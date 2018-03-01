@@ -1,6 +1,6 @@
 # The School of Salamanca - The Webapp
 
-DOI
+[![DOI](https://zenodo.org/badge/123405280.svg)](https://zenodo.org/badge/123405280.svg)
 
 This software package provides a XML/TEI-based digital edition environment. It has been developed as the central element of the web presence of the project of the project "[The School of Salamanca. A digital collection of sources and a dictionary of its juridical-political language](https://www.salamanca.school)" of the [Academy of Sciences and of Literature at Mainz](https://www.adwmainz.de/), Germany. It is meant to be deployed as an application package within [eXist-db](https://exist-db.org/) and it draws upon a series of further services described in more detail below. The data files as well as other parts of the infrastructure will be published separately.
 
