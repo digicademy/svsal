@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright Martin Holmes. 
+Dual-licensed under CC-by and BSD2 licences 
+$Date: 2014-10-12 10:01:38 -0700 (Sun, 12 Oct 2014) $
+$Id: CodeSharing.odd 15 2014-10-12 17:01:38Z martindholmes $
+-->
+
+<TEI xml:lang="en" 
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+     xmlns="http://www.tei-c.org/ns/1.0"
+  xmlns:rng="http://relaxng.org/ns/structure/1.0">
+  <teiHeader>
+    <fileDesc>
+      <titleStmt>
+        <title>ODD file for CodeSharing API response. Based on TEI with maximal setup, 
+        with some additional constraints.</title>
+        <author>Martin Holmes, based on original tei_all by Sebastian Rahtz</author>
+      </titleStmt>
+      <publicationStmt>
+        <availability status="free">
+          <p>This template file is freely available and you are hereby
+            authorised to copy, modify, and redistribute it in any way without
+            further reference or permissions.</p>
+          <p>When making such modifications, you are strongly recommended to
+            change the present text to include an accurate statement of the
+            licencing conditions applicable to your modified text.</p>
+        </availability>
+      </publicationStmt>
+      <sourceDesc>
+        <p>This digital file is the original, although it is heavily based on the
+          file tei_all.odd.</p>
+      </sourceDesc>
+    </fileDesc>
+  </teiHeader>
+  <text>
+    <body>
+      <head>TEI Complete</head>
+      <p>This TEI customization describes a schema against which the responses
+        of servers or systems implementing the CodeSharing API can be validated.
+        Since CodeSharing servers may be working with any TEI whatsoever, this 
+        customization has to include <emph>all</emph> of the TEI (P5) modules.
+      However, it does not include the external modules (SVG and MathML).</p>
+
+      <schemaSpec ident="CodeSharing" prefix="tei_" start="TEI">
+        <moduleRef key="tei"/>           <!-- required -->
+        <moduleRef key="core"/>          <!-- required -->
+        <moduleRef key="analysis"/>
+        <moduleRef key="certainty"/>
+        <moduleRef key="corpus"/>
+        <moduleRef key="declarefs"/>
+        <moduleRef key="dictionaries"/>
+        <moduleRef key="drama"/>
+        <moduleRef key="figures"/>
+        <moduleRef key="gaiji"/>
+        <moduleRef key="header"/>         <!-- required -->
+        <moduleRef key="iso-fs"/>
+        <moduleRef key="linking"/>
+        <moduleRef key="msdescription"/>
+        <moduleRef key="namesdates"/>
+        <moduleRef key="nets"/>
+        <moduleRef key="spoken"/>
+	    <moduleRef key="tagdocs"/>
+        <moduleRef key="textcrit"/>
+        <moduleRef key="textstructure"/>  <!-- required -->
+        <moduleRef key="transcr"/>
+        <moduleRef key="verse"/>
+        
+        <elementSpec ident="front" ns="http://www.tei-c.org/ns/1.0" mode="change">
+          <constraintSpec scheme="isoschematron" ident="cs_project-must-exist">
+            <constraint>
+              <sch:rule context="tei:front" xmlns:sch="http://purl.oclc.org/dsdl/schematron">
+                <sch:assert test="descendant::*[@xml:id='cs_project']">The <sch:name/> element should have a descendant
+                  element whose @xml:id attribute is 'cs_project'.</sch:assert>
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          
+          <constraintSpec scheme="isoschematron" ident="cs_verb-must-exist">
+            <constraint>
+              <sch:rule context="tei:front" xmlns:sch="http://purl.oclc.org/dsdl/schematron">
+                <sch:assert test="descendant::*[@xml:id='cs_verb']">The <sch:name/> element should have a descendant
+                  element whose @xml:id attribute is 'cs_verb'.</sch:assert>
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          
+          <constraintSpec scheme="isoschematron" ident="cs_namespace-must-exist">
+            <constraint>
+              <sch:rule context="tei:front" xmlns:sch="http://purl.oclc.org/dsdl/schematron">
+                <sch:assert test="descendant::*[@xml:id='cs_namespace']">The <sch:name/> element should have a descendant
+                  element whose @xml:id attribute is 'cs_namespace'.</sch:assert>
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          
+          <constraintSpec scheme="isoschematron" ident="cs_elementName-must-exist">
+            <constraint>
+              <sch:rule context="tei:front" xmlns:sch="http://purl.oclc.org/dsdl/schematron">
+                <sch:assert test="descendant::*[@xml:id='cs_elementName']">The <sch:name/> element should have a descendant
+                  element whose @xml:id attribute is 'cs_elementName'.</sch:assert>
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          
+          <constraintSpec scheme="isoschematron" ident="cs_attributeName-must-exist">
+            <constraint>
+              <sch:rule context="tei:front" xmlns:sch="http://purl.oclc.org/dsdl/schematron">
+                <sch:assert test="descendant::*[@xml:id='cs_attributeName']">The <sch:name/> element should have a descendant
+                  element whose @xml:id attribute is 'cs_attributeName'.</sch:assert>
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          
+          <constraintSpec scheme="isoschematron" ident="cs_wrapped-must-exist">
+            <constraint>
+              <sch:rule context="tei:front" xmlns:sch="http://purl.oclc.org/dsdl/schematron">
+                <sch:assert test="descendant::*[@xml:id='cs_wrapped']">The <sch:name/> element should have a descendant
+                  element whose @xml:id attribute is 'cs_wrapped'.</sch:assert>
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          
+          <constraintSpec scheme="isoschematron" ident="cs_nextUrl-must-exist">
+            <constraint>
+              <sch:rule context="tei:front" xmlns:sch="http://purl.oclc.org/dsdl/schematron">
+                <sch:assert test="descendant::*[@xml:id='cs_nextUrl']">The <sch:name/> element should have a descendant
+                  element whose @xml:id attribute is 'cs_nextUrl'.</sch:assert>
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          
+          <!--  Looks like I started thinking I should override @xml:id on <item> in 
+                a particular context here, but of course it's not practical with current 
+                ODD technology. -->
+          <!--
+          <attList>
+            <attDef ident="xml:id" mode="change">
+              <valList type="closed">
+                
+                <valItem ident="cs_project">
+                  <desc>The name of the project from which the examples are drawn.</desc>
+                </valItem>
+                
+                <valItem ident="cs_verb">
+                  <desc>The verb for the action requested. May be "listElements", "listAttributes", "listNamespaces", or "getExamples".</desc>
+                </valItem>
+                
+                <valItem ident="cs_namespace">
+                  <desc>The namespace specified (in effect if the verb is "getExamples").</desc>
+                </valItem>
+                
+                <valItem ident="cs_elementName">
+                  <desc>The element name for which examples are requested (in effect if the 
+                    verb is "getExamples"). If combined with an attribute name in cs_attributeName,
+                    then examples of the attribute appearing on that element will be returned.</desc>
+                </valItem>
+                
+                <valItem ident="cs_attributeName">
+                  <desc>The attribute name for which examples are requested  (in effect if the 
+                    verb is "getExamples"). If combined with an element name in cs_elementName,
+                    then examples of the attribute appearing on that element will be returned.</desc>
+                </valItem>
+                
+                <valItem ident="cs_wrapped">
+                  <desc>Whether examples of an element should be returned in the context of their
+                    parent element. In effect if the verb is "getExamples". Values true or false.</desc>
+                </valItem>
+                
+                <valItem ident="cs_maxResultsPerPage">
+                  <desc>The maximum number of instances that the requester would like to receive in 
+                    one response. This may be overridden if the server has a smaller value set in its own
+                    processor code. In effect if the verb is "getExamples". Value is an integer.</desc>
+                </valItem>
+                
+                <valItem ident="cs_totalInstances">
+                  <desc>The total number of examples of the element or attribute requested which are 
+                    available in the project collection. In effect if the verb is "getExamples". Value is an
+                    integer. </desc>
+                </valItem>
+                
+                <valItem ident="cs_from">
+                  <desc>Where the verb is "getExamples" and the number of total potential examples 
+                    is larger than the effective maximum instances allowed in one response page, this contains
+                    the starting number from which the examples on the current page begin. For example,
+                    if there are 50 examples of the <gi>date</gi> element in the collection, but the effective
+                    maximum number of instances per page is 20, then the first page returned will have 
+                    cs_from set to 1, and the second page to 21, etc.</desc>
+                </valItem>
+                
+                <valItem ident="cs_next">
+                  <desc>Where the verb is "getExamples" and the number of total potential examples 
+                    is larger than the effective maximum instances allowed in one response page, this contains
+                    the starting number from which the examples on the next page will begin. For example,
+                    if there are 50 examples of the <gi>date</gi> element in the collection, but the effective
+                    maximum number of instances per page is 20, then the first page returned will have 
+                    cs_from set to 1, and cs_next to 21.</desc>
+                </valItem>
+                
+                <valItem ident="cs_currParams">
+                  <desc>This is a query string which, if passed back to the server appended to the page URL,
+                    would produce the same results as the current page. In other words, this is the set of 
+                    parameters in the current query, expressed as a GET array.</desc>
+                </valItem>
+                
+                <valItem ident="cs_nextParams">
+                  <desc>This is a query string which, if passed back to the server appended to the page URL,
+                    would produce the next paged set of results from the current query. A client can append this
+                    as the query string to the URI of the current page to generate the next set of result for 
+                    the current query.</desc>
+                </valItem>
+                
+                <valItem ident="cs_prevParams">
+                  <desc>In the case of paged results, where the client has requested a subsequent set of 
+                    results from the same query, this is a query string representing the previous set of results. 
+                    A client can append this as the query string to the URI of the current page to generate the
+                    previous page of results for the current query.</desc>
+                </valItem>
+                
+                <valItem ident="cs_url">
+                  <desc>This is the URL (absolute or relative) of the query page itself.</desc>
+                </valItem>
+                
+                <valItem ident="cs_nextUrl">
+                  <desc>This is the URL (absolute or relative) that a client can call to get the next set of results 
+                    in a case where there are more results than can be returned in a single page. This is equivalent
+                    to <ident>cs_url</ident> + '?' + <ident>cs_nextParams</ident>.</desc>
+                </valItem>
+                
+                <valItem ident="cs_prevUrl">
+                  <desc>This is the URL (absolute or relative) that a client can call to get the previous set of results 
+                    in a case where there are more results than can be returned in a single page. This is equivalent
+                    to <ident>cs_url</ident> + '?' + <ident>cs_prevParams</ident>.</desc>
+                </valItem>
+              </valList>
+            </attDef>
+          </attList>-->
+        </elementSpec>
+        
+      </schemaSpec>
+    </body>
+  </text>
+</TEI>

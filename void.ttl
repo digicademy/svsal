@@ -1,0 +1,163 @@
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix wv: <http://vocab.org/waiver/terms/norms> .        
+@prefix sd: <http://www.w3.org/ns/sparql-service-description#> .
+
+@prefix : <#> .
+
+<> a void:DatasetDescription ;
+	dcterms:title "A VoID description of the School of Salamanca Dataset" ;
+	dcterms:creator :Andreas_Wagner ;
+	foaf:primaryTopic :Salamanca ;
+	.
+
+:Salamanca a void:Dataset ;
+	foaf:homepage <http://www.salamanca.school> ;
+    dcterms:title "The School of Salamanca Data" ;
+    dcterms:description "RDF data extracted from Works of and about the School of Salamanca" ;
+    dcterms:creator :Salamanca_Project ;
+    dcterms:publisher :ADWMainz ;
+    dcterms:contributor :Salamanca_Project ;
+    dcterms:contributor :Andreas_Wagner ;
+    dcterms:created "2016-11-01"^^xsd:date ;
+
+    dcterms:license <http://www.opendatacommons.org/licenses/by/> ;
+    wv:norms <http://www.opendatacommons.org/norms/odc-by-sa/> ;
+
+    dcterms:subject <http://dbpedia.org/resource/School_of_Salamanca> ;
+    dcterms:subject <http://dbpedia.org/resource/Political_philosophy> ;
+    dcterms:subject <http://dbpedia.org/resource/Legal_history> ;
+    dcterms:subject <http://dbpedia.org/resource/Practical_theology> ;
+    dcterms:subject <http://dbpedia.org/resource/History_of_political_thought> ;
+
+    void:feature <http://www.w3.org/ns/formats/RDF_XML> ;
+    void:uriLookupEndpoint <http://id.salamanca.school/> ;
+	void:sparqlEndpoint <http://t.spatialhumanities.de/openrdf-workbench/repositories/svsal> ;
+	void:openSearchDescription <https://search.salamanca.school/lemmatized> ;
+
+	void:uriSpace "http://id.salamanca.school/" ;
+	void:exampleResource <http://id.salamanca.school/works.W0013> ;
+	void:exampleResource <http://id.salamanca.school/authors.A0100> ;
+
+	void:vocabulary <http://xmlns.com/foaf/0.1/> ;
+	void:vocabulary <http://purl.org/vocab/bio/0.1/> ;
+	void:vocabulary <http://purl.org/vocab/relationship/> ;
+	void:vocabulary <http://www.w3.org/ns/org> ;
+	void:vocabulary <http://schema.org/Book/> ;
+	void:vocabulary <http://purl.org/spar/fabio/> ;
+	void:vocabulary <http://purl.org/spar/cito/> ;
+	void:vocabulary <http://purl.org/spar/doco/> ;
+
+	void:classPartition [
+							void:class foaf:Person ;
+							dcterms:description "Authors of or persons in the wider context of the School of Salamanca" ;
+							void:documents 7 ;
+#							void:entities 999 ;
+#							void:triples 9999 ;
+						] ;
+	void:classPartition [
+							void:class <http://purl.org/spar/fabio/work> ;
+							dcterms:title "Works of the School of Salamanca" ;
+							void:documents 18 ;
+#							void:entities 999 ;
+#							void:triples 9999 ;
+						] ;
+    .
+
+
+:Salamanca_GND a void:Linkset ;
+	void:target :Salamanca ;
+	void:target :GND ;
+	void:linkPredicate owl:sameAs ;
+#	void:triples 99 ;
+	.
+
+:Salamanca_Larramendi a void:Linkset ;
+	void:target :Salamanca ;
+	void:target <http://datahub.io/dataset/polymath-virtual-library> ;
+	void:linkPredicate owl:sameAs ;
+#	void:triples 99 ;
+	.
+
+:Salamanca_CERL a void:Linkset ;
+	void:target :Salamanca ;
+	void:target :CERL ;
+	void:linkPredicate owl:sameAs ;
+#	void:triples 99 ;
+	.
+
+:Salamanca_Getty a void:Linkset ;
+	void:target :Salamanca ;
+	void:target <http://vocab.getty.edu/void.ttl> ;
+	void:linkPredicate owl:sameAs ;
+#	void:triples 99 ;
+	.
+
+:Salamanca:OCLC a void:Linkset ;
+	void:target :Salamanca ;
+	void:target <http://purl.oclc.org/dataset/WorldCat> ;
+	void:linkPredicate owl:sameAs ;
+#	void:triples 99 ;
+	.
+
+:GND a void:Dataset ;
+ foaf:homepage <http://d-nb.info/gnd> ;
+ dcterms:title "Gemeinsame Normdatei" ;
+ dcterms:description "Gemeinsame Normdatei in RDF, siehe auch http://www.d-nb.de/standardisierung/normdateien/gnd.htm" ; 
+ void:exampleResource <http://d-nb.info/gnd/4137933-0> ;
+ void:exampleResource <http://d-nb.info/gnd/118594893> .
+
+:CERL a void:Dataset ;
+ foaf:homepage <https://www.cerl.org/resources/cerl_thesaurus/main> ;
+ dcterms:title "CERL Thesaurus" ;
+ void:exampleResource <https://thesaurus.cerl.org/cgi-bin/record.pl?rid=cnp01318674> ;
+ void:exampleResource <https://thesaurus.cerl.org/cgi-bin/record.pl?rid=cnc00008968> ;
+ void:exampleResource <https://thesaurus.cerl.org/cgi-bin/record.pl?rid=cni00063650> .
+
+
+:Salamanca_Project a foaf:Project ;
+    rdfs:label "Projekt 'Die Schule von Salamanca. Eine digitale Quellensammlung und ein Wörterbuch ihrer juridisch-politischen Sprache'"@de ;
+    rdfs:label "Project 'The School of Salamanca. Ai digital collection of sources and a dictionary of its juridical-political language'"@en ;
+    rdfs:label "Proyecto 'La Escuela de Salamanca. Una Colección Digital de Fuentes y un Diccionario de su Lenguaje Jurídico-Político'"@es ;
+    foaf:homepage <http://www.salamanca.school/> ;
+    foaf:page <http://salamanca.adwmainz.de/> ;
+    foaf:mailbox <mailto:info@salamanca.adwmainz.de> ;
+    foaf:member :Andreas_Wagner ;
+    foaf:member :Christiane_Birr ;
+    foaf:member :Thomas_Duve ;
+    foaf:member :Matthias_Lutz-Bachmann ;
+    .
+
+:ADWMainz a foaf:Organization ;
+	rdfs:label "Akademie der Wissenschaften und der Literatur | Mainz" ;
+	foaf:mbox <generalsekretariat@adwmainz.de> ;
+	foaf:member :Salamanca_Project ;
+	.
+
+:Andreas_Wagner a foaf:Person ;
+	rdfs:label "Andreas Wagner" ;
+	foaf:mbox <mailto:andreas.wagner@em.uni-frankfurt.de> ;
+	owl:sameAs <http://orcid.org/0000-0003-1835-1653> ;
+	owl:sameAs <d-nb.info/gnd/108835820> ;
+	.
+
+:Christiane_Birr a foaf:Person ;
+	rdfs:label "Christiane Birr" ;
+	owl:sameAs <d-nb.info/gnd/123718406> ;
+	owl:sameAs <d-nb.info/gnd/138962987> ;
+	.
+
+:Thomas_Duve a foaf:Person ;
+	rdfs:label "Thomas Duve" ;
+	owl:sameAs <d-nb.info/gnd/1028938721> ;
+	.
+
+:Matthias_Lutz-Bachmann a foaf:Person ;
+	rdfs:label "Matthias Lutz-Bachmann" ;
+	owl:sameAs <d-nb.info/gnd/1022577581> ;
+	.

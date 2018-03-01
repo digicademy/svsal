@@ -1,0 +1,581 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="https://files.salamanca.school/SvSal_txt.rng"
+    type="application/xml"
+    schematypens="http://relaxng.org/ns/structure/1.0"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="TechSonderzeichen">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title xml:lang="de">Sonderzeichen der SvSal-Edition</title>
+                <title xml:lang="en">Special characters used in this edition</title>
+                <title xml:lang="es">Caracteres especiales empleado en esta edición</title>
+                <author>
+                    <surname>Wagner</surname>, <forename>Andreas</forename>
+                </author>
+                <author>
+                    <surname>Caesar</surname>, <forename>Ingo</forename>
+                </author>
+            </titleStmt>
+            <editionStmt>
+                <edition xml:lang="de">Die Transkription der Texte wurde unter Verwendung des
+                <ref type="url" target="https://files.salamanca.school/SvSal_txt.rng">"SvSal-Schemas für Werke"</ref> angefertigt.
+            </edition>
+                <respStmt>
+                    <resp>Erstellt von</resp>
+                    <persName ref="#AW">Andreas Wagner</persName>
+                    <persName ref="#IC">Ingo Caesar</persName>
+                </respStmt>
+                <sponsor>
+                    <orgName>Akademie der Wissenschaften und der Literatur, Mainz</orgName>
+                    <ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>
+                </sponsor>
+                <funder>
+                    <orgName>Akademie der Wissenschaften und der Literatur, Mainz</orgName>
+                    <ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>
+                </funder>
+            </editionStmt>
+            <publicationStmt>
+                <publisher>
+                    <orgName>Akademie der Wissenschaften und der Literatur, Mainz</orgName>
+                    <ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>
+                </publisher>
+                <distributor>
+                    <orgName>Akademie der Wissenschaften und der Literatur, Mainz</orgName>, <orgName>Max Planck Institut für europäische Rechtsgeschichte</orgName>, <orgName>Goethe-Universität Frankfurt/Main</orgName>
+                    <email>info@salamanca.adwmainz.de</email>
+                </distributor>
+                <pubPlace role="digitzedEd">
+            Frankfurt/Main (<ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>)
+        </pubPlace>
+                <date type="digitizedEd" when="2013">2013</date>
+
+<!-- Angaben zum copyright -->
+                <availability>
+                    <licence target="http://creativecommons.org/licenses/by-nc-sa/3.0/">
+                        <p xml:id="p_löojpcn3qp3q4">Dieses Werk bzw. dieser Inhalt wurde digitalisiert durch die Akademie der
+                Wissenschaften und der Literatur, Mainz, und steht unter einer Creative
+                Commons Lizenz: Namensnennung-NichtKommerziell-KeineBearbeitung 3.0 Unported.</p>
+                    </licence>
+                </availability>
+            </publicationStmt>
+            <sourceDesc>
+                <p xml:lang="de" xml:id="p_koiuwasdas">Born digital, erstellt am 2014-03-27, um 20:10 Uhr.
+            Zuletzt aktualisiert am 2014-03-27, um 20:10 Uhr.</p>
+            </sourceDesc>
+        </fileDesc>
+
+<!-- Was wurde wie ausgezeichnet (XML-Schema, Richtlinien, Tags, Styles, Präfixe, ...) -->
+        <encodingDesc>
+
+<!-- Beschreibung verwendeter Sonderzeichen -->
+            <appInfo>
+                <application ident="MUFI" version="3.0">
+                    <label>MUFI character recommendation v. 3.0</label>
+                    <ref target="http://www.mufi.info/specs/MUFI-Alphabetic-3-0.pdf"/>
+                </application>
+                <application ident="Unicode" version="5.1">
+                    <label>The Unicode Consortium. The Unicode Standard, Version 6.3.0</label>
+                    <ref target="http://www.unicode.org/versions/Unicode6.3.0/"/>
+                </application>
+            </appInfo>
+            <charDecl xml:id="charDecl">
+
+<!-- Characters below 00FF -->
+
+                <char xml:id="char0026">
+                    <desc>AMPERSAND</desc>
+                    <charProp>
+                        <unicodeName>entity</unicodeName>
+                        <value>amp</value>
+                    </charProp>
+                    <mapping type="precomposed">&amp;</mapping>
+                    <mapping type="standardized">&amp;</mapping>
+                </char>
+            
+                <char xml:id="char00b6">
+                    <desc>PILCROW SIGN</desc>
+                    <charProp>
+                        <unicodeName>entity</unicodeName>
+                        <value>para</value>
+                    </charProp>
+                    <mapping type="precomposed">¶</mapping>
+                    <mapping type="standardized">¶</mapping>
+                </char>
+            
+                <char xml:id="char00df">
+                    <desc>LATIN SMALL LETTER SHARP S</desc>
+                    <charProp>
+                        <unicodeName>entity</unicodeName>
+                        <value>szlig</value>
+                    </charProp>
+                    <mapping type="precomposed">ß</mapping>
+                    <mapping type="standardized">ss</mapping>
+                </char>
+
+                <char xml:id="char00e6">
+                    <desc>LATIN SMALL LETTER AE</desc>
+                    <charProp>
+                        <unicodeName>entity</unicodeName>
+                        <value>aelig</value>
+                    </charProp>
+                    <mapping type="precomposed">æ</mapping>
+                    <mapping type="standardized">ae</mapping>
+                </char>
+
+<!-- Other Precomposed Characters -->
+
+                <char xml:id="char0111">
+                    <desc>LATIN SMALL LETTER D WITH STROKE</desc>
+                    <charProp>
+                        <unicodeName>entity</unicodeName>
+                        <value>dstrok</value>
+                    </charProp>
+                    <mapping type="precomposed">đ</mapping>
+                    <mapping type="composed">d̄</mapping>
+                    <mapping type="standardized">d</mapping>
+                </char>
+                <char xml:id="char0142">
+                    <desc>LATIN SMALL LETTER L WITH STROKE</desc>
+                    <charProp>
+                        <unicodeName>entity</unicodeName>
+                        <value>lstrok</value>
+                    </charProp>
+                    <mapping type="precomposed">ł</mapping>
+                    <mapping type="composed">l̄</mapping>
+                    <mapping type="standardized">l</mapping>
+                </char>
+                <char xml:id="char0153">
+                    <desc>LATIN SMALL LIGATURE OE</desc>
+                    <charProp>
+                        <unicodeName>entity</unicodeName>
+                        <value>oelig</value>
+                    </charProp>
+                    <mapping type="precomposed">œ</mapping>
+                    <mapping type="standardized">oe</mapping>
+                </char>
+                <char xml:id="char017f">
+                    <desc>LATIN SMALL LETTER LONG S</desc>
+                    <charProp>
+                        <unicodeName>entity</unicodeName>
+                        <value>slong</value>
+                    </charProp>
+                    <mapping type="precomposed">ſ</mapping>
+                    <mapping type="standardized">s</mapping>
+                </char>
+                <char xml:id="char01d4">
+                    <desc>LATIN SMALL LETTER U WITH CARON</desc>
+                    <mapping type="precomposed">ǔ</mapping>
+                    <mapping type="standardized">u</mapping>
+                </char>
+                <char xml:id="char0250">
+                    <desc>LATIN SMALL LETTER TURNED A</desc>
+                    <mapping type="precomposed">ɐ</mapping>
+                    <mapping type="standardized">a</mapping>
+                </char>
+                <char xml:id="char0259">
+                    <desc>LATIN SMALL LETTER SCHWA</desc>
+                    <charProp>
+                        <unicodeName>entity</unicodeName>
+                        <value>schwa</value>
+                    </charProp>
+                    <mapping type="precomposed">ə</mapping>
+                    <mapping type="standardized">e</mapping>
+                </char>
+                <char xml:id="char026f">
+                    <desc>LATIN SMALL LETTER TURNED M</desc>
+                    <charProp>
+                        <localName>entity</localName>
+                        <value>turnedm</value>
+                    </charProp>
+                    <mapping type="precomposed">ɯ</mapping>
+                    <mapping type="standardized">m</mapping>
+                </char>
+                <char xml:id="char0292">
+                    <desc>LATIN SMALL LETTER EZH</desc>
+                    <charProp>
+                        <unicodeName>entity</unicodeName>
+                        <value>ezh</value>
+                    </charProp>
+                    <mapping type="precomposed">ʒ</mapping>
+                    <mapping type="standardized">z</mapping>
+                </char>
+                <char xml:id="char2020">
+                    <desc>DAGGER</desc>
+                    <charProp>
+                        <unicodeName>entity</unicodeName>
+                        <value>dagger</value>
+                    </charProp>
+                    <mapping type="precomposed">†</mapping>
+                    <mapping type="standardized">+</mapping>
+                </char>
+                <char xml:id="char204a">
+                    <desc>LATIN ABBREVIATION SIGN SMALL ET</desc>
+                    <charProp>
+                        <unicodeName>entity</unicodeName>
+                        <value>et</value>
+                    </charProp>
+                    <mapping type="precomposed">⁊</mapping>
+                    <mapping type="standardized">et</mapping>
+                </char>
+                <char xml:id="char211f">
+                    <desc>RESPONSE</desc>
+                    <charProp>
+                        <unicodeName>entity</unicodeName>
+                        <value>Rslstrok</value>
+                    </charProp>
+                    <mapping type="precomposed">℟</mapping>
+                    <mapping type="standardized">R</mapping>
+                </char>
+                <char xml:id="char2184">
+                    <desc>LATIN ABBREVIATION SIGN SMALL CON</desc>
+                    <charProp>
+                        <unicodeName>entity</unicodeName>
+                        <value>conbase</value>
+                    </charProp>
+                    <mapping type="precomposed">ↄ</mapping>
+                    <mapping type="standardized">con</mapping>
+                </char>
+                <char xml:id="chara751">
+                    <desc>LATIN SMALL LETTER P WITH STROKE THROUGH DESCENDER</desc>
+                    <charProp>
+                        <unicodeName>entity</unicodeName>
+                        <value>pbardes</value>
+                    </charProp>
+                    <mapping type="precomposed">ꝑ</mapping>
+                    <mapping type="standardized">p</mapping>
+                </char>
+                <char xml:id="chara753">
+                    <desc>LATIN SMALL LETTER P WITH FLOURISH</desc>
+                    <charProp>
+                        <unicodeName>entity</unicodeName>
+                        <value>pflour</value>
+                    </charProp>
+                    <mapping type="precomposed">ꝓ</mapping>
+                    <mapping type="standardized">p</mapping>
+                </char>
+                <char xml:id="chara759">
+                    <desc>LATIN SMALL LETTER Q WITH DIAGONAL STROKE</desc>
+                    <charProp>
+                        <unicodeName>entity</unicodeName>
+                        <value>qslstrok</value>
+                    </charProp>
+                    <mapping type="precomposed">ꝙ</mapping>
+                    <mapping type="standardized">q</mapping>
+                </char>
+                <char xml:id="chara75d">
+                    <desc>LATIN SMALL LETTER RUM ROTUNDA</desc>
+                    <charProp>
+                        <unicodeName>entity</unicodeName>
+                        <value>rum</value>
+                    </charProp>
+                    <mapping type="precomposed">ꝝ</mapping>
+                    <mapping type="standardized">rum</mapping>
+                </char>
+                <char xml:id="chara75f">
+                    <desc>LATIN SMALL LETTER V WITH DIAGONAL STROKE</desc>
+                    <charProp>
+                        <unicodeName>entity</unicodeName>
+                        <value>vdiagstrok</value>
+                    </charProp>
+                    <mapping type="precomposed">ꝟ</mapping>
+                    <mapping type="standardized">v</mapping>
+                </char>
+                <char xml:id="chara76d">
+                    <desc>LATIN SMALL LETTER IS</desc>
+                    <charProp>
+                        <unicodeName>entity</unicodeName>
+                        <value>is</value>
+                    </charProp>
+                    <mapping type="precomposed">ꝭ</mapping>
+                    <mapping type="standardized">is</mapping>
+                </char>
+
+                <char xml:id="chara770">
+                    <desc>MODIFIER LETTER US</desc>
+                    <charProp>
+                        <unicodeName>entity</unicodeName>
+                        <value>usmod</value>
+                    </charProp>
+                    <mapping type="precomposed">ꝰ</mapping>
+                    <mapping type="standardized">us</mapping>
+                </char>
+
+                <char xml:id="chare682">
+                    <desc>LATIN SMALL LETTER Q WITH DOT ABOVE</desc>
+                    <charProp>
+                        <localName>entity</localName>
+                        <value>qdot</value>
+                    </charProp>
+                    <mapping type="MUFI" subtype="PUA">U+E682</mapping>
+                    <mapping type="composed">q̇</mapping>
+                    <mapping type="standardized">q</mapping>
+                    <graphic mimeType="image/png" url="http://www.manuscriptorium.com/apps/gbank/data/mufi-graphic/a759.png"/>
+                </char>
+
+                <char xml:id="chare8b3">
+                    <desc>LATIN SMALL LETTER Q LIGATED WITH R ROTUNDA</desc>
+                    <charProp>
+                        <localName>entity</localName>
+                        <value>q2app</value>
+                    </charProp>
+                    <mapping type="MUFI" subtype="PUA">U+E8B3</mapping>
+                    <mapping type="precomposed"></mapping>
+                    <mapping type="standardized">q</mapping>
+                    <graphic mimeType="image/png" url="http://www.manuscriptorium.com/apps/gbank/data/mufi-graphic/e8b3.png"/>
+                </char>
+                <char xml:id="chare8bf">
+                    <desc>LATIN SMALL LETTER Q LIGATED WITH FINAL ET</desc>
+                    <charProp>
+                        <localName>entity</localName>
+                        <value>q3app</value>
+                    </charProp>
+                    <mapping type="MUFI" subtype="PUA">U+E8BF</mapping>
+                    <mapping type="precomposed"></mapping>
+                    <mapping type="standardized">q</mapping>
+                    <graphic mimeType="image/png" url="http://www.manuscriptorium.com/apps/gbank/data/mufi-graphic/e8bf.png"/>
+                </char>
+                <char xml:id="charebd1">
+                    <desc>LATIN SMALL LETTER D ROTUNDA WITH DOT ABOVE</desc>
+                    <desc>LATIN SMALL LETTER D ROTUNDA + COMBINING DOT ABOVE</desc>
+                    <charProp>
+                        <localName>entity</localName>
+                        <value>drotdot</value>
+                    </charProp>
+                    <charProp>
+                        <localName>combined-entity</localName>
+                        <value> drotdot = drot + combdot </value>
+                    </charProp>
+                    <mapping type="MUFI" subtype="PUA">U+EBD1</mapping>
+                    <mapping type="MUFI" subtype="Combined">U+EBD1 = A77A + 0307</mapping>
+                    <mapping type="precomposed"></mapping>
+                    <mapping type="composed">ꝺ̇</mapping>
+                    <mapping type="standardized">d</mapping>
+                    <graphic mimeType="image/png" url="http://www.manuscriptorium.com/apps/gbank/data/mufi-graphic/ebd1.png"/>
+                </char>
+                <char xml:id="charf159">
+                    <desc>LATIN ABBREVIATION SIGN SMALL DE</desc>
+                    <charProp>
+                        <localName>entity</localName>
+                        <value>de</value>
+                    </charProp>
+                    <mapping type="MUFI" subtype="PUA">U+F159</mapping>
+                    <mapping type="precomposed"></mapping>
+                    <mapping type="standardized">d</mapping>
+                    <graphic mimeType="image/png" url="http://www.manuscriptorium.com/apps/gbank/data/mufi-graphic/f159.png"/>
+                </char>
+
+<!-- Combining Characters, the first character of the code after "char" is the base letter, then come 4 identifying characters combining mark -->
+
+                <char xml:id="chara0303">
+                    <desc>LATIN SMALL LETTER A WITH TILDE</desc>
+                    <charProp>
+                        <unicodeName>entity</unicodeName>
+                        <value>atilde</value>
+                    </charProp>
+                    <charProp>
+                        <unicodeName>combined-entity</unicodeName>
+                        <value> atilde = a + combtilde </value>
+                    </charProp>
+                    <mapping type="precomposed">ã</mapping>
+                    <mapping type="composed">ã</mapping>
+                    <mapping type="standardized">a</mapping>
+                    <graphic mimeType="image/png" url="http://www.manuscriptorium.com/apps/gbank/data/mufi-graphic/00e3.png"/>
+                </char>
+                <char xml:id="charb0307">
+                    <desc>LATIN SMALL LETTER B WITH DOT ABOVE</desc>
+                    <mapping type="composed">ḃ</mapping>
+                    <mapping type="standardized">b</mapping>
+                </char>
+                <char xml:id="charc0303">
+                    <desc>LATIN SMALL LETTER C WITH TILDE</desc>
+                    <mapping type="composed">c̃</mapping>
+                    <mapping type="standardized">c</mapping>
+                </char>
+                <char xml:id="charc0327">
+                    <desc>LATIN SMALL LETTER C WITH CEDILLA</desc>
+                    <charProp>
+                        <unicodeName>entity</unicodeName>
+                        <value>ccedil</value>
+                    </charProp>
+                    <mapping type="precomposed">ç</mapping>
+                    <mapping type="composed">ç</mapping>
+                    <mapping type="standardized">c</mapping>
+                    <graphic mimeType="image/png" url="http://www.manuscriptorium.com/apps/gbank/data/mufi-graphic/00e7.png"/>
+                </char>
+                <char xml:id="chare0303">
+                    <desc>LATIN SMALL LETTER E WITH TILDE</desc>
+                    <mapping type="composed">ẽ</mapping>
+                    <mapping type="standardized">e</mapping>
+                </char>
+                <char xml:id="chare0308">
+                    <desc>LATIN SMALL LETTER E WITH TWO DOTS ABOVE</desc>
+                    <mapping type="composed">ë</mapping>
+                    <mapping type="standardized">e</mapping>
+                </char>
+                <char xml:id="chare0327">
+                    <desc>LATIN SMALL LETTER E WITH CEDILLA</desc>
+                    <mapping type="precomposed">&#x0229;</mapping>
+                    <mapping type="composed">e&#x0327;</mapping>
+                    <mapping type="standardized">e</mapping>
+                </char>
+                <char xml:id="chare0328">
+                    <desc>LATIN SMALL LETTER E WITH OGONEK</desc>
+                    <mapping type="composed">ę</mapping>
+                    <mapping type="standardized">e</mapping>
+                </char>
+                <char xml:id="chari0303">
+                    <desc>LATIN SMALL LETTER I WITH TILDE</desc>
+                    <mapping type="composed">ĩ</mapping>
+                    <mapping type="standardized">i</mapping>
+                </char>
+                <char xml:id="charj0303">
+                    <desc>LATIN SMALL LETTER J WITH TILDE</desc>
+                    <mapping type="composed">j̃</mapping>
+                    <mapping type="standardized">j</mapping>
+                </char>
+                <char xml:id="charl0303">
+                    <desc>LATIN SMALL LETTER L WITH TILDE</desc>
+                    <mapping type="composed">l̃</mapping>
+                    <mapping type="standardized">l</mapping>
+                </char>
+                <char xml:id="charl0309">
+                    <desc>LATIN SMALL LETTER L WITH HOOK</desc>
+                    <charProp>
+                        <localName>entity</localName>
+                        <value>lhook</value>
+                    </charProp>
+                    <mapping type="composed">l̉</mapping>
+                    <mapping type="standardized">l</mapping>
+                </char>
+                <char xml:id="charm0303">
+                    <desc>LATIN SMALL LETTER M WITH TILDE</desc>
+                    <mapping type="composed">m̃</mapping>
+                    <mapping type="standardized">m</mapping>
+                </char>
+                <char xml:id="charn0303">
+                    <desc>LATIN SMALL LETTER N WITH TILDE</desc>
+                    <mapping type="composed">ñ</mapping>
+                    <mapping type="standardized">n</mapping>
+                </char>
+                <char xml:id="charo0302">
+                    <desc>LATIN SMALL LETTER O WITH CIRCUMFLEX</desc>
+                    <mapping type="composed">ô</mapping>
+                    <mapping type="standardized">o</mapping>
+                </char>
+                <char xml:id="charo0303">
+                    <desc>LATIN SMALL LETTER O WITH TILDE</desc>
+                    <mapping type="composed">õ</mapping>
+                    <mapping type="standardized">o</mapping>
+                </char>
+                <char xml:id="charp0301">
+                    <desc>LATIN SMALL LETTER P WITH ACUTE ACCENT</desc>
+                    <mapping type="composed">ṕ</mapping>
+                    <mapping type="standardized">p</mapping>
+                </char>
+                <char xml:id="charp0303">
+                    <desc>LATIN SMALL LETTER P WITH TILDE</desc>
+                    <mapping type="composed">p̃</mapping>
+                    <mapping type="standardized">p</mapping>
+                </char>
+                <char xml:id="charp0307">
+                    <desc>LATIN SMALL LETTER P WITH DOT ABOVE</desc>
+                    <mapping type="composed">ṗ</mapping>
+                    <mapping type="standardized">p</mapping>
+                </char>
+                <char xml:id="charq0301">
+                    <desc>LATIN SMALL LETTER Q WITH ACUTE ACCENT</desc>
+                    <mapping type="composed">q́</mapping>
+                    <mapping type="standardized">q</mapping>
+                </char>
+                <char xml:id="charq0303">
+                    <desc>LATIN SMALL LETTER Q WITH TILDE</desc>
+                    <mapping type="composed">q̃</mapping>
+                    <mapping type="standardized">q</mapping>
+                </char>
+                <char xml:id="charq0307">
+                    <desc>LATIN SMALL LETTER Q WITH DOT ABOVE</desc>
+                    <mapping type="composed">q̇</mapping>
+                    <mapping type="standardized">q</mapping>
+                </char>
+                <char xml:id="charq0308">
+                    <desc>LATIN SMALL LETTER Q WITH TWO DOTS ABOVE</desc>
+                    <mapping type="composed">q̈</mapping>
+                    <mapping type="standardized">q</mapping>
+                </char>
+                <char xml:id="charq0366">
+                    <desc>LATIN SMALL LETTER Q WITH SMALL O ABOVE</desc>
+                    <mapping type="composed">qͦ</mapping>
+                    <mapping type="standardized">q</mapping>
+                </char>
+                <char xml:id="charr0303">
+                    <desc>LATIN SMALL LETTER R WITH TILDE</desc>
+                    <mapping type="composed">r̃</mapping>
+                    <mapping type="standardized">r</mapping>
+                </char>
+                <char xml:id="chars0303">
+                    <desc>LATIN SMALL LETTER S WITH TILDE</desc>
+                    <mapping type="composed">s̃</mapping>
+                    <mapping type="standardized">s</mapping>
+                </char>
+                <char xml:id="chart0303">
+                    <desc>LATIN SMALL LETTER T WITH TILDE</desc>
+                    <mapping type="composed">t̃</mapping>
+                    <mapping type="standardized">t</mapping>
+                </char>
+                <char xml:id="charu0303">
+                    <desc>LATIN SMALL LETTER U WITH TILDE</desc>
+                    <mapping type="composed">ũ</mapping>
+                    <mapping type="standardized">u</mapping>
+                </char>
+                <char xml:id="charx0303">
+                    <desc>LATIN SMALL LETTER X WITH TILDE</desc>
+                    <mapping type="composed">x̃</mapping>
+                    <mapping type="standardized">x</mapping>
+                </char>
+
+<!-- Combining characters where even the base letter is a four-letter codepoint -->
+                <char xml:id="char01310323">
+                    <desc>LATIN TURNED SMALL LETTER I</desc>
+                    <mapping type="precomposed">ı̣</mapping>
+                    <mapping type="standardized">i</mapping>
+                </char>
+                <char xml:id="char21840303">
+                    <desc>LATIN ABBREVIATION SIGN SMALL CON WITH TILDE</desc>
+                    <mapping type="composed">ↄ̃</mapping>
+                    <mapping type="standardized">con</mapping>
+                </char>
+                <char xml:id="chara7590303">
+                    <desc>LATIN SMALL LETTER Q WITH DIAGONAL STROKE AND TILDE</desc>
+                    <mapping type="composed">ꝙ̃</mapping>
+                    <mapping type="standardized">q</mapping>
+                </char>
+                <char xml:id="chare8bf0301">
+                    <desc>LATIN SMALL LETTER Q LIGATED WITH FINAL ET AND WITH ACUTE ACCENT</desc>
+                    <mapping type="composed">́</mapping>
+                    <mapping type="standardized">q</mapping>
+                </char>
+                <char xml:id="chare8bf0308">
+                    <desc>LATIN SMALL LETTER Q LIGATED WITH FINAL ET AND WITH TWO DOTS ABOVE</desc>
+                    <mapping type="composed">̈</mapping>
+                    <mapping type="standardized">q</mapping>
+                </char>
+
+<!-- Other characters, not present in unicode nor MUFI -->
+                <char xml:id="char-turnedfl">
+                    <desc>LATIN TURNED SMALL LIGATURE FL</desc>
+                    <mapping type="standardized">fl.</mapping>
+                </char>
+            </charDecl>
+        </encodingDesc>
+        <revisionDesc status="a_raw">
+            <listChange>
+                <change who="#AW" when="2015-06-24" status="a_raw">Scharfes S und andere Glyphen unterhalb von x00ff wieder hinzugenommen (wegen Umschaltung dipl./konst. Ansicht).</change>
+                <change who="#AW" when="2014-03-27" status="a_raw">Mit Musterdeklaration aus W_Head_general angelegt</change>
+            </listChange>
+        </revisionDesc>
+    </teiHeader>
+    <text type="technical" xml:id="completeWork">
+        <body>
+            <p xml:id="p_joiweiursc45">This is just dummy text - the meat is in the header (TEI/teiHeader/encodingDesc/charDecl).</p>
+        </body>
+    </text>
+</TEI>

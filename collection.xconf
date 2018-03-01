@@ -1,0 +1,146 @@
+<collection xmlns="http://exist-db.org/collection-config/1.0">
+    <index xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sal="http://salamanca.adwmainz.de">
+
+        <fulltext default="none" attributes="false"/>
+
+
+<!--
+        <lucene diacritics="no">
+        
+<!-\-        <analyzer class="org.apache.lucene.analysis.standard.StandardAnalyzer"/>        -\->
+            <analyzer class="org.apache.lucene.analysis.core.StandardAnalyzer"/>
+            <analyzer id="ws" class="org.apache.lucene.analysis.core.WhitespaceAnalyzer"/>
+
+            <!-\- Fields: all (i.e. p+head+list(+note?)), heading, note, person, place, lemma, dict, entry -\->
+            <!-\-    Wir indizieren keine div's, weil die verschachtelt sind und für dieselbe Textstelle immer mehrere Hits generieren -\->
+            <text qname="tei:head" boost="1.8"/>    <!-\- Überschriften -\->
+            <text qname="@key" boost="1.8"/>        <!-\- normierte Schreibungen -\->
+            <text qname="@n" boost="1.8"/>          <!-\- manuell angelegte Kurzformen der Summarien -\->
+            <text qname="@xml:id"/>                 <!-\- so id lookup is sped up also in expanded documents -\->
+            <text qname="tei:item"/>                <!-\- Listeneinträge, z.B. Inhaltsangaben -\->
+            <text qname="tei:p">                    <!-\- Haupttext -\->
+                <ignore qname="tei:note"/>          <!-\- We index those separately for extra queries, but we exclude them -\->
+                <ignore qname="tei:head"/>          <!-\- from the 'p' index in order not to get duplicate hits -\->
+                <ignore qname="tei:list"/>
+                <ignore qname="@n"/>
+                <ignore qname="@key"/>
+            </text>
+            <text qname="tei:note"/>        <!-\- Here is what we can query explicitly -\->
+            <text qname="tei:persName"/>
+            <text qname="tei:placeName"/>
+            <text qname="tei:title"/>
+            <text qname="tei:term"/>
+            <text qname="tei:titlePage"/>
+            <text qname="tei:imprint"/>
+            <inline qname="tei:hi"/>        <!-\- The following don't mark word boundaries by themselves -\->
+            <inline qname="tei:choice"/>
+            <inline qname="tei:corr"/>
+            <inline qname="tei:expan"/>
+            <inline qname="tei:reg"/>
+            <inline qname="tei:sic"/>
+            <inline qname="tei:g"/>
+            <ignore qname="tei:abbr"/>      <!-\- The following are ignored altogether -\->
+            <ignore qname="tei:orig"/>
+            <ignore qname="tei:cb"/>
+            <ignore qname="tei:lb"/>
+            <ignore qname="tei:pb"/>
+            <ignore qname="tei:fw"/>
+        </lucene>
+-->
+        <range>
+
+<!-- sal index file fields ... -->
+            <create qname="sal:node">
+                <field name="sal.node.n" match="@n" type="xs:string"/>
+                <field name="sal.node.type" match="@type" type="xs:string"/>
+                <field name="sal.node.subtype" match="@subtype" type="xs:string"/>
+            </create>
+            <create qname="sal:fragment"/>
+            <create qname="sal:crumbtrail"/>
+            <create qname="sal:citetrail"/>
+            <create qname="sal:citableParent"/>
+
+<!-- rdf/lod fields ... -->
+            <create qname="rdf:Description">
+                <field name="rdf.Description.rdfAbout" match="@rdf:about" type="xs:string"/>
+            </create>
+            <create qname="rdfs:seeAlso">
+                <field name="rdfs.seeAlso.rdfresource" match="@rdf:resource" type="xs:string"/>
+            </create>
+
+<!-- tei fields ... -->
+            <create qname="tei:bibl">
+                <field name="tei.bibl.key" match="@key" type="xs:string"/>
+                <field name="tei.bibl.ref" match="@ref" type="xs:string"/>
+                <field name="tei.bibl.sortKey" match="@sortKey" type="xs:string"/>
+            </create>
+            <create qname="tei:char"/>
+            <create qname="tei:date">
+                <field name="tei.date.type" match="@type" type="xs:string"/>
+            </create>
+            <create qname="tei:div">
+                <field name="tei.div.n" match="@n" type="xs:string"/>
+                <field name="tei.div.type" match="@type" type="xs:string"/>
+            </create>
+            <create qname="tei:g">
+                <field name="tei.g.ref" match="@ref" type="xs:string"/>
+            </create>
+<!--        <create qname="tei:head"/> -->
+<!--        <create qname="tei:item"/> -->
+            <create qname="tei:lb">
+                <field name="tei.lb.break" match="@break" type="xs:string"/>
+            </create>
+            <create qname="tei:list">
+                <field name="tei.list.type" match="@type" type="xs:string"/>
+            </create>
+            <create qname="tei:mapping">
+                <field name="tei.mapping.type" match="@type" type="xs:string"/>
+            </create>
+            <create qname="tei:milestone">
+                <field name="tei.milestone.n" match="@n" type="xs:string"/>
+                <field name="tei.milestone.unit" match="@unit" type="xs:string"/>
+            </create>
+<!--        <create qname="tei:note"/>  -->
+<!--        <create qname="tei:p"/> -->
+            <create qname="tei:persName">
+                <field name="tei.persName.key" match="@key" type="xs:string"/>
+                <field name="tei.persName.ref" match="@ref" type="xs:string"/>
+            </create>
+            <create qname="tei:publisher">
+                <field name="tei.publisher.n" match="@n" type="xs:string"/>
+            </create>
+            <create qname="tei:pubPlace">
+                <field name="tei.pubPlace.role" match="@role" type="xs:string"/>
+            </create>
+            <create qname="tei:ref">
+                <field name="tei.ref.target" match="@target" type="xs:string"/>
+                <field name="tei.ref.n" match="@n" type="xs:string"/>
+                <field name="tei.ref.type" match="@type" type="xs:string"/>
+            </create>
+            <create qname="tei:term">
+                <field name="tei.term.key" match="@key" type="xs:string"/>
+                <field name="tei.term.ref" match="@ref" type="xs:string"/>
+            </create>
+            <create qname="tei:text">
+                <field name="tei.text.type" match="@type" type="xs:string"/>
+            </create>
+            <create qname="tei:title">
+                <field name="tei.title.type" match="@type" type="xs:string"/>
+                <field name="tei.title.key" match="@key" type="xs:string"/>
+                <field name="tei.title.ref" match="@ref" type="xs:string"/>
+                <field name="tei.title.n" match="@n" type="xs:string"/>
+            </create>
+
+<!-- HTML elements... -->            
+            <create qname="div">
+                <field name="div.id" match="@id" type="xs:string"/>
+            </create>
+            <create qname="a">
+                <field name="a.class" match="@class" type="xs:string"/>
+                <field name="a.href" match="@href" type="xs:string"/>
+            </create>
+
+        </range>
+        
+    </index>
+</collection>

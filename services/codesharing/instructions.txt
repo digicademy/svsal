@@ -1,0 +1,62 @@
+
+_____________________________________________________
+
+How to use this example implementation of CodeSharing
+_____________________________________________________
+
+For details of the CodeSharing API, please open the 
+codesharing_protocol.xhtml file in your web browser.
+
+To use the XQuery implementation in eXist:
+
+Requirements: eXist 2.1 or above.
+
+1. Edit codesharing_config.xql to customize it for 
+   your own repository. Details are in comments in 
+   the file.
+
+2. Upload codesharing_config.xql, codesharing.xql and 
+   codesharing.xsl into an empty collection in your 
+   eXist database. Make the .xql files executable.
+   
+3. Add appropriate stanzas in your controller.xql 
+   file. For example, with the following stanzas, a 
+   request to "codesharing.htm" will result in the 
+   human-friendly web form interface; a request to 
+   "codesharing.xhtml" will be answered with the 
+   protocol document; and anything else beginning 
+   with "codesharing" will generate the xml response
+   used by harvesters and other automated processes.
+   The following assumes that the codesharing.* files
+   are stored in a collection called "codesharing" 
+   which is a child of the collection containing 
+   controller.xql.
+   
+   (: TEI CodeSharing API functions. We handle HTML first.  :)
+else if (text:matches-regex($exist:path, '/codesharing\.htm')) then
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+    	<forward url="{$exist:controller}/codesharing/codesharing.xql">
+    	  <add-parameter name="outputType" value="html"/>
+    	</forward>
+    </dispatch>
+    
+    (: Now we can provide a special case for the HTML protocol description file. :)
+    else if (text:matches-regex($exist:path, '/codesharing_protocol\.xhtml')) then
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+    	<forward url="{$exist:controller}/codesharing/codesharing_protocol.xhtml">
+    	</forward>
+    </dispatch>
+    
+(: Now we handle all other cases, to which we respond with XML. This means that e.g. 
+  '/codesharing.xml', '/codesharing.xql' or even '/codesharing' will work. :)
+else if (text:matches-regex($exist:path, '/codesharing')) then
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+    	<forward url="{$exist:controller}/codesharing/codesharing.xql">
+    	</forward>
+    </dispatch>
+    
+___________________________________________________________
+
+         Copyright Martin Holmes (mholmes@uvic.ca).
+This project is dual-licensed under CC-by and BSD2 licences
+___________________________________________________________

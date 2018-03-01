@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns:i18n="http://exist-db.org/xquery/i18n" data-template="templates:surround" data-template-with="templates/template_basic.html" data-template-at="content">
+    <div data-template="i18n:translate" data-template-catalogues="data/i18n">
+        <div class="container">
+            <h2 style="margin-top: 3%" class="hidden-md hidden-sm hidden-xs">
+                <span class="text-muted">
+                    <span class="glyphicon glyphicon-hand-right" aria-hidden="true"/>
+                    <i18n:text key="news">Aktuelles</i18n:text>
+                </span>
+               
+            </h2>
+            <h2 style="margin-top: 2%" class="hidden-lg hidden-sm hidden-xs">
+                <span class="text-muted">
+                    <span class="glyphicon glyphicon-hand-right" aria-hidden="true"/>
+                    <i18n:text key="news">Aktuelles</i18n:text>
+                </span>
+               
+            </h2>
+            <h2 class="hidden-lg hidden-md">
+                <span class="text-muted">
+                    <span class="glyphicon glyphicon-hand-right" aria-hidden="true"/>
+                    <i18n:text key="news">Aktuelles</i18n:text>
+                </span>
+               
+            </h2>
+            <span data-template="app:loadListOfNews">
+                <span data-template="templates:each" data-template-from="listOfNews" data-template-to="currentNews">
+                    <span data-template="app:NEWsList"/>
+                </span>
+            </span>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xtriples>
+<!-- Use at http://xtriples.spatialhumanities.de/extract.xql?configuration=svsal-xtriples-person.xml&format=xtriples/rdf -->
+	<configuration>
+		<vocabularies>
+			<vocabulary prefix="rdf" uri="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+			<vocabulary prefix="rdfs" uri="http://www.w3.org/2000/01/rdf-schema#"/>
+			<vocabulary prefix="owl" uri="http://www.w3.org/2002/07/owl#"/>			           <!-- needed for owl:sameAs (indicates identifiers for the same thing (itself), wehereas schema:sameAs connects also documents referring to one and the same underlying entity) -->
+			<vocabulary prefix="tei" uri="http://www.tei-c.org/ns/1.0"/>
+			<vocabulary prefix="dcterms" uri="http://purl.org/dc/terms/"/>	                  <!-- for dates etc. -->
+			<vocabulary prefix="foaf" uri="http://xmlns.com/foaf/0.1/"/>			              <!-- basic data of persons -->
+			<vocabulary prefix="bio" uri="http://purl.org/vocab/bio/0.1/"/>			           <!-- biographical information -->
+			<vocabulary prefix="rel" uri="http://purl.org/vocab/relationship/"/>	           <!-- relations between persons -->
+			<vocabulary prefix="org" uri="http://www.w3.org/ns/org#"/>	                      <!-- organisations -->
+           <vocabulary prefix="void" uri="http://rdfs.org/ns/void#"/>
+		</vocabularies>
+		<triples>
+           <statement n="0">
+                <subject type="uri"/>
+                <predicate prefix="void">inDataset</predicate>
+                <object type="uri">void.ttl#Salamanca</object>
+           </statement>
+
+			<statement n="1"><!-- rdf:type: foaf:person -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="rdf">type</predicate>
+				<object prefix="foaf" type="uri">Person</object>
+			</statement>
+			<statement n="2"><!-- foaf:name -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="foaf">name</predicate>
+				<object type="literal">/string-join(($currentResource/tei:person/tei:persName/tei:forename, $currentResource/tei:person/tei:persName/tei:nameLink, $currentResource/tei:person/tei:persName/tei:surname, $currentResource/tei:person/tei:persName/tei:genName,(if ($currentResource/tei:person/tei:persName/tei:addName) then (", ", $currentResource/tei:person/tei:persName/tei:addName) else ())),' ')</object>
+			</statement>
+
+			<statement n="3"><!-- bio:birth (better: link it to a 'birth event' which is linked to a place and time,see below) -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="bio">birth</predicate>
+				<object type="literal">($currentResource/tei:person/tei:birth/tei:date[@cert=high], $currentResource/tei:person/tei:birth/tei:date[@cert=medium], $currentResource/tei:person/tei:birth/tei:date[@cert=low], $currentResource/tei:person/tei:birth/tei:date)[1]</object>
+			</statement>
+			<statement n="4"><!-- bio:death (better: link it to a 'death event' which is linked to a place and time) -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="bio">death</predicate>
+				<object type="literal">($currentResource/tei:person/tei:death/tei:date[@cert=high], $currentResource/tei:person/tei:death/tei:date[@cert=medium], $currentResource/tei:person/tei:death/tei:date[@cert=low], $currentResource/tei:person/tei:death/tei:date)[1]</object>
+			</statement>
+
+<!-- A Birth event -->
+			<statement n="5"><!-- A Birth event... -->
+				<subject type="bnode">/concat('PersonBirth_', $currentResource/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8))</subject>
+				<predicate prefix="rdf">type</predicate>
+				<object prefix="bio">Birth</object>
+			</statement>
+			<statement n="6"><!-- ... whose birth? -->
+				<subject type="bnode">/concat('PersonBirth_', $currentResource/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8))</subject>
+				<predicate prefix="bio">principal</predicate>
+				<object type="uri" prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</object>
+			</statement>
+			<statement n="7"><!-- ... when? -->
+				<subject type="bnode">/concat('PersonBirth_', $currentResource/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8))</subject>
+				<predicate prefix="dcterms">date</predicate>
+				<object type="literal">($currentResource/tei:person/tei:birth/tei:date[@cert=high]/@when, $currentResource/tei:person/tei:birth/tei:date[@cert=medium]/@when, $currentResource/tei:person/tei:birth/tei:date[@cert=low]/@when, $currentResource/tei:person/tei:birth/tei:date/@when)[1]</object>
+			</statement>
+			<statement n="8"><!-- ... where? -->
+				<subject type="bnode">/concat('PersonBirth_', $currentResource/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8))</subject>
+				<predicate prefix="bio">place</predicate>
+				<object type="uri" prepend="http://vocab.getty.edu/tgn/">/tei:person/tei:birth//tei:placeName/@ref/tokenize(.,'getty:')[2]</object>
+			</statement>
+<!-- A Death event -->
+			<statement n="9"><!-- A Death event... -->
+				<subject type="bnode">/concat('PersonDeath_', $currentResource/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8))</subject>
+				<predicate prefix="rdf">type</predicate>
+				<object prefix="bio">Death</object>
+			</statement>
+			<statement n="10"><!-- ... whose death? -->
+				<subject type="bnode">/concat('PersonDeath_', $currentResource/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8))</subject>
+				<predicate prefix="bio">principal</predicate>
+				<object type="uri" prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</object>
+			</statement>
+			<statement n="11"><!-- ... when? -->
+				<subject type="bnode">/concat('PersonDeath_', $currentResource/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8))</subject>
+				<predicate prefix="dcterms">date</predicate>
+				<object type="literal">($currentResource/tei:person/tei:death/tei:date[@cert=high]/@when, $currentResource/tei:person/tei:death/tei:date[@cert=medium]/@when, $currentResource/tei:person/tei:death/tei:date[@cert=low]/@when, $currentResource/tei:person/tei:death/tei:date/@when)[1]</object>
+			</statement>
+			<statement n="12"><!-- ... where? -->
+				<subject type="bnode">/concat('PersonDeath_', $currentResource/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8))</subject>
+				<predicate prefix="bio">place</predicate>
+				<object type="uri" prepend="http://vocab.getty.edu/tgn/">/tei:person/tei:death//tei:placeName/@ref/tokenize(.,'getty:')[2]</object>
+			</statement>
+
+<!-- Todo:
+foaf:image
+foaf:gender
+foaf:member
+bio:emigration
+bio:graduation
+bio:imprisonment
+bio:inauguration
+bio:investiture?
+bio:marriage
+bio:changeOfName
+bio:ordination
+bio:changeOfPosition
+bio:resignation
+bio:retirement
+bio:enrolment
+event
+-->
+
+			<statement n="13"><!-- org:memberOf (cerl) --> <!-- cerl keeps those as http://rdvocab.info/uri/schema/FRBRentitiesRDA/CorporateBody entities and the names at rdaGr2:nameOfTheCorporateBody -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="org">memberOf</predicate>
+				<object prepend="http://thesaurus.cerl.org/record/" type="uri">//(tei:affiliation | tei:education | tei:occupation)/tei:orgName/@ref/tokenize(tokenize(., 'cerl:')[2], ' ')[1]</object>
+			</statement>
+
+
+<!-- Connections to other persons -->
+			<statement n="14"><!-- rel:apprenticeTo (svsal) -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="rel">apprenticeTo</predicate>
+				<object prepend="http://id.salamanca.school/authors." type="uri">//tei:relation[@name="teaches"][lower-case($currentResource/tei:person/tei:persName/@ref/tokenize(.,' ')[1]) = (@passive/tokenize(lower-case(.), ' '))]/@active/(for $i in tokenize(., ' ')[starts-with(., 'author:')] return substring($i, 8))</object>
+			</statement>
+			<statement n="15"><!-- rel:apprenticeTo (cerl) -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="rel">apprenticeTo</predicate>
+				<object prepend="http://thesaurus.cerl.org/record/" type="uri">//tei:relation[@name="teaches"][lower-case($currentResource/tei:person/tei:persName/@ref/tokenize(.,' ')[1]) = (@passive/tokenize(lower-case(.), ' '))]/@active/(for $i in tokenize(., ' ')[starts-with(., 'cerl:')] return substring($i, 6))</object>
+			</statement>
+			<statement n="16"><!-- rel:apprenticeTo (gnd) -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="rel">apprenticeTo</predicate>
+				<object prepend="http://d-nb.info/gnd/" type="uri">//tei:relation[@name="teaches"][lower-case($currentResource/tei:person/tei:persName/@ref/tokenize(.,' ')[1]) = (@passive/tokenize(lower-case(.), ' '))]/@active/(for $i in tokenize(., ' ')[starts-with(., 'gnd:')] return substring($i, 5))</object>
+			</statement>
+			<statement n="17"><!-- rel:apprenticeTo (viaf) -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="rel">apprenticeTo</predicate>
+				<object prepend="http://www.viaf.org/viaf/" type="uri">//tei:relation[@name="teaches"][lower-case($currentResource/tei:person/tei:persName/@ref/tokenize(.,' ')[1]) = (@passive/tokenize(lower-case(.), ' '))]/@active/(for $i in tokenize(., ' ')[starts-with(., 'viaf:')] return substring($i, 6))</object>
+			</statement>
+			<statement n="18"><!-- rel:apprenticeTo (fhla) -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="rel">apprenticeTo</predicate>
+				<object prepend="http://www.larramendi.es/aut/" append=".rdf" type="uri">//tei:relation[@name="teaches"][lower-case($currentResource/tei:person/tei:persName/@ref/tokenize(.,' ')[1]) = (@passive/tokenize(lower-case(.), ' '))]/@active/(for $i in tokenize(., ' ')[starts-with(., 'fhla:')] return substring($i, 6))</object>
+			</statement>
+
+			<statement n="19"><!-- rel:mentorOf (svsal) -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="rel">mentorOf</predicate>
+				<object prepend="http://id.salamanca.school/authors." type="uri">//tei:relation[@name="teaches"][lower-case($currentResource/tei:person/tei:persName/@ref/tokenize(.,' ')[1]) = (@active/tokenize(lower-case(.), ' '))]/@passive/(for $i in tokenize(., ' ')[starts-with(., 'author:')] return substring($i, 8))</object>
+			</statement>
+			<statement n="20"><!-- rel:mentorOf (cerl) -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="rel">mentorOf</predicate>
+				<object prepend="http://thesaurus.cerl.org/record/" type="uri">//tei:relation[@name="teaches"][lower-case($currentResource/tei:person/tei:persName/@ref/tokenize(.,' ')[1]) = (@active/tokenize(lower-case(.), ' '))]/@passive/(for $i in tokenize(., ' ')[starts-with(., 'cerl:')] return substring($i, 6))</object>
+			</statement>
+			<statement n="21"><!-- rel:mentorOf (gnd) -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="rel">mentorOf</predicate>
+				<object prepend="http://d-nb.info/gnd/" type="uri">//tei:relation[@name="teaches"][lower-case($currentResource/tei:person/tei:persName/@ref/tokenize(.,' ')[1]) = (@active/tokenize(lower-case(.), ' '))]/@passive/(for $i in tokenize(., ' ')[starts-with(., 'gnd:')] return substring($i, 5))</object>
+			</statement>
+			<statement n="22"><!-- rel:mentorOf (viaf) -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="rel">mentorOf</predicate>
+				<object prepend="http://www.viaf.org/viaf/" type="uri">//tei:relation[@name="teaches"][lower-case($currentResource/tei:person/tei:persName/@ref/tokenize(.,' ')[1]) = (@active/tokenize(lower-case(.), ' '))]/@passive/(for $i in tokenize(., ' ')[starts-with(., 'viaf:')] return substring($i, 6))</object>
+			</statement>
+			<statement n="23"><!-- rel:mentorOf (fhla) -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="rel">mentorOf</predicate>
+				<object prepend="http://www.larramendi.es/aut/" append=".rdf" type="uri">//tei:relation[@name="teaches"][lower-case($currentResource/tei:person/tei:persName/@ref/tokenize(.,' ')[1]) = (@active/tokenize(lower-case(.), ' '))]/@passive/(for $i in tokenize(., ' ')[starts-with(., 'fhla:')] return substring($i, 6))</object>
+			</statement>
+
+			<statement n="24"><!-- rel:influencedBy (svsal) -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="rel">influencedBy</predicate>
+				<object prepend="http://id.salamanca.school/authors." type="uri">//tei:relation[@name="influences"][lower-case($currentResource/tei:person/tei:persName/@ref/tokenize(.,' ')[1]) = (@passive/tokenize(lower-case(.), ' '))]/@active/(for $i in tokenize(., ' ')[starts-with(., 'author:')] return substring($i, 8))</object>
+			</statement>
+			<statement n="25"><!-- rel:influencedBy (cerl) -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="rel">influencedBy</predicate>
+				<object prepend="http://thesaurus.cerl.org/record/" type="uri">//tei:relation[@name="influences"][lower-case($currentResource/tei:person/tei:persName/@ref/tokenize(.,' ')[1]) = (@passive/tokenize(lower-case(.), ' '))]/@active/(for $i in tokenize(., ' ')[starts-with(., 'cerl:')] return substring($i, 6))</object>
+			</statement>
+			<statement n="26"><!-- rel:influencedBy (gnd) -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="rel">influencedBy</predicate>
+				<object prepend="http://d-nb.info/gnd/" type="uri">//tei:relation[@name="influences"][lower-case($currentResource/tei:person/tei:persName/@ref/tokenize(.,' ')[1]) = (@passive/tokenize(lower-case(.), ' '))]/@active/(for $i in tokenize(., ' ')[starts-with(., 'gnd:')] return substring($i, 5))</object>
+			</statement>
+			<statement n="27"><!-- rel:influencedBy (viaf) -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="rel">influencedBy</predicate>
+				<object prepend="http://www.viaf.org/viaf/" type="uri">//tei:relation[@name="influences"][lower-case($currentResource/tei:person/tei:persName/@ref/tokenize(.,' ')[1]) = (@passive/tokenize(lower-case(.), ' '))]/@active/(for $i in tokenize(., ' ')[starts-with(., 'viaf:')] return substring($i, 6))</object>
+			</statement>
+			<statement n="28"><!-- rel:influencedBy (fhla) -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="rel">influencedBy</predicate>
+				<object prepend="http://www.larramendi.es/aut/" append=".rdf" type="uri">//tei:relation[@name="influences"][lower-case($currentResource/tei:person/tei:persName/@ref/tokenize(.,' ')[1]) = (@passive/tokenize(lower-case(.), ' '))]/@active/(for $i in tokenize(., ' ')[starts-with(., 'fhla:')] return substring($i, 6))</object>
+			</statement>
+
+			<statement n="29"><!-- rel:antagonistOf (svsal) -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="rel">antagonistOf</predicate>
+				<object prepend="http://id.salamanca.school/authors." type="uri">//tei:relation[@name="antagonizes"]/@mutual/(for $i in tokenize(., ' ')[starts-with(., 'author:')][not(. = concat('author:', $currentResource//tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)))] return substring($i, 8))</object>
+			</statement>
+			<statement n="30"><!-- rel:antagonistOf (cerl) -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="rel">antagonistOf</predicate>
+				<object prepend="http://thesaurus.cerl.org/record/" type="uri">//tei:relation[@name="antagonizes"]/@mutual/(for $i in tokenize(., ' ')[starts-with(., 'cerl:')] return substring($i, 6))</object>
+			</statement>
+			<statement n="31"><!-- rel:antagonistOf (gnd) -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="rel">antagonistOf</predicate>
+				<object prepend="http://d-nb.info/gnd/" type="uri">//tei:relation[@name="antagonizes"]/@mutual/(for $i in tokenize(., ' ')[starts-with(., 'gnd:')] return substring($i, 5))</object>
+			</statement>
+			<statement n="32"><!-- rel:antagonistOf (viaf) -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="rel">antagonistOf</predicate>
+				<object prepend="http://www.viaf.org/viaf/" type="uri">//tei:relation[@name="antagonizes"]/@mutual/(for $i in tokenize(., ' ')[starts-with(., 'viaf:')] return substring($i, 6))</object>
+			</statement>
+			<statement n="33"><!-- rel:antagonistOf (fhla) -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="rel">antagonistOf</predicate>
+				<object prepend="http://www.larramendi.es/aut/" append=".rdf" type="uri">//tei:relation[@name="antagonizes"]/@mutual/(for $i in tokenize(., ' ')[starts-with(., 'fhla:')] return substring($i, 6))</object>
+			</statement>
+
+			<statement n="34"><!-- rel:collaboratesWith (svsal) -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="rel">collaboratesWith</predicate>
+				<object prepend="http://id.salamanca.school/authors." type="uri">//tei:relation[@name="collaborates"]/@mutual/(for $i in tokenize(., ' ')[starts-with(., 'author:')][not(. = concat('author:', $currentResource//tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)))] return substring($i, 8))</object>
+			</statement>
+			<statement n="35"><!-- rel:collaboratesWith (cerl) -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="rel">collaboratesWith</predicate>
+				<object prepend="http://thesaurus.cerl.org/record/" type="uri">//tei:relation[@name="collaborates"]/@mutual/(for $i in tokenize(., ' ')[starts-with(., 'cerl:')] return substring($i, 6))</object>
+			</statement>
+			<statement n="36"><!-- rel:collaboratesWith (gnd) -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="rel">collaboratesWith</predicate>
+				<object prepend="http://d-nb.info/gnd/" type="uri">//tei:relation[@name="collaborates"]/@mutual/(for $i in tokenize(., ' ')[starts-with(., 'gnd:')] return substring($i, 5))</object>
+			</statement>
+			<statement n="37"><!-- rel:collaboratesWith (viaf) -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="rel">collaboratesWith</predicate>
+				<object prepend="http://www.viaf.org/viaf/" type="uri">//tei:relation[@name="collaborates"]/@mutual/(for $i in tokenize(., ' ')[starts-with(., 'viaf:')] return substring($i, 6))</object>
+			</statement>
+			<statement n="38"><!-- rel:collaboratesWith (fhla) -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="rel">collaboratesWith</predicate>
+				<object prepend="http://www.larramendi.es/aut/" append=".rdf" type="uri">//tei:relation[@name="collaborates"]/@mutual/(for $i in tokenize(., ' ')[starts-with(., 'fhla:')] return substring($i, 6))</object>
+			</statement>
+
+			<statement n="39"><!-- rel:colleagueOf (svsal) -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="rel">colleagueOf</predicate>
+				<object prepend="http://id.salamanca.school/authors." type="uri">//tei:relation[@name="colleagueOf"][lower-case($currentResource/tei:person/tei:persName/@ref/tokenize(.,' ')[1]) = (@active/tokenize(lower-case(.), ' '))]/@passive/(for $i in tokenize(., ' ')[starts-with(., 'author:')] return substring($i, 8))</object>
+			</statement>
+			<statement n="40"><!-- rel:colleagueOf (cerl) -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="rel">colleagueOf</predicate>
+				<object prepend="http://thesaurus.cerl.org/record/" type="uri">//tei:relation[@name="colleagueOf"][lower-case($currentResource/tei:person/tei:persName/@ref/tokenize(.,' ')[1]) = (@active/tokenize(lower-case(.), ' '))]/@passive/(for $i in tokenize(., ' ')[starts-with(., 'cerl:')] return substring($i, 6))</object>
+			</statement>
+			<statement n="41"><!-- rel:colleagueOf (gnd) -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="rel">colleagueOf</predicate>
+				<object prepend="http://d-nb.info/gnd/" type="uri">//tei:relation[@name="colleagueOf"][lower-case($currentResource/tei:person/tei:persName/@ref/tokenize(.,' ')[1]) = (@active/tokenize(lower-case(.), ' '))]/@passive/(for $i in tokenize(., ' ')[starts-with(., 'gnd:')] return substring($i, 5))</object>
+			</statement>
+			<statement n="42"><!-- rel:colleagueOf (viaf) -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="rel">colleagueOf</predicate>
+				<object prepend="http://www.viaf.org/viaf/" type="uri">//tei:relation[@name="colleagueOf"][lower-case($currentResource/tei:person/tei:persName/@ref/tokenize(.,' ')[1]) = (@active/tokenize(lower-case(.), ' '))]/@passive/(for $i in tokenize(., ' ')[starts-with(., 'viaf:')] return substring($i, 6))</object>
+			</statement>
+			<statement n="43"><!-- rel:colleagueOf (fhla) -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="rel">colleagueOf</predicate>
+				<object prepend="http://www.larramendi.es/aut/" append=".rdf" type="uri">//tei:relation[@name="colleagueOf"][lower-case($currentResource/tei:person/tei:persName/@ref/tokenize(.,' ')[1]) = (@active/tokenize(lower-case(.), ' '))]/@passive/(for $i in tokenize(., ' ')[starts-with(., 'fhla:')] return substring($i, 6))</object>
+			</statement>
+
+<!-- Todo:
+rel:influences?
+rel:employedBy
+(foaf:knows or more precise,implied by cito:cites?)
+-->
+
+
+<!-- Connections to SvSal Works -->
+			<statement n="44">
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="foaf">made</predicate>
+				<object type="uri" debug="true" prepend="http://id.salamanca.school/works." >//tei:listBibl[@xml:id = "listOfWorks"]/tei:bibl/tei:title/@ref/tokenize(., ":")[2]</object>
+			</statement>
+
+<!-- /Connections to Works -->
+
+
+<!-- Person is identical to other instances (gnd, cerl, viaf, fhla etc.) -->
+			<statement n="45">
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="owl">sameAs</predicate>
+				<object type="uri" prepend="http://d-nb.info/gnd/">/tei:person/tei:persName/@ref/tokenize(tokenize(.,'gnd:')[2],' ')[1]</object>
+			</statement>
+			<statement n="46">
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="owl">sameAs</predicate>
+				<object type="uri" prepend="http://thesaurus.cerl.org/record/">/tei:person/tei:persName/@ref/tokenize(tokenize(.,'cerl:')[2],' ')[1]</object>
+			</statement>
+			<statement n="47">
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="owl">sameAs</predicate>
+				<object type="uri" prepend="http://www.viaf.org/viaf/">/tei:person/tei:persName/@ref/tokenize(tokenize(.,'viaf:')[2],' ')[1]</object>
+			</statement>
+			<statement n="48">
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="owl">sameAs</predicate>
+				<object type="uri" prepend="http://www.larramendi.es/aut/" append=".rdf">/./tei:person/tei:persName/@ref/tokenize(tokenize(.,'fhla:')[2],' ')[1]</object>
+			</statement>
+
+			<statement n="49"><!-- See also SvSal author page -->
+				<subject prepend="http://id.salamanca.school/authors.">/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8)</subject>
+				<predicate prefix="rdfs">seeAlso</predicate>
+				<object type="uri">/concat("http://www.salamanca.school/author.html?aid=", $currentResource/tei:person/tei:persName/@ref/substring(tokenize(.,' ')[1],8))</object>
+			</statement>
+		</triples>
+	</configuration>
+
+<!--    <collection uri="http://files.salamanca.school/data/dummyResourceId.xml">
+        <resource uri="{//tei:listPerson}"/>
+    </collection>
+-->
+<!--
+    <collection uri="http://www.salamanca.school/persons-from-atom.xml">
+        <resource   uri="http://files.salamanca.school/data/{//tei:rs[@type = 'author']/substring(.,8)}.xml{/tei:listPerson}"/>
+    </collection>
+-->
+</xtriples>

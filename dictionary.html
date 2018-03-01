@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns:i18n="http://exist-db.org/xquery/i18n" data-template="templates:surround" data-template-with="templates/template_lemmata.html" data-template-at="content">
+    <div data-template="i18n:translate" data-template-catalogues="data/i18n">
+        <div class="container">
+            <h2 style="margin-top: 3%" class="hidden-md hidden-sm hidden-xs">
+                <span class="text-muted">
+                    <span class="glyphicon glyphicon-book" aria-hidden="true"/>
+                    <i18n:text key="dictionary">Wörterbuch</i18n:text>
+                </span>
+                <hr/>
+            </h2>
+            <h2 style="margin-top: 2%" class="hidden-lg hidden-sm hidden-xs">
+                <span class="text-muted">
+                    <span class="glyphicon glyphicon-book" aria-hidden="true"/>
+                    <i18n:text key="dictionary">Wörterbuch</i18n:text>
+                </span>
+                <hr/>
+            </h2>
+            <h2 class="hidden-lg hidden-md">
+                <span class="text-muted">
+                    <span class="glyphicon glyphicon-book" aria-hidden="true"/>
+                    <i18n:text key="dictionary">Wörterbuch</i18n:text>
+                </span>
+                <hr/>
+            </h2>
+            <div class="row" data-template="app:loadDictionary">
+                <div class="col-md-3 hidden-xs hidden-sm">
+                    <ul class="fadeIn" id="facets" style="padding-top: 20%; padding-left: 5%"/>
+                    <!-- show this when js is disabled -->
+                    <noscript>
+                        <div style="margin-top: -13%;" data-template="app:sortLEM"/>
+                    </noscript>
+                </div>
+                <div class="col-md-9" id="results" style="padding-top: 5%">
+                    <!-- show this when js is disabled -->
+                    <noscript>
+                        <div class="col-md-12" style="top: -27px; margin-bottom: -3%;">
+                            <span data-template="app:countLEMsnoJs"/>
+                            <span>
+                                <i18n:text key="lemmata">Lemma</i18n:text>
+                            </span>
+                        </div>
+                        <div data-template="templates:each" data-template-from="listOfLemmata" data-template-to="currentLemma">
+                            <span data-template="app:LEMlist"/>
+                        </div>
+                    </noscript>
+                </div>
+                <script type="text/javascript">
+                    var lemmata_items = [  <span data-template="app:LEMfinalFacets"/> ];
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

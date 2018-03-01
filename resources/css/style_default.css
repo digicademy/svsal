@@ -1,0 +1,639 @@
+/*  Application styles for all pages */
+/*! Color scheme:
+    Dark Blue:  #102873
+    Even Darker Blue: #03123F
+    Medium Blue: #081D5C
+    Light Blue: #39529B
+    Light Grey: #DEDFE7
+    Dark Grey:  #ADB2BD
+    Orange:     #B57D29
+    Orange2:    #CF9416
+*/
+.navbar-default {
+color:#DEDFE7;
+background-color:#102873;
+font-size:14px;
+border-bottom-width:1px;
+border-color:#39529B
+}
+.navbar-default .navbar-brand,
+.navbar-default .navbar-nav > li > a {
+color:#DEDFE7
+}
+.navbar-default .navbar-brand a:hover,
+.navbar-default .navbar-brand a:focus,
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+color:#DEDFE7;
+background-color:#03123F;
+background:-webkit-linear-gradient(top, #102873 0%, #081D5C 100%);
+background:linear-gradient(to bottom, #102873 0%, #081D5C 100%)
+}
+.navbar-default .navbar-brand:focus,
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+color:#DEDFE7;
+background-color:#081D5C
+}
+.navbar-default .btn-default {
+color:#DEDFE7;
+background-color:#102873;
+background:none;
+border:1px solid #39529B;
+border-radius:0
+}
+.navbar-default .btn-default.focus,
+.navbar-default .btn-default:focus {
+color:#DEDFE7;
+background-color:#03123F;
+border:1px solid #39529B;
+border-radius:0
+}
+.navbar-default .btn-default.active,
+.navbar-default .btn-default.active:focus,
+.navbar-default .btn-default.focus:active,
+.navbar-default .btn-default:active,
+.navbar-default .btn-info,
+.navbar-default .btn-info.active,
+.navbar-default .btn-info.focus,
+.navbar-default .btn-info:active,
+.navbar-default .btn-info:focus,
+.navbar-default .btn-info.active:focus,
+.navbar-default .btn-info.focus:active {
+color:#DEDFE7;
+background-color:#102873;
+background:none;
+border:3px solid #DEDFE7;
+border-radius:0;
+padding:4px 8px
+}
+.navbar-default .navbar-toggle,
+.navbar-default .navbar-toggle:hover .icon-bar,
+.navbar-default .navbar-toggle:focus .icon-bar {
+border-color:#337ab7
+}
+.navbar-default .navbar-toggle:hover,
+.navbar-default .navbar-toggle:focus,
+.navbar-default .navbar-toggle .icon-bar {
+background-color:white
+}
+.btn-sample:hover, 
+.btn-sample:focus, 
+.btn-sample:active, 
+.btn-sample.active, 
+.open .dropdown-toggle.btn-sample { 
+color:#FFFFFF; 
+background-color:#ffffff; 
+border-color:#337AB7
+} 
+html,
+body {
+height:100%;
+width:100%
+}
+a {
+color:#102873
+}      
+/*Important for mobile devices in portrait format/ and fixed header overlap*/
+body {
+padding-top:50px
+}
+/* Wrapper for page content to push down footer */
+#wrap {
+min-height:95%;
+height:auto !important;
+height:100%;
+/* Negative indent footer by it's height */
+margin:0 auto -110px
+}
+/* Set the fixed height of the footer here */
+#push {
+height:100px
+}
+#footer {
+border-top:thin double #eeeeee;
+background-color:#f8f8f8;
+height:250px
+}
+/*news entry style*/
+.newsP {
+font-size:1.3em; 
+text-align:justify; 
+text-justify:inter-word
+}
+/*guidelines styles*/
+.alignedGuidelines {
+margin-top:1em;;
+margin-bottom:0.5em
+}
+.textGuidelines {
+margin-top: 0.5em;
+/*margin-bottom: 1.8em;*/
+text-align:justify; 
+text-justify:inter-word
+}
+.listGuidelines {
+list-style-type:upper-latin; 
+margin-left:20px
+}
+img.resize{
+width:17%;
+height:auto
+}
+#leftCol {
+position:fixed;
+width:150px;
+overflow-y:scroll;
+top:0;
+bottom:0
+}
+li.toc {
+list-style-type:none; 
+font-size:0.95em
+}
+ul.toc {
+list-style:none outside none;
+margin-bottom:2px;
+margin-right:8px;
+padding-left:10px
+}
+.blue {
+color:#428bca
+}
+/*Bigger Glyphicons*/
+span.glyphicon glyphicon-send {
+font-size:1.5em
+}
+/*Justierung der Sprunglinks, damit sie richtig oben unter der HeaderNavigation erscheinen*/
+a[name] {
+padding-top:25%; /* das vergrößert aber alle Links um einen unsichtbaren Bereich nach oben, zu sehen, wenn man ein "leaf-icon" anklickt. */
+/*
+margin-top: -40px;
+display: inline-block; /\* required for webkit browsers *\/
+*/
+}
+/*for highlighting of search results*/
+.hi { 
+background-color:yellow
+}
+/*Change the point at which your navbar switches between collapsed and horizontal mode.
+CSS-Solution from http://stackoverflow.com/questions/18192082/bootstrap-3-navbar-collapse*/
+@media (max-width: 1199px) {
+.navbar-header {
+float:none
+}
+.navbar-toggle {
+display:block
+}
+.navbar-collapse {
+border-top:1px solid transparent;
+box-shadow:inset 0 1px 0 rgba(255,255,255,0.1)
+}
+.navbar-collapse.collapse {
+display: none!important
+}
+.navbar-nav {
+float:none!important;
+margin:7.5px -15px
+}
+.navbar-nav>li {
+float:none
+}
+.navbar-nav>li>a {
+padding-top:10px;
+padding-bottom:10px
+}
+/* since 3.1.0 */
+.navbar-collapse.collapse.in { 
+display:block!important
+}
+.collapsing {
+overflow:hidden!important
+}
+}
+/*Make header title smaller for mobile View*/
+@media (min-width: 320px) {
+.smallNav{
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+width:70%
+}
+}
+@media (min-width: 361px) {
+.smallNav{
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+width:70%
+}
+}
+/*details_work.html +++ show button in Image*/
+.button {
+position:absolute;
+top:8%;
+left:7%
+}
+.btn-link {
+color:#102873
+}
+.btn-info {
+color:#DEDFE7;
+background-color:#102873
+}
+/*fit author in panel /authors.html*/
+.panel-body .lead {
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    line-height:normal;
+    width:75%;
+    padding-top:8px;
+    margin: 0 0 0 0;
+}
+.bigger {
+font-size:1.2em;
+color:#555555
+}
+#facets .facetitem,
+#facets .orderby,
+#facets .deselectstartover {
+color:#102873
+}
+.hbigger {
+font-size:3em;
+color:#555555
+}
+.carousel {
+/*   margin-bottom: -10px;
+margin-top: 1%;*/
+}
+/* CSS based on document revision status */
+.watermark-wip-text {
+display:none
+}
+/* a_ and b_ : inaccessible */
+.panel-default.a_raw,
+.panel-default.b_cleared {
+background-color:silver;
+color:DimGray
+}
+.panel-default.a_raw .lead a,
+.panel-default.a_raw .volumeLinks a,
+.panel-default.b_cleared .lead a,
+.panel-default.b_cleared .volumeLinks a,
+.panel-default.a_raw a.lead,
+.panel-default.b_cleared a.lead {
+color:DimGray;
+pointer-events:none;
+cursor:default;
+}
+/* c_ and d_ : accessible, but watermarked */
+.panel-default.c_hyph_proposed,
+.panel-default.d_hyph_approved {
+background-color:Gainsboro
+}
+.panel-default.c_hyph_proposed .watermark-wip-text,
+.panel-default.d_hyph_approved .watermark-wip-text
+{
+display:block;
+position:absolute;
+top:1.6em;
+left:2.2em;
+color:red;
+font-size:2em;
+font-weight:bold;
+transform:rotate(340deg);
+-webkit-transform:rotate(340deg);
+opacity:0.3;
+filter:alpha(opacity=30);   /* for <= IE 8 */
+pointer-events:none         /* click through it */
+}
+/* e_ and f_ : accessible, but watermarked */
+.panel-default.e_unrevised,
+.panel-default.f_revised_unreviewed {
+background-color:GhostWhite
+}
+.panel-default.e_unrevised .watermark-wip-text,
+.panel-default.f_revised_unreviewed .watermark-wip-text
+{
+display:block;
+position:absolute;
+top:1.8em;
+left:1.8em;
+color:red;
+font-size:2em;
+font-weight:bold;
+transform:rotate(340deg);
+-webkit-transform:rotate(340deg);
+opacity:0.7;
+filter:alpha(opacity=70);   /* for <= IE 8 */
+pointer-events:none       /* click through it */
+}
+/* g_ and later: unrestricted */
+.panel-default.g_revised_approved,
+.panel-default.h_uploaded,
+.panel-default.i_cRefs
+.panel-default.j_frozen {
+background-color:white
+}
+a.a_raw,
+a.b_cleared {
+pointer-events:none;
+cursor:default;
+color:DimGray
+}
+.button.a_raw,
+.button.b_cleared {
+background-color:silver;
+color:DimGray
+}
+.watermark-status-text {
+    clear: left;
+    width: 50%;
+    margin-bottom: 0;
+    color:gray;
+    opacity:0.4;
+    filter:alpha(opacity=4);   /* for <= IE 8 */
+}
+.volumeLinks {
+    float: left;
+}
+/*the  facets*/
+.activeorderby, .activefacet {
+color:#428bca;
+font-weight:bold
+}
+ul > span.list-group-item {
+position:absolute;
+top:1.8%;
+width:170%;
+z-index:1000;
+left:14%
+}
+.btn-xlarge {
+padding:18px 28px;
+font-size:20px; /* change this to your desired size */
+line-height:normal;
+-webkit-border-radius:8px;
+-moz-border-radius:8px;
+border-radius:8px
+}
+#language {
+width:400px
+}
+#language .facetlist {
+column-count:2;
+-webkit-column-count:2;
+-moz-column-count:2;
+-o-column-count:2
+}
+.deselectstartover {
+/*    margin:10px 0 80px 0;    */
+cursor:pointer
+}
+.orderbyitem, .facetitem {
+cursor:pointer
+}
+.results {
+margin-top:2%
+}
+.hit {
+    height: 10em;
+}  
+.hit h4 {
+font-size:1.2em
+}
+.hit .tags {
+font-weight:bold;
+color:gray
+}
+.hit workImages, div.hit workDetails {
+    float:right;    
+}
+.thumbnail {
+    width: 15em;
+/*    height: 5em;*/
+}
+
+#showmorebutton {
+/* border:1px solid #AAA;*/
+border-radius:3px;
+/*  background-color:#EEEEEE;*/
+margin-left:27.6%;
+padding:10px;
+display:inline;
+text-align:center;
+cursor:pointer
+}
+ul > div:first-child {
+padding-top:25%
+}
+.facetitem, .facettitle {
+animation: fadein 2s;
+-moz-animation: fadein 2s;      /* Firefox */
+-webkit-animation: fadein 2s;   /* Safari and Chrome */
+-o-animation: fadein 2s;        /* Opera */
+}
+/*fade in of facets*/
+@keyframes fadein,
+@-moz-keyframes fadein,
+@-webkit-keyframes fadein,
+@-o-keyframes fadein {
+from {
+opacity:0;
+}
+to {
+opacity:1;
+}
+}
+#inner {
+width:10%
+}
+div.inline {
+float:left
+}
+/*make a short hr*/
+.half-rule {
+margin:40px auto;
+width:100px
+}
+/*exist image svg*/
+#poweredby {
+background:transparent url("../img/logos_misc/powered-by.svg") no-repeat scroll center center / 100% 100%;
+display:inline-block;
+float:right;
+height:70px;
+/* margin-bottom: 20px;*/
+/* margin-top: 10px;*/
+width:140px
+}
+.bs-callout-info {
+border-left-color:#1b809e
+}
+.bs-callout {
+-moz-border-bottom-colors:none;
+-moz-border-left-colors:none;
+-moz-border-right-colors:none;
+-moz-border-top-colors:none;
+border-color:#eee;
+border-image:none;
+border-radius:3px;
+border-style:solid;
+border-width:1px 1px 1px 5px;
+margin:20px 0;
+padding:20px
+}
+.popover{
+max-width:100% /* Max Width of the popover (depending on the container!) */
+}
+.fa {
+/*    vertical-align:text-top;*/
+font-size:0.75em !important
+}
+.btn-link .fa,
+.nav .fa {
+/*    vertical-align:text-top;*/
+font-size:1.2em !important
+}
+
+.quote:before {
+display:inline; 
+content:"«";
+opacity:0.5
+}
+.quote:after {
+display:inline; 
+content:"»";
+opacity:0.5
+}
+.soCalled:before {
+display:inline; 
+content:"‹";
+/*  opacity:0.5*/
+}
+.soCalled:after {
+display:inline; 
+content:"›";
+/*  opacity:0.5*/
+}
+.emph {
+font-style:italic;
+}
+/* Search page elements and classes, in document order */
+.searchFields{
+text-align: left;
+margin-top:25px;
+margin-bottom:25px
+}
+#appendedInputButton {
+margin:5px
+}
+#f-btn-search {
+margin-left:15px
+}
+.searchResults {
+}
+#searchInfo {
+/*    margin-bottom:25px;
+      margin-left:31px;*/
+margin-top:5px
+}
+.resultsSection {
+margin-top:25px;
+margin-bottom:20px;
+margin-left:-22px
+}
+.resultsList {
+/*margin-left:10px;*/
+list-style-type:none
+}
+/*.resultsList i,*/
+.resultsList > li {
+margin-top:10px;
+margin-bottom:12px;
+font-size:1.2em;
+font-weight:bold
+}
+.resultsList > li:first-child {
+margin-top:5px
+}
+.resultsList .toggleDetails {
+font-weight:normal
+}
+.resultsDetails {
+font-size:1em;
+font-weight:normal;
+margin-left:2em
+}
+.resultsDetails #details_searchTerms,
+.resultsDetails #details_totalHits {
+display:none
+}
+.resultsDetails #details_displayRange {
+font-size:0.8em
+}
+.resultsDetails h4 {
+font-weight:normal;
+margin-bottom:0.2em
+}
+.resultsDetails .loadPrev,
+.resultsDetails .loadNext {
+font-size:0.9em
+}
+.resultsDetails .crumbtrail {
+font-size:1em;
+line-height:1.1em;
+margin-top:0.2em;
+margin-bottom:0.4em;
+font-family:'Junicode', 'Cardo', 'Andron', 'Cabin', sans-serif
+}
+#detailsDiv tr td:first-child {
+font-size:0.8em;
+margin-top:1.5em
+}
+/*
+.detailsList {
+    margin-left:10px;
+    margin-bottom:15px;
+}
+.detailsList > li, .detailsList > tr {
+    margin-top:5px;
+    margin-bottom:8px;
+}
+.detailsList td {
+    vertical-align:top;
+    padding-bottom: 1%;
+}
+.detailsList > li:first-child, .detailsList > tr:first-child {
+    margin-top:1px;
+}
+*/
+.result__snippet {
+color:#666;
+font-size:1.2em;
+line-height:1.38;
+margin:0 0 0.1em;
+font-family:'Junicode', 'Cardo', 'Andron', 'Cabin' !important
+}
+/*render images to slide size in carousel*/
+.carousel-inner > .item > img,
+.carousel-inner > .item > a > img {
+width:100%
+}
+
+/*print all accordion stuff collapsed*/
+@media print {
+.panel-collapse,
+.panel-collapse .collapse {
+height:auto !important;
+display:block
+}
+}
+.borderless tbody tr td,
+.borderless tbody tr th,
+.borderless thead tr th {
+border:none
+}

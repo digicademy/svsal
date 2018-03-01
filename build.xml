@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This is an ant build script, to be called like 'ant' or 'ant clean'... -->
+<project name="svsal" default="xar">
+    <xmlproperty file="expath-pkg.xml"/> <!--  collapseAttributes="true" -->
+    <property name="build.dir"          value="build"/>
+    <property name="project.app"        value="${package(abbrev)}"/>
+    <property name="project.version"    value="${package(version)}"/>
+    <target name="xar" description="Generate application xar archive file">
+        <echo>Making package for ${project.app}</echo>
+        <mkdir dir="${build.dir}"/>
+        <zip basedir="."
+             destfile="${build.dir}/${project.app}-${project.version}.xar" 
+             excludes="${build.dir}/*,${build.dir},**/*.bak,html/**/*,html,snippets/**/*,snippets,temp/**/*,data-bak/**/*,data-bak,.svn/**/*,.svn"
+        />
+    </target>
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
+</project>

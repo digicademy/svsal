@@ -1,0 +1,41 @@
+<div xmlns:i18n="http://exist-db.org/xquery/i18n" data-template="templates:surround" data-template-with="templates/template_work.html" data-template-at="content">
+        <div class="container" data-template="i18n:translate" data-template-catalogues="data/i18n">
+            <p class="watermark-wip-text" data-template="app:watermark"/>
+            <div id="findMe" class="row">
+                <!-- === TOC*** Modal Start === -->
+                <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog  modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <span aria-hidden="true">×</span>
+                                    <span class="sr-only">Close</span>
+                                </button>
+                                <h4 class="modal-title" id="myModalLabel">
+                                    <i18n:text key="toc">Inhaltsverzeichnis</i18n:text>
+                                    <!--new-->
+                                    <button id="toggleButton" class="btn btn-link btn-lg expanded">
+                                        <span class="glyphicon glyphicon-resize-small" aria-hidden="true"/>
+                                    </button>
+                                    <!--new-->
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+                                <span data-template="app:WRKtoc"/>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">
+                                    <i18n:text key="close">Schließen</i18n:text>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- === TOC*** Modal End === -->
+            </div>
+                <!-- Main text -->
+            <div id="wrapperWork" class="col-lg-7 col-lg-offset-3 col-md-7 col-md-offset-3 col-sm-9 col-sm-offset-3 col-xs-12" style="padding-top: 17%">
+                <div id="main" data-template="app:displaySingleWork"/>
+            </div>
+        </div>
+    </div>

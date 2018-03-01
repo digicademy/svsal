@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="https://files.salamanca.school/SvSal_txt.rng"
+    type="application/xml"
+    schematypens="http://relaxng.org/ns/structure/1.0"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="TechSearchHelp">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title xml:lang="de">Hilfe-Texte für die Such-Seite der SvSal-Edition</title>
+                <title xml:lang="en">Help texts for the Search facility of this edition</title>
+                <title xml:lang="es">Textos de ayudo port la página de buscada de esta edición</title>
+                <author>
+                    <surname>Wagner</surname>, <forename>Andreas</forename>
+                </author>
+                <author>
+                    <surname>Caesar</surname>, <forename>Ingo</forename>
+                </author>
+            </titleStmt>
+            <editionStmt>
+                <edition xml:lang="de">Die Transkription der Texte wurde unter Verwendung des
+                <ref type="url" target="https://files.salamanca.school/SvSal_txt.rng">"SvSal-Schemas für Werke"</ref> angefertigt.
+            </edition>
+                <respStmt>
+                    <resp>Erstellt von</resp>
+                    <persName ref="#AW">Andreas Wagner</persName>
+                    <persName ref="#IC">Ingo Caesar</persName>
+                </respStmt>
+                <sponsor>
+                    <orgName>Akademie der Wissenschaften und der Literatur, Mainz</orgName>
+                    <ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>
+                </sponsor>
+                <funder>
+                    <orgName>Akademie der Wissenschaften und der Literatur, Mainz</orgName>
+                    <ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>
+                </funder>
+            </editionStmt>
+            <publicationStmt>
+                <publisher>
+                    <orgName>Akademie der Wissenschaften und der Literatur, Mainz</orgName>
+                    <ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>
+                </publisher>
+                <distributor>
+                    <orgName>Akademie der Wissenschaften und der Literatur, Mainz</orgName>, <orgName>Max Planck Institut für europäische Rechtsgeschichte</orgName>, <orgName>Goethe-Universität Frankfurt/Main</orgName>
+                    <email>info@salamanca.adwmainz.de</email>
+                </distributor>
+                <pubPlace role="digitzedEd">
+            Frankfurt/Main (<ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>)
+        </pubPlace>
+                <date type="digitizedEd" when="2013">2013</date>
+
+<!-- Angaben zum copyright -->
+                <availability>
+                    <licence target="http://creativecommons.org/licenses/by-nc-sa/3.0/">
+                        <p xml:id="p_löojpcn3qp3q4">Dieses Werk bzw. dieser Inhalt wurde digitalisiert durch die Akademie der
+                Wissenschaften und der Literatur, Mainz, und steht unter einer Creative
+                Commons Lizenz: Namensnennung-NichtKommerziell-KeineBearbeitung 3.0 Unported.</p>
+                    </licence>
+                </availability>
+            </publicationStmt>
+            <sourceDesc>
+                <p xml:lang="de" xml:id="p_koiuwasdas">Born digital, erstellt am 2015-06-24, um 10:10 Uhr.
+            Zuletzt aktualisiert am 2015-06-25, um 12:25 Uhr.</p>
+            </sourceDesc>
+        </fileDesc>
+        <revisionDesc status="a_raw">
+            <listChange>
+                <change who="#AW" when="2015-06-25" status="a_raw">TEI-kompatibel gemacht</change>
+                <change who="#AW" when="2015-06-24" status="a_raw">Angelegt</change>
+            </listChange>
+        </revisionDesc>
+    </teiHeader>
+    <text type="technical" xml:id="completeWork">
+        <body>
+
+<div type="section" xml:id="div_Suchhilfe_de" xml:lang="de">
+
+    <div type="section" xml:id="div_modi_de">
+        <head xml:id="head_modi_de">Die verschiedenen Such-Modi</head>
+        <p xml:id="p_sdfgcsrbc">Im linken Dropdown-Menu kann zwischen verschiedenen Such-Modi ausgewählt werden:
+            <list type="ordered">
+                <item xml:id="item_everything_de">
+                    <term xml:id="term_everything_de" ref="#option1">Quellen, Wörterbuch, WP etc.: Volltext allgemein</term>
+                    <gloss target="#term_everything_de">sucht nach den Suchbegriffen über alle Textgattungen, d.h.
+                    inklusive der biographischen und der sachlichen Wörterbuch-Artikel sowie der Abstracts und Keywords der Working Papers. Die Ergebnisse werden
+                    nach Textgattung gruppiert angezeigt, ggf. mit der Möglichkeit, die Suche innerhalb einer solchen Gruppe zu wiederholen und mehr bzw.
+                    detailliertere Ergebnisse zu erhalten. (Dies ist der Standard-Suchmodus.)</gloss>
+                                    </item>
+                <item xml:id="item_corpus_de">
+                    <term xml:id="term_corpus_de" ref="#option2">Corpus: Volltext</term>
+                    <gloss target="#term_corpus_de">sucht nach den Suchbegriffen im kompletten Text aller bei uns edierten Werke.</gloss>
+                                    </item>
+                <item xml:id="item_headings_de">
+                    <term xml:id="term_headings_de" ref="#option3">Corpus: Überschriften</term>
+                    <gloss target="#term_headings_de">sucht nach den Suchbegriffen in allen Quelltexten, jedoch dort nur in den Überschriften.</gloss>
+                                    </item>
+                <item xml:id="item_notes_de">
+                    <term xml:id="term_notes_de" ref="#option4">Corpus: Noten</term>
+                    <gloss target="#term_notes_de">sucht nach den Suchbegriffen in allen Quelltexten, jedoch dort nur in den Marginal-, Fuß- und Endnoten.</gloss>
+                                    </item>
+                <item xml:id="item_dict_de">
+                    <term xml:id="term_dict_de" ref="#option8">Wörterbuch: Volltext</term>
+                    <gloss target="#term_dict_de">sucht nach den Suchbegriffen im Volltext aller Einträge des Wörterbuchs der juridisch-politischen Sprache der Schule von Salamanca.</gloss>
+                                    </item>
+                <item xml:id="item_entries_de">
+                    <term xml:id="term_entries_de" ref="#option9">Wörterbuch: Einträge</term>
+                    <gloss target="#term_entries_de">sucht nach den Suchbegriffen in Artikeln des Wörterbuchs jedoch dort nur in den Überschriften.</gloss>
+                                    </item>
+                <item xml:id="item_wp_de">
+                    <term xml:id="term_wp_de" ref="#optiona">Working Papers: Abstract, Keywords etc.</term>
+                    <gloss target="#term_wp_de">sucht nach den Suchbegriffen in den Metadaten der Working Papers. Auf die Volltexte greift unsere Suche leider nicht zu.</gloss>
+                                    </item>
+            </list>
+        </p>
+    </div>
+
+    <div type="section" xml:id="div_begriffe">
+        <head xml:id="head_suchbegriffe">Wie funktioniert die Such-Syntax?</head>
+        <p xml:id="p_sefgcrtbczcx">
+    Die Suche funktioniert generell lemmatisiert, d.h. eine Suche nach einer Wortform findet alle anderen Wortformen des zugehörigen Lemmas:
+    
+            <eg>
+lex =&gt; findet Passagen mit "lex", "legum", "leges" etc.
+            </eg>
+    
+    Soll eine genaue Wortform gefunden werden, wird dem Suchbegriff ein Gleichheitszeichen vorangestellt:
+    
+            <eg>
+=lex =&gt; findet Passagen mit "lex", nicht aber solche, in denen nur "legum", "leges" etc. vorkommen.
+            </eg>
+    
+    (Dieser Operator kann auch innerhalb von Phrasen und anderen weiter unten beschriebenen Operatoren verwendet werden.)
+    
+    
+    Außerdem erlaubt die Suche die Verwendung von "?" und "*" als Platzhalter für ein bzw. beliebig viele Zeichen:
+    
+            <eg>
+l?b?r =&gt; findet liber und labor
+lab* =&gt; findet labor und labello
+leg* =&gt; findet leges, legislator, legitimus, legatus usw.
+            </eg>
+        </p>
+    </div>
+
+    <div type="section" xml:id="div_mehrere">
+        <head xml:id="head_mehrereSuchbegriffe">Wie wird mit mehreren Suchbegriffen gearbeitet?</head>
+        <p xml:id="p_swsaeascea">
+    Die Eingabe mehrerer Suchbegriffe führt dazu dass <hi rendition="#it">alle</hi> Suchbegriffe in den gesuchten Textabschnitten vorhanden sein sollen
+    (impliziter Und-Operator). Ist dies nicht gewünscht, müssen die Begriffe mit einem senkrechten Strich "|" als Oder-Operator
+    voneinander getrennt werden:
+    
+            <eg>
+lex | ius =&gt; findet Texte, in denen entweder lex oder ius (oder beides) vorkommt.
+            </eg>
+    
+    Dabei ist die Präzedenz des Oder-Operators höher als die des Und-Operators, so dass 
+    
+            <eg>
+Francisco Vitoria | Suárez =&gt; sucht nach Francisco und (Vitoria oder Suárez), findet mithin kein Dokument, das allein "Suárez" enthält.
+            </eg>
+    
+    Im Zweifelsfall kann die Gruppierung von Begriffen und Operatoren mit Klammern explizit festgehalten werden:
+    
+            <eg>
+(Francisco Vitoria) | Suárez =&gt; sucht nach Dokumenten in denen Francisco und Vitoria und nach solchen, in denen Suárez vorkommt.
+            </eg>
+    
+    Soll ein Suchbegriff <hi rendition="#it">ausgeschlossen</hi> werden, muss ihm ein "-" vorangestellt werden:
+    
+            <eg>
+lex -ius =&gt; findet Texte, in denen lex vorkommt, die aber nicht auch ius enthalten
+lex -(ius | naturalis) =&gt; findet Texte, in denen zwar lex, aber weder ius noch naturalis vorkommen.
+            </eg>
+    
+    Soll eine genaue Phrase gesucht werden, müssen die entsprechenden Suchbegriffe in Anführungszeichen gesetzt werden:
+    
+            <eg>
+"lex naturalis" =&gt; sucht nach lex naturalis, wobei beide Suchbegriffe so nebeneinander stehen müssen.
+            </eg>
+    
+    Wenn die Suchbegriffe in der Nähe voneinander stehen sollen, kann entweder die Phrase relativiert werden:
+    
+            <eg>
+"lex aeterna naturalis"~10 =&gt; sucht nach dem Vorkommen aller drei Suchbegriffe innerhalb einer Passage von 10 Wörtern
+            </eg>
+    
+    ...oder mit dem Operator "NEAR/XY" eine Toleranz zwischen jeden Suchbegriff eingefügt werden:
+    
+            <eg>
+lex NEAR/10 aeterna NEAR/20 =&gt; sucht nach einer Passage mit maximal 9 Wörtern zwischen lex und aeterna und max. 19 Wörtern zwischen dem gefundenen aeterna und naturalis
+            </eg>
+    
+    Wenn nur einige aus einer Auswahl von Suchbegriffen gefunden werden müssen, kann man eine Phrase mit "/" relativieren:
+    
+            <eg>
+lex "divina aeterna naturalis positiva civilis"/2 =&gt; sucht nach dem Begriff lex und 2 aus den 5 genannten Ergänzungen
+            </eg>
+    
+    Wenn die Reihenfolge, nicht aber das unmittelbare Aufeinanderfolgen von Suchbegriffen relevant sein soll, wird das mit
+    dem Reihenfolgen-Operator "&lt;&lt;" angegeben:
+    
+            <eg>
+lex &lt;&lt; ius =&gt; sucht nach lex vor ius
+            </eg>
+    
+    (Dieser Operator hat, gemeinsam mit den NEAR/XY-Operator, die geringste Präzedenz von allen.)
+    
+    
+    Der "SENTENCE" operator verknüpft Suchbegriffe mit der Bedingung, dass beide im selben Satz auftreten müssen:
+    
+            <eg>
+lex SENTENCE naturalis =&gt; sucht nach einem Satz, in dem sowohl lex als auch naturalis vorkommen.
+            </eg>
+        </p>
+    </div>
+
+    <div type="section" xml:id="div_mehr_infos_de">
+        <head xml:id="head_mehr_infos">Wo finde ich weitere Informationen?</head>
+        <p xml:id="p_juzsrddvnzu">
+Die Suche verwendet im Hintergrund die Suchmaschine <ref type="url" target="http://sphinxsearch.com/">Sphinx</ref> in der
+Version 2.1.3. Der Großteil der dort vorgehaltenen <ref type="url" target="http://sphinxsearch.com/docs/archives/2.1.3/extended-syntax.html">Dokumentation zur Such-Syntax</ref>
+trifft mithin auch auf unsere Suche zu.<note place="margin" xml:id="note_esfwerxe">Eine wichtige Ausnahme ist die Angabe von Feld-Operatoren "@", die in unserer
+Suchmaschine nicht zugänglich ist. Es wird immer der Quelltext selbst (und in der Suche nach allem, in der Lemma-, Autoren-, und
+Working-Paper-Suche auch der Autorenname) durchsucht; bei der Suche in Werken werden sowohl die diplomatische Transkription als auch
+die konstituierte Lesart durchsucht.</note>
+                    </p>
+    </div>
+
+</div>
+
+
+        </body>
+    </text>
+</TEI>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div data-template="app:loadSingleLemma">
+    <div xmlns:i18n="http://exist-db.org/xquery/i18n" data-template="templates:surround" data-template-with="templates/template_lemma.html" data-template-at="content">
+        <div data-template="i18n:translate" data-template-catalogues="data/i18n">
+            <div class="container">
+                <p class="watermark-wip-text" data-template="app:watermark"/>
+                <h2 style="margin-top: 3%" class="hidden-md hidden-sm hidden-xs">
+                    <span class="text-muted">
+                        <span class="glyphicon glyphicon-book" aria-hidden="true"/>&#160;
+                        <span data-template="app:LEMtitle"/>
+                        <span class="pull-right" data-template="app:LEMauthor"/>
+                    </span>
+                    <hr/>
+                </h2>
+                <h2 style="margin-top: 2%" class="hidden-lg hidden-sm hidden-xs">
+                    <span class="text-muted">
+                        <span class="glyphicon glyphicon-book" aria-hidden="true"/>&#160;
+                        <span data-template="app:LEMtitle"/>
+                        <span class="pull-right" data-template="app:LEMauthor"/>
+                    </span>
+                    <hr/>
+                </h2>
+                <h2 class="hidden-lg hidden-md">
+                    <span class="text-muted">
+                        <span class="glyphicon glyphicon-book" aria-hidden="true"/>&#160;
+                        <span data-template="app:LEMtitle"/>
+                        <span class="pull-right" data-template="app:LEMauthor"/>
+                    </span>
+                    <hr/>
+                </h2>
+
+                <div class="row-fluid">
+                    <div class="col-md-7">
+                        <a data-toggle="collapse" href="#collapseTOC" aria-expanded="false" aria-controls="collapseTOC">
+                            <h3 style="padding-bottom: 5%">
+                                <span class="glyphicon glyphicon-list" aria-hidden="true"/>
+                                <i18n:text key="contents">Inhalt</i18n:text>
+                            </h3>
+                        </a>
+                        <div class="collapse" id="collapseTOC">
+                            <div class="panel panel-default">
+                                <div data-template="app:LEMtoc"/>
+                            </div>
+                        </div>
+                        <!--<span data-template="app:LEMentry"/>-->
+                        <div data-template="app:AUTloadEntryHtml">boing</div>
+                    </div>
+                    <div class="col-md-1"/>
+                    <div class="col-md-4">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <a data-toggle="collapse" data-target="#personsList">
+                                    <i18n:text key="authsInArticle">Personen in diesem Artikel</i18n:text>
+                                </a>
+                            </div>
+                            <div class="panel-body collapse" id="personsList">
+                                <!--<div data-template="app:persons"/>-->
+                                <span data-template="app:AUTloadPersonsHtml">boing</span>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <a data-toggle="collapse" data-target="#lemmataList">
+                                    <i18n:text key="LemmataInArticle">Lemmata in diesem Artikel</i18n:text>
+                                </a>
+                            </div>
+                            <div class="panel-body collapse" id="lemmataList">
+                                <!--<div data-template="app:lemmata"/>-->
+                                <span data-template="app:AUTloadLemmataHtml">boing</span>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <a data-toggle="collapse" data-target="#placesList">
+                                    <i18n:text key="placesInArticle">Orte in diesem Artikel</i18n:text>
+                                </a>
+                            </div>
+                            <div class="panel-body collapse" id="placesList">
+                                <!--<div data-template="app:AUTplaces"/>-->
+                                <span data-template="app:AUTloadPlacesHtml">boing</span>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <a data-toggle="collapse" data-target="#biblList">
+                                    <i18n:text key="citedInArticle">Zitierte Literatur in diesem Artikel</i18n:text>
+                                </a>
+                            </div>
+                            <div class="panel-body collapse" id="biblList">
+                                <!--<div data-template="app:cited"/>-->
+                                <span data-template="app:AUTloadCitedHtml">boing</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns:i18n="http://exist-db.org/xquery/i18n" data-template="templates:surround" data-template-with="templates/template_workingPapers.html" data-template-at="content">
+    <div data-template="i18n:translate" data-template-catalogues="data/i18n">
+        <div class="container">
+            <h2 style="margin-top: 3%" class="hidden-md hidden-sm hidden-xs">
+                <span class="text-muted">
+                    <i class="fa fa-pencil" aria-hidden="true"/>
+                    <i18n:text key="WpIntroTitle">Salamanca Working Paper Series (ISSN 2509-5080)</i18n:text>
+                </span>
+            </h2>
+            <h2 style="margin-top: 2%" class="hidden-lg hidden-sm hidden-xs">
+                <span class="text-muted">
+                    <i class="fa fa-pencil" aria-hidden="true"/>
+                    <i18n:text key="WpIntroTitle">Salamanca Working Paper Series (ISSN 2509-5080)</i18n:text>
+                </span>
+            </h2>
+            <h2 class="hidden-lg hidden-md">
+                <span class="text-muted">
+                    <i class="fa fa-pencil" aria-hidden="true"/>
+                    <i18n:text key="WpIntroTitle">Salamanca Working Paper Series (ISSN 2509-5080)</i18n:text>
+                </span>
+            </h2>
+            <p>
+                <i18n:text key="WpIntro">Die Salamanca Working Papers Series ist eine interdisziplinäre
+                    Reihe von Beiträgen, die Themen aus den philosophischen, juristischen und theologischen
+                    Wissenschaften bearbeiten. Die Reihe begleitet die Projektarbeit, ist aber auch für
+                    externe Beiträge offen. Eingereichte Beiträge durchlaufen ein double blind peer
+                    review-Verfahren. Gern nehmen wir Vorschläge unter dieser Adresse entgegen:</i18n:text>
+                    <a href="mailto:info.salamanca@adwmainz.de">info.salamanca(at)adwmainz.de</a>
+            </p>
+            <hr/>
+            <span data-template="app:loadListOfWps">
+                <span data-template="templates:each" data-template-from="listOfWps" data-template-to="currentWp">
+                    <div class="row-fluid">
+                        <table class="table table-hover borderless">
+                            <tr>
+                                <td class="col-md-2 hidden-xs hidden-sm">
+                                    <span data-template="app:WPimg"/>
+                                </td>
+                                <td class="col-md-2 col-sm-3 col-xs-3">
+                                    <span data-template="app:WPvol"/>
+                                </td>
+                                <td class="col-md-8 xol-sm-9 col-xs-9">
+                                    <span data-template="app:WPauthor"/>
+                                    <br/>
+                                    <span class="lead">
+                                        <span data-template="app:WPtitle"/>
+                                    </span>
+                                    <br/>
+                                    <br/>
+                                    <span data-template="app:citation"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </span>
+            </span>
+        </div>
+    </div>
+</div>

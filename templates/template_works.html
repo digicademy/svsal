@@ -1,0 +1,187 @@
+<html xmlns:i18n="http://exist-db.org/xquery/i18n" data-template="i18n:translate" data-template-catalogues="data/i18n">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta name="author" content=""/>
+        <meta name="description" data-template="config:meta-description" content=""/>
+        <title data-template="config:meta-title"/>
+        <link rel="canonical" data-template="config:canonical-url"/>
+        <link rel="alternative" data-template="config:hreflang-url"/>
+
+        <!-- ==== Bootsrap CSS!  ==== -->
+        <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+        
+        <!--  ==== Custom styles for this template  ==== -->
+        <link rel="stylesheet" type="text/css" href="resources/css/style_default.css"/>
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/>
+        <link rel="stylesheet" type="text/css" href="resources/css/backTop.css"/>
+        
+        <!-- ==== favIcon ==== -->
+        <link rel="apple-touch-icon" sizes="57x57" href="resources/favicons/apple-touch-icon-57x57.png"/>
+        <link rel="apple-touch-icon" sizes="60x60" href="resources/favicons/apple-touch-icon-60x60.png"/>
+        <link rel="apple-touch-icon" sizes="72x72" href="resources/favicons/apple-touch-icon-72x72.png"/>
+        <link rel="apple-touch-icon" sizes="76x76" href="resources/favicons/apple-touch-icon-76x76.png"/>
+        <link rel="apple-touch-icon" sizes="114x114" href="resources/favicons/apple-touch-icon-114x114.png"/>
+        <link rel="apple-touch-icon" sizes="120x120" href="resources/favicons/apple-touch-icon-120x120.png"/>
+        <link rel="apple-touch-icon" sizes="144x144" href="resources/favicons/apple-touch-icon-144x144.png"/>
+        <link rel="apple-touch-icon" sizes="152x152" href="resources/favicons/apple-touch-icon-152x152.png"/>
+        <link rel="apple-touch-icon" sizes="180x180" href="resources/favicons/apple-touch-icon-180x180.png"/>
+        <link rel="icon" type="image/png" href="resources/favicons/favicon-32x32.png" sizes="32x32"/>
+        <link rel="icon" type="image/png" href="resources/favicons/favicon-194x194.png" sizes="194x194"/>
+        <link rel="icon" type="image/png" href="resources/favicons/favicon-96x96.png" sizes="96x96"/>
+        <link rel="icon" type="image/png" href="resources/favicons/android-chrome-192x192.png" sizes="192x192"/>
+        <link rel="icon" type="image/png" href="resources/favicons/favicon-16x16.png" sizes="16x16"/>
+        <link rel="manifest" href="resources/favicons/manifest.json"/>
+        <meta name="msapplication-TileColor" content="#ffffff"/>
+        <meta name="msapplication-TileImage" content="resources/favicons/mstile-144x144.png"/>
+        <meta name="theme-color" content="#ffffff"/>
+        
+    </head>
+    <body id="body">
+        <div id="wrap">
+            <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+                <div class="container">
+                    <a data-template="config:logo"/>
+                    <div data-template="config:app-header"/>
+                </div>
+            </div>
+            <div id="content" class="container-fluid"/>
+            <div id="push"/>
+        </div>
+        <h2/>
+        <div id="footer">
+            <div class="container">
+                <div data-template="config:footer"/>
+            </div>
+        </div>
+
+        <!-- ==== JavaScript placed at the end of the document so the pages load faster ==== -->
+        <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"/>
+        <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"/>
+        <script type="text/javascript" src="resources/js/jquery.backTop.js"/>
+        
+        <!--  ==== Facets  ==== -->
+        <script type="text/javascript" src="resources/js/underscore-1.1.7.js"/>
+        <script type="text/javascript" src="resources/js/facetedsearchWrks.js"/>
+        <script type="text/javascript">
+                $(function(){
+                    var item_template = 
+                        '&lt;div class="col-lg-6 col-md-12 col-sm-12"&gt;' +      
+                            '&lt;div class="panel panel-default &lt;%= obj.status %&gt;"&gt;' +
+                                '&lt;div class="panel-body"&gt;' +
+                                    '&lt;div class="hit"&gt;' + 
+                                        '&lt;% if (obj.WIPstatus == "yes") { %&gt;' +
+                                            '&lt;p class="watermark-wip-text"&gt;<i18n:text key="workInProgress">Work in Progress!</i18n:text>&lt;/p&gt;' +
+                                        '&lt;% } %&gt;' +
+                                        '&lt;p class="lead"&gt;' +
+                                            '&lt;a href="&lt;%= obj.monoMultiUrl %&gt;"&gt;&lt;span class="glyphicon glyphicon-file"&gt;&lt;/span&gt;&lt;% if (obj.title) {  %&gt;&lt;%= obj.title %&gt;&lt;% } %&gt; &lt;/a&gt;' +
+                                            '&lt;/br&gt;' +
+                                            '&lt;span&gt;&lt;% if (obj.name) {  %&gt;&lt;%= obj.name %&gt;&lt;% } %&gt;&lt;/span&gt;' + 
+                                        '&lt;/p&gt;' +
+                                        '&lt;p&gt;' +
+                                            '&lt;span &gt;&lt;% if (obj.printingPlace) {  %&gt;&lt;%= obj.printingPlace %&gt;&lt;% } %&gt;&lt;% if (obj.printer) {  %&gt;&lt;%= obj.printer %&gt;&lt;% } %&gt;&lt;% if (obj.date) {  %&gt;, &lt;%= obj.date %&gt;&lt;% } %&gt;&lt;/span&gt;' +
+                                        '&lt;/p&gt;' +
+                                        '&lt;p class="volumeLinks"&gt;' +
+                                            '&lt;span&gt;&lt;%= obj.volLabel %&gt;&lt;/span&gt;' +
+                                            '&lt;a class="workVolume" href="&lt;%= obj.vol1 %&gt;"&gt;&lt;%= obj.vol1Cont %&gt;&lt;/a&gt;' +
+                                    		    '&lt;a class="workVolume" href="&lt;%= obj.vol2 %&gt;"&gt;&lt;%= obj.vol2Cont %&gt;&lt;/a&gt;' +
+                                    		    '&lt;a class="workVolume" href="&lt;%= obj.vol3 %&gt;"&gt;&lt;%= obj.vol3Cont %&gt;&lt;/a&gt;' +
+                                  		    '&lt;a class="workVolume" href="&lt;%= obj.vol4 %&gt;"&gt;&lt;%= obj.vol4Cont %&gt;&lt;/a&gt;' +
+                                  		    '&lt;a class="workVolume" href="&lt;%= obj.vol5 %&gt;"&gt;&lt;%= obj.vol5Cont %&gt;&lt;/a&gt;' +
+                                  		    '&lt;a class="workVolume" href="&lt;%= obj.vol6 %&gt;"&gt;&lt;%= obj.vol6Cont %&gt;&lt;/a&gt;' +
+                                  		    '&lt;a class="workVolume" href="&lt;%= obj.vol7 %&gt;"&gt;&lt;%= obj.vol7Cont %&gt;&lt;/a&gt;' +
+                                  		    '&lt;a class="workVolume" href="&lt;%= obj.vol8 %&gt;"&gt;&lt;%= obj.vol8Cont %&gt;&lt;/a&gt;' +
+                                        '&lt;/p&gt;' +
+                              		    '&lt;a title="&lt;%=obj.facsAttrib %&gt;" class="workImages pull-right" href="&lt;%= obj.workImages %&gt;"&gt;&lt;i class="fa fa-file-text-o" &gt;&lt;/i&gt; &lt;%=obj.facsAttrib %&gt;&lt;/a&gt;' +
+                                        '&lt;br/&gt;' +
+                                        '&lt;a title="&lt;%=obj.titAttrib %&gt;" class="workDetails pull-right" href="&lt;%= obj.workDetails %&gt;"&gt;&lt;i class="fa fa-file-text-o" &gt;&lt;/i&gt; &lt;%=obj.titAttrib %&gt;&lt;/a&gt;' +
+                              		    '&lt;a style="display: none;"  &gt;&lt;%= obj.sortName %&gt;&lt;/a&gt;' +
+                                        '&lt;p class="watermark-status-text"&gt;Status: &lt;%= obj.status %&gt;&lt;/p&gt;' +
+                                    '&lt;/div&gt;' +
+                                '&lt;/div&gt;' + 
+                            '&lt;/div&gt;' +   
+                        '&lt;/div&gt;';
+                  
+                        settings = { 
+                          items            : works_items,
+                          facets           : { 
+                                                'nameFacet'       : '<span data-template="app:switchAuthor"/>',
+                                                'chronology'      : '<span data-template="app:switchYear"/>',
+                                                'textLanguage'    : '<span data-template="app:switchLanguage"/>',
+                							         'facetPlace'	      : '<span data-template="app:switchPrintingPlace"/>'
+                                              },
+                            resultSelector   : '#results',
+                            facetSelector    : '#facets',
+                            resultTemplate   : item_template,
+                            deselectTemplate   : '&lt;div class=deselectstartover&gt;&lt;span class="glyphicon glyphicon-remove-circle"&gt;&lt;/span&gt; <i18n:text key="deselectFilters">Alle Filter deaktivieren</i18n:text>&lt;/div&gt;',
+                            countTemplate      : '&lt;div class=facettotalcount style="position: absolute; top: 10px; left:340px;width:400px"&gt;&lt;%= count %&gt; <i18n:text key="entries">Einträge</i18n:text> &lt;/div&gt;',
+                            noResults          : '&lt;div class=results style=float:left;&gt;<i18n:text key="filtersYieldNoResult">Die Filter geben leider kein Resultat aus.</i18n:text>&lt;/div&gt;',
+                            paginationCount  : 25,
+                            orderByOptions   : {'sortName': '<span data-template="app:switchAuthor"/>', 'title': '<span data-template="app:switchTitle"/>', 'printingPlace': '<span data-template="app:switchPrintingPlace"/>', 'date': '<span data-template="app:switchYear"/>'}
+                            }   
+// use them!
+                        $.facetelize(settings);
+                    });
+        </script>  
+        
+        <!-- ==== change label value in dropdown when order by value is chosen ==== -->
+        <script type="text/javascript">
+            $(function(){
+                $(".dropdown-menu").on('click', 'li a', function(){
+                    $("#order:first-child").html($(this).text()+' <span class="caret"/>');
+                    $("#order:first-child").val($(this).text());
+                });
+            });
+        </script>
+        
+        <!-- ==== Mobil-View: Hide opened collapsed menu after clicking elsewhere on page ==== -->
+        <script type="text/javascript">
+            $(document).on('click',function(){
+                $('.collapse').collapse('hide');
+            });
+        </script>
+        
+        <!-- ==== Mobil-View: scroll to last collapsed navbar item on mobile when there are many items ==== -->
+        <script type="text/javascript">
+            $(".navbar-collapse").css({ maxHeight: $(window).height() - $(".navbar-header").height() + "px" });
+        </script>
+        
+        <!-- ==== Back to top ==== -->
+        <a id="backTop"/>
+        <script type="text/javascript">
+            $(document).ready( function() {
+                $('#backTop').backTop({
+                    'position' : 100,
+                    'speed' : 200,
+                    'color' : 'white',
+                });
+            });
+        </script>
+
+        <!-- ==== Piwik for visitor stats ==== -->
+        <!-- - - Piwik for visitor stats (modified to enable caching and compression) - - -->
+        <script type="text/javascript">
+          var _paq = _paq || [];
+          _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
+          _paq.push(["setCookieDomain", "*.salamanca.school"]);
+          _paq.push(["setDomains", ["*.salamanca.school"]]);
+          _paq.push(['trackPageView']);
+          _paq.push(['enableLinkTracking']);
+          (function() {
+            var u="//stats.adwmainz.net/";
+            _paq.push(['setTrackerUrl', u+'js/']);
+/*          _paq.push(['setTrackerUrl', u+'piwik.php']); */
+            _paq.push(['setSiteId', 20]);
+            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+            g.type='text/javascript'; g.async=true; g.defer=true;
+/*          g.src=u+'piwik.js'; */
+            g.src=u+'js/';
+            s.parentNode.insertBefore(g,s);
+          })();
+        </script>
+        <noscript><p><img src="//stats.adwmainz.net/piwik.php?idsite=20" style="border:0;" alt=""/></p></noscript>
+        <!-- End Piwik Code -->
+
+    </body>
+</html>

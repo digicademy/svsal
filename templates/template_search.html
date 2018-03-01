@@ -1,0 +1,241 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:i18n="http://exist-db.org/xquery/i18n" data-template="i18n:translate" data-template-catalogues="data/i18n" data-template-lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta name="author" content=""/>
+        <meta name="description" data-template="config:meta-description" content=""/>
+        <title data-template="config:meta-title"/>
+        <link rel="canonical" data-template="config:canonical-url"/>
+        <link rel="alternative" data-template="config:hreflang-url"/>
+
+        <!-- ==== CSS ==== -->
+        <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+        <link rel="stylesheet" type="text/css" href="resources/css/style_default.css"/>
+        <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/>
+        <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.css"/>
+        <link rel="stylesheet" type="text/css" href="resources/css/backTop.css"/>
+        
+        <!-- ==== favIcon ==== -->
+        <link rel="apple-touch-icon" sizes="57x57" href="resources/favicons/apple-touch-icon-57x57.png"/>
+        <link rel="apple-touch-icon" sizes="60x60" href="resources/favicons/apple-touch-icon-60x60.png"/>
+        <link rel="apple-touch-icon" sizes="72x72" href="resources/favicons/apple-touch-icon-72x72.png"/>
+        <link rel="apple-touch-icon" sizes="76x76" href="resources/favicons/apple-touch-icon-76x76.png"/>
+        <link rel="apple-touch-icon" sizes="114x114" href="resources/favicons/apple-touch-icon-114x114.png"/>
+        <link rel="apple-touch-icon" sizes="120x120" href="resources/favicons/apple-touch-icon-120x120.png"/>
+        <link rel="apple-touch-icon" sizes="144x144" href="resources/favicons/apple-touch-icon-144x144.png"/>
+        <link rel="apple-touch-icon" sizes="152x152" href="resources/favicons/apple-touch-icon-152x152.png"/>
+        <link rel="apple-touch-icon" sizes="180x180" href="resources/favicons/apple-touch-icon-180x180.png"/>
+        <link rel="icon" type="image/png" href="resources/favicons/favicon-32x32.png" sizes="32x32"/>
+        <link rel="icon" type="image/png" href="resources/favicons/favicon-194x194.png" sizes="194x194"/>
+        <link rel="icon" type="image/png" href="resources/favicons/favicon-96x96.png" sizes="96x96"/>
+        <link rel="icon" type="image/png" href="resources/favicons/android-chrome-192x192.png" sizes="192x192"/>
+        <link rel="icon" type="image/png" href="resources/favicons/favicon-16x16.png" sizes="16x16"/>
+        <link rel="manifest" href="resources/favicons/manifest.json"/>
+        <meta name="msapplication-TileColor" content="#ffffff"/>
+        <meta name="msapplication-TileImage" content="resources/favicons/mstile-144x144.png"/>
+        <meta name="theme-color" content="#ffffff"/>
+        
+    </head>
+    <body id="body" data-template="i18n:translate" data-template-catalogues="data/i18n">
+        <div id="wrap">
+            <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+                <div class="container">
+                    <a data-template="config:logo"/>
+                    <div data-template="config:app-header"/>
+                </div>
+            </div>
+            <div id="content" class="container-fluid"/>
+            <div id="push"/>
+        </div>
+        <h2/>
+        <div id="footer">
+            <div class="container">
+                <div data-template="config:footer"/>
+            </div>
+        </div>
+        
+        <!-- ==== Core JavaScript ==== -->
+        <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"/>
+        <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"/>
+        <script type="text/javascript" src="//code.jquery.com/ui/1.11.3/jquery-ui.min.js"/>
+        <script type="text/javascript" src="resources/js/jquery.backTop.js"/>
+        
+        <!-- ==== Back to top ==== -->
+        <a id="backTop"/>
+        <script type="text/javascript">
+        $(document).ready( function() {
+            $('#backTop').backTop({
+                'position' : 100,
+                'speed' : 200,
+                'color' : 'white',
+            });
+        });
+        </script>
+        
+        <!-- ==== Preselect Field Dropdown? ==== -->
+        <script type="text/javascript">
+            $(document).ready(function(){
+                var $preselect = $.urlParam('field');
+                if ($preselect!=null)
+                    $("select").val($preselect);
+                else
+                    $("select").val("everything");
+            });
+            $.urlParam = function(name){
+                var results = new RegExp('[\?&amp;]' + name + '=([^&amp;#]*)').exec(window.location.href);
+                if (results==null){
+                   return null;
+                }
+                else{
+                   return results[1] || 0;
+                }
+            };
+        </script>
+        
+        <!-- ==== Prevent jumping around when clicking on the 'Details...' collapse anchor ==== -->
+        <script type="text/javascript">
+            $(".toggleDetails").on('click', function (e) { e.preventDefault(); })
+        </script>
+        
+        <!-- ==== Mobil-View: Klicking outside makes navbar dropdown disappear ==== -->
+        <script type="text/javascript">
+             jQuery('body').bind('click', function(e) {
+             if(jQuery(e.target).closest('.navbar-collapse').length == 0) {
+             // click happened outside of .navbar, so hide
+             var opened = jQuery('.navbar-collapse').hasClass('in');
+             if ( opened === true ) {
+             jQuery('.navbar-collapse').collapse('hide');
+             }
+             }
+             });
+        </script>
+
+        <!-- ==== Load next/previous page of detail snippets via AJAX and go to top after load was completed ==== -->
+        <script type="text/javascript">
+            $(document).on('click', '.loadNext',  function(event) {
+                var hash = this.hash;
+     		    $(this).parent().parent().load($(this).attr('href') + ' #detailsDiv', function() {
+                     var st = $(hash).scrollTop();
+                     $('html, body').animate({ scrollTop: st }, 200); //200ms duration
+                });
+                event.stopImmediatePropagation();
+                event.preventDefault();
+            });
+            $(document).on('click', '.loadPrev',  function(event) {
+                var hash = this.hash;
+    			$(this).parent().parent().parent().load($(this).attr('href') + ' #detailsDiv', function() {
+                    var st = $(hash).scrollTop();
+                    $('html, body').animate({ scrollTop: st }, 200); //200ms duration
+                });
+                event.stopImmediatePropagation();
+                event.preventDefault();
+            });
+        </script>
+        
+        <!-- ==== Show spinning wheel while next ajax request is done ==== -->
+        <script type="text/javascript">
+             jQuery.ajaxSetup({
+                beforeSend: function() {
+                $('.spin100').show();
+                },
+                complete: function(){
+                $('.spin100').hide();
+                },
+                success: function() {}
+             });
+        </script>
+
+        <!-- Help Window -->
+        <div id="helpBox2" title="Hilfe zur Suche" style="overflow:auto">
+            <a data-toggle="collapse" href="#collapseTOC" aria-expanded="false" aria-controls="collapseTOC">
+                <h4 style="top: 10%;">
+                    <span class="glyphicon glyphicon-list" aria-hidden="true"/>
+                    <i18n:text key="contents">Inhalt</i18n:text>
+                </h4>
+            </a>
+            <div data-template="sphinx:help"/>
+        
+        <script type="text/javascript">
+                $(document).ready(function(){
+                    $('#helpBox2').dialog({
+                                autoOpen:   false,
+                                //position:   {my: "left top", at: "right-10 bottom+10", of: "button.btn-default"},
+                                
+                                height:     $(window).height()* 0.6,
+                                maxHeight:  $(window).height()* 0.95,
+                                width:      $(window).width() * 0.45,
+                                create:     function(event, ui) {
+                                                $(event.target).parent().css('position', 'fixed');
+                                            },
+                                resizeStop: function(event, ui) {
+                                                var position = [(Math.floor(ui.position.left) - $(window).scrollLeft()),
+                                                                 (Math.floor(ui.position.top) - $(window).scrollTop())];
+                                                $(event.target).parent().css('position', 'fixed');
+                                                $(dlg).dialog('option','position',position);
+                                            },
+                                beforeClose: function( event, ui ) {
+                                                $("#showHelp").show();
+                                             }
+                    });
+                });
+                $(document).on('click', '#toggleHelp',  function(event) {
+                    if ($('#helpBox2').dialog('isOpen')) { $('#helpBox2').dialog('close'); } else { $('#helpBox2').dialog('open'); }
+                    event.preventDefault();
+                });
+                $(document).on('click', 'a[href^="#option"]',  function(event) {
+                    $('option:selected', 'select[name="field"]').removeAttr('selected');
+                    var optionNumber = $(this).attr('href').substring(7);
+                    $('option[accesskey="' + optionNumber +'"]').prop('selected',true);
+                    event.preventDefault();
+                });
+                $(document).on('click', 'a[href^="#div_"]',  function(event) {
+                    var target = $(this).attr('href');
+                    $('#helpBox2').scrollTop($(target).position().top);
+                    event.preventDefault();
+                });
+        </script>
+        </div>
+        
+        <!-- ==== Mobil-View: Hide opened collapsed menu after clicking elsewhere on page ==== -->
+        <script type="text/javascript">
+            $(document).on('click',function(){
+                $('.collapse .navbar-collapse').collapse('hide');
+            });
+        </script>
+        
+        <!-- ==== Mobil-View: scroll to last collapsed navbar item on mobile when there are many items ==== -->
+        <script type="text/javascript">
+            $(".navbar-collapse").css({ maxHeight: $(window).height() - $(".navbar-header").height() + "px" });
+        </script>
+
+        <!-- ==== Piwik for visitor stats ==== -->
+        <!-- - - Piwik for visitor stats (modified to enable caching and compression) - - -->
+        <script type="text/javascript">
+          var _paq = _paq || [];
+          _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
+          _paq.push(["setCookieDomain", "*.salamanca.school"]);
+          _paq.push(["setDomains", ["*.salamanca.school"]]);
+          _paq.push(['trackPageView']);
+          _paq.push(['enableLinkTracking']);
+          (function() {
+            var u="//stats.adwmainz.net/";
+            _paq.push(['setTrackerUrl', u+'js/']);
+/*          _paq.push(['setTrackerUrl', u+'piwik.php']); */
+            _paq.push(['setSiteId', 20]);
+            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+            g.type='text/javascript'; g.async=true; g.defer=true;
+/*          g.src=u+'piwik.js'; */
+            g.src=u+'js/';
+            s.parentNode.insertBefore(g,s);
+          })();
+        </script>
+        <noscript>
+            <p>
+                <img src="//stats.adwmainz.net/piwik.php?idsite=20" style="border:0;" alt=""/>
+            </p>
+        </noscript>
+        <!-- End Piwik Code -->
+
+    </body>
+</html>

@@ -1,0 +1,104 @@
+<div xmlns:i18n="http://exist-db.org/xquery/i18n" data-template="templates:surround" data-template-with="templates/template_basic.html" data-template-at="content">
+    <div class="container" data-template="i18n:translate" data-template-catalogues="data/i18n">
+        <div class="page-header">
+            <h1>
+                <i18n:text key="administration">Administration</i18n:text>
+            </h1>
+        </div>
+
+        <div>
+            <p>            
+                Link zur <a target="_new" href="https://stats.adwmainz.net/index.php?module=CoreHome&amp;action=index&amp;idSite=20&amp;period=day&amp;date=yesterday&amp;ignoreSalt=eb2d7603c7b3f98ce81efb011e901d4c#?module=Dashboard&amp;action=embeddedIndex&amp;idSite=20&amp;period=day&amp;date=yesterday&amp;ignoreSalt=eb2d7603c7b3f98ce81efb011e901d4c&amp;idDashboard=1">Piwik-Seite</a>.<br/>
+                <a href="reindex.xql" target="_new">Reindex</a> eXist-db.
+            </p>
+<!--        <p><a href="admin-svn.html">SVN Functions</a>.</p> -->
+        </div>
+
+        <div class="row" data-template="app:loadListOfWorks" data-template-sort="wid">
+            <h2>Works</h2>
+            <p>
+                <span data-template="app:workCount">0</span> works found.
+            </p>
+            <table class="table table-hover">
+                <tr>
+                    <th>Werk-ID</th>
+                    <th>HTML Fragmente</th>
+                    <th>Sphinx Fragmente</th>
+                    <th>RDF Triples</th>
+                    <th>IIIF Resource</th>
+                </tr>
+                <tr data-template="templates:each" data-template-from="listOfWorks" data-template-to="currentWork">
+                    <td data-template="render:workString">boing</td>
+                    <td data-template="render:needsRenderString">boing</td>
+                    <td data-template="sphinx:needsSnippetsString">boing</td>
+                    <td data-template="rdf:needsRDFString">boing</td>
+                    <td data-template="iiif:needsResourceString">boing</td>
+                </tr>
+            <br/>
+            <a href="createLists.html" role="button" class="btn btn-primary">Write/overwrite list of works and save!</a>
+            <br/>
+            </table>
+            <p>
+                <span data-template="render:needsCorpusZipString">boing</span>
+            </p>
+        </div>
+        
+        <div class="row" data-template="app:loadListOfAuthors">
+            <h2>Authors</h2>
+            <table class="table table-hover">
+                <tbody>
+                    <tr>
+                        <th>Autor-ID</th>
+                        <th>HTML</th>
+                        <th>Sphinx Fragmente</th>
+                        <th>RDF Triples</th>
+                    </tr>
+                    <tr data-template="templates:each" data-template-from="listOfAuthors" data-template-to="currentAuthor">
+                        <td data-template="render:authorString">boing</td>
+                        <td data-template="render:authorMakeHTML">boing</td>
+                        <td data-template="sphinx:needsSnippetsString">boing</td>
+                        <td data-template="rdf:needsRDFString">boing</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+        
+        <div class="row" data-template="app:loadDictionary">
+            <h2>Lemmata</h2>
+            <table class="table table-hover">
+                <tbody>
+                    <tr>
+                        <th>Lemma-ID</th>
+                        <th>HTML</th>
+                        <th>Sphinx Fragmente</th>
+                    </tr>
+                    <tr data-template="templates:each" data-template-from="listOfLemmata" data-template-to="currentLemma">
+                        <td data-template="render:lemmaString">boing</td>
+                        <td data-template="render:lemmaMakeHTML">boing</td>
+                        <td data-template="sphinx:needsSnippetsString">boing</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row" data-template="app:loadListOfWps">
+            <h2>Working Papers</h2>
+            <table class="table table-hover">
+                <tbody>
+                    <tr>
+                        <th>WP-ID</th>
+<!--                    <th>HTML</th> -->
+                        <th>Sphinx Fragmente</th>
+                    </tr>
+                    <tr data-template="templates:each" data-template-from="listOfWps" data-template-to="currentWp">
+                        <td data-template="render:WPString">boing</td>
+<!--                    <td data-template="render:lemmaMakeHTML">boing</td>  -->
+                        <td data-template="sphinx:needsSnippetsString">boing</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>

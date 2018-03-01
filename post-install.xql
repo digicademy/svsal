@@ -1,0 +1,58 @@
+xquery version "3.0";
+
+declare namespace repo      = "http://exist-db.org/xquery/repo";
+declare namespace tei       = "http://www.tei-c.org/ns/1.0";
+
+import module namespace xmldb      = "http://exist-db.org/xquery/xmldb";
+import module namespace sm         = "http://exist-db.org/xquery/securitymanager";
+import module namespace render     = "http://salamanca/render"  at "modules/render.xql";
+import module namespace config     = "http://salamanca/config"  at "modules/config.xqm";
+
+(: The following external variables are set by the repo:deploy function :)
+(: the target collection into which the app is deployed :)
+declare variable $target external;
+declare variable $adminGrp          := "svsalAdmin";
+declare variable $data-collection   := concat($target, "/data");
+declare variable $adminfiles        := ($target || '/admin.html',
+                                        $target || '/build.xml',
+                                        $target || '/collection.xconf',
+                                        $target || '/controller.xql',
+                                        $target || '/createLists.html',
+                                        $target || '/expath-pkg.xml',c
+                                        $target || '/post-install.xql',
+                                        $target || '/pre-install.xql',
+                                        $target || '/rdf-admin.xql',
+                                        $target || '/reindex.xql',
+                                        $target || '/render.html',
+                                        $target || '/renderTheRest.html',
+                                        $target || '/sphinx-admin.xql',
+                                        $target || '/sphinx-out.html',
+                                        $target || '/sphinx-out.xql',
+                                        $target || '/svn-out.xql',
+                                        $target || '/sync-gdocs.xql' );
+
+
+(: Define files and folders with special permissions :)
+let $chmod  := for $file in $adminfiles
+                    let $GR := sm:chgrp($file, $adminGrp)
+                    return  if ($file eq $target || '/admin.html') then
+                                    sm:chmod($file, "rw-rwS---")
+                            else if ($file eq $target || '/controller.xql') then
+                                    sm:chmod($file, "rwxrwxr-x")
+                            else if (ends-with($file, '.xql')) then
+                                    sm:chmod($file, "rwxrwx---")
+                            else
+                                    sm:chmod($file, "rw-rw----")
+
+(:let $chmod-cache := sm:chmod($target || 'services/lod/temp/cache', "rwxrwxrwx"):)
+
+(: Run index :)
+let $index-app-status := xmldb:reindex($data-collection)
+let $index-repository-status := xmldb:reindex($config:salamanca-data-root)
+return ($index-app-status and $index-repository-status)
+
+(: Render all the works :)
+(:
+for $work in collection($data-collection)//tei:TEI[.//tei:text[@type = ("work_multivolume", "work_monograph")]]
+    let $success := render:renderWork(node(), map{}, $work/@xml:id)
+:)

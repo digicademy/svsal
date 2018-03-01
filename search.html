@@ -1,0 +1,170 @@
+<div xmlns:i18n="http://exist-db.org/xquery/i18n" data-template="templates:surround" data-template-with="templates/template_search.html" data-template-at="content">
+    <div class="container" data-template="i18n:translate" data-template-catalogues="data/i18n">
+
+        <h2 class="hidden-md hidden-sm hidden-xs" style="margin-top: 3%">
+            <span class="text-muted">
+                <span class="glyphicon glyphicon-search" aria-hidden="true"/>
+                <i18n:text key="search">Suche</i18n:text>
+                <a class="btn btn-link" id="toggleHelp" target="#"><i class="fa fa-question-circle"/></a> 
+            </span>
+        </h2>
+        <h2 class="hidden-lg hidden-sm hidden-xs" style="margin-top: 2%">
+            <span class="text-muted">
+                <span class="glyphicon glyphicon-search" aria-hidden="true"/>
+                <i18n:text key="search">Suche</i18n:text>
+                <a class="btn btn-link" id="toggleHelp" target="#"><i class="fa fa-question-circle"/></a>
+            </span>
+        </h2>
+        <h2 class="hidden-lg hidden-md">
+            <span class="text-muted">
+                <span class="glyphicon glyphicon-search" aria-hidden="true"/>
+                <i18n:text key="search">Suche</i18n:text>
+                <a class="btn btn-link" id="toggleHelp" target="#"><i class="fa fa-question-circle"/></a>
+            </span>
+        </h2>
+
+        <div class="row"><!-- Search Form -->
+            <div class="col-md-12">
+             
+<!--
+                <form name="f-query" class="input form-inline searchFields" role="form" action="search.html" method="get">
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <a class="btn btn-link" id="toggleHelp" target="#">
+                                <span class="icon-uniE606"></span>
+                            </a>
+                        <!-\- option group to select which field(s) to query -\->
+                            <select name="field" data-template="form-control" class="span12 form-control templates:form-control">
+                                <option value="everything" accesskey="1">
+                                       <i18n:text key="global">Alle Datenquellen</i18n:text>
+                                </option>
+                                <option value="corpus" accesskey="2">
+                                       <i18n:text key="corpus">Werke</i18n:text>: <i18n:text key="fulltext">Volltext</i18n:text>
+                                </option>
+                                <option value="headings" accesskey="3">
+                                        <i18n:text key="corpus">Werke</i18n:text>: <i18n:text key="headings">Überschriften</i18n:text>
+                                </option>
+                                <option value="notes" accesskey="4">
+                                        <i18n:text key="corpus">Werke</i18n:text>: <i18n:text key="notes">Noten</i18n:text>
+                                </option>
+                                <option value="persons" accesskey="5" disabled="disabled">
+                                    5. <i18n:text key="corpus">Corpus</i18n:text>: <i18n:text key="persons">Personen</i18n:text> (reg.)</option>
+                                <option value="places" accesskey="6" disabled="disabled">
+                                    6. <i18n:text key="corpus">Corpus</i18n:text>: <i18n:text key="places">Orte</i18n:text> (reg.)</option>
+                                <option value="lemmata" accesskey="7" disabled="disabled">
+                                    7. <i18n:text key="corpus">Corpus</i18n:text>: <i18n:text key="lemmata">Lemmata</i18n:text>
+                                </option>
+                                <option value="dict" accesskey="8">
+                                    8. <i18n:text key="dictionary">Wörterbuch</i18n:text>: <i18n:text key="fulltext">Volltext</i18n:text>
+                                </option>
+                                <option value="entries" accesskey="9">
+                                        <i18n:text key="dictionary">Wörterbucheinträge</i18n:text>
+                                </option>
+                                <option value="wp" accesskey="a">
+                                       <i18n:text key="workingPapers">Working Papers</i18n:text>: <i18n:text key="MPMetadata">Abstract und Metadaten</i18n:text>
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <!-\- Text entry field -\->
+                            <input name="q" id="appendedInputButton" type="text" size="70" class="templates:form-control form-control"/>
+                        </div>
+                    </div>
+                    <button name="action" id="f-btn-search" type="submit" value="Search" class="btn btn-default">
+                        <span class="glyphicon glyphicon-search"/> 
+                    </button>
+                </form>
+-->
+<!--
+                <form class="form-inline">
+                    <a class="btn btn-link" id="toggleHelp" target="#">
+                        <span class="icon-uniE606"></span>
+                    </a>
+                    <div class="form-group">
+                        <select name="field" data-template="form-control" class="span12 form-control templates:form-control">
+                            <option value="everything" accesskey="1">
+                                <i18n:text key="global">Alle Datenquellen</i18n:text>
+                            </option>
+                            <option value="corpus" accesskey="2">
+                                <i18n:text key="corpus">Werke</i18n:text>: <i18n:text key="fulltext">Volltext</i18n:text>
+                            </option>
+                            <option value="headings" accesskey="3">
+                                <i18n:text key="corpus">Werke</i18n:text>: <i18n:text key="headings">Überschriften</i18n:text>
+                            </option>
+                            <option value="notes" accesskey="4">
+                                <i18n:text key="corpus">Werke</i18n:text>: <i18n:text key="notes">Noten</i18n:text>
+                            </option>
+                            <option value="entries" accesskey="9">
+                                <i18n:text key="dictionary">Wörterbucheinträge</i18n:text>
+                            </option>
+                            <option value="wp" accesskey="a">
+                                <i18n:text key="workingPapers">Working Papers</i18n:text>: <i18n:text key="MPMetadata">Abstract und Metadaten</i18n:text>
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="sr-only" for="appendedInputButton">Search</label>
+                        <input name="q" id="appendedInputButton" type="text" class="templates:form-control form-control" placeholder="Search"/>
+                    </div>
+                    <button name="action" id="f-btn-search" type="submit" value="Search" class="btn btn-default">
+                        <span class="glyphicon glyphicon-search"/> 
+                    </button>
+                </form>
+-->
+                
+                <form name="f-query" role="form" action="search.html" method="get">
+                    <div class="form-group">
+                        <div class="col-md-4 col-sm-5 col-xs-5">
+                            <select name="field" data-template="sphinx:buildSelect" class="span12 form-control">
+<!--                            <select name="field" data-template="form-control" class="span12 form-control templates:form-control">-->
+                                <option value="everything" accesskey="1" title="&lt;i18n:text key='global'&gt;everything&lt;/i18n:text&gt;">
+                                    <i18n:text key="global">Alle Datenquellen</i18n:text>
+                                </option>
+                                <option value="corpus" accesskey="2" title="corpus">
+                                    <i18n:text key="corpus">Werke</i18n:text>: <i18n:text key="fulltext">Volltext</i18n:text>
+                                </option>
+                                <option value="headings" accesskey="3">
+                                    <i18n:text key="corpus">Werke</i18n:text>: <i18n:text key="headings">Überschriften</i18n:text>
+                                </option>
+                                <option value="notes" accesskey="4">
+                                    <i18n:text key="corpus">Werke</i18n:text>: <i18n:text key="notes">Noten</i18n:text>
+                                </option>
+                                <option value="nonotes" accesskey="5">
+                                    <i18n:text key="corpus">Werke</i18n:text>: <i18n:text key="nonotes">ohne Noten</i18n:text>
+                                </option>
+                                <!--<option value="dict" accesskey="8">
+                                    <i18n:text key="dictionary">Wörterbucheinträge</i18n:text>
+                                </option>
+                                <option value="entries" accesskey="9">
+                                    <i18n:text key="dictionary">Wörterbucheinträge</i18n:text>: <i18n:text key="headings">Überschriften</i18n:text>
+                                </option>-->
+                                <option value="wp" accesskey="a">
+                                    <i18n:text key="workingPapers">Working Papers</i18n:text>: <i18n:text key="WPMetadata">Abstract und Metadaten</i18n:text>
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 col-sm-5 col-xs-5">
+                            <input name="q" class="templates:form-control form-control" placeholder="search"/>
+                        </div>
+                        <div class="col-md-1 col-sm-2 col-xs-2">
+                            <button name="action" id="f-btn-search" type="submit" value="Search" class="btn btn-default">
+                                  <span class="glyphicon glyphicon-search"/>  
+                            </button>
+                        </div>
+                        <input type="hidden" name="lang" value="en" data-template="sphinx:passLang"/>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+        <div class="row"><!-- Search Results -->
+            <div class="col-md-9 col-sm-12" data-template="sphinx:search">
+                <div class="searchResults" data-template="sphinx:resultsLandingPage"/>
+            </div>
+        </div>
+
+    </div>
+</div>

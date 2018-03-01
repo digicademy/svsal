@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /*.html
+Allow: /services
+Disallow: /admin.html
+Disallow: /createLists.html
+Disallow: /render.html
+Disallow: /renderTheRest.html
+Disallow: /sphinx-out.html
+Disallow: /stats.html
+
+Sitemap: https://www.salamanca.school/sitemap_index.xml

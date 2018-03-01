@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sal:lemmata xmlns:sal="http://salamanca.adwmainz.de">
+    <sal:lemma xml:id="lemma_d1e161" type="term">imperium</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e164" type="term">infidelitas | infidelis</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e256" type="term">privilegium</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e259" type="term">rapina | raptor</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e262" type="term">ratio</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e266" type="term">res publica</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e269" type="term">restitutio</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e272" type="term">rex | princeps</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e275" type="term">scandalum</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e278" type="term">scientia (practica | moralis)</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e167" type="term">iniuria</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e202" type="term">ius gentium</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e3" type="term">absolutio</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e6" type="term">baptismus</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e9" type="term">bellum</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e12" type="term">beneficium</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e15" type="term">blasphemia</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e19" type="term">bonum</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e22" type="term">carcer</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e25" type="term">casus fortuitus</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e28" type="term">causa</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e31" type="term">censura</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e34" type="term">circunstantia</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e38" type="term">civitas</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e41" type="term">clericus</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e44" type="term">communitas</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e47" type="term">compensatio</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e50" type="term">concubinarius | fornicator</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e53" type="term">confessio</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e57" type="term">conscientia</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e60" type="term">consuetudo</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e63" type="term">contractus | quasi-contractus</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e66" type="term">contumelia</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e69" type="term">correctio</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e72" type="term">culpa | dolus</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e76" type="term">denuntiatio</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e79" type="term">deus</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e82" type="term">dispensatio</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e85" type="term">disputatio</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e88" type="term">doctor | magister</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e91" type="term">dominium</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e95" type="term">donatio</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e98" type="term">dubium</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e101" type="term">ecclesia | ecclesiasticus</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e104" type="term">electio</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e107" type="term">emphyteusis</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e110" type="term">emptio | venditio</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e114" type="term">episcopus</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e117" type="term">exceptio | exemptus</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e120" type="term">falsarius | falsitas</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e123" type="term">fama | rumor</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e126" type="term">familia | famulus</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e129" type="term">fides</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e133" type="term">fugere</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e136" type="term">furtum</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e139" type="term">habitus</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e142" type="term">haeres | haereditas</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e145" type="term">haeresia | haereticus</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e148" type="term">homicidium</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e152" type="term">homo | humanus</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e155" type="term">honor | honratio</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e158" type="term">ignorantia</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e171" type="term">iniustitia</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e174" type="term">inquisitio</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e177" type="term">interdictum</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e180" type="term">interpretatio</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e183" type="term">inventio</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e186" type="term">irregularitas</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e190" type="term">iudex</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e193" type="term">iudicium</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e196" type="term">iuramentum</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e199" type="term">ius</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e205" type="term">iustitia</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e209" type="term">lex</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e212" type="term">matrimonium</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e215" type="term">miles | militia</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e218" type="term">necessitas</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e221" type="term">negotium | negotiator</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e224" type="term">obedientia</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e228" type="term">officium</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e231" type="term">ordo | ordinare</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e234" type="term">papa | pontifex</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e237" type="term">peccatum</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e240" type="term">poena | punitio</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e243" type="term">poenitentia</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e247" type="term">possessio</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e250" type="term">potestas</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e251" type="term">praeceptum</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e253" type="term">praescriptio</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e256" type="term">privilegium</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e259" type="term">rapina | raptor</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e262" type="term">ratio</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e266" type="term">res publica</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e269" type="term">restitutio</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e272" type="term">rex | princeps</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e275" type="term">scandalum</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e278" type="term">scientia (practica | moralis)</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e281" type="term">servus | servitus</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e282" type="term">simonia</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e285" type="term">subditus</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e288" type="term">superstitio</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e291" type="term">tyrannus</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e294" type="term">usura</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e297" type="term">virtus</sal:lemma>
+    <sal:lemma xml:id="lemma_d1e300" type="term">voluntas</sal:lemma>
+</sal:lemmata>

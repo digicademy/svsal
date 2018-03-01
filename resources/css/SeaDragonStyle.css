@@ -1,0 +1,35 @@
+.openseadragon
+{  
+   /* width: auto;*/
+     
+     
+    /* color:      #333; *//* text color for messages */
+    /*border:     1px solid black;*/
+    /*background-color: black;*/
+}
+.openseadragon-small
+{
+    width:      40px;
+    height:     30px;
+    border:     1px solid black;
+    color:      #333; /* text color for messages */
+    background-color: white;
+}
+.toolbar
+{
+    width:      600px;
+    height:     33px;
+    border:     none;
+    color:      #333;
+    padding:    4px;
+    background-color: transparent;
+}
+.toolbar.fullpage{
+    width:      100%;
+    border:     none;
+    position:   fixed;
+    z-index:    999999;
+    left:       0;
+    top:        0;
+    background-color: #ccc;
+}

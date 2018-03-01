@@ -1,0 +1,928 @@
+/* Application styles */
+
+/* FONTS */
+/* 1. Cardo (Bembo Variante, Hausschrift der ADW) 
+      URL: http://scholarsfonts.net/cardofnt.html
+*/
+@font-face {
+    font-family:Cardo;
+    src: url('../fonts/cardo/cardo104s-webfont.eot'); /* Embedded font type required by IE 8 */
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family:Cardo;
+    src: url('../fonts/cardo/cardo104s-webfont.woff'); /* Embedded font type used by other browsers */
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family:Cardo;
+    src: url('../fonts/cardo/cardob101-webfont.eot');
+    font-weight: bold;
+}
+@font-face {
+    font-family:Cardo;
+    src: url('../fonts/cardo/cardob101-webfont.woff');
+    font-weight: bold;
+}
+@font-face {
+    font-family:Cardo;
+    src: url('../fonts/cardo/cardoi99-webfont.eot');
+    font-style: italic;
+}
+@font-face {
+    font-family:Cardo;
+    src: url('../fonts/cardo/cardoi99-webfont.woff');
+    font-style: italic;
+}
+/* 2. Junicode
+      URL: http://junicode.sourceforge.net/
+*/
+@font-face{
+    font-family:Junicode;
+    src:url("../fonts/junicode/junicode.eot");
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face{
+    font-family:Junicode;
+    src:url("../fonts/junicode/junicode.woff");
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face{
+    font-family:Junicode;
+    src:url("../fonts/junicode/junicode-bold.eot");
+    font-weight:bold;
+}
+@font-face{
+    font-family:Junicode;
+    src:url("../fonts/junicode/junicode-bold.woff");
+    font-weight:bold;
+}
+@font-face{
+    font-family:Junicode;
+    src:url("../fonts/junicode/junicode-italic.eot");
+    font-style:italic;
+}
+@font-face{
+    font-family:Junicode;
+    src:url("../fonts/junicode/junicode-italic.woff");
+    font-style:italic;
+}
+@font-face{
+    font-family:Junicode;
+    src:url("../fonts/junicode/junicode-bolditalic.eot");
+    font-weight:bold;
+    font-style:italic;
+}
+@font-face{
+    font-family:Junicode;
+    src:url("../fonts/junicode/junicode-bolditalic.woff");
+    font-weight:bold;
+    font-style:italic;
+}
+/* 3. Andron (A. Stötzner, Koop. m. MUFI)
+      URL: http://www.mufi.info/fonts/#Andron
+*/
+@font-face{
+    font-family:Andron;
+    src:url("../fonts/andron/andron-scriptor-web.eot");
+}
+@font-face{
+    font-family:Andron;
+    src:url("../fonts/andron/andron-scriptor-web.woff");
+}
+
+
+
+/* Color scheme:
+    Dark Blue:  #102873
+    Even Darker Blue: #03123F
+    Medium Blue: #081D5C
+    Light Blue: #39529B
+    Light Grey: #DEDFE7
+    Dark Grey:  #ADB2BD
+    Orange:     #B57D29
+    Orange2:    #CF9416
+*/
+
+.navbar-default {
+        color: #DEDFE7;
+        background-color: #102873;
+        font-size: 14px;
+        border-bottom-width: 1px;
+        border-color: #39529B;
+}
+
+.navbar-default .navbar-brand,
+.navbar-default .navbar-nav > li > a {
+    color: #DEDFE7;
+}
+.navbar-default .navbar-brand a:hover,
+.navbar-default .navbar-brand a:focus,
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+    color: #DEDFE7;
+    background-color: #03123F;
+    background: -webkit-linear-gradient(top, #102873 0%, #081D5C 100%);
+    background: linear-gradient(to bottom, #102873 0%, #081D5C 100%);
+}
+.navbar-default .navbar-brand:focus,
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+    color: #DEDFE7;
+    background-color: #081D5C;
+}
+
+.navbar-default .btn-default {
+    color: #DEDFE7;
+    background-color: #102873;
+    background: none;
+    border: 1px solid #39529B;
+    border-radius:0px;
+}
+.navbar-default .btn-default.focus,
+.navbar-default .btn-default:focus {
+    color: #DEDFE7;
+    background-color: #03123F;
+/*    background: none;*/
+    border: 1px solid #39529B;
+    border-radius:0px;
+}
+.navbar-default .btn-default.active,
+.navbar-default .btn-default.active:focus,
+.navbar-default .btn-default.focus:active,
+.navbar-default .btn-default:active,
+.navbar-default .btn-info,
+.navbar-default .btn-info.active,
+.navbar-default .btn-info.focus,
+.navbar-default .btn-info:active,
+.navbar-default .btn-info:focus,
+.navbar-default .btn-info.active:focus,
+.navbar-default .btn-info.focus:active {
+    color: #DEDFE7;
+    background-color: #102873;
+    background: none;
+    border: 3px solid #DEDFE7;
+    border-radius:0px;
+    padding: 4px 8px;
+}
+
+.navbar-default .navbar-toggle {
+    border-color: #337ab7;
+}
+.navbar-default .navbar-toggle:hover,
+.navbar-default .navbar-toggle:focus {
+    background-color: white;
+}
+.navbar-default .navbar-toggle .icon-bar {
+    background-color: white;
+}
+.navbar-default .navbar-toggle:hover .icon-bar,
+.navbar-default .navbar-toggle:focus .icon-bar {
+    background-color: #337ab7;
+}
+
+
+
+/* Elements */
+html, body {
+    height: 100%;
+    width: 100%;
+}
+
+/*body and html adjusted for the "dialog off screen functionality"*/
+body {
+    position: relative;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    /*padding-top: 25px;*/
+}
+
+a {
+    color: #102873;
+}      
+
+a[id]:not(.jstree-anchor) {
+/*    padding-top: 10px; */
+/*    margin-top: -10px; */
+    display: inline-block; /* required for webkit browsers */
+    
+}
+
+a[id]:before { 
+  display: block; 
+  content: " "; 
+  margin-top: -100px; 
+  height: 100px; 
+  visibility: hidden; 
+}
+
+/*a.anchor {
+    display: block; 
+    position: relative; 
+    top: -50px; 
+    visibility: hidden;
+}*/
+
+a[class~="hideMe"] {
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;     /** IE6+, Firefox 7+, Opera 11+, Chrome, Safari **/
+        -o-text-overflow: ellipsis;  /** Opera 9 & 10 **/
+        width: 65% /* note that this width will have to be smaller to see the effect */
+    }
+
+a > span[class~=pull-right] {
+        position:absolute;
+        right: 10%; 
+    }
+
+a:hover > span[class~=pull-right] {
+    background-color: #E7F4F9
+} 
+
+#wrapperWork > * {
+    font-family: 'Junicode', 'Cardo', 'Andron', 'Cabin', sans-serif;
+}
+
+it {
+    font-style: italic;
+}
+li.cardoStyleLi {
+    font-family: 'Junicode', 'Cardo', 'Andron', 'Cabin', sans-serif;
+    font-size: x-large;
+} 
+
+
+
+/* font sizes for different screen sizes */
+@media only screen and (min-width: 320px){ 
+.hauptText,
+.SvSalPage li,
+.SvSalPage section {
+    text-align: justify;
+    clear: both; 
+    font-family: 'Junicode', 'Cardo', 'Andron', 'Cabin', sans-serif;
+    font-size: 1.2em;
+    z-index: -10;
+    } 
+.SvSalPage h3 {
+    font-size: 1.4em;
+    font-weight: bold;
+    }
+.SvSalPage h4 {
+    font-size: 1.2em;
+    font-weight: bold;
+    }
+}
+
+@media only screen and (min-width: 533px){ 
+.hauptText,
+.SvSalPage li,
+.SvSalPage section {
+    text-align: justify;
+    clear: both; 
+    font-family: 'Junicode', 'Cardo', 'Andron', 'Cabin', sans-serif;
+    font-size: 1.4em;
+    } 
+.SvSalPage h3 {
+    font-size: 1.5em;
+    }
+.SvSalPage h4 {
+    font-size: 1.4em;
+    font-weight: bold;
+    }
+}
+
+@media only screen and (min-width: 768px){ 
+.hauptText,
+.SvSalPage li,
+.SvSalPage section {
+    text-align: justify;
+    clear: both; 
+    font-family: 'Junicode', 'Cardo', 'Andron', 'Cabin', sans-serif;
+    font-size: 1.3em;
+    } 
+.SvSalPage h3 {
+    font-size: 1.7em;
+    }
+.SvSalPage h4 {
+    font-size: 1.3em;
+    font-weight: bold;
+    }
+}
+
+@media only screen and (min-width: 1024px){
+.hauptText,
+.hauptText li,
+.SvSalPage section {
+    text-align: justify;
+    clear: both; 
+    font-family: 'Junicode', 'Cardo', 'Andron', 'Cabin', sans-serif;
+    font-size: 1.4em;
+    }
+.SvSalPage h3 {
+    font-size: 1.5em;
+    }
+.SvSalPage h4 {
+    font-size: 1.4em;
+    font-weight: bold;
+    }
+}
+
+@media only screen and (min-width: 1440px){
+.hauptText,
+.hauptText li,
+.SvSalPage section {
+    text-align: justify;
+    clear: both; 
+    font-family: 'Junicode', 'Cardo', 'Andron', 'Cabin', sans-serif;
+    font-size: 1.8em;
+    }
+.SvSalPage h3 {
+    font-size: 2.2em;
+    } 
+.SvSalPage h4 {
+    font-size: 1.8em;
+    font-weight: bold;
+    }
+}
+
+
+/* Classes */
+
+
+/*a[name] {
+    padding-top: 45%;
+}*/
+
+.alpheios-enabled-text {
+    font-family: 'Junicode', 'Cardo', 'Andron', 'Cabin', sans-serif;
+    padding:0px;
+    margin:0px;
+}
+
+.boxRight {
+    position: fixed;
+   /* top: 40%;*/
+	/*background-color: #f5f5f5;*/
+	z-index:1;
+	/*font-size: 14px;*/
+	display: none;
+	
+	/*margin-top: 3.1%;*/
+	
+	/*-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+    border-radius: 4px;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+	-moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    min-width: 20%; */
+   /* left: 20%;*/
+	}
+
+.boxLeft {
+    position: fixed;
+	/*background-color: #f5f5f8;*/
+	z-index:1;
+	/*font-size: 14px;*/
+	/*width: 37%;*/
+	/*margin-top:5%;*/
+	display: none;
+	/*overflow:scroll;*/
+	/*margin-top: 3.1%;*/
+	/*left: -5%;*/
+	/*-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+    border-radius: 4px;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+	-moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);*/
+    /*min-height: 20%;*/
+    /*max-height: 97%;*/
+   /* padding-top: 3%;*/
+   /* overflow-x: hidden*/
+	}
+
+#content .container .watermark-wip-text {
+    display:block;
+    position:fixed;
+    text-align:center;
+    margin-left:auto;
+    margin-right:auto;
+    top:40%;
+    color:gray;
+    z-index:1000;
+    font-size:10em;
+    font-weight:bold;
+    transform:rotate(330deg);
+    -webkit-transform:rotate(330deg);
+    opacity:0.25;
+    filter:alpha(opacity=25);   /* for <= IE 8 */
+    pointer-events: none;       /* click through it */
+}
+
+.dictLemma {
+    font-weight: bold;
+}
+
+.original, .abbr, .orig, .sic{
+    color:#DD0000;
+}
+.edited, .expan, .reg, .corr{
+    color:#777777;
+}
+a .edited, a .expan, a .reg, a .corr{
+    color: #428bca;    
+} 
+/*.glyph{
+    color:#707070 !important;
+}*/
+
+.hauptText .fa {
+    font-size:0.75em !important;
+    vertical-align: initial;
+}
+
+.form-inline > .form-group {
+    vertical-align: top;
+}
+
+.glyphicon {
+    font-size: 1.25em;
+    top: 0.10em;
+}
+.navbar .glyphicon {
+    font-size: 1em;
+}
+
+.cardoStyle {
+    font-family: 'Junicode', 'Cardo', 'Andron', 'Cabin', sans-serif;
+    font-size: 1.8em;
+}
+
+.hi { 
+/*    background-color: #B57D29;*/
+    background-color: gold;
+    padding: 0 3px 0 3px;
+}
+
+.highlighted {
+    background-color: #CF9416;
+/*    background-color: wheat;*/
+    padding: 0 3px 0 3px;
+}
+
+.marginal {
+	float: right;
+	clear: right;
+	margin-right: -51%;
+	padding: 5px;
+	line-height: 1.6;
+   font-size: 0.8em;
+   font-style: normal;
+	text-indent: 0;
+	text-align: justify;
+	width:45%;
+}
+
+.pagination, .pageNumbers {
+	float: left;
+/*	margin-left: -12%;*/
+    margin-left: -18%;
+/* 	margin-top: -5.1%; */
+/*  padding-top: 5.8%; */
+    display: block;
+/*    font-size: large;*/
+      
+}
+
+.pageNo {
+   /* font-size:large;*/
+   /* font-size: 22px;*/
+    font-family: 'Junicode', 'Cardo', 'Andron', 'Cabin', sans-serif;
+}
+
+.pipe {
+  /*  font-size:initial;*/
+    padding-bottom: 5%;
+}
+
+.poem {
+    font-style: italic;
+}
+
+.searchResultsNav {
+    position: fixed;
+    top:48px;
+    height:32px;
+    padding: 4px 2px 4px 2px;
+    z-index: 9;
+    text-align: center;
+    background: gold none repeat scroll 0% 0%;
+    border: 1px solid tan;
+}
+
+.sidebar {
+    background-color: red;
+}
+.sidebar-nav {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.sidebar-outer {
+    position: relative;
+}
+
+.smallcaps {
+    font-variant: small-caps;
+}
+
+.spacer {
+    min-height: 60%;
+}
+.summaria, .summaries{
+    text-align: justify;
+    clear: both; 
+    font-family: 'Junicode', 'Cardo', 'Andron', 'Cabin', sans-serif;
+    font-size: 1.4em;
+    display: block;
+   /* text-indent:1em;*/
+}
+
+.summary_title {
+	float: left;
+    clear: left;
+	margin-left: -49%;
+	line-height: 1.6;
+    font-family: Helvetica, Arial, sans-serif;
+	/*font-size: 1.4em;*//* this is a css 3 property and it means relative to the fontsize of the document root, not the current parent! */
+/*	text-align: justify; */
+	width:36%;
+	vertical-align: baseline;
+    /*font-size: 1.0em;*/
+    font-size: initial;
+    position: relative;
+    bottom: -0.55em;
+}
+
+/*a[name] {display: block; position: relative; top: -50px; visibility: hidden;}*/
+
+.titlePage {
+    /*border:medium double black;*/
+    background-color:#e8f1fa;
+    /* padding:0.2em;*/
+    line-height: 150%;
+    border-radius: 2px;
+    font-family: 'Junicode', 'Cardo', 'Andron', 'Cabin', sans-serif;
+    font-size: 1.8em;
+    display: block;
+    text-align: center;
+    margin-bottom: 10%;
+        
+}
+
+li.toc {
+    list-style-type: none; 
+}
+
+ul.toc-sub {
+    list-style-type: none;
+    margin-left: -2%;
+}
+
+/*ul.cardoStyleUl {
+    font-family: 'Junicode', 'Cardo', 'Andron', 'Cabin', sans-serif;
+    font-size: initial;
+}*/
+
+span.unsichtbar, .unsichtbar {
+    display:none !important;
+}
+
+.visible {
+    display:inherit;
+}
+
+/*#wrapper {
+    font-size: 0.94em;
+    font-family: Helvetica, Arial, sans-serif;
+    line-height: 150%;
+}*/
+
+
+
+/* IDs */
+/*#box {
+    bottom: 0; /\* increase for footer use *\/
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 4.8%; /\* spacer to show the scrollbar of the "haupttext" right under the header *\/
+}*/
+
+#buttonRight {
+    /*padding-top: 6%; */
+   /* padding-right: 2.5%;*/
+    position: fixed; 
+    z-index: 1000;
+    
+    /*right: 1%;
+    padding: 1%;*/
+    
+}
+
+#buttonLeft {
+    /*padding-top: 6%; */
+   /* padding-right: 2.5%;*/
+   /* position: fixed; */
+    z-index: 10000;
+    /*left: 1%;
+    padding: 1%;*/
+}
+
+/*#column {
+    height: 100%;
+    padding-top: 3%;
+    overflow-x: hidden;
+}*/
+
+#column:before, .column:after {
+    content: "";
+    display: table;
+}
+
+#column:after {
+    clear: both;
+}
+
+/*for  the two scrollbars and the expandable left div (switch to scroll, when height is higher than 100%*/
+
+#container {
+    width: auto; 
+}
+
+
+
+#full {
+    width: 100%;
+}
+
+#initials {
+    text-align: justify;
+    clear: right;
+    font-size: 1.5em;
+    display: inline-block;
+    margin-bottom: -2%;
+}
+
+#row-fluid {
+   min-height: 95%;
+}
+
+/*affix info*/
+
+/*#con{
+    height:30px;
+    width: 100%;
+}*/
+
+#nav.affix {
+    position: fixed;
+    top: 23px;
+    width: 100%;
+    z-index: 1;
+}
+
+#nav {
+    width: 100%;
+    margin-top: -30px;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* jsTree Dialog "Expand/Collapse all" button */
+button#toggleButton {
+    display: none;
+}
+
+/*Change the point at which your navbar switches between collapsed and horizontal mode.
+CSS-Solution from http://stackoverflow.com/questions/18192082/bootstrap-3-navbar-collapse*/
+@media (max-width: 1199px) {
+    .navbar-header {
+        float: none;
+    }
+    .navbar-toggle {
+        display: block;
+    }
+    .navbar-collapse {
+        border-top: 1px solid transparent;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    .navbar-collapse.collapse {
+        display: none!important;
+    }
+    .navbar-nav {
+        float: none!important;
+        margin: 7.5px -15px;
+    }
+    .navbar-nav>li {
+        float: none;
+    }
+    .navbar-nav>li>a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    /* since 3.1.0 */
+    .navbar-collapse.collapse.in { 
+        display: block!important;
+        
+    }
+    .collapsing {
+        overflow: hidden!important;
+        z-index: 1000;
+    }
+}
+
+/*Make header title smaller for mobile View*/
+@media (min-width: 320px) {
+.smallNav{
+white-space: nowrap;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    width: 30%;
+    }
+  }
+ 
+@media (min-width: 361px) {
+.smallNav{
+white-space: nowrap;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    width: 54%;
+    }
+  }
+  
+
+/*scrollable paginator*/
+.scrollable-menu {
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+}
+
+/*Make caret white*/
+.whiteCaret {
+    border-color: white transparent;
+    border-style: solid solid dotted;
+    border-width: 4px 4px 0;
+    display: inline-block;
+    height: 0;
+    margin-left: 2px;
+    vertical-align: middle;
+    width: 0;
+    }
+/*GUI Navbar Design */  
+.navbar-white {
+/*    background: rgba(0, 0, 0, 0) linear-gradient(5deg, white, white 10%, #39b3d7, #39b3d7, 20%, #428bca, #428bca 60%, #67598a, #67598a) repeat scroll 0 0;*/
+    color: #333;    
+    background-color: #F8F8F8;
+    border-color: #39529B;
+/*    border-bottom-color: #4710D5;*/
+    padding-bottom: 3px;
+    padding-top: 40px;
+}
+.navbar-white .btn-link {
+    color: #333;    
+}
+
+
+/*responsive screen display behaviour*/
+@media (min-width: 768px) {
+  .modal-xl {
+    width: 90%;
+   max-width:1200px;
+  }
+}
+
+@media only screen and (min-width: 320px){
+#wrapperWork {
+  padding-left: 6%;
+ }
+}
+
+@media only screen and (min-width: 603px){
+#wrapperWork {
+    padding-left: 8%;
+ }
+}
+
+@media only screen and (min-width: 768px){
+#wrapperWork {
+    padding-left: 9%;
+ }
+}
+
+@media only screen and (min-width: 1024px){
+#wrapperWork {
+    padding-left: 2%;
+ }
+}
+
+/*Change the point at which your navbar switches between collapsed and horizontal mode.
+CSS-Solution from http://stackoverflow.com/questions/18192082/bootstrap-3-navbar-collapse*/
+@media (max-width: 1199px) {
+    .navbar-header {
+        float: none;
+    }
+    .navbar-toggle {
+        display: block;
+    }
+    .navbar-collapse {
+        border-top: 1px solid transparent;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    .navbar-collapse.collapse {
+        display: none!important;
+    }
+    .navbar-nav {
+        float: none!important;
+        margin: 7.5px -15px;
+    }
+    .navbar-nav>li {
+        float: none;
+    }
+    .navbar-nav>li>a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    /* since 3.1.0 */
+    .navbar-collapse.collapse.in { 
+        display: block!important;
+    }
+    .collapsing {
+        overflow: hidden!important;
+    }
+}
+
+/*Make header title smaller for mobile View*/
+@media (min-width: 320px) {
+.smallNav{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    width: 70%;
+    }
+  }
+ 
+@media (min-width: 361px) {
+.smallNav{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    width: 70%;
+    }
+  }
+  
+.openseadragon-small
+{
+    width:      40px;
+    height:     30px;
+    border:     1px solid black;
+    color:      #333; /* text color for messages */
+    background-color: white;
+}
+
+
+.toolbar
+{
+    width:      600px;
+    height:     33px;
+    border:     none;
+    color:      #333;
+    padding:    4px;
+    background-color: transparent;
+}
+.toolbar.fullpage{
+    width:      100%;
+    border:     none;
+    position:   fixed;
+    z-index:    999999;
+    left:       0;
+    top:        0;
+    background-color: #ccc;
+}
+

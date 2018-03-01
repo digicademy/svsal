@@ -1,0 +1,912 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<!--
+Copyright Martin Holmes. 
+Dual-licensed under CC-by and BSD2 licences 
+$Date: 2014-10-29 14:22:27 -0700 (Wed, 29 Oct 2014) $
+$Id: codesharing_protocol.xhtml 35 2014-10-29 21:22:27Z martindholmes $
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+      <meta charset="utf-8" />
+        <title>The CodeSharing Protocol for TEI Markup, Version 1.0.</title>
+      
+      <style type="text/css" media="all">
+
+        body{
+          font-family: georgia, serif;
+          margin: 2em 10%;
+          max-width: 50em;
+        }
+
+/* Counters for sections and subsections. */
+        body{
+          counter-reset: section;
+        }
+        
+        body&gt;section{
+           counter-reset: subsection;
+          counter-increment: section;
+        }
+        
+        h2:before{
+          content: counter(section) "." counter(subsection) " ";
+        }
+        
+        section&gt;section{
+          counter-increment: subsection;
+        }
+        
+        h3:before{
+          content: counter(section) "." counter(subsection) " ";
+        }
+        
+        nav{
+          counter-reset: navsection;
+        }
+        nav&gt;ul&gt;li{
+          counter-increment: navsection;
+          counter-reset: navsubsection;
+        }
+        nav&gt;ul&gt;li&gt;ul&gt;li{
+          counter-increment: navsubsection;
+        }
+        nav a:before{
+          content: counter(navsection) "." counter(navsubsection) " ";
+        }
+       
+        
+        
+/* Regular styles. */
+        section{
+          margin-top: 1em;
+          margin-left: 1em;
+        }
+
+        li, dt{
+          margin-top: 0.5em;
+        }
+        
+        code{
+          font-family: monospace;
+          font-weight: bold;
+          display: inline;
+        }
+
+        code.paramName{
+          color: #990000;
+        }
+        
+        code.paramValue{
+          color: #009900;
+        }
+        
+        code.xmlId{
+          color: #000099;
+        }
+        
+        code.requiredOptional{
+          color: #990099;
+        }
+        
+        code.requiredOptional:before{
+          content: "(";
+        }
+        
+        code.requiredOptional:after{
+          content: ")";
+        }
+        
+        blockquote{
+          padding: 0.5em;
+          background-color: #d0d0d0;
+        }
+        
+      </style>
+      
+      <script type="text/ecmascript">
+        
+        //<![CDATA[
+
+        <!--
+        
+        //Build a page menu automatically, so we don't have to maintain it.
+        
+        function buildNav(){
+          var body=document.getElementsByTagName('body')[0];
+          var nav=document.createElement('nav');
+          createSectionList(body, nav);
+          var firstSection = body.getElementsByTagName('section')[0];
+          body.insertBefore(nav, firstSection);
+        }
+        
+        function createSectionList(rootEl, appendTo){
+          var ul=document.createElement('ul');
+          var children = rootEl.childNodes;
+          var sectionNum = 0;
+          for (var i=0; i<children.length; i++){
+            if (children[i].tagName && children[i].tagName.toUpperCase() == 'SECTION'){
+              sectionNum++;
+              var li = document.createElement('li');
+              var a = document.createElement('a');
+              a.setAttribute('href', '#'+children[i].getAttribute('id'));
+              var t = document.createTextNode(children[i].getElementsByTagName('header')[0].textContent);
+              a.appendChild(t);
+              li.appendChild(a);
+              ul.appendChild(li);
+              if (children[i].getElementsByTagName('section').length > 0){
+                createSectionList(children[i], li);
+              }
+            }
+          }
+          appendTo.appendChild(ul);
+        }
+        
+        
+        
+        //-->
+
+        //]]>
+
+      </script>
+      
+    </head>
+    <body onload="buildNav()">
+        <h1>The CodeSharing Protocol for TEI Markup</h1>
+        <h1>Version 1.0</h1>
+        <h4>Martin Holmes, University of Victoria, 2013.</h4>
+        <p>This document describes a protocol through which any repository containing documents
+            encoded in TEI XML (or any other schema) may make examples of XML encoding available to
+            any harvesting tool, or, through a form-based interface, to anyone interested in
+            examining encoding practises. I recently presented the project at the TEI 2014 Conference in
+            Evanston (<a href="http://tei.northwestern.edu/files/2014/10/mholmes_codesharing-1ybmalo.pdf">PDF of paper</a>),
+          and the project itself is housed on SourceForge at 
+          <a href="https://sourceforge.net/projects/codesharing/">https://sourceforge.net/projects/codesharing/</a>.
+        </p>
+      
+      <p>This is not a formal specification, so it eschews the customary definitions of modal verbs and key adjectives. </p>
+        <section id="definitions">
+            <header>
+                <h2>Definitions</h2>
+            </header>
+            <dl>
+                <dt>
+                    <dfn>Repository</dfn>
+                </dt>
+                <dd>Any collection of XML-encoded documents, stored in an XML database, a
+                    conventional database, or on a file system.</dd>
+              
+              <dt>
+                    <dfn>Service</dfn>
+                </dt>
+              <dd>A server responding on a particular URL to requests formatted according to the CodeSharing 
+              protocol, returning results in accordance with the description below.</dd>
+              
+
+                <dt>
+                    <dfn>Harvester</dfn>
+                </dt>
+                <dd>An automated application which queries a system implementing the CodeSharing API
+                    to retrieve lists of XML elements or other information provided through the
+                    API.</dd>
+
+                <dt>
+                    <dfn>User</dfn>
+                </dt>
+                <dd>A non-automated client who uses a human-friendly interface based on the
+                    CodeSharing API to retrieve examples of encoding.</dd>
+            </dl>
+        </section>
+        <section id="useCases">
+            <header>
+                <h2>Use cases</h2>
+            </header>
+            <p>There are currently three primary use-cases for an implementation of this protocol.</p>
+          <section id="humanUsers">
+            <header>
+                    <h3>Easy access to example encodings for project workers</h3>
+                </header>
+            <p>Large-scale encoding projects are increasingly common in the digital humanities. It is not 
+            unusual for five or six encoders to be working simultaneously on a document collection, 
+            with different levels of skills and experience. Good documentation and training is essential, 
+            but many people learn more effectively by looking at examples. A human-friendly front-end
+            for a CodeSharing service, such as the HTML-form-based implementation included in the current 
+            codebase, can be a very useful tool for working encoders, enabling them to find examples 
+            of the current usage of tags and attributes on which to base their encoding. </p>
+          </section>
+          
+          <section id="mechanicalHarvesters">
+            <header>
+                    <h3>Statistical and survey work across projects</h3>
+                </header>
+            <p>Organizations with a strong investment in TEI encoding, including the TEI itself, will be 
+            interested in the possibility of querying multiple collections of TEI documents for information
+            about the use of specific tags and attributes. For instance, the TEI Council, in its role as 
+            maintainer and updater of the Guidelines, often needs to know how a particular element 
+            is being used "in the wild" when considering how or whether to make a change to its 
+            definition or values.</p>
+          </section>
+          
+          <section id="guidelinesExamples">
+            <header>
+                    <h3>A source of examples for the TEI Guidelines</h3>
+                </header>
+            <p>TEI Council members working on improving and expanding the TEI Guidelines 
+            are often in search of realistic uses of elements and attributes to insert as examples
+            into the Guidelines text and specifications. Repositories implementing a CodeSharing 
+            service would provide easily accessible sources for such examples.</p>
+          </section>
+        </section>
+      
+      <section id="httpRequests">
+        <header>
+                <h2>HTTP requests</h2>
+            </header>
+        <p>CodeSharing requests are HTTP requests, submitted using the HTTP GET or POST methods. Since requests
+        cannot by the nature of the CodeSharing protocol be very long, it is unlikely that normal length-limits for GET 
+        will be exceeded, so it is more practical to use GET than POST because GET requests can easily be bookmarked.</p>
+        
+        <p>There is a single base URL for all requests. This base URL does not need to be included in any of the responses
+          to requests, since it is impossible for the requester to retrieve a response without already knowing the URL; the 
+          base URL must be advertised to potential users and harvesters using other means, such as links on the project 
+          website.</p>
+        
+        <p>In what follows, we will use the example base URL <code>http://mapoflondon.uvic.ca/codesharing(.xml|.htm)</code>, 
+        which is in fact a working prototype.</p>
+        
+        <p>Requests made to the base URL must also include a list of keyword arguments in the form of <code class="paramName">key</code>
+                <code>=</code>
+                <code class="paramValue">value</code> pairs. 
+        Keys and values are described below. Responses to requests on the base URL take the form of a TEI XML document, whose 
+        parameters are described below.</p>
+        
+        <p>In addition to the base URL for XML responses, a repository may also advertise a second URL on which requests can be made,
+        and which will provide responses in the form of an HTML page with output formatted for easy reading. Such an HTML page may 
+        also include an HTML form, enabling a user to query the server more easily. An example of such an interface is available at 
+          <a href="http://mapoflondon.uvic.ca/codesharing.htm">http://mapoflondon.uvic.ca/codesharing.htm</a>. The <code class="paramName">key</code>
+                <code>=</code>
+                <code class="paramValue">value</code> 
+        parameters are identical when querying the XML or HTML URLs of a repository.</p>
+      </section>
+      
+      <section id="requestParameters">
+        <header>
+                <h2>Request parameters</h2>
+            </header>
+        
+        <p>The following is a list of the keys and values that may be included in the request, and a brief description of 
+        the response the server should provide to each. The exact format of the response is treated in a later section.</p>
+        
+        <section id="verbParameter">
+          <header>
+                    <h3>Key: <code class="paramName">verb</code>
+                    </h3>
+                </header>
+          <p>The <code class="paramName">verb</code> key is the primary component of the request. It can take the following values:</p>
+          <ul>
+            <li>
+                        <code class="paramValue">identify</code>: This causes the service to provide identification information about itself.</li>
+            <li>
+                        <code class="paramValue">listElements</code>: The service responds with a list of all the local names of elements which are in the namespace 
+              supplied in the <code class="paramValue">namespace</code> parameter (described below). Where the <code class="paramName">namespace</code> parameter is 
+              empty, the service provides a list of elements which are in the empty namespace. Where the <code class="paramName">namespace</code> parameter 
+            is not supplied, the service may choose to respond based on a default namespace (such as the TEI namespace, as our example
+            implementation does), or return no elements at all.</li>
+            <li>
+                        <code class="paramValue">listAttributes</code>: The service responds with a list of local attribute names. The same rules with regard to namespaces 
+              apply as in the case of <code class="paramValue">listElements</code>, but with one important exception. According to the XML specification, unprefixed 
+              attributes do not inherit the namespace of their parent elements. This means that, for instance, the TEI <code>@corresp</code> attribute, 
+              even when it appears on a <code>&lt;name&gt;</code> element in the TEI namespace, is not itself in the TEI namespace. This is 
+            somewhat counter-intuitive for most people, and can lead to confusion. Therefore, in the CodeSharing protocol, a request with a 
+            query-string like this:
+            
+              <blockquote>
+                            <code>?verb=listAttributes&amp;namespace=namespace=http%3A%2F%2Fwww.tei-c.org%2Fns%2F1.0</code>
+                        </blockquote>
+            
+            (<q>list attributes in the TEI namespace</q>) will result in a list which is composed of the names of:
+            
+            <ol>
+              <li>all attributes which are in the TEI namespace (there are not normally any of these)</li>
+              <li>all unprefixed attributes which are children of elements in the TEI namespace (what we normally think of as <q>TEI attributes</q>).</li>
+            </ol>
+            </li>
+            <li>
+                        <code class="paramValue">listDocumentTypes</code>: The service responds with a list of all the document types in the repository. How
+              document types are identified is entirely the responsibility of the service and the project whose documents it serves. The example
+              implementation is based on a project which uses the TEI <code>&lt;taxonomy&gt; and &lt;category&gt;</code> elements as a mechanism 
+              for specifying document types, along with <code>&lt;catRef&gt;</code> elements for assigning them to documents, but any
+              TEI-compliant method of categorizing texts may be used. The list of document types should be in the form of human-readable 
+              identifiers, with each identifier wrapped in a <code>&lt;name&gt;</code> element; passing one of these identifiers back to the service 
+              as the value of the <code class="paramName">documentType</code> parameter will result in the filtering of examples according to the 
+              selected document type.
+            </li>
+            <li>
+                        <code class="paramValue">listNamespaces</code>: The service responds with a list of all the namespaces used in the repository.</li>
+            <li>
+                        <code class="paramValue">getExamples</code>: This causes the service to retrieve a list of examples of encoding, based on the values 
+            of other key/value pairs in the request, and return them. If no other parameters are supplied, then no examples
+            are returned.</li>
+          </ul>
+          
+          <p>Note that <code class="paramValue">identify</code> is the default value for this key, and if the key is absent, or has no 
+            value, <code class="paramValue">identify</code> is assumed. This means that <em>a request to the base URL with no parameters 
+              at all is the same as a request with <code class="paramName">verb</code>
+                        <code>=</code>
+                        <code class="paramValue">identify</code>
+                    </em>.</p>
+      </section>
+        
+        <!--<section id="documentTypeParameter">
+          <header><h3>Key: <code class="paramName">documentType</code></h3></header>
+          
+          <p>The value of this parameter is an arbitrary string which the service can associate with a subset of documents. </p>
+          
+        </section>-->
+        
+        <section id="elementNameParameter">
+          <header>
+                    <h3>Key: <code class="paramName">elementName</code>
+                    </h3>
+                </header>
+          <p>The value of this parameter is the local name of an XML element. Where <code class="paramName">verb</code>
+                    <code>=</code>
+                    <code class="paramValue">getExamples</code>, the service responds 
+            with a set of examples of the element requested in the namespace which is specified. For example, this request:</p>
+          
+          <blockquote>
+                    <code>?verb=getExamples&amp;elementName=div&amp;namespace=http%3A%2F%2Fwww.tei-c.org%2Fns%2F1.0</code>
+                </blockquote>
+          
+          <p>will retrieve a set of examples of the TEI <code>&lt;div&gt;</code> element, if it exists in documents in the repository.</p>
+        </section>
+        
+        <section id="attributeNameParameter">
+          <header>
+                    <h3>Key: <code class="paramName">attributeName</code>
+                    </h3>
+                </header>
+          <p>The value of this parameter is the local name of an XML attribute. Where <code class="paramName">verb</code>
+                    <code>=</code>
+                    <code class="paramValue">getExamples</code>, the service responds 
+            with a set of examples of the attribute requested in the namespace which is specified. Attributes are always returned in the 
+            context of their parent elements. For example, this request:</p>
+          
+          <blockquote>
+                    <code>verb=getExamples&amp;attributeName=ref&amp;namespace=http%3A%2F%2Fwww.tei-c.org%2Fns%2F1.0</code>
+                </blockquote>
+          
+          <p>will retrieve a set of examples of elements which bear the TEI <code>@ref</code> attribute, if it exists in documents in the repository. <em>Note:
+            the same conditions regarding namespaces apply to this key as to the <code class="paramName">verb</code>
+                        <code>=</code>
+                        <code class="paramValue">listAttributes</code> parameter discussed above.</em> </p>
+          
+          <p>When this parameter is combined with the <code class="paramName">elementName</code> parameter, only attributes found in the context of the named 
+          element will be returned. For instance, this request:</p>
+          
+          <blockquote>
+                    <code>?verb=getExamples&amp;elementName=hi&amp;attributeName=rend&amp;namespace=http%3A%2F%2Fwww.tei-c.org%2Fns%2F1.0</code>
+                </blockquote>
+          
+          <p>will retrieve only TEI <code>&lt;hi&gt;</code> elements which bear the attribute <code>@rend</code>.</p>
+        </section>
+        
+        <section id="attributeValueParameter">
+          <header>
+                    <h3>Key: <code class="paramName">attributeValue</code>
+                    </h3>
+                </header>
+          <p>The value of this parameter is the value of an XML attribute. Where <code class="paramName">verb</code>
+                    <code>=</code>
+                    <code class="paramValue">getExamples</code>, and an <code class="paramName">attributeName</code> parameter is provided, the service responds 
+            with a set of examples of the attribute with the value requested in the namespace which is specified. Attributes are always returned in the 
+            context of their parent elements. For example, this request:</p>
+          
+          <blockquote>
+                    <code>verb=getExamples&amp;attributeName=type&amp;attributeValue=simple&amp;namespace=http%3A%2F%2Fwww.tei-c.org%2Fns%2F1.0</code>
+                </blockquote>
+          
+          <p>will retrieve a set of examples of elements which bear the TEI <code>@type</code> attribute set to the value <q>simple</q>, if it exists in documents in the repository. </p>
+          
+          <p>When the two attribute parameters are combined with the <code class="paramName">elementName</code> parameter, only attributes found in the context of the named 
+            element will be returned. For instance, this request:</p>
+          
+          <blockquote>
+                    <code>?verb=getExamples&amp;elementName=list&amp;attributeName=type&amp;attributeValue=simple&amp;namespace=http%3A%2F%2Fwww.tei-c.org%2Fns%2F1.0</code>
+                </blockquote>
+          
+          <p>will retrieve only TEI <code>&lt;list&gt;</code> elements whose <code>@type</code> attribute has the value <q>simple</q>.</p>
+        </section>
+        
+        <section id="documentTypeParameter">
+          <header>
+                    <h3>Key: <code class="paramName">documentType</code>
+                    </h3>
+                </header>
+          <p>The value of this parameter is a string token. If this parameter is supplied, then the results of other requests will be filtered such that 
+            only elements and attributes from documents which belong to the specified document type are returned. A harvester or human user may 
+            discover what <code class="paramName">documentType</code> values are available in the collection by submitting a request with 
+            <code class="paramName">verb</code>
+                    <code>=</code>
+                    <code class="paramValue">listDocumentTypes</code>. The 
+            <code class="paramName">documentType</code> parameter is an optional feature of the API, and services working with collections which 
+            do not have document type categories may choose not to provide it.
+          </p>
+        </section>
+        
+        <section id="namespaceParameter">
+          <header>
+                    <h3>Key: <code class="paramName">namespace</code>
+                    </h3>
+                </header>
+      <p>The value of this parameter is a namespace URL. In the case of a GET request, note that certain characters in the URL (such as colons and 
+        slashes) will be escaped using hexadecimal representations in order to comply with <a href="http://www.ietf.org/rfc/rfc2396.txt">RFC 2396</a>. 
+        The <code class="paramName">namespace</code> parameter provides the namespace context within which other requests operate, as described above.
+      </p>
+        </section>
+        
+        <section id="wrappedParameter">
+          <header>
+                    <h3>Key: <code class="paramName">wrapped</code>
+                    </h3>
+                </header>
+          
+          <p>The key <code class="paramName">wrapped</code> may have two values:</p>
+          
+          <ul>
+            <li>
+                        <code class="paramValue">true</code>
+                    </li>
+            <li>
+                        <code class="paramValue">false</code> (the default)</li>
+          </ul>
+          
+          <p>If <code class="paramName">wrapped</code>
+                    <code>=</code>
+                    <code class="paramValue">true</code>, the elements found by the service in response to the rest of the request will be returned in the 
+          context of their parent element. For example, this request:</p>
+          
+          <blockquote>
+                    <code>?verb=getExamples&amp;elementName=hi&amp;wrapped=true&amp;namespace=http%3A%2F%2Fwww.tei-c.org%2Fns%2F1.0</code>
+                </blockquote>
+          
+          <p>would result in a list of examples of elements which contain the TEI <code>&lt;hi&gt;</code> element 
+            (such as <code>&lt;p&gt;</code>). This is particularly useful for learning about the typical usage of an 
+          element and the contexts in which it is found.</p>
+          
+        </section>
+        
+        <section id="maxItemsPerPageParameter">
+          <header>
+                    <h3>Key: <code class="paramName">maxItemsPerPage</code>
+                    </h3>
+                </header>
+          <p>The value of this key is a positive integer. This enables a harvester to specify the maximum number of 
+          items which it is prepared to process in one operation. <em>However, it is only a request.</em> The service 
+          is free to impose its own maximum number of items per page on its responses, and this may override the 
+          number requested in this parameter. This is important, because it would be relatively easy to overwhelm a server
+          providing CodeSharing services for a large repository by requesting a response containing thousands of elements.</p>
+          
+          <p>Note: this parameter works in conjunction with the <a href="#paging">paging functionality</a> described below.</p>
+          
+        </section>
+        
+      </section>
+      
+      <section id="httpResponses">
+        <header>
+                <h2>HTTP responses</h2>
+            </header>
+        
+        <p>Responses to requests on the base URL of the service (XML responses) must conform with the following guidelines:</p>
+        
+        <ul>
+          <li>They must be served with either the TEI or one of the generic XML mime types:
+          <ul>
+            <li>
+                            <code>application/tei+xml</code>
+                        </li>
+            <li>
+                            <code>application/xml</code>
+                        </li>
+            <li>
+                            <code>text/xml</code>
+                        </li>
+          </ul>
+          </li>
+          <li>The response must be provided in the form of a standard TEI XML file which validates against the current version of the 
+            "tei_all" schema available on the TEI website at <a href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng">http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng</a>.</li>
+          <li>The <code>&lt;front&gt;</code> element of the response must include key pieces of information in the form of 
+            elements with the <code>@xml:id</code> attributes specified below in <a href="#dataPoints">Data points</a>. </li>
+            <li>The <code>&lt;body&gt;</code> element of the response must include the results of the query, in the format described 
+              below in <a href="#resultFormat">Format of results</a>.</li>
+        </ul>
+          
+          
+        <p>There are no rules or guidelines regarding the format of a response on to the HTML URL of a CodeSharing service; any 
+          human-readable page which includes the response information in some format is acceptable.</p>
+          
+          <section id="dataPoints">
+            <header>
+                    <h3>Data points</h3>
+                </header>
+            <p>The following data points are returned in the <code>&lt;front&gt;</code> element of the TEI response file. Each 
+            data point is identified by an <code>@xml:id</code> attribute beginning with "cs_" (for "CodeSharing"). The data 
+            itself comprises the text content of the element. There is no constraint on what type of element should be used, 
+            as long as it has the correct <code>@xml:id</code>. Some data is required, and some is optional. Many of these data 
+            points simply echo back input parameters. </p>
+            
+          <h4>Required data items</h4>
+          <ul>
+            <li>
+                        <code class="xmlId">cs_project</code> <code class="requiredOptional">required</code> A string identifying the project or repository 
+              whose markup can be queried through the service.</li>
+            <li>
+                        <code class="xmlId">cs_verb</code> <code class="requiredOptional">required</code> The value of the <code class="paramName">verb</code> 
+              parameter which has been passed in as part of the query.</li>
+            <li>
+                        <code class="xmlId">cs_namespace</code> <code class="requiredOptional">required</code> The value of the <code class="paramName">namespace</code> 
+              parameter which has been passed in as part of the query.</li>
+            <li>
+                        <code class="xmlId">cs_elementName</code> <code class="requiredOptional">required</code> The value of the <code class="paramName">elementName</code> 
+              parameter which has been passed in as part of the query.</li>
+            <li>
+                        <code class="xmlId">cs_attributeName</code> <code class="requiredOptional">required</code> The value of the <code class="paramName">attributeName</code> 
+              parameter which has been passed in as part of the query.</li>
+            <li>
+                        <code class="xmlId">cs_wrapped</code> <code class="requiredOptional">required</code> The value of the <code class="paramName">wrapped</code> 
+              parameter which has been passed in as part of the query.</li>
+            <li>
+                        <code class="xmlId">cs_totalInstances</code> <code class="requiredOptional">required</code> The total number of results from the query (of which a subset
+              appears in the response page, based on the effective maximum number per page).</li>
+            <li>
+                        <code class="xmlId">cs_nextUrl</code> <code class="requiredOptional">required</code> An absolute or relative URL which leads to the next page of 
+              results, in the case where there are more results from the query than can fit on one page (based on the <code class="paramName">maxItemsPerPage</code>
+              value submitted in the query, which may be overridden by the server's own limits).</li>
+          </ul>
+          
+          <h4>Optional data items</h4>
+            <ul>
+              <li>
+                        <code class="xmlId">cs_documentType</code> <code class="requiredOptional">optional</code> The value of the 
+                <code class="paramName">documentType</code> parameter.</li>
+              <li>
+                        <code class="xmlId">cs_defaultMaxItemsPerPage</code> <code class="requiredOptional">optional</code> The default paging maximum used by the server
+                where no value is supplied in the <code class="paramName">maxItemsPerPage</code> parameter.</li>
+              <li>
+                        <code class="xmlId">cs_absoluteMaxItemsPerPage</code> <code class="requiredOptional">optional</code> The server's internal absolute limit on the number 
+                of results it is prepared to supply in a single page (this overrides the <code class="paramName">maxItemsPerPage</code> parameter).</li>
+              <li>
+                        <code class="xmlId">cs_maxItemsPerPage</code> <code class="requiredOptional">optional</code> The value of the <code class="paramName">maxItemsPerPage</code> parameter.</li>
+              <li>
+                        <code class="xmlId">cs_totalInstances</code> <code class="requiredOptional">optional</code> The total number of results from the query (of which a subset
+                appears in the response page, based on the effective maximum number per page).</li>
+              <li>
+                        <code class="xmlId">cs_from</code> <code class="requiredOptional">optional</code> Where there are more results than will fit on one page, 
+                this is the number of the first result in the current page, as part of the total number of results. For example, if there are 100 results of the 
+                query, and a maximum number per page of 20, then the first page of results will have <code class="xmlId">cs_from</code>
+                        <code>=1</code>,
+                the second will have <code class="xmlId">cs_from</code>
+                        <code>=21</code>, and so on.</li>
+              <li>
+                        <code class="xmlId">cs_next</code> <code class="requiredOptional">optional</code> Where there are more results than will fit on one page, 
+                this is the number of the first result in the following page, as part of the total number of results. For example, if there are 100 results of the 
+                query, and a maximum number per page of 20, then the first page of results will have <code class="xmlId">cs_next</code>
+                        <code>=21</code>,
+                the second will have <code class="xmlId">cs_from</code>
+                        <code>=41</code>, and so on.</li>
+              <li>
+                        <code class="xmlId">cs_currParams</code> <code class="requiredOptional">optional</code> This is a complete copy of the query which 
+              was submitted to get these results, in the form of the query string of a GET URL (everything following the question mark). For example:
+                 <blockquote>
+                            <code>verb=getExamples&amp;elementName=hi&amp;wrapped=false&amp;attributeName=&amp;namespace=http%3A%2F%2Fwww.tei-c.org%2Fns%2F1.0&amp;maxItemsPerPage=30&amp;from=1</code>
+                        </blockquote>
+                
+                This may be useful in cases where a harvester is collecting and storing results; it provides a simple way to run the same query again at a later date.
+              </li>
+              
+              <li>
+                        <code class="xmlId">cs_nextParams</code> <code class="requiredOptional">optional</code> In the case of a multi-page result set, this is a 
+                complete copy of the query which would be submitted to get the next page of results, in the form of the query string of a GET URL 
+                (everything following the question mark).</li>
+              
+              <li>
+                        <code class="xmlId">cs_prevParams</code> <code class="requiredOptional">optional</code> In the case of a multi-page result set, this is a 
+                complete copy of the query which would be submitted to get the previous page of results, in the form of the query string of a GET URL 
+                (everything following the question mark).</li>
+              
+              <li>
+                        <code class="xmlId">cs_url</code> <code class="requiredOptional">optional</code> An absolute or relative URL to the base of the codesharing 
+                service.</li>
+              
+              <li>
+                        <code class="xmlId">cs_prevUrl</code> <code class="requiredOptional">optional</code> An absolute or relative URL to the base of the codesharing 
+                service, combined with the parameters required to retrieve the previous page of results.</li>
+            </ul>
+</section>
+        
+        <section id="resultFormat">
+          <header>
+                    <h3>Format of results</h3>
+                </header>
+          
+          <p>Results are always returned in the <code>&lt;body&gt;</code> of the TEI XML result document. They are formatted as follows:</p>
+          
+          <ul>
+            <li>A <strong>list of element names</strong> (the result of a <code class="paramName">verb</code>
+                        <code>=</code>
+                        <code class="paramValue">listElements</code> request) is returned using the <code>&lt;list&gt;</code>, <code>&lt;item&gt;</code> and <code>&lt;gi&gt;</code>
+            elements, as in this example:
+            <pre>
+      &lt;list&gt;
+        &lt;item&gt;
+            &lt;gi&gt;author&lt;/gi&gt;
+        &lt;/item&gt;
+        &lt;item&gt;
+            &lt;gi&gt;availability&lt;/gi&gt;
+        &lt;/item&gt;
+        &lt;item&gt;
+            &lt;gi&gt;back&lt;/gi&gt;
+        &lt;/item&gt;
+        [...]
+      &lt;/list&gt;
+            </pre>
+            </li>
+            
+            <li>A <strong>list of attribute names</strong> (the result of a <code class="paramName">verb</code>
+                        <code>=</code>
+                        <code class="paramValue">listAttributes</code> request) is returned using the <code>&lt;list&gt;</code>, <code>&lt;item&gt;</code> and <code>&lt;att&gt;</code>
+              elements, as in this example:
+              <pre>
+      &lt;list&gt;
+        &lt;item&gt;
+            &lt;att&gt;calendar&lt;/att&gt;
+        &lt;/item&gt;
+        &lt;item&gt;
+            &lt;att&gt;cert&lt;/att&gt;
+        &lt;/item&gt;
+        &lt;item&gt;
+            &lt;att&gt;code&lt;/att&gt;
+        &lt;/item&gt;
+        [...]
+      &lt;/list&gt;
+            </pre>
+            </li>
+            
+            <li>A <strong>list of document types</strong> (the result of a <code class="paramName">verb</code>
+                        <code>=</code>
+                        <code class="paramValue">listDocumentTypes</code> request) is returned using the <code>&lt;list&gt;</code>, <code>&lt;item&gt;</code> and <code>&lt;name&gt;</code>
+              elements. Supplementary information may be supplied following the <code>&lt;name&gt;</code> elements, as in this example:
+              <pre>
+      &lt;list&gt;
+        &lt;item&gt;
+            &lt;name&gt;mdtBornDigital&lt;/name&gt; : Born-digital documents created as part of this project, and not based on any pre-existing source text. 
+        &lt;/item&gt;
+        &lt;item&gt;
+            &lt;name&gt;mdtCritical&lt;/name&gt; : Critical apparatus, introductions and textual notes relating to digital editions of primary texts. 
+        &lt;/item&gt;
+        &lt;item&gt;
+            &lt;name&gt;mdtDatabase&lt;/name&gt; : Database-like documents containing a sequence of records, such as a personography.  
+        &lt;/item&gt;
+        [...]
+      &lt;/list&gt;
+            </pre>
+            </li>
+            
+            <li>A <strong>list of namespace URIs</strong> (the result of a <code class="paramName">verb</code>
+                        <code>=</code>
+                        <code class="paramValue">listNamespaces</code> request) is returned using the <code>&lt;list&gt;</code>, <code>&lt;item&gt;</code> and <code>&lt;ptr&gt;</code>
+              elements, as in this example:
+              <pre>
+      &lt;list&gt;
+        &lt;item&gt;[empty namespace]&lt;/item&gt;
+        &lt;item&gt;
+            &lt;ptr target="http://purl.oclc.org/dsdl/schematron"/&gt;
+        &lt;/item&gt;
+        &lt;item&gt;
+            &lt;ptr target="http://www.tei-c.org/ns/1.0"/&gt;
+        &lt;/item&gt;
+        &lt;item&gt;
+            &lt;ptr target="http://relaxng.org/ns/structure/1.0"/&gt;
+        &lt;/item&gt;
+        [...]
+      &lt;/list&gt;
+            </pre>
+              Note the special case of the empty namespace.
+            </li>
+            
+            <li>A <strong>list of elements</strong> (the result of a <code class="paramName">verb</code>
+                        <code>=</code>
+                        <code class="paramValue">getExamples</code> request) is returned in a <code>&lt;div&gt;</code> element containing
+            a sequence of <code>&lt;egXML&gt;</code> elements, as in this example:
+            
+            <pre>
+      &lt;div&gt;
+        &lt;egXML xmlns="http://www.tei-c.org/ns/Examples"&gt;
+            &lt;head&gt;Bibliographies&lt;/head&gt;
+        &lt;/egXML&gt;
+        &lt;egXML xmlns="http://www.tei-c.org/ns/Examples"&gt;
+            &lt;head&gt;Fun Resources&lt;/head&gt;
+        &lt;/egXML&gt;
+        &lt;egXML xmlns="http://www.tei-c.org/ns/Examples"&gt;
+            &lt;head&gt;Introduction&lt;/head&gt;
+        &lt;/egXML&gt;
+        [...]
+      &lt;/div&gt;
+            </pre>
+            
+            Note that the <code>&lt;egXML&gt;</code> element is not in the regular TEI namespace; it is in the 
+              TEI Examples namespace, and that namespace is inherited by the child elements. The <code>&lt;egXML&gt;</code>
+              element may also carry the <code>@source</code> attribute, with an identifier for the document from which 
+              the example comes; this is optional, and its functionality (how its path is designated, etc.) is left to the 
+              implementation.
+            
+            </li>
+            
+          </ul>
+        </section>
+
+        
+      </section>
+      
+      <section id="paging">
+        <header>
+                <h2>Paging of results</h2>
+        </header>
+        
+        <p>As mentioned above, where there are more results than can be fit on one page, the result document 
+        will always contain an element with the <code>@xml:id</code> <code class="xmlId">cs_nextUrl</code>, so
+        that the user or harvester can retrieve a series of result pages until the entire result set has been 
+        gathered, if required. Assuming that all the parameters for the subsequent request can be encoded in the
+        <code class="xmlId">cs_nextUrl</code> value, the server need not maintain an session record and the 
+        entire API can function in a stateless manner, as does the sample XQuery implementation running on the 
+        <a href="http://mapoflondon.uvic.ca/codesharing">Map of Early Modern London</a> website. However, if it 
+          suits the implementer to maintain state on the server, to avoid (for instance) having to do expensive 
+        queries multiple times, then there is nothing to prevent this.</p>
+        
+        <p>Nevertheless, since the protocol is intended to function in a stateless manner, it is possible that 
+        the underlying data may change between requests in a series. If, for instance, a document is deleted 
+        between the first and second requests for examples of an element, and the number of such examples is 
+        thereby reduced, the second page of results may not be what was expected; in fact in may be empty. 
+        This is not regarded as problematic; there is no requirement that a series of result pages, when 
+        amalgamated, need precisely reflect a particular coherent state of the repository.</p>
+        
+      </section>
+      
+      <section id="examples">
+        <header>
+                <h2>Examples</h2>
+            </header>
+        <p>This section provides several example requests along with constructed URLs for them,
+          linked to the example implementation on the 
+          <a href="http://mapoflondon.uvic.ca/codesharing">Map of Early Modern London</a> website. Links
+          are provided both to the base URL <code>http://mapoflondon.uvic.ca/codesharing</code> 
+          (resulting in an XML response), and the HTML front-end of the 
+          service <code>http://mapoflondon.uvic.ca/codesharing</code>, which provides a more 
+          human-readable rendering created by transforming the XML response 
+        to XHTML5 using XSLT.</p>
+        
+        <ol>
+          <li>
+                    <strong>List all TEI elements in the repository:</strong>
+          <pre>
+    verb=listElements
+    namespace=http://www.tei-c.org/ns/1.0</pre>
+            <ul>
+              <li>
+                            <a href="http://mapoflondon.uvic.ca/codesharing?verb=listElements&amp;namespace=http%3A%2F%2Fwww.tei-c.org%2Fns%2F1.0">link (XML)</a>
+                        </li>
+              <li>
+                            <a href="http://mapoflondon.uvic.ca/codesharing.htm?verb=listElements&amp;namespace=http%3A%2F%2Fwww.tei-c.org%2Fns%2F1.0">link (HTML)</a>
+                        </li>
+            </ul>
+          </li>
+          <li>
+                    <strong>Get examples of TEI <code>&lt;head&gt;</code> elements in the repository:</strong>
+            <pre>
+    verb=getExamples
+    elementName=head
+    namespace=http://www.tei-c.org/ns/1.0</pre>
+            <ul>
+              <li>
+                            <a href="http://mapoflondon.uvic.ca/codesharing?verb=getExamples&amp;elementName=head&amp;namespace=http%3A%2F%2Fwww.tei-c.org%2Fns%2F1.0">link (XML)</a>
+                        </li>
+              <li>
+                            <a href="http://mapoflondon.uvic.ca/codesharing.htm?verb=getExamples&amp;elementName=head&amp;namespace=http%3A%2F%2Fwww.tei-c.org%2Fns%2F1.0">link (HTML)</a>
+                        </li>
+            </ul>
+          </li>
+          <li>
+                    <strong>Get examples of TEI <code>@style</code> attributes, on any element:</strong>
+            <pre>
+    verb=getExamples
+    attributeName=style
+    namespace=http://www.tei-c.org/ns/1.0</pre>
+            <ul>
+              <li>
+                            <a href="http://mapoflondon.uvic.ca/codesharing?verb=getExamples&amp;attributeName=style&amp;namespace=http%3A%2F%2Fwww.tei-c.org%2Fns%2F1.0">link (XML)</a>
+                        </li>
+              <li>
+                            <a href="http://mapoflondon.uvic.ca/codesharing.htm?verb=getExamples&amp;attributeName=style&amp;namespace=http%3A%2F%2Fwww.tei-c.org%2Fns%2F1.0">link (HTML)</a>
+                        </li>
+            </ul>
+          </li>
+          <li>
+                    <strong>Get examples of TEI <code>@style</code> attributes appearing on the <code>&lt;hi&gt;</code> element, and return them in the context of their parent element:</strong>
+            <pre>
+    verb=getExamples
+    elementName=hi
+    attributeName=style
+    wrapped=true
+    namespace=http://www.tei-c.org/ns/1.0</pre>
+            <ul>
+              <li>
+                            <a href="http://mapoflondon.uvic.ca/codesharing?verb=getExamples&amp;elementName=hi&amp;attributeName=style&amp;wrapped=true&amp;namespace=http%3A%2F%2Fwww.tei-c.org%2Fns%2F1.0">link (XML)</a>
+                        </li>
+              <li>
+                            <a href="http://mapoflondon.uvic.ca/codesharing.htm?verb=getExamples&amp;elementName=hi&amp;attributeName=style&amp;wrapped=true&amp;namespace=http%3A%2F%2Fwww.tei-c.org%2Fns%2F1.0">link (HTML)</a>
+                        </li>
+            </ul>
+          </li>
+        </ol>
+        
+      </section>
+      
+      <section id="futureDevelopment">
+        <header>
+                <h2>Future development</h2>
+            </header>
+        <p>The following features are under consideration for a future version of this protocol:</p>
+        
+          <section id="responseCompression">
+                <header>
+                    <h3>Response compression</h3>
+                </header>
+            
+          <p>The OAI-PMH protocol, which is a strong influence on this one, includes the option for the server 
+          to supply a response to the querying harvester in a 
+            <a href="http://www.openarchives.org/OAI/openarchivesprotocol.html#ResponseCompression">compressed format</a>. 
+            Where large quantities of XML data are being harvested, this might be a useful feature.</p>
+            </section>
+        
+          <section id="xpathQueries">
+                <header>
+                    <h3>XPath queries</h3>
+                </header>
+            
+          <p>This protocol is designed to be as simple as possible, so that it can easily be implemented and understood both 
+          by implementers and users. However, sophisticated users who are familiar with XPath and XQuery are likely to 
+          find its limitations frustrating. One obvious way to expand the protocol is to allow querying of the data using 
+          XPath and/or XQuery. This presents potential issues of security and input-sanitization, so it would need some 
+          careful thought; an XPath query could easily construct a single response element that includes the entire collection 
+          that is being queried, bringing the responding server to its knees, and an XQuery could modify or delete data if 
+          permissions are not correctly configured.</p>
+            </section>
+        
+        <section id="exampleSource">
+                <header>
+                    <h3>Source document information for examples</h3>
+                </header>
+          <p>It would be useful if information about the source document from which an example is taken could be provided
+            along with the example. This might be supplied as a URI in the <code>@source</code> attribute on the
+            <code>&lt;egXML&gt;</code> element. This would have to be optional, since many repositories do not provide
+            access to their XML source code as a matter of course, and may choose to implement the CodeSharing API
+            in a manner that excludes some components of their documents.
+          </p>
+        
+        </section>
+        
+          <section id="exampleIdentifiers">
+                <header>
+                    <h3>Identifiers for examples</h3>
+                </header>
+          <p>Other than providing the option to "wrap" a target element in its parent, the current version of the protocol provides no
+          contextual information about any element in the response. It might be useful if there were a method of specifying a stable
+          identifier for any result element, which could be expressed as an attribute on the containing &lt;egXML&gt; element. However,
+          it is by no means clear that any such identifier could be stable in the long-term, given that collections change and data is 
+          edited, and there is no current use-case for any such identifier.</p>
+          </section>
+        
+      </section>
+    </body>
+</html>
