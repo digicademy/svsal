@@ -331,7 +331,7 @@ declare function config:app-header($node as node(), $model as map(*), $lang as x
                 </li> 
             </menu>
             <!-- language-switch buttons on large screens -->
-            <menu>
+            <menu class="nav navbar-nav">
                 <li class="nav navbar-nav navbar-right hidden-xs hidden-sm hidden-md">
                    <div class="btn-group" role="group" aria-label="...">
                      <a  class="btn navbar-btn {if ($lang='de') then 'btn-info' else 'btn-default'}" href="{$config:webserver}/de/{concat(request:get-attribute('$exist:resource'), if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (), string-join(net:inject-requestParameter('', ''), '&amp;'))}">de</a>
