@@ -33,9 +33,9 @@ xquery version "3.0";
 
 (: ########## PROLOGUE ############################################################################# :)
 
-import module namespace functx  = "http://www.functx.com";
-import module namespace console = "http://exist-db.org/xquery/console";
-import module namespace config  = "http://xtriples.spatialhumanities.de/config" at "modules/config.xqm";
+import module namespace functx   = "http://www.functx.com";
+import module namespace console  = "http://exist-db.org/xquery/console";
+import module namespace xconfig  = "http://xtriples.spatialhumanities.de/config" at "modules/xconfig.xqm";
 
 (: ### SVSAL modules and namespaces ### :)
 declare namespace http		  = "http://expath.org/ns/http-client";
@@ -82,7 +82,7 @@ declare variable $retrievedDocuments := map { };
 					else $externalDocuments(hash($URI)) 
 		  };
 :)
-declare variable $tmp-collection-path := $config:app-root || '/temp/cache';
+declare variable $tmp-collection-path := $xconfig:app-root || '/temp/cache';
 
 (:~
  : Get resources from the web by PND and store the result in a cache object with the current date. 
@@ -106,7 +106,7 @@ declare function local:grabExternalDoc($uri as xs:string) as node()? {  (: as el
 	let $url       := $uri
 (:		switch($resource)
 		case 'wikipedia' return replace(wega-util:beacon-map($gnd, $docType)('wikipedia')[1], 'dewiki', $lang || 'wiki')
-		case 'dnb' return concat(config:get-option($resource), $gnd, '/about/rdf')
+		case 'dnb' return concat(xconfig:get-option($resource), $gnd, '/about/rdf')
 		default return doc($resource)
 :)
 	let $fileName  := encode-for-uri($uri)
@@ -159,7 +159,7 @@ declare function local:cache-doc($docURI as xs:string, $callback as function() a
 
 	let $updateNecessary := 
 	   (: Aktualisierung entweder bei geänderter Datenbank oder bei veraltetem Cache :) 
-	   (: config:eXistDbWasUpdatedAfterwards($currentDateTimeOfFile) or :)
+	   (: xconfig:eXistDbWasUpdatedAfterwards($currentDateTimeOfFile) or :)
         if (($currentDateTimeOfFile + $lease) lt current-dateTime()) then
             let $debug1 :=  local:log (
 							"extract.xql: local:cache-doc: cache too old (" ||
@@ -418,7 +418,7 @@ let $debug4 := for $file at $index in $result
 declare function local:log($message as xs:string, $priority as xs:string?) {
 	let $prio := if ($priority) then $priority else "trace"
 	return try  {
-					let $consoleOutput :=   if ($config:debug = "trace" or $prio = ("info", "warn", "error")) then
+					let $consoleOutput :=   if ($xconfig:debug = "trace" or $prio = ("info", "warn", "error")) then
 												console:log($message)
 											else ()
 					let $fileOutput	:= local:logToFile($prio, $message)
@@ -439,11 +439,11 @@ declare function local:log($message as xs:string, $priority as xs:string?) {
  : @return 
 :)
 declare function local:logToFile($priority as xs:string, $message as xs:string) {
-	let $file	:= $config:logfile
-(:  let $message := concat($message, ' (rev. ', config:getCurrentSvnRev(), ')') :)
+	let $file	:= $xconfig:logfile
+(:  let $message := concat($message, ' (rev. ', xconfig:getCurrentSvnRev(), ')') :)
 	return  (
 				let $log := util:log-app($priority, $file, $message)
-				return if ($config:debug = "trace" or $priority = ('error', 'warn')) then
+				return if ($xconfig:debug = "trace" or $priority = ('error', 'warn')) then
 					util:log-system-out($message)
 				else ()
 			)
@@ -1050,12 +1050,12 @@ declare function xtriples:getRDF($xtriples as node()*, $vocabularies as node()*)
     (: official RDF format via any23 :)
     let $headers := <headers><header name="Content-Type" value="application/rdf+xml; charset=UTF-8"/></headers>
 
-    let $POST_request := httpclient:post(xs:anyURI(concat($config:any23WebserviceURL, "rdfxml")), $rdfInternal, false(), $headers)
+    let $POST_request := httpclient:post(xs:anyURI(concat($xconfig:any23WebserviceURL, "rdfxml")), $rdfInternal, false(), $headers)
     let $rdfBad := $POST_request//httpclient:body/*
 
 	(: clean self-references broken by any23 service :)
     let $parameters    := <parameters>
-                            <param name="idServer"            value="{$config:idserver}"/>
+                            <param name="idServer"            value="{$xconfig:idserver}"/>
                           </parameters>
 	let $rdfstylesheet2 := doc("rdf-cleanSelfReferences.xsl")
 	let $rdf := transform:transform($rdfBad, $rdfstylesheet2, $parameters)
@@ -1068,7 +1068,7 @@ declare function xtriples:getNTRIPLES($rdf as node()*) as item()* {
 
 	(: url encoded ntriples :)
 	let $headers := <headers><header name="Content-Type" value="application/rdf+xml; charset=UTF-8"/></headers>
-	let $POST_request := httpclient:post(xs:anyURI(concat($config:any23WebserviceURL, "nt")), $rdf, false(), $headers)
+	let $POST_request := httpclient:post(xs:anyURI(concat($xconfig:any23WebserviceURL, "nt")), $rdf, false(), $headers)
 	let $ntriples := util:unescape-uri(replace(string($POST_request//httpclient:body), '%00', ''), "UTF-8")
 
 	return replace($ntriples, 'http://any23.org/tmp/', '')
@@ -1079,7 +1079,7 @@ declare function xtriples:getTURTLE($rdf as node()*) as item()* {
 
 	(: eXist returns base64Binary turtle :)
 	let $headers := <headers><header name="Content-Type" value="application/rdf+xml; charset=UTF-8"/></headers>
-	let $POST_request := httpclient:post(xs:anyURI(concat($config:any23WebserviceURL, "turtle")), $rdf, false(), $headers)
+	let $POST_request := httpclient:post(xs:anyURI(concat($xconfig:any23WebserviceURL, "turtle")), $rdf, false(), $headers)
 	let $turtle := util:binary-to-string(xs:base64Binary($POST_request//httpclient:body), "UTF-8")
 
 	return replace($turtle, 'http://any23.org/tmp/', '')
@@ -1090,7 +1090,7 @@ declare function xtriples:getNQUADS($rdf as node()*) as item()* {
 
 	(: eXist returns base64Binary nquads :)
 	let $headers := <headers><header name="Content-Type" value="application/rdf+xml; charset=UTF-8"/></headers>
-	let $POST_request := httpclient:post(xs:anyURI(concat($config:any23WebserviceURL, "nq")), $rdf, false(), $headers)
+	let $POST_request := httpclient:post(xs:anyURI(concat($xconfig:any23WebserviceURL, "nq")), $rdf, false(), $headers)
 	let $nquads := util:binary-to-string(xs:base64Binary($POST_request//httpclient:body), "UTF-8")
 
 	return replace($nquads, 'http://any23.org/tmp/', '')
@@ -1101,7 +1101,7 @@ declare function xtriples:getJSON($rdf as node()*) as item()* {
 
 	(: eXist returns base64Binary json :)
 	let $headers := <headers><header name="Content-Type" value="application/rdf+xml; charset=UTF-8"/></headers>
-	let $POST_request := httpclient:post(xs:anyURI(concat($config:any23WebserviceURL, "json")), $rdf, false(), $headers)
+	let $POST_request := httpclient:post(xs:anyURI(concat($xconfig:any23WebserviceURL, "json")), $rdf, false(), $headers)
 	let $json := util:binary-to-string(xs:base64Binary($POST_request//httpclient:body), "UTF-8")
 
 	return replace($json, 'http://any23.org/tmp/', '')
@@ -1112,7 +1112,7 @@ declare function xtriples:getTRIX($rdf as node()*) as item()* {
 
 	(: eXist returns base64Binary json :)
 	let $headers := <headers><header name="Content-Type" value="application/rdf+xml; charset=UTF-8"/></headers>
-	let $POST_request := httpclient:post(xs:anyURI(concat($config:any23WebserviceURL, "trix")), $rdf, false(), $headers)
+	let $POST_request := httpclient:post(xs:anyURI(concat($xconfig:any23WebserviceURL, "trix")), $rdf, false(), $headers)
 	let $trix := $POST_request//httpclient:body/*
 
 	return replace($trix, 'http://any23.org/tmp/', '')
@@ -1123,15 +1123,15 @@ declare function xtriples:getSVG($rdf as node()*) as item()* {
 
 	(: svg format with temporary file :)
 	let $filename := concat(util:uuid(), ".xml")
-	let $store := xmldb:store($config:app-root || "/temp/", $filename, $rdf)
+	let $store := xmldb:store($xconfig:app-root || "/temp/", $filename, $rdf)
 	let $svgHeaders := 
 		<headers>
 			<header name="format" value="RDF/XML"/>
 			<header name="mode" value="svg" />
-			<headers name="rules" value="{$config:redeferWebserviceRulesURL}" />
+			<headers name="rules" value="{$xconfig:redeferWebserviceRulesURL}" />
 		</headers>
 	
-	let $GET_request := httpclient:get(xs:anyURI(concat($config:redeferWebserviceURL, "render?rdf=", $config:xtriplesWebserviceURL, "temp/", $filename, "&amp;format=RDF/XML&amp;mode=svg&amp;rules=", $config:redeferWebserviceRulesURL)), false(), $svgHeaders)
+	let $GET_request := httpclient:get(xs:anyURI(concat($xconfig:redeferWebserviceURL, "render?rdf=", $xconfig:xtriplesWebserviceURL, "temp/", $filename, "&amp;format=RDF/XML&amp;mode=svg&amp;rules=", $xconfig:redeferWebserviceRulesURL)), false(), $svgHeaders)
 	let $svg := $GET_request//httpclient:body/*
 	let $delete := xmldb:remove("/db/apps/xtriples/temp/", $filename)
 
@@ -1153,7 +1153,7 @@ let $vocabularies := $configuration/vocabularies
 let $namespaces := 
 	if ($configuration/vocabularies/*) then
 		for $namespace in $configuration/vocabularies/*
-		return util:declare-namespace($namespace/@prefix, $namespace/@uri)
+		  return util:declare-namespace($namespace/@prefix, $namespace/@uri)
 	else ""
 
 (: extract triples from collections :)
