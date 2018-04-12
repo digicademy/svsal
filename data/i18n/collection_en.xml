@@ -1,139 +1,139 @@
 <catalogue xml:lang="en">
   <!-- Navigation -->
-    <msg key="titleHeader">The School of Salamanca</msg>
-    <msg key="projectName">The School of Salamanca</msg>
-    <msg key="titleSubHeader">A Digital Collection of Sources and a Dictionary of its Juridical-Political Language</msg>
-    <msg key="start">Home</msg>
-    <msg key="home">The School of Salamanca</msg>
-    <msg key="lang">Language</msg>
-    <msg key="en">English</msg>
-    <msg key="de">German</msg>
-    <msg key="es">Spanish</msg>
-    <msg key="search">Search</msg>
-    <msg key="dictionary">Dictionary</msg>
-    <msg key="authors">Authors</msg>
-    <msg key="works">Works</msg>
-    <msg key="workingPapers">Working Papers</msg>
-    <msg key="project">Project</msg>
-    <msg key="news">News</msg>
-    <msg key="description">About</msg>
-    <msg key="staff">Staff</msg>
-    <msg key="guidelines">Edition Guidelines</msg>
-    <msg key="contact">Contact</msg>
-    <msg key="about">About the Project</msg>
-    <msg key="WpAbout">Submit a Working Paper</msg>
-    <msg key="WpIntro">The interdisciplinary Salamanca Working Papers Series offers philosophical, legal, and theological articles related to the School of Salamanca. The series reflects the research done in the project, but also accepts contributions from other scholars. Submitted articles are subject to a double blind peer review. To submit a proposal, please contact us at</msg>
-    <msg key="WpGuidelinesDelayed">Further information for authors is forthcoming.</msg>
-    <msg key="WpIntroTitle">Salamanca Working Papers Series (ISSN 2509-5080)</msg>
-    <msg key="getAnswers">Get in contact</msg>
-
-<!-- Meta Description Tags -->
-    <msg key="metaAuthor">Biobibliographical Information on</msg>
-    <msg key="metaLemma">Dictionary article on</msg>
-    <msg key="metaWP">SvSal Working Paper</msg>
-    <msg key="metaWork">Reading view of</msg>
-    <msg key="metaWorkDetails">Bibliographical Data of</msg>
-    <msg key="metaIndex">A digital scholarly edition of sources and a dictionary of the juridical-political discourses of early modern Iberian theologians, jurists and philosophers.</msg>
-    <msg key="metaSearch">Search in texts of the School of Salamanca, in biographical articles and in dictionary entries as well as in Working Papers on the School of Salamanca.</msg>
-    <msg key="metaContact">How to contact the project team and how to stay informed about news of the project.</msg>
-    <msg key="metaEditorial">Guidelines for submission of contributions to the Working Paper series of the project "The School of Salamanca".</msg>
-    <msg key="metaGuidelines">Editorial guidelines for the digital collection of sources of the project "The School of Salamanca".</msg>
-    <msg key="metaProject">General information on the project "The School of Salamanca. A digital collection of sources and a dictionary of its juridical-political language".</msg>
-    <msg key="metaNews">News, announcements and other short blog posts about theory, methods, technical and other aspects of the project "The School of Salamanca".</msg>
-    <msg key="metaWorks">Overview of the works that the collection of digital sources provides.</msg>
-    <msg key="metaAuthors">Overview of the authors represented in the collection of works and discussed in biographical articles.</msg>
-    <msg key="metaDictionary">Overview of dictionary entries of the juridical-political language of the School of Salamanca.</msg>
-    <msg key="metaWPs">Overview of the working papers on the School of Salamanca published in the context of the project's WP series.</msg>
-
+  <msg key="titleHeader">The School of Salamanca</msg>
+  <msg key="projectName">The School of Salamanca</msg>
+  <msg key="titleSubHeader">A Digital Collection of Sources and a Dictionary of its Juridical-Political Language</msg>
+  <msg key="start">Home</msg>
+  <msg key="home">The School of Salamanca</msg>
+  <msg key="lang">Language</msg>
+  <msg key="en">English</msg>
+  <msg key="de">German</msg>
+  <msg key="es">Spanish</msg>
+  <msg key="search">Search</msg>
+  <msg key="dictionary">Dictionary</msg>
+  <msg key="authors">Authors</msg>
+  <msg key="works">Works</msg>
+  <msg key="workingPapers">Working Papers</msg>
+  <msg key="project">Project</msg>
+  <msg key="news">News</msg>
+  <msg key="description">About</msg>
+  <msg key="staff">Staff</msg>
+  <msg key="guidelines">Edition Guidelines</msg>
+  <msg key="contact">Contact</msg>
+  <msg key="about">About the Project</msg>
+  <msg key="WpAbout">Submit a Working Paper</msg>
+  <msg key="WpIntro">The interdisciplinary Salamanca Working Papers Series offers philosophical, legal, and theological articles related to the School of Salamanca. The series reflects the research done in the project, but also accepts contributions from other scholars. Submitted articles are subject to a double blind peer review. To submit a proposal, please contact us at</msg>
+  <msg key="WpGuidelinesDelayed">Further information for authors is forthcoming.</msg>
+  <msg key="WpIntroTitle">Salamanca Working Papers Series (ISSN 2509-5080)</msg>
+  <msg key="getAnswers">Get in contact</msg>
+  
+  <!-- Meta Description Tags -->
+  <msg key="metaAuthor">Biobibliographical Information on</msg>
+  <msg key="metaLemma">Dictionary article on</msg>
+  <msg key="metaWP">SvSal Working Paper</msg>
+  <msg key="metaWork">Reading view of</msg>
+  <msg key="metaWorkDetails">Bibliographical Data of</msg>
+  <msg key="metaIndex">A digital scholarly edition of sources and a dictionary of the juridical-political discourses of early modern Iberian theologians, jurists and philosophers.</msg>
+  <msg key="metaSearch">Search in texts of the School of Salamanca, in biographical articles and in dictionary entries as well as in Working Papers on the School of Salamanca.</msg>
+  <msg key="metaContact">How to contact the project team and how to stay informed about news of the project.</msg>
+  <msg key="metaEditorial">Guidelines for submission of contributions to the Working Paper series of the project "The School of Salamanca".</msg>
+  <msg key="metaGuidelines">Editorial guidelines for the digital collection of sources of the project "The School of Salamanca".</msg>
+  <msg key="metaProject">General information on the project "The School of Salamanca. A digital collection of sources and a dictionary of its juridical-political language".</msg>
+  <msg key="metaNews">News, announcements and other short blog posts about theory, methods, technical and other aspects of the project "The School of Salamanca".</msg>
+  <msg key="metaWorks">Overview of the works that the collection of digital sources provides.</msg>
+  <msg key="metaAuthors">Overview of the authors represented in the collection of works and discussed in biographical articles.</msg>
+  <msg key="metaDictionary">Overview of dictionary entries of the juridical-political language of the School of Salamanca.</msg>
+  <msg key="metaWPs">Overview of the working papers on the School of Salamanca published in the context of the project's WP series.</msg>
+  
   <!-- index.html -->
-    <msg key="introSearch">Search in the Digital Collection of works, dictionary and biographical entries, and Working Papers.</msg>
-    <msg key="introDict">of the Juridical-Political Language of the School of Salamanca.</msg>
-    <msg key="introAuthors">Biographical and bibliographical information about the authors represented in the Digital Collection.</msg>
-    <msg key="introWorks">116 works fully transcribed and edited.</msg>
-    <msg key="introWorkingPapers">Articles in the project's Working Paper Series.</msg>
-    <msg key="introNews">News from the scientific community.</msg>
-    <msg key="introProject">Project Team, Description of the Project, Contact and Imprint.</msg>
-    <msg key="introGoBtn">Go!</msg>
-    <msg key="imprint">Imprint</msg>
+  <msg key="introSearch">Search in the Digital Collection of works, dictionary and biographical entries, and Working Papers.</msg>
+  <msg key="introDict">of the Juridical-Political Language of the School of Salamanca.</msg>
+  <msg key="introAuthors">Biographical and bibliographical information about the authors represented in the Digital Collection.</msg>
+  <msg key="introWorks">116 works fully transcribed and edited.</msg>
+  <msg key="introWorkingPapers">Articles in the project's Working Paper Series.</msg>
+  <msg key="introNews">News from the scientific community.</msg>
+  <msg key="introProject">Project Team, Description of the Project, Contact and Imprint.</msg>
+  <msg key="introGoBtn">Go!</msg>
+  <msg key="imprint">Imprint</msg>
   
   
   <!-- project.html -->
-    <msg key="projectDesc">Project description</msg>
-    <msg key="pojectDesc1">The (re-)discovery of the fundamental importance of the School of Salamanca for the early modern discourse about law, politics, religion and ethics 
-      is widespread among of philosophers and legal historians. During the 16th and 17th centuries, the intellectual sparks emitted by this academic force field reached not 
-      only the most far-flung cities of the Spanish monarchy, be it Mexico, Madrid or Manila: they also spread to universities in the protestant territories of the Ancien Régime. 
-      Europe's intellectual history, history of political thought, and legal history can not be understood adequately without being aware of the School of Salamanca as an almost 
-      universal intellectual reference point. Nevertheless, the assessment of the School and its intellectual influence remains a much discussed topic until the present day.</msg>
-    <msg key="pojectDesc2">The School of Salamanca's significance and influence on more than one continent as well as in different academic fields have given rise to an 
-      impressive multitude of research efforts in various disciplines: philosophers, historians, jurists, legal historians, and theologians pursue the reconstruction of complex 
-      subareas of the Salamantine intellectual edifice. The sheer number of these research projects wordwide has caused a notable fragmentation of the scientific landscape. 
-      Notably the connections between persons, texts, and disciplines threaten to become lost, but also an understanding of comprehensive questions and methods. </msg>
-    <msg key="pojectDesc3">These are the problems our project aims to adress by creating an easy access to primary sources, their concepts and contexts. As a foundation 
-      of our work we will build a digital text corpus including 116 works of the Salmantine jurists and theologians in selected prints from the 16th and 17th centuries. 
-      The high-resolution scans will be complemented by the full text of the featured works, supporting all online researches with comfortable search functionalities. Based on these 
-      resources, we will also compose a historic dictionary of circa 300 essential terms of the Salmantine School's juridic-politic language, bringing together international and 
-      interdisciplinary research perspectives. In the electronic version, the dictionary articles will be linked to the source texts, enabling easy access to information about concepts, 
-      contexts, and authors. At the final stage, a print-version of the dictionary will be published.</msg>
-    <msg key="pojectDesc4"/>
-    <msg key="contactDesc">Feedback, comments, critique.</msg>
-    <msg key="guidelinesDecl">Description of the TEI markup we use.</msg>
-    <msg key="wpCreateDecl">Submit a Working Paper.</msg>
-    <msg key="team">Project Team</msg>
-    <msg key="teamDesc">Profiles of the Project Team on the website of the Academy of Sciences and Literature, Mainz.</msg>
-    <msg key="getInvolved">Contribute</msg>
-
-    <msg key="happyness">Thank you for your interest. If you have any questions regarding our project, please contact us at:</msg>
+  <msg key="projectDesc">Project description</msg>
+  <msg key="pojectDesc1">The (re-)discovery of the fundamental importance of the School of Salamanca for the early modern discourse about law, politics, religion and ethics 
+    is widespread among of philosophers and legal historians. During the 16th and 17th centuries, the intellectual sparks emitted by this academic force field reached not 
+    only the most far-flung cities of the Spanish monarchy, be it Mexico, Madrid or Manila: they also spread to universities in the protestant territories of the Ancien Régime. 
+    Europe's intellectual history, history of political thought, and legal history can not be understood adequately without being aware of the School of Salamanca as an almost 
+    universal intellectual reference point. Nevertheless, the assessment of the School and its intellectual influence remains a much discussed topic until the present day.</msg>
+  <msg key="pojectDesc2">The School of Salamanca's significance and influence on more than one continent as well as in different academic fields have given rise to an 
+    impressive multitude of research efforts in various disciplines: philosophers, historians, jurists, legal historians, and theologians pursue the reconstruction of complex 
+    subareas of the Salamantine intellectual edifice. The sheer number of these research projects wordwide has caused a notable fragmentation of the scientific landscape. 
+    Notably the connections between persons, texts, and disciplines threaten to become lost, but also an understanding of comprehensive questions and methods. </msg>
+  <msg key="pojectDesc3">These are the problems our project aims to adress by creating an easy access to primary sources, their concepts and contexts. As a foundation 
+    of our work we will build a digital text corpus including 116 works of the Salmantine jurists and theologians in selected prints from the 16th and 17th centuries. 
+    The high-resolution scans will be complemented by the full text of the featured works, supporting all online researches with comfortable search functionalities. Based on these 
+    resources, we will also compose a historic dictionary of circa 300 essential terms of the Salmantine School's juridic-politic language, bringing together international and 
+    interdisciplinary research perspectives. In the electronic version, the dictionary articles will be linked to the source texts, enabling easy access to information about concepts, 
+    contexts, and authors. At the final stage, a print-version of the dictionary will be published.</msg>
+  <msg key="pojectDesc4"/>
+  <msg key="contactDesc">Feedback, comments, critique.</msg>
+  <msg key="guidelinesDecl">Description of the TEI markup we use.</msg>
+  <msg key="wpCreateDecl">Submit a Working Paper.</msg>
+  <msg key="team">Project Team</msg>
+  <msg key="teamDesc">Profiles of the Project Team on the website of the Academy of Sciences and Literature, Mainz.</msg>
+  <msg key="getInvolved">Contribute</msg>
+  
+  <msg key="happyness">Thank you for your interest. If you have any questions regarding our project, please contact us at:</msg>
   
   
   <!-- works/details -->
-    <msg key="sort">Sort</msg>
-    <msg key="deselectFilters">Deselect filters</msg>
-    <msg key="filtersYieldNoResult">Sorry, but no items match these criteria (or the list of items has not been found [hint to admin])</msg>
-    <msg key="year">Year of Publication</msg>
-    <msg key="author">Author</msg>
-    <msg key="title">Title</msg>
-    <msg key="surname">Surname</msg>
-    <msg key="titleShort">Title (short)</msg>
-    <msg key="titleProper">Title proper in heading form</msg>
-    <msg key="printingPlace">Printing Place</msg>
-    <msg key="imprintWRK">Imprint</msg>
-    <msg key="summaryOfVols">Volumes</msg>
-    <msg key="complete">Complete</msg>
-    <msg key="id">Identifier</msg>
-    <msg key="latin">Latin</msg>
-    <msg key="spanish">Spanish</msg>
-    <msg key="german">German</msg>
-    <msg key="english">English</msg>
-    <msg key="language">Language</msg>
-    <msg key="material">Material</msg>
-    <msg key="readWork">Read</msg>
-    <msg key="volNo">Volume number</msg>
-    <msg key="volTitle">Volume title</msg>
-    <msg key="volume">Volume</msg>
-    <msg key="volumes">Volumes</msg>
-    <msg key="1stEd">First edition</msg>
-    <msg key="thisEd">This edition</msg>
-    <msg key="extent">Extent, format</msg>
-    <msg key="dateOfOrigin">Year of publication</msg>
-    <msg key="details">Catalogue Record</msg>
-    <msg key="facsimiles">Images</msg>
-    <msg key="periodOfOrigin">Volume designation</msg>
-    <msg key="ownerPrimaryEd">Owner</msg>
-    <msg key="catLink">Catalogue link</msg>
-    <msg key="ownerMaster">Digital master</msg>
-    <msg key="sort">Sort</msg>
-    <!--<msg key="next">Next</msg>-->
-    
+  <msg key="sort">Sort</msg>
+  <msg key="deselectFilters">Deselect filters</msg>
+  <msg key="filtersYieldNoResult">Sorry, but no items match these criteria (or the list of items has not been found [hint to admin])</msg>
+  <msg key="year">Year of Publication</msg>
+  <msg key="author">Author</msg>
+  <msg key="title">Title</msg>
+  <msg key="surname">Surname</msg>
+  <msg key="titleShort">Title (short)</msg>
+  <msg key="titleProper">Title proper in heading form</msg>
+  <msg key="printingPlace">Printing Place</msg>
+  <msg key="imprintWRK">Imprint</msg>
+  <msg key="summaryOfVols">Volumes</msg>
+  <msg key="complete">Complete</msg>
+  <msg key="id">Identifier</msg>
+  <msg key="latin">Latin</msg>
+  <msg key="spanish">Spanish</msg>
+  <msg key="german">German</msg>
+  <msg key="english">English</msg>
+  <msg key="language">Language</msg>
+  <msg key="material">Material</msg>
+  <msg key="readWork">Read</msg>
+  <msg key="volNo">Volume number</msg>
+  <msg key="volTitle">Volume title</msg>
+  <msg key="volume">Volume</msg>
+  <msg key="volumes">Volumes</msg>
+  <msg key="1stEd">First edition</msg>
+  <msg key="thisEd">This edition</msg>
+  <msg key="extent">Extent, format</msg>
+  <msg key="dateOfOrigin">Year of publication</msg>
+  <msg key="details">Catalogue Record</msg>
+  <msg key="facsimiles">Images</msg>
+  <msg key="periodOfOrigin">Volume designation</msg>
+  <msg key="ownerPrimaryEd">Owner</msg>
+  <msg key="catLink">Catalogue link</msg>
+  <msg key="ownerMaster">Digital master</msg>
+  <msg key="sort">Sort</msg>
+  <!--<msg key="next">Next</msg>-->
+  
   <!--Work help-->
-    <msg key="addFunx">Additional Functions</msg>
-    <msg key="onPage">on this page</msg>
-    <msg key="pages">Click on the page numbers to open the facsimile images:</msg>
-    <msg key="leafText">Click here to open the toolbox for a specific text section.</msg>
-    <msg key="bookmarkText">Click here to jump to a chosen text section.</msg>
-    <msg key="copyURL">Then you can copy the URL from the browser adress line.</msg>
-    <msg key="highlightText">Open a dialog in order to highlight persons, places, lemmata and cited works in the text.</msg>
-    <msg key="dontShow">Don't show again</msg>
-    <msg key="help">Click on this icon to open this message again.</msg>
+  <msg key="addFunx">Additional Functions</msg>
+  <msg key="onPage">on this page</msg>
+  <msg key="pages">Click on the page numbers to open the facsimile images:</msg>
+  <msg key="leafText">Click here to open the toolbox for a specific text section.</msg>
+  <msg key="bookmarkText">Click here to jump to a chosen text section.</msg>
+  <msg key="copyURL">Then you can copy the URL from the browser adress line.</msg>
+  <msg key="highlightText">Open a dialog in order to highlight persons, places, lemmata and cited works in the text.</msg>
+  <msg key="dontShow">Don't show again</msg>
+  <msg key="help">Click on this icon to open this message again.</msg>
   
   <msg key="worksInCorpus">Works in the Corpus</msg>
   <msg key="authsInArticle">Persons in this article</msg>
@@ -143,108 +143,113 @@
   <msg key="contents">Contents</msg>
   
   <!--search-->
-    <msg key="all">All</msg>
-    <msg key="global">All data sources</msg>
-    <msg key="fulltext">fulltext</msg>
-    <msg key="headings">headings</msg>
-    <msg key="heading">heading</msg>
-    <msg key="head">heading</msg>
-    <msg key="person">person</msg>
-    <msg key="place">Place</msg>
-    <msg key="notes">notes</msg>
-    <msg key="nonotes">without notes</msg>
-    <msg key="note">note</msg>
-    <msg key="titlepage">title page</msg>
-    <msg key="hit">hit</msg>
-    <msg key="hits">Hits</msg>
-    <msg key="lemma">lemma</msg>
-    <msg key="corpus">works</msg>
-    <msg key="dictionarySearch">Dictionary</msg>
-    <msg key="dictionaryEntries">Dictionary Entries</msg>
-    <msg key="WPMetadata">abstract, keywords, etc.</msg>
-    <msg key="in">in</msg>
-    <msg key="entry">entry</msg>
-    <msg key="entries">Entries</msg>
-    <msg key="searchFor">Search for</msg>
-    <msg key="allResults">All</msg>
-    <msg key="searchFeatures">Search features</msg>
-    <msg key="found">found</msg>
-    <msg key="display">display</msg>
-    <msg key="prev">previous</msg>
-    <msg key="next">next</msg>
-    <msg key="mainText">main text</msg>
-    <msg key="everythingDesc">Search in works, in biographical and conceptual dictionary articles and in abstracts and keywords of working papers.</msg>
-    <msg key="corpusDesc">Search the full text of all works.</msg>
-    <msg key="headingsDesc">Search in all works, but only in headings.</msg>
-    <msg key="notesDesc">Search in all works, but only in marginal, end- or footnotes.</msg>
-    <msg key="nonotesDesc">Search in all works, except for marginal, end- or footnotes.</msg>
-    <msg key="dictDesc">Search the full text of all dictionary entries.</msg>
-    <msg key="entriesDesc">Search the headings of dictionary entries.</msg>
-    <msg key="wpDesc">Search in abstracts and metadata of working papers.</msg>
-
-    
+  <msg key="all">All</msg>
+  <msg key="global">All data sources</msg>
+  <msg key="fulltext">fulltext</msg>
+  <msg key="headings">headings</msg>
+  <msg key="heading">heading</msg>
+  <msg key="head">heading</msg>
+  <msg key="person">person</msg>
+  <msg key="place">Place</msg>
+  <msg key="notes">notes</msg>
+  <msg key="nonotes">without notes</msg>
+  <msg key="note">note</msg>
+  <msg key="titlepage">title page</msg>
+  <msg key="hit">hit</msg>
+  <msg key="hits">Hits</msg>
+  <msg key="lemma">lemma</msg>
+  <msg key="corpus">works</msg>
+  <msg key="dictionarySearch">Dictionary</msg>
+  <msg key="dictionaryEntries">Dictionary Entries</msg>
+  <msg key="WPMetadata">abstract, keywords, etc.</msg>
+  <msg key="in">in</msg>
+  <msg key="entry">entry</msg>
+  <msg key="entries">Entries</msg>
+  <msg key="searchFor">Search for</msg>
+  <msg key="allResults">All</msg>
+  <msg key="searchFeatures">Search features</msg>
+  <msg key="found">found</msg>
+  <msg key="display">display</msg>
+  <msg key="prev">previous</msg>
+  <msg key="next">next</msg>
+  <msg key="mainText">main text</msg>
+  <msg key="everythingDesc">Search in works, in biographical and conceptual dictionary articles and in abstracts and keywords of working papers.</msg>
+  <msg key="corpusDesc">Search the full text of all works.</msg>
+  <msg key="headingsDesc">Search in all works, but only in headings.</msg>
+  <msg key="notesDesc">Search in all works, but only in marginal, end- or footnotes.</msg>
+  <msg key="nonotesDesc">Search in all works, except for marginal, end- or footnotes.</msg>
+  <msg key="dictDesc">Search the full text of all dictionary entries.</msg>
+  <msg key="entriesDesc">Search the headings of dictionary entries.</msg>
+  <msg key="wpDesc">Search in abstracts and metadata of working papers.</msg>
+  
+  
   <!--common-->
-    <msg key="externalWindow">Open link in new tab</msg>
-    <msg key="close">Close</msg>
-    <msg key="licenceDesc">Data of the School of Salamanca project are licensed under the terms of a</msg>
-    <msg key="licenceCC40">Creative Commons Attribution 4.0 International (CC BY 4.0)</msg>
-    <msg key="workInProgress">Work in Progress!</msg>
+  <msg key="externalWindow">Open link in new tab</msg>
+  <msg key="close">Close</msg>
+  <msg key="licenceDesc">Data of the School of Salamanca project are licensed (if not stated otherwise) under the terms of a</msg>
+  <msg key="licenceCC40">Creative Commons Attribution 4.0 International (CC BY 4.0)</msg>
+  <msg key="workInProgress">Work in Progress!</msg>
   
   <!--author-->
-    <msg key="order">Religious order</msg>
-    <msg key="death">Date of death</msg>
-
-    <msg key="discipline">Discipline</msg>
-    <msg key="theologian">Theology</msg>
-    <msg key="canonist">Canon Law</msg>
-    <msg key="jurist">Secular Law</msg>
-    <msg key="artes">Liberal Arts</msg>
-
-    <msg key="philosopher">Philosopher</msg>
-    <msg key="artist">Artist</msg>
-    <msg key="advocatus">Advocate</msg>
-    <msg key="procurator">Procurator</msg>
-
-    <msg key="OP">Dominican</msg>
-    <msg key="SJ">Jesuit</msg>
-    <msg key="OFM">Franciscan</msg>
-    <msg key="OESA">Augustinian</msg>
-    <msg key="CRSA">Augustinian</msg>
-
-  <!--work-->
-    <msg key="text">Text</msg>
-    <msg key="textOnly">Pure Text</msg>
-    <msg key="images">Images</msg>
-    <msg key="view">View</msg>
-    <msg key="page">Page</msg>
-    <msg key="searchWork">Search Item</msg>
-    <msg key="content">Contents</msg>
-    <msg key="toc">Contents</msg>
-    <msg key="searchterm">Search term(s)</msg>
-    <msg key="citedStuff">Persons/Places/Lemmata/Cited</msg>
-    <msg key="multivolume">Multivolume</msg>
-    <msg key="persons">Persons</msg>
-    <msg key="places">Places</msg>
-    <msg key="lemmata">Lemma</msg>
-    <msg key="cited">Cited</msg>
-    <msg key="export">Export</msg>
-    <msg key="register">Register</msg>
-    <msg key="print">Print</msg>
-    <msg key="diplomatic">Diplomatic</msg>
-    <msg key="constituted">Constituted</msg>
+  <msg key="order">Religious order</msg>
+  <msg key="death">Date of death</msg>
   
-    <msg key="workNotAvailable">This work is not yet available.</msg>
+  <msg key="discipline">Discipline</msg>
+  <msg key="theologian">Theology</msg>
+  <msg key="canonist">Canon Law</msg>
+  <msg key="jurist">Secular Law</msg>
+  <msg key="artes">Liberal Arts</msg>
+  
+  <msg key="philosopher">Philosopher</msg>
+  <msg key="artist">Artist</msg>
+  <msg key="advocatus">Advocate</msg>
+  <msg key="procurator">Procurator</msg>
+  
+  <msg key="OP">Dominican</msg>
+  <msg key="SJ">Jesuit</msg>
+  <msg key="OFM">Franciscan</msg>
+  <msg key="OESA">Augustinian</msg>
+  <msg key="CRSA">Augustinian</msg>
+  
+  <!--work-->
+  <msg key="text">Text</msg>
+  <msg key="textOnly">Pure Text</msg>
+  <msg key="images">Images</msg>
+  <msg key="view">View</msg>
+  <msg key="page">Page</msg>
+  <msg key="searchWork">Search Item</msg>
+  <msg key="content">Contents</msg>
+  <msg key="toc">Contents</msg>
+  <msg key="searchterm">Search term(s)</msg>
+  <msg key="citedStuff">Persons/Places/Lemmata/Cited</msg>
+  <msg key="multivolume">Multivolume</msg>
+  <msg key="persons">Persons</msg>
+  <msg key="places">Places</msg>
+  <msg key="lemmata">Lemma</msg>
+  <msg key="cited">Cited</msg>
+  <msg key="export">Export</msg>
+  <msg key="register">Register</msg>
+  <msg key="print">Print</msg>
+  <msg key="diplomatic">Diplomatic</msg>
+  <msg key="constituted">Constituted</msg>
+  
+  <msg key="workNotAvailable">This work is not yet available.</msg>
   
   <!--news-->
-    <msg key="more">more</msg>
-    <msg key="moreb">More</msg>
-    <msg key="back">back</msg>
+  <msg key="more">more</msg>
+  <msg key="moreb">More</msg>
+  <msg key="back">back</msg>
   
   <!--working papers-->
-    <msg key="editorialWpHead">Submit a Working Paper</msg>
-    <msg key="abstract">Abstract</msg>
-    <msg key="download">Download</msg>
-
-    <msg key="codeSharingDescription">TEI CodeSharing service by Martin Holmes, running on </msg>
-    <msg key="loadPrev">Load preceding text</msg>
+  <msg key="editorialWpHead">Submit a Working Paper</msg>
+  <msg key="abstract">Abstract</msg>
+  <msg key="download">Download</msg>
+  
+  <msg key="codeSharingDescription">TEI CodeSharing service by Martin Holmes, running on </msg>
+  <msg key="loadPrev">Load preceding text</msg>
+  
+  <!-- dictionary -->
+  <msg key="dictUnderConstruction">The Dictionary of the School of Salamanca’s juridical-political language is going to be found here: approx. 200 entries with Latin and Spanish lemmata, taken directly from the sources.
+    The entries will be published successively, beginning in 2019.</msg>
+  
 </catalogue>
