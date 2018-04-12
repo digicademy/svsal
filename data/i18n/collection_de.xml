@@ -1,26 +1,31 @@
 <catalogue xml:lang="de">
-<!--Do not edit -->
-  <!--author-->
+    <!--Do not edit -->
+    
+    <!-- common -->
+    
+    <msg key="licenceDesc">Für die Daten des Projekts "Die Schule von Salamanca" gilt (falls nicht anders angegeben) eine</msg>
+    
+    <!--author-->
     <msg key="order">Orden</msg>
     <msg key="death">Todesdatum</msg>
-
+    
     <msg key="discipline">Disziplin</msg>
     <msg key="theologian">Theologie</msg>
     <msg key="canonist">Kanonisches Recht</msg>
     <msg key="jurist">Säkulares Recht</msg>
     <msg key="artes">Artes Liberales</msg>
-
+    
     <msg key="philosopher">Philosoph</msg>
     <msg key="artist">Artist</msg>
     <msg key="advocatus">Advokat</msg>
     <msg key="procurator">Prokurator</msg>
-
+    
     <msg key="OP">Dominikaner</msg>
     <msg key="SJ">Jesuit</msg>
     <msg key="OFM">Franziskaner</msg>
     <msg key="OESA">Augustiner</msg>
     <msg key="CRSA">Augustiner</msg>
-
+    
     <msg key="workInProgress">Werk in Arbeit!</msg>
     
     <!-- work -->
@@ -28,8 +33,8 @@
     <msg key="constituted">Konstituiert</msg>
     
     <msg key="workNotAvailable">Dieses Werk ist noch nicht verfügbar.</msg>
-
-<!-- Meta Description Tags -->
+    
+    <!-- Meta Description Tags -->
     <msg key="metaAuthor">Biobibliographische Informationen über</msg>
     <msg key="metaLemma">Sachartikel zu</msg>
     <msg key="metaWP">SvSal Working Paper</msg>
@@ -46,5 +51,9 @@
     <msg key="metaAuthors">Überblick über die Autoren, deren Texte in der Quellenedition und die weiterhin durch biographische Artikel beschrieben sind.</msg>
     <msg key="metaDictionary">Überblick über die im Projekt erarbeiteten Sachartikel des Wörterbuchs der juridisch-politischen Sprache der Schule von Salamanca</msg>
     <msg key="metaWPs">Überblick über die Working Papers zur Schule von Salamanca, die im Rahmen der vom Projekt veranstalteten Reihe erschienen sind.</msg>
-
+    
+    <!-- dictionary -->
+    <msg key="dictUnderConstruction">Hier entsteht das Wörterbuch der juristisch-politischen Sprache der Schule von Salamanca: ca. 200 Artikel mit lateinischen und spanischen Lemmata, den Quellen selbst entnommen. 
+        Die Artikel werden voraussichtlich ab 2019 sukzessive veröffentlicht.</msg>
+    
 </catalogue>

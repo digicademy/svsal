@@ -887,22 +887,22 @@ declare function config:footer ($node as node(), $model as map(*), $lang as xs:s
             <div class="col-md-12 hidden-sm hidden-xs" style="text-align: center">
             <br/>
                 <p><a href="contact.html"><i class="fa fa-envelope-o"></i>&#32;&#32;<i18n:text key='contact'>Kontakt</i18n:text></a> | <a  href="project.html"><i18n:text key='imprint'>Impressum</i18n:text></a></p>
-                    <p><span style="color:#92A4B1;"></span>&#xA0;&#xA0; <i class="fa fa-copyright"></i>&#32;&#32;<span title="{$username}">SvSal 2015</span>
+                    <p><span style="color:#92A4B1;"></span>&#xA0;&#xA0; <i class="fa fa-copyright"></i>&#32;&#32;<span title="{$username}">SvSal 2015-2018</span>
                 </p>
             </div>
         </div>
         <div class="col-sm-12 hidden-lg hidden-md" style="text-align: center">
             <p><a href="contact.html"><i class="fa fa-envelope-o"></i>&#32;&#32;<i18n:text key='contact'>Kontakt</i18n:text></a> | <a  href="project.html"><i18n:text key='imprint'>Impressum</i18n:text></a></p>
-                <p><span style="color:#92A4B1;"></span>&#xA0;&#xA0; <i class="fa fa-copyright"></i>&#32;&#32;<span title="{$username}">SvSal 2015</span>
+                <p><span style="color:#92A4B1;"></span>&#xA0;&#xA0; <i class="fa fa-copyright"></i>&#32;&#32;<span title="{$username}">SvSal 2015-2018</span>
             </p>
         </div>
         <!-- CC BY -->        
         <div class="row">   
             <div class="col-md-12" style="text-align: center">
            <!--<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons Lizenzvertrag" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />-->
-           <i18n:text key="licenceDesc">Für die Daten des Projekts "Die Schule von Salamanca" gilt eine</i18n:text>{$config:nbsp}<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><i18n:text key="licenceCC40">Creative Commons Namensnennung 4.0 International Lizenz</i18n:text> <span class="glyphicon glyphicon-new-window"></span></a>.
+           <i18n:text key="licenceDesc"/>{$config:nbsp}<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><i18n:text key="licenceCC40">Creative Commons Namensnennung 4.0 International Lizenz</i18n:text> <span class="glyphicon glyphicon-new-window"></span></a>.
            </div>
        </div>
     </span>
      return i18n:process($footer, $lang, "/db/apps/salamanca/data/i18n", "de")
-};   
+};     
