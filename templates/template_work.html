@@ -440,13 +440,29 @@
             return ( prop &amp;&amp; prop in params ) ? params[ prop ] : params;
         };
 
+        /**
+         * JavaScript Get current Language
+         * 
+         * @return the content of the 'lang' url parameter or a string based on pathname components
+         */
+        function getLang() {
+            if (getUrlParams('lang').length > 0)
+                return getUrlParams('lang')
+            else if (window.location.href.indexOf("/es/") > -1) 
+                return 'es'
+            else if (window.location.href.indexOf("/de/") > -1)
+                return 'de'
+            else
+                return 'en'
+        };
+
         // Build viewer popup, but don't show it yet (jquery ui config)
         $(document).ready(function(){
             document.getElementById('Mirador').src = "mirador.html?wid=" + getUrlParams( 'wid' );
             $('#parent').dialog({                                      // define jquery-ui dialogue properties...
                 position:   {my: "left top", at: "left+5 bottom+40", of: "div.navbar"},
                 autoOpen:   false,
-                width:      Math.min($(window).width()* 0.45, 500),   // startsize of the dialog
+                width:      Math.min($(window).width()* 0.4, 600),   // startsize of the dialog
                 height:     Math.min($(window).height()* 0.8, 700),
                 create:     function(event, ui) {
                                 $(event.target).parent().css('position', 'fixed');
@@ -496,6 +512,8 @@
                 // Update some values of the dialog popup window
                 $("#parent small").text($(this).attr('href'));         // update Viewer Heading
                 $("#parent div").attr('title', $(this).attr('href'));  // update Viewer Title
+                $('#Mirador')[0].contentDocument.getElementById('downloadImages').href = "http://facs.salamanca.school/" + getUrlParams( 'wid' ) + "/" + getUrlParams( 'wid' ) + ".zip";  // update Download button
+                $('#Mirador')[0].contentDocument.getElementById('downloadImages').setAttribute('download', getUrlParams( 'wid' ) + ".zip");  // update Download button
     
                 // Open the dialog window
                 $("#parent").dialog('open');                           // show Viewer with jquery-ui Dialog method
@@ -522,6 +540,8 @@
                 // Update some values of the dialog popup window
                 $("#parent small").text($(this).attr('href'));         // update Viewer Heading
                 $("#parent div").attr('title', $(this).attr('href'));  // update Viewer Title
+                $('#Mirador')[0].contentDocument.getElementById('downloadImages').href = "http://facs.salamanca.school/" + getUrlParams( 'wid' ) + "/" + getUrlParams( 'wid' ) + ".zip";  // update Download button
+                $('#Mirador')[0].contentDocument.getElementById('downloadImages').setAttribute('download', getUrlParams( 'wid' ) + ".zip");  // update Download button
     
                 // Reflect viewer status in url
                 params = new URLSearchParams(window.location.search) ;
@@ -550,7 +570,6 @@
             // Bind click event for syncing/scrolling text area
             $('#Mirador').contents().find("#sync").on('click', function(){
                 $canvasId = document.getElementById('Mirador').contentWindow.MyObjects.myMirador.viewer.workspace.windows[0].canvasID
-// TODO: do something if the target is not in the current fragment...
                 var target = $("a[data-canvas='" + $canvasId +"']");
                 if (target.length) {
                     console.log('sync button has been clicked on canvasId ' + $canvasId + ', going to #' + target.attr('id'));
@@ -576,6 +595,13 @@
                         });
                 }
             });
+
+            // Bind click event for download images button
+//            $('#Mirador').contents().find("#downloadImages").on('click', function(){
+//                $wid = getUrlParams( 'wid' );
+//                console.log('download button has been clicked for work ' + $wid + '.');
+//                $('#Mirador')[0].contentDocument.getElementById('#downloadImages').attr('href') = "https://facs.salamanca.school/" + $wid + "/" + $wid + ".zip";
+//            });
         };
         </script>
 

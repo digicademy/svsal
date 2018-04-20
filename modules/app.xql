@@ -2951,7 +2951,7 @@ declare function app:downloadTXT($node as node(), $model as map(*), $mode as xs:
 };
 
 declare function app:downloadCorpusXML($node as node(), $model as map(*), $lang as xs:string) {
-    let $download :=        <li><a href="{$config:teiserver ||'/sal-tei-corpus.zip'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/> ZIP (XML Corpus)</a></li>
+    let $download :=        <li><a href="{$config:softwareserver ||'/sal-tei-corpus.zip'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/> ZIP (XML Corpus)</a></li>
     return i18n:process($download, $lang, '/db/apps/salamanca/data/i18n', 'en')
 };
        
