@@ -446,11 +446,11 @@
          * @return the content of the 'lang' url parameter or a string based on pathname components
          */
         function getLang() {
-            if (getUrlParams('lang').length > 0)
+            if (getUrlParams('lang').length &gt; 0)
                 return getUrlParams('lang')
-            else if (window.location.href.indexOf("/es/") > -1) 
+            else if (window.location.href.indexOf("/es/") &gt; -1) 
                 return 'es'
-            else if (window.location.href.indexOf("/de/") > -1)
+            else if (window.location.href.indexOf("/de/") &gt; -1)
                 return 'de'
             else
                 return 'en'
@@ -512,7 +512,7 @@
                 // Update some values of the dialog popup window
                 $("#parent small").text($(this).attr('href'));         // update Viewer Heading
                 $("#parent div").attr('title', $(this).attr('href'));  // update Viewer Title
-                $('#Mirador')[0].contentDocument.getElementById('downloadImages').href = "http://facs.salamanca.school/" + getUrlParams( 'wid' ) + "/" + getUrlParams( 'wid' ) + ".zip";  // update Download button
+                $('#Mirador')[0].contentDocument.getElementById('downloadImages').href = "https://c104-131.cloud.gwdg.de/sal-facs/" + getUrlParams( 'wid' ) + "/" + getUrlParams( 'wid' ) + ".zip";  // update Download button
                 $('#Mirador')[0].contentDocument.getElementById('downloadImages').setAttribute('download', getUrlParams( 'wid' ) + ".zip");  // update Download button
     
                 // Open the dialog window
@@ -540,7 +540,7 @@
                 // Update some values of the dialog popup window
                 $("#parent small").text($(this).attr('href'));         // update Viewer Heading
                 $("#parent div").attr('title', $(this).attr('href'));  // update Viewer Title
-                $('#Mirador')[0].contentDocument.getElementById('downloadImages').href = "http://facs.salamanca.school/" + getUrlParams( 'wid' ) + "/" + getUrlParams( 'wid' ) + ".zip";  // update Download button
+                $('#Mirador')[0].contentDocument.getElementById('downloadImages').href = "https://c104-131.cloud.gwdg.de/sal-facs/" + getUrlParams( 'wid' ) + "/" + getUrlParams( 'wid' ) + ".zip";  // update Download button
                 $('#Mirador')[0].contentDocument.getElementById('downloadImages').setAttribute('download', getUrlParams( 'wid' ) + ".zip");  // update Download button
     
                 // Reflect viewer status in url
@@ -595,13 +595,6 @@
                         });
                 }
             });
-
-            // Bind click event for download images button
-//            $('#Mirador').contents().find("#downloadImages").on('click', function(){
-//                $wid = getUrlParams( 'wid' );
-//                console.log('download button has been clicked for work ' + $wid + '.');
-//                $('#Mirador')[0].contentDocument.getElementById('#downloadImages').attr('href') = "https://facs.salamanca.school/" + $wid + "/" + $wid + ".zip";
-//            });
         };
         </script>
 
