@@ -123,6 +123,7 @@
   <msg key="ownerMaster">Digital master</msg>
   <msg key="sort">Sort</msg>
   <!--<msg key="next">Next</msg>-->
+  <msg key="corpus">the whole corpus as TEI/XML files</msg>
   
   <!--Work help-->
   <msg key="addFunx">Additional Functions</msg>

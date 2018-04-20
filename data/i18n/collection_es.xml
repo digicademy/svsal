@@ -128,6 +128,7 @@
  <msg key="catLink">Enlace en el catálogo</msg>
  <msg key="ownerMaster">Propiedad digital</msg>
  <msg key="titleReadingViev">Título</msg>
+ <msg key="corpus">todo el corpus como archivos TEI/XML</msg>
  
  <!--Work help-->
  <msg key="addFunx">Additional Functions</msg>

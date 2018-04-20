@@ -257,6 +257,9 @@ background-color:#102873
 font-size:1.2em;
 color:#555555
 }
+#corpusdownloadparagraph {
+    margin-top: 40px;
+}
 #facets .facetitem,
 #facets .orderby,
 #facets .deselectstartover {

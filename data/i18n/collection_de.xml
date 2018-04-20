@@ -31,6 +31,8 @@
     <!-- work -->
     <msg key="diplomatic">Diplomatisch</msg>
     <msg key="constituted">Konstituiert</msg>
+    <msg key="corpus">des ganzen Corpus als TEI/XML Dateien</msg>
+    <msg key="download">Download</msg>
     
     <msg key="workNotAvailable">Dieses Werk ist noch nicht verfügbar.</msg>
     
