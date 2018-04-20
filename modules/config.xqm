@@ -150,6 +150,7 @@ declare variable $config:html-root      := concat($config:data-root, "/html");
 declare variable $config:snippets-root  := concat($config:data-root, "/snippets");
 declare variable $config:rdf-root       := concat($config:salamanca-data-root, "/rdf");
 declare variable $config:iiif-root      := concat($config:salamanca-data-root, "/iiif");
+declare variable $config:files-root     := concat($config:resources-root, "/files");
 
 (: declare variable $config:home-url   := replace(replace(replace(request:get-url(), substring-after(request:get-url(), '/salamanca'), ''),'/rest/', '/'), 'localhost', 'h2250286.stratoserver.net'); :)
 
@@ -291,12 +292,13 @@ declare function config:app-header($node as node(), $model as map(*), $lang as x
                     <a href="works.html">
                     <span class="glyphicon glyphicon-file" aria-hidden="true"></span>&#160;
                     <i18n:text key="works">Werke</i18n:text></a></li> 
-                 
+                <!-- 
                     <li class="{if ( (contains(request:get-url(), 'dictionary')) or
                                  (contains(request:get-url(), 'lemma.'))        ) then 'active' else ()}">
                     <a href="dictionary.html">
                     <span class="glyphicon glyphicon-book" aria-hidden="true"></span>&#160;
                     <i18n:text key="dictionary">Wörterbuch</i18n:text></a></li> 
+                -->
                 <li class="{if ( (contains(request:get-url(), 'author.')) or
                                  (contains(request:get-url(), 'authors.'))      ) then 'active' else ()}">
                     <a href="authors.html">
@@ -330,7 +332,7 @@ declare function config:app-header($node as node(), $model as map(*), $lang as x
                 </li> 
             </menu>
             <!-- language-switch buttons on large screens -->
-            <menu>
+            <menu class="nav navbar-nav">
                 <li class="nav navbar-nav navbar-right hidden-xs hidden-sm hidden-md">
                    <div class="btn-group" role="group" aria-label="...">
                      <a  class="btn navbar-btn {if ($lang='de') then 'btn-info' else 'btn-default'}" href="{$config:webserver}/de/{concat(request:get-attribute('$exist:resource'), if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (), string-join(net:inject-requestParameter('', ''), '&amp;'))}">de</a>
@@ -904,4 +906,4 @@ declare function config:footer ($node as node(), $model as map(*), $lang as xs:s
        </div>
     </span>
      return i18n:process($footer, $lang, "/db/apps/salamanca/data/i18n", "de")
-};   
+};     
