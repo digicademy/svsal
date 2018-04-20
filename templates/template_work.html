@@ -464,7 +464,7 @@
         function getLang() {
             if (getUrlParams('lang').length &gt; 0)
                 return getUrlParams('lang')
-            else if (window.location.href.indexOf("/es/") != -1) 
+            else if (window.location.href.indexOf("/es/") != -1)
                 return 'es'
             else if (window.location.href.indexOf("/de/") != -1)
                 return 'de'
@@ -614,13 +614,6 @@
                         });
                 }
             });
-
-            // Bind click event for download images button
-//            $('#Mirador').contents().find("#downloadImages").on('click', function(){
-//                $wid = getUrlParams( 'wid' );
-//                console.log('download button has been clicked for work ' + $wid + '.');
-//                $('#Mirador')[0].contentDocument.getElementById('#downloadImages').attr('href') = "https://facs.salamanca.school/" + $wid + "/" + $wid + ".zip";
-//            });
         };
         </script>
 
