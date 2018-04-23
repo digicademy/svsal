@@ -39,7 +39,7 @@ declare function iiif:needsResource($targetWorkId as xs:string) as xs:boolean {
 declare function iiif:needsResourceString($node as node(), $model as map(*)) {
     let $currentWorkId := (string($model('currentWork')/@xml:id))
     return if (iiif:needsResource($currentWorkId)) then
-                <td title="source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}"><a href="iiif-admin.xql?wid={$currentWorkId}"><b>Create IIIF resource NOW!</b></a></td>
+                <td title="source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}"><a href="iiif-admin.xql?resourceId={$currentWorkId}"><b>Create IIIF resource NOW!</b></a></td>
             else
                 <td title="{concat('IIIF resource created on: ', string(xmldb:last-modified($config:iiif-root, $currentWorkId || '.json')), ', Source from: ', string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml')), '.')}">Creating IIIF resource unnecessary. <small><a href="iiif-admin.xql?resourceId={$currentWorkId}">Create IIIF resource anyway!</a></small></td>
     
