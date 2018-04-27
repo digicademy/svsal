@@ -83,37 +83,8 @@ declare function iiif:mkMultiVolumeCollection($workId as xs:string, $tei as node
     let $manifests := array {for $manifest in $volumeManifests return $manifest}
 
     (: Bibliographical metadata section :)
-    (: TODO: alternate title? :)
-    let $monogr := $tei/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct/tei:monogr
-    let $pubPlace := if ($monogr/tei:imprint/tei:pubPlace[@role='thisEd']) then normalize-space($monogr/tei:imprint/tei:pubPlace[@role='thisEd']/@key)
-                     else if ($monogr/tei:imprint/tei:pubPlace[@role='firstEd']) then normalize-space($monogr/tei:imprint/tei:pubPlace[@role='firstEd']/@key)
-                     else ()
-    let $publishers := if ($monogr/tei:imprint/tei:publisher[@n='thisEd'])
-                       then array { for $publisher in $monogr/tei:imprint/tei:publisher[@n='thisEd']//tei:persName
-                                   return map {"label": "Publisher", "value": normalize-space($publisher[text()]) } }
-                       else if ($monogr/tei:imprint/tei:publisher[@n='firstEd'])
-                       then array { for $publisher in $monogr/tei:imprint/tei:publisher[@n='firstEd']//tei:persName
-                                   return map {"label": "Publisher", "value": normalize-space($publisher[text()]) } }
-                       else ()
-    let $pubDate := if ($monogr/tei:imprint/tei:date[@type='thisEd']) then normalize-space($monogr/tei:imprint/tei:date[@type='thisEd'])
-                    else if ($monogr/tei:imprint/tei:date[@type='firstEd']) then normalize-space($monogr/tei:imprint/tei:date[@type='firstEd'])
-                    else ()
-    let $lang := string($tei/tei:text/@xml:lang)
+    let $metadata := iiif:mkMetadata($tei)
 
-    let $metadata := array {
-        map {"label": "Title", "value": normalize-space($tei//tei:titleStmt/tei:title[@type="main"]/text())},
-        map {"label": "Author", "value": normalize-space($tei//tei:titleStmt/tei:author)},
-        map {"label": "Date Added", "value": ""},
-        map {"label": "Language", "value": $lang},
-        map {"label": "Publish Place", "value": $pubPlace},
-        map {"label": "Publish Date", "value": $pubDate},
-        map {"label": "Publishers", "value": $publishers},
-        map {"label": "Full Title", "value": normalize-space($tei//tei:sourceDesc/tei:biblStruct//tei:monogr/tei:title[@type='main'])},
-        map {"label": "Topic", "value": ""},
-        map {"label": "About", "value": ""}
-    }
-
-	
     (: the "manifests" property (below) is likely to be deprecated in v3.0 and should probably be changed to "members" then :)
     let $collection-out := map {
         "@context": "http://iiif.io/api/presentation/2/context.json",
@@ -140,35 +111,7 @@ declare function iiif:mkSingleVolumeManifest($volumeId as xs:string, $tei as nod
     let $label := normalize-space($tei/tei:teiHeader//tei:titleStmt/tei:title[@type="main"]/text())
 
     (: Bibliographical metadata section :)
-    (: TODO: alternate title? :)
-    let $monogr := $tei/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct/tei:monogr
-    let $pubPlace := if ($monogr/tei:imprint/tei:pubPlace[@role='thisEd']) then normalize-space($monogr/tei:imprint/tei:pubPlace[@role='thisEd']/@key)
-                     else if ($monogr/tei:imprint/tei:pubPlace[@role='firstEd']) then normalize-space($monogr/tei:imprint/tei:pubPlace[@role='firstEd']/@key)
-                     else ()
-    let $publishers := if ($monogr/tei:imprint/tei:publisher[@n='thisEd'])
-                       then array { for $publisher in $monogr/tei:imprint/tei:publisher[@n='thisEd']//tei:persName
-                                   return map {"label": "Publisher", "value": normalize-space($publisher[text()]) } }
-                       else if ($monogr/tei:imprint/tei:publisher[@n='firstEd'])
-                       then array { for $publisher in $monogr/tei:imprint/tei:publisher[@n='firstEd']//tei:persName
-                                   return map {"label": "Publisher", "value": normalize-space($publisher[text()]) } }
-                       else ()
-    let $pubDate := if ($monogr/tei:imprint/tei:date[@type='thisEd']) then string($monogr/tei:imprint/tei:date[@type='thisEd']/@when)
-                    else if ($monogr/tei:imprint/tei:date[@type='firstEd']) then string($monogr/tei:imprint/tei:date[@type='firstEd']/@when)
-                    else ()
-    let $lang := string($tei/tei:text/@xml:lang)
-
-    let $metadata := array {
-        map {"label": "Title", "value": normalize-space($tei//tei:titleStmt/tei:title[@type="main"]/text())},
-        map {"label": "Author", "value": normalize-space($tei//tei:titleStmt/tei:author)},
-        map {"label": "Date Added", "value": ""},
-        map {"label": "Language", "value": $lang},
-        map {"label": "Publish Place", "value": $pubPlace},
-        map {"label": "Publish Date", "value": $pubDate},
-        map {"label": "Publishers", "value": $publishers},
-        map {"label": "Full Title", "value": normalize-space($tei//tei:sourceDesc/tei:biblStruct//tei:monogr/tei:title[@type='main'])},
-        map {"label": "Topic", "value": ""},
-        map {"label": "About", "value": ""}
-    }
+    let $metadata := iiif:mkMetadata($tei)
 
     let $description := "Coming soon..." (: TODO, depends on available description in TEI metadata :)
     (: the thumbnail works only if we have a titlePage with a pb in or before it: :)
@@ -373,10 +316,76 @@ declare function iiif:transformDigilibCanvas($volumeId as xs:string, $canvas as 
     return $canvas-out
 };
 
+(: Gets the bibliographic metadata of a given TEI document (node).
+    @param $tei The TEI document node for a work
+    @returns An "metadata" array according to the IIIF presentation specifications
+    :)
+declare function iiif:mkMetadata($tei as node()) as array(*) {
+    let $monogr := $tei/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct/tei:monogr
+    let $pubPlace := if ($monogr/tei:imprint/tei:pubPlace[@role='thisEd']) then normalize-space($monogr/tei:imprint/tei:pubPlace[@role='thisEd']/@key)
+                     else if ($monogr/tei:imprint/tei:pubPlace[@role='firstEd']) then normalize-space($monogr/tei:imprint/tei:pubPlace[@role='firstEd']/@key)
+                     else ()
+    let $publishers := if ($monogr/tei:imprint/tei:publisher[@n='thisEd'])
+                       then array { for $publisher in $monogr/tei:imprint/tei:publisher[@n='thisEd']//tei:persName
+                                   return map {"label": iiif:getI18nLabels("publisher"), "@value": normalize-space($publisher[text()]) } }
+                       else if ($monogr/tei:imprint/tei:publisher[@n='firstEd'])
+                       then array { for $publisher in $monogr/tei:imprint/tei:publisher[@n='firstEd']//tei:persName
+                                   return map {"label": iiif:getI18nLabels("publisher"), "@value": normalize-space($publisher[text()]) } }
+                       else ()
+(:   let $publishersI18n := for $publisher in $publishers array {
+                            map { "@value": map:get(map:get($labels, $labelKey), "en"), "@language": "en" },
+                            map { "@value": map:get(map:get($labels, $labelKey), "es"), "@language": "es" },
+                            map { "@value": map:get(map:get($labels, $labelKey), "de"), "@language": "de" } 
+                        }  :)         
+    let $pubDate := if ($monogr/tei:imprint/tei:date[@type='thisEd']) then string($monogr/tei:imprint/tei:date[@type='thisEd']/@when)
+                    else if ($monogr/tei:imprint/tei:date[@type='firstEd']) then string($monogr/tei:imprint/tei:date[@type='firstEd']/@when)
+                    else ()
+    let $lang := string($tei/tei:text/@xml:lang)
+
+    let $metadata := array {
+        map {"label": iiif:getI18nLabels("title"), "value": normalize-space($tei//tei:titleStmt/tei:title[@type="main"]/text())},
+        map {"label": iiif:getI18nLabels("author"), "value": normalize-space($tei//tei:titleStmt/tei:author)},
+        map {"label": iiif:getI18nLabels("date-added"), "value": ""},
+        map {"label": iiif:getI18nLabels("language"), "value": $lang},
+        map {"label": iiif:getI18nLabels("publish-place"), "value": $pubPlace},
+        map {"label": iiif:getI18nLabels("publish-date"), "value": $pubDate},
+        map {"label": iiif:getI18nLabels("publishers"), "value": $publishers},
+        map {"label": iiif:getI18nLabels("full-title"), "value": normalize-space($tei//tei:sourceDesc/tei:biblStruct//tei:monogr/tei:title[@type='main'])}
+    }
+(:   further potential metadata fields:
+        map {"label": "Topic", "value": ""},
+        map {"label": "About", "value": ""}  :)
+    return $metadata
+};
+
 declare function iiif:getThumbnailUrl($tei as node()) as xs:string {
     let $thumbnailFacs := if ($tei/tei:text/tei:front//tei:titlePage[1]//tei:pb[1]) then $tei/tei:text/tei:front/tei:titlePage//tei:pb[1]/@facs
                           else $tei/tei:text/tei:front//tei:titlePage[1]/preceding-sibling::tei:pb[1]/@facs
     return iiif:teiFacs2IiifImageId($thumbnailFacs)
+};
+
+(: Returns for a specific label keyword an array of labels in English, Spanish, and German.
+    @param $labelKey The label keyword for which internationalized versions are required
+    @return An array of (maps for) labels in English, Spanish, and German :)
+declare function iiif:getI18nLabels($labelKey as xs:string?) as array(*) {
+    let $labels := map { "title": map {"en": "Title", "de": "Titel", "es": "Título"},
+                         "author": map {"en": "Author", "de": "Autor", "es": "Autor"},
+                         "date-added": map {"en": "Date Added", "de": "Hinzugefügt", "es": "Agregado"},
+                         "language": map {"en": "Language", "de": "Sprache", "es": "Lengua"},
+                         "publish-place": map {"en": "Publish Place", "de": "Erscheinungsort", "es": "Lugar de Publicación"},
+                         "publish-date": map {"en": "Publish Date", "de": "Erscheinungsjahr", "es": "Año de Publicación"},
+                         "publishers": map {"en": "Publishers", "de": "Verleger", "es": "Editores"},
+                         "full-title": map {"en": "Full Title", "de": "Gesamter Titel", "es": "Título Completo"},
+                         "publisher": map {"en": "Publisher", "de": "Verleger", "es": "Editor"}
+                         }
+    let $currentLabel := if (map:contains($labels, $labelKey) ) then 
+                        array {
+                            map { "@value": map:get(map:get($labels, $labelKey), "en"), "@language": "en" },
+                            map { "@value": map:get(map:get($labels, $labelKey), "es"), "@language": "es" },
+                            map { "@value": map:get(map:get($labels, $labelKey), "de"), "@language": "de" } 
+                        }
+                        else ()
+    return $currentLabel
 };
 
 (: converts a tei:pb/@facs value (given that it has the form "facs:Wxxxx(-x)-xxxx") into an image id understandable by the Digilib server,
@@ -529,7 +538,7 @@ declare function iiif:getPageId($canvasId as xs:string*) {
 
 (: TODO:
     - create top collection for SvSal
-    - create ranges (deprecation warning...)?;
+    (- create ranges (deprecation warning...)?;)
     - startCanvas in Sequence
     - check validity and consistency of @id on every level
     - dealing with TEI data which has been separated into Wxxx_a, Wxxx_b etc due to performance issues
