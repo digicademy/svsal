@@ -5,7 +5,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@prefix wv: <http://vocab.org/waiver/terms/norms> .        
+@prefix wv: <http://vocab.org/waiver/terms/norms> .
 @prefix sd: <http://www.w3.org/ns/sparql-service-description#> .
 
 @prefix : <#> .
@@ -24,7 +24,7 @@
     dcterms:publisher :ADWMainz ;
     dcterms:contributor :Salamanca_Project ;
     dcterms:contributor :Andreas_Wagner ;
-    dcterms:created "2016-11-01"^^xsd:date ;
+    dcterms:created "2018-05-02"^^xsd:date ;
 
     dcterms:license <http://www.opendatacommons.org/licenses/by/> ;
     wv:norms <http://www.opendatacommons.org/norms/odc-by-sa/> ;
@@ -63,7 +63,7 @@
 	void:classPartition [
 							void:class <http://purl.org/spar/fabio/work> ;
 							dcterms:title "Works of the School of Salamanca" ;
-							void:documents 18 ;
+							void:documents 3 ;
 #							void:entities 999 ;
 #							void:triples 9999 ;
 						] ;
@@ -108,7 +108,7 @@
 :GND a void:Dataset ;
  foaf:homepage <http://d-nb.info/gnd> ;
  dcterms:title "Gemeinsame Normdatei" ;
- dcterms:description "Gemeinsame Normdatei in RDF, siehe auch http://www.d-nb.de/standardisierung/normdateien/gnd.htm" ; 
+ dcterms:description "Gemeinsame Normdatei in RDF, siehe auch http://www.d-nb.de/standardisierung/normdateien/gnd.htm" ;
  void:exampleResource <http://d-nb.info/gnd/4137933-0> ;
  void:exampleResource <http://d-nb.info/gnd/118594893> .
 
@@ -130,6 +130,7 @@
     foaf:member :Andreas_Wagner ;
     foaf:member :Christiane_Birr ;
     foaf:member :Thomas_Duve ;
+    foaf:member :David_Glueck ;
     foaf:member :Matthias_Lutz-Bachmann ;
     .
 
@@ -142,22 +143,27 @@
 :Andreas_Wagner a foaf:Person ;
 	rdfs:label "Andreas Wagner" ;
 	foaf:mbox <mailto:andreas.wagner@em.uni-frankfurt.de> ;
-	owl:sameAs <http://orcid.org/0000-0003-1835-1653> ;
-	owl:sameAs <d-nb.info/gnd/108835820> ;
+	owl:sameAs <https://orcid.org/0000-0003-1835-1653> ;
+	owl:sameAs <https://d-nb.info/gnd/108835820> ;
 	.
 
 :Christiane_Birr a foaf:Person ;
 	rdfs:label "Christiane Birr" ;
-	owl:sameAs <d-nb.info/gnd/123718406> ;
-	owl:sameAs <d-nb.info/gnd/138962987> ;
+	owl:sameAs <https://d-nb.info/gnd/123718406> ;
+	owl:sameAs <https://d-nb.info/gnd/138962987> ;
 	.
+
+:David_Glueck a foaf:Person ;
+    rdfs:label "David Glück" ;
+    owl:sameAs <https://orcid.org/0000-0002-0273-3844> ;
+    .
 
 :Thomas_Duve a foaf:Person ;
 	rdfs:label "Thomas Duve" ;
-	owl:sameAs <d-nb.info/gnd/1028938721> ;
+	owl:sameAs <https://d-nb.info/gnd/1028938721> ;
 	.
 
 :Matthias_Lutz-Bachmann a foaf:Person ;
 	rdfs:label "Matthias Lutz-Bachmann" ;
-	owl:sameAs <d-nb.info/gnd/1022577581> ;
+	owl:sameAs <https://d-nb.info/gnd/1022577581> ;
 	.
