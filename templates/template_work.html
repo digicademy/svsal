@@ -13,7 +13,7 @@
         <link rel="first" data-template="config:firstLink"/>
         <link rel="prev" data-template="config:prevLink"/>
         <link rel="next" data-template="config:nextLink"/>
-        
+
         <!-- ==== CSS  ==== -->
         <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
         <link rel="stylesheet" type="text/css" href="resources/css/style_work.css"/>
@@ -29,7 +29,7 @@
                 padding: 0 0;
             }
 /*            .ui-dialog-titlebar {display:none} */
-        </style>       
+        </style>
         <!-- ==== favIcon ==== -->
         <link rel="apple-touch-icon" sizes="57x57" href="resources/favicons/apple-touch-icon-57x57.png"/>
         <link rel="apple-touch-icon" sizes="60x60" href="resources/favicons/apple-touch-icon-60x60.png"/>
@@ -49,7 +49,7 @@
         <meta name="msapplication-TileColor" content="#ffffff"/>
         <meta name="msapplication-TileImage" content="/resources/favicons/mstile-144x144.png"/>
         <meta name="theme-color" content="#ffffff"/>
-        
+
     </head>
     <body id="body">
         <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -63,71 +63,87 @@
         <div data-template="app:guiWRK"/>
         <!-- main window -->
         <div id="content" class="container-fluid"/>
-        
+
         <!-- ==== Core JavaScript  ==== -->
         <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"/>
         <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"/>
         <script type="text/javascript" src="//code.jquery.com/ui/1.11.3/jquery-ui.min.js"/>
         <script type="text/javascript" src="resources/js/jquery.bootstrap-autohidingnavbar.js"/>
         <script type="text/javascript" src="resources/js/jquery.tooltipster.js"/>
-        
+
         <!-- ==== Back to top ==== -->
         <a id="backTop"/>
         <script type="text/javascript" src="resources/js/jquery.backTop.js"/>
-        <script type="text/javascript">
-            $(document).ready( function() {
-                $('#backTop').backTop({
-                    'position' : 100,
-                    'speed' : 200,
-                    'color' : 'white',
-                });
-            });
-        </script>
-        
+
         <!-- ==== Scroll an anchor into view if we have one ==== -->
         <script type="text/javascript">
-            $(document).ready(function () {
-                if (window.location.hash) { scrollIntoView(window.location.hash);}
-            });
-            $('a[href*="#"]').click(function(event){
-                console.log("Click on a@href=" + $(this).attr('href') + '...')
-                z = $(this).attr('href').slice($(this).attr('href').indexOf('#'))
-                console.log("z = " + z + '...')
-                if ($(z).length != 0) {
-                    console.log("Going locally to " + z + '...')
-                    scrollIntoView(z);
-                    event.preventDefault();
-                }
-            });
-            function scrollIntoView(targetId) {
-                var $offset = $(targetId).offset();
-                console.log("$('" + targetId + ").offset().top = " + $offset.top + ".")
-                goHere = $offset.top - ($(".navbar-white").offset().top + $(".navbar-white").outerHeight(true) + 15);
-                console.log("GoHere: " + goHere + ".")
-                $('html, body').animate({
-                        'scrollTop': goHere
-                      }, 800, 'swing', function () {
-                                $(targetId).parent().effect( "highlight", {color:'LightSkyBlue'}, 1000 );
-                                $(targetId).parent().effect( "highlight", {color:'LightSkyBlue'}, 1000 );
-                            });
+            $('a')
+                .filter(function() {
+//                    console.log("Click on a@href=" + $(this).attr('href') + '... (window.location.href being ' + window.location.href + '.)');
+//                    console.log((window.location.origin + window.location.pathname + window.location.search
+//                             == 
+//                             this.href.split('#')[0]
+//                            ) &amp;&amp; (this.href.indexOf('#') !== -1).toString());
+                    return  ((window.location.origin + window.location.pathname + window.location.search
+                             == 
+                             this.href.split('#')[0]
+                            ) &amp;&amp; (this.href.indexOf('#') !== -1));
+                }).click(function(event){
+//                    console.log("Click on a@href=" + $(this).attr('href') + '...')
+                    z = $(this).attr('href').slice($(this).attr('href').indexOf('#'))
+//                    console.log("anchor=" + z + '...')
+                    if ($(z).length != 0) {
+                        console.log("Going locally to " + z + '...')
+                        myScrollIntoView(z);
+                        event.preventDefault();
+                    }
+                });
+//            $('a[href*="#"]').click(function(event){
+//                console.log("Click on a@href=" + $(this).attr('href') + '...')
+//                z = $(this).attr('href').slice($(this).attr('href').indexOf('#'))
+//                console.log("anchor =" + z + '...')
+//                if ($(z).length != 0) {
+//                    console.log("Going locally to " + z + '...')
+//                    myScrollIntoView(z);
+//                    event.preventDefault();
+//                }
+//            });
+            function myScrollIntoView(targetId) {
+                $(targetId)[0].scrollIntoView(true);
+                var scrolledY = window.scrollY;
+                if(scrolledY){
+                  window.scroll(0, scrolledY - $(".navbar-fixed-top").outerHeight(true) - 50);
+                };
+                $(targetId).parent().effect( "highlight", {color:'LightSkyBlue'}, 700 );
+                $(targetId).parent().effect( "highlight", {color:'LightSkyBlue'}, 700 );
+                $(targetId).parent().effect( "highlight", {color:'LightSkyBlue'}, 700 );
+//                var $offset = $(targetId).offset().top;
+//                console.log("$('" + targetId + "').offset().top = " + $offset + ".")
+//                goHere = $offset - 80;
+//                console.log("Go to " + goHere + ".")
+//                $('#wrapperWork').animate({scrollTop: goHere}, 800, 'swing', function () {
+//                                $(targetId).parent().effect( "highlight", {color:'LightSkyBlue'}, 700 );
+//                                $(targetId).parent().effect( "highlight", {color:'LightSkyBlue'}, 700 );
+//                                $(targetId).parent().effect( "highlight", {color:'LightSkyBlue'}, 700 );
+//                            });
             }
         </script>
-        
+
         <!-- ==== Toggle diplomatic/constituated textmode ==== -->
         <script type="text/javascript" src="resources/js/sal-common.js"/>
         <script type="text/javascript">
-            $(document).ready(function() {
-                if (window.location.search.match(/mode=((orig)|(edit))/i)) { applyMode(); }
-            });
+//            $(document).ready(function() {
+//                if (window.location.search.match(/mode=((orig)|(edit))/i)) { applyMode(); }
+//            });
         </script>
 
         <!-- ==== Show GUI-Nav when scolling to top ==== -->
         <script type="text/javascript">
-            $(document).ready(function () {
-                $(".navbar-white").autoHidingNavbar().autoHidingNavbar('setShowOnBottom', false).autoHidingNavbar('setAnimationDuration', 400);
-            });
+//            $(document).ready(function () {
+//                $(".navbar-white").autoHidingNavbar().autoHidingNavbar('setShowOnBottom', false).autoHidingNavbar('setAnimationDuration', 400);
+//            });
         </script>
-        
+
         <!-- ==== InfiniteAjaxScroll for progressive enhancement ==== -->
         <script type="text/javascript" src="resources/js/jquery-ias.js"/>
         <script type="text/javascript">
@@ -205,19 +221,19 @@
                     $( this ).click();                                          // this re-enables it
                 });
             });
-		</script>
-        
+        </script>
+
         <!-- ==== Load Paginator content when clicking on dropdown-menu ==== -->
         <script type="text/javascript">
-            $(document).ready(function() {
-                $('#dropdownMenu1').click(loadPaginatorContent);
-            });
+//            $(document).ready(function() {
+//                $('#dropdownMenu1').click(loadPaginatorContent);
+//            });
             function loadPaginatorContent() {
                 var $self = `<span data-template="app:loadWRKpagination"/>`;
                 $("#loadMeLast").innerHtml = ($self + '#later li'); 
             }
         </script>
-        
+
         <!-- ==== TOC tree ==== -->
         <script type="text/javascript" src="resources/js/jstree.js"/>
         <!-- ==== Initialize Table of Contents ==== -->
@@ -232,7 +248,7 @@
                     var href = data.node.a_attr.href;
                     document.location.href = href;
             });
-	    </script>
+        </script>
 
         <!-- ==== Toggle Table of Contents ==== -->
         <script type="text/javascript">
@@ -251,7 +267,7 @@
                 });
             });
         </script>
-        
+
         <!-- ==== Close Modal on Clicking a TOC link ==== -->
         <script type="text/javascript">
             $('.hideMe').click(function(){
@@ -259,7 +275,7 @@
                     $('#myModal').modal('hide');  
                 });
         </script>
-        
+
         <!-- ==== Remember current position on Clicking a language link ==== -->
         <script type="text/javascript">
             function replaceQueryParam(param, newval, search) {
@@ -337,7 +353,7 @@
             });
         </script>
 -->
-        
+
         <!-- ==== Scroll to prev/next search result ==== -->
         <!--<script type="text/javascript">
             $(document).ready(function(){
@@ -389,7 +405,7 @@
             });
         </script>
 -->
-        
+
         <!-- ==== Imageviewer ==== -->
 <!--
     CURRENT STATUS:
@@ -398,19 +414,19 @@
     This is also put into the href attribute in the html anchor.
     In our rdf data (data/rdf/W0013.rdf), there's a seeAlso pointing to
         http://facs.salamanca.school/W0013/A/W0013-A-0017.jpg
-    
+
     Javascript-enabled browsers do not call the href directly, but instead open SeaDragon with the above
     configuration, so that SeaDragon then requests an image from api.salamanca.school/iiif/...
-    
+
     Replacing the id href with a simple image for non-javascript browsers is not necessary because of the
     server redirection which returns an simple image if the client acceps only images.
     But this still does not work in Firefox, so Firefox without javascript does not work.
-    
+
     To the above iiif info.json mechanism corresponds this simple image URI for
     cases where no javascript is available:
         http://c104-131.cloud.gwdg.de:8080/digilib/Scaler/IIIF/svsal!W0013!A!W0013-A-0017/full/full/0/default.jpg
         (and we can define other separators than '!'...
-    
+
     If we have a server redirection
         facs.salamanca.school => http://c104-131.cloud.gwdg.de:8080/digilib/Scaler/IIIF/ ,
     then that's
@@ -423,7 +439,7 @@
         <script type="text/javascript">
         /**
          * JavaScript Get URL Parameter
-         * 
+         *
          * @param String prop The specific URL parameter you want to retreive the value for
          * @return String|Object If prop is provided a string value is returned, otherwise an object of all properties is returned
          */
@@ -431,39 +447,55 @@
             var params = {};
             var search = decodeURIComponent( window.location.href.slice( window.location.href.indexOf( '?' ) + 1 ) );
             var definitions = search.split( '&amp;' );
-        
+
             definitions.forEach( function( val, key ) {
                 var parts = val.split( '=', 2 );
                 params[ parts[ 0 ] ] = parts[ 1 ];
             } );
-        
+
             return ( prop &amp;&amp; prop in params ) ? params[ prop ] : params;
         };
 
+        /**
+         * JavaScript Get current Language
+         *
+         * @return the content of the 'lang' url parameter or a string based on pathname components
+         */
+        function getLang() {
+            if (getUrlParams('lang').length &gt; 0)
+                return getUrlParams('lang')
+            else if (window.location.href.indexOf("/es/") != -1)
+                return 'es'
+            else if (window.location.href.indexOf("/de/") != -1)
+                return 'de'
+            else
+                return 'en'
+        };
+
         // Build viewer popup, but don't show it yet (jquery ui config)
-        $(document).ready(function(){
-            document.getElementById('Mirador').src = "mirador.html?wid=" + getUrlParams( 'wid' );
-            $('#parent').dialog({                                      // define jquery-ui dialogue properties...
-                position:   {my: "left top", at: "left+5 bottom+40", of: "div.navbar"},
-                autoOpen:   false,
-                width:      Math.min($(window).width()* 0.45, 500),   // startsize of the dialog
-                height:     Math.min($(window).height()* 0.8, 700),
-                create:     function(event, ui) {
-                                $(event.target).parent().css('position', 'fixed');
-                            },
-                resizeStop: function(event, ui) {
-                                var position = [(Math.floor(ui.position.left) - $(window).scrollLeft()),
-                                                 (Math.floor(ui.position.top) - $(window).scrollTop())];
-                                $(event.target).parent().css('position', 'fixed');
-                                $("#parent").dialog('option','position', position);
-                             },
-                close:       function(event, ui) {
-                                params = new URLSearchParams(window.location.search) ;
-                                params.delete('viewer');
-                                window.history.replaceState(null, '', window.location.pathname + '?' + params + window.location.hash);
-                             }
-            });
-        });
+//        $(document).ready(function(){
+//            document.getElementById('Mirador').src = "mirador.html?wid=" + getUrlParams( 'wid' );
+//            $('#parent').dialog({                                      // define jquery-ui dialogue properties...
+//                position:   {my: "left top", at: "left+5 bottom+40", of: "div.navbar"},
+//                autoOpen:   false,
+//                width:      Math.min($(window).width()* 0.4, 600),   // startsize of the dialog
+//                height:     Math.min($(window).height()* 0.8, 700),
+//                create:     function(event, ui) {
+//                                $(event.target).parent().css('position', 'fixed');
+//                            },
+//                resizeStop: function(event, ui) {
+//                                var position = [(Math.floor(ui.position.left) - $(window).scrollLeft()),
+//                                                 (Math.floor(ui.position.top) - $(window).scrollTop())];
+//                                $(event.target).parent().css('position', 'fixed');
+//                                $("#parent").dialog('option','position', position);
+//                             },
+//                close:       function(event, ui) {
+//                                params = new URLSearchParams(window.location.search) ;
+//                                params.delete('viewer');
+//                                window.history.replaceState(null, '', window.location.pathname + '?' + params + window.location.hash);
+//                            }
+//            });
+//        });
 
 // Bind events - this needs mirador to be fully initialized. We achieve this by having it called from the iframe html file...
         function miradorLoaded() {
@@ -496,13 +528,16 @@
                 // Update some values of the dialog popup window
                 $("#parent small").text($(this).attr('href'));         // update Viewer Heading
                 $("#parent div").attr('title', $(this).attr('href'));  // update Viewer Title
-    
+                $('#Mirador')[0].contentDocument.getElementById('downloadImages').href = "https://c104-131.cloud.gwdg.de/sal-facs/" + getUrlParams( 'wid' ) + "/" + getUrlParams( 'wid' ) + ".zip";  // update Download button
+//              $('#Mirador')[0].contentDocument.getElementById('downloadImages').href = "http://facs.salamanca.school/" + getUrlParams( 'wid' ) + "/" + getUrlParams( 'wid' ) + ".zip";  // update Download button
+                $('#Mirador')[0].contentDocument.getElementById('downloadImages').setAttribute('download', getUrlParams( 'wid' ) + ".zip");  // update Download button
+
                 // Open the dialog window
                 $("#parent").dialog('open');                           // show Viewer with jquery-ui Dialog method
             }
 
             // Bind click event for opening viewer popup
-            $(document).on('click', ".pageNo", function(event){ 
+            $(document).on('click', ".pageNo", function(event){
                 event.preventDefault();                                 // do not actually go to this url - but if there is no javascript enabled the effect will be to simply go there.
                 $(this).blur();
 
@@ -522,7 +557,10 @@
                 // Update some values of the dialog popup window
                 $("#parent small").text($(this).attr('href'));         // update Viewer Heading
                 $("#parent div").attr('title', $(this).attr('href'));  // update Viewer Title
-    
+                $('#Mirador')[0].contentDocument.getElementById('downloadImages').href = "https://c104-131.cloud.gwdg.de/sal-facs/" + getUrlParams( 'wid' ) + "/" + getUrlParams( 'wid' ) + ".zip";  // update Download button
+//              $('#Mirador')[0].contentDocument.getElementById('downloadImages').href = "http://facs.salamanca.school/" + getUrlParams( 'wid' ) + "/" + getUrlParams( 'wid' ) + ".zip";  // update Download button
+                $('#Mirador')[0].contentDocument.getElementById('downloadImages').setAttribute('download', getUrlParams( 'wid' ) + ".zip");  // update Download button
+
                 // Reflect viewer status in url
                 params = new URLSearchParams(window.location.search) ;
                 params.set('viewer', $targetCanvasID);
@@ -540,7 +578,7 @@
             // Bind viewer url parameter update to paging in viewer
             document.getElementById('Mirador').contentWindow.MyObjects.myMirador.eventEmitter.subscribe('currentCanvasIDUpdated.' +
                                                 document.getElementById('Mirador').contentWindow.MyObjects.myMirador.saveController.slots[0].window.id,
-                                                function(event, CanvasId) { 
+                                                function(event, CanvasId) {
                     console.log("Canvas changed to " + CanvasId+ ".");
                     params = new URLSearchParams(window.location.search) ;
                     params.set('viewer', CanvasId);
@@ -550,10 +588,10 @@
             // Bind click event for syncing/scrolling text area
             $('#Mirador').contents().find("#sync").on('click', function(){
                 $canvasId = document.getElementById('Mirador').contentWindow.MyObjects.myMirador.viewer.workspace.windows[0].canvasID
-// TODO: do something if the target is not in the current fragment...
                 var target = $("a[data-canvas='" + $canvasId +"']");
                 if (target.length) {
                     console.log('sync button has been clicked on canvasId ' + $canvasId + ', going to #' + target.attr('id'));
+// TODO use myScrollIntoView('#'+ target.attr('id'))...
                     var $offset = target.offset();                  // Contains .top and .left
                     $offset.top -= ($(".navbar-white").outerHeight() + 5);
                     $('html, body').animate({
@@ -585,27 +623,27 @@
                 $('.collapse .navbar-collapse').collapse('hide');
             });
         </script>
-        
+
         <!-- ==== Mobil-View: scroll to last collapsed navbar item on mobile when there are many items ==== -->
         <script type="text/javascript">
             $(".navbar-collapse").css({ maxHeight: $(window).height() - $(".navbar-header").height() + "px" });
         </script>
-        
-        <!--Modal: Additional functions with cookies-->
+
+       <!-- Modal: Additional functions with cookies -->
        <!-- <div data-template="app:WRKhelp"/>
-        <script type="text/javascript">
+       <script type="text/javascript">
              // Delayed Modal Display + Cookie On Click
              $(document).ready(function() {
-     
+
                 // If no cookie with our chosen name (e.g. no_thanks)...
                 if ($.cookie("no_thanks") == null) {
-   
+
                // Show the modal, with delay func.
                $('#myModal2').appendTo("body");
                function show_modal(){
                  $('#myModal2').modal();
                }
-     
+
                // Set delay func. time in milliseconds
                window.setTimeout(show_modal, 300);
                }
@@ -615,8 +653,8 @@
                date.setTime(date.getTime() + (1800 * 1000));
                $.cookie('no_thanks', 'true', { expires: date, path: '/' });  // expires after 30 minutes
                });
-            }); 
-        </script>-->
+            });
+        </script> -->
 
         <!-- ==== Piwik for visitor stats ==== -->
         <!-- - - Piwik for visitor stats (modified to enable caching and compression) - - -->
@@ -646,6 +684,55 @@
         </noscript>
 
         <!-- End Piwik Code -->
+
+        <!-- One document.ready function collecting init for all of the above... -->
+        <script type="text/javascript">
+            $(window).load( function() {
+                // move to anchor if we have one in our url
+                if (window.location.hash.length > 0) {
+                    myScrollIntoView(window.location.hash);
+                }
+            });
+            $(document).ready( function() {
+                // Init backTop
+                $('#backTop').backTop({
+                    'position' : 100,
+                    'speed' : 200,
+                    'color' : 'white',
+                });
+                // apply constituted/diplomatic mode
+                if (window.location.search.match(/mode=((orig)|(edit))/i)) {
+                    applyMode();
+                }
+                // Show GUI-Nav when scolling to top
+                $(".navbar-white").autoHidingNavbar().autoHidingNavbar('setShowOnBottom', false).autoHidingNavbar('setAnimationDuration', 400);
+                // Load Paginator
+                $('#dropdownMenu1').click(loadPaginatorContent);
+
+                // Initialize Mirador viewer
+                document.getElementById('Mirador').src = "mirador.html?wid=" + getUrlParams( 'wid' );
+                $('#parent').dialog({                                      // define jquery-ui dialogue properties...
+                    position:   {my: "left top", at: "left+5 bottom+40", of: "div.navbar"},
+                    autoOpen:   false,
+                    width:      Math.min($(window).width()* 0.4, 600),   // startsize of the dialog
+                    height:     Math.min($(window).height()* 0.8, 700),
+                    create:     function(event, ui) {
+                                    $(event.target).parent().css('position', 'fixed');
+                                },
+                    resizeStop: function(event, ui) {
+                                    var position = [(Math.floor(ui.position.left) - $(window).scrollLeft()),
+                                                     (Math.floor(ui.position.top) - $(window).scrollTop())];
+                                    $(event.target).parent().css('position', 'fixed');
+                                    $("#parent").dialog('option','position', position);
+                                 },
+                    close:       function(event, ui) {
+                                    params = new URLSearchParams(window.location.search) ;
+                                    params.delete('viewer');
+                                    window.history.replaceState(null, '', window.location.pathname + '?' + params + window.location.hash);
+                                 }
+                });
+            });
+        </script>
 
     </body>
 </html>

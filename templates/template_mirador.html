@@ -46,6 +46,12 @@
     <script type="text/javascript" src="resources/js/mirador/mirador.js"/>
     <script type="text/javascript">
 
+        /**
+         * JavaScript Get URL Parameter
+         * 
+         * @param String prop The specific URL parameter you want to retreive the value for
+         * @return String|Object If prop is provided a string value is returned, otherwise an object of all properties is returned
+         */
         function getUrlParams( prop ) {
             var params = {};
             var search = decodeURIComponent( window.location.href.slice( window.location.href.indexOf( '?' ) + 1 ) );
@@ -58,6 +64,22 @@
             return ( prop &amp;&amp; prop in params ) ? params[ prop ] : params;
         };
 
+        /**
+         * JavaScript Get current Language
+         * 
+         * @return the content of the 'lang' url parameter or a string based on pathname components
+         */
+        function getLang() {
+            if (getUrlParams('lang').length > 0)
+                return getUrlParams('lang')
+            else if (window.location.href.indexOf("/es/") > -1) 
+                return 'es'
+            else if (window.location.href.indexOf("/de/") > -1)
+                return 'de'
+            else
+                return 'en'
+        };
+
         var MyObjects = {};
 
         $(document).ready(function(){
@@ -66,6 +88,7 @@
                 id :        "viewer",
                 buildPath : "resources/js/mirador/",
                 layout: "1x1",
+                language: getLang(),
                 mainMenuSettings : {
                     "show" : true,
                     "bookmark" : true,
@@ -73,6 +96,16 @@
                     "options" : true,
                     "fullScreenViewer": true,
                     "userButtons": [
+                        {
+                            "label": "Download",
+                            "iconClass": "fa fa-file-archive-o",
+                            "attributes": {
+                                "id": "downloadImages",
+                                "aria-hidden": "true",
+                                "href": "#no-op",
+                                "download": "true"
+                            }
+                        },
                         {
                             "label": "Sync",
                             "iconClass": "fa fa-refresh",

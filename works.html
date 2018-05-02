@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <div xmlns:i18n="http://exist-db.org/xquery/i18n" data-template="templates:surround" data-template-with="templates/template_works.html" data-template-at="content">
     <div data-template="i18n:translate" data-template-catalogues="data/i18n">
         <div class="container">
@@ -31,6 +30,12 @@
                     <noscript>
                         <div style="margin-top: -13%;" data-template="app:sortWRK"/>
                     </noscript>
+                    <p id="corpusdownloadparagraph">
+                        <a href="resources/files/sal-tei-corpus.zip">
+                            <i18n:text key="download">Download</i18n:text>
+                        </a>
+                        <i18n:text key="corpus"/>
+                    </p>
                 </div>
                 <div class="col-md-9" id="results" style="padding-top: 5%">
                     <!-- show this when js is disabled -->

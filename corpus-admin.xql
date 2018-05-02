@@ -30,12 +30,12 @@ let $works := for $reqWork in collection($config:tei-works-root)/tei:TEI/@xml:id
     
 (: Create a zip archive from the temporary collection and store it :)    
 let $zip := compression:zip(xs:anyURI($tmpCollection), false())
-let $save := xmldb:store-as-binary($config:data-root, 'sal-tei-corpus.zip', $zip)
+let $save := xmldb:store-as-binary($config:files-root , 'sal-tei-corpus.zip', $zip)
 
 (: Clean the database from temporary files/collections :)
 let $removeStatus2 := for $work in $works return xmldb:remove($tmpCollection, $work/@xml:id || '.xml')
 let $removeStatus3 := if (xmldb:collection-available($tmpCollection)) then xmldb:remove($tmpCollection) else ()
-let $filepath := $config:data-root || '/sal-tei-corpus.zip'
+let $filepath := $config:files-root  || '/sal-tei-corpus.zip'
 let $removeStatus4            := if (file:exists($filepath)) then
                                       xmldb:remove($filepath)
                                  else ()
