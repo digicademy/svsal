@@ -2080,10 +2080,13 @@ declare %templates:wrap
                                         replace($facs,'facs_(W\d{4})-([A-Z])-(\d{4})',  'http://wwwuser.gwdg.de/~svsal/thumbs/$1/$2/$1-$2-$3.jpg')
                                     else
                                         replace($facs,'facs_(W\d{4})-(\d{4})',          'http://wwwuser.gwdg.de/~svsal/thumbs/$1/$1-$2.jpg'):)
+            let $titlepage      := ($base//tei:titlePage[1]/following::tei:pb)[1]
+(: TODO: Fix this work-around :)
             let $img            :=  if ($nodeIndex//sal:node[@subtype eq "work_multivolume"]) then
-                                        replace($facs,'facs_(W\d{4})-([A-Z])-(\d{4})',  $config:imageserver || '/$1/$2/$1-$2-$3.jpg')
+                                        replace($titlepage/@facs,'facs:(W\d{4})-([A-Z])-(\d{4})',  replace($config:imageserver, 'https://', 'http://') || '/$1/$2/$1-$2-$3.jpg')
                                     else
-                                        replace($facs,'facs_(W\d{4})-(\d{4})',          $config:imageserver || '/$1/$1-$2.jpg')
+                                        replace($titlepage/@facs,'facs:(W\d{4})-(\d{4})',          replace($config:imageserver, 'https://', 'http://') || '/$1/$1-$2.jpg')
+let $debug := console:log("Todo: Fix image-url generating work-around in app:bibliographicalRecord! image-source = '" || $img || "'.")
             let $primaryEd      := $getHeader//tei:note[@xml:id="ownerOfPrimarySource"]/tei:ref[@type eq "institution"]
             let $catalogue      := $getHeader//tei:note[@xml:id="ownerOfPrimarySource"]/tei:ref[@type eq "catLink"]/@target/string()
             let $extLink        := i18n:process(<i18n:text key="external Window">externer Link</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
@@ -2098,7 +2101,7 @@ declare %templates:wrap
                     <div class="col-md-3">
                         <div>
                             <a class="{$status}" href="{if ($status = ("a_raw", "b_cleared")) then 'javascript:' else $target}">
-                                <img src="{data($img)}" class="img-responsive thumbnail" alt="Titlepage {functx:capitalize-first(substring($item/@type, 6))}"/>
+                                <img src="{$img}" class="img-responsive thumbnail" alt="Titlepage {functx:capitalize-first(substring($item/@type, 6))}"/>
                             </a>
                             <a class="btn btn-info button {$status}" href="{if ($status = ("a_raw", "b_cleared")) then 'javascript:' else $target}">
                                 <span class="glyphicon glyphicon-file"></span>{$config:nbsp || $config:nbsp}
@@ -2951,7 +2954,7 @@ declare function app:downloadTXT($node as node(), $model as map(*), $mode as xs:
 };
 
 declare function app:downloadCorpusXML($node as node(), $model as map(*), $lang as xs:string) {
-    let $download :=        <li><a href="{$config:softwareserver ||'/sal-tei-corpus.zip'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/> ZIP (XML Corpus)</a></li>
+    let $download :=        <li><a href="{$config:teiserver ||'/sal-tei-corpus.zip'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/> ZIP (XML Corpus)</a></li>
     return i18n:process($download, $lang, '/db/apps/salamanca/data/i18n', 'en')
 };
        
