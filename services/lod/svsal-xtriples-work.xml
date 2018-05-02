@@ -26,15 +26,32 @@
 
         <triples>
 
-<!-- TODO: - Try to get rid of string() so that values are not isolated from their (indexed) nodes (ML suggestion by Joe Wicentowski)
-           - better use union of full xpaths than or'ing predicates/conditions (intersect instead of and'ing, too?) -->
+<!-- TODO/General:
+    - Try to get rid of string() so that values are not isolated from their (indexed) nodes (ML suggestion by Joe Wicentowski)
+    - better use union of full xpaths than or'ing predicates/conditions (intersect instead of and'ing, too?)
+-->
+
 
             <statement n="0">
                 <subject type="uri"/>
                 <predicate prefix="void">inDataset</predicate>
                 <object type="uri">void.ttl#Salamanca</object>
             </statement>
-<!-- Metadata: Type, Title, Creator, Year -->  
+
+
+<!-- ============================================================= -->
+<!-- === I. Bibliographic Metadata: Type, Title, Creator, Year === -->  
+<!-- ============================================================= -->
+
+<!-- TODO/Bibliographic:
+    - fabio:has language
+    - fabio:has page count
+    - deo:dedication
+    - book:mentions (organisations)
+    - cito:isCitedBy?
+    ! test reification of cito:cites in order to associate po:isContainedBy
+    ! corresponds to an oclc dataset?
+-->
 
             <statement n="1"><!-- a fabio:work -->
                 <subject type="uri" prepend="works.">/@work</subject>
@@ -87,17 +104,15 @@
                 <object type="uri" prepend="http://www.salamanca.school/work.html?wid=">/@work</object>
 			 </statement>
 
-<!-- TODO/Bibliographic:
-- fabio:has language
-- fabio:has page count
-- deo:dedication
-- book:mentions (organisations)
-- cito:isCitedBy?
-! test reification of cito:cites in order to associate po:isContainedBy
-! corresponds to an oclc dataset?
+
+<!-- =================================================================== -->
+<!-- === II. Document Components: Volumes, Sections, Paragraphs etc. === -->
+<!-- =================================================================== -->
+
+<!-- Todo/Document Components:
+    - items and lists, of dictionary entries in particular
 -->
 
-<!-- Document Components: Volumes, Sections, Paragraphs -->
     <!-- For each document component, we record
             (1) its type,
             (2) a label, and
@@ -227,583 +242,465 @@
                 <predicate prefix="rdfs">seeAlso</predicate>
                 <object type="uri" prepend="http://www.salamanca.school/">//sal:node[@type eq 'completeWork']/sal:crumbtrail/a[last()]/@href</object>
 			 </statement>
-
-    <!-- Other section levels: div, p, milestones -->
-            <statement n="30" repeat="{/min((10, count($currentResource//sal:node[@type eq 'div'])))}">
+        
+    <!-- Other section levels: div, p, milestones, lists, items, notes -->
+            <statement n="30" debug="true" repeat="{/min((10020, count($currentResource//sal:node[@type eq 'div'])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type eq 'div'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdf">type</predicate>
                 <object type="uri" prefix="doco">/(if($currentResource//sal:node[@type eq 'div'][$repeatIndex]/@subtype eq 'book') then 'part' else if ($currentResource//sal:node[@type eq 'div'][$repeatIndex]/@subtype eq 'chapter') then 'chapter' else 'section')</object>
             </statement>
-            <statement n="31" repeat="{/min((10, count($currentResource//sal:node[@type eq 'div'])))}">
+            <statement n="31" repeat="{/min((10020, count($currentResource//sal:node[@type eq 'div'])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type eq 'div'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdfs">label</predicate>
                 <object type="literal">/replace($currentResource//sal:node[@type eq 'div'][$repeatIndex]/sal:title, '"', '\\"')</object>
             </statement>
-            <statement n="32" repeat="{/min((10, count($currentResource//sal:node[@type eq 'div'])))}">
+            <statement n="32" repeat="{/min((10020, count($currentResource//sal:node[@type eq 'div'])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type eq 'div'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="po">isContainedBy</predicate>
                 <object type="uri" prepend="works.">/string-join(($currentResource/@work, (for $t in $currentResource//sal:node[@type eq 'div'][$repeatIndex]/sal:citableParent/text() return $currentResource//sal:node[@n eq $t]/sal:citetrail/text())), ':')</object>
             </statement>
-            <statement n="33" repeat="{/min((10, count($currentResource//sal:node[@type eq 'div'])))}">
+            <statement n="33" repeat="{/min((10020, count($currentResource//sal:node[@type eq 'div'])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type eq 'div'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdfs">seeAlso</predicate>
                 <object type="uri" prepend="http://www.salamanca.school/">/($currentResource//sal:node[@type eq 'div'][$repeatIndex]/sal:crumbtrail/a/@href)[last()]</object>
 			 </statement>
 
-            <statement n="34" repeat="{/min((50, count($currentResource//sal:node[@type eq 'p'])))}">
+            <statement n="34" repeat="{/min((10020, count($currentResource//sal:node[@type eq 'p'])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type eq 'p'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdf">type</predicate>
                 <object type="uri" prefix="doco">paragraph</object>
             </statement>
-            <statement n="35" repeat="{/min((50, count($currentResource//sal:node[@type eq 'p'])))}">
+            <statement n="35" repeat="{/min((10020, count($currentResource//sal:node[@type eq 'p'])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type eq 'p'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdfs">label</predicate>
                 <object type="literal">/replace($currentResource//sal:node[@type eq 'p'][$repeatIndex]/sal:title, '"', '\\"')</object>
             </statement>
-            <statement n="36" repeat="{/min((50, count($currentResource//sal:node[@type eq 'p'])))}">
+            <statement n="36" repeat="{/min((10020, count($currentResource//sal:node[@type eq 'p'])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type eq 'p'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="po">isContainedBy</predicate>
 <!--                <object type="uri"  prepend="works.">/string-join((./@work, $currentResource//sal:node[@n = $currentResource//sal:node[@type='p'][$repeatIndex]/sal:citableParent]/sal:citetrail/text()), ':')</object>-->
                 <object type="uri" prepend="works.">/string-join(($currentResource/@work, (for $t in $currentResource//sal:node[@type eq 'p'][$repeatIndex]/sal:citableParent/text() return $currentResource//sal:node[@n eq $t]/sal:citetrail/text())), ':')</object>
             </statement>
-            <statement n="37" repeat="{/min((50, count($currentResource//sal:node[@type eq 'p'])))}">
+            <statement n="37" repeat="{/min((10020, count($currentResource//sal:node[@type eq 'p'])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type eq 'p'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdfs">seeAlso</predicate>
                 <object type="uri" prepend="http://www.salamanca.school/">/($currentResource//sal:node[@type eq 'p'][$repeatIndex]/sal:crumbtrail/a/@href)[last()]</object>
 			 </statement>
 
-            <statement n="38" repeat="{/min((20, count($currentResource//sal:node[@type eq 'milestone'])))}">
+            <statement n="38" repeat="{/min((10020, count($currentResource//sal:node[@type eq 'milestone'])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type='milestone'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdf">type</predicate>
                 <object type="uri" prefix="doco">section</object>
             </statement>
-            <statement n="39" repeat="{/min((20, count($currentResource//sal:node[@type eq 'milestone'])))}">
+            <statement n="39" repeat="{/min((10020, count($currentResource//sal:node[@type eq 'milestone'])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type eq 'milestone'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdfs">label</predicate>
                 <object type="literal">/replace($currentResource//sal:node[@type eq 'milestone'][$repeatIndex]/sal:title, '"', '\\"')</object>
             </statement>
-            <statement n="40" repeat="{/min((20, count($currentResource//sal:node[@type eq 'milestone'])))}">
+            <statement n="40" repeat="{/min((10020, count($currentResource//sal:node[@type eq 'milestone'])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type eq 'milestone'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="po">isContainedBy</predicate>
                 <object type="uri" prepend="works.">/string-join(($currentResource/@work, (for $t in $currentResource//sal:node[@type eq 'milestone'][$repeatIndex]/sal:citableParent/text() return $currentResource//sal:node[@n eq $t]/sal:citetrail/text())), ':')</object>
             </statement>
-            <statement n="41" repeat="{/min((20, count($currentResource//sal:node[@type eq 'milestone'])))}">
+            <statement n="41" repeat="{/min((10020, count($currentResource//sal:node[@type eq 'milestone'])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type eq 'milestone'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdfs">seeAlso</predicate>
                 <object type="uri" prepend="http://www.salamanca.school/">/($currentResource//sal:node[@type eq 'milestone'][$repeatIndex]/sal:crumbtrail/a/@href)[last()]</object>
 			 </statement>
 
-<!-- Todo: items and lists of dictionary entries -->
-
-            <statement n="42" repeat="{/min((10, count($currentResource//sal:node[@type eq 'list'])))}">
+            <statement n="42" repeat="{/min((10010, count($currentResource//sal:node[@type eq 'list'])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type eq 'list'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdf">type</predicate>
                 <object type="uri" prefix="doco">list</object>
             </statement>
-            <statement n="43" repeat="{/min((10, count($currentResource//sal:node[@type eq 'list'])))}">
+            <statement n="43" repeat="{/min((10010, count($currentResource//sal:node[@type eq 'list'])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type eq 'list'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdfs">label</predicate>
                 <object type="literal">/replace($currentResource//sal:node[@type eq 'list'][$repeatIndex]/sal:title, '"', '\\"')</object>
             </statement>
-            <statement n="44" repeat="{/min((10, count($currentResource//sal:node[@type eq 'list'])))}">
+            <statement n="44" repeat="{/min((10010, count($currentResource//sal:node[@type eq 'list'])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type eq 'list'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="po">isContainedBy</predicate>
                 <object type="uri" prepend="works.">/string-join(($currentResource/@work, (for $t in $currentResource//sal:node[@type eq 'list'][$repeatIndex]/sal:citableParent/text() return $currentResource//sal:node[@n eq $t]/sal:citetrail/text())), ':')</object>
             </statement>
-            <statement n="45" repeat="{/min((10, count($currentResource//sal:node[@type eq 'list'])))}">
+            <statement n="45" repeat="{/min((10010, count($currentResource//sal:node[@type eq 'list'])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type eq 'list'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdfs">seeAlso</predicate>
                 <object type="uri" prepend="http://www.salamanca.school/">/($currentResource//sal:node[@type eq 'list'][$repeatIndex]/sal:crumbtrail/a/@href)[last()]</object>
 			 </statement>
 
-            <statement n="46" repeat="{/min((200, count($currentResource//sal:node[@type eq 'item'])))}">
+            <statement n="46" repeat="{/min((10050, count($currentResource//sal:node[@type eq 'item'])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type eq 'item'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdf">type</predicate>
                 <object type="uri" prefix="doco">section</object>
             </statement>
-            <statement n="47" repeat="{/min((200, count($currentResource//sal:node[@type eq 'item'])))}">
+            <statement n="47" repeat="{/min((10050, count($currentResource//sal:node[@type eq 'item'])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type eq 'item'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdfs">label</predicate>
                 <object type="literal">/replace($currentResource//sal:node[@type eq 'item'][$repeatIndex]/sal:title, '"', '\\"')</object>
             </statement>
-            <statement n="48" repeat="{/min((200, count($currentResource//sal:node[@type eq 'item'])))}">
+            <statement n="48" repeat="{/min((10050, count($currentResource//sal:node[@type eq 'item'])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type eq 'item'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="po">isContainedBy</predicate>
                 <object type="uri" prepend="works.">/string-join(($currentResource/@work, (for $t in $currentResource//sal:node[@type eq 'item'][$repeatIndex]/sal:citableParent/text() return $currentResource//sal:node[@n eq $t]/sal:citetrail/text())), ':')</object>
             </statement>
-            <statement n="49" repeat="{/min((200, count($currentResource//sal:node[@type eq 'item'])))}">
+            <statement n="49" repeat="{/min((10050, count($currentResource//sal:node[@type eq 'item'])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type eq 'item'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdfs">seeAlso</predicate>
                 <object type="uri" prepend="http://www.salamanca.school/">/($currentResource//sal:node[@type eq 'item'][$repeatIndex]/sal:crumbtrail/a/@href)[last()]</object>
 			 </statement>
 
-<!-- Notes -->
-            <statement n="50" repeat="{/min((100, count($currentResource//sal:node[@type eq 'note'])))}">
+            <statement n="50" repeat="{/min((10050, count($currentResource//sal:node[@type eq 'note'])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type eq 'note'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdf">type</predicate>
                 <object type="uri" prefix="doco">footnote</object>
             </statement>
-            <statement n="51" repeat="{/min((100, count($currentResource//sal:node[@type eq 'note'])))}">
+            <statement n="51" repeat="{/min((10050, count($currentResource//sal:node[@type eq 'note'])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type eq 'note'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdfs">label</predicate>
                 <object type="literal">/replace($currentResource//sal:node[@type eq 'note'][$repeatIndex]/sal:title, '"', '\\"')</object>
             </statement>
-            <statement n="52" repeat="{/min((100, count($currentResource//sal:node[@type eq 'note'])))}">
+            <statement n="52" repeat="{/min((10050, count($currentResource//sal:node[@type eq 'note'])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type eq 'note'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="po">isContainedBy</predicate>
                 <object type="uri" prepend="works.">/string-join(($currentResource/@work, (for $t in $currentResource//sal:node[@type eq 'note'][$repeatIndex]/sal:citableParent/text() return $currentResource//sal:node[@n eq $t]/sal:citetrail/text())), ':')</object>
             </statement>
-            <statement n="53" repeat="{/min((100, count($currentResource//sal:node[@type eq 'note'])))}">
+            <statement n="53" repeat="{/min((10050, count($currentResource//sal:node[@type eq 'note'])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type eq 'note'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdfs">seeAlso</predicate>
                 <object type="uri" prepend="http://www.salamanca.school/">/($currentResource//sal:node[@type eq 'note'][$repeatIndex]/sal:crumbtrail/a/@href)[last()]</object>
 			 </statement>
 
-<!-- Pages -->
-            <statement n="54" repeat="{/min((100, count($currentResource//sal:node[@type eq 'pb'][not(@subtype='sameAs')])))}">
+
+<!-- ==================================== -->
+<!-- === III. Physical Aspects: Pages === -->
+<!-- ==================================== -->
+
+            <!-- Pages -->
+            <statement n="54" repeat="{/min((10050, count($currentResource//sal:node[@type eq 'pb'][not(@subtype='sameAs')])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type eq 'pb'][not(@subtype eq 'sameAs')][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdf">type</predicate>
                 <object type="uri" prefix="fabio">page</object>
             </statement>
-            <statement n="55" repeat="{/min((100, count($currentResource//sal:node[@type eq 'pb'][not(@subtype='sameAs')])))}">
+            <statement n="55" repeat="{/min((10050, count($currentResource//sal:node[@type eq 'pb'][not(@subtype='sameAs')])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type eq 'pb'][not(@subtype eq 'sameAs')][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdfs">label</predicate>
                 <object type="literal">/replace(normalize-space($currentResource//sal:node[@type eq 'pb'][not(@subtype eq 'sameAs')][$repeatIndex]/sal:title), '"', '\\"')</object>
             </statement>
-            <statement n="56" repeat="{/min((100, count($currentResource//sal:node[@type eq 'pb'][not(@subtype='sameAs')])))}">
+            <statement n="56" repeat="{/min((10050, count($currentResource//sal:node[@type eq 'pb'][not(@subtype='sameAs')])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type eq 'pb'][not(@subtype eq 'sameAs')][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="po">isContainedBy</predicate>
                 <object type="uri" prepend="works.">/concat($currentResource/@work, if(functx:substring-before-last($currentResource//sal:node[@type eq 'pb'][not(@subtype eq 'sameAs')][$repeatIndex]/sal:citetrail, '.')) then ':' else (), functx:substring-before-last($currentResource//sal:node[@type eq 'pb'][not(@subtype eq 'sameAs')][$repeatIndex]/sal:citetrail, '.'))</object>
             </statement>
-            <statement n="57" repeat="{/min((100, count($currentResource//sal:node[@type eq 'pb'][not(@subtype='sameAs')])))}">
+            <statement n="57" repeat="{/min((10050, count($currentResource//sal:node[@type eq 'pb'][not(@subtype='sameAs')])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type eq 'pb'][not(@subtype eq 'sameAs')][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdfs">seeAlso</predicate>
                 <object type="uri" prepend="http://facs.salamanca.school/{/@work}/">/concat(replace(string-join(functx:get-matches(substring($currentResource//sal:node[@type eq 'pb'][not(@subtype eq 'sameAs')][$repeatIndex]/@n, 12), '[A-Z-]'), ''), '-', '/'), substring($currentResource//sal:node[@type eq 'pb'][not(@subtype eq 'sameAs')][$repeatIndex]/@n[1], 6), '.jpg')</object>
 			 </statement>
-            <statement n="58" repeat="{/min((100, count($currentResource//sal:node[@type eq 'pb'][not(@subtype='sameAs')])))}">
+            <statement n="58" repeat="{/min((10050, count($currentResource//sal:node[@type eq 'pb'][not(@subtype='sameAs')])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type eq 'pb'][not(@subtype eq 'sameAs')][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdfs">seeAlso</predicate>
                 <object type="uri" prepend="http://www.salamanca.school/">/($currentResource//sal:node[@type eq 'pb'][not(@subtype eq 'sameAs')][$repeatIndex]/sal:crumbtrail/a/@href)[last()]</object>
 			 </statement>
 
-            <statement n="58-iiif1" repeat="{/min((100, count($currentResource//sal:node[@type eq 'pb'][not(@subtype='sameAs')])))}">
+            <!-- iiif stuff -->
+<!-- Todo/iiif:
+    - Other iiif stuff: label, height, width, thumbnail, otherContent, startCanvas (per work, not per page)
+    - blank node for image resource
+    - blank node for annotation mentioning image resource
+    - iiif:images contains annotations
+-->
+            <statement n="59" repeat="{/min((10050, count($currentResource//sal:node[@type eq 'pb'][not(@subtype='sameAs')])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type eq 'pb'][not(@subtype eq 'sameAs')][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdf">type</predicate>
                 <object type="uri" prefix="iiif">canvas</object>
             </statement>
 
-<!-- iiif:label -->
-<!-- iiif:height -->
-<!-- iiif:width -->
-<!-- iiif:thumbnail -->
-<!-- iiif:otherContent -->
 
-<!-- blank node for image resource -->
-<!-- blank node for annotation mentioning image resource -->
-<!-- iiif:images contains annotations -->
+<!-- ====================== -->
+<!-- === IV. References === -->
+<!-- ====================== -->
 
+<!-- Todo/References:
+    - render persons who are mentioned, but not cited as authors
+-->
 
-<!-- References -->
+    <!-- a. References within citations (<cit>): We render this with cito:includesQuotationFrom -->
 
-    <!-- cito:includesQuotationFrom: Other works quoted in the work (svsal, oclc) -->
-
-        <!-- in Citations (<cit>), work titles (-> CitationAct_a_XY-##) -->
+    <!-- a.1. ... to work titles (-> CitationAct_a_XY-## blank nodes) -->
             <!-- SvSal works -->
-			 <statement n="59" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:title[contains(@ref, 'work:')])))}"><!-- A CitationAct event... -->
+			 <statement n="60" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:title[contains(@ref, 'work:')])))}"><!-- A CitationAct event... -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_a_', $currentResource/@work, '-works-', $repeatIndex)</subject>
 				<predicate prefix="rdf">type</predicate>
 				<object type="uri" prefix="cito">citationAct</object>
 			 </statement>
-			 <statement n="60" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:title[contains(@ref, 'work:')])))}"><!-- ... of type... -->
+			 <statement n="61" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:title[contains(@ref, 'work:')])))}"><!-- ... of type... -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_a_', $currentResource/@work, '-works-', $repeatIndex)</subject>
 				<predicate prefix="cito">hasCitationCharacterization</predicate>
 				<object type="uri" prefix="cito">includesQuotationFrom</object>
 			 </statement>
-			 <statement n="61" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:title[contains(@ref, 'work:')])))}"><!-- ... what is cited? -->
+			 <statement n="62" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:title[contains(@ref, 'work:')])))}"><!-- ... what is cited? -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_a_', $currentResource/@work, '-works-', $repeatIndex)</subject>
 				<predicate prefix="cito">hasCitedEntity</predicate>
 				<object type="uri" prepend="works." resource="https://tei.salamanca.school/{/@work}.xml">/(//tei:text//tei:cit//tei:title[contains(@ref, 'work:')])[$repeatIndex]/tokenize(tokenize(@ref, 'work:')[2], ' ')[1]</object>
 			 </statement>
-			 <statement n="62" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:title[contains(@ref, 'work:')])))}"><!-- ... where is the citation? -->
+			 <statement n="63" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:title[contains(@ref, 'work:')])))}"><!-- ... where is the citation? -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_a_', $currentResource/@work, '-works-', $repeatIndex)</subject>
               <predicate prefix="cito">hasCitingEntity</predicate><!-- or po:isContainedBy? -->
 		       <object type="uri" prepend="works.{/@work}:" resource="https://tei.salamanca.school/{/@work}.xml">($currentResource//sal:node[@n = (($externalResource//tei:text//tei:cit//tei:title[contains(@ref, 'work:')])[$repeatIndex]/(ancestor::tei:p|ancestor::tei:div))[last()]/@xml:id/string()]/sal:citetrail/text())</object>
 			 </statement>
             <!-- OCLC works -->
-			 <statement n="63" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:title[contains(@ref, 'oclc:')])))}"><!-- A CitationAct event... -->
+			 <statement n="64" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:title[contains(@ref, 'oclc:')])))}"><!-- A CitationAct event... -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_a_', $currentResource/@work, '-oclc-', $repeatIndex)</subject>
 				<predicate prefix="rdf">type</predicate>
 				<object type="uri" prefix="cito">citationAct</object>
 			 </statement>
-			 <statement n="64" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:title[contains(@ref, 'oclc:')])))}"><!-- ... of type... -->
+			 <statement n="65" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:title[contains(@ref, 'oclc:')])))}"><!-- ... of type... -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_a_', $currentResource/@work, '-oclc', $repeatIndex)</subject>
 				<predicate prefix="cito">hasCitationCharacterization</predicate>
 				<object type="uri" prefix="cito">includesQuotationFrom</object>
 			 </statement>
-			 <statement n="65" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:title[contains(@ref, 'oclc:')])))}"><!-- ... what is cited? -->
+			 <statement n="66" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:title[contains(@ref, 'oclc:')])))}"><!-- ... what is cited? -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_a_', $currentResource/@work, '-oclc-', $repeatIndex)</subject>
 				<predicate prefix="cito">hasCitedEntity</predicate>
 				<object type="uri" prepend="http://www.worldcat.org/oclc/" resource="https://tei.salamanca.school/{/@work}.xml">/(//tei:text//tei:cit//tei:title[contains(@ref, 'oclc:')])[$repeatIndex]/tokenize(tokenize(@ref, 'oclc:')[2], ' ')[1]</object>
 			 </statement>
-			 <statement n="66" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:title[contains(@ref, 'oclc:')])))}"><!-- ... where is the citation? -->
+			 <statement n="67" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:title[contains(@ref, 'oclc:')])))}"><!-- ... where is the citation? -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_a_', $currentResource/@work, '-oclc-', $repeatIndex)</subject>
               <predicate prefix="cito">hasCitingEntity</predicate><!-- or po:isContainedBy? -->
 		       <object type="uri" prepend="works.{/@work}:" resource="https://tei.salamanca.school/{/@work}.xml">($currentResource//sal:node[@n = (($externalResource//tei:text//tei:cit//tei:title[contains(@ref, 'oclc:')])[$repeatIndex]/(ancestor::tei:p|ancestor::tei:div))[last()]/@xml:id/string()]/sal:citetrail/text())</object>
 			 </statement>
             <!-- GND works -->
-			 <statement n="67" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:title[contains(@ref, 'gnd:')])))}"><!-- A CitationAct event... -->
+			 <statement n="68" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:title[contains(@ref, 'gnd:')])))}"><!-- A CitationAct event... -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_a_', $currentResource/@work, '-gnd-', $repeatIndex)</subject>
 				<predicate prefix="rdf">type</predicate>
 				<object type="uri" prefix="cito">citationAct</object>
 			 </statement>
-			 <statement n="68" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:title[contains(@ref, 'gnd:')])))}"><!-- ... of type... -->
+			 <statement n="69" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:title[contains(@ref, 'gnd:')])))}"><!-- ... of type... -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_a_', $currentResource/@work, '-gnd-', $repeatIndex)</subject>
 				<predicate prefix="cito">hasCitationCharacterization</predicate>
 				<object type="uri" prefix="cito">includesQuotationFrom</object>
 			 </statement>
-			 <statement n="69" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:title[contains(@ref, 'gnd:')])))}"><!-- ... what is cited? -->
+			 <statement n="70" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:title[contains(@ref, 'gnd:')])))}"><!-- ... what is cited? -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_a_', $currentResource/@work, '-gnd-', $repeatIndex)</subject>
 				<predicate prefix="cito">hasCitedEntity</predicate>
 				<object type="uri" prepend="http://d-nb.info/gnd/" resource="https://tei.salamanca.school/{/@work}.xml">/(//tei:text//tei:cit//tei:title[contains(@ref, 'gnd:')])[$repeatIndex]/tokenize(tokenize(@ref, 'gnd:')[2], ' ')[1]</object>
 			 </statement>
-			 <statement n="70" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:title[contains(@ref, 'gnd:')])))}"><!-- ... where is the citation? -->
+			 <statement n="71" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:title[contains(@ref, 'gnd:')])))}"><!-- ... where is the citation? -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_a_', $currentResource/@work, '-gnd-', $repeatIndex)</subject>
               <predicate prefix="cito">hasCitingEntity</predicate><!-- or po:isContainedBy? -->
 		       <object type="uri" prepend="works.{/@work}:" resource="https://tei.salamanca.school/{/@work}.xml">($currentResource//sal:node[@n = (($externalResource//tei:text//tei:cit//tei:title[contains(@ref, 'gnd:')])[$repeatIndex]/(ancestor::tei:p|ancestor::tei:div))[last()]/@xml:id/string()]/sal:citetrail/text())</object>
 			 </statement>
 
-        <!-- in Citations (<cit>), authors (CitationAct_b_XY-##) -->
+    <!-- a.2. ... to authors (CitationAct_b_XY-## blank nodes) -->
             <!-- SvSal authors -->
-			 <statement n="71" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:author/tei:persName[contains(@ref, 'author:')])))}"><!-- A CitationAct event... -->
+			 <statement n="72" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:author/tei:persName[contains(@ref, 'author:')])))}"><!-- A CitationAct event... -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_b_-', $currentResource/@work, '-authors-', $repeatIndex)</subject>
 				<predicate prefix="rdf">type</predicate>
 				<object type="uri" prefix="cito">citationAct</object>
 			 </statement>
-			 <statement n="72" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:author/tei:persName[contains(@ref, 'author:')])))}"><!-- ... of type... -->
+			 <statement n="73" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:author/tei:persName[contains(@ref, 'author:')])))}"><!-- ... of type... -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_b_', $currentResource/@work, '-authors-', $repeatIndex)</subject>
 				<predicate prefix="cito">hasCitationCharacterization</predicate>
 				<object type="uri" prefix="cito">citesAsRelated</object>
 			 </statement>
-			 <statement n="73" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:author/tei:persName[contains(@ref, 'author:')])))}"><!-- ... what is cited? -->
+			 <statement n="74" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:author/tei:persName[contains(@ref, 'author:')])))}"><!-- ... what is cited? -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_b_', $currentResource/@work, '-authors-, $repeatIndex)</subject>
 				<predicate prefix="cito">hasCitedEntity</predicate>
 				<object type="uri" prepend="authors." resource="https://tei.salamanca.school/{/@work}.xml">/(//tei:text//tei:cit//tei:author/tei:persName[contains(@ref, 'author:')])[$repeatIndex]/tokenize(tokenize(@ref, 'author:')[2], ' ')[1]</object>
 			 </statement>
-			 <statement n="74" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:author/tei:persName[contains(@ref, 'author:')])))}"><!-- ... where is the citation? -->
+			 <statement n="75" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:author/tei:persName[contains(@ref, 'author:')])))}"><!-- ... where is the citation? -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_b_', $currentResource/@work, '-authors-', $repeatIndex)</subject>
               <predicate prefix="cito">hasCitingEntity</predicate><!-- or po:isContainedBy? -->
 		       <object type="uri" prepend="works.{/@work}:" resource="https://tei.salamanca.school/{/@work}.xml">($currentResource//sal:node[@n = (($externalResource//tei:text//tei:cit//tei:author/tei:persName[contains(@ref, 'author:')])[$repeatIndex]/(ancestor::tei:p|ancestor::tei:div))[last()]/@xml:id/string()]/sal:citetrail/text())</object>
 			 </statement>
             <!-- Cerl authors -->
-			 <statement n="75" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:author/tei:persName[contains(@ref, 'cerl:')])))}"><!-- A CitationAct event... -->
+			 <statement n="76" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:author/tei:persName[contains(@ref, 'cerl:')])))}"><!-- A CitationAct event... -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_b_', $currentResource/@work, '-cerl-', $repeatIndex)</subject>
 				<predicate prefix="rdf">type</predicate>
 				<object type="uri" prefix="cito">citationAct</object>
 			 </statement>
-			 <statement n="76" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:author/tei:persName[contains(@ref, 'cerl:')])))}"><!-- ... of type... -->
+			 <statement n="77" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:author/tei:persName[contains(@ref, 'cerl:')])))}"><!-- ... of type... -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_b_', $currentResource/@work, '-cerl-', $repeatIndex)</subject>
 				<predicate prefix="cito">hasCitationCharacterization</predicate>
 				<object type="uri" prefix="cito">citesAsRelated</object>
 			 </statement>
-			 <statement n="77" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:author/tei:persName[contains(@ref, 'cerl:')])))}"><!-- ... what is cited? -->
+			 <statement n="78" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:author/tei:persName[contains(@ref, 'cerl:')])))}"><!-- ... what is cited? -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_b_', $currentResource/@work, '-cerl-', $repeatIndex)</subject>
 				<predicate prefix="cito">hasCitedEntity</predicate>
 				<object type="uri" prepend="http://thesaurus.cerl.org/record/" resource="https://tei.salamanca.school/{/@work}.xml">/(//tei:text//tei:cit//tei:author/tei:persName[contains(@ref, 'cerl:')])[$repeatIndex]/tokenize(tokenize(@ref, 'cerl:')[2], ' ')[1]</object>
 			 </statement>
-			 <statement n="78" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:author/tei:persName[contains(@ref, 'cerl:')])))}"><!-- ... where is the citation? -->
+			 <statement n="79" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:author/tei:persName[contains(@ref, 'cerl:')])))}"><!-- ... where is the citation? -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_b_', $currentResource/@work, '-cerl-', $repeatIndex)</subject>
               <predicate prefix="cito">hasCitingEntity</predicate><!-- or po:isContainedBy? -->
 		       <object type="uri" prepend="works.{/@work}:" resource="https://tei.salamanca.school/{/@work}.xml">($currentResource//sal:node[@n = (($externalResource//tei:text//tei:cit//tei:author/tei:persName[contains(@ref, 'cerl:')])[$repeatIndex]/(ancestor::tei:p|ancestor::tei:div))[last()]/@xml:id/string()]/sal:citetrail/text())</object>
 			 </statement>
             <!-- GND authors -->
-			 <statement n="79" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:author/tei:persName[contains(@ref, 'gnd:')])))}"><!-- A CitationAct event... -->
+			 <statement n="80" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:author/tei:persName[contains(@ref, 'gnd:')])))}"><!-- A CitationAct event... -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_b_', $currentResource/@work, '-gnd-', $repeatIndex)</subject>
 				<predicate prefix="rdf">type</predicate>
 				<object type="uri" prefix="cito">citationAct</object>
 			 </statement>
-			 <statement n="80" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:author/tei:persName[contains(@ref, 'gnd:')])))}"><!-- ... of type... -->
+			 <statement n="81" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:author/tei:persName[contains(@ref, 'gnd:')])))}"><!-- ... of type... -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_b_', $currentResource/@work, '-gnd-', $repeatIndex)</subject>
 				<predicate prefix="cito">hasCitationCharacterization</predicate>
 				<object type="uri" prefix="cito">citesAsRelated</object>
 			 </statement>
-			 <statement n="81" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:author/tei:persName[contains(@ref, 'gnd:')])))}"><!-- ... what is cited? -->
+			 <statement n="82" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:author/tei:persName[contains(@ref, 'gnd:')])))}"><!-- ... what is cited? -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_b_', $currentResource/@work, '-gnd-', $repeatIndex)</subject>
 				<predicate prefix="cito">hasCitedEntity</predicate>
 				<object type="uri" prepend="http://d-nb.info/gnd/" resource="https://tei.salamanca.school/{/@work}.xml">/(//tei:text//tei:cit//tei:author/tei:persName[contains(@ref, 'gnd:')])[$repeatIndex]/tokenize(tokenize(@ref, 'gnd:')[2], ' ')[1]</object>
 			 </statement>
-			 <statement n="82" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:author/tei:persName[contains(@ref, 'gnd:')])))}"><!-- ... where is the citation? -->
+			 <statement n="83" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:cit//tei:author/tei:persName[contains(@ref, 'gnd:')])))}"><!-- ... where is the citation? -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_b_', $currentResource/@work, '-gnd-', $repeatIndex)</subject>
               <predicate prefix="cito">hasCitingEntity</predicate><!-- or po:isContainedBy? -->
 		       <object type="uri" prepend="works.{/@work}:" resource="https://tei.salamanca.school/{/@work}.xml">($currentResource//sal:node[@n = (($externalResource//tei:text//tei:cit//tei:author/tei:persName[contains(@ref, 'gnd:')])[$repeatIndex]/(ancestor::tei:p|ancestor::tei:div))[last()]/@xml:id/string()]/sal:citetrail/text())</object>
 			 </statement>
 
-    <!-- Outside of Citations (-> citesAsRelated), works (-> CitationAct_c_XY-##) -->
+    <!-- b. References outside of citations: We render this with cito:citesAsRelated -->
+
+    <!-- b.1. ... to work titles (-> CitationAct_c_XY-## blank nodes) -->
             <!-- SvSal works -->
-			 <statement n="83" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:title[contains(@ref, 'work:')][not(ancestor::tei:cit)])))}"><!-- A CitationAct event... -->
+			 <statement n="84" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:title[contains(@ref, 'work:')][not(ancestor::tei:cit)])))}"><!-- A CitationAct event... -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_c_', $currentResource/@work, '-works-', $repeatIndex)</subject>
 				<predicate prefix="rdf">type</predicate>
 				<object type="uri" prefix="cito">citationAct</object>
 			 </statement>
-			 <statement n="84" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:title[contains(@ref, 'work:')][not(ancestor::tei:cit)])))}"><!-- ... of type... -->
+			 <statement n="85" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:title[contains(@ref, 'work:')][not(ancestor::tei:cit)])))}"><!-- ... of type... -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_c_', $currentResource/@work, '-works-', $repeatIndex)</subject>
 				<predicate prefix="cito">hasCitationCharacterization</predicate>
 				<object type="uri" prefix="cito">citesAsRelated</object>
 			 </statement>
-			 <statement n="85" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:title[contains(@ref, 'work:')][not(ancestor::tei:cit)])))}"><!-- ... what is cited? -->
+			 <statement n="86" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:title[contains(@ref, 'work:')][not(ancestor::tei:cit)])))}"><!-- ... what is cited? -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_c_', $currentResource/@work, '-works-', $repeatIndex)</subject>
 				<predicate prefix="cito">hasCitedEntity</predicate>
 				<object type="uri" prepend="works." resource="https://tei.salamanca.school/{/@work}.xml">/($externalResource//tei:text//tei:title[contains(@ref, 'work:')][not(ancestor::tei:cit)])[$repeatIndex]/tokenize(tokenize(@ref, 'work:')[2], ' ')[1]</object>
 			 </statement>
-			 <statement n="86" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:title[contains(@ref, 'work:')][not(ancestor::tei:cit)])))}"><!-- ... where is the citation? -->
+			 <statement n="87" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:title[contains(@ref, 'work:')][not(ancestor::tei:cit)])))}"><!-- ... where is the citation? -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_c_', $currentResource/@work, '-works-', $repeatIndex)</subject>
               <predicate prefix="cito">hasCitingEntity</predicate>
 		       <object type="uri" prepend="works.{/@work}:" resource="https://tei.salamanca.school/{/@work}.xml">($currentResource//sal:node[@n = (($externalResource//tei:text//tei:title[contains(@ref, 'work:')][not(ancestor::tei:cit)])[$repeatIndex]/(ancestor::tei:p|ancestor::tei:div))[last()]/@xml:id/string()]/sal:citetrail/text())</object>
 			 </statement>
             <!-- OCLC works -->
-			 <statement n="87" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:title[contains(@ref, 'oclc:')][not(ancestor::tei:cit)])))}"><!-- A CitationAct event... -->
+			 <statement n="88" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:title[contains(@ref, 'oclc:')][not(ancestor::tei:cit)])))}"><!-- A CitationAct event... -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_c_', $currentResource/@work, '-oclc-', $repeatIndex)</subject>
 				<predicate prefix="rdf">type</predicate>
 				<object type="uri" prefix="cito">citationAct</object>
 			 </statement>
-			 <statement n="88" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:title[contains(@ref, 'oclc:')][not(ancestor::tei:cit)])))}"><!-- ... of type... -->
+			 <statement n="89" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:title[contains(@ref, 'oclc:')][not(ancestor::tei:cit)])))}"><!-- ... of type... -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_c_', $currentResource/@work, '-oclc-', $repeatIndex)</subject>
 				<predicate prefix="cito">hasCitationCharacterization</predicate>
 				<object type="uri" prefix="cito">citesAsRelated</object>
 			 </statement>
-			 <statement n="89" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:title[contains(@ref, 'oclc:')][not(ancestor::tei:cit)])))}"><!-- ... what is cited? -->
+			 <statement n="90" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:title[contains(@ref, 'oclc:')][not(ancestor::tei:cit)])))}"><!-- ... what is cited? -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_c_', $currentResource/@work, '-oclc-', $repeatIndex)</subject>
 				<predicate prefix="cito">hasCitedEntity</predicate>
 				<object type="uri" prepend="http://www.worldcat.org/oclc/" resource="https://tei.salamanca.school/{/@work}.xml">/($externalResource//tei:text//tei:title[contains(@ref, 'oclc:')][not(ancestor::tei:cit)])[$repeatIndex]/tokenize(tokenize(@ref, 'oclc:')[2], ' ')[1]</object>
 			 </statement>
-			 <statement n="90" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:title[contains(@ref, 'oclc:')][not(ancestor::tei:cit)])))}"><!-- ... where is the citation? -->
+			 <statement n="91" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:title[contains(@ref, 'oclc:')][not(ancestor::tei:cit)])))}"><!-- ... where is the citation? -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_c_', $currentResource/@work, '-oclc-', $repeatIndex)</subject>
               <predicate prefix="cito">hasCitingEntity</predicate><!-- or po:isContainedBy? -->
 		       <object type="uri" prepend="works.{/@work}:" resource="https://tei.salamanca.school/{/@work}.xml">($currentResource//sal:node[@n = (($externalResource//tei:text//tei:title[contains(@ref, 'oclc:')][not(ancestor::tei:cit)])[$repeatIndex]/(ancestor::tei:p|ancestor::tei:div))[last()]/@xml:id/string()]/sal:citetrail/text())</object>
 			 </statement>
             <!-- GND works -->
-			 <statement n="91" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:title[contains(@ref, 'gnd:')][not(ancestor::tei:cit)])))}"><!-- A CitationAct event... -->
+			 <statement n="92" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:title[contains(@ref, 'gnd:')][not(ancestor::tei:cit)])))}"><!-- A CitationAct event... -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_c_', $currentResource/@work, '-gnd-', $repeatIndex)</subject>
 				<predicate prefix="rdf">type</predicate>
 				<object type="uri" prefix="cito">citationAct</object>
 			 </statement>
-			 <statement n="92" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:title[contains(@ref, 'gnd:')][not(ancestor::tei:cit)])))}"><!-- ... of type... -->
+			 <statement n="93" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:title[contains(@ref, 'gnd:')][not(ancestor::tei:cit)])))}"><!-- ... of type... -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_c_', $currentResource/@work, '-gnd-', $repeatIndex)</subject>
 				<predicate prefix="cito">hasCitationCharacterization</predicate>
 				<object type="uri" prefix="cito">citesAsRelated</object>
 			 </statement>
-			 <statement n="93" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:title[contains(@ref, 'gnd:')][not(ancestor::tei:cit)])))}"><!-- ... what is cited? -->
+			 <statement n="94" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:title[contains(@ref, 'gnd:')][not(ancestor::tei:cit)])))}"><!-- ... what is cited? -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_c_', $currentResource/@work, '-gnd-', $repeatIndex)</subject>
 				<predicate prefix="cito">hasCitedEntity</predicate>
 				<object type="uri" prepend="http://d-nb.info/gnd/" resource="https://tei.salamanca.school/{/@work}.xml">/($externalResource//tei:text//tei:title[contains(@ref, 'gnd:')][not(ancestor::tei:cit)])[$repeatIndex]/tokenize(tokenize(@ref, 'gnd:')[2], ' ')[1]</object>
 			 </statement>
-			 <statement n="94" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:title[contains(@ref, 'gnd:')][not(ancestor::tei:cit)])))}"><!-- ... where is the citation? -->
+			 <statement n="95" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:title[contains(@ref, 'gnd:')][not(ancestor::tei:cit)])))}"><!-- ... where is the citation? -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_c_', $currentResource/@work, '-gnd-', $repeatIndex)</subject>
               <predicate prefix="cito">hasCitingEntity</predicate><!-- or po:isContainedBy? -->
 		       <object type="uri" prepend="works.{/@work}:" resource="https://tei.salamanca.school/{/@work}.xml">($currentResource//sal:node[@n = (($externalResource//tei:text//tei:title[contains(@ref, 'gnd:')][not(ancestor::tei:cit)])[$repeatIndex]/(ancestor::tei:p|ancestor::tei:div))[last()]/@xml:id/string()]/sal:citetrail/text())</object>
 			 </statement>
 
-        <!-- Outside of Citations (-> citesAsRelated), authors (CitationAct_d_XY-##) -->
+    <!-- b.2. ... to authors (-> CitationAct_d_XY-## blank nodes) -->
             <!-- SvSal authors -->
-			 <statement n="95" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:persName[contains(@ref, 'author:')][not(ancestor::tei:cit)])))}"><!-- A CitationAct event... -->
+			 <statement n="96" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:persName[contains(@ref, 'author:')][not(ancestor::tei:cit)])))}"><!-- A CitationAct event... -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_d_', $currentResource/@work, '-authors-', $repeatIndex)</subject>
 				<predicate prefix="rdf">type</predicate>
 				<object type="uri" prefix="cito">citationAct</object>
 			 </statement>
-			 <statement n="96" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:persName[contains(@ref, 'author:')][not(ancestor::tei:cit)])))}"><!-- ... of type... -->
+			 <statement n="97" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:persName[contains(@ref, 'author:')][not(ancestor::tei:cit)])))}"><!-- ... of type... -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_d_', $currentResource/@work, '-authors-', $repeatIndex)</subject>
 				<predicate prefix="cito">hasCitationCharacterization</predicate>
 				<object type="uri" prefix="cito">citesAsRelated</object>
 			 </statement>
-			 <statement n="97" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:persName[contains(@ref, 'author:')][not(ancestor::tei:cit)])))}"><!-- ... what is cited? -->
+			 <statement n="98" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:persName[contains(@ref, 'author:')][not(ancestor::tei:cit)])))}"><!-- ... what is cited? -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_d_', $currentResource/@work, '-authors-', $repeatIndex)</subject>
 				<predicate prefix="cito">hasCitedEntity</predicate>
 				<object type="uri" prepend="authors." resource="https://tei.salamanca.school/{/@work}.xml">/($externalResource//tei:text//tei:persName[contains(@ref, 'author:')][not(ancestor::tei:cit)])[$repeatIndex]/tokenize(tokenize(@ref, 'author:')[2], ' ')[1]</object>
 			 </statement>
-			 <statement n="98" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:persName[contains(@ref, 'author:')][not(ancestor::tei:cit)])))}"><!-- ... where is the citation? -->
+			 <statement n="99" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:persName[contains(@ref, 'author:')][not(ancestor::tei:cit)])))}"><!-- ... where is the citation? -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_d_', $currentResource/@work, '-authors-', $repeatIndex)</subject>
               <predicate prefix="cito">hasCitingEntity</predicate><!-- or po:isContainedBy? -->
 		       <object type="uri" prepend="works.{/@work}:" resource="https://tei.salamanca.school/{/@work}.xml">($currentResource//sal:node[@n = (($externalResource//tei:text//tei:persName[contains(@ref, 'author:')][not(ancestor::tei:cit)])[$repeatIndex]/(ancestor::tei:p|ancestor::tei:div))[last()]/@xml:id/string()]/sal:citetrail/text())</object>
 			 </statement>
             <!-- Cerl authors -->
-			 <statement n="99" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:persName[contains(@ref, 'cerl:')][not(ancestor::tei:cit)])))}"><!-- A CitationAct event... -->
+			 <statement n="100" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:persName[contains(@ref, 'cerl:')][not(ancestor::tei:cit)])))}"><!-- A CitationAct event... -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_d_', $currentResource/@work, '-cerl-', $repeatIndex)</subject>
 				<predicate prefix="rdf">type</predicate>
 				<object type="uri" prefix="cito">citationAct</object>
 			 </statement>
-			 <statement n="100" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:persName[contains(@ref, 'cerl:')][not(ancestor::tei:cit)])))}"><!-- ... of type... -->
+			 <statement n="101" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:persName[contains(@ref, 'cerl:')][not(ancestor::tei:cit)])))}"><!-- ... of type... -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_d_', $currentResource/@work, '-cerl-', $repeatIndex)</subject>
 				<predicate prefix="cito">hasCitationCharacterization</predicate>
 				<object type="uri" prefix="cito">citesAsRelated</object>
 			 </statement>
-			 <statement n="101" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:persName[contains(@ref, 'cerl:')][not(ancestor::tei:cit)])))}"><!-- ... what is cited? -->
+			 <statement n="102" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:persName[contains(@ref, 'cerl:')][not(ancestor::tei:cit)])))}"><!-- ... what is cited? -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_d_', $currentResource/@work, '-cerl-', $repeatIndex)</subject>
 				<predicate prefix="cito">hasCitedEntity</predicate>
 				<object type="uri" prepend="http://thesaurus.cerl.org/record/" resource="https://tei.salamanca.school/{/@work}.xml">/($externalResource//tei:text//tei:persName[contains(@ref, 'cerl:')][not(ancestor::tei:cit)])[$repeatIndex]/tokenize(tokenize(@ref, 'cerl:')[2], ' ')[1]</object>
 			 </statement>
-			 <statement n="102" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:persName[contains(@ref, 'cerl:')][not(ancestor::tei:cit)])))}"><!-- ... where is the citation? -->
+			 <statement n="103" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:persName[contains(@ref, 'cerl:')][not(ancestor::tei:cit)])))}"><!-- ... where is the citation? -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_d_', $currentResource/@work, '-cerl-', $repeatIndex)</subject>
               <predicate prefix="cito">hasCitingEntity</predicate><!-- or po:isContainedBy? -->
 		       <object type="uri" prepend="works.{/@work}:" resource="https://tei.salamanca.school/{/@work}.xml">($currentResource//sal:node[@n = (($externalResource//tei:text//tei:persName[contains(@ref, 'cerl:')][not(ancestor::tei:cit)])[$repeatIndex]/(ancestor::tei:p|ancestor::tei:div))[last()]/@xml:id/string()]/sal:citetrail/text())</object>
 			 </statement>
             <!-- GND authors -->
-			 <statement n="103" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:persName[contains(@ref, 'gnd:')][not(ancestor::tei:cit)])))}"><!-- A CitationAct event... -->
+			 <statement n="104" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:persName[contains(@ref, 'gnd:')][not(ancestor::tei:cit)])))}"><!-- A CitationAct event... -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_d_', $currentResource/@work, '-gnd-', $repeatIndex)</subject>
 				<predicate prefix="rdf">type</predicate>
 				<object type="uri" prefix="cito">citationAct</object>
 			 </statement>
-			 <statement n="104" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:persName[contains(@ref, 'gnd:')][not(ancestor::tei:cit)])))}"><!-- ... of type... -->
+			 <statement n="105" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:persName[contains(@ref, 'gnd:')][not(ancestor::tei:cit)])))}"><!-- ... of type... -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_d_', $currentResource/@work, '-gnd-', $repeatIndex)</subject>
 				<predicate prefix="cito">hasCitationCharacterization</predicate>
 				<object type="uri" prefix="cito">citesAsRelated</object>
 			 </statement>
-			 <statement n="105" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:persName[contains(@ref, 'gnd:')][not(ancestor::tei:cit)])))}"><!-- ... what is cited? -->
+			 <statement n="106" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:persName[contains(@ref, 'gnd:')][not(ancestor::tei:cit)])))}"><!-- ... what is cited? -->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_d_', $currentResource/@work, '-gnd-', $repeatIndex)</subject>
 				<predicate prefix="cito">hasCitedEntity</predicate>
 				<object type="uri" prepend="http://d-nb.info/gnd/" resource="https://tei.salamanca.school/{/@work}.xml">/($externalResource//tei:text//tei:persName[contains(@ref, 'gnd:')][not(ancestor::tei:cit)])[$repeatIndex]/tokenize(tokenize(@ref, 'gnd:')[2], ' ')[1]</object>
 			 </statement>
-<!-- This one has worked at least once!: -->
+
 <!-- Perhaps search ancestors also for dict items: ancestor::tei:item[ancestor::tei:list/@type='dict'] -->
-			 <statement debug="true" n="106" repeat="{/min((10, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:persName[contains(@ref, 'gnd:')][not(ancestor::tei:cit)])))}"><!-- ... where is the citation? -->
+<!-- 
+			 <statement n="107" debug="true" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:persName[contains(@ref, 'gnd:')][not(ancestor::tei:cit)])))}"><!-/- ... where is the citation? -/->
 				<subject type="bnode" resource="https://tei.salamanca.school/{/@work}.xml">/concat('CitationAct_d_', $currentResource/@work, '-gnd-', $repeatIndex)</subject>
-              <predicate prefix="cito">hasCitingEntity</predicate><!-- or po:isContainedBy? -->
+              <predicate prefix="cito">hasCitingEntity</predicate><!-/- or po:isContainedBy? -/->
 		       <object type="uri" prepend="works.{/@work}:" resource="https://tei.salamanca.school/{/@work}.xml">($currentResource//sal:node[@n = (($externalResource//tei:text//tei:persName[contains(@ref, 'gnd:')][not(ancestor::tei:cit)])[$repeatIndex]/(ancestor::tei:p|ancestor::tei:div))[last()]/@xml:id/string()]/sal:citetrail/text())</object>
 			 </statement>
+-->
 
-    <!-- book:mentions: Entities mentioned in the work (persons, places, organizations etc.) --> 
-            <!-- SvSal authors -->
-            <statement n="107">
-                <subject type="uri" prepend="works.">/@work</subject>
-                <predicate prefix="book">mentions</predicate>
-                <object type="uri" prepend="authors." resource="https://tei.salamanca.school/{/@work}.xml">//tei:text//tei:persName[not(ancestor::tei:cit)]/tokenize(tokenize(@ref, 'author:')[2], ' ')[1]</object>
-            </statement>
-            <!-- Cerl authors -->
-            <statement n="108">
-                <subject type="uri" prepend="works.">/@work</subject>
-                <predicate prefix="book">mentions</predicate>
-                <object type="uri" prepend="http://thesaurus.cerl.org/record/" resource="https://tei.salamanca.school/{/@work}.xml">//tei:text//tei:persName[not(ancestor::tei:cit)]/tokenize(tokenize(@ref, 'cerl:')[2], ' ')[1]</object>
-            </statement>
-            <!-- GND authors -->
-            <statement n="109">
-                <subject type="uri" prepend="works.">/@work</subject>
-                <predicate prefix="book">mentions</predicate>
-                <object type="uri" prepend="http://d-nb.info/gnd/" resource="https://tei.salamanca.school/{/@work}.xml">//tei:text//tei:persName[not(ancestor::tei:cit)]/tokenize(tokenize(@ref, 'gnd:')[2], ' ')[1]</object>
-            </statement>
-
+    <!-- c. References to non-literary entities (places, organizations etc.): We render this with book:mentions -->
             <!-- Getty places (independently of whether or not inside a citation) -->
-            <statement n="110">
+            <statement n="111" repeat="{/min((10010, count(doc('https://tei.salamanca.school/' || @work || '.xml')//tei:text//tei:placeName[contains(@ref, 'getty:')])))}">
                 <subject type="uri" prepend="works.">/@work</subject>
                 <predicate prefix="book">mentions</predicate>
-                <object type="uri" prepend="http://vocab.getty.edu/tgn/" resource="https://tei.salamanca.school/{/@work}.xml">//tei:text//tei:placeName/tokenize(tokenize(@ref, 'getty:')[2], ' ')[1]</object>
+                <object type="uri" prepend="http://vocab.getty.edu/tgn/" resource="https://tei.salamanca.school/{/@work}.xml">/($externalResource//tei:text//tei:placeName[contains(@ref, 'getty:')])[$repeatIndex]/tokenize(tokenize(@ref, 'getty:')[2], ' ')[1]</object>
             </statement>
 
-<!--
-            <statement n="63" repeat="{/count(tokenize(.//sal:node[@n eq 'completeWork']/@xinc/string(), ' '))}" class="xinclude-repeater">    <!-\- Multiple Volumes/Parts -\->
-                <condition>/boolean(.//sal:node[@n eq 'completeWork']/@xinc)</condition> 
-                <subject type="uri" prepend="works.">/@work</subject>
-                <predicate prefix="cito">includesQuotationFrom</predicate>
-                <object type="uri" prepend="works." resource="https://tei.salamanca.school/{/tokenize(.//sal:node[@n='completeWork']/@xinc, ' ')[$repeatIndex]}">//tei:text//tei:cit//tei:title/tokenize(tokenize(@ref, 'work:')[2], ' ')[1]</object>
-            </statement>
-            <statement n="64"><!-/- Single Volume (without xincludes involved) -/->
-                <condition>/boolean(not($currentResource//sal:node[@xinc]))</condition>
-                <subject type="uri" prepend="works.">/@work</subject>
-                <predicate prefix="cito">includesQuotationFrom</predicate>
-                <object type="uri" prepend="works." resource="https://tei.salamanca.school/{/@work}.xml">//tei:text//tei:cit//tei:title/tokenize(tokenize(@ref, 'work:')[2], ' ')[1]</object>
-            </statement>
--->
-<!--
-            <statement n="65" repeat="{/count(tokenize(.//sal:node[@n='completeWork']/@xinc/string(), ' '))}" class="xinclude-repeater">    <!-\- Multiple Volumes/Parts -\->
-                <condition>/boolean($currentResource//sal:node[@n eq'completeWork']/@xinc)</condition> 
-                <subject type="uri" prepend="works.">/@work</subject>
-                <predicate prefix="cito">includesQuotationFrom</predicate>
-                <object type="uri" prepend="http://www.worldcat.org/oclc/" resource="https://tei.salamanca.school/{/tokenize(.//sal:node[@n='completeWork']/@xinc, ' ')[$repeatIndex]}">//tei:text//tei:cit//tei:title/tokenize(tokenize(@ref, 'oclc:')[2], ' ')[1]</object>
-            </statement>
-            <statement n="66">                                         <!-\- Single Volume (without xincludes involved) -\->
-                <condition>/boolean(not($currentResource//sal:node[@xinc]))</condition>
-                <subject type="uri" prepend="works.">/@work</subject>
-                <predicate prefix="cito">includesQuotationFrom</predicate>
-                <object type="uri" prepend="http://www.worldcat.org/oclc/" resource="https://tei.salamanca.school/{/@work}.xml">//tei:text//tei:cit//tei:title/tokenize(tokenize(@ref, 'oclc:')[2], ' ')[1]</object>
-            </statement>
-            
-            <statement n="67" repeat="{/count(tokenize(.//sal:node[@n='completeWork']/@xinc/string(), ' '))}" class="xinclude-repeater">    <!-\- Multiple Volumes/Parts -\->
-                <condition>/boolean($currentResource//sal:node[@n eq 'completeWork']/@xinc)</condition> 
-                <subject type="uri" prepend="works.">/@work</subject>
-                <predicate prefix="cito">includesQuotationFrom</predicate>
-                <object type="uri" prepend="http://d-nb.info/gnd/" resource="https://tei.salamanca.school/{/tokenize(.//sal:node[@n='completeWork']/@xinc, ' ')[$repeatIndex]}">//tei:text//tei:cit//tei:title/tokenize(tokenize(@ref, 'gnd:')[2], ' ')[1]</object>
-            </statement>
-            <statement n="68">                                         <!-\- Single Volume (without xincludes involved) -\->
-                <condition>/boolean(not($currentResource//sal:node[@xinc]))</condition>
-                <subject type="uri" prepend="works.">/@work</subject>
-                <predicate prefix="cito">includesQuotationFrom</predicate>
-                <object type="uri" prepend="http://d-nb.info/gnd/" resource="https://tei.salamanca.school/{/@work}.xml">//tei:text//tei:cit//tei:title/tokenize(tokenize(@ref, 'gnd:')[2], ' ')[1]</object>
-            </statement>
--->
-<!--
-            <!-\- SvSal works -\->
-            <statement n="75" repeat="{/count(tokenize(.//sal:node[@n eq 'completeWork']/@xinc/string(), ' '))}" class="xinclude-repeater">    <!-\- Multiple Volumes/Parts -\->
-                <condition>/boolean($currentResource//sal:node[@n eq 'completeWork']/@xinc)</condition> 
-                <subject type="uri" prepend="works.">/@work</subject>
-                <predicate prefix="cito">cites</predicate>
-                <object type="uri" prepend="works." resource="https://tei.salamanca.school/{/tokenize(.//sal:node[@n='completeWork']/@xinc, ' ')[$repeatIndex]}">//tei:text//tei:title[not(ancestor::tei:cit)]/tokenize(tokenize(@ref, 'work:')[2], ' ')[1]</object>
-            </statement>
-            <statement n="76">                                         <!-\- Single Volume (without xincludes involved) -\->
-                <condition>/boolean(not($currentResource//sal:node[@xinc]))</condition>
-                <subject type="uri" prepend="works.">/@work</subject>
-                <predicate prefix="cito">cites</predicate>
-                <object type="uri" prepend="works." resource="https://tei.salamanca.school/{/@work}.xml">//tei:text//tei:title[not(ancestor::tei:cit)]/tokenize(tokenize(@ref, 'work:')[2], ' ')[1]</object>
-            </statement>
-            <!-\- OCLC works -\->
-            <statement n="77" repeat="{/count(tokenize(.//sal:node[@n eq 'completeWork']/@xinc/string(), ' '))}" class="xinclude-repeater">    <!-\- Multiple Volumes/Parts -\->
-                <condition>/boolean($currentResource//sal:node[@n eq 'completeWork']/@xinc)</condition> 
-                <subject type="uri" prepend="works.">/@work</subject>
-                <predicate prefix="cito">cites</predicate>
-                <object type="uri" prepend="http://www.worldcat.org/oclc/" resource="https://tei.salamanca.school/{/tokenize(.//sal:node[@n='completeWork']/@xinc, ' ')[$repeatIndex]}">//tei:text//tei:title[not(ancestor::tei:cit)]/tokenize(tokenize(@ref, 'oclc:')[2], ' ')[1]</object>
-            </statement>
-            <statement n="78">                                         <!-\- Single Volume (without xincludes involved) -\->
-                <condition>/boolean(not($currentResource//sal:node[@xinc]))</condition>
-                <subject type="uri" prepend="works.">/@work</subject>
-                <predicate prefix="cito">cites</predicate>
-                <object type="uri" prepend="http://www.worldcat.org/oclc/" resource="https://tei.salamanca.school/{/@work}.xml">//tei:text//tei:title[not(ancestor::tei:cit)]/tokenize(tokenize(@ref, 'oclc:')[2], ' ')[1]</object>
-            </statement>
-            <!-\- GND works -\->
-            <statement n="79" repeat="{/count(tokenize(.//sal:node[@n eq 'completeWork']/@xinc/string(), ' '))}" class="xinclude-repeater">    <!-\- Multiple Volumes/Parts -\->
-                <condition>/boolean($currentResource//sal:node[@n eq 'completeWork']/@xinc)</condition> 
-                <subject type="uri" prepend="works.">/@work</subject>
-                <predicate prefix="cito">cites</predicate>
-                <object type="uri" prepend="http://d-nb.info/gnd/" resource="https://tei.salamanca.school/{/tokenize(.//sal:node[@n='completeWork']/@xinc, ' ')[$repeatIndex]}">//tei:text//tei:title[not(ancestor::tei:cit)]/tokenize(tokenize(@ref, 'gnd:')[2], ' ')[1]</object>
-            </statement>
-            <statement n="80">                                         <!-\- Single Volume (without xincludes involved) -\->
-                <condition>/boolean(not($currentResource//sal:node[@xinc]))</condition>
-                <subject type="uri" prepend="works.">/@work</subject>
-                <predicate prefix="cito">cites</predicate>
-                <object type="uri" prepend="http://d-nb.info/gnd/" resource="https://tei.salamanca.school/{/@work}.xml">//tei:text//tei:title[not(ancestor::tei:cit)]/tokenize(tokenize(@ref, 'gnd:')[2], ' ')[1]</object>
-            </statement>
--->
-<!--
-            <statement n="81" repeat="{/count(tokenize(.//sal:node[@n eq 'completeWork']/@xinc/string(), ' '))}" class="xinclude-repeater">    <!-\- Multiple Volumes/Parts -\->
-                <condition>/boolean($currentResource//sal:node[@n eq 'completeWork']/@xinc)</condition> 
-                <subject type="uri" prepend="works.">/@work</subject>
-                <predicate prefix="book">mentions</predicate>
-                <object type="uri" prepend="authors." resource="https://tei.salamanca.school/{/tokenize(.//sal:node[@n='completeWork']/@xinc, ' ')[$repeatIndex]}">//tei:text//tei:persName[not(ancestor::tei:cit)]/tokenize(tokenize(@ref, 'author:')[2], ' ')[1]</object>
-            </statement>
-            <statement n="83" repeat="{/count(tokenize(.//sal:node[@n eq 'completeWork']/@xinc/string(), ' '))}" class="xinclude-repeater">    <!-\- Multiple Volumes/Parts -\->
-                <condition>/boolean($currentResource//sal:node[@n eq 'completeWork']/@xinc)</condition> 
-                <subject type="uri" prepend="works.">/@work</subject>
-                <predicate prefix="book">mentions</predicate>
-                <object type="uri" prepend="http://thesaurus.cerl.org/record/" resource="https://tei.salamanca.school/{/tokenize(.//sal:node[@n='completeWork']/@xinc, ' ')[$repeatIndex]}">//tei:text//tei:persName[not(ancestor::tei:cit)]/tokenize(tokenize(@ref, 'cerl:')[2], ' ')[1]</object>
-            </statement>
-            <statement n="85" repeat="{/count(tokenize(.//sal:node[@n eq 'completeWork']/@xinc/string(), ' '))}" class="xinclude-repeater">    <!-\- Multiple Volumes/Parts -\->
-                <condition>/boolean($currentResource//sal:node[@n eq 'completeWork']/@xinc)</condition> 
-                <subject type="uri" prepend="works.">/@work</subject>
-                <predicate prefix="book">mentions</predicate>
-                <object type="uri" prepend="http://d-nb.info/gnd/" resource="https://tei.salamanca.school/{/tokenize(.//sal:node[@n='completeWork']/@xinc, ' ')[$repeatIndex]}">//tei:text//tei:persName[not(ancestor::tei:cit)]/tokenize(tokenize(@ref, 'gnd:')[2], ' ')[1]</object>
-            </statement>
-            <statement n="87" repeat="{/count(tokenize(.//sal:node[@n eq 'completeWork']/@xinc/string(), ' '))}" class="xinclude-repeater">    <!-\- Multiple Volumes/Parts -\->
-                <condition>/boolean($currentResource//sal:node[@n eq 'completeWork']/@xinc)</condition> 
-                <subject type="uri" prepend="works.">/@work</subject>
-                <predicate prefix="book">mentions</predicate>
-                <object type="uri" prepend="http://vocab.getty.edu/tgn/" resource="https://tei.salamanca.school/{/tokenize(.//sal:node[@n='completeWork']/@xinc, ' ')[$repeatIndex]}">//tei:text//tei:placeName/tokenize(tokenize(@ref, 'getty:')[2], ' ')[1]</object>
-            </statement>
--->
         </triples>
     </configuration>
 
