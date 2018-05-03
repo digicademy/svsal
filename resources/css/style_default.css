@@ -277,23 +277,41 @@ margin-top: 1%;*/
 .watermark-wip-text {
 display:none
 }
-/* a_ and b_ : inaccessible */
+/* a_ to f_ : inaccessible */
 .panel-default.a_raw,
-.panel-default.b_cleared {
+.panel-default.b_cleared,
+.panel-default.c_hyph_proposed,
+.panel-default.d_hyph_approved,
+.panel-default.e_emended_unenriched,
+.panel-default.f_enriched {
 background-color:silver;
 color:DimGray
 }
+.panel-default.a_raw a.lead,
 .panel-default.a_raw .lead a,
 .panel-default.a_raw .volumeLinks a,
+.panel-default.b_cleared a.lead,
 .panel-default.b_cleared .lead a,
 .panel-default.b_cleared .volumeLinks a,
-.panel-default.a_raw a.lead,
-.panel-default.b_cleared a.lead {
+.panel-default.c_hyph_proposed a.lead,
+.panel-default.c_hyph_proposed .lead a,
+.panel-default.c_hyph_proposed .volumeLinks a,
+.panel-default.d_hyph_approved a.lead,
+.panel-default.d_hyph_approved .lead a,
+.panel-default.d_hyph_approved .volumeLinks a,
+.panel-default.e_emended_unenriched a.lead,
+.panel-default.e_emended_unenriched .lead a,
+.panel-default.e_emended_unenriched .volumeLinks a,
+.panel-default.f_enriched a.lead,
+.panel-default.f_enriched .lead a,
+.panel-default.f_enriched .volumeLinks a
+ {
 color:DimGray;
 pointer-events:none;
 cursor:default;
 }
-/* c_ and d_ : accessible, but watermarked */
+/* 
+/ * c_ and d_ : accessible, but watermarked * /
 .panel-default.c_hyph_proposed,
 .panel-default.d_hyph_approved {
 background-color:Gainsboro
@@ -311,10 +329,10 @@ font-weight:bold;
 transform:rotate(340deg);
 -webkit-transform:rotate(340deg);
 opacity:0.3;
-filter:alpha(opacity=30);   /* for <= IE 8 */
-pointer-events:none         /* click through it */
+filter:alpha(opacity=30);
+pointer-events:none
 }
-/* e_ and f_ : accessible, but watermarked */
+/ * e_ and f_ : accessible, but watermarked * /
 .panel-default.e_unrevised,
 .panel-default.f_revised_unreviewed {
 background-color:GhostWhite
@@ -332,9 +350,10 @@ font-weight:bold;
 transform:rotate(340deg);
 -webkit-transform:rotate(340deg);
 opacity:0.7;
-filter:alpha(opacity=70);   /* for <= IE 8 */
-pointer-events:none       /* click through it */
+filter:alpha(opacity=70);
+pointer-events:none
 }
+*/
 /* g_ and later: unrestricted */
 .panel-default.g_revised_approved,
 .panel-default.h_uploaded,
@@ -343,13 +362,21 @@ pointer-events:none       /* click through it */
 background-color:white
 }
 a.a_raw,
-a.b_cleared {
+a.b_cleared,
+a.c_hyph_proposed,
+a.d_hyph_approved,
+a.e_emended_unenriched,
+a.f_enriched {
 pointer-events:none;
 cursor:default;
 color:DimGray
 }
 .button.a_raw,
-.button.b_cleared {
+.button.b_cleared,
+.button.c_hyph_proposed,
+.button.d_hyph_approved,
+.button.e_emended_unenriched,
+.button.f_enriched {
 background-color:silver;
 color:DimGray
 }

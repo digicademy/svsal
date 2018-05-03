@@ -404,11 +404,12 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
         let $title          :=  $item//tei:monogr/tei:title[@type = 'short']
         let $status         :=  xs:string($item/ancestor-or-self::tei:TEI//tei:revisionDesc/@status)
         let $WIPstatus      :=  if ($item/ancestor-or-self::tei:TEI//tei:revisionDesc/@status =
-                                                         ('a_raw',
+                                                         ( 'a_raw',
                                                            'b_cleared',
                                                            'c_hyph_proposed',
                                                            'd_hyph_approved',
-                                                           'e_unrevised'
+                                                           'e_emended_unenriched',
+                                                           'f_enriched'
                                                          )) then "yes"
                                 else "no"
         let $wrkLink        :=  'work.html?wid=' || $wid
@@ -1161,7 +1162,8 @@ declare function app:watermark($node as node(), $model as map(*), $wid as xs:str
                                                            'b_cleared',
                                                            'c_hyph_proposed',
                                                            'd_hyph_approved',
-                                                           'e_unrevised'
+                                                           'e_emended_unenriched',
+                                                           'f_enriched'
                                                           )) then
                             <p class="watermark-wip-text">
                                 <i18n:text key="workInProgress">Work in Progress!</i18n:text>
@@ -1183,7 +1185,8 @@ declare function app:watermark-txtonly($node as node(), $model as map(*), $wid a
                                                            'b_cleared',
                                                            'c_hyph_proposed',
                                                            'd_hyph_approved',
-                                                           'e_unrevised'
+                                                           'e_emended_unenriched',
+                                                           'f_enriched'
                                                           )) then
                             <span>{i18n:process(<i18n:text key="workInProgress">Work in Progress!</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))}</span>
                         else
@@ -2030,10 +2033,10 @@ declare %templates:wrap
                             let $date       := if ($thisEd) then $thisEd else $firstEd                                       
                             let $vol        := doc($config:data-root || "/" || $wid || '_nodeIndex.xml')//sal:node[@n=$volId]/sal:crumbtrail/a[last()]/@href/string()
                             return  if ($item is ($model('currentWork')//tei:text)[last()]) then
-                                            <a class="{$status}" href="{if ($status = ("a_raw", "b_cleared")) then 'javascript:' else $vol}">{concat($volNumber||': ', $date)}</a>
+                                            <a class="{$status}" href="{if ($status = ("a_raw", "b_cleared", "c_hyph_proposed", "d_hyph_approved", "e_emended_unenriched", "f_enriched")) then 'javascript:' else $vol}">{concat($volNumber||': ', $date)}</a>
                                     else
                                         <span>
-                                            <a class="{$status}" href="{if ($status = ("a_raw", "b_cleared")) then 'javascript:' else $vol}">{concat($volNumber||': ', $date)}</a>{'&#xA0;-&#xA0;'}
+                                            <a class="{$status}" href="{if ($status = ("a_raw", "b_cleared", "c_hyph_proposed", "d_hyph_approved", "e_emended_unenriched", "f_enriched")) then 'javascript:' else $vol}">{concat($volNumber||': ', $date)}</a>{'&#xA0;-&#xA0;'}
                                         </span>  
         return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
 };
@@ -2099,10 +2102,10 @@ let $debug := console:log("Todo: Fix image-url generating work-around in app:bib
                 <div class="row"><hr/>
                     <div class="col-md-3">
                         <div>
-                            <a class="{$status}" href="{if ($status = ("a_raw", "b_cleared")) then 'javascript:' else $target}">
+                            <a class="{$status}" href="{if ($status = ("a_raw", "b_cleared", "c_hyph_proposed", "d_hyph_approved", "e_emended_unenriched", "f_enriched")) then 'javascript:' else $target}">
                                 <img src="{$img}" class="img-responsive thumbnail" alt="Titlepage {functx:capitalize-first(substring($item/@type, 6))}"/>
                             </a>
-                            <a class="btn btn-info button {$status}" href="{if ($status = ("a_raw", "b_cleared")) then 'javascript:' else $target}">
+                            <a class="btn btn-info button {$status}" href="{if ($status = ("a_raw", "b_cleared", "c_hyph_proposed", "d_hyph_approved", "e_emended_unenriched", "f_enriched")) then 'javascript:' else $target}">
                                 <span class="glyphicon glyphicon-file"></span>{$config:nbsp || $config:nbsp}
                                 {if ($item/@type = 'work_volume') then
                                     <span><i18n:text key="volume">Band</i18n:text>{$config:nbsp || $volNumber}</span>
