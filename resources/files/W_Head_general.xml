@@ -344,14 +344,12 @@
     </teiHeader>
     <text type="technical" xml:id="completeWork">
         <body>
-            
             <!-- Guidelines for WebApp-->
             <div type="part" xml:lang="de" xml:id="guidelines-de">
                 <div type="section" xml:id="richtlinien">
                     <head xml:id="head_opoiupoiu">Editions-Richtlinien zur Texterfassung</head>
                     <p xml:id="p_zuozuouzt">Sämtliche Fragen, Anmerkungen und Kritik gern an <ref target="mailto:info.salamanca@adwmainz.de">info.salamanca@adwmainz.de</ref>.</p>
-                    <!-- TODO: add date -->
-                    <p xml:id="p_uiouoqweqxc">David Glück, Andreas Wagner - Stand: 18.04.2018</p>
+                    <p xml:id="p_uiouoqweqxc">David Glück, Andreas Wagner - Stand: 02.05.2018</p>
                     <div type="chapter" xml:id="de_Grundsätzliches">
                         <head n="1." xml:id="head_ipoiupiuta">Grundsätzliches</head>
                         <div type="section" xml:id="synthese">
@@ -373,35 +371,37 @@
                         </div>
                         <div type="section" xml:id="edition">
                             <head n="1.2." xml:id="head_ppuqefqf3">Zur digitalen Edition</head>
-                            <p xml:id="p_qw3wfd2131324">Die digitale Editon "Die Schule von Salamanca" besteht aus 116
+                            <p xml:id="p_qw3wfd2131324">Die digitale Editon des Projekts "Die Schule von Salamanca" besteht aus 116
                                 Werken, die unter Zuhilfename einer Anpassung des TEI-P5 Schemas
-                                ausgezeichnet werden. Diese Anpassung (im weiteren SvSal-TEI) ist
+                                ausgezeichnet werden. Diese Anpassung (im weiteren <q>SalTEI</q>) ist
                                 TEI-konform und speziell an den wissenschaftlichen Anforderungen des
-                                Projekts ausgerichtet. Ihre Definition und Dokumentation ist hier
-                                abrufbar: 
+                                Projekts ausgerichtet. Hierzu zählen vor allem:</p>
                                 <list>
-                                    <item xml:id="item_poi098098">
-                                        <!-- TODO: Links anpassen, Link zur docx/pdf-Beschreibung hinzufügen -->
-                                        <ref target="http://files.salamanca.school/SvSal_txt.xml">.odd</ref> (All-In-One XML-Definition des SalTEI-Schemas)
-                                    </item>
-                                    <!--<item xml:id="item_oi79q3w1">
-                                        <ref target="http://files.salamanca.school/SvSal_txt_doc.docx">.docx</ref> (Schema-Dokumentation)
-                                    </item>-->
-                                    <item xml:id="item_fcwq43q13dwq">
-                                        <ref target="http://files.salamanca.school/SvSal_txt.rng">.rng</ref> (SalTEI-Schema im RELAX NG Format)
-                                    </item>
+                                    <item xml:id="item_4jfdsf8w">Die Verlinkung der Quellen mit den im Wörterbuch verzeichneten Lemmata aus dem
+                                        Diskussionszusammenhang der Schule von Salamanca.</item>
+                                    <item xml:id="item_faskfdms">Die Verlinkung der Quellen untereinander durch Referenzen auf "interne" Werke und/oder Autoren 
+                                        der Quellensammlung, sowie evtl. die Verlinkung von Entitäten (Namen, Literaturangaben) mit externen Normdaten.</item>
+                                    <item xml:id="item_3gsdgfds">Die Bereitstellung einer synoptischen (Text-/Bild-)Leseansicht sowohl in diplomatischer (quellennaher) 
+                                    als auch in konstituierter (normalisierter) Form, etwa durch systematisch durchgeführte Korrekturen und Abkürzungsauflösungen.</item>
+                                    <item xml:id="item_73ffksöf">Die Dursuchbarkeit der Texte mithilfe einer begriffsgenauen Volltextsuche und 
+                                        komfortablen, erweiterte Suchoptionen wie bspw.
+                                        Mehrwortsuche mit Umgebungs- oder Ausnahmebedingungen.</item>
+                                    <item xml:id="item_54jsfds8">Ein selektiver und geordneter Zugriff auf die Texte z.B. nach Autoren, Titelstichworten, 
+                                        Erscheinungsjahren oder Druckorten.</item>
                                 </list>
-                            </p>
-                            <p xml:id="p_asdadadw">Darüber hinaus werden hier folgende Dateien als Download angeboten:
-                                <list>
-                                    <!-- TODO: rename Sonderzeichen and possibly also W_Head_general and insert correct links -->
-                                    <item xml:id="item_oi79q3dw1">
-                                        <ref target="http://files.salamanca.school/W_Head_general.xml">.xml</ref> (Diese Dokumentationsdatei)</item>
-                                    <item xml:id="item_fcwq43qf13dwq">
-                                        <ref target="http://files.salamanca.school/Sonderzeichen.xml">.xml</ref> (Übersicht der verwendeten Sonderzeichen)</item>
-                                </list>
-                            </p>
-                            <p xml:id="p_lkjfdkhdfggfh">Die hier vorliegenden Editionsrichtlinien (in der Folge "die
+                                <p xml:id="p_sdflökf0fds"> Dabei versteht sich die Edition 
+                                nicht als eine Aufbereitung der Texte hin zu einem einfach und "endgültig" publizierten Editionstext, 
+                                sondern macht von den Möglichkeiten des digitalen Mediums Gebrauch, indem auch bereits publizierte Textversionen noch weiter anreicherbar 
+                                sind. Die Multidimensionalität der wissenschaftlichen Anforderungen und die 
+                                stufenweise (Weiter-)Bearbeitbarkeit der Texte stellen die digitale Edition gleichzeitig vor Herausforderungen beim Vorgehen in der 
+                                Textaufbereitung und der Publikation, denen u.a. mithilfe eines komplexen Schemas von 
+                                <ref target="#bearbetst">Bearbeitungsstatus</ref>, die jeder Text bei der Aufbereitung durchläuft, entsprochen wird.
+                                <!-- TODO: link to more extensive documentation, once it is available -->
+                                </p>
+                        </div>
+                            <div xml:id="richtl" type="section">
+                                <head xml:id="head_jfdf8fgh" n="1.3.">Zu den Editionsrichtlinien</head>
+                                <p xml:id="p_lkjfdkhdfggfh">Die hier vorliegenden Editionsrichtlinien (in der Folge "die
                                 Richtlinien") verstehen sich als XML-Auszeichnungsrichtlinien und
                                 sollen: <list>
                                     <item xml:id="item_serz564wsgw4">die Regeln und Besonderheiten, nach der diese digitale
@@ -435,15 +435,98 @@
                                 für das Projekt <ref type="url" target="http://mapoflondon.uvic.ca/">Map of Early Modern London</ref>
                                 entwickelten "Codesharing"-Dienst bei uns installiert.</p>
                         </div>
-                    </div>
-                    <div type="chapter" xml:id="de_status">
-                        <!-- TODO: revise this when decision about status is done -->
-                        <head n="2." xml:id="head_popopopo">Bearbeitungsstatus</head>
-                        <div type="section" xml:id="bearbetst">
-                            <head xml:id="blubbis" n="2.1.">Überarbeitungshistorie</head>
-                            <p xml:id="p_popopoavecqwr"> Die Überarbeitungshistorie eines Werkes/Bandes wird in der <gi>revisionDesc</gi> festgehalten.
-                        Es gibt neun Status der Bearbeitung, wobei der neueste Status jeweils in das <att>status</att>
-                           -Attribut des <gi>revisionDesc</gi>-Elements eingetragen wird.</p>
+                        <div xml:id="dokuData" type="section">
+                            <head xml:id="head_87434mv" n="1.4.">Technische Dokumentation und Downloads</head>
+                                <p xml:id="p_5sdflkjsdf9">Die Definition und Dokumentation des verwendeten TEI-Schemas ist hier
+                                abrufbar: 
+                                <list>
+                                    <item xml:id="item_poi098098">
+                                        <ref target="http://files.salamanca.school/SvSal_txt.xml">.odd</ref> (All-In-One XML-Definition des SalTEI-Schemas)
+                                    </item>
+                                    <!-- TODO: add docx documentation -->
+                                    <!--<item xml:id="item_oi79q3w1">
+                                        <ref target="http://files.salamanca.school/SvSal_txt_doc.docx">.docx</ref> (Schema-Dokumentation)
+                                    </item>-->
+                                    <item xml:id="item_fcwq43q13dwq">
+                                        <ref target="http://files.salamanca.school/SvSal_txt.rng">.rng</ref> (SalTEI-Schema im RELAX NG Format)
+                                    </item>
+                                </list>
+                            </p>
+                            <p xml:id="p_asdadadw">Darüber hinaus werden hier folgende Dateien als Download angeboten:
+                                <list>
+                                    <!-- TODO: rename Sonderzeichen and possibly also W_Head_general and insert correct links -->
+                                    <item xml:id="item_oi79q3dw1">
+                                        <ref target="http://files.salamanca.school/W_Head_general.xml">.xml</ref> (Diese Dokumentationsdatei)</item>
+                                    <item xml:id="item_fcwq43qf13dwq">
+                                        <ref target="http://files.salamanca.school/Sonderzeichen.xml">.xml</ref> (Übersicht der verwendeten Sonderzeichen)</item>
+                                </list>
+                            </p>
+                            </div>
+                            
+                        </div>
+                        <div type="chapter" xml:id="de_status">
+                        <head n="2." xml:id="head_popopopo">Textaufbereitung: Status und Historie</head>
+                            <div xml:id="bearbetst" type="section">
+                                <head xml:id="head_ifudosifb" n="2.1.">Bearbeitungsstatus</head>
+                                <p xml:id="p_34jfsdf8">Bei der Aufbereitung und Edition durchläuft ein Text grundsätzlich neun Bearbeitungsstatus, wobei 
+                                die Abfolge der im folgenden beschriebenen Status nicht notwendigerweise sequenziell ist; beispielsweise kann ein Text im Rahmen 
+                                fachwissenschaftlicher Annotationen und Korrekturen mehrfach 
+                                die Schritte <val>h_revised</val> und <val>g_revised_approved</val> durchlaufen.</p>
+                                <list type="dict">
+                                <item xml:id="item_mewrper">
+                                    <att>a_raw</att> Der im Double-Keying erfasste Text wurde in eine einfache TEI-Datei umgewandelt, 
+                                    welche den Schemavorgaben entspricht.
+                           </item>
+                                <item xml:id="item_oncqc3p4">
+                                    <att>b_cleared</att> Unsicherheitsmarkierungen, welche die Typisten festgehalten haben, 
+                                    wurden anhand eines Abgleichs mit der Vorlage aufgelöst.
+                           </item>
+                                <item xml:id="item_cmireunpoi">
+                                    <att>c_hyph_proposed</att> Vorschläge zu Worttrennungen, Korrekturen und Abkürzungsauflösungen wurden erstellt.
+                           </item>
+                                <item xml:id="item_öjpjmpwq">
+                                    <att>d_hyph_approved</att> Vorschläge zu Worttrennungen, Korrekturen und Abkürzungsauflösungen wurden 
+                                    durch die WissenschaftlerInnen angenommen und im Text umgesetzt.
+                           </item>
+                                <item xml:id="item_cmpewqd9pd">
+                                    <att>e_emended_unenriched</att> Anreicherung des Textes (Auszeichnung von Personen, Orten, Literatur 
+                                    sowie die Verlinkung mit Wörterbuch- oder Autorendatensätzen) ist in Arbeit.
+                           </item>
+                                <item xml:id="item_cserweloiuo">
+                                    <att>f_enriched</att> Anreicherung des Textes wurde fertiggestellt. Korrektur/Prüfung der 
+                                    Anreicherung nach dem Vier-Augen-Prinzip steht aus.
+                           </item>
+                                <item xml:id="item_luhkhsd">
+                                    <att>g_enriched_approved</att> Die Überprüfung wurde abgeschlossen. Der Text wurde 
+                                    offiziell und auf eine persistent zitierbare Weise veröffentlicht und steht somit der 
+                                    wissenschaftlichen Community regulär zur Verfügung.
+                           </item>
+                                <item xml:id="item_nmpieawrhf0">
+                                    <att>h_revised</att> Während einer Karenzzeit gesammelte, (auch von Dritten stammende) weitere 
+                                    Vorschläge zur Korrektur und Anreicherung wurden in den Text eingepflegt, Überprüfung der Vorschläge 
+                                    nach dem Vier-Augen-Prinzip steht aus.
+                           </item>
+                                <item xml:id="item_iuwph3qp4">
+                                    <att>i_revised_approved</att> Weitere Vorschläge zur Korrektur und Anreicherung wurden durch die WissenschaftlerInnen 
+                                    angenommen, der Text wurde erneut (d.h. mit neuen, persistenten Identifiern) veröffentlicht, 
+                                    wobei ältere Versionen des Textes persistent referenzierbar erhalten bleiben.
+                           </item>
+                                <item xml:id="item_safzuoewq4">
+                                    <!-- TODO: this will be rendered as "J", make the numbering disappear or use digit numbering -->
+                                    <att>z_final</att> Der Text wurde am Ende der Bearbeitungsphasen in einer nicht weiter veränderbaren Version 
+                                    für Zwecke der Langzeitarchivierung/-präsentation der Projektergebnisse "eingefroren".
+                           </item>
+                                <!-- TODO: link to more extensive description of the digitization workflow -->
+                            </list>
+                            </div>
+                        <div type="section" xml:id="historie">
+                            <head xml:id="blubbis" n="2.2.">Überarbeitungshistorie</head>
+                            <p xml:id="p_popopoavecqwr">Die Überarbeitungshistorie eines Werkes/Bandes verzeichnet Umwandlungen, Eingriffe oder Erweiterungen des/im
+                                TEI-Dokument und wird in der <gi>revisionDesc</gi> im <gi>teiHeader</gi> 
+                                festgehalten. Dabei wird der aktuelle 
+                                <ref target="#bearbetst">Bearbeitungsstatus</ref> 
+                                jeweils im <att>status</att>
+                           -Attribut des <gi>revisionDesc</gi>-Elements hinterlegt.</p>
                             <egXML xmlns="http://www.tei-c.org/ns/Examples">
                             <![CDATA[
                             <revisionDesc status="j_frozen">
@@ -461,53 +544,20 @@
                                 </listChange>
                             </revisionDesc>
                              ]]></egXML>
-                            <list type="ordered">
-                                <item xml:id="item_mewrper">
-                                    <att>a_raw</att> Der im Double-Keying erfasste Text wurde in eine einfache TEI-Datei umgewandelt, welche den Schemavorgaben entspricht.
-                           </item>
-                                <item xml:id="item_oncqc3p4">
-                                    <att>b_cleared</att> Unsicherheitsmarkierungen, welche die Typisten festgehalten haben, wurden anhand eines Abgleichs mit der Vorlage aufgelöst.
-                           </item>
-                                <item xml:id="item_cmireunpoi">
-                                    <att>c_hyph_proposed</att> Vorschläge zu Worttrennung, Korrektur und Abkürzungsauflösung wurden erstellt.
-                           </item>
-                                <item xml:id="item_öjpjmpwq">
-                                    <att>d_hyph_approved</att> Vorschläge zu Worttrennung, Korrektur und Abkürzungsauflösung wurden durch die WissenschaftlerInnen angenommen und im Text umgesetzt.
-                           </item>
-                                <item xml:id="item_cmpewqd9pd">
-                                    <att>e_emended_unenriched</att>Anreicherung des Textes (Auszeichnung der Sonderzeichen-Entitäten, Auszeichnung von Personen, Orten, Literatur sowie die Verlinkung mit Wörterbuch- oder Autorendatensätzen) ist in Arbeit.
-                           </item>
-                                <item xml:id="item_cserweloiuo">
-                                    <att>f_enriched</att> Anreicherung des Textes wurde fertiggestellt. Korrektur/Prüfung der Anreicherung nach dem Vier-Augen-Prinzip steht aus.
-                           </item>
-                                <item xml:id="item_luhkhsd">
-                                    <att>g_enriched_approved</att> Die Überprüfung wurde abgeschlossen. Der Text wurde offiziell und auf eine persistent zitierbare Weise veröffentlicht und steht somit der wissenschaftlichen Community regulär zur Verfügung.
-                           </item>
-                                <item xml:id="item_nmpieawrhf0">
-                                    <att>h_revised</att> Während einer Karenzzeit gesammelte, (auch von Dritten stammende) weitere Vorschläge zur Korrektur und Anreicherung wurden in den Text eingepflegt, Überprüfung der Vorschläge nach dem Vier-Augen-Prinzip steht aus.
-                           </item>
-                                <item xml:id="item_iuwph3qp4">
-                                    <att>i_revised_approved</att> Weitere Vorschläge zur Korrektur und Anreicherung wurden durch die WissenschaftlerInnen angenommen, der Text wurde erneut (d.h. mit neuen, persistenten Identifiern) veröffentlicht, wobei ältere Versionen des Textes erhalten bleiben.
-                           </item>
-                                <item xml:id="item_safzuoewq4">
-                                    <!-- TODO: this will be rendered as "J", make the numbering disappear or use digit numbering -->
-                                    <att>z_final</att> Der Text wurde am Ende der Bearbeitungsphasen in einer nicht weiter veränderbaren Version für Zwecke der Langzeitarchivierung/-präsentation der Projektergebnisse "eingefroren".
-                           </item>
-                                <!-- TODO: link to more extensive description of the digitization workflow -->
-                            </list>
+                            
                         </div>
                     </div>
                     <div type="chapter" xml:id="de_editorischeEingriffe">
                         <head n="3." xml:id="head_opjpqjep93q4">Editorische Eingriffe</head>
                         <div xml:id="de_Textbereiche" type="section">
                             <head xml:id="head_cfunmdasd7" n="3.1.">Erfasste Textbereiche</head>
-                            <p xml:id="p_dflijasdf">Als Teil des Editionstexts erfasst wurden der "Hauptbereich" des Textes, d.h. der im
+                            <p xml:id="p_dflijasdf">Als Teil des Editionstexts erfasst werden der "Hauptbereich" des Textes, d.h. der im
                             inneren Bereich einer Druckseite gelegene, ggf. mehrspaltige Textbereich. Von dem diesen Hauptbereich umschließenden Marginalbereich 
-                            des Textes wurden nur Marginal-, Fußnoten und Seiten-/Foliozahlen (s.u.) erfasst, nicht jedoch 
-                            Kopfzeilen, Kolumnentitel, Bogensignaturen oder Kustoden. Ebenso wurden handschriftliche Elemente 
+                            des Textes werden nur Marginal-, Fußnoten und Seiten-/Foliozahlen (s.u.) erfasst, nicht jedoch 
+                            Kopfzeilen, Kolumnentitel, Bogensignaturen oder Kustoden. Ebenso werden handschriftliche Elemente 
                             (handschriftliche Notizen, Anmerkungen, Symbole, Zeichnungen, Anstreichungen etc.) auf den Druckseiten 
                             nicht erfasst oder dokumentiert.</p>
-                            <p xml:id="p_asdfioeflke">Zum Druckbild gehörende Bilder, Illustrationen oder Grafiken wurden nicht als solche 
+                            <p xml:id="p_asdfioeflke">Zum Druckbild gehörende Bilder, Illustrationen oder Grafiken werden nicht als solche 
                             erfasst (sondern nur durch Platzhalter in Form von <gi>figure</gi>-Tags markiert) und 
                                 werden somit auch nicht in der Leseansicht angezeigt. Allerdings wird in diesem Fall in der Leseansicht auf grafische 
                                 Elemente hingewiesen, die in der Bildansicht des entsprechenden Faksimiles zu sehen sind. Dies gilt auch für Ornamente, 
@@ -519,23 +569,24 @@
                             <div type="section" xml:id="stillschweigend">
                                 <head n="3.2.1." xml:id="head_lupouh">Stillschweigende Normalisierungen</head>
                                 <list>
-                                    <!-- TODO: render text in q in a particular way -->
-                                    <item xml:id="item_sadfq3qf2q">Ligaturen (<q>ß, ﬅ, ﬆ, ﬁ, ﬂ, , ĳ</q> usw.) wurden stillschweigend aufgelöst;
-                                        die Digraphen <q>w, œ, æ</q> hingegen wurden übernommen. Dabei wird angenommen, dass jene Digraphen eine aus
+                                    <item xml:id="item_sadfq3qf2q">Ligaturen (<q>ß, ﬅ, ﬆ, ﬁ, ﬂ, , ĳ</q> usw.) werden stillschweigend aufgelöst;
+                                        die Digraphen <q>w, œ, æ</q> hingegen werden übernommen. Dabei wird angenommen, dass jene Digraphen eine aus
                                         zwei Buchstaben bestehende orthographische Einheit und einen entsprechenden Laut bezeichnen, Ligaturen hingegen ein allein
                                         typographisches Phänomen darstellen. Die systematische Grenzziehung ist nicht einfach und umstritten, bei uns betrifft sie
                                         jedenfalls nur die genannten drei Digraphen. Beide Phänomene unterliegen ggf. außerdem einer Normalisierung oder Expansion (s.u.).
                                     </item>
                                     <!-- TODO: add links to WG A, WG B -->
-                                    <!-- TODO: add section for s spelling in the teiHeader (where?) -->
-                                    <item xml:id="item_mnbmböl">Das Schaft- oder lange s (<q>ſ</q>) wurde auf zwei, von Text zu Text unterschiedliche, Arten aufgelöst; der Grund hierfür ist in der unterschiedlichen 
-                                        Herkunft und dabei unterschiedlichen Transkriptionsvorgaben der im Double-Keying transkribierten Texte zu sehen. In den bereits verfügbaren Werken der <ref target="...">Werkgruppe A</ref> stillschweigend durch 
-                                        <q>s</q> ersetzt (d.h. nicht ausgezeichnet), in der <ref target="...">Werkgruppe B</ref> wurden Schaft-s hingegen weitgehend beibehalten. Der Umgang eines Textes 
+                                    <item xml:id="item_mnbmböl">Das Schaft- oder lange s (<q>ſ</q>) wird auf zwei, von Text zu Text unterschiedliche, Arten aufgelöst; 
+                                        der Grund hierfür liegt in unterschiedlichen 
+                                        unterschiedlichen Transkriptionsvorgaben bei den bislang im Double-Keying transkribierten Texten. In den verfügbaren Werken der Werkgruppe A wurde 
+                                        <q>ſ</q> stillschweigend durch 
+                                        <q>s</q> ersetzt, d.h. nicht ausgezeichnet, in den bisher erfassten Werken der Werkgruppe B wurden Schaft-s hingegen weitgehend beibehalten. 
+                                        Der Umgang eines Textes 
                                         mit der s-Schreibung ist im <gi>teiHeader</gi> des Dokuments festgehalten, ebenso ist dort – falls im Text <q>ſ</q> nicht stillschweigend aufgelöst wurde – eine 
                                         Konvertierungsmöglichkeit von <q>ſ</q> zu <q>s</q> angegeben (der umgekehrte Konvertierungsfall von <q>s</q> zu <q>ſ</q> lässt 
                                         sich allerdings in unserem Fall nicht eindeutig definieren).
                                     </item>
-                                    <item xml:id="item_sadcfaert343">Die Verwendung von Leerzeichen (nach Satzzeichen) wurde, soweit möglich, stillschweigend an moderne Gepflogenheiten angepasst, so dass die
+                                    <item xml:id="item_sadcfaert343">Die Verwendung von Leerzeichen (nach Satzzeichen) wird, soweit möglich, stillschweigend an moderne Gepflogenheiten angepasst, so dass die
                                         korrekte Zusammen- und Getrenntschreibung, anders als im Druckbild der Vorlage, deutlich werden.
                                     </item>
                                     <item xml:id="item_ccobqwcqw2">
@@ -543,75 +594,10 @@
                                         die <ref target="http://www.tei-c.org/release/doc/tei-p5-doc/en/html/CO.html#COHQQ">TEI Guidelines</ref>), im Original eventuell
                                         vorhandene Anführungszeichen entfallen dabei. 
                                     </item>
-                                    <!-- TODO: stillschweigende Korrektur von Transkriptionsfehlern? -->
+                                    <item xml:id="item_idsdnsda">Falls Transkriptionsfehler festgestellt werden (d.h. Fehler, die erst durch die Double Keying-Texterfassung erzeugt wurden und im 
+                                    Original nicht zu finden sind), werden diese Fehler stillschweigend korrigiert.</item>
                                 </list>
                             </div>
-                            <!-- TODO: delete or edit the following uncommented section when decision is done -->
-                            <!--<div type="section" xml:id="dokumentiert">
-                                <head n="3.1.2." xml:id="head_acqwrcq3">Dokumentierte Normalisierungen</head>
-                                <!-\- TODO: do we still apply normalizations? -\->
-                                <p xml:id="p_lkgösospvg">Obwohl sie in der Standard-Leseansicht unserer Web-Anwendung
-                                    zugunsten einer normalisierten Form ausgeblendet werden, sind
-                                    die im Folgenden beschriebenen Transformationen in dieser Form
-                                    in den xml-Dateien unserer Edition hinterlegt: 
-                                    <egXML xmlns="http://www.tei-c.org/ns/Examples">
-                                        <![CDATA[
-                                        <choice>
-                                            <orig>alte Schreibung</orig>
-                                            <reg resp="#JR" cert="high">regularisierte Schreibung</reg>
-                                        </choice>
-                                        ]]></egXML> Die in der Quelle verwendete Schreibung ist in
-                                    einem <gi>orig</gi>-Element, an das sich ein
-                                    <gi>reg</gi>-Element mit der normalisierten und in der
-                                    Web-Ansicht angezeigten Variante anschließt. Beide sind
-                                    gemeinsam in ein <gi>choice</gi>-Element eingebettet, welches
-                                    signalisiert, dass sie alternative Varianten einer Passage
-                                    repräsentieren. <q type="important"/>Normalisierungen werden tokenbasiert, also auf Wort-Ebene und nicht buchstabenbasiert vorgenommen.</p>
-                                <p xml:id="p_oijöoq3w4">
-                                    <q type="important"/>
-                                    Innerhalb aller <gi>choice</gi>-Elemente werden die Elemente, welche die Regularisierung/Normalisierung  (<gi>reg</gi>),  
-                                    die Expansion/Abkürzungsauflösung (<gi>expan</gi>) sowie die Korrektur (<gi>corr</gi>) einer Passage betreffen,
-                                    mit Attributangaben versehen, welche den hierfür verantwortlichen Editierenden (<att>resp</att>-Attribut) sowie die Gewissheit hinsichtlich des
-                                    eingetragenen Textes festhalten (<att>cert</att>-Attribut).</p>
-                                <p xml:id="p_soncpqwob45">
-                                    Tritt innerhalb eines zu normalisierenden Elements ein Seiten-, Spalten- oder Zeilen-Umbruch auf, wird er im normalisierten Element
-                                    möglichst genau an der dem Original entsprechenden Stelle wiederholt, dort jedoch mit einem <att>corresp</att>-Attribut versehen, welches auf
-                                    die <att>xml:id</att> des Seitenumbruchs in der Originalversion verweist.
-                                </p>
-                                <list>
-                                    <item xml:id="item_sdgf3wqv">
-                                        <label>i/j</label>
-                                        <p xml:id="p_ewrterterz">In den lateinischen Texten wird <q>j</q> durchgängig
-                                            durch die <q>i</q>-Schreibweise ersetzt. </p>
-                                    </item>
-                                    <item xml:id="item_fdgsdfgsdfw34">
-                                        <label>u/v</label>
-                                        <p xml:id="p_wqefq24fw45efg7r">
-                                            <q>v</q> wird der modernen U-Lesart angeglichen (<q>u</q>). Bei
-                                            der Vewendung der modernen Lesart folgt die Edition den Angleichungen nach:
-                                            Baier, Thomas: DER NEUE GEORGES : Ausführliches Handwörterbuch Lateinisch - Deutsch. 
-                                            Darmstadt, 2013.
-                                        </p>
-                                    </item>
-                                </list>
-                                <p xml:id="p_srdrtncvnb">Beispiele:</p>
-                                <p xml:id="p_h34swre24">vniversitas im Original wird zu universitas</p>
-                                <egXML xmlns="http://www.tei-c.org/ns/Examples">
-                                    <![CDATA[
-                                    <choice>
-                                        <orig>vniversitas</orig>
-                                        <reg resp="#CB cert="high">universitas</reg>
-                                    </choice>
-                                    ]]></egXML>
-                                <p xml:id="p_srt3wq4j89">VOLVMEN im Original wird zu VOLUMEN</p>
-                                <egXML xmlns="http://www.tei-c.org/ns/Examples">
-                                    <![CDATA[
-                                <choice>
-                                    <orig>VOLVMEN</orig>
-                                    <reg resp="#CB" cert="high">VOLUMEN</reg>
-                                </choice>
-                                ]]></egXML>
-                            </div>-->
                             <div type="section" xml:id="Sonderzeichen">
                                 <head n="3.2.3." xml:id="head_öpijpij">Sonderzeichen</head>
                                 <p xml:id="p_fspokp980982">Sonderzeichen werden, so weit möglich, als Unicode-Zeichen
@@ -636,24 +622,30 @@
                                     Font Initiative (in der Version 4.0) zurückgegriffen: <ref target="http://hdl.handle.net/1956/10699">
                                         <q>MUFI character recommendation v. 4.0</q>
                                     </ref>. </p>
-                                <!-- TODO: ganzen folgenden Absatz anpassen: -->
-                                <p xml:id="p_lsaüpmcpcw234">Alle über <q>Codepage Latin-1</q> (s.o.) hinausgehenden
+                                <p xml:id="p_lsaüpmcpcw234">Mindestens alle über <q>Codepage Latin-1</q> (s.o.) hinausgehenden
                                     Sonderzeichen werden unter Rückgriff auf das <q>gaiji</q>-Modul
-                                    im <gi>teiHeader</gi> deklariert. Dort wird auch angegeben, wodurch das
+                                    im <gi>teiHeader</gi> deklariert (teilweise werden auch in der <q>Codepage Latin-1</q> noch vorhandene, 
+                                    aber ebenfalls zu normalisierende Zeichen, wie z.B. <q>ã</q>, deklariert). Im <gi>teiHeader</gi> wird auch angegeben, wodurch das
                                     jeweilige Sonderzeichen in einer normalisierten Variante ersetzt
-                                    werden kann. <!-- TODO: discuss the following statement: -->[Zu diskutieren: In der Darstellung der Leseansicht wird die Ersetzung dementsprechend in der Regel
-                                    aus dem Header bezogen, kann aber auch – falls vorhanden – aus dem Inhalt des <gi>g</gi>-Tags
-                                    an der je aktuellen Stelle generiert werden.] Die Deklaration des Sonderzeichens und die unterschiedlichen Arten des "Mappings" des Zeichens 
-                                    (Mapping auf ein standardisiertes Zeichen, auf eine html-Entität, nach den Empfehlungen der <q>MUFI</q>, u.a.)
-                                    werden zunächst aus der <ref target="http://www.manuscriptorium.com/apps/gbank/">ENRICH
-                                    gBank</ref> bezogen; dann werden durch uns die in den dortigen Spezifikationen (oder möglicherweise auch in der entsprechenden MUFI-Spezifikation)
+                                    werden kann. In der Darstellung der Leseansicht wird die Ersetzung dementsprechend in der Regel
+                                    aus dem Header bezogen, kann aber auch – falls vorhanden – dem Inhalt des <gi>g</gi>-Tags
+                                    an der je aktuellen Stelle entnommen werden. 
+                                    Die Deklaration des Sonderzeichens und die unterschiedlichen "Mappings" des Zeichens 
+                                    (Mapping auf ein standardisiertes Zeichen, auf eine html-Entität, nach den Empfehlungen der <q>MUFI</q>, etc.)
+                                    werden zunächst aus der 
+                                    <ref target="http://www.manuscriptorium.com/apps/gbank/">ENRICH gBank</ref> 
+                                    bezogen; dann werden durch uns die in den dortigen Spezifikationen 
+                                    (oder möglicherweise auch in der entsprechenden MUFI-Spezifikation)
                                     angegebenen "vorgerenderten" Unicode-Zeichen (falls verfügbar) oder NCR
                                     als <gi>mapping</gi> vom <att>type</att>
-                                    <val>composed</val> sowie <val>precomposed</val>eingefügt,
-                                    wobei insgesamt die Entsprechung zur aktuellen MUFI-Empfehlung überprüft und ggf.
-                                    korrigiert und die <att>url</att>-Eigenschaft des
-                                    <gi>graphic</gi>-Elements
-                                    angepasst wird. </p>
+                                    <val>composed</val> sowie <val>precomposed</val>eingefügt. 
+                                    Insgesamt wird stets die Entsprechung zur aktuellen MUFI-Empfehlung überprüft und die <att>url</att>-Eigenschaft des
+                                    <gi>graphic</gi>-Elements angepasst. </p>
+                                <p xml:id="p_48flskdf80">Bei Expansionen von Wörtern, die mithilfe von Sonderzeichen abgekürzt wurden, erfolgt 
+                                die Auflösung des Sonderzeichens nicht mithilfe der im <gi>teiHeader</gi> deklarierten normalisierten Variante des Zeichens, sondern 
+                                wird von dem/der EditorIn im Rahmen der Abkürzungsauflösung im Element <gi>expan</gi> (innerhalb des Elements <gi>choice</gi>) 
+                                    und ohne dortige Angabe des <gi>g</gi>-Tags angegeben. 
+                                Siehe hierzu v.a. den Abschnitt zu <ref target="#de_Abkürzungen">Abkürzungen</ref>.</p>
                                 <p xml:id="p_sfe5234fp89">Beispiele: <egXML xmlns="http://www.tei-c.org/ns/Examples">
                                     <![CDATA[
                                     <teiHeader> 
@@ -722,12 +714,6 @@
                                                 <mapping type="composed">ꝙ̃</mapping>
                                                 <mapping type="standardized">q</mapping>
                                             </char>
-                                        
-                                            <char xml:id="chare8bf0301">
-                                                <desc>LATIN SMALL LETTER Q LIGATED WITH FINAL ET AND WITH ACUTE ACCENT</desc>
-                                                <mapping type="composed">́</mapping>
-                                                <mapping type="standardized">q</mapping>
-                                            </char>
 
                                             <char xml:id="chare8bf">
                                                 <desc>LATIN SMALL LETTER Q LIGATED WITH FINAL ET</desc>
@@ -751,62 +737,40 @@
                                     </body> 
                                         ]]></egXML>
                                 </p>
-                                <!-- TODO: potentially remove specialchars images from the database -->
+                                <!-- TODO: remove specialchars images from the database? -->
                                 <div type="section" xml:id="codecharts">
                                     <head n="3.2.3.1." xml:id="head_lkyuxhfpiuq">Sonderzeichen-Dokumentation</head>
                                     <p xml:id="p_lalshfoasdn">Sämtliche im Rahmen der digitalen Edition bisher erfassten Sonderzeichen und deren jeweilige Kodierung sind 
                                         im <ref target="http://facs.salamanca.school/docs/transcription/sal-char-encoding-table.pdf">Encoding Table of (Non-Standard) Characters</ref> (engl.) verzeichnet.</p>
                                     <p xml:id="p_ewrt897098fd24">Die oben genannten XML-Deklarationen zu allen bisher erfassten Sonderzeichen 
-                                        finden sich in der Datei <!-- TODO: Dateinamen/Link anpassen --><ref target="Sonderzeichen.xml">Sonderzeichen.xml</ref> (deren <gi>encodingDesc</gi> 
+                                        finden sich in der Datei 
+                                        <ref target="https://files.salamanca.school/Sonderzeichen.xml">Sonderzeichen.xml</ref> 
+                                        (deren <gi>encodingDesc</gi> 
                                         stets Teil des <gi>teiHeader</gi>s eines TEI-Datensatzes zu einem Band/Werk ist).
                                     </p>
-                                    <!-- TODO: discuss if the following needs to be found at this place: -->
-                                    <!--<p xml:id="p_fewvwf45c">Zur Kodierung von Sonderzeichen, Abkürzungen und Ligaturen 
+                                    <p xml:id="p_fewvwf45c">Zur Kodierung von Sonderzeichen, Abkürzungen und Ligaturen 
                                         vgl. auch <ref target="#stillschweigend">oben</ref> sowie für die (auch "historische") Praxis der Sonderzeichenerfassung im Projekt die 
                                         jeweils <ref target="http://facs.salamanca.school/docs/transcription/guidelines/general/">allgemeinen</ref> und 
-                                        <ref target="http://facs.salamanca.school/docs/transcription/guidelines/specific/">werksbezogenen Erfassungsanweisungen</ref>. </p>-->
+                                        <ref target="http://facs.salamanca.school/docs/transcription/guidelines/specific/">werksbezogenen Erfassungsanweisungen</ref>. </p>
                                 </div>
                             </div>
-                            <div type="section" xml:id="NamensNormalisierung">
-                                <head n="3.2.4." xml:id="head_iugoaewt4f">Eigennamen und Werktitel</head>
-                                <p xml:id="p_sfertzjrt">
-                                    <q type="optional"/> Falls Eigennamen oder Werktitel einschlägig bekannt sind, können
-                                    diese neben der beibehaltenen Variante des Textes mittels des <att>key</att>-Attributs in <gi>persName</gi>, <gi>placeName</gi> 
-                                    oder <gi>title</gi> in ihrer modernisierten Variante hinterlegt werden:</p>
-                                <egXML xmlns="http://www.tei-c.org/ns/Examples">
-                                    <![CDATA[
-                                <persName ref="cerl:01302080" key="Hieronymus, Sophronius Eusebius" resp="#DG" cert="high">
-                                    Hierony.
-                                </persName>
-                                ...
-                                <bibl>
-                                    <title key="De Republica, Liber III, § 11" resp="#DG" cert="high">
-                                        Lib. 3 de Republi. tit. 11. fol.78.
-                                    </title>
-                                </bibl>
-                                ]]></egXML>
-                                <p xml:id="p_serhtmetrsg4wf">(Zu Eigennamen und Zitaten siehe auch <ref target="#head_iuziuziuz">4.4.7.1. Personen</ref>, 
-                                    <ref target="#head_josomcp3q4">4.4.7.2. Orte</ref> und <ref target="#head_cw2453grf3">4.5. Literaturangaben</ref>. 
-                                    Zum <att>ref</att>-Attribut in diesem Beispiel siehe ebenfalls unten,
-                                    unter <ref target="#de_Referenzen">4.4. Referenzen</ref>.)</p>
-                            </div>
                             <div xml:id="NummerierungsNormalisierung" type="section">
-                                <head n="3.2.5." xml:id="head_aslkdasd">Nummerierungen</head>
+                                <head n="3.2.4." xml:id="head_aslkdasd">Nummerierungen</head>
                                 <div xml:id="Seitenzahlen" type="section">
-                                    <head n="3.2.5.1." xml:id="head_aslkfjaf">Paginierung</head>
-                                    <p xml:id="p_pofgdgfkj">Seitenzahlen bzw. Foliozahlen wurden im Attribut <att>n</att> des <gi>pb</gi>-Elements 
-                                    erfasst (siehe auch <ref target="#head_uoipg3q4v4w">3.2. Seiten-, Spalten- und Zeilenumbrüche</ref>). Dabei wurden grundsätzlich 
+                                    <head n="3.2.4.1." xml:id="head_aslkfjaf">Paginierung</head>
+                                    <p xml:id="p_pofgdgfkj">Seitenzahlen bzw. Foliozahlen werden im Attribut <att>n</att> des <gi>pb</gi>-Elements 
+                                    erfasst (siehe auch <ref target="#head_uoipg3q4v4w">Seiten-, Spalten- und Zeilenumbrüche</ref>). Dabei werden grundsätzlich 
                                         die Ziffern auf der jeweiligen Seite der originalen Vorlage übernommen. Sind 
-                                    auf einer Seite keine Seiten-/Folioziffern vorhanden oder sind diese fehlerhaft, wurde die Zählung normalisiert, 
-                                    d.h. es wurden Seiten-/Foliozahlen hinzugefügt, wobei die Normalisierung mittels 
-                                    eckiger Klammern <q>"[...]"</q> im Attributwert von <att>n</att> markiert wurde:</p>
+                                    auf einer Seite keine Seiten-/Folioziffern vorhanden oder sind diese fehlerhaft, wird die Zählung korrigiert, 
+                                    d.h. es werden Seiten-/Foliozahlen hinzugefügt, wobei die Korrektur mittels 
+                                    eckiger Klammern <q>"[...]"</q> im Attributwert von <att>n</att> markiert wird:</p>
                                     <egXML xmlns="http://www.tei-c.org/ns/Examples">
                                         <![CDATA[
                                 <pb n="[443]" facs="..." xml:id="..." resp="#DG" cert="high"/> 
                                 ]]>
                                     </egXML>
                                     <p xml:id="p_dasjdhdf">Gibt es eine Folio-Paginierung, bei der im Original stets nur die Vorderseite ("Recto") eines Blattes 
-                                    nummeriert ist, so wurde die Foliozahl im Falle einer Vorderseite mit dem Suffix "r" markiert, bei einer Rückseite die Foliozahl 
+                                    nummeriert ist, so wird die Foliozahl im Falle einer Vorderseite mit dem Suffix "r" markiert, bei einer Rückseite die Foliozahl 
                                     der Vorderseite übernommen und mit dem Suffix "v" (für "Verso") markiert:</p>
                                     <egXML xmlns="http://www.tei-c.org/ns/Examples">
                                         <![CDATA[    
@@ -817,40 +781,110 @@
                                 <pb n="27r" facs="..." xml:id="..."/>
                                 ]]>
                                     </egXML>
-                                    <p xml:id="p_kjhdfgsdf">Bei unpaginierten Abschnitten vor oder nach dem (paginierten) Hauptteil eines Bandes/Werkes wurde eine 
-                                        einfache, aufsteigende Seitenzählung mit römischen Ziffern (unabhängig von der Art und Zählweise der Paginierung des Hauptteils) hinzugefügt, 
-                                        wobei diesen "künstlichen" Seitenzahlen vor dem Hauptteil des Textes der Suffix "f" (für "front matter") und nach dem Hauptteil (wo sie 
-                                        wieder bei "i" beginnt) der Suffix "b" (für "back matter") hinzugefügt wurde.</p>
+                                    <p xml:id="p_kjhdfgsdf">Bei unpaginierten Abschnitten vor oder nach dem (paginierten) Hauptteil eines Bandes/Werkes wird eine 
+                                        einfach inkrementierende Seitenzählung mit römischen Ziffern (unabhängig von der Art und Zählweise der Paginierung des Hauptteils) hinzugefügt, 
+                                        wobei diesen "künstlichen" Seitenzahlen vor dem Hauptteil des Textes der Präfix "f" (für "front matter") und nach dem Hauptteil (wo sie 
+                                        wieder bei "i" beginnt) der Präfix "b" (für "back matter") hinzugefügt wird.</p>
+                                </div>
+                                <div xml:id="de_spaltenzaehlung" type="section">
+                                    <head xml:id="head_fkasjf879" n="3.2.4.2">Spaltenzählung</head>
+                                    <p xml:id="p_fdf78d0f">Falls im Original vorhanden, werden Spaltenzahlen – analog zu 
+                                        <ref target="#Seitenzahlen">Seitenzahlen</ref> 
+                                        – im <att>n</att>-Attribut von <gi>cb</gi> 
+                                    in angegeben, ggf. in korrigierter Form, d.h. durch Angabe von in "[]" gesetzten, korrigierten bzw. hinzugefügten Ziffern im Falle 
+                                    fehlerhafter oder lückenhaft fehlender Spaltenzählung im Original. Gibt es in der Originalvorlage hingegen keine Spaltenzählung, 
+                                    wird auch im TEI-XML keine hinzugefügt.</p>
                                 </div>
                                 <div type="section" xml:id="Marginalziffern">
-                                    <head n="3.2.5.2." xml:id="head_asfljasf">Marginalziffern</head>
-                                    <p xml:id="p_iubnvdsfk"> Durch Marginalziffern, *-, †-Symbole ö.ä. markierte Übergänge der argumentativen 
-                                        Sinn-Einheiten wurden durch <gi>milestone</gi>-Tags festgehalten (siehe <!-- TODO: Link zu milestone-Abschnitt --><ref target="#asdasd">...</ref>).
-                                        Dabei wurden Marginalziffern, die (eventuell in Verbindung mit im Text verankerten Zeichen) solche Übergänge markieren, im Attribut <att>n</att> des 
-                                    entsprechenden <gi>milestone</gi>-Tags erfasst, wobei eindeutig fehlende oder fehlerhafte Marginalziffern in normalisierter Form hinzugefügt wurden.</p>
+                                    <head n="3.2.4.3." xml:id="head_asfljasf">Marginalziffern</head>
+                                    <p xml:id="p_iubnvdsfk"> Durch Marginalziffern, *-, †-Symbole o.ä. markierte Übergänge der argumentativen 
+                                        Sinn-Einheiten werden durch <gi>milestone</gi>-Tags festgehalten (siehe 
+                                        <ref target="#de_Absaetze">Typographische und argumentative Paragraphen</ref>
+                                        ).
+                                        Dabei werden Marginalziffern, die (eventuell in Verbindung mit im Text verankerten Zeichen) solche Übergänge markieren, im Attribut <att>n</att> des 
+                                    entsprechenden <gi>milestone</gi>-Tags erfasst, wobei eindeutig fehlende oder fehlerhafte Marginalziffern in normalisierter Form hinzugefügt werden.</p>
                                     <egXML xmlns="http://www.tei-c.org/ns/Examples">
                                         <![CDATA[    
-                                <milestone unit="article" n="[99] rendition="#dagger" xml:id="..." resp="#DG" cert="high"/>
-                                ]]>
+                                        <milestone unit="article" n="[99] rendition="#dagger" xml:id="..." resp="#DG" cert="high"/>
+                                        ]]>
                                     </egXML>
                                 </div>
                             </div>
+                            <div xml:id="de_AbkKorr" type="section">
+                                <head xml:id="head_fslkf089" n="3.2.5.">Abkürzungen und Druckfehler</head>
+                                <p xml:id="p_fds74503n">
+                                    Abkürzungen und Druckfehler werden mithilfe des Elements <gi>choice</gi> aufgelöst und somit im TEI-XML dokumentiert (obwohl z.B. 
+                                    in der konstituierten Leseansicht ausgeblendet). Diese Normalisierungen/Korrekturen werden stets tokenbasiert, also auf Wort-Ebene, und 
+                                    nicht buchstabenbasiert vorgenommen. Innerhalb aller <gi>choice</gi>-Elemente werden die Elemente, 
+                                    die Expansion/Abkürzungsauflösung (<gi>expan</gi>) sowie die Korrektur (<gi>corr</gi>) einer Passage betreffen,
+                                    mit Attributangaben versehen, welche den hierfür verantwortlichen Editierenden (<att>resp</att>-Attribut) sowie die Gewissheit 
+                                    hinsichtlich des
+                                    eingetragenen Textes festhalten (<att>cert</att>-Attribut).
+                                </p>
+                                <p xml:id="p_soncpqwob45">
+                                    Tritt innerhalb eines zu expandierenden (<gi>abbr</gi>) oder zu korrigierenden (<gi>sic</gi>) Tokens ein Seiten-, Spalten- oder Zeilenumbruch (siehe 
+                                    <ref target="#de_Umbrueche">Seiten-, Spalten- oder Zeilenumbrüche</ref>) auf, wird er im expandierten (<gi>expan</gi>) bzw. korrigierten 
+                                    (<gi>corr</gi>) Element
+                                    möglichst genau an der dem Original entsprechenden Stelle wiederholt, dort jedoch mit einem <att>corresp</att>-Attribut versehen, welches auf
+                                    die <att>xml:id</att> des Seitenumbruchs in der Originalversion verweist.
+                                </p>
+                                <div type="section" xml:id="de_Abkürzungen">
+                                    <head n="3.2.6." xml:id="head_ljdljdpfjpoij">Abkürzungen</head>
+                                    <p xml:id="p_asfddwrq23">Abkürzungen werden durch <gi>abbr</gi> markiert und gemeinsam mit der
+                                        durch <gi>expan</gi> markierten Expansion in ein
+                                        <gi>choice</gi>-Element eingebettet.  Die oder der
+                                        Bearbeitende nimmt die Expansion vor sowie die Gewissheit, mit der die Expansion als zutreffend
+                                        angenommen wird:</p>
+                                    <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                                        <![CDATA[
+                                        <choice>
+                                            <abbr>Revere&#x0303;diss.</abbr>
+                                            <expan resp="#AW" cert="high">Reverendissimum</expan>
+                                        </choice>
+                                         ]]></egXML>
+                                    <p xml:id="p_jkokpoup">Zu den Abkürzungen zählen auch die Brevigraphen "<q>&amp;</q>"
+                                        und "<q>⁊</q>", die beide die Expansion "<q>et</q>" erhalten.</p>
+                                    <p xml:id="p_jdf7593"><q type="important"/> Werden mithilfe von Sonderzeichen abgekürzte Tokens aufgelöst, so wird das Sonderzeichen 
+                                    mithilfe des <gi>g</gi>-Tags nur im nicht-expandierten Element (<gi>abbr</gi>) angegeben, im expandierten Element (das üblicherweise 
+                                        keine Sonderzeichen mehr enthalten sollte) wird hingegen das durch den/die EditorIn aufgelöste Token ohne <gi>g</gi>-Tag festgehalten.</p>
+                                    <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                                        <![CDATA[
+                                        ...
+                                            <choice>
+                                                <abbr>at<g ref="#chare8bf">q</g></abbr>
+                                                <expan resp="#AW" cert="high">atque</expan>
+                                            </choice>
+                                        ...
+                                         ]]></egXML>
+                                </div>
+                                <div type="section" xml:id="de_Korrekturen">
+                                    <head n="3.2.6." xml:id="head_pijijowaq">Korrekturen</head>
+                                    <p xml:id="p_sdresesdr">Festgestellte Druckfehler werden durch die Elemente <gi>sic</gi> und
+                                            <gi>corr</gi> innerhalb eines <gi>choice</gi>-Elements
+                                        festgehalten:</p>
+                                    <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                                        <![CDATA[
+                                        <choice>
+                                            <sic>Vitora</sic>
+                                            <corr resp="#IC" cert="high">Vitoria</corr>
+                                        </choice>
+                                    ]]></egXML>
+                                    <p xml:id="p_fdsf7890f">Festgestellte Transkriptionsfehler werden hingegen stillschweigend aufgelöst.</p>
+                                </div>
+                            </div>
                         </div>
-                        <!-- TODO: Abschnitt zu Verantwortlichkeit und Gewissheit mit Nennung aller betreffenden Elemente:
-                        - @n in pb und milestone 
-                        -->
                         <div type="section" xml:id="de_Umbrueche">
                             <head n="3.3." xml:id="head_uoipg3q4v4w">Seiten-, Spalten- und Zeilenumbrüche</head>
                             <p xml:id="p_sdrpohfw45">Seiten-, Spalten- und Zeilenumbrüche werden <emph>am Beginn</emph> einer Seite, Spalte oder Zeile durch leere Elemente
-                                    <gi>pb</gi>, <gi>cb</gi> und <gi>lb</gi> markiert, wobei<!-- TODO: Spaltenzählung (normalisiert) in cb/@n? -->
-                                bei Seiten<!--- und Spalten-->anfängen die Original-Paginierung (siehe auch <ref target="#Seitenzahlen">3.1.5.1. Seitenzahlen</ref>) <!--bzw. die
-                                Spalten-Zählung -->im <att>n</att>-Attribut angegeben wird. Ändert sich
+                                    <gi>pb</gi>, <gi>cb</gi> und <gi>lb</gi> markiert, wobei
+                                bei Seiten und Spaltenanfängen die Original-Paginierung (siehe auch <ref target="#Seitenzahlen">Seitenzahlen</ref>) bzw. die
+                                -Spaltenzählung normalisiert (s.u.) im <att>n</att>-Attribut angegeben wird. Ändert sich
                                 die Einteilung in Spalten im Laufe einer Seite, wird zusätzlich der Beginn des
                                 mehrspaltigen Layouts durch eine Angabe <code>type="start"</code> in <gi>cb</gi> bzw. am Ende
                                 durch <code>type="end"</code> markiert. (Diese implizieren dann auch
                                 bereits den Beginn der neuen (ersten) Spalte oder des nicht mehr in
                                 Spalten gesetzten Texts.)</p>
-                            <p xml:id="p_urmjhdfd"><gi>pb</gi>, <gi>cb</gi> und <gi>lb</gi> erhalten <att>xml:id</att> (siehe <ref target="#IDs">4.4.1. xml:id</ref>). 
+                            <p xml:id="p_urmjhdfd"><gi>pb</gi>, <gi>cb</gi> und <gi>lb</gi> erhalten <att>xml:id</att> (siehe <ref target="#IDs">xml:id</ref>). 
                             Bei <gi>lb</gi> tragen die letzten 4 Zeichen der <att>xml:id</att> – im Gegensatz zu den Werten von <gi>xml:id</gi> bei anderen Elementen – Bedeutung im Sinne 
                             einer Zeilenzählung. Das erste dieser vier Zeichen signifiziert den Ort der aktuellen Zeile (<gi>lb</gi>) im Seitenlayout 
                             (0=Hauptbereich des Textes, spaltenloses Format; 1=Hauptbereich, erste Spalte; 2=Hauptbereich, zweite Spalte; usf.; m=Marginalbereich), die 
@@ -865,7 +899,7 @@
                                 Umbruchselemente (oder auch "Anker"-Elemente wie <gi>milestone</gi>) zusammen auf, so gilt folgende Reihenfolge: 
                             <gi>pb</gi>, <gi>cb</gi>, <gi>lb</gi>, <gi>milestone</gi>.</p>
                             <p xml:id="p_sdfdf80m">Hier ein umfassendes Beispiel der oben genannten Punkte:</p>
-                            <!-- TODO: evtl. cb/@n hinzufügen: -->
+                            
                             <egXML xmlns="http://www.tei-c.org/ns/Examples">
                                 <![CDATA[
                                 <div>
@@ -927,49 +961,8 @@
                                     ausgezeichnet (siehe <ref target="#head_uoipg3q4v4w">Seiten-, Spalten- und Zeilenumbrüche</ref>). </item>
                             </list>
                         </div>
-                        <div type="section" xml:id="de_Abkürzungen">
-                            <head n="3.5." xml:id="head_ljdljdpfjpoij">Abkürzungen</head>
-                            <p xml:id="p_asfddwrq23">Abkürzungen werden durch <gi>abbr</gi> markiert und gemeinsam mit der
-                                durch <gi>expan</gi> markierten Expansion in ein
-                                <gi>choice</gi>-Element eingebettet.  Die oder der
-                                Bearbeitende nimmt die Expansion vor sowie die Gewissheit, mit der die Expansion als zutreffend
-                                angenommen wird:</p>
-                            <egXML xmlns="http://www.tei-c.org/ns/Examples">
-                                <![CDATA[
-                                <choice>
-                                    <abbr>Revere&#x0303;diss.</abbr>
-                                    <expan resp="#AW" cert="high">Reverendissimum</expan>
-                                </choice>
-                                 ]]></egXML>
-                           <!-- <p><q type="optional"/>können auch der
-                                genaue Umfang der vom Editor eingefügten Ergänzung und ggf. das die
-                                Abkürzung als solche markierende Zeichen durch <gi>ex</gi> bzw.
-                                    <gi>am</gi> ausgezeichnet werden. </p>
-                             <egXML xmlns="http://www.tei-c.org/ns/Examples">  
-                                <![CDATA[
-                                <choice>
-                                    <abbr>Revere<am>̃</am>diss<am>.</am></abbr>
-                                    <expan resp="#AW" cert="high">Revere<ex>n</ex>diss<ex>imum</ex></expan>
-                                </choice>
-                            ]]></egXML> -->
-                            <p xml:id="p_jkokpoup">Zu den Abkürzungen zählen auch die Brevigraphen "<q>&amp;</q>"
-                                und "<q>⁊</q>", die beide die Expansion "<q>et</q>" erhalten.</p>
-                        </div>
-                        <div type="section" xml:id="de_Korrekturen">
-                            <head n="3.6." xml:id="head_pijijowaq">Korrekturen</head>
-                            <p xml:id="p_sdresesdr">Festgestellte Druckfehler werden durch die Elemente <gi>sic</gi> und
-                                    <gi>corr</gi> innerhalb eines <gi>choice</gi>-Elements
-                                festgehalten:</p>
-                            <egXML xmlns="http://www.tei-c.org/ns/Examples">
-                                <![CDATA[
-                                <choice>
-                                    <sic>Vitora</sic>
-                                    <corr resp="#IC" cert="high">Vitoria</corr>
-                                </choice>
-                            ]]></egXML>
-                        </div>
                         <div type="section" xml:id="de_Lücken">
-                            <head n="3.7." xml:id="head_müpoopoivsce">Lücken und Konjekturen</head>
+                            <head n="3.5." xml:id="head_müpoopoivsce">Lücken und Konjekturen</head>
                             <p xml:id="p_fcwopiuc23">Bei Textverlust wegen Zensur im Umfang von einzelnen Zeichen, Wörtern oder eines Satzes wird der Bereich mit einem <gi>del</gi>-Tag 
                                 markiert, bei Textverlust im Umfang einer längeren Passage wird zu deren Beginn ein leeres <gi>delSpan</gi>-Tag gesetzt, dessen 
                                 Attribut <att>spanTo</att> auf die <att>xml:id</att>
@@ -1002,7 +995,6 @@
                             </p>
                             <egXML xmlns="http://www.tei-c.org/ns/Examples">
                             <![CDATA[
-                              
                                         <unclear reason="damage" resp="#AW" cert="high">2 Ut ordinate 
                                             proced
                                             <supplied resp="#AW" cert="high" source="Azpilcueta, Martin de:
@@ -1010,7 +1002,6 @@
                                             amus ...
                                             </supplied>
                                         </unclear>
-                                       
                               ]]></egXML>
                             <p xml:id="p_ewrf3455345456">
                                 In diesem Fall (lesbare Ersatzseite einer anderen Ausgabe liegt vor) oder in dem Fall, wenn der oder die Bearbeitende eine
@@ -1038,17 +1029,16 @@
                                 die Ergänzung vermerkt werden, wird dies mit dem
                                 <gi>gap</gi>-Element notiert; die Attribute funktionieren erneut wie
                                 im Vorigen beschrieben.</p>
-                 
                         </div>
                         <div type="section" xml:id="Typo">
-                                <head n="3.8." xml:id="head_okjcpesrhcpq">Typographische Stile und Textausrichtung</head>
+                                <head n="3.6." xml:id="head_okjcpesrhcpq">Typographische Stile und Textausrichtung</head>
                                 <p xml:id="p_fämväwejfü3w4">Typographische Besonderheiten im Text werden durch das
                                         <att>rendition</att>-Attribut erfasst. Dazu zählen 
                                     die folgende Arten von Markierungen:</p>
                             <list>
-                                <item xml:id="item_48djfd8">Textstrukturell bedeutsame Zeichen wie Trennstriche, Asteriske oder Kreuzchen können in 
-                                    unterschiedlichen Arten von Elementen (etwa <gi>milestone</gi>) mittels <att>rendition</att> markiert werden. 
-                                (Für Sonderzeichen ohne strukturelle Bedeutung siehe hingegen <ref target="#Sonderzeichen">3.2.3. Sonderzeichen</ref>.) Die 
+                                <item xml:id="item_48djfd8">Textstrukturell oder argumentativ bedeutsame Zeichen wie Trennstriche, Asteriske oder Kreuzchen werden in 
+                                    unterschiedlichen Arten von Elementen (etwa <gi>milestone</gi>) mittels <att>rendition</att> markiert. 
+                                (Für Sonderzeichen ohne eigene Bedeutung siehe hingegen <ref target="#Sonderzeichen">Sonderzeichen</ref>.) Die 
                                 Erfassung der typographischen Markierung im jeweiligen Element bietet sich dabei aufgrund des unmittelbaren Zusammenhangs 
                                 zwischen Zeichen und (dem im jeweiligen Element ausgedrückten) Textphänomen an.</item>
                                 <item xml:id="item">Besondere Scriftformatierungen (Initialen, Kursivierung, Recte, Fettung, Kapitälchen, Hoch- und Tiefstellung 
@@ -1089,8 +1079,10 @@
                     </div>
                     <div type="chapter" xml:id="de_Anreicherung">
                         <head n="4." xml:id="head_c243f343q4">Strukturierung und Anreicherung der Werke</head>
-                        <div type="section" xml:id="de_MehrbändigeWerke">
-                            <head n="4.1." xml:id="head_cse432r2f">Mehrbändige Werke</head>
+                        <div type="section" xml:id="de_Strukturierung">
+                            <head n="4.1." xml:id="head_kwer3290u8f">Strukturierung</head>
+                            <div type="section" xml:id="de_MehrbändigeWerke">
+                            <head n="4.1.1." xml:id="head_cse432r2f">Mehrbändige Werke</head>
                             <p xml:id="p_f2342358">Wir erfassen mehrbändige Werke als einen xml-Datensatz, der Gruppen
                                     (<gi>group</gi>) von Texten (nämlich Bände: <tag>text
                                     type="work_volume"</tag>) enthält. Das umfassende
@@ -1126,19 +1118,16 @@
                             </TEI>
                             ]]></egXML>
                         </div>
-                        <div type="section" xml:id="de_Strukturierung">
-                            <head n="4.2." xml:id="head_kwer3290u8f">Strukturelle und typographische Textphänomene</head>
                             <div xml:id="de_Gesamtstruktur" type="section">
-                                <head n="4.2.1." xml:id="head_slfkujsdf">Gesamtstruktur eines Werkes/Bandes</head>
+                                <head n="4.1.2." xml:id="head_slfkujsdf">Gesamtstruktur eines Textes</head>
                                 <p xml:id="p_sdfiondlf">Auf höchster struktureller Ebene wird der Hauptteil eines Textes 
-                                im <gi>body</gi>-Element von <gi>text</gi> erfasst. Die Titelei (siehe auch <ref target="de_Titelseite">4.2.2. Titelseite(n)</ref>) 
+                                im <gi>body</gi>-Element von <gi>text</gi> erfasst. Die Titelei (siehe auch <ref target="de_Titelseite">Titelseite(n)</ref>) 
                                     und etwaige weitere Textabschnitte vor dem Hauptteil (z.B. Widmungen, Vorwörter, Inhaltsverzeichnisse, Angaben zu Privilegien, etc.)
                                 werden im <gi>front</gi>-Element, etwaige nach dem Hauptteil auftretende Bestandteile des Werkes (z.B. Indizes, Errata, 
                                     Inhaltsverzeichnisse o.ä.) im <gi>back</gi>-Element erfasst.</p>
                             </div>
                             <div xml:id="de_Titelseite" type="section">
-                                <head xml:id="head_sdflk8trr" n="4.2.2.">Titelseite(n)</head>
-                                <!-- TODO: Spezifikationen sind noch nicht endgültig: -->
+                                <head xml:id="head_sdflk8trr" n="4.1.3.">Titelseite(n)</head>
                                 <!-- TODO: Schema anpassen mit Blick auf die hier angegebenen Spezifikationen -->
                                 <p xml:id="p_dfkljsdf7df">Titelseiten werden jeweils (es können ggf. mehrere vorhanden sein) mittels der hierfür 
                                 in den <ref target="http://www.tei-c.org/release/doc/tei-p5-doc/de/html/DS.html#DSTITL">TEI P5-Guidelines</ref> vorgesehenen 
@@ -1164,7 +1153,7 @@
                                     <ref target="#de_Absaetze">typographische Paragraphen</ref> <gi>p</gi> erfasst.</p>
                             </div>
                             <div xml:id="de_struktEinheiten" type="section">
-                               <head n="4.2.3." xml:id="head_irnm79ksdj">Strukturelle Texteinheiten</head>
+                               <head n="4.1.4." xml:id="head_irnm79ksdj">Strukturelle Texteinheiten</head>
                                <p xml:id="p_dp3wq0849">Die strukturellen Einheiten (Vorlesungen, Bücher, Kapitel,
                                    Quaestiones usw.), die in der Vorlage i.d.R. durch Überschriften,
                                    Nummerierungen usw. markiert sind, werden <q type="optional"/>so weit wie möglich durch
@@ -1182,7 +1171,8 @@
                                        <val>index</val>, <val>lecture</val>, <val>map</val> sowie <val>part</val>.
                                    </p>
                                <p xml:id="p_f9872398zf4">Jedes <gi>div</gi> -Element wird möglichst durch ein
-                                   <gi>head</gi>-Element auf der Kind-Achse (child) komplettiert. <q type="important"/> Dies bedeutet im Umkehrschluss, dass 
+                                   <gi>head</gi>-Element auf der Kind-Achse (<code>child</code>) komplettiert. <q type="important"/> 
+                                   Dies bedeutet im Umkehrschluss, dass 
                                    Überschriften von als <gi>div</gi> markierten Abschnitten <emph>nicht</emph> als <gi>head</gi>-Elemente 
                                    innerhalb von ggf. gleichzeitig auftretenden 
                                    "konzeptionellen" Elementen wie z.B. <gi>list</gi> oder <gi>lg</gi> erfasst werden.
@@ -1190,13 +1180,13 @@
                                    <att>n</att>-Attribut des <gi>div</gi>-Elements vorgenommen werden.</p>
                             </div>
                             <div type="section" xml:id="de_Absaetze">
-                                <head xml:id="head_asflksdf98" n="4.2.4.">Typographische und argumentative Paragraphen</head>
+                                <head xml:id="head_asflksdf98" n="4.1.5.">Typographische und argumentative Paragraphen</head>
                                 <p xml:id="p_x9870z7f3">Die typographischen Absatz-Unterteilungen, markiert in der Quelle
                                     durch vertikale Abstände, Erstzeileneinzüge, verkürzte, also nicht
                                     bis in den Blocksatz ausgetriebene Zeilenenden o.ä., werden als
                                         <gi>p</gi>-Paragraphen wiedergegeben. Eventuell vorhandene
                                     Absatz-Symbole ('¶') werden stets beibehalten.</p>
-                                <p xml:id="p_opp8ujq34">Durch Marginalziffern, *-, †-Symbole ö.ä. markierte Übergänge der argumentativen
+                                <p xml:id="p_opp8ujq34">Durch Marginalziffern, *-, †-Symbole o.ä. markierte Übergänge der argumentativen
                                     Sinn-Einheiten werden durch <gi>milestone</gi>-Tags festgehalten. <!-- TODO: zu disktuieren -->Dies gilt sowohl für den Fall, wenn derart markierte Übergänge 
                                     im typographisch "unauffälligen" Textfluss, als auch, wenn sie zugleich mit einem typographischen Absatz
                                     auftreten (in diesem Fall wird der entsprechende <gi>milestone</gi>-Tag als eines der ersten Kindelemente (<code>child</code>) 
@@ -1208,7 +1198,7 @@
                                 ]]></egXML>
                             </div>
                             <div type="section" xml:id="de_ListenTabellen">
-                                <head xml:id="head_llkjasf745j" n="4.2.5.">Listen</head>
+                                <head xml:id="head_llkjasf745j" n="4.1.6.">Listen</head>
                                 <p xml:id="p_daxoöinqq234">
                                 Inhaltsverzeichnisse, Indices, Wörterbücher und andere Listenstrukturen werden als Listen von <gi>item</gi>s erfasst, die <q type="optional"/> jeweils ein <gi>term</gi>-Element erläutern.
                                 Die Listen werden ggf. durch eine Überschrift (<gi>head</gi>) angeführt und als <gi>list</gi>e mit einem Attribut <att>type</att> erfasst, 
@@ -1220,7 +1210,7 @@
                                 </p>
                             </div>
                             <div xml:id="de_Verstext" type="section">
-                                <head xml:id="head_f8d9fsfd" n="4.2.6.">Verstext</head>
+                                <head xml:id="head_f8d9fsfd" n="4.1.7.">Verstext</head>
                                 <p xml:id="p_fddf78dfs"><q type="optional"/> Textblöcke, die aus Verstext bestehen – in der Regel sind sie 
                                     markiert durch tiefere Einrückung als der umgebende Text und ggf. 
                                 Kursivierung –, werden insgesamt mit dem Element <gi>lg</gi> ausgezeichnet. Können innerhalb eines Verstextblocks Strophen 
@@ -1246,7 +1236,7 @@
                                 </p>
                             </div>
                             <div type="section" xml:id="de_Noten">
-                                <head n="4.2.7" xml:id="head_miosjvp34f32">Anmerkungen und Noten</head>
+                                <head n="4.1.8." xml:id="head_miosjvp34f32">Anmerkungen und Noten</head>
                                 <p xml:id="p_cser2jo9823d">Anmerkungen, Fuß- oder Marginalnoten werden im <gi>note</gi>-Element
                                     festgehalten, dessen <att>place</att>-Attribut angibt, ob es sich um
                                     eine Marginal- (<val>margin</val>), Fuß- (<val>bottom</val>) oder
@@ -1258,7 +1248,7 @@
                                     Note verankert ist, stehen, am Beginn der Note selbst oder an beiden
                                     Positionen.</p>
                                 <div type="section" xml:id="Notenposition">
-                                    <head n="4.2.7.1." xml:id="head_mjoijesacp943">Position</head>
+                                    <head n="4.1.8.1." xml:id="head_mjoijesacp943">Position</head>
                                     <p xml:id="p_jiewiuow39844c">Ist die genaue Position, an der die Note verankert ist,
                                         ersichtlich, so wird sie (vollständig) auch an genau dieser
                                         Stelle im TEI-XML erfasst und unterbricht somit in gewisser Weise den
@@ -1269,15 +1259,15 @@
                                             in der Note ein Seiten- und/oder Spaltenwechsel erfolgt, verweist das an dieser 
                                             Stelle (zusätzlich zum <gi>pb</gi> bzw. <gi>cb</gi> im Haupttext) gesetzte <gi>pb</gi> bzw. <gi>cb</gi> mit
                                             dem <att>sameAs</att>-Attribut auf die <att>xml:id</att> (siehe auch: 
-                                        <ref target="#IDs">4.3.1. xml:id</ref>) des
+                                        <ref target="#IDs">xml:id</ref>) des
                                             Seiten-/Spaltenwechsels im Haupttext.
                                     </p>
                                 </div>
                                 <div type="section" xml:id="Notenzeichen">
-                                    <head n="4.2.7.2." xml:id="head_nmesoörjpw34">Zeichen</head>
+                                    <head n="4.1.8.2." xml:id="head_nmesoörjpw34">Zeichen</head>
                                     <p xml:id="p_moewjpf34ce">Ein die Note identifizierendes Zeichen <hi rendition="#it">im
                                             Haupttext</hi> wird als <gi>ref</gi> vom <att>type</att>
-                                        <val>note-anchor</val> vor der Note erfasst (siehe auch <ref target="#de_Querverweise">4.3.2. Querverweise</ref>). Die Note, auf die
+                                        <val>note-anchor</val> vor der Note erfasst (siehe auch <ref target="#de_Querverweise">Querverweise</ref>). Die Note, auf die
                                         es verweist, wird mittels deren <att>xml:id</att>-Attributs im
                                             <att>target</att>-Attribut festgehalten.</p>
                                     <p xml:id="p_cswreöhlodscqe">Ein die Note identifizierendes Zeichen oder eine 
@@ -1299,9 +1289,9 @@
                         </div>
                         </div>
                         <div xml:id="de_Verlinkung" type="section">
-                            <head xml:id="head_flksdf8d7" n="4.3.">Identifizierung und Verlinkung von Texteinheiten</head>
+                            <head xml:id="head_flksdf8d7" n="4.2.">Identifizierung und Verlinkung von Texteinheiten</head>
                             <div type="section" xml:id="IDs">
-                                <head n="4.3.1." xml:id="head_cdwmcp3qo423">
+                                <head n="4.2.1." xml:id="head_cdwmcp3qo423">
                                     <att>xml:id</att>
                                 </head>
                                 <!-- TODO: überarbeiten: -->
@@ -1371,7 +1361,7 @@
                                         Elements, z.B. "pa" für <gi>p</gi>-Elemente. Für eine erschöpfende Liste aller möglichen Element-Kürzel siehe weiter unten in diesem Abschnitt.</item>
                                         <item xml:id="item_fdsi97fd"><q>Zahlencode</q>: ein vierstelliger alphanumerischer Wert, der im Wesentlichen 
                                         der Eindeutigkeit der <att>xml:id</att> dient und nur im Falle von <gi>lb</gi>-Elementen bedeutungstragend ist 
-                                        (im Sinne einer Zeilenzählung, siehe hierzu <ref target="#de_Umbrueche">3.3. Seiten-, Spalten- und Zeilenumbrüche</ref>).</item>
+                                        (im Sinne einer Zeilenzählung, siehe hierzu <ref target="#de_Umbrueche">Seiten-, Spalten- und Zeilenumbrüche</ref>).</item>
                                     </list>
                                     <p xml:id="p_8rüsdlad">
                                     Folgende Elemente erhalten diesem Schema folgend derzeit ein <att>xml:id</att>-Attribut (in Klammern das zugehörige Element-Kürzel, das 
@@ -1414,15 +1404,15 @@
                                             ...
                                         ]]></egXML>
                                 <p xml:id="p_fasdf89asd">Die gleichförmige Syntax von <att>xml:id</att> im <gi>text</gi>-Bereich, die zugleich eine Unterscheidung 
-                                    von Elementen nach Werk, Band, Faksimilenummer, Elementtyp (und im Falle von <gi>lb</gi> sogar nach 
-                                    Zeilennummer) erlaubt, macht Elemente nach einem oder mehreren dieser Kriterien auf zusätzliche Weise addressier- und 
-                                referenzierbar.</p>
+                                    von Elementen nach Werk, Band, Faksimilenummer oder Elementtyp (oder im Falle von <gi>lb</gi> sogar nach 
+                                    Zeilennummer) erlaubt, soll Elemente nach einem oder mehreren dieser Kriterien auf logisch intuitive Weise 
+                                referenzierbar machen.</p>
                             </div>
                             <!-- TODO ######################################################################## TODO -->
                             <div type="section" xml:id="de_Querverweise">
-                            <head n="4.3.2." xml:id="head_m098jq8932j4">Querverweise</head>
+                            <head n="4.2.2." xml:id="head_m098jq8932j4">Querverweise</head>
                             <p xml:id="p_k09iij8fj3">Querverweise werden, wo annotiert, grundsätzlich mithilfe des <gi>ref</gi>-Elements
-                                festgehalten. Sie kommen z.B. in Form von kurzen
+                                und des zugehörigen <att>target</att>-Attributs festgehalten. Sie kommen z.B. in Form von kurzen
                                 Summarientiteln in der Inhaltsangabe von Werken bzw. Werk-Abschnitten
                                 oder in Form von Zeichen, welche auf Marginalnoten verweisen, vor.
                                 Das <att>type</att>-Attribut kann diese Unterscheidung markieren,
@@ -1430,7 +1420,7 @@
                                     <val>note-anchor</val> (außerdem noch <val>url</val> und
                                     <val>image</val>, die aber i.d.R. in den Werken nicht
                                 nötig sind). Das <att>target</att>-Attribut hält die <att>xml:id</att>
-                                des Abschnittes fest, auf das verwiesen wird.</p>
+                                des Elementes bzw. Abschnittes fest, auf das/den verwiesen wird.</p>
                             <egXML xmlns="http://www.tei-c.org/ns/Examples">
                                 <![CDATA[
                             <list type="summaries">
@@ -1456,8 +1446,8 @@
                         </div>
                         
                         <div type="section" xml:id="de_Referenzen">
-                            <head n="4.4." xml:id="head_vseönupirn3qr">Referenzen und semantische Texterfassung</head>
-                            <p xml:id="p_cniurnoeiwr">Die Anwendung "Die Schule von Salamanca" verknüpft verschiedene intern
+                            <head n="4.3." xml:id="head_vseönupirn3qr">Referenzen und inhaltliche Texterfassung</head>
+                            <p xml:id="p_cniurnoeiwr">Die Edition des Projekts "Die Schule von Salamanca" verknüpft verschiedene intern
                                 aufbereitete Datensätze: Werke, Wörterbuchartikel und Autoren.
                                 Außerdem gibt es Verweise auf externe Normdaten, die aus der
                                 Anwendung hinaus führen. Dafür werden der 
@@ -1468,184 +1458,247 @@
                                 <ref target="http://www.getty.edu/research/tools/vocabularies/tgn/index.html">Getty Thesaurus of Geographic Names ® Online</ref> 
                                 verwendet. Diese Verweise verwenden das Attribut
                                     <att>xml:id</att>, das unter 
-                                <ref target="#IDs">4.3.1. xml:id</ref> 
+                                <ref target="#IDs">xml:id</ref> 
                                 genauer beschrieben ist, sowie 
                                 die Attribute<att>ref</att>-, <att>key</att>- und
                                     <att>sortKey</att>, die im Folgenden erläutert werden.</p>
                             
-                            <div type="section" xml:id="REFs">
-                                <head n="4.4.1." xml:id="head_dspvmpew5m3ßü4">
-                                    <att>ref</att>
-                                </head>
-                                <p xml:id="p_vfm3ompiwe5">
-                                    <att>ref</att>-Attribute werden verwendet, um Vorkommnisse im
-                                    Text mit einem eigenen Datensatz zu verknüpfen; z.B. die Nennung
-                                    von Personen mit dem entsprechenden Autoren-Datensatz, Orte mit
-                                    ihrem Eintrag in einer öffentlichen Normdatenbank usw. Dabei
-                                    erhält das Attribut einen durch Doppelpunkt abgetrennten Präfix,
-                                    der angibt, an welcher Stelle die entsprechende Ressource liegt:
-                                        <val>author:</val>, <val>work:</val>, <val>lemma:</val>
-                                    beziehen sich auf Autoren-, Werk- oder Lemma-Datensätze des
-                                    "Salamanca"-Projekts; <val>cerl:</val>, <val>getty:</val> und <val>gnd:</val> beziehen sich auf
-                                    externe Normdatenbanken. Es können, durch Leerzeichen getrennt,
-                                    mehrere solcher Schlüssel eingetragen werden; dabei <q type="important"/>muss der
-                                    projekteigene Autorendatensatz immer referenziert werden, wenn er existiert,
-                                    und es sollte <q type="optional"/>möglichst auch der CERL-Datensatz 
-                                    (bei Personen) bzw. der getty-Datensatz (bei Ortsangaben) genannt werden.
-                                    Von der Webanwendung wird der erste verfügbare Schlüssel verwendet, 
-                                    deshalb sollten interne Schlüssel (<val>author:</val>, <val>work:</val>, 
-                                    <val>lemma:</val>) zuerst genannt werden, dann ggf. <val>cerl:</val>, 
-                                    dann erst weitere Schlüssel aus Normdatenbanken. </p>
-                                <div type="section" xml:id="REFsOpts">
-                                    <head n="4.4.2.1." xml:id="head_niewtcnoi34">
-                                        Varianten des <att>ref</att>-Attributs
+                            <div xml:id="de_RefAttribute" type="section">
+                                <head xml:id="head_84dfölsf8" n="4.3.1.">Attribute für Referenzen und Normalisierungen</head>
+                                    <div type="section" xml:id="REFs">
+                                    <head n="4.3.1.1." xml:id="head_dspvmpew5m3ßü4">
+                                        <att>ref</att>
                                     </head>
-                                    <p xml:id="p_fcmwöoeim3409">
-                                        Je nachdem, welche Verknüpfung erstellt wird, ergeben sich für das <att>ref</att>-Attribut
-                                        also drei verschiedene Varianten. 
+                                    <p xml:id="p_vfm3ompiwe5">
+                                        <att>ref</att>-Attribute werden verwendet, um Vorkommnisse im
+                                        Text mit einem eigenen Datensatz zu verknüpfen; z.B. die Nennung
+                                        von Personen mit dem entsprechenden Autoren-Datensatz, Orte mit
+                                        ihrem Eintrag in einer öffentlichen Normdatenbank usw. Dabei
+                                        erhält das Attribut einen durch Doppelpunkt abgetrennten Präfix,
+                                        der angibt, an welcher Stelle die entsprechende Ressource liegt:
+                                            <val>author:</val>, <val>work:</val>, <val>lemma:</val>
+                                        beziehen sich auf Autoren-, Werk- oder Lemma-Datensätze des
+                                        Projekts "Die Schule von Salamanca"; <val>cerl:</val>, <val>getty:</val> und <val>gnd:</val> beziehen sich auf
+                                        externe Normdatenbanken. Es können, durch Leerzeichen getrennt,
+                                        mehrere solcher Schlüssel eingetragen werden; dabei <q type="important"/>muss der
+                                        projekteigene Autorendatensatz immer referenziert werden, wenn er existiert,
+                                        und es sollte <q type="optional"/>möglichst auch der CERL-Datensatz 
+                                        (bei Personen) bzw. der getty-Datensatz (bei Ortsangaben) genannt werden.
+                                        Von der Webanwendung wird der erste verfügbare Schlüssel verwendet, 
+                                        deshalb sollten interne Schlüssel (<val>author:</val>, <val>work:</val>, 
+                                        <val>lemma:</val>) zuerst genannt werden, dann ggf. <val>cerl:</val>, 
+                                        dann erst weitere Schlüssel aus Normdatenbanken. </p>
+                                    <p xml:id="p_0djsdadgt"> <q type="important"/> Bei dem Verweis mittels <att>ref</att>-Attribut von einem 
+                                        inhaltlich relevanten Element auf ein anderes Element handelt es sich konzeptuell um etwas anderes als die 
+                                        in <ref target="#de_Querverweise">Querverweise</ref> beschriebene Art von <hi rendition="#it">strukturellem</hi> 
+                                        Querverweis, die in der Originalvorlage explizit als solche erkennbar ist (z.B. als Verweis 
+                                        im Inhaltskapitel auf eine bestimmte Seitenzahl) und mittels des <hi rendition="#it">Elements</hi> 
+                                        <gi>ref</gi> annotiert wird.</p>
+                                    <div type="section" xml:id="REFsOpts">
+                                        <head n="4.3.1.2." xml:id="head_niewtcnoi34">
+                                            Varianten des <att>ref</att>-Attributs
+                                        </head>
+                                        <p xml:id="p_fcmwöoeim3409">
+                                            Je nachdem, welche Verknüpfung erstellt wird, ergeben sich für das <att>ref</att>-Attribut
+                                            also drei verschiedene Varianten. 
+                                        </p>
+                                        <list xml:id="p_jfcpeaomewr">
+                                            <item xml:id="item_0923hfds">1. Es wird auf eine Stelle innerhalb desselben Datensatzes verwiesen.
+                                        <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                                            <![CDATA[
+                                            <!-- stets ohne Präfix (work:, lemma: author:)-->
+                                            <term ref="#W0998-00-0066-mi-3e52" key="utilitas" xml:id="W0998-00-0014-te-aa45"}">
+                                            context ...
+                                            </term>
+                                            ]]></egXML></item>
+                                        <item xml:id="item_cfewöoöoqc3">
+                                            2. Es wird auf einen anderen Datensatz/auf eine bestimmte Stelle in
+                                            einem anderen Datensatz verwiesen.
+                                        <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                                                <![CDATA[
+                                            <!-- stets mit Präfix (work:, lemma:, author:) und @xml:id des Datensatzes (hier: A0001)-->
+                                            <persName ref="author:A0001#A0001-pa-43fa" key="Vitoria, Francisco de" xml:id="W0998-00-0324-pe-7f6a"}">
+                                            FRANCISCI ...
+                                            </persName>
+                                            ]]></egXML>
+                                        </item>
+                                        <item xml:id="item_se4a54ffw45">
+                                                3. Es wird auf eine Referenz außerhalb der Webanwendung  verwiesen.
+                                                Siehe den Abschnitt 
+                                            <ref target="#externeNormdaten">Externe Normdaten.</ref>
+                                        </item>
+                                            </list>
+                                    </div>
+                                </div>
+                                <div type="section" xml:id="KEYs">
+                                    <head n="4.3.1.3" xml:id="head_mfcwr304">
+                                        <att>key</att>
+                                    </head>
+                                    <p xml:id="p_sönesapm44">
+                                        <att>key</att>-Attribute werden verwendet, um eine normalisierte
+                                        Variante der durch das Element markierten Entität zu
+                                        hinterlegen. Falls der Rückgriff auf die normalisierte Form aus
+                                        den externen Normdatenbanken nicht funktioniert, wird in
+                                        der Webanwendung der Wert dieses Attributs herangezogen. Folgende
+                                        Elemente können ein <att>key</att>-Attribut besitzen, das in
+                                        dieser Weise verwendet wird: <list>
+                                            <item xml:id="item_npwfe4npo">
+                                                <gi>persName</gi>
+                                            </item>
+                                            <item xml:id="item_mcpewrnp7">
+                                                <gi>placeName</gi>
+                                            </item>
+                                            <item xml:id="item_mcewoirnq">
+                                                <gi>title</gi>
+                                            </item>
+                                            <item xml:id="item_okpkmvpiew">
+                                                <gi>term</gi>
+                                            </item>
+                                        </list>
                                     </p>
-                                    <p xml:id="p_jfcpeaomewr">
-                                        1. Es wird auf eine Stelle innerhalb desselben Datensatzes verwiesen.
-                                        
-                                    </p>
+                                    <div type="section" xml:id="NamensNormalisierung">
+                                    <head n="4.3.1.3.1." xml:id="head_iugoaewt4f">Normalisierung von Eigennamen und Werktiteln mittels <att>key</att></head>
+                                    <p xml:id="p_sfertzjrt">
+                                        <q type="optional"/> Sind beispielsweise Eigennamen oder Werktitel einschlägig bekannt, können
+                                        diese neben der beibehaltenen Variante des Textes mittels des <att>key</att>-Attributs in <gi>persName</gi>, <gi>placeName</gi> 
+                                        oder <gi>title</gi> in ihrer normalisierten bzw. modernisierten Variante hinterlegt werden:</p>
                                     <egXML xmlns="http://www.tei-c.org/ns/Examples">
                                         <![CDATA[
-                                        <!-- stets ohne Präfix (work:, lemma: author:)-->
-                                        <term ref="#a6ef" key="utilitas" xml:id="ie4D"}">
-                                        context ...
-                                        </term>
-                                        ]]></egXML>
-                                    <p xml:id="p_cfewöoöoqc3">
-                                        2. Es wird auf einen anderen Datensatz/auf eine bestimmte Stelle in
-                                        einem anderen Datensatz verwiesen.
-                                    </p>
+                                    <persName ref="cerl:01302080" key="Hieronymus, Sophronius Eusebius" resp="#DG" cert="high">
+                                        Hierony.
+                                    </persName>
+                                    ...
+                                    <bibl>
+                                        <title key="De Republica, Liber III, § 11" resp="#DG" cert="high">
+                                            Lib. 3 de Republi. tit. 11. fol.78.
+                                        </title>
+                                    </bibl>
+                                    ]]></egXML>
+                                    <p xml:id="p_serhtmetrsg4wf">(Zu Eigennamen und Zitaten siehe auch die Abschnitte zu <ref target="#head_iuziuziuz">Personen</ref>, 
+                                        <ref target="#head_josomcp3q4">Orten</ref> und <ref target="#head_cw2453grf3">Literaturangaben</ref>. 
+                                        Zum <att>ref</att>-Attribut in diesem Beispiel siehe <ref target="#de_Referenzen">ref</ref>.)</p>
+                                </div>
+                                </div>
+                                <div type="section" xml:id="SORTKEYs">
+                                    <head n="4.3.1.4." xml:id="head_jewl434mser">
+                                        <att>sortKey</att>
+                                    </head>
+                                    <p xml:id="p_fceoinjpospz">Das <att>sortKey</att>-Attribut wird ausschließlich bei
+                                            <gi>bibl</gi>-Elementen (also bei externen
+                                        <ref target="#de_Bibl">Literaturangaben</ref> 
+                                        oder Referenzen auf 
+                                        <ref target="#Werke">interne Werke</ref>
+                                        ) verwendet. Es dient dazu, Referenzen
+                                        auf ein bestimmtes Werk zu gruppieren. Daher setzt sich der
+                                        einzutragende Wert aus dem Autorennamen, dem Trennzeichen "_"
+                                        und dem Werk(kurz)titel zusammen. Anstelle vorkommender
+                                        Leerzeichen wird kein Zwischenraum gesetzt, dafür das folgende
+                                        Wort mit einem Großbuchstaben angehängt (sog. CamelCase).
+                                        Bsp.:</p>
                                     <egXML xmlns="http://www.tei-c.org/ns/Examples">
-                                            <![CDATA[
-                                        <!-- stets mit Präfix (work:, lemma: author:) und xml:id des Datensatzes (hier: A0001)-->
-                                        <persName ref="author:A0001#a6ef" key="Vitoria, Francisco de" xml:id="ie4D"}">
-                                        FRANCISCI ...
-                                        </persName>
+                                        <![CDATA[
+                                    <bibl sortKey="Mt_16">Matthei decimo sexto</bibl>,
+                                    <bibl sortKey="ThomasAquinas_SThPrimaPars">
+                                        <author>
+                                            <persName ref="cerl:cnp00396685" key="Thomas &lt;de Aquino&gt;">
+                                                <choice>
+                                                    <orig>S. Tho.</orig>
+                                                    <reg>Sanctus Thomas</reg>
+                                                </choice>
+                                            </persName>
+                                        </author>
+                                        1.p.q.1.a.7.</bibl>
                                         ]]></egXML>
-                                    <p xml:id="p_se4a54ffw45">
-                                            3. Es wird auf eine Referenz außerhalb der Webanwendung  verwiesen.
-                                            Siehe den Abschnitt <ref target="#externeNormdaten">Externe Nordaten.</ref>
-                                    </p>
+                                </div>
+                                <div type="section" xml:id="Ns">
+                                    <head n="4.3.1.5." xml:id="head_koisvme3r">
+                                        <att>n</att>
+                                    </head>
+                                    <p xml:id="p_sc3q4cmpices">Im <att>n</att>-Attribut kann bei gezählten oder benannten 
+                                        Elementen hinterlegt werden, mit welchem Namen oder welcher
+                                        Nummer der betr. Abschnitt angezeigt wird. Diese Funktionalität
+                                        hat nichts mit den hier behandelten Referenzen und Verknüpfungen
+                                        zu tun und wird hier nur genannt, um Verwechslungen
+                                        auszuschließen. Mit ihr können aber etwa Seitenzahlen (im Element <gi>pb</gi>, siehe 
+                                        <ref target="#Seitenzahlen">Paginierung</ref>) oder
+                                        Kurztitel (in <gi>div</gi>, z.B. bei sehr langen Titeln in dessen <code>child</code>-Element <gi>head</gi>, 
+                                        siehe <ref target="#de_struktEinheiten">Strukturelle Texteinheiten</ref>) 
+                                        ergänzt werden. Bsp.:</p>
+                                    <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                                        <![CDATA[
+                                        <div type="foreword" xml:id="..." n="Praefatio (Boyer)">...</div>
+                                        <div type="question" xml:id="..." n="Qu. 1 - An in Eccl. sit dignitas">...</div>
+                                        <milestone unit="article" xml:id="..." n="De diversis acceptionibus"/>
+                                        <pb facs="facs:W0065-B-0077" n="[2]" xml:id="..."/>
+                                        ]]></egXML>
                                 </div>
                             </div>
-                            <div type="section" xml:id="KEYs">
-                                <head n="4.4.2." xml:id="head_mfcwr304">
-                                    <att>key</att>
-                                </head>
-                                <p xml:id="p_sönesapm44">
-                                    <att>key</att>-Attribute werden verwendet, um eine normalisierte
-                                    Variante der durch das Element markierten Entität zu
-                                    hinterlegen. Falls der Rückgriff auf die normalisierte Form aus
-                                    den externen Normdatenbanken nicht funktioniert, wird in
-                                    der Webanwendung der Wert dieses Attributs herangezogen. Folgende
-                                    Elemente können ein <att>key</att>-Attribut besitzen, das in
-                                    dieser Weise verwendet wird: <list>
-                                        <item xml:id="item_npwfe4npo">
-                                            <gi>persName</gi>
-                                        </item>
-                                        <item xml:id="item_mcpewrnp7">
-                                            <gi>placeName</gi>
-                                        </item>
-                                        <item xml:id="item_mcewoirnq">
-                                            <gi>title</gi>
-                                        </item>
-                                        <item xml:id="item_okpkmvpiew">
-                                            <gi>term</gi>
-                                        </item>
-                                    </list>
-                                </p>
-                            </div>
-                            <div type="section" xml:id="SORTKEYs">
-                                <head n="4.4.3." xml:id="head_jewl434mser">
-                                    <att>sortKey</att>
-                                </head>
-                                <p xml:id="p_fceoinjpospz">Das <att>sortKey</att>-Attribut wird einzig und allein bei
-                                        <gi>bibl</gi>-Elementen verwendet. Es dient dazu, Referenzen
-                                    auf ein bestimmtes Werk zu gruppieren. Daher setzt sich der
-                                    einzutragende Wert aus dem Autorennamen, dem Trennzeichen "_"
-                                    und dem Werk(kurz)titel zusammen. Anstelle vorkommender
-                                    Leerzeichen wird kein Zwischenraum gesetzt, dafür das folgende
-                                    Wort mit einem Großbuchstaben angehängt (sog. CamelCase).
-                                    Bsp.:</p>
-                                <egXML xmlns="http://www.tei-c.org/ns/Examples">
-                                    <![CDATA[
-                                <bibl sortKey="Mt_16">Matthei decimo sexto</bibl>,
-                                <bibl sortKey="ThomasAquinas_SThPrimaPars">
-                                    <author>
-                                        <persName ref="cerl:cnp00396685" key="Thomas &lt;de Aquino&gt;">
-                                            <choice>
-                                                <orig>S. Tho.</orig>
-                                                <reg>Sanctus Thomas</reg>
-                                            </choice>
-                                        </persName>
-                                    </author>
-                                    1.p.q.1.a.7.</bibl>
-                                    ]]></egXML>
-                            </div>
-                            <div type="section" xml:id="Ns">
-                                <head n="4.4.4." xml:id="head_koisvme3r">
-                                    <att>n</att>
-                                </head>
-                                <p xml:id="p_sc3q4cmpices">Im <att>n</att>-Attribut kann bei gezählten oder benannten
-                                    Abschnitten hinterlegt werden, mit welchem Namen oder welcher
-                                    Nummer der betr. Abschnitt angezeigt wird. Diese Funktionalität
-                                    hat nichts mit den hier behandelten Referenzen und Verknüpfungen
-                                    zu tun und wird hier nur genannt, um Verwechslungen
-                                    auszuschließen. Mit ihr können aber etwa Seitenzahlen oder
-                                    Kurztitel ergänzt werden. Bsp.:</p>
-                                <egXML xmlns="http://www.tei-c.org/ns/Examples">
-                                    <![CDATA[
-                                    <div type="foreword" xml:id="da12" n="Praefatio (Boyer)">...</div>
-                                    <div type="question" xml:id="ktQW" n="Qu. 1 - An in Eccl. sit dignitas">...</div>
-                                    <milestone unit="article" xml:id="D319" n="De diversis acceptionibus"/>
-                                    <pb facs="facs:W0065-B-0002.jpg" n="[2]" type="blank" xml:id="07df"/>
-                                    ]]></egXML>
-                            </div>
                             <div type="section" xml:id="interneVerweise">
-                                <head n="4.4.5." xml:id="head_öojseer3wq4">Interne Verweise</head>
-                                <p xml:id="p_mjserouhpvw3h94">Interne Verweise werden in jedem Datensatz verwendet. Siehe hierzu auch  <ref target="#REFsOpts">Varianten des <att>ref</att>-Attributs</ref>. GNDGZwei Beispiele: </p>
+                                <head n="4.3.2." xml:id="head_öojseer3wq4">Interne Verweise</head>
+                                <p xml:id="p_mjserouhpvw3h94">Interne Verweise beziehen sich auf Verlinkungen zwischen 
+                                    Datensätzen innerhalb der digitalen Edition (siehe hierzu auch 
+                                    <ref target="#REFsOpts">Varianten des <att>ref</att>-Attributs</ref>) und können z.B. in folgenden Szenarien 
+                                    angewendet werden:</p>
                                 <list>
                                     <item xml:id="item_kocsjreüpwq">
-                                        Verweis von einem Werk zu Passagen in anderen Werken, zu genannten Autoren oder zu vorkommenden Lemmata
+                                        Verweis von einem Werk zu Passagen in anderen Werken, zu Autoren von Werken der Quellensammlung oder zu 
+                                        im Wörterbuch vorkommenden Lemmata;
                                     </item>
                                     <item xml:id="item_moösephüüß34">
-                                        Verweis von einem Wörterbuchartikel auf Passagen anderer Wörterbuchartikel und/oder auf bestimmte Autoren oder auf Passagen in bestimmten Werken
+                                        Verweis von einem Wörterbuchartikel (d.h. einem Datensatz für ein Lemma) auf Passagen anderer Wörterbuchartikel 
+                                        und/oder auf bestimmte Autoren der Quellensammlung oder auf Passagen in bestimmten Werken.
                                     </item>
                                 </list>
                                 <div type="section" xml:id="Lemmata">
-                                    <head n="4.4.6.1." xml:id="head_jcpojp9p9zp9z">Lemmata</head>
-                                    <p xml:id="p_wewerwerretvtr">Lemmata werden im Corpus gesondert hervorgehoben. Im TEI wird
+                                    <head n="4.3.2.1." xml:id="head_jcpojp9p9zp9z">Lemmata</head>
+                                    <p xml:id="p_wewerwerretvtr">Lemmata, d.h. Verweise auf im Rahmen des Wörterbuchs des Projekts erfasste 
+                                        Begriffe, werden im Corpus mittels des Elements <gi>term</gi> gesondert erfasst. Dabei wird
                                         im <att>ref</att>-Attribut des <gi>term</gi>-Elements auf den
                                         Datensatz eines Lemmas referenziert. Im
                                             <att>key</att>-Attribut wird die normierte Form
                                         (normiert i.S. des Namens laut Wörterbuchartikel) des Lemmas
                                         hinterlegt.</p>
+                                    <p xml:id="p_4nfdf8">Ein (hypothetisches) Beispiel:</p>
                                     <egXML xmlns="http://www.tei-c.org/ns/Examples">
                                         <![CDATA[
-                                        De <term ref="lemma:L0001" key="utilitas" xml:id="ln27">utilitate</term> ...
-                                        <term ref="lemma:L0325" key="lumen supernaturale" xml:id="93Or">supernaturali lumine</term> et revelatio
+                                        De <term ref="lemma:L0001" key="utilitas" xml:id="W0998-00-0034-te-7a8df">utilitate</term> ...
+                                        <term ref="lemma:L0325" key="lumen supernaturale" xml:id="W0998-00-0087-te-445f">supernaturali lumine</term> et revelatio
                                         <lb/>ne cognita ad Deum et divina quaedam pertinent:
-                                        <term ref="lemma:L0404" key="obiectum scientiae Theologiae" xml:id="935f">obiectum verum scien<lb break="no" rendition="#hyphen"/>tiae Theologiae</term>
+                                        <term ref="lemma:L0404" key="obiectum scientiae Theologiae" xml:id="W0998-00-0113-te-77da">
+                                            obiectum verum scien<lb break="no" rendition="#hyphen"/>tiae Theologiae
+                                        </term>
                                         ]]></egXML>
                                 </div>
                                 <div type="section" xml:id="Autoren">
-                                    <head n="4.4.6.2." xml:id="head_moserf34ev">Autoren</head>
+                                    <head n="4.3.2.2." xml:id="head_moserf34ev">Autoren</head>
                                     <p xml:id="p_okokpokoij">Bei den "Autoren" handelt es sich um die Autoren der im
-                                        Corpus verwendeten Werke. Entsprechend werden auch hier
-                                        Datensatz-Referenz (in <att>ref</att>) und normierte Form im
-                                        i.S. des Namens im biographischen Artikel (in
+                                        Corpus verwendeten Werke. Im Falle der Erwähnung (z.B. eindeutig identifizierbare Zitation oder 
+                                        Paraphrasierung) eines solchen Autors im Text wird der erwähnte 
+                                        Eigenname bzw. die Referenz auf den Autor mithilfe des Elements <gi>persName</gi> erfasst. Entsprechend werden auch hier
+                                        Datensatz-Referenz (in <att>ref</att>) und normierte Form 
+                                        im Sinne des Namens im biographischen Artikel (in
                                         <att>key</att>) angegeben.</p>
                                     <egXML xmlns="http://www.tei-c.org/ns/Examples">
                                         <![CDATA[
-                                        <persName ref="author:A0001 cerl:cnp01318674 gnd:118768735" key="Vitoria, Francisco de">FRANCISCI DE VIctoria</persName>
+                                        <persName ref="author:A0001 cerl:cnp01318674 gnd:118768735" key="Vitoria, Francisco de" xml:id="W0998-00-0245-pe-7ff8">
+                                            FRANCISCI DE VIctoria
+                                        </persName>
                                         ]]></egXML>
+                                    <p xml:id="p_7fdsjfß">Die Erfassung von "Autoren" ist von der Erfassung von "externen" Personen(namen) 
+                                    zu unterscheiden insofern, als bei "Autoren" der Autorenschlüssel (z.B. <code>ref="author:A0001"</code>) angegeben werden muss. 
+                                        (Für externe Personen siehe den Abschnitt <ref target="#Personen">Personen</ref> in der Sektion "Externe Normdaten".)</p>
                                 </div>
                                 <div type="section" xml:id="Werke">
-                                    <head n="4.4.6.3." xml:id="head_pkpkjpkjpim">Werke</head>
+                                    <head n="4.3.2.3." xml:id="head_pkpkjpkjpim">Werke</head>
+                                    <p xml:id="p_32ggk234">Bei den "Werken" handelt es sich um Werke der digitalen Quellensammlung des Projekts. 
+                                    Im Text vorkommende Zitate und Literaturangaben dieser Art von Werk werden durch das
+                                    <gi>bibl</gi>-Element ausgezeichnet. In dessen
+                                    <att>sortKey</att>-Attribut wird ein das zitierte Werk
+                                identifizierendes Kürzel aus Autorenname, Trennzeichen <code>_</code> und
+                                Kurztitel eingetragen. Das <gi>bibl</gi>-Element enthält in der
+                                Regel weitere Unterelemente wie <gi>author</gi> (inkl. <gi>persName</gi>, für das der Abschnitt zu 
+                                        <ref target="#Autoren">Autoren</ref> gilt) und
+                                <gi>title</gi>.</p>
                                     <egXML xmlns="http://www.tei-c.org/ns/Examples">
                                         <![CDATA[
                                         wie 
@@ -1653,12 +1706,17 @@
                                             <author>
                                                 <persName ref="author:A0001" key="Vitoria, Francisco de">Vitoria</persName>
                                             </author> in <title ref="work:W0015#a6ef">Liber 1 Caput 1 Artikel 1</title>
-                                        </bibl>ausführt
+                                        </bibl>
+                                        ausführt
                                         ]]></egXML>
+                                    <p xml:id="p_dsfsdf890">Die Erfassung von Literaturangaben oder Zitaten "externer" (d.h. nicht im Quellencorpus versammelter) Autoren 
+                                    wird unter 
+                                        <ref target="#de_Bibl">Literaturangaben</ref>
+                                        beschrieben.</p>
                                 </div>
                             </div>
                             <div type="section" xml:id="externeNormdaten">
-                                <head n="4.4.7." xml:id="head_nmsecrerrer">Externe Normdaten</head>
+                                <head n="4.3.3." xml:id="head_nmsecrerrer">Externe Normdaten</head>
                                 <p xml:id="p_kpoawjwereqw">
                                     <q type="optional"/> Als externe Normdaten gelten Personen, Orte oder zitierte Literatur. 
                                     Im Zuge der inhaltlichen Auswertung werden Personen, Orte oder zitierte Literatur
@@ -1668,9 +1726,9 @@
                                 Bei bestimmten Werken oder bestimmten Sequenzen in einzelnen Werken, in denen Personen, Orte 
                                 oder zitierte Literatur möglichst vollständig ausgezeichnet werden, müssen diese Angaben im <gi>teiHeader</gi> festgehalten werden.</p>
                                 <div type="section" xml:id="Personen">
-                                    <head n="4.4.7.1." xml:id="head_iuziuziuz">Personen</head>
+                                    <head n="4.3.3.1." xml:id="head_iuziuziuz">Personen</head>
                                     <p xml:id="p_poipwierwer">Für den Bedarf dieser Richtlinien handelt es sich bei <q>Personen</q>
-                                        – anders als bei <q>Autoren</q> – um externe Referenzen.
+                                        – anders als bei <q><ref target="#Autoren">Autoren</ref></q> – um externe Referenzen.
                                         Bei Personen wird im <att>ref</att>-Attribut auf den 
                                         <ref target="http://thesaurus.cerl.org/cgi-bin/search.pl">CERL-Thesaurus</ref>
                                         und <q type="optional"/> auf die <ref target="http://www.dnb.de/gnd">GND</ref> verwiesen.
@@ -1683,10 +1741,12 @@
                                         ]]></egXML>
                                 </div>
                                 <div type="section" xml:id="Orte">
-                                    <head n="4.4.7.2." xml:id="head_josomcp3q4">Orte</head>
-                                    <p xml:id="p_fcsajpfq934">Bei Orten wird im <att>ref</att>-Attribut auf den <ref target="https://www.getty.edu/research/tools/vocabularies/tgn/">
-                                        Getty Thesaurus of Geographic Names® Online</ref>
-                                        und <q type="optional"/> auf die <ref target="http://www.dnb.de/gnd">GND</ref> referenziert. 
+                                    <head n="4.3.3.2." xml:id="head_josomcp3q4">Orte</head>
+                                    <p xml:id="p_fcsajpfq934">Bei Orten wird im <att>ref</att>-Attribut auf den 
+                                        <ref target="https://www.getty.edu/research/tools/vocabularies/tgn/">Getty Thesaurus of Geographic Names® Online</ref>
+                                        und <q type="optional"/> auf die 
+                                        <ref target="http://www.dnb.de/gnd">GND</ref> 
+                                        referenziert. 
                                         Im <att>key</att>-Attribut wird der bei GETTY vorgeschlagene normierte Ort eingetragen, 
                                         als sog. fallback-Lösung, sollte der Getty-Server einmal nicht erreichbar sein.</p>
                                     <egXML xmlns="http://www.tei-c.org/ns/Examples">
@@ -1697,11 +1757,12 @@
                             </div>
                         </div>
                         <div type="section" xml:id="de_Bibl">
-                            <head n="4.5." xml:id="head_cw2453grf3">Literaturangaben</head>
-                            <p xml:id="p_ser53409c34">Im Text vorkommende Zitate und Literaturangaben werden durch das
-                                    <gi>bibl</gi>-Element ausgezeichnet. In dessen
-                                    <att>sortKey</att>-Attribut wird ein das zitierte Werk
-                                identifizierendes Kürzel aus Autorenname, Trennzeichen <q>_</q> und
+                            <head n="4.4." xml:id="head_cw2453grf3">Literaturangaben</head>
+                            <p xml:id="p_ser53409c34">Im Text vorkommende Zitate bzw. Angaben <hi rendition="#it">externer</hi> (d.h. nicht in der Quellensammlung 
+                                vorhandener) Literatur werden durch das
+                                    <gi>bibl</gi>-Element ausgezeichnet (für Zitate/Angaben von Werken der Quellensammlung siehe hingegen <ref target="#Werke">Werke</ref>). Im
+                                    <att>sortKey</att>-Attribut von <gi>bibl</gi> wird ein das zitierte Werk
+                                identifizierendes Kürzel aus Autorenname, Trennzeichen <code>_</code> und
                                 Kurztitel eingetragen. Das <gi>bibl</gi>-Element enthält in der
                                 Regel weitere Unterelemente wie <gi>author</gi> und
                                 <gi>title</gi>.</p>
@@ -1720,8 +1781,9 @@
                     <div type="chapter" xml:id="de_Header">
                         <head n="5." xml:id="head_oijsidfhoercr">Metadaten im Dateikopf</head>
                         <p xml:id="p_deluohf324">Im <gi>teiHeader</gi> der Werke werden stets identische Angaben über <gi>xi:include</gi> 
-                            Anweisungen generiert. Diese werden aus der <ref target="W_Head_general.xml">
-                                Dokumentationsdatei</ref> bezogen. Hierzu zählen folgende Statements des <gi>teiHeader</gi>s:<list>
+                            Anweisungen generiert. Diese werden über <gi>xi:include</gi> aus der <ref target="W_Head_general.xml">
+                                Dokumentationsdatei zu den TEI-Metadaten des Projekts</ref> bezogen. Hierzu zählen folgende Statements des <gi>teiHeader</gi>s:<list>
+                                <!-- TODO: add sth. to the following, specify it more precisely? -->
                                 <item xml:id="item_nlcesp987f32d">
                                     <gi>editionStmt</gi>
                                 </item>
@@ -1734,29 +1796,32 @@
                             </list>
                         </p>
                         <p xml:id="p_öljewlihoiewrfr">Innerhalb der Dokumentationsdatei werden die für die <gi>charDecl</gi> verwendeten Sonderzeichen wiederum über <gi>xi:include</gi>
-                            aus der Datei <ref target="Sonderzeichen.xml">Sonderzeichen.xml</ref> geholt.</p>
-                        <p xml:id="p_fleiuhofdcw">Gegenüber den generisch für alle Werke geltenden Angaben werden folgende Daten auf Werksebene ausgezeichnet:
+                            aus der 
+                            <ref target="https://files.salamanca.school/Sonderzeichen.xml">Sonderzeichen-TEI-Datei</ref> 
+                            eingebunden.</p>
+                        <p xml:id="p_fleiuhofdcw">Gegenüber den generisch für alle Werke geltenden Angaben (s.o.) werden folgende Daten auf Werksebene ausgezeichnet:
                             <list>
                                 <item xml:id="item_ncoierhoq334">
                                     <ref target="http://www.tei-c.org/release/doc/tei-p5-doc/de/html/ref-titleStmt.html">
                                         <gi>
                                             titleStmt
                                         </gi>
-                                    </ref> "Angaben zum Titel eines Werks und zu den für seinen Inhalt Verantwortlichen" (TEI Guidelines)
+                                    </ref> " (...) umfasst Angaben zum Titel eines Werks und zu den für seinen Inhalt Verantwortlichen" (TEI Guidelines)
                                 </item>
                                 <item xml:id="item_lnicearho243f">
                                     <ref target="http://www.tei-c.org/release/doc/tei-p5-doc/de/html/ref-sourceDesc.html">
                                         <gi>
                                             sourceDesc
                                         </gi>
-                                    </ref> "(...) beschreibt den (die) Quelltext(e), von dem (denen) der elektronische Text abstammt oder erzeugt wurde." (TEI Guidelines)
+                                    </ref> "(...) beschreibt die Quelle, von der sich der elektronische Text ableitet" (TEI Guidelines)
                                 </item>
                                 <item xml:id="item_kjoi08u3f4">
                                     <ref target="http://www.tei-c.org/release/doc/tei-p5-doc/de/html/ref-revisionDesc.html">
                                         <gi>
                                             revisionDesc
                                         </gi>
-                                    </ref> "(...) alle Revisionsschritte, die an der Datei vorgenommen wurden (...)." (TEI Guidelines). Hierzu auch der Abschnitt <ref target="#status">Bearbeitungsstatus</ref>
+                                    </ref> "(...) dokumentiert die Änderungen, die an der Datei vorgenommen wurden" (TEI Guidelines). Hierzu auch der Abschnitt 
+                                    <ref target="#status">Bearbeitungsstatus</ref>
                                 </item>
                             </list>
                         </p>
@@ -1815,12 +1880,16 @@
                                 </sourceDesc>
                              ]]></egXML>
                             <p xml:id="p_faaffwsff">Die bibliographische Beschreibung orientiert sich beim Hauptsachtitel (<gi>title</gi>
-                                <gi>type</gi>="main") an der Richtlinie 
-                                <ref target="http://www.gbv.de/bibliotheken/verbundbibliotheken/02Verbund/01Erschliessung/02Richtlinien/01KatRicht/sondadr.pdf">
-                                Alte Drucke</ref> der Verbundzentrale des GBV (VZG) (S. 6-7) sowie analog dazu an den <ref target="http://aad.gbv.de/empfehlung/m_standard-n.htm#biblbeschreib">Mindestanforderungen
-                                für die autoptische Katalogisierung Alter Drucke (AAD)</ref>. Wie das Beispiel zeigt, werden 
-                                neben dem Hauptsachtitel ein einschlägiger zitierfähiger Kurztitel sowie ein Ansetzungssachtiel vergeben. <ref target="#Autoren">Autoren</ref> und <ref target="#Orte">Orte</ref> werden gemäß der 
-                                hier vorliegenden Richtlinien behandelt.</p>
+                                <code>type="main"</code>) an der Richtlinie 
+                                <ref target="http://www.gbv.de/bibliotheken/verbundbibliotheken/02Verbund/01Erschliessung/02Richtlinien/01KatRicht/sondadr.pdf">Alte Drucke</ref> 
+                                der Verbundzentrale des GBV (VZG) (S. 6-7) sowie analog dazu an den 
+                                <ref target="http://aad.gbv.de/empfehlung/m_standard-n.htm#biblbeschreib">Mindestanforderungen für die autoptische Katalogisierung Alter Drucke (AAD)</ref>. 
+                                Wie das Beispiel zeigt, werden 
+                                neben dem Hauptsachtitel ein einschlägiger zitierfähiger Kurztitel sowie ein Ansetzungssachtiel vergeben. 
+                                <ref target="#Autoren">Autoren</ref> 
+                                und 
+                                <ref target="#Orte">Orte</ref> 
+                                werden gemäß der hier vorliegenden Richtlinien behandelt.</p>
                             <p xml:id="p_dadrweas">Bei den Angaben zur verwendeten Ausgabe gibt es folgende Besonderheit: Wenn die digitalisierte Ausgabe nicht der Erstausgabe entspricht, wird ein <gi>publisher</gi>-
                                 Element mit dem <gi>n</gi>-Attributwert <gi>thisEd</gi> ergänzt. Falls eine andere als die Erstausgabe verwendet wird, werden so die Angaben beider Ausgaben festgehalten und angezeigt.</p>
                             <p xml:id="p_arfwwrwr">Ähnlich verhält es sich bei Datensätzen mehrbändiger Werke:</p>
@@ -1840,43 +1909,27 @@
                              ]]></egXML>
                             <p xml:id="p_sasrsdfgh">Sollte die verwendete digitaliserte Reihe nicht diejenige sein, welche die Erstausgaben enhält, wird dem Element <gi>date</gi> der <gi>type</gi>- Attributwert<gi>summaryFirstEd</gi> das 
                             Element <gi>date</gi> der <gi>type</gi>- Attributwert<gi>summaryThisEd</gi>    
-                            hinzugefügt. So wird aus der Datei ersichtlich, welche verwendeten Bände in der Reihe benutzt werden und, ob die Bände der erstveröffentlichen Ausgabe der Reihe entsprechen.</p>
-                            <p xml:id="p_saaewtgd">Neben den Angaben zum Impressum (Drucker, Ort und Erscheinungsjahr), werden zusätzlich die Institution, welche die Vorlage des Digitalisats besitzt sowie ein Link zum Katalogisat dieser 
-                            Vorlage bereitgestellt. Sollten Seiten in der Vorlage fehlen, so werden diese substituiert. Die Hinzufügungen fremder Seiten und deren Herkunft werden in der <gi>sourceDesc</gi> in Form einer Liste dokumentiert.</p>
-                        </div>
-                    </div>
-                    <div type="chapter" xml:id="de_Downloads">
-                        <head xml:id="h_dfafafaf" n="6.">Downloads</head>
-                        <div xml:id="aaferfe" type="section">
-                            <head xml:id="dffdfsd" n="6.1.">Download Material</head>
-                            <p xml:id="p_hrrhrdsgv">Komplette Übersicht der als Download verfügbaren Materialien:</p>
-                            <list>
-                                <item xml:id="item_poi98098">
-                                    <ref target="http://files.salamanca.school/SvSal_txt.xml">.odd</ref> (All-In-One xml Definition)</item>
-                                <item xml:id="item_o79q3w1">
-                                    <ref target="http://files.salamanca.school/SvSal_txt_doc.docx">.docx</ref> (Schema-Dokumentation)</item>
-                                <item xml:id="item_fcwq43q1dwq">
-                                    <ref target="http://files.salamanca.school/SvSal_txt.rng">.rng</ref> (Schema im RELAX NG Format)</item>
-                                <item xml:id="item_oi79qdfs3w1">
-                                    <ref target="http://files.salamanca.school/W_Head_general.xml">.xml</ref> (Diese Dokumentationsdatei)</item>
-                                <item xml:id="item_fcwq43qf13q">
-                                    <ref target="http://files.salamanca.school/Sonderzeichen.xml">.xml</ref> (Übersicht der verwendeten Sonderzeichen)</item>
-                            </list>
+                            hinzugefügt. So wird aus der Datei ersichtlich, welche verwendeten Bände in der Reihe benutzt werden und 
+                            ob die Bände der erstveröffentlichen Ausgabe der Reihe entsprechen.</p>
+                            <p xml:id="p_saaewtgd">Neben den Angaben zum Impressum (Drucker, Ort und Erscheinungsjahr) werden zusätzlich die Institution, 
+                                welche die Vorlage des Digitalisats besitzt, sowie ein Link zum Katalogisat dieser 
+                            Vorlage bereitgestellt. Sollten Seiten in der Vorlage fehlen, so werden diese substituiert. 
+                            Die Hinzufügungen fremder Seiten und deren Herkunft werden in der <gi>sourceDesc</gi> in Form einer Liste dokumentiert.</p>
                         </div>
                     </div>
                 </div>
-            <div type="part" xml:lang="en" xml:id="guidelines-en">
+                <div type="part" xml:lang="en" xml:id="guidelines-en">
                 <head xml:id="head_mojepf3f4">Edition Guidelines</head>
                 <p xml:id="p_niewrcpq34">As yet our Edition Guidelines are available <ref target="guidelines.html?lang=de" type="url">in German</ref> only. For questions, please contact us at <ref target="mailto:info.salamanca@adwmainz.de">info.salamanca(at)adwmainz.de</ref>.</p>
-                <p xml:id="p_ljkoijizhzuqw3">Ingo Caesar, Andreas Wagner - Date: 02.2014</p>
+                <p xml:id="p_ljkoijizhzuqw3">David Glück, Andreas Wagner - Date: 05.2018</p>
                 <!--<div type="chapter" xml:id="basics">
                     <head xml:id="head_mewrcpih334f32">Editions Guidelines</head>
                 </div>-->
             </div>
             <div type="part" xml:lang="es" xml:id="guidelines-es">
                 <head xml:id="head_kjoepvjpqv">Directrices de edición para la redacción de las fuentes en la Colección Digital</head>
-                <p xml:id="p_jöpohecp4">En el momento hay solo la <ref target="guidelines.html?lang=de" type="url">versión alemana</ref> de las directrices de edición para las obras en la Colección Digital de Fuentes. Si tiene alguna duda, no hesite a contactarnos: <ref target="mailto:info.salamanca@adwmainz.de">info.salamanca(at)adwmainz.de</ref>.</p>
-                <p xml:id="p_jerq3wreqe">Ingo Caesar, Andreas Wagner - Fecha de actualización: 02.2014</p>
+                <p xml:id="p_jöpohecp4">En este momento solamente está disponible la <ref target="guidelines.html?lang=de" type="url">versión alemana</ref> de las directrices de edición para las obras en la Colección Digital de Fuentes. Si tiene alguna duda, no hesite a contactarnos: <ref target="mailto:info.salamanca@adwmainz.de">info.salamanca(at)adwmainz.de</ref>.</p>
+                <p xml:id="p_jerq3wreqe">David Glück, Andreas Wagner - Fecha de actualización: 05.2018</p>
                <!-- <div type="chapter" xml:id="esencial">
                     <head xml:id="head_drfeasas">Directrices de edición</head>
                 </div>-->
