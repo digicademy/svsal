@@ -157,7 +157,7 @@ return
 (: *** AW: Brauchen wir das noch? Wir haben keine vertraulichen Credentials mehr und die Berechtigungen kann man doch durch die "File"-Berechtigungen auf admin.xql
    ***     und den html-Dateien regeln.
    *** :)
-    else if (matches($exist:resource, "(admin.html)|(admin-svn.html)|(render.html)|(renderTheRest.html)|(createLists.html)|(sphinx-admin.xql)|(rdf-admin.xql)")) then
+    else if (matches($exist:resource, "(admin.html)|(admin-svn.html)|(render.html)|(renderTheRest.html)|(createLists.html)|(sphinx-admin.xql)|(rdf-admin.xql)|(iiif-admin.xql)")) then
         let $debug          := if ($config:debug = ("trace", "info")) then console:log("Admin page requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
         (: For now, we don't use net:forward here since we need a nested view/forwarding. :)
         return
@@ -228,7 +228,7 @@ return
         else if (starts-with($exist:path, "/lod/")) then
             let $debug1         := if ($config:debug = ("trace", "info")) then console:log("XTriples requested: " || $net:forwardedForServername || $exist:path || $parameterString || " ...") else ()
             return
-                if ($exist:path = ("/lod/createConfig.xql", "/lod/extract.xql", "/lod/xtriples.html", "/lod/changelog.html", "/lod/documentation.html", "/lod/examples.html")) then
+                if ($exist:path = ("/lod/createConfig.xql", "/lod/xtriples.html", "/lod/changelog.html", "/lod/documentation.html", "/lod/examples.html")) then
                     net:forward('/services' || $exist:path, $net-vars)
                 else ()
 
@@ -334,7 +334,7 @@ return
                     let $debug2       := if ($config:debug = ("trace", "info")) then console:log("Html is acceptable. Load metadata from " || $config:rdf-root || '/' || $work || '.rdf' || " ...") else ()
                     let $metadata     := doc($config:rdf-root || '/' || $work || '.rdf')
                     let $debug3       := if ($config:debug = ("trace", "info")) then console:log("Retrieving $metadata//rdf:Description[@rdf:about = $reqResource]/rdfs:seeAlso[1]/@rdf:resource[contains(., '.html')]") else ()
-                    let $resolvedPath := string(($metadata//*[ends-with(@rdf:about, $reqResource)]/rdfs:seeAlso[1]/@rdf:resource[contains(., ".html")])[1])
+                    let $resolvedPath := string(($metadata//*[@rdf:about eq $reqResource]/rdfs:seeAlso[1]/@rdf:resource[contains(., ".html")])[1])
                     let $pathname     := if (contains($resolvedPath, '?')) then
                                             substring-before($resolvedPath, '?')
                                          else if (contains($resolvedPath, '#')) then
