@@ -11,13 +11,14 @@ import module namespace templates="http://exist-db.org/xquery/templates" ;
  : The following modules provide functions which will be called by the 
  : templating.
  :)
-import module namespace config = "http://xtriples.spatialhumanities.de/config" at "config.xqm";
+import module namespace xconfig = "http://xtriples.spatialhumanities.de/config" at "xconfig.xqm"; 
+(: import module namespace config      = "http://salamanca/config" at "../../../modules/config.xqm"; :)
 import module namespace app = "http://xtriples.spatialhumanities.de/templates" at "app.xql";
 
 declare option exist:serialize "method=html5 media-type=text/html enforce-xhtml=yes";
 
 let $config := map {
-    $templates:CONFIG_APP_ROOT := $config:app-root,
+    $templates:CONFIG_APP_ROOT := $xconfig:app-root,
     $templates:CONFIG_STOP_ON_ERROR := true()
 }
 (:
