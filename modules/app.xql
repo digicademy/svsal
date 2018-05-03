@@ -2095,7 +2095,6 @@ let $debug := console:log("Todo: Fix image-url generating work-around in app:bib
                                     else
                                         concat('work.html?wid=', $wid)
 
-
             let $output         := 
                 <div class="row"><hr/>
                     <div class="col-md-3">
@@ -2176,6 +2175,7 @@ let $debug := console:log("Todo: Fix image-url generating work-around in app:bib
                     </div>
                 </div>
         order by $volNumber ascending
+let $debug := console:log("Debug: " || serialize($output))
         return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
         }; 
 
