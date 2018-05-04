@@ -478,7 +478,7 @@
                                 <p xml:id="p_34jfsdf8">Bei der Aufbereitung und Edition durchläuft ein Text grundsätzlich neun Bearbeitungsstatus, wobei 
                                 die Abfolge der im folgenden beschriebenen Status nicht notwendigerweise sequenziell ist; beispielsweise kann ein Text im Rahmen 
                                 fachwissenschaftlicher Annotationen und Korrekturen mehrfach 
-                                die Schritte <val>h_revised</val> und <val>g_enriched_approved</val> durchlaufen.</p>
+                                die Schritte <val>h_revised</val> und <val>g_revised_approved</val> durchlaufen.</p>
                                 <list type="dict">
                                 <item xml:id="item_mewrper">
                                     <att>a_raw</att> Der im Double-Keying erfasste Text wurde in eine einfache TEI-Datei umgewandelt, 
@@ -545,7 +545,7 @@
                                     <change who="#Ed2" status="f_enriched">Enrichment done, pending four-eye cross-check.</change>
                                     <change who="#Ed2" status="e_emended_unenriched">Enrichment (entity annotation, linking, etc.) in process.</change>
                                     <change who="#Ed2" status="d_hyph_approved">Hyphenation, correction and abbr. expansion suggestions approved and implemented.</change>
-                                    <change who="#Ed1" status="c_hyph_proposed">Hyphenation, correction and abbr. expansion suggestions.</change>
+                                    <change who="#Ed1" status="c_hyph_proposed">Hyphenation, correction and abbr. expansion suggestions, first version that is viewable by the public.</change>
                                     <change who="#Ed2" status="b_cleared">Uncertainty marks resolved.</change>
                                     <change who="#Ed1" status="a_raw">Just converted to TEI.</change>
                                 </listChange>
