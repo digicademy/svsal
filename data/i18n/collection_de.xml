@@ -57,5 +57,8 @@
     <!-- dictionary -->
     <msg key="dictUnderConstruction">Hier entsteht das Wörterbuch der juristisch-politischen Sprache der Schule von Salamanca: ca. 200 Artikel mit lateinischen und spanischen Lemmata, den Quellen selbst entnommen. 
         Die Artikel werden voraussichtlich ab 2019 sukzessive veröffentlicht.</msg>
+ 
+    <!-- project.html -->
+    <msg key="guidelinesDecl">Beschreibung der Editionsprinzipien und der Textkodierung.</msg>
     
 </catalogue>
