@@ -48,22 +48,20 @@
                 </author>
             </titleStmt>
 
-<!-- Angaben zu unserer digitalen Edition -->
-            <editionStmt xml:id="editionStmt" xml:lang="de">
-               <!-- <edition xml:lang="de">Die Transkription der Texte wurde unter Verwendung des
-                    <ref type="url" target="http://files.salamanca.school/SvSal_txt.rng">"SvSal-Schemas für Werke"</ref> angefertigt. </edition>-->
+            <!-- Information about the electronic edition -->
+            <editionStmt xml:id="editionStmt" xml:lang="en">
                 <edition>[Electronic ed.]</edition>
                 <respStmt>
-                    <resp>Erstellt von</resp>
+                    <resp>Created by</resp>
                     <persName ref="#DG">David Glück</persName>
                     <persName ref="#AW">Andreas Wagner</persName>
                     <persName ref="#IC">Ingo Caesar</persName>
-                    <orgName>Akademie der Wissenschaften und der Literatur Mainz
+                    <orgName>Akademie der Wissenschaften und der Literatur | Mainz
                         <ref type="url" target="http://www.adwmainz.de"/>
                     </orgName>
                 </respStmt>
                 <funder>
-                    <orgName>Akademie der Wissenschaften und der Literatur Mainz</orgName>
+                    <orgName>Akademie der Wissenschaften und der Literatur | Mainz</orgName>
                     <ref type="url" target="http://www.adwmainz.de"/>
                 </funder>
             </editionStmt>
@@ -76,30 +74,38 @@
                 </publisher>
                 <distributor>
                     <orgName>Akademie der Wissenschaften und der Literatur, Mainz</orgName>,
-                    <orgName>Max Planck Institut für europäische Rechtsgeschichte</orgName>,
+                    <orgName>Max-Planck-Institut für europäische Rechtsgeschichte</orgName>,
                     <orgName>Goethe-Universität Frankfurt/Main</orgName>
                     <email>info@salamanca.adwmainz.de</email>
                 </distributor>
                 <pubPlace role="digitzedEd">
-                    Frankfurt/Main (<ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>)
+                    <placeName ref="getty:7005293">Frankfurt/Main</placeName> (<ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>)
                 </pubPlace>
                 <date type="digitizedEd" when="2013">2013</date>
-<!-- Angaben zum copyright -->
                 <availability>
                     <licence target="https://creativecommons.org/licenses/by/4.0">
-                        <p xml:id="p_wc2c454">Dieses Werk bzw. dieser Inhalt wurde digitalisiert durch die Akademie der
-                              Wissenschaften und der Literatur, Mainz, und steht unter einer Creative
-                              Commons Lizenz: Namensnennung 4.0 International (CC BY 4.0).</p>
+                        <p xml:id="p_wc2c454" xml:lang="de">Dieses Werk bzw. dieser Inhalt wurde digitalisiert durch die <ref target="http://www.adwmainz.de">Akademie der
+                            Wissenschaften und der Literatur, Mainz</ref>, und steht unter einer <ref target="https://creativecommons.org/licenses/by/4.0/deed.de">Creative
+                              Commons Lizenz: Namensnennung 4.0 International (CC BY 4.0)</ref>.</p>
+                        <p xml:id="p_ffjaäöskfd" xml:lang="en">This work, or content, respectively, was digitized by the 
+                            <ref target="http://www.adwmainz.de">Akademie der  Wissenschaften und der Literatur, Mainz</ref>,
+                        and is licensed under the terms of a 
+                            <ref target="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International (CC BY 4.0)</ref>.</p>
+                        <p xml:id="p_7rlkjdf8sd" xml:lang="es">Esta obra respectivamente este contenido ha sido digitalizado por la <ref target="http://www.adwmainz.de">Akademie der
+                            Wissenschaften und der Literatur, Mainz</ref> y es autorizado bajo una licencia de 
+                            <ref target="https://creativecommons.org/licenses/by/4.0/deed.es"> Creative Commons Reconocimiento 4.0 Internacional (CC BY 4.0)</ref></p>
                     </licence>
                 </availability>
             </publicationStmt>
             <seriesStmt xml:id="seriesStmt">
-                <title level="s" xml:lang="de">Die Schule von Salamanca: eine digitale Quellensammlung und ein Wörterbuch ihrer juristisch-politischen Sprache.</title>
+                <title level="s" xml:lang="de">Die Schule von Salamanca: Eine digitale Quellensammlung und ein Wörterbuch ihrer juristisch-politischen Sprache.</title>
                 <title level="s" xml:lang="en">The School of Salamanca: A Digital Collection of Sources and a Dictionary of its Juridical-Political Language.</title>
+                <title level="s" xml:lang="es">La Escuela de Salamanca: Una Colección Digital de Fuentes y un Diccionario de su Lenguaje Jurídico-Político.</title>
             </seriesStmt>
             <sourceDesc>
-                <p xml:id="p_cq23d3" xml:lang="de">Born digital, erstellt am 2013-08-13, um 12:42 Uhr.
-                Zuletzt aktualisiert am 2018-05-02, um 11:10 Uhr.</p>
+                <p xml:id="p_cq23d3" xml:lang="de">Born digital, erstellt am <date when="2013-08-13">13.08.2013</date>, um 12:42 Uhr.</p>
+                <p xml:id="p_cq2d63" xml:lang="en">Born digital, created on <date when="2013-08-13">13 August 2013</date>, at 1:42pm.</p>
+                <p xml:id="p_cq2d73" xml:lang="es">Nativamente digital, creado el <date when="2013-08-13">13 de agosto 2013</date> a las 12:42.</p>
             </sourceDesc>
         </fileDesc>
 
@@ -328,17 +334,18 @@
 -->
             </listPrefixDef>
         </encodingDesc>
-        <revisionDesc status="e_unrevised">
+        <revisionDesc status="e_emended_unenriched">
             <listChange>
-                <change who="#AW" when="2018-05-02" status="g_revised_approved">Add #DG to authors and respStmt; change license to CC-By 4.0; remove cRefPatterns;
+                <change who="#DG" when="2018-05-04" status="g_enriched_approved">Adjusted status labels (in revisionDesc) according to new label schema</change>
+                <change who="#AW" when="2018-05-02" status="g_enriched_approved">Add #DG to authors and respStmt; change license to CC-By 4.0; remove cRefPatterns;
                                                                                 fix prefixDef (to take account of svsal-data package).</change>
-                <change who="#AW" when="2016-03-03" status="g_revised_approved">Fix PrefixDefs for public URIs</change>
-                <change who="#IC" when="2014-11-27" status="g_revised_approved">Final preliminary Revision.</change>
-                <change who="#IC" when="2014-11-21" status="e_unrevised">Sonderzeichen erweitert, Fehler im Text korrigiert. Nummerierung, @type=chapter als übergeordnete DIVS, @type=section jeweils untergeordnet.</change>
-                <change who="#AW" when="2014-10-13" status="e_unrevised">xi:include von Sonderzeichen wieder hergestellt; Autoren aktualisiert</change>
-                <change who="#AW" when="2014-05-26" status="e_unrevised">linegroups kursiv by default</change>
-                <change who="#AW" when="2014-03-25" status="e_unrevised">Editionsrichtlinien im body überarbeitet</change>
-                <change who="#AW" when="2014-02-03" status="e_unrevised">Präfixe gefixt, Namen nachgeschlagen</change>
+                <change who="#AW" when="2016-03-03" status="g_enriched_approved">Fix PrefixDefs for public URIs</change>
+                <change who="#IC" when="2014-11-27" status="g_enriched_approved">Final preliminary Revision.</change>
+                <change who="#IC" when="2014-11-21" status="e_emended_unenriched">Sonderzeichen erweitert, Fehler im Text korrigiert. Nummerierung, @type=chapter als übergeordnete DIVS, @type=section jeweils untergeordnet.</change>
+                <change who="#AW" when="2014-10-13" status="e_emended_unenriched">xi:include von Sonderzeichen wieder hergestellt; Autoren aktualisiert</change>
+                <change who="#AW" when="2014-05-26" status="e_emended_unenriched">linegroups kursiv by default</change>
+                <change who="#AW" when="2014-03-25" status="e_emended_unenriched">Editionsrichtlinien im body überarbeitet</change>
+                <change who="#AW" when="2014-02-03" status="e_emended_unenriched">Präfixe gefixt, Namen nachgeschlagen</change>
             </listChange>
         </revisionDesc>
     </teiHeader>
@@ -471,7 +478,7 @@
                                 <p xml:id="p_34jfsdf8">Bei der Aufbereitung und Edition durchläuft ein Text grundsätzlich neun Bearbeitungsstatus, wobei 
                                 die Abfolge der im folgenden beschriebenen Status nicht notwendigerweise sequenziell ist; beispielsweise kann ein Text im Rahmen 
                                 fachwissenschaftlicher Annotationen und Korrekturen mehrfach 
-                                die Schritte <val>h_revised</val> und <val>g_revised_approved</val> durchlaufen.</p>
+                                die Schritte <val>h_revised</val> und <val>g_enriched_approved</val> durchlaufen.</p>
                                 <list type="dict">
                                 <item xml:id="item_mewrper">
                                     <att>a_raw</att> Der im Double-Keying erfasste Text wurde in eine einfache TEI-Datei umgewandelt, 
@@ -538,7 +545,7 @@
                                     <change who="#Ed2" status="f_enriched">Enrichment done, pending four-eye cross-check.</change>
                                     <change who="#Ed2" status="e_emended_unenriched">Enrichment (entity annotation, linking, etc.) in process.</change>
                                     <change who="#Ed2" status="d_hyph_approved">Hyphenation, correction and abbr. expansion suggestions approved and implemented.</change>
-                                    <change who="#Ed1" status="c_hyph_proposed">Hyphenation, correction and abbr. expansion suggestions, first version that is viewable by the public.</change>
+                                    <change who="#Ed1" status="c_hyph_proposed">Hyphenation, correction and abbr. expansion suggestions.</change>
                                     <change who="#Ed2" status="b_cleared">Uncertainty marks resolved.</change>
                                     <change who="#Ed1" status="a_raw">Just converted to TEI.</change>
                                 </listChange>
@@ -599,7 +606,7 @@
                                 </list>
                             </div>
                             <div type="section" xml:id="Sonderzeichen">
-                                <head n="3.2.3." xml:id="head_öpijpij">Sonderzeichen</head>
+                                <head n="3.2.2." xml:id="head_öpijpij">Sonderzeichen</head>
                                 <p xml:id="p_fspokp980982">Sonderzeichen werden, so weit möglich, als Unicode-Zeichen
                                     erfasst. Dabei werden Zeichen der ersten beiden
                                     Unicode-Codeblöcke <q>Basis-Lateinisch</q>
@@ -739,7 +746,7 @@
                                 </p>
                                 <!-- TODO: remove specialchars images from the database? -->
                                 <div type="section" xml:id="codecharts">
-                                    <head n="3.2.3.1." xml:id="head_lkyuxhfpiuq">Sonderzeichen-Dokumentation</head>
+                                    <head n="3.2.2.1." xml:id="head_lkyuxhfpiuq">Sonderzeichen-Dokumentation</head>
                                     <p xml:id="p_lalshfoasdn">Sämtliche im Rahmen der digitalen Edition bisher erfassten Sonderzeichen und deren jeweilige Kodierung sind 
                                         im <ref target="http://facs.salamanca.school/docs/transcription/sal-char-encoding-table.pdf">Encoding Table of (Non-Standard) Characters</ref> (engl.) verzeichnet.</p>
                                     <p xml:id="p_ewrt897098fd24">Die oben genannten XML-Deklarationen zu allen bisher erfassten Sonderzeichen 
@@ -755,9 +762,9 @@
                                 </div>
                             </div>
                             <div xml:id="NummerierungsNormalisierung" type="section">
-                                <head n="3.2.4." xml:id="head_aslkdasd">Nummerierungen</head>
+                                <head n="3.2.3." xml:id="head_aslkdasd">Nummerierungen</head>
                                 <div xml:id="Seitenzahlen" type="section">
-                                    <head n="3.2.4.1." xml:id="head_aslkfjaf">Paginierung</head>
+                                    <head n="3.2.3.1." xml:id="head_aslkfjaf">Paginierung</head>
                                     <p xml:id="p_pofgdgfkj">Seitenzahlen bzw. Foliozahlen werden im Attribut <att>n</att> des <gi>pb</gi>-Elements 
                                     erfasst (siehe auch <ref target="#head_uoipg3q4v4w">Seiten-, Spalten- und Zeilenumbrüche</ref>). Dabei werden grundsätzlich 
                                         die Ziffern auf der jeweiligen Seite der originalen Vorlage übernommen. Sind 
@@ -787,7 +794,7 @@
                                         wieder bei "i" beginnt) der Präfix "b" (für "back matter") hinzugefügt wird.</p>
                                 </div>
                                 <div xml:id="de_spaltenzaehlung" type="section">
-                                    <head xml:id="head_fkasjf879" n="3.2.4.2">Spaltenzählung</head>
+                                    <head xml:id="head_fkasjf879" n="3.2.3.2">Spaltenzählung</head>
                                     <p xml:id="p_fdf78d0f">Falls im Original vorhanden, werden Spaltenzahlen – analog zu 
                                         <ref target="#Seitenzahlen">Seitenzahlen</ref> 
                                         – im <att>n</att>-Attribut von <gi>cb</gi> 
@@ -796,7 +803,7 @@
                                     wird auch im TEI-XML keine hinzugefügt.</p>
                                 </div>
                                 <div type="section" xml:id="Marginalziffern">
-                                    <head n="3.2.4.3." xml:id="head_asfljasf">Marginalziffern</head>
+                                    <head n="3.2.3.3." xml:id="head_asfljasf">Marginalziffern</head>
                                     <p xml:id="p_iubnvdsfk"> Durch Marginalziffern, *-, †-Symbole o.ä. markierte Übergänge der argumentativen 
                                         Sinn-Einheiten werden durch <gi>milestone</gi>-Tags festgehalten (siehe 
                                         <ref target="#de_Absaetze">Typographische und argumentative Paragraphen</ref>
@@ -811,7 +818,7 @@
                                 </div>
                             </div>
                             <div xml:id="de_AbkKorr" type="section">
-                                <head xml:id="head_fslkf089" n="3.2.5.">Abkürzungen und Druckfehler</head>
+                                <head xml:id="head_fslkf089" n="3.2.4.">Abkürzungen und Druckfehler</head>
                                 <p xml:id="p_fds74503n">
                                     Abkürzungen und Druckfehler werden mithilfe des Elements <gi>choice</gi> aufgelöst und somit im TEI-XML dokumentiert (obwohl z.B. 
                                     in der konstituierten Leseansicht ausgeblendet). Diese Normalisierungen/Korrekturen werden stets tokenbasiert, also auf Wort-Ebene, und 
@@ -829,7 +836,7 @@
                                     die <att>xml:id</att> des Seitenumbruchs in der Originalversion verweist.
                                 </p>
                                 <div type="section" xml:id="de_Abkürzungen">
-                                    <head n="3.2.6." xml:id="head_ljdljdpfjpoij">Abkürzungen</head>
+                                    <head n="3.2.4.1." xml:id="head_ljdljdpfjpoij">Abkürzungen</head>
                                     <p xml:id="p_asfddwrq23">Abkürzungen werden durch <gi>abbr</gi> markiert und gemeinsam mit der
                                         durch <gi>expan</gi> markierten Expansion in ein
                                         <gi>choice</gi>-Element eingebettet.  Die oder der
@@ -858,7 +865,7 @@
                                          ]]></egXML>
                                 </div>
                                 <div type="section" xml:id="de_Korrekturen">
-                                    <head n="3.2.6." xml:id="head_pijijowaq">Korrekturen</head>
+                                    <head n="3.2.4.2." xml:id="head_pijijowaq">Korrekturen</head>
                                     <p xml:id="p_sdresesdr">Festgestellte Druckfehler werden durch die Elemente <gi>sic</gi> und
                                             <gi>corr</gi> innerhalb eines <gi>choice</gi>-Elements
                                         festgehalten:</p>
@@ -1286,7 +1293,6 @@
                                     <!-- TODO: bisherige Werke anpassen -->
                                 </div>
                             </div>
-                        </div>
                         </div>
                         <div xml:id="de_Verlinkung" type="section">
                             <head xml:id="head_flksdf8d7" n="4.2.">Identifizierung und Verlinkung von Texteinheiten</head>
@@ -1776,7 +1782,7 @@
                                  </bibl>
                                 ]]></egXML>
                         </div>
-                        
+                    </div>
                     </div>
                     <div type="chapter" xml:id="de_Header">
                         <head n="5." xml:id="head_oijsidfhoercr">Metadaten im Dateikopf</head>

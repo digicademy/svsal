@@ -374,31 +374,31 @@
                                     <desc>Just converted to TEI.</desc>
                                 </valItem>
                                 <valItem ident="b_cleared">
-                                    <desc>Uncertainty marks resolved (Ffm1 done).</desc>
+                                    <desc>Uncertainty marks resolved.</desc>
                                 </valItem>
                                 <valItem ident="c_hyph_proposed">
-                                    <desc>Hyphenation (and abbr. expansion) suggestions (Mz1 done).</desc>
+                                    <desc>Hyphenation, correction and abbr. expansion suggestions.</desc>
                                 </valItem>
                                 <valItem ident="d_hyph_approved">
-                                    <desc>Suggestions approved (Ffm2 done).</desc>
+                                    <desc>Hyphenation, correction and abbr. expansion suggestions approved and implemented.</desc>
                                 </valItem>
-                                <valItem ident="e_unrevised">
-                                    <desc>Enrichment (expansion/linking/entity annotation etc.) in process (in Ffm).</desc>
+                                <valItem ident="e_emended_unenriched">
+                                    <desc>Enrichment (entity annotation, linking, etc.) in process.</desc>
                                 </valItem>
-                                <valItem ident="f_revised_unreviewed">
-                                    <desc>Enrichment done, pending four-eye principle/cross-check.</desc>
+                                <valItem ident="f_enriched">
+                                    <desc>Enrichment done, pending four-eye cross-check.</desc>
                                 </valItem>
-                                <valItem ident="g_revised_approved">
-                                    <desc>Pending upload</desc>
+                                <valItem ident="g_enriched_approved">
+                                    <desc>Enrichment approved, work publicly and persistently released.</desc>
                                 </valItem>
-                                <valItem ident="h_uploaded">
-                                    <desc>Uploaded, in use by project authors</desc>
+                                <valItem ident="h_revised">
+                                    <desc>Further corrections/enrichment done, pending four-eye cross-check.</desc>
                                 </valItem>
-                                <valItem ident="i_cRefs">
-                                    <desc>Uploaded, canonical citation structures being tested</desc>
+                                <valItem ident="i_revised_approved">
+                                    <desc>Further corrections/enrichment approved, re-release.</desc>
                                 </valItem>
-                                <valItem ident="j_frozen">
-                                    <desc>Published and canonicized</desc>
+                                <valItem ident="z_final">
+                                    <desc>Final version for archival of project results.</desc>
                                 </valItem>
 <!--
                     <valItem ident="deprecated"/>
