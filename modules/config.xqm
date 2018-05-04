@@ -292,13 +292,12 @@ declare function config:app-header($node as node(), $model as map(*), $lang as x
                     <a href="works.html">
                     <span class="glyphicon glyphicon-file" aria-hidden="true"></span>&#160;
                     <i18n:text key="works">Werke</i18n:text></a></li> 
-                <!-- 
+                 
                     <li class="{if ( (contains(request:get-url(), 'dictionary')) or
                                  (contains(request:get-url(), 'lemma.'))        ) then 'active' else ()}">
                     <a href="dictionary.html">
                     <span class="glyphicon glyphicon-book" aria-hidden="true"></span>&#160;
                     <i18n:text key="dictionary">Wörterbuch</i18n:text></a></li> 
-                -->
                 <li class="{if ( (contains(request:get-url(), 'author.')) or
                                  (contains(request:get-url(), 'authors.'))      ) then 'active' else ()}">
                     <a href="authors.html">
