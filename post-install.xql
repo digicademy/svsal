@@ -18,7 +18,8 @@ declare variable $adminfiles        := ($target || '/admin.html',
                                         $target || '/collection.xconf',
                                         $target || '/controller.xql',
                                         $target || '/createLists.html',
-                                        $target || '/expath-pkg.xml',c
+                                        $target || '/expath-pkg.xml',
+                                        $target || '/iiif-admin.xql',
                                         $target || '/post-install.xql',
                                         $target || '/pre-install.xql',
                                         $target || '/rdf-admin.xql',
@@ -27,9 +28,7 @@ declare variable $adminfiles        := ($target || '/admin.html',
                                         $target || '/renderTheRest.html',
                                         $target || '/sphinx-admin.xql',
                                         $target || '/sphinx-out.html',
-                                        $target || '/sphinx-out.xql',
-                                        $target || '/svn-out.xql',
-                                        $target || '/sync-gdocs.xql' );
+                                        $target || '/sphinx-out.xql' );
 
 
 (: Define files and folders with special permissions :)

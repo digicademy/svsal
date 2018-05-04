@@ -10,7 +10,7 @@
         <mkdir dir="${build.dir}"/>
         <zip basedir="."
              destfile="${build.dir}/${project.app}-${project.version}.xar" 
-             excludes="${build.dir}/*,${build.dir},**/*.bak,html/**/*,html,snippets/**/*,snippets,temp/**/*,data-bak/**/*,data-bak,.svn/**/*,.svn"
+             excludes="${build.dir}/*,${build.dir},**/*.bak,html/**/*,html,snippets/**/*,snippets,temp/**/*,data-bak/**/*,data-bak,.svn/**/*,.svn,.gitignore"
         />
     </target>
     <target name="clean">
