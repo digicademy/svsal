@@ -639,7 +639,7 @@ return
                 $doc
         else if ($exist:resource eq 'sal-tei-corpus.zip') then
             let $debug      := if ($config:debug = "trace") then console:log ("TEI/XML corpus download requested: " || $net:forwardedForServername || $exist:path || ".") else ()
-            let $pathToZip := $config:data-root || '/sal-tei-corpus.zip'
+            let $pathToZip := $config:files-root || '/sal-tei-corpus.zip'
             return if (util:binary-doc-available($pathToZip)) then response:stream-binary(util:binary-doc($pathToZip), 'application/octet-stream', 'sal-tei-corpus.zip') else ()
             
         else ()
