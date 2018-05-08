@@ -21,37 +21,38 @@
                 <ref type="url" target="https://files.salamanca.school/SvSal_txt.rng">"SvSal-Schemas für Werke"</ref> angefertigt.
             </edition>
                 <respStmt>
-                    <resp>Erstellt von</resp>
+                    <resp>Created by</resp>
+                    <persName ref="#DG">David Glück</persName>
                     <persName ref="#AW">Andreas Wagner</persName>
                     <persName ref="#IC">Ingo Caesar</persName>
                 </respStmt>
                 <sponsor>
-                    <orgName>Akademie der Wissenschaften und der Literatur, Mainz</orgName>
+                    <orgName xml:lang="de">Akademie der Wissenschaften und der Literatur, Mainz</orgName>
                     <ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>
                 </sponsor>
                 <funder>
-                    <orgName>Akademie der Wissenschaften und der Literatur, Mainz</orgName>
+                    <orgName xml:lang="de">Akademie der Wissenschaften und der Literatur, Mainz</orgName>
                     <ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>
                 </funder>
             </editionStmt>
             <publicationStmt>
                 <publisher>
-                    <orgName>Akademie der Wissenschaften und der Literatur, Mainz</orgName>
+                    <orgName xml:lang="de">Akademie der Wissenschaften und der Literatur, Mainz</orgName>
                     <ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>
                 </publisher>
                 <distributor>
-                    <orgName>Akademie der Wissenschaften und der Literatur, Mainz</orgName>, <orgName>Max Planck Institut für europäische Rechtsgeschichte</orgName>, <orgName>Goethe-Universität Frankfurt/Main</orgName>
+                    <orgName xml:lang="de">Akademie der Wissenschaften und der Literatur, Mainz</orgName>, <orgName>Max Planck Institut für europäische Rechtsgeschichte</orgName>, <orgName>Goethe-Universität Frankfurt/Main</orgName>
                     <email>info@salamanca.adwmainz.de</email>
                 </distributor>
-                <pubPlace role="digitzedEd">
-            Frankfurt/Main (<ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>)
+                <pubPlace role="digitzedEd" xml:lang="en">
+            Frankfurt am Main, Germany (<ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>)
         </pubPlace>
                 <date type="digitizedEd" when="2013">2013</date>
 
-<!-- Angaben zum copyright -->
+    <!-- Copyright -->
                 <availability>
                     <licence target="http://creativecommons.org/licenses/by-nc-sa/3.0/">
-                        <p xml:id="p_löojpcn3qp3q4">Dieses Werk bzw. dieser Inhalt wurde digitalisiert durch die Akademie der
+                        <p xml:id="p_löojpcn3qp3q4" xml:lang="de">Dieses Werk bzw. dieser Inhalt wurde digitalisiert durch die Akademie der
                 Wissenschaften und der Literatur, Mainz, und steht unter einer Creative
                 Commons Lizenz: Namensnennung-NichtKommerziell-KeineBearbeitung 3.0 Unported.</p>
                     </licence>
@@ -63,10 +64,9 @@
             </sourceDesc>
         </fileDesc>
 
-<!-- Was wurde wie ausgezeichnet (XML-Schema, Richtlinien, Tags, Styles, Präfixe, ...) -->
         <encodingDesc>
 
-<!-- Beschreibung verwendeter Sonderzeichen -->
+<!-- Description of applied non-standard characters -->
             <appInfo>
                 <application ident="MUFI" version="3.0">
                     <label>MUFI character recommendation v. 3.0</label>
@@ -568,14 +568,15 @@
         </encodingDesc>
         <revisionDesc status="a_raw">
             <listChange>
-                <change who="#AW" when="2015-06-24" status="a_raw">Scharfes S und andere Glyphen unterhalb von x00ff wieder hinzugenommen (wegen Umschaltung dipl./konst. Ansicht).</change>
-                <change who="#AW" when="2014-03-27" status="a_raw">Mit Musterdeklaration aus W_Head_general angelegt</change>
+                <change who="#DG" when="2018-05-08" status="a_raw" xml:lang="en">Localize metadata.</change>
+                <change who="#AW" when="2015-06-24" status="a_raw" xml:lang="de">Scharfes S und andere Glyphen unterhalb von x00ff wieder hinzugenommen (wegen Umschaltung dipl./konst. Ansicht).</change>
+                <change who="#AW" when="2014-03-27" status="a_raw" xml:lang="de">Mit Musterdeklaration aus W_Head_general angelegt</change>
             </listChange>
         </revisionDesc>
     </teiHeader>
     <text type="technical" xml:id="completeWork">
         <body>
-            <p xml:id="p_joiweiursc45">This is just dummy text - the meat is in the header (TEI/teiHeader/encodingDesc/charDecl).</p>
+            <p xml:id="p_joiweiursc45" xml:lang="en">This is just dummy text - the meat is in the header (TEI/teiHeader/encodingDesc/charDecl).</p>
         </body>
     </text>
 </TEI>

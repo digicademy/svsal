@@ -50,44 +50,44 @@
 
             <!-- Information about the electronic edition -->
             <editionStmt xml:id="editionStmt" xml:lang="en">
-                <edition>[Electronic ed.]</edition>
+                <edition xml:lang="en">[Electronic Edition]</edition>
                 <respStmt>
-                    <resp>Created by</resp>
+                    <resp xml:lang="en">Technical development by</resp>
                     <persName ref="#DG">David Glück</persName>
                     <persName ref="#AW">Andreas Wagner</persName>
                     <persName ref="#IC">Ingo Caesar</persName>
-                    <orgName>Akademie der Wissenschaften und der Literatur | Mainz
+                    <orgName xml:lang="de">Akademie der Wissenschaften und der Literatur | Mainz
                         <ref type="url" target="http://www.adwmainz.de"/>
                     </orgName>
                 </respStmt>
                 <funder>
-                    <orgName>Akademie der Wissenschaften und der Literatur | Mainz</orgName>
+                    <orgName xml:lang="de">Akademie der Wissenschaften und der Literatur | Mainz</orgName>
                     <ref type="url" target="http://www.adwmainz.de"/>
                 </funder>
             </editionStmt>
 
-<!-- Förderer, Hersteller, Veröffentlichung der digitalen Ausgabe -->
+            <!-- Funder, producer, publisher of the digital version -->
             <publicationStmt xml:id="publicationStmt" xml:lang="de">
-                <publisher>
-                    <orgName>Akademie der Wissenschaften und der Literatur, Mainz</orgName>
+                <publisher xml:id="publicationStmt_publisher">
+                    <orgName xml:lang="de">Akademie der Wissenschaften und der Literatur, Mainz</orgName>
                     <ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>
                 </publisher>
-                <distributor>
-                    <orgName>Akademie der Wissenschaften und der Literatur, Mainz</orgName>,
-                    <orgName>Max-Planck-Institut für europäische Rechtsgeschichte</orgName>,
-                    <orgName>Goethe-Universität Frankfurt/Main</orgName>
+                <distributor xml:id="publicationStmt_distributor">
+                    <orgName xml:lang="de">Akademie der Wissenschaften und der Literatur, Mainz</orgName>,
+                    <orgName xml:lang="de">Max-Planck-Institut für europäische Rechtsgeschichte</orgName>,
+                    <orgName xml:lang="de">Goethe-Universität Frankfurt/Main</orgName>
                     <email>info@salamanca.adwmainz.de</email>
                 </distributor>
-                <pubPlace role="digitzedEd">
-                    <placeName ref="getty:7005293">Frankfurt/Main</placeName> (<ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>)
+                <pubPlace role="digitzedEd" xml:lang="en" xml:id="publicationStmt_pubPlace">
+                    Frankfurt am Main, Germany (<ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>)
                 </pubPlace>
                 <date type="digitizedEd" when="2013">2013</date>
-                <availability>
+                <availability xml:id="publicationStmt_availability">
                     <licence target="https://creativecommons.org/licenses/by/4.0">
                         <p xml:id="p_wc2c454" xml:lang="de">Dieses Werk bzw. dieser Inhalt wurde digitalisiert durch die <ref target="http://www.adwmainz.de">Akademie der
-                            Wissenschaften und der Literatur, Mainz</ref>, und steht unter einer <ref target="https://creativecommons.org/licenses/by/4.0/deed.de">Creative
+                            Wissenschaften und der Literatur, Mainz</ref> und steht unter einer <ref target="https://creativecommons.org/licenses/by/4.0/deed.de">Creative
                               Commons Lizenz: Namensnennung 4.0 International (CC BY 4.0)</ref>.</p>
-                        <p xml:id="p_ffjaäöskfd" xml:lang="en">This work, or content, respectively, was digitized by the 
+                        <p xml:id="p_ffjaäöskfd" xml:lang="en">This work or content, respectively, was digitized by the 
                             <ref target="http://www.adwmainz.de">Akademie der  Wissenschaften und der Literatur, Mainz</ref>,
                         and is licensed under the terms of a 
                             <ref target="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International (CC BY 4.0)</ref>.</p>
@@ -109,119 +109,80 @@
             </sourceDesc>
         </fileDesc>
 
-<!-- Was wurde wie ausgezeichnet (XML-Schema, Richtlinien, Tags, Styles, Präfixe, ...) -->
         <encodingDesc xml:id="encodingDesc" xml:lang="de">
-
-<!-- Allgemeine Prinzipien dieser Edition -->
             <projectDesc>
-                <p xml:id="p_retq324ewfr">Dieses Dokument wurde im Rahmen des Projekts "Die Schule von Salamanca.
-               Eine digitale Quellensammlung und ein Wörterbuch ihrer juridisch-politischen Sprache" der
-               Akademie der Wissenschaften und der Literatur, Mainz, kodiert. Dieses Projekt zielt
-               neben der Herstellung eines Wörterbuchs auf die freie und leicht zugängliche
-               Präsentation wichtiger Texte aus dem Diskussionszusammenhang der sog. "Schule von
-               Salamanca" ab, die hierfür (i.d.R.) aus den Erst-Drucken retrodigitalisiert werden.
-               Von einer kritischen Überarbeitung und einem Rückgriff auf die Manuskript-Quellen oder
+                <p xml:id="p_retq324ewfr" xml:lang="de">Dieses Dokument wurde im Rahmen des Projekts 
+                    <ref target="https://www.salamanca.school/de/project.html">"Die Schule von Salamanca.
+                    Eine digitale Quellensammlung und ein Wörterbuch ihrer juridisch-politischen Sprache"</ref> der
+                    <ref target="http://www.adwmainz.de">Akademie der Wissenschaften und der Literatur, Mainz</ref>, kodiert. Dieses Projekt zielt
+                    neben der Herstellung eines Wörterbuchs auf die freie und leicht zugängliche
+                    Präsentation wichtiger Texte aus dem Diskussionszusammenhang der sog. "Schule von
+                    Salamanca" ab, die hierfür (i.d.R.) aus den Erst-Drucken retrodigitalisiert werden.
+                    Von einer kritischen Überarbeitung und einem Rückgriff auf die Manuskript-Quellen oder
                andere Ausgaben wurde abgesehen.</p>
+                <p xml:id="p_fhsdofisad" xml:lang="en">This document was  
+                    encoded within the scope of the project <ref target="https://www.salamanca.school/en/project.html">"The School of Salamanca. A Digital Collection of 
+                    Sources and a Dictionary of its Juridical-Political Language"</ref> of the 
+                    <ref target="http://www.adwmainz.de">Akademie der Wissenschaften und der Literatur, Mainz</ref>. 
+                    Besides creating a dictionary, the project aims at a freely available and easily accessible 
+                    collection of important texts from the discoursive context of the so called "School of Salamanca", 
+                    which are being digitized for this purpose (usually in the form of their initial edition). A critical revision, 
+                    or a recourse to manuscript templates, for instance, has been refrained from.
+                </p>
+                <p xml:id="p_fhsdofesad" xml:lang="es">
+                    Este documento se codificó en el marco del proyecto <ref target="https://www.salamanca.school/es/project.html">"La Escuela de Salamanca. Una 
+                    colección digital de fuentes y un diccionario de su lenguaje jurídico-político"</ref> 
+                    de la <ref target="http://www.adwmainz.de">Akademie der Wissenschaften und der Literatur, Mainz</ref>.
+                    Además de la producción de un diccionario, el proyecto tiene como objetivo la presentación gratuita y 
+                    accesible de textos importantes del contexto de discusión de la llamada "Escuela de Salamanca", 
+                    que se digitalizan (básicamente en la forma de su primera publicación).
+                    Se ha prescindido tanto de una revisión crítica, como de un 
+                    recurso que muestre los originales de los manuscritos o otras ediciones.
+                </p>
             </projectDesc>
 
-<!-- Beschreibung editorischer Eingriffe -->
             <editorialDecl>
-                <p xml:id="p_dq24r2fqqc">Seiten-, Spalten- und Zeilenumbrüche werden durch die leeren Elemente
-                &lt;pb/&gt;, &lt;cb/&gt; und &lt;lb/&gt; wiedergegeben, wobei bei Spalten- und
-                Seitenumbrüchen die Original-Paginierung bzw. die Spalten-Zählung im @n-Attribut
-                angegeben wird.
-                Ändert sich die Einteilung in Spalten im Laufe einer Seite wird zu Beginn des
-                mehrspaltigen Layouts ein &lt;cb type="start"/&gt; bzw. am Ende ein &lt;cb type="end"/&gt;
-                gesetzt.</p>
-                <correction>
-                    <p xml:id="p_wq4g3g3q">Außer den untenstehenden Modifikationen wurden keine Eingriffe in den Text
-                    vorgenommen.</p>
-                    <p xml:id="p_2ff35q32vvewtr">(Guidelines: "Was the text corrected during or after data capture? If so,
-                    were corrections made silently or are they marked using the tags described in section
-                    '3.4 Simple Editorial Changes"? What principles have been adopted with respect to
-                    omissions, truncations, dubious corrections, alternate readings, false starts,
-                    repetitions, etc.?)</p>
-                </correction>
-                <normalization method="silent">
-                    <p xml:id="p_v243vcwtevq">Schaft-S wurde stillschweigend in s ersetzt.</p>
-                </normalization>
-                <normalization method="silent">
-                    <p xml:id="p_fw3eg4g45">"&amp;" wurde stillschweigend durch "et" ersetzt.</p>
-                </normalization>
-                <normalization method="silent">
-                    <p xml:id="p_srdz4w5v3q">Die Verwendung von Leerzeichen (nach Satzzeichen) wurde, so weit
-                    möglich, stillschweigend an moderne Gepflogenheiten angepasst.</p>
-                </normalization>
-                <normalization method="silent">
-                    <p xml:id="p_srdt3v3q">u/v sowie i/j wurden stillschweigend durch die moderne Schreibweise ersetzt.</p>
-                </normalization>
-                <hyphenation eol="none">
-                    <p xml:id="p_f3q41f1cw332">Trennstriche am Zeilenende wurden getilgt. Die entsprechenden Wort-
-                    Trennungen wurden mit @rendition="#hyphen" markiert; im Falle mehrerer
-                    unmittelbar aufeinander folgender Umbrüche (&lt;lb/&gt;+&lt;cb/&gt;+&lt;pb/&gt;)
-                    wurde dieses Attribut im ersten dieser Umbrüche hinterlegt.
-                    Trennungen, die im Quelltext nicht durch einen Trennstrich kenntlich gemacht
-                    worden waren, erhalten im entsprechenden Umbruchs-Element das @rendition-Attribut
-                    "#noHyphen".
-                    Außerdem wurden alle Trennungen, ob im Quelltext markiert oder nicht,
-                    durch das @break="no"-Attribut in allen intervenierenden Umbruchs-Elementen
-                    (nicht jedoch in den &lt;fw&gt;-Elementen, die Kolumnentitel, Bogensignaturen,
-                    Kustoden usw. auszeichnen) markiert.
-                    Es ist darauf zu achten, dass in solchen Fällen kein whitespace, also kein
-                    Leerzeichen, Tab oder auch nur Zeilenumbruch außerhalb der genannten Elemente
-                    interveniert, d.h. Zeilenumbrüche werden in den xml-Dateien innerhalb der
-                    &lt;lb/&gt;+&lt;cb/&gt;+&lt;pb/&gt;-Elemente gesetzt, vorzugsweise direkt
-                    nach dem Elementnamen und vor dem @break-Attribut.</p>
-                </hyphenation>
-                <interpretation>
-                    <p xml:id="p_cwq2432cesar">Wir erfassen mehrbändige Werke als einen xml-Datensatz, der Gruppen
-                    (&lt;group&gt;) von Texten (nämlich den Bänden: &lt;text type="volume"&gt;) enthält.
-                    Dass umfassende &lt;text&gt;-Element hat in diesem Fall den Typ "multivolume_work".
-                    Ggf. wird innerhalb dieser Bände weiter, etwa nach Vorlesungen, "group-iert".</p>
-                    <p xml:id="p_derewqr2q34">Die &lt;text&gt;-Blöcke selbst werden wie folgt unterteilt:
-                   Die typographischen Absatz-Unterteilungen werden als 
-                   &lt;p&gt;-Paragraphen wiedergegeben, wobei eventuelle Absatz-Symbole ('¶')
-                   getilgt wurden.</p>
-                    <p xml:id="p_fewq4q232vee">Darüber hinaus sind in der Vorlage durch Überschriften, Nummerierungen,
-                  Marginalziffern, *-, †-Symbole ö.ä. markierte Übergänge der argumentativen
-                  Sinn-Einheiten des Textes durch &lt;div&gt;s verschiedener Typen und
-                  &lt;milestone/&gt;-Tags festgehalten. (Dabei wurden die Symbole nicht
-                  beibehalten, sondern im @rendition-Attribut des milestone-Tags hinterlegt.
-                  In der Leseansicht unserer Webseite werden sie allerdings durch ein '❧'
-                  wiedergegeben.)</p>
-                    <p xml:id="p_cqwpirec2">Siehe auch den nächsten Abschnitt, "refsDecl".</p>
-                </interpretation>
+                <p xml:id="p_7899fsfdfd" xml:lang="de">Dieses Werk wurde für das Projekt "Die Schule von Salamanca" 
+                    im Double-Keying-Verfahren durch Nicht-Muttersprachler transkribiert 
+                    (siehe hierzu auch die 
+                    <ref target="http://facs.salamanca.school/docs/transcription/guidelines/general/SvSal_Allgemeine_Erfassungsanweisungen.pdf">allgemeinen</ref>
+                    und 
+                    <ref target="http://facs.salamanca.school/docs/transcription/guidelines/specific/">werkspezifischen</ref> 
+                    Erfassungsanweisungen des Projekts) 
+                    und gemäß der 
+                    <ref target="https://www.salamanca.school/de/guidelines.html">Editionsrichtlinien</ref> 
+                    durch das Projekt in XML/TEI P5 kodiert.</p>
+                <p xml:id="p_5kldhf80" xml:lang="en">This work was transcribed by non-native speakers through 
+                    double keying for the project "The School of Salamanca" (see also the 
+                    <ref target="http://facs.salamanca.school/docs/transcription/guidelines/general/SvSal_Allgemeine_Erfassungsanweisungen.pdf">general</ref>
+                    and 
+                    <ref target="http://facs.salamanca.school/docs/transcription/guidelines/specific/">werkspezifischen</ref>
+                    transcription guidelines of the project, currently only available in German) and was 
+                    encoded by the project in XML/TEI P5 according to the 
+                    <ref target="https://www.salamanca.school/en/guidelines.html">edition guidelines</ref>.</p>
+                <p xml:id="p_jfdklf87s" xml:lang="es">Esta obra fue transcrita por hablantes no nativos a través 
+                    de doble codificación para el proyecto "La Escuela de Salamanca" (véase también las Directrices 
+                    <ref target="http://facs.salamanca.school/docs/transcription/guidelines/general/SvSal_Allgemeine_Erfassungsanweisungen.pdf">Generales</ref> 
+                    y 
+                    <ref target="http://facs.salamanca.school/docs/transcription/guidelines/specific/">Específicas</ref> de 
+                    transcripción del proyecto, actualmente solo disponibles en alemán) y fue 
+                    codificada por el proyecto en XML/TEI P5 según las <ref target="https://www.salamanca.school/es/guidelines.html">directrices</ref> de edición.
+                </p>
             </editorialDecl>
 
-<!-- Beschreibung der Strukturierung und Verlinkung -->
-            <refsDecl><!-- mehrere refsDecl möglich, als Prosa u.a. -->
-                <p xml:id="p_d2d3fccq3">Wir erfassen mehrbändige Werke als einen xml-Datensatz, der Gruppen
-                (&lt;group&gt;) von Texten (nämlich den Bänden: &lt;text type="volume"&gt;) enthält.
-                Dass umfassende &lt;text&gt;-Element hat in diesem Fall den Typ "multivolume_work".
-                Diese Gruppierung von &lt;text&gt;-Elementen erstreckt sich bis auf die Ebene der
-                gebundenen Einzelbände, innerhalb dieser werden strukturelle Einteilungen wie
-                Vorlesungen, "Bücher" o.ä. nicht mehr durch &lt;text&gt;-, sondern durch
-                &lt;div&gt;-Elemente wiedergegeben.</p>
-                <p xml:id="p_dq3cccizici">Die strukturellen Einheiten (Vorlesungen, Bücher, Kapitel, Quaestiones usw.), die
-                in der Vorlage i.d.R. durch Überschriften, Nummerierungen usw. m,arkiert sind,
-                werden so weit wie möglich durch &lt;div&gt;-Elemente verschiedener @Typen
-                wiedergegeben. Die Benennung dieser Typen orientiert sich an der englischen
-                Terminologie ("book", "part", "chapter", "question", "foreword" etc. - und lehnt sich
-                an <ref type="url">http://dfg-viewer.de/strukturdatenset/</ref> an, obwohl auf einige
-                der dort beschriebenen Elemente verzichtet wird und andere hinzugekommen sind. Details
-                sind unserem Schema zu entnehmen.).</p>
-                <p xml:id="p_popoipo">Die typographischen Absatz-Unterteilungen werden als 
-                &lt;p&gt;-Paragraphen wiedergegeben, wobei eventuelle Absatz-Symbole ('¶')
-                getilgt wurden.</p>
-                <p xml:id="p_oipjpoih">Marginalziffern, *-, †-Symbole ö.ä. markierte Übergänge der argumentativen
-                Sinn-Einheiten des Textes durch &lt;div&gt;s verschiedener Typen und
-                &lt;milestone/&gt;-Tags festgehalten. (Dabei wurden die Symbole nicht
-                beibehalten, sondern im @rendition-Attribut des milestone-Tags hinterlegt.
-                In der Leseansicht unserer Webseite werden sie allerdings durch ein '❧'
-                wiedergegeben.)</p>
+            <refsDecl>
+                <p xml:id="p_d2d3fccq3" xml:lang="de">Für eine Beschreibung der im Werk verwendeten Identifikations- und 
+                    Referenzierungsschemata für Elemente mittels <att>xml:id</att> siehe die
+                    <ref target="https://www.salamanca.school/de/guidelines.html#de-xmlid">Editionsrichtlinien</ref>.</p>
+                <p xml:id="p_d2derccq3" xml:lang="en">For a description of the schemata used for identification and referencing of elements 
+                    by means of <att>xml:id</att>, please refer to the
+                    <ref target="https://www.salamanca.school/en/guidelines.html#en-xmlid">edition guidelines</ref>.</p>
+                <p xml:id="p_d2deercq3" xml:lang="es">Para una descripción de los esquemas de identificación y referencia de elementos,
+                    utilizado en la obra por medio de <att>xml:id</att>, por favor refiérase a las 
+                    <ref target="https://www.salamanca.school/en/guidelines.html#es-xmlid">directrices de edición</ref>.</p>
             </refsDecl>
         
-<!-- Beschreibung der typographischen Stile, auf die im Dokument referiert wird -->
+            <!-- Description of typographic styles referenced in the document -->
             <styleDefDecl scheme="css"/>
             <tagsDecl> <!-- from TEI P5 2.8.0 on: @partial="true" -->
                 <rendition xml:id="hyphenBefore">content:'-';</rendition>
@@ -241,10 +202,11 @@
                     <tagUsage gi="lb" rendition="#noHyphen"/>
                     <tagUsage gi="milestone" rendition="#asterisk"/>
                     <tagUsage gi="lg" rendition="#it"/>
+                    <!--<tagUsage gi="head" rendition="#r-center"/>-->
                 </namespace>
             </tagsDecl>
 
-<!-- Beschreibung verwendeter Sonderzeichen -->
+            <!-- Description of available non-standard characters -->
             <appInfo>
                 <application ident="MUFI" version="4.0">
                     <label>MUFI character recommendation v. 4.0</label>
@@ -258,54 +220,53 @@
             <xi:include href="Sonderzeichen.xml" xpointer="charDecl">
                 <xi:fallback>
                     <charDecl>
-                        <p xml:lang="de">
-                            Die Definitionen der Sonderzeichen konnte nicht eingebunden werden.
-                            Sie sollte normalerweise dennoch
-                            <ref target="https://files.salamanca.school/Sonderzeichen.xml">auf der
-                            Projektseite</ref> zugänglich sein.</p>
+                        <p xml:lang="en">
+                            The definition of non-standard characters could not be embedded.
+                            However, it should nonetheless be available on the 
+                            <ref target="https://files.salamanca.school/Sonderzeichen.xml">project website</ref>.</p>
                     </charDecl>
                 </xi:fallback>
             </xi:include>
                 
-<!-- Definition der in den Referenzen verwendeten Präfixe, um intern oder extern zu verweisen -->
+            <!-- Definition of the prefixes utilized in internal and external references -->
             <listPrefixDef>
                 <prefixDef ident="author" matchPattern="([A-z0-9.:#_\-]+)" replacementPattern="http://id.salamanca.school/authors.$1">
-                   <p xml:id="p_f2q34f3cew">Im Kontext dieser Edition verweisen private URIs mit dem Präfix "author" auf
-                   Personen-Datensätze im Verzeichnis "tei/authors/" des svsal-data packages. Die Dateinamen dort setzen sich zusammen
-                   aus der mit dem Buchstaben "A" beginnenden internen ID-Nummer der jeweiligen Person
-                   und der Datei-Endung ".xml". Die Web-Anwendung stellt diese Datensätze unter der
-                   Adresse <ref type="url" target="http://www.salamanca.school/author.html">http://www.salamanca.school/author.html</ref>
-                   dar, der der Parameter "?aid=" und die interne ID-Nummer anzuhängen sind.</p>
+                   <p xml:id="p_f2q34f3cew" xml:lang="en">Within the scope of this edition, private URIs using an "author" prefix refer to 
+                       person datasets, available in the "tei/authors/" directory of the svsal-data package.
+                       The filenames therein are concatenations of the internal ID number of the respective person, beginning 
+                       with the letter "A", and the file extension ".xml". The web application displays these datasets 
+                       under the address <ref type="url" target="http://www.salamanca.school/author.html">http://www.salamanca.school/author.html</ref>, 
+                       which is to be complemented by the "?aid=" parameter, followed by the internal ID number.</p>
                 </prefixDef>
                 <prefixDef ident="work" matchPattern="([A-z0-9.:#_\-]+)" replacementPattern="http://id.salamanca.school/works.$1">
-                    <p xml:id="p_awevearvq">Im Kontext dieser Edition verweisen private URIs mit dem Präfix "work" auf
-                    Werk-Datensätze im Verzeichnis "tei/works/" des svsal-data packages. Die Dateinamen dort setzen sich zusammen
-                    aus der mit dem Buchstaben "W" beginnenden internen ID-Nummer des jeweiligen Werkes
-                    und der Datei-Endung ".xml". Die Web-Anwendung stellt diese Datensätze unter der
-                    Adresse <ref type="url" target="http://www.salamanca.school/work.html">http://www.salamanca.school/work.html</ref>
-                    dar, der der Parameter "?wid=" und die interne ID-Nummer anzuhängen sind.</p>
+                    <p xml:id="p_awevearvq" xml:lang="en">Within the scope of this edition, private URIs using a "work" prefix refer to 
+                        work datasets, available in the "tei/works/" directory of the svsal-data package.
+                        The filenames therein are concatenations of the internal ID number of the respective work, beginning 
+                        with the letter "W", and the file extension ".xml". The web application displays these datasets 
+                        under the address <ref type="url" target="http://www.salamanca.school/work.html">http://www.salamanca.school/work.html</ref>, 
+                        which is to be complemented by the "?wid=" parameter, followed by the internal ID number.</p>
                 </prefixDef>
                 <prefixDef ident="lemma" matchPattern="([A-z0-9.:#_\-]+)" replacementPattern="http://www.salamanca.school/lemma.html?lid=$1">
-                    <p xml:id="p_dlkjupupu">Im Kontext dieser Edition verweisen private URIs mit dem Präfix "lemma" auf
-                    Wörterbuch-Einträge im Verzeichnis "tei/lemmata/" des svsal-data packages. Die Dateinamen dort setzen sich zusammen
-                    aus der mit dem Buchstaben "L" beginnenden internen ID-Nummer des jeweiligen Lemmas 
-                    und der Datei-Endung ".xml". Die Web-Anwendung stellt diese Datensätze unter der
-                    Adresse <ref type="url" target="http://www.salamanca.school/lemma.html">http://www.salamanca.school/lemma.html</ref>
-                    dar, der der Parameter "?lid=" und die interne ID-Nummer anzuhängen sind.</p>
+                    <p xml:id="p_dlkjupupu" xml:lang="en">Within the scope of this edition, private URIs using a "lemma" prefix refer to 
+                        dictionary datasets, available in the "tei/lemmata/" directory of the svsal-data package.
+                        The filenames therein are concatenations of the internal ID number of the respective lemma, beginning 
+                        with the letter "L", and the file extension ".xml". The web application displays these datasets 
+                        under the address <ref type="url" target="http://www.salamanca.school/lemma.html">http://www.salamanca.school/lemma.html</ref>, 
+                        which is to be complemented by the "?lid=" parameter, followed by the internal ID number.</p>
                 </prefixDef>
                 <prefixDef ident="facs" matchPattern="(W[0-9]{4})-[0-9]{4}" replacementPattern="http://wwwuser.gwdg.de/~svsal/images/$1/$0.jpg"> <!-- einbändige Werke -->
-                    <p xml:id="p_sdeaeeq1">Im Kontext dieser Edition verweisen private URIs mit dem Präfix "facs" auf Scan-
-                    Bilddateien im Server-Verzeichnis der "Gesellschaft für wissenschaftliche Datenverarbeitung in
-                    Göttingen (GWDG)" unter "http://wwwuser.gwdg.de/~svsal/images/". Die Dateinamen dort entsprechen
-                    der internen ID-Nummer des jeweiligen Werkes und der Dateiendung ".jpg". Die Zuordnungen ID-Werk 
-                    befindet sich ebenfalls unter dem angegebenen Pfad.</p>
+                    <p xml:id="p_sdeaeeq1" xml:lang="en">Within the scope of this edition, private URIs using the "facs" prefix 
+                        refer to scan image files within the server system of the "Gesellschaft für wissenschaftliche Datenverarbeitung in
+                        Göttingen (GWDG)" at <ref target="http://wwwuser.gwdg.de/~svsal/images/">http://wwwuser.gwdg.de/~svsal/images/</ref>. The filenames
+                        therein are concatenations of the internal ID number of the respective work and the ".jpg" file extension. 
+                        The mapping of each ID to its respective work also can be found at the mentioned address.</p>
                 </prefixDef>
                 <prefixDef ident="facs" matchPattern="(W[0-9]{4})-([A-Z])-[0-9]{4}" replacementPattern="http://wwwuser.gwdg.de/~svsal/images/$1/$2/$0.jpg"> <!-- mehrbändige Werke -->
-                    <p xml:id="p_sdeaeeq2">Im Kontext dieser Edition verweisen private URIs mit dem Präfix "facs" auf Scan-
-                    Bilddateien im Server-Verzeichnis der "Gesellschaft für wissenschaftliche Datenverarbeitung in
-                    Göttingen (GWDG)" unter "http://wwwuser.gwdg.de/~svsal/images/". Die Dateinamen dort entsprechen
-                    der internen ID-Nummer des jeweiligen Werkes und der Dateiendung ".jpg". Die Zuordnungen ID-Werk 
-                    befindet sich ebenfalls unter dem angegebenen Pfad.</p>
+                    <p xml:id="p_sdeaeeq2" xml:lang="en">Within the scope of this edition, private URIs using the "facs" prefix 
+                        refer to scan image files within the server system of the "Gesellschaft für wissenschaftliche Datenverarbeitung in
+                        Göttingen (GWDG)" at <ref target="http://wwwuser.gwdg.de/~svsal/images/">http://wwwuser.gwdg.de/~svsal/images/</ref>. The filenames
+                        therein are concatenations of the internal ID number of the respective work and the ".jpg" file extension. 
+                        The mapping of each ID to its respective work also can be found at the mentioned address.</p>
                 </prefixDef>
 <!-- The following prefixes linking our data to external sources are disabled for now,
      because the data are not rich enough yet... -->
@@ -334,24 +295,26 @@
 -->
             </listPrefixDef>
         </encodingDesc>
-        <revisionDesc status="e_emended_unenriched">
+        <revisionDesc status="g_enriched_approved">
             <listChange>
-                <change who="#DG" when="2018-05-04" status="g_enriched_approved">Adjusted status labels (in revisionDesc) according to new label schema</change>
-                <change who="#AW" when="2018-05-02" status="g_enriched_approved">Add #DG to authors and respStmt; change license to CC-By 4.0; remove cRefPatterns;
+                <change who="#DG" when="2018-05-08" status="g_enriched_approved" xml:lang="en">Localize encodingDesc</change>
+                <change who="#DG" when="2018-05-04" status="g_enriched_approved" xml:lang="en">Adjusted status labels (in revisionDesc) according to new label schema</change>
+                <change who="#AW" when="2018-05-02" status="g_enriched_approved" xml:lang="en">Add #DG to authors and respStmt; change license to CC-By 4.0; remove cRefPatterns;
                                                                                 fix prefixDef (to take account of svsal-data package).</change>
-                <change who="#AW" when="2016-03-03" status="g_enriched_approved">Fix PrefixDefs for public URIs</change>
-                <change who="#IC" when="2014-11-27" status="g_enriched_approved">Final preliminary Revision.</change>
-                <change who="#IC" when="2014-11-21" status="e_emended_unenriched">Sonderzeichen erweitert, Fehler im Text korrigiert. Nummerierung, @type=chapter als übergeordnete DIVS, @type=section jeweils untergeordnet.</change>
-                <change who="#AW" when="2014-10-13" status="e_emended_unenriched">xi:include von Sonderzeichen wieder hergestellt; Autoren aktualisiert</change>
-                <change who="#AW" when="2014-05-26" status="e_emended_unenriched">linegroups kursiv by default</change>
-                <change who="#AW" when="2014-03-25" status="e_emended_unenriched">Editionsrichtlinien im body überarbeitet</change>
-                <change who="#AW" when="2014-02-03" status="e_emended_unenriched">Präfixe gefixt, Namen nachgeschlagen</change>
+                <change who="#AW" when="2016-03-03" status="g_enriched_approved" xml:lang="en">Fix PrefixDefs for public URIs</change>
+                <change who="#IC" when="2014-11-27" status="g_enriched_approved" xml:lang="en">Final preliminary Revision.</change>
+                <change who="#IC" when="2014-11-21" status="e_emended_unenriched" xml:lang="de">Sonderzeichen erweitert, Fehler im Text korrigiert. Nummerierung, @type=chapter als übergeordnete DIVS, @type=section jeweils untergeordnet.</change>
+                <change who="#AW" when="2014-10-13" status="e_emended_unenriched" xml:lang="de">xi:include von Sonderzeichen wieder hergestellt; Autoren aktualisiert</change>
+                <change who="#AW" when="2014-05-26" status="e_emended_unenriched" xml:lang="de">linegroups kursiv by default</change>
+                <change who="#AW" when="2014-03-25" status="e_emended_unenriched" xml:lang="de">Editionsrichtlinien im body überarbeitet</change>
+                <change who="#AW" when="2014-02-03" status="e_emended_unenriched" xml:lang="de">Präfixe gefixt, Namen nachgeschlagen</change>
             </listChange>
         </revisionDesc>
     </teiHeader>
     <text type="technical" xml:id="completeWork">
         <body>
-            <!-- Guidelines for WebApp-->
+            
+            <!-- German version of the edition guidelines -->
             <div type="part" xml:lang="de" xml:id="guidelines-de">
                 <div type="section" xml:id="richtlinien">
                     <head xml:id="head_opoiupoiu">Editions-Richtlinien zur Texterfassung</head>
