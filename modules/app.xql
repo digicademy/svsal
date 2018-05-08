@@ -2237,16 +2237,27 @@ declare function app:contactEMailHTML($node as node(), $model as map(*)) {
 declare function app:guidelines($node as node(), $model as map(*), $lang as xs:string) {
 (:        let $store-lang := session:set-attribute("lang", $lang):)
        
-        let $parameters :=  <parameters>
+        if ($lang eq 'de')  then
+            let $parameters :=  <parameters>
                                 <param name="exist:stop-on-warn" value="yes"/>
                                 <param name="exist:stop-on-error" value="yes"/>
+                                <param name="language" value="de"></param>
                             </parameters>
-        return  if ($lang eq 'de')  then
-            transform:transform(doc($config:app-root || "/resources/files/W_Head_general.xml")/tei:TEI//tei:div[@xml:id='guidelines-de'], doc(($config:app-root || "/resources/xsl/guidelines.xsl")), $parameters)
+            return transform:transform(doc($config:app-root || "/resources/files/W_Head_general.xml")/tei:TEI//tei:div[@xml:id='guidelines-de'], doc(($config:app-root || "/resources/xsl/guidelines.xsl")), $parameters)
         else if  ($lang eq 'en')  then 
-            transform:transform(doc($config:app-root || "/resources/files/W_Head_general.xml")/tei:TEI//tei:div[@xml:id='guidelines-en'], doc(($config:app-root || "/resources/xsl/guidelines.xsl")), $parameters)
+            let $parameters :=  <parameters>
+                                <param name="exist:stop-on-warn" value="yes"/>
+                                <param name="exist:stop-on-error" value="yes"/>
+                                <param name="language" value="en"></param>
+                            </parameters>
+            return transform:transform(doc($config:app-root || "/resources/files/W_Head_general.xml")/tei:TEI//tei:div[@xml:id='guidelines-en'], doc(($config:app-root || "/resources/xsl/guidelines.xsl")), $parameters)
         else if  ($lang eq 'es')  then
-            transform:transform(doc($config:app-root || "/resources/files/W_Head_general.xml")/tei:TEI//tei:div[@xml:id='guidelines-es'], doc(($config:app-root || "/resources/xsl/guidelines.xsl")), $parameters)
+            let $parameters :=  <parameters>
+                                <param name="exist:stop-on-warn" value="yes"/>
+                                <param name="exist:stop-on-error" value="yes"/>
+                                <param name="language" value="es"></param>
+                            </parameters>
+            return transform:transform(doc($config:app-root || "/resources/files/W_Head_general.xml")/tei:TEI//tei:div[@xml:id='guidelines-es'], doc(($config:app-root || "/resources/xsl/guidelines.xsl")), $parameters)
         else()
 };
 

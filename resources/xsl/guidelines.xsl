@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:teix="http://www.tei-c.org/ns/Examples" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" version="2.0" exclude-result-prefixes="xd xs exist teix tei" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
     <xsl:output method="html"/>
     <xsl:param name="modus"/>
+    <xsl:param name="language"/>
 
     <!-- Root -->
     <xsl:template match="/">
@@ -24,14 +24,14 @@
     <xsl:template match="div[@type='chapter']/head">
         <h2 class="alignedGuidelines">
             <xsl:if test="@n">
-                <xsl:value-of select="@n"/>&#160; </xsl:if>
+                <xsl:value-of select="@n"/>  </xsl:if>
             <xsl:apply-templates/>
         </h2>
     </xsl:template>
     <xsl:template match="div[@type='section']/head">
         <h3 class="alignedGuidelines">
             <xsl:if test="@n">
-                <xsl:value-of select="@n"/>&#160; </xsl:if>
+                <xsl:value-of select="@n"/>  </xsl:if>
             <xsl:apply-templates/>
         </h3>
     </xsl:template>
@@ -48,9 +48,31 @@
 
     <!--Importante-->
     <xsl:template match="q[@type='optional']">
-        <span class="label label-success"> OPTIONAL </span>&#160; </xsl:template>
+        <xsl:choose>
+            <xsl:when test="$language='de'">
+                <span class="label label-success">OPTIONAL</span> 
+            </xsl:when>
+            <xsl:when test="$language='en'">
+                <span class="label label-success">OPTIONAL</span> 
+            </xsl:when>
+            <xsl:when test="$language='es'">
+                <span class="label label-success">OPCIONAL</span> 
+            </xsl:when>
+        </xsl:choose>
+    </xsl:template>
     <xsl:template match="q[@type='important']">
-        <span class="label label-danger"> WICHTIG </span>&#160; </xsl:template>
+        <xsl:choose>
+            <xsl:when test="$language='de'">
+                <span class="label label-danger">WICHTIG</span>
+            </xsl:when>
+            <xsl:when test="$language='en'">
+                <span class="label label-danger">IMPORTANT</span>
+            </xsl:when>
+            <xsl:when test="$language='es'">
+                <span class="label label-danger">IMPORTANTE</span>
+            </xsl:when>
+        </xsl:choose>
+    </xsl:template>
     <xsl:template match="q[@type='glyphicon-leaf']">
         <span class="glyphicon glyphicon-leaf blue"/>
     </xsl:template>
@@ -184,7 +206,7 @@
                     <div class="panel-heading" role="tab" id="{@xml:id}">
                         <h4 class="panel-title">
                             <a data-toggle="collapse" data-parent="#accordion" href="#{head/@xml:id}" aria-expanded="true" aria-controls="{head/@xml:id}">
-                                <xsl:value-of select="head/@n"/>&#160;&#160;
+                                <xsl:value-of select="head/@n"/>  
                                 <xsl:choose>
                                     <xsl:when test="head/att">
                                         <xsl:value-of select="head/att/text()"/>
@@ -209,7 +231,7 @@
                                         <xsl:value-of select="concat('#',@xml:id)"/>
                                     </xsl:attribute>
                                     <li class="list-group-item">
-                                        <xsl:apply-templates select="head/@n"/>&#160;<!--<xsl:apply-templates select="head/text()"/>-->
+                                        <xsl:apply-templates select="head/@n"/> <!--<xsl:apply-templates select="head/text()"/>-->
                                         <xsl:choose>
                                             <xsl:when test="head/att">
                                                 <xsl:value-of select="head/att/text()"/>
@@ -230,7 +252,7 @@
                     <div class="panel-heading" role="tab" id="{@xml:id}">
                         <h4 class="panel-title">
                             <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#{head/@xml:id}" aria-expanded="false" aria-controls="{head/@xml:id}">
-                                <xsl:value-of select="head/@n"/>&#160;&#160;<xsl:value-of select="head"/>
+                                <xsl:value-of select="head/@n"/>  <xsl:value-of select="head"/>
                             </a>
                         </h4>
                     </div>
@@ -242,7 +264,7 @@
                                         <xsl:value-of select="concat('#',@xml:id)"/>
                                     </xsl:attribute>
                                     <li class="list-group-item">
-                                        <xsl:apply-templates select="head/@n"/>&#160;<!--<xsl:apply-templates select="head/text()"/>-->
+                                        <xsl:apply-templates select="head/@n"/> <!--<xsl:apply-templates select="head/text()"/>-->
                                         <xsl:choose>
                                             <xsl:when test="head/att">
                                                 <xsl:value-of select="head/att/text()"/>
