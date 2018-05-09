@@ -321,8 +321,8 @@ declare function render:mkUrl ($targetWork as node(), $targetNode as node()) {
                             "workingPaper.html?wpid="
                          else
                             "index.html?wid="
-    let $targetNodeHTMLAnchor :=    if (contains($targetNodeId, 'facs_')) then
-                                        replace($targetNodeId, 'facs_', 'pageNo_')
+    let $targetNodeHTMLAnchor :=    if (contains($targetNodeId, '-pb-')) then
+                                        concat('pageNo_', $targetNodeId)
                                     else
                                         $targetNodeId
     let $frag := render:getFragmentFile($targetWorkId, $targetNodeId)

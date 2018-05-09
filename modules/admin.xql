@@ -307,7 +307,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                                         </sal:index>
                                 let $indexSaveStatus := admin:saveFile($work/@xml:id, $work/@xml:id || "_nodeIndex.xml", $index, "data")
 
-                               (: Next, create a ToC html file. :)
+                            (: Next, create a ToC html file. :)
                                 let $doc    :=      util:expand(doc($config:tei-works-root || '/' || $wid ||   '.xml')/tei:TEI)
                                 let $text   :=      $doc//tei:text[@type='work_volume'] | $doc//tei:text[@type = 'work_monograph']
                                 let $elements :=    $doc//tei:text[@type = 'work_monograph']/(tei:front | tei:body | tei:back)  
@@ -329,7 +329,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                             </li>
                                         </ul>
                                     </div>
-                                 let $tocSaveStatus := admin:saveFile($doc/@xml:id, $doc/@xml:id || "_toc.html", $store, "html")
+                                let $tocSaveStatus := admin:saveFile($doc/@xml:id, $doc/@xml:id || "_toc.html", $store, "html")
                                 
 
                             (:Next, create the Pages html file. :)

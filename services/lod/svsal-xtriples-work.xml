@@ -244,7 +244,7 @@
 			 </statement>
         
     <!-- Other section levels: div, p, milestones, lists, items, notes -->
-            <statement n="30" debug="true" repeat="{/min((10020, count($currentResource//sal:node[@type eq 'div'])))}">
+            <statement n="30" repeat="{/min((10020, count($currentResource//sal:node[@type eq 'div'])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type eq 'div'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdf">type</predicate>
                 <object type="uri" prefix="doco">/(if($currentResource//sal:node[@type eq 'div'][$repeatIndex]/@subtype eq 'book') then 'part' else if ($currentResource//sal:node[@type eq 'div'][$repeatIndex]/@subtype eq 'chapter') then 'chapter' else 'section')</object>
@@ -329,6 +329,7 @@
                 <object type="uri" prepend="http://www.salamanca.school/">/($currentResource//sal:node[@type eq 'list'][$repeatIndex]/sal:crumbtrail/a/@href)[last()]</object>
 			 </statement>
 
+<!--
             <statement n="46" repeat="{/min((10050, count($currentResource//sal:node[@type eq 'item'])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type eq 'item'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdf">type</predicate>
@@ -349,6 +350,7 @@
                 <predicate prefix="rdfs">seeAlso</predicate>
                 <object type="uri" prepend="http://www.salamanca.school/">/($currentResource//sal:node[@type eq 'item'][$repeatIndex]/sal:crumbtrail/a/@href)[last()]</object>
 			 </statement>
+-->
 
             <statement n="50" repeat="{/min((10050, count($currentResource//sal:node[@type eq 'note'])))}">
                 <subject type="uri" prepend="works.{/@work}:">//sal:node[@type eq 'note'][$repeatIndex]/sal:citetrail/text()</subject>

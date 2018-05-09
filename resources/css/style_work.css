@@ -508,7 +508,9 @@ a .edited, a .expan, a .reg, a .corr{
 
 .pageNo {
    /* font-size:large;*/
-   /* font-size: 22px;*/
+    font-size: 18px !important;
+    font-style: normal !important;
+    font-weight: normal !important;
     font-family: 'Junicode', 'Cardo', 'Andron', 'Cabin', sans-serif;
 }
 

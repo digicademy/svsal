@@ -114,9 +114,15 @@
                 if(scrolledY){
                   window.scroll(0, scrolledY - $(".navbar-fixed-top").outerHeight(true) - 50);
                 };
-                $(targetId).parent().effect( "highlight", {color:'LightSkyBlue'}, 700 );
-                $(targetId).parent().effect( "highlight", {color:'LightSkyBlue'}, 700 );
-                $(targetId).parent().effect( "highlight", {color:'LightSkyBlue'}, 700 );
+                if($(targetId).nodeName == "A") {
+                    $(targetId).parent().effect( "highlight", {color:'LightSkyBlue'}, 700 );
+                    $(targetId).parent().effect( "highlight", {color:'LightSkyBlue'}, 700 );
+                    $(targetId).parent().effect( "highlight", {color:'LightSkyBlue'}, 700 );
+                } else {
+                    $(targetId).effect( "highlight", {color:'LightSkyBlue'}, 700 );
+                    $(targetId).effect( "highlight", {color:'LightSkyBlue'}, 700 );
+                    $(targetId).effect( "highlight", {color:'LightSkyBlue'}, 700 );
+                }
 //                var $offset = $(targetId).offset().top;
 //                console.log("$('" + targetId + "').offset().top = " + $offset + ".")
 //                goHere = $offset - 80;
