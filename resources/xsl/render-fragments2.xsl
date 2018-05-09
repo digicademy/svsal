@@ -282,6 +282,11 @@
         <xsl:choose>                                                <!-- available list types: "ordered", "simple", "bulleted", "gloss", "index", or "summaries" ("dict" in not available in this pattern) -->
             <xsl:when test="@type='ordered'">                       <!-- Make an enumerated/ordered list -->
                 <section>
+                    <xsl:if test="@xml:id">
+                        <xsl:attribute name="id">
+                            <xsl:value-of select="@xml:id"/>
+                        </xsl:attribute>
+                    </xsl:if>
                     <xsl:for-each select="child::head">
                         <h4>
                             <xsl:apply-templates/>
@@ -296,6 +301,11 @@
             </xsl:when>
             <xsl:when test="@type='simple'">                        <!-- Make no list in html terms at all -->
                 <section>
+                    <xsl:if test="@xml:id">
+                        <xsl:attribute name="id">
+                            <xsl:value-of select="@xml:id"/>
+                        </xsl:attribute>
+                    </xsl:if>
                     <xsl:for-each select="child::head">
                         <h4>
                             <xsl:apply-templates/>
@@ -308,6 +318,11 @@
             </xsl:when>
             <xsl:otherwise>                                         <!-- Else put an unordered list (and captions) in a figure environment of class @type -->
                 <figure class="{@type}">
+                    <xsl:if test="@xml:id">
+                        <xsl:attribute name="id">
+                            <xsl:value-of select="@xml:id"/>
+                        </xsl:attribute>
+                    </xsl:if>
                     <xsl:for-each select="child::head">
                         <h4>
                             <xsl:apply-templates/>
@@ -409,7 +424,7 @@
                     </xsl:attribute>
                     <xsl:choose><!-- create name/id attributes: take the @xml:id if possible -->
                         <xsl:when test="@xml:id">
-                            <xsl:variable name="pageAnchor" select="concat('pageNo_', substring-after(@xml:id, 'facs_'))"/>
+                            <xsl:variable name="pageAnchor" select="concat('pageNo_', @xml:id/string())"/>
                             <xsl:attribute name="id" select="$pageAnchor"/>
                         </xsl:when>
                         <xsl:otherwise>

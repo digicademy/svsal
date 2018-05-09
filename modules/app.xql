@@ -2238,21 +2238,21 @@ declare function app:guidelines($node as node(), $model as map(*), $lang as xs:s
 (:        let $store-lang := session:set-attribute("lang", $lang):)
        
         if ($lang eq 'de')  then
-            let $parameters :=  <parameters>
+        let $parameters :=  <parameters>
                                 <param name="exist:stop-on-warn" value="yes"/>
                                 <param name="exist:stop-on-error" value="yes"/>
                                 <param name="language" value="de"></param>
                             </parameters>
             return transform:transform(doc($config:app-root || "/resources/files/W_Head_general.xml")/tei:TEI//tei:div[@xml:id='guidelines-de'], doc(($config:app-root || "/resources/xsl/guidelines.xsl")), $parameters)
         else if  ($lang eq 'en')  then 
-            let $parameters :=  <parameters>
+        let $parameters :=  <parameters>
                                 <param name="exist:stop-on-warn" value="yes"/>
                                 <param name="exist:stop-on-error" value="yes"/>
                                 <param name="language" value="en"></param>
                             </parameters>
             return transform:transform(doc($config:app-root || "/resources/files/W_Head_general.xml")/tei:TEI//tei:div[@xml:id='guidelines-en'], doc(($config:app-root || "/resources/xsl/guidelines.xsl")), $parameters)
         else if  ($lang eq 'es')  then
-            let $parameters :=  <parameters>
+        let $parameters :=  <parameters>
                                 <param name="exist:stop-on-warn" value="yes"/>
                                 <param name="exist:stop-on-error" value="yes"/>
                                 <param name="language" value="es"></param>
@@ -2832,7 +2832,7 @@ declare function app:WRKpreparePagination($node as node(), $model as map(*), $wi
     let $workId    :=  if ($wid) then $wid else $model("currentWork")/@xml:id
     for $pb in doc($config:data-root || "/" || $workId || '_nodeIndex.xml')//sal:node[@type="pb"][not(starts-with(sal:title, 'sameAs'))][not(starts-with(sal:title, 'corresp'))]
         let $fragment := $pb/sal:fragment
-        let $url      := 'work.html?wid=' || $workId || '&amp;frag=' || $fragment || '#' || replace($pb/@n, 'facs_', 'pageNo_')
+        let $url      := 'work.html?wid=' || $workId || '&amp;frag=' || $fragment || '#' || concat('pageNo_', $pb/@n)
         return 
             <li role="presentation"><a role="menuitem" tabindex="-1" href="{$url}">{normalize-space($pb/sal:title)}</a></li>
 }
