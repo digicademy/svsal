@@ -804,8 +804,12 @@ declare function sphinx:help ($node as node(), $model as map(*), $lang as xs:str
     let $helpfile   := doc($config:data-root || "/i18n/search_help.xml")
     let $helptext   :=   if ($lang = "de") then
                                     "div_Suchhilfe_de"
+                                else if ($lang = "en") then
+                                    "div_searchHelp_en"
+                                else if ($lang = "es") then
+                                    "div_searchHelp_es"
                                 else
-                                    "div_Suchhilfe_de"
+                                "div_searchHelp_en"
     let $html       := render:dispatch($helpfile//tei:div[@xml:id = $helptext], "html")
     return if (count($html)) then
         <div id="help" class="help">

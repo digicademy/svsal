@@ -1,14 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <?xml-model href="https://files.salamanca.school/SvSal_txt.rng"
     type="application/xml"
-    schematypens="http://relaxng.org/ns/structure/1.0"?>
-<TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="TechSearchHelp">
+    schematypens="http://relaxng.org/ns/structure/1.0"?><TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="TechSearchHelp">
     <teiHeader>
         <fileDesc>
             <titleStmt>
                 <title xml:lang="de">Hilfe-Texte für die Such-Seite der SvSal-Edition</title>
                 <title xml:lang="en">Help texts for the Search facility of this edition</title>
                 <title xml:lang="es">Textos de ayudo port la página de buscada de esta edición</title>
+                <author>
+                    <surname>Glück</surname>, <forename>David</forename>
+                </author>
                 <author>
                     <surname>Wagner</surname>, <forename>Andreas</forename>
                 </author>
@@ -21,29 +22,32 @@
                 <ref type="url" target="https://files.salamanca.school/SvSal_txt.rng">"SvSal-Schemas für Werke"</ref> angefertigt.
             </edition>
                 <respStmt>
-                    <resp>Erstellt von</resp>
+                    <resp xml:lang="en">Created by</resp>
+                    <persName ref="#DG">David Glück</persName>
                     <persName ref="#AW">Andreas Wagner</persName>
                     <persName ref="#IC">Ingo Caesar</persName>
                 </respStmt>
                 <sponsor>
-                    <orgName>Akademie der Wissenschaften und der Literatur, Mainz</orgName>
+                    <orgName xml:lang="de">Akademie der Wissenschaften und der Literatur, Mainz</orgName>
                     <ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>
                 </sponsor>
                 <funder>
-                    <orgName>Akademie der Wissenschaften und der Literatur, Mainz</orgName>
+                    <orgName xml:lang="de">Akademie der Wissenschaften und der Literatur, Mainz</orgName>
                     <ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>
                 </funder>
             </editionStmt>
             <publicationStmt>
                 <publisher>
-                    <orgName>Akademie der Wissenschaften und der Literatur, Mainz</orgName>
+                    <orgName xml:lang="de">Akademie der Wissenschaften und der Literatur, Mainz</orgName>
                     <ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>
                 </publisher>
                 <distributor>
-                    <orgName>Akademie der Wissenschaften und der Literatur, Mainz</orgName>, <orgName>Max Planck Institut für europäische Rechtsgeschichte</orgName>, <orgName>Goethe-Universität Frankfurt/Main</orgName>
+                    <orgName xml:lang="de">Akademie der Wissenschaften und der Literatur, Mainz</orgName>, 
+                    <orgName xml:lang="de">Max Planck Institut für europäische Rechtsgeschichte</orgName>, 
+                    <orgName xml:lang="de">Goethe-Universität Frankfurt/Main</orgName>
                     <email>info@salamanca.adwmainz.de</email>
                 </distributor>
-                <pubPlace role="digitzedEd">
+                <pubPlace role="digitzedEd" xml:lang="de">
             Frankfurt/Main (<ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>)
         </pubPlace>
                 <date type="digitizedEd" when="2013">2013</date>
@@ -51,7 +55,7 @@
 <!-- Angaben zum copyright -->
                 <availability>
                     <licence target="http://creativecommons.org/licenses/by-nc-sa/3.0/">
-                        <p xml:id="p_löojpcn3qp3q4">Dieses Werk bzw. dieser Inhalt wurde digitalisiert durch die Akademie der
+                        <p xml:id="p_löojpcn3qp3q4" xml:lang="de">Dieses Werk bzw. dieser Inhalt wurde digitalisiert durch die Akademie der
                 Wissenschaften und der Literatur, Mainz, und steht unter einer Creative
                 Commons Lizenz: Namensnennung-NichtKommerziell-KeineBearbeitung 3.0 Unported.</p>
                     </licence>
@@ -64,8 +68,10 @@
         </fileDesc>
         <revisionDesc status="a_raw">
             <listChange>
-                <change who="#AW" when="2015-06-25" status="a_raw">TEI-kompatibel gemacht</change>
-                <change who="#AW" when="2015-06-24" status="a_raw">Angelegt</change>
+                <change who="#DG #CRC #CC" when="2018-05-11" status="a_raw" xml:lang="en">Add Spanish version for search help</change>
+                <change who="#DG" when="2018-05-09" status="a_raw" xml:lang="es">Add English version for search help</change>
+                <change who="#AW" when="2015-06-25" status="a_raw" xml:lang="de">TEI-kompatibel gemacht</change>
+                <change who="#AW" when="2015-06-24" status="a_raw" xml:lang="de">Angelegt</change>
             </listChange>
         </revisionDesc>
     </teiHeader>
@@ -226,8 +232,334 @@ die konstituierte Lesart durchsucht.</note>
     </div>
 
 </div>
-
-
+            
+            <div type="section" xml:id="div_searchHelp_en" xml:lang="en">
+                
+                <div type="section" xml:id="div_modi_en">
+                    <head xml:id="head_modi_en">The Different Search Modes</head>
+                    <p xml:id="p_sdfgcerbc">In the dropdown menu on the left hand side, you can choose 
+                        among different search modes:
+                        <list type="ordered">
+                            <item xml:id="item_everything_en">
+                                <term xml:id="term_everything_en" ref="#option1">Sources, dictionary, WP, etc.: full text (all)</term>
+                                <gloss target="#term_everything_en">searches for terms across all types of text, that is, including 
+                                    biographic and topic-related dictionary articles as well as abstracts and keywords from 
+                                    the workin papers. The results are grouped according to text types, possibly offering an option 
+                                    for repeating the search within one such group and for yielding more, or more detailed, respectively, results.
+                                    (This is the standard mode of search.)</gloss>
+                            </item>
+                            <item xml:id="item_corpus_en">
+                                <term xml:id="term_corpus_en" ref="#option2">Corpus: Full Text</term>
+                                <gloss target="#term_corpus_en">searches for terms in the full text of all works in the complete digital edition.</gloss>
+                            </item>
+                            <item xml:id="item_headings_en">
+                                <term xml:id="term_headings_en" ref="#option3">Corpus: Headings</term>
+                                <gloss target="#term_headings_en">searches for terms in all works, but only within their headings.</gloss>
+                            </item>
+                            <item xml:id="item_notes_en">
+                                <term xml:id="term_notes_en" ref="#option4">Corpus: Notes</term>
+                                <gloss target="#term_notes_en">searches for terms in all works, but only within marginal, bottom, and end notes.</gloss>
+                            </item>
+                            <item xml:id="item_dict_en">
+                                <term xml:id="term_dict_en" ref="#option8">Dictionary: Full Text</term>
+                                <gloss target="#term_dict_en">searches for terms in the full text of all entries in the 
+                                    dictionary of juridical-political language of the School of Salamanca.</gloss>
+                            </item>
+                            <item xml:id="item_entries_en">
+                                <term xml:id="term_entries_en" ref="#option9">Dictionary: Entries</term>
+                                <gloss target="#term_entries_en">searches for terms in the articles of the dictionary, but only within the 
+                                    headings therein.</gloss>
+                            </item>
+                            <item xml:id="item_wp_en">
+                                <term xml:id="term_wp_en" ref="#optiona">Working Papers: Abstract, Keywords etc.</term>
+                                <gloss target="#term_wp_en">searches for terms in the metadata of the working papers. The full text 
+                                    of the working papers is not included in this search mode.</gloss>
+                            </item>
+                        </list>
+                    </p>
+                </div>
+                
+                <div type="section" xml:id="div_terms">
+                    <head xml:id="head_searchTerms">How the Search Syntax Works</head>
+                    <p xml:id="p_sefgcerbczcx">The search works, in general, based on lemmatization; that is, a search for a word form finds 
+                        all other word forms of the respective lemma:
+                        
+                        <eg>
+                            lex =&gt; finds all passages with "lex", "legum", "leges", etc.
+                        </eg>
+                        
+                        If a specific word form is to be found, an equality sign must be prepended to the search term:
+                        
+                        <eg>
+                            =lex =&gt; finds passages with "lex", but not those in which only "legum", "leges", etc. occur.
+                        </eg>
+                        
+                        (This operator can also be applied within phrases and other operators described further below.)
+                        
+                        Furthermore, the search allows the use of "?" and "*" as placeholders for one or infinitely many character(s):
+                        
+                        <eg>
+                            l?b?r =&gt; finds liber and labor
+                            lab* =&gt; finds labor and labello
+                            leg* =&gt; finds leges, legislator, legitimus, legatus, etc.
+                        </eg>
+                    </p>
+                </div>
+                
+                <div type="section" xml:id="div_multiple">
+                    <head xml:id="head_multipleTerms">How the Multiple-Term Search Works</head>
+                    <p xml:id="p_swsaeaserea">
+                        The input of multiple search terms implies a search for text passages in which <hi rendition="#it">all</hi> the 
+                        stated search terms must be present (implicit AND operator). If this is not desired, 
+                        the terms must be separated by means of a "|" pipe (as OR operator):
+                        
+                        <eg>
+                            lex | ius =&gt; finds texts in which either lex or ius, or both, occur.
+                        </eg>
+                        
+                        At this, the precedence of the OR operator is higher than the precedence of the AND operator, such that
+                        
+                        <eg>
+                            Francisco Vitoria | Suárez =&gt; searches for Francisco and (Vitoria or Suárez), thus finds no document that 
+                            only contains the string "Suárez".
+                        </eg>
+                        
+                        In case of doubt, the grouping of terms and operators may be explicitely stated in brackets:
+                        
+                        <eg>
+                            (Francisco Vitoria) | Suárez =&gt; searches for documents in which Francisco and Vitoria occur, or in which 
+                            Suárez occurs.
+                        </eg>
+                        
+                        In case a term is to be <hi rendition="#it">excluded</hi>, it must be prepended by a "-" hyphen:
+                        
+                        <eg>
+                            lex -ius =&gt; finds all texts in which lex occurs but not ius.
+                            lex -(ius | naturalis) =&gt; finds all texts containing lex but neither ius nor naturalis.
+                        </eg>
+                        
+                        If an exact phrase is to be searched for, the respective terms must be embedded within quotation signs:
+                        
+                        <eg>
+                            "lex naturalis" =&gt; searches for lex naturalis, with both terms being required to occur in this very sequence.
+                        </eg>
+                        
+                        If the search terms are to occur close to each other, the phrase can either be relativized:
+                        
+                        <eg>
+                            "lex aeterna naturalis"~10 =&gt; searches for the occurrence of all three search terms within a scope of ten words.
+                        </eg>
+                        
+                        ... or a tolerance for distance must be stated by means of the "NEAR/XY" operator between each search term:
+                        
+                        <eg>
+                            lex NEAR/10 aeterna NEAR/20 =&gt; searches for a passage of maximally 9 words between lex and aeterna and maximally 19 words between the found aeterna and naturalis.
+                        </eg>
+                        
+                        In case that merely some of a set of search terms shall be found, a phrase can be relativized through "/":
+                        
+                        <eg>
+                            lex "divina aeterna naturalis positiva civilis"/2 =&gt; searches for the term "lex" and 2 out of the 5 stated additional words.
+                        </eg>
+                        
+                        If the order but not the immediate succession of search terms is relevant, the order operator "&lt;&lt;" can be used:
+                        
+                        <eg>
+                            lex &lt;&lt; ius =&gt; searches for lex ahead of ius
+                        </eg>
+                        
+                        (This operator has, along with the NEAR/XY operator, the lowest precedence of all operators.)
+                        
+                        The "SENTENCE" operator assigns two search terms to the condition of both thse terms having to occur within the same sentence.
+                        
+                        <eg>
+                            lex SENTENCE naturalis =&gt; searches for a sentence in which lex as well as naturalis occur.
+                        </eg>
+                    </p>
+                </div>
+                
+                <div type="section" xml:id="div_more_info_en">
+                    <head xml:id="head_more_info_en">Where to Find more Information</head>
+                    <p xml:id="p_juzserdvnzu">
+                        The search is based, in the background, on the <ref type="url" target="http://sphinxsearch.com/">Sphinx</ref> 
+                        search engine in version 2.1.3. The largest part of the 
+                        <ref type="url" target="http://sphinxsearch.com/docs/archives/2.1.3/extended-syntax.html">documentation of search syntax</ref> 
+                        displayed there also applies to the search function at hand.
+                        <note place="margin" xml:id="note_esfwerer">An important exception is the stating of field operators "@", which 
+                            are not available on our search function. The source text is always searched after (and in the search for everything, the lemma,
+                            author, and working paper search also the author name); with the search within works, the diplomatic as well as the 
+                            constituted version are searched after.</note>
+                    </p>
+                </div>
+            </div>
+            
+            <div type="section" xml:id="div_searchHelp_es" xml:lang="es">
+                <div type="section" xml:id="div_modi_es">
+                    <head xml:id="head_modi_es">Modos diferentes de búsqueda</head>
+                    <p xml:id="p_sdfgcerbrc">En el menú desplegable de la izquierda se puede elegir entre
+                        diferentes modos de búsqueda: <list type="ordered">
+                            <item xml:id="item_everything_es">
+                                <term xml:id="term_everything_es" ref="#option1">Fuentes, diccionario, etc.:
+                                    Texto Completo (todos)</term>
+                                <gloss target="#term_everything_es">busca los términos de búsqueda en todos los
+                                    tipos de texto, es decir, incluidos los artículos biográficos y objetivos,
+                                    así como los resúmenes y las palabras clave de los documentos de trabajo.
+                                    Los resultados se muestran agrupados por tipo de texto, según el caso con la
+                                    posibilidad de repetir la búsqueda dentro de dicho grupo para obtener más
+                                    información o resultados más detallados. (Este es el modo de búsqueda
+                                    predeterminado)</gloss>
+                            </item>
+                            <item xml:id="item_corpus_es">
+                                <term xml:id="term_corpus_es" ref="#option2">Corpus: Texto Completo</term>
+                                <gloss target="#term_corpus_es">busca los términos de búsqueda en todas las
+                                    obras editadas por nosotros.</gloss>
+                            </item>
+                            <item xml:id="item_headings_es">
+                                <term xml:id="term_headings_es" ref="#option3">Corpus: Títulos</term>
+                                <gloss target="#term_headings_es">busca los términos de búsqueda en todas las
+                                    fuentes originales, pero solo en los títulos.</gloss>
+                            </item>
+                            <item xml:id="item_notes_es">
+                                <term xml:id="term_notes_es" ref="#option4">Corpus: Notas</term>
+                                <gloss target="#term_notes_es">busca los términos de búsqueda en todos los
+                                    textos fuente, pero solo en las notas marginales, de pie de página y
+                                    finales.</gloss>
+                            </item>
+                            <item xml:id="item_dict_es">
+                                <term xml:id="term_dict_es" ref="#option8">Diccionario: Texto Completo</term>
+                                <gloss target="#term_dict_es">busca las palabras de búsqueda en el texto
+                                    completo de todas las entradas del diccionario del lenguaje
+                                    jurídico-político de la Escuela de Salamanca.</gloss>
+                            </item>
+                            <item xml:id="item_entries_es">
+                                <term xml:id="term_entries_es" ref="#option9">Diccionario: Entradas</term>
+                                <gloss target="#term_entries_es">busca los términos de búsqueda en los artículos
+                                    del diccionario, pero solo en los títulos.</gloss>
+                            </item>
+                            <item xml:id="item_wp_es">
+                                <term xml:id="term_wp_es" ref="#optiona">Working Papers: Resumen, Palabras
+                                    clave, etc.</term>
+                                <gloss target="#term_wp_es">busca los términos de búsqueda en los metadatos de
+                                    los documentos de trabajo. Lamentablemente, nuestra búsqueda no se aplica a
+                                    los textos completos.</gloss>
+                            </item>
+                        </list>
+                    </p>
+                </div>
+                
+                <div type="section" xml:id="div_terms_es">
+                    <head xml:id="head_searchTerms_es">¿Cómo funciona la sintaxis de la búsqueda?</head>
+                    <p xml:id="p_sefgcerbczdx">La búsqueda se lematiza generalmente, es decir, la búsqueda de
+                        una forma de una palabra encuentra todas las otras formas de la palabra del lema
+                        asociado: 
+                        
+                        <eg> lex =&gt; encuentra pasajes con "lex", "legum", "leges" etc. </eg> 
+                        
+                        Si se
+                        busca la forma exacta de una palabra, se debe escribir el término de búsqueda precedido
+                        por un signo igual: 
+                        
+                        <eg> =lex =&gt; encuentra pasajes con "lex", pero no aquellos, en
+                            los que solo aparecen "legum", "leges" etc. </eg> 
+                        
+                        (Este operador también se puede
+                        usar dentro de las frases y otros operadores que se describen a continuación). Además,
+                        la búsqueda permite el uso de "?" y "*" como comodines para uno o más caracteres: 
+                        
+                        <eg>
+                            l?b?r =&gt; encuentra liber y labor lab* =&gt; encuentra labor y labello leg* =&gt;
+                            encuentra leges, legislator, legitimus, legatus etc. </eg>
+                    </p>
+                </div>
+                
+                <div type="section" xml:id="div_multiple_es">
+                    <head xml:id="head_multipleTerms_es">¿Cómo trabajar con múltiples términos de búsqueda?</head>
+                    <p xml:id="p_swsaeaseresa"> La entrada de varios términos de búsqueda hace que <hi
+                        rendition="#it">todos</hi> los términos de búsqueda estén presentes en las secciones
+                        de texto buscadas (implícito y operador). Si no se desea, los términos deben separase
+                        con una barra vertical "|" como operador de orden:: 
+                        
+                        <eg> lex | ius =&gt; encuentra
+                            textos, en los cuales aparecen lex o ius (o ambos). </eg> 
+                        
+                        La precedencia de un
+                        operador de orden es más alta que la de un operador Y, por lo que: 
+                        
+                        <eg> Francisco
+                            Vitoria | Suárez =&gt; busca Francisco y (Vitoria o Suárez), por lo tanto, no
+                            encuentra ningún documento que contenga solo "Suárez". </eg> 
+                        
+                        En caso de duda, la
+                        agrupación de términos y operadores con paréntesis se puede indicar explícitamente: <eg>
+                            (Francisco Vitoria) | Suárez =&gt; busca documentos en los cuales aparece Francisco
+                            y Vitoria así como también Suárez.</eg> 
+                        
+                        Si debe <hi rendition="#it">excluirse</hi>
+                        un término de búsqueda, éste debe ir precedido por un "-": 
+                        
+                        <eg> lex -ius =&gt; encuentra
+                            textos, en los cuales aparece lex, pero que no contienen ius. lex -(ius | naturalis)
+                            =&gt; encuentra textos, en los cuales aparece lex, pero que no contienen ni ius ni
+                            naturalis. </eg> 
+                        
+                        Si debe buscarse una frase exacta, los términos de búsqueda
+                        correspondientes deben estar entre comillas: 
+                        
+                        <eg> "lex naturalis" =&gt; busca lex
+                            naturalis, por lo cual ambos términos de búsqueda deben estar juntos. </eg> 
+                        
+                        Si los
+                        términos de búsqueda están juntos, la frase se puede poner en perspectiva: 
+                        
+                        <eg> "lex
+                            aeterna naturalis"~10 =&gt; busca la aparición de los tres términos de búsqueda
+                            dentro de un pasaje de 10 palabras. </eg> 
+                        
+                        … o con el operador "NEAR / XY" puede
+                        insertarse una tolerancia entre cada término de búsqueda: 
+                        
+                        <eg> lex NEAR/10 aeterna
+                            NEAR/20 =&gt; busca un pasaje con un máximo de 9 palabras entre lex y aeterna y max.
+                            19 palabras entre el encontrado aeterna y naturalis. </eg> 
+                        
+                        Si solo algunos términos
+                        de una selección de términos de búsqueda deben encontrarse, se puede relativizar la
+                        frase con "/": 
+                        
+                        <eg> lex "divina aeterna naturalis positiva civilis"/2 =&gt; busca el
+                            término lex y 2 de 5 de los complementos mencionados. </eg> 
+                        
+                        Si el orden, pero no la
+                        sucesión inmediata de los términos de búsqueda es relevante, se indica con el operador
+                        de secuencia "&lt;&lt;": 
+                        
+                        <eg> lex &lt;&lt; ius =&gt; busca lex antes de ius </eg> 
+                        
+                        (Este
+                        operador tiene la precedencia más baja de todas junto con el operador NEAR / XY). El
+                        operador "SENTENCE" asocia términos de búsqueda con la condición de que ambos deben
+                        aparecer en la misma oración: 
+                        
+                        <eg> lex SENTENCE naturalis =&gt; busca una oración, en la
+                            cual aparece tanto lex como naturalis. </eg>
+                    </p>
+                </div>
+                
+                <div type="section" xml:id="div_more_info_es">
+                    <head xml:id="head_more_info_es">¿Dónde puedo encontrar más información?</head>
+                    <p xml:id="p_juzserddvnzu"> La búsqueda usa el motor de búsqueda <ref type="url"
+                        target="http://sphinxsearch.com/">Sphinx</ref> versión 2.1.3. La mayoría de la <ref
+                            type="url" target="http://sphinxsearch.com/docs/archives/2.1.3/extended-syntax.html"
+                            >documentación sobre la sintaxis de búsqueda</ref> guardada allí también se aplica a
+                        nuestra búsqueda.<note place="margin" xml:id="note_esfweerer">Una excepción importante es
+                            la especificación de los operadores de campo "@", que no es accesible en nuestro
+                            motor de búsqueda. Se busca siempre el texto fuente en sí (y en la búsqueda de todo,
+                            en la búsqueda del autor, del lema, de los Working papers como también del nombre
+                            del autor); al buscar en obras, se busca tanto en la transcripción diplomática como
+                            en la lectura constituida.</note>
+                    </p>
+                </div>
+            </div>
         </body>
     </text>
 </TEI>
