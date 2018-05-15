@@ -20,7 +20,7 @@ declare option output:media-type "application/json";
 
 (: relative server domain! :)
 declare variable $iiif:serverDomain := $config:serverdomain;
-declare variable $iiif:proto := "http";
+declare variable $iiif:proto := $config:proto;
 
 declare variable $iiif:facsServer := $iiif:proto || "://facs." || $iiif:serverDomain;
 declare variable $iiif:imageServer := $iiif:facsServer || "/iiif/image/";
@@ -115,10 +115,10 @@ declare function iiif:mkSingleVolumeManifest($volumeId as xs:string, $tei as nod
 
     let $description := "Coming soon..." (: TODO, depends on available description in TEI metadata :)
     (: the thumbnail works only if we have a titlePage with a pb in or before it: :)
-    let $thumbnailId := iiif:getThumbnailUrl($tei)
-    let $thumbnailServiceId := "" (:TODO :)
+    let $thumbnailId := iiif:getThumbnailId($tei)
+    let $thumbnailServiceId := concat($iiif:imageServer, $thumbnailId)
     let $thumbnail := map {
-        "@id": concat($config:digilibServerScaler, $thumbnailId, "/full/full/0/default.jpg"),
+        "@id": concat($iiif:imageServer, $thumbnailId, "/full/full/0/default.jpg"),
         "service": map {
             "@context": "http://iiif.io/api/image/2/context.json",
             "@id": $thumbnailServiceId,
@@ -127,7 +127,8 @@ declare function iiif:mkSingleVolumeManifest($volumeId as xs:string, $tei as nod
     }
 
     (: Sequences, including all the canvases and images for the volume :)
-    let $sequences := array { iiif:mkSequence($volumeId, $tei, $thumbnailId) } (: currently, there is but one sequence (the default sequence/order of pages for the volume) :)
+    (: currently, there is but one sequence (the default sequence/order of pages for the volume) :)
+    let $sequences := array { iiif:mkSequence($volumeId, $tei, concat($iiif:imageServer, $thumbnailId, "/full/full/0/default.jpg")) } 
 
     (: Presentation information :)
     let $viewingDirection := "left-to-right"
@@ -174,12 +175,15 @@ declare function iiif:mkSingleVolumeManifest($volumeId as xs:string, $tei as nod
 
 };
 
-declare function iiif:mkSequence($volumeId as xs:string, $tei as node(), $thumbnail as xs:string) {
+(: Creates a sequence of canvases. 
+    @param $volumeId The ID of the volume to be processed. 
+    @tei The TEI node of the volume.
+    @thumbnailUrl The complete URL of the thumbnail, as also stated in the "thumbnail" field's "@id" attribute :)
+declare function iiif:mkSequence($volumeId as xs:string, $tei as node(), $thumbnailUrl as xs:string) {
     let $debug := if ($config:debug = "trace") then console:log("iiif:mkSequence running...") else ()
 
     let $id := $iiif:presentationServer || $volumeId || "/sequence/normal"
 
-(:  here is currently a problem, apparently in both conditions:  :)
     let $canvases :=
         if (count($tei/tei:text/tei:body//tei:pb) > 15) then
             (: we have a full text :)
@@ -204,7 +208,16 @@ declare function iiif:mkSequence($volumeId as xs:string, $tei as node(), $thumbn
                             $tei/tei:text//tei:titlepage/following::tei:pb/count(preceding::tei:pb) + 1
                         else
                             1
-    let $startCanvas := $canvases($startPageNo)("id")    (: TODO: currently contains no valid canvas URL, should return the canvas URL of the thumbnail image :)
+    (: The startCanvas is identifiable by its containing (within "resource"/"@id") 
+        the URL of the title page (=thumbnail). The following assumes that this URL can be found somewhere 
+        within the first 30 canvases:)
+    let $getStartCanvas := for $i in (1 to 30)  
+                            let $canvasImage := map:get($canvases($i), "images")(1)
+                            let $imageResourceId := map:get(map:get($canvasImage, "resource"), "@id")
+                            let $return := if ($imageResourceId eq $thumbnailUrl) 
+                                            then  map:get($canvases($i), "@id") else ()
+                            return $return
+    let $startCanvas := if (count($getStartCanvas) eq 1) then $getStartCanvas else $startPageNo
 
     let $sequences-out := map {
         "@context": "http://iiif.io/api/presentation/2/context.json",
@@ -224,8 +237,7 @@ declare function iiif:mkCanvasFromTeiFacs($volumeId as xs:string, $facs as xs:st
     let $id := $iiif:presentationServer || $volumeId || "/canvas/p" || string($index)
     let $label := "p. " || string($index)
 
-    (: TODO: currently points to digilib server with native URL, should eventually be formulated as facs... URL :)
-    let $digilibImageId := $config:digilibServerScaler || iiif:teiFacs2IiifImageId($facs)
+    let $digilibImageId := $iiif:imageServer || iiif:teiFacs2IiifImageId($facs)
     (: get image height and width from the digilib server (i.e. from each image json file): :)
     let $options := map { "liberal": true(), "duplicates": "use-last" }
 
@@ -268,7 +280,12 @@ declare function iiif:mkCanvasFromTeiFacs($volumeId as xs:string, $facs as xs:st
     return $canvas-out
 };
 
-
+(: Transforms the canvas shipped from an external digilib server into a "Salamanca" canvas 
+by adding some info (such as Salamanca URLs) 
+@param $volumeId The volume's ID.
+@param $canvas The external canvas to be processed.
+@param $index A counter supplied to the function when it is iteratively called, to be used for the pagination of canvases.
+:)
 declare function iiif:transformDigilibCanvas($volumeId as xs:string, $canvas as map(*), $index as xs:integer) {
     let $id := $iiif:presentationServer || $volumeId || "/canvas/p" || string($index)
     let $label := "p. " || string($index)
@@ -277,7 +294,7 @@ declare function iiif:transformDigilibCanvas($volumeId as xs:string, $canvas as 
     let $dl-image1 := array:get($dl-images, 1) (: assumes that the "images" element contains only one relevant subelement: the first one  :)
     let $dl-resource := map:get($dl-image1, "resource")
 
-    let $digilibImageId := $config:digilibServerScaler || substring-before(substring-after(map:get($dl-resource, "@id"), "/Scaler/IIIF/svsal!"), "/full/full/0/default.jpg")
+    let $digilibImageId := $iiif:imageServer || substring-before(substring-after(map:get($dl-resource, "@id"), "/Scaler/IIIF/svsal!"), "/full/full/0/default.jpg")
 
     let $imageHeight := map:get($dl-resource, "height")
     let $imageWidth := map:get($dl-resource, "width")
@@ -358,7 +375,7 @@ declare function iiif:mkMetadata($tei as node()) as array(*) {
     return $metadata
 };
 
-declare function iiif:getThumbnailUrl($tei as node()) as xs:string {
+declare function iiif:getThumbnailId($tei as node()) as xs:string {
     let $thumbnailFacs := if ($tei/tei:text/tei:front//tei:titlePage[1]//tei:pb[1]) then $tei/tei:text/tei:front/tei:titlePage//tei:pb[1]/@facs
                           else $tei/tei:text/tei:front//tei:titlePage[1]/preceding-sibling::tei:pb[1]/@facs
     return iiif:teiFacs2IiifImageId($thumbnailFacs)
@@ -404,16 +421,7 @@ declare function iiif:teiFacs2IiifImageId($facs as xs:string?) as xs:string {
     If a work has been separated into several files with identifiers ending on underscore + lowercased letter, then this id will be returned. :)
 declare function iiif:getIiifVolumeId($volumeId as xs:string) as xs:string {
     let $volumeMap := map {
-        "Vol01": "A",
-        "Vol02": "B",
-        "Vol03": "C",
-        "Vol04": "D",
-        "Vol05": "E",
-        "Vol06": "F",
-        "Vol07": "G",
-        "Vol08": "H",
-        "Vol09": "I",
-        "Vol10": "J"
+        "Vol01": "A","Vol02": "B","Vol03": "C","Vol04": "D","Vol05": "E","Vol06": "F","Vol07": "G","Vol08": "H","Vol09": "I","Vol10": "J"
     }
     let $iiifVolumeId :=
         if (matches($volumeId, "^W[0-9]{4}$")) then $volumeId
@@ -539,13 +547,7 @@ declare function iiif:getPageId($canvasId as xs:string*) {
 (: TODO:
     - create top collection for SvSal
     (- create ranges (deprecation warning...)?;)
-    - startCanvas in Sequence
     - check validity and consistency of @id on every level
     - dealing with TEI data which has been separated into Wxxx_a, Wxxx_b etc due to performance issues
  :)
-(:        serialize($iiifResource,
-            <output:serialization-parameters>
-                <output:method>json</output:method>
-            </output:serialization-parameters>)
-:)
 
