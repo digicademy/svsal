@@ -1014,6 +1014,18 @@ declare function app:loadWRKsnoJs ($node as node(), $model as map (*), $lang as 
     else()
 };
 
+declare %templates:wrap  
+    function app:WRKsNotice ($node as node(), $model as map(*), $lang as xs:string?)  {
+        let $output := 
+            <div style="padding:0.2em;text-align:justify">
+                    <i18n:text key="worksNotice"/>
+                    <a href="guidelines.html">
+                        <i18n:text key="guidelines">Editionsrichtlinien</i18n:text>
+                    </a>.
+            </div>
+        return  i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "en")                
+};
+
 
 (: ====================== End  List functions ========================== :)
 

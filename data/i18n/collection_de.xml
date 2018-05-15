@@ -1,6 +1,9 @@
 <catalogue xml:lang="de">
     <!--Do not edit -->
     
+    <!-- Navigation -->
+    <msg key="guidelines">Editionsrichtlinien</msg>
+    
     <!-- common -->
     
     <msg key="licenceDesc">Für die Daten des Projekts "Die Schule von Salamanca" gilt (falls nicht anders angegeben) eine</msg>
@@ -28,6 +31,10 @@
     
     <msg key="workInProgress">Werk in Arbeit!</msg>
     
+    <msg key="authorsNotice">Biographische Artikel zu den Autoren der Quellensammlung des Projekts 
+        "Die Schule von Salamanca" werden (voraussichtlich ab 
+        2019) sukzessive auf dieser Seite veröffentlicht.</msg>
+    
     <!-- work -->
     <msg key="diplomatic">Diplomatisch</msg>
     <msg key="constituted">Konstituiert</msg>
@@ -35,6 +42,12 @@
     <msg key="download">Download</msg>
     
     <msg key="workNotAvailable">Dieses Werk ist noch nicht verfügbar.</msg>
+    
+    <!-- works/details -->
+    <msg key="worksNotice">Die digitale Quellensammlung des Projekts "Die Schule von Salamanca" besteht 
+        aus insgesamt 116 Werken, die ab Mai 2018 sukzessive auf dieser Seite zur Verfügung gestellt werden. 
+        Hierfür werden die Texte den Spezifikationen der Text Encoding Initiative (TEI) entsprechend aufbereitet;
+        für nähere Informationen siehe die </msg>
     
     <!-- Meta Description Tags -->
     <msg key="metaAuthor">Biobibliographische Informationen über</msg>

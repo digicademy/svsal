@@ -129,6 +129,10 @@
  <msg key="ownerMaster">Propiedad digital</msg>
  <msg key="titleReadingViev">Título</msg>
  <msg key="corpusVerb">todo el corpus como archivos TEI/XML</msg>
+  <msg key="worksNotice">La colección digital de fuentes del proyecto "La Escuela de Salamanca" 
+    incluye 116 obras en total, que se publicarán sucesivamente en esta página a partir de 
+    mayo de 2018. Para este fin, los textos están codificados por medio de las especificaciones 
+    de Text Encoding Initiative (TEI); para más información, por favor consulte las </msg>
  
  <!--Work help-->
  <msg key="addFunx">Additional Functions</msg>
@@ -182,6 +186,9 @@
  <msg key="placesInArticle">Lugares en este artículo</msg>
  <msg key="citedInArticle">Citas en este artículo</msg>
  <msg key="contents">Contenido</msg>
+  
+  <msg key="authorsNotice">Los artículos biográficos sobre los autores de la colección de fuentes del proyecto 
+    "La Escuela de Salamanca" se publicarán sucesivamente (a partir del 2019) en esta página.</msg>
  
  
  <!--search-->

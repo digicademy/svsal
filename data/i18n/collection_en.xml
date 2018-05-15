@@ -124,6 +124,10 @@
   <msg key="sort">Sort</msg>
   <!--<msg key="next">Next</msg>-->
   <msg key="corpusVerb">the whole corpus as TEI/XML files</msg>
+  <msg key="worksNotice">The digital collection of sources of the project "The School of Salamanca" comprises 116 works in 
+    total, which are successively published on this page starting in May 2018. For this purpose, the texts 
+    are encoded according to the specifications of the Text Encoding Initiative (TEI); for further information, please 
+    refer to the </msg>
   
   <!--Work help-->
   <msg key="addFunx">Additional Functions</msg>
@@ -211,6 +215,10 @@
   <msg key="OFM">Franciscan</msg>
   <msg key="OESA">Augustinian</msg>
   <msg key="CRSA">Augustinian</msg>
+  
+  <msg key="authorsNotice">
+    Biographic articles on authors from the collection of sources of the project "The School of Salamanca" 
+    will be successively published on this page (presumably starting in 2019).</msg>
   
   <!--work-->
   <msg key="text">Text</msg>
