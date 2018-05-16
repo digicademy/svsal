@@ -1014,6 +1014,23 @@ declare function app:loadWRKsnoJs ($node as node(), $model as map (*), $lang as 
     else()
 };
 
+declare %templates:wrap  
+    function app:WRKsNotice ($node as node(), $model as map(*), $lang as xs:string?)  {
+        let $output := 
+            <div style="padding:0.4em;text-align:justify">
+                    <i18n:text key="worksNotice"/>
+                    <a href="guidelines.html">
+                        <i18n:text key="guidelines">Editionsrichtlinien</i18n:text>
+                    </a>.<br/>
+                    <a href="resources/files/sal-tei-corpus.zip">
+                        <i18n:text key="download">Download</i18n:text>
+                    </a> <i18n:text key="corpus"/>
+            </div>
+        return  i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "en")                
+};
+
+
+
 
 (: ====================== End  List functions ========================== :)
 
@@ -2237,27 +2254,16 @@ declare function app:contactEMailHTML($node as node(), $model as map(*)) {
 declare function app:guidelines($node as node(), $model as map(*), $lang as xs:string) {
 (:        let $store-lang := session:set-attribute("lang", $lang):)
        
-        if ($lang eq 'de')  then
         let $parameters :=  <parameters>
                                 <param name="exist:stop-on-warn" value="yes"/>
                                 <param name="exist:stop-on-error" value="yes"/>
-                                <param name="language" value="de"></param>
                             </parameters>
-            return transform:transform(doc($config:app-root || "/resources/files/W_Head_general.xml")/tei:TEI//tei:div[@xml:id='guidelines-de'], doc(($config:app-root || "/resources/xsl/guidelines.xsl")), $parameters)
+        return  if ($lang eq 'de')  then
+            transform:transform(doc($config:app-root || "/resources/files/W_Head_general.xml")/tei:TEI//tei:div[@xml:id='guidelines-de'], doc(($config:app-root || "/resources/xsl/guidelines.xsl")), $parameters)
         else if  ($lang eq 'en')  then 
-        let $parameters :=  <parameters>
-                                <param name="exist:stop-on-warn" value="yes"/>
-                                <param name="exist:stop-on-error" value="yes"/>
-                                <param name="language" value="en"></param>
-                            </parameters>
-            return transform:transform(doc($config:app-root || "/resources/files/W_Head_general.xml")/tei:TEI//tei:div[@xml:id='guidelines-en'], doc(($config:app-root || "/resources/xsl/guidelines.xsl")), $parameters)
+            transform:transform(doc($config:app-root || "/resources/files/W_Head_general.xml")/tei:TEI//tei:div[@xml:id='guidelines-en'], doc(($config:app-root || "/resources/xsl/guidelines.xsl")), $parameters)
         else if  ($lang eq 'es')  then
-        let $parameters :=  <parameters>
-                                <param name="exist:stop-on-warn" value="yes"/>
-                                <param name="exist:stop-on-error" value="yes"/>
-                                <param name="language" value="es"></param>
-                            </parameters>
-            return transform:transform(doc($config:app-root || "/resources/files/W_Head_general.xml")/tei:TEI//tei:div[@xml:id='guidelines-es'], doc(($config:app-root || "/resources/xsl/guidelines.xsl")), $parameters)
+            transform:transform(doc($config:app-root || "/resources/files/W_Head_general.xml")/tei:TEI//tei:div[@xml:id='guidelines-es'], doc(($config:app-root || "/resources/xsl/guidelines.xsl")), $parameters)
         else()
 };
 
@@ -2659,9 +2665,10 @@ declare
 (:Special GUI: HUD display for work navigation:)
 declare %templates:default
     function app:guiWRK($node as node(), $model as map(*), $lang as xs:string, $wid as xs:string*, $q as xs:string?) as element() {    
-    let $downloadXML     :=  app:downloadXML($node, $model)
+    let $downloadXML     :=  app:downloadXML($node, $model, $lang)
     let $downloadTXTorig :=  app:downloadTXT($node, $model, 'orig', $lang)
     let $downloadTXTedit :=  app:downloadTXT($node, $model, 'edit', $lang)
+    let $downloadRDF     :=  app:downloadRDF($node, $model, $lang)
     let $downloadCorpus  :=  app:downloadCorpusXML($node, $model, $lang)
     let $name            :=  app:WRKcombined($node, $model, $wid)
     let $top             :=  'work.html?wid=' || $wid
@@ -2700,38 +2707,39 @@ declare %templates:default
                             <!--Details Button-->
                                {app:WRKdetailsCurrent($node, $model, $lang)}
                             </div>
+
+                        <!-- Textmode, register, print and export functions, in largeish views -->
                             <!--Textmode Button-->
-                            <div class="btn-group hidden-md hidden-sm hidden-xs">
-                               {app:WRKtextModus($node, $model, $lang)}
-                            </div>
+                            <div class="btn-group hidden-md hidden-sm hidden-xs">{app:WRKtextModus($node, $model, $lang)}</div>
                             <!-- Register Button-->
-                            <div class="btn-group hidden-md hidden-sm hidden-xs">
-                                <button type="button" class="btn btn-link disabled">
-                                    <span class="glyphicon glyphicon-stats text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="register">Register</i18n:text></span>
-                                </button>
+                            <div class="btn-group hidden-md hidden-sm hidden-xs btn btn-link disabled">
+                                <span class="glyphicon glyphicon-stats text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="register">Register</i18n:text></span>
                             </div>
                             <!--Print-Button and Export-Dropdown-->
-                            <div class="btn-group hidden-md hidden-sm hidden-xs">
-                                <button type="button" class="btn btn-link hidden-sm hidden-xs disabled">
-                                    <span class="glyphicon glyphicon-print text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="print">Drucken</i18n:text></span>
-                                </button>
-                                <div class="btn-group hidden-md hidden-sm hidden-xs">
-                                    <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                        <span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;<i18n:text key="export">Export</i18n:text>&#xA0;
-                                        <span class="caret"/>
-                                    </button>
-                                    <ul class="dropdown-menu" role="menu">
-                                        {$downloadXML}
-                                        {$downloadTXTorig}
-                                        {$downloadTXTedit}
-                                        {$downloadCorpus}
-                                        <li class="disabled">
-                                            <a><span class="glyphicon glyphicon-download-alt text-muted" aria-hidden="true"></span> <span class="text-muted"> PDF</span></a>
-                                        </li>
-                                    </ul>
-                                </div>
+                            <div class="btn-group hidden-md hidden-sm hidden-xs btn btn-link disabled">
+                                <span class="glyphicon glyphicon-print text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="print">Drucken</i18n:text></span>
                             </div>
-                            <!-- Hamburger Icon, used in small views only: substitutes textmode, print and export functions -->
+                            <div class="btn-group hidden-md hidden-sm hidden-xs">
+                                <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                    <span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;<i18n:text key="export">Export</i18n:text>&#xA0;
+                                    <span class="caret"/>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    {$downloadXML}
+                                    {$downloadTXTorig}
+                                    {$downloadTXTedit}
+                                    {$downloadRDF}
+                                    {$downloadCorpus}
+                                    <li class="disabled">
+                                        <a><span class="glyphicon glyphicon-download-alt text-muted" aria-hidden="true"></span> <span class="text-muted"> PDF</span></a>
+                                    </li>
+                                    <li class="disabled">
+                                        <a><span class="glyphicon glyphicon-download-alt text-muted" aria-hidden="true"></span> <span class="text-muted"> ebook</span></a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        <!-- Hamburger Icon, used in small views only: substitutes textmode, print and export functions -->
                             <!--<div class="btn-group hidden-lg hidden-md hidden-xs">
                                 <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                    <i class="fa fa-bars"></i>&#xA0;<i18n:text key="moreb">Mehr</i18n:text>
@@ -2752,30 +2760,22 @@ declare %templates:default
                                     </li>
                                 </ul>
                             </div>-->
-                            <!-- Hamburger Icon, used in small and eXtra-small views only: substitutes textmode, register print and export functions -->
+                        <!-- Hamburger Icon, used in small and eXtra-small views only: substitutes textmode, register, print and export functions -->
                             <div class="btn-group hidden-lg">
                                 <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                    <i class="fa fa-bars"></i>&#xA0;<i18n:text key="moreb">Mehr</i18n:text>
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
-                                <li class="disabled">
-                                    <a><span class="glyphicon glyphicon-stats text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="register">Register</i18n:text></span></a>
-                                </li>
-                                <li>
-                                    <a onclick="applyEditMode()" class="btn original unsichtbar" style="cursor: pointer;"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"/>&#xA0;<i18n:text key="constituted">Konstituiert</i18n:text></a>
-                                </li>
-                                <li>
-                                    <a onclick="applyOrigMode()" class="btn edited" style="cursor: pointer;"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"/>&#xA0;<i18n:text key="diplomatic">Diplomatisch</i18n:text></a>
-                                </li>
-                               <li class="disabled">
-                                    <a><span class="glyphicon glyphicon-print text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="print">Drucken</i18n:text></span></a>
-                               </li>
-                              {$downloadXML}
-                              {$downloadTXTorig}
-                              {$downloadTXTedit}
-                               <li class="disabled">
-                                    <a><span class="glyphicon glyphicon-download-alt text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted">PDF</span></a>
-                               </li>   
+                                    <li class="disabled"><a><span class="glyphicon glyphicon-stats text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="register">Register</i18n:text></span></a></li>
+                                    <li><a onclick="applyEditMode()" class="btn original unsichtbar" style="cursor: pointer;"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"/>&#xA0;<i18n:text key="constituted">Konstituiert</i18n:text></a></li>
+                                    <li><a onclick="applyOrigMode()" class="btn edited" style="cursor: pointer;"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"/>&#xA0;<i18n:text key="diplomatic">Diplomatisch</i18n:text></a></li>
+                                    <li class="disabled"><a><span class="glyphicon glyphicon-print text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="print">Drucken</i18n:text></span></a></li>
+                                    {$downloadXML}
+                                    {$downloadTXTorig}
+                                    {$downloadTXTedit}
+                                    {$downloadRDF}
+                                    <li class="disabled"><a><span class="glyphicon glyphicon-download-alt text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted">PDF</span></a></li>   
+                                    <li class="disabled"><a><span class="glyphicon glyphicon-download-alt text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted">ebook</span></a></li>   
                                 </ul>
                             </div>
                         </div>
@@ -2832,7 +2832,7 @@ declare function app:WRKpreparePagination($node as node(), $model as map(*), $wi
     let $workId    :=  if ($wid) then $wid else $model("currentWork")/@xml:id
     for $pb in doc($config:data-root || "/" || $workId || '_nodeIndex.xml')//sal:node[@type="pb"][not(starts-with(sal:title, 'sameAs'))][not(starts-with(sal:title, 'corresp'))]
         let $fragment := $pb/sal:fragment
-        let $url      := 'work.html?wid=' || $workId || '&amp;frag=' || $fragment || '#' || concat('pageNo_', $pb/@n)
+        let $url      := 'work.html?wid=' || $workId || '&amp;frag=' || $fragment || '#' || replace($pb/@n, 'facs_', 'pageNo_')
         return 
             <li role="presentation"><a role="menuitem" tabindex="-1" href="{$url}">{normalize-space($pb/sal:title)}</a></li>
 }
@@ -2947,30 +2947,46 @@ declare %templates:wrap
 };
 
 (:download XML func:)
-declare function app:downloadXML($node as node(), $model as map(*)) {
+declare function app:downloadXML($node as node(), $model as map(*), $lang as xs:string) {
     let $wid      :=  request:get-parameter('wid', '')
+    let $hoverTitle := i18n:process(<i18n:text key="downloadXML">Download TEI/XML source file</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
     let $download := 
-             if ($wid)                    then <li><a href="{$config:teiserver || '/' || $wid}.xml"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;XML</a></li>
-        else if ($model('currentLemma'))  then <li><a href="{$config:teiserver || '/' || $model('currentLemma')/@xml:id}.xml">XML</a></li>
-        else if ($model('currentAuthor')) then <li><a href="{$config:teiserver || '/' || $model('currentAuthor')/@xml:id}.xml">XML</a></li>
+             if ($wid)                    then <li><a title="{$hoverTitle}" href="{$config:teiserver || '/' || $wid}.xml"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;TEI/XML</a></li>
+        else if ($model('currentLemma'))  then <li><a title="{$hoverTitle}" href="{$config:teiserver || '/' || $model('currentLemma')/@xml:id}.xml">TEI/XML</a></li>
+        else if ($model('currentAuthor')) then <li><a title="{$hoverTitle}" href="{$config:teiserver || '/' || $model('currentAuthor')/@xml:id}.xml">TEI/XML</a></li>
         else()
     return $download
 };
 
 declare function app:downloadTXT($node as node(), $model as map(*), $mode as xs:string, $lang as xs:string) {
     let $wid      :=  request:get-parameter('wid', '')
+    let $hoverTitleEdit := i18n:process(<i18n:text key="downloadTXTEdit">Download as plaintext (constituted variant)</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
+    let $hoverTitleOrig := i18n:process(<i18n:text key="downloadTXTOrig">Download as plaintext (diplomatic variant)</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
     
     let $download := 
-             if ($wid and ($mode eq 'edit'))                    then <li><a href="{$config:apiserver || '/txt/work.' || $wid ||'.edit'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;TXT (<i18n:text key="constituted">Constituted</i18n:text>)</a></li>
-             else if ($wid and ($mode eq 'orig'))               then <li><a href="{$config:apiserver || '/txt/work.' || $wid ||'.orig'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;TXT (<i18n:text key="diplomatic">Diplomatic</i18n:text>)</a></li>
+             if ($wid and ($mode eq 'edit'))                    then <li><a title="{$hoverTitleEdit}" href="{$config:apiserver || '/txt/work.' || $wid ||'.edit'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;TXT (<i18n:text key="constituted">Constituted</i18n:text>)</a></li>
+             else if ($wid and ($mode eq 'orig'))               then <li><a title="{$hoverTitleOrig}" href="{$config:apiserver || '/txt/work.' || $wid ||'.orig'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;TXT (<i18n:text key="diplomatic">Diplomatic</i18n:text>)</a></li>
         else()
     return i18n:process($download, $lang, '/db/apps/salamanca/data/i18n', 'en')
 };
 
 declare function app:downloadCorpusXML($node as node(), $model as map(*), $lang as xs:string) {
-    let $download :=        <li><a href="{$config:teiserver ||'/sal-tei-corpus.zip'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/> ZIP (XML Corpus)</a></li>
-    return i18n:process($download, $lang, '/db/apps/salamanca/data/i18n', 'en')
+    let $hoverTitle := i18n:process(<i18n:text key="downloadCorpus">Download corpus of XML sources</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
+    let $download   := <li><a title="{$hoverTitle}" href="{$config:teiserver ||'/sal-tei-corpus.zip'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/> ZIP (XML Corpus)</a></li>
+    return $download
 };
+
+declare function app:downloadRDF($node as node(), $model as map(*), $lang as xs:string) {
+    let $wid      :=  request:get-parameter('wid', '')
+    let $hoverTitle := i18n:process(<i18n:text key="downloadRDF">Download RDF/XML data for this work</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
+    let $download := 
+             if ($wid)                    then <li><a title="{$hoverTitle}" href="{$config:dataserver || '/works.' || $wid}.rdf"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;RDF/XML</a></li>
+        else if ($model('currentLemma'))  then <li><a title="{$hoverTitle}" href="{$config:dataserver || '/lemmata.' || $model('currentLemma')/@xml:id}.rdf">RDF/XML</a></li>
+        else if ($model('currentAuthor')) then <li><a title="{$hoverTitle}" href="{$config:dataserver || '/authors.' || $model('currentAuthor')/@xml:id}.rdf">RDF/XML</a></li>
+        else()
+    return $download
+};
+
        
 declare function app:scaleImg($node as node(), $model as map(*), $wid as xs:string) {
              if ($wid eq 'W0001') then  'height: 3868, width:  2519'   
