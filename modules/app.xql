@@ -1024,7 +1024,7 @@ declare %templates:wrap
                     </a>.<br/>
                     <a href="resources/files/sal-tei-corpus.zip">
                         <i18n:text key="download">Download</i18n:text>
-                    </a> <i18n:text key="corpus"/>
+                    </a> <i18n:text key="corpusVerb"/>
             </div>
         return  i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "en")                
 };
