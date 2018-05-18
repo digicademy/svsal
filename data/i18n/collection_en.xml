@@ -58,6 +58,7 @@
   
   
   <!-- project.html -->
+
     <msg key="projectDesc">Project description</msg>
     <msg key="pojectDesc1">The (re-)discovery of the fundamental importance of the School of Salamanca for the early modern discourse about law, politics, religion and ethics 
       is widespread among of philosophers and legal historians. During the 16th and 17th centuries, the intellectual sparks emitted by this academic force field reached not 
@@ -123,24 +124,31 @@
     <msg key="ownerMaster">Digital master</msg>
     <msg key="sort">Sort</msg>
     <!--<msg key="next">Next</msg>-->
-    
-  <msg key="corpusVerb">the whole corpus as TEI/XML files</msg>
-  <msg key="worksNotice">The digital collection of sources of the project "The School of Salamanca" comprises 116 works in 
+    <msg key="corpusVerb">the whole corpus as TEI/XML files</msg>
+    <msg key="worksNotice">The digital collection of sources of the project "The School of Salamanca" comprises 116 works in 
     total, which are successively published on this page starting in May 2018. For this purpose, the texts 
     are encoded according to the specifications of the Text Encoding Initiative (TEI); for further information, please 
     refer to the </msg>
   
     
-    <!--Work help-->
-    <msg key="addFunx">Additional Functions</msg>
-    <msg key="onPage">on this page</msg>
-    <msg key="pages">Click on the page numbers to open the facsimile images:</msg>
-    <msg key="leafText">Click here to open the toolbox for a specific text section.</msg>
-    <msg key="bookmarkText">Click here to jump to a chosen text section.</msg>
-    <msg key="copyURL">Then you can copy the URL from the browser adress line.</msg>
-    <msg key="highlightText">Open a dialog in order to highlight persons, places, lemmata and cited works in the text.</msg>
-    <msg key="dontShow">Don't show again</msg>
-    <msg key="help">Click on this icon to open this message again.</msg>
+  <!--Work help-->
+  <msg key="addFunx">Additional Functions</msg>
+  <msg key="onPage">on this page</msg>
+  <msg key="pages">Click on the page numbers to open the facsimile images:</msg>
+  <msg key="leaf">Click the Leaf-Icon</msg>
+  <!--<msg key="leafText">to open the toolbox</msg>-->
+  <msg key="leafText">Mouse click to open the toolbox for a specific text section</msg>
+  <msg key="bookmark">Click on the Bookmark-Icon</msg>
+  <!--    <msg key="bookmarkText">to jump to a chosen section</msg>-->
+  <msg key="bookmarkText">Click here to jump to a chosen section</msg>
+  <msg key="copyURL">You can then copy the URL from the browser adress line</msg>
+  <!--    <msg key="copyURL">Then you can copy the URL from the browser adress line</msg>-->
+  <msg key="highlight">Click the higlighting-icon</msg>
+  <msg key="highlightText">Open a dialog in order to highlight persons, places, lemmata and cited works in the text</msg>
+  <!--    <msg key="highlightText">to open a dialog in order to highlight persons, places, lemmata and cited works in the text</msg>-->
+  <msg key="dontShow">Do not show this message again</msg>
+  <msg key="help">Click on this icon to open this message again.</msg>
+  
   
   <msg key="worksInCorpus">Works in the Corpus</msg>
   <msg key="authsInArticle">Persons in this article</msg>
@@ -218,6 +226,7 @@
     <msg key="OESA">Augustinian</msg>
     <msg key="CRSA">Augustinian</msg>
   
+
     <msg key="authorsNotice">
       Biographic articles on authors from the collection of sources of the project "The School of Salamanca" 
       will be successively published on this page (presumably starting in 2019).</msg>

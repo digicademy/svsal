@@ -1017,19 +1017,14 @@ declare function app:loadWRKsnoJs ($node as node(), $model as map (*), $lang as 
 declare %templates:wrap  
     function app:WRKsNotice ($node as node(), $model as map(*), $lang as xs:string?)  {
         let $output := 
-            <div style="padding:0.4em;text-align:justify">
+            <div style="padding:0.2em;text-align:justify">
                     <i18n:text key="worksNotice"/>
                     <a href="guidelines.html">
                         <i18n:text key="guidelines">Editionsrichtlinien</i18n:text>
-                    </a>.<br/>
-                    <a href="resources/files/sal-tei-corpus.zip">
-                        <i18n:text key="download">Download</i18n:text>
-                    </a> <i18n:text key="corpusVerb"/>
+                    </a>.
             </div>
         return  i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "en")                
 };
-
-
 
 
 (: ====================== End  List functions ========================== :)
@@ -2254,16 +2249,27 @@ declare function app:contactEMailHTML($node as node(), $model as map(*)) {
 declare function app:guidelines($node as node(), $model as map(*), $lang as xs:string) {
 (:        let $store-lang := session:set-attribute("lang", $lang):)
        
+        if ($lang eq 'de')  then
         let $parameters :=  <parameters>
                                 <param name="exist:stop-on-warn" value="yes"/>
                                 <param name="exist:stop-on-error" value="yes"/>
+                                <param name="language" value="de"></param>
                             </parameters>
-        return  if ($lang eq 'de')  then
-            transform:transform(doc($config:app-root || "/resources/files/W_Head_general.xml")/tei:TEI//tei:div[@xml:id='guidelines-de'], doc(($config:app-root || "/resources/xsl/guidelines.xsl")), $parameters)
+            return transform:transform(doc($config:app-root || "/resources/files/W_Head_general.xml")/tei:TEI//tei:div[@xml:id='guidelines-de'], doc(($config:app-root || "/resources/xsl/guidelines.xsl")), $parameters)
         else if  ($lang eq 'en')  then 
-            transform:transform(doc($config:app-root || "/resources/files/W_Head_general.xml")/tei:TEI//tei:div[@xml:id='guidelines-en'], doc(($config:app-root || "/resources/xsl/guidelines.xsl")), $parameters)
+        let $parameters :=  <parameters>
+                                <param name="exist:stop-on-warn" value="yes"/>
+                                <param name="exist:stop-on-error" value="yes"/>
+                                <param name="language" value="en"></param>
+                            </parameters>
+            return transform:transform(doc($config:app-root || "/resources/files/W_Head_general.xml")/tei:TEI//tei:div[@xml:id='guidelines-en'], doc(($config:app-root || "/resources/xsl/guidelines.xsl")), $parameters)
         else if  ($lang eq 'es')  then
-            transform:transform(doc($config:app-root || "/resources/files/W_Head_general.xml")/tei:TEI//tei:div[@xml:id='guidelines-es'], doc(($config:app-root || "/resources/xsl/guidelines.xsl")), $parameters)
+        let $parameters :=  <parameters>
+                                <param name="exist:stop-on-warn" value="yes"/>
+                                <param name="exist:stop-on-error" value="yes"/>
+                                <param name="language" value="es"></param>
+                            </parameters>
+            return transform:transform(doc($config:app-root || "/resources/files/W_Head_general.xml")/tei:TEI//tei:div[@xml:id='guidelines-es'], doc(($config:app-root || "/resources/xsl/guidelines.xsl")), $parameters)
         else()
 };
 
@@ -2832,7 +2838,7 @@ declare function app:WRKpreparePagination($node as node(), $model as map(*), $wi
     let $workId    :=  if ($wid) then $wid else $model("currentWork")/@xml:id
     for $pb in doc($config:data-root || "/" || $workId || '_nodeIndex.xml')//sal:node[@type="pb"][not(starts-with(sal:title, 'sameAs'))][not(starts-with(sal:title, 'corresp'))]
         let $fragment := $pb/sal:fragment
-        let $url      := 'work.html?wid=' || $workId || '&amp;frag=' || $fragment || '#' || replace($pb/@n, 'facs_', 'pageNo_')
+        let $url      := 'work.html?wid=' || $workId || '&amp;frag=' || $fragment || '#' || concat('pageNo_', $pb/@n)
         return 
             <li role="presentation"><a role="menuitem" tabindex="-1" href="{$url}">{normalize-space($pb/sal:title)}</a></li>
 }

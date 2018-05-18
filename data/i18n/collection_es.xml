@@ -44,7 +44,21 @@
     <msg key="metaDictionary">Überblick über die im Projekt erarbeiteten Sachartikel des Wörterbuchs der juridisch-politischen Sprache der Schule von Salamanca</msg>
     <msg key="metaWPs">Überblick über die Working Papers zur Schule von Salamanca, die im Rahmen der vom Projekt veranstalteten Reihe erschienen sind.</msg>
 
+    <!-- index -->
+    <msg key="introSearch">Búsqueda en textos completos de 116 obras, en el diccionario, en los artículos biográficos y en los Working Papers.</msg>
+    <msg key="introDict">Libre acceso al diccionario filosófico-jurídico de la Escuela de Salamanca.</msg>
+    <msg key="introAuthors">Acceso a los autores: Curriculum Vitae, bibliografía y referencias a obras dentro del corpus.</msg>
+    <msg key="introWorks">116 obras transcritas y editadas en su totalidad. Clic aquí para ver la lista completa.</msg>
+    <msg key="introWorkingPapers">Working Papers publicados por el proyecto dentro del contexto de la Escuela de Salamanca.</msg>
+    <msg key="introNews">Noticias de la comunidad.</msg>
+    <msg key="introProject">Equipo de trabajo, Descripción del Proyecto, Contacto y Créditos.</msg>
+    <msg key="introGoBtn">Vamos!</msg>
+    <msg key="imprint">Créditos</msg>
+    <msg key="contactUs">Feedback</msg>
+    <msg key="happyness">Muchas gracias para su interés. Para preguntas o más informaciones sobre el proyecto, escríbanos :</msg>
+
  <!-- project.html -->
+
     <msg key="projectDesc">Descripción del Proyecto</msg>
     <msg key="pojectDesc1">El significado de la Escuela de Salamanca, en la elaboración de conceptos claves en la temprana Edad Moderna para el Derecho, la Política, la Religión 
     y la Moral, ha sido reconocido por parte de la Filosofia, la Historia del pensamiento político, la Ética, así como la Historia del Derecho. Su importancia se ha manifestado 
@@ -74,23 +88,9 @@
     <msg key="team">Equipo de trabajo</msg>
     <msg key="teamDesc">Miembros del equipo de trabajo en la página de la Academia de Mainz.</msg>
     <msg key="getInvolved">Contribuir</msg>
- 
 
  
- 
- 
-   <!-- index -->
-    <msg key="introSearch">Búsqueda en textos completos de 116 obras, en el diccionario, en los artículos biográficos y en los Working Papers.</msg>
-    <msg key="introDict">Libre acceso al diccionario filosófico-jurídico de la Escuela de Salamanca.</msg>
-    <msg key="introAuthors">Acceso a los autores: Curriculum Vitae, bibliografía y referencias a obras dentro del corpus.</msg>
-    <msg key="introWorks">116 obras transcritas y editadas en su totalidad. Clic aquí para ver la lista completa.</msg>
-    <msg key="introWorkingPapers">Working Papers publicados por el proyecto dentro del contexto de la Escuela de Salamanca.</msg>
-    <msg key="introNews">Noticias de la comunidad.</msg>
-    <msg key="introProject">Equipo de trabajo, Descripción del Proyecto, Contacto y Créditos.</msg>
-    <msg key="introGoBtn">Vamos!</msg>
-    <msg key="imprint">Créditos</msg>
-    <msg key="contactUs">Feedback</msg>
-    <msg key="happyness">Muchas gracias para su interés. Para preguntas o más informaciones sobre el proyecto, escríbanos :</msg>
+
    
    <!--works/details-->
     <msg key="sort">Ordenar</msg>
@@ -138,25 +138,19 @@
     <msg key="addFunx">Additional Functions</msg>
     <msg key="onPage">on this page</msg>
     <msg key="pages">Click on the page numbers to open the facsimile images:</msg>
+    <msg key="leaf">Click the Leaf-Icon</msg>
+    <!--<msg key="leafText">to open the toolbox</msg>-->
     <msg key="leafText">Mouse click to open the toolbox for a specific text section</msg>
-    <msg key="bookmarkText">Click to jump to a chosen section</msg>
-    <msg key="copyURL">Then you can copy the URL from the browser adress line</msg>
-    <msg key="highlightText">Mouse click to open a dialog in order to highlight persons, places, lemmata and cited works in the text</msg>
+    <msg key="bookmark">Click on the Bookmark-Icon</msg>
+    <!--    <msg key="bookmarkText">to jump to a chosen section</msg>-->
+    <msg key="bookmarkText">Click here to jump to a chosen section</msg>
+    <msg key="copyURL">You can then copy the URL from the browser adress line</msg>
+<!--    <msg key="copyURL">Then you can copy the URL from the browser adress line</msg>-->
+    <msg key="highlight">Click the higlighting-icon</msg>
+    <msg key="highlightText">Open a dialog in order to highlight persons, places, lemmata and cited works in the text</msg>
+<!--    <msg key="highlightText">to open a dialog in order to highlight persons, places, lemmata and cited works in the text</msg>-->
     <msg key="dontShow">Do not show this message again</msg>
     <msg key="help">Click on this icon to open this message again.</msg>
- 
-   <!--Work help-->
-    <msg key="addFunx">Additional Functions</msg>
-    <msg key="onPage">on this page</msg>
-    <msg key="pages">Click the page numbers to open the original image:</msg>
-    <msg key="leaf">Click the Leaf-Icon</msg>
-    <msg key="leafText">to open the toolbox</msg>
-    <msg key="bookmark">Click the Bookmark-Icon</msg>
-    <msg key="bookmarkText">to jump to a chosen section</msg>
-    <msg key="copyURL">You can then copy the URL from the browser adress line</msg>
-    <msg key="highlight">Click the higlighting-icon</msg>
-    <msg key="highlightText">to open a dialog in order to highlight persons, places, lemmata and cited works in the text</msg>
-    <msg key="dontShow">Do not show this massage again</msg>
  
 
   <!--author-->
@@ -186,6 +180,7 @@
     <msg key="placesInArticle">Lugares en este artículo</msg>
     <msg key="citedInArticle">Citas en este artículo</msg>
     <msg key="contents">Contenido</msg>
+
  
     <msg key="authorsNotice">Los artículos biográficos sobre los autores de la colección de fuentes del proyecto 
       "La Escuela de Salamanca" se publicarán sucesivamente (a partir del 2019) en esta página.</msg>
@@ -240,15 +235,7 @@
     <msg key="downloadTXTOrig">Descargar como texto sin formato (variante diplomático)</msg>
     <msg key="downloadRDF">Descargar informaciones sobre esta obra como archivo RDF/XML</msg>
     <msg key="downloadCorpus">Descargar corpus como TEI/XML archivos</msg>
-    
-   <!--<msg key="corpus">Corpus</msg>
-   <msg key="dictionarySearch">Dictionary</msg>
-   <msg key="headings">Headings</msg>
-   <msg key="notes">Notes</msg>
-   <msg key="in">in</msg>
-   <msg key="entry">entry</msg>
-   <msg key="hit">hit</msg>
-   <msg key="entries">Entries</msg>-->
+
    
    <!--common-->
     <msg key="externalWindow">Abrir enlace en una nueva pestaña</msg>
