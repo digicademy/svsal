@@ -12,5 +12,6 @@
     <target>salamanca</target>
     <prepare>pre-install.xql</prepare>
     <finish>post-install.xql</finish>
+    <permissions/>
 <deployed>2016-04-11T14:20:04.566+02:00</deployed>
 </meta>
