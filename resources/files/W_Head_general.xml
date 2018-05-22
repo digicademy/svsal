@@ -408,7 +408,7 @@
                                 unter anderem auf, wie Sonderzeichen wiedergegeben werden oder wie
                                 Lemma-, Autoren- und Werkverweise mit XML-Markup versehen werden.</p>
                             <p xml:id="p_dxdgrnnmr5n">Neben den im Folgenden genannten Beispielen
-                                lassen sich auf unserer <ref type="url" target="https://api.salamanca.school/codesharing.html">"Codesharing"-Seite</ref> 
+                                lassen sich auf unserer <ref type="url" target="https://api.salamanca.school/codesharing/codesharing.html">"Codesharing"-Seite</ref> 
                                 zu allen Elementen und Attributen beispielhafte Verwendungen
                                 automatisch aus unseren Texten exzerpieren. Dazu haben wir den sehr komfortablen, von
                                 <ref type="url" target="http://www.mholmes.com/">Martin Holmes</ref>
@@ -738,7 +738,7 @@
                                 <div xml:id="Seitenzahlen" type="section">
                                     <head n="3.2.3.1." xml:id="head_aslkfjaf">Paginierung</head>
                                     <p xml:id="p_pofgdgfkj">Seitenzahlen bzw. Foliozahlen werden im Attribut <att>n</att> des <gi>pb</gi>-Elements 
-                                    erfasst (siehe auch <ref target="#head_uoipg3q4v4w">Seiten-, Spalten- und Zeilenumbrüche</ref>). Dabei werden grundsätzlich 
+                                        erfasst (siehe auch <ref target="#de_Umbrueche">Seiten-, Spalten- und Zeilenumbrüche</ref>). Dabei werden grundsätzlich 
                                         die Ziffern auf der jeweiligen Seite der originalen Vorlage übernommen. Sind 
                                     auf einer Seite keine Seiten-/Folioziffern vorhanden oder sind diese fehlerhaft, wird die Zählung korrigiert bzw. 
                                     es werden Seiten-/Foliozahlen hinzugefügt, wobei die Korrektur/Hinzufügung mittels 
@@ -947,7 +947,7 @@
                                         <att>break</att>-Attribut. </item>
                                 <item xml:id="item_ljpokpokp"> Demgegenüber wird ein normaler Zeilenumbruch, bei dem kein
                                     Wort getrennt wird, einfach mit einem <gi>lb</gi>-Element
-                                    ausgezeichnet (siehe <ref target="#head_uoipg3q4v4w">Seiten-, Spalten- und Zeilenumbrüche</ref>). </item>
+                                    ausgezeichnet (siehe <ref target="#de_Umbrueche">Seiten-, Spalten- und Zeilenumbrüche</ref>). </item>
                             </list>
                         </div>
                         <div type="section" xml:id="de_Lücken">
@@ -1112,7 +1112,7 @@
                             <div xml:id="gesamtstruktur" type="section">
                                 <head n="4.1.2." xml:id="head_slfkujsdf">Gesamtstruktur eines Textes</head>
                                 <p xml:id="p_sdfiondlf">Auf höchster struktureller Ebene wird der Hauptteil eines Textes 
-                                im <gi>body</gi>-Element von <gi>text</gi> erfasst. Die Titelei (siehe auch <ref target="de_Titelseite">Titelseite(n)</ref>) 
+                                im <gi>body</gi>-Element von <gi>text</gi> erfasst. Die Titelei (siehe auch <ref target="#de_Titelseite">Titelseite(n)</ref>) 
                                     und etwaige weitere Textabschnitte vor dem Hauptteil (z.B. Widmungen, Vorwörter, Inhaltsverzeichnisse, Angaben zu Privilegien, etc.)
                                 werden im <gi>front</gi>-Element, etwaige nach dem Hauptteil auftretende Bestandteile des Werkes (z.B. Indizes, Errata, 
                                     Inhaltsverzeichnisse o.ä.) im <gi>back</gi>-Element erfasst.</p>
@@ -1568,8 +1568,8 @@
                                         </title>
                                     </bibl>
                                     ]]></egXML>
-                                    <p xml:id="p_serhtmetrsg4wf">(Zu Eigennamen und Zitaten siehe auch die Abschnitte zu <ref target="#head_iuziuziuz">Personen</ref>, 
-                                        <ref target="#head_josomcp3q4">Orten</ref> und <ref target="#head_cw2453grf3">Literaturangaben</ref>. 
+                                    <p xml:id="p_serhtmetrsg4wf">(Zu Eigennamen und Zitaten siehe auch die Abschnitte zu <ref target="#Personen">Personen</ref>, 
+                                        <ref target="#Orte">Orten</ref> und <ref target="#de_Bibl">Literaturangaben</ref>. 
                                         Zum <att>ref</att>-Attribut in diesem Beispiel siehe <ref target="#de_Referenzen">ref</ref>.)</p>
                                 </div>
                                 </div>
@@ -1775,7 +1775,7 @@
                     <div type="chapter" xml:id="de_Header">
                         <head n="5." xml:id="head_oijsidfhoercr">Metadaten im Dateikopf</head>
                         <p xml:id="p_deluohf324">Im <gi>teiHeader</gi> der Werke werden stets identische Angaben über <gi>xi:include</gi> 
-                            Anweisungen generiert. Diese werden über <gi>xi:include</gi> aus der <ref target="W_Head_general.xml">
+                            Anweisungen generiert. Diese werden über <gi>xi:include</gi> aus der <ref target="https://files.salamanca.school/W_Head_general.xml">
                                 Dokumentationsdatei zu den TEI-Metadaten des Projekts</ref> bezogen. Hierzu zählen folgende Statements des <gi>teiHeader</gi>s:<list>
                                 <item xml:id="item_nlcesp987f32d">
                                     <gi>editionStmt</gi>
@@ -1814,7 +1814,7 @@
                                             revisionDesc
                                         </gi>
                                     </ref> "(...) dokumentiert die Änderungen, die an der Datei vorgenommen wurden" (TEI Guidelines). Hierzu auch der Abschnitt 
-                                    <ref target="#status">Bearbeitungsstatus</ref>
+                                    <ref target="#bearbetst">Bearbeitungsstatus</ref>
                                 </item>
                             </list>
                         </p>
@@ -2343,7 +2343,7 @@
                                 ]]>
                                 </egXML>
                                 <p xml:id="p_kjhdfdsdf">With sections before the main part of the text (see also 
-                                    <ref target="#textstructure">Overall Structure of a Work/Volume</ref>) that do not have any 
+                                    <ref target="#overallstructure">General Structure of a Work/Volume</ref>) that do not have any 
                                     numeration, regularly incrementing pagination (regardless of the 
                                     type of numeration of the main part) by means of Roman numerals is added; with 
                                     unnumbered parts <hi rendition="#it">after</hi> the main part, the (type of) numeration 
@@ -2699,7 +2699,7 @@
                             ]]></egXML>
                         </div>
                             <div xml:id="overallstructure" type="section">
-                                <head n="4.1.2." xml:id="head_slfwujsdf">Overall Structure of a Text</head>
+                                <head n="4.1.2." xml:id="head_slfwujsdf">General Structure of a Text</head>
                                 <p xml:id="p_sdfiotzlf">On the highest structural level of a text (i.e., directly below 
                                     the <gi>text</gi> element), its main part is embedded in the 
                                     <gi>body</gi> element. The title page (see also <ref target="#titlepage">Title Page(s)</ref>) 
@@ -2741,7 +2741,7 @@
                                 <p xml:id="p_jerdlfdfs">The thus encoded metadata of a text as given on its title page may also serve for 
                                     cross-checking with the <ref target="#bibldescription">Bibliographic Description</ref> of the work.
                                     All text blocks on a title page not mentioned here are annotated as 
-                                    <ref target="#typoparagraphs">typographic paragraphs</ref> (<gi>p</gi>) by default.</p>
+                                    <ref target="#paragraphs">typographic paragraphs</ref> (<gi>p</gi>) by default.</p>
                             </div>
                             <div xml:id="structuralunits" type="section">
                                <head n="4.1.4." xml:id="head_irnm79erdj">Structural Text Units</head>
@@ -3005,7 +3005,6 @@
                                     make such elements "addressable" and recognizable in a logically intuitive way (not least 
                                     for persons editing the XML document).</p>
                             </div>
-                            <!-- TODO ######################################################################## TODO -->
                             <div type="section" xml:id="crossreferences">
                             <head n="4.2.2." xml:id="head_m0erjq8932j4">Cross-References</head>
                             <p xml:id="p_k09iijerj3">If annotated, cross-references are annotated generally by means of 
@@ -3365,7 +3364,7 @@
                         <head n="5." xml:id="head_oeridfhoercr">Metadata in the teiHeader</head>
                         <p xml:id="p_deluoer324">In the <gi>teiHeader</gi> of a work, generic information (applying to all works of 
                             the corpus) is embedded by means of <gi>xi:include</gi> elements. The latter are included 
-                            from the central <ref target="W_Head_general.xml">documentation file</ref> for TEI metadata of the project. 
+                            from the central <ref target="http://files.salamanca.school/W_Head_general.xml">documentation file</ref> for TEI metadata of the project. 
                             This comprises the following statements from the <gi>teiHeader</gi>:<list>
                                     <item xml:id="item_nlcesper7f32d">
                                         <gi>editionStmt</gi>
@@ -3378,7 +3377,7 @@
                                     </item>
                                 </list>
                         </p>
-                        <p xml:id="p_erjewlihoiewrfr">In the <ref target="W_Head_general.xml">documentation file</ref> for TEI metadata of the project, the 
+                        <p xml:id="p_erjewlihoiewrfr">In the <ref target="http://files.salamanca.school/W_Head_general.xml">documentation file</ref> for TEI metadata of the project, the 
                             non-standard characters declared in the <gi>charDecl</gi> are included in turn via <gi>xi:include</gi> from a specific 
                             <ref target="https://files.salamanca.school/Sonderzeichen.xml">non-standard character file</ref>.</p>
                         <p xml:id="p_fleiuerfdcw">In opposition to these generically (i.e., corpus-wide) applying information, the following data is 
@@ -3919,7 +3918,7 @@
                                       (cuya <gi>encodingDesc</gi> forma parte de los <gi>teiHeader</gi>s de un registro TEI de un(a) volumen/obra).
                                     </p>
                                    <p xml:id="p_fewvwefrr5c">Para la codificación de caracteres especiales, abreviaturas 
-                                      y ligaduras comparar también <ref target="normimplicitas">arriba</ref>, así como para la práctica (también "histórica") 
+                                      y ligaduras comparar también <ref target="#normimplicitas">arriba</ref>, así como para la práctica (también "histórica") 
                                       del registro de caracteres especiales en el proyecto, 
                                       las instrucciones de registro 
                                       <ref target="http://facs.salamanca.school/docs/transcription/guidelines/general/">generales</ref> y 
@@ -4170,7 +4169,7 @@
                               <q type="important"/> (importante) en la posición local del texto 
                               (es decir dentro del texto TEI), sino que se registra en el texto regular.  
                               En su lugar, si se usaron páginas de otra plantilla se coloca una 
-                              nota en el <gi>teiHeader</gi> (Véase <ref target="descripcionbibl">Descripción Bibliográfica</ref>).
+                              nota en el <gi>teiHeader</gi> (Véase <ref target="#descripcionbibl">Descripción Bibliográfica</ref>).
                             </p>
                            <p xml:id="p_o9err45r24">Si el texto no es reconocible, pero si el editor tiene 
                               una página de repuesto legible de una edición 
@@ -4458,7 +4457,7 @@
                                         dentro de la nota, el elemento respectivo 
                                         (<gi>pb</gi> o <gi>cb</gi>) hace referencia al <att>xml:id</att> del elemento de 
                                         salto correspondiente (<gi>pb</gi> o <gi>cb</gi>) en el área principal del 
-                                        texto por medio del atributo <att>sameAs</att> (Véase también <ref target="#xmlid-es">xml:id</ref>).
+                                        texto por medio del atributo <att>sameAs</att> (Véase también <ref target="#es-xmlid">xml:id</ref>).
                                         </p>
                                 </div>
                                 <div type="section" xml:id="notassimbolos">
@@ -4486,7 +4485,7 @@
                         </div>
                         <div xml:id="identificacionenlaz" type="section">
                             <head xml:id="head_flksddf8der" n="4.2.">Identificación y enlazamiento de unidades de textos.</head>
-                            <div type="section" xml:id="xmlid-es">
+                            <div type="section" xml:id="es-xmlid">
                                 <head n="4.2.1." xml:id="head_cdwerpso423">
                                     <att>xml:id</att>
                                 </head>
@@ -4728,7 +4727,7 @@
                                         </item>
                                         <item xml:id="item_se4er4fsfw45">
                                             Se hace referencia a una entidad por fuera de la aplicación. Véase 
-                                            <ref target="#datosnormasexternos">Normas de datos externos</ref>.
+                                            <ref target="#datosnormasexternas">Datos de normas externas</ref>.
                                         </item>
                                             </list>
                                     </div>
@@ -4794,7 +4793,7 @@
                                         <att>sortKey</att>
                                     </head>
                                     <p xml:id="p_fceosierpospz">El atributo <att>sortKey</att> se usa exclusivamente con los elementos 
-                                        <gi>bibl</gi> (es decir, para <ref target="es-bibl">referencias bibliográficas</ref> o 
+                                        <gi>bibl</gi> (es decir, para <ref target="#es-bibl">referencias bibliográficas</ref> o 
                                         <ref target="#obras">obras internas</ref>). 
                                         Sirve para agrupar referencias a una obra específica. Por lo 
                                         tanto, el valor que debe ingresarse en <att>sortKey</att> está compuesto por el 
@@ -4844,11 +4843,7 @@
                                 <p xml:id="p_mjseehpvw3h94">Las referencias internas hacen referencia en este caso a los 
                                     enlaces entre bases de datos dentro de la edición digital 
                                     (véase también <ref target="#variantesref">Variantes del atributo ref</ref>) y 
-                                    pueden usarse en diferentes casos, por ejemplo:
-                                    
-                                    Internal references designate links between datasets within the digital edition 
-                                    (see also <ref target="#refvariants">Variants of @ref</ref>) and can be applied, for instance, in the 
-                                    following scenarios:</p>
+                                    pueden usarse en diferentes casos, por ejemplo:</p>
                                 <list>
                                     <item xml:id="item_kocsjrerspwq">
                                         Referencia en un obra a un pasaje de otra obra, a autores de obras que se encuentran dentro 
@@ -4992,8 +4987,8 @@
                         <head n="5." xml:id="head_oeidfhoercr">Metadatos en el encabezado del archivo</head>
                         <p xml:id="p_delsuoer324">El <gi>teiHeader</gi> de las obras siempre 
                             genera información idéntica sobre instrucciones xi:include. 
-                            Estas se obtienen a través de <gi>xi:include</gi> desde 
-                            <ref target="W_Head_general.xml">El Archivo de 
+                            Estas se obtienen a través de <gi>xi:include</gi> desde el 
+                            <ref target="http://files.salamanca.school/W_Head_general.xml">Archivo de 
                             Documentación de los Metadatos de TEI del Proyecto</ref>. 
                             Estos incluyen las siguientes declaraciones en el <gi>teiHeader</gi>:<list>
                                     <item xml:id="item_nlceser7f32d">
@@ -5007,7 +5002,7 @@
                                     </item>
                                 </list>
                         </p>
-                        <p xml:id="p_erjewlihoiewfr">Dentro del <ref target="W_Head_general.xml">archivo de documentación</ref> se 
+                        <p xml:id="p_erjewlihoiewfr">Dentro del <ref target="http://files.salamanca.school/W_Head_general.xml">archivo de documentación</ref> se 
                             integran nuevamente los caracteres especiales utilizados para <gi>charDecl</gi> 
                             a través de <gi>xi:include</gi> desde el 
                             <ref target="https://files.salamanca.school/Sonderzeichen.xml">Archivo TEI de Caracteres Especiales</ref>.</p>
@@ -5039,7 +5034,7 @@
                                         </gi>
                                     </ref> "(...) resume el historial de la revisión de un archivo" 
                                     <ref target="http://www.tei-c.org/release/doc/tei-p5-doc/es/html/ref-revisionDesc.html">(Directrices TEI)</ref>. 
-                                    See also the section on <ref target="#revisionhistory">Revision History</ref>.
+                                    También véase <ref target="#historialderevision">Historial de revisión</ref>.
                                 </item>
                             </list>
                         </p>
@@ -5136,13 +5131,7 @@
                                 no sea la primera edición, se le agrega al elemento <gi>date</gi> 
                                 del atributo <att>type</att> con el valor <val>summaryFirstEd</val>, el elemento <gi>date</gi> con el 
                                 valor <val>summaryFirstEd</val> en el atributo <att>type</att>. Con esto se hace 
-                                evidente cuales volúmenes se usan y si corresponden a la primera edición.
-                                
-                                Should the digitized series not be the one containing the first editions of the volumes, 
-                                the <gi>date</gi> element containing the <gi>type</gi> attribute value of <gi>summaryFirstEd</gi> is complemented 
-                                by a <gi>date</gi> element containing the <gi>type</gi> attribute value of <gi>summaryThisEd</gi>.
-                                Thus, it is made clear which volumes from the series have been encoded, and whether the volumes are 
-                                the first-edition volumes.</p>
+                                evidente cuales volúmenes se usan y si corresponden a la primera edición.</p>
                             <p xml:id="p_saarerwtgd">Junto a la información sobre la imprenta (editorial, 
                                 lugar y año de impresión) se añaden además, el nombre de la 
                                 institución que posee los originales de los documentos 
