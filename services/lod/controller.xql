@@ -7,7 +7,7 @@ import module namespace xmldb   = "http://exist-db.org/xquery/xmldb";
 import module namespace console = "http://exist-db.org/xquery/console";
 import module namespace util    = "http://exist-db.org/xquery/util";
 import module namespace functx  = "http://www.functx.com";
-import module namespace config  = "http://salamanca/config" at "modules/config.xqm";
+import module namespace config  = "http://salamanca/config" at "modules/xconfig.xqm";
 import module namespace net     = "http://salamanca/net"    at "modules/net.xql";
 import module namespace render  = "http://salamanca/render" at "modules/render.xql";
 
