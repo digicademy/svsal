@@ -6,6 +6,7 @@ xquery version "1.0";
 
 import module namespace xmldb =   "http://exist-db.org/xquery/xmldb";
 import module namespace sm    =   "http://exist-db.org/xquery/securitymanager";
+import module namespace util  = "http://exist-db.org/xquery/util";
 
 (: The following external variables are set by the repo:deploy function :)
 
@@ -20,10 +21,11 @@ declare variable $target external;
     is required for writing in the database and setting permissions, which many administration 
     (like render.xql/html) tasks do. Permissions are enforced by file ownership, managed in post-install.xql :)
 
-declare variable $group       := "userGrp";
-declare variable $adminGrp    := "adminGrp";
-declare variable $user        := "user";
-declare variable $pwd         := "";
+declare variable $group       := "tmpGrp";
+declare variable $adminGrp    := "tmpAdminGrp";
+declare variable $user        := "tmpUser";
+declare variable $pwd         := replace(util:uuid(), '-', '');
+declare variable $pwdSet      := if (string-length($pwd) > 10) then true() else false();
 declare variable $umask       := 2;
 declare variable $otherGroups := ("dba", "monex", "eXide", $adminGrp);
 
@@ -45,7 +47,7 @@ declare function local:mkcol($collection, $path) {
 
 let $GR     :=  if (not (sm:group-exists($group))    ) then sm:create-group($group) else ()
 let $AGR    :=  if (not (sm:group-exists($adminGrp)) ) then sm:create-group($adminGrp) else ()
-let $US     :=  if (not (sm:user-exists($user))) then
+let $US     :=  if (not (sm:user-exists($user)) and $pwdSet) then
                     let $account := sm:create-account($user, $pwd, $group, $otherGroups)
                     let $mask    := sm:set-umask($user, $umask)
                     return $account
@@ -55,4 +57,7 @@ return
 
 (: store the collection configuration :)
     local:mkcol("/db/system/config", $target),
-    xmldb:store-files-from-pattern(concat("/db/system/config", $target), $dir, "*.xconf")
+    xmldb:store-files-from-pattern(concat("/db/system/config", $target), $dir, "*.xconf"),
+    sm:remove-account($user),
+    sm:remove-group($group),
+    sm:remove-group($adminGrp)
