@@ -1225,11 +1225,13 @@ declare function app:displaySingleWork($node as node(), $model as map(*),
                                             $lang as xs:string?) {   
     let $workId             := if ($wid) then $wid else $model("currentWork")/@xml:id
 
-    let $targetFragment    := if ($frag and $frag || ".html" = xmldb:get-child-resources($config:html-root || "/" || $workId)) then
-                                    $frag || ".html"
-                                 else if (xmldb:collection-available($config:html-root || "/" || $workId)) then
-                                    functx:sort(xmldb:get-child-resources($config:html-root || "/" || $workId))[1]
-                                 else ()
+    let $targetFragment    :=   if (xmldb:collection-available($config:html-root || "/" || $workId)) then
+                                    if ($frag and $frag || ".html" = xmldb:get-child-resources($config:html-root || "/" || $workId)) then
+                                        $frag || ".html"
+                                    else if (xmldb:collection-available($config:html-root || "/" || $workId)) then
+                                        functx:sort(xmldb:get-child-resources($config:html-root || "/" || $workId))[1]
+                                    else ()
+                                else ()
 
     let $originalDoc    := doc($config:html-root || "/" || $workId || "/" || $targetFragment)
 

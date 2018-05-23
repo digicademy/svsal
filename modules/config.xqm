@@ -661,7 +661,7 @@ declare %templates:default("lang", "en")
 };
 
 declare 
-    function config:rdf-url($node as node(), $model as map(*), $wid as xs:string*, $aid as xs:string*, $lid as xs:string*) as element() {
+    function config:rdf-url($node as node(), $model as map(*), $wid as xs:string*, $aid as xs:string*, $lid as xs:string*) as element()? {
         if (request:get-attribute('$exist:resource') = ("authors.html",
                                                              "works.html",
                                                              "dictionary.html",
