@@ -1,0 +1,187 @@
+<?xml-model href="https://files.salamanca.school/SvSal_txt.rng"
+    type="application/xml"
+    schematypens="http://relaxng.org/ns/structure/1.0"?><TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="TechSearchHelp">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title xml:lang="de">Impressum</title>
+                <title xml:lang="en">Imprint</title>
+                <title xml:lang="es">Créditos</title>
+                <author>
+                    <surname>Birr</surname>, <forename>Christiane</forename>
+                </author>
+                <author>
+                    <surname>Glück</surname>, <forename>David</forename>
+                </author>
+                <author>
+                    <surname>Wagner</surname>, <forename>Andreas</forename>
+                </author>
+            </titleStmt>
+            <editionStmt>
+                <edition/>
+                <respStmt>
+                    <resp xml:lang="en">Created by</resp>
+                    <persName ref="#CB">Christiane Birr</persName>
+                    <persName ref="#DG">David Glück</persName>
+                    <persName ref="#AW">Andreas Wagner</persName>
+                </respStmt>
+                <sponsor>
+                    <orgName xml:lang="de">Akademie der Wissenschaften und der Literatur, Mainz</orgName>
+                    <ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>
+                </sponsor>
+                <funder>
+                    <orgName xml:lang="de">Akademie der Wissenschaften und der Literatur, Mainz</orgName>
+                    <ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>
+                </funder>
+            </editionStmt>
+            <publicationStmt>
+                <publisher>
+                    <orgName xml:lang="de">Akademie der Wissenschaften und der Literatur, Mainz</orgName>
+                    <ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>
+                </publisher>
+                <distributor>
+                    <orgName xml:lang="de">Akademie der Wissenschaften und der Literatur, Mainz</orgName>, 
+                    <orgName xml:lang="de">Max Planck Institut für europäische Rechtsgeschichte</orgName>, 
+                    <orgName xml:lang="de">Goethe-Universität Frankfurt/Main</orgName>
+                    <email>info@salamanca.adwmainz.de</email>
+                </distributor>
+                <pubPlace role="digitzedEd" xml:lang="de">
+                    Frankfurt/Main (<ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>)
+                </pubPlace>
+                
+                <!-- Angaben zum copyright -->
+                <availability>
+                    <licence target="http://creativecommons.org/licenses/by-nc-sa/3.0/">
+                        <p xml:id="p_lzojpcn3qp3q4" xml:lang="de">Dieses Werk bzw. dieser Inhalt wurde erstellt durch die Akademie der
+                            Wissenschaften und der Literatur, Mainz, und steht unter einer Creative
+                            Commons Lizenz: Namensnennung-NichtKommerziell-KeineBearbeitung 3.0 Unported.</p>
+                    </licence>
+                </availability>
+            </publicationStmt>
+            <sourceDesc>
+                <p xml:lang="de" xml:id="p_koiuwasdas">Born digital, erstellt am 2018-05-24, um 10:40 Uhr.</p>
+            </sourceDesc>
+        </fileDesc>
+        <revisionDesc status="a_raw">
+            <listChange>
+                <change who="#DG" when="2018-05-24" status="a_raw" xml:lang="en">Added to the database.</change>
+                <change who="#CB" when="2018-05-24" status="a_raw" xml:lang="en">Created.</change>
+            </listChange>
+        </revisionDesc>
+    </teiHeader>
+    <text type="technical" xml:id="completeWork">
+        <body>
+            
+            <div type="chapter" xml:id="div-imprint-de" xml:lang="de">
+                <head xml:id="head-sadlkfj">
+                    <hi rendition="#b">Impressum</hi>
+                </head>
+                <p xml:id="p-sgffsdssdf">
+                    <hi rendition="#b">Die Schule von Salamanca. Eine digitale Quellensammlung und 
+                        ein Wörterbuch ihrer juristisch-politischen Sprache</hi>
+                </p>
+                <div type="section" xml:id="div-project-de">
+                    <p xml:id="p-sdkfjdsf">Ein Projekt der:</p>
+                    <div xml:id="div-alskdjasdbh" type="section">
+                        <p xml:id="p_sdfgcsrbc">Akademie der Wissenschaften und der Literatur │ Mainz
+                            <lb/>Geschwister-Scholl-Straße 2
+                            <lb/>55131 Mainz
+                            <lb/>Tel. 0049 6131 577 0
+                            <lb/>Fax. 0049 6131 577 111
+                            <lb/><ref target="mailto:generalsekretariat@adwmainz.de" type="url">Kontakt aufnehmen</ref>
+                        </p>
+                    </div>
+                </div>
+                <div xml:id="div-head-de" type="section">
+                    <head xml:id="head-iuzasjfd">Projektleiter</head>
+                    <div xml:id="div-aklsjfsa" type="section">
+                        <list xml:id="list-aslkdjd">
+                            <item xml:id="item-kalsjdasd">
+                                <p xml:id="item-laskfj">
+                                    Prof. Dr. Thomas Duve
+                                    <lb/>Max-Planck-Institut für europäische Rechtsgeschichte
+                                    <lb/>Hansaallee 41
+                                    <lb/>60323 Frankfurt am Main
+                                    <lb/>Tel.: +49 69 789 78 165
+                                    <lb/>Fax: +49 69 789 78 211
+                                    <lb/><ref target="mailto:sekduve@rg.mpg.de" type="url">Kontakt aufnehmen</ref>
+                                </p>
+                            </item>
+                            <item xml:id="item-aslkgdjas">
+                                <p xml:id="p-lkasjjdsd">
+                                    Prof. Dr. Dr. Matthias Lutz-Bachmann
+                                    <lb/>Institut für Philosophie
+                                    <lb/>Fachbereich 08
+                                    <lb/>Goethe-Universität Frankfurt am Main
+                                    <lb/>Norbert-Wollheim-Platz 1
+                                    <lb/>60629 Frankfurt am Main
+                                    <lb/>Tel.: +49 69 798 32779
+                                    <lb/>Fax: +49 69 798 32794
+                                    <lb/><ref target="mailto:lutz-bachmann@em.uni-frankfurt.de" type="url">Kontakt aufnehmen</ref>
+                                </p>
+                            </item>
+                        </list>
+                    </div>
+                </div>
+                <div xml:id="div-dir-de" type="section">
+                    <head xml:id="head-laskjddsaa">Arbeitsstellenleitung</head>
+                    <p xml:id="p-aslkdhjsa">
+                        PD Dr. Christiane Birr
+                        <lb/>Max-Planck-Institut für europäische Rechtsgeschichte
+                        <lb/>Hansaallee 41
+                        <lb/>60323 Frankfurt am Main
+                        <lb/>Tel.: +49 69 789 78 161
+                        <lb/>Fax: +49 69 789 78 169
+                        <lb/><ref target="mailto:info.salamanca@adwmainz.de" type="url">Kontakt aufnehmen</ref>
+                    </p>
+                </div>
+                <!--<div xml:id="div-license-de" type="section">
+                    <head xml:id="head-sdlkfjdsf">Lizenzierung</head>
+                </div>-->
+                <div xml:id="div-links-de" type="section">
+                    <head xml:id="head-klasjfsf">Links</head>
+                    <p xml:id="p-sdklfjsdf">
+                        Wir haben keinen Einfluss auf den Inhalt der von dieser Seite verlinkten externen 
+                        Internetseiten und sind für diese auch nicht verantwortlich. Eine Prüfung bei 
+                        der Verlinkung ergab keine strafbaren Inhalte auf diesen Seiten. Alle Linkangaben 
+                        ohne Gewähr. Seitenaufrufe externer Seiten über diese Links erfolgen auf eigene Gefahr. 
+                        Dies gilt für alle Links auf dieser Internetseite.
+                    </p>
+                </div>
+                <div xml:id="div-liability-de" type="section">
+                    <head xml:id="head-kladsjfsf">Haftungsausschluss</head>
+                    <p xml:id="p-sdklfjdsdf">
+                        Die Inhalte dieses Internetangebotes wurden sorgfältig geprüft und nach 
+                        bestem Wissen erstellt. Eine Haftung oder Garantie für die Aktualität, Richtigkeit und 
+                        Vollständigkeit der zur Verfügung gestellten Informationen und Daten ist jedoch ausgeschlossen. 
+                        In keinem Fall wird für Schäden, die sich aus der Verwendung der 
+                        abgerufenen Informationen ergeben, eine Haftung übernommen.
+                    </p>
+                </div>
+                <!--<div xml:id="div-citation-de" type="section">
+                    <head xml:id="head-aslkfjsf">Empfohlene Zitierweise</head>
+                    <p xml:id="p-laskffadas">Die Schule von Salamanca. Digitale Edition, https://www.salamanca.school, Version 1.1.</p>
+                </div>-->
+                <div xml:id="div-actualization-de" type="section">
+                    <p xml:id="p-laskfsdf">
+                        <hi rendition="#it">Letzte Änderung dieses Dokuments am 01. Juni 2018.</hi>
+                    </p>
+                </div>
+            </div>
+            
+            
+            <div type="section" xml:id="div-imprint-en" xml:lang="en">
+                <!--<p xml:id="p_sdfgcerbc">Currently, the imprint is available 
+                    in German only. Please refer to the 
+                    <ref target="https://www.salamanca.school/de/legal.html" type="url">German version</ref> for further information.</p>-->
+            </div>
+            
+            <div type="section" xml:id="div-imprint-es" xml:lang="en">
+                <!--<p xml:id="p_sdfsgcerbc">En este momento los informaciones legales 
+                    solamente están disponibles en alemán. Véase la 
+                    <ref target="https://www.salamanca.school/de/legal.html" type="url">Versión Alemana</ref> para más informaciónes.</p>-->
+            </div>
+            
+        </body>
+    </text>
+</TEI>

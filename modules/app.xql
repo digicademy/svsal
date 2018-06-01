@@ -2724,9 +2724,9 @@ declare %templates:default
                                 <span class="glyphicon glyphicon-stats text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="register">Register</i18n:text></span>
                             </div>
                             <!--Print-Button and Export-Dropdown-->
-                            <div class="btn-group hidden-md hidden-sm hidden-xs btn btn-link disabled">
+                            <!--<div class="btn-group hidden-md hidden-sm hidden-xs btn btn-link disabled">
                                 <span class="glyphicon glyphicon-print text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="print">Drucken</i18n:text></span>
-                            </div>
+                            </div>-->
                             <div class="btn-group hidden-md hidden-sm hidden-xs">
                                 <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                     <span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;<i18n:text key="export">Export</i18n:text>&#xA0;
@@ -2745,6 +2745,9 @@ declare %templates:default
                                         <a><span class="glyphicon glyphicon-download-alt text-muted" aria-hidden="true"></span> <span class="text-muted"> ebook</span></a>
                                     </li>
                                 </ul>
+                            </div>
+                            <div class="btn-group">
+                                <a class="btn btn-link" href="legal.html"><!--<i class="fa fa-info-circle">--><i class="fa fa-flag"></i>&#32; <i18n:text key="legalShort">Datenschutz&amp;Impressum</i18n:text></a>
                             </div>
 
                         <!-- Hamburger Icon, used in small views only: substitutes textmode, print and export functions -->
@@ -2777,7 +2780,7 @@ declare %templates:default
                                     <li class="disabled"><a><span class="glyphicon glyphicon-stats text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="register">Register</i18n:text></span></a></li>
                                     <li><a onclick="applyEditMode()" class="btn original unsichtbar" style="cursor: pointer;"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"/>&#xA0;<i18n:text key="constituted">Konstituiert</i18n:text></a></li>
                                     <li><a onclick="applyOrigMode()" class="btn edited" style="cursor: pointer;"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"/>&#xA0;<i18n:text key="diplomatic">Diplomatisch</i18n:text></a></li>
-                                    <li class="disabled"><a><span class="glyphicon glyphicon-print text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="print">Drucken</i18n:text></span></a></li>
+                                    <!--<li class="disabled"><a><span class="glyphicon glyphicon-print text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="print">Drucken</i18n:text></span></a></li>-->
                                     {$downloadXML}
                                     {$downloadTXTorig}
                                     {$downloadTXTedit}
@@ -3017,3 +3020,43 @@ declare function app:scaleImg($node as node(), $model as map(*), $wid as xs:stri
         else if ($wid eq 'W0114') then  'height: 2601, width:  1674' 
         else ()
 };
+
+
+(: legal declarations :)
+
+declare function app:privDecl ($node as node(), $model as map(*), $lang as xs:string?) {
+    let $declfile   := doc($config:data-root || "/i18n/privacy_decl.xml")
+    let $decltext   :=   if ($lang = "de") then
+                                    "div-privdecl-de"
+                                else if ($lang = "en") then
+                                    "div-privdecl-en"
+                                else if ($lang = "es") then
+                                    "div-privdecl-es"
+                                else
+                                "div-privdecl-de"
+    let $html       := render:dispatch($declfile//tei:div[@xml:id = $decltext], "html")
+    return if (count($html)) then
+        <div id="privDecl" class="help">
+            {$html}
+        </div>
+    else ()
+};
+
+declare function app:imprint ($node as node(), $model as map(*), $lang as xs:string?) {
+    let $declfile   := doc($config:data-root || "/i18n/imprint.xml")
+    let $decltext   :=   if ($lang = "de") then
+                                    "div-imprint-de"
+                                else if ($lang = "en") then
+                                    "div-imprint-en"
+                                else if ($lang = "es") then
+                                    "div-imprint-es"
+                                else
+                                "div-imprint-de"
+    let $html       := render:dispatch($declfile//tei:div[@xml:id = $decltext], "html")
+    return if (count($html)) then
+        <div id="imprint" class="help">
+            {$html}
+        </div>
+    else ()
+};
+

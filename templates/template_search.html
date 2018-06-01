@@ -8,7 +8,7 @@
         <title data-template="config:meta-title"/>
         <link rel="canonical" data-template="config:canonical-url"/>
         <link rel="alternative" data-template="config:hreflang-url"/>
-
+        
         <!-- ==== CSS ==== -->
         <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
         <link rel="stylesheet" type="text/css" href="resources/css/style_default.css"/>
@@ -110,7 +110,7 @@
              }
              });
         </script>
-
+        
         <!-- ==== Load next/previous page of detail snippets via AJAX and go to top after load was completed ==== -->
         <script type="text/javascript">
             $(document).on('click', '.loadNext',  function(event) {
@@ -145,9 +145,9 @@
                 success: function() {}
              });
         </script>
-
+        
         <!-- Help Window -->
-        <div id="helpBox2" title="Hilfe zur Suche" style="overflow:auto">
+        <div id="helpBox2" title="" style="overflow:auto">
             <a data-toggle="collapse" href="#collapseTOC" aria-expanded="false" aria-controls="collapseTOC">
                 <h4 style="top: 10%;">
                     <span class="glyphicon glyphicon-list" aria-hidden="true"/>
@@ -155,8 +155,8 @@
                 </h4>
             </a>
             <div data-template="sphinx:help"/>
-        
-        <script type="text/javascript">
+            
+            <script type="text/javascript">
                 $(document).ready(function(){
                     $('#helpBox2').dialog({
                                 autoOpen:   false,
@@ -208,10 +208,10 @@
         <script type="text/javascript">
             $(".navbar-collapse").css({ maxHeight: $(window).height() - $(".navbar-header").height() + "px" });
         </script>
-
+        
         <!-- ==== Piwik for visitor stats ==== -->
         <!-- - - Piwik for visitor stats (modified to enable caching and compression) - - -->
-        <script type="text/javascript">
+        <!--<script type="text/javascript">
           var _paq = _paq || [];
           _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
           _paq.push(["setCookieDomain", "*.salamanca.school"]);
@@ -234,8 +234,8 @@
             <p>
                 <img src="//stats.adwmainz.net/piwik.php?idsite=20" style="border:0;" alt=""/>
             </p>
-        </noscript>
+        </noscript>-->
         <!-- End Piwik Code -->
-
+        
     </body>
 </html>

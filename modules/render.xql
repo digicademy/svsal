@@ -347,7 +347,7 @@ declare function render:dispatch($node as node(), $mode as xs:string) {
     (: Try to sort the following nodes based (approx.) on frequency of occurences, so fewer checks are needed. :)
         case text()                 return local:text($node, $mode)
 
-        case element(tei:lb)        return local:break($node, $mode)
+        case element(tei:lb)        return local:linebreak($node, $mode)
         case element(tei:pb)        return local:break($node, $mode)
         case element(tei:cb)        return local:break($node, $mode)
         case element(tei:fw)        return ()
@@ -418,6 +418,16 @@ declare function local:break($node as element(), $mode as xs:string) {
             ' '
         else ()
     else ()         (: some sophisticated function to insert a pipe and a pagenumber div in the margin :)
+};
+
+declare function local:linebreak($node as element(), $mode as xs:string) {
+    if ($mode = ("orig", "edit", "work")) then
+        if (not($node/@break = 'no')) then
+            ' '
+        else ()
+    else if ($mode = "html") then 
+        <br/>
+    else () 
 };
 
 declare function local:p($node as element(tei:p), $mode as xs:string) {

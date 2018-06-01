@@ -457,15 +457,15 @@ declare %templates:wrap
     function config:langProjektteam($node as node(), $model as map(*), $lang as xs:string) as element()  {
         if ($lang = 'en') then
             <a target="blank" href="http://www.salamanca.adwmainz.de/en/project-team-and-consultants.html">
-               Project Team&#160;<span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>
+               <i class="fa fa-group" aria-hidden="true"></i>&#160;Project Team
             </a>
         else if ($lang = 'es') then
             <a target="blank" href="http://www.salamanca.adwmainz.de/es/el-equipo-de-proyecto-y-sus-consultores.html">
-               Equipo del Proyecto&#160;<span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>
+               <i class="fa fa-group" aria-hidden="true"></i>&#160;Equipo del Proyecto
             </a>
         else
             <a target="blank" href="http://www.salamanca.adwmainz.de/projektbeteiligte.html">
-               Projektteam&#160;<span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>
+               <i class="fa fa-group" aria-hidden="true"></i>&#160;Projektteam
             </a>
 };
 
@@ -489,6 +489,15 @@ declare %templates:wrap
         i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))};
         
 declare %templates:wrap
+    function config:langLegal($node as node(), $model as map(*), $lang as xs:string) as element()  {
+    let $output := 
+        <a  href="legal.html">
+           <span class="fa fa-flag" aria-hidden="true"></span>&#160;<i18n:text key="legal">Datenschutz &amp; Impressum</i18n:text>
+        </a>
+    return 
+        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))};
+        
+declare %templates:wrap
     function config:langContact($node as node(), $model as map(*), $lang as xs:string) as element()  {
     let $output := 
         <a  href="contact.html">
@@ -496,6 +505,16 @@ declare %templates:wrap
         </a>
     return 
         i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))};       
+
+declare %templates:wrap
+    function config:langSourceCode($node as node(), $model as map(*), $lang as xs:string) as element()  {
+    let $output :=
+            <a target="blank" href="https://github.com/digicademy/svsal">
+               <i class="glyphicon glyphicon-console" aria-hidden="true"></i>&#160;<i18n:text key="sourceCode">Quellcode</i18n:text>
+            </a>
+    return 
+        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
+};
 
 declare %templates:wrap
     function config:searchInfoDetails($node as node(), $model as map(*), $lang as xs:string) as element()  {
@@ -882,18 +901,23 @@ declare function config:footer ($node as node(), $model as map(*), $lang as xs:s
              </div>
         </div>
         <br/>
-        <!-- contact, information, version -->
+        <!-- contact, information, privacy, version -->
         <div class="row">
-            <div class="col-md-12 hidden-sm hidden-xs" style="text-align: center">
+            <div class="col-md-12 hidden-sm hidden-xs" style="text-align: center;">
             <br/>
-                <p><a href="contact.html"><i class="fa fa-envelope-o"></i>&#32;&#32;<i18n:text key='contact'>Kontakt</i18n:text></a> | <a  href="project.html"><i18n:text key='imprint'>Impressum</i18n:text></a></p>
-                    <p><span style="color:#92A4B1;"></span>&#xA0;&#xA0; <i class="fa fa-copyright"></i>&#32;&#32;<span title="{$username}">SvSal 2015-2018</span>
+                <p style="font-size:1.2em">
+                <a href="contact.html"><i class="fa fa-envelope-o"></i>&#32;&#32;<i18n:text key='contact'>Kontakt</i18n:text></a> 
+                | <a  href="legal.html"><i class="fa fa-flag"></i>&#32;&#32;<i18n:text key='legal'>Datenschutz &amp; Impressum</i18n:text></a> 
+                </p>
+                    <p><span style="color:#92A4B1;"></span>&#xA0;&#xA0; <i class="fa fa-copyright"></i>&#32;&#32;<span title="{$username}"><i18n:text key="projectName"></i18n:text> 2015-2018</span>
                 </p>
             </div>
         </div>
         <div class="col-sm-12 hidden-lg hidden-md" style="text-align: center">
-            <p><a href="contact.html"><i class="fa fa-envelope-o"></i>&#32;&#32;<i18n:text key='contact'>Kontakt</i18n:text></a> | <a  href="project.html"><i18n:text key='imprint'>Impressum</i18n:text></a></p>
-                <p><span style="color:#92A4B1;"></span>&#xA0;&#xA0; <i class="fa fa-copyright"></i>&#32;&#32;<span title="{$username}">SvSal 2015-2018</span>
+            <p>
+            <a href="contact.html"><i class="fa fa-envelope-o"></i>&#32;&#32;<i18n:text key='contact'>Kontakt</i18n:text></a>
+                | <a  href="legal.html"><i class="fa fa-flag"></i>&#32;&#32;<i18n:text key='legal'>Datenschutz &amp; Impressum</i18n:text></a>            </p>
+                <p><span style="color:#92A4B1;"></span>&#xA0;&#xA0; <i class="fa fa-copyright"></i>&#32;&#32;<span title="{$username}"><i18n:text key="projectName"></i18n:text> 2015-2018</span>
             </p>
         </div>
         <!-- CC BY -->        

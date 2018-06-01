@@ -54,22 +54,27 @@ declare variable $cs:mediumElements   := ('p', 'ab', 'list', 'note', 'titlePage'
 
 
 (: Set this variable to a string which identifies your project. :)
-declare variable $cs:language    := request:get-parameter('lang', 'de');
-declare variable $cs:projectName := i18n:process(<i18n:text key="projectName">Die Schule von Salamanca</i18n:text>, $cs:language, "/db/apps/salamanca/data/i18n", "");
+declare variable $cs:language    := request:get-parameter('lang', 'en');
+declare variable $cs:projectName := i18n:process(<i18n:text key="projectName">The School of Salamanca</i18n:text>, $cs:language, "/db/apps/salamanca/data/i18n", "");
 
 (: If you want to provide access to the protocol description document,
    set this variable appropriately. :)
 declare variable $cs:protocolDescUrl := 'codesharing_protocol.xhtml';
 
 (: Set this variable to a suitable string. :)
-declare variable $cs:noResultsFound := i18n:process(<i18n:text key="filtersYieldNoResult">Leider keine Ergebnisse.</i18n:text>, $cs:language, "/db/apps/salamanca/data/i18n", "");
+declare variable $cs:noResultsFound := i18n:process(<i18n:text key="filtersYieldNoResult">Sorry, but no items match these criteria.</i18n:text>, $cs:language, "/db/apps/salamanca/data/i18n", "");
 
-(: Set this string to a useful explanation of the site and the API itself. :)
+(: Set this variable to a useful explanation of the site and the API itself. :)
 declare variable $cs:identification := concat(
-                    i18n:process(<i18n:text key="codeSharingDescription">TEI CodeSharing service von Martin Holmes, hier für das Projekt </i18n:text>, $cs:language, "/db/apps/salamanca/data/i18n", ""),
-                    " ",
+                    i18n:process(<i18n:text key="codeSharingDescription">TEI CodeSharing service by Martin Holmes, running on this page for the project </i18n:text>, $cs:language, "/db/apps/salamanca/data/i18n", ""),
+                    ' "',
                     $cs:projectName,
-                    '.');
+                    '".', 
+                    " ",
+                    i18n:process(<i18n:text key="legalDisclaimer">For the privacy policy and legal information of this website, please refer to the </i18n:text>, $cs:language, "/db/apps/salamanca/data/i18n", ""));
+                    
+declare variable $cs:privLink := "https://www.salamanca.school/legal.html";
+declare variable $cs:privPolicy := i18n:process(<i18n:text key="legalTitle">Privacy &amp; Legal Information</i18n:text>, $cs:language, "/db/apps/salamanca/data/i18n", "");
 
 (: This function retrieves a list of document types [which can be anything your project 
    believes would qualify as a way of typing documents]. Customize this function to 

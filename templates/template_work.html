@@ -664,7 +664,7 @@
 
         <!-- ==== Piwik for visitor stats ==== -->
         <!-- - - Piwik for visitor stats (modified to enable caching and compression) - - -->
-        <script type="text/javascript">
+        <!--<script type="text/javascript">
           var _paq = _paq || [];
           _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
           _paq.push(["setCookieDomain", "*.salamanca.school"]);
@@ -687,7 +687,7 @@
             <p>
                 <img src="//stats.adwmainz.net/piwik.php?idsite=20" style="border:0;" alt=""/>
             </p>
-        </noscript>
+        </noscript>-->
 
         <!-- End Piwik Code -->
 
@@ -735,6 +735,11 @@
                                     params = new URLSearchParams(window.location.search) ;
                                     params.delete('viewer');
                                     window.history.replaceState(null, '', window.location.pathname + '?' + params + window.location.hash);
+                                    params.set('viewer', null);
+//                                    document.getElementById('Mirador')
+                                    event.stopImmediatePropagation();
+                                    event.preventDefault();
+                                    return false;
                                  }
                 });
             });
