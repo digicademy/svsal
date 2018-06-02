@@ -6,7 +6,6 @@ declare namespace tei       = "http://www.tei-c.org/ns/1.0";
 import module namespace xmldb      = "http://exist-db.org/xquery/xmldb";
 import module namespace sm         = "http://exist-db.org/xquery/securitymanager";
 import module namespace render     = "http://salamanca/render"  at "modules/render.xql";
-import module namespace config     = "http://salamanca/config"  at "modules/config.xqm";
 
 (: The following external variables are set by the repo:deploy function :)
 (: the target collection into which the app is deployed :)
@@ -47,8 +46,7 @@ let $chmod  := for $file in $adminfiles
 
 (: Run index :)
 let $index-app-status := xmldb:reindex($data-collection)
-let $index-repository-status := xmldb:reindex($config:salamanca-data-root)
-return ($index-app-status and $index-repository-status)
+return $index-app-status
 
 (: Render all the works :)
 (:
