@@ -5,6 +5,9 @@
   <msg key="projectName">Die Schule von Salamanca</msg>
   <msg key="guidelines">Editionsrichtlinien</msg>
   
+  <!-- index.html -->
+  <msg key="introWorks">Digitale Quellensammlung mit 116 Werken, aufbereitet gemäß unserer</msg>
+  
   <!-- common -->
   
   <msg key="licenceDesc">Für die Daten des Projekts "Die Schule von Salamanca" gilt (falls nicht anders angegeben) eine</msg>
