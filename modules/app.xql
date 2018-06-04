@@ -2747,7 +2747,7 @@ declare %templates:default
                                 </ul>
                             </div>
                             <div class="btn-group">
-                                <a class="btn btn-link" href="legal.html"><!--<i class="fa fa-info-circle">--><i class="fa fa-flag"></i>&#32; <i18n:text key="legalShort">Datenschutz&amp;Impressum</i18n:text></a>
+                                <a class="btn btn-link" href="legal.html"><!--<i class="fa fa-info-circle">--><i class="fa fa-bell-o"></i>&#32; <i18n:text key="legalShort">Datenschutz&amp;Impressum</i18n:text></a>
                             </div>
 
                         <!-- Hamburger Icon, used in small views only: substitutes textmode, print and export functions -->
