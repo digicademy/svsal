@@ -91,7 +91,8 @@
   <msg key="legal">Privacy &amp; Legal Information</msg>
   <msg key="legalDesc">Privacy policy of our webpage and legal information.</msg>
   <msg key="legalShort">Privacy &amp; Legal Inf.</msg>
-  <msg key="legalDisclaimer">For the privacy policy and legal information of this website, please refer to the </msg>
+  <msg key="privacyDisclaimer">For the privacy policy and legal information of this website, please refer to the </msg>
+  <msg key="legalDisclaimer">Please note that the description of our privacy policy and legal information are available in German only.</msg>
   
   <!-- works/details -->
   <msg key="sort">Sort</msg>

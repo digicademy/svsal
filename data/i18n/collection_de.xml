@@ -93,5 +93,6 @@
   <!-- legal.html -->
   <msg key="legalTitle">Datenschutzerklärung &amp; Impressum</msg>
   <msg key="privacyDisclaimer">Für Informationen zum Datenschutz auf dieser Webseite siehe die </msg>
+  <msg key="legalDisclaimer"/>
   
 </catalogue>

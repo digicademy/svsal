@@ -71,7 +71,7 @@ declare variable $cs:identification := concat(
                     $cs:projectName,
                     '".', 
                     " ",
-                    i18n:process(<i18n:text key="legalDisclaimer">For the privacy policy and legal information of this website, please refer to the </i18n:text>, $cs:language, "/db/apps/salamanca/data/i18n", ""));
+                    i18n:process(<i18n:text key="privacyDisclaimer">For the privacy policy and legal information of this website, please refer to the </i18n:text>, $cs:language, "/db/apps/salamanca/data/i18n", ""));
                     
 declare variable $cs:privLink := "https://www.salamanca.school/legal.html";
 declare variable $cs:privPolicy := i18n:process(<i18n:text key="legalTitle">Privacy &amp; Legal Information</i18n:text>, $cs:language, "/db/apps/salamanca/data/i18n", "");

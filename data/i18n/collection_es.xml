@@ -98,6 +98,7 @@
     <msg key="legalDesc">Política de privacidad de nuestra página web y información legal.</msg>
     <msg key="legalShort">Privacidad &amp; Inf. legal</msg>
     <msg key="privacyDisclaimer">Para informaciones sobre la privacidad en esta página web véase la </msg>
+    <msg key="legalDisclaimer">Por favor tenga en cuenta que la descripción de nuestra política de privacidad y la información legal están disponibles solamente en alemán.</msg>
     
     <!--works/details-->
     <msg key="sort">Ordenar</msg>

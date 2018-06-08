@@ -3024,16 +3024,18 @@ declare function app:scaleImg($node as node(), $model as map(*), $wid as xs:stri
 
 (: legal declarations :)
 
+declare function app:legalDisclaimer ($node as node(), $model as map(*), $lang as xs:string?) {
+    let $disclaimerText := i18n:process(<i18n:text key="legalDisclaimer"/>, $lang, '/db/apps/salamanca/data/i18n', 'en')
+    return if ($disclaimerText) then 
+        <div style="margin-bottom:1em;border:1px solid gray;border-radius:5px;padding:0.5em;">
+            <span>{$disclaimerText}</span>
+        </div>
+        else ()
+};
+
 declare function app:privDecl ($node as node(), $model as map(*), $lang as xs:string?) {
     let $declfile   := doc($config:data-root || "/i18n/privacy_decl.xml")
-    let $decltext   :=   if ($lang = "de") then
-                                    "div-privdecl-de"
-                                else if ($lang = "en") then
-                                    "div-privdecl-en"
-                                else if ($lang = "es") then
-                                    "div-privdecl-es"
-                                else
-                                "div-privdecl-de"
+    let $decltext   := "div-privdecl-de"
     let $html       := render:dispatch($declfile//tei:div[@xml:id = $decltext], "html")
     return if (count($html)) then
         <div id="privDecl" class="help">
@@ -3044,14 +3046,7 @@ declare function app:privDecl ($node as node(), $model as map(*), $lang as xs:st
 
 declare function app:imprint ($node as node(), $model as map(*), $lang as xs:string?) {
     let $declfile   := doc($config:data-root || "/i18n/imprint.xml")
-    let $decltext   :=   if ($lang = "de") then
-                                    "div-imprint-de"
-                                else if ($lang = "en") then
-                                    "div-imprint-en"
-                                else if ($lang = "es") then
-                                    "div-imprint-es"
-                                else
-                                "div-imprint-de"
+    let $decltext   := "div-imprint-de"
     let $html       := render:dispatch($declfile//tei:div[@xml:id = $decltext], "html")
     return if (count($html)) then
         <div id="imprint" class="help">

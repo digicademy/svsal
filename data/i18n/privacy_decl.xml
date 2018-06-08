@@ -124,7 +124,6 @@
                             Angriffsversuchen und von Spam-Kommentaren im Blog zu verarbeiten. Bei rechtswidrigen Aktivitäten werden wir die 
                             relevanten bei uns gespeicherten Daten mit Ermittlungsbehörden teilen.</p>
                     </div>
-                    <!-- ############### TODO ################# -->
                     <div xml:id="div-cookies-de" type="section">
                         <head xml:id="head-lksdjfsdf">Cookies</head>
                         <p xml:id="p-lksdjfsdfs">Beim Aufruf unserer Seiten werden temporäre 
@@ -215,8 +214,9 @@
                     </div>
                     <div xml:id="div-disclaimer-de" type="section">
                         <head xml:id="head-sdkfjsdf">Disclaimer</head>
-                        <p xml:id="p-lsdkfjsdsf">Diese Datenschutz-Hinweise wurden erstellt u.a. 
-                            unter Einbeziehung der Datenschutzerklärung des Landes Rheinland-Pfalz (Stand: 13. Januar 2017: 
+                        <p xml:id="p-lsdkfjsdsf">Diese Datenschutzerklärung dient der Information der BenutzerInnen der Webseite salamanca.school 
+                            entsprechend der Datenschutz-Grundverordnung (DSGVO). 
+                            Sie wurde erstellt u.a. unter Einbeziehung der Datenschutzerklärung des Landes Rheinland-Pfalz (Stand: 19. Januar 2018: 
                             <ref target="https://www.datenschutz.rlp.de/de/themenfelder-themen/datenschutzerklaerung-ab-1912018/" type="url">https://www.datenschutz.rlp.de/de/themenfelder-themen/datenschutzerklaerung-ab-1912018/</ref>), 
                             der Datenschutzerklärung der Akademie der Wissenschaften und der Literatur Mainz 
                             (<ref target="http://www.adwmainz.de/datenschutz.html" type="url">http://www.adwmainz.de/datenschutz.html</ref>) und des Datenschutz-Generator.de 
@@ -226,18 +226,8 @@
                 </div>
             </div>
             
-            <div type="section" xml:id="div-privdecl-en" xml:lang="en">
-                <p xml:id="p_sdfgcerbc">Currently, the description of our privacy policy and the legal 
-                    information are available 
-                    in German only. Please refer to the 
-                    <ref target="https://www.salamanca.school/de/legal.html" type="url">German version</ref> for further information.</p>
-            </div>
-            
-            <div type="section" xml:id="div-privdecl-es" xml:lang="en">
-                <p xml:id="p_sdfsgcerbc">En este momento la descripción de nuestra política de privacidad 
-                    y la información legal están disponibles solamente en alemán. Véase la 
-                    <ref target="https://www.salamanca.school/de/legal.html" type="url">Versión Alemana</ref> para más informaciónes.</p>
-            </div>
+            <div type="section" xml:id="div-privdecl-en" xml:lang="en"/>
+            <div type="section" xml:id="div-privdecl-es" xml:lang="en"/>
             
         </body>
     </text>

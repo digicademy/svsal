@@ -164,23 +164,13 @@
                 </div>-->
                 <div xml:id="div-actualization-de" type="section">
                     <p xml:id="p-laskfsdf">
-                        <hi rendition="#it">Letzte Änderung dieses Dokuments am 01. Juni 2018.</hi>
+                        <hi rendition="#it">Letzte Änderung dieses Dokuments am 08. Juni 2018.</hi>
                     </p>
                 </div>
             </div>
             
-            
-            <div type="section" xml:id="div-imprint-en" xml:lang="en">
-                <!--<p xml:id="p_sdfgcerbc">Currently, the imprint is available 
-                    in German only. Please refer to the 
-                    <ref target="https://www.salamanca.school/de/legal.html" type="url">German version</ref> for further information.</p>-->
-            </div>
-            
-            <div type="section" xml:id="div-imprint-es" xml:lang="en">
-                <!--<p xml:id="p_sdfsgcerbc">En este momento los informaciones legales 
-                    solamente están disponibles en alemán. Véase la 
-                    <ref target="https://www.salamanca.school/de/legal.html" type="url">Versión Alemana</ref> para más informaciónes.</p>-->
-            </div>
+            <div type="section" xml:id="div-imprint-en" xml:lang="en"/>
+            <div type="section" xml:id="div-imprint-es" xml:lang="en"/>
             
         </body>
     </text>
