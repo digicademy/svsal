@@ -492,7 +492,7 @@ declare %templates:wrap
     function config:langLegal($node as node(), $model as map(*), $lang as xs:string) as element()  {
     let $output := 
         <a  href="legal.html">
-           <span class="fa fa-bell-o" aria-hidden="true"></span>&#160;<i18n:text key="legal">Datenschutz &amp; Impressum</i18n:text>
+           <span class="fa fa-lock" aria-hidden="true"></span>&#160;<i18n:text key="legal">Datenschutz &amp; Impressum</i18n:text>
         </a>
     return 
         i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))};
@@ -907,7 +907,7 @@ declare function config:footer ($node as node(), $model as map(*), $lang as xs:s
             <br/>
                 <p style="font-size:1.2em">
                 <a href="contact.html"><i class="fa fa-envelope-o"></i>&#32;&#32;<i18n:text key='contact'>Kontakt</i18n:text></a> 
-                | <a  href="legal.html"><i class="fa fa-bell-o"></i>&#32;&#32;<i18n:text key='legal'>Datenschutz &amp; Impressum</i18n:text></a> 
+                | <a  href="legal.html"><i class="fa fa-lock"></i>&#32;&#32;<i18n:text key='legal'>Datenschutz &amp; Impressum</i18n:text></a> 
                 </p>
                     <p><span style="color:#92A4B1;"></span>&#xA0;&#xA0; <i class="fa fa-copyright"></i>&#32;&#32;<span title="{$username}"><i18n:text key="projectName"></i18n:text> 2015-2018</span>
                 </p>
@@ -916,7 +916,7 @@ declare function config:footer ($node as node(), $model as map(*), $lang as xs:s
         <div class="col-sm-12 hidden-lg hidden-md" style="text-align: center">
             <p>
             <a href="contact.html"><i class="fa fa-envelope-o"></i>&#32;&#32;<i18n:text key='contact'>Kontakt</i18n:text></a>
-                | <a  href="legal.html"><i class="fa fa-bell-o"></i>&#32;&#32;<i18n:text key='legal'>Datenschutz &amp; Impressum</i18n:text></a>            </p>
+                | <a  href="legal.html"><i class="fa fa-lock"></i>&#32;&#32;<i18n:text key='legal'>Datenschutz &amp; Impressum</i18n:text></a>            </p>
                 <p><span style="color:#92A4B1;"></span>&#xA0;&#xA0; <i class="fa fa-copyright"></i>&#32;&#32;<span title="{$username}"><i18n:text key="projectName"></i18n:text> 2015-2018</span>
             </p>
         </div>

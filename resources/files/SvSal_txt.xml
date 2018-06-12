@@ -22,7 +22,7 @@
     </fileDesc>
     <revisionDesc status="e_unreviewed">
             <listChange>
-                <change who="#DG" when="2018-06-12" status="e_emended_unenriched"><p>Reverse removal of 
+                <change who="#DG" when="2018-06-12" status="e_emended_unenriched"><p>Withdraw removal of 
                     att.global.change; add element space (module transcr); add values "#AA" (automatic annotation), 
                     "#CRC" and "#DG" to @resp.</p></change>
                 <change who="#DG" when="2018-06-11" status="e_emended_unenriched"><p>Add value "unknown" to 
