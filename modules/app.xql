@@ -428,22 +428,24 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
         let $workImages     :=  'mirador.html?wid=' ||  $wid
         let $FacsInfo       :=  i18n:process(<i18n:text key="facsimiles">Bildansicht</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en")
 
-        let $pubPlaceFirst  :=  $item//tei:pubPlace[@role = 'firstEd']
-        let $pubPlaceThis   :=  $item//tei:pubPlace[@role = 'thisEd']
-        let $printingPlace  :=  if ($pubPlaceThis) then $pubPlaceThis else $pubPlaceFirst
+        let $printingPlace  :=  if ($item//tei:pubPlace[@role = 'thisEd']) then $item//tei:pubPlace[@role = 'thisEd'] 
+                                else $item//tei:pubPlace[@role = 'firstEd']
         let $placeFirstChar :=  substring($printingPlace/@key, 1, 1)
         let $facetPlace     :=       if ($placeFirstChar = ('A','B','C','D','E','F')) then 'A - F'
                                 else if ($placeFirstChar = ('G','H','I','J','K','L')) then 'G - L'
                                 else if ($placeFirstChar = ('M','N','O','P','Q','R')) then 'M - R'
                                 else                                                       'S - Z'
-        let $date           :=  ($item//tei:date[@type = 'thisEd'] | $item//tei:date[@type = 'firstEd'])[1]/@when
+        let $date           :=  if ($item//tei:date[@type = 'thisEd']) then $item//tei:date[@type = 'thisEd'][1]/@when
+                                else $item//tei:date[@type = 'firstEd'][1]/@when
         let $datefacet      :=       if ($date < 1501) then '1501-1550'
                                 else if ($date < 1551) then '1501-1550'
                                 else if ($date < 1601) then '1551-1600'
                                 else if ($date < 1651) then '1601-1650'
                                 else if ($date < 1701) then '1651-1700'
-                                else                        '??'
-        let $printer        :=  ': ' || $item//tei:sourceDesc//(tei:publisher[@n="thisEd"] | tei:publisher[@n="firstEd"])[1]/tei:persName[1]/tei:surname
+                                else                        '??' 
+        let $printer    := if ($item//tei:sourceDesc//tei:publisher[@n="thisEd"]) then 
+                                ': ' || $item//tei:sourceDesc//tei:publisher[@n="thisEd"][1]/tei:persName[1]/tei:surname
+                           else ': ' || $item//tei:sourceDesc//tei:publisher[@n="firstEd"][1]/tei:persName[1]/tei:surname
 
         let $language       :=  i18n:process(if ($item/parent::tei:TEI//tei:text/@xml:lang = 'la') then
                                                 <i18n:text key="latin">Latein</i18n:text>
