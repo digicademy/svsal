@@ -90,8 +90,8 @@ declare function render:needsRenderString($node as node(), $model as map(*)) {
 
 declare function render:needsCorpusZipString($node as node(), $model as map(*)) {
     let $worksModTime := max(for $work in xmldb:get-child-resources($config:tei-works-root) return xmldb:last-modified($config:tei-works-root, $work))    
-    let $needsCorpusZip := if (util:binary-doc-available($config:data-root || '/sal-tei-corpus.zip')) then
-                let $resourceModTime := xmldb:last-modified($config:data-root, 'sal-tei-corpus.zip')
+    let $needsCorpusZip := if (util:binary-doc-available($config:files-root || '/sal-tei-corpus.zip')) then
+                let $resourceModTime := xmldb:last-modified($config:files-root, 'sal-tei-corpus.zip')
                 return if ($resourceModTime lt $worksModTime) then true() else false()
         else
             true()
@@ -99,7 +99,7 @@ declare function render:needsCorpusZipString($node as node(), $model as map(*)) 
     return if ($needsCorpusZip) then
                 <td title="Most current source from: {string($worksModTime)}"><a href="corpus-admin.xql"><b>Create corpus zip NOW!</b></a></td>
             else
-                <td title="{concat('Corpus zip created on: ', string(xmldb:last-modified($config:data-root, 'sal-tei-corpus.zip')), ', most current source from: ', string($worksModTime), '.')}">Creating corpus zip unnecessary. <small><a href="corpus-admin.xql">Create corpus zip anyway!</a></small></td>
+                <td title="{concat('Corpus zip created on: ', string(xmldb:last-modified($config:files-root, 'sal-tei-corpus.zip')), ', most current source from: ', string($worksModTime), '.')}">Creating corpus zip unnecessary. <small><a href="corpus-admin.xql">Create corpus zip anyway!</a></small></td>
     
 };
 
