@@ -5,7 +5,7 @@
          xmlns:teix="http://www.tei-c.org/ns/Examples"
          datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
          ns="http://www.tei-c.org/ns/1.0"><!--
-Schema generated from ODD source 2018-05-07T15:37:53Z. .
+Schema generated from ODD source 2018-06-13T07:30:06Z. .
 TEI Edition: Version 3.3.0. Last updated on
 	31st January 2018, revision f4d8439
 TEI Edition Location: http://www.tei-c.org/Vault/P5/Version 3.3.0/
@@ -133,7 +133,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5/Version 3.3.0/
             </choice>
          </zeroOrMore>
       </element>
-      <pattern xmlns="http://purl.oclc.org/dsdl/schematron" id="d475419e43738-constraint">
+      <pattern xmlns="http://purl.oclc.org/dsdl/schematron" id="d13512e43741-constraint">
          <rule context="tei:content">
             <report test="descendant::*[not(namespace-uri(.) = ('http://relaxng.org/ns/structure/1.0'))]">content content must be in the namespace ''</report>
          </rule>
@@ -159,7 +159,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5/Version 3.3.0/
             </choice>
          </zeroOrMore>
       </element>
-      <pattern xmlns="http://purl.oclc.org/dsdl/schematron" id="d475419e44063-constraint">
+      <pattern xmlns="http://purl.oclc.org/dsdl/schematron" id="d13512e44066-constraint">
          <rule context="tei:constraint">
             <report test="descendant::*[not(namespace-uri(.) = ('http://purl.oclc.org/dsdl/schematron'))]">constraint content must be in the namespace ''</report>
          </rule>
@@ -185,7 +185,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5/Version 3.3.0/
             </choice>
          </zeroOrMore>
       </element>
-      <pattern xmlns="http://purl.oclc.org/dsdl/schematron" id="d475419e44972-constraint">
+      <pattern xmlns="http://purl.oclc.org/dsdl/schematron" id="d13512e44975-constraint">
          <rule context="tei:datatype">
             <report test="descendant::*[not(namespace-uri(.) = ('http://relaxng.org/ns/structure/1.0'))]">datatype content must be in the namespace ''</report>
          </rule>
