@@ -1,4 +1,4 @@
-<xsl:stylesheet xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:functx="http://www.functx.com" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sal="http://salamanca.adwmainz.de" version="3.0" exclude-result-prefixes="xsl xi tei functx xs exist fn sal xd" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+<xsl:stylesheet xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:functx="http://www.functx.com" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" xmlns:sal="http://salamanca.adwmainz.de" version="3.0" exclude-result-prefixes="xsl xi tei functx xs exist fn sal xd" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
     
     <xsl:import href="xipr-1-1.xsl"/>   <!-- XInclude processing -->
 
@@ -241,10 +241,10 @@
         <xsl:param name="serverDomain" as="xs:string"/>
     <xsl:choose>
         <xsl:when test="matches($facsTarget, '^facs:W[0-9]{4}-[A-z]-[0-9]{4}$')">
-            <xsl:value-of select="concat('http://facs.', $serverDomain, '/iiif/presentation/', sal:convertVolumeID(substring($facsTarget, 6, 7)), '/canvas/p', $index)"/>
+            <xsl:value-of select="concat('https://facs.', $serverDomain, '/iiif/presentation/', sal:convertVolumeID(substring($facsTarget, 6, 7)), '/canvas/p', $index)"/>
         </xsl:when>
         <xsl:when test="matches($facsTarget, '^facs:W[0-9]{4}-[0-9]{4}$')">
-            <xsl:value-of select="concat('http://facs.', $serverDomain, '/iiif/presentation/', substring($facsTarget, 6, 5), '/canvas/p', $index)"/>
+            <xsl:value-of select="concat('https://facs.', $serverDomain, '/iiif/presentation/', substring($facsTarget, 6, 5), '/canvas/p', $index)"/>
         </xsl:when>
         <xsl:otherwise>
             <xsl:message>Error: unknown pb/@facs value</xsl:message>
