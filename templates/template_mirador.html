@@ -1,13 +1,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <title>SvSal Mirador Instance</title>
-    <link rel="stylesheet" type="text/css" href="resources/css/mirador-combined.css"/>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
-    <!-- ==== Scripts ==== -->
-    <!-- - - Piwik for visitor stats (modified to enable caching and compression) - - -->
-    <script type="text/javascript">
+    <head>
+        <title>SvSal Mirador Instance</title>
+        <link rel="stylesheet" type="text/css" href="resources/css/mirador-combined.css"/>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        
+        <!-- ==== Scripts ==== -->
+        <!-- - - Piwik for visitor stats (modified to enable caching and compression) - - -->
+        <!--<script type="text/javascript">
       var _paq = _paq || [];
       _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
       _paq.push(["setCookieDomain", "*.salamanca.school"]);
@@ -25,26 +25,26 @@
         g.src=u+'js/';
         s.parentNode.insertBefore(g,s);
       })();
-    </script>
-    <!-- End Piwik Code -->
+    </script>-->
+        <!-- End Piwik Code -->
+        
+        <!-- ==== favIcon ==== -->
+        <link rel="icon" type="image/png" href="resources/favicons/favicon-32x32.png" sizes="32x32"/>
+        <link rel="icon" type="image/png" href="resources/favicons/favicon-194x194.png" sizes="194x194"/>
+        <link rel="icon" type="image/png" href="resources/favicons/favicon-96x96.png" sizes="96x96"/>
+        <link rel="icon" type="image/png" href="resources/favicons/android-chrome-192x192.png" sizes="192x192"/>
+        <link rel="icon" type="image/png" href="resources/favicons/favicon-16x16.png" sizes="16x16"/>
+        <link rel="manifest" href="resources/favicons/manifest.json"/>
+        <meta name="msapplication-TileColor" content="#ffffff"/>
+        <meta name="msapplication-TileImage" content="resources/favicons/mstile-144x144.png"/>
+        <meta name="theme-color" content="#ffffff"/>
+    </head>
     
-    <!-- ==== favIcon ==== -->
-    <link rel="icon" type="image/png" href="resources/favicons/favicon-32x32.png" sizes="32x32"/>
-    <link rel="icon" type="image/png" href="resources/favicons/favicon-194x194.png" sizes="194x194"/>
-    <link rel="icon" type="image/png" href="resources/favicons/favicon-96x96.png" sizes="96x96"/>
-    <link rel="icon" type="image/png" href="resources/favicons/android-chrome-192x192.png" sizes="192x192"/>
-    <link rel="icon" type="image/png" href="resources/favicons/favicon-16x16.png" sizes="16x16"/>
-    <link rel="manifest" href="resources/favicons/manifest.json"/>
-    <meta name="msapplication-TileColor" content="#ffffff"/>
-    <meta name="msapplication-TileImage" content="resources/favicons/mstile-144x144.png"/>
-    <meta name="theme-color" content="#ffffff"/>
-</head>
-
-<body id="body">
-    <div id="content"/>
-
-    <script type="text/javascript" src="resources/js/mirador/mirador.js"/>
-    <script type="text/javascript">
+    <body id="body">
+        <div id="content"/>
+        
+        <script type="text/javascript" src="resources/js/mirador/mirador.js"/>
+        <script type="text/javascript">
 
         /**
          * JavaScript Get URL Parameter
@@ -70,11 +70,11 @@
          * @return the content of the 'lang' url parameter or a string based on pathname components
          */
         function getLang() {
-            if (getUrlParams('lang').length > 0)
+            if (getUrlParams('lang').length &gt; 0)
                 return getUrlParams('lang')
-            else if (window.location.href.indexOf("/es/") > -1) 
+            else if (window.location.href.indexOf("/es/") &gt; -1) 
                 return 'es'
-            else if (window.location.href.indexOf("/de/") > -1)
+            else if (window.location.href.indexOf("/de/") &gt; -1)
                 return 'de'
             else
                 return 'en'
@@ -114,6 +114,15 @@
                                 "aria-hidden": "true",
                                 "href": "#no-op"
                             }
+                        },
+                        {
+                            "label": "Privacy &amp; Legal Information",
+                            "iconClass": "fa fa-lock",
+                            "attributes": {
+                                "id": "legal",
+                                "aria-hidden": "true",
+                                "href": "https://www.salamanca.school/legal.html"
+                            }
                         }
 // we could close the popup window from here, and eliminate its titlebar, thus saving space. But then we have nothing to grab for dragging the window around...
 // ,
@@ -140,6 +149,6 @@
             setTimeout( window.parent.miradorLoaded, 4000 );
         });
     </script>
-
-</body>
+        
+    </body>
 </html>

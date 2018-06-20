@@ -428,8 +428,8 @@ let $doc :=
     
     <back>
       <div>
-        <p>{$cs:identification}</p>
-        <p><ref target="{$cs:protocolDescUrl}">More information</ref></p>
+        <p>{$cs:identification}<ref target="{$cs:privLink}">{$cs:privPolicy}</ref>.</p>
+        <p><ref target="{$cs:protocolDescUrl}">More information on the CodeSharing Protocol</ref></p>
       </div>
     </back>
     

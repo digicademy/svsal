@@ -1,0 +1,38 @@
+<div xmlns:i18n="http://exist-db.org/xquery/i18n" data-template="templates:surround" data-template-with="templates/template_basic.html" data-template-at="content">
+    <div data-template="i18n:translate" data-template-catalogues="data/i18n">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2"/>
+                <div class="col-md-8">
+                    <h2 style="margin-top: 3%" class="hidden-md hidden-sm hidden-xs">
+                        <span class="text-muted">
+                            <i18n:text key="legalTitle">Datenschutzerklärung und Impressum</i18n:text>
+                        </span>
+                        <hr/>
+                    </h2>
+                    <h2 style="margin-top: 2%" class="hidden-lg hidden-sm hidden-xs">
+                        <span class="text-muted">
+                            <i18n:text key="legalTitle">Datenschutzerklärung und Impressum</i18n:text>
+                        </span>
+                        <hr/>
+                    </h2>
+                    <h2 class="hidden-lg hidden-md">
+                        <span class="text-muted">
+                            <i18n:text key="legalTitle">Datenschutzerklärung und Impressum</i18n:text>
+                        </span>
+                        <hr/>
+                    </h2>
+                    <div id="disclaimer" title="LegalDisclaimer" data-template="app:legalDisclaimer"/>
+                    <div id="privacy" title="PrivacyPolicy">
+                        <div data-template="app:privDecl"/>
+                    </div>
+                    <br/>
+                    <div id="imprint" title="Imprint">
+                        <div data-template="app:imprint"/>
+                    </div>
+                </div>
+                <div class="col-md-2"/>
+            </div>
+        </div>
+    </div>
+</div>

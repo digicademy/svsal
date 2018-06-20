@@ -308,7 +308,7 @@
                     <mapping type="MUFI" subtype="PUA">U+E682</mapping>
                     <mapping type="composed">q̇</mapping>
                     <mapping type="standardized">q</mapping>
-                    <graphic mimeType="image/png" url="http://www.manuscriptorium.com/apps/gbank/data/mufi-graphic/a759.png"/>
+                    <graphic mimeType="image/png" url="http://v2.manuscriptorium.com/apps/gbank/data/mufi-graphic/e682.png"/>
                 </char>
 
                 <char xml:id="chare8b3">
@@ -320,7 +320,7 @@
                     <mapping type="MUFI" subtype="PUA">U+E8B3</mapping>
                     <mapping type="precomposed"></mapping>
                     <mapping type="standardized">q</mapping>
-                    <graphic mimeType="image/png" url="http://www.manuscriptorium.com/apps/gbank/data/mufi-graphic/e8b3.png"/>
+                    <graphic mimeType="image/png" url="http://v2.manuscriptorium.com/apps/gbank/data/mufi-graphic/e8b3.png"/>
                 </char>
                 <char xml:id="chare8bf">
                     <desc>LATIN SMALL LETTER Q LIGATED WITH FINAL ET</desc>
@@ -331,7 +331,7 @@
                     <mapping type="MUFI" subtype="PUA">U+E8BF</mapping>
                     <mapping type="precomposed"></mapping>
                     <mapping type="standardized">q</mapping>
-                    <graphic mimeType="image/png" url="http://www.manuscriptorium.com/apps/gbank/data/mufi-graphic/e8bf.png"/>
+                    <graphic mimeType="image/png" url="http://v2.manuscriptorium.com/apps/gbank/data/mufi-graphic/e8bf.png"/>
                 </char>
                 <char xml:id="charebd1">
                     <desc>LATIN SMALL LETTER D ROTUNDA WITH DOT ABOVE</desc>
@@ -349,7 +349,7 @@
                     <mapping type="precomposed"></mapping>
                     <mapping type="composed">ꝺ̇</mapping>
                     <mapping type="standardized">d</mapping>
-                    <graphic mimeType="image/png" url="http://www.manuscriptorium.com/apps/gbank/data/mufi-graphic/ebd1.png"/>
+                    <graphic mimeType="image/png" url="http://v2.manuscriptorium.com/apps/gbank/data/mufi-graphic/ebd1.png"/>
                 </char>
                 <char xml:id="charf159">
                     <desc>LATIN ABBREVIATION SIGN SMALL DE</desc>
@@ -360,7 +360,7 @@
                     <mapping type="MUFI" subtype="PUA">U+F159</mapping>
                     <mapping type="precomposed"></mapping>
                     <mapping type="standardized">d</mapping>
-                    <graphic mimeType="image/png" url="http://www.manuscriptorium.com/apps/gbank/data/mufi-graphic/f159.png"/>
+                    <graphic mimeType="image/png" url="http://v2.manuscriptorium.com/apps/gbank/data/mufi-graphic/f159.png"/>
                 </char>
 
 <!-- Combining Characters, the first character of the code after "char" is the base letter, then come 4 identifying characters combining mark -->

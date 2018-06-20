@@ -1,0 +1,241 @@
+<?xml-model href="https://files.salamanca.school/SvSal_txt.rng"
+    type="application/xml"
+    schematypens="http://relaxng.org/ns/structure/1.0"?><TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="TechSearchHelp">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title xml:lang="de">Datenschutzerklärung</title>
+                <title xml:lang="en">Privacy Policy</title>
+                <title xml:lang="es">Política de Privacidad</title>
+                <author>
+                    <surname>Birr</surname>, <forename>Christiane</forename>
+                </author>
+                <author>
+                    <surname>Glück</surname>, <forename>David</forename>
+                </author>
+                <author>
+                    <surname>Wagner</surname>, <forename>Andreas</forename>
+                </author>
+            </titleStmt>
+            <editionStmt>
+                <edition/>
+                <respStmt>
+                    <resp xml:lang="en">Created by</resp>
+                    <persName ref="#CB">Christiane Birr</persName>
+                    <persName ref="#DG">David Glück</persName>
+                    <persName ref="#AW">Andreas Wagner</persName>
+                </respStmt>
+                <sponsor>
+                    <orgName xml:lang="de">Akademie der Wissenschaften und der Literatur, Mainz</orgName>
+                    <ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>
+                </sponsor>
+                <funder>
+                    <orgName xml:lang="de">Akademie der Wissenschaften und der Literatur, Mainz</orgName>
+                    <ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>
+                </funder>
+            </editionStmt>
+            <publicationStmt>
+                <publisher>
+                    <orgName xml:lang="de">Akademie der Wissenschaften und der Literatur, Mainz</orgName>
+                    <ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>
+                </publisher>
+                <distributor>
+                    <orgName xml:lang="de">Akademie der Wissenschaften und der Literatur, Mainz</orgName>, 
+                    <orgName xml:lang="de">Max Planck Institut für europäische Rechtsgeschichte</orgName>, 
+                    <orgName xml:lang="de">Goethe-Universität Frankfurt/Main</orgName>
+                    <email>info@salamanca.adwmainz.de</email>
+                </distributor>
+                <pubPlace role="digitzedEd" xml:lang="de">
+                    Frankfurt/Main (<ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>)
+                </pubPlace>
+                
+                <!-- Information about copyright -->
+                <availability>
+                    <licence target="http://creativecommons.org/licenses/by-nc-sa/3.0/">
+                        <p xml:id="p_luojpcn3qp3q4" xml:lang="de">Dieses Werk bzw. dieser Inhalt wurde erstellt durch die Akademie der
+                            Wissenschaften und der Literatur, Mainz, und steht unter einer Creative
+                            Commons Lizenz: Namensnennung-NichtKommerziell-KeineBearbeitung 3.0 Unported.</p>
+                    </licence>
+                </availability>
+            </publicationStmt>
+            <sourceDesc>
+                <p xml:lang="de" xml:id="p_koiuwasdas">Born digital, erstellt am 2018-05-24, um 10:40 Uhr.</p>
+            </sourceDesc>
+        </fileDesc>
+        <revisionDesc status="a_raw">
+            <listChange>
+                <change who="#DG" when="2018-05-24" status="a_raw" xml:lang="de">Added to the database.</change>
+            </listChange>
+        </revisionDesc>
+    </teiHeader>
+    <text type="technical" xml:id="completeWork">
+        <body>
+            
+            <div type="chapter" xml:id="div-privdecl-de" xml:lang="de">
+                <head xml:id="head-lksdjfd">
+                    <hi rendition="#b">Datenschutzerklärung</hi>
+                </head>
+                <p xml:id="p-sdlkfjsdf">Diese Datenschutzerklärung gilt für das Internetangebot des Projekts 
+                    „Die Schule von Salamanca. Eine digitale Quellensammlung und ein Wörterbuch ihrer juridisch-politischen Sprache“ 
+                    (siehe Impressum), das unter der Domain "salamanca.school" erreichbar ist, 
+                    und für die über diese Internetdienste erhobenen personenbezogenen Daten.</p>
+                <div type="section" xml:id="div-technics-de">
+                    <head xml:id="head-kajsfhds">Bei der Technik haben wir Hilfe</head>
+                    <p xml:id="p_sdfgcsrbc">Dieses Internet-Angebot wird von der Gesellschaft für wissenschaftliche 
+                        Datenverarbeitung mbH Göttingen (GWDG) als technischem Dienstleister 
+                        vorgehalten. Die dortige Verarbeitung von 
+                        Nutzungsdaten erfolgt in unserem Auftrag und nach unseren Vorgaben.</p>
+                    <div xml:id="div-know-de" type="section">
+                        <head xml:id="head-lskfsdfd">Was wissen wir über Ihre Zugriffe auf unser Angebot?</head>
+                        <p xml:id="p-lsdkfjsdf">Beim Zugriff auf das Internet-Angebot unter der Domain salamanca.school werden die folgenden Angaben in 
+                            Protokolldateien auf dem Web- bzw. Anwendungsserver gespeichert:</p>
+                        <list>
+                            <item xml:id="item-asdlsdkj1">Browser-Informationen (genutzter Web-Browser, Betriebssystem, Spracheinstellung, etc.),</item>
+                            <item xml:id="item-asdlsdkj2">Angaben über den genutzten Serverdienst,</item>
+                            <item xml:id="item-asdlsdkj3">Protokollversion,</item>
+                            <item xml:id="item-asdlsdkj4">Name der abgerufenen Datei bzw. Angebotsseite (URL),</item>
+                            <item xml:id="item-asdlsdkj5">Datum und Uhrzeit des Zugriffs,</item>
+                            <item xml:id="item-asdlsdkj6">Statusangaben (z.B. Fehlermeldungen),</item>
+                            <item xml:id="item-asdlsdkj7">in anonymisierter Form die IP-Adresse des Geräts, von dem die Anfrage abgeschickt wurde.</item>
+                        </list>
+                        <p xml:id="p-sdklfjre">Wenn Sie sich in unserem Blog registrieren und dort 
+                            Nachrichten bzw. Kommentare hinterlassen, 
+                            werden zusätzlich die folgenden Daten gespeichert:</p>
+                        <list>
+                            <item xml:id="item-aslsdkj1">Nutzername</item>
+                            <item xml:id="item-adlsdkj2">E-Mail-Adresse</item>
+                            <item xml:id="item-adlsdkj3">Kommentare</item>
+                        </list>
+                        <p xml:id="p-sdlkfdjsdf">Wenn Sie sich in unserer Mailingliste eintragen (s.u.) 
+                            wird ebenfalls die Email-Adresse und, wenn angegeben, Ihr Name gespeichert.</p>
+                        <p xml:id="p-lkdjsfsfds">Diese Informationen werden für die technische Weiterentwicklung (z.B. Fehlerbehebung) 
+                            des Angebots und ggf. für sicherheitsrelevante Auswertungen genutzt. Es wird kein personenbezogenes 
+                            Nutzungsprofil erstellt, die Daten werden nicht an Dritte weitergegeben und die oben genannten 
+                            Protokolldateien werden spätestens nach Ablauf von 50 Tagen gelöscht.</p>
+                        <p xml:id="p-sallkjsdfd">Die im Rahmen der Kommentare und Beiträge auf unserem Blog angegebenen 
+                            Daten werden ebenso wie die Anmeldeinformationen auf unserer Mailingliste 
+                            von uns bis zum Widerspruch der Nutzer dauerhaft gespeichert. 
+                            (Vgl. unten, Abschnitt Recht auf Auskunft, Berichtigung, Löschung)</p>
+                    </div>
+                    <div xml:id="div-attack-de" type="section">
+                        <head xml:id="head-lkjdgdgff">Wir wollen wissen, wer unser Angebot stört oder angreift</head>
+                        <p xml:id="p-lsdkjfsfds">Wir behalten uns vor, auf Grundlage unserer berechtigten Interessen 
+                            gem. Art. 6 Abs. 1 lit. f. DSGVO, die Angaben der Nutzer zwecks Erkennung von 
+                            Angriffsversuchen und von Spam-Kommentaren im Blog zu verarbeiten. Außerdem kann bei direkten Angriffsversuchen auf 
+                            unsere Server, die keinen gewöhnlichen Aufruf unseres öffentlichen Internetangebots unter der Domain salamanca.school 
+                            darstellen, zusätzlich zu den <ref target="#div-know-de" type="url">oben genannten Daten</ref> die IP-Adresse des Angreifers 
+                            temporär und in nicht-anonymisierter Form protokolliert und ggf. für sicherheitsrelevante Analysen weiterverarbeitet werden. 
+                            Diese Daten werden jedoch spätestens nach Ablauf von 7 Tagen 
+                            gelöscht.</p> 
+                        <p xml:id="p-sdfjhdfsdf">Bei offensichtlich rechtswidrigen Aktivitäten werden wir die 
+                            relevanten bei uns gespeicherten Daten ggf. mit Ermittlungsbehörden teilen. Eine Weitergabe an Dritte (ausgenommen 
+                            Ermittlungsbehörden) ist jedoch ausgeschlossen.</p>
+                    </div>
+                    <div xml:id="div-cookies-de" type="section">
+                        <head xml:id="head-lksdjfsdf">Cookies</head>
+                        <p xml:id="p-lksdjfsdfs">Beim Aufruf unserer Seiten werden temporäre 
+                            <ref target="https://de.wikipedia.org/wiki/Cookie" type="url">Cookies</ref>
+                            verwendet, also kleine Textdateien mit technischen Informationen 
+                            für die Verbindung Ihres Browsers zu unserem Angebot 
+                            salamanca.school bzw. blog.salamanca.school. 
+                            Diese Session-Cookies beinhalten keine personenbezogenen Daten. 
+                            <!--Bei Ihrem ersten Besuch auf den Seiten www.salamanca.school 
+                            und blog.salamanca.school zeigen wir Ihnen einen Hinweis, dass wir 
+                            Cookies nutzen. Wenn Sie den 
+                            Button „Einverstanden“ in dem Hinweis anklicken, wird außerdem ein 
+                            Cookie gesetzt, das uns zeigt, dass Sie den Hinweis gesehen haben.--> Wenn Sie keine 
+                            Cookies wünschen, können Sie diese in Ihren Browsereinstellungen grundsätzlich oder ggf. speziell 
+                            für diese Seiten deaktivieren.</p>
+                    </div>
+                    <div xml:id="div-social-de" type="section">
+                        <head xml:id="head-askdfjas">Social Plugins: Facebook, Twitter</head>
+                        <p xml:id="p-lkasjdasd">Dieses Angebot nutzt keine Mechanismen, mit denen 
+                            beim Besuch unseres Angebots automatisch Informationen 
+                            an die Anbieter von Social Media-Diensten fließen (Social Plugins).</p>
+                    </div>
+                    <div xml:id="div-lkdsjfsdf" type="section">
+                        <head xml:id="head-lskfjsdf">Content Delivery Networks und Google Fonts</head>
+                        <p xml:id="p-sdlkfjhsdf">Unsere Webseiten verwenden Programm- und Symbolbibliotheken 
+                            anderer Anbieter. Da diese im Internet auf vielen Webseiten 
+                            verwendet werden, ist die Wahrscheinlichkeit hoch, dass die 
+                            Betrachter sie aus schnell erreichbaren Zwischenspeichern („Cache“) 
+                            flüssiger verwenden können als wenn sie sie von unserer Webseite herunterladen 
+                            müssten. Um den Betrachtern diesen Vorteil zu erhalten, binden wir die 
+                            entsprechenden Module über ein Drittanbieter-Netzwerk, ein sog. 
+                            <ref target="https://de.wikipedia.org/wiki/Content_Delivery_Network" type="url">Content Delivery Network</ref>, 
+                            ein. Dieses Netzwerk wählt den für den jeweiligen Betrachter 
+                            nächstliegenden oder optimalen Server automatisch aus, wir können daher nicht 
+                            vorwegnehmen, in welcher Jurisdiktion der Server, von dem die Daten letztendlich 
+                            bezogen werden, steht. Der Betreiber dieses Servers/Netzwerks wird vom Betrachter 
+                            unserer Seiten allerdings IP-Adresse, Browserprofil, 
+                            Zugriffszeitpunkt und die URL der betrachteten Seite erfahren können.</p>
+                        <p xml:id="p-salfkasdf">Die entsprechenden Bibliotheken (jQuery, Boostrap und Font-Awesome) 
+                            binden wir über das Netzwerk des Betreibers MaxCDN, 2021 McKinney Ave., 
+                            Suite 1100, Dallas TX 75201, USA, ein. Dessen 
+                            Datenschutzerklärung ist hier ersichtlich: 
+                            <ref target="https://www.maxcdn.com/legal/" type="url">https://www.maxcdn.com/legal/</ref>.</p>
+                    </div>
+                    <div xml:id="div-javascript-de" type="section">
+                        <head xml:id="head-asifjasd">Nutzung des Angebots ohne JavaScript</head>
+                        <p xml:id="p-laksfjsaf">Wenn Sie in Ihrem Browser JavaScript deaktiviert haben, ist 
+                            die eine oder andere Funktionalität der Webseite nicht verfügbar. Die 
+                            Inhalte sollten allerdings vollständig sichtbar sein. Über Erweiterungen wie 
+                            etwa <ref target="https://addons.mozilla.org/firefox/addon/noscript" type="url">NoScript</ref> 
+                            können Sie JavaScript für bestimmte Seiten 
+                            (z.B. blog.salamanca.school) zulassen.</p>
+                    </div>
+                    <div xml:id="div-encryption-de" type="section">
+                        <head xml:id="head-lksfjsdf">Verschlüsselung</head>
+                        <p xml:id="p-aslkfjhasd">Dieses Angebot unterstützt eine Leitungsverschlüsselung per 
+                            HTTPS/<ref target="https://de.wikipedia.org/wiki/Transport_Layer_Security" type="url">TLS</ref>. 
+                            Dadurch wird verhindert, dass bei der Übertragung Ihrer Daten im Internet 
+                            diese durch Unbefugte zur Kenntnis genommen oder verändert werden können.</p>
+                    </div>
+                    <div xml:id="div-list-de" type="section">
+                        <head xml:id="head-sdlfkjsdf">Mailingliste</head>
+                        <p xml:id="p-jksdfhsdf">Wir betreiben eine Mailingliste unter der Adresse 
+                            <ref target="mailto:salamanca@dlist.server.uni-frankfurt.de" type="url">salamanca@dlist.server.uni-frankfurt.de</ref>. 
+                            Diese wird durch uns auf 
+                            einem Server der Goethe-Universität Frankfurt/M. administriert. 
+                            Abonnieren, sich austragen oder Ihre Einstellungen ändern können Sie 
+                            unter der Adresse 
+                            <ref target="https://dlist.server.uni-frankfurt.de/mailman/listinfo/salamanca" type="url">https://dlist.server.uni-frankfurt.de/mailman/listinfo/salamanca</ref>. 
+                            Die Informationen, die Sie dort hinterlegen dienen allein dem Zweck, 
+                            gelegentlich Informationen über Forschung und andere Entwicklungen im Kontext des 
+                            Projekts zu zirkulieren und werden keinesfalls weitergegeben.</p>
+                    </div>
+                    <div xml:id="div-rights-de" type="section">
+                        <head xml:id="head-lkhdsfsdf">Recht auf Auskunft, Berichtigung, 
+                            Löschung sowie Beschwerdemöglichkeit</head>
+                        <p xml:id="p-salkfjsfsad">
+                            Sie haben nach der Datenschutz-Grundverordnung das Recht auf Auskunft 
+                            über Sie betreffende Daten, deren Berichtigung sowie sofortige Löschung. 
+                            Wenn Sie der Auffassung sind, dass Ihre Rechte gem. DSGVO verletzt werden, 
+                            wenden Sie sich bitte an 
+                            <ref target="mailto:info.salamanca@adwmainz.de" type="url">info.salamanca@adwmainz.de</ref>. 
+                            Er/Sie wird Ihr Anliegen innerhalb der 
+                            gesetzlichen Frist prüfen und Ihnen hiervon Mitteilung machen. Sofern 
+                            keine Abhilfe erfolgt, besteht die Möglichkeit der Beschwerde bei der zuständigen 
+                            Aufsichtsbehörde, dem Hessischen Datenschutzbeauftragten.
+                        </p>
+                    </div>
+                    <div xml:id="div-disclaimer-de" type="section">
+                        <head xml:id="head-sdkfjsdf">Disclaimer</head>
+                        <p xml:id="p-lsdkfjsdsf">Diese Datenschutzerklärung dient der Information der BenutzerInnen der Webseite salamanca.school 
+                            entsprechend der Datenschutz-Grundverordnung (DSGVO). 
+                            Sie wurde erstellt u.a. unter Einbeziehung der Datenschutzerklärung des Landes Rheinland-Pfalz (Stand: 19. Januar 2018: 
+                            <ref target="https://www.datenschutz.rlp.de/de/themenfelder-themen/datenschutzerklaerung-ab-1912018/" type="url">https://www.datenschutz.rlp.de/de/themenfelder-themen/datenschutzerklaerung-ab-1912018/</ref>), 
+                            der Datenschutzerklärung der Akademie der Wissenschaften und der Literatur Mainz 
+                            (<ref target="http://www.adwmainz.de/datenschutz.html" type="url">http://www.adwmainz.de/datenschutz.html</ref>) und des Datenschutz-Generator.de 
+                            (<ref target="https://datenschutz-generator.de/" type="url">https://datenschutz-generator.de/</ref>) von RA Dr. Thomas Schwenke.</p>
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <div type="section" xml:id="div-privdecl-en" xml:lang="en"/>
+            <div type="section" xml:id="div-privdecl-es" xml:lang="en"/>
+            
+        </body>
+    </text>
+</TEI>

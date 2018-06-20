@@ -60,20 +60,7 @@
             <create qname="sal:citetrail"/>
             <create qname="sal:citableParent"/>
 
-<!-- rdf/lod fields ... -->
-            <create qname="rdf:Description">
-                <field name="rdf.Description.rdfAbout" match="@rdf:about" type="xs:string"/>
-            </create>
-            <create qname="rdfs:seeAlso">
-                <field name="rdfs.seeAlso.rdfresource" match="@rdf:resource" type="xs:string"/>
-            </create>
-
-<!-- tei fields ... -->
-            <create qname="tei:bibl">
-                <field name="tei.bibl.key" match="@key" type="xs:string"/>
-                <field name="tei.bibl.ref" match="@ref" type="xs:string"/>
-                <field name="tei.bibl.sortKey" match="@sortKey" type="xs:string"/>
-            </create>
+<!-- some TEI fields, relevant e.g. for TEI metadata files stored within the web app ... -->
             <create qname="tei:char"/>
             <create qname="tei:date">
                 <field name="tei.date.type" match="@type" type="xs:string"/>
@@ -82,53 +69,19 @@
                 <field name="tei.div.n" match="@n" type="xs:string"/>
                 <field name="tei.div.type" match="@type" type="xs:string"/>
             </create>
-            <create qname="tei:g">
-                <field name="tei.g.ref" match="@ref" type="xs:string"/>
-            </create>
-<!--        <create qname="tei:head"/> -->
-<!--        <create qname="tei:item"/> -->
-            <create qname="tei:lb">
-                <field name="tei.lb.break" match="@break" type="xs:string"/>
-            </create>
             <create qname="tei:list">
                 <field name="tei.list.type" match="@type" type="xs:string"/>
             </create>
             <create qname="tei:mapping">
                 <field name="tei.mapping.type" match="@type" type="xs:string"/>
             </create>
-            <create qname="tei:milestone">
-                <field name="tei.milestone.n" match="@n" type="xs:string"/>
-                <field name="tei.milestone.unit" match="@unit" type="xs:string"/>
-            </create>
-<!--        <create qname="tei:note"/>  -->
-<!--        <create qname="tei:p"/> -->
-            <create qname="tei:persName">
-                <field name="tei.persName.key" match="@key" type="xs:string"/>
-                <field name="tei.persName.ref" match="@ref" type="xs:string"/>
-            </create>
-            <create qname="tei:publisher">
-                <field name="tei.publisher.n" match="@n" type="xs:string"/>
-            </create>
-            <create qname="tei:pubPlace">
-                <field name="tei.pubPlace.role" match="@role" type="xs:string"/>
-            </create>
             <create qname="tei:ref">
                 <field name="tei.ref.target" match="@target" type="xs:string"/>
                 <field name="tei.ref.n" match="@n" type="xs:string"/>
                 <field name="tei.ref.type" match="@type" type="xs:string"/>
             </create>
-            <create qname="tei:term">
-                <field name="tei.term.key" match="@key" type="xs:string"/>
-                <field name="tei.term.ref" match="@ref" type="xs:string"/>
-            </create>
             <create qname="tei:text">
                 <field name="tei.text.type" match="@type" type="xs:string"/>
-            </create>
-            <create qname="tei:title">
-                <field name="tei.title.type" match="@type" type="xs:string"/>
-                <field name="tei.title.key" match="@key" type="xs:string"/>
-                <field name="tei.title.ref" match="@ref" type="xs:string"/>
-                <field name="tei.title.n" match="@n" type="xs:string"/>
             </create>
 
 <!-- HTML elements... -->            

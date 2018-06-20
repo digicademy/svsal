@@ -17,17 +17,8 @@ declare variable $dir external;
 (: the target collection into which the app is deployed :)
 declare variable $target external;
 
-(: Regular visitors are not members of the admin group, but $user is. Membership in the admin group
-    is required for writing in the database and setting permissions, which many administration 
+(: Membership in the admin group is required for writing in the database and setting permissions, which many administration 
     (like render.xql/html) tasks do. Permissions are enforced by file ownership, managed in post-install.xql :)
-
-declare variable $group       := "tmpGrp";
-declare variable $adminGrp    := "tmpAdminGrp";
-declare variable $user        := "tmpUser";
-declare variable $pwd         := replace(util:uuid(), '-', '');
-declare variable $pwdSet      := if (string-length($pwd) > 10) then true() else false();
-declare variable $umask       := 2;
-declare variable $otherGroups := ("dba", "monex", "eXide", $adminGrp);
 
 declare function local:mkcol-recursive($collection, $components) {
     if (exists($components)) then
@@ -45,19 +36,8 @@ declare function local:mkcol($collection, $path) {
     local:mkcol-recursive($collection, tokenize($path, "/"))
 };
 
-let $GR     :=  if (not (sm:group-exists($group))    ) then sm:create-group($group) else ()
-let $AGR    :=  if (not (sm:group-exists($adminGrp)) ) then sm:create-group($adminGrp) else ()
-let $US     :=  if (not (sm:user-exists($user)) and $pwdSet) then
-                    let $account := sm:create-account($user, $pwd, $group, $otherGroups)
-                    let $mask    := sm:set-umask($user, $umask)
-                    return $account
-                else ()
-
-return
-
 (: store the collection configuration :)
-    local:mkcol("/db/system/config", $target),
-    xmldb:store-files-from-pattern(concat("/db/system/config", $target), $dir, "*.xconf"),
-    sm:remove-account($user),
-    sm:remove-group($group),
-    sm:remove-group($adminGrp)
+local:mkcol("/db/system/config", $target), 
+        xmldb:store-files-from-pattern(concat("/db/system/config", $target), $dir, "*.xconf")
+
+

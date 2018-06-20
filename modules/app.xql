@@ -428,22 +428,24 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
         let $workImages     :=  'mirador.html?wid=' ||  $wid
         let $FacsInfo       :=  i18n:process(<i18n:text key="facsimiles">Bildansicht</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en")
 
-        let $pubPlaceFirst  :=  $item//tei:pubPlace[@role = 'firstEd']
-        let $pubPlaceThis   :=  $item//tei:pubPlace[@role = 'thisEd']
-        let $printingPlace  :=  if ($pubPlaceThis) then $pubPlaceThis else $pubPlaceFirst
+        let $printingPlace  :=  if ($item//tei:pubPlace[@role = 'thisEd']) then $item//tei:pubPlace[@role = 'thisEd'] 
+                                else $item//tei:pubPlace[@role = 'firstEd']
         let $placeFirstChar :=  substring($printingPlace/@key, 1, 1)
         let $facetPlace     :=       if ($placeFirstChar = ('A','B','C','D','E','F')) then 'A - F'
                                 else if ($placeFirstChar = ('G','H','I','J','K','L')) then 'G - L'
                                 else if ($placeFirstChar = ('M','N','O','P','Q','R')) then 'M - R'
                                 else                                                       'S - Z'
-        let $date           :=  ($item//tei:date[@type = 'thisEd'] | $item//tei:date[@type = 'firstEd'])[1]/@when
+        let $date           :=  if ($item//tei:date[@type = 'thisEd']) then $item//tei:date[@type = 'thisEd'][1]/@when
+                                else $item//tei:date[@type = 'firstEd'][1]/@when
         let $datefacet      :=       if ($date < 1501) then '1501-1550'
                                 else if ($date < 1551) then '1501-1550'
                                 else if ($date < 1601) then '1551-1600'
                                 else if ($date < 1651) then '1601-1650'
                                 else if ($date < 1701) then '1651-1700'
-                                else                        '??'
-        let $printer        :=  ': ' || $item//tei:sourceDesc//(tei:publisher[@n="thisEd"] | tei:publisher[@n="firstEd"])[1]/tei:persName[1]/tei:surname
+                                else                        '??' 
+        let $printer    := if ($item//tei:sourceDesc//tei:publisher[@n="thisEd"]) then 
+                                ': ' || $item//tei:sourceDesc//tei:publisher[@n="thisEd"][1]/tei:persName[1]/tei:surname
+                           else ': ' || $item//tei:sourceDesc//tei:publisher[@n="firstEd"][1]/tei:persName[1]/tei:surname
 
         let $language       :=  i18n:process(if ($item/parent::tei:TEI//tei:text/@xml:lang = 'la') then
                                                 <i18n:text key="latin">Latein</i18n:text>
@@ -2724,9 +2726,9 @@ declare %templates:default
                                 <span class="glyphicon glyphicon-stats text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="register">Register</i18n:text></span>
                             </div>
                             <!--Print-Button and Export-Dropdown-->
-                            <div class="btn-group hidden-md hidden-sm hidden-xs btn btn-link disabled">
+                            <!--<div class="btn-group hidden-md hidden-sm hidden-xs btn btn-link disabled">
                                 <span class="glyphicon glyphicon-print text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="print">Drucken</i18n:text></span>
-                            </div>
+                            </div>-->
                             <div class="btn-group hidden-md hidden-sm hidden-xs">
                                 <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                     <span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;<i18n:text key="export">Export</i18n:text>&#xA0;
@@ -2745,6 +2747,9 @@ declare %templates:default
                                         <a><span class="glyphicon glyphicon-download-alt text-muted" aria-hidden="true"></span> <span class="text-muted"> ebook</span></a>
                                     </li>
                                 </ul>
+                            </div>
+                            <div class="btn-group">
+                                <a class="btn btn-link" href="legal.html"><!--<i class="fa fa-info-circle">--><i class="fa fa-lock"></i>&#32; <i18n:text key="legalShort">Datenschutz&amp;Impressum</i18n:text></a>
                             </div>
 
                         <!-- Hamburger Icon, used in small views only: substitutes textmode, print and export functions -->
@@ -2777,7 +2782,7 @@ declare %templates:default
                                     <li class="disabled"><a><span class="glyphicon glyphicon-stats text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="register">Register</i18n:text></span></a></li>
                                     <li><a onclick="applyEditMode()" class="btn original unsichtbar" style="cursor: pointer;"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"/>&#xA0;<i18n:text key="constituted">Konstituiert</i18n:text></a></li>
                                     <li><a onclick="applyOrigMode()" class="btn edited" style="cursor: pointer;"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"/>&#xA0;<i18n:text key="diplomatic">Diplomatisch</i18n:text></a></li>
-                                    <li class="disabled"><a><span class="glyphicon glyphicon-print text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="print">Drucken</i18n:text></span></a></li>
+                                    <!--<li class="disabled"><a><span class="glyphicon glyphicon-print text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="print">Drucken</i18n:text></span></a></li>-->
                                     {$downloadXML}
                                     {$downloadTXTorig}
                                     {$downloadTXTedit}
@@ -3017,3 +3022,38 @@ declare function app:scaleImg($node as node(), $model as map(*), $wid as xs:stri
         else if ($wid eq 'W0114') then  'height: 2601, width:  1674' 
         else ()
 };
+
+
+(: legal declarations :)
+
+declare function app:legalDisclaimer ($node as node(), $model as map(*), $lang as xs:string?) {
+    let $disclaimerText := i18n:process(<i18n:text key="legalDisclaimer"/>, $lang, '/db/apps/salamanca/data/i18n', 'en')
+    return if ($disclaimerText) then 
+        <div style="margin-bottom:1em;border:1px solid gray;border-radius:5px;padding:0.5em;">
+            <span>{$disclaimerText}</span>
+        </div>
+        else ()
+};
+
+declare function app:privDecl ($node as node(), $model as map(*), $lang as xs:string?) {
+    let $declfile   := doc($config:data-root || "/i18n/privacy_decl.xml")
+    let $decltext   := "div-privdecl-de"
+    let $html       := render:dispatch($declfile//tei:div[@xml:id = $decltext], "html")
+    return if (count($html)) then
+        <div id="privDecl" class="help">
+            {$html}
+        </div>
+    else ()
+};
+
+declare function app:imprint ($node as node(), $model as map(*), $lang as xs:string?) {
+    let $declfile   := doc($config:data-root || "/i18n/imprint.xml")
+    let $decltext   := "div-imprint-de"
+    let $html       := render:dispatch($declfile//tei:div[@xml:id = $decltext], "html")
+    return if (count($html)) then
+        <div id="imprint" class="help">
+            {$html}
+        </div>
+    else ()
+};
+

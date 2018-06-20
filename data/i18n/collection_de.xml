@@ -1,98 +1,98 @@
 <catalogue xml:lang="de">
-<!--Do not edit -->
-    
+  <!--Do not edit -->
+  
   <!-- Navigation -->
-    <msg key="guidelines">Editionsrichtlinien</msg>
-    
-    <!-- Navigation -->
-    <msg key="guidelines">Editionsrichtlinien</msg>
-    
-    <!-- common -->
-    
-    <msg key="licenceDesc">Für die Daten des Projekts "Die Schule von Salamanca" gilt (falls nicht anders angegeben) eine</msg>
-    
+  <msg key="projectName">Die Schule von Salamanca</msg>
+  <msg key="guidelines">Editionsrichtlinien</msg>
+  
+  <!-- index.html -->
+  <msg key="introWorks">Digitale Quellensammlung mit 116 Werken, aufbereitet gemäß unserer</msg>
+  
+  <!-- common -->
+  
+  <msg key="licenceDesc">Für die Daten des Projekts "Die Schule von Salamanca" gilt (falls nicht anders angegeben) eine</msg>
+  
   <!--author-->
-    <msg key="order">Orden</msg>
-    <msg key="death">Todesdatum</msg>
-
-    <msg key="discipline">Disziplin</msg>
-    <msg key="theologian">Theologie</msg>
-    <msg key="canonist">Kanonisches Recht</msg>
-    <msg key="jurist">Säkulares Recht</msg>
-    <msg key="artes">Artes Liberales</msg>
-
-    <msg key="philosopher">Philosoph</msg>
-    <msg key="artist">Artist</msg>
-    <msg key="advocatus">Advokat</msg>
-    <msg key="procurator">Prokurator</msg>
-
-    <msg key="OP">Dominikaner</msg>
-    <msg key="SJ">Jesuit</msg>
-    <msg key="OFM">Franziskaner</msg>
-    <msg key="OESA">Augustiner</msg>
-    <msg key="CRSA">Augustiner</msg>
-
-    <msg key="workInProgress">Werk in Arbeit!</msg>
+  <msg key="order">Orden</msg>
+  <msg key="death">Todesdatum</msg>
   
-    <msg key="authorsNotice">Biographische Artikel zu den Autoren der Quellensammlung des Projekts 
-      "Die Schule von Salamanca" werden (voraussichtlich ab 
-      2019) sukzessive auf dieser Seite veröffentlicht.</msg>
-    
-    <msg key="authorsNotice">Biographische Artikel zu den Autoren der Quellensammlung des Projekts 
-        "Die Schule von Salamanca" werden (voraussichtlich ab 
-        2019) sukzessive auf dieser Seite veröffentlicht.</msg>
-    
-    <!-- work -->
-    <msg key="diplomatic">Diplomatisch</msg>
-    <msg key="constituted">Konstituiert</msg>
-
-    <msg key="corpusVerb">des ganzen Corpus als TEI/XML Dateien</msg>
-    <msg key="download">Download</msg>
-
-    
-    <msg key="corpusVerb">des ganzen Corpus als TEI/XML Dateien</msg>
-    <msg key="download">Download </msg>
-    <msg key="downloadXML">Download TEI/XML Quelldatei</msg>
-    <msg key="downloadTXTEdit">Download als Plaintext (konstituierte Variante)</msg>
-    <msg key="downloadTXTOrig">Download als Plaintext (diplomatische Variante)</msg>
-    <msg key="downloadRDF">Download von RDF/XML Daten zu diesem Werk</msg>
-    <msg key="downloadCorpus">Download des Corpus als TEI/XML Dateien</msg>
-    
-    <msg key="workNotAvailable">Dieses Werk ist noch nicht verfügbar.</msg>
+  <msg key="discipline">Disziplin</msg>
+  <msg key="theologian">Theologie</msg>
+  <msg key="canonist">Kanonisches Recht</msg>
+  <msg key="jurist">Säkulares Recht</msg>
+  <msg key="artes">Artes Liberales</msg>
   
-    <!-- works/details -->
-    <msg key="worksNotice">Die digitale Quellensammlung des Projekts "Die Schule von Salamanca" besteht 
-      aus insgesamt 116 Werken, die ab Mai 2018 sukzessive auf dieser Seite zur Verfügung gestellt werden. 
-      Hierfür werden die Texte den Spezifikationen der Text Encoding Initiative (TEI) entsprechend aufbereitet;
-      für nähere Informationen siehe die </msg>
-
-<!-- Meta Description Tags -->
-
-    <msg key="metaAuthor">Biobibliographische Informationen über</msg>
-    <msg key="metaLemma">Sachartikel zu</msg>
-    <msg key="metaWP">SvSal Working Paper</msg>
-    <msg key="metaWork">Leseansicht von</msg>
-    <msg key="metaWorkDetails">Bibliographische Daten zu</msg>
-    <msg key="metaIndex">Eine Sammlung digitaler Quellen und ein Wörterbuch der juridisch-politischen Diskurse von iberischen Theologen, Juristen und Philosophen der Frühen Neuzeit.</msg>
-    <msg key="metaSearch">Suche in Texten der Salmanticenser Autoren, in Wörterbuch- und biographischen Artikeln sowie in Working Papers über die Schule von Salamanca.</msg>
-    <msg key="metaContact">Möglichkeiten, das Projekt "Die Schule von Salamanca" zu kontaktieren und über Neuigkeiten auf dem Laufenden zu bleiben.</msg>
-    <msg key="metaEditorial">Richtlinien und Vorgaben für die Einreichung von Vorschlägen für die Working Paper Reihe des Projekts "Die Schule von Salamanca".</msg>
-    <msg key="metaGuidelines">Editionsrichtlinien der Erstellung der digitalen Quellenedition des Projekts "Die Schule von Salamanca".</msg>
-    <msg key="metaProject">Allgemeine Informationen über das Projekt "Die Schule von Salamanca. Eine digitale Quellenedition und ein Wörterbuch ihrer juridisch-politischen Sprache".</msg>
-    <msg key="metaNews">Neuigkeiten, Ankündigungen und kurze Blog-Texte des Projekts "Die Schule von Salamanca" über Theorie, Methodologie, Technik und Weiteres.</msg>
-    <msg key="metaWorks">Überblick über die Quellen, die im Rahmen der digitalen Quellenedition in Text und Bild verfügbar sind. Filter- und Sortierbar.</msg>
-    <msg key="metaAuthors">Überblick über die Autoren, deren Texte in der Quellenedition und die weiterhin durch biographische Artikel beschrieben sind.</msg>
-    <msg key="metaDictionary">Überblick über die im Projekt erarbeiteten Sachartikel des Wörterbuchs der juridisch-politischen Sprache der Schule von Salamanca</msg>
-    <msg key="metaWPs">Überblick über die Working Papers zur Schule von Salamanca, die im Rahmen der vom Projekt veranstalteten Reihe erschienen sind.</msg>
-
-    <!-- dictionary -->
-    <msg key="dictUnderConstruction">Hier entsteht das Wörterbuch der juristisch-politischen Sprache der Schule von Salamanca: ca. 200 Artikel mit lateinischen und spanischen Lemmata, den Quellen selbst entnommen. 
-        Die Artikel werden voraussichtlich ab 2019 sukzessive veröffentlicht.</msg>
-
-<!-- project.html -->
-    <msg key="guidelinesDecl">Beschreibung der Editionsprinzipien und der Textkodierung.</msg>
-    
-    <!-- project.html -->
-    <msg key="guidelinesDecl">Beschreibung der Editionsprinzipien und der Textkodierung.</msg>
-    
+  <msg key="philosopher">Philosoph</msg>
+  <msg key="artist">Artist</msg>
+  <msg key="advocatus">Advokat</msg>
+  <msg key="procurator">Prokurator</msg>
+  
+  <msg key="OP">Dominikaner</msg>
+  <msg key="SJ">Jesuit</msg>
+  <msg key="OFM">Franziskaner</msg>
+  <msg key="OESA">Augustiner</msg>
+  <msg key="CRSA">Augustiner</msg>
+  
+  <msg key="workInProgress">Werk in Arbeit!</msg>
+  
+  <msg key="authorsNotice">Biographische Artikel zu den Autoren der Quellensammlung des Projekts 
+    "Die Schule von Salamanca" werden (voraussichtlich ab 
+    2019) sukzessive auf dieser Seite veröffentlicht.</msg>
+  
+  <!-- work -->
+  <msg key="diplomatic">Diplomatisch</msg>
+  <msg key="constituted">Konstituiert</msg>
+  
+  <msg key="corpusVerb">des ganzen Corpus als TEI/XML Dateien</msg>
+  <msg key="download">Download </msg>
+  <msg key="downloadXML">Download TEI/XML Quelldatei</msg>
+  <msg key="downloadTXTEdit">Download als Plaintext (konstituierte Variante)</msg>
+  <msg key="downloadTXTOrig">Download als Plaintext (diplomatische Variante)</msg>
+  <msg key="downloadRDF">Download von RDF/XML Daten zu diesem Werk</msg>
+  <msg key="downloadCorpus">Download des Corpus als TEI/XML Dateien</msg>
+  
+  <msg key="workNotAvailable">Dieses Werk ist noch nicht verfügbar.</msg>
+  
+  <!-- works/details -->
+  <msg key="worksNotice">Die digitale Quellensammlung des Projekts "Die Schule von Salamanca" besteht 
+    aus insgesamt 116 Werken, die ab Mai 2018 sukzessive auf dieser Seite zur Verfügung gestellt werden. 
+    Hierfür werden die Texte den Spezifikationen der Text Encoding Initiative (TEI) entsprechend aufbereitet;
+    für nähere Informationen siehe die </msg>
+  
+  <!-- Meta Description Tags -->
+  
+  <msg key="metaAuthor">Biobibliographische Informationen über</msg>
+  <msg key="metaLemma">Sachartikel zu</msg>
+  <msg key="metaWP">SvSal Working Paper</msg>
+  <msg key="metaWork">Leseansicht von</msg>
+  <msg key="metaWorkDetails">Bibliographische Daten zu</msg>
+  <msg key="metaIndex">Eine Sammlung digitaler Quellen und ein Wörterbuch der juridisch-politischen Diskurse von iberischen Theologen, Juristen und Philosophen der Frühen Neuzeit.</msg>
+  <msg key="metaSearch">Suche in Texten der Salmanticenser Autoren, in Wörterbuch- und biographischen Artikeln sowie in Working Papers über die Schule von Salamanca.</msg>
+  <msg key="metaContact">Möglichkeiten, das Projekt "Die Schule von Salamanca" zu kontaktieren und über Neuigkeiten auf dem Laufenden zu bleiben.</msg>
+  <msg key="metaEditorial">Richtlinien und Vorgaben für die Einreichung von Vorschlägen für die Working Paper Reihe des Projekts "Die Schule von Salamanca".</msg>
+  <msg key="metaGuidelines">Editionsrichtlinien der Erstellung der digitalen Quellenedition des Projekts "Die Schule von Salamanca".</msg>
+  <msg key="metaProject">Allgemeine Informationen über das Projekt "Die Schule von Salamanca. Eine digitale Quellenedition und ein Wörterbuch ihrer juridisch-politischen Sprache".</msg>
+  <msg key="metaNews">Neuigkeiten, Ankündigungen und kurze Blog-Texte des Projekts "Die Schule von Salamanca" über Theorie, Methodologie, Technik und Weiteres.</msg>
+  <msg key="metaWorks">Überblick über die Quellen, die im Rahmen der digitalen Quellenedition in Text und Bild verfügbar sind. Filter- und Sortierbar.</msg>
+  <msg key="metaAuthors">Überblick über die Autoren, deren Texte in der Quellenedition und die weiterhin durch biographische Artikel beschrieben sind.</msg>
+  <msg key="metaDictionary">Überblick über die im Projekt erarbeiteten Sachartikel des Wörterbuchs der juridisch-politischen Sprache der Schule von Salamanca</msg>
+  <msg key="metaWPs">Überblick über die Working Papers zur Schule von Salamanca, die im Rahmen der vom Projekt veranstalteten Reihe erschienen sind.</msg>
+  
+  <!-- dictionary -->
+  <msg key="dictUnderConstruction">Hier entsteht das Wörterbuch der juristisch-politischen Sprache der Schule von Salamanca: ca. 200 Artikel mit lateinischen und spanischen Lemmata, den Quellen selbst entnommen. 
+    Die Artikel werden voraussichtlich ab 2019 sukzessive veröffentlicht.</msg>
+  
+  <!-- project.html -->
+  <msg key="guidelinesDecl">Beschreibung der Editionsprinzipien und der Textkodierung.</msg>
+  <msg key="legal">Datenschutz &amp; Impressum</msg>
+  <msg key="legalShort">Datenschutz &amp; Impressum</msg>
+  <msg key="legalDesc">Datenschutzerklärung unserer Webseite und Impressum.</msg>
+  <msg key="sourceCode">Quellcode</msg>
+  <msg key="sourceCodeDecl">Der Programmcode dieser Webanwendung im externen GitHub-Repositorium.</msg>
+  
+  <!-- legal.html -->
+  <msg key="legalTitle">Datenschutzerklärung &amp; Impressum</msg>
+  <msg key="privacyDisclaimer">Für Informationen zum Datenschutz auf dieser Webseite siehe die </msg>
+  <msg key="legalDisclaimer"/>
+  
 </catalogue>
