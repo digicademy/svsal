@@ -1,4 +1,4 @@
-<xsl:stylesheet xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sal="http://salamanca.adwmainz.de" version="3.0" exclude-result-prefixes="exist sal tei xd xs xsl" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" xmlns:sal="http://salamanca.adwmainz.de" version="3.0" exclude-result-prefixes="exist sal tei xd xs xsl" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
 
 <!-- TODO:
            * tweak/tune performance: use
@@ -612,6 +612,16 @@
             </xsl:choose>
         </xsl:variable>
         <xsl:value-of select="$originalGlyph"/>
+    </xsl:template>
+    <xsl:template match="damage">
+        <xsl:apply-templates/>
+    </xsl:template>
+    <xsl:template match="supplied">
+        <span class="original unsichtbar" title="{string(.)}">&#91;<xsl:value-of select="./text()"/>&#93;</span> 
+        <span class="edited" title="{concat('[', string(.), ']')}"><xsl:value-of select="./text()"/></span>
+    </xsl:template>
+    <xsl:template match="supplied" mode="pureText">
+        <xsl:apply-templates mode="pureText"/>
     </xsl:template>
 
     <!-- Analytic references (persNames, titles etc.) -->
