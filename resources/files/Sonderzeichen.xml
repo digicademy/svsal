@@ -123,14 +123,24 @@
 
 <!-- Other Precomposed Characters -->
 
+                <char xml:id="char0180">
+                    <desc>LATIN SMALL LETTER B WITH STROKE</desc>
+                    <charProp>
+                        <unicodeName>entity</unicodeName>
+                        <value>bstrok</value>
+                    </charProp>
+                    <mapping type="MUFI" subtype="LatExtB">U+0180</mapping>
+                    <mapping type="precomposed">ƀ</mapping>
+                    <mapping type="standardized">b</mapping>
+                </char>
                 <char xml:id="char0111">
                     <desc>LATIN SMALL LETTER D WITH STROKE</desc>
                     <charProp>
                         <unicodeName>entity</unicodeName>
                         <value>dstrok</value>
                     </charProp>
+                    <mapping type="MUFI" subtype="LatExtA">U+0111</mapping>
                     <mapping type="precomposed">đ</mapping>
-                    <mapping type="composed">d̄</mapping>
                     <mapping type="standardized">d</mapping>
                 </char>
                 <char xml:id="char0142">
@@ -139,8 +149,8 @@
                         <unicodeName>entity</unicodeName>
                         <value>lstrok</value>
                     </charProp>
+                    <mapping type="MUFI" subtype="LatExtA">U+0142</mapping>
                     <mapping type="precomposed">ł</mapping>
-                    <mapping type="composed">l̄</mapping>
                     <mapping type="standardized">l</mapping>
                 </char>
                 <char xml:id="char0153">
@@ -159,6 +169,16 @@
                         <value>slong</value>
                     </charProp>
                     <mapping type="precomposed">ſ</mapping>
+                    <mapping type="standardized">s</mapping>
+                </char>
+                <char xml:id="char1e9c">
+                    <desc>LATIN SMALL LETTER LONG S WITH DIAGONAL STROKE</desc>
+                    <charProp>
+                        <unicodeName>entity</unicodeName>
+                        <value>slongbarslash</value>
+                    </charProp>
+                    <mapping type="MUFI" subtype="LatExtAdd"></mapping>
+                    <mapping type="precomposed">ẜ</mapping>
                     <mapping type="standardized">s</mapping>
                 </char>
                 <char xml:id="char01d4">
@@ -333,6 +353,34 @@
                     <mapping type="standardized">q</mapping>
                     <graphic mimeType="image/png" url="http://v2.manuscriptorium.com/apps/gbank/data/mufi-graphic/e8bf.png"/>
                 </char>
+                <char xml:id="chara757">
+                    <desc>LATIN SMALL LETTER Q WITH STROKE THROUGH DESCENDER</desc>
+                    <charProp>
+                       <localName>entity</localName>
+                       <value>qbardes</value>
+                    </charProp>
+                    <mapping type="MUFI" subtype="LatExtD">U+A757</mapping>
+                    <mapping type="precomposed">ꝗ</mapping>
+                    <mapping type="standardized">q</mapping>
+                </char>
+                <char xml:id="chare68b">
+                    <desc>LATIN SMALL LETTER Q WITH STROKE THROUGH DESCENDER AND TILDE</desc>
+                    <desc n="Combined">LATIN SMALL LETTER Q WITH STROKE THROUGH DESCENDER + COMBINING TILDE</desc>
+                    <charProp>
+                       <localName>entity</localName>
+                       <value>qbardestilde</value>
+                    </charProp>
+                    <charProp>
+                       <localName>combined-entity</localName>
+                       <value> qbardestilde = qbardes + combtilde </value>
+                    </charProp>
+                    <mapping type="MUFI" subtype="PUA">U+E68B</mapping>
+                    <mapping type="MUFI" subtype="Combined">U+E68B = A757+ 0303</mapping>
+                    <mapping type="precomposed"></mapping>
+                    <mapping type="composed">ꝗ̃</mapping>
+                    <mapping type="standardized">q</mapping>
+                    <graphic mimeType="image/png" url="http://v2.manuscriptorium.com/apps/gbank/data/mufi-graphic/e68b.png"/>
+                </char>
                 <char xml:id="charebd1">
                     <desc>LATIN SMALL LETTER D ROTUNDA WITH DOT ABOVE</desc>
                     <desc>LATIN SMALL LETTER D ROTUNDA + COMBINING DOT ABOVE</desc>
@@ -380,6 +428,22 @@
                     <mapping type="standardized">a</mapping>
                     <graphic mimeType="image/png" url="http://www.manuscriptorium.com/apps/gbank/data/mufi-graphic/00e3.png"/>
                 </char>
+                <char xml:id="chara0304">
+                    <desc>LATIN SMALL LETTER A WITH MACRON</desc>
+                    <charProp>
+                       <localName>entity</localName>
+                       <value>amacr</value>
+                    </charProp>
+                    <charProp>
+                       <localName>combined-entity</localName>
+                       <value> amacr = a + combmacr</value>
+                    </charProp>
+                    <mapping type="MUFI" subtype="LatExtA">U+0101</mapping>
+                    <mapping type="MUFI" subtype="Combined">U+0101 = 0061 + 0304</mapping>
+                    <mapping type="precomposed">ā</mapping>
+                    <mapping type="composed">ā</mapping>
+                    <mapping type="standardized">a</mapping>
+                </char>
                 <char xml:id="charb0307">
                     <desc>LATIN SMALL LETTER B WITH DOT ABOVE</desc>
                     <mapping type="composed">ḃ</mapping>
@@ -408,7 +472,12 @@
                 </char>
                 <char xml:id="chare0308">
                     <desc>LATIN SMALL LETTER E WITH TWO DOTS ABOVE</desc>
-                    <mapping type="composed">ë</mapping>
+                    <charProp>
+                        <unicodeName>entity</unicodeName>
+                        <value>euml</value>
+                    </charProp>
+                    <mapping type="precomposed">ë</mapping>
+                    <mapping type="composed">ë</mapping>
                     <mapping type="standardized">e</mapping>
                 </char>
                 <char xml:id="chare0327">
@@ -419,11 +488,18 @@
                 </char>
                 <char xml:id="chare0328">
                     <desc>LATIN SMALL LETTER E WITH OGONEK</desc>
+                    <charProp>
+                       <localName>entity</localName>
+                       <value>eogon</value>
+                    </charProp>
+                    <mapping type="MUFI" subtype="LatExtA">U+0119</mapping>
+                    <mapping type="precomposed">ę</mapping>
                     <mapping type="composed">ę</mapping>
                     <mapping type="standardized">e</mapping>
                 </char>
                 <char xml:id="chari0303">
                     <desc>LATIN SMALL LETTER I WITH TILDE</desc>
+                    <mapping type="precomposed">ĩ</mapping>
                     <mapping type="composed">ĩ</mapping>
                     <mapping type="standardized">i</mapping>
                 </char>
@@ -453,6 +529,7 @@
                 </char>
                 <char xml:id="charn0303">
                     <desc>LATIN SMALL LETTER N WITH TILDE</desc>
+                    <mapping type="precomposed">ñ</mapping>
                     <mapping type="composed">ñ</mapping>
                     <mapping type="standardized">n</mapping>
                 </char>
@@ -464,6 +541,22 @@
                 <char xml:id="charo0303">
                     <desc>LATIN SMALL LETTER O WITH TILDE</desc>
                     <mapping type="composed">õ</mapping>
+                    <mapping type="standardized">o</mapping>
+                </char>
+                <char xml:id="charo0304">
+                    <desc>LATIN SMALL LETTER O WITH MACRON</desc>
+                    <charProp>
+                       <localName>entity</localName>
+                       <value>omacr</value>
+                    </charProp>
+                    <charProp>
+                       <localName>combined-entity</localName>
+                       <value> omacr = o + combmacr</value>
+                    </charProp>
+                    <mapping type="MUFI" subtype="LatExtA">U+014D</mapping>
+                    <mapping type="MUFI" subtype="Combined">U+014D = 006F + 0304</mapping>
+                    <mapping type="precomposed">ō</mapping>
+                    <mapping type="composed">ō</mapping>
                     <mapping type="standardized">o</mapping>
                 </char>
                 <char xml:id="charp0301">
@@ -523,6 +616,7 @@
                 </char>
                 <char xml:id="charu0303">
                     <desc>LATIN SMALL LETTER U WITH TILDE</desc>
+                    <mapping type="precomposed">ũ</mapping>
                     <mapping type="composed">ũ</mapping>
                     <mapping type="standardized">u</mapping>
                 </char>
@@ -530,6 +624,22 @@
                     <desc>LATIN SMALL LETTER X WITH TILDE</desc>
                     <mapping type="composed">x̃</mapping>
                     <mapping type="standardized">x</mapping>
+                </char>
+                <char xml:id="chary0304">
+                    <desc>LATIN SMALL LETTER Y WITH MACRON</desc>
+                    <charProp>
+                       <localName>entity</localName>
+                       <value>ymacr</value>
+                    </charProp>
+                    <charProp>
+                       <localName>combined-entity</localName>
+                       <value> ymacr = y + combmacr</value>
+                    </charProp>
+                    <mapping type="MUFI" subtype="LatExtB">U+0233</mapping>
+                    <mapping type="MUFI" subtype="Combined">U+0233 = 0079 + 0304</mapping>
+                    <mapping type="precomposed">ȳ</mapping>
+                    <mapping type="composed">ȳ</mapping>
+                    <mapping type="standardized">y</mapping>
                 </char>
 
 <!-- Combining characters where even the base letter is a four-letter codepoint -->
@@ -568,6 +678,7 @@
         </encodingDesc>
         <revisionDesc status="a_raw">
             <listChange>
+                <change who="#DG" when="2018-06-21" status="a_raw" xml:lang="en">Add small letters with macron, and further special characters.</change>
                 <change who="#DG" when="2018-05-08" status="a_raw" xml:lang="en">Localize metadata.</change>
                 <change who="#AW" when="2015-06-24" status="a_raw" xml:lang="de">Scharfes S und andere Glyphen unterhalb von x00ff wieder hinzugenommen (wegen Umschaltung dipl./konst. Ansicht).</change>
                 <change who="#AW" when="2014-03-27" status="a_raw" xml:lang="de">Mit Musterdeklaration aus W_Head_general angelegt</change>
