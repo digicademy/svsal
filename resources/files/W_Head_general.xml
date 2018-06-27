@@ -1,10 +1,6 @@
 <?xml-model href="http://files.salamanca.school/SvSal_txt.rng"
     type="application/xml"
-    schematypens="http://relaxng.org/ns/structure/1.0"?>
-<TEI xmlns="http://www.tei-c.org/ns/1.0"
-        xmlns:xi="http://www.w3.org/2001/XInclude"
-        xmlns:sal="http://salamanca.adwmainz.de"
-        xml:id="WorksHeadGeneralXML">
+    schematypens="http://relaxng.org/ns/structure/1.0"?><TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:sal="http://salamanca.adwmainz.de" xml:id="WorksHeadGeneralXML">
     <teiHeader>
         <fileDesc>
             <titleStmt>
@@ -307,6 +303,7 @@
         </encodingDesc>
         <revisionDesc status="g_enriched_approved">
             <listChange>
+                <change who="#DG" when="2018-06-22" status="g_enriched_approved" xml:lang="en">Add new subsection for graphic elements.</change>
                 <change who="#DG #CRC #CC" when="2018-05-11" status="g_enriched_approved" xml:lang="en">Add Spanish version for the edition guidelines.</change>
                 <change who="#DG" when="2018-05-09" status="g_enriched_approved" xml:lang="en">Add English version for the edition guidelines.</change>
                 <change who="#DG" when="2018-05-08" status="g_enriched_approved" xml:lang="en">Localize encodingDesc</change>
@@ -531,16 +528,11 @@
                             <head xml:id="head_cfunmdasd7" n="3.1.">Erfasste Textbereiche</head>
                             <p xml:id="p_dflijasdf">Als Teil des Editionstexts erfasst werden der "Hauptbereich" des Textes, d.h. der im
                             inneren Bereich einer Druckseite gelegene, ggf. mehrspaltige Textbereich. Von dem diesen Hauptbereich umschließenden Marginalbereich 
-                            des Textes werden nur Marginal-, Fußnoten und Seiten-/Foliozahlen (s.u.) erfasst, nicht jedoch 
+                            des Textes werden nur Marginal-, Fußnoten und Seiten-/Foliozahlen (siehe unten) erfasst, nicht jedoch 
                             Kopfzeilen, Kolumnentitel, Bogensignaturen oder Kustoden. Ebenso werden handschriftliche Elemente 
                             (handschriftliche Notizen, Anmerkungen, Symbole, Zeichnungen, Anstreichungen etc.) auf den Druckseiten 
                             nicht erfasst oder dokumentiert.</p>
-                            <p xml:id="p_asdfioeflke">Zum Druckbild gehörende Bilder, Illustrationen oder Grafiken werden nicht als solche 
-                            erfasst (sondern nur durch Platzhalter in Form von <gi>figure</gi>-Tags markiert) und 
-                                werden somit auch nicht in der Leseansicht angezeigt. Allerdings wird in diesem Fall in der Leseansicht auf grafische 
-                                Elemente hingewiesen, die in der Bildansicht des entsprechenden Faksimiles zu sehen sind. Dies gilt auch für Ornamente, 
-                                die durch das Element <gi>ornament</gi> repräsentiert werden.
-                            </p>
+                            <p xml:id="p_75klljfsdf">Zur Erfassung von grafischen Elementen siehe <ref target="#graphic-de">den entsprechenden Abschnitt</ref>.</p>
                         </div>
                         <div type="section" xml:id="de_Normalisierung">
                             <head n="3.2." xml:id="head_saefq34">Normalisierung von Zeichen und Schreibungen</head>
@@ -1067,6 +1059,23 @@
                                     </tagsDecl>
                              ]]></egXML>
                             </div>
+                            <div xml:id="graphic-de" type="section">
+                                <head xml:id="head_koeljdfsdsdf" n="3.7">Grafische Elemente</head>
+                                <p xml:id="p_asdfioeflke">Größere Bilder, Illustrationen oder Grafiken, die zum Druckbild gehören,
+                                    werden nicht als solche erfasst, sondern nur durch Platzhalter in Form von <gi>figure</gi>-Tags markiert. Somit 
+                                    werden grafische Elemente auch nicht in der Text-Leseansicht angezeigt, sondern dort allenfalls 
+                                    (als Hinweis zum Vergleich der entsprechenden Faksimileseite) angedeutet.</p>
+                                    <p xml:id="p_lkjfsfldijf">Kleinere grafische Elemente wie Sternchen, durchgezogene oder geschwungene Linien, 
+                                        kleinere Illustrationen etc., <hi rendition="#it">die eine strukturelle Funktion erfüllen</hi> – etwa 
+                                        als Separatoren zwischen Überschriften und/oder Abschnitten – mittels des (leeren) Tags 
+                                        <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                                        <![CDATA[
+                                        <figure place="inline" type="ornament"/>
+                                 ]]></egXML>
+                                         erfasst.
+                                </p>
+                        </div>
+                        
                     </div>
                     <div type="chapter" xml:id="de_Anreicherung">
                         <head n="4." xml:id="head_c243f343q4">Strukturierung und Anreicherung der Werke</head>
@@ -1363,7 +1372,7 @@
                                     <item xml:id="item_74mfasdfgsr"><gi>back</gi>: "bm" (back matter)</item>
                                     <item xml:id="item_74mfasdfsfr"><gi>titlePage</gi>: "tp"</item>
                                     <item xml:id="item_asdjö94kfsd"><gi>docTitle</gi>: "dt"</item>
-                                    <item xml:id="item_74mfasdfsrd"><gi>titlePart</gi> mit dem Attribut <code>@type='main'</code>: "tm" (Haupttitel des Werkes)</item>
+                                    <item xml:id="item_74mfasdfsrd"><gi>titlePart</gi>: "tt"</item>
                                     <item xml:id="item_74mfasdfssr"><gi>div</gi>: "dX" (division, wobei "X" als numerischer Wert die Position des <gi>div</gi> in 
                                         der <gi>div</gi>-Hierarchie angibt: "d1" steht z.B. für ein "top-level"-<gi>div</gi>)</item>
                                     <item xml:id="item_74mfasdfsar"><gi>head</gi>: "he" (heading)</item>
@@ -1380,6 +1389,7 @@
                                     <item xml:id="item_74mfasdf2sr"><gi>placeName</gi>: "pl"</item>
                                     <item xml:id="item_74mfasdf1sr"><gi>term</gi>: "te"</item>
                                     <item xml:id="item_74mfasdf9sr"><gi>title</gi>: "ti"</item>
+                                    <item xml:id="item_sdlfkjdsdfd"><gi>supplied</gi>: "su"</item>
                                 </list>
                                 <egXML xmlns="http://www.tei-c.org/ns/Examples">
                                         <![CDATA[
@@ -1948,7 +1958,7 @@
                                 <item xml:id="item_73ffkerf">The searchability of the texts by means of a term-precise full text search, including 
                                     comfortable, extended search options such as a multiple-token search that is able to make use of context parameters 
                                     and exception rules.</item>
-                                <item xml:id="item_54jerds8">A selective and orderely accessiblity of the texts, for instance with regards to authors, 
+                                <item xml:id="item_54jerds8">An accessibility of the texts based on enhanced selection functions, for instance with regards to authors, 
                                     title keywords, publication dates, or publication places.</item>
                             </list>
                             <p xml:id="p_sdflerf0fds">At this, the edition of the sources is not to be considered a strictly sequential process of 
@@ -2109,18 +2119,16 @@
                             <head xml:id="head_cfunerasd7" n="3.1.">Encoded Text Areas</head>
                             <p xml:id="p_dflijersdf">The parts of text relevant, transcribed and encoded within the scope of the edition comprise, firstly, 
                                 the "main area" of the original text, 
-                                that is, the (potentially, multi-column) part of text at the center of a page that itself does not encompass other 
+                                that is, the (potentially multi-column) part of text at the center of a page that itself does not encompass other 
                                 parts of text on that page. Furthermore, from the marginal area of text encompassing the aforementioned main area, marginal and foot notes are 
                                 encoded, as well as page or folio numbers. However, running heads/titles, signature marks, or catchwords 
                                 are not encoded. Equally, manually written elements (handwritten notes, additions, symbols, drawings, marks, etc.) occurring on print pages 
                                 are not encoded or documented. </p>
-                            <p xml:id="p_asdfierflke">Printed images, illustrations or graphics are not recorded as such but marked in the text by means of 
-                                <gi>figure</gi> tags (as "placeholders"). Thus, these types of elements of the print image are not rendered within the reading view 
-                                of the digital edition, although their occurrence is indicated as a "reference" to the image view of the according facsimile page.
+                            <p xml:id="p_asdfierflke">For the annotation of graphic elements, please refer to the <ref target="#graphic-en">specific section</ref>.
                             </p>
                         </div>
                         <div type="section" xml:id="normalization">
-                            <head n="3.2." xml:id="head_saeferq34">Normailzation of Characters and Spellings</head>
+                            <head n="3.2." xml:id="head_saeferq34">Normalization of Characters and Spellings</head>
                             <div type="section" xml:id="silentnorm">
                                 <head n="3.2.1." xml:id="head_lupoeruh">Silent Normalizations</head>
                                 <list>
@@ -2656,6 +2664,21 @@
                                     </tagsDecl>
                              ]]></egXML>
                         </div>
+                        <div xml:id="graphic-en" type="section">
+                                <head xml:id="head_koeljfsdsdf" n="3.7">Graphic Elements</head>
+                                <p xml:id="p_asdfieflke">Larger images, illustrations or graphics 
+                                    are not recorded as such but marked in the text by means of <gi>figure</gi> tags (as "placeholders"). 
+                                    Thus, these types of elements of the print image are not rendered within the reading view of the digital edition, 
+                                    although their occurrence is indicated as a "reference" for comparison with the image view of the according facsimile page.</p>
+                                    <p xml:id="p_lkjfsldijf">Smaller graphic elements such as (ornamental) asterisks, solid or curly lines, smaller illustrations, etc., 
+                                        <hi rendition="#it">that perform a structural function</hi> – for instance, as separators between headings and/or sections – are 
+                                        captured as:
+                                        <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                                        <![CDATA[
+                                        <figure place="inline" type="ornament"/>
+                                        ]]></egXML>
+                                </p>
+                        </div>
                     </div>
                         
                         <div type="chapter" xml:id="structuringenrichment">
@@ -2968,7 +2991,7 @@
                                     <item xml:id="item_74mfasergsr"><gi>back</gi>: "bm" (back matter)</item>
                                     <item xml:id="item_74mferdfsfr"><gi>titlePage</gi>: "tp"</item>
                                     <item xml:id="item_asdjer4kfsd"><gi>docTitle</gi>: "dt"</item>
-                                    <item xml:id="item_74mfasderrd"><gi>titlePart</gi> with attribute <code>@type="main"</code>: "tm" (main title of the work)</item>
+                                    <item xml:id="item_74mfasderrd"><gi>titlePart</gi>: "tt"</item>
                                     <item xml:id="item_74mfaerfssr"><gi>div</gi>: "dX" (division, with "X" as a numeric value stating the <gi>div</gi>'s position in 
                                         the overall <gi>div</gi> hierarchy: e.g., "d1" is a "top-level" <gi>div</gi>)</item>
                                     <item xml:id="item_74mfasderar"><gi>head</gi>: "he" (heading)</item>
@@ -2985,6 +3008,7 @@
                                     <item xml:id="item_ermfasdf2sr"><gi>placeName</gi>: "pl"</item>
                                     <item xml:id="item_ermfasdf1sr"><gi>term</gi>: "te"</item>
                                     <item xml:id="item_ermfasdf9sr"><gi>title</gi>: "ti"</item>
+                                    <item xml:id="item_sdlfkjds2fd"><gi>supplied</gi>: "su"</item>
                                 </list>
                                 <egXML xmlns="http://www.tei-c.org/ns/Examples">
                                         <![CDATA[
@@ -3718,12 +3742,7 @@
                               de hoja o reclamos. Del mismo modo, los elementos escritos a mano (notas 
                               manuscritas, notas, símbolos, dibujos, pinturas, etc.) 
                               no se registraron ni documentaron en las páginas impresas.</p>
-                           <p xml:id="p_asdfierfrke">Las imágenes, ilustraciones o gráficos que pertenecen a la 
-                              imagen impresa no se registraron como tales (sino que solo se marcaron como 
-                              marcadores de posición en forma de etiquetas <gi>figure</gi>). Por lo tanto, no se muestran 
-                              en la vista de lectura. Sin embargo, en la vista de lectura se señalan los elementos 
-                              gráficos, que se pueden ver en la vista de la imagen del facsímil correspondiente. Esto también se 
-                              aplica a los ornamentos que están representados por el elemento <gi>ornament</gi>.</p>
+                           <p xml:id="p_asdfierfrke">Para informaciones sobre elementos gráficos véase <ref target="#graphic-es">la seccion respectiva</ref>.</p>
                         </div>
                         <div type="section" xml:id="normalizacion">
                            <head n="3.2." xml:id="head_saeferdfq34">Normalización de caracteres y ortografía</head>
@@ -4260,6 +4279,22 @@
                                     </tagsDecl>
                              ]]></egXML>
                         </div>
+                        <div xml:id="graphic-es" type="section">
+                                <head xml:id="head_koelfsdsdf" n="3.7">Elementos gráficos</head>
+                                <p xml:id="p_asdfsieflke">Las imágenes, ilustraciones o gráficos grandes no se registran como tales, 
+                                    sino que se marcan en el texto mediante etiquetas <gi>figure</gi> (como "marcadores de posición"). 
+                                    Por lo tanto, estos tipos de elementos de la imagen impresa no se representan dentro de la vista de lectura de 
+                                    la edición digital, aunque su aparición se indica como una "referencia" para 
+                                    comparar con la vista de la imagen de la página de facsímil correspondiente.</p>
+                                    <p xml:id="p_lkjfslfdijf">Los elementos gráficos pequeños como asteriscos (ornamentales), 
+                                        líneas sólidas o curvas, ilustraciones más pequeñas, etc., <hi rendition="#it">que 
+                                        realizan una función estructural</hi> (por ejemplo, como separadores entre títulos y/o secciones) se registran como:
+                                        <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                                        <![CDATA[
+                                        <figure place="inline" type="ornament"/>
+                                        ]]></egXML>
+                                </p>
+                        </div>
                     </div>
                         
                         <div type="chapter" xml:id="estructuracionenrique">
@@ -4581,7 +4616,7 @@
                                     <item xml:id="item_74mfaergsr"><gi>back</gi>: "bm" (back matter – texto posterior)</item>
                                     <item xml:id="item_74mferfsfr"><gi>titlePage</gi>: "tp"</item>
                                     <item xml:id="item_asdjer4fsd"><gi>docTitle</gi>: "dt"</item>
-                                    <item xml:id="item_74mfasdrrd"><gi>titlePart</gi> con atributo <code>@type='main'</code>: "tm" (parte principal del título de la obra)</item>
+                                    <item xml:id="item_74mfasdrrd"><gi>titlePart</gi>: "tt"</item>
                                     <item xml:id="item_74mfaerssr"><gi>div</gi>: "dX" (división, donde "X" es un valor numérico que indica la 
                                         posición del <gi>div</gi> en la jerarquía de todos los <gi>div</gi>: "d1" significa p.ej. un <gi>div</gi> "top-level")</item>
                                     <item xml:id="item_74mfaserar"><gi>head</gi>: "he" (heading – encabezado)</item>
@@ -4598,6 +4633,7 @@
                                     <item xml:id="item_ermfasf2sr"><gi>placeName</gi>: "pl"</item>
                                     <item xml:id="item_ermfadf1sr"><gi>term</gi>: "te"</item>
                                     <item xml:id="item_ermfsdf9sr"><gi>title</gi>: "ti"</item>
+                                    <item xml:id="item_slfkjrsdfd"><gi>supplied</gi>: "su"</item>
                                 </list>
                                 <egXML xmlns="http://www.tei-c.org/ns/Examples">
                                         <![CDATA[
