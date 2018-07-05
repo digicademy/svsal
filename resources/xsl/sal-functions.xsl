@@ -1,9 +1,9 @@
-<xsl:stylesheet xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:functx="http://www.functx.com" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" xmlns:sal="http://salamanca.adwmainz.de" version="3.0" exclude-result-prefixes="xsl xi tei functx xs exist fn sal xd" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+<xsl:stylesheet xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:functx="http://www.functx.com" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sal="http://salamanca.adwmainz.de" version="3.0" exclude-result-prefixes="xsl xi tei functx xs exist fn sal xd" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
     
     <xsl:import href="xipr-1-1.xsl"/>   <!-- XInclude processing -->
 
     <xsl:param name="truncate-limit" select="45"/>
-    <xsl:param name="serverDomain" as="xs:string" select="salamanca.school"/>
+    <xsl:param name="serverDomain" as="xs:string" select="'salamanca.school'"/>
 
     <xsl:variable name="idserver" as="xs:string" select="concat('https://id.', $serverDomain)"/>
     <xsl:variable name="teiserver" as="xs:string" select="concat('https://tei.', $serverDomain)"/>
@@ -28,21 +28,19 @@
         <xsl:variable name="normalizedString" select="normalize-space(string-join($input,' '))"/>
 
         <xsl:choose>
-            <xsl:when test="string-length($normalizedString)&gt;=$truncate-limit">
+            <xsl:when test="string-length($normalizedString) ge $truncate-limit">
                 <xsl:variable name="localTeaserString" select="concat(substring($normalizedString, 1, $truncate-limit),'…')"/>
                 <xsl:choose>
                     <xsl:when test="$mode/text()='html'">
                         <xsl:element name="a">
-                            <xsl:attribute name="data-toggle">collapse</xsl:attribute>
-                            <xsl:attribute name="data-target">#restOfString<xsl:value-of select="$identifier"/>
-                            </xsl:attribute>
+                            <xsl:attribute name="data-toggle" select="'collapse'"/>
+                            <xsl:attribute name="data-target" select="concat('#restOfString', $identifier)"/>
                             <xsl:value-of select="$localTeaserString"/>
                             <i class="fa fa-angle-double-down"/>
                         </xsl:element>
                         <xsl:element name="div">
-                            <xsl:attribute name="class">collapse</xsl:attribute>
-                            <xsl:attribute name="id">restOfString<xsl:value-of select="$identifier"/>
-                            </xsl:attribute>
+                            <xsl:attribute name="class" select="'collapse'"/>
+                            <xsl:attribute name="id" select="concat('restOfString', $identifier)"/>
                             <xsl:apply-templates select="$input"/>
                         </xsl:element>
                     </xsl:when>
@@ -56,6 +54,7 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
+    
 
     <!-- Resolve Private namespace prefixes...
 	   cf. S. Rahtz on February 2013 in http://tei-l.970651.n3.nabble.com/TEI-P5-version-2-3-0-is-released-td4023117.html.

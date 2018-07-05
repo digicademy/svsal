@@ -488,11 +488,49 @@ a .edited, a .expan, a .reg, a .corr{
 	margin-right: -51%;
 	padding: 5px;
 	line-height: 1.6;
-   font-size: 0.8em;
-   font-style: normal;
+    font-size: 0.8em;
+    font-style: normal;
 	text-indent: 0;
 	text-align: justify;
 	width:45%;
+}
+
+.note-label {
+    font-style: italic;
+    display:inline;
+}
+
+.note-paragraph {
+    display:inline;
+}
+
+.marginal p.collapse[aria-expanded="false"] {
+    display: block;
+    height: 1.6em !important;
+    overflow: hidden;
+}
+
+.marginal p.collapsing[aria-expanded="false"] {
+    height: 1.6em !important;
+}
+
+.marginal a:not(.collapsed) {
+    text-decoration: none;
+    color: black;
+}
+
+.marginal a:not(.collapsed) .edited {
+    color:#777777;
+}
+
+.marginal a.collapsed .original {
+    color:#BA55D3;
+}
+
+.marginal a.collapsed:after {
+    content: '...⮛';
+    margin-top:-1em;
+    position:absolute;
 }
 
 .pagination, .pageNumbers {

@@ -1,4 +1,4 @@
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" xmlns:sal="http://salamanca.adwmainz.de" version="3.0" exclude-result-prefixes="exist sal tei xd xs xsl" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+<xsl:stylesheet xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sal="http://salamanca.adwmainz.de" version="3.0" exclude-result-prefixes="exist sal tei xd xs xsl" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
 
 <!-- TODO:
            * tweak/tune performance: use
@@ -38,6 +38,7 @@
     <xsl:key name="targeting-refs" match="ref[@type='summary']" use="@target"/>         <!-- Key-value array for toc generation -->
     <xsl:key name="chars" match="char" use="@xml:id"/>                                  <!-- Key-value array for special symbol representation -->
 
+    <xsl:param name="noteTruncLimit" select="35"/>
 
 <!-- *** III. Named Templates *** -->
     <xsl:template name="anchor-id">                                                     <!-- Small toolbox including anchor for the passed xml:id -->
@@ -114,7 +115,12 @@
             <xsl:apply-templates/>
         </div>
     </xsl:template>
-    <xsl:template match="titlePart | docTitle">
+    <xsl:template match="titlePart[@type='main']">
+        <xsl:element name="h1">
+            <xsl:apply-templates/>
+        </xsl:element>
+    </xsl:template>
+    <xsl:template match="titlePart[not(@type='main')]|docTitle|byline|argument|docDate|docImprint|imprimatur">
         <xsl:apply-templates/>
     </xsl:template>
 
@@ -128,7 +134,7 @@
             </xsl:for-each>
         </xsl:if>
 -->
-        <xsl:if test="xs:integer(@n) &gt; 1">   <!-- If this is the second or an even later volume, add a <hr/> -->
+        <xsl:if test="xs:integer(@n) gt 1">   <!-- If this is the second or an even later volume, add a <hr/> -->
             <hr/>
         </xsl:if>
         <div class="summary_title">
@@ -144,7 +150,7 @@
     </xsl:template>
 <!-- CHECK: What is this next template doing? Is it even called? -->
     <xsl:template match="text[@type='work_volume']" mode="non-recursive">
-        <xsl:if test="position()&gt;1">
+        <xsl:if test="position() gt 1">
             <hr/>
         </xsl:if>
         <div class="summary_title">
@@ -360,11 +366,11 @@
         </h3>
     </xsl:template>
 
-    <!-- Main Text: put <p> in html <div class="hauptText"> and create anchor if p@xml:id (or just create an html <p> if we are inside a note or list item)  -->
-    <xsl:template match="p">
+    <!-- Main Text: put <p> in html <div class="hauptText"> and create anchor if p@xml:id (or just create an html <p> if we are inside a list item);  -->
+    <xsl:template match="p[not(ancestor::note)]">
 <!--        <xsl:message>Matched p node <xsl:value-of select="@xml:id"/>.</xsl:message>-->
         <xsl:choose>
-            <xsl:when test="ancestor::note|ancestor::item[not(ancestor::list/@type = ('dict', 'index'))]">
+            <xsl:when test="ancestor::titlePage|ancestor::item[not(ancestor::list/@type = ('dict', 'index'))]">
                 <xsl:element name="p">
                     <xsl:if test="@xml:id">
                         <xsl:attribute name="id">
@@ -388,6 +394,15 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
+    
+    <xsl:template match="p[ancestor::note]">
+<!--        <xsl:message>Matched note/p node <xsl:value-of select="@xml:id"/>.</xsl:message>-->
+            <xsl:element name="span">
+                <xsl:attribute name="class" select="'note-paragraph'"></xsl:attribute>
+                <xsl:apply-templates/>
+            </xsl:element>
+    </xsl:template>
+    
 
     <!-- BREAKS -->
     <xsl:template match="pb">                   <!-- insert a '|' and, eventually, a space to indicate pagebreaks in the text -->
@@ -528,15 +543,43 @@
     <xsl:template match="note">
 <!--        <xsl:message>Matched note node <xsl:value-of select="@xml:id"/>.</xsl:message>-->
         <xsl:element name="div">
-            <xsl:attribute name="class">marginal note</xsl:attribute>
-            <xsl:if test="@xml:id">
-                <xsl:attribute name="id" select="@xml:id"/>
-            </xsl:if>
-            <xsl:call-template name="sal:teaserString">
-                <xsl:with-param name="identifier" select="@xml:id"/>
-                <xsl:with-param name="mode">html</xsl:with-param>
-                <xsl:with-param name="input" select="./*"/>
-            </xsl:call-template>
+            <xsl:attribute name="class">marginal container</xsl:attribute>
+            <xsl:attribute name="id" select="@xml:id"/>
+            
+            <xsl:variable name="normalizedString" 
+                select="normalize-space(string-join(.//text()[not(ancestor::sic or ancestor::abbr or ancestor::orig)],' '))"/>
+            
+            <xsl:variable name="noteContent">
+                <xsl:if test="@n">
+                    <span class="note-label">
+                        <xsl:value-of select="concat(@n, ' ')"/>
+                    </span>
+                </xsl:if>
+                <xsl:choose>
+                    <xsl:when test="child::p"> <!-- note/p are handled elsewhere -->
+                        <xsl:apply-templates/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <span class="note-paragraph">
+                            <xsl:apply-templates/>
+                        </span>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:variable>
+            
+            <xsl:choose>
+                <xsl:when test="string-length(concat(@n, ' ', $normalizedString)) ge $noteTruncLimit">
+                    <xsl:variable name="id" select="concat('collapse-', @xml:id)"/>
+                    <a role="button" class="collapsed note-teaser" data-toggle="collapse" href="{concat('#', $id)}" aria-expanded="false" aria-controls="{$id}">    
+                        <p class="collapse" id="{$id}" aria-expanded="false">
+                            <xsl:copy-of select="$noteContent"/>
+                        </p>
+                    </a>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:copy-of select="$noteContent"/>
+                </xsl:otherwise>
+            </xsl:choose>
         </xsl:element>
     </xsl:template>
 
@@ -617,7 +660,7 @@
         <xsl:apply-templates/>
     </xsl:template>
     <xsl:template match="supplied">
-        <span class="original unsichtbar" title="{string(.)}">&#91;<xsl:value-of select="./text()"/>&#93;</span> 
+        <span class="original unsichtbar" title="{string(.)}">[<xsl:value-of select="./text()"/>]</span> 
         <span class="edited" title="{concat('[', string(.), ']')}"><xsl:value-of select="./text()"/></span>
     </xsl:template>
     <xsl:template match="supplied" mode="pureText">
@@ -625,7 +668,7 @@
     </xsl:template>
 
     <!-- Analytic references (persNames, titles etc.) -->
-    <xsl:template match="persName|placeName|text//title|term">
+    <xsl:template match="docAuthor|persName|placeName|text//title|term">
         <xsl:element name="span">
             <xsl:variable name="class-elementname" select="local-name()"/>
             <xsl:variable name="class-hilightname">
@@ -640,18 +683,21 @@
             </xsl:variable>
 
             <xsl:attribute name="class" select="normalize-space(string-join(($class-elementname, $class-hilightname, $class-dictLemma), ' '))"/>
-
-            <xsl:choose>
+            
+            <!-- as long as any link would lead nowhere, omit linking and simply grasp the content: -->
+            <xsl:apply-templates/>
+            <!-- when links have actual targets, execute the following: -->
+            <!--<xsl:choose>
                 <xsl:when test="@ref and substring(sal:resolveURI(current(), @ref)[1],1, 5) = ('http:', '/exis') ">
                     <xsl:choose>
-                        <xsl:when test="not(./pb)"> <!-- The entity does not contain a pagebreak intervention - no problem then -->
+                        <xsl:when test="not(./pb)"> <!-\- The entity does not contain a pagebreak intervention - no problem then -\->
                             <xsl:element name="a">
                                 <xsl:attribute name="href" select="sal:resolveURI(current(), @ref)"/>
                                 <xsl:attribute name="target">_blank</xsl:attribute>
                                 <xsl:apply-templates/>
                             </xsl:element>
                         </xsl:when>
-                        <xsl:otherwise>             <!-- Otherwise, make an anchor for the preceding part, then render the pb, then "continue" the anchor -->
+                        <xsl:otherwise>             <!-\- Otherwise, make an anchor for the preceding part, then render the pb, then "continue" the anchor -\->
                             <xsl:element name="a">
                                 <xsl:attribute name="href" select="sal:resolveURI(current(), @ref)"/>
                                 <xsl:attribute name="target">_blank</xsl:attribute>
@@ -669,7 +715,7 @@
                 <xsl:otherwise>
                     <xsl:apply-templates/>
                 </xsl:otherwise>
-            </xsl:choose>
+            </xsl:choose>-->
         </xsl:element>
     </xsl:template>
     <xsl:template match="bibl">
@@ -699,10 +745,10 @@
             <xsl:if test="'#initCaps' = $styles">initialCaps</xsl:if>
         </xsl:variable>
         <xsl:element name="span">
-            <xsl:if test="string-length(string-join($css-styles, ' ')) &gt; 0">
+            <xsl:if test="string-length(string-join($css-styles, ' ')) gt 0">
                 <xsl:attribute name="style" select="string-join($css-styles, ' ')"/>
             </xsl:if>
-            <xsl:if test="string-length(string-join($classnames, ' ')) &gt; 0">
+            <xsl:if test="string-length(string-join($classnames, ' ')) gt 0">
                 <xsl:attribute name="class" select="string-join($classnames, ' ')"/>
             </xsl:if>
 <!--            <xsl:message>Opened html span with class='<xsl:value-of select="string-join($classnames, ' ')"/>' and style='<xsl:value-of select="string-join($css-styles, ' ')"/>'.</xsl:message>-->
@@ -719,7 +765,7 @@
             <xsl:apply-templates/>
         </span>
     </xsl:template>
-    <xsl:template match="ref">
+    <xsl:template match="ref[not(@type='note-anchor')]"> <!-- omit note references -->
         <xsl:choose>
             <xsl:when test="@target">
                 <xsl:element name="a">
