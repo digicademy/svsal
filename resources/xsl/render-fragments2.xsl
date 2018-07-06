@@ -398,7 +398,7 @@
     <xsl:template match="p[ancestor::note]">
 <!--        <xsl:message>Matched note/p node <xsl:value-of select="@xml:id"/>.</xsl:message>-->
             <xsl:element name="span">
-                <xsl:attribute name="class" select="'note-paragraph'"></xsl:attribute>
+                <xsl:attribute name="class" select="'note-paragraph'"/>
                 <xsl:apply-templates/>
             </xsl:element>
     </xsl:template>
@@ -546,8 +546,7 @@
             <xsl:attribute name="class">marginal container</xsl:attribute>
             <xsl:attribute name="id" select="@xml:id"/>
             
-            <xsl:variable name="normalizedString" 
-                select="normalize-space(string-join(.//text()[not(ancestor::sic or ancestor::abbr or ancestor::orig)],' '))"/>
+            <xsl:variable name="normalizedString" select="normalize-space(string-join(.//text()[not(ancestor::sic or ancestor::abbr or ancestor::orig)],' '))"/>
             
             <xsl:variable name="noteContent">
                 <xsl:if test="@n">
@@ -619,6 +618,9 @@
         <xsl:apply-templates mode="pureText"/>
     </xsl:template>
     <xsl:template match="g">
+        <xsl:if test="not(key('chars', substring(@ref,2)))">
+            <xsl:message terminate="yes" select="concat('Error: g/@ref has an invalid value, the char code does not exist): ', substring(@ref,2))"/>
+        </xsl:if>
         <xsl:variable name="originalGlyph">
             <xsl:choose>
                 <xsl:when test="key('chars', substring(@ref,2))/mapping[@type='precomposed']">

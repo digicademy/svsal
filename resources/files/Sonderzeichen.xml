@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <?xml-model href="https://files.salamanca.school/SvSal_txt.rng"
     type="application/xml"
     schematypens="http://relaxng.org/ns/structure/1.0"?>
@@ -11,6 +10,9 @@
                 <title xml:lang="es">Caracteres especiales empleado en esta edición</title>
                 <author>
                     <surname>Wagner</surname>, <forename>Andreas</forename>
+                </author>
+                <author>
+                    <surname>Glück</surname>, <forename>David</forename>
                 </author>
                 <author>
                     <surname>Caesar</surname>, <forename>Ingo</forename>
@@ -52,7 +54,7 @@
     <!-- Copyright -->
                 <availability>
                     <licence target="http://creativecommons.org/licenses/by-nc-sa/3.0/">
-                        <p xml:id="p_löojpcn3qp3q4" xml:lang="de">Dieses Werk bzw. dieser Inhalt wurde digitalisiert durch die Akademie der
+                        <p xml:id="p_luojpcn3qp3q4" xml:lang="de">Dieses Werk bzw. dieser Inhalt wurde digitalisiert durch die Akademie der
                 Wissenschaften und der Literatur, Mainz, und steht unter einer Creative
                 Commons Lizenz: Namensnennung-NichtKommerziell-KeineBearbeitung 3.0 Unported.</p>
                     </licence>
@@ -60,7 +62,7 @@
             </publicationStmt>
             <sourceDesc>
                 <p xml:lang="de" xml:id="p_koiuwasdas">Born digital, erstellt am 2014-03-27, um 20:10 Uhr.
-            Zuletzt aktualisiert am 2014-03-27, um 20:10 Uhr.</p>
+            Zuletzt aktualisiert am 2018-07-06, um 16:32 Uhr.</p>
             </sourceDesc>
         </fileDesc>
 
@@ -177,7 +179,7 @@
                         <unicodeName>entity</unicodeName>
                         <value>slongbarslash</value>
                     </charProp>
-                    <mapping type="MUFI" subtype="LatExtAdd"></mapping>
+                    <mapping type="MUFI" subtype="LatExtAdd"/>
                     <mapping type="precomposed">ẜ</mapping>
                     <mapping type="standardized">s</mapping>
                 </char>
@@ -482,8 +484,24 @@
                 </char>
                 <char xml:id="chare0327">
                     <desc>LATIN SMALL LETTER E WITH CEDILLA</desc>
-                    <mapping type="precomposed">&#x0229;</mapping>
-                    <mapping type="composed">e&#x0327;</mapping>
+                    <mapping type="precomposed">ȩ</mapping>
+                    <mapping type="composed">ȩ</mapping>
+                    <mapping type="standardized">e</mapping>
+                </char>
+                <char xml:id="chare0304">
+                    <desc>LATIN SMALL LETTER E WITH MACRON</desc>
+                    <charProp>
+                       <localName>entity</localName>
+                       <value>emacr</value>
+                    </charProp>
+                    <charProp>
+                       <localName>combined-entity</localName>
+                       <value> emacr = e + combmacr</value>
+                    </charProp>
+                    <mapping type="MUFI" subtype="LatExtA">U+0113</mapping>
+                    <mapping type="MUFI" subtype="Combined">U+0113 = 0065 + 0304</mapping>
+                    <mapping type="precomposed">ē</mapping>
+                    <mapping type="composed">ē</mapping>
                     <mapping type="standardized">e</mapping>
                 </char>
                 <char xml:id="chare0328">
@@ -678,6 +696,7 @@
         </encodingDesc>
         <revisionDesc status="a_raw">
             <listChange>
+                <change who="#DG" when="2018-07-06" status="a_raw" xml:lang="en">Add small letter e with macron.</change>
                 <change who="#DG" when="2018-06-21" status="a_raw" xml:lang="en">Add small letters with macron, and further special characters.</change>
                 <change who="#DG" when="2018-05-08" status="a_raw" xml:lang="en">Localize metadata.</change>
                 <change who="#AW" when="2015-06-24" status="a_raw" xml:lang="de">Scharfes S und andere Glyphen unterhalb von x00ff wieder hinzugenommen (wegen Umschaltung dipl./konst. Ansicht).</change>
