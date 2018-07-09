@@ -2106,8 +2106,14 @@ declare %templates:wrap
                                     else
                                         replace($titlepage/@facs,'facs:(W\d{4})-(\d{4})',          replace($config:imageserver, 'https://', 'http://') || '/$1/$1-$2.jpg')
 let $debug := console:log("Todo: Fix image-url generating work-around in app:bibliographicalRecord! image-source = '" || $img || "'.")
-            let $primaryEd      := $getHeader//tei:note[@xml:id="ownerOfPrimarySource"]/tei:ref[@type eq "institution"]
-            let $catalogue      := $getHeader//tei:note[@xml:id="ownerOfPrimarySource"]/tei:ref[@type eq "catLink"]/@target/string()
+            (: if there are several providers of digitized material, we only state the first (i.e., main) one :)
+            let $primaryEd      := if ($getHeader//tei:note[@xml:id="ownerOfPrimarySource"]/tei:ref[@type eq "institution" and @subtype eq "main"]) then 
+                                       $getHeader//tei:note[@xml:id="ownerOfPrimarySource"]/tei:ref[@type eq "institution" and @subtype eq "main"][1]
+                                   else $getHeader//tei:note[@xml:id="ownerOfPrimarySource"]/tei:ref[@type eq "institution"][1]
+            let $catalogue      := if ($getHeader//tei:note[@xml:id="ownerOfPrimarySource"]/tei:ref[@type eq "catLink" and @subtype eq "main"]) then
+                                       $getHeader//tei:note[@xml:id="ownerOfPrimarySource"]/tei:ref[@type eq "catLink" and @subtype eq "main"][1]/@target/string()
+                                   else $getHeader//tei:note[@xml:id="ownerOfPrimarySource"]/tei:ref[@type eq "catLink"][1]/@target/string()
+            
             let $extLink        := i18n:process(<i18n:text key="external Window">externer Link</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
             let $target         :=  if ($item/@type ='work_volume') then
                                         doc($config:data-root || "/" || $wid || '_nodeIndex.xml')//sal:node[@n=$textId]/sal:crumbtrail/a[last()]/@href/string()
