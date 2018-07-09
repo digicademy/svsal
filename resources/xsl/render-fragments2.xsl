@@ -120,9 +120,22 @@
             <xsl:apply-templates/>
         </xsl:element>
     </xsl:template>
-    <xsl:template match="titlePart[not(@type='main')]|docTitle|byline|argument|docDate|docImprint|imprimatur">
+    <xsl:template match="titlePart[not(@type='main')]|docTitle|argument|docDate|docImprint">
         <xsl:apply-templates/>
     </xsl:template>
+    <xsl:template match="byline|imprimatur">
+        <xsl:element name="span">
+            <xsl:attribute name="class" select="'tp-paragraph'"/>
+            <xsl:apply-templates/>
+        </xsl:element>
+    </xsl:template>
+    <xsl:template match="p[ancestor::titlePage]">
+        <xsl:element name="span">
+            <xsl:attribute name="class" select="'tp-paragraph'"/>
+            <xsl:apply-templates/>
+        </xsl:element>
+    </xsl:template>
+    
 
     <!-- To every <text type='work_volume'>, add a section heading and an anchor
          (to grab link, refresh filters, export/print). -->
@@ -367,10 +380,10 @@
     </xsl:template>
 
     <!-- Main Text: put <p> in html <div class="hauptText"> and create anchor if p@xml:id (or just create an html <p> if we are inside a list item);  -->
-    <xsl:template match="p[not(ancestor::note)]">
+    <xsl:template match="p[not(ancestor::note or ancestor::titlePage)]">
 <!--        <xsl:message>Matched p node <xsl:value-of select="@xml:id"/>.</xsl:message>-->
         <xsl:choose>
-            <xsl:when test="ancestor::titlePage|ancestor::item[not(ancestor::list/@type = ('dict', 'index'))]">
+            <xsl:when test="ancestor::item[not(ancestor::list/@type = ('dict', 'index'))]">
                 <xsl:element name="p">
                     <xsl:if test="@xml:id">
                         <xsl:attribute name="id">
