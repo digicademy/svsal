@@ -523,7 +523,7 @@ a .edited, a .expan, a .reg, a .corr{
     color:#777777;
 }
 
-.marginal a.collapsed .original {
+a .original {
     color:#BA55D3;
 }
 
