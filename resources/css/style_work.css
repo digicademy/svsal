@@ -532,7 +532,7 @@ a .original {
 }
 
 .marginal a.collapsed:after {
-    content: '...⮛';
+    content: '...⌄';
     margin-top:-1em;
     position:absolute;
 }
