@@ -2001,6 +2001,7 @@ declare function app:WRKtitle($node as node(), $model as map(*), $lang as xs:str
     return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
 };  
 
+
 (: deprecated?
 declare %templates:wrap
     function app:WRKid($node as node(), $model as map(*), $lang as xs:string?) {
@@ -2043,9 +2044,9 @@ declare %templates:wrap
         let $output := for $item in $books
                             let $volId      := $item/@xml:id/string()
                             let $volNumber  := $item/@n/string()
-                            let $getHeader  := doc($config:tei-works-root || "/" || $wid ||'_'|| $volId || '.xml')/tei:TEI//tei:fileDesc/tei:sourceDesc
-                            let $firstEd    := $getHeader//tei:date[@type = 'firstEd']/@when/string()
-                            let $thisEd     := $getHeader//tei:date[@type = 'thisEd']/@when/string()
+                            let $sourceDesc  := doc($config:tei-works-root || "/" || $wid ||'_'|| $volId || '.xml')/tei:TEI//tei:fileDesc/tei:sourceDesc
+                            let $firstEd    := $sourceDesc//tei:date[@type = 'firstEd']/@when/string()
+                            let $thisEd     := $sourceDesc//tei:date[@type = 'thisEd']/@when/string()
                             let $date       := if ($thisEd) then $thisEd else $firstEd                                       
                             let $vol        := doc($config:data-root || "/" || $wid || '_nodeIndex.xml')//sal:node[@n=$volId]/sal:crumbtrail/a[last()]/@href/string()
                             return  if ($item is ($model('currentWork')//tei:text)[last()]) then
@@ -2057,8 +2058,93 @@ declare %templates:wrap
         return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
 };
 
+
+(: Creates a HTML snippet containing bibliographical information about the digital edition of a work (as opposed to the 
+bibliographical record of the original edition, see app:sourceBibliographicalRecord()). :)
+declare %templates:wrap
+    function app:WRKdigitalEditionRecord($node as node(), $model as map(*), $lang as xs:string?, $wid as xs:string?) {
+    
+    let $teiHeader          := util:expand($model('currentWork'))//tei:teiHeader
+    let $status             := $teiHeader//tei:revisionDesc/@status/string()
+    
+    let $workEditors := if ($status eq 'g_enriched_approved') then
+        let $editorNames := for $ed in $teiHeader/tei:fileDesc/tei:titleStmt/tei:editor/tei:persName 
+                                return concat($ed/tei:forename/string(), ' ', $ed/tei:surname/string())
+        let $editorsString := string-join($editorNames, '; ')
+        let $editors := 
+        <tr>
+            <td class="col-md-4">
+                <i18n:text key="alphaEditors">Editors (in alphabetical order)</i18n:text>:
+            </td>
+            <td class="col-md-8">
+                {$editorsString}
+            </td>
+        </tr>
+        return $editors
+    else ()
+    
+    let $seriesInfo := if ($status eq 'g_enriched_approved') then
+        let $series :=
+            <tr>
+                <td class="col-md-4">
+                    <i18n:text key="series">Series</i18n:text>:
+                </td>
+                <td class="col-md-8">
+                    <i18n:text key="editionSeries">The School of Salamanca. A Digital Collection of Sources</i18n:text>
+                </td>
+            </tr>
+        let $editorsNames  := for $ed in $teiHeader/tei:fileDesc/tei:seriesStmt/tei:editor/tei:persName
+                              return concat($ed/tei:forename/string(), ' ', $ed/tei:surname/string())
+        let $seriesEditors :=
+            <tr>
+                <td class="col-md-4">
+                    <i18n:text key="editorsInChief">Editors of the Series</i18n:text>:
+                </td>
+                <td class="col-md-8">
+                    {string-join($editorsNames, '; ')}
+                </td>
+            </tr>
+        let $currentVolume := $teiHeader/tei:fileDesc/tei:seriesStmt/tei:biblScope/@n/string()
+        let $volume :=
+            <tr>
+                <td class="col-md-4">
+                    <i18n:text key="volume">Volume</i18n:text>:
+                </td>
+                <td class="col-md-8">
+                    {$currentVolume}
+                </td>
+            </tr>
+        let $digitalPubDate := i18n:convertDate($teiHeader/tei:fileDesc/tei:editionStmt/tei:edition/tei:date/@when/string(), $lang, 'verbose')
+        let $digitalPublication :=
+            <tr>
+                <td class="col-md-4">
+                    <i18n:text key="digitalPublication">Digital Publication</i18n:text>:
+                </td>
+                <td class="col-md-8">
+                    {$digitalPubDate}
+                </td>
+            </tr>
+        return ($series, $seriesEditors, $volume, $digitalPublication)
+    else ()
+    
+    let $output :=
+    <table class="borderless table table-hover">
+        <tr>
+            <td class="col-md-4"><i18n:text key="author">Autor</i18n:text>:</td>
+            <td class="col-md-8">{app:WRKauthor($node, $model)}</td>
+        </tr>
+        {app:WRKtitle($node, $model, $lang)}
+        {app:WRKdateOfOrigin($node, $model, $lang, $wid)}
+        {$workEditors}
+        {$seriesInfo}
+    </table>
+    
+    return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
+};
+    
+    
 declare %templates:wrap 
-    function app:bibliographicalRecord($node as node(), $model as map(*), $lang as xs:string?, $wid as xs:string?) {
+    function app:sourceBibliographicalRecord($node as node(), $model as map(*), $lang as xs:string?, $wid as xs:string?) {
 (: *** AW: Last minute new approach: Get workDetails data from rdf rather than from TEI/nodeIndex (shall we? *** :)
 (:
         let $metadata     := doc($config:rdf-root || '/' || $wid || '.rdf')
@@ -2071,25 +2157,25 @@ declare %templates:wrap
 
 :)
 
-        let $base               := $model('currentWork')
+        let $base               := util:expand($model('currentWork'))
         let $status             := $base//tei:revisionDesc/@status/string()
         let $books              := $base//tei:text[@type ='work_volume' or @type ='work_monograph']
 
-        for $item in $books
+        for $item in $books(:[not(./preceding-sibling::tei:teiHeader[@n='test'])]:)
             let $textId         := $item/@xml:id/string()
             let $volNumber      := $item/@n/string()
-            let $getHeader      := doc($config:tei-works-root || "/" || $wid || (if ($item/@type ='work_volume') then concat('_', $textId) else ()) || '.xml')//tei:sourceDesc
-            let $title          := $getHeader//tei:title[@type ='245a']/text()
-            let $volNumberTitle := $getHeader//tei:title[@type ='volume']/text()
-            let $printingPlace     := $getHeader//tei:pubPlace[@role = 'firstEd']/text()
-            let $printingPlaceThis := $getHeader//tei:pubPlace[@role = 'thisEd']/text()
-            let $printer        := app:rotateFormatName($getHeader//tei:publisher[@n="firstEd"]/tei:persName)
-            let $printerThis    := app:rotateFormatName($getHeader//tei:publisher[@n="thisEd"]/tei:persName)   
-            let $firstEd        := $getHeader//tei:date[@type eq 'firstEd']/@when/string()
-            let $thisEd         := $getHeader//tei:date[@type eq 'thisEd']/@when/string()
-            let $extent         := $getHeader//tei:extent
+            let $sourceDesc      := doc($config:tei-works-root || "/" || $wid || (if ($item/@type ='work_volume') then concat('_', $textId) else ()) || '.xml')//tei:sourceDesc
+            let $title          := $sourceDesc//tei:title[@type ='245a']/text()
+            let $volNumberTitle := $sourceDesc//tei:title[@type ='volume']/text()
+            let $printingPlace     := $sourceDesc//tei:pubPlace[@role = 'firstEd']/text()
+            let $printingPlaceThis := $sourceDesc//tei:pubPlace[@role = 'thisEd']/text()
+            let $printer        := app:rotateFormatName($sourceDesc//tei:publisher[@n="firstEd"]/tei:persName)
+            let $printerThis    := app:rotateFormatName($sourceDesc//tei:publisher[@n="thisEd"]/tei:persName)   
+            let $firstEd        := $sourceDesc//tei:date[@type eq 'firstEd']/@when/string()
+            let $thisEd         := $sourceDesc//tei:date[@type eq 'thisEd']/@when/string()
+            let $extent         := $sourceDesc//tei:extent
             let $master         := $base//tei:publicationStmt/tei:publisher/tei:orgName
-            let $material       := $base//tei:editionStmt/tei:edition
+(:            let $material       := $base//tei:editionStmt/tei:edition:)
             let $nodeIndex      := doc($config:data-root || "/" || $wid || '_nodeIndex.xml')
             let $facs           := if ($nodeIndex//sal:node[@type eq "text"]) then
                                        $nodeIndex//sal:node[@type eq "text"][@n eq $textId]/following-sibling::sal:node[@type eq "pb"][1]/@n/string()
@@ -2105,14 +2191,14 @@ declare %templates:wrap
                                         replace($titlepage/@facs,'facs:(W\d{4})-([A-Z])-(\d{4})',  replace($config:imageserver, 'https://', 'http://') || '/$1/$2/$1-$2-$3.jpg')
                                     else
                                         replace($titlepage/@facs,'facs:(W\d{4})-(\d{4})',          replace($config:imageserver, 'https://', 'http://') || '/$1/$1-$2.jpg')
-let $debug := console:log("Todo: Fix image-url generating work-around in app:bibliographicalRecord! image-source = '" || $img || "'.")
+            let $debug := console:log("Todo: Fix image-url generating work-around in app:sourceBibliographicalRecord! image-source = '" || $img || "'.")
             (: if there are several providers of digitized material, we only state the first (i.e., main) one :)
-            let $primaryEd      := if ($getHeader//tei:note[@xml:id="ownerOfPrimarySource"]/tei:ref[@type eq "institution" and @subtype eq "main"]) then 
-                                       $getHeader//tei:note[@xml:id="ownerOfPrimarySource"]/tei:ref[@type eq "institution" and @subtype eq "main"][1]
-                                   else $getHeader//tei:note[@xml:id="ownerOfPrimarySource"]/tei:ref[@type eq "institution"][1]
-            let $catalogue      := if ($getHeader//tei:note[@xml:id="ownerOfPrimarySource"]/tei:ref[@type eq "catLink" and @subtype eq "main"]) then
-                                       $getHeader//tei:note[@xml:id="ownerOfPrimarySource"]/tei:ref[@type eq "catLink" and @subtype eq "main"][1]/@target/string()
-                                   else $getHeader//tei:note[@xml:id="ownerOfPrimarySource"]/tei:ref[@type eq "catLink"][1]/@target/string()
+            let $primaryEd      := if ($sourceDesc//tei:note[@xml:id="ownerOfPrimarySource"]/tei:ref[@type eq "institution" and @subtype eq "main"]) then 
+                                       $sourceDesc//tei:note[@xml:id="ownerOfPrimarySource"]/tei:ref[@type eq "institution" and @subtype eq "main"][1]
+                                   else $sourceDesc//tei:note[@xml:id="ownerOfPrimarySource"]/tei:ref[@type eq "institution"][1]
+            let $catalogue      := if ($sourceDesc//tei:note[@xml:id="ownerOfPrimarySource"]/tei:ref[@type eq "catLink" and @subtype eq "main"]) then
+                                       $sourceDesc//tei:note[@xml:id="ownerOfPrimarySource"]/tei:ref[@type eq "catLink" and @subtype eq "main"][1]/@target/string()
+                                   else $sourceDesc//tei:note[@xml:id="ownerOfPrimarySource"]/tei:ref[@type eq "catLink"][1]/@target/string()
             
             let $extLink        := i18n:process(<i18n:text key="external Window">externer Link</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
             let $target         :=  if ($item/@type ='work_volume') then
@@ -2170,10 +2256,6 @@ let $debug := console:log("Todo: Fix image-url generating work-around in app:bib
                                     <td class="col-md-8" style="line-height: 1.2">{$extent}</td>
                               </tr>
                               <tr>
-                                    <td class="col-md-4" style="line-height: 1.2"><i18n:text key="material">Material</i18n:text>:</td>
-                                    <td class="col-md-8" style="line-height: 1.2">{$material}</td>
-                              </tr>
-                              <tr>
                                 <td class="col-md-4" style="line-height: 1.2"><i18n:text key="language">Sprache</i18n:text>:</td>
                                     <td class="col-md-8" style="line-height: 1.2">
                                         {
@@ -2199,10 +2281,17 @@ let $debug := console:log("Todo: Fix image-url generating work-around in app:bib
                         </table>
                     </div>
                 </div>
+                (: the following may be added once the proper information is avaliable:
+                <tr>
+                                    <td class="col-md-4" style="line-height: 1.2"><i18n:text key="material">Material</i18n:text>:</td>
+                                    <td class="col-md-8" style="line-height: 1.2">{$material}</td>
+                </tr>:)
         order by $volNumber ascending
 let $debug := console:log("Debug: " || serialize($output))
         return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
         }; 
+        
+
 
 (:combined title on work.html in left box:)
 declare %templates:wrap

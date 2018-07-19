@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <div data-template="app:loadSingleWork">
     <div xmlns:i18n="http://exist-db.org/xquery/i18n" data-template="templates:surround" data-template-with="templates/template_basic.html" data-template-at="content">
         <div data-template="i18n:translate" data-template-catalogues="data/i18n">
@@ -25,16 +24,9 @@
                     <hr/>
                 </h2>
                 <div class="row-fluid">
-                    <table class="borderless table table-hover">
-                        <tr>
-                            <td class="col-md-4"><i18n:text key="author">Autor</i18n:text>:</td>
-                            <td class="col-md-8" data-template="app:WRKauthor"/>
-                        </tr>
-                        <span data-template="app:WRKtitle"/>
-                        <span data-template="app:WRKdateOfOrigin"/>
-                    </table>
+                    <span data-template="app:WRKdigitalEditionRecord"/>
                 </div>
-                <span data-template="app:bibliographicalRecord"/>
+                <span data-template="app:sourceBibliographicalRecord"/>
             </div>
         </div>
     </div>

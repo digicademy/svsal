@@ -128,7 +128,7 @@
     <msg key="1stEd">Edición primera</msg>
     <msg key="thisEd">Edición presenta</msg>
     <msg key="extent">Extensión, Formato</msg>
-    <msg key="dateOfOrigin">Dato de creación</msg>
+    <msg key="dateOfOrigin">Año de publicación (fuente original)</msg>
     <msg key="details">Catálogo</msg>
     <msg key="facsimiles">Imagenes</msg>
     <msg key="periodOfOrigin">Fechas de publicación</msg>
@@ -145,7 +145,7 @@
     <msg key="series">Colección</msg>
     <msg key="editionSeries">La Escuela de Salamanca. Una Colección Digital de Fuentes</msg>
     <msg key="editorsInChief">Directores de la colección</msg>
-    <msg key="digitalPublication">Publicación digital</msg>
+    <msg key="digitalPublication">Publicación electronica</msg>
     
     <!--Work help-->
     <msg key="addFunx">Additional Functions</msg>
@@ -256,6 +256,7 @@
     <msg key="workInProgress">¡Obra en proceso!</msg>
     <msg key="licenceDesc">Los datos del proyecto de La Escuela de Salamanca son autorizados (si no se indica lo contrario) bajo una licencia de</msg>
     <msg key="licenceCC40">Creative Commons Reconocimiento 4.0 Internacional (CC BY 4.0)</msg>
+    <msg key="academy">Academia de Ciencias y Literatura de Maguncia</msg>
     
     <!--work-->
     <msg key="text">Texto</msg>

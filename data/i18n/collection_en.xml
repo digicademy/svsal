@@ -123,7 +123,7 @@
   <msg key="1stEd">First edition</msg>
   <msg key="thisEd">This edition</msg>
   <msg key="extent">Extent, format</msg>
-  <msg key="dateOfOrigin">Year of publication</msg>
+  <msg key="dateOfOrigin">Year of publication (original source)</msg>
   <msg key="details">Catalogue Record</msg>
   <msg key="facsimiles">Images</msg>
   <msg key="periodOfOrigin">Volume designation</msg>
@@ -140,8 +140,8 @@
   <msg key="series">Series</msg>
   <msg key="alphaEditors">Editors (in alphabetical order)</msg>
   <msg key="editionSeries">The School of Salamanca. A Digital Collection of Sources</msg>
-  <msg key="editorsInChief">Editors of the Series</msg>
-  <msg key="digitalPublication">Digital Publication</msg>
+  <msg key="editorsInChief">Editors of the series</msg>
+  <msg key="digitalPublication">Electronic publication</msg>
   
   
   <!--Work help-->
@@ -217,6 +217,7 @@
   <msg key="licenceDesc">Data of the School of Salamanca project are licensed (if not stated otherwise) under the terms of a</msg>
   <msg key="licenceCC40">Creative Commons Attribution 4.0 International (CC BY 4.0)</msg>
   <msg key="workInProgress">Work in Progress!</msg>
+  <msg key="academy">Academy of Sciences and Literature | Mainz, Germany</msg>
   
   <!--author-->
   <msg key="order">Religious order</msg>
