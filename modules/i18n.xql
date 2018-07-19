@@ -207,3 +207,35 @@ declare function i18n:getSelectedLanguage($node as node()*,$selectedLang as xs:s
     else
         'en'
 };
+
+(: Consumes a date in standardized format (YYYY-MM-DD) and converts it to either German, English, or Spanish. 
+@param $date    the date string, in standardized format (YYYY-MM-DD)
+@param $lang    the language to convert the date to (either "de", "en", "es")
+@param $mode    the mode/format of the resulting date; this may either be "numeric" (which yields 
+                a numeric date in the format "DD.MM.YYYY") or verbose (which results in verbose month names, e.g. "January")
+@return         the converted date as a string
+@author         David Glück
+:)
+declare function i18n:convertDate($date as xs:string, $lang as xs:string, $mode) as xs:string {
+    let $dateFormat := if (matches($date, '[0-9]{4}-[0-9]{2}-[0-9]{2}')) then xs:date($date) else ()
+    
+    let $convertedDate :=
+        if ($mode eq 'verbose') then
+            if ($lang eq 'de') then format-date($dateFormat, "[D]. [MNn] [Y]", "de", (), ())
+            else if ($lang eq 'en') then format-date($dateFormat, "[D] [MNn] [Y]", "en", (), ())
+            else if ($lang eq 'es') then 
+                (: format-time does not contain Spanish month names, apparently, so we need to state those extra :)
+                let $esMonths := map {"01": "enero", "02": "febrero", "03": "marzo", "04": "abril", "05": "mayo", "06": "junio", 
+                          "07": "julio", "08": "agosto", "09": "septiembre", "10": "octubre", "11": "noviembre", "12": "diciembre"}
+                let $dateItems := tokenize($date, '-')
+                return concat(format-date($dateFormat, "[D]"), " de ", map:get($esMonths, $dateItems[2]), " de ", $dateItems[1])
+            else ()
+        else if ($mode eq 'numeric') then
+            if ($lang eq 'de') then format-date($dateFormat, "[D].[M].[Y]")
+            else if ($lang eq 'en') then $date
+            else if ($lang eq 'es') then format-date($dateFormat, "[D]/[M]/[Y]")
+            else ()
+        else ()
+    return $convertedDate
+};
+
