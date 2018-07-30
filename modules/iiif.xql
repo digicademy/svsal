@@ -210,8 +210,8 @@ declare function iiif:mkSequence($volumeId as xs:string, $tei as node(), $thumbn
                             1
     (: The startCanvas is identifiable by its containing (within "resource"/"@id") 
         the URL of the title page (=thumbnail). The following assumes that this URL can be found somewhere 
-        within the first 30 canvases:)
-    let $getStartCanvas := for $i in (1 to 30)  
+        within the first 30 canvases :)
+    let $getStartCanvas := for $i in (1 to min((30, array:size($canvases))))  
                             let $canvasImage := map:get($canvases($i), "images")(1)
                             let $imageResourceId := map:get(map:get($canvasImage, "resource"), "@id")
                             let $return := if ($imageResourceId eq $thumbnailUrl) 
