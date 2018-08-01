@@ -1,4 +1,4 @@
-xquery version "3.0";
+xquery version "3.1";
 
 module namespace app         = "http://salamanca/app";
 declare namespace exist      = "http://exist.sourceforge.net/NS/exist";
@@ -22,6 +22,7 @@ import module namespace i18n      = "http://exist-db.org/xquery/i18n"        at 
 import module namespace kwic      = "http://exist-db.org/xquery/kwic";
 import module namespace request   = "http://exist-db.org/xquery/request";
 import module namespace templates = "http://exist-db.org/xquery/templates";
+import module namespace iiif      = "http://salamanca/iiif"                  at "iiif.xql";
 
 (: declare option output:method            "html5";     :)
 (: declare option output:media-type        "text/html"; :)
@@ -2186,11 +2187,23 @@ declare %templates:wrap
                                     else
                                         replace($facs,'facs_(W\d{4})-(\d{4})',          'http://wwwuser.gwdg.de/~svsal/thumbs/$1/$1-$2.jpg'):)
             let $titlepage      := ($base//tei:titlePage[1]/following::tei:pb)[1]
-(: TODO: Fix this work-around :)
-            let $img            :=  if ($nodeIndex//sal:node[@subtype eq "work_multivolume"]) then
+            let $img            :=  if (util:binary-doc-available($config:iiif-root || '/' || $wid || '.json')) then 
+                                        let $work-json := json-doc($config:iiif-root || '/' || $wid || '.json')
+                                        let $idFieldname := '@id'
+                                        let $book-thumbnail := if ('thumbnail' = map:keys($work-json)) then
+                                                                    map:get($work-json, 'thumbnail')
+                                                               else
+                                                                    let $debug := console:log("Todo: Fix hardcoded id of manifests (facs.salamanca.school even on test server) in app:sourceBibliographicalRecord!")
+                                                                    let $member :=  $work-json?members?*[?($idFieldname) = 'https://facs.salamanca.school/iiif/presentation/' || $wid || '_' || $textId || '/manifest']
+                                                                    return map:get($member, 'thumbnail')
+                                        return map:get($book-thumbnail, "@id")
+                                    else concat($iiif:imageServer, iiif:getThumbnailId($base), "/full/full/0/default.jpg")
+(:            concat($iiif:imageServer, iiif:getThumbnailId($base), "/full/full/0/default.jpg"):)
+            (:if ($nodeIndex//sal:node[@subtype eq "work_multivolume"]) then
                                         replace($titlepage/@facs,'facs:(W\d{4})-([A-Z])-(\d{4})',  replace($config:imageserver, 'https://', 'http://') || '/$1/$2/$1-$2-$3.jpg')
                                     else
                                         replace($titlepage/@facs,'facs:(W\d{4})-(\d{4})',          replace($config:imageserver, 'https://', 'http://') || '/$1/$1-$2.jpg')
+            :)
             let $debug := console:log("Todo: Fix image-url generating work-around in app:sourceBibliographicalRecord! image-source = '" || $img || "'.")
             (: if there are several providers of digitized material, we only state the first (i.e., main) one :)
             let $primaryEd      := if ($sourceDesc//tei:note[@xml:id="ownerOfPrimarySource"]/tei:ref[@type eq "institution" and @subtype eq "main"]) then 
@@ -2287,7 +2300,7 @@ declare %templates:wrap
                                     <td class="col-md-8" style="line-height: 1.2">{$material}</td>
                 </tr>:)
         order by $volNumber ascending
-let $debug := console:log("Debug: " || serialize($output))
+(:let $debug := console:log("Debug: " || serialize($output)):)
         return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
         }; 
         
