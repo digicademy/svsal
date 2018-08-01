@@ -2064,7 +2064,7 @@ bibliographical record of the original edition, see app:sourceBibliographicalRec
 declare %templates:wrap
     function app:WRKdigitalEditionRecord($node as node(), $model as map(*), $lang as xs:string?, $wid as xs:string?) {
     
-    let $teiHeader          := $model('currentWork')//tei:teiHeader
+    let $teiHeader          := util:expand($model('currentWork'))//tei:teiHeader
     let $status             := $teiHeader//tei:revisionDesc/@status/string()
     
     let $workEditors := if ($status eq 'g_enriched_approved') then
@@ -2157,7 +2157,7 @@ declare %templates:wrap
 
 :)
 
-        let $base               := $model('currentWork')
+        let $base               := util:expand($model('currentWork'))
         let $status             := $base//tei:revisionDesc/@status/string()
         let $books              := $base//tei:text[@type ='work_volume' or @type ='work_monograph']
 
