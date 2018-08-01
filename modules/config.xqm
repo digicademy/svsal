@@ -924,7 +924,7 @@ declare function config:footer ($node as node(), $model as map(*), $lang as xs:s
         <div class="row">   
             <div class="col-md-12" style="text-align: center">
            <!--<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons Lizenzvertrag" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />-->
-           <i18n:text key="licenceDesc"/>{$config:nbsp}<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><i18n:text key="licenceCC40">Creative Commons Namensnennung 4.0 International Lizenz</i18n:text> <span class="glyphicon glyphicon-new-window"></span></a>.
+           <i18n:text key="licenceDesc"/>{$config:nbsp}<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><i18n:text key="licenceCC40">Creative Commons Namensnennung 4.0 International Lizenz</i18n:text><span class="glyphicon glyphicon-new-window" style="padding-left:0.3em;"></span></a>.
            </div>
        </div>
     </span>

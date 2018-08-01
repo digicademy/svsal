@@ -17,36 +17,21 @@
                         <surname>Caesar</surname>, <forename>Ingo</forename>
                     </persName>
                 </author>
-                <author xml:id="CC">
+                <editor role="translator" xml:id="CC">
                     <persName ref="orcid:0000-0003-1240-649X">
                         <surname>Cárdenas Velásquez</surname>, <forename>Luisa Carolina</forename>
                     </persName>
-                </author>
-                <author xml:id="TD">
-                    <persName ref="gnd:1028938721">
-                        <surname>Duve</surname>, <forename>Thomas</forename>
-                    </persName>
-                </author>
+                </editor>
                 <author xml:id="DG">
                     <persName ref="orcid:0000-0002-0273-3844">
                         <surname>Glück</surname>, <forename>David</forename>
                     </persName>
                 </author>
-                <author xml:id="MLB">
-                    <persName ref="gnd:115585133">
-                        <surname>Lutz-Bachmann</surname>, <forename>Matthias</forename>
-                    </persName>
-                </author>
-                <author xml:id="CRC">
+                <editor role="translator" xml:id="CRC">
                     <persName ref="orcid:0000-0001-5095-1793">
                         <surname>Rico Carmona</surname>, <forename>Cindy</forename>
                     </persName>
-                </author>
-                <author xml:id="AS">
-                    <persName ref="gnd:13605708X">
-                        <surname>Spindler</surname>, <forename>Anselm</forename>
-                    </persName>
-                </author>
+                </editor>
                 <author xml:id="AW">
                     <persName ref="gnd:108835820">
                         <surname>Wagner</surname>, <forename>Andreas</forename>
@@ -54,41 +39,23 @@
                 </author>
             </titleStmt>
 
-            <!-- Information about the electronic edition -->
-            <editionStmt xml:id="editionStmt" xml:lang="en">
-                <edition xml:lang="en">[Electronic Edition]</edition>
-                <respStmt>
-                    <resp xml:lang="en">Technical development by</resp>
-                    <persName ref="#DG">David Glück</persName>
-                    <persName ref="#AW">Andreas Wagner</persName>
-                    <persName ref="#IC">Ingo Caesar</persName>
-                    <orgName xml:lang="de">Akademie der Wissenschaften und der Literatur | Mainz
-                        <ref type="url" target="http://www.adwmainz.de"/>
-                    </orgName>
-                </respStmt>
-                <funder>
-                    <orgName xml:lang="de">Akademie der Wissenschaften und der Literatur | Mainz</orgName>
-                    <ref type="url" target="http://www.adwmainz.de"/>
-                </funder>
-            </editionStmt>
-
             <!-- Funder, producer, publisher of the digital version -->
             <publicationStmt xml:id="publicationStmt" xml:lang="de">
-                <publisher xml:id="publicationStmt_publisher">
+                <!-- embedded in each work's dataset: -->
+                <publisher xml:id="pubstmt-publisher">
                     <orgName xml:lang="de">Akademie der Wissenschaften und der Literatur, Mainz</orgName>
                     <ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>
                 </publisher>
-                <distributor xml:id="publicationStmt_distributor">
+                <distributor xml:id="pubstmt-distributor">
                     <orgName xml:lang="de">Akademie der Wissenschaften und der Literatur, Mainz</orgName>,
                     <orgName xml:lang="de">Max-Planck-Institut für europäische Rechtsgeschichte</orgName>,
                     <orgName xml:lang="de">Goethe-Universität Frankfurt/Main</orgName>
                     <email>info@salamanca.adwmainz.de</email>
                 </distributor>
-                <pubPlace role="digitzedEd" xml:lang="en" xml:id="publicationStmt_pubPlace">
+                <pubPlace role="digitizedEd" xml:lang="en" xml:id="pubstmt-pubplace">
                     Frankfurt am Main, Germany (<ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>)
                 </pubPlace>
-                <date type="digitizedEd" when="2013">2013</date>
-                <availability xml:id="publicationStmt_availability">
+                <availability xml:id="pubstmt-availability">
                     <licence target="https://creativecommons.org/licenses/by/4.0">
                         <p xml:id="p_wc2c454" xml:lang="de">Dieses Werk bzw. dieser Inhalt wurde digitalisiert durch die <ref target="http://www.adwmainz.de">Akademie der
                             Wissenschaften und der Literatur, Mainz</ref> und steht unter einer <ref target="https://creativecommons.org/licenses/by/4.0/deed.de">Creative
@@ -102,21 +69,37 @@
                             <ref target="https://creativecommons.org/licenses/by/4.0/deed.es"> Creative Commons Reconocimiento 4.0 Internacional (CC BY 4.0)</ref></p>
                     </licence>
                 </availability>
+                <!-- the specific date of (digital) publication of a work must be included here... -->
+                <!-- specific IDs/URIs for each work and related data must be recorded here by means of <idno>... -->
             </publicationStmt>
+            
+            <!-- embedded in each work's dataset: -->
             <seriesStmt xml:id="seriesStmt">
-                <title level="s" xml:lang="de">Die Schule von Salamanca: Eine digitale Quellensammlung und ein Wörterbuch ihrer juristisch-politischen Sprache.</title>
-                <title level="s" xml:lang="en">The School of Salamanca: A Digital Collection of Sources and a Dictionary of its Juridical-Political Language.</title>
-                <title level="s" xml:lang="es">La Escuela de Salamanca: Una Colección Digital de Fuentes y un Diccionario de su Lenguaje Jurídico-Político.</title>
+                <title xml:lang="de">Die Schule von Salamanca. Eine Digitale Quellensammlung</title>
+                <title xml:lang="en">The School of Salamanca. A Digital Collection of Sources</title>
+                <title xml:lang="es">La Escuela de Salamanca. Una Colección Digital de Fuentes</title>
+                <editor xml:id="TD">
+                     <persName ref="gnd:1028938721" full="yes">
+                         <surname full="yes">Duve</surname>, <forename full="yes">Thomas</forename>
+                     </persName>
+                 </editor>
+                 <editor xml:id="MLB">
+                     <persName ref="gnd:1022577581" full="yes">
+                         <surname full="yes">Lutz-Bachmann</surname>, <forename full="yes">Matthias</forename>
+                     </persName>
+                 </editor>
             </seriesStmt>
+            
             <sourceDesc>
                 <p xml:id="p_cq23d3" xml:lang="de">Born digital, erstellt am <date when="2013-08-13">13.08.2013</date>, um 12:42 Uhr.</p>
                 <p xml:id="p_cq2d63" xml:lang="en">Born digital, created on <date when="2013-08-13">13 August 2013</date>, at 1:42pm.</p>
                 <p xml:id="p_cq2d73" xml:lang="es">Nativamente digital, creado el <date when="2013-08-13">13 de agosto 2013</date> a las 12:42.</p>
             </sourceDesc>
         </fileDesc>
-
-        <encodingDesc xml:id="encodingDesc" xml:lang="de">
-            <projectDesc>
+        
+        <encodingDesc xml:id="encodingDesc">
+            <!-- embedded in each work's dataset: -->
+            <projectDesc xml:id="projectDesc">
                 <p xml:id="p_retq324ewfr" xml:lang="de">Dieses Dokument wurde im Rahmen des Projekts 
                     <ref target="https://www.salamanca.school/de/project.html">"Die Schule von Salamanca.
                     Eine digitale Quellensammlung und ein Wörterbuch ihrer juridisch-politischen Sprache"</ref> der
@@ -148,7 +131,8 @@
             </projectDesc>
 
             <editorialDecl>
-                <p xml:id="p_7899fsfdfd" xml:lang="de">Dieses Werk wurde für das Projekt "Die Schule von Salamanca" 
+                <!-- embedded in each work's dataset: -->
+                <p xml:id="editorialdecl-de" xml:lang="de">Dieses Werk wurde für das Projekt "Die Schule von Salamanca" 
                     im Double-Keying-Verfahren durch Nicht-Muttersprachler transkribiert 
                     (siehe hierzu auch die 
                     <ref target="http://facs.salamanca.school/docs/transcription/guidelines/general/SvSal_Allgemeine_Erfassungsanweisungen.pdf">allgemeinen</ref>
@@ -158,7 +142,7 @@
                     und gemäß der 
                     <ref target="https://www.salamanca.school/de/guidelines.html">Editionsrichtlinien</ref> 
                     durch das Projekt in XML/TEI P5 kodiert.</p>
-                <p xml:id="p_5kldhf80" xml:lang="en">This work was transcribed by non-native speakers through 
+                <p xml:id="editorialdecl-en" xml:lang="en">This work was transcribed by non-native speakers through 
                     double keying for the project "The School of Salamanca" (see also the 
                     <ref target="http://facs.salamanca.school/docs/transcription/guidelines/general/SvSal_Allgemeine_Erfassungsanweisungen.pdf">general</ref>
                     and 
@@ -166,7 +150,7 @@
                     transcription guidelines of the project, currently only available in German) and was 
                     encoded by the project in XML/TEI P5 according to the 
                     <ref target="https://www.salamanca.school/en/guidelines.html">edition guidelines</ref>.</p>
-                <p xml:id="p_jfdklf87s" xml:lang="es">Esta obra fue transcrita por hablantes no nativos a través 
+                <p xml:id="editorialdecl-es" xml:lang="es">Esta obra fue transcrita por hablantes no nativos a través 
                     de doble codificación para el proyecto "La Escuela de Salamanca" (véase también las Directrices 
                     <ref target="http://facs.salamanca.school/docs/transcription/guidelines/general/SvSal_Allgemeine_Erfassungsanweisungen.pdf">Generales</ref> 
                     y 
@@ -174,9 +158,10 @@
                     transcripción del proyecto, actualmente solo disponibles en alemán) y fue 
                     codificada por el proyecto en XML/TEI P5 según las <ref target="https://www.salamanca.school/es/guidelines.html">directrices</ref> de edición.
                 </p>
+                <!-- any further, specific edition practices for an individual text must be recorded here -->
             </editorialDecl>
-
-            <refsDecl>
+            <!-- embedded in each work's dataset: -->
+            <refsDecl xml:id="refsDecl">
                 <p xml:id="p_d2d3fccq3" xml:lang="de">Für eine Beschreibung der im Werk verwendeten Identifikations- und 
                     Referenzierungsschemata für Elemente mittels <att>xml:id</att> siehe die
                     <ref target="https://www.salamanca.school/de/guidelines.html#de-xmlid">Editionsrichtlinien</ref>.</p>
@@ -197,18 +182,19 @@
                 <rendition xml:id="dagger">content:'†';</rendition>
                 <rendition xml:id="initCaps" scope="first-letter">font-size: xx-large; font-style: initial;</rendition>
                 <rendition xml:id="it">font-style: italic;</rendition>
-                <rendition xml:id="rt">font-style: normal;</rendition>
+                <rendition xml:id="recte">font-style: normal;</rendition>
                 <rendition xml:id="b">font-weight: bold;</rendition>
                 <rendition xml:id="sc">font-variant: small-caps;</rendition>
                 <rendition xml:id="sup">vertical-align: sup; font-size: .83em;</rendition>
                 <rendition xml:id="sub">vertical-align: sub; font-size: .83em;</rendition>
                 <rendition xml:id="spc">letter-spacing: 3px;</rendition>
                 <rendition xml:id="r-center">text-align: center;</rendition>
+                <rendition xml:id="right">text-align: right;</rendition>
                 <namespace name="http://www.tei-c.org/ns/1.0">
                     <tagUsage gi="lb" rendition="#noHyphen"/>
                     <tagUsage gi="milestone" rendition="#asterisk"/>
                     <tagUsage gi="lg" rendition="#it"/>
-                    <!--<tagUsage gi="head" rendition="#r-center"/>-->
+                    <tagUsage gi="head" rendition="#r-center"/>
                 </namespace>
             </tagsDecl>
 
@@ -274,9 +260,9 @@
                         therein are concatenations of the internal ID number of the respective work and the ".jpg" file extension. 
                         The mapping of each ID to its respective work also can be found at the mentioned address.</p>
                 </prefixDef>
-<!-- The following prefixes linking our data to external sources are disabled for now,
-     because the data are not rich enough yet... -->
-<!--
+                <!-- The following prefixes linking our data to external sources are disabled for now,
+                     because the data are not rich enough yet... -->
+                <!--
                 <prefixDef ident="cerl" matchPattern="([A-z0-9.#_\-]+)" replacementPattern="http://thesaurus.cerl.org/cgi-bin/record.pl?rid=$1">
                     <p xml:id="p_ertertwe">Im Kontext dieser Edition verweisen private URIs mit dem Präfix "cerl" auf Personen-
                     Datensätze in der öffentlichen Datenbank unter http://thesaurus.cerl.org/.</p>
@@ -434,7 +420,7 @@
                                     <item xml:id="item_oi79q3dw1">
                                         <ref target="http://files.salamanca.school/W_Head_general.xml">.xml</ref> (Diese Dokumentationsdatei)</item>
                                     <item xml:id="item_fcwq43qf13dwq">
-                                        <ref target="http://facs.salamanca.school/docs/transcription/sal-char-encoding-table.pdf">.xml</ref> 
+                                        <ref target="http://facs.salamanca.school/docs/transcription/sal-char-encoding-table.pdf">.pdf</ref> 
                                         (Übersicht der verwendeten Sonderzeichen, engl.)</item>
                                 </list>
                             </p>
@@ -2021,7 +2007,7 @@
                                     <item xml:id="item_oi79qerw1">
                                         <ref target="http://files.salamanca.school/W_Head_general.xml">.xml</ref> (the documentation file at hand)</item>
                                     <item xml:id="item_fcwq4erf13dwq">
-                                        <ref target="http://facs.salamanca.school/docs/transcription/sal-char-encoding-table.pdf">.xml</ref> (overview of the 
+                                        <ref target="http://facs.salamanca.school/docs/transcription/sal-char-encoding-table.pdf">.pdf</ref> (overview of the 
                                         standard and non-standard characters utilized in this edition)</item>
                                 </list>
                             </p>
@@ -3635,7 +3621,7 @@
                                     <item xml:id="item_oi79qfdrw1">
                                        <ref target="http://files.salamanca.school/W_Head_general.xml">.xml</ref> (Archivo de esta documentación)</item>
                                     <item xml:id="item_fcwqsdrf13dwq">
-                                       <ref target="http://facs.salamanca.school/docs/transcription/sal-char-encoding-table.pdf">.xml</ref> (Lista de los caracteres especiales utilizados)</item>
+                                       <ref target="http://facs.salamanca.school/docs/transcription/sal-char-encoding-table.pdf">.pdf</ref> (Lista de los caracteres especiales utilizados)</item>
                                 </list>
                             </p>
                         </div>
