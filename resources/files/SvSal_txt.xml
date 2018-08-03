@@ -21,89 +21,137 @@
       </sourceDesc>
     </fileDesc>
     <revisionDesc status="e_unreviewed">
-            <listChange>
-                <change who="#DG" when="2018-06-12" status="e_emended_unenriched"><p>Withdraw removal of 
+      <listChange>
+        <change who="#DG" when="2018-08-03" status="e_emended_unenriched">
+          <p>Added msdescription to modules; small additions/changes.</p>
+        </change>
+        <change who="#DG" when="2018-06-12" status="e_emended_unenriched">
+          <p>Withdraw removal of 
                     att.global.change; add element space (module transcr); add values "#AA" (automatic annotation), 
-                    "#CRC" and "#DG" to @resp.</p></change>
-                <change who="#DG" when="2018-06-11" status="e_emended_unenriched"><p>Add value "unknown" to 
-                    unclear/@reason, div/@type, and milestone/@unit; add values "#right" and "#gap" to @rendition.</p></change>
-                <change who="#DG" when="2018-05-07" status="e_emended_unenriched"><p>Add title page elements: 
+                    "#CRC" and "#DG" to @resp.</p>
+        </change>
+        <change who="#DG" when="2018-06-11" status="e_emended_unenriched">
+          <p>Add value "unknown" to 
+                    unclear/@reason, div/@type, and milestone/@unit; add values "#right" and "#gap" to @rendition.</p>
+        </change>
+        <change who="#DG" when="2018-05-07" status="e_emended_unenriched">
+          <p>Add title page elements: 
                     docAuthor, docImprint, byline, imprimatur, docDate; update status labels; 
-                    change name of TEI specification to "SalTEI".</p></change>
-                <change who="#AW" when="2015-04-23" status="e_emended_unenriched"><p>Add XInclude
-                    elements.</p></change>
-                <change who="#AW" when="2015-04-10" status="e_emended_unenriched"><p>Remove @style
+                    change name of TEI specification to "SalTEI".</p>
+        </change>
+        <change who="#AW" when="2015-04-23" status="e_emended_unenriched">
+          <p>Add XInclude
+                    elements.</p>
+        </change>
+        <change who="#AW" when="2015-04-10" status="e_emended_unenriched">
+          <p>Remove @style
                     and @rend from att.global.rendition class and add hi @rendition value for
-                    "recte".</p></change>
-                <change who="#AW" when="2014-11-19" status="e_emended_unenriched"><p>remove value
+                    "recte".</p>
+        </change>
+        <change who="#AW" when="2014-11-19" status="e_emended_unenriched">
+          <p>remove value
                     "sub" of title@type; date@type="summaryFirstEd|summaryThisEd", remove
-                    "summary".</p></change>
-                <change who="#AW" when="2014-10-14" status="e_emended_unenriched"><p>Added title@type=245a,
-                    ref@type=catLink,institution, date@type=summary</p></change>
-                <change who="#AW" when="2014-09-02" status="e_emended_unenriched"> Add "dict" list type. </change>
-                <change who="#AW" when="2014-08-05" status="e_emended_unenriched"> Add mentioned element. </change>
-                <change who="#AW" when="2014-06-27" status="e_emended_unenriched"> Allow text@xml:id to be
+                    "summary".</p>
+        </change>
+        <change who="#AW" when="2014-10-14" status="e_emended_unenriched">
+          <p>Added title@type=245a,
+                    ref@type=catLink,institution, date@type=summary</p>
+        </change>
+        <change who="#AW" when="2014-09-02" status="e_emended_unenriched"
+          > Add "dict" list type. </change>
+        <change who="#AW" when="2014-08-05" status="e_emended_unenriched"
+          > Add mentioned element. </change>
+        <change who="#AW" when="2014-06-27" status="e_emended_unenriched"
+          > Allow text@xml:id to be
                     VolXY (with a capital 'V') instead of volXY, so as to match how the xml files
                     are actually called. </change>
-                <change who="#AW" when="2014-05-27" status="e_emended_unenriched"> Allow ref
+        <change who="#AW" when="2014-05-27" status="e_emended_unenriched"
+          > Allow ref
                     @type="anchor-index" </change>
-                <change who="#AW" when="2014-05-14" status="e_emended_unenriched"> specified dictionary and
+        <change who="#AW" when="2014-05-14" status="e_emended_unenriched"
+          > specified dictionary and
                     analysis elements replaced exclude- with include-specifications in some
                     moduleRef instances made @status an optional attribute in revisionDesc </change>
-                <change who="#AW" when="2014-04-11" status="e_emended_unenriched"><p>Relaxes a few parts
-                    (keeping this more in synch with the author schema).</p></change>
-                <change who="#AW" when="2014-03-26" status="e_emended_unenriched"><p> ... </p></change>
-                <change who="#AW" when="2014-03-25" status="e_emended_unenriched"><p><list>
-                    <item>Reactivated attribute deletions in att.classes removals</item>
-                    <item>added required xml:id attributes in certain elements</item>
-                    <item>replace @who with @resp in definitions of responsibilty (gap,
+        <change who="#AW" when="2014-04-11" status="e_emended_unenriched">
+          <p>Relaxes a few parts
+                    (keeping this more in synch with the author schema).</p>
+        </change>
+        <change who="#AW" when="2014-03-26" status="e_emended_unenriched">
+          <p> ... </p>
+        </change>
+        <change who="#AW" when="2014-03-25" status="e_emended_unenriched">
+          <p>
+            <list>
+              <item>Reactivated attribute deletions in att.classes removals</item>
+              <item>added required xml:id attributes in certain elements</item>
+              <item>replace @who with @resp in definitions of responsibilty (gap,
                         supplied etc.)</item>
-                    <item>allow graphic element</item>
-                    <item>use tei_odd schema for this odd file</item>
-                    <item>add "news" type for text elements</item>
-                    <item>keywords element allowed</item>
-                </list></p></change>
-                <change who="#AW" when="2014-03-14" status="unreviewed"><p>Modifications to cater
-                    for Editorial Guidelines (in W_Head_general.xml): <list>
-                        <item>remove "#code" from hi@rendition - use <gi>code</gi> instead, once
-                            we have the tagdocs module.</item>
-                        <item>allow <tag>ref type="image"</tag>
-                        </item>
-                    </list>
-                </p></change>
-                <change who="#AW" when="2014-03-14" status="unreviewed"><p>Modifications to cater
-                    for Editorial Guidelines (in W_Head_general.xml): <list>
-                        <item>add "#code" to hi@rendition</item>
-                        <item>add tagdocs module</item>
-                    </list>
-                </p></change>
-                <change who="#AW" when="2014-03-06" status="unreviewed"><p>clear up classspec
+              <item>allow graphic element</item>
+              <item>use tei_odd schema for this odd file</item>
+              <item>add "news" type for text elements</item>
+              <item>keywords element allowed</item>
+            </list>
+          </p>
+        </change>
+        <change who="#AW" when="2014-03-14" status="unreviewed">
+          <p>Modifications to cater
+                    for Editorial Guidelines (in W_Head_general.xml): <list><item>remove "#code" from hi@rendition - use <gi>code</gi> instead, once
+                            we have the tagdocs module.</item><item>allow <tag>ref type="image"</tag>
+            </item></list> </p>
+        </change>
+        <change who="#AW" when="2014-03-14" status="unreviewed">
+          <p>Modifications to cater
+                    for Editorial Guidelines (in W_Head_general.xml): <list><item>add "#code" to hi@rendition</item><item>add tagdocs module</item></list>
+          </p>
+        </change>
+        <change who="#AW" when="2014-03-06" status="unreviewed">
+          <p>clear up classspec
                     definitiones which are used to delete the whole class of attributes
-                    anyway</p><p>add "#l-ident" to hi@rendition values</p><p>cope with
-                        damage/del and gap/unclear/supplied elements</p><p>narrow down and explain
+                    anyway</p>
+          <p>add "#l-ident" to hi@rendition values</p>
+          <p>cope with
+                        damage/del and gap/unclear/supplied elements</p>
+          <p>narrow down and explain
                             docStatus values (and remove the revisionStmt element from att.docStatus so
-                            that it does not need to have a status itself).</p><p>extend text types to
-                                cover lemma-/author articles and working papers</p></change>
-                <change who="#AW" when="2013-09-26" status="unreviewed"><p>add gaiji
-                    module.</p><p>consolidate @types of text and div elements.</p><p>remove
-                        category/taxonomy elements since we won't be using them.</p><p>change list
-                            and ref elements to use summaries/summary respectively.</p></change>
-                <change who="#AW" when="2013-09-19" status="unreviewed"><p>add "monograph" to
-                    possible values of text@type.</p></change>
-                <change who="#AW" when="2013-09-18" status="unreviewed"><p>text@type is only
-                    optional. (and whitespace formatting.)</p></change>
-                <change who="#AW" when="2013-09-17" status="unreviewed"><p>Synched partly with <ref
-                    type="url">http://dfg-viewer.de/strukturdatenset/</ref>, this concerns
-                    specific types of div and text tags.</p><p>Also allowed biblscope tag as it
-                        is used in seriesStmt.</p></change>
-                <change who="#AW" when="2013-09-02" status="unreviewed"><p>Removed @synch (it means
+                            that it does not need to have a status itself).</p>
+          <p>extend text types to
+                                cover lemma-/author articles and working papers</p>
+        </change>
+        <change who="#AW" when="2013-09-26" status="unreviewed">
+          <p>add gaiji
+                    module.</p>
+          <p>consolidate @types of text and div elements.</p>
+          <p>remove
+                        category/taxonomy elements since we won't be using them.</p>
+          <p>change list
+                            and ref elements to use summaries/summary respectively.</p>
+        </change>
+        <change who="#AW" when="2013-09-19" status="unreviewed">
+          <p>add "monograph" to
+                    possible values of text@type.</p>
+        </change>
+        <change who="#AW" when="2013-09-18" status="unreviewed">
+          <p>text@type is only
+                    optional. (and whitespace formatting.)</p>
+        </change>
+        <change who="#AW" when="2013-09-17" status="unreviewed">
+          <p>Synched partly with <ref type="url"
+            >http://dfg-viewer.de/strukturdatenset/</ref>, this concerns
+                    specific types of div and text tags.</p>
+          <p>Also allowed biblscope tag as it
+                        is used in seriesStmt.</p>
+        </change>
+        <change who="#AW" when="2013-09-02" status="unreviewed">
+          <p>Removed @synch (it means
                     sync in time, for speech transcription)and defined list@rendition values
-                    (like dta does as per <ref type="url"
-                        >www.deutsches-textarchiv.de/doku/basisformat_texterschliessung_formal#Klammerungen</ref>.
+                    (like dta does as per <ref
+            type="url"
+            >www.deutsches-textarchiv.de/doku/basisformat_texterschliessung_formal#Klammerungen</ref>.
                     Changed @status to an xml name data type (without '/'). Also re-shuffled
-                    *Spec-entries to sort on @ident. </p></change>
-            </listChange>
-        </revisionDesc>
+                    *Spec-entries to sort on @ident. </p>
+        </change>
+      </listChange>
+    </revisionDesc>
   </teiHeader>
   <text>
     <front>
@@ -403,7 +451,7 @@
                 <valItem ident="article"/>
                 <valItem ident="question"/>
                 <valItem ident="section"/>
-                <valItem ident="unknown"/>
+                <valItem ident="other"/>
               </valList>
             </attDef>
           </attList>
@@ -430,7 +478,8 @@
           <attList>
             <attDef ident="resp" mode="change">
               <valList type="closed" mode="replace">
-                <valItem ident="#AA"/> <!-- automatic annotation -->
+                <valItem ident="#AA"/>
+                <!-- automatic annotation -->
                 <valItem ident="#AS"/>
                 <valItem ident="#AW"/>
                 <valItem ident="#CB"/>
@@ -568,25 +617,48 @@
                 <valItem ident="annotation"/>
                 <valItem ident="article"/>
                 <valItem ident="book"/>
-                <valItem ident="chapter"/>
-                <valItem ident="colophon"/>
+                <valItem ident="chapter">
+                  <desc>A chapter, labeled as such (as given in the chapter heading, e.g.) or clearly identifiable as such from the context. 
+                        (Please note: parts of chapters that are not specifically labeled otherwise usually are annotated as sections ('section' value).)</desc>
+                </valItem>
+                <valItem ident="colophon">
+                  <desc>A statement about the publication of a work/volume (place, date, printer, etc.), usually occurring at its end.</desc>
+                </valItem>
                 <valItem ident="contained_work"/>
-                <valItem ident="contents"/>
+                <valItem ident="contents">
+                  <desc>A section of the document listing structural units in the document, or in a part of the document.</desc>
+                </valItem>
                 <valItem ident="corrigenda"/>
                 <valItem ident="dedication"/>
                 <valItem ident="disputation"/>
                 <valItem ident="entry"/>
-                <valItem ident="foreword"/>
-                <valItem ident="index"/>
+                <valItem ident="foreword">
+                  <desc>An opening statement, usually written by someone other than the author of the work.</desc>
+                </valItem>
+                <valItem ident="index">
+                  <desc>An index.</desc>
+                </valItem>
                 <valItem ident="lecture"/>
                 <valItem ident="map"/>
-                <valItem ident="part"/>
-                <valItem ident="preface"/>
+                <valItem ident="part">
+                  <desc>A larger part of the work/volume, usually comprising structural sub-units such as chapters, sections, etc.</desc>
+                </valItem>
+                <valItem ident="preface">
+                  <desc>An introductory statement about the work/volume, written by its author.</desc>
+                </valItem>
                 <valItem ident="privileges"/>
                 <valItem ident="question"/>
-                <valItem ident="section"/>
+                <valItem ident="section">
+                  <desc>A section of any size and on any level within the document; if there are so-called chapters, sections usually (but not exclusively) occur below the chapter level.</desc>
+                </valItem>
+                <!--<valItem ident="subsection">
+                  <desc>A small structural unit, usually of a section but possibly also of any other structural unit.</desc>
+                </valItem>-->
                 <valItem ident="sources"/>
-                <valItem ident="unknown"/>
+                <valItem ident="unknown">
+                  <desc>In case none of the available values of @type applies to a structural unit of a document, 'unknown' may be used, 
+                    but only for validation of the document and as a marker to be resolved through further scholarly editing.</desc>
+                </valItem>
                 <valItem ident="work_part">
                   <desc>A part of a document that has been splitted for technical
                                         reasons.</desc>
@@ -717,6 +789,10 @@
                   <!-- indented (on the left, presumably a kind of list) -->
                   <gloss>indented on the left</gloss>
                 </valItem>
+                <valItem ident="#h-line">
+                  <!-- a horizontal line, e.g. used as a structural separator and/or as representation of an ornament -->
+                  <gloss>horizontal line</gloss>
+                </valItem>
               </valList>
             </attDef>
           </attList>
@@ -727,12 +803,7 @@
             <attDef ident="xml:id" mode="change" usage="req"/>
           </attList>
         </elementSpec>
-        <elementSpec ident="language" module="header" mode="change">
-          <!-- no @usage -->
-          <attList>
-            <attDef ident="usage" mode="delete"/>
-          </attList>
-        </elementSpec>
+        <elementSpec ident="language" module="header" mode="change"><!-- no @usage --></elementSpec>
         <elementSpec ident="lb" module="core" mode="change">
           <!-- @rendition="#hyphen/#noHyphen" -->
           <attList>
@@ -883,7 +954,7 @@
               <valList type="closed" mode="replace">
                 <valItem ident="firstEd"/>
                 <valItem ident="thisEd"/>
-                <valItem ident="digitzedEd"/>
+                <valItem ident="digitizedEd"/>
               </valList>
             </attDef>
           </attList>
@@ -1136,6 +1207,9 @@
                     </content>
                 </macroSpec>
 -->
+        <moduleRef key="msdescription"
+          except="accMat acquisition additional additions binding bindingDesc condition custEvent custodialHist decoDesc decoNote explicit filiation finalRubric handDesc heraldry history incipit locus locusGrp musicNotation provenance recordHist rubric seal sealDesc secFol signatures source stamp support supportDesc watermark"
+        />
       </schemaSpec>
     </body>
   </text>
