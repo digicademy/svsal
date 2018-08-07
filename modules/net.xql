@@ -13,25 +13,6 @@ declare       namespace sal         = "http://salamanca.adwmainz.de";
 
 declare variable $net:cache-control       := "no";
 
-(: TODO: Letsencrypt mgmt is done via apache proxy and jetty as of now, so we should remove it here ... :)
-declare variable $net:responseToken             := "Bn-fSXmMYzA3uXu0Otpc5aNyWBzzK4OWgvQ0-iccAKk";
-declare variable $net:plainDomainChallenge      := "Aty4HlCj17eaeym8tAzbdIaXHHFgRkiEIIHzHUa2pcc";
-declare variable $net:apiDomainChallenge        := "ZHVv4BGzgjM5esX9Rsyt549W9xdIgN3TTe-JrndiDwc";
-declare variable $net:dataDomainChallenge       := "AQRtdEnG79M6FIYzEqEj7N_t-ow_KO3Kw6AUFLcHExY";
-declare variable $net:filesDomainChallenge      := "RNQsVpou2gbJ6faH3q6Xz2nlQ_FUnnMQLkV7gsXk860";
-declare variable $net:idDomainChallenge         := "GdAax0gfCZ0wcVozfyqFJxBo_uLDEPtscJh2LeVh_Hc";
-declare variable $net:softwareDomainChallenge   := "RvCq7udo5LWFJLWWNHCIDcuWg7pmogEEvrAPOPYSQyU";
-declare variable $net:teiDomainChallenge        := "0rwL8uTxZK46MP7ooYBULIiE87kud_Mc70BA4-uagiM";
-declare variable $net:wwwDomainChallenge        := "uNNFAgKCPbYYGjwsHo8EGd-zfFtYxVbd10az8BKmC_s";
-declare variable $net:plainDomainToken          := $net:plainDomainChallenge    || "." || $net:responseToken;
-declare variable $net:apiDomainToken            := $net:apiDomainChallenge      || "." || $net:responseToken;
-declare variable $net:dataDomainToken           := $net:dataDomainChallenge     || "." || $net:responseToken;
-declare variable $net:idDomainToken             := $net:idDomainChallenge       || "." || $net:responseToken;
-declare variable $net:softwareDomainToken       := $net:softwareDomainChallenge || "." || $net:responseToken;
-declare variable $net:filesDomainToken          := $net:filesDomainChallenge    || "." || $net:responseToken;
-declare variable $net:teiDomainToken            := $net:teiDomainChallenge      || "." || $net:responseToken;
-declare variable $net:wwwDomainToken            := $net:wwwDomainChallenge      || "." || $net:responseToken;
-
 declare variable $net:forwardedForServername    := request:get-header('X-Forwarded-Host');
 declare variable $net:servedContentTypes        := (
                                                     'text/html',
@@ -267,30 +248,6 @@ declare function local:negotiateCTSub($offers as xs:string*, $bestOffer as xs:st
                           else
                                 if ($newOffer[1]) then $newOffer[1] else $bestOffer
     return $returnOffer
-};
-
-
-(: TODO: Letsencrypt mgmt is done via apache proxy and jetty as of now, so we should remove it here ... :)
-declare function net:acmeExchange($net-vars){
-    let $ret := util:declare-option("exist:serialize", "method=text media-type=text/plain")
-    return
-             if ($net:forwardedForServername = "salamanca.school"           and $net-vars('resource') = $net:plainDomainChallenge) then
-                text{$net:plainDomainToken}
-        else if ($net:forwardedForServername = "www.salamanca.school"       and $net-vars('resource') = $net:wwwDomainChallenge) then
-                text{$net:wwwDomainToken}
-        else if ($net:forwardedForServername = "data.salamanca.school"      and $net-vars('resource') = $net:dataDomainChallenge) then
-                text{$net:dataDomainToken}
-        else if ($net:forwardedForServername = "files.salamanca.school"     and $net-vars('resource') = $net:filesDomainChallenge) then
-                text{$net:filesDomainToken}
-        else if ($net:forwardedForServername = "id.salamanca.school"        and $net-vars('resource') = $net:idDomainChallenge) then
-                text{$net:idDomainToken}
-        else if ($net:forwardedForServername = "api.salamanca.school"       and $net-vars('resource') = $net:apiDomainChallenge) then
-                text{$net:apiDomainToken}
-        else if ($net:forwardedForServername = "software.salamanca.school"  and $net-vars('resource') = $net:softwareDomainChallenge) then
-                text{$net:softwareDomainToken}
-        else if ($net:forwardedForServername = "tei.salamanca.school"       and $net-vars('resource') = $net:teiDomainChallenge) then
-                text{$net:teiDomainToken}
-        else ()
 };
 
 
