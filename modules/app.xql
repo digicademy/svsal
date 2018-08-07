@@ -2657,10 +2657,10 @@ declare function app:WRKtextModus($node as node(), $model as map(*), $lang as xs
         <div>
             <section id="switchEditsSection">
                         <span class="original unsichtbar" style="cursor: pointer;">
-                            <a class="btn btn-link" onclick="applyEditMode()"> <span class="glyphicon glyphicon-eye-open" aria-hidden="true"/>&#xA0;<i18n:text key="constituted">Konstituiert</i18n:text></a>
+                            <a class="btn btn-link" onclick="applyEditMode()"> <span class="glyphicon glyphicon-eye-open" aria-hidden="true"/>&#xA0;<i18n:text key="diplomatic">Diplomatisch</i18n:text></a>
                         </span>
                         <span class="edited" style="cursor: pointer;">
-                            <a class="btn btn-link" onclick="applyOrigMode()"> <span class="glyphicon glyphicon-eye-open" aria-hidden="true"/>&#xA0;<i18n:text key="diplomatic">Diplomatisch</i18n:text></a>
+                            <a class="btn btn-link" onclick="applyOrigMode()"> <span class="glyphicon glyphicon-eye-open" aria-hidden="true"/>&#xA0;<i18n:text key="constituted">Konstituiert</i18n:text></a>
                         </span>
             </section>
         </div>
