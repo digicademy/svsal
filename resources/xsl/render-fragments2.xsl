@@ -798,6 +798,13 @@
             <xsl:apply-templates/>
         </span>
     </xsl:template>
+    
+    <!-- represent ornaments as short horizontal line -->
+    <xsl:template match="figure[@type eq 'ornament']">
+        <xsl:element name="hr">
+            <xsl:attribute name="class" select="'ornament'"/>
+        </xsl:element>
+    </xsl:template>
 
     <!-- For highlighting of search results -->
 <!-- <xsl:template match="exist:match">

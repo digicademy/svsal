@@ -537,6 +537,10 @@ a .original {
     position:absolute;
 }
 
+hr.ornament {
+    width: 30%;
+}
+
 .pagination, .pageNumbers {
 	float: left;
 /*	margin-left: -12%;*/
