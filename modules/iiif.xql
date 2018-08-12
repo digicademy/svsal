@@ -45,7 +45,53 @@ declare function iiif:needsResourceString($node as node(), $model as map(*)) {
     
 };
 
-declare function iiif:getIiifResource($targetWorkId as xs:string) as map(*) {
+
+(: Interface function for fetching a iiif resource, either (if possible) from the database or by creating it on-the-fly.
+This resource may be either a manifest (for a single-volume work or a single volume within a multi-volume work) 
+or a collection resource (for a multi-volume work).
+@param $wid: the ID of the work or volume which the manifest is requested for
+@return:     the iiif manifest/collection
+:)
+declare function iiif:fetchResource ($wid as xs:string) as map(*) {
+    let $workType := if (matches($wid, '^W\d{4}(_Vol\d{2})?$')) then 
+                         doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI/tei:text/@type
+                     else ()
+    let $output := 
+        (: get multi-volume collection or single-volume manifest :)
+        if ($workType = ('work_multivolume', 'work_monograph')) then
+            if (util:binary-doc-available($config:iiif-root || '/' || $wid || '.json')) then 
+                let $debug := console:log('Fetching iiif manifest for ' || $wid || ' from the DB.')
+                return json-doc($config:iiif-root || '/' || $wid || '.json')
+            else
+                let $debug := console:log('Creating iiif manifest for ' || $wid || '.')
+                return iiif:createResource($wid) 
+        (: get manifest for single volume within a multi-volume work :)
+        else if ($workType eq 'work_volume') then
+            let $collectionId := substring-before($wid, '_Vol')
+            let $volume := 
+                (: if the resource for the collection is available in the DB, get the manifest from within the collection :)
+                if (util:binary-doc-available($config:iiif-root || '/' || $collectionId || '.json')) then
+                    let $debug := console:log('Fetching iiif manifest for ' || $wid || ' from collection for ' || $collectionId || ' from the DB.')
+                    let $collection := json-doc($config:iiif-root || '/' || $collectionId || '.json')
+                    let $manifest := array:get(array:filter(map:get($collection, 'members'), function($a) {contains(map:get($a, '@id'), $wid)}), 1)
+                    return $manifest
+                    (:for $i in (1 to array:size(map:get($collection, 'members'))) return
+                                         if (array:get(map:get($collection, 'members'), $i))
+                    array:for-each(map:get($collection, 'members'), ...)
+                    :)
+                else 
+                    let $debug := console:log('Creating iiif manifest for ' || $wid || '.')
+                    return iiif:createResource($wid) (: TODO: rename this iiif:makeResource...:)
+            return $volume
+        else ()
+    return $output 
+};
+
+(: Creates a new iiif resource, either a manifest (for a single-volume work or 
+a single volume within a multi-volume work) or a collection resource (for a multi-volume work).
+@param $wid: the ID of the work or volume which the manifest is requested for
+@return:     the iiif manifest/collection :)
+declare function iiif:createResource($targetWorkId as xs:string) as map(*) {
     let $tei  := doc($config:tei-works-root || '/' || $targetWorkId || '.xml')//tei:TEI
     let $iiifResource :=
         if ($tei) then
@@ -210,8 +256,8 @@ declare function iiif:mkSequence($volumeId as xs:string, $tei as node(), $thumbn
                             1
     (: The startCanvas is identifiable by its containing (within "resource"/"@id") 
         the URL of the title page (=thumbnail). The following assumes that this URL can be found somewhere 
-        within the first 30 canvases :)
-    let $getStartCanvas := for $i in (1 to min((30, array:size($canvases))))  
+        within the first 30 canvases:)
+    let $getStartCanvas := for $i in (1 to 30)  
                             let $canvasImage := map:get($canvases($i), "images")(1)
                             let $imageResourceId := map:get(map:get($canvasImage, "resource"), "@id")
                             let $return := if ($imageResourceId eq $thumbnailUrl) 
@@ -545,9 +591,9 @@ declare function iiif:getPageId($canvasId as xs:string*) {
 
 
 (: TODO:
-    - create top collection for SvSal
+    - create top collection comprising all SvSal works?
     (- create ranges (deprecation warning...)?;)
-    - check validity and consistency of @id on every level
-    - dealing with TEI data which has been separated into Wxxx_a, Wxxx_b etc due to performance issues
+    - check validity and consistency of @id on any level
+    - dealing with TEI data which has been separated into Wxxx_a, Wxxx_b etc due to performance issues?
  :)
 
