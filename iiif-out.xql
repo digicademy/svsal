@@ -11,6 +11,7 @@ declare         namespace   tei     = "http://www.tei-c.org/ns/1.0";
 declare option output:method "json";
 declare option output:media-type "application/json";
 
+
 let $wid                :=  request:get-parameter('wid', '')
 let $canvas             :=  request:get-parameter('canvas', '')
 let $header-addition    :=  response:set-header("Access-Control-Allow-Origin", "*")
@@ -23,3 +24,4 @@ let $output             :=  if ($canvas) then
                                 return if (array:size($targetCanvases) eq 1) then array:get($targetCanvases, 1) else ()
                             else $resource
 return $output
+

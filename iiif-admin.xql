@@ -11,11 +11,14 @@ declare          namespace response = "http://exist-db.org/xquery/response";
 (:declare option output:method "json";
 declare option output:media-type "application/json";:)
 
-let $wid                := request:get-parameter('resourceId', 'W0015')
+(: only monograph manifests or multi-volume collections may be created :)
+let $wid                := if (matches(request:get-parameter('resourceId', ''), '^W\d{4}$')) then 
+                               request:get-parameter('resourceId', '')
+                           else ()
 let $header-addition   := response:set-header("Access-Control-Allow-Origin", "*")
 let $debug              := if ($config:debug = ("trace", "info")) then console:log("iiif handler running, requested work: '" || $wid || "'.") else ()
 
-let $resource := serialize(iiif:getIiifResource($wid), 
+let $resource := serialize(iiif:createResource($wid), 
         <output:serialization-parameters>
             <output:method>json</output:method>
         </output:serialization-parameters>)

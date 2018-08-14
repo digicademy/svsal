@@ -2159,6 +2159,7 @@ declare %templates:wrap
 :)
 
         let $base               := util:expand($model('currentWork'))
+        let $baseId             := $base/@xml:id
         let $status             := $base//tei:revisionDesc/@status/string()
         let $books              := $base//tei:text[@type ='work_volume' or @type ='work_monograph']
 
@@ -2187,23 +2188,11 @@ declare %templates:wrap
                                     else
                                         replace($facs,'facs_(W\d{4})-(\d{4})',          'http://wwwuser.gwdg.de/~svsal/thumbs/$1/$1-$2.jpg'):)
             let $titlepage      := ($base//tei:titlePage[1]/following::tei:pb)[1]
-            let $img            :=  if (util:binary-doc-available($config:iiif-root || '/' || $wid || '.json')) then 
-                                        let $work-json := json-doc($config:iiif-root || '/' || $wid || '.json')
-                                        let $idFieldname := '@id'
-                                        let $book-thumbnail := if ('thumbnail' = map:keys($work-json)) then
-                                                                    map:get($work-json, 'thumbnail')
-                                                               else
-                                                                    let $debug := console:log("Todo: Fix hardcoded id of manifests (facs.salamanca.school even on test server) in app:sourceBibliographicalRecord!")
-                                                                    let $member :=  $work-json?members?*[?($idFieldname) = 'https://facs.salamanca.school/iiif/presentation/' || $wid || '_' || $textId || '/manifest']
-                                                                    return map:get($member, 'thumbnail')
-                                        return map:get($book-thumbnail, "@id")
-                                    else concat($iiif:imageServer, iiif:getThumbnailId($base), "/full/full/0/default.jpg")
-(:            concat($iiif:imageServer, iiif:getThumbnailId($base), "/full/full/0/default.jpg"):)
-            (:if ($nodeIndex//sal:node[@subtype eq "work_multivolume"]) then
-                                        replace($titlepage/@facs,'facs:(W\d{4})-([A-Z])-(\d{4})',  replace($config:imageserver, 'https://', 'http://') || '/$1/$2/$1-$2-$3.jpg')
-                                    else
-                                        replace($titlepage/@facs,'facs:(W\d{4})-(\d{4})',          replace($config:imageserver, 'https://', 'http://') || '/$1/$1-$2.jpg')
-            :)
+            
+            let $bookId       := if ($item/@type eq 'work_volume' and contains($baseId, '_Vol')) then concat(substring-before($baseId, '_Vol'), '_', $textId) 
+                                 else if ($item/@type eq 'work_volume') then concat($baseId, '_', $textId)
+                                 else $baseId
+            let $img            := map:get(map:get(iiif:fetchResource($bookId), 'thumbnail'), '@id')
             let $debug := console:log("Todo: Fix image-url generating work-around in app:sourceBibliographicalRecord! image-source = '" || $img || "'.")
             (: if there are several providers of digitized material, we only state the first (i.e., main) one :)
             let $primaryEd      := if ($sourceDesc//tei:note[@xml:id="ownerOfPrimarySource"]/tei:ref[@type eq "institution" and @subtype eq "main"]) then 
