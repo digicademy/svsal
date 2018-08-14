@@ -9,6 +9,7 @@ import module namespace functx  = "http://www.functx.com";
 import module namespace config  = "http://salamanca/config" at "modules/config.xqm";
 import module namespace net     = "http://salamanca/net"    at "modules/net.xql";
 import module namespace render  = "http://salamanca/render" at "modules/render.xql";
+import module namespace iiif  = "http://salamanca/iiif" at "modules/iiif.xql";
 
 declare       namespace exist   = "http://exist.sourceforge.net/NS/exist";
 declare       namespace output  = "http://www.w3.org/2010/xslt-xquery-serialization";
@@ -312,6 +313,25 @@ return
 (: === End API functions === :)
 
 
+(: === Iiif Presentation API URI resolver === :)
+    else if (request:get-header('X-Forwarded-Host') = "facs." || $config:serverdomain) then
+        let $debug1 :=  if ($config:debug = ("trace", "info")) then console:log('Iiif presentation resource requested: ' || $net:forwardedForServername || $exist:path || $parameterString || '...') else ()
+        (: determine requested resource type and do some sanitizing :)
+        let $mode :=    if (matches($exist:path, '^/?collection/W\d{4}$')) then 'collection'
+                        else if (matches($exist:path, '^/?W\d{4}(_Vol\d{2})?/manifest$')) then 'manifest'
+                        else if (matches($exist:path, 'W\d{4}(_Vol\d{2})?/canvas/p\d{1,5}$')) then 'canvas'
+                        else ()
+        let $workId :=  if ($mode eq 'collection') then tokenize($exist:path, '/')[last()]
+                        else if ($mode eq 'manifest') then substring-after(substring-before($exist:path, '/manifest'), '/')
+                        else if ($mode eq 'canvas') then substring-after(substring-before($exist:path, '/canvas/'), '/')
+                        else ()
+        let $canvas :=  if ($mode eq 'canvas') then substring-after($exist:path, '/canvas/') else ()
+        let $resolvedURI   :=  $config:webserver || '/iiif-out.xql?wid=' || $workId || (if ($canvas) then concat('&amp;canvas=', $canvas) else ())
+        (: redirect in a way that URI (i.e., iiif @id) remains the same and only output of iiif-out.xql is shown :)
+        return net:redirect-with-303($resolvedURI)
+
+        
+        
 (: === Entity resolver (X-Forwarded-Host = 'id.{$config:serverdomain}') === :)
 (:     303-Redirects:
     If html is the preferred data type, we look up the entity at data.{$config:serverdomain}, retrieve the
