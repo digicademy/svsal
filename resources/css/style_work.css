@@ -523,10 +523,6 @@ a .edited, a .expan, a .reg, a .corr{
     color:#777777;
 }
 
-.marginal a:not(.collapsed) .original {
-    color:#DD0000;
-}
-
 a .original {
     color:#BA55D3;
 }
@@ -537,8 +533,12 @@ a .original {
     position:absolute;
 }
 
-hr.ornament {
-    width: 30%;
+span.label-inline {
+    display:block;
+    text-align:center;
+    font-weight: bold;
+    font-size:28px !important;
+    padding:0.5em;
 }
 
 .pagination, .pageNumbers {
@@ -550,6 +550,10 @@ hr.ornament {
     display: block;
 /*    font-size: large;*/
       
+}
+
+hr.ornament {
+    width: 30%;
 }
 
 .pageNo {
