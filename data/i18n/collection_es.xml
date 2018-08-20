@@ -18,9 +18,9 @@
     <msg key="news">Novedades</msg>
     <msg key="description">Sobre...</msg>
     <msg key="staff">Personas</msg>
-    <msg key="guidelines">Directrices de edición</msg>
+    <msg key="guidelines">Directrices de Edición</msg>
     <msg key="contact">Contacto</msg>
-    <msg key="about">Descripción del Proyecto</msg>
+    <msg key="about">Descripción del proyecto</msg>
     <msg key="WpIntro">La serie de Working Papers de Salamanca es una colección interdisciplinar de artículos que abordan temas filosóficos, jurídicos y teológicos relacionados con la Escuela de Salamanca. Esta colección refleja tanto la investigación hecha en el proyecto, como las contribuciones realizadas por otros investigadores. Cada propuesta pasa por un proceso de revisión anónima por pares. Si desea enviar un artículo, por favor contáctenos en</msg>
     <msg key="WpIntroTitle">Salamanca Working Papers Series (ISSN 2509-5080)</msg>
     <msg key="WpGuidelinesDelayed">Próximamente habrá más información en línea para los autores.</msg>
@@ -59,7 +59,7 @@
     
     <!-- project.html -->
     
-    <msg key="projectDesc">Descripción del Proyecto</msg>
+    <msg key="projectDesc">Descripción del proyecto</msg>
     <msg key="pojectDesc1">El significado de la Escuela de Salamanca, en la elaboración de conceptos claves en la temprana Edad Moderna para el Derecho, la Política, la Religión 
         y la Moral, ha sido reconocido por parte de la Filosofia, la Historia del pensamiento político, la Ética, así como la Historia del Derecho. Su importancia se ha manifestado 
         no sólo dentro del pensamiento de la Monarquía Española en los siglos XVI y XVII a lo largo de su inmenso territorio (desde Madrid hasta México pasando por Manila), como 
