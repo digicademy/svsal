@@ -1,6 +1,7 @@
 xquery version "3.0";
 
 module namespace admin              = "http://salamanca/admin";
+declare namespace exist             = "http://exist.sourceforge.net/NS/exist";
 declare namespace tei               = "http://www.tei-c.org/ns/1.0";
 declare namespace xi                = "http://www.w3.org/2001/XInclude";
 declare namespace sal               = "http://salamanca.adwmainz.de";
@@ -14,6 +15,7 @@ import module namespace config      = "http://salamanca/config"                 
 import module namespace render      = "http://salamanca/render"                 at "render.xql";
 import module namespace sphinx      = "http://salamanca/sphinx"                 at "sphinx.xql";
 
+declare option exist:timeout "10800000"; (: 3 h :)
 
 declare function admin:cleanCollection ($wid as xs:string, $collection as xs:string) {
     let $collectionName := if ($collection = "html") then
@@ -270,10 +272,13 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                                                         xs:integer($work-raw//processing-instruction('svsal')[matches(., 'htmlFragmentationDepth="[^"]*"')][1]/replace(substring-after(., 'htmlFragmentationDepth="'), '"', ''))
                                                                     else
                                                                         $config:fragmentationDepthDefault
+                                let $debug              := if ($config:debug = ("trace", "info")) then console:log("Rendering " || string($work-raw/@xml:id) || " at fragmentation level " || $fragmentationDepth || ".") else ()
+                                
                                 let $start-time-a := util:system-time()
 
                                 (: a rule picking those elements that should become our fragments :)
                                 let $target-set := $work//tei:text//tei:*[count(./ancestor-or-self::tei:*) eq $fragmentationDepth]
+                                let $debug              := if ($config:debug = ("trace")) then console:log("  " || string(count($target-set)) || " elements to be rendered...") else ()
 
                                 (: First, create index of nodes for generating HTML fragments :)
                                 let $index1           := <sal:index work="{string($work/@xml:id)}">{for $node at $pos in $work//tei:*[ancestor-or-self::tei:text][@xml:id]
@@ -309,6 +314,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                                                    }
                                                         </sal:index>
                                 let $index1SaveStatus := admin:saveFile($work/@xml:id, $work/@xml:id || "_nodeIndex.xml", $index1, "data")
+                                let $debug              := if ($config:debug = ("trace")) then console:log("  Preliminary index file created.") else ()
 
 
                                 (: Next, create a ToC html file. :)
@@ -334,6 +340,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                         </ul>
                                     </div>
                                 let $tocSaveStatus := admin:saveFile($doc/@xml:id, $doc/@xml:id || "_toc.html", $store, "html")
+                                let $debug              := if ($config:debug = ("trace")) then console:log("  ToC file created.") else ()
                                 
 
                                 (:Next, create the Pages html file. :)
@@ -343,6 +350,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                 let $savePages      :=  (admin:saveFile($work/@xml:id, $work/@xml:id || "_pages_de.html", $pagesDe, "html"),
                                                          admin:saveFile($work/@xml:id, $work/@xml:id || "_pages_en.html", $pagesEn, "html"),
                                                          admin:saveFile($work/@xml:id, $work/@xml:id || "_pages_es.html", $pagesEs, "html"))
+                                let $debug              := if ($config:debug = ("trace")) then console:log("  Pages files created.") else ()
 
 
                                 (: Next, get "previous" and "next" fragment ids and hand the current fragment over to the renderFragment function :)
@@ -401,6 +409,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                                                    }
                                                         </sal:index>
                                 let $index2SaveStatus := admin:saveFile($work/@xml:id, $work/@xml:id || "_nodeIndex.xml", $index2, "data")
+                                let $debug              := if ($config:debug = ("trace")) then console:log("  Revised index file created.") else ()
 
 
                             (: Done. The rest is reporting... :)
@@ -455,7 +464,7 @@ declare function admin:renderFragment ($work as node(), $wid as xs:string, $targ
                                  <param name="nextId"        value="{$nextId}" />
                                  <param name="serverDomain"  value="{$serverDomain}" />
                                </parameters>
-    let $debugOutput   := if ($config:debug = "trace") then console:log("Render Element " || $targetindex || ": " || $targetid || " of " || $wid || "...") else ()
+    let $debugOutput   := if ($config:debug = "trace") then console:log("  Render Element " || $targetindex || ": " || $targetid || " of " || $wid || "...") else ()
     let $html              := transform:transform($work, $tei2htmlXslt, $xsl-parameters)
 
     (: Now for saving the fragment ... :)
