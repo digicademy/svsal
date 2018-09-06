@@ -3523,7 +3523,7 @@
             <div type="part" xml:lang="es" xml:id="guidelines-es">
               <head xml:id="head_mojeperf4">Directrices de edición</head>
               <p xml:id="p_niewrerpq34">Para preguntas, contáctenos en <ref target="mailto:info.salamanca@adwmainz.de">info.salamanca(at)adwmainz.de</ref>.</p>
-              <p xml:id="p_ljkoijizherqw3">David Glück, Andreas Wagner, Cindy Rico Carmona, Carolina Cárdenas - Última actualización: Mayo de 2018</p>
+              <p xml:id="p_ljkoijizherqw3">David Glück, Andreas Wagner, Cindy Rico Carmona, Carolina Cárdenas - Última actualización: Septiembre de 2018</p>
                     <div type="chapter" xml:id="fundamentales">
                        <head n="1." xml:id="head_ipoiererta">Aspectos fundamentales</head>
                         <div type="section" xml:id="sintesis">
@@ -3596,7 +3596,7 @@
                               de los textos, como, por ejemplo, el manejo de caracteres especiales, abreviaciones, notas de pie de página o notas 
                               marginales, deterioros del original, citaciones, la marcación de personas y lugares, etc. Muestran, entre otras cosas, 
                               cómo se reproducen los caracteres especiales o cómo se marcan las referencias a lemas, autores y obras con el lenguaje de marcado XML.</p> 
-                           <p xml:id="p_dxdgrggrmr5n">Además de los ejemplos a continuación, pueden extraer se automáticamente de nuestros textos algunos usos de todos 
+                           <p xml:id="p_dxdgrggrmr5n">Además de los ejemplos a continuación, se pueden extraer automáticamente de nuestros textos algunos usos de todos 
                               los elementos y atributos en nuestra página <ref type="url" target="https://api.salamanca.school/codesharing/codesharing.html">Codesharing</ref>. 
                               Para ello, hemos instalado el 
                               servicio de código compartido muy cómodo desarrollado 
@@ -3606,7 +3606,7 @@
                        <div xml:id="docutecnica" type="section">
                           <head xml:id="head_8743errrv" n="1.4.">Documentación técnica y descargas</head>
                           <p xml:id="p_5sdferjggdf9">La definición y documentación 
-                             del esquema de TEI utilizado están disponibles aquí:
+                             del esquema de TEI utilizados están disponibles aquí:
                                 <list>
                                     <item xml:id="item_poi09ffr98">
                                        <ref target="http://files.salamanca.school/SvSal_txt.xml">.odd</ref> (All-In-One descripción xml)
@@ -3686,7 +3686,7 @@
                                 <item xml:id="item_saftzerwq4">
                                    <att>z_final</att> El texto fue "congelado" al final 
                                    de las fases de edición en una versión no modificable con 
-                                   el fin de archivar a largo plazo/presentar los resultados del proyecto.
+                                   el fin de archivar a largo plazo y/o presentar los resultados del proyecto.
                                 </item>
                             </list>
                         </div>
@@ -3803,7 +3803,7 @@
                                   <q>gaiji</q> de TEI</ref> (parcialmente se declaran en la página de códigos <q>Latin-1</q> todavía disponible, 
                                   pero también para caracteres normalizados, como <q>ã</q>). En <gi>teiHeader</gi> 
                                   (en la <gi>charDecl</gi>) también se indica, 
-                                  por cual carácter especial respectivo puede ser reemplazada en una variante normalizada. 
+                                  por cual carácter especial respectivo puede ser reemplazado en una variante normalizada. 
                                   En la visualización de la vista de lectura el remplazo correspondiente se toma generalmente 
                                   del teiHeader, pero también – en caso de que esté disponible – puede ser generado a partir 
                                   del contenido de la etiqueta <gi>g</gi> en la posición actual. La declaración de los caracteres especiales 
@@ -3822,7 +3822,7 @@
                                   sin dar allí información de la etiqueta <gi>g</gi>. Alternativamente se puede obtener el carácter de 
                                   abreviatura del contenido del elemento <gi>g</gi>.
                                   Véase especialmente la sección de <ref target="#abreviaturas">Abreviaturas</ref>.</p>
-                                <p xml:id="p_sfe52eoerkp89">Examples of non-standard character declarations: 
+                                <p xml:id="p_sfe52eoerkp89">Ejemplos de declaraciones de caracteres no estándar:  
                                     <egXML xmlns="http://www.tei-c.org/ns/Examples">
                                     <![CDATA[
                                     <teiHeader> 
@@ -3925,12 +3925,11 @@
                                       <ref target="https://files.salamanca.school/Sonderzeichen.xml">Sondernzeichen.xml</ref> 
                                       (cuya <gi>encodingDesc</gi> forma parte de los <gi>teiHeader</gi>s de un registro TEI de un(a) volumen/obra).
                                     </p>
-                                   <p xml:id="p_fewvwefrr5c">Para la codificación de caracteres especiales, abreviaturas 
-                                      y ligaduras comparar también <ref target="#normimplicitas">arriba</ref>, así como para la práctica (también "histórica") 
-                                      del registro de caracteres especiales en el proyecto, 
-                                      las instrucciones de registro 
-                                      <ref target="http://facs.salamanca.school/docs/transcription/guidelines/general/">generales</ref> y 
-                                      <ref target="http://facs.salamanca.school/docs/transcription/guidelines/specific/">relacionadas con las obras</ref> (alemán).</p>
+                                   <p xml:id="p_fewvwefrr5c">Con respecto a la codificación de caracteres especiales, abreviaturas 
+                                      y ligaduras no estándar, consulte también <ref target="#normimplicitas">arriba</ref>, así como para las prácticas ("históricas") 
+                                      de codificaciones de texto dentro del alcance de este proyecto durante la fase de transcripción, consulte también las
+                                      <ref target="http://facs.salamanca.school/docs/transcription/guidelines/general/">pautas de transcripción generales</ref> y 
+                                      <ref target="http://facs.salamanca.school/docs/transcription/guidelines/specific/">pautas de transcripción específicas</ref> (disponible solo en alemán).</p>
                                 </div>
                             </div>
                         
@@ -3939,9 +3938,9 @@
                             <div xml:id="paginacion" type="section">
                                 <head n="3.2.3.1." xml:id="head_aslas45jaf">Paginación</head>
                                 <p xml:id="p_poerdgrefkj">
-                                   Los números de página y de folio fueron registrados con el atributo <att>n</att> del 
+                                   Los números de página y de folio se registran con el atributo <att>n</att> del 
                                    elemento <gi>pb</gi> (véase <ref target="#saltos">Saltos de Página, Columna y de Línea</ref>). 
-                                   Básicamente, se tomaron los números de la página respectiva del texto original.
+                                   Básicamente, se toman los números de página respectiva del texto original.
                                    Si no hay números de página/folio disponibles, o si son incorrectos, el recuento se ha normalizado; 
                                    es decir, se agregaron los números de página/folio, con la normalización 
                                    marcada por medio de corchetes "<q>[...]</q>" en el valor del atributo <att>n</att>:</p>
@@ -3951,9 +3950,9 @@
                                         ]]>
                                     </egXML>
                                <p xml:id="p_dasjsrehdf">Si hay paginación de folio en que el original esta numerado solo en 
-                                  la página frontal de una hoja (“Recto”), se marcó el número de folio de la pagina frontal
-                                  con el sufijo “r”. En la pagina posterior se
-                                  tomó el numero de la pagina frontal y se marcó con el sufijo “v” (de “Verso”).</p>
+                                  la página frontal de una hoja (“Recto”), se marca el número de folio de la página frontal
+                                  con el sufijo “r”. En la página posterior se
+                                  toma el numero de la página frontal y se marca con el sufijo “v” (de “Verso”).</p>
                                 <egXML xmlns="http://www.tei-c.org/ns/Examples">
                                     <![CDATA[    
                                 <pb n="26r" facs="..." xml:id="..."/>
@@ -3966,27 +3965,26 @@
                                <p xml:id="p_kjhdedsdf">Con secciones antes de la parte principal 
                                   del texto (Véase también <ref target="#estructurageneral">Estructura general de obra/volumen</ref>) que 
                                   no tienen numeración, se agrega regularmente la paginación de 
-                                  manera ascendente (independientemente del tipo de numeración de 
-                                  la parte principal) mediante números romanos; con partes no numeradas 
-                                  <hi rendition="#it">después</hi> de la parte principal, el (tipo de) numeración de la parte 
-                                  principal se lleva a 
+                                  manera ascendente mediante números romanos (independientemente del tipo de numeración de 
+                                  la parte principal); con partes no numeradas 
+                                  <hi rendition="#it">después</hi> de la parte principal, se lleva a 
                                   cabo de la manera explicada anteriormente (p. ej., marcada entre corchetes).</p>
                             </div>
                             <div xml:id="numeroscolumnas" type="section">
                                <head xml:id="head_fk67tr879" n="3.2.3.2">Números de Columnas</head>
                                <p xml:id="p_fdf7rt0f">En caso de que los números de columna – análogos a los <ref target="#paginacion">números de página</ref> – estén 
                                   presentes en el original, se especifican en el atributo <att>n</att> de <gi>cb</gi> en la forma 
-                                  dada o corregida según el caso. Es decir, se especifica en "[]" los números 
-                                  corregidos o agregados en caso de conteo erróneo o incompleto de columnas 
-                                  faltantes en el original. Sin embargo, si no hay conteo de columnas en la 
-                                  plantilla original, no se agrega ninguno en el TEI-XML.</p>
+                                  dada o corregida según el caso. Es decir, en caso de conteo erróneo o incompleto de columnas 
+                                  faltantes en el original se especifican los números 
+                                  corregidos o agregados dentro de "[]". Sin embargo, si no hay conteo de columnas en la 
+                                  obra original, no se agrega ninguno en el TEI-XML.</p>
                             </div>
                             <div type="section" xml:id="numerosmarginales">
                                <head n="3.2.3.3." xml:id="head_43freljasf">Números de marginales</head>
                                <p xml:id="p_iubnbeeedsfk">Las transiciones de unidades de sentido argumentativas marcadas con dígitos
                                   marginales, símbolos <q>*</q>, símbolos <q>†</q>, o similares, fueron documentadas a través de etiquetas <gi>milestone</gi> 
-                                  (véase Párrafos Tipográficos y Argumentativos). Los dígitos marginales que marcan tales transiciones 
-                                  (posiblemente junto con caracteres anclados en texto) se registraron en el atributo <att>n</att> 
+                                  (véase <ref target="#parrafos">Párrafos Tipográficos y Argumentativos</ref>). Los dígitos marginales que marcan tales transiciones 
+                                  (posiblemente junto con caracteres anclados en texto) se registran en el atributo <att>n</att> 
                                   de la etiqueta milestone correspondiente, con dígitos marginales 
                                   claramente ausentes o incorrectos que fueron añadidos en forma normalizada.</p>
                                 <egXML xmlns="http://www.tei-c.org/ns/Examples">
@@ -3999,7 +3997,7 @@
                         <div xml:id="abreviaturaserrores" type="section">
                            <head xml:id="head_fsl5670re89" n="3.2.4.">Abreviaturas y errores de impresión</head>
                            <p xml:id="p_fds1245re03n">Las abreviaturas y los errores de impresión se resuelven utilizando el elemento 
-                              <gi>choice</gi> y, por lo tanto, se documentan en el TEI-XML (aunque están ocultos, por ejemplo, en la vista
+                              <gi>choice</gi> y, por lo tanto, se documentan en el TEI-XML (aunque estén ocultos, por ejemplo, en la vista
                               de lectura constituida). Estas normalizaciones/correcciones están siempre basadas en tokens. Es
                               decir, están hechas a nivel de palabras y no de letras. Dentro de todos los elementos <gi>choice</gi>,
                               los elementos que afectan la resolución de expansión/abreviación (<gi>expan</gi>), así como la
@@ -4060,8 +4058,8 @@
                         <div type="section" xml:id="saltos">
                            <head n="3.3." xml:id="head_uoipst4v4w">Saltos de Página, Columna y Línea</head>
                            <p xml:id="p_sdrpufzfw45">Los saltos de página, columna y línea se marcan <hi rendition="#it">al 
-                              comienzo</hi> de una página, columna o línea con el elemento vacío <gi>pb</gi>, <gi>cb</gi>, y 
-                              <gi>lb</gi>, con lo que se indica el comienzo de página de la <ref target="#paginacion">paginación</ref> original
+                              comienzo</hi> de una página, columna o línea con un elemento vacío <gi>pb</gi>, <gi>cb</gi>, y 
+                              <gi>lb</gi> respectivamente, con lo que se indica el comienzo de página de la <ref target="#paginacion">paginación</ref> original
                               o, si existe, la numeración de columna  
                               en el atributo <att>n</att> de <gi>pb</gi>/<gi>cb</gi>. Si la división en columnas cambia en el transcurso de 
                               una página, el inicio del diseño de varias columnas se marca adicionalmente 
@@ -4069,22 +4067,22 @@
                               (Esto ya implicará el comienzo de la nueva (primera) 
                               columna o el texto que ya no está en columnas).</p>
                            <p xml:id="p_urmerdrd"><gi>pb</gi>, <gi>cb</gi> y <gi>lb</gi> reciben <att>xml:id</att> (véase 
-                              <ref target="es-xmlid">xml:id</ref>). 
-                              En <gi>lb</gi> los últimos 4 caracteres del <att>xml:id</att> tienen – a diferencia de los 
-                              valores de <att>xml:id</att> de otros elementos – el significado en el sentido de 
+                              <ref target="#es-xmlid">xml:id</ref>). 
+                              En <gi>lb</gi> los últimos 4 caracteres del <att>xml:id</att> significan – a diferencia de los 
+                              valores de <att>xml:id</att> de otros elementos – la 
                               numeración de líneas. El primero de estos cuatro caracteres señala el 
-                              lugar de la línea actual (<gi>lb</gi>) en el diseño de página (0= área principal 
-                              del texto, Formato sin columnas; 1=área principal, 
-                              primera columna; 2=área principal, segunda columna; y así 
-                              sucesivamente; m=área marginal), las siguientes tres cifras dan 
+                              lugar de la línea actual (<gi>lb</gi>) en el diseño de página (0 = área principal 
+                              del texto, Formato sin columnas; 1 = área principal, 
+                              primera columna; 2 = área principal, segunda columna; y así 
+                              sucesivamente; m = área marginal), las siguientes tres cifras dan 
                               la numeración de las líneas, de acuerdo a todas las líneas 
                               anteriores en la misma área de diseño. Esta numeración documenta 
                               la posición de una línea, con fines internos del proyecto y dado 
                               el caso con objetivos de lingüística de corpus, sin embargo, ésta 
                               no es relevante para la visualización del texto en la visión de lectura de la 
                               edición (donde no se indican los números de línea).</p>
-                           <p xml:id="p_zrtsrrtkjh">En el contexto de esta edición el posicionamiento 
-                              (en la comunidad TEI disputado) de dichos elementos de saltos aplica 
+                           <p xml:id="p_zrtsrrtkjh">Para el posicionamiento de dichos elementos de saltos
+                              (disputado en la comunidad TEI) aplica en el contexto de esta edición 
                               la regla: Si el inicio de una página, columna o línea coincide con el 
                               comienzo de un elemento de texto "conceptual" correspondientemente 
                               etiquetado (por ej. <gi>head</gi>, <gi>p</gi>, <gi>div</gi>, <gi>note</gi>, 
@@ -4173,13 +4171,13 @@
                               or <val>low</val>) en el atributo <att>cert</att>.
                             </p>
                            <p xml:id="p_sd4257er25f">Si el texto ya no es reconocible, pero el editor 
-                              tiene una página de repuesto de la misma edición, esto no se marcará como 
-                              <q type="important"/> (importante) en la posición local del texto 
-                              (es decir dentro del texto TEI), sino que se registra en el texto regular.  
-                              En su lugar, si se usaron páginas de otra plantilla se coloca una 
+                              tiene una página de repuesto de la misma edición, esto se registra 
+                              en la posición local del texto (es decir dentro del texto TEI). <q type="important"/>   
+                              el texto no se registra por separado, sino en el texto regular.  
+                              En su lugar, si se usaron páginas de otra obra original se coloca una 
                               nota en el <gi>teiHeader</gi> (Véase <ref target="#descripcionbibl">Descripción Bibliográfica</ref>).
                             </p>
-                           <p xml:id="p_o9err45r24">Si el texto no es reconocible, pero si el editor tiene 
+                           <p xml:id="p_o9err45r24">Si el texto no es reconocible, pero el editor tiene 
                               una página de repuesto legible de una edición 
                               diferente, se anota la fuente utilizada en el atributo <att>source</att> del elemento <gi>supplied</gi> 
                               (que se usa para registrar el texto complementado):
@@ -4194,9 +4192,10 @@
                                             </supplied>
                                         </unclear>
                               ]]></egXML>
-                           <p xml:id="p_ewrf34er3ers56">En este caso, o si el editor tiene una idea de cómo se puede completar 
-                              este vacío, esto se marcará con el elemento <gi>supplied</gi>. 
-                              Los atributos <att>reason</att>, <att>resp</att> y <att>cert</att> se utilizarán de la 
+                           <p xml:id="p_ewrf34er3ers56">En este caso (se tiene una página de repuesto legible de una edición diferente), 
+                              o si el editor tiene una idea de cómo se puede completar 
+                              este vacío, esto se marca con el elemento <gi>supplied</gi>. 
+                              Los atributos <att>reason</att>, <att>resp</att> y <att>cert</att> se utilizan de la 
                               manera como ya fueron descritos.</p>
                             <egXML xmlns="http://www.tei-c.org/ns/Examples">
                                 <![CDATA[
@@ -4403,9 +4402,9 @@
                                 <p xml:id="p_oer8ujqer34">Los números marginales, símbolos como *, † o similares que 
                                     marquen las unidades <hi rendition="#it">argumentativas</hi> de sentido, se documentan con etiquetas <gi>milestone</gi>. 
                                     Esto aplica tanto en el caso donde tales transiciones marcadas ocurren en el 
-                                    flujo de texto de manera "discreta", como cuando coinciden con un párrafo 
+                                    texto continuo de manera "discreta", así como cuando coinciden con un párrafo 
                                     tipográfico <gi>p</gi> (en este caso, la etiqueta <gi>milestone</gi> correspondiente se 
-                                    considera aun uno de los primeros elementos secundarios ("child") de <gi>p</gi> 
+                                    considera como uno de los primeros elementos secundarios ("child") de <gi>p</gi> 
                                     antes de establecer el primer nodo de texto). Los símbolos no se conservan, sino que se 
                                     depositan en el atributo <att>rendition</att> de la etiqueta de <gi>milestone</gi>.</p>
                                 <egXML xmlns="http://www.tei-c.org/ns/Examples">
@@ -4421,12 +4420,12 @@
                                     término dentro del diccionario). Las listas están posiblemente encabezadas 
                                     por títulos (<gi>head</gi>) y anotadas con atributos <att>type</att> con un valor 
                                     como <val>contents</val>, <val>index</val>, o <val>dict</val>. El registro de entradas (términos) individuales 
-                                    se hace en el nivel más bajo de <gi>list</gi>/<gi>item</gi>. 
+                                    se hace en el último nivel de <gi>list</gi>/<gi>item</gi>. 
                                     En el caso de que una lista contenga estructuras superiores 
                                     (p. ej., la agrupación de entradas en índices con respecto a sus caracteres iniciales), 
                                     la agrupación de <gi>item</gi>s se anotan como (sub)lists 
                                     que contienen <gi>item</gi>s de bajo nivel (y posiblemente sus propios subencabezamientos) y 
-                                    forman parte de una <gi>list</gi> general más amplia; en este sentido, las <gi>list</gi>as pueden estar anidadas.
+                                    forman parte de una <gi>list</gi> general más amplia; en este sentido, las <gi>list</gi>as pueden estar jerarquizadas.
                                 </p>
                             </div>
                             <div xml:id="textoverso" type="section">
@@ -4465,7 +4464,7 @@
                                     se registran en el elemento <gi>note</gi>, cuyo atributo <att>place</att> indica 
                                     si se trata de una nota marginal (<val>margin</val>), de pie (<val>bottom</val>) u otra. Diferentes 
                                     casos son posibles: la nota puede ser identificada en el 
-                                    original por un caracter (p. ej. una letra en superíndice 
+                                    original por un carácter (p. ej. una letra en superíndice 
                                     o un asterisco); esto puede estar en la posición exacta 
                                     donde la nota está anclada, 
                                     al comienzo de la nota misma o en ambas posiciones.</p>
@@ -4571,7 +4570,7 @@
                                     uniforme, siempre tienen 
                                     21 dígitos y se componen de las siguientes partes:</p>
                                 <p xml:id="p_fkerjs8sd">
-                                    <code>xml:id="[ID-Obra]-[Numero de volumen]-[Número de facsímil]-[Abreviatura de elemento]-[Código alphanumérico]"</code></p>
+                                    <code>xml:id="[ID-Obra]-[Número de volumen]-[Número de facsímil]-[Abreviatura de elemento]-[Código alfanumérico]"</code></p>
                                     <p xml:id="p_kj39sersfj">Donde:</p>
                                     <list>
                                         <item xml:id="item_fds89ers7fd"><q>ID-Obra</q>: ID de la obra de cinco dígitos de la obra 
@@ -4589,7 +4588,7 @@
                                             asignado internamente para el tipo de elemento actual, p. ej. "pa" 
                                             para elementos <gi>p</gi>. Para obtener una lista exhaustiva de todas las posibles abreviaturas de 
                                             elementos, consulte más adelante en esta sección.</item>
-                                        <item xml:id="item_fdsid9er7fd"><q>Código alphanumérico</q>: un valor alfanumérico de 
+                                        <item xml:id="item_fdsid9er7fd"><q>Código alfanumérico</q>: un valor alfanumérico de 
                                             cuatro dígitos que es esencialmente único del <att>xml:id</att> y 
                                             significativo sólo en el caso de los elementos <gi>lb</gi> 
                                             (en el sentido de un recuento de líneas, 
@@ -4684,8 +4683,8 @@
                                 diferentes conjuntos de datos internos: obras, artículos de diccionarios y autores. 
                                 Además, hay referencias a datos externos de archivos de autoridad, que conducen 
                                 fuera de la aplicación web. Para este último propósito, están referenciados el 
-                                <ref target="https://thesaurus.cerl.org/">CERL-Thesaurus (Consortium of European Research Libraries)</ref>,
-                                <ref target="http://www.dnb.de/gnd">Gemeinsame Normdatei der Deutschen Nationalbibliothek (GND)</ref>, 
+                                <ref target="https://thesaurus.cerl.org/">CERL-Thesaurus (Consortium of European Research Libraries)</ref>, 
+                                el <ref target="http://www.dnb.de/gnd">Gemeinsame Normdatei der Deutschen Nationalbibliothek (GND)</ref>, 
                                 y, con nombres de lugares, el 
                                 <ref target="http://www.getty.edu/research/tools/vocabularies/tgn/index.html">Getty Thesaurus of Geographic Names ® Online</ref>. Todas estas 
                                 referencias (internas y externas) utilizan el atributo <att>xml:id</att> 
@@ -4699,7 +4698,7 @@
                                         <att>ref</att>
                                     </head>
                                         <p xml:id="p_vfm3osmpier5">Los atributos <att>ref</att> están hechos para unir entidades que 
-                                            ocurren en el texto con su archivo. Esto concierne, p. ej., el nombramiento 
+                                            ocurren en el texto con su archivo específico. Esto concierne, p. ej., el nombramiento 
                                             de personas con el registro de autor correspondiente, lugares con su entrada en 
                                             una base de datos de autoridad pública, etc. El atributo recibe un prefijo separado 
                                             por dos puntos, que indica dónde se encuentra el recurso correspondiente: 
@@ -4762,11 +4761,11 @@
                                         <att>key</att>
                                     </head>
                                     <p xml:id="p_ernesapm4s4">
-                                        Atributos <att>key</att> se usan para registrar variantes normalizadas de las entidades anotadas 
+                                        Los atributos <att>key</att> se usan para registrar variantes normalizadas de las entidades anotadas 
                                         por medio de los respectivos elementos. En tal caso de no sea posible ir de la 
                                         variante normalizada al archivo de autoridad, la aplicación web hace uso del 
                                         valor de este atributo. Los siguientes elementos pueden 
-                                        poseer un atributo <att>key</att> que pueda ser usado de esta manera:<list>
+                                        poseer un atributo <att>key</att> que puede ser usado de esta manera:<list>
                                             <item xml:id="item_nperse4npo">
                                                 <gi>persName</gi>
                                             </item>
@@ -4818,7 +4817,7 @@
                                         <att>sortKey</att>
                                     </head>
                                     <p xml:id="p_fceosierpospz">El atributo <att>sortKey</att> se usa exclusivamente con los elementos 
-                                        <gi>bibl</gi> (es decir, para <ref target="#es-bibl">referencias bibliográficas</ref> o 
+                                        <gi>bibl</gi> (es decir, para <ref target="#es-bibl">referencias bibliográficas</ref> u 
                                         <ref target="#obras">obras internas</ref>). 
                                         Sirve para agrupar referencias a una obra específica. Por lo 
                                         tanto, el valor que debe ingresarse en <att>sortKey</att> está compuesto por el 
@@ -4846,7 +4845,7 @@
                                         <att>n</att>
                                     </head>
                                     <p xml:id="p_sc34cmperes">En el caso de elementos que sirvan para enumerar o identificar, 
-                                        el atributo <gi>n</gi> especifíca que cifra o nombre debe llevar la 
+                                        el atributo <gi>n</gi> especifica que cifra o nombre debe llevar la 
                                         sección a la que el elemento hace referencia. Esta función no tiene 
                                         nada que ver con las referencias o los enlaces que se trataron aquí, y 
                                         se nombra solo para evitar confusiones. Con este atributo se pueden completar 
@@ -4865,13 +4864,13 @@
                             </div>
                             <div type="section" xml:id="referenciasinternas">
                                 <head n="4.3.2." xml:id="head_erjseer3swq4">Referencias internas</head>
-                                <p xml:id="p_mjseehpvw3h94">Las referencias internas hacen referencia en este caso a los 
+                                <p xml:id="p_mjseehpvw3h94">Las referencias internas en este caso hacen referencia a los 
                                     enlaces entre bases de datos dentro de la edición digital 
                                     (véase también <ref target="#variantesref">Variantes del atributo ref</ref>) y 
                                     pueden usarse en diferentes casos, por ejemplo:</p>
                                 <list>
                                     <item xml:id="item_kocsjrerspwq">
-                                        Referencia en un obra a un pasaje de otra obra, a autores de obras que se encuentran dentro 
+                                        Referencia en una obra a un pasaje de otra obra, a autores de obras que se encuentran dentro 
                                         de la recopilación de fuentes o a lemas que aparecen dentro del diccionario.
                                     </item>
                                     <item xml:id="item_mesedpherg34">
@@ -4913,8 +4912,8 @@
                                         ]]></egXML>
                                     <p xml:id="p_7fdsesrzu">La anotación de „autores“ se diferencia de la anotación 
                                         de nombres de personas „externas“ en que para los autores debe especificarse 
-                                        la clave de autor, por ejemplo, (<code>ref="author:A0001"</code>). 
-                                        Véase la párrafo <ref target="#personas">Personas</ref> en la sección 
+                                        la clave del autor, por ejemplo, (<code>ref="author:A0001"</code>). 
+                                        Véase el párrafo <ref target="#personas">Personas</ref> en la sección 
                                         “normas de datos externos” para más información sobre personas externas.</p>
                                 </div>
                                 <div type="section" xml:id="obras">
@@ -4923,7 +4922,7 @@
                                         proyecto. Las citas y referencias bibliográficas de este tipo de obras 
                                         que aparecen en el texto se marcan con el elemento <gi>bibl</gi>. En su atributo 
                                         <att>sortKey</att>, se ingresa una abreviatura que consiste en el nombre del autor, 
-                                        el delimitador "_" y el título corto que identifica la obra citado. 
+                                        el delimitador "_" y el título corto que identifica la obra citada. 
                                         El elemento <gi>bibl</gi> generalmente contiene otros subelementos como <gi>author</gi> (incluido <gi>persName</gi>, 
                                         para el cual se aplica la sección de <ref target="#autores">Autores</ref>) y <gi>title</gi>.</p>
                                     <egXML xmlns="http://www.tei-c.org/ns/Examples">
