@@ -220,15 +220,6 @@
                     <mapping type="precomposed">ʒ</mapping>
                     <mapping type="standardized">z</mapping>
                 </char>
-                <char xml:id="char2020">
-                    <desc>DAGGER</desc>
-                    <charProp>
-                        <unicodeName>entity</unicodeName>
-                        <value>dagger</value>
-                    </charProp>
-                    <mapping type="precomposed">†</mapping>
-                    <mapping type="standardized">+</mapping>
-                </char>
                 <char xml:id="char204a">
                     <desc>LATIN ABBREVIATION SIGN SMALL ET</desc>
                     <charProp>
@@ -659,8 +650,39 @@
                     <mapping type="composed">ȳ</mapping>
                     <mapping type="standardized">y</mapping>
                 </char>
-
-<!-- Combining characters where even the base letter is a four-letter codepoint -->
+                
+                
+                <!-- Horizontal bars and lines, cross-like symbols -->
+                <char xml:id="char2013">
+                    <desc>EN DASH</desc>
+                    <mapping type="MUFI" subtype="GenPunct">U+2013</mapping>
+                    <mapping type="precomposed">–</mapping>
+                    <mapping type="standardized">–</mapping>
+                </char>
+                <char xml:id="char2014">
+                    <desc>EM DASH</desc>
+                    <mapping type="MUFI" subtype="GenPunct">U+2014</mapping>
+                    <mapping type="precomposed">—</mapping>
+                    <mapping type="standardized">—</mapping>
+                </char>
+                <char xml:id="char2020">
+                    <desc>DAGGER</desc>
+                    <charProp>
+                        <unicodeName>entity</unicodeName>
+                        <value>dagger</value>
+                    </charProp>
+                    <mapping type="precomposed">†</mapping>
+                    <mapping type="standardized">+</mapping>
+                </char>
+                <char xml:id="char271d">
+                    <desc>LATIN CROSS</desc>
+                    <mapping type="MUFI" subtype="Dingbats">U+271D</mapping>
+                    <mapping type="precomposed">✝</mapping>
+                    <mapping type="standardized">+</mapping>
+                </char>
+                
+                
+                <!-- Combining characters where even the base letter is a four-letter codepoint -->
                 <char xml:id="char01310323">
                     <desc>LATIN TURNED SMALL LETTER I</desc>
                     <mapping type="precomposed">ı̣</mapping>
@@ -687,7 +709,7 @@
                     <mapping type="standardized">q</mapping>
                 </char>
 
-<!-- Other characters, not present in unicode nor MUFI -->
+                <!-- Other characters, not present in unicode nor MUFI -->
                 <char xml:id="char-turnedfl">
                     <desc>LATIN TURNED SMALL LIGATURE FL</desc>
                     <mapping type="standardized">fl.</mapping>
@@ -696,6 +718,7 @@
         </encodingDesc>
         <revisionDesc status="a_raw">
             <listChange>
+                <change who="#DG" when="2018-09-05" status="a_raw" xml:lang="en">Add section for crosses, horizontal bars (en dash and em dash) etc.</change>
                 <change who="#DG" when="2018-07-06" status="a_raw" xml:lang="en">Add small letter e with macron.</change>
                 <change who="#DG" when="2018-06-21" status="a_raw" xml:lang="en">Add small letters with macron, and further special characters.</change>
                 <change who="#DG" when="2018-05-08" status="a_raw" xml:lang="en">Localize metadata.</change>

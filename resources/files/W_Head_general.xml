@@ -60,7 +60,7 @@
                         <p xml:id="p_wc2c454" xml:lang="de">Dieses Werk bzw. dieser Inhalt wurde digitalisiert durch die <ref target="http://www.adwmainz.de">Akademie der
                             Wissenschaften und der Literatur, Mainz</ref> und steht unter einer <ref target="https://creativecommons.org/licenses/by/4.0/deed.de">Creative
                               Commons Lizenz: Namensnennung 4.0 International (CC BY 4.0)</ref>.</p>
-                        <p xml:id="p_ffjaäöskfd" xml:lang="en">This work or content, respectively, was digitized by the 
+                        <p xml:id="p_ffjaztskfd" xml:lang="en">This work or content, respectively, was digitized by the 
                             <ref target="http://www.adwmainz.de">Akademie der  Wissenschaften und der Literatur, Mainz</ref>,
                         and is licensed under the terms of a 
                             <ref target="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International (CC BY 4.0)</ref>.</p>
@@ -75,9 +75,9 @@
             
             <!-- embedded in each work's dataset: -->
             <seriesStmt xml:id="seriesStmt">
-                <title xml:lang="de">Die Schule von Salamanca. Eine Digitale Quellensammlung</title>
-                <title xml:lang="en">The School of Salamanca. A Digital Collection of Sources</title>
-                <title xml:lang="es">La Escuela de Salamanca. Una Colección Digital de Fuentes</title>
+                <title level="s" xml:lang="de">Die Schule von Salamanca. Eine Digitale Quellensammlung</title>
+                <title level="s" xml:lang="en">The School of Salamanca. A Digital Collection of Sources</title>
+                <title level="s" xml:lang="es">La Escuela de Salamanca. Una Colección Digital de Fuentes</title>
                 <editor xml:id="TD">
                      <persName ref="gnd:1028938721" full="yes">
                          <surname full="yes">Duve</surname>, <forename full="yes">Thomas</forename>
@@ -88,6 +88,7 @@
                          <surname full="yes">Lutz-Bachmann</surname>, <forename full="yes">Matthias</forename>
                      </persName>
                  </editor>
+            <!-- the volume number (within the series) of a specific work must be stated here, within biblScope -->
             </seriesStmt>
             
             <sourceDesc>
@@ -176,20 +177,22 @@
             <!-- Description of typographic styles referenced in the document -->
             <styleDefDecl scheme="css"/>
             <tagsDecl> <!-- from TEI P5 2.8.0 on: @partial="true" -->
-                <rendition xml:id="hyphenBefore">content:'-';</rendition>
-                <rendition xml:id="noHyphen">content:'';</rendition>
-                <rendition xml:id="asterisk">content:'*';</rendition>
-                <rendition xml:id="dagger">content:'†';</rendition>
-                <rendition xml:id="initCaps" scope="first-letter">font-size: xx-large; font-style: initial;</rendition>
-                <rendition xml:id="it">font-style: italic;</rendition>
-                <rendition xml:id="recte">font-style: normal;</rendition>
-                <rendition xml:id="b">font-weight: bold;</rendition>
-                <rendition xml:id="sc">font-variant: small-caps;</rendition>
-                <rendition xml:id="sup">vertical-align: sup; font-size: .83em;</rendition>
-                <rendition xml:id="sub">vertical-align: sub; font-size: .83em;</rendition>
-                <rendition xml:id="spc">letter-spacing: 3px;</rendition>
-                <rendition xml:id="r-center">text-align: center;</rendition>
-                <rendition xml:id="right">text-align: right;</rendition>
+                <rendition scheme="css" xml:id="hyphenBefore">content:'-';</rendition>
+                <rendition scheme="css" xml:id="noHyphen">content:'';</rendition>
+                <rendition scheme="css" xml:id="asterisk">content:'*';</rendition>
+                <rendition scheme="css" xml:id="dagger">content:'†';</rendition>
+                <rendition scheme="css" xml:id="initCaps" scope="first-letter">font-size: xx-large; font-style: initial;</rendition>
+                <rendition scheme="css" xml:id="it">font-style: italic;</rendition>
+                <rendition scheme="css" xml:id="recte">font-style: normal;</rendition>
+                <rendition scheme="css" xml:id="b">font-weight: bold;</rendition>
+                <rendition scheme="css" xml:id="sc">font-variant: small-caps;</rendition>
+                <rendition scheme="css" xml:id="sup">vertical-align: sup; font-size: .83em;</rendition>
+                <rendition scheme="css" xml:id="sub">vertical-align: sub; font-size: .83em;</rendition>
+                <rendition scheme="css" xml:id="spc">letter-spacing: 3px;</rendition>
+                <rendition scheme="css" xml:id="r-center">text-align: center;</rendition>
+                <rendition scheme="css" xml:id="right">text-align: right;</rendition>
+                <rendition scheme="css" xml:id="inline-space">content: '        ';</rendition>
+                <rendition scheme="css" xml:id="h-line">content: " ";display:block;border-bottom: 1px solid #rrggbb;</rendition>
                 <namespace name="http://www.tei-c.org/ns/1.0">
                     <tagUsage gi="lb" rendition="#noHyphen"/>
                     <tagUsage gi="milestone" rendition="#asterisk"/>
@@ -531,7 +534,7 @@
                                         typographisches Phänomen darstellen. Die systematische Grenzziehung ist nicht einfach und umstritten, bei uns betrifft sie
                                         jedenfalls nur die genannten drei Digraphen. Beide Phänomene unterliegen ggf. außerdem einer Normalisierung oder Expansion (s.u.).
                                     </item>
-                                    <item xml:id="item_mnbmböl">Das Schaft- oder lange s (<q>ſ</q>) wurde bislang stillschweigend aufgelöst, also durch <q>s</q> ersetzt.
+                                    <item xml:id="item_mnbmb6l">Das Schaft- oder lange s (<q>ſ</q>) wurde bislang stillschweigend aufgelöst, also durch <q>s</q> ersetzt.
                                         <!--Das Schaft- oder lange s (<q>ſ</q>) wird auf zwei, von Text zu Text unterschiedliche, Arten aufgelöst; 
                                         der Grund hierfür liegt in unterschiedlichen 
                                         unterschiedlichen Transkriptionsvorgaben bei den bislang im Double-Keying transkribierten Texten. In den verfügbaren Werken der Werkgruppe A wurde 
