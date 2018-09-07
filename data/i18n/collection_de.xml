@@ -4,6 +4,7 @@
   <!-- Navigation -->
   <msg key="projectName">Die Schule von Salamanca</msg>
   <msg key="guidelines">Editionsrichtlinien</msg>
+  <msg key="works">Werke</msg>
   
   <!-- index.html -->
   <msg key="introWorks">Digitale Quellensammlung mit 116 Werken, aufbereitet gemäß unserer</msg>
@@ -102,5 +103,9 @@
   <msg key="legalTitle">Datenschutzerklärung &amp; Impressum</msg>
   <msg key="privacyDisclaimer">Für Informationen zum Datenschutz auf dieser Webseite siehe die </msg>
   <msg key="legalDisclaimer"/>
+  
+  <!-- Search -->
+  <msg key="searchFor">Suche nach</msg>
+  <msg key="allResults">Alle</msg>
   
 </catalogue>

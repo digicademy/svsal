@@ -88,8 +88,8 @@ declare function sphinx:needsSnippetsString($node as node(), $model as map(*)) {
                     <td title="{concat('Snippets created on: ', max(for $file in xmldb:get-child-resources($config:snippets-root || '/' || $currentWorkId) return string(xmldb:last-modified($config:snippets-root || '/' || $currentWorkId, $file))), ', Source from: ', string(xmldb:last-modified($targetSubcollection, $currentWorkId || '.xml')), '.')}">Creating snippets unnecessary. <small><a href="sphinx-admin.xql?wid={$currentWorkId}">Create snippets anyway!</a></small></td>
 };
 
-declare function sphinx:passLang($node as node(), $model as map(*)) {
-    <input type="hidden" name="lang" value="{request:get-parameter('lang', 'en')}"/>
+declare function sphinx:passLang($node as node(), $model as map(*), $lang as xs:string?) {
+    <input type="hidden" name="lang" value="{request:get-parameter('lang', $lang)}"/>
 };
 
 (: ####====---- End Helper Functions ----====#### :)
@@ -379,10 +379,10 @@ function sphinx:resultsLandingPage ($node as node(), $model as map(*), $q as xs:
 
         (: Get Works ... :)
         let $worksLink :=           if (xs:integer($results/sal:works//opensearch:totalResults/text()) > $config:searchMultiModeLimit ) then
-                                        <span style="margin-left:7px;"><a href="search.html?field=corpus&amp;q={encode-for-uri($q)}&amp;offset=0&amp;limit={$limit}"><i18n:text key="allResults">Alle</i18n:text>...</a></span>
+                                        <span style="margin-left:7px;"><a href="search.html?field=corpus&amp;q={encode-for-uri($q)}&amp;offset=0&amp;limit={$limit}"><i18n:text key="allResults">All</i18n:text>...</a></span>
                                     else ()
         let $worksList :=           <div class="resultsSection">
-                                          <h4><i18n:text key="works">Werke</i18n:text> ({$results/sal:works//opensearch:totalResults/text()})</h4>
+                                          <h4><i18n:text key="works">Works</i18n:text> ({$results/sal:works//opensearch:totalResults/text()})</h4>
                                           <ol class="resultsList">{
                                                 for $item at $index in $results/sal:works//item
                                                     let $author         := $item/author/text()

@@ -23,7 +23,7 @@
     <msg key="about">Descripción del proyecto</msg>
     <msg key="WpIntro">La serie de Working Papers de Salamanca es una colección interdisciplinar de artículos que abordan temas filosóficos, jurídicos y teológicos relacionados con la Escuela de Salamanca. Esta colección refleja tanto la investigación hecha en el proyecto, como las contribuciones realizadas por otros investigadores. Cada propuesta pasa por un proceso de revisión anónima por pares. Si desea enviar un artículo, por favor contáctenos en</msg>
     <msg key="WpIntroTitle">Salamanca Working Papers Series (ISSN 2509-5080)</msg>
-    <msg key="WpGuidelinesDelayed">Próximamente habrá más información en línea para los autores.</msg>
+    <msg key="WpGuidelinesDelayed">Próximamente habrá más información en línea para autores.</msg>
     <msg key="getAnswers">Cómo llegar hasta nosotros</msg>
     
     <!-- Meta Description Tags -->
@@ -45,40 +45,40 @@
     <msg key="metaWPs">Überblick über die Working Papers zur Schule von Salamanca, die im Rahmen der vom Projekt veranstalteten Reihe erschienen sind.</msg>
     
     <!-- index -->
-    <msg key="introSearch">Búsqueda en textos completos de 116 obras, en el diccionario, en los artículos biográficos y en los Working Papers.</msg>
+    <msg key="introSearch">Búsqueda de texto completo en 116 obras, en el diccionario, en los artículos biográficos y en los Working Papers.</msg>
     <msg key="introDict">Libre acceso al diccionario filosófico-jurídico de la Escuela de Salamanca.</msg>
     <msg key="introAuthors">Acceso a los autores: Curriculum Vitae, bibliografía y referencias a obras dentro del corpus.</msg>
     <msg key="introWorks">Colección digital de 116 obras, editadas según nuestras</msg>
     <msg key="introWorkingPapers">Working Papers publicados por el proyecto dentro del contexto de la Escuela de Salamanca.</msg>
     <msg key="introNews">Noticias de la comunidad.</msg>
-    <msg key="introProject">Equipo de trabajo, Descripción del Proyecto, Contacto y Información legal.</msg>
+    <msg key="introProject">Equipo de trabajo, Descripción del Proyecto, Contacto e Información legal.</msg>
     <msg key="introGoBtn">Vamos!</msg>
     <msg key="imprint">Información legal</msg>
     <msg key="contactUs">Feedback</msg>
-    <msg key="happyness">Muchas gracias para su interés. Para preguntas o más informaciones sobre el proyecto, escríbanos :</msg>
+    <msg key="happyness">Muchas gracias por su interés. Para preguntas o más información sobre el proyecto, escríbanos:</msg>
     
     <!-- project.html -->
     
     <msg key="projectDesc">Descripción del proyecto</msg>
     <msg key="pojectDesc1">El significado de la Escuela de Salamanca, en la elaboración de conceptos claves en la temprana Edad Moderna para el Derecho, la Política, la Religión 
-        y la Moral, ha sido reconocido por parte de la Filosofia, la Historia del pensamiento político, la Ética, así como la Historia del Derecho. Su importancia se ha manifestado 
+        y la Moral, ha sido reconocido por parte de la Filosofía, la Historia del pensamiento político, la Ética, así como la Historia del Derecho. Su importancia se ha manifestado 
         no sólo dentro del pensamiento de la Monarquía Española en los siglos XVI y XVII a lo largo de su inmenso territorio (desde Madrid hasta México pasando por Manila), como 
         también, en los debates sobre Derechos Humanos, el Derecho Internacional, los principios de la Economía, hasta el impacto que tuvo más allá de sus "fronteras confesionales", 
         en la cultura universitaria protestante del antiguo Sacro Imperio. La inmensa labor desarrollada por la Escuela de Salamanca ha sido abordada desde diferentes aspectos por 
         especialistas de varias disciplinas (filósofos, legistas, historiadores y teólogos). No obstante, esta serie de esfuerzos individuales, por lo general, han permanecido 
         aislados e inconexos, lo que condujo a una fragmentación de los discursos académicos, y a la imposibilidad de plantear cuestiones metódicas generales. </msg>
-    <msg key="pojectDesc2">"La Escuela de Salamanca: Proyecto de digitalización de fuentes y diccionario jurídico-político" se llevará a cabo a partir del año 2013 como un proyecto 
+    <msg key="pojectDesc2">"La Escuela de Salamanca: Una Colección Digital de Fuentes y un Diccionario de su Lenguaje Jurídico-Político" se llevará a cabo a partir del año 2013 como un proyecto 
         de investigación de la Academia de Ciencias y Literatura de Maguncia (Akademie der Wissenschaften und Literatur Mainz), dentro del marco del programa de proyectos de 
         investigación de larga duración, financiado por la Unión de Academias de Ciencias Alemanas (Union der Akademien der Wissenschaften). Su objetivo consiste precisamente 
         en remediar esta situación. Aspira brindar a la comunidad científica una herramienta necesaria para reconstruir los pensamientos y reflexiones de esta Escuela, a partir 
         de las distintas tradiciones disciplinares, y en su contexto histórico. </msg>
-    <msg key="pojectDesc3">El proyecto tendrá una duración de 18 años, con sucesivas evaluaciones, y preveé tres etapas: en primer lugar, se digitalizará en alta calidad una serie 
+    <msg key="pojectDesc3">El proyecto tendrá una duración de 18 años, con sucesivas evaluaciones, y prevé tres etapas: en primer lugar, se digitalizará en alta calidad una serie 
         de más de 120 obras de la Escuela de Salamanca de los siglos XVI y XVII, con reconocimiento de texto que permite la posibilidad de hacer búsquedas en las versiones electrónicas. 
-        En segundo lugar, se confeccionará un diccionario histórico elaborado a partir de esas fuentes, en forma electrónica que permite el accesso directo a las mismas fuentes. En la 
+        En segundo lugar, se confeccionará un diccionario histórico elaborado a partir de esas fuentes, en forma electrónica que permite el acceso directo a las mismas fuentes. En la 
         tercera etapa, se publicará, una vez concluida la confección de las voces, el diccionario en forma impresa. Es importante señalar que en el proceso de selección de las obras del 
         corpus como también de las voces del diccionario, se ha tomado en consideración un criterio histórico, prestando especial atención a la representación de discursos tanto europeos 
-        como coloniales. Las obras seleccionadas como el diccionario estarán disponibles a través en internet, y así la comunidad cientifica internacional, podrá acceder, de manera 
-        simúltanea, a estas herramientas fundamentales de investigacion. De esta forma, la investigación sobre la importancia y el significado histórico de la Escuela de Salamanca, tendrá, 
+        como coloniales. Las obras seleccionadas como el diccionario estarán disponibles en internet, y así la comunidad científica internacional, podrá acceder, de manera 
+        simúltanea, a estas herramientas fundamentales de investigación. De esta forma, la investigación sobre la importancia y el significado histórico de la Escuela de Salamanca, tendrá, 
         por primera vez, acceso a un corpus de texto común y dispondrá de un marco de referencia intelectual para el análisis histórico y la discusión interdisciplinar. De esta manera, se 
         espera dar un nuevo aporte a la investigación de la Escuela de Salamanca y su influencia en la construcción de la teoría política y el derecho en la Edad Moderna.</msg>
     <msg key="pojectDesc4"/>
@@ -95,7 +95,7 @@
     <!-- legal.html -->
     <msg key="legalTitle">Privacidad &amp; Información legal</msg>
     <msg key="legal">Privacidad &amp; Información legal</msg>
-    <msg key="legalDesc">Política de privacidad de nuestra página web y información legal.</msg>
+    <msg key="legalDesc">Política de privacidad de nuestra página web e información legal.</msg>
     <msg key="legalShort">Privacidad &amp; Inf. legal</msg>
     <msg key="privacyDisclaimer">Para informaciones sobre la privacidad en esta página web véase la </msg>
     <msg key="legalDisclaimer">Por favor tenga en cuenta que la descripción de nuestra política de privacidad y la información legal están disponibles solamente en alemán.</msg>
@@ -130,12 +130,12 @@
     <msg key="extent">Extensión, Formato</msg>
     <msg key="dateOfOrigin">Año de publicación (fuente original)</msg>
     <msg key="details">Catálogo</msg>
-    <msg key="facsimiles">Imagenes</msg>
+    <msg key="facsimiles">Imágenes</msg>
     <msg key="periodOfOrigin">Fechas de publicación</msg>
     <msg key="ownerPrimaryEd">Propiedad del ejemplar digitalizado</msg>
     <msg key="catLink">Enlace en el catálogo</msg>
     <msg key="ownerMaster">Propiedad digital</msg>
-    <msg key="titleReadingViev">Título</msg>
+    <msg key="titleReadingViev">Título</msg> 
     <msg key="corpusVerb">todo el corpus como archivos TEI/XML</msg>
     <msg key="worksNotice">La colección digital de fuentes del proyecto "La Escuela de Salamanca" 
         incluye 116 obras en total, que se publicarán sucesivamente en esta página a partir de 
@@ -222,7 +222,7 @@
     <msg key="in">en</msg>
     <msg key="entry">entrada</msg>
     <msg key="entries">entradas</msg>
-    <msg key="searchFor">búsqueda para</msg>
+    <msg key="searchFor">Búsqueda para</msg>
     <msg key="allResults">Todos</msg>
     <msg key="searchFeatures">funciones dela búsqueda</msg>
     <msg key="found">encontrado</msg>
