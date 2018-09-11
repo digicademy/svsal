@@ -506,6 +506,20 @@
                     <mapping type="composed">ę</mapping>
                     <mapping type="standardized">e</mapping>
                 </char>
+                <char xml:id="chare4e9">
+                    <desc>LATIN SMALL LETTER E WITH CURL</desc>
+                    <charProp>
+                        <localName>entity</localName>
+                        <value>ecurl</value>
+                    </charProp>
+                    <charProp>
+                        <localName>combined-entity</localName>
+                        <value>ecurl = e + combcurl</value>
+                    </charProp>
+                    <mapping type="MUFI" subtype="Combined">U+E4E9 = 0065 + 1DCE</mapping>
+                    <mapping type="precomposed"></mapping>
+                    <mapping type="standardized">e</mapping>
+                </char>
                 <char xml:id="chari0303">
                     <desc>LATIN SMALL LETTER I WITH TILDE</desc>
                     <mapping type="precomposed">ĩ</mapping>
