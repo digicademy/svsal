@@ -174,7 +174,7 @@ function sphinx:search ($context as node()*, $model as map(*), $q as xs:string?,
 :)
             if ($field eq 'everything') then
             (: search for queryterm in sphinx_description_edit and ..._orig fields,
-                filter by work type (for now, based on  work id, as of late we also have a work_type attritute that we should start using),
+                filter by work type (for now, based on work id, as of late we also have a work_type attritute that we should start using),
                 group by work (so we don't the same document repeatedly),
                 paginate results if necessary
             :)
@@ -390,7 +390,9 @@ function sphinx:resultsLandingPage ($node as node(), $model as map(*), $q as xs:
                                                     let $wid            := $item/work/text()
                                                     let $numberOfHits   := $item/sphinxNS:groupcount/text()
                                                     let $link           :=  if (contains($item/fragment_path/text(), "#")) then
-                                                                                replace($item/fragment_path/text(), '#', '&amp;q=' || encode-for-uri($q) || '#')
+                                                                                if ($item/fragment_path/text() eq '#No fragment discoverable!') then
+                                                                                    'work.html?wid=' || $wid || '&amp;q=' || encode-for-uri($q) (: workaround for avoiding hard http errors (TODO) :)
+                                                                                else replace($item/fragment_path/text(), '#', '&amp;q=' || encode-for-uri($q) || '#')
                                                                             else if (contains($item/fragment_path/text(), "?")) then
                                                                                 $item/fragment_path/text() || '&amp;q=' || encode-for-uri($q)    (: this is the url to call the frg. in the webapp :)
                                                                             else
@@ -634,7 +636,7 @@ declare function sphinx:keywords ($q as xs:string?) as xs:string {
 
 declare function sphinx:excerpts ($documents as node()*, $words as xs:string) as node()* {
     let $endpoint   := concat($config:sphinxRESTURL, "/excerpts")
-let $debug :=  if ($config:debug = "info") then console:log("Excerpts needed for doc[0]: " || substring(normalize-space($documents/description_orig), 0, 150)) else ()
+    let $debug :=  if ($config:debug = "info") then console:log("Excerpts needed for doc[0]: " || substring(normalize-space($documents/description_orig), 0, 150)) else ()
     let $requestDoc := concat(         encode-for-uri('opts[limit]=' || $config:snippetLength),
                               '&amp;', encode-for-uri('opts[html_strip_mode]=strip'),
                               '&amp;', encode-for-uri('opts[query_mode]=true'),
@@ -645,19 +647,19 @@ let $debug :=  if ($config:debug = "info") then console:log("Excerpts needed for
 (:                                           normalize-space($documents/description_edit):)
                                )
     let $tempString := replace(replace($requestDoc, '%20', '+'), '%3D', '=')
-let $debug :=  if ($config:debug = "trace") then console:log("Excerpts request body: " || $tempString) else ()
-(: Querying with EXPath http client proved not to work in eXist 3.4
-    let $request    := <http:request method="post">
-                         <http:header name="Content-Type" value="application/x-www-form-urlencoded"/>
-                         <http:body                  media-type="application/x-www-form-urlencoded" method="text">{$tempString}</http:body>
-                       </http:request>
-    let $response   := http:send-request($request, $endpoint)
-:)
+    let $debug :=  if ($config:debug = "trace") then console:log("Excerpts request body: " || $tempString) else ()
+    (: Querying with EXPath http client proved not to work in eXist 3.4
+        let $request    := <http:request method="post">
+                             <http:header name="Content-Type" value="application/x-www-form-urlencoded"/>
+                             <http:body                  media-type="application/x-www-form-urlencoded" method="text">{$tempString}</http:body>
+                           </http:request>
+        let $response   := http:send-request($request, $endpoint)
+    :)
     let $response   := httpclient:post($endpoint, $tempString, true(), <headers><header name="Content-Type" value="application/x-www-form-urlencoded"/></headers>)
-let $debug :=  if ($config:debug = "trace") then console:log("Excerpts response: " || serialize($response)) else ()
+    let $debug :=  if ($config:debug = "trace") then console:log("Excerpts response: " || serialize($response)) else ()
     let $rspBody    := if ($response//httpclient:body/@encoding = "Base64Encoded") then parse-xml(util:base64-decode($response//httpclient:body)) else $response//httpclient:body
-let $debug :=  if ($config:debug = "trace") then console:log("$rspBody: " || serialize($rspBody)) else ()
-let $debug :=  if ($config:debug = "trace" and $response//httpclient:body/@encoding = "Base64Encoded") then console:log("body decodes to: " || util:base64-decode($response//httpclient:body)) else ()
+    let $debug :=  if ($config:debug = "trace") then console:log("$rspBody: " || serialize($rspBody)) else ()
+    let $debug :=  if ($config:debug = "trace" and $response//httpclient:body/@encoding = "Base64Encoded") then console:log("body decodes to: " || util:base64-decode($response//httpclient:body)) else ()
 
     return $rspBody//rss
 };
@@ -690,7 +692,7 @@ declare function sphinx:highlight ($document as node(), $words as xs:string*) as
     return $rspBody//rss
 };
 
-(: nicht als Parameter verfügbar:
+(: not available as parameters:
 let $sort   := request:get-parameter('sort',    '2')
 let $sortby := request:get-parameter('sortby',  'sphinx_fragment_number')
 let $ranker := request:get-parameter('ranker',  '2')
