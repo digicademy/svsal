@@ -890,7 +890,7 @@ declare function config:footer ($node as node(), $model as map(*), $lang as xs:s
             </div>
         <!-- the Institute -->    
             <div class="col-md-3 hidden-sm hidden-xs">
-                <a href="http://www.rg.mpg.de"><img style="margin-top: 9%; float: right" class="img-responsive" src="resources/img/logos_misc/mpier.svg"/></a>
+                <a href="http://www.rg.mpg.de"><img style="margin-top: 9%; float: right; height: 100%;" class="img-responsive" src="resources/img/logos_misc/mpier.svg"/></a>
             </div>
             <div class="hidden-lg hidden-md col-sm-4" style="text-align: center;margin-top: 1%">
                 <a href="http://www.rg.mpg.de"><p><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span> Max-Planck-Institut<br/>für<br/>europäische Rechtsgeschichte</p></a>
