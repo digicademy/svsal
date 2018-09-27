@@ -22,6 +22,9 @@
     </fileDesc>
     <revisionDesc status="e_unreviewed">
       <listChange>
+        <change who="#DG" when="2018-09-27" status="e_emended_unenriched">
+          <p>Added series element to core module.</p>
+        </change>
         <change who="#DG" when="2018-08-03" status="e_emended_unenriched">
           <p>Added msdescription to modules; small additions/changes.</p>
         </change>
@@ -169,7 +172,7 @@
         <!-- specify modules to include (and which of their elements not to) -->
         <moduleRef key="tei" except=""/>
         <moduleRef key="core"
-          except="add addrLine address analytic binaryObject distinct divGen gb index listBibl measure measureGrp media meeting name num postBox postCode said series sp speaker stage street teiCorpus textLang time"/>
+          except="add addrLine address analytic binaryObject distinct divGen gb index listBibl measure measureGrp media meeting name num postBox postCode said sp speaker stage street teiCorpus textLang time"/>
         <moduleRef key="analysis" include="m pc"/>
         <!-- except="c cl interp interpGrp phr s spanGrp w" -->
         <moduleRef key="figures" except="notatedMusic"/>
