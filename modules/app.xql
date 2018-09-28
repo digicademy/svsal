@@ -805,13 +805,13 @@ declare %templates:wrap
                                                     <span class="lead">{$author}</span>
                                                     <br/>
                                                     {
-                                                    let $thisEd         :=      $root//tei:pubPlace[@role = 'thisEd']
-                                                    let $firstEd        :=      $root//tei:pubPlace[@role = 'firstEd']
-                                                    let $publisher      :=      if ($thisEd) then $root//tei:imprint/tei:publisher[@n = 'thisEd']/tei:persName[1]/tei:surname else $root//tei:imprint/tei:publisher[@n = 'firstEd']/tei:persName[1]/tei:surname
+                                                    let $thisEd         :=      $root//tei:teiHeader//tei:sourceDesc//tei:pubPlace[@role = 'thisEd']
+                                                    let $firstEd        :=      $root//tei:teiHeader//tei:sourceDesc//tei:pubPlace[@role = 'firstEd']
+                                                    let $publisher      :=      if ($thisEd) then $root//tei:teiHeader//tei:imprint/tei:publisher[@n = 'thisEd']/tei:persName[1]/tei:surname 
+                                                                                else $root//tei:teiHeader//tei:imprint/tei:publisher[@n = 'firstEd']/tei:persName[1]/tei:surname
                                                     let $place          :=      if ($thisEd) then $thisEd else $firstEd
-                                                    let $year           :=      if ($thisEd) 
-                                                                                then $root//tei:date[@type = 'thisEd']/@when/string() 
-                                                                                else $root//tei:date[@type = 'firstEd']/@when/string()
+                                                    let $year           :=      if ($thisEd) then $root//tei:teiHeader//tei:date[@type = 'thisEd']/@when/string() 
+                                                                                else $root//tei:teiHeader//tei:date[@type = 'firstEd']/@when/string()
                                                     let $vol            :=      if ($root/tei:teiHeader//tei:monogr//tei:title[@type = 'volume']) 
                                                                                 then concat(', ', $model('currentWork')/tei:teiHeader//tei:monogr//tei:title[@type = 'volume']) 
                                                                                 else ()                         
@@ -857,13 +857,13 @@ declare %templates:wrap
                                                     <span class="lead">{$author}</span>
                                                     <br/>
                                                     {
-                                                    let $thisEd         :=      $root//tei:pubPlace[@role = 'thisEd']
-                                                    let $firstEd        :=      $root//tei:pubPlace[@role = 'firstEd']
-                                                    let $publisher      :=      if ($thisEd) then $root//tei:imprint/tei:publisher[@n = 'thisEd']/tei:persName[1]/tei:surname else $root//tei:imprint/tei:publisher[@n = 'firstEd']/tei:persName[1]/tei:surname
+                                                    let $thisEd         :=      $root//tei:teiHeader//tei:sourceDesc//tei:pubPlace[@role = 'thisEd']
+                                                    let $firstEd        :=      $root//tei:teiHeader//tei:sourceDesc//tei:pubPlace[@role = 'firstEd']
+                                                    let $publisher      :=      if ($thisEd) then $root//tei:teiHeader//tei:imprint/tei:publisher[@n = 'thisEd']/tei:persName[1]/tei:surname 
+                                                                                else $root//tei:imprint/tei:publisher[@n = 'firstEd']/tei:persName[1]/tei:surname
                                                     let $place          :=      if ($thisEd) then $thisEd else $firstEd
-                                                    let $year           :=      if ($thisEd) 
-                                                                                then $root//tei:date[@type = 'thisEd']/@when/string() 
-                                                                                else $root//tei:date[@type = 'firstEd']/@when/string()
+                                                    let $year           :=      if ($thisEd) then $root//tei:teiHeader//tei:date[@type = 'thisEd']/@when/string() 
+                                                                                else $root//tei:teiHeader//tei:date[@type = 'firstEd']/@when/string()
                                                     let $vol            :=      if ($root/tei:teiHeader//tei:monogr//tei:title[@type = 'volume']) 
                                                                                 then concat(', ', $model('currentWork')/tei:teiHeader//tei:monogr//tei:title[@type = 'volume']) 
                                                                                 else ()                         
@@ -909,13 +909,14 @@ declare %templates:wrap
                                                     <span class="lead">{$author}</span>
                                                     <br/>
                                                     {
-                                                    let $thisEd         :=      $root//tei:pubPlace[@role = 'thisEd']
-                                                    let $firstEd        :=      $root//tei:pubPlace[@role = 'firstEd']
-                                                    let $publisher      :=      if ($thisEd) then $root//tei:imprint/tei:publisher[@n = 'thisEd']/tei:persName[1]/tei:surname else $root//tei:imprint/tei:publisher[@n = 'firstEd']/tei:persName[1]/tei:surname
+                                                    let $thisEd         :=      $root//tei:teiHeader//tei:sourceDesc//tei:pubPlace[@role = 'thisEd']
+                                                    let $firstEd        :=      $root//tei:teiHeader//tei:sourceDesc//tei:pubPlace[@role = 'firstEd']
+                                                    let $publisher      :=      if ($thisEd) then $root//tei:teiHeader//tei:imprint/tei:publisher[@n = 'thisEd']/tei:persName[1]/tei:surname 
+                                                                                else $root//tei:teiHeader//tei:imprint/tei:publisher[@n = 'firstEd']/tei:persName[1]/tei:surname
                                                     let $place          :=      if ($thisEd) then $thisEd else $firstEd
                                                     let $year           :=      if ($thisEd) 
-                                                                                then $root//tei:date[@type = 'thisEd']/@when/string() 
-                                                                                else $root//tei:date[@type = 'firstEd']/@when/string()
+                                                                                then $root//tei:teiHeader//tei:date[@type = 'thisEd']/@when/string() 
+                                                                                else $root//tei:teiHeader//tei:date[@type = 'firstEd']/@when/string()
                                                     let $vol            :=      if ($root/tei:teiHeader//tei:monogr//tei:title[@type = 'volume']) 
                                                                                 then concat(', ', $model('currentWork')/tei:teiHeader//tei:monogr//tei:title[@type = 'volume']) 
                                                                                 else ()                         
@@ -964,13 +965,14 @@ declare %templates:wrap
                                                     <span class="lead">{$author}</span>
                                                     <br/>
                                                     {
-                                                    let $thisEd         :=      $root//tei:pubPlace[@role = 'thisEd']
-                                                    let $firstEd        :=      $root//tei:pubPlace[@role = 'firstEd']
-                                                    let $publisher      :=      if ($thisEd) then $root//tei:imprint/tei:publisher[@n = 'thisEd']/tei:persName[1]/tei:surname else $root//tei:imprint/tei:publisher[@n = 'firstEd']/tei:persName[1]/tei:surname
+                                                    let $thisEd         :=      $root//tei:teiHeader//tei:sourceDesc//tei:pubPlace[@role = 'thisEd']
+                                                    let $firstEd        :=      $root//tei:teiHeader//tei:sourceDesc//tei:pubPlace[@role = 'firstEd']
+                                                    let $publisher      :=      if ($thisEd) then $root//tei:teiHeader//tei:imprint/tei:publisher[@n = 'thisEd']/tei:persName[1]/tei:surname 
+                                                                                else $root//tei:teiHeader//tei:imprint/tei:publisher[@n = 'firstEd']/tei:persName[1]/tei:surname
                                                     let $place          :=      if ($thisEd) then $thisEd else $firstEd
                                                     let $year           :=      if ($thisEd) 
-                                                                                then $root//tei:date[@type = 'thisEd']/@when/string() 
-                                                                                else $root//tei:date[@type = 'firstEd']/@when/string()
+                                                                                then $root//tei:teiHeader//tei:sourceDesc//tei:date[@type = 'thisEd']/@when/string() 
+                                                                                else $root//tei:teiHeader//tei:sourceDesc//tei:date[@type = 'firstEd']/@when/string()
                                                     let $vol            :=      if ($root/tei:teiHeader//tei:monogr//tei:title[@type = 'volume']) 
                                                                                 then concat(', ', $model('currentWork')/tei:teiHeader//tei:monogr//tei:title[@type = 'volume']) 
                                                                                 else ()                         
