@@ -36,7 +36,7 @@ import module namespace iiif      = "http://salamanca/iiif"                  at 
  : - dummy test function
  :)
 
-(:Name wird zusammengesetzt, Nachname, Vorname:)
+(: Concatenates name(s): surname, forename :)
 declare function app:formatName($persName as element()*) as xs:string? {
     let $return-string := for $pers in $persName
                                 return
@@ -51,7 +51,7 @@ declare function app:formatName($persName as element()*) as xs:string? {
     return (string-join($return-string, ' &amp; '))
 };
 
-(:Name Vorname, Nachname:)
+(: Concatenates name(s): forename surname:)
 declare function app:rotateFormatName($persName as element()*) as xs:string? {
     let $return-string := for $pers in $persName
                                 return
@@ -1949,9 +1949,12 @@ declare %templates:wrap %templates:default("lang", "en")
 (:-------------------- funx for page workDetails.html ---------------------:)       
 declare %templates:wrap
     function app:WRKtype($node as node(), $model as map(*), $lang as xs:string?) {
-       let $type      :=  if ($model('currentWork')//tei:text[@type='work_multivolume']/string())  then <i18n:text key="multivolume">Mehrbandwerk</i18n:text> else ()
+       let $teiType := $model('currentWork')/tei:text/@type/string()
+       let $type      :=  if ($teiType eq 'work_multivolume') then <i18n:text key="multivolume">Mehrbandwerk</i18n:text> 
+                          else if ($teiType eq 'work_volume') then <i18n:text key="workvolume">Einzelband</i18n:text>
+                          else ()
        let $translate := i18n:process($type, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
-       return if ($model('currentWork')//tei:text[@type='work_multivolume']) then
+       return if ($type) then
                     ' ('|| $translate ||') '
               else ()
 };
@@ -1965,6 +1968,20 @@ declare function app:WRKtitleProper($node as node(), $model as map(*)) {
 declare function app:WRKtitleMain($node as node(), $model as map(*)) {
         $model('currentWork')/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'main']/string()  
 };
+
+(: Creates the heading for a catalogue entry: author name: work/volume title :)
+declare function app:WRKcatRecordTitle($node as node(), $model as map(*), $lang as xs:string?) {
+    let $authorName := app:rotateFormatName($model('currentWork')/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:author/tei:persName)
+    let $title := app:WRKtitleShort($node, $model)
+    let $workType := app:WRKtype($node, $model, $lang)
+    return (
+        <span class="text-muted">{$authorName}: </span>,
+        <span class="text-muted">{$title}</span>,
+        <span class="text-muted">{$workType}</span>,
+        <hr/>
+        )
+};
+
 
 (:Zitiertitel:)
 declare function app:WRKtitleShort($node as node(), $model as map(*)) {
@@ -2061,6 +2078,207 @@ declare %templates:wrap
         return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
 };
 
+(: Creates a HTML fragment containing a work's/volume's catalogue record 
+@param node: template node
+@param model: application data for the current request
+@param lang: current language
+@param wid: ID for the current work
+:)
+declare %templates:wrap function app:WRKcatRecord($node as node(), $model as map(*), $lang as xs:string?, $wid as xs:string?) {
+    let $workType := $model('currentWork')/tei:text/@type
+    let $tei := $model('currentWork')
+    let $biblTitle := i18n:process(<i18n:text key="biblInfo"/>, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
+    let $biblRecord := app:WRKcatRecordBibliographical($tei, $lang) 
+    let $editionTitle := if ($workType = ('work_monograph', 'work_volume')) then 
+                             i18n:process(<i18n:text key="editionInfo"/>, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
+                         else if ($workType eq 'work_multivolume') then i18n:process(<i18n:text key="volumes"/>, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
+                         else ()
+    let $editionRecord := ()
+    let $output := 
+        <div>
+            <div class="row-fluid">
+                <h3>{$biblTitle}</h3>
+                <div>{$biblRecord}</div>
+            </div>
+            <div>
+                <h3>{$editionTitle}</h3>
+                <div>{$editionRecord}</div>
+            </div>
+        </div>
+    return $output
+};
+    
+(: Creates a HTML fragment containing the bibliographical data about a work or (multi-work) volume 
+@param tei: the TEI node of a work/volume dataset
+@param lang: current language
+@return: a HTML div element
+:)
+declare function app:WRKcatRecordBibliographical($tei as node(), $lang as xs:string?) {
+    let $workId := $tei/@xml:id
+    let $type := $tei/tei:text/@type
+(:    let $teiHeader := $tei/tei:teiHeader:)
+    let $sourceDesc := $tei/tei:teiHeader/tei:fileDesc/tei:sourceDesc
+    let $title := $sourceDesc//tei:title[@type eq '245a']/text()
+    let $shortTitle := $sourceDesc//tei:title[@type eq 'short']/text()
+    let $author := app:rotateFormatName($sourceDesc//tei:author/tei:persName)
+    let $publicationTime := if ($type eq 'work_multivolume') then
+                                let $pubSpan := if ($sourceDesc//tei:date[@type eq 'summaryThisEd']) then $sourceDesc//tei:date[@type eq 'summaryThisEd']/text()
+                                                else $sourceDesc//tei:date[@type eq 'summaryFirstEd']/text()
+                                return 
+                                <tr>
+                                    <td class="col-md-4" style="line-height: 1.2"><i18n:text key="periodOfOrigin">Period of publication</i18n:text>:</td>
+                                    <td class="col-md-8" style="line-height: 1.2">{$pubSpan}</td>
+                                </tr>
+                            else
+                                let $pubYear := if ($sourceDesc//tei:date[@type eq 'thisEd']) then $sourceDesc//tei:date[@type eq 'thisEd']/@when/string()
+                                                else $sourceDesc//tei:date[@type eq 'firstEd']/@when/string()
+                                return
+                                <tr>
+                                    <td class="col-md-4" style="line-height: 1.2"><i18n:text key="pubYear">Year of publication</i18n:text>:</td>
+                                    <td class="col-md-8" style="line-height: 1.2">{$pubYear}</td>
+                                </tr>
+    let $publisher :=   if ($sourceDesc//tei:publisher[@n eq 'thisEd']) then app:rotateFormatName($sourceDesc//tei:publisher[@n eq 'thisEd']/tei:persName)
+                        else app:rotateFormatName($sourceDesc//tei:publisher[@n eq 'firstEd']/tei:persName)
+    let $pubPlace :=    if ($sourceDesc//tei:pubPlace[@role eq 'thisEd']) then $sourceDesc//tei:pubPlace[@role eq 'thisEd']/text()
+                        else $sourceDesc//tei:pubPlace[@role eq 'firstEd']/text()
+    (:let $extent         := $sourceDesc//tei:extent/text()  state extent once there is formalized information :)
+(:    let $master         := $base//tei:publicationStmt/tei:publisher/tei:orgName:)
+
+    (: if the text is a volume within a multi-volume work, provide volume specifications: :)
+    let $volumeSpecifications :=
+        if ($type eq 'work_volume') then
+            let $volumeNumber := $sourceDesc//tei:series/tei:biblscope/@n/string()
+            let $volumeTitle := $sourceDesc//tei:title[@type ='volume']/text()
+            let $totalVolumes := string(count(doc($config:tei-root || '/' || substring-before($workId, '_Vol') || '.xml')
+                                              /tei:TEI/tei:teiHeader//tei:notesStmt/tei:relatedItem[@type eq 'work_volume']))
+            let $volumeString := $volumeTitle || ' (' || $volumeNumber || ' ' 
+                                     || i18n:process(<i18n:text key="of">of</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
+                                     || ' ' || $totalVolumes || ')'
+            return
+            <tr>
+                <td class="col-md-4" style="line-height: 1.2"><i18n:text key="volume">Volume</i18n:text>:</td>
+                <td class="col-md-8" style="line-height: 1.2">{$volumeString}</td>
+            </tr>
+        else ()
+    (: if text is not the first edition, state whole imprint of the first edition :)
+    let $imprintFirst := 
+        if ($sourceDesc//tei:pubPlace[@role = 'thisEd']) then 
+            let $printingPlaceFirst := $sourceDesc//tei:pubPlace[@role = 'firstEd']/text()
+            let $publisherFirst := app:rotateFormatName($sourceDesc//tei:publisher[@n="firstEd"]/tei:persName)
+            let $dateFirst := $sourceDesc//tei:date[@type eq 'firstEd']/@when/string()
+            let $firstString := $printingPlaceFirst || $config:nbsp || ':' || $publisherFirst || ', ' || $config:nbsp || $dateFirst
+            return
+            <tr>
+                <td class="col-md-4" style="line-height: 1.2"><i18n:text key="imprintFirst">Imprint of the First Edition</i18n:text>:</td>
+                <td class="col-md-8" style="line-height: 1.2">{$firstString}</td>
+            </tr>
+        else ()
+    let $origin :=    if ($type = ('work_monograph', 'work_volume')) then 
+                            (: if there are several original sources, state only the main source :)
+                            let $library := if (count($sourceDesc//tei:msDesc) gt 1) then $sourceDesc//tei:msDesc[@type eq 'main']//tei:repository/text() 
+                                            else $sourceDesc//tei:msDesc//tei:repository/text()
+                            let $extLink := i18n:process(<i18n:text key="externalWindow">externer Link</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
+                            let $catLink  := if (count($sourceDesc//tei:msDesc) gt 1) then $sourceDesc//tei:msDesc[@type eq 'main']//tei:idno[@type eq 'catlink']/text()
+                                             else $sourceDesc//tei:msDesc//tei:idno[@type eq 'catlink']/text()
+                            return
+                            (<tr>
+                                <td class="col-md-4" style="line-height: 1.2"><i18n:text key="library">Library</i18n:text>:</td>
+                                <td class="col-md-8" style="line-height: 1.2">{$library}</td>
+                            </tr>,
+                            <tr>
+                                <td class="col-md-4" style="line-height: 1.2"><i18n:text key="catLink">Catalogue link</i18n:text>:</td>
+                                <td class="col-md-8" style="line-height: 1.2">
+                                    <a  href="{$catLink}" title="{$extLink}" target="_blank">{($catLink || '&#32;')} 
+                                        <span class="glyphicon glyphicon-new-window"></span>
+                                    </a>
+                                </td>
+                            </tr>)
+                        else ()
+    let $output := 
+        <table class="borderless table table-hover">
+            <tbody>
+                <tr>
+                    <td class="col-md-4" style="line-height: 1.2"><i18n:text key="title">Title</i18n:text>:</td>
+                    <td class="col-md-8" style="line-height: 1.2">{$title}</td>
+                </tr>
+                <tr>
+                    <td class="col-md-4" style="line-height: 1.2"><i18n:text key="shortTitle">Short Title</i18n:text>:</td>
+                    <td class="col-md-8" style="line-height: 1.2">{$shortTitle}</td>
+                </tr>
+                <tr>
+                    <td class="col-md-4" style="line-height: 1.2"><i18n:text key="author">Author</i18n:text>:</td>
+                    <td class="col-md-8" style="line-height: 1.2">{$author}</td>
+                </tr>
+                {$publicationTime}
+                <tr>
+                      <td class="col-md-4" style="line-height: 1.2"><i18n:text key="publisher">Publisher</i18n:text>:</td>
+                      <td class="col-md-8" style="line-height: 1.2">{$publisher}</td>
+                </tr>
+                <tr>
+                      <td class="col-md-4" style="line-height: 1.2"><i18n:text key="printingPlace">Printing Place</i18n:text>:</td>
+                      <td class="col-md-8" style="line-height: 1.2">{$pubPlace}</td>
+                </tr>
+                {$volumeSpecifications}
+                {$imprintFirst}
+                {$origin}
+            </tbody>
+        </table>
+    return $output
+(:   {if ($type eq 'work_volume') then
+                    <tr>
+                        <td class="col-md-4" style="line-height: 1.2"><i18n:text key="volTitle"/>:</td>
+                        <td class="col-md-8" style="line-height: 1.2">{$title}</td>
+                    </tr>
+                 else ()
+                }
+                
+                {if ($type eq 'work_volume') then
+                    <tr>
+                        <td class="col-md-4" style="line-height: 1.2"><i18n:text key="volNo">Bandnummer</i18n:text>:</td>
+                        <td class="col-md-8" style="line-height: 1.2">{$volNumberTitle}</td>
+                        </tr>
+                 else ()
+                } 
+                {if ($printingPlaceThis) then
+                    <tr>
+                        <td class="col-md-4" style="line-height: 1.2"><i18n:text key="imprintWRK">Impressum</i18n:text>:</td>
+                        <td class="col-md-8" style="line-height: 1.2">{$printingPlaceThis || $config:nbsp}: {$printerThis},{$config:nbsp || $thisEd}</td>
+                    </tr>
+                 else ()} :)
+    
+};
+
+(: Creates a HTML fragment containing information about the digital edition of a single work or (multi-work) volume,
+accompanied by a thumbnail for and a reading link to the respective work/volume.
+@param tei: the TEI node of a work/volume dataset
+@param lang: current language
+@return: a HTML div element
+:)
+declare function app:WRKcatRecordEdition($tei as node(), $lang as xs:string?) {
+    ()
+(:  <tr>
+                  <td class="col-md-4" style="line-height: 1.2"><i18n:text key="language">Sprache</i18n:text>:</td>
+                      <td class="col-md-8" style="line-height: 1.2">
+                          {
+                               if ($item/@xml:lang = 'la') then <i18n:text key="latin">Latein</i18n:text>
+                          else if ($item/@xml:lang = 'es') then <i18n:text key="spanish">Spanisch</i18n:text>
+                          else ()
+                          }
+                      </td>
+                </tr>  :)
+};
+
+(: Creates a HTML fragment containing a "teaser" for each volume of a multi-volume work. A teaser contains 
+essential information about the print source (title, publication date, etc.) and about the digital edition (editors, etc.),
+as well as a link to the complete catalogue record of the respective volume; moreover, it is accompanied by a thumbnail for 
+and a reading link to the respective volume. 
+@param tei: the TEI node of a work/volume dataset
+@param lang: current language
+@return: a HTML div element
+:)
+declare function app:WRKcatRecordTeaser($tei as node(), $lang as xs:string?) {
+    ()
+};
 
 (: Creates a HTML snippet containing bibliographical information about the digital edition of a work (as opposed to the 
 bibliographical record of the original edition, see app:sourceBibliographicalRecord()). :)
@@ -2144,7 +2362,6 @@ declare %templates:wrap
     
     return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
 };
-    
     
 declare %templates:wrap 
     function app:sourceBibliographicalRecord($node as node(), $model as map(*), $lang as xs:string?, $wid as xs:string?) {
