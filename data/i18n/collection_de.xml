@@ -10,7 +10,7 @@
   <msg key="introWorks">Digitale Quellensammlung mit 116 Werken, aufbereitet gemäß unserer</msg>
   
   <!-- common -->
-  
+  <msg key="externalWindow">Link in neuem Tab öffnen</msg>
   <msg key="licenceDesc">Für die Daten des Projekts "Die Schule von Salamanca" gilt (falls nicht anders angegeben) eine</msg>
   <msg key="academy">Akademie der Wissenschaften und der Literatur | Mainz</msg>
   
@@ -45,6 +45,10 @@
   <msg key="diplomatic">Diplomatisch</msg>
   <msg key="constituted">Konstituiert</msg>
   
+  <msg key="multivolume">Mehrbandwerk</msg>
+  <msg key="workvolume">Einzelband</msg>
+  <msg key="biblInfo">Bibliographische Angaben</msg>
+  <msg key="editionInfo">Digitale Edition</msg>
   <msg key="corpusVerb">des ganzen Corpus als TEI/XML Dateien</msg>
   <msg key="download">Download </msg>
   <msg key="downloadXML">Download TEI/XML Quelldatei</msg>
@@ -65,8 +69,22 @@
   <msg key="editionSeries">Die Schule von Salamanca. Eine Digitale Quellensammlung</msg>
   <msg key="editorsInChief">Herausgeber der Reihe</msg>
   <msg key="volume">Band</msg>
+  <msg key="volumes">Bände</msg>
   <msg key="digitalPublication">Digitale Veröffentlichung</msg>
   <msg key="dateOfOrigin">Erscheinungsjahr (Druckoriginal)</msg>
+  <msg key="volTitle">Titel des Bandes/Reihe</msg> 
+  <msg key="title">Titel</msg>
+  <msg key="titleShort">Kurztitel</msg>
+  <msg key="pubYear">Erscheinungsjahr</msg>
+  <msg key="publisher">Drucker</msg>
+  <msg key="imprintFirst">Impressum der Erstausgabe</msg>
+  <msg key="catLink">Katalogisat</msg>
+  <msg key="author">Autor</msg>
+  <msg key="printingPlace">Erscheinungsort</msg>
+  <msg key="ownerPrimaryEd">Bibliothek</msg>
+  <msg key="notPublished">Noch nicht veröffentlicht</msg>
+  <msg key="language">Sprache</msg>
+  <msg key="digitizedBy">Digitalisiert durch</msg>
   
   <!-- Meta Description Tags -->
   
@@ -107,5 +125,8 @@
   <!-- Search -->
   <msg key="searchFor">Suche nach</msg>
   <msg key="allResults">Alle</msg>
+  
+  <!-- general language -->
+  <msg key="of">von</msg>
   
 </catalogue>

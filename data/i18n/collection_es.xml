@@ -128,11 +128,11 @@
     <msg key="1stEd">Edición primera</msg>
     <msg key="thisEd">Edición presenta</msg>
     <msg key="extent">Extensión, Formato</msg>
-    <msg key="dateOfOrigin">Año de publicación (fuente original)</msg>
+    <!--<msg key="dateOfOrigin">Año de publicación (fuente original)</msg>-->
     <msg key="details">Catálogo</msg>
     <msg key="facsimiles">Imágenes</msg>
-    <msg key="periodOfOrigin">Fechas de publicación</msg>
-    <msg key="ownerPrimaryEd">Propiedad del ejemplar digitalizado</msg>
+    <msg key="periodOfOrigin">Periodo de publicación</msg>
+    <msg key="ownerPrimaryEd">Biblioteca</msg>
     <msg key="catLink">Enlace en el catálogo</msg>
     <msg key="ownerMaster">Propiedad digital</msg>
     <msg key="titleReadingViev">Título</msg> 
@@ -146,6 +146,13 @@
     <msg key="editionSeries">La Escuela de Salamanca. Una Colección Digital de Fuentes</msg>
     <msg key="editorsInChief">Directores de la colección</msg>
     <msg key="digitalPublication">Publicación electronica</msg>
+    <msg key="biblInfo">Información bibliográfica</msg>
+    <msg key="editionInfo">Edición digital</msg>
+    <msg key="pubYear">Año de publicación</msg>
+    <msg key="publisher">Impresor</msg>
+    <msg key="imprintFirst">Primera edición</msg>
+    <msg key="notPublished">Aún no publicado</msg>
+    <msg key="digitizedBy">Digitalizado por</msg>
     
     <!--Work help-->
     <msg key="addFunx">Additional Functions</msg>
@@ -270,6 +277,7 @@
     <msg key="searchterm">Frase(s) buscada(s)</msg>
     <msg key="citedStuff">Personas/Lugares/Lemas/Citas</msg>
     <msg key="multivolume">Colección</msg>
+    <msg key="workvolume">Volumen Sencillo</msg>
     <msg key="persons">Personas</msg>
     <msg key="places">Locales</msg>
     <msg key="lemmata">Lema</msg>
@@ -297,5 +305,9 @@
     <!-- dictionary -->
     <msg key="dictUnderConstruction">El Diccionario de la lengua jurídica-política de la Escuela de Salamanca será publicado aquí: aprox. 200 entradas con lemas en latín y español, tomados directamente de las fuentes.
         Las entradas serán publicadas de manera sucesiva, previsiblemente comenzando en el año 2019.</msg>
+    
+    <!-- general language -->
+  <msg key="of">de</msg>
+    
     
 </catalogue>

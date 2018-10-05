@@ -123,11 +123,11 @@
   <msg key="1stEd">First edition</msg>
   <msg key="thisEd">This edition</msg>
   <msg key="extent">Extent, format</msg>
-  <msg key="dateOfOrigin">Year of publication (original source)</msg>
+  <!--<msg key="dateOfOrigin">Year of publication (original source)</msg>-->
   <msg key="details">Catalogue Record</msg>
   <msg key="facsimiles">Images</msg>
-  <msg key="periodOfOrigin">Volume designation</msg>
-  <msg key="ownerPrimaryEd">Owner</msg>
+  <msg key="periodOfOrigin">Period of publication</msg>
+  <msg key="ownerPrimaryEd">Library</msg>
   <msg key="catLink">Catalogue link</msg>
   <msg key="ownerMaster">Digital master</msg>
   <msg key="sort">Sort</msg>
@@ -142,7 +142,13 @@
   <msg key="editionSeries">The School of Salamanca. A Digital Collection of Sources</msg>
   <msg key="editorsInChief">Editors of the series</msg>
   <msg key="digitalPublication">Electronic publication</msg>
-  
+  <msg key="notPublished">Not yet published</msg>
+  <msg key="biblInfo">Bibliographical Information</msg>
+  <msg key="editionInfo">Digital Edition</msg>
+  <msg key="pubYear">Year of publication</msg>
+  <msg key="publisher">Publisher</msg>
+  <msg key="imprintFirst">Imprint of the first edition</msg>
+  <msg key="digitizedBy">Digitized by</msg>
   
   <!--Work help-->
   <msg key="addFunx">Additional Functions</msg>
@@ -257,6 +263,7 @@
   <msg key="searchterm">Search term(s)</msg>
   <msg key="citedStuff">Persons/Places/Lemmata/Cited</msg>
   <msg key="multivolume">Multivolume</msg>
+  <msg key="workvolume">Single Volume</msg>
   <msg key="persons">Persons</msg>
   <msg key="places">Places</msg>
   <msg key="lemmata">Lemma</msg>
@@ -268,7 +275,7 @@
   <msg key="constituted">Constituted</msg>
   
   <msg key="workNotAvailable">This work is not yet available.</msg>
-  
+   
   <!--news-->
   <msg key="more">more</msg>
   <msg key="moreb">More</msg>
@@ -290,5 +297,8 @@
   <!-- dictionary -->
   <msg key="dictUnderConstruction">The Dictionary of the School of Salamanca’s juridical-political language is going to be found here: approx. 200 entries with Latin and Spanish lemmata, taken directly from the sources.
     The entries will be published successively, beginning in 2019.</msg>
+  
+  <!-- general language -->
+  <msg key="of">of</msg>
   
 </catalogue>
