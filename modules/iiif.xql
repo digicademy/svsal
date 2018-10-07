@@ -579,21 +579,36 @@ declare function iiif:MiradorWindowObject($node as node(), $model as map (*), $w
 };
 
 declare function iiif:getPageId($canvasId as xs:string*) {
-    let $HTMLcollection := collection($config:html-root )
+    let $htmlCollection := collection($config:html-root )
     let $results := map:new(
                             for $id in $canvasId
-                                let $htmlAnchor := $HTMLcollection//a[@data-canvas = $id]
+                                let $htmlAnchor := $htmlCollection//a[@data-canvas = $id]
                                 let $pageId     := $htmlAnchor/@data-sal-id/string()
                                 return map:entry( $id , $pageId)
                             )
     return $results
 };
 
+(:~
+Manipulates a iiif full-image URI with regards to the scale of resolution of the image resource. Note: does not check whether 
+the URI leads to an actual image.
+@param uri: the URI of the image, conforming to the iiif image api
+@param scale: a value between 0 and 100 scaling the width and height of the image (in percent)
+@return: the manipulated URI
+~:)
+declare function iiif:scaleImageURI($uri as xs:string, $scale as xs:integer) as xs:string? {
+    if (matches($uri, '/full/.*?/.*?/default.jpg$')) then
+        let $before := replace($uri, '^(.*?/full/).*?/.*?/default.jpg$', '$1')
+        let $imgScaler := 'pct:' || string($scale)
+        let $after := replace($uri, '^.*?/full/.*?(/.*?/default.jpg)$', '$1')
+        return $before || $imgScaler || $after
+    else ()
+};
+
 
 (: TODO:
     - create top collection comprising all SvSal works?
-    (- create ranges (deprecation warning...)?;)
-    - check validity and consistency of @id on any level
+    (- create ranges (deprecation warning...)?)
     - dealing with TEI data which has been separated into Wxxx_a, Wxxx_b etc due to performance issues?
  :)
 
