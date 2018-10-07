@@ -10,6 +10,7 @@ import module namespace config  = "http://salamanca/config" at "modules/config.x
 import module namespace net     = "http://salamanca/net"    at "modules/net.xql";
 import module namespace render  = "http://salamanca/render" at "modules/render.xql";
 import module namespace iiif  = "http://salamanca/iiif" at "modules/iiif.xql";
+import module namespace export    = "http://salamanca/export"               at "modules/export.xql";
 
 declare       namespace exist   = "http://exist.sourceforge.net/NS/exist";
 declare       namespace output  = "http://www.w3.org/2010/xslt-xquery-serialization";
@@ -657,6 +658,9 @@ return
             let $debug3     := if ($config:debug = "trace") then console:log ("deliver doc: " || $doc/name() || "/@xml:id=" || $doc/@xml:id || ".") else ()
             return
                 $doc
+        else if (matches($exist:resource, 'W\d{4}_teiHeader.xml')) then 
+            let $workId := substring-before($exist:resource, '_teiHeader.xml')
+            return export:WRKteiHeader($workId, 'metadata')
         else if ($exist:resource eq 'sal-tei-corpus.zip') then
             let $debug      := if ($config:debug = "trace") then console:log ("TEI/XML corpus download requested: " || $net:forwardedForServername || $exist:path || ".") else ()
             let $pathToZip := $config:files-root || '/sal-tei-corpus.zip'
