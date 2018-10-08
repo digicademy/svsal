@@ -142,6 +142,7 @@
         mayo de 2018. Para este fin, los textos están codificados por medio de las especificaciones 
         de Text Encoding Initiative (TEI); para más información, por favor consulte las </msg>
     <msg key="alphaEditors">Editores (en orden alfabético)</msg>
+    <msg key="editors">Editores</msg>
     <msg key="series">Colección</msg>
     <msg key="editionSeries">La Escuela de Salamanca. Una Colección Digital de Fuentes</msg>
     <msg key="editorsInChief">Directores de la colección</msg>
@@ -153,6 +154,16 @@
     <msg key="imprintFirst">Primera edición</msg>
     <msg key="notPublished">Aún no publicado</msg>
     <msg key="digitizedBy">Digitalizado por</msg>
+    <msg key="workViews">Vistas para esta obra</msg>
+    <msg key="volViews">Vistas para este volumen</msg>
+    <msg key="textViews">Vistas para este texto</msg>
+    <msg key="readingView">Vista de texto e imágenes</msg>
+    <msg key="facsimilesLink">Facsimiles</msg>
+    <msg key="metadata">Metadatos</msg>
+    <msg key="teiHeader">Cabezado TEI</msg>
+    <msg key="scans">Escaneados</msg>
+    <msg key="notAvailable">No disponible</msg>
+    <msg key="notFullyAvailable">No disponible</msg> <!-- omitted "(completamente)" due to lack of space -->
     
     <!--Work help-->
     <msg key="addFunx">Additional Functions</msg>
@@ -287,8 +298,8 @@
     <msg key="print">Imprimir</msg>
     <msg key="diplomatic">Diplomático</msg>
     <msg key="constituted">Constituido</msg>
-    
     <msg key="workNotAvailable">Esta obra no está aún disponible.</msg>
+    
     
     <!--news-->
     <msg key="more">más</msg>

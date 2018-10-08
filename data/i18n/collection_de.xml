@@ -42,6 +42,7 @@
     2019) sukzessive auf dieser Seite veröffentlicht.</msg>
   
   <!-- work -->
+  <msg key="text">Text</msg>
   <msg key="diplomatic">Diplomatisch</msg>
   <msg key="constituted">Konstituiert</msg>
   
@@ -65,6 +66,7 @@
     Hierfür werden die Texte den Spezifikationen der Text Encoding Initiative (TEI) entsprechend aufbereitet;
     für nähere Informationen siehe die </msg>
   <msg key="alphaEditors">Herausgeber (in alphabetischer Reihenfolge)</msg>
+  <msg key="editors">Herausgeber</msg>
   <msg key="series">Reihe</msg>
   <msg key="editionSeries">Die Schule von Salamanca. Eine Digitale Quellensammlung</msg>
   <msg key="editorsInChief">Herausgeber der Reihe</msg>
@@ -85,6 +87,16 @@
   <msg key="notPublished">Noch nicht veröffentlicht</msg>
   <msg key="language">Sprache</msg>
   <msg key="digitizedBy">Digitalisiert durch</msg>
+  <msg key="workViews">Ansichten für dieses Werk</msg>
+  <msg key="volViews">Ansichten für diesen Band</msg>
+  <msg key="textViews">Ansichten für diesen Text</msg>
+  <msg key="readingView">Text-Bild-Leseansicht</msg>
+  <msg key="facsimilesLink">Faksimiles</msg>
+  <msg key="metadata">Metadaten</msg>
+  <msg key="teiHeader">TEI-Header</msg>
+  <msg key="scans">Scans</msg>
+  <msg key="notAvailable">Nicht verfügbar</msg>
+  <msg key="notFullyAvailable">Nicht (komplett) verfügbar</msg>
   
   <!-- Meta Description Tags -->
   

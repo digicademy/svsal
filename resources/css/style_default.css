@@ -233,8 +233,8 @@ width:70%
 /*details_work.html +++ show button in Image*/
 .button {
 position:absolute;
-top:8%;
-left:7%
+top:18%;
+left:15%;
 }
 .btn-link {
 color:#102873
@@ -243,6 +243,9 @@ color:#102873
 color:#DEDFE7;
 background-color:#102873
 }
+/*.img-container img {
+  height: auto;
+}*/
 /*fit author in panel /authors.html*/
 .panel-body .lead {
     white-space:nowrap;

@@ -139,6 +139,7 @@
     refer to the </msg>
   <msg key="series">Series</msg>
   <msg key="alphaEditors">Editors (in alphabetical order)</msg>
+  <msg key="editors">Editors</msg>
   <msg key="editionSeries">The School of Salamanca. A Digital Collection of Sources</msg>
   <msg key="editorsInChief">Editors of the series</msg>
   <msg key="digitalPublication">Electronic publication</msg>
@@ -149,6 +150,16 @@
   <msg key="publisher">Publisher</msg>
   <msg key="imprintFirst">Imprint of the first edition</msg>
   <msg key="digitizedBy">Digitized by</msg>
+  <msg key="workViews">Views for this Work</msg>
+  <msg key="volViews">Views for this Volume</msg>
+  <msg key="textViews">Views for this Text</msg>
+  <msg key="readingView">Text/image reading view</msg>
+  <msg key="facsimilesLink">Facsimiles</msg>
+  <msg key="metadata">Metadata</msg>
+  <msg key="teiHeader">TEI Header</msg>
+  <msg key="scans">Scans</msg> 
+  <msg key="notAvailable">Not available</msg>
+  <msg key="notFullyAvailable">Not (fully) available</msg>
   
   <!--Work help-->
   <msg key="addFunx">Additional Functions</msg>
