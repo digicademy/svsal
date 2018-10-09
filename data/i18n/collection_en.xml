@@ -149,6 +149,7 @@
   <msg key="pubYear">Year of publication</msg>
   <msg key="publisher">Publisher</msg>
   <msg key="imprintFirst">Imprint of the first edition</msg>
+  <msg key="imprintThis">Imprint</msg>
   <msg key="digitizedBy">Digitized by</msg>
   <msg key="workViews">Views for this Work</msg>
   <msg key="volViews">Views for this Volume</msg>
@@ -160,6 +161,9 @@
   <msg key="scans">Scans</msg> 
   <msg key="notAvailable">Not available</msg>
   <msg key="notFullyAvailable">Not (fully) available</msg>
+  <msg key="fullCatalogueRecord">Full catalogue record</msg>
+  <msg key="seriesVolume">Series volume</msg>
+  <msg key="originalVolume">Volume (original)</msg>
   
   <!--Work help-->
   <msg key="addFunx">Additional Functions</msg>
@@ -308,6 +312,7 @@
   <!-- dictionary -->
   <msg key="dictUnderConstruction">The Dictionary of the School of Salamanca’s juridical-political language is going to be found here: approx. 200 entries with Latin and Spanish lemmata, taken directly from the sources.
     The entries will be published successively, beginning in 2019.</msg>
+  
   
   <!-- general language -->
   <msg key="of">of</msg>

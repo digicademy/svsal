@@ -79,6 +79,7 @@
   <msg key="titleShort">Kurztitel</msg>
   <msg key="pubYear">Erscheinungsjahr</msg>
   <msg key="publisher">Drucker</msg>
+  <msg key="imprintThis">Impressum</msg>
   <msg key="imprintFirst">Impressum der Erstausgabe</msg>
   <msg key="catLink">Katalogisat</msg>
   <msg key="author">Autor</msg>
@@ -97,6 +98,9 @@
   <msg key="scans">Scans</msg>
   <msg key="notAvailable">Nicht verfügbar</msg>
   <msg key="notFullyAvailable">Nicht (komplett) verfügbar</msg>
+  <msg key="fullCatalogueRecord">Vollständiger Katalogeintrag</msg>
+  <msg key="seriesVolume">Reihenband</msg>
+  <msg key="originalVolume">Band (Original)</msg>
   
   <!-- Meta Description Tags -->
   

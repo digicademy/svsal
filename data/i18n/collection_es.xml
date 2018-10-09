@@ -152,6 +152,7 @@
     <msg key="pubYear">Año de publicación</msg>
     <msg key="publisher">Impresor</msg>
     <msg key="imprintFirst">Primera edición</msg>
+    <msg key="imprintThis">Datos de impresión</msg>
     <msg key="notPublished">Aún no publicado</msg>
     <msg key="digitizedBy">Digitalizado por</msg>
     <msg key="workViews">Vistas para esta obra</msg>
@@ -164,6 +165,9 @@
     <msg key="scans">Escaneados</msg>
     <msg key="notAvailable">No disponible</msg>
     <msg key="notFullyAvailable">No disponible</msg> <!-- omitted "(completamente)" due to lack of space -->
+    <msg key="fullCatalogueRecord">Entrada de catálogo completa</msg>
+    <msg key="seriesVolume">Volumen de la colección</msg>
+    <msg key="originalVolume">Volumen (original)</msg>
     
     <!--Work help-->
     <msg key="addFunx">Additional Functions</msg>

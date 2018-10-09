@@ -2125,39 +2125,414 @@ Creates a (HTML) catalogue record for a work/volume.
 ~:)
 declare %templates:wrap function app:WRKcatRecord($node as node(), $model as map(*), $lang as xs:string?, $wid as xs:string?) {
     let $workType := $model('currentWork')/tei:text/@type
-    
-    let $thumbnail := app:WRKcatRecordThumbnail($node, $model, $lang, 'full')
-    
-    (: ####  Stick all record parts together ####  :)
+    let $volumeIds :=   if ($workType eq 'work_multivolume') then 
+                            for $item in $model('currentWork')/tei:teiHeader/tei:fileDesc/tei:notesStmt/tei:relatedItem[@type eq 'work_volume'] return substring-after($item/@target/string(), 'work:')
+                        else ()
+    let $volumesRecord :=   if (count($volumeIds) gt 0) then 
+                                for $id in $volumeIds return app:WRKcatRecordTeaser($node, $model, $id, $lang)
+                            else ()
     let $output := 
         <div>
-            {app:WRKeditionRecord($node, $model, $lang)}
-            <hr/>
             <div class="row">
-                <div class="col-md-3">{$thumbnail}</div>
-                <div class="col-md-1"/>
-                {app:WRKbibliographicalRecord($node, $model, $lang)}
+                <div class="col-md-8">
+                    {app:WRKeditionRecord($node, $model, $lang)}
+                    <hr/>
+                    {app:WRKbibliographicalRecord($node, $model, $lang)}
+                </div>
+              <!--<div class="col-md-1"/>-->
+                <div class="col-md-4">
+                    {app:WRKadditionalInfoRecord($node, $model, $lang)}
+                </div>
             </div>
+            {if ($volumesRecord) then 
+                <div>
+                    <hr/>
+                    <h4><i18n:text key="volumes">Volumes</i18n:text></h4>
+                    {$volumesRecord}
+                </div>
+            else ()}
         </div>
+            
     return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
+};
+
+declare function app:WRKadditionalInfoRecord($node as node(), $model as map(*), $lang as xs:string?) {
+    let $workType := $model('currentWork')/tei:text/@type/string()
+    let $workId := $model('currentWork')/@xml:id/string()
+    let $status := $model('currentWork')/tei:teiHeader/tei:revisionDesc/@status/string()
+
+    let $thumbnail := app:WRKcatRecordThumbnail($node, $model, $workId, 'full')
+    let $mirador := 'mirador.html?wid=' || $workId
+    let $scanCount := 0
+    let $isPublished := app:WRKisPublished($node, $model, $workId)
+    (: ({$scanCount || ' '}<i18n:text key="scans">Scans</i18n:text>) :)
+    let $imagesLink := <a href="{$mirador}" target="_blank" rel="noopener noreferrer">
+                           <i18n:text key="facsimilesLink">Facsimiles</i18n:text> 
+                       </a>
+    let $views := 
+        <div>
+            <h4><i18n:text key="textViews">Views for this Text</i18n:text></h4>
+            <ul>
+                <li><h5><i18n:text key="readingView">Text/image reading view</i18n:text></h5>
+                    {$thumbnail}
+                </li>
+                <li>{$imagesLink}</li>
+            </ul>
+        </div>
+        
+    let $teiHeader := $config:teiserver || '/' || $workId || '_teiHeader.xml'
+    let $teiHeaderLink :=   <a href="{$teiHeader}">
+                                <i18n:text key="teiHeader">TEI Header</i18n:text>
+                            </a>
+    let $metadata :=
+        <div>
+            <h4><i18n:text key="metadata">Metadata</i18n:text></h4>
+            <ul>
+                <li>{$teiHeaderLink}</li>
+                {if ($isPublished) then 
+                    <li><a href="{$config:dataserver || '/works.' || $workId ||'.rdf'}">RDF</a></li> 
+                else ()}
+            </ul>
+        </div>
+    
+    let $teiHeaderLink := ()
+    let $download :=    if ($isPublished) then 
+                            <div>
+                                <hr/>
+                                <h4><i18n:text key="download">Metadata</i18n:text></h4>
+                                <ul>
+                                    <li><a href="{$config:teiserver || '/' || $workId ||'.xml'}">XML (TEI P5)</a></li>
+                                    <li><a href="{$config:apiserver || '/txt/work.' || $workId ||'.edit'}">
+                                            <i18n:text key="text">Text</i18n:text> (<i18n:text key="constituted">Constituted</i18n:text>)
+                                        </a>
+                                    </li>
+                                    <li><a href="{$config:apiserver || '/txt/work.' || $workId ||'.orig'}">
+                                            <i18n:text key="text">Text</i18n:text> (<i18n:text key="diplomatic">Diplomatic</i18n:text>)
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        else ()
+    return 
+        <div>
+            {$views}
+            <hr/>
+            {$metadata}
+            {$download}
+        </div> 
+};
+
+(:~ 
+Creates a HTML fragment containing a "teaser" for each volume of a multi-volume work. A teaser contains 
+essential information about the print source (title, publication date, etc.) and about the digital edition (editors, etc.),
+as well as a link to the complete catalogue record of the respective volume; moreover, it is accompanied by a thumbnail 
+for the respective volume. 
+@return: a HTML div element
+~:)
+declare function app:WRKcatRecordTeaser($node as node(), $model as map(*), $wid as xs:string, $lang as xs:string?) {
+    let $teiHeader :=   if ($wid eq $model('currentWork')/@xml:id/string()) then $model('currentWork')/tei:teiHeader
+                        else if (doc-available($config:tei-works-root || '/' || $wid || '.xml')) then 
+                            doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI/tei:teiHeader
+                        else ()
+    let $teaserText :=
+        if ($teiHeader) then
+            let $digital := app:WRKeditionMetadata($node, $model, $wid)
+            let $bibliographical := app:WRKprintMetadata($node, $model, $wid)
+            let $title := $digital?('titleMain')
+            let $volumeN := $bibliographical?('volumeNumber')
+            let $pubDate :=     if ($digital?('published') eq 'true') then
+                                    i18n:convertDate($digital?('publicationDate'), $lang, 'verbose')
+                                else ()
+            let $editors :=     if ($digital?('published') eq 'true') then $digital?('alphaEditors')
+                                else ()
+            let $recordLink := 'workDetails.html?wid=' || $wid
+            let $imagesLink := 'mirador.html?wid=' || $wid
+            let $col1-width := 'col-md-2'
+            let $col2-width := 'col-md-10'
+            let $publication := if ($digital?('published') eq 'true') then 
+                                    (<tr>
+                                         <td class="{$col1-width}" style="line-height: 1.2">
+                                             <i18n:text key="editors">Editors</i18n:text>:
+                                         </td>
+                                         <td class="{$col2-width}" style="line-height: 1.2">
+                                             {$editors}
+                                         </td>
+                                     </tr>,
+                                     <tr>
+                                         <td class="{$col1-width}" style="line-height: 1.2">
+                                             <i18n:text key="digitalPublication">Electronic Publication</i18n:text>:
+                                         </td>
+                                         <td class="{$col2-width}" style="line-height: 1.2">
+                                             {$pubDate}
+                                         </td>
+                                     </tr>)
+                                 else 
+                                    <tr>
+                                        <td class="{$col1-width}" style="line-height: 1.2">
+                                            <i18n:text key="digitalPublication">Electronic publication</i18n:text>:
+                                        </td>
+                                        <td class="{$col2-width}" style="line-height: 1.2">
+                                            <i18n:text key="notPublished">Not yet published</i18n:text>
+                                        </td>
+                                    </tr>
+            return 
+                <div class="col-md-9 catrecord-teasertext">
+                    <table class="borderless table table-hover">
+                        <tbody>
+                            <tr>
+                                <td class="{$col1-width}" style="line-height: 1.2">
+                                    <i18n:text key="title">Title</i18n:text>:
+                                </td>
+                                <td class="{$col2-width}" style="line-height: 1.2">
+                                    {$title}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="{$col1-width}" style="line-height: 1.2">
+                                    <i18n:text key="originalVolume">Volume (original)</i18n:text>:
+                                </td>
+                                <td class="{$col2-width}" style="line-height: 1.2">
+                                    {$volumeN}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="{$col1-width}" style="line-height: 1.2">
+                                    <i18n:text key="imprintThis">Imprint</i18n:text>:
+                                </td>
+                                <td class="{$col2-width}" style="line-height: 1.2">
+                                    {$bibliographical?('imprint')}
+                                </td>
+                            </tr>
+                            {$publication}
+                        </tbody>
+                    </table>
+                    <span><a href="{$recordLink}"><span class="fa fa-arrow-right"/>{' '}<i18n:text key="fullCatalogueRecord">Full catalogue record</i18n:text></a></span>
+                    <br/>
+                    <span><a href="{$imagesLink}" target="_blank" rel="noopener noreferrer"><span class="fa fa-arrow-right"/>{' '}<i18n:text key="facsimilesLink">Facsimiles</i18n:text></a></span>
+                </div>
+        else ()
+    let $thumbnail := <div class="col-md-3">{app:WRKcatRecordThumbnail($node, $model, $wid, 'teaser')}</div>
+    return 
+        <div class="row">
+            {$thumbnail}
+            {$teaserText}
+        </div>
+};
+
+(:~
+Determines whether a given work is officially published as part of the digital edition.
+@param wid: the ID of the requested work.
+~:)
+declare function app:WRKisPublished($node as node(), $model as map(*), $wid as xs:string) as xs:boolean {
+    let $status :=  if ($wid eq $model('currentWork')/@xml:id/string()) then
+                        $model('currentWork')/tei:teiHeader/tei:revisionDesc/@status/string()
+                    else if (doc-available($config:tei-works-root || '/' || $wid || '.xml')) then 
+                        doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI/tei:teiHeader/tei:revisionDesc/@status/string()
+                    else 'no_status'
+    let $publishedStatus := ('g_enriched_approved', 'h_revised', 'i_revised_approved', 'z_final')
+    return $status = $publishedStatus
+};
+
+(:~
+Creates a thumbnail image for the catalogue record of a work or volume.
+@param mode: 'full': larger image including link to reading view; 'teaser': smaller image without link
+@return: HTML div
+~:)
+declare function app:WRKcatRecordThumbnail($node as node(), $model as map(*), $wid as xs:string?, $mode as xs:string?) {
+    let $workId := if ($wid) then $wid else $model('currentWork')/@xml:id
+    let $tei := if ($wid and $wid eq $model('currentWork')/@xml:id) then $model('currentWork')
+                else if (doc-available($config:tei-works-root || '/' || $wid || '.xml')) then 
+                    doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI
+                else ()
+    (:let $img            := map:get(map:get(iiif:fetchResource($workId), 'thumbnail'), '@id'):)
+    let $iiifResource := iiif:fetchResource($workId)
+    let $img            :=  if ($iiifResource?('@type') eq 'sc:Manifest') then 
+                                $iiifResource?('thumbnail')?('@id') 
+                                (:map:get(map:get(iiif:fetchResource($workId), 'thumbnail'), '@id'):)
+                            (: if iiif doc is a collection (multi-volume work), get thumbnail of 1st volume :)
+                            else if ($iiifResource?('@type') eq 'sc:Collection') then
+                                $iiifResource?('members')?(1)?('thumbnail')?('@id')
+                            else ()
+    let $scaledImg := if ($mode eq 'full') then iiif:scaleImageURI($img, 25) else iiif:scaleImageURI($img, 20)
+    let $workType := $tei/tei:text/@type/string()
+    let $target         :=  if ($workType eq 'work_volume') then
+                                doc($config:data-root || "/" || substring-before($workId, '_Vol') || '_nodeIndex.xml')//sal:node[@n=$workId]/sal:crumbtrail/a[last()]/@href/string()
+                            else
+                                concat('work.html?wid=', $workId)
+    let $status := $tei/tei:teiHeader//tei:revisionDesc/@status/string() 
+    let $isPublished := app:WRKisPublished($node, $model, $workId)
+    let $buttonText :=  if (not($isPublished)) then
+                            if ($workType eq 'work_multivolume') then <i18n:text key="notFullyAvailable">Not (fully) available</i18n:text>
+                            else <i18n:text key="notAvailable">Not available</i18n:text>
+                        else 
+                            if ($workType eq 'work_volume') then 
+                                let $volNumber := $tei/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:series/tei:biblScope/@n/string()
+                                return <span><i18n:text key="volume">Not available</i18n:text>{' ' || $volNumber}</span>
+                            else <i18n:text key="readWork">Read</i18n:text>
+    let $thumbnail :=
+        if ($mode eq 'full') then
+            <div>
+                <a class="{$status}" href="{if (not($isPublished)) then 'javascript:' else $target}">
+                    <img src="{$scaledImg}" class="img-responsive thumbnail" alt="Titlepage {functx:capitalize-first(substring($workType, 6))}"/>
+                </a>
+                <a class="btn btn-info button {$status}" href="{if (not($isPublished)) then 'javascript:' else $target}">
+                    <span class="glyphicon glyphicon-file"></span>
+                    {$config:nbsp}{$buttonText}
+                </a>
+            </div>
+            
+        else if ($mode eq 'teaser') then 
+            <div class="catrecord-teaser">
+                <a class="{$status}" href="{if (not($isPublished)) then 'javascript:' else $target}">
+                    <img src="{$scaledImg}" class="img-responsive thumbnail teaser-thumbnail" alt="Titlepage {functx:capitalize-first(substring($workType, 6))}"/>
+                </a>
+                <a class="btn btn-info teaser-button {$status}" href="{if (not($isPublished)) then 'javascript:' else $target}">
+                    <span class="glyphicon glyphicon-file"></span>
+                    {$config:nbsp}{$buttonText}
+                </a>
+            </div>
+        else ()
+    return $thumbnail
+};
+
+(:~
+Creates a html (div) fragment containing metadata about a work's/volume's digital edition, 
+for embedding in a larger catalogue record. Receives the edition information mainly from 
+app:WRKeditionMetadata().
+~:)
+declare function app:WRKeditionRecord($node as node(), $model as map(*), $lang as xs:string?) {
+    let $workId := $model('currentWork')/@xml:id/string()
+    let $digital := app:WRKeditionMetadata($node, $model, $workId)
+    let $status := $model('currentWork')/tei:teiHeader/tei:revisionDesc/@status/string()
+    (: layout specs :)
+    let $col1-width := 'col-md-3'
+    let $col2-width := 'col-md-9'
+    let $isPublished := app:WRKisPublished($node, $model, $workId)
+    let $publicationInfo := 
+        if ($isPublished) then
+            (<tr>
+                <td class="{$col1-width}">
+                    <i18n:text key="digitalPublication">Digital publication</i18n:text>:
+                </td>
+                <td class="{$col2-width}">
+                    {$digital?('publicationDate')}
+                </td>
+            </tr>,
+            <tr>
+                <td class="{$col1-width}">
+                    <i18n:text key="alphaEditors">Editors (in alphabetical order)</i18n:text>:
+                </td>
+                <td class="{$col2-width}">
+                    {$digital?('alphaEditors')}
+                </td>
+            </tr>)
+        else 
+            <tr>
+                <td class="{$col1-width}">
+                    <i18n:text key="digitalPublication">Electronic publication</i18n:text>:
+                </td>
+                <td class="{$col2-width}">
+                    <i18n:text key="notPublished">Not yet published</i18n:text>
+                </td>
+            </tr>
+    let $volumeInfo := 
+        if ($isPublished) then
+            (<tr>
+                <td class="{$col1-width}">
+                    <i18n:text key="seriesVolume">Series volume</i18n:text>:
+                </td>
+                <td class="{$col2-width}">
+                    {$digital?('currentVolume')}
+                </td>
+            </tr>,
+            <tr>
+                <td class="{$col1-width}">
+                    <i18n:text key="digitizedBy">Digitized by</i18n:text>:
+                </td>
+                <td class="{$col2-width}">
+                    {$digital?('publisher')}
+                </td>
+            </tr>)
+        else ()
+    let $editionRecord :=
+        <table class="borderless table table-hover">
+            <tbody>
+                <tr>
+                    <td class="{$col1-width}" style="line-height: 1.2"><i18n:text key="title">Title</i18n:text>:</td>
+                    <td class="{$col2-width}" style="line-height: 1.2">{$digital?('titleMain')}</td>
+                </tr>
+                <tr>
+                    <td class="{$col1-width}" style="line-height: 1.2"><i18n:text key="titleShort">Short Title</i18n:text>:</td>
+                    <td class="{$col2-width}" style="line-height: 1.2">{$digital?('titleShort')}</td>
+                </tr>
+                <tr>
+                    <td class="{$col1-width}" style="line-height: 1.2"><i18n:text key="author">Author</i18n:text>:</td>
+                    <td class="{$col2-width}" style="line-height: 1.2">{$digital?('author')}</td>
+                </tr>
+                <tr>
+                    <td class="{$col1-width}" style="line-height: 1.2"><i18n:text key="language">Language</i18n:text>:</td>
+                    <td class="{$col2-width}" style="line-height: 1.2">{$digital?('language')}</td>
+                </tr>
+                {$publicationInfo}
+                <tr>
+                    <td class="{$col1-width}">
+                        <i18n:text key="series">Series</i18n:text>:
+                    </td>
+                    <td class="{$col2-width}">
+                        <i18n:text key="editionSeries">The School of Salamanca. A Digital Collection of Sources</i18n:text>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="{$col1-width}">
+                        <i18n:text key="editorsInChief">Editors of the Series</i18n:text>:
+                    </td>
+                    <td class="{$col2-width}">
+                        {$digital?('seriesEditors')}
+                    </td>
+                </tr>
+                {$volumeInfo}
+            </tbody>
+        </table>
+        (: citation recommendation? :)
+        return
+            <div>
+                <h4><i18n:text key="editionInfo">Digital Edition</i18n:text></h4>
+                <div>{$editionRecord}</div>
+            </div>
 };
 
 (:~
 Creates a html (div) fragment containing bibliographic information about a print source, 
-for embedding in a larger catalogue record.
+for embedding in a larger catalogue record. Receives the bibliographic information mainly from 
+app:WRKprintMetadata().
 ~:)
 declare function app:WRKbibliographicalRecord($node as node(), $model as map(*), $lang as xs:string?) {
+    (: *** AW: Get workDetails data from rdf rather than from TEI/nodeIndex? ***:)
+(:
+        let $metadata     := doc($config:rdf-root || '/' || $wid || '.rdf')
+        let $debug1       := if ($config:debug = ("trace", "info")) then console:log("Retrieving $metadata//rdf:Description[@rdf:about = $reqResource]/rdfs:seeAlso[1]/@rdf:resource[contains(., '.html')]") else ()
+        let $resolvedPath := string(($metadata//*[@rdf:about eq $reqResource]/rdfs:seeAlso[1]/@rdf:resource[contains(., ".html")])[1])
+
+        for $item in $metadata/rdf:Description/@rdf:about[../rdf:type/@rdf:resource="http://purl.org/spar/doco/part"]
+            let $textId := $item
+            let $volNumber := ...
+:)
     let $workType := $model('currentWork')/tei:text/@type/string()
-    let $bibliographical := app:WRKprintMetadata($node, $model, $lang)
+    let $workId := $model('currentWork')/@xml:id/string()
+    let $bibliographical := app:WRKprintMetadata($node, $model, $workId)
+    (: layout specs :)
+    let $col1-width := 'col-md-3'
+    let $col2-width := 'col-md-9'
+    
     let $publicationTime := if ($bibliographical?('publicationSpan')) then
                                 <tr>
-                                    <td class="col-md-4" style="line-height: 1.2"><i18n:text key="periodOfOrigin">Period of publication</i18n:text>:</td>
-                                    <td class="col-md-8" style="line-height: 1.2">{$bibliographical?('publicationSpan')}</td>
+                                    <td class="{$col1-width}" style="line-height: 1.2"><i18n:text key="periodOfOrigin">Period of publication</i18n:text>:</td>
+                                    <td class="{$col2-width}" style="line-height: 1.2">{$bibliographical?('publicationSpan')}</td>
                                 </tr>
                             else if ($bibliographical?('publicationYear')) then
                                 <tr>
-                                    <td class="col-md-4" style="line-height: 1.2"><i18n:text key="pubYear">Year of publication</i18n:text>:</td>
-                                    <td class="col-md-8" style="line-height: 1.2">{$bibliographical?('publicationYear')}</td>
+                                    <td class="{$col1-width}" style="line-height: 1.2"><i18n:text key="pubYear">Year of publication</i18n:text>:</td>
+                                    <td class="{$col2-width}" style="line-height: 1.2">{$bibliographical?('publicationYear')}</td>
                                 </tr>
                             else ()
     (: if the text is a volume within a multi-volume work, provide volume specifications: :)
@@ -2168,27 +2543,27 @@ declare function app:WRKbibliographicalRecord($node as node(), $model as map(*),
                                      || ' ' || $bibliographical?('totalVolumesCount') || ')'
             return
             <tr>
-                <td class="col-md-4" style="line-height: 1.2"><i18n:text key="volume">Volume</i18n:text>:</td>
-                <td class="col-md-8" style="line-height: 1.2">{$volumeString}</td>
+                <td class="{$col1-width}" style="line-height: 1.2"><i18n:text key="volume">Volume</i18n:text>:</td>
+                <td class="{$col2-width}" style="line-height: 1.2">{$volumeString}</td>
             </tr>
         else ()   
     let $imprintFirst := 
         if ($bibliographical?('imprintFirst')) then 
             <tr>
-                <td class="col-md-4" style="line-height: 1.2"><i18n:text key="imprintFirst">Imprint of the First Edition</i18n:text>:</td>
-                <td class="col-md-8" style="line-height: 1.2">{$bibliographical?('imprintFirst')}</td>
+                <td class="{$col1-width}" style="line-height: 1.2"><i18n:text key="imprintFirst">Imprint of the First Edition</i18n:text>:</td>
+                <td class="{$col2-width}" style="line-height: 1.2">{$bibliographical?('imprintFirst')}</td>
             </tr>
         else ()
     let $origin :=    if ($workType = ('work_monograph', 'work_volume')) then 
                             let $extLink := i18n:process(<i18n:text key="externalWindow">externer Link</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
                             return
                             (<tr>
-                                <td class="col-md-4" style="line-height: 1.2"><i18n:text key="ownerPrimaryEd">Library</i18n:text>:</td>
-                                <td class="col-md-8" style="line-height: 1.2">{$bibliographical?('library')}</td>
+                                <td class="{$col1-width}" style="line-height: 1.2"><i18n:text key="ownerPrimaryEd">Library</i18n:text>:</td>
+                                <td class="{$col2-width}" style="line-height: 1.2">{$bibliographical?('library')}</td>
                             </tr>,
                             <tr>
-                                <td class="col-md-4" style="line-height: 1.2"><i18n:text key="catLink">Catalogue link</i18n:text>:</td>
-                                <td class="col-md-8" style="line-height: 1.2">
+                                <td class="{$col1-width}" style="line-height: 1.2"><i18n:text key="catLink">Catalogue link</i18n:text>:</td>
+                                <td class="{$col2-width}" style="line-height: 1.2">
                                     <a  href="{$bibliographical?('catLink')}" title="{$extLink}" target="_blank">{($bibliographical?('catLink') || '&#32;')} 
                                         <span class="glyphicon glyphicon-new-window"></span>
                                     </a>
@@ -2201,17 +2576,17 @@ declare function app:WRKbibliographicalRecord($node as node(), $model as map(*),
         <table class="borderless table table-hover">
             <tbody>
                 <tr>
-                    <td class="col-md-4" style="line-height: 1.2"><i18n:text key="title">Title</i18n:text>:</td>
-                    <td class="col-md-8" style="line-height: 1.2">{$bibliographical?('titleMain')}</td>
+                    <td class="{$col1-width}" style="line-height: 1.2"><i18n:text key="title">Title</i18n:text>:</td>
+                    <td class="{$col2-width}" style="line-height: 1.2">{$bibliographical?('titleMain')}</td>
                 </tr>
                 {$publicationTime}
                 <tr>
-                      <td class="col-md-4" style="line-height: 1.2"><i18n:text key="publisher">Publisher</i18n:text>:</td>
-                      <td class="col-md-8" style="line-height: 1.2">{$bibliographical?('publisher')}</td>
+                      <td class="{$col1-width}" style="line-height: 1.2"><i18n:text key="publisher">Publisher</i18n:text>:</td>
+                      <td class="{$col2-width}" style="line-height: 1.2">{$bibliographical?('publisher')}</td>
                 </tr>
                 <tr>
-                      <td class="col-md-4" style="line-height: 1.2"><i18n:text key="printingPlace">Printing Place</i18n:text>:</td>
-                      <td class="col-md-8" style="line-height: 1.2">{$bibliographical?('publicationPlace')}</td>
+                      <td class="{$col1-width}" style="line-height: 1.2"><i18n:text key="printingPlace">Printing Place</i18n:text>:</td>
+                      <td class="{$col2-width}" style="line-height: 1.2">{$bibliographical?('publicationPlace')}</td>
                 </tr>
                 {$volumeSpecifications}
                 {$origin}
@@ -2219,124 +2594,27 @@ declare function app:WRKbibliographicalRecord($node as node(), $model as map(*),
             </tbody>
         </table>
     return
-        <div class="col-md-8">
+        <div>
             <h4><i18n:text key="biblInfo">Bibliographic Information</i18n:text></h4>
             <div>{$bibliographicalRecord}</div>
         </div>
-};
-
-(:~
-Creates a html (div) fragment containing metadata about a work's/volume's digital edition, 
-for embedding in a larger catalogue record.
-~:)
-declare function app:WRKeditionRecord($node as node(), $model as map(*), $lang as xs:string?) {
-    let $digital := app:WRKeditionMetadata($node, $model, $lang)
-    let $status := $model('currentWork')/tei:teiHeader/tei:revisionDesc/@status/string()
-    let $publicationInfo := 
-        if ($status eq 'g_enriched_approved') then
-            (<tr>
-                <td class="col-md-4">
-                    <i18n:text key="digitalPublication">Digital publication</i18n:text>:
-                </td>
-                <td class="col-md-8">
-                    {$digital?('publicationDate')}
-                </td>
-            </tr>,
-            <tr>
-                <td class="col-md-4">
-                    <i18n:text key="alphaEditors">Editors (in alphabetical order)</i18n:text>:
-                </td>
-                <td class="col-md-8">
-                    {$digital?('alphaEditors')}
-                </td>
-            </tr>)
-        else 
-            <tr>
-                <td class="col-md-4">
-                    <i18n:text key="digitalPublication">Electronic publication</i18n:text>:
-                </td>
-                <td class="col-md-8">
-                    <i18n:text key="notPublished">Not yet published</i18n:text>
-                </td>
-            </tr>
-    let $volumeInfo := 
-        if ($status eq 'g_enriched_approved') then
-            (<tr>
-                <td class="col-md-4">
-                    <i18n:text key="volume">Volume</i18n:text>:
-                </td>
-                <td class="col-md-8">
-                    {$digital?('currentVolume')}
-                </td>
-            </tr>,
-            <tr>
-                <td class="col-md-4">
-                    <i18n:text key="digitizedBy">Digitized by</i18n:text>:
-                </td>
-                <td class="col-md-8">
-                    {$digital?('publisher')}
-                </td>
-            </tr>)
-        else ()
-    let $editionRecord :=
-        <table class="borderless table table-hover">
-            <tbody>
-                <tr>
-                    <td class="col-md-4" style="line-height: 1.2"><i18n:text key="title">Title</i18n:text>:</td>
-                    <td class="col-md-8" style="line-height: 1.2">{$digital?('titleMain')}</td>
-                </tr>
-                <tr>
-                    <td class="col-md-4" style="line-height: 1.2"><i18n:text key="titleShort">Short Title</i18n:text>:</td>
-                    <td class="col-md-8" style="line-height: 1.2">{$digital?('titleShort')}</td>
-                </tr>
-                <tr>
-                    <td class="col-md-4" style="line-height: 1.2"><i18n:text key="author">Author</i18n:text>:</td>
-                    <td class="col-md-8" style="line-height: 1.2">{$digital?('author')}</td>
-                </tr>
-                <tr>
-                    <td class="col-md-4" style="line-height: 1.2"><i18n:text key="language">Language</i18n:text>:</td>
-                    <td class="col-md-8" style="line-height: 1.2">{$digital?('language')}</td>
-                </tr>
-                {$publicationInfo}
-                <tr>
-                    <td class="col-md-4">
-                        <i18n:text key="series">Series</i18n:text>:
-                    </td>
-                    <td class="col-md-8">
-                        <i18n:text key="editionSeries">The School of Salamanca. A Digital Collection of Sources</i18n:text>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i18n:text key="editorsInChief">Editors of the Series</i18n:text>:
-                    </td>
-                    <td class="col-md-8">
-                        {$digital?('seriesEditors')}
-                    </td>
-                </tr>
-                {$volumeInfo}
-            </tbody>
-        </table>
-        (:  TODO: citation recommendation? :)
-        return
-            <div class="row-fluid">
-                <h4><i18n:text key="editionInfo">Digital Edition</i18n:text></h4>
-                <div>{$editionRecord}</div>
-            </div>
 };
     
 (:~ 
 Bundles the bibliographical data of a (print) source.
 ~:)
-declare function app:WRKprintMetadata($node as node(), $model as map(*), $lang as xs:string?) as map(*)? {
-    let $tei := $model('currentWork')
+declare function app:WRKprintMetadata($node as node(), $model as map(*), $wid as xs:string?) as map(*)? {
+    let $tei := if ($wid eq $model('currentWork')/@xml:id) then $model('currentWork')
+                else if (doc-available($config:tei-works-root || '/' || $wid || '.xml')) then 
+                    doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI
+                else ()
     let $workId := $tei/@xml:id
     let $type := $tei/tei:text/@type
     let $sourceDesc := $tei/tei:teiHeader/tei:fileDesc/tei:sourceDesc
     
-    let $titleMain := app:WRKtitleMain($node, $model)
-    let $titleShort := app:WRKtitleShort($node, $model)
-    let $titleProper := app:WRKtitleProper($node, $model)
+    let $titleMain := $sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'main']/string()
+    let $titleShort := $sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'short']/string()
+    let $titleProper := $sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = '245a']/string()
     let $author := app:rotateFormatName($sourceDesc//tei:author/tei:persName)
     let $pubSpan := if ($sourceDesc//tei:date[@type eq 'summaryThisEd']) then $sourceDesc//tei:date[@type eq 'summaryThisEd']/text()
                             else if ($sourceDesc//tei:date[@type eq 'summaryFirstEd']) then $sourceDesc//tei:date[@type eq 'summaryFirstEd']/text()
@@ -2346,16 +2624,17 @@ declare function app:WRKprintMetadata($node as node(), $model as map(*), $lang a
                     else ()
     let $publisher :=   if ($sourceDesc//tei:publisher[@n eq 'thisEd']) then app:rotateFormatName($sourceDesc//tei:publisher[@n eq 'thisEd']/tei:persName)
                         else app:rotateFormatName($sourceDesc//tei:publisher[@n eq 'firstEd']/tei:persName)
-    let $pubPlace :=    if ($sourceDesc//tei:pubPlace[@role eq 'thisEd']) then $sourceDesc//tei:pubPlace[@role eq 'thisEd']/text()
-                        else $sourceDesc//tei:pubPlace[@role eq 'firstEd']/text()
+    let $pubPlace :=    if ($sourceDesc//tei:pubPlace[@role eq 'thisEd']) then $sourceDesc//tei:pubPlace[@role eq 'thisEd']/@key/string()
+                        else $sourceDesc//tei:pubPlace[@role eq 'firstEd']/@key/string()
     let $volumeNumber := if ($type eq 'work_volume') then $sourceDesc//tei:series/tei:biblScope/@n/string() else ()
     let $volumeTitle := if ($type eq 'work_volume') then $sourceDesc//tei:title[@type ='volume']/text() else ()
     let $totalVolumes := string(count(doc($config:tei-works-root || '/' || substring-before($workId, '_Vol') || '.xml')
                                               /tei:TEI/tei:teiHeader//tei:notesStmt/tei:relatedItem[@type eq 'work_volume']))
-    (: if text is not the first edition, supply whole imprint of the first edition :)
+    let $imprint := $pubPlace || ' : ' || $publisher || ', ' || $pubYear
+    (: if text is not the first edition, also supply imprint of the first edition :)
     let $imprintFirst := 
         if ($sourceDesc//tei:pubPlace[@role = 'thisEd']) then 
-            let $printingPlaceFirst := $sourceDesc//tei:pubPlace[@role = 'firstEd']/text()
+            let $printingPlaceFirst := $sourceDesc//tei:pubPlace[@role = 'firstEd']/@key/string()
             let $publisherFirst := app:rotateFormatName($sourceDesc//tei:publisher[@n="firstEd"]/tei:persName)
             let $dateFirst := $sourceDesc//tei:date[@type eq 'firstEd']/@when/string()
             return $printingPlaceFirst || $config:nbsp || ':' || $publisherFirst || ', ' || $config:nbsp || $dateFirst
@@ -2380,6 +2659,7 @@ declare function app:WRKprintMetadata($node as node(), $model as map(*), $lang a
             'volumeNumber': $volumeNumber,
             'volumeTitle': $volumeTitle,
             'totalVolumesCount': $totalVolumes,
+            'imprint': $imprint,
             'imprintFirst': $imprintFirst,
             'library': $library,
             'catLink': $catLink,
@@ -2391,10 +2671,14 @@ declare function app:WRKprintMetadata($node as node(), $model as map(*), $lang a
 (:~
 Bundles the digital edition metadata of a work/volume.
 ~:)
-declare function app:WRKeditionMetadata($node as node(), $model as map(*), $lang as xs:string?) as map(*)? {
-    let $workId := $model('currentWork')/@xml:id
-    let $type := $model('currentWork')/tei:text/@type
-    let $teiHeader := util:expand($model('currentWork')/tei:teiHeader)
+declare function app:WRKeditionMetadata($node as node(), $model as map(*), $wid as xs:string?) as map(*)? {
+    let $tei := if ($wid eq $model('currentWork')/@xml:id) then $model('currentWork')
+                else if (doc-available($config:tei-works-root || '/' || $wid || '.xml')) then 
+                    doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI
+                else ()
+    let $workId := $tei/@xml:id
+    let $type := $tei/tei:text/@type
+    let $teiHeader := util:expand($tei/tei:teiHeader)
     let $status := $teiHeader/tei:revisionDesc/@status/string()
     
     let $titleMain := app:WRKeditionTitleMain($node, $model)
@@ -2404,10 +2688,11 @@ declare function app:WRKeditionMetadata($node as node(), $model as map(*), $lang
     let $language := if ($teiHeader/tei:profileDesc//tei:language[@n eq 'main']/@ident eq 'la') then <i18n:text key="latin">Latein</i18n:text>
                      else if ($teiHeader/tei:profileDesc//tei:language[@n eq 'main']/@ident eq 'es') then <i18n:text key="spanish">Spanisch</i18n:text>
                      else ()
-    let $pubDate := if ($status eq 'g_enriched_approved') then
-                        i18n:convertDate($teiHeader/tei:fileDesc/tei:editionStmt/tei:edition/tei:date/@when/string(), $lang, 'verbose')
+    let $isPublished := app:WRKisPublished($node, $model, $workId)
+    let $pubDate := if ($isPublished) then
+                        $teiHeader/tei:fileDesc/tei:editionStmt/tei:edition/tei:date/@when/string()
                     else ()
-    let $alphaEditors := if ($status eq 'g_enriched_approved') then
+    let $alphaEditors := if ($isPublished) then
                              string-join(for $ed in $teiHeader/tei:fileDesc/tei:titleStmt/tei:editor/tei:persName 
                                                      order by $ed/tei:surname
                                                      return app:rotateFormatName($ed), '; ')
@@ -2417,6 +2702,7 @@ declare function app:WRKeditionMetadata($node as node(), $model as map(*), $lang
                                                      order by $ed/tei:surname
                                                      return app:rotateFormatName($ed), '; ')
     let $digitalMaster := $teiHeader/tei:fileDesc/tei:publicationStmt/tei:publisher/tei:orgName[1]/text()
+    let $published := if (app:WRKisPublished($node, $model, $workId)) then 'true' else 'false'
     
     return 
         map {
@@ -2430,192 +2716,10 @@ declare function app:WRKeditionMetadata($node as node(), $model as map(*), $lang
             'alphaEditors': $alphaEditors,
             'currentVolume': $currentVolume,
             'seriesEditors': $seriesEditors,
-            'publisher': $digitalMaster
+            'publisher': $digitalMaster,
+            'published': $published
         }
 };
-
-(:~
-Creates a thumbnail image for the catalogue record of a work or volume.
-@param mode: 'full': larger image including link to reading view; 'teaser': smaller image without link
-@return: HTML div
-~:)
-declare function app:WRKcatRecordThumbnail($node as node(), $model as map(*), $lang as xs:string?, $mode as xs:string?) {
-    let $workId := $model('currentWork')/@xml:id
-    let $img            := map:get(map:get(iiif:fetchResource($workId), 'thumbnail'), '@id')
-    let $workType := $model('currentWork')/tei:text/@type/string()
-    let $target         :=  if ($workType eq 'work_volume') then
-                                doc($config:data-root || "/" || substring-before($workId, '_Vol') || '_nodeIndex.xml')//sal:node[@n=$workId]/sal:crumbtrail/a[last()]/@href/string()
-                            else
-                                concat('work.html?wid=', $workId)
-    let $status := $model('currentWork')/tei:teiHeader//tei:revisionDesc/@status/string() 
-    let $thumbnail :=
-        if ($mode eq 'full') then
-            <div>
-                <a class="{$status}" href="{if ($status = ("a_raw", "b_cleared", "c_hyph_proposed", "d_hyph_approved", "e_emended_unenriched", "f_enriched")) then 'javascript:' else $target}">
-                    <img src="{$img}" class="img-responsive thumbnail" alt="Titlepage {functx:capitalize-first(substring($workType, 6))}"/>
-                </a>
-                <a class="btn btn-info button {$status}" href="{if ($status = ("a_raw", "b_cleared", "c_hyph_proposed", "d_hyph_approved", "e_emended_unenriched", "f_enriched")) then 'javascript:' else $target}">
-                    <span class="glyphicon glyphicon-file"></span>
-                    {$config:nbsp || $config:nbsp}
-                    <i18n:text key="readWork">Lesen</i18n:text>
-                </a>
-            </div>
-        else ()
-    return $thumbnail
-};
-
-(: Creates a HTML fragment containing a "teaser" for each volume of a multi-volume work. A teaser contains 
-essential information about the print source (title, publication date, etc.) and about the digital edition (editors, etc.),
-as well as a link to the complete catalogue record of the respective volume; moreover, it is accompanied by a thumbnail for 
-and a reading link to the respective volume. 
-@param tei: the TEI node of a work/volume dataset
-@param lang: current language
-@return: a HTML div element
-:)
-declare function app:WRKcatRecordTeaser($node as node(), $model as map(*), $lang as xs:string?) {
-    ()
-};
-    
-declare %templates:wrap 
-    function app:sourceBibliographicalRecord($node as node(), $model as map(*), $lang as xs:string?, $wid as xs:string?) {
-(: *** AW: Last minute new approach: Get workDetails data from rdf rather than from TEI/nodeIndex (shall we? *** :)
-(:
-        let $metadata     := doc($config:rdf-root || '/' || $wid || '.rdf')
-        let $debug1       := if ($config:debug = ("trace", "info")) then console:log("Retrieving $metadata//rdf:Description[@rdf:about = $reqResource]/rdfs:seeAlso[1]/@rdf:resource[contains(., '.html')]") else ()
-        let $resolvedPath := string(($metadata//*[@rdf:about eq $reqResource]/rdfs:seeAlso[1]/@rdf:resource[contains(., ".html")])[1])
-
-        for $item in $metadata/rdf:Description/@rdf:about[../rdf:type/@rdf:resource="http://purl.org/spar/doco/part"]
-            let $textId := $item
-            let $volNumber := 
-:)
-
-        let $base               := util:expand($model('currentWork'))
-        let $baseId             := $base/@xml:id
-        let $status             := $base//tei:revisionDesc/@status/string()
-        let $books              := $base//tei:text[@type ='work_volume' or @type ='work_monograph']
-
-        for $item in $books(:[not(./preceding-sibling::tei:teiHeader[@n='test'])]:)
-            let $textId         := $item/@xml:id/string()
-            let $volNumber      := $item/@n/string()
-            
-            (:let $nodeIndex      := doc($config:data-root || "/" || $wid || '_nodeIndex.xml'):)
-            (:let $facs           := if ($nodeIndex//sal:node[@type eq "text"]) then
-                                       $nodeIndex//sal:node[@type eq "text"][@n eq $textId]/following-sibling::sal:node[@type eq "pb"][1]/@n/string()
-                                    else
-                                       $nodeIndex//sal:node[@type eq "pb"][1]/@n/string():)
-(:            let $img            :=  if ($nodeIndex//sal:node[@subtype eq "work_multivolume"]) then
-                                        replace($facs,'facs_(W\d{4})-([A-Z])-(\d{4})',  'http://wwwuser.gwdg.de/~svsal/thumbs/$1/$2/$1-$2-$3.jpg')
-                                    else
-                                        replace($facs,'facs_(W\d{4})-(\d{4})',          'http://wwwuser.gwdg.de/~svsal/thumbs/$1/$1-$2.jpg'):)
-            (:let $titlepage      := ($base//tei:titlePage[1]/following::tei:pb)[1]:)
-            
-            let $bookId       := if ($item/@type eq 'work_volume' and contains($baseId, '_Vol')) then concat(substring-before($baseId, '_Vol'), '_', $textId) 
-                                 else if ($item/@type eq 'work_volume') then concat($baseId, '_', $textId)
-                                 else $baseId
-            let $img            := map:get(map:get(iiif:fetchResource($bookId), 'thumbnail'), '@id')
-            (:let $debug := console:log("Todo: Fix image-url generating work-around in app:sourceBibliographicalRecord! image-source = '" || $img || "'."):)
-            (: if there are several providers of digitized material, we only state the first (i.e., main) one :)
-            (:let $primaryEd      := if ($sourceDesc//tei:note[@xml:id="ownerOfPrimarySource"]/tei:ref[@type eq "institution" and @subtype eq "main"]) then 
-                                       $sourceDesc//tei:note[@xml:id="ownerOfPrimarySource"]/tei:ref[@type eq "institution" and @subtype eq "main"][1]
-                                   else $sourceDesc//tei:note[@xml:id="ownerOfPrimarySource"]/tei:ref[@type eq "institution"][1]
-            let $catalogue      := if ($sourceDesc//tei:note[@xml:id="ownerOfPrimarySource"]/tei:ref[@type eq "catLink" and @subtype eq "main"]) then
-                                       $sourceDesc//tei:note[@xml:id="ownerOfPrimarySource"]/tei:ref[@type eq "catLink" and @subtype eq "main"][1]/@target/string()
-                                   else $sourceDesc//tei:note[@xml:id="ownerOfPrimarySource"]/tei:ref[@type eq "catLink"][1]/@target/string()
-            :)
-            (:let $extLink        := i18n:process(<i18n:text key="external Window">externer Link</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())):)
-            (:let $target         :=  if ($item/@type ='work_volume') then
-                                        doc($config:data-root || "/" || $wid || '_nodeIndex.xml')//sal:node[@n=$textId]/sal:crumbtrail/a[last()]/@href/string()
-                                    else
-                                        concat('work.html?wid=', $wid):)
-
-            let $output         := ()
-                (:<div class="row"><hr/>
-                    <div class="col-md-3">
-                        <div>
-                            <a class="{$status}" href="{if ($status = ("a_raw", "b_cleared", "c_hyph_proposed", "d_hyph_approved", "e_emended_unenriched", "f_enriched")) then 'javascript:' else $target}">
-                                <img src="{$img}" class="img-responsive thumbnail" alt="Titlepage {functx:capitalize-first(substring($item/@type, 6))}"/>
-                            </a>
-                            <a class="btn btn-info button {$status}" href="{if ($status = ("a_raw", "b_cleared", "c_hyph_proposed", "d_hyph_approved", "e_emended_unenriched", "f_enriched")) then 'javascript:' else $target}">
-                                <span class="glyphicon glyphicon-file"></span>{$config:nbsp || $config:nbsp}
-                                {if ($item/@type = 'work_volume') then
-                                    <span><i18n:text key="volume">Band</i18n:text>{$config:nbsp || $volNumber}</span>
-                                 else
-                                    <i18n:text key="readWork">Lesen</i18n:text>
-                                }
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-md-1"/>
-                    <div class="col-md-8" style="left: -0.7%">
-                        <table class="borderless table table-hover">
-                            <tbody>
-                                {if ($item/@type ='work_volume') then
-                                    <tr>
-                                        <td class="col-md-4" style="line-height: 1.2"><i18n:text key="volTitle">Titel des Bandes/Reihe</i18n:text>:</td>
-                                        <td class="col-md-8" style="line-height: 1.2">{$title}</td>
-                                    </tr>
-                                 else ()
-                                }
-                                {if ($item/@type ='work_volume') then
-                                    <tr>
-                                        <td class="col-md-4" style="line-height: 1.2"><i18n:text key="volNo">Bandnummer</i18n:text>:</td>
-                                        <td class="col-md-8" style="line-height: 1.2">{$volNumberTitle}</td>
-                                        </tr>
-                                 else ()
-                                } 
-                                {if ($printingPlaceThis) then
-                                    <tr>
-                                        <td class="col-md-4" style="line-height: 1.2"><i18n:text key="imprintWRK">Impressum</i18n:text>:</td>
-                                        <td class="col-md-8" style="line-height: 1.2">{$printingPlaceThis || $config:nbsp}: {$printerThis},{$config:nbsp || $thisEd}</td>
-                                    </tr>
-                                 else ()}
-                              <tr>
-                                    <td class="col-md-4" style="line-height: 1.2"><i18n:text key="imprintWRK">Impressum [Erstausgabe]</i18n:text>:</td>
-                                    <td class="col-md-8" style="line-height: 1.2">{$printingPlace || $config:nbsp}: {$printer},{$config:nbsp || $firstEd}</td>
-                              </tr>
-                              <tr>
-                                    <td class="col-md-4" style="line-height: 1.2"><i18n:text key="extent">Umfang, Format</i18n:text>:</td>
-                                    <td class="col-md-8" style="line-height: 1.2">{$extent}</td>
-                              </tr>
-                              <tr>
-                                <td class="col-md-4" style="line-height: 1.2"><i18n:text key="language">Sprache</i18n:text>:</td>
-                                    <td class="col-md-8" style="line-height: 1.2">
-                                        {
-                                             if ($item/@xml:lang = 'la') then <i18n:text key="latin">Latein</i18n:text>
-                                        else if ($item/@xml:lang = 'es') then <i18n:text key="spanish">Spanisch</i18n:text>
-                                        else ()
-                                        }
-                                    </td>
-                              </tr>
-                              <tr>
-                                    <td class="col-md-4" style="line-height: 1.2"><i18n:text key="ownerMaster">Digital Master</i18n:text>:</td>
-                                    <td class="col-md-8" style="line-height: 1.2">{$master}</td>
-                              </tr>
-                              <tr>
-                                    <td class="col-md-4" style="line-height: 1.2"><i18n:text key="ownerPrimaryEd">Digitalisierungsvorlage</i18n:text>:</td>
-                                    <td class="col-md-8" style="line-height: 1.2">{$primaryEd}</td>
-                              </tr>
-                              <tr>
-                                    <td class="col-md-4" style="line-height: 1.2"><i18n:text key="catLink">Katalogisat der Vorlage</i18n:text>:</td>
-                                    <td class="col-md-8" style="line-height: 1.2">{if ($catalogue) then <a  href="{$catalogue}" title="{$extLink}" target="_blank">{($catalogue || '&#32;')} <span class="glyphicon glyphicon-new-window"></span></a> else ()}</td>
-                              </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>:)
-                
-                (: the following may be added once the proper information is avaliable:
-                <tr>
-                                    <td class="col-md-4" style="line-height: 1.2"><i18n:text key="material">Material</i18n:text>:</td>
-                                    <td class="col-md-8" style="line-height: 1.2">{$material}</td>
-                </tr>:)
-        (:order by $volNumber ascending
-(\:let $debug := console:log("Debug: " || serialize($output)):\)
-        return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())):) 
-        return ()
-        }; 
-        
-
 
 (:combined title on work.html in left box:)
 declare %templates:wrap

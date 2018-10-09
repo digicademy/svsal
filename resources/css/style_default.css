@@ -236,6 +236,11 @@ position:absolute;
 top:18%;
 left:15%;
 }
+.teaser-button {
+    position:absolute;
+    top:10%;
+    left:7%;
+}
 .btn-link {
 color:#102873
 }
@@ -379,7 +384,13 @@ color:DimGray
 .button.c_hyph_proposed,
 .button.d_hyph_approved,
 .button.e_emended_unenriched,
-.button.f_enriched {
+.button.f_enriched,
+.teaser-button.a_raw,
+.teaser-button.b_cleared,
+.teaser-button.c_hyph_proposed,
+.teaser-button.d_hyph_approved,
+.teaser-button.e_emended_unenriched,
+.teaser-button.f_enriched{
 background-color:silver;
 color:DimGray
 }
@@ -449,6 +460,19 @@ color:gray
 .thumbnail {
     width: 15em;
 /*    height: 5em;*/
+}
+
+.teaser-thumbnail {
+    width:12em;
+    height:auto;
+}
+
+.catrecord-teaser {
+    padding-top: 0.5em;
+}
+
+.catrecord-teasertext {
+    padding-top: 0.5em;
 }
 
 #showmorebutton {
