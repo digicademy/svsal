@@ -402,7 +402,7 @@ declare function app:switchTitle($node as node(), $model as map (*), $lang as xs
 declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang as xs:string?) {
     for $item in (collection($config:tei-works-root)//tei:teiHeader[parent::tei:TEI//tei:text/@type = ("work_monograph", "work_multivolume")])
         let $wid            :=  xs:string($item/parent::tei:TEI/@xml:id)
-        let $title          :=  $item//tei:monogr/tei:title[@type = 'short']
+        let $title          :=  $item/tei:fileDesc/tei:titleStmt/tei:title[@type = 'short']
         let $status         :=  xs:string($item/ancestor-or-self::tei:TEI//tei:revisionDesc/@status)
         let $WIPstatus      :=  if ($item/ancestor-or-self::tei:TEI//tei:revisionDesc/@status =
                                                          ( 'a_raw',
@@ -415,9 +415,9 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
                                 else "no"
         let $wrkLink        :=  'work.html?wid=' || $wid
 
-        let $name           :=  app:rotateFormatName($item//tei:sourceDesc//tei:author/tei:persName)
-        let $sortName       :=  $item//tei:sourceDesc//tei:author/tei:persName/tei:surname
-        let $firstChar      :=  substring($item//tei:sourceDesc//tei:author//tei:surname, 1, 1)
+        let $name           :=  app:formatName($item/tei:fileDesc/tei:titleStmt/tei:author/tei:persName)
+        let $sortName       :=  lower-case($item/tei:fileDesc/tei:titleStmt/tei:author/tei:persName/tei:surname) (:lower-casing for equal sorting:)
+        let $firstChar      :=  upper-case(substring($item/tei:fileDesc/tei:titleStmt/tei:author//tei:surname, 1, 1))
         let $nameFacet      :=       if ($firstChar = ('A','B','C','D','E','F')) then 'A - F'
                                 else if ($firstChar = ('G','H','I','J','K','L')) then 'G - L'
                                 else if ($firstChar = ('M','N','O','P','Q','R')) then 'M - R'
