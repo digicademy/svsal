@@ -261,6 +261,9 @@ background-color:#102873
     padding-top:8px;
     margin: 0 0 0 0;
 }
+.panel-body .work-title {
+    font-weight: bold;
+}
 .bigger {
 font-size:1.2em;
 color:#555555
