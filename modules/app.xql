@@ -2184,14 +2184,19 @@ declare function app:WRKadditionalInfoRecord($node as node(), $model as map(*), 
     let $teiHeaderLink :=   <a href="{$teiHeader}">
                                 <i18n:text key="teiHeader">TEI Header</i18n:text>
                             </a>
+    let $iiif :=    if ($workType eq 'work_multivolume') then $iiif:presentationServer || 'collection/' || $workId
+                    else $iiif:presentationServer || '/' || $workId || '/manifest'
+    let $iiifLink :=    <a href="{$iiif}">
+                            IIIF (<i18n:text key="imageMetadata">Image Metadata</i18n:text>)
+                        </a>
+    let $rdfLink := <a href="{$config:dataserver || '/works.' || $workId ||'.rdf'}">RDF</a>
     let $metadata :=
         <div>
             <h4><i18n:text key="metadata">Metadata</i18n:text></h4>
             <ul>
                 <li>{$teiHeaderLink}</li>
-                {if ($isPublished) then 
-                    <li><a href="{$config:dataserver || '/works.' || $workId ||'.rdf'}">RDF</a></li> 
-                else ()}
+                <li>{$rdfLink}</li>
+                <li>{$iiifLink}</li>
             </ul>
         </div>
     
@@ -2454,16 +2459,19 @@ declare function app:WRKeditionRecord($node as node(), $model as map(*), $lang a
                 </td>
             </tr>)
         else ()
+        
+    let $title := if ($digital?('titleProper')) then $digital?('titleProper') else $digital?('titleMain')
+        
     let $editionRecord :=
         <table class="borderless table table-hover">
             <tbody>
                 <tr>
-                    <td class="{$col1-width}" style="line-height: 1.2"><i18n:text key="title">Title</i18n:text>:</td>
-                    <td class="{$col2-width}" style="line-height: 1.2">{$digital?('titleMain')}</td>
+                    <td class="{$col1-width}" style="line-height: 1.2"><i18n:text key="citationTitle">Citation Title</i18n:text>:</td>
+                    <td class="{$col2-width}" style="line-height: 1.2">{$digital?('titleShort')}</td>
                 </tr>
                 <tr>
-                    <td class="{$col1-width}" style="line-height: 1.2"><i18n:text key="titleShort">Short Title</i18n:text>:</td>
-                    <td class="{$col2-width}" style="line-height: 1.2">{$digital?('titleShort')}</td>
+                    <td class="{$col1-width}" style="line-height: 1.2"><i18n:text key="title">Title</i18n:text>:</td>
+                    <td class="{$col2-width}" style="line-height: 1.2">{$title}</td>
                 </tr>
                 <tr>
                     <td class="{$col1-width}" style="line-height: 1.2"><i18n:text key="author">Author</i18n:text>:</td>
@@ -2572,12 +2580,14 @@ declare function app:WRKbibliographicalRecord($node as node(), $model as map(*),
                         else ()
     (:let $extent := $bibliographical?('extent'):) (: TODO: localize the format specifications :)
     
+    let $title := if ($bibliographical?('titleProper')) then $bibliographical?('titleProper') else $bibliographical?('titleMain')
+    
     let $bibliographicalRecord :=
         <table class="borderless table table-hover">
             <tbody>
                 <tr>
                     <td class="{$col1-width}" style="line-height: 1.2"><i18n:text key="title">Title</i18n:text>:</td>
-                    <td class="{$col2-width}" style="line-height: 1.2">{$bibliographical?('titleMain')}</td>
+                    <td class="{$col2-width}" style="line-height: 1.2">{$title}</td>
                 </tr>
                 {$publicationTime}
                 <tr>
@@ -2637,7 +2647,7 @@ declare function app:WRKprintMetadata($node as node(), $model as map(*), $wid as
             let $printingPlaceFirst := $sourceDesc//tei:pubPlace[@role = 'firstEd']/@key/string()
             let $publisherFirst := app:rotateFormatName($sourceDesc//tei:publisher[@n="firstEd"]/tei:persName)
             let $dateFirst := $sourceDesc//tei:date[@type eq 'firstEd']/@when/string()
-            return $printingPlaceFirst || $config:nbsp || ':' || $publisherFirst || ', ' || $config:nbsp || $dateFirst
+            return $printingPlaceFirst || ' : ' || $publisherFirst || ', ' || $dateFirst
         else ()
     (: catalogue link for the print source: if there are several original sources, state only the main source :)
     let $library := if (count($sourceDesc//tei:msDesc) gt 1) then $sourceDesc//tei:msDesc[@type eq 'main']//tei:repository/text() 

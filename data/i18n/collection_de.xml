@@ -77,6 +77,7 @@
   <msg key="volTitle">Titel des Bandes/Reihe</msg> 
   <msg key="title">Titel</msg>
   <msg key="titleShort">Kurztitel</msg>
+  <msg key="citationTitle">Zitiertitel</msg>
   <msg key="pubYear">Erscheinungsjahr</msg>
   <msg key="publisher">Drucker</msg>
   <msg key="imprintThis">Impressum</msg>
@@ -101,6 +102,7 @@
   <msg key="fullCatalogueRecord">Vollständiger Katalogeintrag</msg>
   <msg key="seriesVolume">Reihenband</msg>
   <msg key="originalVolume">Band (Original)</msg>
+  <msg key="imageMetadata">Bildmetadaten</msg>
   
   <!-- Meta Description Tags -->
   

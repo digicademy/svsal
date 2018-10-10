@@ -110,6 +110,7 @@
     <msg key="surname">Apellido</msg>
     <msg key="titleShort">Título corto</msg>
     <msg key="titleProper">Título adaptado</msg>
+    <msg key="citationTitle">Título de citación</msg>
     <msg key="printer">Impresor</msg>
     <msg key="printingPlace">Lugar de publicación</msg>
     <msg key="imprintWRK">Datos de impresión</msg>
@@ -168,6 +169,7 @@
     <msg key="fullCatalogueRecord">Entrada de catálogo completa</msg>
     <msg key="seriesVolume">Volumen de la colección</msg>
     <msg key="originalVolume">Volumen (original)</msg>
+    <msg key="imageMetadata">Metadatos de las imágenes</msg>
     
     <!--Work help-->
     <msg key="addFunx">Additional Functions</msg>

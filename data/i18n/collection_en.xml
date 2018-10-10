@@ -104,6 +104,7 @@
   <msg key="surname">Surname</msg>
   <msg key="titleShort">Title (short)</msg>
   <msg key="titleProper">Title proper in heading form</msg>
+  <msg key="citationTitle">Citation Title</msg>
   <msg key="printingPlace">Printing Place</msg>
   <msg key="imprintWRK">Imprint</msg>
   <msg key="summaryOfVols">Volumes</msg>
@@ -164,6 +165,7 @@
   <msg key="fullCatalogueRecord">Full catalogue record</msg>
   <msg key="seriesVolume">Series volume</msg>
   <msg key="originalVolume">Volume (original)</msg>
+  <msg key="imageMetadata">Image Metadata</msg>
   
   <!--Work help-->
   <msg key="addFunx">Additional Functions</msg>
