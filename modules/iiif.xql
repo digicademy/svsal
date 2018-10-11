@@ -52,7 +52,7 @@ or a collection resource (for a multi-volume work).
 @param $wid: the ID of the work or volume which the manifest is requested for
 @return:     the iiif manifest/collection
 :)
-declare function iiif:fetchResource ($wid as xs:string) as map(*) {
+declare function iiif:fetchResource ($wid as xs:string) as map(*)? {
     let $workType := if (matches($wid, '^W\d{4}(_Vol\d{2})?$')) then 
                          doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI/tei:text/@type
                      else ()
@@ -257,7 +257,7 @@ declare function iiif:mkSequence($volumeId as xs:string, $tei as node(), $thumbn
     (: The startCanvas is identifiable by its containing (within "resource"/"@id") 
         the URL of the title page (=thumbnail). The following assumes that this URL can be found somewhere 
         within the first 30 canvases:)
-    let $getStartCanvas := for $i in (1 to 30)  
+    let $getStartCanvas := for $i in (1 to 15)  (: assuming that no work has less than 15 images AND that the thumbnail occurs within the first 15 images :)
                             let $canvasImage := map:get($canvases($i), "images")(1)
                             let $imageResourceId := map:get(map:get($canvasImage, "resource"), "@id")
                             let $return := if ($imageResourceId eq $thumbnailUrl) 
