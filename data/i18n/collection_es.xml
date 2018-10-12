@@ -324,7 +324,11 @@
         Las entradas serán publicadas de manera sucesiva, previsiblemente comenzando en el año 2019.</msg>
     
     <!-- general language -->
-  <msg key="of">de</msg>
+    <msg key="of">de</msg>
+    
+    <!-- Mirador -->
+    <msg key="toWorksOverview">Lista de Obras</msg>
+    <msg key="catalogueRecord">Registro de Catálogo</msg>
     
     
 </catalogue>

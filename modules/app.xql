@@ -3590,14 +3590,3 @@ declare function app:imprint ($node as node(), $model as map(*), $lang as xs:str
     else ()
 };
 
-(:~
-Returns i18n (XML) data for a given language as JSON (e.g., for being used by JavaScript apps). 
-~:)
-declare function app:JSi18nData ($node as node(), $model as map (*), $lang as xs:string?) {
-    let $i18nData := doc($config:i18n-root || '/collection_' || $lang || '.xml')
-    (:return map {
-        for 
-    }:)
-    return ()
-};
-

@@ -319,4 +319,8 @@
   <!-- general language -->
   <msg key="of">of</msg>
   
+  <!-- Mirador -->
+  <msg key="toWorksOverview">to Works Overview</msg>
+  <msg key="catalogueRecord">Catalogue Record</msg>
+  
 </catalogue>

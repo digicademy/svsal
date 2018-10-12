@@ -147,4 +147,8 @@
   <!-- general language -->
   <msg key="of">von</msg>
   
+  <!-- Mirador -->
+  <msg key="toWorksOverview">zur Werkliste</msg>
+  <msg key="catalogueRecord">Katalogeintrag</msg>
+  
 </catalogue>
