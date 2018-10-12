@@ -75,13 +75,9 @@ declare function iiif:fetchResource ($wid as xs:string) as map(*)? {
                     let $collection := json-doc($config:iiif-root || '/' || $collectionId || '.json')
                     let $manifest := array:get(array:filter(map:get($collection, 'members'), function($a) {contains(map:get($a, '@id'), $wid)}), 1)
                     return $manifest
-                    (:for $i in (1 to array:size(map:get($collection, 'members'))) return
-                                         if (array:get(map:get($collection, 'members'), $i))
-                    array:for-each(map:get($collection, 'members'), ...)
-                    :)
                 else 
                     let $debug := console:log('Creating iiif manifest for ' || $wid || '.')
-                    return iiif:createResource($wid) (: TODO: rename this iiif:makeResource...:)
+                    return iiif:createResource($wid)
             return $volume
         else ()
     return $output 
@@ -144,14 +140,14 @@ declare function iiif:mkMultiVolumeCollection($workId as xs:string, $tei as node
         "license": $license,
         "members": $manifests
     }
-(: rendering? seeAlso? thumbnail? :)
     return $collection-out
 };
 
 (: includes single-volume works as well as single volumes as part of multi-volume works:)
 (: volumeId: xml:id of TEI node of single TEI file, e.g. "W0004" or "W0013_Vol01" :)
-declare function iiif:mkSingleVolumeManifest($volumeId as xs:string, $tei as node(), $collectionId as xs:string?) {
+declare function iiif:mkSingleVolumeManifest($volumeId as xs:string, $teiDoc as node(), $collectionId as xs:string?) {
     let $debug := if ($config:debug = "trace") then console:log("iiif:mkSingleVolumeManifest running (" || $volumeId || " requested) ...") else ()
+    let $tei := util:expand($teiDoc)
     (: File metadata section :)
     let $id := $iiif:presentationServer || $volumeId || "/manifest"
     let $label := normalize-space($tei/tei:teiHeader//tei:titleStmt/tei:title[@type="main"]/text())
@@ -286,7 +282,8 @@ declare function iiif:mkCanvasFromTeiFacs($volumeId as xs:string, $facs as xs:st
     let $digilibImageId := $iiif:imageServer || iiif:teiFacs2IiifImageId($facs)
     (: get image height and width from the digilib server (i.e. from each image json file): :)
     let $options := map { "liberal": true(), "duplicates": "use-last" }
-
+    
+    let $debug := if ($config:debug = ('trace', 'info')) then console:log('Getting image resource from digilib server: ' || $digilibImageId) else ()
     let $digilibImageResource := json-doc($digilibImageId, $options)
     
     let $imageHeight := map:get($digilibImageResource, "height")
@@ -422,8 +419,9 @@ declare function iiif:mkMetadata($tei as node()) as array(*) {
 };
 
 declare function iiif:getThumbnailId($tei as node()) as xs:string {
-    let $thumbnailFacs := if ($tei/tei:text/tei:front//tei:titlePage[1]//tei:pb[1]) then $tei/tei:text/tei:front/tei:titlePage//tei:pb[1]/@facs
-                          else $tei/tei:text/tei:front//tei:titlePage[1]/preceding-sibling::tei:pb[1]/@facs
+    let $expandedTei := util:expand($tei)
+    let $thumbnailFacs := if ($expandedTei/tei:text/tei:front//tei:titlePage[1]//tei:pb[1]) then $expandedTei/tei:text/tei:front//tei:titlePage[1]//tei:pb[1]/@facs
+                          else $expandedTei/tei:text/tei:front//tei:titlePage[1]/preceding-sibling::tei:pb[1]/@facs
     return iiif:teiFacs2IiifImageId($thumbnailFacs)
 };
 
@@ -454,6 +452,7 @@ declare function iiif:getI18nLabels($labelKey as xs:string?) as array(*) {
 (: converts a tei:pb/@facs value (given that it has the form "facs:Wxxxx(-x)-xxxx") into an image id understandable by the Digilib server,
     such as "W0013!A!W0013-A-0009". Changes in the Digilib settings, for instance with the delimiters, might make changes in this function necessary :)
 declare function iiif:teiFacs2IiifImageId($facs as xs:string?) as xs:string {
+    let $debug := if (not(matches($facs, 'facs:W\d{4}(-[A-z])?-\d{4}'))) then error() else ()
     let $facsWork := substring-before(substring-after($facs, "facs:"), "-")
     let $facsVol := if (contains(substring-after($facs, "-"), "-")) then substring-before(substring-after($facs, "-"),"-") else ()
     let $facsImgId := substring($facs, string-length($facs) - 3, 4)
@@ -596,7 +595,7 @@ the URI leads to an actual image.
 @param scale: a value between 0 and 100 scaling the width and height of the image (in percent)
 @return: the manipulated URI
 ~:)
-declare function iiif:scaleImageURI($uri as xs:string, $scale as xs:integer) as xs:string? {
+declare function iiif:scaleImageURI($uri as xs:string?, $scale as xs:integer) as xs:string? {
     if (matches($uri, '/full/.*?/.*?/default.jpg$')) then
         let $before := replace($uri, '^(.*?/full/).*?/.*?/default.jpg$', '$1')
         let $imgScaler := 'pct:' || string($scale)

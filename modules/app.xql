@@ -2239,11 +2239,12 @@ declare function app:WRKcatRecordTeaser($node as node(), $model as map(*), $wid 
                         else if (doc-available($config:tei-works-root || '/' || $wid || '.xml')) then 
                             doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI/tei:teiHeader
                         else ()
+    let $log := if ($config:debug = ('trace', 'info')) then console:log('Creating cat record teaser for work/volume:' || $wid) else ()
     let $teaserText :=
         if ($teiHeader) then
             let $digital := app:WRKeditionMetadata($node, $model, $wid)
             let $bibliographical := app:WRKprintMetadata($node, $model, $wid)
-            let $title := $digital?('titleMain')
+            let $title := if ($digital?('titleProper')) then $digital?('titleProper') else $digital?('titleMain') (: or $digital?('titleShort')?:)
             let $volumeN := $bibliographical?('volumeNumber')
             let $pubDate :=     if ($digital?('published') eq 'true') then
                                     i18n:convertDate($digital?('publicationDate'), $lang, 'verbose')
@@ -2344,16 +2345,14 @@ Creates a thumbnail image for the catalogue record of a work or volume.
 @return: HTML div
 ~:)
 declare function app:WRKcatRecordThumbnail($node as node(), $model as map(*), $wid as xs:string?, $mode as xs:string?) {
-    let $workId := if ($wid) then $wid else $model('currentWork')/@xml:id
     let $tei := if ($wid and $wid eq $model('currentWork')/@xml:id) then $model('currentWork')
                 else if (doc-available($config:tei-works-root || '/' || $wid || '.xml')) then 
                     doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI
                 else ()
-    (:let $img            := map:get(map:get(iiif:fetchResource($workId), 'thumbnail'), '@id'):)
+    let $workId := $tei/@xml:id
     let $iiifResource := iiif:fetchResource($workId)
     let $img            :=  if ($iiifResource?('@type') eq 'sc:Manifest') then 
                                 $iiifResource?('thumbnail')?('@id') 
-                                (:map:get(map:get(iiif:fetchResource($workId), 'thumbnail'), '@id'):)
                             (: if iiif doc is a collection (multi-volume work), get thumbnail of 1st volume :)
                             else if ($iiifResource?('@type') eq 'sc:Collection') then
                                 $iiifResource?('members')?(1)?('thumbnail')?('@id')
@@ -2375,7 +2374,7 @@ declare function app:WRKcatRecordThumbnail($node as node(), $model as map(*), $w
                                 return <span><i18n:text key="volume">Not available</i18n:text>{' ' || $volNumber}</span>
                             else <i18n:text key="readWork">Read</i18n:text>
     let $thumbnail :=
-        if ($mode eq 'full') then
+        if ($mode eq 'full' and $scaledImg) then
             <div>
                 <a class="{$status}" href="{if (not($isPublished)) then 'javascript:' else $target}">
                     <img src="{$scaledImg}" class="img-responsive thumbnail" alt="Titlepage {functx:capitalize-first(substring($workType, 6))}"/>
@@ -2386,7 +2385,7 @@ declare function app:WRKcatRecordThumbnail($node as node(), $model as map(*), $w
                 </a>
             </div>
             
-        else if ($mode eq 'teaser') then 
+        else if ($mode eq 'teaser' and $scaledImg) then 
             <div class="catrecord-teaser">
                 <a class="{$status}" href="{if (not($isPublished)) then 'javascript:' else $target}">
                     <img src="{$scaledImg}" class="img-responsive thumbnail teaser-thumbnail" alt="Titlepage {functx:capitalize-first(substring($workType, 6))}"/>
@@ -2413,6 +2412,7 @@ declare function app:WRKeditionRecord($node as node(), $model as map(*), $lang a
     let $col1-width := 'col-md-3'
     let $col2-width := 'col-md-9'
     let $isPublished := app:WRKisPublished($node, $model, $workId)
+    let $publicationDate := i18n:convertDate($digital?('publicationDate'), $lang, 'verbose')
     let $publicationInfo := 
         if ($isPublished) then
             (<tr>
@@ -2420,7 +2420,7 @@ declare function app:WRKeditionRecord($node as node(), $model as map(*), $lang a
                     <i18n:text key="digitalPublication">Digital publication</i18n:text>:
                 </td>
                 <td class="{$col2-width}">
-                    {$digital?('publicationDate')}
+                    {$publicationDate}
                 </td>
             </tr>,
             <tr>
@@ -3588,5 +3588,16 @@ declare function app:imprint ($node as node(), $model as map(*), $lang as xs:str
             {$html}
         </div>
     else ()
+};
+
+(:~
+Returns i18n (XML) data for a given language as JSON (e.g., for being used by JavaScript apps). 
+~:)
+declare function app:JSi18nData ($node as node(), $model as map (*), $lang as xs:string?) {
+    let $i18nData := doc($config:i18n-root || '/collection_' || $lang || '.xml')
+    (:return map {
+        for 
+    }:)
+    return ()
 };
 
