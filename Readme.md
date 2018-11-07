@@ -27,7 +27,6 @@ Configuration is concentrated in a single file modules/config.xqm. This file is 
 * a sphinxsearch search server, accessed via an opensearch-compatible php interface
 * a wordpress blog
 
-
 ## Caveats/provisos
 
 While we consider some aspects of the software sufficiently consolidated and tests to offer them for public review, criticism and re-use, we are well aware that some other areas urgently need to be taken care of. This concerns, among others:
@@ -36,7 +35,6 @@ While we consider some aspects of the software sufficiently consolidated and tes
 * Clean up code - some obsolete code has not been commented out, let alone removed. This also concerns files (i.e. obsolete javascript libraries or xslt stylesheets). Also, not all occurrences of hardcoded, "Salamanca-specific" information has been moved to the central configuration module (modules/config.xqm) or the localisation files at data/i18n, where such things should reside.
 * Performance - when we are satisfied with everything, we want to minify js and css code. However, we also have to revise the application more generally in terms of performance. In some cases, caching routines can certainly help (in the case of the rdf lifting service, we have started working on this, but this is not working properly right now.)
 * Error handling can certainly be done in a more orderly way.
-
 
 ## License
 
