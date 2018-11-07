@@ -4,6 +4,7 @@
 
 This software package provides a XML/TEI-based digital edition environment. It has been developed as the central element of the web presence of the project "[The School of Salamanca. A digital collection of sources and a dictionary of its juridical-political language](https://www.salamanca.school)" of the [Academy of Sciences and Literature | Mainz](https://www.adwmainz.de/), Germany. It is meant to be deployed as an application package within [eXist-db](https://exist-db.org/) and it draws upon a series of further services described in more detail below. The data files as well as other parts of the infrastructure will be published separately.
 
+Technical documentation can be found in <docs/Technical.md> and a description of the API is in <docs/API.md>.
 
 ## Features
 
@@ -17,10 +18,9 @@ Some of the particular features of this software are the following:
 
 * **Microservices architecture**: Some of the application's functions are implemented as clients requesting data from dedicated services. Navigation between passages relies (in part) on the id service described above, search relies on an [OpenSearch](http://www.opensearch.org/)-compatible search service, image viewing on an [iiif](http://iiif.io/)-conforming image and manifest service etc. For the environment that this application expects, see below.
 
-
 ## Environment
 
-Configuration is concentrated in a single file modules/config.xqm. This file is one of the things you will want to customize when you intend to launch the software yourself. However, at (https://www.salamanca.school), the application is also integrated with the following other servers:
+Configuration is concentrated in a single file modules/config.xqm. This file is one of the things you will want to customize when you intend to launch the software yourself. However, at <https://www.salamanca.school>, the application is also integrated with the following other servers:
 
 * an iiif-conformant image server (iiif image and presentation APIs)
 * an any23 service rendering rdf information in a desired serialisation
