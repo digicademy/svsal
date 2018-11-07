@@ -40,7 +40,7 @@ import module namespace templates   = "http://exist-db.org/xquery/templates";
 import module namespace config      = "http://salamanca.school/ns/config"               at "config.xqm";
 import module namespace render      = "http://salamanca.school/ns/render"               at "render.xql";
 import module namespace i18n        = "http://exist-db.org/xquery/i18n"                 at "i18n.xql";
-import module namespace stool       = "http://salamanca.school/ns/stool"                at "stool.xql";
+import module namespace stool       = "http://salamanca.school/ns/stool"                at "stool.xqm";
 
 
 (: === Page Header Elements === :)

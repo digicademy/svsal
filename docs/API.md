@@ -8,7 +8,7 @@ The general API is accessible at <https://api.salamanca.school/>.
 
 ## Services and formats
 
-Under <https://api.salamanca.school>, we provide the following endpoints<sup id="anchor1">[1](#fn1)</sup>:
+Under <https://api.salamanca.school/v1>, we provide the following endpoints<sup id="anchor1">[1](#fn1)</sup>:
 
 * **/tei/** for [TEI P5](http://www.tei-c.org/release/doc/tei-p5-doc/en/html/index.html) xml (this is also being redirected to from <https://tei.salamanca.school/>)
 * **/txt/** for plaintext
@@ -96,10 +96,8 @@ Since the projects' html files are very huge in some cases, it was necessary to 
 
 <b id="fn2">2</b> Cf. <https://blog.salamanca.school/de/2016/11/15/whats-in-a-uri-part-1/>, also mentioning more literature. [↩](#anchor2)
 
-
-
 ## Sources
 
-* Constantin, A., Peroni, S., Pettifer, S., Shotton, D., Vitali, F. (2016). The Document Components Ontology (DoCO). In Semantic Web – Interoperability, Usability, Applicability, 7 (2): 167-181. Amsterdam, The Netherlands: IOS Press. https://doi.org/10.3233/SW-150177
+* Constantin, A., Peroni, S., Pettifer, S., Shotton, D., Vitali, F. (2016). The Document Components Ontology (DoCO). In Semantic Web – Interoperability, Usability, Applicability, 7 (2): 167-181. Amsterdam, The Netherlands: IOS Press. <https://doi.org/10.3233/SW-150177>
 * Blackwell, Chr., Smith, N. (2014). The Canonical Text Services URN specification, version 2.0.rc.1 <http://cite-architecture.github.io/ctsurn_spec/> (retrieved 2018-10-31).
 * Smith, N., Blackwell, Chr. W. (2012). "Four URLs, Limitless Apps: Separation of Concerns in the Homer Multitext Architecture". In Donum Natalicium Digitaliter Confectum Gregorio Nagy Septuagenario a Discipulis Collegis Familiaribus Oblatum: A Virtual Birthday Gift Presented to Gregory Nagy on Turning Seventy by His Students, Colleagues, and Friends. Washington D.C.: Center for Hellenic Studies <https://chs.harvard.edu/CHS/article/display/4846> (retrieved 2018-11-07).

@@ -219,7 +219,7 @@ function local:docSubjectname($id as xs:string) as xs:string? {
 
 declare
     %templates:wrap
- function stool:test($node as node(), $model as map(*), $lang as xs:string?) {
+function stool:test($node as node(), $model as map(*), $lang as xs:string?) {
         <p>
   <!--  request:get-uri(): {request:get-uri()}<br/>
         $config:app-root: {$config:app-root}<br/>

@@ -352,3 +352,79 @@ declare function net:sitemapResponse($net-vars as map(*)) {
             return $sitemapIndex
 };
 
+declare function net:deliverTEI($pathComponents as xs:string*) {
+    let $reqResource    := $pathComponents[last()]
+    let $reqWork        := tokenize(tokenize($reqResource, ':')[1], '\.')[2]
+    let $dummy          := (util:declare-option("output:method", "xml"),
+                            util:declare-option("output:media-type", "application/tei+xml"),
+                            util:declare-option("output:indent", "yes"),
+                            util:declare-option("output:expand-xincludes", "yes")
+                            )
+    let $debug2         :=  if ($config:debug = "trace") then console:log("Serializing options: method:" || util:get-option('output:method') ||
+                                                                                             ', media-type:' || util:get-option('output:media-type') ||
+                                                                                             ', indent:'     || util:get-option('output:indent') ||
+                                                                                             ', expand-xi:'  || util:get-option('output:expand-xincludes') ||
+                                                                                             '.')
+                            else ()
+    let $doc            :=  if (doc-available($config:tei-works-root || '/' || $reqWork || '.xml')) then
+                                util:expand(doc($config:tei-works-root || '/' || $reqWork || '.xml')/tei:TEI)
+                            else
+                                <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                                    <forward url="{$exist:controller}/en/error-page.html" method="get"/>
+                                    <view>
+                                        <forward url="{$exist:controller}/modules/view.xql">
+                                            <set-attribute name="lang"              value="{$lang}"/>
+                                            <set-attribute name="$exist:resource"   value="{$exist:resource}"/>
+                                            <set-attribute name="$exist:prefix"     value="{$exist:prefix}"/>
+                                            <set-attribute name="$exist:controller" value="{$exist:controller}"/>
+                                        </forward>
+                                    </view>
+                                    {$errorhandler}
+                                </dispatch>
+    let $debug3         :=  if ($config:debug = "trace") then console:log("deliver doc: " || $reqResource || " -> " || $reqWork || '.xml' || ".")
+                            else ()
+    return
+        $doc
+};
+
+declare function net:deliverTXT($pathComponents as xs:string*) {
+    let $reqResource    := $pathComponents[last()]
+    let $reqWork        := tokenize(tokenize($reqResource, ':')[1], '\.')[2]
+    let $reqVersion     := if (tokenize(tokenize($reqResource, ':')[1], '\.')[3]) then tokenize(tokenize($reqResource, ':')[1], '\.')[3]
+                           else "edit"
+    let $node           := net:findNode($reqResource)
+    let $dummy          := (util:declare-option("output:method", "text"),
+                            util:declare-option("output:media-type", "text/plain"))
+    let $debug2         := if ($config:debug = "trace") then console:log("Serializing options: method:" || util:get-option('output:method') ||
+                                                                                        ', media-type:' || util:get-option('output:media-type') ||
+                                                                                        '.') else ()
+    return render:dispatch($node, $reqVersion)
+};
+
+declare function net:deliverIIIF($path as xs:string) {
+    let $reqResource    := tokenize(tokenize($path, '/iiif/')[last()], '/')[1]
+    let $iiif-paras     := string-join(subsequence(tokenize(tokenize($path, '/iiif/')[last()], '/'), 2), '/')
+    let $work           := tokenize(tokenize($reqResource, ':')[1], '\.')[2]   (: group.work[.edition]:pass.age :)
+    let $passage        := tokenize($reqResource, ':')[2]
+    let $entityPath     := concat($work, if ($passage) then concat('#', $passage) else ())
+    let $debug2         := if ($config:debug = "trace") then console:log("Load metadata from " || $config:rdf-root || '/' || $work || '.rdf' || " ...") else ()
+    let $metadata       := doc($config:rdf-root || '/' || $work || '.rdf')
+    let $debug3         := if ($config:debug = "trace") then console:log("Retrieving $metadata//rdf:Description[@rdf:about = '']/rdfs:seeAlso[1]/@rdf:resource[contains(., '.html')]") else ()
+
+    let $images         := for $url in $metadata//rdf:Description[@rdf:about = 'http://id.' || $config:serverdomain || '/' || $reqResource]/rdfs:seeAlso/@rdf:resource/string()
+                            where matches($url, "\.(jpg|jpeg|png|tif|tiff)$")
+                            return $url
+    let $image          := $images[1]
+    let $prefix         := "facs." || $config:serverdomain || "/iiif/"
+    let $filename       := tokenize($image, '/')[last()]
+    let $debug4         := if ($config:debug = ("trace")) then console:log("filename = " || $filename) else ()
+    let $fullpathname   := if (matches($filename, '\-[A-Z]\-')) then
+                                    concat(string-join(($work, substring(string-join(functx:get-matches($filename, '-[A-Z]-'), ''), 2, 1), functx:substring-before-last($filename, '.')), '%C2%A7'), '/', $iiif-paras)
+                            else
+                                    concat(string-join(($work, functx:substring-before-last($filename, '.')), '%C2%A7'), '/', $iiif-paras)
+
+    let $resolvedURI    := concat($prefix, $fullpathname)
+    let $debug5         := if ($config:debug = ("trace", "info")) then console:log("redirecting to " || $resolvedURI) else ()
+
+    return net:redirect($resolvedURI, $net-vars)
+};

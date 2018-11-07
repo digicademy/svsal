@@ -1,4 +1,4 @@
-xquery version "3.0";
+xquery version "3.1";
 
 import module namespace request = "http://exist-db.org/xquery/request";
 import module namespace session = "http://exist-db.org/xquery/session";
@@ -6,11 +6,11 @@ import module namespace xmldb   = "http://exist-db.org/xquery/xmldb";
 import module namespace console = "http://exist-db.org/xquery/console";
 import module namespace util    = "http://exist-db.org/xquery/util";
 import module namespace functx  = "http://www.functx.com";
-import module namespace config  = "http://salamanca/config" at "modules/config.xqm";
-import module namespace net     = "http://salamanca/net"    at "modules/net.xql";
-import module namespace render  = "http://salamanca/render" at "modules/render.xql";
-import module namespace iiif  = "http://salamanca/iiif" at "modules/iiif.xql";
-import module namespace export    = "http://salamanca/export"               at "modules/export.xql";
+import module namespace config  = "http://salamanca/config"     at "modules/config.xqm";
+import module namespace net     = "http://salamanca/net"        at "modules/net.xql";
+import module namespace render  = "http://salamanca/render"     at "modules/render.xql";
+import module namespace iiif    = "http://salamanca/iiif"       at "modules/iiif.xql";
+import module namespace export  = "http://salamanca/export"     at "modules/export.xql";
 
 declare       namespace exist   = "http://exist.sourceforge.net/NS/exist";
 declare       namespace output  = "http://www.w3.org/2010/xslt-xquery-serialization";
@@ -42,8 +42,8 @@ declare variable $exist:controller  external;
 declare variable $exist:prefix      external;
 declare variable $exist:root        external;
 
-let $lang                     :=
-(:
+let $lang :=
+    (:
                     if (net:request:get-parameter-names($net-vars) = ('en', 'de', 'es')) then
                         let $pathLang :=      if ('de' = net:request:get-parameter-names($net-vars)) then 'de'
                                          else if ('es' = net:request:get-parameter-names($net-vars)) then 'es'
@@ -51,7 +51,7 @@ let $lang                     :=
                                          else $config:defaultLang
                         let $set := request:set-attribute('lang', $pathLang)
                         return $pathLang
-:)
+    :)
                     if (request:get-parameter-names() = 'lang') then
                         if (request:get-parameter('lang', 'dummy-default-value') = ('de', 'en', 'es')) then
                             let $debug :=  if ($config:debug = "trace") then console:log("case 1a: lang parameter-name and valid value present.") else ()
@@ -97,19 +97,21 @@ let $lang                     :=
                         let $set := request:set-attribute('lang', $config:defaultLang)
                         return $config:defaultLang
 
-let $net-vars       := map {
-                            'path'          : $exist:path,
-                            'resource'      : $exist:resource,
-                            'controller'    : $exist:controller,
-                            'prefix'        : $exist:prefix,
-                            'root'          : $exist:root,
-                            'lang'          : $lang,
-                            'accept'        : $net:requestedContentTypes,
-                            'params'        : (for $p in request:get-parameter-names() return $p || "="  || request:get-parameter($p, ()) (:, tokenize($exist:path, '/') :) )
-                           }
-let $parameterString := if (count(request:get-parameter-names())) then
+let $net-vars           := map  {
+                                    "path"          : $exist:path,
+                                    "resource"      : $exist:resource,
+                                    "controller"    : $exist:controller,
+                                    "prefix"        : $exist:prefix,
+                                    "root"          : $exist:root,
+                                    "lang"          : lower-case($lang),
+                                    "accept"        : $net:requestedContentTypes,
+                                    "params"        : ( for $p in request:get-parameter-names() return lower-case($p) || "="  || lower-case(request:get-parameter($p, ())) )
+                                }
+
+let $parameterString    :=  if (count(request:get-parameter-names())) then
                                 "?" || string-join($net-vars('params'), '&amp;')
-                        else ()
+                            else
+                                ()
 
 
 
@@ -125,190 +127,93 @@ let $debug :=  if ($config:debug = "trace") then
 let $debug2 :=  if ($config:debug = "trace") then
                         console:log("$lang: " || $lang || ".")
                 else ()
-(: *** TODO: reflect variables defined above...
-   *** :)
 
-let $errorhandler := if (($config:instanceMode = "staging") or ($config:debug = "trace")) then ()
-                       else
+let $errorhandler :=    if (($config:instanceMode = "staging") or ($config:debug = "trace") or ("debug=trace" = $net-vars('params')) ) then ()
+                        else
                             <error-handler>
                                 <forward url="{$exist:controller}/en/error-page.html" method="get"/>
                                 <forward url="{$exist:controller}/modules/view.xql"/>
                             </error-handler>
 
 return
-(: *** AW: Warum ist das auskommentiert? War ich das selbst? (Suchmaschinen greifen auf servername/.well-known/void zu.)
-   *** :)
-(:  else if (ends-with($exist:path, "/.well-known/void")) then
-        net:redirect("../void.ttl", $net-vars)
-:)
 
-    (: *** Redirects for special resources (favicons, robots.txt, sitemap; specified by name *** :)
-    if ($exist:resource = "favicon.ico") then
+    (: *** Redirects for special resources (favicons, robots.txt, sitemap; specified by resource name *** :)
+    if (lower-case($exist:resource) = "favicon.ico") then
         let $debug          := if ($config:debug = "trace") then console:log("Favicon requested: " || $net:forwardedForServername || $exist:path || ".") else ()
         return net:forward("/resources/favicons/favicon.ico", $net-vars)
-    else if ($exist:resource = "robots.txt") then
+    else if (lower-case($exist:resource) = "robots.txt") then
         let $debug          := if ($config:debug = "trace") then console:log("Robots.txt requested: " || $net:forwardedForServername || $exist:path || ".") else ()
         let $parameters     := <exist:add-parameter name="Cache-Control" value="max-age=3600, must-revalidate"/>
         return net:forward("/robots.txt", $net-vars, $parameters)
-    else if (matches($exist:path, '^/sitemap(_index)?.xml$') or
-             matches($exist:path, '^/sitemap_(en|de|es).xml(.(gz|zip))?$')) then
+    else if (matches(lower-case($exist:path), '^/sitemap(_index)?.xml$') or
+             matches(lower-case($exist:path), '^/sitemap_(en|de|es).xml(.(gz|zip))?$')) then
         let $debug          := if ($config:debug = ("trace", "info")) then console:log("Sitemap requested: " || $net:forwardedForServername || $exist:path || ".") else ()
         return net:sitemapResponse($net-vars)
 
-    (: Pass all requests to admin HTML files through view-admin.xql, which handles HTML templating and is aware of admin credentials/routines :)
-(: *** AW: Brauchen wir das noch? Wir haben keine vertraulichen Credentials mehr und die Berechtigungen kann man doch durch die "File"-Berechtigungen auf admin.xql
-   ***     und den html-Dateien regeln.
-   *** :)
-    else if (matches($exist:resource, "(admin.html)|(admin-svn.html)|(render.html)|(renderTheRest.html)|(createLists.html)|(sphinx-admin.xql)|(rdf-admin.xql)|(iiif-admin.xql)")) then
-        let $debug          := if ($config:debug = ("trace", "info")) then console:log("Admin page requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-        (: For now, we don't use net:forward here since we need a nested view/forwarding. :)
-        return
-            <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                <view>
-                    <forward url="{$exist:controller}/modules/view-admin.xql">
-                        <set-attribute name="$exist:prefix" value="{$exist:prefix}"/>
-                        <set-attribute name="$exist:controller" value="{$exist:controller}"/>
-                    </forward>
-                </view>
-                {$errorhandler}
-            </dispatch>
-
-    (: We have a request with (almost) empty path to unqualified domain name or {serverdomain} -> redirect to homepage :)
-    else if (request:get-header('X-Forwarded-Host') = ("", "www." || $config:serverdomain) and $exist:path = ("", "/", "/en", "/es", "/de", "/en/", "/es/", "/de/") ) then
+    (: *** We have an underspecified request with (almost) empty path -> redirect this to homepage *** :)
+    else if (request:get-header('X-Forwarded-Host') = ("", "www." || $config:serverdomain) and
+             lower-case($exist:path) = ("", "/", "/en", "/es", "/de", "/en/", "/es/", "/de/") ) then
         let $debug          := if ($config:debug = ("trace", "info")) then console:log("Homepage requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-        let $absolutePath   := concat($config:proto, "://", if ($net:forwardedForServername) then $net:forwardedForServername else "www." || $config:serverdomain, '/', $lang, '/index.html',
-                                        if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (),
-                                        string-join(net:inject-requestParameter('', ''), '&amp;')
+        let $absolutePath   := concat( $config:proto, "://", if ($net:forwardedForServername) then $net:forwardedForServername else "www." || $config:serverdomain, '/', $lang, '/index.html',
+                                       if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (),
+                                       string-join(net:inject-requestParameter('', ''), '&amp;')
                                      )
         return net:redirect($absolutePath, $net-vars)
 
 
-(: === API functions (X-Forwarded-Host='api.{serverdomain}') === :)
-(: We have the following API areas, accessible by path component:
-   1. Search (/search) (Forwards to opensphinxsearch.)
-   2. CodeSharing (/codesharing) (To expose TEI tag usage. See https://api.{$config:serverdomain}/codesharing/codesharing.html or https://mapoflondon.uvic.ca/BLOG10.htm) 
-   3. lod (/lod) (Extract rdf from xml with xtriples.      See https://api.{$config:serverdomain}/lod/xtriples.html            or http://xtriples.spatialhumanities.de/index.html)
-      (*** AW: Where does this differ from data.{$config:serverdomain}? Do we need both? ***)
-   4. text/plain          export (/txt) (As of now, only for works)
-   5. application/tei+xml export (/tei) (As of now, only for works)
-   6. iiif (Transform salamanca ids into info.json addresses (/iiif)
-:)
-(: *** TODO: - Clean up and *systematically* offer only https://api.{$serverdomain}/{function}/{resource} and/equal to https://{function}.{$serverdomain}/{resource}
-   ***         (Should we better refactor this into higher-level cases instead of cases under api.{$config:serverdomain} and then again all the subdomains at another place?)
-   ***       - Also switch based on mime-type, not only $exist:path? As an example, see "4. txt" below.
-   ***       - Add application/pdf, application/json, text/html, tei-simple?
-   *** :)
+    (: *** API functions (X-Forwarded-Host='api.{serverdomain}') *** :)
+    else if (request:get-header('X-Forwarded-Host') = "api." || $config:serverdomain) then
+        (: We have the following API areas, accessible by path component:
 
-    else if (request:get-header('X-Forwarded-Host') = "api." || $config:serverdomain and (
-                                                                                                contains($exist:path, "/search/")
-                                                                                             or contains($exist:path, "/codesharing/")
-                                                                                             or contains($exist:path, "/lod/")
-                                                                                             or contains($exist:path, "/txt/")
-                                                                                             or contains($exist:path, "/tei/")
-                                                                                             or contains($exist:path, "/iiif/"))
-                                                                                          ) then
+            1. /v1/tei/
+            2. /v1/txt/
+            3. /v1/rdf/
+            4. /v1/html/
+            5. /v1/iiif/
 
-        if (starts-with($exist:path, "/search/")) then
-            let $debug1         := if ($config:debug = ("trace", "info")) then console:log("Search requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-            let $absolutePath   := concat($config:searchserver, '/', substring-after($exist:path, '/search/'))
-            return net:redirect($absolutePath, $net-vars)
+            a. Search (/v1/search)           (Forwards to opensphinxsearch.)
+            b. CodeSharing (/v1/codesharing) (To expose TEI tag usage.             See https://api.{$config:serverdomain}/codesharing/codesharing.html or https://mapoflondon.uvic.ca/BLOG10.htm) 
+            c. XTriples (/v1/xtriples)       (Extract rdf from xml with xtriples.  See https://api.{$config:serverdomain}/lod/xtriples.html            or http://xtriples.spatialhumanities.de/index.html)
 
-        else if (starts-with($exist:path, "/codesharing/")) then
-            let $debug1         := if ($config:debug = ("trace", "info")) then console:log("Codesharing requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-            let $parameters     := <exist:add-parameter name="outputType" value="html"/>
-            return
-                   if (ends-with($exist:resource, 'index.html') or
-                       ends-with($exist:resource, 'codesharing.html') or
-                       ends-with($exist:resource, 'codesharing.htm') or
-                       ends-with($exist:resource, 'codesharing.xhtml')) then                        (: Main service HTML page.  :)
-                           net:forward('/services/codesharing/codesharing.xql', $net-vars, $parameters)
-              else if (ends-with($exist:resource, 'codesharing_protocol.xhtml')) then               (: Protocol description html file. :)
-                           net:forward('/services/codesharing/codesharing_protocol.xhtml', $net-vars)
-              else                                                                                  (: All other cases. This means that e.g. '/codesharing.xml', '/codesharing.xql' or even '/codesharing/' will work. :)
-                           net:forward('/services/codesharing/codesharing.xql', $net-vars)
+            TODO: - Clean up and *systematically* offer only https://api.{$serverdomain}/{version}/{function}/{resource}
+                    and perhaps (!) the same at https://{function}.{$serverdomain}/{resource}
+                    (Should we better refactor this into higher-level cases instead of cases under api.{$config:serverdomain} and then again all the subdomains at another place?)
+                  - Also switch based on mime-type, not only $exist:path? As an example, see "4. txt" below.
+                  - Add application/pdf, application/json, text/html, tei-simple?
 
-        else if (starts-with($exist:path, "/lod/")) then
-            let $debug1         := if ($config:debug = ("trace", "info")) then console:log("XTriples requested: " || $net:forwardedForServername || $exist:path || $parameterString || " ...") else ()
-            return
-                if ($exist:path = ("/lod/extract.xql", "/lod/createConfig.xql", "/lod/xtriples.html", "/lod/changelog.html", "/lod/documentation.html", "/lod/examples.html")) then
-                    net:forward('/services' || $exist:path, $net-vars)
-                else ()
-
-        else if (starts-with($exist:path, "/txt/") or net:negotiateContentType($net:servedContentTypes, '') = 'text/plain') then
-            let $debug1         := if ($config:debug = ("trace", "info")) then console:log("TXT requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-            let $reqResource    := replace(tokenize($exist:path, '/')[last()], '\|', '/')
-            let $reqWork        := tokenize($exist:path, ':')[1]
-            let $node           := net:findNode($reqResource)
-            let $dummy          := (util:declare-option("output:method", "text"),
-                                    util:declare-option("output:media-type", "text/plain"))
-            let $debug2         := if ($config:debug = "trace") then console:log("Serializing options: method:" || util:get-option('output:method') ||
-                                                                                                ', media-type:' || util:get-option('output:media-type') ||
-                                                                                                '.') else ()
-            return  if (contains($reqWork, '.orig')) then
-                        render:dispatch($node, 'orig')
+        :)
+        let $pathComponents := tokenize(lower-case($exist:path), "/")
+        if ($pathComponents[2] = $config:apiEndpoints?$pathComponents[1]) then
+            switch($pathComponents[2])
+            case "tei"
+                let $debug1         := if ($config:debug = ("trace", "info")) then console:log("TEI/XML requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
+                return net:deliverTEI($pathComponents)
+            case "txt"
+                let $debug1         := if ($config:debug = ("trace", "info")) then console:log("TXT requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
+                return net:deliverTXT($pathComponents)
+            case "rdf"
+            case "html"
+            case "iiif"
+                let $debug1         := if ($config:debug = ("trace", "info")) then console:log("iiif requested: " || $net:forwardedForServername || $exist:path || $parameterString || " ...") else ()
+                return net:deliverIIIF($exist:path)
+            case "search"
+                let $debug1         := if ($config:debug = ("trace", "info")) then console:log("Search requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
+                let $absolutePath   := concat($config:searchserver, '/', substring-after($exist:path, '/search/'))
+                return net:redirect($absolutePath, $net-vars)
+            case "codesharing"
+                let $debug1         := if ($config:debug = ("trace", "info")) then console:log("Codesharing requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
+                let $parameters     := <exist:add-parameter name="outputType" value="html"/>
+                return
+                    if ($pathComponents[3] = 'codesharing_protocol.xhtml') then
+                            net:forward('/services/codesharing/codesharing_protocol.xhtml', $net-vars)      (: Protocol description html file. :)
                     else
-                        render:dispatch($node, 'edit')
-
-        else if (starts-with($exist:path, "/xml/") or net:negotiateContentType($net:servedContentTypes, '') = ('application/tei+xml', 'text/xml')) then
-            let $debug1         := if ($config:debug = ("trace", "info")) then console:log ("TEI/XML requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-            let $reqResource    := tokenize($exist:path, '/')[last()]
-            let $reqWork        := tokenize(tokenize($reqResource, ':')[1], '\.')[2]
-            let $dummy          := (util:declare-option("output:method", "xml"),
-                                    util:declare-option("output:media-type", "application/tei+xml"),
-                                    util:declare-option("output:indent", "yes"),
-                                    util:declare-option("output:expand-xincludes", "yes")
-                                   )
-            let $debug2         := if ($config:debug = "trace") then console:log("Serializing options: method:" || util:get-option('output:method') ||
-                                                                                            ', media-type:' || util:get-option('output:media-type') ||
-                                                                                            ', indent:'     || util:get-option('output:indent') ||
-                                                                                            ', expand-xi:'  || util:get-option('output:expand-xincludes') ||
-                                                                                            '.') else ()
-            let $doc            := if (doc-available($config:tei-works-root || '/' || $reqWork || '.xml')) then
-                                     util:expand(doc($config:tei-works-root || '/' || $reqWork || '.xml')/tei:TEI)
-                                   else
-                                    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                                        <forward url="{$exist:controller}/en/error-page.html" method="get"/>
-                                        <view>
-                                            <forward url="{$exist:controller}/modules/view.xql">
-                                                <set-attribute name="lang"              value="{$lang}"/>
-                                                <set-attribute name="$exist:resource"   value="{$exist:resource}"/>
-                                                <set-attribute name="$exist:prefix"     value="{$exist:prefix}"/>
-                                                <set-attribute name="$exist:controller" value="{$exist:controller}"/>
-                                            </forward>
-                                        </view>
-                                        {$errorhandler}
-                                    </dispatch>
-            let $debug3         := if ($config:debug = "trace") then console:log ("deliver doc: " || $reqResource || " -> " || $reqWork || '.xml' || ".") else ()
-            return
-                $doc
-
-        else if (starts-with($exist:path, "/iiif/")) then
-            let $debug1         := if ($config:debug = ("trace", "info")) then console:log("iiif requested: " || $net:forwardedForServername || $exist:path || $parameterString || " ...") else ()
-            let $reqResource    := tokenize(tokenize($exist:path, '/iiif/')[last()], '/')[1]
-            let $iiif-paras     := string-join(subsequence(tokenize(tokenize($exist:path, '/iiif/')[last()], '/'), 2), '/')
-            let $work           := tokenize(tokenize($reqResource, ':')[1], '\.')[2]   (: group.work[.edition]:pass.age :)
-            let $passage        := tokenize($reqResource, ':')[2]
-            let $entityPath     := concat($work, if ($passage) then concat('#', $passage) else ())
-            let $debug2         := if ($config:debug = "trace") then console:log("Load metadata from " || $config:rdf-root || '/' || $work || '.rdf' || " ...") else ()
-            let $metadata       := doc($config:rdf-root || '/' || $work || '.rdf')
-            let $debug3         := if ($config:debug = "trace") then console:log("Retrieving $metadata//rdf:Description[@rdf:about = '']/rdfs:seeAlso[1]/@rdf:resource[contains(., '.html')]") else ()
-
-            let $images         := for $url in $metadata//rdf:Description[@rdf:about = 'http://id.' || $config:serverdomain || '/' || $reqResource]/rdfs:seeAlso/@rdf:resource/string()
-                                   where matches($url, "\.(jpg|jpeg|png|tif|tiff)$")
-                                   return $url
-            let $image          := $images[1]
-            let $prefix         := "facs." || $config:serverdomain || "/iiif/"
-            let $filename       := tokenize($image, '/')[last()]
-            let $debug4         := if ($config:debug = ("trace")) then console:log("filename = " || $filename) else ()
-            let $fullpathname   := if (matches($filename, '\-[A-Z]\-')) then
-                                         concat(string-join(($work, substring(string-join(functx:get-matches($filename, '-[A-Z]-'), ''), 2, 1), functx:substring-before-last($filename, '.')), '%C2%A7'), '/', $iiif-paras)
-                                    else
-                                         concat(string-join(($work, functx:substring-before-last($filename, '.')), '%C2%A7'), '/', $iiif-paras)
-
-            let $resolvedURI    := concat($prefix, $fullpathname)
-            let $debug5         := if ($config:debug = ("trace", "info")) then console:log("redirecting to " || $resolvedURI) else ()
-
-            return net:redirect($resolvedURI, $net-vars)
+                            net:forward('/services/codesharing/codesharing.xql', $net-vars, $parameters)    (: Main service HTML page.  :)
+            case "xtriples"
+                let $debug1         := if ($config:debug = ("trace", "info")) then console:log("XTriples requested: " || $net:forwardedForServername || $exist:path || $parameterString || " ...") else ()
+                return
+                    if ($pathComponents[3] = ("extract.xql", "createConfig.xql", "xtriples.html", "changelog.html", "documentation.html", "examples.html")) then
+                        net:forward('/services/lod/' || $pathComponents[3], $net-vars)
+                    else ()
 
         else ()
 (: === End API functions === :)
@@ -725,13 +630,12 @@ return
             <ignore xmlns="http://exist.sourceforge.net/NS/exist">
                 <cache-control cache="yes"/>
             </ignore> :)
-         let $debug          := if ($config:debug = ("trace", "info")) then console:log("Page not found: " || $net:forwardedForServername || $exist:path || $parameterString || "."
-
-        || " Absolute path:" || concat($config:proto, "://", $net:forwardedForServername, '/', $lang, '/index.html',
+        let $debug          :=  if ($config:debug = ("trace", "info")) then console:log("Page not found: " || $net:forwardedForServername || $exist:path || $parameterString || "."
+                                    || " Absolute path:" || concat($config:proto, "://", $net:forwardedForServername, '/', $lang, '/index.html',
                                     if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (),
                                     string-join(net:inject-requestParameter('', ''), '&amp;'))
-
-                                    ) else ()
+                                    )
+                                else ()
 
         let $absolutePath   := concat($config:proto, "://", $net:forwardedForServername, '/', $lang, '/index.html',
                                     if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (),
