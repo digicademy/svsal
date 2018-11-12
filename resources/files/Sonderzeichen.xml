@@ -256,6 +256,15 @@
                     <mapping type="precomposed">ꝑ</mapping>
                     <mapping type="standardized">p</mapping>
                 </char>
+                <char xml:id="chara750">
+                    <desc>LATIN CAPITAL LETTER P WITH STROKE THROUGH DESCENDER</desc>
+                    <charProp>
+                        <unicodeName>entity</unicodeName>
+                        <value>pbardes</value>
+                    </charProp>
+                    <mapping type="precomposed">Ꝑ</mapping>
+                    <mapping type="standardized">P</mapping>
+                </char>
                 <char xml:id="chara753">
                     <desc>LATIN SMALL LETTER P WITH FLOURISH</desc>
                     <charProp>
