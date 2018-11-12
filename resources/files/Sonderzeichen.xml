@@ -260,7 +260,7 @@
                     <desc>LATIN CAPITAL LETTER P WITH STROKE THROUGH DESCENDER</desc>
                     <charProp>
                         <unicodeName>entity</unicodeName>
-                        <value>pbardes</value>
+                        <value>Pbardes</value>
                     </charProp>
                     <mapping type="precomposed">Ꝑ</mapping>
                     <mapping type="standardized">P</mapping>
@@ -741,6 +741,7 @@
         </encodingDesc>
         <revisionDesc status="a_raw">
             <listChange>
+                <change who="#DG" when="2018-11-12" status="a_raw" xml:lang="en">Added latin capital letter p with stroke through descender.</change>
                 <change who="#DG" when="2018-09-05" status="a_raw" xml:lang="en">Add section for crosses, horizontal bars (en dash and em dash) etc.</change>
                 <change who="#DG" when="2018-07-06" status="a_raw" xml:lang="en">Add small letter e with macron.</change>
                 <change who="#DG" when="2018-06-21" status="a_raw" xml:lang="en">Add small letters with macron, and further special characters.</change>
