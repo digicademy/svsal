@@ -8,6 +8,7 @@ declare namespace tei     = "http://www.tei-c.org/ns/1.0";
 declare namespace xi      = "http://www.w3.org/2001/XInclude";
 
 import module namespace config    = "http://salamanca/config"               at "config.xqm";
+import module namespace app = "http://salamanca/app" at "app.xql";
 import module namespace console    = "http://exist-db.org/xquery/console";
 import module namespace functx     = "http://www.functx.com";
 import module namespace i18n       = "http://exist-db.org/xquery/i18n"       at "i18n.xql";
@@ -385,18 +386,8 @@ declare function iiif:mkMetadata($tei as node()) as array(*) {
     let $pubPlace := if ($monogr/tei:imprint/tei:pubPlace[@role='thisEd']) then normalize-space($monogr/tei:imprint/tei:pubPlace[@role='thisEd']/@key)
                      else if ($monogr/tei:imprint/tei:pubPlace[@role='firstEd']) then normalize-space($monogr/tei:imprint/tei:pubPlace[@role='firstEd']/@key)
                      else ()
-    let $publishers := if ($monogr/tei:imprint/tei:publisher[@n='thisEd'])
-                       then array { for $publisher in $monogr/tei:imprint/tei:publisher[@n='thisEd']//tei:persName
-                                   return map {"label": iiif:getI18nLabels("publisher"), "@value": normalize-space($publisher[text()]) } }
-                       else if ($monogr/tei:imprint/tei:publisher[@n='firstEd'])
-                       then array { for $publisher in $monogr/tei:imprint/tei:publisher[@n='firstEd']//tei:persName
-                                   return map {"label": iiif:getI18nLabels("publisher"), "@value": normalize-space($publisher[text()]) } }
-                       else ()
-(:   let $publishersI18n := for $publisher in $publishers array {
-                            map { "@value": map:get(map:get($labels, $labelKey), "en"), "@language": "en" },
-                            map { "@value": map:get(map:get($labels, $labelKey), "es"), "@language": "es" },
-                            map { "@value": map:get(map:get($labels, $labelKey), "de"), "@language": "de" } 
-                        }  :)         
+    let $publishers :=    if ($monogr/tei:imprint/tei:publisher[@n='thisEd']) then app:rotateFormatName($monogr/tei:imprint/tei:publisher[@n='thisEd']/tei:persName)
+                                else app:rotateFormatName($monogr/tei:imprint/tei:publisher[@n='firstEd']/tei:persName)        
     let $pubDate := if ($monogr/tei:imprint/tei:date[@type='thisEd']) then string($monogr/tei:imprint/tei:date[@type='thisEd']/@when)
                     else if ($monogr/tei:imprint/tei:date[@type='firstEd']) then string($monogr/tei:imprint/tei:date[@type='firstEd']/@when)
                     else ()
