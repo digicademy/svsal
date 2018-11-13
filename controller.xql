@@ -327,9 +327,9 @@ return
                         else if ($mode eq 'canvas') then substring-after(substring-before($exist:path, '/canvas/'), '/')
                         else ()
         let $canvas :=  if ($mode eq 'canvas') then substring-after($exist:path, '/canvas/') else ()
-        let $resolvedURI   :=  $config:webserver || '/iiif-out.xql?wid=' || $workId || (if ($canvas) then concat('&amp;canvas=', $canvas) else ())
-        (: redirect in a way that URI (i.e., iiif @id) remains the same and only output of iiif-out.xql is shown :)
-        return net:redirect-with-303($resolvedURI)
+        let $parameters :=  if ($canvas) then (net:add-parameter('wid', $workId), net:add-parameter('canvas', $canvas)) 
+                            else net:add-parameter('wid', $workId)
+        return net:forward('iiif-out.xql', $net-vars, $parameters)
 
         
         
