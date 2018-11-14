@@ -22,6 +22,9 @@
     </fileDesc>
     <revisionDesc status="e_unreviewed">
       <listChange>
+        <change who="#DG" when="2018-11-14" status="e_emended_unenriched">
+          <p>Added 'administrative' as div/@type value.</p>
+        </change>
         <change who="#DG" when="2018-09-27" status="e_emended_unenriched">
           <p>Added series element to core module.</p>
         </change>
@@ -617,26 +620,31 @@
             <attDef ident="type" mode="change" usage="req">
               <valList type="closed" mode="replace">
                 <valItem ident="additional"/>
+                <valItem ident="administrative">
+                  <desc>A section, usually occurring within the front or back matter of a text, that contains statements about 
+                  administrative matters such as censorship, taxation, or permissions.</desc>
+                </valItem>
                 <valItem ident="annotation"/>
                 <valItem ident="article"/>
                 <valItem ident="book"/>
                 <valItem ident="chapter">
-                  <desc>A chapter, labeled as such (as given in the chapter heading, e.g.) or clearly identifiable as such from the context. 
-                        (Please note: parts of chapters that are not specifically labeled otherwise usually are annotated as sections ('section' value).)</desc>
+                  <desc>A chapter, labeled as such (as given in the chapter heading, for example) or clearly identifiable as such through the context. 
+                    (Parts of chapters that are not specifically labeled otherwise are usually annotated as 'section'.)</desc>
                 </valItem>
                 <valItem ident="colophon">
                   <desc>A statement about the publication of a work/volume (place, date, printer, etc.), usually occurring at its end.</desc>
                 </valItem>
                 <valItem ident="contained_work"/>
                 <valItem ident="contents">
-                  <desc>A section of the document listing structural units in the document, or in a part of the document.</desc>
+                  <desc>A section of the text listing structural units of the text, or of a certain part of the text.</desc>
                 </valItem>
                 <valItem ident="corrigenda"/>
                 <valItem ident="dedication"/>
                 <valItem ident="disputation"/>
                 <valItem ident="entry"/>
                 <valItem ident="foreword">
-                  <desc>An opening statement, usually written by someone other than the author of the work.</desc>
+                  <desc>An opening statement, usually written by someone other than the author of the work. This includes statements 
+                  in prose form as well as statements in verse (such as epigrams).</desc>
                 </valItem>
                 <valItem ident="index">
                   <desc>An index.</desc>

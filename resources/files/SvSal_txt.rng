@@ -5,7 +5,7 @@
          xmlns:teix="http://www.tei-c.org/ns/Examples"
          datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
          ns="http://www.tei-c.org/ns/1.0"><!--
-Schema generated from ODD source 2018-09-27T09:19:31Z. .
+Schema generated from ODD source 2018-11-14T14:25:49Z. .
 TEI Edition: Version 3.4.0. Last updated on
 	23rd July 2018, revision 1fa0b54
 TEI Edition Location: http://www.tei-c.org/Vault/P5/Version 3.4.0/
@@ -134,8 +134,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5/Version 3.4.0/
             </choice>
          </zeroOrMore>
       </element>
-      <pattern xmlns="http://purl.oclc.org/dsdl/schematron"
-               id="d103050409e44618-constraint">
+      <pattern xmlns="http://purl.oclc.org/dsdl/schematron" id="d8778006e44624-constraint">
          <rule context="tei:content">
             <report test="descendant::*[not(namespace-uri(.) =               ('http://relaxng.org/ns/structure/1.0', 'http://www.tei-c.org/ns/1.0'))]">content descendants must be in the
               namespaces
@@ -184,8 +183,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5/Version 3.4.0/
             </choice>
          </zeroOrMore>
       </element>
-      <pattern xmlns="http://purl.oclc.org/dsdl/schematron"
-               id="d103050409e45875-constraint">
+      <pattern xmlns="http://purl.oclc.org/dsdl/schematron" id="d8778006e45881-constraint">
          <rule context="tei:datatype">
             <report test="descendant::*[not(namespace-uri(.) =               ('http://relaxng.org/ns/structure/1.0', 'http://www.tei-c.org/ns/1.0'))]">datatype descendants must be in the
               namespaces
@@ -8888,6 +8886,8 @@ Suggested values include: 1] schematron (ISO Schematron) </a:documentation>
             <choice>
                <value>additional</value>
                <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"/>
+               <value>administrative</value>
+               <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">A section, usually occurring within the front or back matter of a text, that contains statements about administrative matters such as censorship, taxation, or permissions.</a:documentation>
                <value>annotation</value>
                <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"/>
                <value>article</value>
@@ -8895,13 +8895,13 @@ Suggested values include: 1] schematron (ISO Schematron) </a:documentation>
                <value>book</value>
                <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"/>
                <value>chapter</value>
-               <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">A chapter, labeled as such (as given in the chapter heading, e.g.) or clearly identifiable as such from the context. (Please note: parts of chapters that are not specifically labeled otherwise usually are annotated as sections ('section' value).)</a:documentation>
+               <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">A chapter, labeled as such (as given in the chapter heading, for example) or clearly identifiable as such through the context. (Parts of chapters that are not specifically labeled otherwise are usually annotated as 'section'.)</a:documentation>
                <value>colophon</value>
                <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">A statement about the publication of a work/volume (place, date, printer, etc.), usually occurring at its end.</a:documentation>
                <value>contained_work</value>
                <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"/>
                <value>contents</value>
-               <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">A section of the document listing structural units in the document, or in a part of the document.</a:documentation>
+               <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">A section of the text listing structural units of the text, or of a certain part of the text.</a:documentation>
                <value>corrigenda</value>
                <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"/>
                <value>dedication</value>
@@ -8911,7 +8911,7 @@ Suggested values include: 1] schematron (ISO Schematron) </a:documentation>
                <value>entry</value>
                <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"/>
                <value>foreword</value>
-               <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">An opening statement, usually written by someone other than the author of the work.</a:documentation>
+               <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">An opening statement, usually written by someone other than the author of the work. This includes statements in prose form as well as statements in verse (such as epigrams).</a:documentation>
                <value>index</value>
                <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">An index.</a:documentation>
                <value>lecture</value>
