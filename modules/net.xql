@@ -1,13 +1,18 @@
 xquery version "3.0";
 
 module namespace net                = "http://salamanca/net";
+import module namespace console     = "http://exist-db.org/xquery/console";
+import module namespace functx      = "http://www.functx.com";
 import module namespace request     = "http://exist-db.org/xquery/request";
 import module namespace response    = "http://exist-db.org/xquery/response";
-import module namespace console     = "http://exist-db.org/xquery/console";
 import module namespace util        = "http://exist-db.org/xquery/util";
 import module namespace config      = "http://salamanca/config"                 at "config.xqm";
+import module namespace render      = "http://salamanca/render"                 at "render.xql";
 
 declare       namespace exist       = "http://exist.sourceforge.net/NS/exist";
+declare       namespace output      = "http://www.w3.org/2010/xslt-xquery-serialization";
+declare       namespace rdf         = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+declare       namespace rdfs        = "http://www.w3.org/2000/01/rdf-schema#";
 declare       namespace tei         = "http://www.tei-c.org/ns/1.0";
 declare       namespace sal         = "http://salamanca.adwmainz.de";
 
@@ -73,7 +78,7 @@ declare function net:redirect-with-301($absolute-path) {  (: Moved permanently :
 (:  net:forward('../services/30x.xql',
         (net:add-parameter('path', $absolute-path),
          net:add-parameter('statusCode', '301')),
-        $net-vars
+        $netVars
         )
 :)
 };
@@ -82,13 +87,13 @@ declare function net:redirect-with-307($absolute-path) {  (: Temporary redirect 
 (:    net:forward('../services/30x.xql',
         (net:add-parameter('path', $absolute-path),
          net:add-parameter('statusCode', '307')),
-        $net-vars
+        $netVars
         )
 :)
 };
 declare function net:redirect-with-303($absolute-path) {  (: See other :)
     (response:set-header('Location', $absolute-path), response:set-status-code(303), text {''})
-(:    net:forward('../services/30x.xql', $net-vars,
+(:    net:forward('../services/30x.xql', $netVars,
         (net:add-parameter('path', $absolute-path),
          net:add-parameter('statusCode', '303'))       
         )
@@ -104,12 +109,12 @@ declare function net:redirect-with-404($absolute-path) {  (: 404 :)
 declare function net:add-parameter($name as xs:string, $value as xs:string) as element(exist:add-parameter) {
     <add-parameter xmlns="http://exist.sourceforge.net/NS/exist" name="{$name}" value="{$value}"/>
 };
-declare function net:forward($relative-path as xs:string, $net-vars as map(*)) {
-    net:forward($relative-path, $net-vars, ())
+declare function net:forward($relative-path as xs:string, $netVars as map(*)) {
+    net:forward($relative-path, $netVars, ())
 };
-declare function net:forward($relative-path as xs:string, $net-vars as map(*), $attribs as element(exist:add-parameter)*) {
-    let $absolute-path := concat($net-vars('controller'), '/', $relative-path)
-(:    let $absolute-path := concat($net-vars('root'), $net-vars('controller'), '/', $relative-path):)
+declare function net:forward($relative-path as xs:string, $netVars as map(*), $attribs as element(exist:add-parameter)*) {
+    let $absolute-path := concat($netVars('controller'), '/', $relative-path)
+(:    let $absolute-path := concat($netVars('root'), $netVars('controller'), '/', $relative-path):)
     return
         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
             <forward url="{$absolute-path}">
@@ -119,7 +124,7 @@ declare function net:forward($relative-path as xs:string, $net-vars as map(*), $
             {$net:errorhandler}
         </dispatch>
     };
-declare function net:redirect($absolute-path as xs:string, $net-vars as map(*)) { (: implicit temporary redirect (302) :)
+declare function net:redirect($absolute-path as xs:string, $netVars as map(*)) { (: implicit temporary redirect (302) :)
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <redirect url="{$absolute-path}"/>
         <cache-control cache="{$net:cache-control}"/>
@@ -132,7 +137,7 @@ declare function net:ignore() {
     </ignore>
 };
 
-declare function net:findNode($ctsId as xs:string?){
+declare function net:findNode($ctsId as xs:string?) {
     let $reqResource  := tokenize($ctsId, '/')[last()]
     let $work         := tokenize(tokenize($reqResource, ':')[1], '\.')[2]   (: group.work:pass.age :)
     let $passage      := tokenize($reqResource, ':')[2]
@@ -141,7 +146,7 @@ declare function net:findNode($ctsId as xs:string?){
                             return $nodeIndex//sal:node[sal:citetrail eq $passage][1]/@n[1]
                          else
                             "completeWork" 
-    let $work         := util:expand(doc($config:tei-works-root || '/' || $work || '.xml')//tei:TEI)
+    let $work         := util:expand(doc($config:tei-works-root || '/' || replace($work, 'w0', 'W0') || '.xml')//tei:TEI)
     let $node         := $work//tei:*[@xml:id eq $nodeId]
     let $debug        := if ($config:debug = "trace") then console:log('findNode returns ' || count($node) || ' node(s): ' || $work/@xml:id || '//*[@xml:id=' || $nodeId || '] (cts/id was "' || $ctsId || '").') else ()
     return $node
@@ -327,8 +332,8 @@ declare function local:sitemapIndex($fileNames as xs:string*) as element(sitemap
         </sitemapindex>
 };
 
-declare function net:sitemapResponse($net-vars as map(*)) {
-    let $resource           := $net-vars('resource')
+declare function net:sitemapResponse($netVars as map(*)) {
+    let $resource           := $netVars('resource')
     let $language           := for $lang in $config:languages
                                     return if ($resource = concat('sitemap_', $lang, '.xml')) then $lang else () 
 (:    let $compression        :=  if(ends-with($resource, 'zip')) then 'zip' else $net:defaultCompression:)
@@ -352,3 +357,105 @@ declare function net:sitemapResponse($net-vars as map(*)) {
             return $sitemapIndex
 };
 
+declare function net:deliverTEI($pathComponents as xs:string*, $netVars as map()* ) {
+    let $reqResource    := $pathComponents[last()]
+    let $reqWork        := tokenize(tokenize($reqResource, ':')[1], '\.')[2]
+    let $dummy          := (util:declare-option("output:method", "xml"),
+                            util:declare-option("output:media-type", "application/tei+xml"),
+                            util:declare-option("output:indent", "yes"),
+                            util:declare-option("output:expand-xincludes", "yes")
+                            )
+    let $debug2         :=  if ($config:debug = "trace") then console:log("Serializing options: method:" || util:get-option('output:method') ||
+                                                                                             ', media-type:' || util:get-option('output:media-type') ||
+                                                                                             ', indent:'     || util:get-option('output:indent') ||
+                                                                                             ', expand-xi:'  || util:get-option('output:expand-xincludes') ||
+                                                                                             '.')
+                            else ()
+    let $doc            :=  if (doc-available($config:tei-works-root || '/' || replace($reqWork, "w0", "W0") || '.xml')) then
+                                let $dummy := response:set-header("Content-Disposition", 'attachment; filename="' || $reqResource || '.tei.xml"')
+                                return util:expand(doc($config:tei-works-root || '/' || replace($reqWork, "w0", "W0") || '.xml')/tei:TEI)
+                            else
+                                <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                                    <forward url="{$netVars('controller')}/error-page.html" method="get"/>
+                                    <view>
+                                        <forward url="/modules/view.xql">
+                                            <set-attribute name="lang"              value="{$netVars('lang')}"/>
+                                            <set-attribute name="$exist:resource"   value="{$netVars('resource')}"/>
+                                            <set-attribute name="$exist:prefix"     value="{$netVars('prefix')}"/>
+                                            <set-attribute name="$exist:controller" value="{$netVars('controller')}"/>
+                                        </forward>
+                                    </view>
+                                    {config:errorhandler($netVars)}
+                                </dispatch>
+    let $debug3         :=  if ($config:debug = "trace") then console:log("deliver doc: " || $reqResource || " -> " || $reqWork || '.xml' || ".")
+                            else ()
+    return
+        $doc
+};
+
+declare function net:deliverTXT($pathComponents as xs:string*) {
+    let $reqResource    := $pathComponents[last()]
+    let $reqWork        := tokenize(tokenize($reqResource, ':')[1], '\.')[2]
+    let $reqVersion     := if (tokenize(tokenize($reqResource, ':')[1], '\.')[3]) then tokenize(tokenize($reqResource, ':')[1], '\.')[3]
+                           else "edit"
+    let $node           := net:findNode($reqResource)
+    let $dummy          := (util:declare-option("output:method", "text"),
+                            util:declare-option("output:media-type", "text/plain"))
+    let $debug2         := if ($config:debug = "trace") then console:log("Serializing options: method:" || util:get-option('output:method') ||
+                                                                                        ', media-type:' || util:get-option('output:media-type') ||
+                                                                                        '.') else ()
+    let $dummy          := response:set-header("Content-Disposition", 'attachment; filename="' || $reqWork || '.' || $reqVersion || '.txt"')
+    return render:dispatch($node, $reqVersion)
+};
+
+declare function net:deliverIIIF($path as xs:string, $netVars) {
+    let $reqResource    := tokenize(tokenize($path, '/iiif/')[last()], '/')[1]
+    let $iiif-paras     := string-join(subsequence(tokenize(tokenize($path, '/iiif/')[last()], '/'), 2), '/')
+    let $work           := tokenize(tokenize($reqResource, ':')[1], '\.')[2]   (: group.work[.edition]:pass.age :)
+    let $passage        := tokenize($reqResource, ':')[2]
+    let $entityPath     := concat($work, if ($passage) then concat('#', $passage) else ())
+    let $debug2         := if ($config:debug = "trace") then console:log("Load metadata from " || $config:rdf-root || '/' || replace($work, 'w0', 'W0') || '.rdf' || " ...") else ()
+    let $metadata       := doc($config:rdf-root || '/' || replace($work, 'w0', 'W0') || '.rdf')
+    let $debug3         := if ($config:debug = "trace") then console:log("Retrieving $metadata//rdf:Description[@rdf:about = '" || replace($reqResource, 'w0', 'W0') || "']/rdfs:seeAlso/@rdf:resource/string()") else ()
+    let $debug4         := if ($config:debug = "trace") then console:log("This gives " || count($metadata//rdf:Description[@rdf:about = replace($reqResource, 'w0', 'W0')]/rdfs:seeAlso/@rdf:resource) || " urls in total.") else ()
+
+    let $images         := for $url in $metadata//rdf:Description[@rdf:about = replace($reqResource, 'w0', 'W0')]/rdfs:seeAlso/@rdf:resource/string()
+                            where matches($url, "\.(jpg|jpeg|png|tif|tiff)$")
+                            return $url
+    let $debug5         := if ($config:debug = "trace") then console:log("Of these, " || count($images) || " are images.") else ()
+    let $image          := $images[1]
+    let $debug5         := if ($config:debug = "trace") then console:log("The target image being " || $image || ".") else ()
+    let $prefix         := "facs." || $config:serverdomain || "/iiif/"
+    let $filename       := tokenize($image, '/')[last()]
+    let $debug          := if ($config:debug = ("trace")) then console:log("filename = " || $filename) else ()
+    let $fullpathname   := if (matches($filename, '\-[A-Z]\-')) then
+                                    concat(string-join((replace($work, 'w0', 'W0'), substring(string-join(functx:get-matches($filename, '-[A-Z]-'), ''), 2, 1), functx:substring-before-last($filename, '.')), '%C2%A7'), '/', $iiif-paras)
+                            else
+                                    concat(string-join((replace($work, 'w0', 'W0'), functx:substring-before-last($filename, '.')), '%C2%A7'), '/', $iiif-paras)
+
+    let $resolvedURI    := concat($prefix, $fullpathname)
+    let $debug5         := if ($config:debug = ("trace", "info")) then console:log("redirecting to " || $resolvedURI) else ()
+
+    return net:redirect($resolvedURI, $netVars)
+};
+
+declare function net:deliverRDF($pathComponents as xs:string*, $netVars as map()*) {
+    let $reqResource    := $pathComponents[last()]
+    let $reqWork        := tokenize(tokenize($reqResource, ':')[1], '\.')[2]
+
+(:
+    let $debug2       := if ($config:debug = ("trace", "info")) then console:log("Rdf is acceptable, but we have bad input somehow. Redirect (303) to error webpage ...") else ()
+    return net:redirect-with-404($config:webserver || '/' || 'error-page.html')
+:)
+    return  if (replace($reqWork, 'w0', 'W0') || '.rdf' = xmldb:get-child-resources($config:rdf-root) and not("nocache" = request:get-parameter-names())) then
+                let $debug          := if ($config:debug = ("trace", "info")) then console:log("Loading " || replace($reqWork, 'w0', 'W0') || " ...") else ()
+                let $dummy          := response:set-header("Content-Disposition", 'attachment; filename="' || $reqWork || '.rdf.xml"')
+                return doc( $config:rdf-root || '/' || replace($reqWork, 'w0', 'W0') || '.rdf')
+            else
+                let $debug          := if ($config:debug = ("trace", "info")) then console:log("Generating rdf for " || replace($reqWork, 'w0', 'W0') || " ...") else ()
+                let $path           := '/services/lod/extract.xql'
+                let $parameters     := (<exist:add-parameter name="configuration"   value="{$config:apiserver || '/xtriples/createConfig.xql?resourceId=' || replace($reqWork, 'w0', 'W0') || '&amp;format=' || $config:lodFormat}"/>,
+                                        <exist:add-parameter name="format"          value="{$config:lodFormat}"/>)
+                let $dummy          := response:set-header("Content-Disposition", 'attachment; filename="' || $reqWork || '.rdf.xml"')
+                return net:forward($path, $netVars, $parameters)
+};

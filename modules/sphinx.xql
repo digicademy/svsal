@@ -9,11 +9,11 @@ declare namespace templates        = "http://exist-db.org/xquery/templates";
 import module namespace functx     = "http://www.functx.com";
 import module namespace app        = "http://salamanca/app"     at "app.xql";
 import module namespace config     = "http://salamanca/config"  at "config.xqm";
+import module namespace i18n       = "http://exist-db.org/xquery/i18n"        at "i18n.xql";
 import module namespace render     = "http://salamanca/render"  at "render.xql";
 import module namespace console    = "http://exist-db.org/xquery/console";
 import module namespace http       = "http://expath.org/ns/http-client";
 import module namespace httpclient = "http://exist-db.org/xquery/httpclient";
-import module namespace i18n       = "http://exist-db.org/xquery/i18n";
 import module namespace util       = "http://exist-db.org/xquery/util";
 import module namespace xmldb      = "http://exist-db.org/xquery/xmldb";
 

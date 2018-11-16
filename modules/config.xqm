@@ -1,4 +1,4 @@
-xquery version "3.0";
+xquery version "3.1";
 
 module namespace config         = "http://salamanca/config";
 declare namespace repo          = "http://exist-db.org/xquery/repo";
@@ -39,6 +39,10 @@ declare variable $config:serverdomain :=
         let $alert := if ($config:debug = "trace") then console:log("Warning! Dynamic $config:serverdomain is uncertain, using servername " || request:get-server-name() || ".") else ()
         return request:get-server-name()
     ;
+
+declare variable $config:apiEndpoints   := map  {
+                                                    "v1": ("tei", "txt", "rdf", "html", "iiif", "search", "codesharing", "xtriples")
+                                                };
 
 declare variable $config:webserver      := $config:proto || "://www."    || $config:serverdomain;
 declare variable $config:blogserver     := $config:proto || "://blog."   || $config:serverdomain;
@@ -181,6 +185,16 @@ declare function config:repo-descriptor() as element(repo:meta) {
 declare function config:expath-descriptor() as element(expath:package) {
     $config:expath-descriptor
 };
+
+declare function config:errorhandler($netVars as map()*) {
+    if (($config:instanceMode = "staging") or ($config:debug = "trace") or ("debug=trace" = $netVars('params')) ) then ()
+        else
+            <error-handler>
+                <forward url="{$netVars('controller')}/error-page.html" method="get"/>
+                <forward url="{$netVars('controller')}/modules/view.xql"/>
+            </error-handler>
+};
+
 
 (: deprecated?:
 declare function config:app-meta($node as node(), $model as map(*)) as element()* {
