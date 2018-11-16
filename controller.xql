@@ -43,61 +43,74 @@ declare variable $exist:prefix      external;
 declare variable $exist:root        external;
 
 let $lang :=
-    (:
-                    if (net:request:get-parameter-names($net-vars) = ('en', 'de', 'es')) then
-                        let $pathLang :=      if ('de' = net:request:get-parameter-names($net-vars)) then 'de'
-                                         else if ('es' = net:request:get-parameter-names($net-vars)) then 'es'
-                                         else if ('en' = net:request:get-parameter-names($net-vars)) then 'en'
-                                         else $config:defaultLang
-                        let $set := request:set-attribute('lang', $pathLang)
-                        return $pathLang
+    (:  Priorities: 1. ?lang
+                    2. /lang/
+                    3. Browser setting/Accept-Language
+                    4. default language
+        We refrain from using session attributes (hard to track, hard to change, cf. https://discuss.neos.io/t/how-to-implement-automatic-language-detection/416/6)
     :)
                     if (request:get-parameter-names() = 'lang') then
                         if (request:get-parameter('lang', 'dummy-default-value') = ('de', 'en', 'es')) then
                             let $debug :=  if ($config:debug = "trace") then console:log("case 1a: lang parameter-name and valid value present.") else ()
-                            let $set := request:set-attribute('lang', request:get-parameter('lang', $config:defaultLang))
-                            return request:get-parameter('lang', $config:defaultLang)
+                            return request:get-parameter('lang', 'dummy-default-value')
                         else
                             let $debug :=  if ($config:debug = "trace") then console:log("case 1b: lang parameter-name but invalid value present.") else ()
-                            let $set := request:set-attribute('lang', $config:defaultLang)
-                            return $config:defaultLang
+                            return if (matches($exist:path, '/(de|en|es)/')) then
+                                        if (contains($exist:path, '/de/')) then
+                                            let $debug :=  if ($config:debug = "trace") then console:log("case 2a: 'de' path component present.") else ()
+                                            return 'de'
+                                        else if (contains($exist:path, '/en/')) then
+                                            let $debug :=  if ($config:debug = "trace") then console:log("case 2b: 'en' path component present.") else ()
+                                            return 'en'
+                                        else
+                                            let $debug :=  if ($config:debug = "trace") then console:log("case 2c: 'es' path component present.") else ()
+                                            return 'es'
+                                    else if (request:get-header('Accept-Language')) then
+                                            if (substring(request:get-header('lang'),1,2) = 'de') then
+                                                let $debug := if ($config:debug = "trace") then console:log("case 3a: 'de' Accept-Language request header present.") else ()
+                                                return 'de'
+                                            else if (substring(request:get-header('lang'),1,2) = 'en') then
+                                                let $debug := if ($config:debug = "trace") then console:log("case 3b: 'en' Accept-Language request header present.") else ()
+                                                return 'en'
+                                            else if (substring(request:get-header('lang'),1,2) = 'es') then
+                                                let $debug := if ($config:debug = "trace") then console:log("case 3c: 'es' Accept-Language request header present.") else ()
+                                                return 'es'
+                                            else
+                                                let $debug := if ($config:debug = "trace") then console:log("case 3d: unknown Accept-Language request header present.") else ()
+                                                return $config:defaultLang
+                                    else
+                                        let $debug := if ($config:debug = "trace") then console:log("case 4: Language could not be detected. Using default language (" || $config:defaultLang || ").") else ()
+                                        return $config:defaultLang
+
                     else if (matches($exist:path, '/(de|en|es)/')) then
                         if (contains($exist:path, '/de/')) then
                             let $debug :=  if ($config:debug = "trace") then console:log("case 2a: 'de' path component present.") else ()
-                            let $set := request:set-attribute('lang', 'de')
                             return 'de'
                         else if (contains($exist:path, '/en/')) then
                             let $debug :=  if ($config:debug = "trace") then console:log("case 2b: 'en' path component present.") else ()
-                            let $set := request:set-attribute('lang', 'en')
                             return 'en'
-                        else if (contains($exist:path, '/es')) then
-                            let $debug :=  if ($config:debug = "trace") then console:log("case 2c: 'es' path component present.") else ()
-                            let $set := request:set-attribute('lang', 'es')
-                            return 'es'
-                        else ()
-                    else if(exists(session:get-attribute('lang'))) then
-                        if (session:get-attribute('lang') = ('de', 'en', 'es')) then
-                            let $debug2 :=  if ($config:debug = "trace") then console:log("case 3a: lang session attribute and valid value present.") else ()
-                            let $set := request:set-attribute('lang', session:get-attribute('lang'))
-                            return session:get-attribute('lang')
                         else
-                            let $debug2 :=  if ($config:debug = "trace") then console:log("case 3b: lang session attribute but invalid value present.") else ()
-                            let $set := request:set-attribute('lang', $config:defaultLang)
-                            return $config:defaultLang
-                    else if(request:get-header('Accept-Language')) then
-                        let $debug2 :=  if ($config:debug = "trace") then console:log("case 4: Accept-Language request header present.") else ()
-                        let $headerLang :=      if (substring(request:get-header('lang'),1,2) = 'de') then 'de'
-                                                else if (substring(request:get-header('lang'),1,2) = 'es') then 'es'
-                                                else if (substring(request:get-header('lang'),1,2) = 'en') then 'en'
-                                                else $config:defaultLang
-                        let $set := request:set-attribute('lang', $headerLang)
-                        return $headerLang
+                            let $debug :=  if ($config:debug = "trace") then console:log("case 2c: 'es' path component present.") else ()
+                            return 'es'
+                    else if (request:get-header('Accept-Language')) then
+                            if (substring(request:get-header('Accept-Language'),1,2) = 'de') then
+                                let $debug := if ($config:debug = "trace") then console:log("case 3a: 'de' Accept-Language request header present.") else ()
+                                return 'de'
+                            else if (substring(request:get-header('Accept-Language'),1,2) = 'en') then
+                                let $debug := if ($config:debug = "trace") then console:log("case 3b: 'en' Accept-Language request header present.") else ()
+                                return 'en'
+                            else if (substring(request:get-header('Accept-Language'),1,2) = 'es') then
+                                let $debug := if ($config:debug = "trace") then console:log("case 3c: 'es' Accept-Language request header present.") else ()
+                                return 'es'
+                            else
+                                let $debug := if ($config:debug = "trace") then console:log("case 3d: unknown Accept-Language request header (" || request:get-header('Accept-Language') || ") present.") else ()
+                                return $config:defaultLang
                     else
-                        let $debug2 :=  if ($config:debug = "trace") then console:log("case 5: set default language.") else ()
-                        let $set := request:set-attribute('lang', $config:defaultLang)
+                        let $debug := if ($config:debug = "trace") then console:log("case 4: Language could not be detected. Using default language (" || $config:defaultLang || ").") else ()
                         return $config:defaultLang
 
-let $net-vars           := map  {
+
+let $netVars           := map  {
                                     "path"          : $exist:path,
                                     "resource"      : $exist:resource,
                                     "controller"    : $exist:controller,
@@ -109,9 +122,8 @@ let $net-vars           := map  {
                                 }
 
 let $parameterString    :=  if (count(request:get-parameter-names())) then
-                                "?" || string-join($net-vars('params'), '&amp;')
-                            else
-                                ()
+                                "?" || string-join($netVars('params'), '&amp;')
+                            else ()
 
 
 
@@ -120,35 +132,30 @@ let $debug :=  if ($config:debug = "trace") then
                         console:log("Request at '" || request:get-header('X-Forwarded-Host') || "' for " || request:get-effective-uri() || "&#x0d; " ||
                                     "HEADERS (" || count(request:get-header-names()) || "): "    || string-join(for $h in request:get-header-names()    return $h || ": " || request:get-header($h), ' ')    || "&#x0d; " ||
                                     "ATTRIBUTES (" || count(request:attribute-names()) || "): " || string-join(for $a in request:attribute-names()     return $a || ": " || request:get-attribute($a), ' ') || "&#x0d; " ||
-                                    "PARAMETERS (" || count($net-vars('params')) ||"): " || string-join($net-vars('params'), '&amp;') ||
-                                    "ACCEPT (" || count($net-vars('accept')) || "): " || string-join($net-vars('accept'), ',')
+                                    "PARAMETERS (" || count($netVars('params')) ||"): " || string-join($netVars('params'), '&amp;') ||
+                                    "ACCEPT (" || count($netVars('accept')) || "): " || string-join($netVars('accept'), '.') ||
+                                    "$lang: " || $lang || "."
                                    )
                 else ()
-let $debug2 :=  if ($config:debug = "trace") then
-                        console:log("$lang: " || $lang || ".")
-                else ()
-
-let $errorhandler :=    if (($config:instanceMode = "staging") or ($config:debug = "trace") or ("debug=trace" = $net-vars('params')) ) then ()
-                        else
-                            <error-handler>
-                                <forward url="{$exist:controller}/en/error-page.html" method="get"/>
-                                <forward url="{$exist:controller}/modules/view.xql"/>
-                            </error-handler>
 
 return
 
     (: *** Redirects for special resources (favicons, robots.txt, sitemap; specified by resource name *** :)
     if (lower-case($exist:resource) = "favicon.ico") then
         let $debug          := if ($config:debug = "trace") then console:log("Favicon requested: " || $net:forwardedForServername || $exist:path || ".") else ()
-        return net:forward("/resources/favicons/favicon.ico", $net-vars)
+        return net:forward("/resources/favicons/favicon.ico", $netVars)
     else if (lower-case($exist:resource) = "robots.txt") then
         let $debug          := if ($config:debug = "trace") then console:log("Robots.txt requested: " || $net:forwardedForServername || $exist:path || ".") else ()
         let $parameters     := <exist:add-parameter name="Cache-Control" value="max-age=3600, must-revalidate"/>
-        return net:forward("/robots.txt", $net-vars, $parameters)
+        return net:forward("/robots.txt", $netVars, $parameters)
     else if (matches(lower-case($exist:path), '^/sitemap(_index)?.xml$') or
              matches(lower-case($exist:path), '^/sitemap_(en|de|es).xml(.(gz|zip))?$')) then
         let $debug          := if ($config:debug = ("trace", "info")) then console:log("Sitemap requested: " || $net:forwardedForServername || $exist:path || ".") else ()
-        return net:sitemapResponse($net-vars)
+        return net:sitemapResponse($netVars)
+    else if ($exist:resource = "void.ttl") then
+        let $debug          := if ($config:debug = ("trace", "info")) then console:log("VoID.ttl requested: " || $net:forwardedForServername || $exist:path || ".") else ()
+        return net:forward("void.ttl", $netVars)
+
 
     (: *** We have an underspecified request with (almost) empty path -> redirect this to homepage *** :)
     else if (request:get-header('X-Forwarded-Host') = ("", "www." || $config:serverdomain) and
@@ -158,22 +165,23 @@ return
                                        if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (),
                                        string-join(net:inject-requestParameter('', ''), '&amp;')
                                      )
-        return net:redirect($absolutePath, $net-vars)
+        return net:redirect($absolutePath, $netVars)
 
 
     (: *** API functions (X-Forwarded-Host='api.{serverdomain}') *** :)
     else if (request:get-header('X-Forwarded-Host') = "api." || $config:serverdomain) then
+        let $debug := if ($config:debug = ("trace", "info")) then console:log("API requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
         (: We have the following API areas, accessible by path component:
 
-            1. /v1/tei/
-            2. /v1/txt/
-            3. /v1/rdf/
-            4. /v1/html/
-            5. /v1/iiif/
+            1. /v1/tei/     works: ✔ passages: 🛇
+            2. /v1/txt/     works: ✔ passages:
+            3. /v1/rdf/     works: ✔ passages:
+            4. /v1/html/    works:    passages:
+            5. /v1/iiif/    works:    pages:
 
-            a. Search (/v1/search)           (Forwards to opensphinxsearch.)
-            b. CodeSharing (/v1/codesharing) (To expose TEI tag usage.             See https://api.{$config:serverdomain}/codesharing/codesharing.html or https://mapoflondon.uvic.ca/BLOG10.htm) 
-            c. XTriples (/v1/xtriples)       (Extract rdf from xml with xtriples.  See https://api.{$config:serverdomain}/lod/xtriples.html            or http://xtriples.spatialhumanities.de/index.html)
+            a. Search (/v1/search) ✔         (Forwards to opensphinxsearch.)
+            b. CodeSharing (/v1/codesharing) ✔ (To expose TEI tag usage.             See https://api.{$config:serverdomain}/codesharing/codesharing.html or https://mapoflondon.uvic.ca/BLOG10.htm) 
+            c. XTriples (/v1/xtriples) ✔      (Extract rdf from xml with xtriples.  See https://api.{$config:serverdomain}/lod/xtriples.html            or http://xtriples.spatialhumanities.de/index.html)
 
             TODO: - Clean up and *systematically* offer only https://api.{$serverdomain}/{version}/{function}/{resource}
                     and perhaps (!) the same at https://{function}.{$serverdomain}/{resource}
@@ -183,37 +191,44 @@ return
 
         :)
         let $pathComponents := tokenize(lower-case($exist:path), "/")
-        if ($pathComponents[2] = $config:apiEndpoints?$pathComponents[1]) then
-            switch($pathComponents[2])
-            case "tei"
-                let $debug1         := if ($config:debug = ("trace", "info")) then console:log("TEI/XML requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-                return net:deliverTEI($pathComponents)
-            case "txt"
-                let $debug1         := if ($config:debug = ("trace", "info")) then console:log("TXT requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
+        let $debug := if ($config:debug = ("trace")) then console:log("$pathComponents: " || string-join($pathComponents, "; ") || ".") else ()
+        let $debug := if ($config:debug = ("trace")) then console:log("This translates to API version " || $pathComponents[2] || ", endpoint " || $pathComponents[3] || ".") else ()
+        
+
+        return if ($pathComponents[3] = $config:apiEndpoints($pathComponents[2])) then
+            switch($pathComponents[3])
+            case "tei" return
+                let $debug         := if ($config:debug = ("trace", "info")) then console:log("TEI/XML requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
+                return net:deliverTEI($pathComponents, $netVars)
+            case "txt" return
+                let $debug         := if ($config:debug = ("trace", "info")) then console:log("TXT requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
                 return net:deliverTXT($pathComponents)
-            case "rdf"
-            case "html"
-            case "iiif"
-                let $debug1         := if ($config:debug = ("trace", "info")) then console:log("iiif requested: " || $net:forwardedForServername || $exist:path || $parameterString || " ...") else ()
-                return net:deliverIIIF($exist:path)
-            case "search"
-                let $debug1         := if ($config:debug = ("trace", "info")) then console:log("Search requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-                let $absolutePath   := concat($config:searchserver, '/', substring-after($exist:path, '/search/'))
-                return net:redirect($absolutePath, $net-vars)
-            case "codesharing"
-                let $debug1         := if ($config:debug = ("trace", "info")) then console:log("Codesharing requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-                let $parameters     := <exist:add-parameter name="outputType" value="html"/>
+            case "rdf" return
+                let $debug         := if ($config:debug = ("trace", "info")) then console:log("RDF requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
+                return net:deliverRDF($pathComponents, $netVars)
+            case "html" return ()
+            case "iiif" return
+                let $debug         := if ($config:debug = ("trace", "info")) then console:log("iiif requested: " || $net:forwardedForServername || $exist:path || $parameterString || " ...") else ()
+                return net:deliverIIIF($exist:path, $netVars)
+            case "search" return
+                let $debug         := if ($config:debug = ("trace", "info")) then console:log("Search requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
+                let $absolutePath  := concat($config:searchserver, '/', substring-after($exist:path, '/search/'))
+                return net:redirect($absolutePath, $netVars)
+            case "codesharing" return
+                let $debug         := if ($config:debug = ("trace", "info")) then console:log("Codesharing requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
+                let $parameters    := <exist:add-parameter name="outputType" value="html"/>
                 return
-                    if ($pathComponents[3] = 'codesharing_protocol.xhtml') then
-                            net:forward('/services/codesharing/codesharing_protocol.xhtml', $net-vars)      (: Protocol description html file. :)
+                    if ($pathComponents[last()] = 'codesharing_protocol.xhtml') then
+                            net:forward('/services/codesharing/codesharing_protocol.xhtml', $netVars)      (: Protocol description html file. :)
                     else
-                            net:forward('/services/codesharing/codesharing.xql', $net-vars, $parameters)    (: Main service HTML page.  :)
-            case "xtriples"
-                let $debug1         := if ($config:debug = ("trace", "info")) then console:log("XTriples requested: " || $net:forwardedForServername || $exist:path || $parameterString || " ...") else ()
+                            net:forward('/services/codesharing/codesharing.xql', $netVars, $parameters)    (: Main service HTML page.  :)
+            case "xtriples" return
+                let $debug         := if ($config:debug = ("trace", "info")) then console:log("XTriples requested: " || $net:forwardedForServername || $exist:path || $parameterString || " ...") else ()
                 return
-                    if ($pathComponents[3] = ("extract.xql", "createConfig.xql", "xtriples.html", "changelog.html", "documentation.html", "examples.html")) then
-                        net:forward('/services/lod/' || $pathComponents[3], $net-vars)
+                    if ($pathComponents[last()] = ("extract.xql", "createConfig.xql", "xtriples.html", "changelog.html", "documentation.html", "examples.html")) then
+                        net:forward('/services/lod/' || $pathComponents[last()], $netVars)
                     else ()
+            default return ()
 
         else ()
 (: === End API functions === :)
@@ -340,21 +355,19 @@ return
 :)
 
 (: LOD 0. We have a request for Metadata (Data about the dataset) :)
-        if ($exist:resource = "void.ttl") then
-            net:forward("void.ttl", $net-vars)
 (: LOD 1. We have a request for a specific resource and a *.rdf filename :)
-        else if (ends-with($exist:path, '.rdf')) then
+        if (ends-with($exist:path, '.rdf')) then
             let $debug          := if ($config:debug = ("trace", "info")) then console:log("LOD requested (Case 1): " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
             let $resourceId     := substring-after(substring-before($exist:resource, '.rdf'), '.')
             return  if ($resourceId || '.rdf' = xmldb:get-child-resources($config:rdf-root) and not("nocache" = request:get-parameter-names())) then
                         let $debug          := if ($config:debug = ("trace", "info")) then console:log("Loading " || $resourceId || " ...") else ()
-                        return net:forward('../../..' || $config:rdf-root || '/' || $resourceId || '.rdf', $net-vars)
+                        return net:forward('../../..' || $config:rdf-root || '/' || $resourceId || '.rdf', $netVars)
                     else
                         let $debug          := if ($config:debug = ("trace", "info")) then console:log("Generating rdf for " || $resourceId || " ...") else ()
                         let $path           := '/services/lod/extract.xql'
                         let $parameters     := (<exist:add-parameter name="configuration"   value="{$config:apiserver || '/lod/createConfig.xql?resourceId=' || $resourceId || '&amp;format=' || $config:lodFormat}"/>,
                                                 <exist:add-parameter name="format"          value="{$config:lodFormat}"/>)
-                        return net:forward($path, $net-vars, $parameters)
+                        return net:forward($path, $netVars, $parameters)
 
 (: LOD 2. We have a request for a specific resource, but a *.html filename :)
         else if ((contains($exist:path, '/authors/') or contains($exist:path, '/works/')) and ends-with($exist:resource, '.html')) then
@@ -429,7 +442,7 @@ return
                                 let $debug          := if ($config:debug = "trace") then console:log("4b1a. rdf list of works") else ()
                                 let $parameters     := (<exist:add-parameter name="configuration"   value="{$config:apiserver || '/lod/svsal-xtriples-workslist.xml'}"/>,
                                                         <exist:add-parameter name="format"          value="{$format}"/>)
-                                return net:forward($extractPath, $net-vars, $parameters)
+                                return net:forward($extractPath, $netVars, $parameters)
                        case "/authors"
                         case "/authors/"
                         case "/persons"
@@ -465,7 +478,7 @@ return
                                 let $debug          := if ($config:debug = "trace") then console:log("4b1a. rdf list of works") else ()
                                 let $parameters     := (<exist:add-parameter name="configuration"   value="{$config:apiserver || '/lod/svsal-xtriples-workslist.xml'}"/>,
                                                         <exist:add-parameter name="format"          value="{$format}"/>)
-                                return net:forward($extractPath, $net-vars, $parameters)
+                                return net:forward($extractPath, $netVars, $parameters)
                         case "/authors"
                         case "/authors/"
                         case "/persons"
@@ -474,7 +487,7 @@ return
                                 let $debug          := if ($config:debug = "trace") then console:log("4b1b. rdf list of authors") else ()
                                 let $parameters     := (<exist:add-parameter name="configuration"   value="{$config:apiserver || '/lod/svsal-xtriples-personslist.xml'}"/>,
                                                         <exist:add-parameter name="format"          value="{$format}"/>)
-                                return net:forward($extractPath, $net-vars, $parameters)
+                                return net:forward($extractPath, $netVars, $parameters)
                         default
                             return
                                 let $resourceId     := tokenize($exist:resource, '\.')[1]
@@ -482,12 +495,12 @@ return
                                 return
                                     if ($exist:resource || '.rdf' = xmldb:get-child-resources($config:app-root || $config:rdf-root)) then
                                         let $debug          := if ($config:debug = "trace") then console:log("Loading " || $resourceId || ".rdf ...") else ()
-                                        return net:forward($config:rdf-root || '/' || $exist:resource || '.rdf', $net-vars)
+                                        return net:forward($config:rdf-root || '/' || $exist:resource || '.rdf', $netVars)
                                     else
                                         let $debug          := if ($config:debug = ("trace", "info")) then console:log("Generating rdf for " || $resourceId || " ...") else ()
                                         let $parameters     := (<exist:add-parameter name="configuration"   value="{$config:apiserver || '/lod/createConfig.xql?resourceId=' || $resourceId || '&amp;format=' || $config:lodFormat}"/>,
                                                                 <exist:add-parameter name="format"          value="{$format}"/>)
-                                        return net:forward($extractPath, $net-vars, $parameters)
+                                        return net:forward($extractPath, $netVars, $parameters)
 
                     else () (: under data.{serverdomain}, we don't care about any other acceptable content types ... :)
 
@@ -513,15 +526,15 @@ return
         let $finalPath1     := replace($exist:path, '/de/', '/')
         let $finalPath2     := replace($finalPath1, '/en/', '/')
         let $finalPath3     := replace($finalPath2, '/es/', '/')
-        let $debug          := if ($config:debug = ("trace", "info")) then console:log("XQL requested: " || $net:forwardedForServername || $exist:path || $parameterString || ", redirecting to " || $finalPath3 || '?' || string-join($net-vars('params'), '&amp;') || ".") else ()
-        return net:forward($finalPath3, $net-vars)
+        let $debug          := if ($config:debug = ("trace", "info")) then console:log("XQL requested: " || $net:forwardedForServername || $exist:path || $parameterString || ", redirecting to " || $finalPath3 || '?' || string-join($netVars('params'), '&amp;') || ".") else ()
+        return net:forward($finalPath3, $netVars)
 
     (: If the request is for a file download, forward to resources/files/... :)
     else if (starts-with($exist:path, "/files/") or request:get-header('X-Forwarded-Host') = "files." || $config:serverdomain) then
         let $prelimPath    := if (starts-with($exist:path, "/files/")) then substring($exist:path, 7) else $exist:path
         let $finalPath     := (: $config:resources-root :) "/resources/files" || $prelimPath
-        let $debug          := if ($config:debug = ("trace", "info")) then console:log("File download requested: " || $net:forwardedForServername || $exist:path || $parameterString || ", redirecting to " || $finalPath || '?' || string-join($net-vars('params'), '&amp;') || ".") else ()
-        return net:forward($finalPath, $net-vars)
+        let $debug          := if ($config:debug = ("trace", "info")) then console:log("File download requested: " || $net:forwardedForServername || $exist:path || $parameterString || ", redirecting to " || $finalPath || '?' || string-join($netVars('params'), '&amp;') || ".") else ()
+        return net:forward($finalPath, $netVars)
 
     (: All requests to TEI XML files to the data directory :)
     else if (request:get-header('X-Forwarded-Host') = "tei." || $config:serverdomain) then
@@ -558,7 +571,7 @@ return
                                                 <set-attribute name="$exist:controller" value="{$exist:controller}"/>
                                             </forward>
                                         </view>
-                                        {$errorhandler}
+                                        {config:errorhandler($netVars)}
                                     </dispatch>
             let $debug3     := if ($config:debug = "trace") then console:log ("deliver doc: " || $doc/name() || "/@xml:id=" || $doc/@xml:id || ".") else ()
             return
@@ -590,7 +603,7 @@ return
                         <set-attribute name="$exist:controller" value="{$exist:controller}"/>
                     </forward>
                 </view>
-                {$errorhandler}
+                {config:errorhandler($netVars)}
             </dispatch>
 
     (: If there is no language path component, redirect to a version of the site where there is one :)
@@ -599,7 +612,7 @@ return
                                         if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (),
                                         string-join(net:inject-requestParameter('', ''), '&amp;'))
         let $debug          := if ($config:debug = ("trace", "info")) then console:log("HTML requested: " || $net:forwardedForServername || $exist:path || $parameterString || ", redirecting to " || $absolutePath || "...") else ()
-        return net:redirect($absolutePath, $net-vars)
+        return net:redirect($absolutePath, $netVars)
 
     else if (contains($exist:path, "/$shared/")) then
         let $debug := if ($config:debug = "trace") then console:log("Shared resource requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
@@ -608,7 +621,7 @@ return
                 <forward url="/shared-resources/{substring-after($exist:path, '/$shared/')}">
                     <set-header name="Cache-Control" value="max-age=3600, must-revalidate"/>
                 </forward>
-                {$errorhandler}
+                {config:errorhandler($netVars)}
             </dispatch>
 
     (: Relative path requests from sub-collections are redirected there :)
@@ -620,7 +633,7 @@ return
 <!--                <set-header name="Cache-Control" value="max-age=432000, must-revalidate"/> -->
                     <set-header name="Expires" value="{format-dateTime(dateTime(current-date(), util:system-time()) + xs:dayTimeDuration('P7D'), 'EEE, d MMM yyyy HH:mm:ss Z' )}"/>
                 </forward>
-                {$errorhandler}
+                {config:errorhandler($netVars)}
             </dispatch>
 
 
@@ -640,6 +653,6 @@ return
         let $absolutePath   := concat($config:proto, "://", $net:forwardedForServername, '/', $lang, '/index.html',
                                     if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (),
                                     string-join(net:inject-requestParameter('', ''), '&amp;'))
-        return net:redirect($absolutePath, $net-vars)
+        return net:redirect($absolutePath, $netVars)
 
 

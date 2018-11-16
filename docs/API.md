@@ -73,6 +73,8 @@ The information includes **metadata** about the work (such as title, author, pub
 
 Finally, information **about the dataset** as a whole (like provenance, authorship etc.) is provided using the [VoID Vocabulary](https://www.w3.org/TR/void/). This information is available on its own at <http://data.salamanca.school/void.ttl> and is linked to from all individual resources.
 
+At the RDF endpoint, the additional URL parameter `nocache` allows you to invalidate rdf information that has been stored and cached on the server and to re-generate the information from the TEI files.
+
 ### HTML endpoint
 
 This endpoint also accepts the following url parameters:

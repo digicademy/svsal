@@ -21,7 +21,7 @@ import module namespace functx  = "http://www.functx.com";
 
 (: ==================================================================================== :)
 (: OOOooo... Configurable Section for the School of Salamanca Web-Application ...oooOOO :)
-declare variable $config:debug        := "info"; (: possible values: trace, info, none :)
+declare variable $config:debug        := "trace"; (: possible values: trace, info, none :)
 declare variable $config:instanceMode := "production"; (: possible values: staging, production :)
 declare variable $config:contactEMail := "info.salamanca@adwmainz.de";
 
@@ -42,7 +42,7 @@ declare variable $config:serverdomain :=
 
 declare variable $config:apiEndpoints   := map  {
                                                     "v1": ("tei", "txt", "rdf", "html", "iiif", "search", "codesharing", "xtriples")
-                                                }
+                                                };
 
 declare variable $config:webserver      := $config:proto || "://www."    || $config:serverdomain;
 declare variable $config:blogserver     := $config:proto || "://blog."   || $config:serverdomain;
@@ -185,6 +185,16 @@ declare function config:repo-descriptor() as element(repo:meta) {
 declare function config:expath-descriptor() as element(expath:package) {
     $config:expath-descriptor
 };
+
+declare function config:errorhandler($netVars as map()*) {
+    if (($config:instanceMode = "staging") or ($config:debug = "trace") or ("debug=trace" = $netVars('params')) ) then ()
+        else
+            <error-handler>
+                <forward url="{$netVars('controller')}/error-page.html" method="get"/>
+                <forward url="{$netVars('controller')}/modules/view.xql"/>
+            </error-handler>
+};
+
 
 (: deprecated?:
 declare function config:app-meta($node as node(), $model as map(*)) as element()* {
