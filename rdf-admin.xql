@@ -21,9 +21,9 @@ let $rid :=     if (starts-with($resourceId, "authors.")) then
                     else
                         $resourceId
 
-let $debug := console:log("Requesting " || $config:apiserver || '/lod/extract.xql?format=rdf&amp;configuration=' || $config:apiserver || '/lod/createConfig.xql?resourceId=' || $rid || ' ...')
+let $debug := console:log("Requesting " || $config:apiserver || '/v1/xtriples/extract.xql?format=rdf&amp;configuration=' || $config:apiserver || '/v1/xtriples/createConfig.xql?resourceId=' || $rid || ' ...')
 
-let $rdf   :=  doc($config:apiserver || '/lod/extract.xql?format=rdf&amp;configuration=' || $config:apiserver        || '/lod/createConfig.xql?resourceId=' || $rid)
+let $rdf   :=  doc($config:apiserver        || '/v1/xtriples/createConfig.xql?resourceId=' || $rid)
 (: let $debug := console:log("Resulting $rdf := " || $rdf || '.' ) :)
 
 let $runtime-ms       := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000

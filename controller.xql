@@ -181,7 +181,7 @@ return
 
             a. Search (/v1/search) ✔         (Forwards to opensphinxsearch.)
             b. CodeSharing (/v1/codesharing) ✔ (To expose TEI tag usage.             See https://api.{$config:serverdomain}/codesharing/codesharing.html or https://mapoflondon.uvic.ca/BLOG10.htm) 
-            c. XTriples (/v1/xtriples) ✔      (Extract rdf from xml with xtriples.  See https://api.{$config:serverdomain}/lod/xtriples.html            or http://xtriples.spatialhumanities.de/index.html)
+            c. XTriples (/v1/xtriples) ✔      (Extract rdf from xml with xtriples.  See https://api.{$config:serverdomain}/v1/xtriples/xtriples.html            or http://xtriples.spatialhumanities.de/index.html)
 
             TODO: - Clean up and *systematically* offer only https://api.{$serverdomain}/{version}/{function}/{resource}
                     and perhaps (!) the same at https://{function}.{$serverdomain}/{resource}
@@ -365,7 +365,7 @@ return
                     else
                         let $debug          := if ($config:debug = ("trace", "info")) then console:log("Generating rdf for " || $resourceId || " ...") else ()
                         let $path           := '/services/lod/extract.xql'
-                        let $parameters     := (<exist:add-parameter name="configuration"   value="{$config:apiserver || '/lod/createConfig.xql?resourceId=' || $resourceId || '&amp;format=' || $config:lodFormat}"/>,
+                        let $parameters     := (<exist:add-parameter name="configuration"   value="{$config:apiserver || '/v1/xtriples/createConfig.xql?resourceId=' || $resourceId || '&amp;format=' || $config:lodFormat}"/>,
                                                 <exist:add-parameter name="format"          value="{$config:lodFormat}"/>)
                         return net:forward($path, $netVars, $parameters)
 
@@ -440,7 +440,7 @@ return
                         case "/works/"
                             return
                                 let $debug          := if ($config:debug = "trace") then console:log("4b1a. rdf list of works") else ()
-                                let $parameters     := (<exist:add-parameter name="configuration"   value="{$config:apiserver || '/lod/svsal-xtriples-workslist.xml'}"/>,
+                                let $parameters     := (<exist:add-parameter name="configuration"   value="{$config:apiserver || '/v1/xtriples/svsal-xtriples-workslist.xml'}"/>,
                                                         <exist:add-parameter name="format"          value="{$format}"/>)
                                 return net:forward($extractPath, $netVars, $parameters)
                        case "/authors"
@@ -476,7 +476,7 @@ return
                         case "/works/"
                             return
                                 let $debug          := if ($config:debug = "trace") then console:log("4b1a. rdf list of works") else ()
-                                let $parameters     := (<exist:add-parameter name="configuration"   value="{$config:apiserver || '/lod/svsal-xtriples-workslist.xml'}"/>,
+                                let $parameters     := (<exist:add-parameter name="configuration"   value="{$config:apiserver || '/v1/xtriples/svsal-xtriples-workslist.xml'}"/>,
                                                         <exist:add-parameter name="format"          value="{$format}"/>)
                                 return net:forward($extractPath, $netVars, $parameters)
                         case "/authors"
@@ -485,7 +485,7 @@ return
                         case "/persons/"
                             return
                                 let $debug          := if ($config:debug = "trace") then console:log("4b1b. rdf list of authors") else ()
-                                let $parameters     := (<exist:add-parameter name="configuration"   value="{$config:apiserver || '/lod/svsal-xtriples-personslist.xml'}"/>,
+                                let $parameters     := (<exist:add-parameter name="configuration"   value="{$config:apiserver || '/v1/xtriples/svsal-xtriples-personslist.xml'}"/>,
                                                         <exist:add-parameter name="format"          value="{$format}"/>)
                                 return net:forward($extractPath, $netVars, $parameters)
                         default
@@ -498,7 +498,7 @@ return
                                         return net:forward($config:rdf-root || '/' || $exist:resource || '.rdf', $netVars)
                                     else
                                         let $debug          := if ($config:debug = ("trace", "info")) then console:log("Generating rdf for " || $resourceId || " ...") else ()
-                                        let $parameters     := (<exist:add-parameter name="configuration"   value="{$config:apiserver || '/lod/createConfig.xql?resourceId=' || $resourceId || '&amp;format=' || $config:lodFormat}"/>,
+                                        let $parameters     := (<exist:add-parameter name="configuration"   value="{$config:apiserver || '/v1/xtriples/createConfig.xql?resourceId=' || $resourceId || '&amp;format=' || $config:lodFormat}"/>,
                                                                 <exist:add-parameter name="format"          value="{$format}"/>)
                                         return net:forward($extractPath, $netVars, $parameters)
 
