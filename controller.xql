@@ -225,8 +225,9 @@ return
             case "xtriples" return
                 let $debug         := if ($config:debug = ("trace", "info")) then console:log("XTriples requested: " || $net:forwardedForServername || $exist:path || $parameterString || " ...") else ()
                 return
-                    if ($pathComponents[last()] = ("extract.xql", "createConfig.xql", "xtriples.html", "changelog.html", "documentation.html", "examples.html")) then
-                        net:forward('/services/lod/' || $pathComponents[last()], $netVars)
+                    if (tokenize($pathComponents[last()], '\?')[1] = ("extract.xql", "createconfig.xql", "xtriples.html", "changelog.html", "documentation.html", "examples.html")) then
+                        let $debug := if ($config:debug = ("trace", "info")) then console:log("Forward to: /services/lod/" || tokenize($exist:path, "/")[last()]  || ".") else ()
+                        return net:forward('/services/lod/' || tokenize($exist:path, "/")[last()], $netVars)
                     else ()
             default return ()
 
@@ -247,9 +248,9 @@ return
                         else if ($mode eq 'canvas') then substring-after(substring-before($exist:path, '/canvas/'), '/')
                         else ()
         let $canvas :=  if ($mode eq 'canvas') then substring-after($exist:path, '/canvas/') else ()
-        let $parameters :=  if ($canvas) then (net:add-parameter('wid', $workId), net:add-parameter('canvas', $canvas)) 
-                            else net:add-parameter('wid', $workId)
-        return net:forward('iiif-out.xql', $net-vars, $parameters)
+        let $resolvedURI   :=  $config:webserver || '/iiif-out.xql?wid=' || $workId || (if ($canvas) then concat('&amp;canvas=', $canvas) else ())
+        (: redirect in a way that URI (i.e., iiif @id) remains the same and only output of iiif-out.xql is shown :)
+        return net:redirect-with-303($resolvedURI)
 
         
         
