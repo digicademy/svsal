@@ -1205,7 +1205,6 @@ return (
 							"extract.xql: output in " || $setFormat  || ".",
 							"trace"
 						  )
-
 		return xtriples:getRDFTriples($xtriples, $vocabularies)
 	else if ($setFormat = "ntriples") then (
 
@@ -1271,7 +1270,6 @@ return (
 							"extract.xql: output in " || $setFormat  || ".",
 							"trace"
 						  )
-
 
 		return    xtriples:getRDF($xtriples, $vocabularies)
 )
