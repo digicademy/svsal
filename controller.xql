@@ -180,7 +180,7 @@ return
             5. /v1/iiif/    works:    pages:
 
             a. Search (/v1/search) ✔         (Forwards to opensphinxsearch.)
-            b. CodeSharing (/v1/codesharing) ✔ (To expose TEI tag usage.             See https://api.{$config:serverdomain}/codesharing/codesharing.html or https://mapoflondon.uvic.ca/BLOG10.htm) 
+            b. CodeSharing (/v1/codesharing) ✔ (To expose TEI tag usage.             See https://api.{$config:serverdomain}/v1/codesharing/codesharing.html or https://mapoflondon.uvic.ca/BLOG10.htm) 
             c. XTriples (/v1/xtriples) ✔      (Extract rdf from xml with xtriples.  See https://api.{$config:serverdomain}/v1/xtriples/xtriples.html            or http://xtriples.spatialhumanities.de/index.html)
 
             TODO: - Clean up and *systematically* offer only https://api.{$serverdomain}/{version}/{function}/{resource}
