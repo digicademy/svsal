@@ -14,7 +14,7 @@ Under <https://api.salamanca.school/v1>, we provide the following endpoints<sup 
 * **/txt/** for plaintext
 * **/rdf/** for linked data (in [rdf/xml](https://www.w3.org/TR/rdf11-primer/); this is also being redirected to from <https://data.salamanca.school/>)
 * **/html/** for web views (this is also being redirected to from <https://www.salamanca.school/>)
-* **/iiif/** for iiif [manifests](https://iiif.io/api/presentation/2.1/) and [images](https://iiif.io/api/image/2.1/)
+* **/iiif/** for iiif [manifests](https://iiif.io/api/presentation/2.1/) and [images](https://iiif.io/api/image/2.1/), depending on the actual resource being requested
 * (in the future: pdf and ebook for ebook views)
 * (also in the future, (some of) the endpoints will be enhanced with versioning/[memento](http://mementoweb.org/guide/howto/) negotiation)
 

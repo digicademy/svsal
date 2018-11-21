@@ -1,4 +1,4 @@
-xquery version "3.0";
+xquery version "3.1";
 
 module namespace net                = "http://salamanca/net";
 import module namespace console     = "http://exist-db.org/xquery/console";
@@ -41,6 +41,92 @@ declare variable $net:errorhandler := if (($config:instanceMode = "staging") or 
                                 <forward url="{$config:app-root}/modules/view.xql"/>
                             </error-handler>;
 
+declare function net:findNode($ctsId as xs:string?) {
+    let $reqResource  := tokenize($ctsId, '/')[last()]
+    let $work         := tokenize(tokenize($reqResource, ':')[1], '\.')[2]   (: group.work:pass.age :)
+    let $passage      := tokenize($reqResource, ':')[2]
+    let $nodeId       := if ($passage) then
+                            let $nodeIndex := doc($config:data-root || '/' || $work || '_nodeIndex.xml')
+                            return $nodeIndex//sal:node[sal:citetrail eq $passage][1]/@n[1]
+                         else
+                            "completeWork" 
+    let $work         := util:expand(doc($config:tei-works-root || '/' || replace($work, 'w0', 'W0') || '.xml')//tei:TEI)
+    let $node         := $work//tei:*[@xml:id eq $nodeId]
+    let $debug        := if ($config:debug = "trace") then console:log('findNode returns ' || count($node) || ' node(s): ' || $work/@xml:id || '//*[@xml:id=' || $nodeId || '] (cts/id was "' || $ctsId || '").') else ()
+    return $node
+};
+
+
+
+(: Set language for the connection ... :)
+declare function net:lang($existPath as xs:string) as xs:string {
+    (:  Priorities: 1. ?lang
+                    2. /lang/
+                    3. Browser setting/Accept-Language
+                    4. default language
+        We refrain from using session attributes (hard to track, hard to change, cf. https://discuss.neos.io/t/how-to-implement-automatic-language-detection/416/6)
+    :)
+                    if (request:get-parameter-names() = 'lang') then
+                        if (request:get-parameter('lang', 'dummy-default-value') = ('de', 'en', 'es')) then
+                            let $debug :=  if ($config:debug = "trace") then console:log("case 1a: lang parameter-name and valid value present.") else ()
+                            return request:get-parameter('lang', 'dummy-default-value')
+                        else
+                            let $debug :=  if ($config:debug = "trace") then console:log("case 1b: lang parameter-name but invalid value present.") else ()
+                            return if (matches($existPath, '/(de|en|es)/')) then
+                                        if (contains($existPath, '/de/')) then
+                                            let $debug :=  if ($config:debug = "trace") then console:log("case 2a: 'de' path component present.") else ()
+                                            return 'de'
+                                        else if (contains($existPath, '/en/')) then
+                                            let $debug :=  if ($config:debug = "trace") then console:log("case 2b: 'en' path component present.") else ()
+                                            return 'en'
+                                        else
+                                            let $debug :=  if ($config:debug = "trace") then console:log("case 2c: 'es' path component present.") else ()
+                                            return 'es'
+                                    else if (request:get-header('Accept-Language')) then
+                                            if (substring(request:get-header('lang'),1,2) = 'de') then
+                                                let $debug := if ($config:debug = "trace") then console:log("case 3a: 'de' Accept-Language request header present.") else ()
+                                                return 'de'
+                                            else if (substring(request:get-header('lang'),1,2) = 'en') then
+                                                let $debug := if ($config:debug = "trace") then console:log("case 3b: 'en' Accept-Language request header present.") else ()
+                                                return 'en'
+                                            else if (substring(request:get-header('lang'),1,2) = 'es') then
+                                                let $debug := if ($config:debug = "trace") then console:log("case 3c: 'es' Accept-Language request header present.") else ()
+                                                return 'es'
+                                            else
+                                                let $debug := if ($config:debug = "trace") then console:log("case 3d: unknown Accept-Language request header present.") else ()
+                                                return $config:defaultLang
+                                    else
+                                        let $debug := if ($config:debug = "trace") then console:log("case 4: Language could not be detected. Using default language (" || $config:defaultLang || ").") else ()
+                                        return $config:defaultLang
+
+                    else if (matches($existPath, '/(de|en|es)/')) then
+                        if (contains($existPath, '/de/')) then
+                            let $debug :=  if ($config:debug = "trace") then console:log("case 2a: 'de' path component present.") else ()
+                            return 'de'
+                        else if (contains($existPath, '/en/')) then
+                            let $debug :=  if ($config:debug = "trace") then console:log("case 2b: 'en' path component present.") else ()
+                            return 'en'
+                        else
+                            let $debug :=  if ($config:debug = "trace") then console:log("case 2c: 'es' path component present.") else ()
+                            return 'es'
+                    else if (request:get-header('Accept-Language')) then
+                            if (substring(request:get-header('Accept-Language'),1,2) = 'de') then
+                                let $debug := if ($config:debug = "trace") then console:log("case 3a: 'de' Accept-Language request header present.") else ()
+                                return 'de'
+                            else if (substring(request:get-header('Accept-Language'),1,2) = 'en') then
+                                let $debug := if ($config:debug = "trace") then console:log("case 3b: 'en' Accept-Language request header present.") else ()
+                                return 'en'
+                            else if (substring(request:get-header('Accept-Language'),1,2) = 'es') then
+                                let $debug := if ($config:debug = "trace") then console:log("case 3c: 'es' Accept-Language request header present.") else ()
+                                return 'es'
+                            else
+                                let $debug := if ($config:debug = "trace") then console:log("case 3d: unknown Accept-Language request header (" || request:get-header('Accept-Language') || ") present.") else ()
+                                return $config:defaultLang
+                    else
+                        let $debug := if ($config:debug = "trace") then console:log("case 4: Language could not be detected. Using default language (" || $config:defaultLang || ").") else ()
+                        return $config:defaultLang
+};
+
 (: Todo: Clean lang parameters when they arrive. It's there but I'm not sure it's working... :)
 declare function net:inject-requestParameter($injectParameter as xs:string*, $injectValue as xs:string*) as xs:string* {
     if (not($injectParameter)) then
@@ -61,6 +147,9 @@ declare function net:inject-requestParameter($injectParameter as xs:string*, $in
                     $preliminaryList
 };
 
+
+
+(: Diverse redirection/forwarding functions ... :)
 (:  Approach based on Joe Wicentowski's suggestion of handling redirection in separate queries
     (and much else in local convenience functions). However, the main code below does not (yet)
     use these convenience functions to the fullest possible extent. (That's a todo.) :)
@@ -75,29 +164,12 @@ declare function net:inject-requestParameter($injectParameter as xs:string*, $in
 :)
 declare function net:redirect-with-301($absolute-path) {  (: Moved permanently :)
     (response:set-status-code(301), response:set-header('Location', $absolute-path))
-(:  net:forward('../services/30x.xql',
-        (net:add-parameter('path', $absolute-path),
-         net:add-parameter('statusCode', '301')),
-        $netVars
-        )
-:)
 };
 declare function net:redirect-with-307($absolute-path) {  (: Temporary redirect :)
     (response:set-status-code(307), response:set-header('Location', $absolute-path))
-(:    net:forward('../services/30x.xql',
-        (net:add-parameter('path', $absolute-path),
-         net:add-parameter('statusCode', '307')),
-        $netVars
-        )
-:)
 };
 declare function net:redirect-with-303($absolute-path) {  (: See other :)
-    (response:set-header('Location', $absolute-path), response:set-status-code(303), text {''})
-(:    net:forward('../services/30x.xql', $netVars,
-        (net:add-parameter('path', $absolute-path),
-         net:add-parameter('statusCode', '303'))       
-        )
-:)
+    (response:set-status-code(303), response:set-header('Location', $absolute-path), text {''})
 };
 declare function net:redirect-with-404($absolute-path) {  (: 404 :)
     (response:set-status-code(404), 
@@ -137,21 +209,9 @@ declare function net:ignore() {
     </ignore>
 };
 
-declare function net:findNode($ctsId as xs:string?) {
-    let $reqResource  := tokenize($ctsId, '/')[last()]
-    let $work         := tokenize(tokenize($reqResource, ':')[1], '\.')[2]   (: group.work:pass.age :)
-    let $passage      := tokenize($reqResource, ':')[2]
-    let $nodeId       := if ($passage) then
-                            let $nodeIndex := doc($config:data-root || '/' || $work || '_nodeIndex.xml')
-                            return $nodeIndex//sal:node[sal:citetrail eq $passage][1]/@n[1]
-                         else
-                            "completeWork" 
-    let $work         := util:expand(doc($config:tei-works-root || '/' || replace($work, 'w0', 'W0') || '.xml')//tei:TEI)
-    let $node         := $work//tei:*[@xml:id eq $nodeId]
-    let $debug        := if ($config:debug = "trace") then console:log('findNode returns ' || count($node) || ' node(s): ' || $work/@xml:id || '//*[@xml:id=' || $nodeId || '] (cts/id was "' || $ctsId || '").') else ()
-    return $node
-};
 
+
+(: Content negotiation ... :)
 (: From https://github.com/golang/gddo/blob/master/httputil/negotiate.go :)
 (: NegotiateContentType returns the best offered content type for the request's
    Accept header. If two offers match with equal weight, then the more specific
@@ -256,6 +316,7 @@ declare function local:negotiateCTSub($offers as xs:string*, $bestOffer as xs:st
 };
 
 
+
 (: Sitemap stuff ... :)
 declare function local:getDbDocumentIds($collections as xs:string*) as xs:string* {
     for $collection in $collections
@@ -357,7 +418,22 @@ declare function net:sitemapResponse($netVars as map(*)) {
             return $sitemapIndex
 };
 
+
+
+(: Deliver data in one or another format ... :)
 declare function net:deliverTEI($pathComponents as xs:string*, $netVars as map()* ) {
+    (: Todo:
+        - clean up work/passage identification
+        - provide logic for teiHeader and Corpus download (at another API endpoint?) :
+            else if (matches($exist:resource, 'W\d{4}_teiHeader.xml')) then 
+                let $workId := substring-before($exist:resource, '_teiHeader.xml')
+                return export:WRKteiHeader($workId, 'metadata')
+            else if ($exist:resource eq 'sal-tei-corpus.zip') then
+                let $debug      := if ($config:debug = "trace") then console:log ("TEI/XML corpus download requested: " || $net:forwardedForServername || $exist:path || ".") else ()
+                let $pathToZip := $config:files-root || '/sal-tei-corpus.zip'
+                return if (util:binary-doc-available($pathToZip)) then response:stream-binary(util:binary-doc($pathToZip), 'application/octet-stream', 'sal-tei-corpus.zip') else ()
+    :)
+
     let $reqResource    := $pathComponents[last()]
     let $reqWork        := tokenize(tokenize($reqResource, ':')[1], '\.')[2]
     let $dummy          := (util:declare-option("output:method", "xml"),
@@ -371,9 +447,22 @@ declare function net:deliverTEI($pathComponents as xs:string*, $netVars as map()
                                                                                              ', expand-xi:'  || util:get-option('output:expand-xincludes') ||
                                                                                              '.')
                             else ()
+
     let $doc            :=  if (doc-available($config:tei-works-root || '/' || replace($reqWork, "w0", "W0") || '.xml')) then
                                 let $dummy := response:set-header("Content-Disposition", 'attachment; filename="' || $reqResource || '.tei.xml"')
                                 return util:expand(doc($config:tei-works-root || '/' || replace($reqWork, "w0", "W0") || '.xml')/tei:TEI)
+
+(:
+Maybe use this, which is from #DG's controller logic (at tei.serverdomain) I think:
+                                 let $docPath := for $subroot in $config:tei-sub-roots return 
+                                     if (doc-available($subroot || '/' || $exist:resource)) then $subroot || '/' || $exist:resource else ()
+                                 let $doc        := if (count($docPath) eq 1) then
+                                                         let $unexpanded := doc($docPath)
+                                                         let $expanded   := util:expand(doc($docPath)/tei:TEI)
+                                                         return $expanded
+[#AW]
+:)
+
                             else
                                 <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                                     <forward url="{$netVars('controller')}/error-page.html" method="get"/>
@@ -442,11 +531,6 @@ declare function net:deliverIIIF($path as xs:string, $netVars) {
 declare function net:deliverRDF($pathComponents as xs:string*, $netVars as map()*) {
     let $reqResource    := $pathComponents[last()]
     let $reqWork        := tokenize(tokenize($reqResource, ':')[1], '\.')[2]
-
-(:
-    let $debug2       := if ($config:debug = ("trace", "info")) then console:log("Rdf is acceptable, but we have bad input somehow. Redirect (303) to error webpage ...") else ()
-    return net:redirect-with-404($config:webserver || '/' || 'error-page.html')
-:)
     return  if (replace($reqWork, 'w0', 'W0') || '.rdf' = xmldb:get-child-resources($config:rdf-root) and not("nocache" = request:get-parameter-names())) then
                 let $debug          := if ($config:debug = ("trace", "info")) then console:log("Loading " || replace($reqWork, 'w0', 'W0') || " ...") else ()
                 let $dummy          := response:set-header("Content-Disposition", 'attachment; filename="' || $reqWork || '.rdf.xml"')
