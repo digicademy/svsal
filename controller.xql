@@ -32,7 +32,8 @@ declare option output:encoding      "utf-8";
    ***          - Handle all "else ()" and error <dispatch>es: Print error, request info to log, redirect to homepage, give error message
    ***       - Sanitize/check all input (parameters)
    ***       - See more below, at API functions
-   *** :)
+   ***       - Content negotiate underspecified X-Forwarded-Host = {serverdomain} ...
+:)
 
 (: Get request, session and context information :)
 declare variable $exist:path        external;
@@ -77,7 +78,7 @@ let $debug              :=  if ($config:debug = "trace") then
 return
 
 
-    (: *** Redirects for special resources (robots.txt, sitemap; specified by resource name *** :)
+    (: *** Redirects for special resources (robots.txt, sitemap, void.ttl; specified by resource name *** :)
     if (lower-case($exist:resource) = "robots.txt") then
         let $debug          := if ($config:debug = "trace") then console:log("Robots.txt requested: " || $net:forwardedForServername || $exist:path || ".") else ()
         let $parameters     := <exist:add-parameter name="Cache-Control" value="max-age=3600, must-revalidate"/>
@@ -106,21 +107,19 @@ return
     else if (request:get-header('X-Forwarded-Host') = "api." || $config:serverdomain) then
         let $debug := if ($config:debug = ("trace", "info")) then console:log("API requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
         (: We have the following API areas, accessible by path component:
-
             1. /v1/tei/     works: ✔ passages: 🛇
             2. /v1/txt/     works: ✔ passages:
             3. /v1/rdf/     works: ✔ passages:
-            4. /v1/html/    works:    passages:     Todo: look up the entity at data.{$config:serverdomain}, retrieve the html fragment at rdfs:seeAlso and deliverHTML
-            5. /v1/iiif/    works:    pages:
+            4. /v1/html/    works:   passages:
+            5. /v1/iiif/    works:   pages:
 
-            a. Search (/v1/search) ✔         (Forwards to opensphinxsearch.)
+            a. Search (/v1/search) ✔           (Forwards to opensphinxsearch.)
             b. CodeSharing (/v1/codesharing) ✔ (To expose TEI tag usage.             See https://api.{$config:serverdomain}/codesharing/codesharing.html or https://mapoflondon.uvic.ca/BLOG10.htm) 
-            c. XTriples (/v1/xtriples) ✔      (Extract rdf from xml with xtriples.  See https://api.{$config:serverdomain}/v1/xtriples/xtriples.html            or http://xtriples.spatialhumanities.de/index.html)
+            c. XTriples (/v1/xtriples) ✔       (Extract rdf from xml with xtriples.  See https://api.{$config:serverdomain}/v1/xtriples/xtriples.html    or http://xtriples.spatialhumanities.de/index.html)
 
             TODO: - Clean up and *systematically* offer only https://api.{$serverdomain}/{version}/{function}/{resource}
                     and perhaps (!) the same at https://{function}.{$serverdomain}/{resource}
                     (Should we better refactor this into higher-level cases instead of cases under api.{$config:serverdomain} and then again all the subdomains at another place?)
-                  - Also switch based on mime-type, not only $exist:path? As an example, see "4. txt" below.
                   - Add application/pdf, application/json, text/html, tei-simple?
                   - Handle image requests: If image/* is the preferred data type and resource refers to a node of type "pb" and we have a seeAlso that ends in jpg, tiff or png (?),
                     then forward to there ...
@@ -128,9 +127,8 @@ return
         let $pathComponents := tokenize(lower-case($exist:path), "/")
         let $debug := if ($config:debug = ("trace")) then console:log("$pathComponents: " || string-join($pathComponents, "; ") || ".") else ()
         let $debug := if ($config:debug = ("trace")) then console:log("This translates to API version " || $pathComponents[2] || ", endpoint " || $pathComponents[3] || ".") else ()
-        
 
-        return if ($pathComponents[3] = $config:apiEndpoints($pathComponents[2])) then
+        return if ($pathComponents[3] = $config:apiEndpoints($pathComponents[2])) then  (: Check if we support the requested endpoint/version :)
             switch($pathComponents[3])
             case "tei" return
                 let $debug         := if ($config:debug = ("trace", "info")) then console:log("TEI/XML requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
@@ -141,7 +139,9 @@ return
             case "rdf" return
                 let $debug         := if ($config:debug = ("trace", "info")) then console:log("RDF requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
                 return net:deliverRDF($pathComponents, $netVars)
-            case "html" return ()
+            case "html" return
+                let $debug         := if ($config:debug = ("trace", "info")) then console:log("HTML requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
+                return net:deliverHTML($pathComponents, $netVars)
             case "iiif" return
                 let $debug         := if ($config:debug = ("trace", "info")) then console:log("iiif requested: " || $net:forwardedForServername || $exist:path || $parameterString || " ...") else ()
                 return net:deliverIIIF($exist:path, $netVars)
@@ -165,7 +165,6 @@ return
                         return net:forward('/services/lod/' || tokenize($exist:path, "/")[last()], $netVars)
                     else ()
             default return ()
-
         else ()
 
 
@@ -173,273 +172,64 @@ return
     else if (request:get-header('X-Forwarded-Host') = "id." || $config:serverdomain) then
         let $debug1                  := if ($config:debug = ("trace", "info")) then console:log("Id requested: " || $net:forwardedForServername || $exist:path || $parameterString || ". (" || net:negotiateContentType($net:servedContentTypes, '') || ')') else ()
         (: For determining the content type, the file extension has the highest priority, only then comes content negotiation based on HTTP Accept Header. :)
-        (: If extension = ('.xml', '.txt', '.rdf', '.html', '.jpg', '.mf.json') then
-                switch(extension) :
-                    .xml        -> 303-redirect to api.{serverdomain}/v1/tei/$resource
-                    .txt        -> 303-redirect to api.{serverdomain}/v1/txt/$resource
-                    .rdf        -> 303-redirect to api.{serverdomain}/v1/rdf/$resource
-                    .html       -> 303-redirect to api.{serverdomain}/v1/html/$resource
-                    .jpg        -> lookUp image url -> deliverImg
-                    .mf.json    -> 303-redirect to api.{serverdomain}/v1/iiif/$resource
-           else
-                let $fileType := net:negotiateContentType($net:servedContentTypes, '')
-                switch $filetype
-                    case "application/tei+xml" return   -> 303-redirect to api.{serverdomain}/v1/tei/$resource
-                    case "application/xml" return       -> - " -
-                    case "text/xml" return              -> - " -
-                    case "text/plain" return            -> 303-redirect to api.{serverdomain}/v1/txt/$resource
-                    case "application/rdf+xml" return   -> 303-redirect to api.{serverdomain}/v1/rdf/$resource
-                    case "image/jpeg" return            -> lookUp image url -> deliverImg
-                    case "application/ld+json" return   -> 303-redirect to api.{serverdomain}/v1/iiif/$resource
-                    default return                      -> 303-redirect to api.{serverdomain}/v1/html/$resource
-        :)
+        let $fileExtension := tokenize($netVars('resource'), '\.')[last()]
+        let $debug1 := if ($config:debug = ("trace")) then console:log("Determining content type by file extension '" || $fileExtension || "'...") else ()
+        return switch ($fileExtension)
+            case 'xml' return
+                let $debug1 := if ($config:debug = ("trace")) then console:log("Redirect (303) to '" || $config:apiserver || "/v1/tei/" || replace($netVars('resource'), '.xml', '') || "'.") else ()
+                return net:redirect-with-303($config:apiserver || "/v1/tei/" || replace($netVars('resource'), '.xml', ''))
+            case 'txt' return
+                let $debug1 := if ($config:debug = ("trace")) then console:log("Redirect (303) to '" || $config:apiserver || "/v1/txt/" || replace($netVars('resource'), '.txt', '') || "'.") else ()
+                return net:redirect-with-303($config:apiserver || "/v1/txt/" || replace($netVars('resource'), '.txt', ''))
+            case 'rdf' return
+                let $debug1 := if ($config:debug = ("trace")) then console:log("Redirect (303) to '" || $config:apiserver || "/v1/rdf/" || replace($netVars('resource'), '.rdf', '') || "'.") else ()
+                return net:redirect-with-303($config:apiserver || "/v1/rdf/" || replace($netVars('resource'), '.rdf', ''))
+            case 'html' return
+                let $debug1 := if ($config:debug = ("trace")) then console:log("Redirect (303) to '" || $config:apiserver || "/v1/html/" || replace($netVars('resource'), '.html', '') || "'.") else ()
+                return net:redirect-with-303($config:apiserver || "/v1/html/" || replace($netVars('resource'), '.html', ''))
+            case 'jpg' return
+                let $debug1 := if ($config:debug = ("trace")) then console:log("Deliver jpg according to request for '" || $netVars('resource') || "'.") else ()
+                let $pathComponents := tokenize(lower-case($exist:path), "/")
+                return net:deliverJPG($pathComponents, $netVars)
+            case 'json' return
+                let $debug1 := if ($config:debug = ("trace")) then console:log("Redirect (303) to '" || $config:apiserver || "/v1/iif/" || replace($netVars('resource'), '.json', '') || "'.") else ()
+                return net:redirect-with-303($config:apiserver || "/v1/iiif/" || replace($netVars('resource'), '.json', ''))
+            default return
+                let $contentType := net:negotiateContentType($net:servedContentTypes, 'text/html')
+                let $debug1 := if ($config:debug = ("trace")) then console:log("Content type '" || $contentType || "' determines endpoint...") else ()
+                return switch ($contentType)
+                    case 'application/tei+xml'
+                    case 'application/xml'
+                    case 'text/xml' return
+                        let $debug1 := if ($config:debug = ("trace")) then console:log("Redirect (303) to '" || $config:apiserver || "/v1/tei/" || $netVars('resource') || "'.") else ()
+                        return net:redirect-with-303($config:apiserver || "/v1/tei/" || $netVars('resource'))
+                    case 'text/plain' return
+                        let $debug1 := if ($config:debug = ("trace")) then console:log("Redirect (303) to '" || $config:apiserver || "/v1/txt/" || $netVars('resource') || "'.") else ()
+                        return net:redirect-with-303($config:apiserver || "/v1/txt/" || $netVars('resource'))
+                    case 'application/rdf+xml' return
+                        let $debug1 := if ($config:debug = ("trace")) then console:log("Redirect (303) to '" || $config:apiserver || "/v1/rdf/" || $netVars('resource') || "'.") else ()
+                        return net:redirect-with-303($config:apiserver || "/v1/rdf/" || $netVars('resource'))
+                    case 'image/jpeg' return
+                        let $debug1 := if ($config:debug = ("trace")) then console:log("Deliver jpg according to request for '" || $netVars('resource') || "'.") else ()
+                        let $pathComponents := tokenize(lower-case($exist:path), "/")
+                        return net:deliverJPG($pathComponents, $netVars)
+                    case 'application/ld+json' return
+                        let $debug1 := if ($config:debug = ("trace")) then console:log("Redirect (303) to '" || $config:apiserver || "/v1/iif/" || $netVars('resource') || "'.") else ()
+                        return net:redirect-with-303($config:apiserver || "/v1/iiif/" || $netVars('resource'))
+                    default return
+                        let $debug1 := if ($config:debug = ("trace")) then console:log("Redirect (303) to '" || $config:apiserver || "/v1/html/" || $netVars('resource') || "'.") else ()
+                        return net:redirect($config:apiserver || "/v1/html/" || $netVars('resource'), $netVars)
 
-        return
-            if (net:negotiateContentType($net:servedContentTypes, 'text/html') = ('text/html', 'application/xhtml+xml')) then
-                if (starts-with($exist:resource, 'works.W0') or starts-with($exist:resource, 'authors.A0')) then
-                    let $reqResource  := tokenize($exist:path, '/')[last()]
-                    let $work         := tokenize(tokenize($reqResource, ':')[1], '\.')[2]   (: group.work:pass.age :)
-                    let $passage      := tokenize($reqResource, ':')[2]
-                    let $entityPath   := concat($work, if ($passage) then concat('#', $passage) else ())
-                    let $debug2       := if ($config:debug = ("trace", "info")) then console:log("Html is acceptable. Load metadata from " || $config:rdf-root || '/' || $work || '.rdf' || " ...") else ()
-                    let $metadata     := doc($config:rdf-root || '/' || $work || '.rdf')
-                    let $debug3       := if ($config:debug = ("trace", "info")) then console:log("Retrieving $metadata//rdf:Description[@rdf:about = $reqResource]/rdfs:seeAlso[1]/@rdf:resource[contains(., '.html')]") else ()
-                    let $resolvedPath := string(($metadata//*[@rdf:about eq $reqResource]/rdfs:seeAlso[1]/@rdf:resource[contains(., ".html")])[1])
-                    let $pathname     := if (contains($resolvedPath, '?')) then
-                                            substring-before($resolvedPath, '?')
-                                         else if (contains($resolvedPath, '#')) then
-                                            substring-before($resolvedPath, '#')
-                                         else
-                                            $resolvedPath
-                    let $searchexp    := if (contains($resolvedPath, '?')) then
-                                            if (contains(substring-after($resolvedPath, '?'), '#')) then
-                                                substring-before(substring-after($resolvedPath, '?'), '#')
-                                            else
-                                                substring-after($resolvedPath, '?')
-                                         else ()
-                    let $params       := substring-after($parameterString, "?")
-                    let $newsearchexp := concat(if ($params or $searchexp) then "?" else (), string-join(($searchexp, $params), "&amp;"))
-                    let $hash         := if (contains($resolvedPath, '#')) then concat('#', substring-after($resolvedPath, '#')) else ()
-                    let $debug4       := if ($config:debug = ("trace", "info")) then console:log("Redirecting to " || $pathname || $newsearchexp || $hash || " ...") else ()
-                    return net:redirect-with-303($pathname || $newsearchexp || $hash )
-                 else
-                    let $debug2       := if ($config:debug = ("trace", "info")) then console:log("Html is acceptable, but bad input. Redirect (303) to error webpage ...") else ()
-                    return net:redirect-with-404($config:webserver || '/' || 'error-page.html')
-            else if (net:negotiateContentType($net:servedContentTypes, 'text/html') = ('application/rdf+xml', 'application/xml')) then
-                if (starts-with($exist:resource, 'works.W') or starts-with($exist:resource, 'authors.A')) then
-                    let $reqResource  := tokenize($exist:path, '/')[last()]
-                    let $work         := tokenize(tokenize($reqResource, ':')[1], '\.')[2]   (: group.work:pass.age :)
-                    let $passage      := tokenize($reqResource, ':')[2]
-                    let $resolvedPath := concat($work, if ($passage) then concat('#', $config:idserver || '/' || $reqResource) else ()) (: Todo: Check how to address the necessary node(s) ... :)
-(: *** AW: Are we doing the right thing here? It should be data.{$config:serverdomain}/works.W0004 (and that should be handled there)... :)
-                    let $debug2       := if ($config:debug = ("trace", "info")) then console:log("Rdf is acceptable - redirect (303) to " || $config:dataserver || '/' || $resolvedPath || " ...") else ()
-                    return net:redirect-with-303($config:dataserver || '/' || $resolvedPath)
-                 else
-                    let $debug2       := if ($config:debug = ("trace", "info")) then console:log("Rdf is acceptable, but we have bad input somehow. Redirect (303) to error webpage ...") else ()
-                    return net:redirect-with-404($config:webserver || '/' || 'error-page.html')
-            else if (starts-with(net:negotiateContentType($net:servedContentTypes, 'text/html'), 'image/')) then
-                    let $reqResource  := tokenize($exist:path, '/')[last()]
-                    let $work         := tokenize(tokenize($reqResource, ':')[1], '\.')[2]   (: group.work:pass.age :)
-                    let $passage      := tokenize($reqResource, ':')[2]
-                    let $metadata     := doc($config:rdf-root || '/' || $work || '.rdf')
-                    let $debug2       := if ($config:debug = "trace") then console:log("Retrieving $metadata//rdf:Description[@rdf:about = $reqResource]/rdfs:seeAlso/@rdf:resource/string()") else ()
-                    let $resolvedPaths := for $url in $metadata//rdf:Description[@rdf:about = $reqResource]/rdfs:seeAlso/@rdf:resource/string()
-                                          where matches($url, "\.(jpg|jpeg|png|tif|tiff)$")
-                                          return $url
-                    let $resolvedPath := $resolvedPaths[1]
-                    let $debug3       := if ($config:debug = ("trace", "info")) then console:log("Redirecting to " || $resolvedPath || " ...") else ()
-                    return net:redirect-with-303($resolvedPath)
-            else
-                    let $debug2       := if ($config:debug = ("trace", "info")) then console:log("No meaningful Accept header.") else ()
-                    return net:redirect-with-404($config:webserver || '/' || 'error-page.html')
 
-    
-    (: data request :)
-(: *** #AW: I suggest to remove all non-data (i.e. html and xml) stuff from this X-forwarded-Host and to do a 307-redirection to api.s.s/v1/rdf/* for the rest. *** :)
+    (: *** Date service (X-Forwarded-Host = 'data.{$config:serverdomain}') *** :)
     else if (request:get-header('X-Forwarded-Host') = "data." || $config:serverdomain) then
         let $debug                  := if ($config:debug = ("trace", "info")) then console:log("Data requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-        return net:redirect-with-307($netVars('path'))
-
-(: *** #AW: This whole rest of this section  -- a very long comment for now -- can then be removed if nothing is breaking...
-    (\: Cases:
-
-    0. void.ttl
-    1. *.rdf                                                OK
-    2. *.html           -> www.{serverdomain}                          OK
-    3. *.xml            -> tei.{serverdomain}                          OK,   But what about other xml files -> software.{serverdomain}/rest
-     4. content negotiate
-        4a. Accept-Header: html
-            4a1. list of resources
-                4a1a. www list of works
-                4a1b. www list of authors/persons
-            4a2. single resource
-                4a2a. www work
-                4a2b. www author
-        4b. Accept-header: rdf
-            4b1. list of resources
-                4b1a. rdf list of works
-                4b1b. rdf list of authors/persons
-            4b2. single resource
-                4b2a. rdf work
-                4b2b. rdf author
-
-    :\)
-
-    (\: LOD 0. We have a request for Metadata (Data about the dataset) :\)
-    (\: LOD 1. We have a request for a specific resource and a *.rdf filename :\)
-        if (ends-with($exist:path, '.rdf')) then
-            let $debug          := if ($config:debug = ("trace", "info")) then console:log("LOD requested (Case 1): " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-            let $resourceId     := substring-after(substring-before($exist:resource, '.rdf'), '.')
-            return  if ($resourceId || '.rdf' = xmldb:get-child-resources($config:rdf-root) and not("nocache" = request:get-parameter-names())) then
-                        let $debug          := if ($config:debug = ("trace", "info")) then console:log("Loading " || $resourceId || " ...") else ()
-                        return net:forward('../../..' || $config:rdf-root || '/' || $resourceId || '.rdf', $netVars)
-                    else
-                        let $debug          := if ($config:debug = ("trace", "info")) then console:log("Generating rdf for " || $resourceId || " ...") else ()
-                        let $path           := '/services/lod/extract.xql'
-                        let $parameters     := (<exist:add-parameter name="configuration"   value="{$config:apiserver || '/v1/xtriples/createConfig.xql?resourceId=' || $resourceId || '&amp;format=' || $config:lodFormat}"/>,
-                                                <exist:add-parameter name="format"          value="{$config:lodFormat}"/>)
-                        return net:forward($path, $netVars, $parameters)
-
-    (\: LOD 2. We have a request for a specific resource, but a *.html filename :\)
-        else if ((contains($exist:path, '/authors/') or contains($exist:path, '/works/')) and ends-with($exist:resource, '.html')) then
-            let $debug        := if ($config:debug = ("trace", "info")) then console:log("LOD requested (Case 2): " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-            let $workOrAuthor := if (contains($exist:path, '/authors/')) then
-                                    '/author.html?aid='
-                                 else if (contains($exist:path, '/works/')) then
-                                    '/work.html?wid='
-                                 else ()
-            let $resolvedPath := $config:webserver || $workOrAuthor || substring-before($exist:resource, '.htm')
-            let $debug        := if ($config:debug = "trace") then console:log("Redirecting (303) to " || $resolvedPath || " ...") else ()
-            return net:redirect-with-303($resolvedPath)
+        return net:redirect-with-307($config:apiserver || "/v1/rdf/" || $netVars('path'))
 
 
-    (\: LOD 3. We have a request for a data xml file :\)
-        else if ((contains($exist:path, '/authors/') or contains($exist:path, '/works/')) and ends-with($exist:path, '.xml')) then
-            let $debug        := if ($config:debug = ("trace", "info")) then console:log("LOD requested (Case 3): " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-            let $resolvedPath := $config:teiserver || '/' || $exist:resource
-            let $debug        := if ($config:debug = ("trace", "info")) then console:log("Redirecting (303) to " || $resolvedPath || " ...") else ()
-            return net:redirect-with-303($resolvedPath)
-
-    (\: LOD 4. We have a request for a specific resource, but have to content negotiate :\)
-        else
-            let $debug := if ($config:debug = ("trace", "info")) then console:log("LOD requested (Case 4): " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-            return
-                if (count(functx:value-intersect($net:requestedContentTypes, ('text/html','application/xhtml+xml')))) then     (\: Todo: Make it aware of weighted preferences. :\)
-                    let $debug := if ($config:debug = "trace") then console:log("4a. html is acceptable.") else ()
-                    return switch ($exist:path)
-                        case "/works"
-                        case "/works/"
-                            return
-                                let $debug        := if ($config:debug = "trace") then console:log("4a1a. html list of works") else ()
-                                let $resolvedPath := $config:webserver || "/" || $lang || "/works.html"
-                                let $debug        := if ($config:debug = "trace") then console:log("Redirecting (303) to " || $resolvedPath || " ...") else ()
-                                return net:redirect-with-303($resolvedPath)
-                        case "/authors"
-                        case "/authors/"
-                        case "/persons"
-                        case "/persons/"
-                            return
-                                let $debug        := if ($config:debug = "trace") then console:log("4a1b. html list of authors") else ()
-                                let $resolvedPath := $config:webserver || "/" || $lang || "/authors.html"
-                                let $debug        := if ($config:debug = "trace") then console:log("Redirecting (303) to " || $resolvedPath || " ...") else ()
-                                return net:redirect-with-303($resolvedPath)
-                        default
-                            return
-                                let $workOrAuthor := if (contains($exist:path, '/works/') or starts-with($exist:resource, 'W0') or starts-with($exist:resource, 'works.')) then
-                                                        let $debug := if ($config:debug = "trace") then console:log("4a2a. html view of single work") else ()
-                                                        return '/work.html?wid='
-                                                     else if (contains($exist:path, '/authors/') or starts-with($exist:resource, 'A0') or starts-with($exist:resource, 'authors.')) then
-                                                        let $debug := if ($config:debug = "trace") then console:log("4a2b. html view of single author") else ()
-                                                        return '/author.html?aid='
-                                                     else
-                                                        let $debug := if ($config:debug = "trace") then console:log("4a2c. bad input") else ()
-                                                        return '/index.html'
-                                let $resourceId   := if (contains($exist:resource, 'works.') or contains($exist:resource, 'authors.')) then
-                                                        tokenize($exist:resource, '\.')[2]
-                                                     else
-                                                        $exist:resource
-                                let $resolvedPath := $config:webserver || "/" || $lang || $workOrAuthor || $resourceId
-                                let $debug        := if ($config:debug = "trace") then console:log("Redirecting (303) to " || $resolvedPath || " ...") else ()
-                                return net:redirect-with-303($resolvedPath)
-
-                else if (count(functx:value-intersect($net:requestedContentTypes, ('application/rdf+xml','application/xml','*/*')))) then
-                    let $debug          := if ($config:debug = "trace") then console:log("4b. rdf is acceptable.") else ()
-                    let $extractPath    := '/services/lod/extract.xql'
-                    let $format         := request:get-parameter('format', $config:lodFormat)
-                    return switch ($exist:path)
-                        case "/works"
-                        case "/works/"
-                            return
-                                let $debug          := if ($config:debug = "trace") then console:log("4b1a. rdf list of works") else ()
-                                let $parameters     := (<exist:add-parameter name="configuration"   value="{$config:apiserver || '/v1/xtriples/svsal-xtriples-workslist.xml'}"/>,
-                                                        <exist:add-parameter name="format"          value="{$format}"/>)
-                                return net:forward($extractPath, $netVars, $parameters)
-                       case "/authors"
-                        case "/authors/"
-                        case "/persons"
-                        case "/persons/"
-                            return
-                                let $debug        := if ($config:debug = "trace") then console:log("4a1b. html list of authors") else ()
-                                let $resolvedPath := $config:webserver || "/authors.html"
-                                let $debug        := if ($config:debug = "trace") then console:log("Redirecting (303) to " || $resolvedPath || " ...") else ()
-                                return net:redirect-with-303($resolvedPath)
-                        default
-                            return
-                                let $workOrAuthor := if (contains($exist:path, '/works/') or starts-with($exist:resource, 'W0')) then
-                                                        let $debug := if ($config:debug = "trace") then console:log("4a2a. html view of single work") else ()
-                                                        return '/work.html?wid='
-                                                     else if (contains($exist:path, '/authors/') or starts-with($exist:resource, 'A0')) then
-                                                        let $debug := if ($config:debug = "trace") then console:log("4a2b. html view of single author") else ()
-                                                        return '/author.html?aid='
-                                                     else
-                                                        let $debug := if ($config:debug = "trace") then console:log("4a2c. bad input") else ()
-                                                        return '/index.html'
-                                let $resolvedPath := $config:webserver || $workOrAuthor || tokenize($exist:resource, '\.')[1]
-                                let $debug        := if ($config:debug = "trace") then console:log("Redirecting (303) to " || $resolvedPath || " ...") else ()
-                                return net:redirect-with-303($resolvedPath)
-
-                else if (count(functx:value-intersect($net:requestedContentTypes, ('application/rdf+xml','application/xml','*/*')))) then
-                    let $debug          := if ($config:debug = "trace") then console:log("4b. rdf is acceptable.") else ()
-                    let $extractPath    := '/services/lod/extract.xql'
-                    let $format         := request:get-parameter('format', $config:lodFormat)
-                    return switch ($exist:path)
-                        case "/works"
-                        case "/works/"
-                            return
-                                let $debug          := if ($config:debug = "trace") then console:log("4b1a. rdf list of works") else ()
-                                let $parameters     := (<exist:add-parameter name="configuration"   value="{$config:apiserver || '/v1/xtriples/svsal-xtriples-workslist.xml'}"/>,
-                                                        <exist:add-parameter name="format"          value="{$format}"/>)
-                                return net:forward($extractPath, $netVars, $parameters)
-                        case "/authors"
-                        case "/authors/"
-                        case "/persons"
-                        case "/persons/"
-                            return
-                                let $debug          := if ($config:debug = "trace") then console:log("4b1b. rdf list of authors") else ()
-                                let $parameters     := (<exist:add-parameter name="configuration"   value="{$config:apiserver || '/v1/xtriples/svsal-xtriples-personslist.xml'}"/>,
-                                                        <exist:add-parameter name="format"          value="{$format}"/>)
-                                return net:forward($extractPath, $netVars, $parameters)
-                        default
-                            return
-                                let $resourceId     := tokenize($exist:resource, '\.')[1]
-                                let $debug          := if ($config:debug = "trace") then console:log("4b2. rdf data of a single resource (" || $resourceId || ")") else ()
-                                return
-                                    if ($exist:resource || '.rdf' = xmldb:get-child-resources($config:app-root || $config:rdf-root)) then
-                                        let $debug          := if ($config:debug = "trace") then console:log("Loading " || $resourceId || ".rdf ...") else ()
-                                        return net:forward($config:rdf-root || '/' || $exist:resource || '.rdf', $netVars)
-                                    else
-                                        let $debug          := if ($config:debug = ("trace", "info")) then console:log("Generating rdf for " || $resourceId || " ...") else ()
-                                        let $parameters     := (<exist:add-parameter name="configuration"   value="{$config:apiserver || '/v1/xtriples/createConfig.xql?resourceId=' || $resourceId || '&amp;format=' || $config:lodFormat}"/>,
-                                                                <exist:add-parameter name="format"          value="{$format}"/>)
-                                        return net:forward($extractPath, $netVars, $parameters)
-
-                    else () (\: under data.{serverdomain}, we don't care about any other acceptable content types ... :\)
-    :)
-
-
-    (: *** TEI XML files to the data directory *** :)
+    (: *** TEI file service (X-Forwarded-Host = 'tei.{$config:serverdomain}') *** :)
+    (: *** #AW: Ideally we would do a 307-redirection to api.s.s/v1/tei/* for this section and move the logic to net:deliverTEI. Will do this next. *** :)
     else if (request:get-header('X-Forwarded-Host') = "tei." || $config:serverdomain) then
-(: *** #AW: Ideally we would do a 307-redirection to api.s.s/v1/tei/* for this section. Will do this next. *** :)
         if (matches($exist:resource, '[ALW]\d{4}\.xml')) then
             let $debug      := if ($config:debug = "trace") then console:log ("TEI/XML requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
             let $doExpand   := (util:declare-option("output:method", "xml"),
@@ -452,14 +242,11 @@ return
                                                                                             ', indent:'     || util:get-option('output:indent') ||
                                                                                             ', expand-xincludes:'  || util:get-option('output:expand-xincludes') ||
                                                                                             '.') else ()
-            
             let $docPath := for $subroot in $config:tei-sub-roots return 
                 if (doc-available($subroot || '/' || $exist:resource)) then $subroot || '/' || $exist:resource else ()
             let $doc        := if (count($docPath) eq 1) then
                                     let $unexpanded := doc($docPath)
-    (:                                let $debug       := console:log("unexpanded: " || substring(serialize($unexpanded), 1, 4000)):)
                                     let $expanded   := util:expand(doc($docPath)/tei:TEI)
-    (:                                let $debug       := console:log("expanded: " || substring(serialize($expanded), 1, 4000)):)
                                     return $expanded
                                else
                                     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
@@ -485,12 +272,11 @@ return
             let $debug      := if ($config:debug = "trace") then console:log ("TEI/XML corpus download requested: " || $net:forwardedForServername || $exist:path || ".") else ()
             let $pathToZip := $config:files-root || '/sal-tei-corpus.zip'
             return if (util:binary-doc-available($pathToZip)) then response:stream-binary(util:binary-doc($pathToZip), 'application/octet-stream', 'sal-tei-corpus.zip') else ()
-            
         else ()
 
 
     (: *** Iiif Presentation API URI resolver *** :)
-(: *** #AW: Ideally we would do a 307-redirection to api.s.s/v1/iiif/* for this section, but I'm afraid ATM to open this can of worms. *** :)
+    (: *** #AW: Ideally we would do a 307-redirection to api.s.s/v1/iiif/* for this section and move the logic to net:deliverIIIF, but I'm afraid ATM to open this can of worms. *** :)
     else if (request:get-header('X-Forwarded-Host') = "facs." || $config:serverdomain) then
         let $debug1 :=  if ($config:debug = ("trace", "info")) then console:log('Iiif presentation resource requested: ' || $net:forwardedForServername || $exist:path || $parameterString || '...') else ()
         (: determine requested resource type and do some sanitizing :)
@@ -507,10 +293,10 @@ return
         (: redirect in a way that URI (i.e., iiif @id) remains the same and only output of iiif-out.xql is shown :)
         return net:redirect-with-303($resolvedURI)
 
-        
-        
-(: *** AW: The rest is html and defaults and miscellaneous stuff. Waiting to be cleaned up a bit... :)
-    (: *** If the request is for an xql file, strip/bypass language selection logic *** :)
+
+
+    (: *** The rest is html and defaults and miscellaneous stuff... :)
+    (: If the request is for an xql file, strip/bypass language selection logic :)
     else if (ends-with($exist:resource, ".xql")) then
         let $finalPath1     := replace($exist:path, '/de/', '/')
         let $finalPath2     := replace($finalPath1, '/en/', '/')
@@ -518,7 +304,7 @@ return
         let $debug          := if ($config:debug = ("trace", "info")) then console:log("XQL requested: " || $net:forwardedForServername || $exist:path || $parameterString || ", redirecting to " || $finalPath3 || '?' || string-join($netVars('params'), '&amp;') || ".") else ()
         return net:forward($finalPath3, $netVars)
 
-    (: *** If the request is for a file download, forward to resources/files/... *** :)
+    (: If the request is for a file download, forward to resources/files/... :)
     else if (starts-with($exist:path, "/files/") or request:get-header('X-Forwarded-Host') = "files." || $config:serverdomain) then
         let $prelimPath    := if (starts-with($exist:path, "/files/")) then substring($exist:path, 7) else $exist:path
         let $finalPath     := (: $config:resources-root :) "/resources/files" || $prelimPath
@@ -553,6 +339,33 @@ return
         let $debug          := if ($config:debug = ("trace", "info")) then console:log("HTML requested: " || $net:forwardedForServername || $exist:path || $parameterString || ", redirecting to " || $absolutePath || "...") else ()
         return net:redirect($absolutePath, $netVars)
 
+    (: Relative path requests from sub-collections are redirected there :)
+    else if (contains($exist:path, "/resources/")) then
+        let $debug := if ($config:debug = "trace") then console:log("Resource requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
+        return if (contains(lower-case($exist:resource), "favicon")) then
+                    if ($config:instanceMode = "testing") then
+                        net:forward("/resources/favicons/" || replace($exist:resource, "favicon", "favicon_red"), $netVars)
+                    else
+                        net:forward("/resources/favicons/" || $exist:resource, $netVars)
+               else
+                    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                        <forward url="{$exist:controller}/resources/{substring-after($exist:path, '/resources/')}">
+                            <set-header name="Expires" value="{format-dateTime(dateTime(current-date(), util:system-time()) + xs:dayTimeDuration('P7D'), 'EEE, d MMM yyyy HH:mm:ss Z' )}"/>
+                        </forward>
+                        {config:errorhandler($netVars)}
+                    </dispatch>
+
+    (: Unspecific hostname :)
+    else if (request:get-header('X-Forwarded-Host') = $config:serverdomain) then
+        let $debug      := if ($config:debug = "trace") then console:log("Underspecified request at base domain (" || $exist:path || $parameterString || ") ...") else ()
+        return
+            if (count(functx:value-intersect($net:requestedContentTypes, ('text/html','application/xhtml+xml')))) then
+                net:redirect-with-303($config:webserver || $exist:path || $parameterString)
+            else if (count(functx:value-intersect($net:requestedContentTypes, ('application/rdf+xml','application/xml','*/*')))) then
+                net:redirect-with-303($config:apiserver || $exist:path || $parameterString)
+            else ()
+
+    (: Manage exist-db shared resources :)
     else if (contains($exist:path, "/$shared/")) then
         let $debug := if ($config:debug = "trace") then console:log("Shared resource requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
         return
@@ -563,36 +376,9 @@ return
                 {config:errorhandler($netVars)}
             </dispatch>
 
-    (: Relative path requests from sub-collections are redirected there :)
-    else if (contains($exist:path, "/resources/")) then
-        let $debug := if ($config:debug = "trace") then console:log("Resource requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-        return if (contains(lower-case($exist:resource), "favicon")) then
-                    return  if ($config:instanceMode = "testing") then
-                                net:forward("/resources/favicons/" || replace($exist:resource, "favicon", "favicon_red"), $netVars)
-                            else
-                                net:forward("/resources/favicons/" || $exist:resource, $netVars)
-               else
-                    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                        <forward url="{$exist:controller}/resources/{substring-after($exist:path, '/resources/')}">
-<!--                <set-header name="Cache-Control" value="max-age=432000, must-revalidate"/> -->
-                            <set-header name="Expires" value="{format-dateTime(dateTime(current-date(), util:system-time()) + xs:dayTimeDuration('P7D'), 'EEE, d MMM yyyy HH:mm:ss Z' )}"/>
-                        </forward>
-                        {config:errorhandler($netVars)}
-                    </dispatch>
-
-(: Todo: content negotiate X-Forwarded-Host = {serverdomain} ... :)
-    else if (request:get-header('X-Forwarded-Host') = $config:serverdomain) then
-        let $debug      := if ($config:debug = "trace") then console:log("Underspecified request at base domain (" || $exist:path || $parameterString || ") ...") else ()
-        return
-            if (count(functx:value-intersect($net:requestedContentTypes, ('text/html','application/xhtml+xml')))) then
-                net:redirect-with-303($config:webserver || $exist:path || $parameterString)
-            else if (count(functx:value-intersect($net:requestedContentTypes, ('application/rdf+xml','application/xml','*/*')))) then
-                net:redirect-with-303($config:apiserver || $exist:path || $parameterString)
-            else ()
 
 
-
-
+    (: Fallback when nothing else fits :)
     else
         let $debug          :=  if ($config:debug = ("trace", "info")) then console:log("Page not found: " || $net:forwardedForServername || $exist:path || $parameterString || "."
                                     || " Absolute path:" || concat($config:proto, "://", $net:forwardedForServername, '/', $lang, '/index.html',

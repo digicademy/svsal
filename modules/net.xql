@@ -43,14 +43,14 @@ declare variable $net:errorhandler := if (($config:instanceMode = "staging") or 
 
 declare function net:findNode($ctsId as xs:string?) {
     let $reqResource  := tokenize($ctsId, '/')[last()]
-    let $work         := tokenize(tokenize($reqResource, ':')[1], '\.')[2]   (: group.work:pass.age :)
-    let $passage      := tokenize($reqResource, ':')[2]
-    let $nodeId       := if ($passage) then
-                            let $nodeIndex := doc($config:data-root || '/' || $work || '_nodeIndex.xml')
-                            return $nodeIndex//sal:node[sal:citetrail eq $passage][1]/@n[1]
+    let $reqWork      := tokenize(tokenize($reqResource, ':')[1], '\.')[2]   (: group.work:pass.age :)
+    let $reqPassage   := tokenize($reqResource, ':')[2]
+    let $nodeId       := if ($reqPassage) then
+                            let $nodeIndex := doc($config:data-root || '/' || $reqWork || '_nodeIndex.xml')
+                            return $nodeIndex//sal:node[sal:citetrail eq $reqPassage][1]/@n[1]
                          else
                             "completeWork" 
-    let $work         := util:expand(doc($config:tei-works-root || '/' || replace($work, 'w0', 'W0') || '.xml')//tei:TEI)
+    let $work         := util:expand(doc($config:tei-works-root || '/' || replace($reqWork, 'w0', 'W0') || '.xml')//tei:TEI)
     let $node         := $work//tei:*[@xml:id eq $nodeId]
     let $debug        := if ($config:debug = "trace") then console:log('findNode returns ' || count($node) || ' node(s): ' || $work/@xml:id || '//*[@xml:id=' || $nodeId || '] (cts/id was "' || $ctsId || '").') else ()
     return $node
@@ -542,4 +542,60 @@ declare function net:deliverRDF($pathComponents as xs:string*, $netVars as map()
                                         <exist:add-parameter name="format"          value="{$config:lodFormat}"/>)
                 let $dummy          := response:set-header("Content-Disposition", 'attachment; filename="' || $reqWork || '.rdf.xml"')
                 return net:forward($path, $netVars, $parameters)
+};
+
+declare function net:deliverHTML($pathComponents as xs:string*, $netVars as map()*) {
+    let $reqResource  := $pathComponents[last()]
+    return if (starts-with(lower-case($reqResource), 'works.w0') or starts-with(lower-case($reqResource), 'authors.a0')) then
+        let $reqResource  := $pathComponents[last()]
+        let $reqWork      := tokenize(tokenize($reqResource, ':')[1], '\.')[2]
+        let $reqVersion   := if (tokenize(tokenize($reqResource, ':')[1], '\.')[3]) then
+                                tokenize(tokenize($reqResource, ':')[1], '\.')[3]
+                             else
+                                "edit"
+        let $reqPassage   := tokenize($reqResource, ':')[2]
+        let $debug2       := if ($config:debug = ("trace")) then console:log("Load metadata from " || $config:rdf-root || '/' || $reqWork || '.rdf' || " ...") else ()
+        let $metadata     := doc($config:rdf-root || '/' || $reqWork || '.rdf')
+        let $debug3       := if ($config:debug = ("trace")) then console:log("Retrieving $metadata//rdf:Description[@rdf:about = '" || $reqResource || "']/rdfs:seeAlso[1]/@rdf:resource[contains(., '.html')]") else ()
+        let $resolvedPath := string(($metadata//*[@rdf:about eq $reqResource]/rdfs:seeAlso[1]/@rdf:resource[ends-with(., ".html")])[1])
+        let $debug4       := if ($config:debug = ("trace")) then console:log("Found path: " || $resolvedPath || " ...") else ()
+
+        (: The pathname that has been saved contains 0 or exactly one parameter for the target html fragment,
+           but it may or may not contain a hash value. We have to mix in other parameters (mode, search expression or viewer state) before the hash. :)
+        let $pathname     := if (contains($resolvedPath, '?')) then
+                                substring-before($resolvedPath, '?')
+                             else if (contains($resolvedPath, '#')) then
+                                substring-before($resolvedPath, '#')
+                             else
+                                $resolvedPath
+        let $hash         := if (contains($resolvedPath, '#')) then concat('#', substring-after($resolvedPath, '#')) else ()
+        let $fragParam    := if (contains($resolvedPath, '?')) then
+                                if (contains(substring-after($resolvedPath, '?'), '#')) then
+                                    substring-before(substring-after($resolvedPath, '?'), '#')
+                                else
+                                    substring-after($resolvedPath, '?')
+                             else ()
+        let $updParams    := if ($reqVersion = "orig") then array:append($netVars('params'), "mode=orig") else $netVars('params')
+        let $parameters   := concat(if ($fragParam or $updParams) then "?" else (), string-join(($fragParam, string-join($updParams, "&amp;")), "&amp;"))
+
+
+        let $debug5       := if ($config:debug = ("trace", "info")) then console:log("Redirecting to " || $pathname || $parameters || $hash || " ...") else ()
+        return net:redirect-with-303($pathname || $parameters || $hash )
+     else
+        let $debug2       := if ($config:debug = ("trace", "info")) then console:log("Html is acceptable, but bad input. Redirect (404) to error webpage ...") else ()
+        return net:redirect-with-404($config:webserver || '/' || 'error-page.html')
+};
+
+declare function net:deliverJPG($pathComponents as xs:string*, $netVars as map()*) {
+        let $reqResource  := $pathComponents[last()]
+        let $reqWork      := tokenize(tokenize($reqResource, ':')[1], '\.')[2]
+        let $passage      := tokenize($reqResource, ':')[2]
+        let $metadata     := doc($config:rdf-root || '/' || $reqWork || '.rdf')
+        let $debug2       := if ($config:debug = "trace") then console:log("Retrieving $metadata//rdf:Description[@rdf:about = " || $reqResource || "]/rdfs:seeAlso/@rdf:resource/string()") else ()
+        let $resolvedPaths := for $url in $metadata//rdf:Description[@rdf:about = $reqResource]/rdfs:seeAlso/@rdf:resource/string()
+                              where matches($url, "\.(jpg|jpeg|png|tif|tiff)$")
+                              return $url
+        let $resolvedPath := $resolvedPaths[1]
+        let $debug3       := if ($config:debug = ("trace", "info")) then console:log("Redirecting to " || $resolvedPath || " ...") else ()
+        return net:redirect-with-303($resolvedPath)
 };

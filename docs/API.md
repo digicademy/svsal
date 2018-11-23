@@ -25,9 +25,9 @@ These services are also accessible directly at <https://id.salamanca.school/>, w
 * `application/rdf+xml` or the file ending `.rdf` for rdf/xml
 * `application/xhtml+xml` (recommended) or `text/html` or the file ending `.html` for web views
 * `image/jpeg` or the file ending `.jpg` for images
-* `application/ld+json; profile=http://iiif.io/presentation/3/context.json` or the file ending `.mf.json` for iiif manifests
+* `application/ld+json; profile=http://iiif.io/presentation/3/context.json` or the file ending `.json` for iiif manifests
 
-Taken without file extension and outside of a http exchange, urls at <https://id.salamanca.school/> are also used to represent the abstract entities that scholarly works or discourse concepts are.
+Taken without file extension and outside of a http exchange, uris beginning with <https://id.salamanca.school/> are also used to represent in LOD contexts the abstract entities that scholarly works or discourse concepts are.
 
 ## Parts of texts
 
