@@ -21,8 +21,8 @@ import module namespace functx  = "http://www.functx.com";
 
 (: ==================================================================================== :)
 (: OOOooo... Configurable Section for the School of Salamanca Web-Application ...oooOOO :)
-declare variable $config:debug        := "info"; (: possible values: trace, info, none :)
-declare variable $config:instanceMode := "production"; (: possible values: staging, production :)
+declare variable $config:debug        := "trace"; (: possible values: trace, info, none :)
+declare variable $config:instanceMode := "testing"; (: possible values: testing, staging, production :)
 declare variable $config:contactEMail := "info.salamanca@adwmainz.de";
 
 (: Configure Servers :)

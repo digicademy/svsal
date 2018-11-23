@@ -42,8 +42,8 @@ declare variable $exist:prefix      external;
 declare variable $exist:root        external;
 
 (: Set session information :)
-let $lang              := net:lang($exist:path)
-let $netVars           := map  {
+let $lang               :=  net:lang($exist:path)
+let $netVars            :=  map  {
                                     "path"          : $exist:path,
                                     "resource"      : $exist:resource,
                                     "controller"    : $exist:controller,
@@ -52,7 +52,7 @@ let $netVars           := map  {
                                     "lang"          : $lang,
                                     "accept"        : $net:requestedContentTypes,
                                     "params"        : ( for $p in request:get-parameter-names() return lower-case($p) || "="  || lower-case(request:get-parameter($p, ())) )
-                                }
+                                 }
 let $parameterString    :=  if (count(request:get-parameter-names())) then
                                 "?" || string-join($netVars('params'), '&amp;')
                             else ()
@@ -61,15 +61,15 @@ let $parameterString    :=  if (count(request:get-parameter-names())) then
 
 
 (: Print request context for debugging :)
-let $debug :=  if ($config:debug = "trace") then
-                        console:log("Request at '" || request:get-header('X-Forwarded-Host') || "' for " || request:get-effective-uri() || "&#x0d; " ||
-                                    "HEADERS (" || count(request:get-header-names()) || "): "    || string-join(for $h in request:get-header-names()    return $h || ": " || request:get-header($h), ' ')    || "&#x0d; " ||
-                                    "ATTRIBUTES (" || count(request:attribute-names()) || "): " || string-join(for $a in request:attribute-names()     return $a || ": " || request:get-attribute($a), ' ') || "&#x0d; " ||
-                                    "PARAMETERS (" || count($netVars('params')) ||"): " || string-join($netVars('params'), '&amp;') ||
-                                    "ACCEPT (" || count($netVars('accept')) || "): " || string-join($netVars('accept'), '.') ||
-                                    "$lang: " || $lang || "."
-                                   )
-                else ()
+let $debug              :=  if ($config:debug = "trace") then
+                                console:log("Request at '" || request:get-header('X-Forwarded-Host') || "' for " || request:get-effective-uri() || "&#x0d; " ||
+                                            "HEADERS (" || count(request:get-header-names()) || "): "    || string-join(for $h in request:get-header-names()    return $h || ": " || request:get-header($h), ' ')    || "&#x0d; " ||
+                                            "ATTRIBUTES (" || count(request:attribute-names()) || "): " || string-join(for $a in request:attribute-names()     return $a || ": " || request:get-attribute($a), ' ') || "&#x0d; " ||
+                                            "PARAMETERS (" || count($netVars('params')) ||"): " || string-join($netVars('params'), '&amp;') ||
+                                            "ACCEPT (" || count($netVars('accept')) || "): " || string-join($netVars('accept'), '.') ||
+                                            "$lang: " || $lang || "."
+                                           )
+                            else ()
 
 
 
@@ -77,11 +77,8 @@ let $debug :=  if ($config:debug = "trace") then
 return
 
 
-    (: *** Redirects for special resources (favicons, robots.txt, sitemap; specified by resource name *** :)
-    if (lower-case($exist:resource) = "favicon.ico") then
-        let $debug          := if ($config:debug = "trace") then console:log("Favicon requested: " || $net:forwardedForServername || $exist:path || ".") else ()
-        return net:forward("/resources/favicons/favicon.ico", $netVars)
-    else if (lower-case($exist:resource) = "robots.txt") then
+    (: *** Redirects for special resources (robots.txt, sitemap; specified by resource name *** :)
+    if (lower-case($exist:resource) = "robots.txt") then
         let $debug          := if ($config:debug = "trace") then console:log("Robots.txt requested: " || $net:forwardedForServername || $exist:path || ".") else ()
         let $parameters     := <exist:add-parameter name="Cache-Control" value="max-age=3600, must-revalidate"/>
         return net:forward("/robots.txt", $netVars, $parameters)
@@ -569,14 +566,19 @@ return
     (: Relative path requests from sub-collections are redirected there :)
     else if (contains($exist:path, "/resources/")) then
         let $debug := if ($config:debug = "trace") then console:log("Resource requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-        return
-            <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                <forward url="{$exist:controller}/resources/{substring-after($exist:path, '/resources/')}">
+        return if (contains(lower-case($exist:resource), "favicon")) then
+                    return  if ($config:instanceMode = "testing") then
+                                net:forward("/resources/favicons/" || replace($exist:resource, "favicon", "favicon_red"), $netVars)
+                            else
+                                net:forward("/resources/favicons/" || $exist:resource, $netVars)
+               else
+                    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                        <forward url="{$exist:controller}/resources/{substring-after($exist:path, '/resources/')}">
 <!--                <set-header name="Cache-Control" value="max-age=432000, must-revalidate"/> -->
-                    <set-header name="Expires" value="{format-dateTime(dateTime(current-date(), util:system-time()) + xs:dayTimeDuration('P7D'), 'EEE, d MMM yyyy HH:mm:ss Z' )}"/>
-                </forward>
-                {config:errorhandler($netVars)}
-            </dispatch>
+                            <set-header name="Expires" value="{format-dateTime(dateTime(current-date(), util:system-time()) + xs:dayTimeDuration('P7D'), 'EEE, d MMM yyyy HH:mm:ss Z' )}"/>
+                        </forward>
+                        {config:errorhandler($netVars)}
+                    </dispatch>
 
 (: Todo: content negotiate X-Forwarded-Host = {serverdomain} ... :)
     else if (request:get-header('X-Forwarded-Host') = $config:serverdomain) then
