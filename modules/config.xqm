@@ -583,7 +583,7 @@ declare %templates:default("language", "en")
                     else if ($wid) then
                         <title>
                             {string-join(doc($config:tei-works-root || "/" || $wid || ".xml")//tei:sourceDesc//tei:author/tei:persName/tei:surname, ', ') || ': ' ||
-                             doc($config:tei-works-root || "/" || $wid || ".xml")//tei:sourceDesc//tei:title[@type = 'short']/string()} -
+                             doc($config:tei-works-root || "/" || $wid || ".xml")//tei:sourceDesc//tei:monogr/tei:title[@type = 'short']/string()} -
                              <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
 (:                    else if (request:get-parameter('wid', '')) then
                         <title>
@@ -766,7 +766,7 @@ declare function local:docSubjectname($id as xs:string) as xs:string? {
             case 'W0'
                 return if (doc-available($config:tei-works-root || '/' || $id || '.xml')) then
                     string-join(doc($config:tei-works-root || "/" || $id || ".xml")//tei:sourceDesc//tei:author/tei:persName/tei:surname, ', ') ||
-                                   ': ' || doc($config:tei-works-root || "/" || $id || ".xml")//tei:sourceDesc//tei:title[@type = 'short']/string()
+                                   ': ' || doc($config:tei-works-root || "/" || $id || ".xml")//tei:sourceDesc//tei:monogr/tei:title[@type = 'short']/string()
                 else ()
             case 'L0'
                 return if (doc-available($config:tei-lemmata-root || '/' || $id || '.xml')) then
