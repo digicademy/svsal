@@ -713,7 +713,7 @@ declare %templates:wrap
                                     return $item
                              else if ($sort eq 'title') then 
                                  for $item in $coll
-                                    order by $item//tei:sourceDesc//tei:title[@type = 'short'] ascending
+                                    order by $item//tei:sourceDesc//tei:monogr/tei:title[@type = 'short'] ascending
                                     return $item
                             else if ($sort eq 'year') then    
                                  for $item in $coll
@@ -847,7 +847,7 @@ declare %templates:wrap
                                 let $details    :=  (session:encode-url( xs:anyURI( 'workDetails.html?wid=' ||  $root/@xml:id ) ))
                                 let $title      :=  $root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'short']/string()
                                 let $author     :=  app:rotateFormatName($root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName)
-                                order by $root/tei:teiHeader//tei:sourceDesc//tei:title[@type = 'short'] ascending
+                                order by $root/tei:teiHeader//tei:sourceDesc//tei:monogr/tei:title[@type = 'short'] ascending
                                     return
                                         <div class="col-md-6"> 
                                             <div class="panel panel-default">
@@ -1358,7 +1358,7 @@ declare %templates:wrap
         let $autId := $model('currentAuthor')/@xml:id/string()
         let $works := for $hit in collection($config:tei-works-root)//tei:TEI[contains(.//tei:titleStmt/tei:author/tei:persName/@ref, $autId)][tei:text/@type = ("work_monograph", "work_multivolume")]
             let $getAutString   := $hit//tei:titleStmt/tei:author/tei:persName/@ref/string()
-            let $workTitle      := $hit//tei:sourceDesc//tei:title[1]/text()
+            let $workTitle      := $hit//tei:sourceDesc//tei:monogr/tei:title[@type eq 'short']/text()
             let $firstEd        := $hit//tei:sourceDesc//tei:date[@type = 'firstEd']
             let $thisEd         := $hit//tei:sourceDesc//tei:date[@type = 'thisEd']
             let $ed             := if ($thisEd) then $thisEd else $firstEd
@@ -2184,12 +2184,16 @@ declare function app:WRKadditionalInfoRecord($node as node(), $model as map(*), 
     let $teiHeaderLink :=   <a href="{$teiHeader}">
                                 <i18n:text key="teiHeader">TEI Header</i18n:text>
                             </a>
-    let $iiif :=    if ($workType eq 'work_multivolume') then $iiif:presentationServer || 'collection/' || $workId
-                    else $iiif:presentationServer || '/' || $workId || '/manifest'
-    let $iiifLink :=    <a href="{$iiif}">
-                            IIIF (<i18n:text key="imageMetadata">Image Metadata</i18n:text>)
+    let $iiifLink := if ($workType eq 'work_multivolume') then   
+                        <a href="{$iiif:presentationServer || 'collection/' || $workId}">
+                            IIIF Collection
                         </a>
-    let $rdfLink := <a href="{$config:dataserver || '/works.' || $workId ||'.rdf'}">RDF</a>
+                     else 
+                        <a href="{$iiif:presentationServer || '/' || $workId || '/manifest'}">
+                            IIIF Manifest
+                        </a>
+    let $rdfId := if ($workType eq 'work_volume') then substring-before($workId, '_Vol') (: redirecting to RDF dataset for the complete work :) else $workId
+    let $rdfLink := <a href="{$config:idserver || '/works.' || $rdfId ||'.rdf'}">RDF</a>
     let $metadata :=
         <div>
             <h4><i18n:text key="metadata">Metadata</i18n:text></h4>
@@ -2245,7 +2249,7 @@ declare function app:WRKcatRecordTeaser($node as node(), $model as map(*), $wid 
             let $digital := app:WRKeditionMetadata($node, $model, $wid)
             let $bibliographical := app:WRKprintMetadata($node, $model, $wid)
             let $title := if ($digital?('titleProper')) then $digital?('titleProper') else $digital?('titleMain') (: or $digital?('titleShort')?:)
-            let $volumeN := $bibliographical?('volumeNumber')
+            let $volumeString := $bibliographical?('volumeTitle') || ' (' || $bibliographical?('volumeNumber') || ')'
             let $pubDate :=     if ($digital?('published') eq 'true') then
                                     i18n:convertDate($digital?('publicationDate'), $lang, 'verbose')
                                 else ()
@@ -2298,7 +2302,7 @@ declare function app:WRKcatRecordTeaser($node as node(), $model as map(*), $wid 
                                     <i18n:text key="originalVolume">Volume (original)</i18n:text>:
                                 </td>
                                 <td class="{$col2-width}" style="line-height: 1.2">
-                                    {$volumeN}
+                                    {$volumeString}
                                 </td>
                             </tr>
                             <tr>
@@ -2412,7 +2416,7 @@ declare function app:WRKeditionRecord($node as node(), $model as map(*), $lang a
     let $col1-width := 'col-md-3'
     let $col2-width := 'col-md-9'
     let $isPublished := app:WRKisPublished($node, $model, $workId)
-    let $publicationDate := i18n:convertDate($digital?('publicationDate'), $lang, 'verbose')
+    let $publicationDate := if ($isPublished) then i18n:convertDate($digital?('publicationDate'), $lang, 'verbose') else ()
     let $publicationInfo := 
         if ($isPublished) then
             (<tr>
@@ -2578,9 +2582,13 @@ declare function app:WRKbibliographicalRecord($node as node(), $model as map(*),
                                 </td>
                             </tr>)
                         else ()
-    (:let $extent := $bibliographical?('extent'):) (: TODO: localize the format specifications :)
     
     let $title := if ($bibliographical?('titleProper')) then $bibliographical?('titleProper') else $bibliographical?('titleMain')
+    let $extent := if ($workType eq 'work_multivolume') then () else (: no extent for mv works :)
+        <tr>
+            <td class="{$col1-width}" style="line-height: 1.2"><i18n:text key="extent">Extent</i18n:text>:</td>
+            <td class="{$col2-width}" style="line-height: 1.2">{$bibliographical?('extent')}</td>
+        </tr>
     
     let $bibliographicalRecord :=
         <table class="borderless table table-hover">
@@ -2599,6 +2607,7 @@ declare function app:WRKbibliographicalRecord($node as node(), $model as map(*),
                       <td class="{$col2-width}" style="line-height: 1.2">{$bibliographical?('publicationPlace')}</td>
                 </tr>
                 {$volumeSpecifications}
+                {$extent}
                 {$origin}
                 {$imprintFirst}
             </tbody>
@@ -2637,7 +2646,7 @@ declare function app:WRKprintMetadata($node as node(), $model as map(*), $wid as
     let $pubPlace :=    if ($sourceDesc//tei:pubPlace[@role eq 'thisEd']) then $sourceDesc//tei:pubPlace[@role eq 'thisEd']/@key/string()
                         else $sourceDesc//tei:pubPlace[@role eq 'firstEd']/@key/string()
     let $volumeNumber := if ($type eq 'work_volume') then $sourceDesc//tei:series/tei:biblScope/@n/string() else ()
-    let $volumeTitle := if ($type eq 'work_volume') then $sourceDesc//tei:title[@type ='volume']/text() else ()
+    let $volumeTitle := if ($type eq 'work_volume') then $sourceDesc//tei:monogr/tei:title[@type ='volume']/text() else ()
     let $totalVolumes := string(count(doc($config:tei-works-root || '/' || substring-before($workId, '_Vol') || '.xml')
                                               /tei:TEI/tei:teiHeader//tei:notesStmt/tei:relatedItem[@type eq 'work_volume']))
     let $imprint := $pubPlace || ' : ' || $publisher || ', ' || $pubYear
@@ -2654,6 +2663,7 @@ declare function app:WRKprintMetadata($node as node(), $model as map(*), $wid as
                     else $sourceDesc//tei:msDesc//tei:repository/text()
     let $catLink  := if (count($sourceDesc//tei:msDesc) gt 1) then $sourceDesc//tei:msDesc[@type eq 'main']//tei:idno[@type eq 'catlink']/text()
                      else $sourceDesc//tei:msDesc//tei:idno[@type eq 'catlink']/text()
+    let $extent := if ($type eq 'work_multivolume') then () else $sourceDesc/tei:biblStruct/tei:monogr/tei:extent/text()
     let $status := $tei/tei:teiHeader//tei:revisionDesc/@status/string()         
     return 
         map {
@@ -2673,9 +2683,10 @@ declare function app:WRKprintMetadata($node as node(), $model as map(*), $wid as
             'imprintFirst': $imprintFirst,
             'library': $library,
             'catLink': $catLink,
+            'extent': $extent,
             'status': $status
         }
-(:    further entries: extent/format   :)
+(:    TODO: make extent/format language-independent :)
 };
 
 (:~
@@ -3589,4 +3600,3 @@ declare function app:imprint ($node as node(), $model as map(*), $lang as xs:str
         </div>
     else ()
 };
-

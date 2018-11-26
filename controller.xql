@@ -265,7 +265,7 @@ return
             let $debug3     := if ($config:debug = "trace") then console:log ("deliver doc: " || $doc/name() || "/@xml:id=" || $doc/@xml:id || ".") else ()
             return
                 $doc
-        else if (matches($exist:resource, 'W\d{4}_teiHeader.xml')) then 
+        else if (matches($exist:resource, 'W\d{4}(_Vol\d\d)?_teiHeader.xml')) then 
             let $workId := substring-before($exist:resource, '_teiHeader.xml')
             return export:WRKteiHeader($workId, 'metadata')
         else if ($exist:resource eq 'sal-tei-corpus.zip') then
