@@ -594,7 +594,7 @@ declare %templates:default("language", "en")
                     else if (ends-with(request:get-uri(), "/workDetails.html")) then
                         <title>
                             {string-join($model("currentWork")//tei:sourceDesc//tei:author/tei:persName/tei:surname, '/') || ", " ||
-                             $model("currentWork")//tei:sourceDesc//tei:title[@type = 'short']/string()} (<i18n:text key='detailsHeader'>Details</i18n:text>) -
+                             $model("currentWork")//tei:sourceDesc//tei:monogr/tei:title[@type = 'short']/string()} (<i18n:text key='detailsHeader'>Details</i18n:text>) -
                              <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
                     else if (ends-with(request:get-uri(), "/works.html")) then
                         <title><i18n:text key="works">Werke</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
