@@ -41,7 +41,7 @@ declare variable $config:serverdomain :=
     ;
 
 declare variable $config:apiEndpoints   := map  {
-                                                    "v1": ("tei", "txt", "rdf", "html", "iiif", "search", "codesharing", "xtriples")
+                                                    "v1": ("texts", "search", "codesharing", "xtriples")
                                                 };
 
 declare variable $config:webserver      := $config:proto || "://www."    || $config:serverdomain;

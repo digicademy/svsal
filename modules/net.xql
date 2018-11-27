@@ -7,6 +7,7 @@ import module namespace request     = "http://exist-db.org/xquery/request";
 import module namespace response    = "http://exist-db.org/xquery/response";
 import module namespace util        = "http://exist-db.org/xquery/util";
 import module namespace config      = "http://salamanca/config"                 at "config.xqm";
+import module namespace export      = "http://salamanca/export"                 at "export.xql";
 import module namespace render      = "http://salamanca/render"                 at "render.xql";
 
 declare       namespace exist       = "http://exist.sourceforge.net/NS/exist";
@@ -174,7 +175,14 @@ declare function net:redirect-with-303($absolute-path) {  (: See other :)
 declare function net:redirect-with-404($absolute-path) {  (: 404 :)
     (response:set-status-code(404), 
     <error-handler>
-        <forward url="{$config:app-root}/en/index.html" method="get"/>
+        <forward url="{$config:app-root}/error-page.html" method="get"/>
+        <forward url="{$config:app-root}/modules/view.xql"/>
+    </error-handler>)
+};
+declare function net:redirect-with-400($absolute-path) {  (: 400 :)
+    (response:set-status-code(400), 
+    <error-handler>
+        <forward url="{$config:app-root}/error-page.html" method="get"/>
         <forward url="{$config:app-root}/modules/view.xql"/>
     </error-handler>)
 };
@@ -424,33 +432,26 @@ declare function net:sitemapResponse($netVars as map(*)) {
 declare function net:deliverTEI($pathComponents as xs:string*, $netVars as map()* ) {
     (: Todo:
         - clean up work/passage identification
-        - provide logic for teiHeader and Corpus download (at another API endpoint?) :
-            else if (matches($exist:resource, 'W\d{4}_teiHeader.xml')) then 
-                let $workId := substring-before($exist:resource, '_teiHeader.xml')
-                return export:WRKteiHeader($workId, 'metadata')
-            else if ($exist:resource eq 'sal-tei-corpus.zip') then
-                let $debug      := if ($config:debug = "trace") then console:log ("TEI/XML corpus download requested: " || $net:forwardedForServername || $exist:path || ".") else ()
-                let $pathToZip := $config:files-root || '/sal-tei-corpus.zip'
-                return if (util:binary-doc-available($pathToZip)) then response:stream-binary(util:binary-doc($pathToZip), 'application/octet-stream', 'sal-tei-corpus.zip') else ()
     :)
-
     let $reqResource    := $pathComponents[last()]
-    let $reqWork        := tokenize(tokenize($reqResource, ':')[1], '\.')[2]
-    let $dummy          := (util:declare-option("output:method", "xml"),
-                            util:declare-option("output:media-type", "application/tei+xml"),
-                            util:declare-option("output:indent", "yes"),
-                            util:declare-option("output:expand-xincludes", "yes")
-                            )
-    let $debug2         :=  if ($config:debug = "trace") then console:log("Serializing options: method:" || util:get-option('output:method') ||
-                                                                                             ', media-type:' || util:get-option('output:media-type') ||
-                                                                                             ', indent:'     || util:get-option('output:indent') ||
-                                                                                             ', expand-xi:'  || util:get-option('output:expand-xincludes') ||
-                                                                                             '.')
-                            else ()
+    return if (matches($reqResource, '[ALW]\d{4}\.xml')) then
 
-    let $doc            :=  if (doc-available($config:tei-works-root || '/' || replace($reqWork, "w0", "W0") || '.xml')) then
-                                let $dummy := response:set-header("Content-Disposition", 'attachment; filename="' || $reqResource || '.tei.xml"')
-                                return util:expand(doc($config:tei-works-root || '/' || replace($reqWork, "w0", "W0") || '.xml')/tei:TEI)
+        let $reqWork        := tokenize(tokenize($reqResource, ':')[1], '\.')[2]
+        let $dummy          := (util:declare-option("output:method", "xml"),
+                                util:declare-option("output:media-type", "application/tei+xml"),
+                                util:declare-option("output:indent", "yes"),
+                                util:declare-option("output:expand-xincludes", "yes")
+                                )
+        let $debug2         :=  if ($config:debug = "trace") then console:log("Serializing options: method:" || util:get-option('output:method') ||
+                                                                                                 ', media-type:' || util:get-option('output:media-type') ||
+                                                                                                 ', indent:'     || util:get-option('output:indent') ||
+                                                                                                 ', expand-xi:'  || util:get-option('output:expand-xincludes') ||
+                                                                                                 '.')
+                                else ()
+    
+        let $doc            :=  if (doc-available($config:tei-works-root || '/' || replace($reqWork, "w0", "W0") || '.xml')) then
+                                    let $dummy := response:set-header("Content-Disposition", 'attachment; filename="' || $reqResource || '.tei.xml"')
+                                    return util:expand(doc($config:tei-works-root || '/' || replace($reqWork, "w0", "W0") || '.xml')/tei:TEI)
 
 (:
 Maybe use this, which is from #DG's controller logic (at tei.serverdomain) I think:
@@ -463,23 +464,30 @@ Maybe use this, which is from #DG's controller logic (at tei.serverdomain) I thi
 [#AW]
 :)
 
-                            else
-                                <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                                    <forward url="{$netVars('controller')}/error-page.html" method="get"/>
-                                    <view>
-                                        <forward url="/modules/view.xql">
-                                            <set-attribute name="lang"              value="{$netVars('lang')}"/>
-                                            <set-attribute name="$exist:resource"   value="{$netVars('resource')}"/>
-                                            <set-attribute name="$exist:prefix"     value="{$netVars('prefix')}"/>
-                                            <set-attribute name="$exist:controller" value="{$netVars('controller')}"/>
-                                        </forward>
-                                    </view>
-                                    {config:errorhandler($netVars)}
-                                </dispatch>
-    let $debug3         :=  if ($config:debug = "trace") then console:log("deliver doc: " || $reqResource || " -> " || $reqWork || '.xml' || ".")
-                            else ()
-    return
-        $doc
+                                else
+                                    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                                        <forward url="{$netVars('controller')}/error-page.html" method="get"/>
+                                        <view>
+                                            <forward url="/modules/view.xql">
+                                                <set-attribute name="lang"              value="{$netVars('lang')}"/>
+                                                <set-attribute name="$exist:resource"   value="{$netVars('resource')}"/>
+                                                <set-attribute name="$exist:prefix"     value="{$netVars('prefix')}"/>
+                                                <set-attribute name="$exist:controller" value="{$netVars('controller')}"/>
+                                            </forward>
+                                        </view>
+                                        {config:errorhandler($netVars)}
+                                    </dispatch>
+        let $debug3         :=  if ($config:debug = "trace") then console:log("deliver doc: " || $reqResource || " -> " || $reqWork || '.xml' || ".")
+                                else ()
+        return
+            $doc
+    else if (matches($reqResource, 'W\d{4}(_Vol\d\d)?_teiHeader.xml')) then 
+        let $workId := substring-before($reqResource, '_teiHeader.xml')
+        return export:WRKteiHeader($workId, 'metadata')
+    else if ($reqResource eq 'sal-tei-corpus.zip') then
+        let $pathToZip := $config:files-root || '/sal-tei-corpus.zip'
+        return if (util:binary-doc-available($pathToZip)) then response:stream-binary(util:binary-doc($pathToZip), 'application/octet-stream', 'sal-tei-corpus.zip') else ()
+    else ()
 };
 
 declare function net:deliverTXT($pathComponents as xs:string*) {
@@ -545,12 +553,11 @@ declare function net:deliverRDF($pathComponents as xs:string*, $netVars as map()
 };
 
 declare function net:deliverHTML($pathComponents as xs:string*, $netVars as map()*) {
-    let $reqResource  := $pathComponents[last()]
-    return if (starts-with(lower-case($reqResource), 'works.w0') or starts-with(lower-case($reqResource), 'authors.a0')) then
-        let $reqResource  := $pathComponents[last()]
-        let $reqWork      := tokenize(tokenize($reqResource, ':')[1], '\.')[2]
-        let $reqVersion   := if (tokenize(tokenize($reqResource, ':')[1], '\.')[3]) then
-                                tokenize(tokenize($reqResource, ':')[1], '\.')[3]
+    let $reqResource  := $pathComponents[last()-1] || "/" || $pathComponents[last()]
+    return if (starts-with(lower-case($reqResource), 'texts/w0') or starts-with(lower-case($reqResource), 'authors/a0')) then
+        let $reqWork      := tokenize(tokenize($reqResource, ':')[1], '/')[2]
+        let $reqVersion   := if (tokenize(tokenize($reqResource, ':')[1], '/')[3]) then
+                                tokenize(tokenize($reqResource, ':')[1], '/')[3]
                              else
                                 "edit"
         let $reqPassage   := tokenize($reqResource, ':')[2]

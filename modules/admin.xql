@@ -281,7 +281,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                 let $debug              := if ($config:debug = ("trace")) then console:log("  " || string(count($target-set)) || " elements to be rendered...") else ()
 
                                 (: First, create index of nodes for generating HTML fragments :)
-                                let $index1           := <sal:index work="{string($work/@xml:id)}">{for $node at $pos in $work//tei:*[ancestor-or-self::tei:text][@xml:id]
+                                let $index1           := <sal:index work="{string($work/@xml:id)}">{for $node at $pos in $work//tei:*[ancestor-or-self::tei:text][not(self::tei:lb)][@xml:id]
                                                                         let $subtype         := if ($node/@sameAs) then
                                                                                                     "sameAs"
                                                                                                 else if ($node/@corresp) then
