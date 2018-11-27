@@ -294,6 +294,8 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                                                                                     string($node/@type)
                                                                                                 else ()
                                                                         let $frag            := (($node/ancestor-or-self::tei:* | $node//tei:*) intersect $target-set)[1]
+                                                                        (: IMPORTANT: for finding fragments, make sure that there are no relevant elements in the TEI doc that 
+                                                                            have tei:text as parent (e.g. tei:text/tei:pb with blank pages) :)
                                                                         return (element sal:node { 
                                                                                                     attribute type      {local-name($node)}, 
                                                                                                     attribute subtype   {$subtype}, 
