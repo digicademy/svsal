@@ -2193,7 +2193,7 @@ declare function app:WRKadditionalInfoRecord($node as node(), $model as map(*), 
                             IIIF Manifest
                         </a>
     let $rdfId := if ($workType eq 'work_volume') then substring-before($workId, '_Vol') (: redirecting to RDF dataset for the complete work :) else $workId
-    let $rdfLink := <a href="{$config:idserver || '/works.' || $rdfId ||'.rdf'}">RDF</a>
+    let $rdfLink := <a href="{$config:idserver || '/texts/' || $rdfId ||'?format=rdf'}">RDF</a>
     let $metadata :=
         <div>
             <h4><i18n:text key="metadata">Metadata</i18n:text></h4>
@@ -3537,7 +3537,7 @@ declare function app:downloadRDF($node as node(), $model as map(*), $lang as xs:
     let $wid      :=  request:get-parameter('wid', '')
     let $hoverTitle := i18n:process(<i18n:text key="downloadRDF">Download RDF/XML data for this work</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
     let $download := 
-             if ($wid)                    then <li><a title="{$hoverTitle}" href="{$config:dataserver || '/works.' || $wid}.rdf"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;RDF/XML</a></li>
+             if ($wid)                    then <li><a title="{$hoverTitle}" href="{$config:dataserver || '/texts/' || $wid}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;RDF/XML</a></li>
         else if ($model('currentLemma'))  then <li><a title="{$hoverTitle}" href="{$config:dataserver || '/lemmata.' || $model('currentLemma')/@xml:id}.rdf">RDF/XML</a></li>
         else if ($model('currentAuthor')) then <li><a title="{$hoverTitle}" href="{$config:dataserver || '/authors.' || $model('currentAuthor')/@xml:id}.rdf">RDF/XML</a></li>
         else()
