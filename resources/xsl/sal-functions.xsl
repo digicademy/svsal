@@ -420,7 +420,7 @@
         <xsl:param name="targetWorkId" as="xs:string"/>
         <xsl:param name="targetNodeId" as="xs:string"/>
         <xsl:variable name="metadata" select="doc(xs:anyURI(concat('xmldb:exist:///db/apps/salamanca/data/', $targetWorkId, '_nodeIndex.xml')))"/> 
-        <xsl:value-of select="concat($idserver, '/works.', $targetWorkId, ':', $metadata//sal:node[@n=$targetNodeId]/sal:citetrail)"/>
+        <xsl:value-of select="concat($idserver, '/texts/', $targetWorkId, ':', $metadata//sal:node[@n=$targetNodeId]/sal:citetrail)"/>
         <xsl:message><xsl:value-of select="concat('XSL rendering id: ', $idserver, '/works.', $targetWorkId, ':', $metadata//sal:node[@n=$targetNodeId]/sal:citetrail)"/></xsl:message>
     </xsl:function>
 

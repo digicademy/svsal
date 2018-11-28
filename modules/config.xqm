@@ -36,8 +36,9 @@ declare variable $config:serverdomain :=
     else if(substring-before(request:get-server-name(), ".") = $config:subdomains)
         then substring-after(request:get-server-name(), ".")
     else
-        let $alert := if ($config:debug = "trace") then console:log("Warning! Dynamic $config:serverdomain is uncertain, using servername " || request:get-server-name() || ".") else ()
-        return request:get-server-name()
+        let $fallbackDomain := 'c106-211.cloud.gwdg.de' (: request:get-server-name() :)
+        let $alert := if ($config:debug = "trace") then console:log("Warning! Dynamic $config:serverdomain is uncertain, using servername " || $fallbackDomain || ".") else ()
+        return $fallbackDomain
     ;
 
 declare variable $config:apiEndpoints   := map  {
