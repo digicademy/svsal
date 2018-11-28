@@ -433,8 +433,8 @@ declare function net:deliverTEI($pathComponents as xs:string*, $netVars as map()
     (: Todo:
         - clean up work/passage identification
     :)
-    let $reqResource    := $pathComponents[last()]
-    return if (matches($reqResource, '[ALW]\d{4}\.xml')) then
+    let $reqResource    := replace($pathComponents[last()], 'w0', 'W0')
+    return if (matches($reqResource, '[ALW]\d{4}(\.xml)?')) then
 
         let $reqWork        := tokenize(tokenize($reqResource, ':')[1], '\.')[1]
         let $dummy          := (util:declare-option("output:method", "xml"),
