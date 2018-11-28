@@ -647,6 +647,7 @@ declare %templates:default("language", "en")
                     else if (ends-with(request:get-uri(), "/")) then
                         <title><i18n:text key="start">Home</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title> else
                         <title><i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        let $debug := if ($config:debug = "trace") then console:log("Meta title: " || $output) else ()
  return
         i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "de")
 };   

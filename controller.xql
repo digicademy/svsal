@@ -25,6 +25,9 @@ declare option output:omit-xml-declaration "no";
 declare option output:encoding      "utf-8";
 
 (: *** Todo: 
+   ***       - Add application/pdf, application/json, text/html, tei-simple, mets/mods xml?
+   ***       - Handle image requests: If image/* is the preferred data type and resource refers to a node of type "pb" and we have a seeAlso
+   ***         that ends in jpg, tiff or png (?), then forward to there ...
    ***       - Use 40x error codes (400 and 404)
    ***       - Implement collections and their filters (e.g. `/texts?q=lex` resulting in a list of texts)
    ***       - Implement API with RESTXQ
@@ -36,8 +39,6 @@ declare option output:encoding      "utf-8";
    ***          - Copy logging method from services/lod/extract.xql
    ***          - Handle all "else ()" and error <dispatch>es: Print error, request info to log, redirect to homepage, give error message
    ***       - Sanitize/check all input (parameters)
-   ***       - See more below, at API functions
-   ***       - Content negotiate underspecified X-Forwarded-Host = {serverdomain} ...
 :)
 
 (: Get request, session and context information :)
@@ -80,7 +81,6 @@ let $debug              :=  if ($config:debug = "trace") then
                             else ()
 
 
-
 (: Here comes the actual routing ... :)
 return
 
@@ -115,17 +115,9 @@ return
         let $debug := if ($config:debug = ("trace", "info")) then console:log("API requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
         (: We have the following API areas, accessible by path component:
             1. /v1/texts
-
             a. /v1/search       (Forwards to opensphinxsearch.)
             b. /v1/codesharing  (To expose TEI tag usage.             See https://api.{$config:serverdomain}/codesharing/codesharing.html or https://mapoflondon.uvic.ca/BLOG10.htm) 
             c. /v1/xtriples     (Extract rdf from xml with xtriples.  See https://api.{$config:serverdomain}/v1/xtriples/xtriples.html    or http://xtriples.spatialhumanities.de/index.html)
-
-            TODO: - Clean up and *systematically* offer only https://api.{$serverdomain}/{version}/{collection}/{resource}
-                    and perhaps (!) the same at https://{function}.{$serverdomain}/{resource}
-                    (Should we better refactor this into higher-level cases instead of cases under api.{$config:serverdomain} and then again all the subdomains at another place?)
-                  - Add application/pdf, application/json, text/html, tei-simple, mets/mods xml?
-                  - Handle image requests: If image/* is the preferred data type and resource refers to a node of type "pb" and we have a seeAlso that ends in jpg, tiff or png (?),
-                    then forward to there ...
         :)
         let $pathComponents := tokenize(lower-case($exist:path), "/")  (: Since $exist:path starts with a slash, $pathComponents[1] is an empty string :)
         let $debug := if ($config:debug = ("trace")) then console:log("This translates to API version " || $pathComponents[2] || ", endpoint " || $pathComponents[3] || ".") else ()
@@ -133,7 +125,8 @@ return
         return if ($pathComponents[3] = $config:apiEndpoints($pathComponents[2])) then  (: Check if we support the requested endpoint/version :)
             switch($pathComponents[3])
             case "texts" return
-                (: For determining the content type, the format url parameter has the highest priority, only then comes content negotiation based on HTTP Accept Header (and we do not use file extensions). :)
+                (: For determining the content type, the format url parameter has the highest priority,
+                   only then comes content negotiation based on HTTP Accept Header (and we do not use file extensions). :)
                 switch ($format)
                     case 'tei' return
                         let $debug         := if ($config:debug = ("trace", "info")) then console:log("TEI/XML requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
@@ -202,7 +195,10 @@ return
     else if (request:get-header('X-Forwarded-Host') = "id." || $config:serverdomain) then
         let $debug1 := if ($config:debug = ("trace", "info")) then console:log("Id requested: " || $net:forwardedForServername || $exist:path || $parameterString || ". (" || net:negotiateContentType($net:servedContentTypes, '') || ')') else ()
         let $debug1 := if ($config:debug = ("trace")) then console:log("Redirect (303) to '" || $config:apiserver || "/v1/texts/" || $exist:path || $parameterString || "'.") else ()
-        return net:redirect-with-303($config:apiserver || "/v1" || $exist:path || $parameterString)
+        return  if (starts-with($exist:resource, "works.")) then
+                    net:redirect-with-303($config:apiserver || "/v1" || replace($exist:path, '/works\.', '/texts/') || $parameterString)
+                else
+                    net:redirect-with-303($config:apiserver || "/v1" || $exist:path || $parameterString)
 
 
     (: *** Date service (X-Forwarded-Host = 'data.{$config:serverdomain}') *** :)
@@ -210,7 +206,6 @@ return
         let $debug        := if ($config:debug = ("trace", "info")) then console:log("Data requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
         let $updParams    := array:append($netVars('params'), "format=rdf")
         let $parameters   := concat("?", string-join($updParams, "&amp;"))
-
         return net:redirect-with-307($config:apiserver || "/v1/texts/" || $netVars('path') || $parameters)
 
 
@@ -219,7 +214,6 @@ return
         let $debug        := if ($config:debug = ("trace", "info")) then console:log("TEI requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
         let $updParams    := array:append($netVars('params'), "format=tei")
         let $parameters   := concat("?", string-join($updParams, "&amp;"))
-
         return net:redirect-with-307($config:apiserver || "/v1/texts/" || $netVars('path') || $parameters)
 
 
@@ -264,12 +258,24 @@ return
         let $debug          := if ($config:debug = "info")  then console:log ("HTML requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
         let $debug          := if ($config:debug = "trace") then console:log ("HTML requested, translating language path component to a request attribute - $exist:path: " || $exist:path || ", redirect to: " || $exist:controller || substring($exist:path, 4) || ", parameters: [" || string-join(net:inject-requestParameter((), ()), "&amp;") || "], attributes: [].") else ()
         (: For now, we don't use net:forward here since we need a nested view/forwarding. :)
+        let $viewModule     := switch ($exist:resource)
+                                case "admin.html"
+                                case "corpus-admin.html"
+                                case "createLists.html"
+                                case "iiif-admin.html"
+                                case "render.html"
+                                case "renderTheRest.html"
+                                case "render.html"
+                                case "sphinx-admin.html" return
+                                    "view-admin.xql"
+                                default return
+                                    "view.xql"
         return
             <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                 <forward url="{$exist:controller || substring($exist:path, 4)}"/>
                 <view>
                     <!-- pass the results through view.xql -->
-                    <forward url="{$exist:controller}/modules/view.xql">
+                    <forward url="{$exist:controller}/modules/{$viewModule}">
                         <set-attribute name="lang"              value="{$lang}"/>
                         <set-attribute name="$exist:resource"   value="{$exist:resource}"/>
                         <set-attribute name="$exist:prefix"     value="{$exist:prefix}"/>
@@ -281,7 +287,7 @@ return
 
     (: If there is no language path component, redirect to a version of the site where there is one :)
     else if (ends-with($exist:resource, ".html")) then
-        let $absolutePath   := concat('/', $lang, $exist:path,
+        let $absolutePath   := concat($config:proto, '://', $net:forwardedForServername, '/', $lang, $exist:path,
                                         if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (),
                                         string-join(net:inject-requestParameter('', ''), '&amp;'))
         let $debug          := if ($config:debug = ("trace", "info")) then console:log("HTML requested: " || $net:forwardedForServername || $exist:path || $parameterString || ", redirecting to " || $absolutePath || "...") else ()

@@ -188,8 +188,8 @@ declare function iiif:mkSingleVolumeManifest($volumeId as xs:string, $teiDoc as 
         map {"@id": concat("http://data.", $iiif:serverDomain, "/", substring($volumeId, 1, 5), ".rdf"),
             "format": "application/rdf+xml"}
     }
-    let $renderingId := if (contains($volumeId, "_")) then concat("http://id.", $iiif:serverDomain, "/works.", substring-before($volumeId, "_"), ":", substring-after($volumeId, "_"))
-                        else concat("http://id.", $iiif:serverDomain, "/works.", $volumeId) (: better: provide native .html URL? :)
+    let $renderingId := if (contains($volumeId, "_")) then concat("http://id.", $iiif:serverDomain, "/texts/", substring-before($volumeId, "_"), ":", substring-after($volumeId, "_"))
+                        else concat("http://id.", $iiif:serverDomain, "/texts/", $volumeId) (: better: provide native .html URL? :)
     let $rendering := map {
         "@id": $renderingId,
         "label": "HTML view",

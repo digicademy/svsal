@@ -254,9 +254,10 @@ declare function admin:get-pages-from-div($div) {
 };    
 
 declare %templates:wrap function admin:renderWork($node as node(), $model as map(*), $wid as xs:string*, $lang as xs:string?) as element(div) {
+    let $debug            := if ($config:debug = ("trace", "info")) then console:log("Rendering " || $wid || ".") else ()
     let $start-time       := util:system-time()
     let $wid              := request:get-parameter('wid', '*')
-
+    
     (: define the works to be fragmented: :)
     let $todo             := if ($wid = '*') then
                                 collection($config:tei-works-root)//tei:TEI[.//tei:text[@type = ("work_multivolume", "work_monograph")]]
@@ -299,8 +300,8 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                                                                                     attribute subtype   {$subtype}, 
                                                                                                     attribute n         {$node/@xml:id},
                                                                                                     if ($node/@xml:id eq 'completeWork' and $xincludes) then
-                                                                                                      attribute xinc    {$xincludes} else
-                                                                                                      (), 
+                                                                                                       attribute xinc    {$xincludes}
+                                                                                                    else (), 
                                                                                                     element sal:title           {app:sectionTitle($work, $node)},
                                                                                                     element sal:fragment        {format-number(functx:index-of-node($target-set, $frag), "0000") || "_" || $frag/@xml:id},
                                                                                                     element sal:citableParent   {string(($node/ancestor::tei:text[not(@type="work_part")] | $node/ancestor::tei:div[not(@type="work_part")][1] 
@@ -376,7 +377,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                                 </p>
                                 
                                 (: Finally, create ultimate version of node index with proper fragment URLs, required for RDF extraction etc. :)
-                                let $index2           := <sal:index work="{string($work/@xml:id)}">{for $node at $pos in $work//tei:*[ancestor-or-self::tei:text][@xml:id]
+                                let $index2           := <sal:index work="{string($work/@xml:id)}">{for $node at $pos in $work//tei:*[ancestor-or-self::tei:text][not(self::tei:lb)][@xml:id]
                                                                         let $subtype         := if ($node/@sameAs) then
                                                                                                     "sameAs"
                                                                                                 else if ($node/@corresp) then

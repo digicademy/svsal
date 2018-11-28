@@ -44,10 +44,10 @@ declare variable $net:errorhandler := if (($config:instanceMode = "staging") or 
 
 declare function net:findNode($ctsId as xs:string?) {
     let $reqResource  := tokenize($ctsId, '/')[last()]
-    let $reqWork      := tokenize(tokenize($reqResource, ':')[1], '\.')[2]   (: group.work:pass.age :)
+    let $reqWork      := tokenize(tokenize($reqResource, ':')[1], '\.')[1]   (: work:pass.age :)
     let $reqPassage   := tokenize($reqResource, ':')[2]
     let $nodeId       := if ($reqPassage) then
-                            let $nodeIndex := doc($config:data-root || '/' || $reqWork || '_nodeIndex.xml')
+                            let $nodeIndex := doc($config:data-root || '/' || replace($reqWork, 'w0', 'W0') || '_nodeIndex.xml')
                             return $nodeIndex//sal:node[sal:citetrail eq $reqPassage][1]/@n[1]
                          else
                             "completeWork" 
@@ -436,7 +436,7 @@ declare function net:deliverTEI($pathComponents as xs:string*, $netVars as map()
     let $reqResource    := $pathComponents[last()]
     return if (matches($reqResource, '[ALW]\d{4}\.xml')) then
 
-        let $reqWork        := tokenize(tokenize($reqResource, ':')[1], '\.')[2]
+        let $reqWork        := tokenize(tokenize($reqResource, ':')[1], '\.')[1]
         let $dummy          := (util:declare-option("output:method", "xml"),
                                 util:declare-option("output:media-type", "application/tei+xml"),
                                 util:declare-option("output:indent", "yes"),
@@ -492,8 +492,8 @@ Maybe use this, which is from #DG's controller logic (at tei.serverdomain) I thi
 
 declare function net:deliverTXT($pathComponents as xs:string*) {
     let $reqResource    := $pathComponents[last()]
-    let $reqWork        := tokenize(tokenize($reqResource, ':')[1], '\.')[2]
-    let $reqVersion     := if (tokenize(tokenize($reqResource, ':')[1], '\.')[3]) then tokenize(tokenize($reqResource, ':')[1], '\.')[3]
+    let $reqWork        := tokenize(tokenize($reqResource, ':')[1], '\.')[1]
+    let $reqVersion     := if (tokenize(tokenize($reqResource, ':')[1], '\.')[2]) then tokenize(tokenize($reqResource, ':')[1], '\.')[2]
                            else "edit"
     let $node           := net:findNode($reqResource)
     let $dummy          := (util:declare-option("output:method", "text"),
@@ -501,14 +501,14 @@ declare function net:deliverTXT($pathComponents as xs:string*) {
     let $debug2         := if ($config:debug = "trace") then console:log("Serializing options: method:" || util:get-option('output:method') ||
                                                                                         ', media-type:' || util:get-option('output:media-type') ||
                                                                                         '.') else ()
-    let $dummy          := response:set-header("Content-Disposition", 'attachment; filename="' || $reqWork || '.' || $reqVersion || '.txt"')
+    let $dummy          := response:set-header("Content-Disposition", 'attachment; filename="' || replace($reqWork, 'w0', 'W0') || '.' || $reqVersion || '.txt"')
     return render:dispatch($node, $reqVersion)
 };
 
 declare function net:deliverIIIF($path as xs:string, $netVars) {
     let $reqResource    := tokenize(tokenize($path, '/iiif/')[last()], '/')[1]
     let $iiif-paras     := string-join(subsequence(tokenize(tokenize($path, '/iiif/')[last()], '/'), 2), '/')
-    let $work           := tokenize(tokenize($reqResource, ':')[1], '\.')[2]   (: group.work[.edition]:pass.age :)
+    let $work           := tokenize(tokenize($reqResource, ':')[1], '\.')[1]   (: work[.edition]:pass.age :)
     let $passage        := tokenize($reqResource, ':')[2]
     let $entityPath     := concat($work, if ($passage) then concat('#', $passage) else ())
     let $debug2         := if ($config:debug = "trace") then console:log("Load metadata from " || $config:rdf-root || '/' || replace($work, 'w0', 'W0') || '.rdf' || " ...") else ()
@@ -538,10 +538,10 @@ declare function net:deliverIIIF($path as xs:string, $netVars) {
 
 declare function net:deliverRDF($pathComponents as xs:string*, $netVars as map()*) {
     let $reqResource    := $pathComponents[last()]
-    let $reqWork        := tokenize(tokenize($reqResource, ':')[1], '\.')[2]
+    let $reqWork        := tokenize(tokenize($reqResource, ':')[1], '\.')[1]
     return  if (replace($reqWork, 'w0', 'W0') || '.rdf' = xmldb:get-child-resources($config:rdf-root) and not("nocache" = request:get-parameter-names())) then
                 let $debug          := if ($config:debug = ("trace", "info")) then console:log("Loading " || replace($reqWork, 'w0', 'W0') || " ...") else ()
-                let $dummy          := response:set-header("Content-Disposition", 'attachment; filename="' || $reqWork || '.rdf.xml"')
+                let $dummy          := response:set-header("Content-Disposition", 'attachment; filename="' || replace($reqWork, 'w0', 'W0') || '.rdf.xml"')
                 return doc( $config:rdf-root || '/' || replace($reqWork, 'w0', 'W0') || '.rdf')
             else
                 let $debug          := if ($config:debug = ("trace", "info")) then console:log("Generating rdf for " || replace($reqWork, 'w0', 'W0') || " ...") else ()
@@ -555,14 +555,14 @@ declare function net:deliverRDF($pathComponents as xs:string*, $netVars as map()
 declare function net:deliverHTML($pathComponents as xs:string*, $netVars as map()*) {
     let $reqResource  := $pathComponents[last()-1] || "/" || $pathComponents[last()]
     return if (starts-with(lower-case($reqResource), 'texts/w0') or starts-with(lower-case($reqResource), 'authors/a0')) then
-        let $reqWork      := tokenize(tokenize($reqResource, ':')[1], '/')[2]
-        let $reqVersion   := if (tokenize(tokenize($reqResource, ':')[1], '/')[3]) then
-                                tokenize(tokenize($reqResource, ':')[1], '/')[3]
+        let $reqWork      := tokenize(tokenize($reqResource, ':')[1], '\.')[1]
+        let $reqVersion   := if (tokenize(tokenize($reqResource, ':')[1], '\.')[2]) then
+                                tokenize(tokenize($reqResource, ':')[1], '\.')[2]
                              else
                                 "edit"
         let $reqPassage   := tokenize($reqResource, ':')[2]
-        let $debug2       := if ($config:debug = ("trace")) then console:log("Load metadata from " || $config:rdf-root || '/' || $reqWork || '.rdf' || " ...") else ()
-        let $metadata     := doc($config:rdf-root || '/' || $reqWork || '.rdf')
+        let $debug2       := if ($config:debug = ("trace")) then console:log("Load metadata from " || $config:rdf-root || '/' || replace($reqWork, 'w0', 'W0') || '.rdf' || " ...") else ()
+        let $metadata     := doc($config:rdf-root || '/' || replace($reqWork, 'w0', 'W0') || '.rdf')
         let $debug3       := if ($config:debug = ("trace")) then console:log("Retrieving $metadata//rdf:Description[@rdf:about = '" || $reqResource || "']/rdfs:seeAlso[1]/@rdf:resource[contains(., '.html')]") else ()
         let $resolvedPath := string(($metadata//*[@rdf:about eq $reqResource]/rdfs:seeAlso[1]/@rdf:resource[ends-with(., ".html")])[1])
         let $debug4       := if ($config:debug = ("trace")) then console:log("Found path: " || $resolvedPath || " ...") else ()
@@ -595,9 +595,9 @@ declare function net:deliverHTML($pathComponents as xs:string*, $netVars as map(
 
 declare function net:deliverJPG($pathComponents as xs:string*, $netVars as map()*) {
         let $reqResource  := $pathComponents[last()]
-        let $reqWork      := tokenize(tokenize($reqResource, ':')[1], '\.')[2]
+        let $reqWork      := tokenize(tokenize($reqResource, ':')[1], '\.')[1]
         let $passage      := tokenize($reqResource, ':')[2]
-        let $metadata     := doc($config:rdf-root || '/' || $reqWork || '.rdf')
+        let $metadata     := doc($config:rdf-root || '/' || replace($reqWork, 'w0', 'W0') || '.rdf')
         let $debug2       := if ($config:debug = "trace") then console:log("Retrieving $metadata//rdf:Description[@rdf:about = " || $reqResource || "]/rdfs:seeAlso/@rdf:resource/string()") else ()
         let $resolvedPaths := for $url in $metadata//rdf:Description[@rdf:about = $reqResource]/rdfs:seeAlso/@rdf:resource/string()
                               where matches($url, "\.(jpg|jpeg|png|tif|tiff)$")

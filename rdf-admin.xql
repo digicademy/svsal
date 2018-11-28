@@ -14,10 +14,10 @@ let $start-time       := util:system-time()
 
 let $resourceId    := request:get-parameter('resourceId', 'W0013')
 
-let $rid :=     if (starts-with($resourceId, "authors.")) then
-                        substring-after($resourceId, "authors.")
-                    else if (starts-with($resourceId, "works.")) then
-                        substring-after($resourceId, "works.")
+let $rid :=     if (starts-with($resourceId, "authors/")) then
+                        substring-after($resourceId, "authors/")
+                    else if (starts-with($resourceId, "texts/")) then
+                        substring-after($resourceId, "texts/")
                     else
                         $resourceId
 
