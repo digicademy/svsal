@@ -650,6 +650,10 @@
         <span class="original glyph unsichtbar" title="{string(.)}"><xsl:value-of select="$originalGlyph"/></span>
         <span class="edited glyph" title="{$originalGlyph}">
             <xsl:choose>
+                <!-- long s shall be standardized (i.e., resolved to "s") by default -->
+                <!--<xsl:when test="substring(@ref,2) eq 'char017f'">
+                    <xsl:value-of select="key('chars', substring(@ref,2))/mapping[@type eq 'standardized']/text()"/>
+                </xsl:when>-->
                 <xsl:when test="child::text() | child::*"><xsl:apply-templates/></xsl:when>
                 <xsl:otherwise><xsl:value-of select="$originalGlyph"/></xsl:otherwise>
             </xsl:choose>
@@ -825,4 +829,6 @@
     <xsl:template match="figDesc" mode="#all"/>
     <xsl:template match="teiHeader" mode="#all"/>
     <xsl:template match="fw" mode="#all"/>
+    <xsl:template match="text//processing-instruction()" mode="#all"/> <!-- editors' comments -->
+    
 </xsl:stylesheet>
