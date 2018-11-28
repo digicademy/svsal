@@ -97,6 +97,11 @@ return
     else if ($exist:resource = "void.ttl") then
         let $debug          := if ($config:debug = ("trace", "info")) then console:log("VoID.ttl requested: " || $net:forwardedForServername || $exist:path || ".") else ()
         return net:forward("void.ttl", $netVars)
+    else if ($exist:resource = "favicon.ico") then
+        if ($config:instanceMode = "testing") then
+            net:forward("/resources/favicons/" || replace($exist:resource, "favicon", "favicon_red"), $netVars)
+        else
+            net:forward("/resources/favicons/" || $exist:resource, $netVars)
 
 
     (: *** We have an underspecified request with (almost) empty path -> redirect this to the homepage *** :)

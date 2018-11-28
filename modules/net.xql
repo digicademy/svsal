@@ -69,63 +69,63 @@ declare function net:lang($existPath as xs:string) as xs:string {
     :)
                     if (request:get-parameter-names() = 'lang') then
                         if (request:get-parameter('lang', 'dummy-default-value') = ('de', 'en', 'es')) then
-                            let $debug :=  if ($config:debug = "trace") then console:log("case 1a: lang parameter-name and valid value present.") else ()
-                            return request:get-parameter('lang', 'dummy-default-value')
+(:                            let $debug :=  if ($config:debug = "trace") then console:log("case 1a: lang parameter-name and valid value present.") else ():)
+                            request:get-parameter('lang', 'dummy-default-value')
                         else
                             let $debug :=  if ($config:debug = "trace") then console:log("case 1b: lang parameter-name but invalid value present.") else ()
                             return if (matches($existPath, '/(de|en|es)/')) then
                                         if (contains($existPath, '/de/')) then
-                                            let $debug :=  if ($config:debug = "trace") then console:log("case 2a: 'de' path component present.") else ()
-                                            return 'de'
+(:                                            let $debug :=  if ($config:debug = "trace") then console:log("case 2a: 'de' path component present.") else ():)
+                                            'de'
                                         else if (contains($existPath, '/en/')) then
-                                            let $debug :=  if ($config:debug = "trace") then console:log("case 2b: 'en' path component present.") else ()
-                                            return 'en'
+(:                                            let $debug :=  if ($config:debug = "trace") then console:log("case 2b: 'en' path component present.") else ():)
+                                            'en'
                                         else
-                                            let $debug :=  if ($config:debug = "trace") then console:log("case 2c: 'es' path component present.") else ()
-                                            return 'es'
+(:                                            let $debug :=  if ($config:debug = "trace") then console:log("case 2c: 'es' path component present.") else ():)
+                                            'es'
                                     else if (request:get-header('Accept-Language')) then
                                             if (substring(request:get-header('lang'),1,2) = 'de') then
-                                                let $debug := if ($config:debug = "trace") then console:log("case 3a: 'de' Accept-Language request header present.") else ()
-                                                return 'de'
+(:                                                let $debug := if ($config:debug = "trace") then console:log("case 3a: 'de' Accept-Language request header present.") else ():)
+                                                'de'
                                             else if (substring(request:get-header('lang'),1,2) = 'en') then
-                                                let $debug := if ($config:debug = "trace") then console:log("case 3b: 'en' Accept-Language request header present.") else ()
-                                                return 'en'
+(:                                                let $debug := if ($config:debug = "trace") then console:log("case 3b: 'en' Accept-Language request header present.") else ():)
+                                                'en'
                                             else if (substring(request:get-header('lang'),1,2) = 'es') then
-                                                let $debug := if ($config:debug = "trace") then console:log("case 3c: 'es' Accept-Language request header present.") else ()
-                                                return 'es'
+(:                                                let $debug := if ($config:debug = "trace") then console:log("case 3c: 'es' Accept-Language request header present.") else ():)
+                                                'es'
                                             else
-                                                let $debug := if ($config:debug = "trace") then console:log("case 3d: unknown Accept-Language request header present.") else ()
-                                                return $config:defaultLang
+(:                                                let $debug := if ($config:debug = "trace") then console:log("case 3d: unknown Accept-Language request header present.") else ():)
+                                                $config:defaultLang
                                     else
-                                        let $debug := if ($config:debug = "trace") then console:log("case 4: Language could not be detected. Using default language (" || $config:defaultLang || ").") else ()
-                                        return $config:defaultLang
+(:                                        let $debug := if ($config:debug = "trace") then console:log("case 4: Language could not be detected. Using default language (" || $config:defaultLang || ").") else ():)
+                                        $config:defaultLang
 
                     else if (matches($existPath, '/(de|en|es)/')) then
                         if (contains($existPath, '/de/')) then
-                            let $debug :=  if ($config:debug = "trace") then console:log("case 2a: 'de' path component present.") else ()
-                            return 'de'
+(:                            let $debug :=  if ($config:debug = "trace") then console:log("case 2a: 'de' path component present.") else ():)
+                            'de'
                         else if (contains($existPath, '/en/')) then
-                            let $debug :=  if ($config:debug = "trace") then console:log("case 2b: 'en' path component present.") else ()
-                            return 'en'
+(:                            let $debug :=  if ($config:debug = "trace") then console:log("case 2b: 'en' path component present.") else ():)
+                            'en'
                         else
-                            let $debug :=  if ($config:debug = "trace") then console:log("case 2c: 'es' path component present.") else ()
-                            return 'es'
+(:                            let $debug :=  if ($config:debug = "trace") then console:log("case 2c: 'es' path component present.") else ():)
+                            'es'
                     else if (request:get-header('Accept-Language')) then
                             if (substring(request:get-header('Accept-Language'),1,2) = 'de') then
-                                let $debug := if ($config:debug = "trace") then console:log("case 3a: 'de' Accept-Language request header present.") else ()
-                                return 'de'
+(:                                let $debug := if ($config:debug = "trace") then console:log("case 3a: 'de' Accept-Language request header present.") else ():)
+                                'de'
                             else if (substring(request:get-header('Accept-Language'),1,2) = 'en') then
-                                let $debug := if ($config:debug = "trace") then console:log("case 3b: 'en' Accept-Language request header present.") else ()
-                                return 'en'
+(:                                let $debug := if ($config:debug = "trace") then console:log("case 3b: 'en' Accept-Language request header present.") else ():)
+                                'en'
                             else if (substring(request:get-header('Accept-Language'),1,2) = 'es') then
-                                let $debug := if ($config:debug = "trace") then console:log("case 3c: 'es' Accept-Language request header present.") else ()
-                                return 'es'
+(:                                let $debug := if ($config:debug = "trace") then console:log("case 3c: 'es' Accept-Language request header present.") else ():)
+                                'es'
                             else
-                                let $debug := if ($config:debug = "trace") then console:log("case 3d: unknown Accept-Language request header (" || request:get-header('Accept-Language') || ") present.") else ()
-                                return $config:defaultLang
+(:                                let $debug := if ($config:debug = "trace") then console:log("case 3d: unknown Accept-Language request header (" || request:get-header('Accept-Language') || ") present.") else ():)
+                                $config:defaultLang
                     else
-                        let $debug := if ($config:debug = "trace") then console:log("case 4: Language could not be detected. Using default language (" || $config:defaultLang || ").") else ()
-                        return $config:defaultLang
+(:                        let $debug := if ($config:debug = "trace") then console:log("case 4: Language could not be detected. Using default language (" || $config:defaultLang || ").") else ():)
+                        $config:defaultLang
 };
 
 (: Todo: Clean lang parameters when they arrive. It's there but I'm not sure it's working... :)
@@ -555,7 +555,7 @@ declare function net:deliverRDF($pathComponents as xs:string*, $netVars as map()
 declare function net:deliverHTML($pathComponents as xs:string*, $netVars as map()*) {
     let $reqResource  := $pathComponents[last()-1] || "/" || $pathComponents[last()]
     return if (starts-with(lower-case($reqResource), 'texts/w0') or starts-with(lower-case($reqResource), 'authors/a0')) then
-        let $reqWork      := tokenize(tokenize($reqResource, ':')[1], '\.')[1]
+        let $reqWork      := tokenize(tokenize(tokenize($reqResource, ':')[1], '/')[2], '\.')[1]
         let $reqVersion   := if (tokenize(tokenize($reqResource, ':')[1], '\.')[2]) then
                                 tokenize(tokenize($reqResource, ':')[1], '\.')[2]
                              else
@@ -563,8 +563,8 @@ declare function net:deliverHTML($pathComponents as xs:string*, $netVars as map(
         let $reqPassage   := tokenize($reqResource, ':')[2]
         let $debug2       := if ($config:debug = ("trace")) then console:log("Load metadata from " || $config:rdf-root || '/' || replace($reqWork, 'w0', 'W0') || '.rdf' || " ...") else ()
         let $metadata     := doc($config:rdf-root || '/' || replace($reqWork, 'w0', 'W0') || '.rdf')
-        let $debug3       := if ($config:debug = ("trace")) then console:log("Retrieving $metadata//rdf:Description[@rdf:about = '" || $reqResource || "']/rdfs:seeAlso[1]/@rdf:resource[contains(., '.html')]") else ()
-        let $resolvedPath := string(($metadata//*[@rdf:about eq $reqResource]/rdfs:seeAlso[1]/@rdf:resource[ends-with(., ".html")])[1])
+        let $debug3       := if ($config:debug = ("trace")) then console:log("Retrieving $metadata//rdf:Description[@rdf:about eq '" || replace($reqResource, 'w0', 'W0') || "']/rdfs:seeAlso[1]/@rdf:resource[contains(., '.html')]") else ()
+        let $resolvedPath := string(($metadata//rdf:Description[@rdf:about eq replace($reqResource, 'w0', 'W0')]/rdfs:seeAlso[1]/@rdf:resource[contains(., ".html")])[1])
         let $debug4       := if ($config:debug = ("trace")) then console:log("Found path: " || $resolvedPath || " ...") else ()
 
         (: The pathname that has been saved contains 0 or exactly one parameter for the target html fragment,
