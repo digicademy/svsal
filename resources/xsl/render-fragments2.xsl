@@ -1,4 +1,4 @@
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" xmlns:sal="http://salamanca.adwmainz.de" version="3.0" exclude-result-prefixes="exist sal tei xd xs xsl" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+<xsl:stylesheet xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sal="http://salamanca.adwmainz.de" version="3.0" exclude-result-prefixes="exist sal tei xd xs xsl" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
 
 <!-- TODO:
            * tweak/tune performance: use
@@ -630,35 +630,49 @@
     <xsl:template match="expan|reg|corr" mode="pureText">
         <xsl:apply-templates mode="pureText"/>
     </xsl:template>
+    
     <xsl:template match="g">
         <xsl:if test="not(key('chars', substring(@ref,2)))">
             <xsl:message terminate="yes" select="concat('Error: g/@ref has an invalid value, the char code does not exist): ', substring(@ref,2))"/>
         </xsl:if>
-        <xsl:variable name="originalGlyph">
-            <xsl:choose>
-                <xsl:when test="key('chars', substring(@ref,2))/mapping[@type='precomposed']">
-                    <xsl:value-of select="key('chars', substring(@ref,2))/mapping[@type='precomposed']/text()" disable-output-escaping="yes"/>
-                </xsl:when>
-                <xsl:when test="key('chars', substring(@ref,2))/mapping[@type='composed']">
-                    <xsl:value-of select="key('chars', substring(@ref,2))/mapping[@type='composed']/text()" disable-output-escaping="yes"/>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:value-of select="string(.)"/>
-                </xsl:otherwise>
-            </xsl:choose>
-        </xsl:variable>
-        <span class="original glyph unsichtbar" title="{string(.)}"><xsl:value-of select="$originalGlyph"/></span>
-        <span class="edited glyph" title="{$originalGlyph}">
-            <xsl:choose>
-                <!-- long s shall be standardized (i.e., resolved to "s") by default -->
-                <!--<xsl:when test="substring(@ref,2) eq 'char017f'">
-                    <xsl:value-of select="key('chars', substring(@ref,2))/mapping[@type eq 'standardized']/text()"/>
-                </xsl:when>-->
-                <xsl:when test="child::text() | child::*"><xsl:apply-templates/></xsl:when>
-                <xsl:otherwise><xsl:value-of select="$originalGlyph"/></xsl:otherwise>
-            </xsl:choose>
-        </span>
+        <!-- for backwards compatibility (W0004, W0013, W0015), we have to distinguish 2 cases: -->
+        <xsl:variable name="precomposedMapping" select="key('chars', substring(@ref,2))/mapping[@type='precomposed']"/>
+        <xsl:variable name="composedMapping" select="key('chars', substring(@ref,2))/mapping[@type='composed']"/>
+        <xsl:choose>
+            <!-- a) element g is applied for resolving abbreviations (or g includes the 'long s' character, 
+                which is to be standardized): include original and edited/standardized form -->
+            <xsl:when test="substring(@ref,2) eq 'char017f'                              or (child::text() ne $precomposedMapping/text() and child::text() ne $composedMapping/text())">
+                <xsl:variable name="originalGlyph">
+                    <xsl:choose>
+                        <xsl:when test="$precomposedMapping">
+                            <xsl:value-of select="$precomposedMapping/text()" disable-output-escaping="yes"/>
+                        </xsl:when>
+                        <xsl:when test="$composedMapping">
+                            <xsl:value-of select="$composedMapping/text()" disable-output-escaping="yes"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="string(.)"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:variable>
+                <span class="original glyph unsichtbar" title="{string(.)}"><xsl:value-of select="$originalGlyph"/></span>
+                <span class="edited glyph" title="{$originalGlyph}">
+                    <xsl:choose>
+                        <xsl:when test="substring(@ref, 2) eq 'char017f'">
+                            <xsl:value-of select="key('chars', substring(@ref,2))/mapping[@type='standardized']/text()"/>
+                        </xsl:when>
+                        <xsl:when test="child::text() | child::*"><xsl:apply-templates/></xsl:when>
+                        <xsl:otherwise><xsl:value-of select="$originalGlyph"/></xsl:otherwise>
+                    </xsl:choose>
+                </span>
+            </xsl:when>
+            <!-- b) g only marks special character, without containing resolved abbreviations: simply pass it through -->
+            <xsl:otherwise>
+                <xsl:apply-templates/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
+    
     <xsl:template match="g" mode="pureText">
         <xsl:variable name="originalGlyph" as="xs:string">
             <xsl:choose>
@@ -829,6 +843,6 @@
     <xsl:template match="figDesc" mode="#all"/>
     <xsl:template match="teiHeader" mode="#all"/>
     <xsl:template match="fw" mode="#all"/>
-    <xsl:template match="text//processing-instruction()" mode="#all"/> <!-- editors' comments -->
+    <xsl:template match="text//processing-instruction()" mode="#all"/>
     
 </xsl:stylesheet>
