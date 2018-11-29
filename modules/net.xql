@@ -405,7 +405,6 @@ declare function net:sitemapResponse($netVars as map(*)) {
     let $resource           := $netVars('resource')
     let $language           := for $lang in $config:languages
                                     return if ($resource = concat('sitemap_', $lang, '.xml')) then $lang else () 
-(:    let $compression        :=  if(ends-with($resource, 'zip')) then 'zip' else $net:defaultCompression:)
     let $properFileNames    :=  for $lang in $config:languages
                                     return concat('sitemap_', $lang, '.xml' (: , '.', $compression :) )
     let $ret := util:declare-option("exist:serialize", "method=xml media-type=application/xml indent=yes omit-xml-declaration=no encoding=utf-8")
@@ -416,7 +415,6 @@ declare function net:sitemapResponse($netVars as map(*)) {
     :)
     return
         if($properFileNames = $resource) then
-    (:        response:stream-binary(local:getSetSitemap($resource), local:getMimeType($compression), $resource):)
             let $sitemap := local:localizedSitemap($language) 
             let $debug   := if ($config:debug = ("info", "trace")) then console:log("Returning sitemap_" || $language || " with " || count($sitemap/*) || " entries ...") else ()
             return $sitemap
@@ -430,63 +428,49 @@ declare function net:sitemapResponse($netVars as map(*)) {
 
 (: Deliver data in one or another format ... :)
 declare function net:deliverTEI($pathComponents as xs:string*, $netVars as map()* ) {
-    (: Todo:
-        - clean up work/passage identification
-    :)
     let $reqResource    := replace($pathComponents[last()], 'w0', 'W0')
-    return if (matches($reqResource, '[ALW]\d{4}(\.xml)?')) then
-
+    return if (matches($reqResource, '[aAlLwW]\d{4}(_[vV]ol\d\d)?(\.xml)?$')) then
         let $reqWork        := tokenize(tokenize($reqResource, ':')[1], '\.')[1]
         let $dummy          := (util:declare-option("output:method", "xml"),
                                 util:declare-option("output:media-type", "application/tei+xml"),
                                 util:declare-option("output:indent", "yes"),
                                 util:declare-option("output:expand-xincludes", "yes")
-                                )
-        let $debug2         :=  if ($config:debug = "trace") then console:log("Serializing options: method:" || util:get-option('output:method') ||
+                               )
+        let $debug          := if ($config:debug = "trace") then console:log("Serializing options: method:" || util:get-option('output:method') ||
                                                                                                  ', media-type:' || util:get-option('output:media-type') ||
                                                                                                  ', indent:'     || util:get-option('output:indent') ||
                                                                                                  ', expand-xi:'  || util:get-option('output:expand-xincludes') ||
                                                                                                  '.')
-                                else ()
-    
-        let $doc            :=  if (doc-available($config:tei-works-root || '/' || replace($reqWork, "w0", "W0") || '.xml')) then
-                                    let $dummy := response:set-header("Content-Disposition", 'attachment; filename="' || $reqResource || '.tei.xml"')
-                                    return util:expand(doc($config:tei-works-root || '/' || replace($reqWork, "w0", "W0") || '.xml')/tei:TEI)
+                               else ()
 
-(:
-Maybe use this, which is from #DG's controller logic (at tei.serverdomain) I think:
-                                 let $docPath := for $subroot in $config:tei-sub-roots return 
-                                     if (doc-available($subroot || '/' || $exist:resource)) then $subroot || '/' || $exist:resource else ()
-                                 let $doc        := if (count($docPath) eq 1) then
-                                                         let $unexpanded := doc($docPath)
-                                                         let $expanded   := util:expand(doc($docPath)/tei:TEI)
-                                                         return $expanded
-[#AW]
-:)
-
-                                else
-                                    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                                        <forward url="{$netVars('controller')}/error-page.html" method="get"/>
-                                        <view>
-                                            <forward url="/modules/view.xql">
-                                                <set-attribute name="lang"              value="{$netVars('lang')}"/>
-                                                <set-attribute name="$exist:resource"   value="{$netVars('resource')}"/>
-                                                <set-attribute name="$exist:prefix"     value="{$netVars('prefix')}"/>
-                                                <set-attribute name="$exist:controller" value="{$netVars('controller')}"/>
-                                            </forward>
-                                        </view>
-                                        {config:errorhandler($netVars)}
-                                    </dispatch>
-        let $debug3         :=  if ($config:debug = "trace") then console:log("deliver doc: " || $reqResource || " -> " || $reqWork || '.xml' || ".")
-                                else ()
+         let $docPath       := for $subroot in $config:tei-sub-roots return 
+                                   if (doc-available($subroot || '/' || replace(replace(replace($reqWork, "w0", "W0"), '_vol', '_Vol'), '.xml', '') || '.xml')) then
+                                     $subroot || '/' || replace(replace(replace($reqWork, "w0", "W0"), '_vol', '_Vol'), '.xml', '') || '.xml'
+                                   else ()
+         let $doc           := if (count($docPath) eq 1) then
+                                   let $expanded   := util:expand(doc($docPath)/tei:TEI)
+                                   return $expanded
+                               else
+                                   <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                                       <forward url="{$netVars('controller')}/error-page.html" method="get"/>
+                                       <view>
+                                           <forward url="/modules/view.xql">
+                                               <set-attribute name="lang"              value="{$netVars('lang')}"/>
+                                               <set-attribute name="$exist:resource"   value="{$netVars('resource')}"/>
+                                               <set-attribute name="$exist:prefix"     value="{$netVars('prefix')}"/>
+                                               <set-attribute name="$exist:controller" value="{$netVars('controller')}"/>
+                                           </forward>
+                                       </view>
+                                       {config:errorhandler($netVars)}
+                                   </dispatch>
+        let $debug          := if ($config:debug = "trace") then console:log("deliver tei doc: " || $reqResource || " -> " || $reqWork || '.xml' || ".") else ()
+        let $dummy          := response:set-header("Content-Disposition", 'attachment; filename="' || replace(replace(replace($reqWork, "w0", "W0"), '_vol', '_Vol'), '.xml', '') || '.tei.xml"')
         return
             $doc
-    else if (matches($reqResource, 'W\d{4}(_Vol\d\d)?_teiHeader.xml')) then 
-        let $workId := substring-before($reqResource, '_teiHeader.xml')
+    else if (matches($reqResource, '[wW]\d{4}(_[vV]ol\d\d)?_tei[hH]eader(\.xml)?$')) then 
+        let $workId         := substring-before($reqResource, '_tei')
+        let $debug          :=  if ($config:debug = "trace") then console:log("forward to teiHeader export for " || $workId || " (" || $reqResource || ").") else ()
         return export:WRKteiHeader($workId, 'metadata')
-    else if ($reqResource eq 'sal-tei-corpus.zip') then
-        let $pathToZip := $config:files-root || '/sal-tei-corpus.zip'
-        return if (util:binary-doc-available($pathToZip)) then response:stream-binary(util:binary-doc($pathToZip), 'application/octet-stream', 'sal-tei-corpus.zip') else ()
     else ()
 };
 
@@ -563,8 +547,8 @@ declare function net:deliverHTML($pathComponents as xs:string*, $netVars as map(
         let $reqPassage   := tokenize($reqResource, ':')[2]
         let $debug2       := if ($config:debug = ("trace")) then console:log("Load metadata from " || $config:rdf-root || '/' || replace($reqWork, 'w0', 'W0') || '.rdf' || " ...") else ()
         let $metadata     := doc($config:rdf-root || '/' || replace($reqWork, 'w0', 'W0') || '.rdf')
-        let $debug3       := if ($config:debug = ("trace")) then console:log("Retrieving $metadata//rdf:Description[@rdf:about eq '" || replace($reqResource, 'w0', 'W0') || "']/rdfs:seeAlso[1]/@rdf:resource[contains(., '.html')]") else ()
-        let $resolvedPath := string(($metadata//rdf:Description[@rdf:about eq replace($reqResource, 'w0', 'W0')]/rdfs:seeAlso[1]/@rdf:resource[contains(., ".html")])[1])
+        let $debug3       := if ($config:debug = ("trace")) then console:log("Retrieving $metadata//rdf:Description[@rdf:about eq '" || replace(replace(replace($reqResource, 'w0', 'W0'), '.edit', ''), '.orig', '') || "']/rdfs:seeAlso[1]/@rdf:resource[contains(., '.html')]") else ()
+        let $resolvedPath := string(($metadata//rdf:Description[@rdf:about eq replace(replace(replace($reqResource, 'w0', 'W0'), '.edit', ''), '.orig', '')]/rdfs:seeAlso[1]/@rdf:resource[contains(., ".html")])[1])
         let $debug4       := if ($config:debug = ("trace")) then console:log("Found path: " || $resolvedPath || " ...") else ()
 
         (: The pathname that has been saved contains 0 or exactly one parameter for the target html fragment,
@@ -582,8 +566,8 @@ declare function net:deliverHTML($pathComponents as xs:string*, $netVars as map(
                                 else
                                     substring-after($resolvedPath, '?')
                              else ()
-        let $updParams    := if ($reqVersion = "orig") then array:append($netVars('params'), "mode=orig") else $netVars('params')
-        let $parameters   := concat(if ($fragParam or $updParams) then "?" else (), string-join(($fragParam, string-join($updParams, "&amp;")), "&amp;"))
+        let $updParams    := if ($reqVersion = "orig") then array:append([$netVars('params')], "mode=orig") else [$netVars('params')]
+        let $parameters   := concat(if ($fragParam or $updParams) then "?" else (), string-join(($fragParam, string-join($updParams?*, "&amp;")), "&amp;"))
 
 
         let $debug5       := if ($config:debug = ("trace", "info")) then console:log("Redirecting to " || $pathname || $parameters || $hash || " ...") else ()

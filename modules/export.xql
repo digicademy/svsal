@@ -36,8 +36,8 @@ Fetches the teiHeader of a work's dataset.
 @param mode: 'metadata' for reduced teiHeader without text-related information such as charDecl and revisionDesc
 ~:)
 declare function export:WRKteiHeader($wid as xs:string?, $mode as xs:string?) {
-    let $unexpanded := if (doc-available($config:tei-works-root || '/' || $wid || '.xml')) 
-                           then doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI/tei:teiHeader
+    let $unexpanded := if (doc-available($config:tei-works-root || '/' || replace(replace($wid, "w0", "W0"), '_vol', '_Vol') || '.xml')) 
+                           then doc($config:tei-works-root || '/' || replace(replace($wid, "w0", "W0"), '_vol', '_Vol') || '.xml')/tei:TEI/tei:teiHeader
                        else ()
     let $options   := (util:declare-option("output:method", "xml"),
                        util:declare-option("output:media-type", "application/tei+xml"),
@@ -50,6 +50,7 @@ declare function export:WRKteiHeader($wid as xs:string?, $mode as xs:string?) {
                         let $encodingDesc := <encodingDesc>{$expanded/tei:encodingDesc/*[not(self::tei:charDecl)]}</encodingDesc>
                         return <teiHeader>{($nodes, $encodingDesc)}</teiHeader>
                     else $expanded
+    let $dummy := response:set-header("Content-Disposition", 'attachment; filename="' || replace(replace($wid, "w0", "W0"), '_vol', '_Vol') || '.teiHeader.xml"')
     return $header
 };
 

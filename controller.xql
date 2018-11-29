@@ -24,21 +24,20 @@ declare option output:indent        "yes";
 declare option output:omit-xml-declaration "no";
 declare option output:encoding      "utf-8";
 
-(: *** Todo: 
-   ***       - Add application/pdf, application/json, text/html, tei-simple, mets/mods xml?
-   ***       - Handle image requests: If image/* is the preferred data type and resource refers to a node of type "pb" and we have a seeAlso
-   ***         that ends in jpg, tiff or png (?), then forward to there ...
-   ***       - Use 40x error codes (400 and 404)
-   ***       - Implement collections and their filters (e.g. `/texts?q=lex` resulting in a list of texts)
-   ***       - Implement API with RESTXQ
-   ***       - Apply (lower-cased) camelCase in fields/properties and kebab-case in uri components to be consistent and allow for JSON-LD
-   ***       - Make JSON-LD the fundamental output format (encapsulate html/xml in a json field) and diverge only when explicitly asked to do so
-   ***       - Content negotiate X-Forwarded-Host={serverdomain} without subdomain
-   ***       - Why are no hashes handled? Some are needed but lost. (http://bla.com/bla/bla.html?bla<#THISHERE!>)
-   ***       - Error Handling and Logging:
-   ***          - Copy logging method from services/lod/extract.xql
-   ***          - Handle all "else ()" and error <dispatch>es: Print error, request info to log, redirect to homepage, give error message
-   ***       - Sanitize/check all input (parameters)
+(: *** Todo:
+   ***  - Add 'meta' endpoint with formats tei(Header) and json-ld, (mets/mods)
+   ***  - Add passage identifiers to filenames on downloads
+   ***  - Why are no hashes handled? Some are needed but lost. (http://bla.com/bla/bla.html?bla<#THISHERE!>)
+   ***  - Implement collections/lists of resources and their filters (e.g. `/texts?q=lex` resulting in a list of texts) - but which format(s)??
+   ***  - Sanitize/check all input (parameters)
+   ***  - Add formats: application/pdf, tei-simple
+   ***  - Use 40x error codes (400 and 404)
+   ***  - Refactor API to use RESTXQ
+   ***  - Make JSON-LD the fundamental output format (encapsulate html/xml in a json field) and diverge only when explicitly asked to do so (really?)
+   ***  - Content negotiate X-Forwarded-Host={serverdomain} without subdomain
+   ***  - Error Handling and Logging:
+   ***    - Copy logging method from services/lod/extract.xql
+   ***    - Handle all "else ()" and error <dispatch>es: Print error, request info to log, redirect to homepage, give error message
 :)
 
 (: Get request, session and context information :)
@@ -200,10 +199,7 @@ return
     else if (request:get-header('X-Forwarded-Host') = "id." || $config:serverdomain) then
         let $debug1 := if ($config:debug = ("trace", "info")) then console:log("Id requested: " || $net:forwardedForServername || $exist:path || $parameterString || ". (" || net:negotiateContentType($net:servedContentTypes, '') || ')') else ()
         let $debug1 := if ($config:debug = ("trace")) then console:log("Redirect (303) to '" || $config:apiserver || "/v1/texts/" || $exist:path || $parameterString || "'.") else ()
-        return  if (starts-with($exist:resource, "works.")) then
-                    net:redirect-with-303($config:apiserver || "/v1" || replace($exist:path, '/works\.', '/texts/') || $parameterString)
-                else
-                    net:redirect-with-303($config:apiserver || "/v1" || $exist:path || $parameterString)
+        return net:redirect-with-303($config:apiserver || "/v1" || replace($exist:path, '/works\.', '/texts/') || $parameterString)
 
 
     (: *** Date service (X-Forwarded-Host = 'data.{$config:serverdomain}') *** :)
@@ -245,10 +241,9 @@ return
                         else if ($mode eq 'canvas') then substring-after(substring-before($exist:path, '/canvas/'), '/')
                         else ()
         let $canvas :=  if ($mode eq 'canvas') then substring-after($exist:path, '/canvas/') else ()
-        let $resolvedURI   :=  $config:webserver || '/iiif-out.xql?wid=' || $workId || (if ($canvas) then concat('&amp;canvas=', $canvas) else ())
-        (: redirect in a way that URI (i.e., iiif @id) remains the same and only output of iiif-out.xql is shown :)
-        return net:redirect-with-303($resolvedURI)
-
+        let $parameters :=  if ($canvas) then (net:add-parameter('wid', $workId), net:add-parameter('canvas', $canvas)) 
+                            else net:add-parameter('wid', $workId)
+        return net:forward('iiif-out.xql', $netVars, $parameters)
 
 
     (: *** The rest is html and defaults and miscellaneous stuff... :)
