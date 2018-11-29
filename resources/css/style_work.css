@@ -436,10 +436,10 @@ li.cardoStyleLi {
 }
 
 .original, .abbr, .orig, .sic{
-    color:#DD0000;
+    color:#993333;
 }
 .edited, .expan, .reg, .corr{
-    color:#777777;
+    color:#707070;
 }
 a .edited, a .expan, a .reg, a .corr{
     color: #428bca;    
@@ -520,15 +520,15 @@ a .edited, a .expan, a .reg, a .corr{
 }
 
 .marginal a:not(.collapsed) .edited {
-    color:#777777;
+    color:#707070;
 }
 
 .marginal a:not(.collapsed) .original {
-    color:#DD0000;
+    color:#993333;
 }
 
 a .original {
-    color:#BA55D3;
+    color:#80005e;
 }
 
 .marginal a.collapsed:after {
