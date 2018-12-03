@@ -45,7 +45,8 @@
   <msg key="text">Text</msg>
   <msg key="diplomatic">Diplomatisch</msg>
   <msg key="constituted">Konstituiert</msg>
-  
+  <msg key="diplomaticLower">diplomatisch</msg>
+  <msg key="constitutedLower">konstituiert</msg>
   <msg key="multivolume">Mehrbandwerk</msg>
   <msg key="workvolume">Einzelband</msg>
   <msg key="biblInfo">Bibliographische Angaben</msg>
@@ -69,7 +70,7 @@
   <msg key="editors">Herausgeber</msg>
   <msg key="series">Reihe</msg>
   <msg key="editionSeries">Die Schule von Salamanca. Eine Digitale Quellensammlung</msg>
-  <msg key="editorsInChief">Herausgeber der Reihe</msg>
+  <msg key="editorsInChief">Reihenherausgeber</msg>
   <msg key="volume">Band</msg>
   <msg key="volumes">Bände</msg>
   <msg key="digitalPublication">Digitale Veröffentlichung</msg>
@@ -88,11 +89,11 @@
   <msg key="ownerPrimaryEd">Bibliothek</msg>
   <msg key="notPublished">Noch nicht veröffentlicht</msg>
   <msg key="language">Sprache</msg>
-  <msg key="digitizedBy">Digitalisiert durch</msg>
+  <msg key="digitalPublisher">Veröffentlicht durch</msg>
   <msg key="workViews">Ansichten für dieses Werk</msg>
   <msg key="volViews">Ansichten für diesen Band</msg>
   <msg key="textViews">Ansichten für diesen Text</msg>
-  <msg key="readingView">Text-Bild-Leseansicht</msg>
+  <msg key="readingView">Leseansicht</msg>
   <msg key="facsimilesLink">Faksimiles</msg>
   <msg key="metadata">Metadaten</msg>
   <msg key="teiHeader">TEI-Header</msg>
@@ -148,7 +149,7 @@
   <msg key="of">von</msg>
   
   <!-- Mirador -->
-  <msg key="toWorksOverview">zur Werkliste</msg>
+  <msg key="worksList">Werkliste</msg>
   <msg key="catalogueRecord">Katalogeintrag</msg>
   
 </catalogue>

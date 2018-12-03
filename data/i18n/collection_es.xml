@@ -128,7 +128,7 @@
     <msg key="volumes">Volúmenes</msg>
     <msg key="1stEd">Edición primera</msg>
     <msg key="thisEd">Edición presenta</msg>
-    <msg key="extent">Extensión, Formato</msg>
+    <msg key="extent">Extensión, formato</msg>
     <!--<msg key="dateOfOrigin">Año de publicación (fuente original)</msg>-->
     <msg key="details">Catálogo</msg>
     <msg key="facsimiles">Imágenes</msg>
@@ -155,11 +155,11 @@
     <msg key="imprintFirst">Primera edición</msg>
     <msg key="imprintThis">Datos de impresión</msg>
     <msg key="notPublished">Aún no publicado</msg>
-    <msg key="digitizedBy">Digitalizado por</msg>
+    <msg key="digitalPublisher">Publicado por</msg>
     <msg key="workViews">Vistas para esta obra</msg>
     <msg key="volViews">Vistas del volumen</msg>
     <msg key="textViews">Vistas del texto</msg>
-    <msg key="readingView">Vista de texto e imágenes</msg>
+    <msg key="readingView">Vista de lectura</msg>
     <msg key="facsimilesLink">Facsímiles</msg>
     <msg key="metadata">Metadatos</msg>
     <msg key="teiHeader">Encabezado TEI</msg>
@@ -294,7 +294,7 @@
     <msg key="searchterm">Frase(s) buscada(s)</msg>
     <msg key="citedStuff">Personas/Lugares/Lemas/Citas</msg>
     <msg key="multivolume">Colección</msg>
-    <msg key="workvolume">Volumen Sencillo</msg>
+    <msg key="workvolume">volumen sencillo</msg>
     <msg key="persons">Personas</msg>
     <msg key="places">Locales</msg>
     <msg key="lemmata">Lema</msg>
@@ -304,6 +304,8 @@
     <msg key="print">Imprimir</msg>
     <msg key="diplomatic">Diplomático</msg>
     <msg key="constituted">Constituido</msg>
+    <msg key="diplomaticLower">diplomático</msg>
+    <msg key="constitutedLower">constituido</msg>
     <msg key="workNotAvailable">Esta obra no está aún disponible.</msg>
     
     
@@ -327,7 +329,7 @@
     <msg key="of">de</msg>
     
     <!-- Mirador -->
-    <msg key="toWorksOverview">Lista de Obras</msg>
+    <msg key="worksList">Lista de Obras</msg>
     <msg key="catalogueRecord">Registro de Catálogo</msg>
     
     

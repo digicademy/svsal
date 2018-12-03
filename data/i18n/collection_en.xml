@@ -104,8 +104,8 @@
   <msg key="surname">Surname</msg>
   <msg key="titleShort">Title (short)</msg>
   <msg key="titleProper">Title proper in heading form</msg>
-  <msg key="citationTitle">Citation Title</msg>
-  <msg key="printingPlace">Printing Place</msg>
+  <msg key="citationTitle">Citation title</msg>
+  <msg key="printingPlace">Publish place</msg>
   <msg key="imprintWRK">Imprint</msg>
   <msg key="summaryOfVols">Volumes</msg>
   <msg key="complete">Complete</msg>
@@ -142,7 +142,7 @@
   <msg key="alphaEditors">Editors (in alphabetical order)</msg>
   <msg key="editors">Editors</msg>
   <msg key="editionSeries">The School of Salamanca. A Digital Collection of Sources</msg>
-  <msg key="editorsInChief">Editors of the series</msg>
+  <msg key="editorsInChief">Series directors</msg>
   <msg key="digitalPublication">Electronic publication</msg>
   <msg key="notPublished">Not yet published</msg>
   <msg key="biblInfo">Bibliographical Information</msg>
@@ -151,11 +151,11 @@
   <msg key="publisher">Publisher</msg>
   <msg key="imprintFirst">Imprint of the first edition</msg>
   <msg key="imprintThis">Imprint</msg>
-  <msg key="digitizedBy">Digitized by</msg>
+  <msg key="digitalPublisher">Published by</msg>
   <msg key="workViews">Views for this Work</msg>
   <msg key="volViews">Views for this Volume</msg>
   <msg key="textViews">Views for this Text</msg>
-  <msg key="readingView">Text/image reading view</msg>
+  <msg key="readingView">Reading View</msg>
   <msg key="facsimilesLink">Facsimiles</msg>
   <msg key="metadata">Metadata</msg>
   <msg key="teiHeader">TEI Header</msg>
@@ -280,7 +280,7 @@
   <msg key="searchterm">Search term(s)</msg>
   <msg key="citedStuff">Persons/Places/Lemmata/Cited</msg>
   <msg key="multivolume">Multivolume</msg>
-  <msg key="workvolume">Single Volume</msg>
+  <msg key="workvolume">single volume</msg>
   <msg key="persons">Persons</msg>
   <msg key="places">Places</msg>
   <msg key="lemmata">Lemma</msg>
@@ -290,6 +290,8 @@
   <msg key="print">Print</msg>
   <msg key="diplomatic">Diplomatic</msg>
   <msg key="constituted">Constituted</msg>
+  <msg key="diplomaticLower">diplomatic</msg>
+  <msg key="constitutedLower">constituted</msg>
   
   <msg key="workNotAvailable">This work is not yet available.</msg>
    
@@ -320,7 +322,7 @@
   <msg key="of">of</msg>
   
   <!-- Mirador -->
-  <msg key="toWorksOverview">to Works Overview</msg>
+  <msg key="worksList">Works List</msg>
   <msg key="catalogueRecord">Catalogue Record</msg>
   
 </catalogue>

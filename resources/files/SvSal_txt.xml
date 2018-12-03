@@ -22,6 +22,9 @@
     </fileDesc>
     <revisionDesc status="e_unreviewed">
       <listChange>
+        <change who="#DG" when="2018-12-03" status="e_emended_unenriched">
+          <p>Deleted title/@type[. eq '245a'].</p>
+        </change>
         <change who="#DG" when="2018-11-14" status="e_emended_unenriched">
           <p>Added 'administrative' as div/@type value.</p>
         </change>
@@ -1101,8 +1104,6 @@
                 <valItem ident="main"/>
                 <valItem ident="sub"/>
                 <valItem ident="short"/>
-                <valItem ident="245a"/>
-                <!-- bibliographic info, corresponds MARC's field no. 245a -->
                 <valItem ident="volume"/>
               </valList>
             </attDef>

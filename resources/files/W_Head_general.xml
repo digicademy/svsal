@@ -1834,7 +1834,6 @@
                                             </author>
                                             <title type="short" level="m">Manual de confessores</title>
                                             <title type="main" level="m">Manval De Confessores Y Penitentes, Qve Clara Y Brevemente Contiene, La Vniversal Y Particular Decision De Qvasi Todas Las Dvdas, que en confessiones suelen ocurrir de los pecados, ... en cinco Comentarios de Vsura, Cambios, Symonia mental, Defension del proximo, De hurto notable, &amp; irregularidad ...</title>
-                                            <title type="245a" level="m">Manual de confessores y penitentes : que clara y breuemente contiene la universal y particular decision de quasi todas las dudas ... </title>
                                             <imprint>
                                                 <pubPlace role="firstEd" ref="getty:7010814" key="Coimbra">Coimbra</pubPlace>
                                                 <date type="firstEd" when="1553">1553</date>
@@ -1876,8 +1875,8 @@
                                 <ref target="http://www.gbv.de/bibliotheken/verbundbibliotheken/02Verbund/01Erschliessung/02Richtlinien/01KatRicht/sondadr.pdf">Alte Drucke</ref> 
                                 der Verbundzentrale des GBV (VZG) (S. 6-7) sowie analog dazu an den 
                                 <ref target="http://aad.gbv.de/empfehlung/m_standard-n.htm#biblbeschreib">Mindestanforderungen für die autoptische Katalogisierung Alter Drucke (AAD)</ref>. 
-                                Wie das Beispiel zeigt, werden 
-                                neben dem Hauptsachtitel ein einschlägiger zitierfähiger Kurztitel sowie ein Ansetzungssachtiel vergeben. 
+                                Wie das Beispiel zeigt, wird 
+                                neben dem Hauptsachtitel ein einschlägiger zitierfähiger Kurztitel vergeben. 
                                 <ref target="#Autoren">Autoren</ref> 
                                 und 
                                 <ref target="#Orte">Orte</ref> 
@@ -3440,7 +3439,6 @@
                                             </author>
                                             <title type="short" level="m">Manual de confessores</title>
                                             <title type="main" level="m">Manval De Confessores Y Penitentes, Qve Clara Y Brevemente Contiene, La Vniversal Y Particular Decision De Qvasi Todas Las Dvdas, que en confessiones suelen ocurrir de los pecados, ... en cinco Comentarios de Vsura, Cambios, Symonia mental, Defension del proximo, De hurto notable, &amp; irregularidad ...</title>
-                                            <title type="245a" level="m">Manual de confessores y penitentes : que clara y breuemente contiene la universal y particular decision de quasi todas las dudas ... </title>
                                             <imprint>
                                                 <pubPlace role="firstEd" ref="getty:7010814" key="Coimbra">Coimbra</pubPlace>
                                                 <date type="firstEd" when="1553">1553</date>
@@ -3484,8 +3482,8 @@
                                 <ref target="https://www.gbv.de/Verbundzentrale-en?set_language=en">Head Office of Gemeinsamer Bibliotheksverbund</ref> (p. 6-7), 
                                 as well as, analogously, the guidelines of the 
                                 <ref target="http://aad.gbv.de/empfehlung/m_standard-n.htm#biblbeschreib">Mindestanforderungen für die autoptische Katalogisierung Alter Drucke (AAD)</ref> 
-                                (German). As the example shows, an established, citable short title and a "Ansetzungssachtitel" (according to the guidelines) are 
-                                satetd along with the full title. Authors and places are annotated corresponding to the edition guidelines at hand.</p>
+                                (German). As the example shows, an established, citable short title is 
+                                stated along with the full title. Authors and places are annotated corresponding to the edition guidelines at hand.</p>
                             <p xml:id="p_dadrereas">The information about the original source may contain the following exception:  If the digitized and encoded edition  
                                 is not the <hi rendition="#it">first</hi> edition of the text, a <gi>publisher</gi> element containing the <att>n</att> attribute with value  
                                 <val>thisEd</val> is added. In the event of encoding a different edition than the first one, the information about 
@@ -5080,7 +5078,6 @@
                                             </author>
                                             <title type="short" level="m">Manual de confessores</title>
                                             <title type="main" level="m">Manval De Confessores Y Penitentes, Qve Clara Y Brevemente Contiene, La Vniversal Y Particular Decision De Qvasi Todas Las Dvdas, que en confessiones suelen ocurrir de los pecados, ... en cinco Comentarios de Vsura, Cambios, Symonia mental, Defension del proximo, De hurto notable, &amp; irregularidad ...</title>
-                                            <title type="245a" level="m">Manual de confessores y penitentes : que clara y breuemente contiene la universal y particular decision de quasi todas las dudas ... </title>
                                             <imprint>
                                                 <pubPlace role="firstEd" ref="getty:7010814" key="Coimbra">Coimbra</pubPlace>
                                                 <date type="firstEd" when="1553">1553</date>
@@ -5127,8 +5124,7 @@
                                 AAD (<ref target="http://aad.gbv.de/empfehlung/m_standard-n.htm#biblbeschreib">Mindestanforderungen 
                                     für die autoptische Katalogisierung Alter Drucke (AAD)</ref>, alemán). 
                                 Como muestra el ejemplo, junto al título principal, se muestra también un 
-                                título corto que puede ser citado, así como un título alternativo (p. ej. 
-                                en caso de que el original tenga errores de impresión.) Autores y lugares 
+                                título corto que puede ser citado. Autores y lugares 
                                 son manejados de acuerdo a las directrices aquí presentadas.</p>
                             <p xml:id="p_dadreredas">En las indicaciones sobre la edición utilizada, existen 
                                 las siguientes especificaciones: Si la edición  digitalizada no corresponde 

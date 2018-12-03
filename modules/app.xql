@@ -1962,14 +1962,7 @@ declare %templates:wrap
                     ' ('|| $translate ||') '
               else ()
 };
-
-(:~
-Proper title of the print source (including normalizations: u vs. v, ...)
-~:)
-declare function app:WRKtitleProper($node as node(), $model as map(*)) as xs:string? {
-        $model('currentWork')/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = '245a']/string()   
-};
-
+ 
 (:~
 Main title of the print source 
 ~:)
@@ -1982,13 +1975,6 @@ Short title of the print source (for citation)
 ~:)
 declare function app:WRKtitleShort($node as node(), $model as map(*)) as xs:string? {
        $model('currentWork')/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'short']/string()
-};
-
-(:~
-Proper title of the digital edition of a work/volume (including normalizations: u vs. v, ...)
-~:)
-declare function app:WRKeditionTitleProper($node as node(), $model as map(*)) as xs:string? {
-        $model('currentWork')/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title[@type = '245a']/string()   
 };
 
 (:~
@@ -2034,37 +2020,18 @@ declare function app:WRKtitle($node as node(), $model as map(*), $lang as xs:str
                                 </td>
                            </tr>
                         else()
-    let $titleProper := if (app:WRKtitleProper($node, $model)) then 
-                            <tr>
-                                <td class="col-md-4">
-                                    <i18n:text key="titleProper">Ansetzungstitel</i18n:text>:
-                                </td>
-                                <td class="col-md-8">
-                                    {app:WRKtitleProper($node, $model)}
-                                </td>
-                           </tr>
-                        else 
-                            <tr>
-                                <td class="col-md-4">
-                                    <i18n:text key="title">Titel</i18n:text>:
-                                </td>
-                                <td class="col-md-8">
-                                    {app:WRKtitleMain($node, $model)}
-                                </td>
-                            </tr>
-    let $output := ($titleShort, $titleProper)
+    let $titleMain :=   <tr>
+                            <td class="col-md-4">
+                                <i18n:text key="title">Titel</i18n:text>:
+                            </td>
+                            <td class="col-md-8">
+                                {app:WRKtitleMain($node, $model)}
+                            </td>
+                        </tr>
+                            
+    let $output := ($titleShort, $titleMain)
     return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
 };  
-
-
-(: deprecated?
-declare %templates:wrap
-    function app:WRKid($node as node(), $model as map(*), $lang as xs:string?) {
-        let $work := <a href="{session:encode-url(xs:anyURI('work.html?wid=' ||  $model('currentWork')/@xml:id ))}">{$model('currentWork')/@xml:id/string()}</a>
-        let $link := ('localhost:8080/exist/apps/salamanca/workDetails.html?wid=' || $model('currentWork')/@xml:id)
-        return (i18n:process($work, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())))    
-};
-:)
 
 (: deprecated? see app:WRKcatRecord() :)
 declare
@@ -2128,8 +2095,9 @@ declare %templates:wrap function app:WRKcatRecord($node as node(), $model as map
     let $volumeIds :=   if ($workType eq 'work_multivolume') then 
                             for $item in $model('currentWork')/tei:teiHeader/tei:fileDesc/tei:notesStmt/tei:relatedItem[@type eq 'work_volume'] return substring-after($item/@target/string(), 'work:')
                         else ()
-    let $volumesRecord :=   if (count($volumeIds) gt 0) then 
-                                for $id in $volumeIds return app:WRKcatRecordTeaser($node, $model, $id, $lang)
+    let $volumesCount := count($volumeIds)
+    let $volumesRecord :=   if ($volumesCount gt 0) then 
+                                for $id in $volumeIds return app:WRKcatRecordTeaser($node, $model, $id, $lang, $volumesCount)
                             else ()
     let $output := 
         <div>
@@ -2147,7 +2115,7 @@ declare %templates:wrap function app:WRKcatRecord($node as node(), $model as map
             {if ($volumesRecord) then 
                 <div>
                     <hr/>
-                    <h4><i18n:text key="volumes">Volumes</i18n:text></h4>
+                    <h4><i18n:text key="volumes">Volumes</i18n:text>{' (' || string($volumesCount) || ')'}</h4>
                     {$volumesRecord}
                 </div>
             else ()}
@@ -2173,7 +2141,7 @@ declare function app:WRKadditionalInfoRecord($node as node(), $model as map(*), 
         <div>
             <h4><i18n:text key="textViews">Views for this Text</i18n:text></h4>
             <ul>
-                <li><h5><i18n:text key="readingView">Text/image reading view</i18n:text></h5>
+                <li><h5><i18n:text key="readingView">Reading view</i18n:text>:</h5>
                     {$thumbnail}
                 </li>
                 <li>{$imagesLink}</li>
@@ -2212,11 +2180,11 @@ declare function app:WRKadditionalInfoRecord($node as node(), $model as map(*), 
                                 <ul>
                                     <li><a href="{$config:teiserver || '/' || $workId ||'.xml'}">XML (TEI P5)</a></li>
                                     <li><a href="{$config:apiserver || '/v1/texts/' || $workId ||'.edit?format=txt'}">
-                                            <i18n:text key="text">Text</i18n:text> (<i18n:text key="constituted">Constituted</i18n:text>)
+                                            <i18n:text key="text">Text</i18n:text> (<i18n:text key="constitutedLower">constituted</i18n:text>)
                                         </a>
                                     </li>
                                     <li><a href="{$config:apiserver || '/v1/texts/' || $workId ||'.orig?format=txt'}">
-                                            <i18n:text key="text">Text</i18n:text> (<i18n:text key="diplomatic">Diplomatic</i18n:text>)
+                                            <i18n:text key="text">Text</i18n:text> (<i18n:text key="diplomaticLower">diplomatic</i18n:text>)
                                         </a>
                                     </li>
                                 </ul>
@@ -2238,7 +2206,7 @@ as well as a link to the complete catalogue record of the respective volume; mor
 for the respective volume. 
 @return: a HTML div element
 ~:)
-declare function app:WRKcatRecordTeaser($node as node(), $model as map(*), $wid as xs:string, $lang as xs:string?) {
+declare function app:WRKcatRecordTeaser($node as node(), $model as map(*), $wid as xs:string, $lang as xs:string?, $volumes as xs:integer) {
     let $teiHeader :=   if ($wid eq $model('currentWork')/@xml:id/string()) then $model('currentWork')/tei:teiHeader
                         else if (doc-available($config:tei-works-root || '/' || $wid || '.xml')) then 
                             doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI/tei:teiHeader
@@ -2248,8 +2216,8 @@ declare function app:WRKcatRecordTeaser($node as node(), $model as map(*), $wid 
         if ($teiHeader) then
             let $digital := app:WRKeditionMetadata($node, $model, $wid)
             let $bibliographical := app:WRKprintMetadata($node, $model, $wid)
-            let $title := if ($digital?('titleProper')) then $digital?('titleProper') else $digital?('titleMain') (: or $digital?('titleShort')?:)
-            let $volumeString := $bibliographical?('volumeTitle') || ' (' || $bibliographical?('volumeNumber') || ')'
+            let $titleShort := $digital?('titleShort')
+            let $volumeString := $bibliographical?('volumeNumber') || ' of ' || string($volumes)
             let $pubDate :=     if ($digital?('published') eq 'true') then
                                     i18n:convertDate($digital?('publicationDate'), $lang, 'verbose')
                                 else ()
@@ -2294,7 +2262,7 @@ declare function app:WRKcatRecordTeaser($node as node(), $model as map(*), $wid 
                                     <i18n:text key="title">Title</i18n:text>:
                                 </td>
                                 <td class="{$col2-width}" style="line-height: 1.2">
-                                    {$title}
+                                    {$titleShort}
                                 </td>
                             </tr>
                             <tr>
@@ -2302,7 +2270,7 @@ declare function app:WRKcatRecordTeaser($node as node(), $model as map(*), $wid 
                                     <i18n:text key="originalVolume">Volume (original)</i18n:text>:
                                 </td>
                                 <td class="{$col2-width}" style="line-height: 1.2">
-                                    {$volumeString}
+                                    {$bibliographical?('volumeNumber') || ' '}<i18n:text key="of"/>{' ' || string($volumes)}
                                 </td>
                             </tr>
                             <tr>
@@ -2363,8 +2331,9 @@ declare function app:WRKcatRecordThumbnail($node as node(), $model as map(*), $w
                             else ()
     let $scaledImg := if ($mode eq 'full') then iiif:scaleImageURI($img, 25) else iiif:scaleImageURI($img, 20)
     let $workType := $tei/tei:text/@type/string()
+    let $volNumber := $tei/tei:text/@n/string()
     let $target         :=  if ($workType eq 'work_volume') then
-                                doc($config:data-root || "/" || substring-before($workId, '_Vol') || '_nodeIndex.xml')//sal:node[@n=$workId]/sal:crumbtrail/a[last()]/@href/string()
+                                $config:idserver || '/works.' || substring($workId,1,5) || ':vol' || $volNumber
                             else
                                 concat('work.html?wid=', $workId)
     let $status := $tei/tei:teiHeader//tei:revisionDesc/@status/string() 
@@ -2374,8 +2343,7 @@ declare function app:WRKcatRecordThumbnail($node as node(), $model as map(*), $w
                             else <i18n:text key="notAvailable">Not available</i18n:text>
                         else 
                             if ($workType eq 'work_volume') then 
-                                let $volNumber := $tei/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:series/tei:biblScope/@n/string()
-                                return <span><i18n:text key="volume">Not available</i18n:text>{' ' || $volNumber}</span>
+                                <span><i18n:text key="volume">Not available</i18n:text>{' ' || $volNumber}</span>
                             else <i18n:text key="readWork">Read</i18n:text>
     let $thumbnail :=
         if ($mode eq 'full' and $scaledImg) then
@@ -2456,7 +2424,7 @@ declare function app:WRKeditionRecord($node as node(), $model as map(*), $lang a
             </tr>,
             <tr>
                 <td class="{$col1-width}">
-                    <i18n:text key="digitizedBy">Digitized by</i18n:text>:
+                    <i18n:text key="digitalPublisher">Published by</i18n:text>:
                 </td>
                 <td class="{$col2-width}">
                     {$digital?('publisher')}
@@ -2464,18 +2432,12 @@ declare function app:WRKeditionRecord($node as node(), $model as map(*), $lang a
             </tr>)
         else ()
         
-    let $title := if ($digital?('titleProper')) then $digital?('titleProper') else $digital?('titleMain')
-        
     let $editionRecord :=
         <table class="borderless table table-hover">
             <tbody>
                 <tr>
                     <td class="{$col1-width}" style="line-height: 1.2"><i18n:text key="citationTitle">Citation Title</i18n:text>:</td>
                     <td class="{$col2-width}" style="line-height: 1.2">{$digital?('titleShort')}</td>
-                </tr>
-                <tr>
-                    <td class="{$col1-width}" style="line-height: 1.2"><i18n:text key="title">Title</i18n:text>:</td>
-                    <td class="{$col2-width}" style="line-height: 1.2">{$title}</td>
                 </tr>
                 <tr>
                     <td class="{$col1-width}" style="line-height: 1.2"><i18n:text key="author">Author</i18n:text>:</td>
@@ -2583,7 +2545,7 @@ declare function app:WRKbibliographicalRecord($node as node(), $model as map(*),
                             </tr>)
                         else ()
     
-    let $title := if ($bibliographical?('titleProper')) then $bibliographical?('titleProper') else $bibliographical?('titleMain')
+    let $title := $bibliographical?('titleMain')
     let $extent := if ($workType eq 'work_multivolume') then () else (: no extent for mv works :)
         <tr>
             <td class="{$col1-width}" style="line-height: 1.2"><i18n:text key="extent">Extent</i18n:text>:</td>
@@ -2633,7 +2595,6 @@ declare function app:WRKprintMetadata($node as node(), $model as map(*), $wid as
     
     let $titleMain := $sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'main']/string()
     let $titleShort := $sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'short']/string()
-    let $titleProper := $sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = '245a']/string()
     let $author := app:rotateFormatName($sourceDesc//tei:author/tei:persName)
     let $pubSpan := if ($sourceDesc//tei:date[@type eq 'summaryThisEd']) then $sourceDesc//tei:date[@type eq 'summaryThisEd']/text()
                             else if ($sourceDesc//tei:date[@type eq 'summaryFirstEd']) then $sourceDesc//tei:date[@type eq 'summaryFirstEd']/text()
@@ -2669,7 +2630,6 @@ declare function app:WRKprintMetadata($node as node(), $model as map(*), $wid as
         map {
             'workId': $workId,
             'titleMain': $titleMain,
-            'titleProper': $titleProper,
             'titleShort': $titleShort,
             'author': $author,
             'publicationSpan': $pubSpan,
@@ -2696,15 +2656,14 @@ declare function app:WRKeditionMetadata($node as node(), $model as map(*), $wid 
     let $tei := if ($wid eq $model('currentWork')/@xml:id) then $model('currentWork')
                 else if (doc-available($config:tei-works-root || '/' || $wid || '.xml')) then 
                     doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI
-                else ()
+                else util:log('error', 'No xml/tei dataset found for workId ' || $wid)
     let $workId := $tei/@xml:id
     let $type := $tei/tei:text/@type
     let $teiHeader := util:expand($tei/tei:teiHeader)
     let $status := $teiHeader/tei:revisionDesc/@status/string()
     
-    let $titleMain := app:WRKeditionTitleMain($node, $model)
-    let $titleProper := app:WRKeditionTitleProper($node, $model)
-    let $titleShort := app:WRKeditionTitleShort($node, $model)
+    let $titleMain := $teiHeader/tei:fileDesc/tei:titleStmt/tei:title[@type eq 'main']/text()
+    let $titleShort := $teiHeader/tei:fileDesc/tei:titleStmt/tei:title[@type eq 'short']/text()
     let $author := app:rotateFormatName($teiHeader/tei:fileDesc/tei:titleStmt/tei:author/tei:persName)
     let $language := if ($teiHeader/tei:profileDesc//tei:language[@n eq 'main']/@ident eq 'la') then <i18n:text key="latin">Latein</i18n:text>
                      else if ($teiHeader/tei:profileDesc//tei:language[@n eq 'main']/@ident eq 'es') then <i18n:text key="spanish">Spanisch</i18n:text>
@@ -2729,7 +2688,6 @@ declare function app:WRKeditionMetadata($node as node(), $model as map(*), $wid 
         map {
             'workId': $workId,
             'titleMain': $titleMain,
-            'titleProper': $titleProper,
             'titleShort': $titleShort,
             'author': $author,
             'language': $language,
@@ -3521,8 +3479,8 @@ declare function app:downloadTXT($node as node(), $model as map(*), $mode as xs:
     let $hoverTitleOrig := i18n:process(<i18n:text key="downloadTXTOrig">Download as plaintext (diplomatic variant)</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
     
     let $download := 
-             if ($wid and ($mode eq 'edit'))                    then <li><a title="{$hoverTitleEdit}" href="{$config:apiserver || '/v1/texts/' || $wid ||'.edit?format=txt'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;TXT (<i18n:text key="constituted">Constituted</i18n:text>)</a></li>
-             else if ($wid and ($mode eq 'orig'))               then <li><a title="{$hoverTitleOrig}" href="{$config:apiserver || '/v1/texts/' || $wid ||'.orig?format=txt'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;TXT (<i18n:text key="diplomatic">Diplomatic</i18n:text>)</a></li>
+             if ($wid and ($mode eq 'edit'))                    then <li><a title="{$hoverTitleEdit}" href="{$config:apiserver || '/v1/texts/' || $wid ||'.edit?format=txt'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;TXT (<i18n:text key="constitutedLower">constituted</i18n:text>)</a></li>
+             else if ($wid and ($mode eq 'orig'))               then <li><a title="{$hoverTitleOrig}" href="{$config:apiserver || '/v1/texts/' || $wid ||'.orig?format=txt'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;TXT (<i18n:text key="diplomaticLower">diplomatic</i18n:text>)</a></li>
         else()
     return i18n:process($download, $lang, '/db/apps/salamanca/data/i18n', 'en')
 };
