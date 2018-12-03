@@ -471,6 +471,11 @@ declare function net:deliverTEI($pathComponents as xs:string*, $netVars as map()
         let $workId         := substring-before($reqResource, '_tei')
         let $debug          :=  if ($config:debug = "trace") then console:log("forward to teiHeader export for " || $workId || " (" || $reqResource || ").") else ()
         return export:WRKteiHeader($workId, 'metadata')
+    else if (matches($reqResource, '[Aa]ll')) then 
+        let $debug          :=  if ($config:debug = "trace") then console:log("forward to corpus export for works in tei format.") else ()
+        let $teiCorpus := $config:files-root || '/sal-tei-corpus.zip'
+        let $dummy          := response:set-header("Content-Disposition", 'attachment; filename="sal-tei-corpus.zip"')
+        return response:stream-binary(util:binary-doc($teiCorpus), 'application/octet-stream', 'sal-tei-corpus.zip')
     else ()
 };
 

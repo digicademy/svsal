@@ -43,6 +43,11 @@ but it diverges in some points, such as `http` instead of `urn` scheme and the e
 collections, ranges and subreferences.<sup id="anchor2">[2](#fn2)</sup> Depending on user
 feedback, we may implement this later.)
 
+Furthermore, the `all` identifier, applicable instead of a normal `{textId}`, stands for 
+the collection of all texts and, along with a mandatory format specifier, leads 
+to a single resource containing all (currently available) texts in the respective format. 
+At the moment, the only available parameter in this regard is `tei` (see below).
+
 ## Parameters
 
 To the resource endpoint, a list of parameters can be appended with a question mark `?`  and
