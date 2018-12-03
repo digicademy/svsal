@@ -4,7 +4,7 @@ This is the technical documentation for the API of the web application "The Scho
 available at <https://github.com/digicademy/svsal> and online at <https://www.salamanca.school/>.
 The general API is accessible at <https://api.salamanca.school/>.
 
-<div style="font-style: italic; text-align: right">(Last edited: Andreas Wagner, 2018-11-07)</div>
+<div style="font-style: italic; text-align: right">(Last edited: David Glück, 2018-12-03)</div>
 
 ## Endpoints
 
@@ -44,7 +44,7 @@ collections, ranges and subreferences.<sup id="anchor2">[2](#fn2)</sup> Dependin
 feedback, we may implement this later.)
 
 Furthermore, the `all` identifier, applicable instead of a normal `{textId}`, stands for 
-the collection of all texts and, along with a mandatory format specifier, leads 
+the collection of all texts and, along with a mandatory format parameter, leads 
 to a single resource containing all (currently available) texts in the respective format. 
 At the moment, the only available parameter in this regard is `tei` (see below).
 

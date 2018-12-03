@@ -268,8 +268,11 @@ background-color:#102873
 font-size:1.2em;
 color:#555555
 }
-#corpusdownloadparagraph {
+div .corpus-download {
     margin-top: 40px;
+    padding:0.5em;
+    border:1px solid lightgray;
+    border-radius:3px;
 }
 #facets .facetitem,
 #facets .orderby,

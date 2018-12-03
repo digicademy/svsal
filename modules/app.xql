@@ -1031,6 +1031,17 @@ declare %templates:wrap
         return  i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "en")                
 };
 
+declare %templates:wrap
+    function app:WRKsCorpusDownload ($node as node(), $model as map(*), $lang as xs:string?) {
+    <div>
+        <a href="{$config:apiserver || '/v1/texts/all?format=tei'}">
+            <span class="glyphicon glyphicon-download-alt"/>
+            <i18n:text key="download">Download</i18n:text>
+        </a>
+        <span>{i18n:process(<i18n:text key="corpusVerb"/>, $lang, "/db/apps/salamanca/data/i18n", "en")}</span>
+    </div>
+};
+
 
 (: ====================== End  List functions ========================== :)
 
@@ -2178,7 +2189,7 @@ declare function app:WRKadditionalInfoRecord($node as node(), $model as map(*), 
                                 <hr/>
                                 <h4><i18n:text key="download">Metadata</i18n:text></h4>
                                 <ul>
-                                    <li><a href="{$config:teiserver || '/' || $workId ||'.xml'}">XML (TEI P5)</a></li>
+                                    <li><a href="{$config:apiserver || '/v1/texts/' || $workId ||'?format=tei'}">XML (TEI P5)</a></li>
                                     <li><a href="{$config:apiserver || '/v1/texts/' || $workId ||'.edit?format=txt'}">
                                             <i18n:text key="text">Text</i18n:text> (<i18n:text key="constitutedLower">constituted</i18n:text>)
                                         </a>
@@ -3466,9 +3477,9 @@ declare function app:downloadXML($node as node(), $model as map(*), $lang as xs:
     let $wid      :=  request:get-parameter('wid', '')
     let $hoverTitle := i18n:process(<i18n:text key="downloadXML">Download TEI/XML source file</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
     let $download := 
-             if ($wid)                    then <li><a title="{$hoverTitle}" href="{$config:teiserver || '/' || $wid}.xml"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;TEI/XML</a></li>
-        else if ($model('currentLemma'))  then <li><a title="{$hoverTitle}" href="{$config:teiserver || '/' || $model('currentLemma')/@xml:id}.xml">TEI/XML</a></li>
-        else if ($model('currentAuthor')) then <li><a title="{$hoverTitle}" href="{$config:teiserver || '/' || $model('currentAuthor')/@xml:id}.xml">TEI/XML</a></li>
+        if ($wid) then <li><a title="{$hoverTitle}" href="{$config:apiserver || '/v1/texts/' || $wid ||'?format=tei'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;TEI/XML</a></li>
+        (:else if ($model('currentLemma'))  then <li><a title="{$hoverTitle}" href="{$config:teiserver || '/' || $model('currentLemma')/@xml:id}.xml">TEI/XML</a></li>
+        else if ($model('currentAuthor')) then <li><a title="{$hoverTitle}" href="{$config:teiserver || '/' || $model('currentAuthor')/@xml:id}.xml">TEI/XML</a></li>:)
         else()
     return $download
 };
@@ -3487,7 +3498,7 @@ declare function app:downloadTXT($node as node(), $model as map(*), $mode as xs:
 
 declare function app:downloadCorpusXML($node as node(), $model as map(*), $lang as xs:string) {
     let $hoverTitle := i18n:process(<i18n:text key="downloadCorpus">Download corpus of XML sources</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
-    let $download   := <li><a title="{$hoverTitle}" href="{$config:softwareserver ||'/sal-tei-corpus.zip'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/> ZIP (XML Corpus)</a></li>
+    let $download   := <li><a title="{$hoverTitle}" href="{$config:apiserver ||'/v1/texts/all?format=tei'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/> ZIP (XML Corpus)</a></li>
     return $download
 };
 
@@ -3495,14 +3506,13 @@ declare function app:downloadRDF($node as node(), $model as map(*), $lang as xs:
     let $wid      :=  request:get-parameter('wid', '')
     let $hoverTitle := i18n:process(<i18n:text key="downloadRDF">Download RDF/XML data for this work</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
     let $download := 
-             if ($wid)                    then <li><a title="{$hoverTitle}" href="{$config:dataserver || '/texts/' || $wid}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;RDF/XML</a></li>
-        else if ($model('currentLemma'))  then <li><a title="{$hoverTitle}" href="{$config:dataserver || '/lemmata.' || $model('currentLemma')/@xml:id}.rdf">RDF/XML</a></li>
-        else if ($model('currentAuthor')) then <li><a title="{$hoverTitle}" href="{$config:dataserver || '/authors.' || $model('currentAuthor')/@xml:id}.rdf">RDF/XML</a></li>
+        if ($wid) then <li><a title="{$hoverTitle}" href="{$config:apiserver || '/v1/texts/' || $wid || '?format=rdf'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;RDF/XML</a></li>
+        (:else if ($model('currentLemma'))  then <li><a title="{$hoverTitle}" href="{$config:dataserver || '/lemmata.' || $model('currentLemma')/@xml:id}.rdf">RDF/XML</a></li>
+        else if ($model('currentAuthor')) then <li><a title="{$hoverTitle}" href="{$config:dataserver || '/authors.' || $model('currentAuthor')/@xml:id}.rdf">RDF/XML</a></li>:)
         else()
     return $download
 };
-
-       
+ 
 declare function app:scaleImg($node as node(), $model as map(*), $wid as xs:string) {
              if ($wid eq 'W0001') then  'height: 3868, width:  2519'   
         else if ($wid eq 'W0002') then  'height: 2319, width:  1589'   
