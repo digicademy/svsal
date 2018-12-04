@@ -443,15 +443,23 @@ declare function net:deliverTEI($pathComponents as xs:string*, $netVars as map()
                                                                                                  ', expand-xi:'  || util:get-option('output:expand-xincludes') ||
                                                                                                  '.')
                                else ()
-
-         let $docPath       := for $subroot in $config:tei-sub-roots return 
+        
+        (: parameter 'mode' must be 'meta' for teiHeader, 'full' for complete tei, or not exist at all (then resolving to 'full') :)
+        let $mode :=    if ($netVars('params') = 'mode=meta') then 'meta' 
+                        else if ($netVars('params') = 'mode=full' or not(some $p in $netVars('params') satisfies starts-with($p, 'mode='))) then 'full'
+                        else 'error'
+        let $docPath       :=   for $subroot in $config:tei-sub-roots return 
                                    if (doc-available($subroot || '/' || replace(replace(replace($reqWork, "w0", "W0"), '_vol', '_Vol'), '.xml', '') || '.xml')) then
                                      $subroot || '/' || replace(replace(replace($reqWork, "w0", "W0"), '_vol', '_Vol'), '.xml', '') || '.xml'
                                    else ()
-         let $doc           := if (count($docPath) eq 1) then
-                                   let $expanded   := util:expand(doc($docPath)/tei:TEI)
-                                   return $expanded
-                               else
+        let $doc           :=   if (count($docPath) eq 1 and $mode ne 'error') then
+                                    if ($mode eq 'meta') then
+                                        let $debug          :=  if ($config:debug = "trace") then console:log("forward to teiHeader export for " || $reqResource || ".") else ()
+                                        return export:WRKteiHeader($reqResource, 'metadata')
+                                    else
+                                        let $expanded   := util:expand(doc($docPath)/tei:TEI)
+                                        return $expanded
+                                else (: does this really forward to the error page, especially if an invalid mode is given? :)
                                    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                                        <forward url="{$netVars('controller')}/error-page.html" method="get"/>
                                        <view>
@@ -464,14 +472,12 @@ declare function net:deliverTEI($pathComponents as xs:string*, $netVars as map()
                                        </view>
                                        {config:errorhandler($netVars)}
                                    </dispatch>
-        let $debug          := if ($config:debug = "trace") then console:log("deliver tei doc: " || $reqResource || " -> " || $reqWork || '.xml' || ".") else ()
-        let $dummy          := response:set-header("Content-Disposition", 'attachment; filename="' || replace(replace(replace($reqWork, "w0", "W0"), '_vol', '_Vol'), '.xml', '') || '.tei.xml"')
+        let $debug          :=  if ($config:debug = "trace") then console:log("deliver tei doc: " || $reqResource || " -> " || $reqWork || '.xml' || ".") else ()
+        let $dummy          :=  if ($mode eq 'meta') then 
+                                    response:set-header("Content-Disposition", 'attachment; filename="' || replace(replace(replace($reqWork, "w0", "W0"), '_vol', '_Vol'), '.xml', '') || '.teiHeader.xml"')
+                                else response:set-header("Content-Disposition", 'attachment; filename="' || replace(replace(replace($reqWork, "w0", "W0"), '_vol', '_Vol'), '.xml', '') || '.tei.xml"')
         return
             $doc
-    else if (matches($reqResource, '[wW]\d{4}(_[vV]ol\d\d)?_tei[hH]eader(\.xml)?$')) then 
-        let $workId         := substring-before($reqResource, '_tei')
-        let $debug          :=  if ($config:debug = "trace") then console:log("forward to teiHeader export for " || $workId || " (" || $reqResource || ").") else ()
-        return export:WRKteiHeader($workId, 'metadata')
     else if (matches($reqResource, '[Aa]ll')) then 
         let $debug          :=  if ($config:debug = "trace") then console:log("forward to corpus export for works in tei format.") else ()
         let $teiCorpus := $config:files-root || '/sal-tei-corpus.zip'
