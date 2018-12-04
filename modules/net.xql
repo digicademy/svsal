@@ -28,6 +28,7 @@ declare variable $net:servedContentTypes        := (
                                                     'application/rdf+xml',
                                                     'application/json',
                                                     'application/pdf',
+                                                    'application/zip',
                                                     'image/jpeg',
                                                     'image/png',
                                                     'image/tiff'
@@ -577,6 +578,10 @@ declare function net:deliverHTML($pathComponents as xs:string*, $netVars as map(
 
         let $debug5       := if ($config:debug = ("trace", "info")) then console:log("Redirecting to " || $pathname || $parameters || $hash || " ...") else ()
         return net:redirect-with-303($pathname || $parameters || $hash )
+     else if (matches(lower-case($reqResource), '^texts/all(\?.*?)?')) then (: forward to works list, regardless of parameters :)
+        let $pathname     := $config:webserver || '/' || 'works.html'
+        let $debug5       := if ($config:debug = ("trace", "info")) then console:log("Redirecting to " || $pathname || " ...") else ()
+        return net:redirect-with-303($pathname)
      else
         let $debug2       := if ($config:debug = ("trace", "info")) then console:log("Html is acceptable, but bad input. Redirect (404) to error webpage ...") else ()
         return net:redirect-with-404($config:webserver || '/' || 'error-page.html')
