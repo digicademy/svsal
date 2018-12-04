@@ -18,12 +18,10 @@ import module namespace xmldb      = "http://exist-db.org/xquery/xmldb";
 
 declare option output:method "json";
 declare option output:media-type "application/json";
-
-(: relative server domain! :)
-declare variable $iiif:serverDomain := $config:serverdomain;
+ 
 declare variable $iiif:proto := $config:proto;
 
-declare variable $iiif:facsServer := $iiif:proto || "://facs." || $iiif:serverDomain;
+declare variable $iiif:facsServer := $iiif:proto || "://facs." || $config:serverdomain;
 declare variable $iiif:imageServer := $iiif:facsServer || "/iiif/image/";
 declare variable $iiif:presentationServer := $iiif:facsServer || "/iiif/presentation/";
 
@@ -183,13 +181,13 @@ declare function iiif:mkSingleVolumeManifest($volumeId as xs:string, $teiDoc as 
 
     (: Links to other data/formats :)
     let $seeAlso := array {
-        map {"@id": concat("http://tei.", $iiif:serverDomain, "/", substring($volumeId, 1, 5), ".xml"),
+        map {"@id": concat($config:apiserverTexts, '/', substring($volumeId, 1, 5), "?format=tei"),
             "format": "text/xml"},
-        map {"@id": concat("http://data.", $iiif:serverDomain, "/", substring($volumeId, 1, 5), ".rdf"),
+        map {"@id": concat($config:apiserverTexts, '/', substring($volumeId, 1, 5), "?format=rdf"),
             "format": "application/rdf+xml"}
     }
-    let $renderingId := if (contains($volumeId, "_")) then concat("http://id.", $iiif:serverDomain, "/texts/", substring-before($volumeId, "_"), ":", substring-after($volumeId, "_"))
-                        else concat("http://id.", $iiif:serverDomain, "/texts/", $volumeId) (: better: provide native .html URL? :)
+    let $renderingId := if (contains($volumeId, "_")) then concat("http://id.", $config:serverdomain, "/texts/", substring-before($volumeId, "_"), ":", substring-after($volumeId, "_"))
+                        else concat("http://id.", $config:serverdomain, "/texts/", $volumeId) (: better: provide native .html URL? :)
     let $rendering := map {
         "@id": $renderingId,
         "label": "HTML view",

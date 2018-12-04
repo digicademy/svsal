@@ -51,6 +51,7 @@ declare variable $config:searchserver   := $config:proto || "://search." || $con
 declare variable $config:imageserver    := $config:proto || "://facs."   || $config:serverdomain;
 declare variable $config:dataserver     := $config:proto || "://data."   || $config:serverdomain;
 declare variable $config:apiserver      := $config:proto || "://api."    || $config:serverdomain;
+declare variable $config:apiserverTexts := $config:apiserver || '/v1/texts';
 declare variable $config:teiserver      := $config:proto || "://tei."    || $config:serverdomain;
 declare variable $config:resolveserver  := $config:proto || "://"        || $config:serverdomain;
 declare variable $config:idserver       := $config:proto || "://id."     || $config:serverdomain;

@@ -50,7 +50,6 @@ declare function export:WRKteiHeader($wid as xs:string?, $mode as xs:string?) {
                         let $encodingDesc := <encodingDesc>{$expanded/tei:encodingDesc/*[not(self::tei:charDecl)]}</encodingDesc>
                         return <teiHeader>{($nodes, $encodingDesc)}</teiHeader>
                     else $expanded
-    let $dummy := response:set-header("Content-Disposition", 'attachment; filename="' || replace(replace($wid, "w0", "W0"), '_vol', '_Vol') || '.teiHeader.xml"')
     return $header
 };
 

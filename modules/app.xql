@@ -2159,7 +2159,7 @@ declare function app:WRKadditionalInfoRecord($node as node(), $model as map(*), 
             </ul>
         </div>
         
-    let $teiHeader := $config:teiserver || '/' || $workId || '_teiHeader.xml'
+    let $teiHeader := $config:apiserver || '/v1/texts/' || $workId || '?format=tei&amp;mode=meta'
     let $teiHeaderLink :=   <a href="{$teiHeader}">
                                 <i18n:text key="teiHeader">TEI Header</i18n:text>
                             </a>
