@@ -215,7 +215,7 @@ return
             ():)
 
     (: *** TEI file service (X-Forwarded-Host = 'tei.{$config:serverdomain}') *** :)
-    (:else if (request:get-header('X-Forwarded-Host') = "tei." || $config:serverdomain) then
+    else if (request:get-header('X-Forwarded-Host') = "tei." || $config:serverdomain) then
         let $reqText      := tokenize($exist:path, '/')[last()]
         let $debug        := if ($config:debug = ("trace", "info")) then console:log("TEI for " || $reqText || " requested: " || $net:forwardedForServername || '/' || $reqText || $parameterString || ".") else ()
         let $updParams    := array:append([$netVars('params')], "format=tei")
@@ -224,7 +224,7 @@ return
             let $debug        := if ($config:debug = ("trace", "info")) then console:log("redirect to tei api: " || $config:apiserver || "/v1/texts/" || replace($reqText, '.xml', '') || $parameters || ".") else ()
             return net:redirect($config:apiserver || "/v1/texts/" || replace($reqText, '.xml', '') || $parameters, $netVars)
         else
-            ():)
+            ()
 
 
     (: *** Iiif Presentation API URI resolver *** :)
