@@ -33,9 +33,9 @@ volume of a multi-volume work).
 
 Here are some example identificators:
 
-* <https://api.salamanca.school/texts/w0004:pFOL7V>
-* <https://api.salamanca.school/texts/w0013:vol1.1.1.n1>
-* <https://api.salamanca.school/texts/w0013:vol2.frontmatter.p1>
+* <https://api.salamanca.school/v1/texts/w0004:pFOL7V>
+* <https://api.salamanca.school/v1/texts/w0013:vol1.1.1.n1>
+* <https://api.salamanca.school/v1/texts/w0013:vol2.frontmatter.p1>
 
 (This way of identifying parts of texts is inspired by the
 [Canonical Text Services](http://cite-architecture.github.io/ctsurn/overview/) specification,
@@ -44,9 +44,11 @@ collections, ranges and subreferences.<sup id="anchor2">[2](#fn2)</sup> Dependin
 feedback, we may implement this later.)
 
 Furthermore, the `all` identifier, applicable instead of a normal `{textId}`, stands for 
-the collection of all texts and, along with a mandatory format parameter, leads 
+the collection of all texts and, along with a format parameter, leads 
 to a single resource containing all (currently available) texts in the respective format. 
-At the moment, the only available parameter in this regard is `tei` (see below).
+At the moment, the only available parameter in this regard is `tei` (see below):
+
+* <https://api.salamanca.school/v1/texts/all?format=tei>
 
 ## Parameters
 
@@ -100,6 +102,11 @@ information in the header is maintained in an external file, the API resolves al
 internal complexity and delivers one complete and integral TEI file. Since the extraction
 of parts of a work can result in invalid TEI or even malformed xml, the tei format
 at the moment cancels an eventual location identifier and always presents whole works.
+
+The `tei` format parameter may be combined with the `mode` parameter. If the latter's 
+value is `meta`, only the metadata of a texts' tei dataset (i.e., the 'teiHeader') is requested, 
+whereas the `full` value (which is the default value if no `mode` parameter is stated) leads to the 
+complete dataset.
 
 ### Plaintext
 
