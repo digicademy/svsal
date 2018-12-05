@@ -99,7 +99,7 @@
             </xsl:matching-substring>
             <xsl:non-matching-substring>                                                <!-- Target does not contain "#", or is not a "work:..." url -->
                 <!--                <xsl:message>analyze-1: non-match</xsl:message>-->
-                <xsl:analyze-string select="$gotoTarget" regex="(\S+):([A-z0-9.:#_\-]+)">           <!-- Use the general replacement mechanism as defined by the prefixDef in W_Head_general.xml -->
+                <xsl:analyze-string select="$gotoTarget" regex="(\S+):([A-z0-9.:#_\-]+)">           <!-- Use the general replacement mechanism as defined by the prefixDef in works-general.xml -->
                     <xsl:matching-substring>
                         <!--                        <xsl:message>analyze-2: match</xsl:message>-->
                         <xsl:variable name="prefix" select="regex-group(1)"/>
@@ -177,7 +177,7 @@
                         <xsl:value-of select="sal:mkId($targetWorkId, concat('facs_', $anchorId))"/>
                     </xsl:matching-substring>
                     <xsl:non-matching-substring>                                                    <!-- Target is not a facs string -->
-                        <xsl:analyze-string select="$gotoTarget" regex="(\S+):([A-z0-9.:#_\-]+)">           <!-- Use the general replacement mechanism as defined by the prefixDef in W_Head_general.xml -->
+                        <xsl:analyze-string select="$gotoTarget" regex="(\S+):([A-z0-9.:#_\-]+)">           <!-- Use the general replacement mechanism as defined by the prefixDef in works-general.xml -->
                             <xsl:matching-substring>
                                 <xsl:variable name="prefix" select="regex-group(1)"/>
                                 <xsl:variable name="value" select="regex-group(2)"/>

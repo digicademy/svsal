@@ -258,9 +258,15 @@ return
     (: If the request is for a file download, forward to resources/files/... :)
     else if (starts-with($exist:path, "/files/") or request:get-header('X-Forwarded-Host') = "files." || $config:serverdomain) then
         let $prelimPath    := if (starts-with($exist:path, "/files/")) then substring($exist:path, 7) else $exist:path
-        let $finalPath     := (: $config:resources-root :) "/resources/files" || $prelimPath
-        let $debug          := if ($config:debug = ("trace", "info")) then console:log("File download requested: " || $net:forwardedForServername || $exist:path || $parameterString || ", redirecting to " || $finalPath || '?' || string-join($netVars('params'), '&amp;') || ".") else ()
-        return net:forward($finalPath, $netVars)
+        return 
+            if ($exist:resource = ('specialchars.xml', 'works-general.xml')) then
+                let $finalPath     := "/tei/meta/" || $exist:resource
+                let $debug          := if ($config:debug = ("trace", "info")) then console:log("File download requested: " || $net:forwardedForServername || $exist:path || $parameterString || ", redirecting to salamanca-data: " || $finalPath || '?' || string-join($netVars('params'), '&amp;') || ".") else ()
+                return net:forward-to-data($finalPath, $netVars, ())
+            else
+                let $finalPath     := "/resources/files" || $prelimPath
+                let $debug          := if ($config:debug = ("trace", "info")) then console:log("File download requested: " || $net:forwardedForServername || $exist:path || $parameterString || ", redirecting to " || $finalPath || '?' || string-join($netVars('params'), '&amp;') || ".") else ()
+                return net:forward($finalPath, $netVars)
 
     (: HTML files should hava a path component - we parse that and put view.xql in control :)
     else if (ends-with($exist:resource, ".html") and substring($exist:path, 1, 4) = ("/de/", "/en/", "/es/")) then

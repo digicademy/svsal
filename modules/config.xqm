@@ -148,6 +148,7 @@ declare variable $config:tei-lemmata-root := concat($config:salamanca-data-root,
 declare variable $config:tei-news-root := concat($config:salamanca-data-root, "/tei/news");
 declare variable $config:tei-workingpapers-root := concat($config:salamanca-data-root, "/tei/workingpapers");
 declare variable $config:tei-works-root := concat($config:salamanca-data-root, "/tei/works");
+declare variable $config:tei-meta-root := concat($config:salamanca-data-root, "/tei/meta");
 declare variable $config:tei-sub-roots := ($config:tei-authors-root, $config:tei-lemmata-root, $config:tei-news-root, $config:tei-workingpapers-root, $config:tei-works-root);
 
 declare variable $config:resources-root := concat($config:app-root, "/resources");

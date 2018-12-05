@@ -205,6 +205,17 @@ declare function net:forward($relative-path as xs:string, $netVars as map(*), $a
             {$net:errorhandler}
         </dispatch>
     };
+declare function net:forward-to-data($relative-path as xs:string, $netVars as map(*), $attribs as element(exist:add-parameter)*) {
+    let $absolute-path := concat($netVars('controller'), '/../salamanca-data/', $relative-path)
+    return
+        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+            <forward url="{$absolute-path}" absolute="no">
+                {$attribs}
+            </forward>
+            <cache-control cache="{$net:cache-control}"/>
+            {$net:errorhandler}
+        </dispatch>
+    };
 declare function net:redirect($absolute-path as xs:string, $netVars as map(*)) { (: implicit temporary redirect (302) :)
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <redirect url="{$absolute-path}"/>
