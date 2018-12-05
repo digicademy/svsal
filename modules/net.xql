@@ -336,7 +336,6 @@ declare function local:negotiateCTSub($offers as xs:string*, $bestOffer as xs:st
 };
 
 
-
 (: Sitemap stuff ... :)
 declare function local:getDbDocumentIds($collections as xs:string*) as xs:string* {
     for $collection in $collections
@@ -435,7 +434,6 @@ declare function net:sitemapResponse($netVars as map(*)) {
             let $debug   := if ($config:debug = ("info", "trace")) then console:log("Returning sitemapIndex with " || count($sitemapIndex/*) || " maps ...") else ()
             return $sitemapIndex
 };
-
 
 
 (: Deliver data in one or another format ... :)

@@ -67,7 +67,6 @@ let $parameterString    :=  if (count(request:get-parameter-names())) then
 
 
 
-
 (: Print request context for debugging :)
 let $debug              :=  if ($config:debug = "trace") then
                                 console:log("Request at '" || request:get-header('X-Forwarded-Host') || "' for " || request:get-effective-uri() || "&#x0d; " ||
@@ -202,18 +201,6 @@ return
         return net:redirect-with-303($config:apiserver || "/v1" || replace($exist:path, '/works\.', '/texts/') || $parameterString)
 
 
-    (: *** Date service (X-Forwarded-Host = 'data.{$config:serverdomain}') *** :)
-    (:else if (request:get-header('X-Forwarded-Host') = "data." || $config:serverdomain) then
-        let $reqText      := tokenize($exist:path, '/')[last()]
-        let $debug        := if ($config:debug = ("trace", "info")) then console:log("Data for " || $reqText || " requested: " || $net:forwardedForServername || '/' || $reqText || $parameterString || ".") else ()
-        let $updParams    := array:append([$netVars('params')], "format=rdf")
-        let $parameters   := concat("?", string-join($updParams?*, "&amp;"))
-        return if (starts-with(lower-case($reqText), 'w0')) then 
-            let $debug        := if ($config:debug = ("trace", "info")) then console:log("redirect to rdf api: " || $config:apiserver || "/v1/texts/" || replace($reqText, '.rdf', '') || $parameters || ".") else ()
-            return net:redirect($config:apiserver || "/v1/texts/" || replace($reqText, '.rdf', '') || $parameters, $netVars)
-        else
-            ():)
-
     (: *** TEI file service (X-Forwarded-Host = 'tei.{$config:serverdomain}') *** :)
     else if (request:get-header('X-Forwarded-Host') = "tei." || $config:serverdomain) then
         let $reqText      := tokenize($exist:path, '/')[last()]
@@ -344,7 +331,6 @@ return
                 </forward>
                 {config:errorhandler($netVars)}
             </dispatch>
-
 
 
     (: Fallback when nothing else fits :)

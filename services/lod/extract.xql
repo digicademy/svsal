@@ -343,7 +343,6 @@ declare function local:store-file($collection as xs:string?, $fileName as xs:str
 	let $collection := 
 		if (empty($collection) or ($collection eq '')) then $tmp-collection-path
 		else $collection
-    let $login := xmldb:login($collection, "sal", "DSvS:EdQueWij-pS")
     let $createCollection := 
 		for $coll in tokenize($collection, '/')
 			let $parentColl := substring-before($collection, $coll)
@@ -411,6 +410,8 @@ let $debug4 := for $file at $index in $result
 							"...",
 							"trace"
 						  )
+
+let $log := util:log('info', 'local:store-file: finally stored ' || $fileName || ' in ' || $collection || '.')
 
 	return $result
 };
