@@ -33,9 +33,10 @@
 
 
             <statement n="0">
+                <condition>/($currentResource//tei:relatedItem[@type eq "work_volume"])</condition>
                 <subject type="uri"/>
                 <predicate prefix="void">inDataset</predicate>
-                <object type="uri">void.ttl#Salamanca</object>
+                <object type="uri" prepend="https://api.salamanca.school/texts/">void.ttl#Salamanca</object>
             </statement>
 
 
@@ -52,59 +53,60 @@
     ! test reification of cito:cites in order to associate po:isContainedBy
     ! corresponds to an oclc dataset?
 -->
-
+            
+            
             <statement n="1"><!-- a fabio:work -->
-                <subject type="uri" prepend="texts/">/@work</subject>
+                <subject type="uri" prepend="texts/">/($currentResource//@docId)</subject>
                 <predicate prefix="rdf">type</predicate>
                 <object type="uri" prefix="fabio">work</object>
             </statement>
             <statement n="2"><!-- fabio:hasTitle -->
-                <subject type="uri" prepend="texts/">/@work</subject>
+                <subject type="uri" prepend="texts/">/($currentResource//@docId)</subject> <!-- /@work -->
                 <predicate prefix="fabio">hasTitle</predicate>
-                <object type="literal" resource="https://tei.salamanca.school/{/@work}.xml">//tei:titleStmt//tei:title[@type eq 'main']</object>
+                <object type="literal">/($currentResource//tei:titleStmt//tei:title[@type eq 'main']/text())</object>
             </statement>
             <statement n="3"><!-- fabio:hasCreator -->
-                <subject type="uri" prepend="texts/">/@work</subject>
+                <subject type="uri" prepend="texts/">/($currentResource//@docId)</subject>
                 <predicate prefix="fabio">hasCreator</predicate>
-                <object type="uri" prepend="authors." resource="https://tei.salamanca.school/{/@work}.xml">(for $t in $externalResource//tei:titleStmt//tei:author/tei:persName/tokenize(tokenize(@ref, 'author:')[2], ' ')[1] return element t {$t})</object>
+                <object type="uri" prepend="authors.">(for $t in $currentResource//tei:titleStmt//tei:author/tei:persName/tokenize(tokenize(@ref, 'author:')[2], ' ')[1] return element t {$t})</object>
             </statement>
             <statement n="4"><!-- fabio:hasPublicationYear -->
-                <subject type="uri" prepend="texts/">/@work</subject>
+                <subject type="uri" prepend="texts/">/($currentResource//@docId)</subject>
                 <predicate prefix="fabio">hasPublicationYear</predicate>
-                <object type="literal" resource="https://tei.salamanca.school/{/@work}.xml">//tei:sourceDesc//tei:imprint/(tei:date[@type eq 'thisEd'], tei:date[@type eq 'firstEd'])[1]/@when</object>
+                <object type="literal">/($currentResource//tei:sourceDesc//tei:imprint/(tei:date[@type eq 'thisEd'], tei:date[@type eq 'firstEd'])[1]/@when)</object>
             </statement>
-
+            
             <statement n="5"><!-- fabio:has short title -->
-                <subject type="uri" prepend="texts/">/@work</subject>
+                <subject type="uri" prepend="texts/">/($currentResource//@docId)</subject>
                 <predicate prefix="fabio">hasShortTitle</predicate>
-                <object type="literal" resource="https://tei.salamanca.school/{/@work}.xml">/replace($externalResource//tei:titleStmt//tei:title[@type="short"], '"', '\\"')</object>
+                <object type="literal">/replace($currentResource//tei:titleStmt//tei:title[@type="short"], '"', '\\"')</object>
             </statement>
-
-
+            
             <statement n="6"><!-- fabio:has publisher (in cerl) -->
-                <subject type="uri" prepend="texts/">/@work</subject>
+                <subject type="uri" prepend="texts/">/($currentResource//@docId)</subject>
                 <predicate prefix="fabio">hasPublisher</predicate>
-                <object type="uri" prepend="http://thesaurus.cerl.org/record/" resource="https://tei.salamanca.school/{/@work}.xml">/(for $t in $externalResource//tei:sourceDesc//tei:imprint/(tei:publisher[@n='thisEd'], tei:publisher[@n='firstEd'])[1]/tei:persName/tokenize(tokenize(@ref,'cerl:')[2], ' ')[1] return element t {$t})</object>
+                <object type="uri" prepend="http://thesaurus.cerl.org/record/">/(for $t in $currentResource//tei:sourceDesc//tei:imprint/(tei:publisher[@n='thisEd'], tei:publisher[@n='firstEd'])[1]/tei:persName/tokenize(tokenize(@ref,'cerl:')[2], ' ')[1] return element t {$t})</object>
             </statement>
             <statement n="7"><!-- fabio:has publisher (in gnd) -->
-                <subject type="uri" prepend="texts/">/@work</subject>
+                <subject type="uri" prepend="texts/">/($currentResource//@docId)</subject>
                 <predicate prefix="fabio">hasPublisher</predicate>
-                <object type="uri" prepend="http://d-nb.info/gnd/" resource="https://tei.salamanca.school/{/@work}.xml">/(for $t in $externalResource//tei:sourceDesc//tei:imprint/(tei:publisher[@n='thisEd'], tei:publisher[@n='firstEd'])[1]/tei:persName/tokenize(tokenize(@ref,'gnd:')[2],' ')[1] return element t {$t})</object>
+                <object type="uri" prepend="http://d-nb.info/gnd/">/(for $t in $currentResource//tei:sourceDesc//tei:imprint/(tei:publisher[@n='thisEd'], tei:publisher[@n='firstEd'])[1]/tei:persName/tokenize(tokenize(@ref,'gnd:')[2],' ')[1] return element t {$t})</object>
             </statement>
             <statement n="8"><!-- fabio:has volume count -->
-                <condition>/boolean($currentResource//sal:node[@subtype eq "work_volume"])</condition>
-                <subject type="uri" prepend="texts/">/@work</subject>
+                <condition>/($currentResource//tei:relatedItem[@type eq "work_volume"])</condition>
+                <subject type="uri" prepend="texts/">/($currentResource//@docId)</subject>
                 <predicate prefix="fabio">hasVolumeCount</predicate>
-                <object type="literal">/count($currentResource//sal:node[@subtype eq "work_volume"])</object>
+                <object type="literal">/count($currentResource//tei:relatedItem[@type eq "work_volume"])</object>
+            </statement>
+            
+            <statement n="9"><!-- rdfs:seeAlso SvSal work webpage -->
+                <subject type="uri" prepend="texts/">/($currentResource//@docId)</subject>
+                <predicate prefix="rdfs">seeAlso</predicate>
+                <object type="uri" prepend="https://id.salamanca.school/texts/">/($currentResource//@docId)</object>
             </statement>
 
-            <statement n="9"><!-- rdfs:seeAlso SvSal work webpage -->
-                <subject type="uri" prepend="texts/">/@work</subject>
-                <predicate prefix="rdfs">seeAlso</predicate>
-                <object type="uri" prepend="http://www.salamanca.school/work.html?wid=">/@work</object>
-			 </statement>
-
-
+            
+            
 <!-- =================================================================== -->
 <!-- === II. Document Components: Volumes, Sections, Paragraphs etc. === -->
 <!-- =================================================================== -->
@@ -404,6 +406,8 @@
                 <predicate prefix="rdfs">seeAlso</predicate>
                 <object type="uri" prepend="http://www.salamanca.school/">/($currentResource//sal:node[@type eq 'pb'][not(@subtype eq 'sameAs')][$repeatIndex]/sal:crumbtrail/a/@href)[last()]</object>
 			 </statement>
+            
+            
 
             <!-- iiif stuff -->
 <!-- Todo/iiif:
@@ -702,6 +706,8 @@
                 <predicate prefix="book">mentions</predicate>
                 <object type="uri" prepend="http://vocab.getty.edu/tgn/" resource="https://tei.salamanca.school/{/@work}.xml">/($externalResource//tei:text//tei:placeName[contains(@ref, 'getty:')])[$repeatIndex]/tokenize(tokenize(@ref, 'getty:')[2], ' ')[1]</object>
             </statement>
+            
+            
 
         </triples>
     </configuration>

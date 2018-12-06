@@ -6,6 +6,7 @@ import module namespace console     = "http://exist-db.org/xquery/console";
 import module namespace config      = "http://salamanca/config" at "../../modules/config.xqm";
 declare       namespace sal         = "http://salamanca.adwmainz.de";
 declare       namespace tei         = "http://www.tei-c.org/ns/1.0";
+declare       namespace xi         = "http://www.w3.org/2001/XInclude";
 
 let $resourceId    := request:get-parameter('resourceId', '')
 let $idServer      := $config:idserver
@@ -72,6 +73,27 @@ let $rawConfiguration   :=  if (starts-with($resourceId, 'A') or starts-with($re
                                 return $localized
                             else
                                 doc("svsal-xtriples-everything.xml")
+
+(: 
+    metadata (teiHeader(s)) are stored separately in one or more resource(s)
+    (either one resource for a single-volume work or several $resources for a work and its volumes
+:)
+let $workMetadata :=  if (starts-with($resourceId, 'W0')) then
+                            let $workTEI := doc($config:tei-works-root || '/' || $resourceId || '.xml')/tei:TEI
+                            let $workType := $workTEI/tei:text/@type
+                            let $workResource := <resource><document docType="{$workType}" docId="{$resourceId}">{$workTEI/tei:teiHeader}</document></resource>
+                            return 
+                                if ($workType eq 'work_multivolume') then 
+                                    let $volumeIds := $workTEI/tei:text/tei:group/xi:include/@href/string()
+                                    (: TODO: fix the substring() workaround by stating correct rdf uris in the teiHeader in the first place :)
+                                    let $volumeHeaders := for $id in $volumeIds return  <document type="work_volume" docId="{$resourceId || ':vol' || substring($id,11,1)}">
+                                                                                            {doc($config:tei-works-root || '/' || $id)/tei:TEI/tei:teiHeader}
+                                                                                        </document>
+                                    let $volumeResources := for $h at $i in $volumeHeaders return <resource>{$h}</resource>
+                                    return ($workResource, $volumeResources)
+                                else $workResource
+                        else ()
+
 let $collection         :=  if (starts-with($resourceId, "authors.")) then
                                 <collection uri="{$config:tei-authors-root}/{substring-after($resourceId, "authors.")}.xml">
                                     <resource uri="{{//tei:listPerson}}"/>
@@ -87,6 +109,7 @@ let $collection         :=  if (starts-with($resourceId, "authors.")) then
                             else if (starts-with($resourceId, 'W0')) then
                                 <collection uri="{$config:data-root}/{$resourceId}_nodeIndex.xml">
                                     <resource uri="{{//sal:index}}"/>
+                                    {$workMetadata}
                                 </collection>
                             else if (starts-with($resourceId, 'Q')) then
                                 <collection uri="{$config:tei-works-root}">
