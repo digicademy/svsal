@@ -39,6 +39,7 @@
     <xsl:key name="chars" match="char" use="@xml:id"/>                                  <!-- Key-value array for special symbol representation -->
 
     <xsl:param name="noteTruncLimit" select="35"/>
+    
 
 <!-- *** III. Named Templates *** -->
     <xsl:template name="anchor-id">                                                     <!-- Small toolbox including anchor for the passed xml:id -->
@@ -635,27 +636,31 @@
         <xsl:if test="not(key('chars', substring(@ref,2)))">
             <xsl:message terminate="yes" select="concat('Error: g/@ref has an invalid value, the char code does not exist): ', substring(@ref,2))"/>
         </xsl:if>
-        <!-- for backwards compatibility (W0004, W0013, W0015), we have to distinguish 2 cases: -->
         <xsl:variable name="precomposedMapping" select="key('chars', substring(@ref,2))/mapping[@type='precomposed']"/>
         <xsl:variable name="composedMapping" select="key('chars', substring(@ref,2))/mapping[@type='composed']"/>
+        <xsl:variable name="precomposedString" as="xs:string?" select="$precomposedMapping/text()"/>
+        <xsl:variable name="composedString" as="xs:string?" select="$composedMapping/text()"/>
+        <xsl:variable name="thisString" as="xs:string" select="./text()"/>
+        <!-- there are 2 cases for g elements (due to backwards compatibility with W0004, W0013, W0015): -->
         <xsl:choose>
             <!-- a) element g is applied for resolving abbreviations (or g includes the 'long s' character, 
                 which is to be standardized): include original and edited/standardized form -->
-            <xsl:when test="substring(@ref,2) eq 'char017f'                              or (child::text() ne $precomposedMapping/text() and child::text() ne $composedMapping/text())">
+            <xsl:when test="substring(@ref,2) eq 'char017f'
+                            or ($thisString != ($precomposedString, $composedString))">
                 <xsl:variable name="originalGlyph">
                     <xsl:choose>
                         <xsl:when test="$precomposedMapping">
-                            <xsl:value-of select="$precomposedMapping/text()" disable-output-escaping="yes"/>
+                            <xsl:value-of select="$precomposedString" disable-output-escaping="yes"/>
                         </xsl:when>
                         <xsl:when test="$composedMapping">
-                            <xsl:value-of select="$composedMapping/text()" disable-output-escaping="yes"/>
+                            <xsl:value-of select="$composedString" disable-output-escaping="yes"/>
                         </xsl:when>
                         <xsl:otherwise>
-                            <xsl:value-of select="string(.)"/>
+                            <xsl:value-of select="$thisString"/>
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:variable>
-                <span class="original glyph unsichtbar" title="{string(.)}"><xsl:value-of select="$originalGlyph"/></span>
+                <span class="original glyph unsichtbar" title="{$thisString}"><xsl:value-of select="$originalGlyph"/></span>
                 <span class="edited glyph" title="{$originalGlyph}">
                     <xsl:choose>
                         <xsl:when test="substring(@ref, 2) eq 'char017f'">
@@ -672,7 +677,6 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    
     <xsl:template match="g" mode="pureText">
         <xsl:variable name="originalGlyph" as="xs:string">
             <xsl:choose>
@@ -689,6 +693,7 @@
         </xsl:variable>
         <xsl:value-of select="$originalGlyph"/>
     </xsl:template>
+    
     <xsl:template match="damage">
         <xsl:apply-templates/>
     </xsl:template>

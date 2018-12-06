@@ -1038,7 +1038,7 @@ declare %templates:wrap
             <span class="glyphicon glyphicon-download-alt"/>
             <i18n:text key="download">Download</i18n:text>
         </a>
-        <span>{i18n:process(<i18n:text key="corpusVerb"/>, $lang, "/db/apps/salamanca/data/i18n", "en")}</span>
+        <span>{' ' || i18n:process(<i18n:text key="corpusVerb"/>, $lang, "/db/apps/salamanca/data/i18n", "en")}</span>
     </div>
 };
 
