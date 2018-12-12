@@ -82,7 +82,7 @@ the following mime types:
 * `image/jpeg` for images
 * `application/ld+json; profile=http://iiif.io/presentation/3/context.json` for iiif manifests
 
-Note that the `format` parameter takes precedence content negotiation.
+Note that the `format` parameter takes precedence over content negotiation.
 
 ## `id` uris
 
