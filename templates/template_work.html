@@ -246,7 +246,7 @@
         <script type="text/javascript">
             var tree = $("#tableOfConts");
             tree.bind("loaded.jstree", function (event, data) {
-                tree.jstree("open_all");
+                tree.jstree(true).open_node($('#tableOfConts').find('li').first());;
             });
             $('#tableOfConts').jstree({
                     "core": { }
