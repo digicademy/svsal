@@ -22,6 +22,7 @@
     </fileDesc>
     <revisionDesc status="e_unreviewed">
       <listChange>
+        <change who="#DG" when="2018-12-18" status="e_emended_unenriched">Added 'number' to milestone/@unit.</change>
         <change who="#DG" when="2018-12-03" status="e_emended_unenriched">
           <p>Deleted title/@type[. eq '245a'].</p>
         </change>
@@ -460,6 +461,7 @@
                 <valItem ident="article"/>
                 <valItem ident="question"/>
                 <valItem ident="section"/>
+                <valItem ident="number"/>
                 <valItem ident="other"/>
               </valList>
             </attDef>
