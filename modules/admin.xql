@@ -282,7 +282,12 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                 let $debug              := if ($config:debug = ("trace")) then console:log("  " || string(count($target-set)) || " elements to be rendered...") else ()
 
                                 (: First, create index of nodes for generating HTML fragments :)
-                                let $index1           := <sal:index work="{string($work/@xml:id)}">{for $node at $pos in $work//tei:*[ancestor-or-self::tei:text][not(self::tei:lb)][@xml:id]
+                                let $index1           := <sal:index work="{string($work/@xml:id)}">{
+                                                                    (:for $node at $pos in $work//tei:*[ancestor-or-self::tei:text][not(self::tei:lb)][@xml:id]:)
+                                                                    for $node at $pos in $work//tei:text/descendant-or-self::tei:*[@xml:id and not(self::tei:lb 
+                                                                                                                                                   or self::tei:item 
+                                                                                                                                                   or self::tei:milestone[@unit eq 'other']
+                                                                                                                                                   or self::tei:choice)]
                                                                         let $subtype         := if ($node/@sameAs) then
                                                                                                     "sameAs"
                                                                                                 else if ($node/@corresp) then
@@ -295,8 +300,6 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                                                                                     string($node/@type)
                                                                                                 else ()
                                                                         let $frag            := (($node/ancestor-or-self::tei:* | $node//tei:*) intersect $target-set)[1]
-                                                                        (: IMPORTANT: for finding fragments, make sure that there are no relevant elements in the TEI doc that 
-                                                                            have tei:text as parent (e.g. tei:text/tei:pb with blank pages) :)
                                                                         return (element sal:node { 
                                                                                                     attribute type      {local-name($node)}, 
                                                                                                     attribute subtype   {$subtype}, 
@@ -379,7 +382,12 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                                 </p>
                                 
                                 (: Finally, create ultimate version of node index with proper fragment URLs, required for RDF extraction etc. :)
-                                let $index2           := <sal:index work="{string($work/@xml:id)}">{for $node at $pos in $work//tei:*[ancestor-or-self::tei:text][not(self::tei:lb)][@xml:id]
+                                let $index2           := <sal:index work="{string($work/@xml:id)}">{
+                                                                    (:for $node at $pos in $work//tei:*[ancestor-or-self::tei:text][not(self::tei:lb)][@xml:id]:)
+                                                                    for $node at $pos in $work//tei:text/descendant-or-self::tei:*[@xml:id and not(self::tei:lb 
+                                                                                                                                                   or self::tei:item 
+                                                                                                                                                   or self::tei:milestone[@unit eq 'other']
+                                                                                                                                                   or self::tei:choice)]
                                                                         let $subtype         := if ($node/@sameAs) then
                                                                                                     "sameAs"
                                                                                                 else if ($node/@corresp) then

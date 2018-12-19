@@ -1,4 +1,4 @@
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" xmlns:sal="http://salamanca.adwmainz.de" version="3.0" exclude-result-prefixes="exist sal tei xd xs xsl" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+<xsl:stylesheet xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sal="http://salamanca.adwmainz.de" version="3.0" exclude-result-prefixes="exist sal tei xd xs xsl" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
 
 <!-- TODO:
            * tweak/tune performance: use
@@ -180,7 +180,7 @@
     
     <!-- To every div, milestone, dictionary or dictionary entry, add a section heading and an anchor
          (to grab link, refresh filters, export/print). -->
-    <xsl:template match="div|milestone[@type ne 'other']|list[@type='dict']|item[parent::list/@type='dict']">
+    <xsl:template match="div|milestone[@unit ne 'other']|list[@type='dict']|item[parent::list/@type='dict']">
 <!--        <xsl:message>Matched div/etc. node <xsl:value-of select="@xml:id"/>.</xsl:message>-->
         <xsl:if test="@xml:id=$targetId and not(preceding-sibling::*) and not((ancestor::body | ancestor::back) and preceding::front/*)">
             <xsl:for-each select="ancestor::text[@type='work_volume']/. | ancestor::div/. | ancestor::p/.">
@@ -240,7 +240,7 @@
         </xsl:if>
         <xsl:apply-templates/>
     </xsl:template>
-    <xsl:template match="div|milestone[@type ne 'other']|list[@type='dict']|item[parent::list/@type='dict']" mode="non-recursive">
+    <xsl:template match="div|milestone[@unit ne 'other']|list[@type='dict']|item[parent::list/@type='dict']" mode="non-recursive">
 <!--        <xsl:message>Matched div/etc. node <xsl:value-of select="@xml:id"/> (in non-recursive mode).</xsl:message>-->
         <xsl:if test="@xml:id">
             <xsl:choose>
@@ -294,7 +294,7 @@
             </xsl:if>
         </xsl:if>
     </xsl:template>
-    <xsl:template match="milestone[@type eq 'other']" mode="#all">
+    <xsl:template match="milestone[@unit eq 'other']" mode="#all">
         <xsl:choose>
             <xsl:when test="@rendition='#dagger'">
                 <sup>†</sup>
