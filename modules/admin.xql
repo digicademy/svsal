@@ -208,7 +208,7 @@ declare %templates:wrap function admin:renderAuthorLemma ($node as node(), $mode
 };
 
 declare function admin:generate-toc-from-div($node, $wid) {
-   for $div in ($node/tei:div[@type="work_part"]/tei:div | $node/tei:div[not(@type="work_part")]| $node/*/tei:milestone)
+   for $div in ($node/tei:div[@type="work_part"]/tei:div | $node/tei:div[not(@type="work_part")]| $node/*/tei:milestone[@unit ne 'other'])
             return admin:toc-div($div, $wid)
 };                      
 
