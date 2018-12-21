@@ -48,7 +48,7 @@ declare function export:WRKteiHeader($wid as xs:string?, $mode as xs:string?) {
     let $header :=  if ($mode eq 'metadata') then 
                         let $nodes := $expanded/*[not(self::tei:encodingDesc) and not(self::tei:revisionDesc)]
                         let $encodingDesc := <encodingDesc>{$expanded/tei:encodingDesc/*[not(self::tei:charDecl)]}</encodingDesc>
-                        return <teiHeader>{($nodes, $encodingDesc)}</teiHeader>
+                        return <teiHeader xmlns="http://www.tei-c.org/ns/1.0">{($nodes, $encodingDesc)}</teiHeader>
                     else $expanded
     return $header
 };

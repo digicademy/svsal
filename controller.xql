@@ -24,8 +24,9 @@ declare option output:indent        "yes";
 declare option output:omit-xml-declaration "no";
 declare option output:encoding      "utf-8";
 
-(: *** Todo:
-   ***  - Add 'meta' endpoint with formats tei(Header) and json-ld, (mets/mods)
+(: *** Todo (especially in api):
+   ***  - Add 'meta' endpoint with json-ld, (mets/mods)
+   ***  - Add iiif endpoints (not really working atm)
    ***  - Add passage identifiers to filenames on downloads
    ***  - Why are no hashes handled? Some are needed but lost. (http://bla.com/bla/bla.html?bla<#THISHERE!>)
    ***  - Implement collections/lists of resources and their filters (e.g. `/texts?q=lex` resulting in a list of texts) - but which format(s)??
@@ -49,7 +50,28 @@ declare variable $exist:root        external;
 
 (: Set session information :)
 let $lang               :=  net:lang($exist:path)
-let $format             :=  lower-case(request:get-parameter("format", ""))
+
+(:
+   For determining the content type, the format url parameter has the highest priority,
+   only then comes content negotiation based on HTTP Accept Header (and we do not use file extensions).
+   If no (valid) format is given, the format resolves to 'html'
+:)
+let $format             :=  if (lower-case(request:get-parameter("format", "")) = map:keys($config:apiFormats)) then 
+                                let $debug := if ($config:debug = ('trace', 'info')) then console:log('Format requested by parameter: format=' || lower-case(request:get-parameter("format", "")) || '.') else ()
+                                return lower-case(request:get-parameter("format", ""))
+                            else 
+                                let $contentType := net:negotiateContentType($net:servedContentTypes, 'text/html')
+                                let $debug := if ($config:debug = ('trace')) then console:log('Format determined by content type "' || $contentType || '".') else ()
+                                return switch ($contentType)
+                                    case 'application/tei+xml'
+                                    case 'application/xml'
+                                    case 'text/xml'            return 'tei'
+                                    case 'text/plain'          return 'txt'
+                                    case 'application/rdf+xml' return 'rdf'
+                                    case 'image/jpeg'          return 'jpg' (: better 'img', for keeping it more generic ? :)
+                                    case 'application/ld+json' return 'iiif'
+                                    default                    return 'html'
+
 let $netVars            :=  map  {
                                     "path"          : $exist:path,
                                     "resource"      : $exist:resource,
@@ -74,7 +96,7 @@ let $debug              :=  if ($config:debug = "trace") then
                                             "ATTRIBUTES (" || count(request:attribute-names()) || "): " || string-join(for $a in request:attribute-names()     return $a || ": " || request:get-attribute($a), ' ') || "&#x0d; " ||
                                             "PARAMETERS (" || count($netVars('params')) ||"): " || string-join($netVars('params'), '&amp;') ||
                                             "ACCEPT (" || count($netVars('accept')) || "): " || string-join($netVars('accept'), '.') ||
-                                            "$lang: " || $lang || ", $format: " || $format || "."
+                                            "$lang: " || $lang || ", $format: " || $format || " resp. " || $netVars('format') || "."
                                            )
                             else ()
 
@@ -123,54 +145,70 @@ return
             c. /v1/xtriples     (Extract rdf from xml with xtriples.  See https://api.{$config:serverdomain}/v1/xtriples/xtriples.html    or http://xtriples.spatialhumanities.de/index.html)
         :)
         let $pathComponents := tokenize(lower-case($exist:path), "/")  (: Since $exist:path starts with a slash, $pathComponents[1] is an empty string :)
+         
         let $debug := if ($config:debug = ("trace")) then console:log("This translates to API version " || $pathComponents[2] || ", endpoint " || $pathComponents[3] || ".") else ()
 
         return if ($pathComponents[3] = $config:apiEndpoints($pathComponents[2])) then  (: Check if we support the requested endpoint/version :)
             switch($pathComponents[3])
-            case "texts" return
-                (: For determining the content type, the format url parameter has the highest priority,
-                   only then comes content negotiation based on HTTP Accept Header (and we do not use file extensions). :)
-                switch ($format)
-                    case 'tei' return
-                        let $debug         := if ($config:debug = ("trace", "info")) then console:log("TEI/XML requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-                        return net:deliverTEI($pathComponents, $netVars)
-                    case "txt" return
-                        let $debug         := if ($config:debug = ("trace", "info")) then console:log("TXT requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-                        return net:deliverTXT($pathComponents)
-                    case "rdf" return
-                        let $debug         := if ($config:debug = ("trace", "info")) then console:log("RDF requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-                        return net:deliverRDF($pathComponents, $netVars)
-                    case "html" return
-                        let $debug         := if ($config:debug = ("trace", "info")) then console:log("HTML requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-                        return net:deliverHTML($pathComponents, $netVars)
-                    case "iiif" return
-                        let $debug         := if ($config:debug = ("trace", "info")) then console:log("iiif requested: " || $net:forwardedForServername || $exist:path || $parameterString || " ...") else ()
-                        return net:deliverIIIF($exist:path, $netVars)
-                    default return
-                        let $contentType := net:negotiateContentType($net:servedContentTypes, 'text/html')
-                        let $debug1 := if ($config:debug = ("trace")) then console:log("Content type '" || $contentType || "' determines endpoint...") else ()
-                        return switch ($contentType)
-                            case 'application/tei+xml'
-                            case 'application/xml'
-                            case 'text/xml' return
-                                let $debug  := if ($config:debug = ("trace", "info")) then console:log($contentType || " requested, delivering tei: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-                                return net:deliverTEI($pathComponents, $netVars)
-                            case 'text/plain' return
-                                let $debug  := if ($config:debug = ("trace", "info")) then console:log($contentType || " requested, delivering txt: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-                                return net:deliverTXT($pathComponents)
-                            case 'application/rdf+xml' return
-                                let $debug  := if ($config:debug = ("trace", "info")) then console:log($contentType || " requested, delivering rdf: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-                                return net:deliverRDF($pathComponents, $netVars)
-                            case 'image/jpeg' return
-                                let $debug  := if ($config:debug = ("trace", "info")) then console:log($contentType || " requested, delivering jpg: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-                                let $pathComponents := tokenize(lower-case($exist:path), "/")
-                                return net:deliverJPG($pathComponents, $netVars)
-                            case 'application/ld+json' return
-                                let $debug  := if ($config:debug = ("trace", "info")) then console:log($contentType || " requested, delivering iiif: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-                                return net:redirect-with-303($config:apiserver || "/v1/iiif/" || $netVars('resource'))
-                            default return
-                                let $debug  := if ($config:debug = ("trace", "info")) then console:log($contentType || " requested, delivering html: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-                                return net:deliverHTML($pathComponents, $netVars)
+                case "texts" return
+                    let $path := substring-after($exist:path, '/texts/')
+                    let $textsRequest := net:APIparseTextsRequest($path, $netVars) 
+                    return
+                        switch ($textsRequest('format')) 
+                            (: TODO: debug 400/404 redirections :)
+                            case 'tei'  return net:deliverTEI($textsRequest,$netVars)
+                            case 'txt'  return net:deliverTXT($textsRequest,$netVars)
+                            case 'iiif' return net:deliverIIIF($path, $netVars)
+                            default     return net:deliverHTML($pathComponents, $netVars)
+(:
+                            case 'rdf' return net:deliverRDF($pathComponents, $netVars)
+                            case 'iiif' return net:deliverIIIF($exist:path, $netVars) (\: TODO: debug forwarding :\)
+                            case 'jpg' return net:deliverJPG($pathComponents, $netVars)
+                            default return net:deliverHTML($pathComponents, $netVars)
+:)
+
+(:
+                        case 'tei' return
+                            let $debug         := if ($config:debug = ("trace", "info")) then console:log("TEI/XML requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
+                            return net:deliverTEI($pathComponents, $netVars)
+                        case "txt" return
+                            let $debug         := if ($config:debug = ("trace", "info")) then console:log("TXT requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
+                            return net:deliverTXT($pathComponents)
+                        case "rdf" return
+                            let $debug         := if ($config:debug = ("trace", "info")) then console:log("RDF requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
+                            return net:deliverRDF($pathComponents, $netVars)
+                        case "html" return
+                            let $debug         := if ($config:debug = ("trace", "info")) then console:log("HTML requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
+                            return net:deliverHTML($pathComponents, $netVars)
+                        case "iiif" return
+                            let $debug         := if ($config:debug = ("trace", "info")) then console:log("iiif requested: " || $net:forwardedForServername || $exist:path || $parameterString || " ...") else ()
+                            return net:deliverIIIF($exist:path, $netVars)
+                        default return
+                            let $contentType := net:negotiateContentType($net:servedContentTypes, 'text/html')
+                            let $debug1 := if ($config:debug = ("trace")) then console:log("Content type '" || $contentType || "' determines format...") else ()
+                            return switch ($contentType)
+                                case 'application/tei+xml'
+                                case 'application/xml'
+                                case 'text/xml' return
+                                    let $debug  := if ($config:debug = ("trace", "info")) then console:log($contentType || " requested, delivering tei: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
+                                    return net:deliverTEI($textsRequest,$netVars)
+                                case 'text/plain' return
+                                    let $debug  := if ($config:debug = ("trace", "info")) then console:log($contentType || " requested, delivering txt: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
+                                    return net:deliverTXT($textsRequest,$netVars)
+                                case 'application/rdf+xml' return
+                                    let $debug  := if ($config:debug = ("trace", "info")) then console:log($contentType || " requested, delivering rdf: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
+                                    return net:deliverRDF($pathComponents, $netVars)
+                                case 'image/jpeg' return
+                                    let $debug  := if ($config:debug = ("trace", "info")) then console:log($contentType || " requested, delivering jpg: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
+                                    let $pathComponents := tokenize(lower-case($exist:path), "/")
+                                    return net:deliverJPG($pathComponents, $netVars)
+                                case 'application/ld+json' return
+                                    let $debug  := if ($config:debug = ("trace", "info")) then console:log($contentType || " requested, delivering iiif: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
+                                    return net:deliverIIIF($path, $netVars)
+                                default return
+                                    let $debug  := if ($config:debug = ("trace", "info")) then console:log($contentType || " requested, delivering html: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
+                                    return net:deliverHTML($pathComponents, $netVars)
+:)
             case "search" return
                 let $debug         := if ($config:debug = ("trace", "info")) then console:log("Search requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
                 let $absolutePath  := concat($config:searchserver, '/', substring-after($exist:path, '/search/'))
@@ -197,7 +235,7 @@ return
     (: *** Entity resolver (X-Forwarded-Host = 'id.{$config:serverdomain}') *** :)
     else if (request:get-header('X-Forwarded-Host') = "id." || $config:serverdomain) then
         let $debug1 := if ($config:debug = ("trace", "info")) then console:log("Id requested: " || $net:forwardedForServername || $exist:path || $parameterString || ". (" || net:negotiateContentType($net:servedContentTypes, '') || ')') else ()
-        let $debug1 := if ($config:debug = ("trace")) then console:log("Redirect (303) to '" || $config:apiserver || "/v1/texts/" || $exist:path || $parameterString || "'.") else ()
+        let $debug1 := if ($config:debug = ("trace")) then console:log("Redirect (303) to '" || $config:apiserver || "/v1" || $exist:path || $parameterString || "'.") else ()
         return net:redirect-with-303($config:apiserver || "/v1" || replace($exist:path, '/works\.', '/texts/') || $parameterString)
 
 

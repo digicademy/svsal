@@ -9,6 +9,7 @@ import module namespace util        = "http://exist-db.org/xquery/util";
 import module namespace config      = "http://salamanca/config"                 at "config.xqm";
 import module namespace export      = "http://salamanca/export"                 at "export.xql";
 import module namespace render      = "http://salamanca/render"                 at "render.xql";
+import module namespace iiif        = "http://salamanca/iiif"                   at "iiif.xql";
 
 declare       namespace exist       = "http://exist.sourceforge.net/NS/exist";
 declare       namespace output      = "http://www.w3.org/2010/xslt-xquery-serialization";
@@ -43,9 +44,9 @@ declare variable $net:errorhandler := if (($config:instanceMode = "staging") or 
                                 <forward url="{$config:app-root}/modules/view.xql"/>
                             </error-handler>;
 
-declare function net:findNode($ctsId as xs:string?) {
+(:declare function net:findNode($ctsId as xs:string?) {
     let $reqResource  := tokenize($ctsId, '/')[last()]
-    let $reqWork      := tokenize(tokenize($reqResource, ':')[1], '\.')[1]   (: work:pass.age :)
+    let $reqWork      := tokenize(tokenize($reqResource, ':')[1], '\.')[1]   (\: work:pass.age :\)
     let $reqPassage   := tokenize($reqResource, ':')[2]
     let $nodeId       := if ($reqPassage) then
                             let $nodeIndex := doc($config:data-root || '/' || replace($reqWork, 'w0', 'W0') || '_nodeIndex.xml')
@@ -56,9 +57,27 @@ declare function net:findNode($ctsId as xs:string?) {
     let $node         := $work//tei:*[@xml:id eq $nodeId]
     let $debug        := if ($config:debug = "trace") then console:log('findNode returns ' || count($node) || ' node(s): ' || $work/@xml:id || '//*[@xml:id=' || $nodeId || '] (cts/id was "' || $ctsId || '").') else ()
     return $node
+};:)
+
+declare function net:findNode($requestData as map()) {
+    let $nodeId       := if ($requestData('passage') ne 'unspecified' and doc-available($config:data-root || '/' || $requestData('mainResource') || '_nodeIndex.xml')) then
+                            let $nodeIndex := doc($config:data-root || '/' || $requestData('mainResource') || '_nodeIndex.xml')
+                            let $id := $nodeIndex//sal:node[sal:citetrail eq $requestData('passage')][1]/@n[1]
+                            return if ($id) then $id else ()
+                         else 
+                            "completeWork" (: if there is no node index (i.e., work hasn't been rendered yet), also return complete text :)
+    return
+        if ($nodeId) then
+            let $work := util:expand(doc($config:tei-works-root || '/' || $requestData('mainResource') || '.xml')//tei:TEI)
+            let $node := $work//tei:*[@xml:id eq $nodeId]
+            let $debug := if ($config:debug = "trace") then console:log('findNode: found ' || count($node) || ' node(s): ' || $work/@xml:id || '//*[@xml:id=' 
+                                                                        || $nodeId || '] (cts/id was "' || $requestData('mainResource') || ':' || $requestData('passage') || '").') else ()
+            return $node
+        else 
+            let $debug := if ($config:debug = "trace") then console:log('findNode: no node found (cts/id was "' || $requestData('mainResource') || ':' || $requestData('passage') || '").') else ()
+            return ()
+            
 };
-
-
 
 (: Set language for the connection ... :)
 declare function net:lang($existPath as xs:string) as xs:string {
@@ -437,7 +456,7 @@ declare function net:sitemapResponse($netVars as map(*)) {
 
 
 (: Deliver data in one or another format ... :)
-declare function net:deliverTEI($pathComponents as xs:string*, $netVars as map()* ) {
+(:declare function net:deliverTEI($pathComponents as xs:string*, $netVars as map()* ) {
     let $reqResource    := replace($pathComponents[last()], 'w0', 'W0')
     return if (matches($reqResource, '[aAlLwW]\d{4}(_[vV]ol\d\d)?(\.xml)?$')) then
         let $reqWork        := tokenize(tokenize($reqResource, ':')[1], '\.')[1]
@@ -453,7 +472,7 @@ declare function net:deliverTEI($pathComponents as xs:string*, $netVars as map()
                                                                                                  '.')
                                else ()
         
-        (: parameter 'mode' must be 'meta' for teiHeader, 'full' for complete tei, or not exist at all (then resolving to 'full') :)
+        (\: parameter 'mode' must be 'meta' for teiHeader, 'full' for complete tei, or not exist at all (then resolving to 'full') :\)
         let $mode :=    if ($netVars('params') = 'mode=meta') then 'meta' 
                         else if ($netVars('params') = 'mode=full' or not(some $p in $netVars('params') satisfies starts-with($p, 'mode='))) then 'full'
                         else 'error'
@@ -468,7 +487,7 @@ declare function net:deliverTEI($pathComponents as xs:string*, $netVars as map()
                                     else
                                         let $expanded   := util:expand(doc($docPath)/tei:TEI)
                                         return $expanded
-                                else (: does this really forward to the error page, especially if an invalid mode is given? :)
+                                else (\: does this really forward to the error page, especially if an invalid mode is given? :\)
                                    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                                        <forward url="{$netVars('controller')}/error-page.html" method="get"/>
                                        <view>
@@ -493,9 +512,10 @@ declare function net:deliverTEI($pathComponents as xs:string*, $netVars as map()
         let $dummy          := response:set-header("Content-Disposition", 'attachment; filename="sal-tei-corpus.zip"')
         return response:stream-binary(util:binary-doc($teiCorpus), 'application/octet-stream', 'sal-tei-corpus.zip')
     else ()
-};
+};:)
 
-declare function net:deliverTXT($pathComponents as xs:string*) {
+(:declare function net:deliverTXT($pathComponents as xs:string*) {
+    
     let $reqResource    := $pathComponents[last()]
     let $reqWork        := tokenize(tokenize($reqResource, ':')[1], '\.')[1]
     let $reqVersion     := if (tokenize(tokenize($reqResource, ':')[1], '\.')[2]) then tokenize(tokenize($reqResource, ':')[1], '\.')[2]
@@ -508,6 +528,56 @@ declare function net:deliverTXT($pathComponents as xs:string*) {
                                                                                         '.') else ()
     let $dummy          := response:set-header("Content-Disposition", 'attachment; filename="' || replace($reqWork, 'w0', 'W0') || '.' || $reqVersion || '.txt"')
     return render:dispatch($node, $reqVersion)
+};:)
+
+declare function net:deliverTEI($requestData as map(), $netVars as map()*) {
+    if (starts-with($requestData('resourceType'), 'work')) then 
+        let $serialization  := (util:declare-option("output:method", "xml"),
+                                util:declare-option("output:media-type", "application/tei+xml"),
+                                util:declare-option("output:indent", "yes"),
+                                util:declare-option("output:expand-xincludes", "yes")
+                               )
+        let $debug :=   if ($config:debug = "trace") then console:log("Serializing options: method:" || util:get-option('output:method') ||
+                                                         ', media-type:' || util:get-option('output:media-type') ||
+                                                         ', indent:'     || util:get-option('output:indent') ||
+                                                         ', expand-xi:'  || util:get-option('output:expand-xincludes') ||
+                                                         '.') else ()
+        let $doc := if ($requestData('mode') eq 'meta') then
+                        let $debug :=  if ($config:debug = "trace") then console:log("texts API: teiHeader export for " || $requestData('resource') || ".") else ()
+                        return export:WRKteiHeader($requestData('resource'), 'metadata')
+                    else 
+                        let $debug :=  if ($config:debug = "trace") then console:log("texts API: TEI doc export for " || $requestData('resource') || ".") else ()
+                        return util:expand(doc($config:tei-works-root || '/' || $requestData('resource') || '.xml')/tei:TEI)
+        let $response :=    if ($requestData('mode') eq 'meta') then 
+                                response:set-header("Content-Disposition", 'attachment; filename="' || $requestData('resource') || '.teiHeader.xml"')
+                            else response:set-header("Content-Disposition", 'attachment; filename="' || $requestData('resource') || '.tei.xml"')
+        return $doc
+    else if ($requestData('resourceType') eq 'corpus') then
+        let $debug      := if ($config:debug = "trace") then console:log("texts API: TEI corpus export.") else ()
+        let $corpusPath := $config:files-root || '/sal-tei-corpus.zip'
+        let $response   := response:set-header("Content-Disposition", 'attachment; filename="sal-tei-corpus.zip"')
+        return response:stream-binary(util:binary-doc($corpusPath), 'application/octet-stream', 'sal-tei-corpus.zip')
+    else net:redirect-with-400($config:webserver || '/' || 'error-page.html')
+};
+
+declare function net:deliverTXT($requestData as map(), $netVars as map()*) {
+    if (starts-with($requestData('resourceType'), 'work')) then 
+        let $mode := if ($requestData('mode')) then $requestData('mode') else 'edit'
+        let $node := net:findNode($requestData)
+        let $serialize := (util:declare-option("output:method", "text"),
+                           util:declare-option("output:media-type", "text/plain"))
+        let $debug := if ($config:debug = "trace") then console:log("Serializing options: method:" || util:get-option('output:method') ||
+                                                                    ', media-type:' || util:get-option('output:media-type') ||
+                                                                    '.') else ()
+        let $response := response:set-header("Content-Disposition", 'attachment; filename="' || $requestData('mainResource') || '.' || $mode || '.txt"')
+        return 
+            if ($node) then render:dispatch($node, $mode)
+            else net:redirect-with-400($config:webserver || '/' || 'error-page.html')
+    else if ($requestData('resourceType') eq 'corpus') then (: as long as we don't have a txt corpus, forward corpus requests to the (html) works list :)
+        let $worksList     := $config:webserver || '/' || 'works.html'
+        let $debug5       := if ($config:debug = ("trace", "info")) then console:log("Redirecting to " || $worksList || " ...") else ()
+        return net:redirect-with-404($worksList)
+    else net:redirect-with-400($config:webserver || '/' || 'error-page.html')
 };
 
 declare function net:deliverIIIF($path as xs:string, $netVars) {
@@ -534,12 +604,26 @@ declare function net:deliverIIIF($path as xs:string, $netVars) {
                                     concat(string-join((replace($work, 'w0', 'W0'), substring(string-join(functx:get-matches($filename, '-[A-Z]-'), ''), 2, 1), functx:substring-before-last($filename, '.')), '%C2%A7'), '/', $iiif-paras)
                             else
                                     concat(string-join((replace($work, 'w0', 'W0'), functx:substring-before-last($filename, '.')), '%C2%A7'), '/', $iiif-paras)
-
     let $resolvedURI    := concat($prefix, $fullpathname)
     let $debug5         := if ($config:debug = ("trace", "info")) then console:log("redirecting to " || $resolvedURI) else ()
 
     return net:redirect($resolvedURI, $netVars)
 };
+
+(:
+declare function net:deliverIIIF($requestData as map(), $netVars as map()*) {
+
+    
+    
+(/:    let $iiif-paras     := string-join(subsequence(tokenize(tokenize($path, '/iiif/')[last()], '/'), 2), '/') (\: sth like W0004/manifest or collection/W0013 :\):/)
+    if ($requestData('resource'))
+    
+    let $resolvedURI    := concat($prefix, $fullpathname)
+    let $debug5         := if ($config:debug = ("trace", "info")) then console:log("redirecting to " || $resolvedURI) else ()
+
+    return net:redirect($resolvedURI, $netVars)
+};
+:)
 
 declare function net:deliverRDF($pathComponents as xs:string*, $netVars as map()*) {
     let $reqResource    := $pathComponents[last()]
@@ -603,15 +687,73 @@ declare function net:deliverHTML($pathComponents as xs:string*, $netVars as map(
 };
 
 declare function net:deliverJPG($pathComponents as xs:string*, $netVars as map()*) {
-        let $reqResource  := $pathComponents[last()]
-        let $reqWork      := tokenize(tokenize($reqResource, ':')[1], '\.')[1]
-        let $passage      := tokenize($reqResource, ':')[2]
-        let $metadata     := doc($config:rdf-root || '/' || replace($reqWork, 'w0', 'W0') || '.rdf')
-        let $debug2       := if ($config:debug = "trace") then console:log("Retrieving $metadata//rdf:Description[@rdf:about = " || $reqResource || "]/rdfs:seeAlso/@rdf:resource/string()") else ()
-        let $resolvedPaths := for $url in $metadata//rdf:Description[@rdf:about = $reqResource]/rdfs:seeAlso/@rdf:resource/string()
-                              where matches($url, "\.(jpg|jpeg|png|tif|tiff)$")
-                              return $url
-        let $resolvedPath := $resolvedPaths[1]
-        let $debug3       := if ($config:debug = ("trace", "info")) then console:log("Redirecting to " || $resolvedPath || " ...") else ()
-        return net:redirect-with-303($resolvedPath)
+    let $reqResource  := $pathComponents[last()]
+    let $reqWork      := tokenize(tokenize($reqResource, ':')[1], '\.')[1]
+    let $passage      := tokenize($reqResource, ':')[2]
+    let $metadata     := doc($config:rdf-root || '/' || replace($reqWork, 'w0', 'W0') || '.rdf')
+    let $debug2       := if ($config:debug = "trace") then console:log("Retrieving $metadata//rdf:Description[@rdf:about = " || $reqResource || "]/rdfs:seeAlso/@rdf:resource/string()") else ()
+    let $resolvedPaths := for $url in $metadata//rdf:Description[@rdf:about = $reqResource]/rdfs:seeAlso/@rdf:resource/string()
+                          where matches($url, "\.(jpg|jpeg|png|tif|tiff)$")
+                          return $url
+    let $resolvedPath := $resolvedPaths[1]
+    let $debug3       := if ($config:debug = ("trace", "info")) then console:log("Redirecting to " || $resolvedPath || " ...") else ()
+    return net:redirect-with-303($resolvedPath)
 };
+
+(:~
+: Receives a list of (lower-cased!) path components as well as parameters for a request, validates the syntax of the request, 
+: and returns information about the requested data in a standardized way.
+~:)
+declare function net:APIparseTextsRequest($textsPath as xs:string?, $netVars as map()*) as map()? {
+    let $pathComponents := tokenize(lower-case($textsPath), "/")
+    let $format         := $netVars('format')
+    (: TODO: forward only substring *after* 'volX.' as passage? :)
+    let $passage :=     if (tokenize($pathComponents, ':')[2]) then tokenize($pathComponents, ':')[2] else 'unspecified'
+    (: TODO: hashes! (should hashes and passages exclude each other?) :)
+    (: TODO: deal with [txtResource].orig/.edit resource names, or enforce using mode parameter by omitting them ? :)
+    let $resource :=    if (count($pathComponents) gt 1) then 
+                            let $debug := if ($config:debug = ('trace')) then console:log('texts API: invalid resource path: .../texts/' || $textsPath || '.') else ()
+                            return 'invalid'
+                        else if (count($pathComponents) eq 0) then 'all'
+                        else 
+                            let $reqResource := tokenize(tokenize($pathComponents, ':')[1], '\.')[1]
+                            return 
+                            (: TODO: enforce usage of ':volX' (passage) instead of '_volXX' (filename) by removing the latter here altogether? :)
+                                if (matches($reqResource, '^w\d{4}(_vol\d{2})?$') and not(matches($passage, '^vol\d$'))) then 
+                                    if (doc-available($config:tei-works-root || '/' || translate($reqResource, 'wv', 'WV') || '.xml')) then translate($reqResource, 'wv', 'WV')
+                                    else 'invalid'
+                                else if (matches($reqResource, '^w\d{4}$') and matches($passage, '^vol\d$')) then 
+                                    if (doc-available($config:tei-works-root || '/' || 'W' || substring($reqResource, 2) || '_Vol0' || substring($passage, 4)) || '.xml') then
+                                        'W' || substring($reqResource, 2) || '_Vol0' || substring($passage, 4)
+                                    else 'invalid'
+                                else if (matches($reqResource, '^[Aa][Ll][Ll]$')) then
+                                    'all'
+                                else 'invalid' 
+    (:  filter out all params that aren't officially stated as valid params for the requested format, and 
+        remove duplicate params; if params have similar names but different values, the first value wins :)
+    let $validParams := $config:apiFormats($format)
+    let $params :=  map:merge(for $p in $netVars('params') return if (($p, substring-before($p, '=')) = $validParams) then map:entry(substring-before($p, '='), substring-after($p, '=')) else ())
+    (: determine what type of text is requested (this can be outsourced to the single net:deliverXYZ functions if it gets 
+        too complex here...) :)
+    let $resourceType :=    if ($resource ne 'invalid') then 
+                                if (contains($resource, '_Vol')) then 'work-volume'
+                                else if (matches($passage, '^vol\d\.')) then 'work-passage'
+                                else if ($resource eq 'all') then 'corpus'
+                                else 'work'
+                            else 'invalid'
+    (: for applications that do not distinguish single volumes: state multi-volume workID: :)
+    let $mainResource := if (starts-with($resourceType,'work')) then substring($resource,1,5) else 'unspecified'
+    let $resourceData := map {
+                        'resourceType': $resourceType,
+                        'resource': $resource,
+                        'mainResource': $mainResource,
+                        'passage': $passage,
+                        'format': $format
+                        }
+    let $completeData := map:merge(($resourceData, $params))
+    let $debug := if ($config:debug = ('trace')) then console:log('texts API: request data: ' || string-join((for $k in map:keys($completeData) return $k || '=' || map:get($completeData, $k)), '; ') || '.') else ()
+    return $completeData
+    (:  how to deal with embedded URLs / URLs as parameter values?  :)
+};
+
+

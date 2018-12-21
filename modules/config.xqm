@@ -44,6 +44,16 @@ declare variable $config:serverdomain :=
 declare variable $config:apiEndpoints   := map  {
                                                     "v1": ("texts", "search", "codesharing", "xtriples")
                                                 };
+(: a table of valid API parameters and values, structured by the 'format' parameter's values; 
+    if there is no explicite value stated for a parameter (such as 'q'), the parameter may have any string value :)
+declare variable $config:apiFormats := map {
+                                                'html': ('mode=edit', 'mode=orig', 'q', 'lang=de', 'lang=en', 'lang=es', 'viewer'),
+                                                'iiif': ('canvas'),
+                                                'jpg': (),
+                                                'rdf': (),
+                                                'tei': ('mode=meta', 'mode=full'),
+                                                'txt': ('mode=edit', 'mode=orig')
+                                            };
 
 declare variable $config:webserver      := $config:proto || "://www."    || $config:serverdomain;
 declare variable $config:blogserver     := $config:proto || "://blog."   || $config:serverdomain;
