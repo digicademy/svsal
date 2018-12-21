@@ -236,6 +236,10 @@ declare function admin:derive-title($node as node()) as item()* {
                                         else if (not($node/tei:head | $node/tei:list/tei:head)) then  ('[', $node/@type/string(), '] ',  $node/@n/string())
                                         else()
      case element(tei:milestone)    return ('[', $node/@unit/string(), '] ',  $node/@n/string())
+     (:case element(tei:label)        return if ($node/@type) then ('[', $node/@type/string(), '] ', local:passthruTOC($node)) else ():)
+     case element(tei:pb)           return if (not($node[@break eq 'no'])) then ' ' else ()
+     case element(tei:cb)           return if (not($node[@break eq 'no'])) then ' ' else ()
+     case element(tei:lb)           return if (not($node[@break eq 'no'])) then ' ' else ()
      default return local:passthruTOC($node)
 };
    

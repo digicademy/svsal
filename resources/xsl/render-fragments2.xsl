@@ -218,10 +218,10 @@
                             <xsl:value-of select=".//term[1]/@key"/>
                         </xsl:when>
                         <xsl:when test="child::head">
-                            <xsl:call-template name="sal:teaserString">
+                            <xsl:call-template name="sal:teaserStringHead">
                                 <xsl:with-param name="identifier" select="@xml:id"/>
                                 <xsl:with-param name="mode">html</xsl:with-param>
-                                <xsl:with-param name="input" select="child::head[1]/text()"/>
+                                <xsl:with-param name="input" select="child::head[1]//node()"/>
                             </xsl:call-template>
                         </xsl:when>
                         <xsl:when test="matches(@n, '^[0-9]+$') and (@unit or @type)">
@@ -273,10 +273,10 @@
                             <xsl:value-of select=".//term[1]/@key"/>
                         </xsl:when>
                         <xsl:when test="child::head">
-                            <xsl:call-template name="sal:teaserString">
+                            <xsl:call-template name="sal:teaserStringHead">
                                 <xsl:with-param name="identifier" select="@xml:id"/>
                                 <xsl:with-param name="mode">html</xsl:with-param>
-                                <xsl:with-param name="input" select="child::head[1]/text()"/>
+                                <xsl:with-param name="input" select="child::head[1]//node()"/>
                             </xsl:call-template>
                         </xsl:when>
                         <xsl:when test="matches(@n, '^[0-9]+$') and (@unit or @type)">
@@ -305,6 +305,24 @@
             <xsl:otherwise/>
         </xsl:choose>
     </xsl:template>
+    
+    <!-- marginal labels will ONLY be displayed on the margin -->
+    <!--<xsl:template match="label[@type and @place eq 'margin']" mode="#all">
+        <xsl:if test="descendant::text()">
+            <div class="summary_title">
+                <xsl:call-template name="anchor-id">
+                    <xsl:with-param name="id">
+                        <xsl:value-of select="@xml:id"/>
+                    </xsl:with-param>
+                </xsl:call-template>
+                <xsl:call-template name="sal:teaserStringHead">
+                    <xsl:with-param name="identifier" select="@xml:id"/>
+                    <xsl:with-param name="mode">html</xsl:with-param>
+                    <xsl:with-param name="input" select=".//node()"/>
+                </xsl:call-template>
+            </div>
+        </xsl:if>
+    </xsl:template>-->
 
     <!-- Other lists (dict-type lists are handled like divs) -->
     <!-- In html, lists must contain nothing but <li>s, so we have to
@@ -390,7 +408,9 @@
             <xsl:apply-templates/>
         </h3>
     </xsl:template>
-
+    <!-- Marginal headings: they should only appear as marginal labels, not as actual in-text headings -->
+    <!--<xsl:template match="head[@place eq 'margin']"/>-->
+    
     <!-- Main Text: put <p> in html <div class="hauptText"> and create anchor if p@xml:id (or just create an html <p> if we are inside a list item);  -->
     <xsl:template match="p[not(ancestor::note or ancestor::titlePage)]">
 <!--        <xsl:message>Matched p node <xsl:value-of select="@xml:id"/>.</xsl:message>-->
@@ -564,8 +584,8 @@
     </xsl:template>
 -->
 
-    <!-- Notes -->
-    <xsl:template match="note">
+    <!-- Notes (and, for now, marginal labels) -->
+    <xsl:template match="note|label[@place eq 'margin']">
 <!--        <xsl:message>Matched note node <xsl:value-of select="@xml:id"/>.</xsl:message>-->
         <xsl:element name="div">
             <xsl:attribute name="class">marginal container</xsl:attribute>
@@ -592,8 +612,7 @@
             </xsl:variable>
             
             <xsl:choose>
-<!--                <xsl:when test="string-length(concat(@n, ' ', $normalizedString)) ge $noteTruncLimit">-->
-                <xsl:when test="string-length(concat(@n, ' ', $normalizedString)) ge 2">
+                <xsl:when test="string-length(concat(@n, ' ', $normalizedString)) ge $noteTruncLimit">
                     <xsl:variable name="id" select="concat('collapse-', @xml:id)"/>
                     <a role="button" class="collapsed note-teaser" data-toggle="collapse" href="{concat('#', $id)}" aria-expanded="false" aria-controls="{$id}">    
                         <p class="collapse" id="{$id}" aria-expanded="false">
@@ -648,6 +667,7 @@
         <xsl:if test="not(key('chars', substring(@ref,2)))">
             <xsl:message terminate="yes" select="concat('Error: g/@ref has an invalid value, the char code does not exist): ', substring(@ref,2))"/>
         </xsl:if>
+        <!-- for backwards compatibility (W0004, W0013, W0015), we have to distinguish 2 cases: -->
         <xsl:variable name="precomposedMapping" select="key('chars', substring(@ref,2))/mapping[@type='precomposed']"/>
         <xsl:variable name="composedMapping" select="key('chars', substring(@ref,2))/mapping[@type='composed']"/>
         <xsl:variable name="precomposedString" as="xs:string?" select="$precomposedMapping/text()"/>
@@ -657,7 +677,7 @@
         <xsl:choose>
             <!-- a) element g is applied for resolving abbreviations (or g includes the 'long s' character, 
                 which is to be standardized): include original and edited/standardized form -->
-            <xsl:when test="substring(@ref,2) eq 'char017f'                             or ($thisString != ($precomposedString, $composedString))">
+            <xsl:when test="substring(@ref,2) eq 'char017f' or ($thisString != ($precomposedString, $composedString))">
                 <xsl:variable name="originalGlyph">
                     <xsl:choose>
                         <xsl:when test="$precomposedMapping">
@@ -688,6 +708,7 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
+    
     <xsl:template match="g" mode="pureText">
         <xsl:variable name="originalGlyph" as="xs:string">
             <xsl:choose>
@@ -704,7 +725,6 @@
         </xsl:variable>
         <xsl:value-of select="$originalGlyph"/>
     </xsl:template>
-    
     <xsl:template match="damage">
         <xsl:apply-templates/>
     </xsl:template>
@@ -840,7 +860,7 @@
         </xsl:element>
     </xsl:template>
     
-    <!-- "free-floating" headings are tagged as label[@place eq 'inline'], to be rendered similar to h4 -->
+    <!-- less significant headings (i.e., h. which do not determine a dedicated div section) are tagged as label[@place=('inline','margin')], to be rendered similar to h4 -->
     <xsl:template match="label[@place eq 'inline']">
         <span class="label-inline">
             <xsl:apply-templates/>

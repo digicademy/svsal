@@ -56,6 +56,59 @@
     </xsl:template>
     
 
+    <!-- quick hack around sal:teaserString, which produces erroneous output for tei:head -->
+    <xsl:template name="sal:teaserStringHead">
+        <xsl:param name="input"/>
+        <xsl:param name="mode"/>                      <!-- shall we return html or plaintext? -->
+        <xsl:param name="identifier" as="xs:string"/> <!-- if it's html, how should we identify the restOfString div? -->
+
+        <xsl:variable name="normalizedString" select="sal:getEditText($input)"/>
+        <xsl:choose>
+            <xsl:when test="string-length($normalizedString) ge $truncate-limit">
+                <xsl:variable name="localTeaserString" select="concat(substring($normalizedString, 1, $truncate-limit),'…')"/>
+                <xsl:choose>
+                    <xsl:when test="$mode/text()='html'">
+                        <xsl:element name="a">
+                            <xsl:attribute name="data-toggle" select="'collapse'"/>
+                            <xsl:attribute name="data-target" select="concat('#restOfString', $identifier)"/>
+                            <xsl:value-of select="$localTeaserString"/>
+                            <i class="fa fa-angle-double-down"/>
+                        </xsl:element>
+                        <xsl:element name="div">
+                            <xsl:attribute name="class" select="'collapse'"/>
+                            <xsl:attribute name="id" select="concat('restOfString', $identifier)"/>
+                            <xsl:apply-templates select="$normalizedString"/>
+                        </xsl:element>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="$localTeaserString"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:copy-of select="$normalizedString"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    
+    <xsl:function name="sal:getEditText" as="xs:string?">
+        <xsl:param name="input" as="node()*"/>
+        <xsl:variable name="transformed">
+            <xsl:for-each select="$input">
+                <xsl:choose>
+                    <xsl:when test="self::text()[not(ancestor::abbr or ancestor::sic or ancestor::orig)]">
+                        <xsl:value-of select="."/>
+                    </xsl:when>
+                    <xsl:when test="(self::lb or self::cb or self::pb) and not(@break eq 'no')">
+                        <xsl:value-of select="' '"/>
+                    </xsl:when>
+                    <xsl:otherwise/>
+                </xsl:choose>
+            </xsl:for-each>
+        </xsl:variable>
+        <xsl:value-of select="normalize-space(string-join($transformed, ''))"/>
+    </xsl:function>
+        
     <!-- Resolve Private namespace prefixes...
 	   cf. S. Rahtz on February 2013 in http://tei-l.970651.n3.nabble.com/TEI-P5-version-2-3-0-is-released-td4023117.html.
     -->
