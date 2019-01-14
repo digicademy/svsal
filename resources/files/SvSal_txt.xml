@@ -22,7 +22,10 @@
     </fileDesc>
     <revisionDesc status="e_unreviewed">
       <listChange>
-        <change who="#DG" when="2018-12-18" status="e_emended_unenriched">Added 'number' to milestone/@unit.</change>
+        <change who="#DG" when="2018-01-14" status="e_emended_unenriched"
+          >Added element signed to textstructure.</change>
+        <change who="#DG" when="2018-12-18" status="e_emended_unenriched"
+          >Added 'number' to milestone/@unit.</change>
         <change who="#DG" when="2018-12-03" status="e_emended_unenriched">
           <p>Deleted title/@type[. eq '245a'].</p>
         </change>
@@ -195,7 +198,7 @@
         <!-- include="addName affiliation age birth bloc climate country death district education event faith floruit forename genName geo geogFeat geogName langKnowledge langKnown listEvent listNym listOrg listPerson listPlace listRelation location nameLink nationality nym occupation offset org orgName persName person personGrp place placeName population region relation relationGrp residence roleName settlement sex socecStatus state surname terrain trait" -->
         <moduleRef key="tagdocs" except=""/>
         <moduleRef key="textstructure"
-          except="closer dateline div1 div2 div3 div4 div5 div6 div7 opener postscript salute signed trailer"/>
+          except="closer dateline div1 div2 div3 div4 div5 div6 div7 opener postscript salute trailer"/>
         <moduleRef key="transcr"
           except="addSpan facsimile handNotes handShift line listTranspose metamark mod redo restore retrace sourceDoc subst substJoin surface surfaceGrp surplus transpose undo zone"/>
         <!-- delete complete attribute classes -->
