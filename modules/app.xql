@@ -127,15 +127,15 @@ declare function app:sectionTitle ($targetWork as node()*, $targetNode as node()
                         concat(($targetNode/@type | $targetNode/@unit)[1], ' ', $targetNode/@n, ': &#34;', $referString, '&#34;')
                 else
                     string($targetNode/@xml:id)
-(: p's are names according to their beginning :)
-            else if ($targetNode/self::tei:p) then
+(: p's and lg's are names according to their beginning :)
+            else if ($targetNode/self::tei:p | $targetNode/self::tei:lg) then
                 if (string-length(string-join($targetNode, '')) gt $config:chars_summary) then
                     concat('Paragraph &#34;', normalize-space(substring(string-join($targetNode//text(), ''), 1, $config:chars_summary)), '…', '&#34;')
                 else
                     concat('Paragraph &#34;', normalize-space(string-join($targetNode//text(), '')), '&#34;')
             else if ($targetNode/self::tei:text and $targetNode/@type='work_volume') then
                 concat('Vol. ', $targetNode/@n)
-            else if ($targetNode/self::tei:text and $targetNode/@xml:id='complete_work') then
+            else if ($targetNode/self::tei:text and $targetNode/@xml:id='completeWork') then
                 'complete work'
             else if ($targetNode/self::tei:text and matches($targetNode/@xml:id, 'work_part_[a-z]')) then
                 '(process-technical) part ' | substring(string($targetNode/@xml:id), 11, 1)
@@ -162,9 +162,9 @@ declare function app:sectionTitle ($targetWork as node()*, $targetNode as node()
                     else concat($volumeString, 'p. ', $targetNode/@n)
             else if ($targetNode/self::tei:titlePart || $targetNode/self::tei:titlePage) then
                 "Titulus"
-            else if ($targetNode/self::tei:frontmatter) then
+            else if ($targetNode/self::tei:front) then
                 "frontmatter"
-            else if ($targetNode/self::tei:backmatter) then
+            else if ($targetNode/self::tei:back) then
                 "backmatter"
             else if ($targetNode/self::tei:lb) then
                 concat('Beginning of line ', $targetNode/@n)
@@ -3225,7 +3225,7 @@ declare %templates:default
                             <!--TOC-Button-->
                             <div class="btn-group">
                                 <button type="button" class="btn btn-link" data-toggle="modal" data-target="#myModal">
-                                    <i class="fa fa-list-ul"aria-hidden="true"> </i>&#xA0;<i18n:text key="toc">Inhalt</i18n:text>
+                                    <i class="fa fa-list-ul" aria-hidden="true"> </i>&#xA0;<i18n:text key="toc">Inhalt</i18n:text>
                                 </button> 
                             <!--Details Button-->
                                {app:WRKdetailsCurrent($node, $model, $lang)}
