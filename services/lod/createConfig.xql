@@ -6,7 +6,8 @@ import module namespace console     = "http://exist-db.org/xquery/console";
 import module namespace config      = "http://salamanca/config" at "../../modules/config.xqm";
 declare       namespace sal         = "http://salamanca.adwmainz.de";
 declare       namespace tei         = "http://www.tei-c.org/ns/1.0";
-declare       namespace xi         = "http://www.w3.org/2001/XInclude";
+declare       namespace util        = "http://exist-db.org/xquery/util";
+declare       namespace xi          = "http://www.w3.org/2001/XInclude";
 
 let $resourceId    := request:get-parameter('resourceId', '')
 let $idServer      := $config:idserver
@@ -68,11 +69,15 @@ let $rawConfiguration   :=  if (starts-with($resourceId, 'A') or starts-with($re
                                                         <param name="webServer"           value="{$webServer}"/>
                                                         <param name="imageServer"         value="{$imageServer}"/>
                                                       </parameters>
-                                let $prelim        := doc("svsal-xtriples-work.xml")
+                                let $prelim        := doc("svsal-xtriples-work2.xml")
                                 let $localized := transform:transform($prelim, $xslSheet, $parameters)
                                 return $localized
                             else
                                 doc("svsal-xtriples-everything.xml")
+
+
+let $nodeIndex     := doc($config:data-root || '/' || $resourceId || '_nodeIndex.xml')
+let $fullTEI       := doc($config:tei-works-root || '/' || $resourceId || '.xml')/tei:TEI
 
 (: 
     metadata (teiHeader(s)) are stored separately in one or more resource(s)
@@ -81,17 +86,16 @@ let $rawConfiguration   :=  if (starts-with($resourceId, 'A') or starts-with($re
 let $workMetadata :=  if (starts-with($resourceId, 'W0')) then
                             let $workTEI := doc($config:tei-works-root || '/' || $resourceId || '.xml')/tei:TEI
                             let $workType := $workTEI/tei:text/@type
-                            let $workResource := <resource><document docType="{$workType}" docId="{$resourceId}">{$workTEI/tei:teiHeader}</document></resource>
+                            let $workHeader := util:expand(<document docType="{$workType}" docId="{$resourceId}">{$workTEI/tei:teiHeader}</document>)
                             return 
                                 if ($workType eq 'work_multivolume') then 
                                     let $volumeIds := $workTEI/tei:text/tei:group/xi:include/@href/string()
                                     (: TODO: fix the substring() workaround by stating correct rdf uris in the teiHeader in the first place :)
                                     let $volumeHeaders := for $id in $volumeIds return  <document type="work_volume" docId="{$resourceId || ':vol' || substring($id,11,1)}">
-                                                                                            {doc($config:tei-works-root || '/' || $id)/tei:TEI/tei:teiHeader}
+                                                                                            {util:expand(doc($config:tei-works-root || '/' || $id)/tei:TEI/tei:teiHeader)}
                                                                                         </document>
-                                    let $volumeResources := for $h at $i in $volumeHeaders return <resource>{$h}</resource>
-                                    return ($workResource, $volumeResources)
-                                else $workResource
+                                    return ($workHeader, $volumeHeaders)
+                                else $workHeader
                         else ()
 
 let $collection         :=  if (starts-with($resourceId, "authors.")) then
@@ -107,20 +111,35 @@ let $collection         :=  if (starts-with($resourceId, "authors.")) then
                                     <resource uri="{{//tei:listPerson}}"/>
                                 </collection>
                             else if (starts-with($resourceId, 'W0')) then
-                                <collection uri="{$config:data-root}/{$resourceId}_nodeIndex.xml">
-                                    <resource uri="{{//sal:index}}"/>
+(:                                <collection uri="{$config:data-root}/{$resourceId}_nodeIndex.xml">
                                     {$workMetadata}
+                                    <resource uri="{{//sal:index}}"/>
+                                </collection>
+:)
+                                <collection>
+                                    <resource>
+                                        {$nodeIndex}
+                                        {$workMetadata}
+                                        {$fullTEI}
+                                    </resource>
+<!--
+                                    <resource uri="{//sal:index}"/>
+                                    <resource uri="{//sal:node}"/>
+                                    <resource uri="{//document}"/>
+                                    <resource uri="{//tei:TEI}"/>
+-->
                                 </collection>
                             else if (starts-with($resourceId, 'Q')) then
-                                <collection uri="{$config:tei-works-root}">
-                                    <resource uri="{$config:tei-works-root}/W0013.xml"/>
-                                    <resource uri="{$config:tei-works-root}/W0013_Vol01.xml"/>
-                                    <resource uri="{$config:tei-works-root}/W0013_Vol02.xml"/>
-                                    <resource uri="{$config:tei-works-root}/W0010.xml"/>
-                                    <resource uri="{$config:tei-works-root}/W0010_a.xml"/>
-                                    <resource uri="{$config:tei-works-root}/W0010_b.xml"/>
-                                    <resource uri="{$config:tei-works-root}/W0010_c.xml"/>
-                                    <resource uri="{$config:tei-works-root}/W0010_d.xml"/>
+                                <collection>
+                                    <dokument>
+                                        {$nodeIndex}
+                                        {$workMetadata}
+                                        {$fullTEI}
+                                    </dokument>
+                                    <resource uri="{//sal:index}"/>
+                                    <resource uri="{//sal:node}"/>
+                                    <resource uri="{//document}"/>
+                                    <resource uri="{//tei:TEI}"/>
                                 </collection>
                             else ()
 
