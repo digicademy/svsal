@@ -31,6 +31,7 @@
     - better use union of full xpaths than or'ing predicates/conditions (intersect instead of and'ing, too?)
 -->
 
+<!-- TODO refactoring/testing: reset minimum thresholds in @repeat attributes -->
 
             <statement debug="true" n="0">
                 <subject type="uri"/>
