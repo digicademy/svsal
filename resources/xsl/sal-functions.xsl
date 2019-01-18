@@ -1,4 +1,4 @@
-<xsl:stylesheet xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:functx="http://www.functx.com" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sal="http://salamanca.adwmainz.de" version="3.0" exclude-result-prefixes="xsl xi tei functx xs exist fn sal xd" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+<xsl:stylesheet xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:functx="http://www.functx.com" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" xmlns:sal="http://salamanca.adwmainz.de" version="3.0" exclude-result-prefixes="xsl xi tei functx xs exist fn sal xd" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
     
     <xsl:import href="xipr-1-1.xsl"/>   <!-- XInclude processing -->
 
@@ -387,7 +387,7 @@
         <xsl:variable name="work" select="sal:getWork($targetWorkId)"/>
         <xsl:variable name="targetNode" select="$work//*[@xml:id = $targetNodeId]"/>
         <xsl:choose>
-            <xsl:when test="$targetNode/self::div | $targetNode/self::milestone">
+            <xsl:when test="$targetNode/self::div | $targetNode/self::milestone | $targetNode/self::list | $targetNode/self::item">
                 <!-- See if we have something we can use to name the thing:
                  Either an @n attribute, a child heading or a summary at the beginning of the chapter/in the index etc. -->
                 <xsl:choose>
@@ -416,57 +416,30 @@
             <xsl:when test="$targetNode/self::text and $targetNode/@xml:id='complete_work'">
                 complete work
             </xsl:when>
+            <xsl:when test="$targetNode/self::front">
+                <xsl:text>frontmatter</xsl:text>
+            </xsl:when>
+            <xsl:when test="$targetNode/self::back">
+                <xsl:text>backmatter</xsl:text>
+            </xsl:when>
+            <xsl:when test="$targetNode/self::tei:p | $targetNode/self::tei:lg">
+                <xsl:value-of select="concat('Paragraph &#34;', normalize-space(substring(string-join($targetNode//text(), ''), 1, $truncate-limit)), '…', '&#34;')"/>
+            </xsl:when>
             <xsl:when test="$targetNode/self::note">
                 <xsl:value-of select="normalize-space(concat('Note ', $targetNode/@n))"/>
+            </xsl:when>
+            <xsl:when test="$targetNode/self::pb">
+                <xsl:variable name="volumeString" select="if ($targetNode/ancestor::tei:text[@type='work_volume']) then concat('Vol. ', $targetNode/ancestor::tei:text[@type='work_volume']/@n, ', ') else ()"/>
+                <xsl:value-of select="if (contains($targetNode/@n, 'fol.')) then concat($volumeString, ' ', $targetNode/@n) else concat($volumeString, 'p. ', $targetNode/@n)"/>
+            </xsl:when>
+            <xsl:when test="$targetNode/self::tei:titlePart || $targetNode/self::tei:titlePage">
+                <xsl:text>titulus</xsl:text>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:value-of select="concat('Non-titleable node (', xs:string($targetNode/@xml:id), ')')"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:function>
-    <!-- <xsl:function name="sal:sectionTitleWithNode" as="xs:string">
-        <xsl:param name="targetNode" as="node()"/>
-
-        <xsl:variable name="target" select="$targetNode"/>
-        <xsl:choose>
-            <xsl:when test="$target/self::div">
-                <xsl:choose>
-                    <xsl:when test="$target/@n">
-                        <xsl:choose>
-                            <xsl:when test="$target/@n castable as xs:integer">
-                                <xsl:value-of select="concat($target/@type, ' ', $target/@n)"/>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:value-of select="xs:string($target/@n)"/>
-                            </xsl:otherwise>
-                        </xsl:choose>
-                    </xsl:when>
-                    <xsl:when test="$target/head">
-                        <xsl:value-of select="concat($target/@type, ' "', $target/head[1], '"')"/>
-                    </xsl:when>
-                    <xsl:when test="$target/@type">
-                        <xsl:value-of select="concat($target/@type, ' (no title), id ', $target/@xml:id)"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:value-of select="$target/@xml:id"/>
-                    </xsl:otherwise>
-                </xsl:choose>
-            </xsl:when>
-            <xsl:when test="$target/self::text">
-                <xsl:value-of select="concat('Vol. ', $target/@n)"/>
-            </xsl:when>
-            <xsl:when test="$target/self::milestone">
-                <xsl:value-of select="concat($target/@unit, ' ', $target/@n)"/>
-            </xsl:when>
-            <xsl:when test="$target/self::note">
-                <xsl:value-of select="normalize-space(concat('Note ', $target/@n))"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:value-of select="concat('Non-titleable node (', xs:string($target/@xml:id), ')')"/>
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:function>
--->
 
     <!-- For a given work-id and node-id, make a permalink to it (server + workId + citetrail) -->
     <xsl:function name="sal:mkId" as="xs:string">

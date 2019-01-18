@@ -1,0 +1,176 @@
+<xtriples xml:base="https://id.salamanca.school/">
+    <configuration>
+        <vocabularies>
+            <!-- Input vocabularies -->
+            <vocabulary prefix="tei" uri="http://www.tei-c.org/ns/1.0"/>
+            <vocabulary prefix="xi" uri="http://www.w3.org/2001/XInclude"/>
+            <vocabulary prefix="sal" uri="http://salamanca.adwmainz.de"/>               
+
+            <!-- Output vocabularies -->
+            <vocabulary prefix="rdf" uri="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+            <vocabulary prefix="rdfs" uri="http://www.w3.org/2000/01/rdf-schema#"/>
+            <vocabulary prefix="owl" uri="http://www.w3.org/2002/07/owl#"/>        
+
+            <vocabulary prefix="void" uri="http://rdfs.org/ns/void#"/>
+            <vocabulary prefix="iiif" uri="http://iiif.io/api/presentation/2.1/"/>
+            <vocabulary prefix="foaf" uri="http://xmlns.com/foaf/0.1/"/>            
+            <vocabulary prefix="book" uri="http://schema.org/Book/"/>               
+            <vocabulary prefix="fabio" uri="http://purl.org/spar/fabio/"/>           
+            <vocabulary prefix="cito" uri="http://purl.org/spar/cito/"/>            
+            <vocabulary prefix="doco" uri="http://purl.org/spar/doco/"/>            
+            <vocabulary prefix="po" uri="http://www.essepuntato.it/2008/12/pattern#"/> 
+<!--            <vocabulary prefix="c40" uri="http://purl.org/spar/c4o"/>              -->
+<!--            <vocabulary prefix="deo" uri="http://purl.org/spar/deo"/>              -->
+<!--            <vocabulary prefix="co" uri="http://purl.org/co/"/>                    -->
+        </vocabularies>
+
+        <triples>
+
+<!-- TODO/General:
+    - Try to get rid of string() so that values are not isolated from their (indexed) nodes (ML suggestion by Joe Wicentowski)
+    - better use union of full xpaths than or'ing predicates/conditions (intersect instead of and'ing, too?)
+-->
+
+
+            <statement n="0">
+                <condition>/($currentResource//tei:relatedItem[@type eq "work_volume"])</condition>
+                <subject type="uri"/>
+                <predicate prefix="void">inDataset</predicate>
+                <object type="uri" prepend="https://api.salamanca.school/texts/">void.ttl#Salamanca</object>
+            </statement>
+            
+            <statement n="1"><!-- a fabio:work -->
+                <subject type="uri" prepend="texts/">/($currentResource//@docId)</subject>
+                <predicate prefix="rdf">type</predicate>
+                <object type="uri" prefix="fabio">work</object>
+            </statement>
+            <statement n="2"><!-- fabio:hasTitle -->
+                <subject type="uri" prepend="texts/">/($currentResource//@docId)</subject> <!-- /@work -->
+                <predicate prefix="fabio">hasTitle</predicate>
+                <object type="literal">/($currentResource//tei:titleStmt//tei:title[@type eq 'main']/text())</object>
+            </statement>
+            <statement n="3"><!-- fabio:hasCreator -->
+                <subject type="uri" prepend="texts/">/($currentResource//@docId)</subject>
+                <predicate prefix="fabio">hasCreator</predicate>
+                <object type="uri" prepend="authors.">(for $t in $currentResource//tei:titleStmt//tei:author/tei:persName/tokenize(tokenize(@ref, 'author:')[2], ' ')[1] return element t {$t})</object>
+            </statement>
+            <statement n="4"><!-- fabio:has volume count -->
+                <condition>/($currentResource//tei:relatedItem[@type eq "work_volume"])</condition>
+                <subject type="uri" prepend="texts/">/($currentResource//@docId)</subject>
+                <predicate prefix="fabio">hasVolumeCount</predicate>
+                <object type="literal">/count($currentResource//tei:relatedItem[@type eq "work_volume"])</object>
+            </statement>
+            
+            <statement n="5"><!-- rdfs:seeAlso SvSal work webpage -->
+                <subject type="uri" prepend="texts/">/($currentResource//@docId)</subject>
+                <predicate prefix="rdfs">seeAlso</predicate>
+                <object type="uri" prepend="https://id.salamanca.school/texts/">/($currentResource//@docId)</object>
+            </statement>
+
+            <statement n="6" repeat="{/count($currentResource//sal:node[@subtype eq 'work_volume'])}">
+                <subject type="uri" prepend="texts/{/@work}:">//sal:node[@subtype eq 'work_volume'][$repeatIndex]/sal:citetrail/text()</subject>
+                <predicate prefix="rdf">type</predicate>
+                <object type="uri" prefix="doco">part</object>
+            </statement>
+            <statement n="7" repeat="{/count($currentResource//sal:node[@subtype eq 'work_volume'])}">
+                <subject type="uri" prepend="texts/{/@work}:">//sal:node[@subtype eq 'work_volume'][$repeatIndex]/sal:citetrail/text()</subject>
+                <predicate prefix="rdfs">label</predicate>
+                <object type="literal">/concat('Volume ', $repeatIndex)</object>
+            </statement>
+            <statement n="8" repeat="{/count($currentResource//sal:node[@subtype eq 'work_volume'])}">
+                <subject type="uri" prepend="texts/{/@work}:">//sal:node[@subtype eq 'work_volume'][$repeatIndex]/sal:citetrail/text()</subject>
+                <predicate prefix="po">isContainedBy</predicate>
+                <object type="uri" prepend="texts/">/@work</object>
+            </statement>
+            <statement n="9" repeat="{/count($currentResource//sal:node[@subtype eq 'work_volume'])}">
+                <subject type="uri" prepend="texts/{/@work}:">//sal:node[@subtype eq 'work_volume'][$repeatIndex]/sal:citetrail/text()</subject>
+                <predicate prefix="rdfs">seeAlso</predicate>
+<!--                <object type="uri" prepend="http://www.salamanca.school/">/(.//sal:node[@subtype eq 'work_volume'][$repeatIndex]/sal:crumbtrail/a/@href)[last()]</object>-->
+                <object type="uri" prepend="http://www.salamanca.school/">//sal:node[@subtype eq 'work_volume'][$repeatIndex]/sal:crumbtrail/a/@href[last()]</object>
+			 </statement>
+        
+            <statement n="10" repeat="{/min((10020, count($currentResource//sal:node[@type eq 'div'])))}">
+                <subject type="uri" prepend="texts/{/@work}:">//sal:node[@type eq 'div'][$repeatIndex]/sal:citetrail/text()</subject>
+                <predicate prefix="rdf">type</predicate>
+                <object type="uri" prefix="doco">/(if($currentResource//sal:node[@type eq 'div'][$repeatIndex]/@subtype eq 'book') then 'part' else if ($currentResource//sal:node[@type eq 'div'][$repeatIndex]/@subtype eq 'chapter') then 'chapter' else 'section')</object>
+            </statement>
+            <statement n="11" repeat="{/min((10020, count($currentResource//sal:node[@type eq 'div'])))}">
+                <subject type="uri" prepend="texts/{/@work}:">//sal:node[@type eq 'div'][$repeatIndex]/sal:citetrail/text()</subject>
+                <predicate prefix="rdfs">label</predicate>
+                <object type="literal">/replace($currentResource//sal:node[@type eq 'div'][$repeatIndex]/sal:title, '"', '\\"')</object>
+            </statement>
+            <statement n="12" repeat="{/min((10020, count($currentResource//sal:node[@type eq 'div'])))}">
+                <subject type="uri" prepend="texts/{/@work}:">//sal:node[@type eq 'div'][$repeatIndex]/sal:citetrail/text()</subject>
+                <predicate prefix="po">isContainedBy</predicate>
+                <object type="uri" prepend="texts/">/string-join(($currentResource/@work, (for $t in $currentResource//sal:node[@type eq 'div'][$repeatIndex]/sal:citableParent/text() return $currentResource//sal:node[@n eq $t]/sal:citetrail/text())), ':')</object>
+            </statement>
+            <statement n="13" repeat="{/min((10020, count($currentResource//sal:node[@type eq 'div'])))}">
+                <subject type="uri" prepend="texts/{/@work}:">//sal:node[@type eq 'div'][$repeatIndex]/sal:citetrail/text()</subject>
+                <predicate prefix="rdfs">seeAlso</predicate>
+                <object type="uri" prepend="http://www.salamanca.school/">/($currentResource//sal:node[@type eq 'div'][$repeatIndex]/sal:crumbtrail/a/@href)[last()]</object>
+			 </statement>
+
+            <statement n="14" repeat="{/min((10020, count($currentResource//sal:node[@type eq 'p'])))}">
+                <subject type="uri" prepend="texts/{/@work}:">//sal:node[@type eq 'p'][$repeatIndex]/sal:citetrail/text()</subject>
+                <predicate prefix="rdf">type</predicate>
+                <object type="uri" prefix="doco">paragraph</object>
+            </statement>
+            <statement n="15" repeat="{/min((10020, count($currentResource//sal:node[@type eq 'p'])))}">
+                <subject type="uri" prepend="texts/{/@work}:">//sal:node[@type eq 'p'][$repeatIndex]/sal:citetrail/text()</subject>
+                <predicate prefix="rdfs">label</predicate>
+                <object type="literal">/replace($currentResource//sal:node[@type eq 'p'][$repeatIndex]/sal:title, '"', '\\"')</object>
+            </statement>
+            <statement n="16" repeat="{/min((10020, count($currentResource//sal:node[@type eq 'p'])))}">
+                <subject type="uri" prepend="texts/{/@work}:">//sal:node[@type eq 'p'][$repeatIndex]/sal:citetrail/text()</subject>
+                <predicate prefix="po">isContainedBy</predicate>
+<!--                <object type="uri"  prepend="texts/">/string-join((./@work, $currentResource//sal:node[@n = $currentResource//sal:node[@type='p'][$repeatIndex]/sal:citableParent]/sal:citetrail/text()), ':')</object>-->
+                <object type="uri" prepend="texts/">/string-join(($currentResource/@work, (for $t in $currentResource//sal:node[@type eq 'p'][$repeatIndex]/sal:citableParent/text() return $currentResource//sal:node[@n eq $t]/sal:citetrail/text())), ':')</object>
+            </statement>
+            <statement n="17" repeat="{/min((10020, count($currentResource//sal:node[@type eq 'p'])))}">
+                <subject type="uri" prepend="texts/{/@work}:">//sal:node[@type eq 'p'][$repeatIndex]/sal:citetrail/text()</subject>
+                <predicate prefix="rdfs">seeAlso</predicate>
+                <object type="uri" prepend="http://www.salamanca.school/">/($currentResource//sal:node[@type eq 'p'][$repeatIndex]/sal:crumbtrail/a/@href)[last()]</object>
+			 </statement>
+
+            <!-- Pages -->
+            <statement n="18" repeat="{/min((10050, count($currentResource//sal:node[@type eq 'pb'][not(@subtype='sameAs')])))}">
+                <subject type="uri" prepend="texts/{/@work}:">//sal:node[@type eq 'pb'][not(@subtype eq 'sameAs')][$repeatIndex]/sal:citetrail/text()</subject>
+                <predicate prefix="rdf">type</predicate>
+                <object type="uri" prefix="fabio">page</object>
+            </statement>
+            <statement n="19" repeat="{/min((10050, count($currentResource//sal:node[@type eq 'pb'][not(@subtype='sameAs')])))}">
+                <subject type="uri" prepend="texts/{/@work}:">//sal:node[@type eq 'pb'][not(@subtype eq 'sameAs')][$repeatIndex]/sal:citetrail/text()</subject>
+                <predicate prefix="rdfs">label</predicate>
+                <object type="literal">/replace(normalize-space($currentResource//sal:node[@type eq 'pb'][not(@subtype eq 'sameAs')][$repeatIndex]/sal:title), '"', '\\"')</object>
+            </statement>
+            <statement n="20" repeat="{/min((10050, count($currentResource//sal:node[@type eq 'pb'][not(@subtype='sameAs')])))}">
+                <subject type="uri" prepend="texts/{/@work}:">//sal:node[@type eq 'pb'][not(@subtype eq 'sameAs')][$repeatIndex]/sal:citetrail/text()</subject>
+                <predicate prefix="po">isContainedBy</predicate>
+                <object type="uri" prepend="texts/">/concat($currentResource/@work, if(functx:substring-before-last($currentResource//sal:node[@type eq 'pb'][not(@subtype eq 'sameAs')][$repeatIndex]/sal:citetrail, '.')) then ':' else (), functx:substring-before-last($currentResource//sal:node[@type eq 'pb'][not(@subtype eq 'sameAs')][$repeatIndex]/sal:citetrail, '.'))</object>
+            </statement>
+            <statement n="21" repeat="{/min((10050, count($currentResource//sal:node[@type eq 'pb'][not(@subtype='sameAs')])))}">
+                <subject type="uri" prepend="texts/{/@work}:">//sal:node[@type eq 'pb'][not(@subtype eq 'sameAs')][$repeatIndex]/sal:citetrail/text()</subject>
+                <predicate prefix="rdfs">seeAlso</predicate>
+                <object type="uri" prepend="http://facs.salamanca.school/{/@work}/">/concat(replace(string-join(functx:get-matches(substring($currentResource//sal:node[@type eq 'pb'][not(@subtype eq 'sameAs')][$repeatIndex]/@n, 12), '[A-Z-]'), ''), '-', '/'), substring($currentResource//sal:node[@type eq 'pb'][not(@subtype eq 'sameAs')][$repeatIndex]/@n[1], 6), '.jpg')</object>
+			 </statement>
+            <statement n="22" repeat="{/min((10050, count($currentResource//sal:node[@type eq 'pb'][not(@subtype='sameAs')])))}">
+                <subject type="uri" prepend="texts/{/@work}:">//sal:node[@type eq 'pb'][not(@subtype eq 'sameAs')][$repeatIndex]/sal:citetrail/text()</subject>
+                <predicate prefix="rdfs">seeAlso</predicate>
+                <object type="uri" prepend="http://www.salamanca.school/">/($currentResource//sal:node[@type eq 'pb'][not(@subtype eq 'sameAs')][$repeatIndex]/sal:crumbtrail/a/@href)[last()]</object>
+			 </statement>
+
+            <!-- iiif stuff -->
+            <statement n="23" repeat="{/min((10050, count($currentResource//sal:node[@type eq 'pb'][not(@subtype='sameAs')])))}">
+                <subject type="uri" prepend="texts/{/@work}:">//sal:node[@type eq 'pb'][not(@subtype eq 'sameAs')][$repeatIndex]/sal:citetrail/text()</subject>
+                <predicate prefix="rdf">type</predicate>
+                <object type="uri" prefix="iiif">canvas</object>
+            </statement>
+
+        </triples>
+    </configuration>
+
+    <!-- This is likely to be overwritten by createConfig.xql -->
+    <collection>
+        <resource uri="{//sal:index}"/>
+    </collection>
+</xtriples>
