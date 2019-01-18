@@ -1,8 +1,11 @@
 xquery version "3.0";
 
+declare namespace exist             = "http://exist.sourceforge.net/NS/exist";
 declare namespace request           = "http://exist-db.org/xquery/request";
 declare namespace output            = "http://www.w3.org/2010/xslt-xquery-serialization";
 import module namespace admin       = "http://salamanca/admin"           at "modules/admin.xql";
+
+declare option exist:timeout "10800000"; (: 3 h :)
 
 declare option output:media-type "text/html";
 declare option output:method "xhtml";

@@ -1,12 +1,15 @@
 xquery version "3.1";
 
-import module   namespace   config       = "http://salamanca/config" at "modules/config.xqm";
+import module   namespace   config      = "http://salamanca/config" at "modules/config.xqm";
 import module   namespace   console     = "http://exist-db.org/xquery/console";
-declare             namespace   output       = "http://www.w3.org/2010/xslt-xquery-serialization";
-declare             namespace   request     = "http://exist-db.org/xquery/request";
-declare             namespace   sal             = "http://salamanca.adwmainz.de";
-declare             namespace   tei             = "http://www.tei-c.org/ns/1.0";
-declare             namespace   util            = "http://exist-db.org/xquery/util";
+declare         namespace   exist       = "http://exist.sourceforge.net/NS/exist";
+declare         namespace   output      = "http://www.w3.org/2010/xslt-xquery-serialization";
+declare         namespace   request     = "http://exist-db.org/xquery/request";
+declare         namespace   sal         = "http://salamanca.adwmainz.de";
+declare         namespace   tei         = "http://www.tei-c.org/ns/1.0";
+declare         namespace   util        = "http://exist-db.org/xquery/util";
+
+declare option exist:timeout "10800000"; (: 3 h :)
 
 declare option output:method "xml";
 
@@ -23,11 +26,12 @@ for $node in $input
                     return
                         (: if we are dealing with an xml:id attribute, and this also occurs in the _nodeIndex file, pull in more attributes from there :)
                         if (name($att) = "xml:id" and $salNodes//sal:node[@n eq $att]) then
-                            let $sn := $salNodes//sal:node[@n eq $att]
+                            let $sn := $salNodes//sal:node[@n eq $att][1]
+                            let $pn := $salNodes//sal:node[@n/string() eq $sn/sal:citableParent/string()][1]
                             return (
-                                attribute title {$sn/sal:title/text()},
+                                attribute title {$sn/sal:title},
                                 if ($sn/sal:crumbtrail/a[last()]/@href) then attribute web {$sn/sal:crumbtrail/a[last()]/@href} else (),
-                                attribute citableParent {$sn/sal:citableParent/text()},
+                                attribute citableParent {$pn/sal:citetrail},
                                 attribute citetrail {$sn/sal:citetrail},
                                 $att
                             )
@@ -43,11 +47,11 @@ for $node in $input
         default return $node
 };
 
-let $wid           :=  request:get-parameter('wid', '')
-let $debug       := if ($config:debug = ("trace", "info")) then console:log("tei enricher running, requested work " || $wid || ".") else ()
+let $wid        :=  request:get-parameter('wid', '')
+let $debug      := if ($config:debug = ("trace", "info")) then console:log("tei enricher running, requested work " || $wid || ".") else ()
 
-let $origTEI      := util:expand(doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI)
-let $salNodesF := doc($config:data-root || '/' || $wid || '_nodeIndex.xml')/sal:index
+let $origTEI    := util:expand(doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI)
+let $salNodesF  := doc($config:data-root || '/' || $wid || '_nodeIndex.xml')/sal:index
 
 let $output     := local:copy($origTEI, $salNodesF)
 
