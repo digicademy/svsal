@@ -105,7 +105,7 @@ let $collection         :=  if (starts-with($resourceId, "authors.")) then
                             else if (starts-with($resourceId, "works.")) then
                                 <collection uri="enhance-tei.xql?wid={substring-after($resourceId, "works.")}">
                                     {$workMetadata}
-                                    <resource uri="{{//(tei:front|tei:body|tei:back)/tei:div}}"/>
+                                    <resources uri="{//tei:div[not(ancestor::tei:div)]}"/>
                                 </collection>
                             else if (starts-with($resourceId, 'A')) then
                                 <collection uri="{$config:tei-authors-root}/{$resourceId}.xml">
@@ -114,7 +114,7 @@ let $collection         :=  if (starts-with($resourceId, "authors.")) then
                             else if (starts-with($resourceId, 'W0')) then
                                 <collection uri="enhance-tei.xql?wid={$resourceId}">
                                     {$workMetadata}
-                                    <resource uri="{{//(tei:front|tei:body|tei:back)/tei:div}}"/>
+                                    <resources uri="{//tei:div[not(ancestor::tei:div)]}"/>
                                 </collection>
                             else if (starts-with($resourceId, 'Q')) then
                                 <collection>
