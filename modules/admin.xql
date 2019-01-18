@@ -261,7 +261,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
     let $debug            := if ($config:debug = ("trace", "info")) then console:log("Rendering " || $wid || ".") else ()
     let $start-time       := util:system-time()
     let $wid              := request:get-parameter('wid', '*')
-    let $indexedElTypes   := "pb|text|front|titlePart|div|p|milestone|list|item|lg|back"
+    let $indexedElTypes   := "pb|text|front|titlePart|div|p|milestone|list|item|lg|back|note"
     
     (: define the works to be fragmented: :)
     let $todo             := if ($wid = '*') then
