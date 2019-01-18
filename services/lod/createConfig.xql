@@ -103,31 +103,18 @@ let $collection         :=  if (starts-with($resourceId, "authors.")) then
                                     <resource uri="{{//tei:listPerson}}"/>
                                 </collection>
                             else if (starts-with($resourceId, "works.")) then
-                                <collection uri="{$config:data-root}/{substring-after($resourceId, "works.")}_nodeIndex.xml">
-                                    <resource uri="{{//tei:listPerson}}"/>
+                                <collection uri="enhance-tei.xql?wid={substring-after($resourceId, "works.")}">
+                                    {$workMetadata}
+                                    <resource uri="{{//(tei:front|tei:body|tei:back)/tei:div}}"/>
                                 </collection>
                             else if (starts-with($resourceId, 'A')) then
                                 <collection uri="{$config:tei-authors-root}/{$resourceId}.xml">
                                     <resource uri="{{//tei:listPerson}}"/>
                                 </collection>
                             else if (starts-with($resourceId, 'W0')) then
-(:                                <collection uri="{$config:data-root}/{$resourceId}_nodeIndex.xml">
+                                <collection uri="enhance-tei.xql?wid={$resourceId}">
                                     {$workMetadata}
-                                    <resource uri="{{//sal:index}}"/>
-                                </collection>
-:)
-                                <collection>
-                                    <resource>
-                                        {$nodeIndex}
-                                        {$workMetadata}
-                                        {$fullTEI}
-                                    </resource>
-<!--
-                                    <resource uri="{//sal:index}"/>
-                                    <resource uri="{//sal:node}"/>
-                                    <resource uri="{//document}"/>
-                                    <resource uri="{//tei:TEI}"/>
--->
+                                    <resource uri="{{//(tei:front|tei:body|tei:back)/tei:div}}"/>
                                 </collection>
                             else if (starts-with($resourceId, 'Q')) then
                                 <collection>
