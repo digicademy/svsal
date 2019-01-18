@@ -94,7 +94,7 @@
             <statement debug="true" n="10" repeat="{/min((20, count($currentResource//descendant-or-self::tei:div)))}">
                 <subject type="uri" prepend="texts/W0015:">/($currentResource//descendant-or-self::tei:div)[$repeatIndex]/@citetrail</subject>
                 <predicate prefix="rdf">type</predicate>
-                <object type="uri" prefix="doco">/(($currentResource//descendant-or-self::tei:div)[$repeatIndex]/@type eq 'book') then 'part' else if (($currentResource//descendant-or-self::tei:div)[$repeatIndex]/@type eq 'chapter') then 'chapter' else 'section')</object>
+                <object type="uri" prefix="doco">/(if (($currentResource//descendant-or-self::tei:div)[$repeatIndex]/@type eq 'book') then 'part' else if (($currentResource//descendant-or-self::tei:div)[$repeatIndex]/@type eq 'chapter') then 'chapter' else 'section')</object>
             </statement>
             <statement debug="true" n="11" repeat="{/min((20, count($currentResource//descendant-or-self::tei:div)))}">
                 <subject type="uri" prepend="texts/W0015:">/($currentResource//descendant-or-self::tei:div)[$repeatIndex]/@citetrail</subject>
@@ -152,6 +152,7 @@
                 <predicate prefix="po">isContainedBy</predicate>
                 <object type="uri" prepend="texts/">/concat($currentResource/@work, if(functx:substring-before-last(($currentResource//descendant-or-self::tei:pb[not(@sameAs)])[$repeatIndex]/sal:citetrail, '.')) then ':' else (), functx:substring-before-last(($currentResource//descendant-or-self::tei:pb[not(@sameAs)])[$repeatIndex]/sal:citetrail, '.'))</object>
             </statement>
+<!-- TODO: fix this statement about jpg pages also -->
             <statement debug="true" n="21" repeat="{/min((50, count($currentResource//tei:pb[not(@sameAs)])))}">
                 <subject type="uri" prepend="texts/W0015:">/($currentResource//descendant-or-self::tei:pb[not(@sameAs)])[$repeatIndex]/@citetrail</subject>
                 <predicate prefix="rdfs">seeAlso</predicate>
@@ -160,7 +161,7 @@
             <statement debug="true" n="22" repeat="{/min((50, count($currentResource//tei:pb[not(@sameAs)])))}">
                 <subject type="uri" prepend="texts/W0015:">/($currentResource//descendant-or-self::tei:pb[not(@sameAs)])[$repeatIndex]/@citetrail</subject>
                 <predicate prefix="rdfs">seeAlso</predicate>
-                <object type="uri" prepend="https://www.c106-211.cloud.gwdg.de/">/(($currentResource//descendant-or-self::tei:pb[not(@sameAs)])[$repeatIndex]/@web</object>
+                <object type="uri" prepend="https://www.c106-211.cloud.gwdg.de/">/($currentResource//descendant-or-self::tei:pb[not(@sameAs)])[$repeatIndex]/@web</object>
 	 </statement>
 
             <!-- iiif stuff -->
