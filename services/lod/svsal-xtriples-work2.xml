@@ -31,7 +31,7 @@
     - better use union of full xpaths than or'ing predicates/conditions (intersect instead of and'ing, too?)
 -->
 
-<!-- TODO refactoring/testing: reset minimum thresholds in @repeat attributes -->
+<!-- TODO refactoring/testing: reset minimum thresholds in @repeat attributes to a higher value in order to catch all resources -->
 
             <statement debug="true" n="0">
                 <subject type="uri"/>
@@ -96,7 +96,7 @@
 <!--                <object type="uri" prepend="http://www.salamanca.school/">/(.//sal:node[@subtype eq 'work_volume'][$repeatIndex]/sal:crumbtrail/a/@href)[last()]</object>-->
                 <object type="uri" prepend="https://www.c106-211.cloud.gwdg.de/">//sal:node[@subtype eq 'work_volume'][$repeatIndex]/sal:crumbtrail/a/@href[last()]</object>
 			 </statement>
-<!-- Todo volume metadate ends here -->
+<!-- Todo volume metadata ends here -->
 
 <!-- TODO: add (from svsal-xtriples-work.xml)
     - frontmatter
@@ -113,7 +113,7 @@
                 <predicate prefix="rdfs">label</predicate>
                 <object type="literal">/replace(($currentResource//descendant-or-self::tei:div)[$repeatIndex]/@title/string(), '"', '\\"')</object>
             </statement>
-<!-- TODO: have citableParent contain the parent's citetrail, not its xml:id -->
+<!-- TODO: have citableParent contain the parent's citetrail, not its xml:id (should be fixed, check it (with re-rendered texts) ) -->
             <statement debug="true" n="42" repeat="{/min((20, count($currentResource//descendant-or-self::tei:div)))}">
                 <subject type="uri" prepend="texts/WXXXX:">/($currentResource//descendant-or-self::tei:div)[$repeatIndex]/@citetrail</subject>
                 <predicate prefix="po">isContainedBy</predicate>
@@ -135,7 +135,7 @@
                 <predicate prefix="rdfs">label</predicate>
                 <object type="literal">/replace(($currentResource//tei:p)[$repeatIndex]/@title, '"', '\\"')</object>
             </statement>
-<!-- TODO: have citableParent contain the parent's citetrail, not its xml:id -->
+<!-- TODO: have citableParent contain the parent's citetrail, not its xml:id (should be fixed, check it (with re-rendered texts) ) -->
             <statement debug="true" n="53" repeat="{/min((20, count($currentResource//tei:p)))}">
                 <subject type="uri" prepend="texts/WXXXX:">//tei:p[$repeatIndex]/@citetrail</subject>
                 <predicate prefix="po">isContainedBy</predicate>
@@ -164,7 +164,7 @@
                 <predicate prefix="rdfs">label</predicate>
                 <object type="literal">/replace(normalize-space(($currentResource//descendant-or-self::tei:pb[not(@sameAs)])[$repeatIndex]/@title), '"', '\\"')</object>
             </statement>
-<!-- TODO: have citableParent contain the parent's citetrail, not its xml:id -->
+<!-- TODO: have citableParent contain the parent's citetrail, not its xml:id (should be fixed, check it (with re-rendered texts) ) -->
             <statement debug="true" n="82" repeat="{/min((50, count($currentResource//tei:pb[not(@sameAs)])))}">
                 <subject type="uri" prepend="texts/WXXXX:">/($currentResource//descendant-or-self::tei:pb[not(@sameAs)])[$repeatIndex]/@citetrail</subject>
                 <predicate prefix="po">isContainedBy</predicate>
@@ -175,12 +175,12 @@
                 <subject type="uri" prepend="texts/WXXXX:">/($currentResource//descendant-or-self::tei:pb[not(@sameAs)])[$repeatIndex]/@citetrail</subject>
                 <predicate prefix="rdfs">seeAlso</predicate>
                 <object type="uri" prepend="https://facs.c106-211.cloud.gwdg.de/{/@work}/">/concat(replace(string-join(functx:get-matches(substring(($currentResource//descendant-or-self::tei:pb[not(@sameAs)])[$repeatIndex]/@xml:id, 12), '[A-Z-]'), ''), '-', '/'), substring(($currentResource//descendant-or-self::tei:pb[not(@sameAs)])[$repeatIndex]/@mlx:id[1], 6), '.jpg')</object>
-	 </statement>
+	        </statement>
             <statement debug="true" n="84" repeat="{/min((50, count($currentResource//tei:pb[not(@sameAs)])))}">
                 <subject type="uri" prepend="texts/WXXXX:">/($currentResource//descendant-or-self::tei:pb[not(@sameAs)])[$repeatIndex]/@citetrail</subject>
                 <predicate prefix="rdfs">seeAlso</predicate>
                 <object type="uri" prepend="https://www.c106-211.cloud.gwdg.de/">/($currentResource//descendant-or-self::tei:pb[not(@sameAs)])[$repeatIndex]/@web</object>
-	 </statement>
+	        </statement>
 
             <!-- iiif stuff -->
             <statement debug="true" n="90" repeat="{/min((50, count($currentResource//tei:pb[not(@sameAs)])))}">
@@ -190,7 +190,7 @@
             </statement>
 
 
-<!-- TODO: add more like the subsequent statements, from svsal-xtriples-work.xml (e.g. tei:cit → cito:includesQuotationFrom) -->
+<!-- TODO: add more statements like the subsequent ones, from svsal-xtriples-work.xml (e.g. tei:cit → cito:includesQuotationFrom) -->
             <!-- SvSal authors -->
             <statement n="101" repeat="{/min((10, count($currentResource//tei:persName[contains(@ref, 'author:')][not(ancestor::tei:cit)])))}"><!-- A CitationAct event... -->
             	<subject type="bnode">/concat('CitationAct_d_', $currentResource/@xml:id, '-authors-', $repeatIndex)</subject>
