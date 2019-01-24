@@ -2714,9 +2714,9 @@ declare function app:WRKeditionMetadata($node as node(), $model as map(*), $wid 
 (:combined title on work.html in left box:)
 declare %templates:wrap
     function app:WRKcombined($node as node(), $model as map(*), $wid as xs:string?) {
-        let $path           :=  doc($config:tei-works-root || "/" || $wid || ".xml")
-        let $author         :=  string-join($path//tei:biblStruct/tei:monogr/tei:author/tei:persName/tei:surname, ', ')
-        let $title          :=  $path//tei:biblStruct/tei:monogr/tei:title[@type = 'short']
+        let $path           :=  doc($config:tei-works-root || "/" || $wid || ".xml")//tei:teiHeader/tei:sourceDesc/tei:biblStruct/tei:monogr
+        let $author         :=  string-join($path//tei:author/tei:persName/tei:surname, ', ')
+        let $title          :=  $path//tei:title[@type = 'short']
         let $thisEd         :=  $path//tei:pubPlace[@role = 'thisEd']
         let $firstEd        :=  $path//tei:pubPlace[@role = 'firstEd']
         let $publisher      :=  if ($thisEd) then
