@@ -67,7 +67,7 @@ declare function admin:saveFile ($wid as xs:string, $fileName as xs:string, $con
                                           xmldb:create-collection($config:salamanca-data-root, "rdf")
                                      else ()
     let $chmod-collection-status  := xmldb:set-collection-permissions($collectionName, 'sal', 'svsal',  util:base-to-integer(0775, 8))
-    let $remove-status            := if ($content and $fileName eq xmldb:get-child-resources($collectionName)) then
+    let $remove-status            := if ($content and ($fileName = xmldb:get-child-resources($collectionName))) then
                                           xmldb:remove($collectionName, $fileName)
                                      else ()
     let $store-status             := if ($content) then
