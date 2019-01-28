@@ -9,7 +9,7 @@ declare         namespace   sal         = "http://salamanca.adwmainz.de";
 declare         namespace   tei         = "http://www.tei-c.org/ns/1.0";
 declare         namespace   util        = "http://exist-db.org/xquery/util";
 
-declare option exist:timeout "10800000"; (: 3 h :)
+declare option exist:timeout "43200000"; (: 12 h :)
 
 declare option output:method "xml";
 
@@ -20,7 +20,6 @@ for $node in $input
         case element()
            return
               element {name($node)} {
-
                 (: copy all the attributes :)
                 for $att in $node/@*
                     return

@@ -97,7 +97,7 @@ declare function app:sectionTitle ($targetWork as node()*, $targetNode as node()
     let $targetNodeId := string($targetNode/@xml:id)
     return normalize-space(
 (: div, milestone, items and lists are named according to //tei:term[1]/@key, ./head, @n, ref->., @xml:id :)
-            if (local-name($targetNode) = ('div', 'milestone', 'item', 'list')) then
+            if ($targetNode/(self::tei:div | self::tei:milestone | self::tei:item | self::tei:list)) then
                 if ($targetNode/self::tei:item and $targetNode/parent::tei:list/@type='dict' and $targetNode//tei:term[1]/self::attribute(key)) then
                     concat('dictionary entry: &#34;',
                             concat($targetNode//tei:term[1]/@key,
@@ -162,6 +162,12 @@ declare function app:sectionTitle ($targetWork as node()*, $targetNode as node()
                     else concat($volumeString, 'p. ', $targetNode/@n)
             else if ($targetNode/self::tei:titlePart || $targetNode/self::tei:titlePage) then
                 "Titulus"
+            else if ($targetNode/self::tei:head) then
+                let $headString := normalize-space($targetNode/string())
+                return if (string-length($headString) gt $config:chars_summary) then
+                    concat($targetNode/@type, ' &#34;', normalize-space(substring($headString, 1, $config:chars_summary)), '…', '&#34;')
+                else
+                    concat($targetNode/@type, ' &#34;', $headString, '&#34;')
             else if ($targetNode/self::tei:front) then
                 "frontmatter"
             else if ($targetNode/self::tei:back) then
@@ -2714,7 +2720,7 @@ declare function app:WRKeditionMetadata($node as node(), $model as map(*), $wid 
 (:combined title on work.html in left box:)
 declare %templates:wrap
     function app:WRKcombined($node as node(), $model as map(*), $wid as xs:string?) {
-        let $path           :=  doc($config:tei-works-root || "/" || $wid || ".xml")//tei:teiHeader/tei:sourceDesc/tei:biblStruct/tei:monogr
+        let $path           :=  doc($config:tei-works-root || "/" || $wid || ".xml")//tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr
         let $author         :=  string-join($path//tei:author/tei:persName/tei:surname, ', ')
         let $title          :=  $path//tei:title[@type = 'short']
         let $thisEd         :=  $path//tei:pubPlace[@role = 'thisEd']

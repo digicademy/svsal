@@ -123,7 +123,7 @@ let $collection         :=  if (starts-with($resourceId, "authors.")) then
                             else if (starts-with($resourceId, 'W0')) then
                                 <collection uri="{$config:webserver}/enhance-tei.xql?wid={$resourceId}">
                                     {$workMetadata}
-                                    <resource uri="{{//tei:div[not(ancestor::tei:div)]}}"/>
+                                    <resource uri="{{//(tei:front|tei:body/tei:div|tei:back)}}"/>
                                 </collection>
                             else if (starts-with($resourceId, 'Q')) then
                                 <collection>

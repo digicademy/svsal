@@ -132,13 +132,13 @@ declare function render:getCrumbtrail ($targetWork as node()*, $targetNode as no
                                             return concat('titlepage.', string(count($targetNode/preceding-sibling::tei:titlePart) + 1))
                                         case element(tei:text)                                                  (: "volX" where X is the current volume number, don't use it at all for monographs :)
                                             return if ($targetNode/@type='work_volume') then
-                                                       concat('vol', count($targetNode/preceding::tei:text[@type = 'work_volume']) + 1)
+                                                       concat('vol', count($targetNode/preceding::tei:text[@type eq 'work_volume']) + 1)
                                                    else ()
                                         case element(tei:note)                                                  (: "nX" where X is the anchor used (if it is alphanumeric) and "nXY" where Y is the number of times that X occurs inside the current div :)
                                             return concat('n',  if (matches($targetNode/@n, '[A-Za-z0-9]')) then
-                                                                    if (count($targetNode/ancestor::tei:div[1]//tei:note[@n = $targetNode/@n]) gt 1) then
+                                                                    if (count($targetNode/ancestor::tei:div[1]//tei:note[@n eq $targetNode/@n]) gt 1) then
                                                                         concat(upper-case(replace($targetNode/@n, '[^a-zA-Z0-9]', '')),
-                                                                               string(count($targetNode/ancestor::tei:div[1]//tei:note intersect $targetNode/preceding::tei:note[@n = $targetNode/@n])+1)
+                                                                               string(count($targetNode/ancestor::tei:div[1]//tei:note intersect $targetNode/preceding::tei:note[@n eq $targetNode/@n])+1)
                                                                               )
                                                                     else
                                                                        upper-case(replace($targetNode/@n, '[^a-zA-Z0-9]', ''))

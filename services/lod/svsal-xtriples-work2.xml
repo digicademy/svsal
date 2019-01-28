@@ -147,6 +147,49 @@
                 <object type="uri" prepend="https://www.c106-211.cloud.gwdg.de/">/($currentResource//tei:p)[$repeatIndex]/@web</object>
 	</statement>
 
+            <statement debug="true" n="60" repeat="{/min((20, count($currentResource//descendant-or-self::tei:titlePage)))}">
+                <subject type="uri" prepend="texts/WXXXX:">/($currentResource//descendant-or-self::tei:titlePage)[$repeatIndex]/@citetrail</subject>
+                <predicate prefix="rdf">type</predicate>
+                <object type="uri" prefix="fabio">page</object>
+            </statement>
+            <statement debug="true" n="61" repeat="{/min((20, count($currentResource//descendant-or-self::tei:titlePage)))}">
+                <subject type="uri" prepend="texts/WXXXX:">/($currentResource//descendant-or-self::tei:titlePage)[$repeatIndex]/@citetrail</subject>
+                <predicate prefix="rdfs">label</predicate>
+                <object type="literal">/(if (starts-with($currentResource/@citetrail/text(), 'vol')) then ("Title page of volume " || replace((tokenize($currentResource/@citetrail, '.'))[1], 'vol', '')) else "Title page")</object>
+            </statement>
+            <statement debug="true" n="62" repeat="{/min((20, count($currentResource//descendant-or-self::tei:titlePage)))}">
+                <subject type="uri" prepend="texts/WXXXX:">/($currentResource//descendant-or-self::tei:titlePage)[$repeatIndex]/@citetrail</subject>
+                <predicate prefix="po">isContainedBy</predicate>
+                <object type="uri" prepend="texts/">/string-join(($currentResource/@work, ($currentResource//descendant-or-self::tei:titlePage)[$repeatIndex]/@citableParent/text()), ':')</object>
+            </statement>
+            <statement debug="true" n="63" repeat="{/min((20, count($currentResource//descendant-or-self::tei:titlePage)))}">
+                <subject type="uri" prepend="texts/WXXXX:">/($currentResource//descendant-or-self::tei:titlePage)[$repeatIndex]/@citetrail</subject>
+                <predicate prefix="rdfs">seeAlso</predicate>
+                <object type="uri" prepend="https://www.c106-211.cloud.gwdg.de/">/($currentResource//descendant-or-self::tei:titlePage)[$repeatIndex]/@web</object>
+            </statement>
+
+            <statement debug="true" n="70" repeat="{/min((20, count($currentResource//descendant-or-self::tei:titlePart)))}">
+                <subject type="uri" prepend="texts/WXXXX:">/($currentResource//descendant-or-self::tei:titlePart)[$repeatIndex]/@citetrail</subject>
+                <predicate prefix="rdf">type</predicate>
+                <object type="uri" prefix="doco">title</object>
+            </statement>
+            <statement debug="true" n="71" repeat="{/min((20, count($currentResource//descendant-or-self::tei:titlePart)))}">
+                <subject type="uri" prepend="texts/WXXXX:">/($currentResource//descendant-or-self::tei:titlePart)[$repeatIndex]/@citetrail</subject>
+                <predicate prefix="rdfs">label</predicate>
+                <object type="literal">/normalize-space(replace(($currentResource//descendant-or-self::tei:titlePart)[$repeatIndex]/string(), '"', '\\"'))</object>
+            </statement>
+            <statement debug="true" n="72" repeat="{/min((20, count($currentResource//descendant-or-self::tei:titlePart)))}">
+                <subject type="uri" prepend="texts/WXXXX:">/($currentResource//descendant-or-self::tei:titlePart)[$repeatIndex]/@citetrail</subject>
+                <predicate prefix="po">isContainedBy</predicate>
+                <object type="uri" prepend="texts/">/string-join(($currentResource/@work, ($currentResource//descendant-or-self::tei:titlePart)[$repeatIndex]/@citableParent/text()), ':')</object>
+            </statement>
+            <statement debug="true" n="73" repeat="{/min((20, count($currentResource//descendant-or-self::tei:titlePart)))}">
+                <subject type="uri" prepend="texts/WXXXX:">/($currentResource//descendant-or-self::tei:titlePart)[$repeatIndex]/@citetrail</subject>
+                <predicate prefix="rdfs">seeAlso</predicate>
+                <object type="uri" prepend="https://www.c106-211.cloud.gwdg.de/">/($currentResource//descendant-or-self::tei:titlePart)[$repeatIndex]/@web</object>
+            </statement>
+
+
 <!-- TODO: add (from svsal-xtriples-work.xml)
     - milestones
     - lists
