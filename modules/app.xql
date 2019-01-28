@@ -92,7 +92,7 @@ declare function app:resolveURI($string as xs:string*) {
                     return xs:string(transform:transform($doc, $tei2htmlXslt, $xsl-parameters))
 };
 
-declare function app:sectionTitle ($targetWork as node()*, $targetNode as node()) {
+declare function app:sectionTitle($targetWork as node()*, $targetNode as node()) {
     let $targetWorkId := string($targetWork/tei:TEI/@xml:id)
     let $targetNodeId := string($targetNode/@xml:id)
     return normalize-space(
@@ -110,7 +110,7 @@ declare function app:sectionTitle ($targetWork as node()*, $targetNode as node()
                 else if ($targetNode/@n and not(matches($targetNode/@n, '^[0-9]+$'))) then
                     string($targetNode/@n)
                 else if ($targetNode/tei:head) then
-                    let $headString := normalize-space(string-join($targetNode/tei:head[1], ''))
+                    let $headString := normalize-space(string-join(render:dispatch(($targetNode/tei:head)[1], 'edit'), ''))
                     return if (string-length($headString) gt $config:chars_summary) then
                         concat($targetNode/@type, ' &#34;', normalize-space(substring($headString, 1, $config:chars_summary)), '…', '&#34;')
                     else
@@ -129,10 +129,11 @@ declare function app:sectionTitle ($targetWork as node()*, $targetNode as node()
                     string($targetNode/@xml:id)
 (: p's and lg's are names according to their beginning :)
             else if ($targetNode/self::tei:p | $targetNode/self::tei:lg) then
-                if (string-length(string-join($targetNode, '')) gt $config:chars_summary) then
-                    concat('Paragraph &#34;', normalize-space(substring(string-join($targetNode//text(), ''), 1, $config:chars_summary)), '…', '&#34;')
-                else
-                    concat('Paragraph &#34;', normalize-space(string-join($targetNode//text(), '')), '&#34;')
+                let $pString := normalize-space(string-join(render:dispatch($targetNode, 'edit'), ''))
+                return if (string-length($pString) gt $config:chars_summary) then
+                            concat('Paragraph &#34;', substring($pString, 1, $config:chars_summary), '…', '&#34;')
+                        else
+                            concat('Paragraph &#34;', $pString, '&#34;')
             else if ($targetNode/self::tei:text and $targetNode/@type='work_volume') then
                 concat('Vol. ', $targetNode/@n)
             else if ($targetNode/self::tei:text and $targetNode/@xml:id='completeWork') then

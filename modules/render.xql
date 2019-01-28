@@ -595,7 +595,11 @@ declare function local:g($node as element(tei:g), $mode as xs:string) {
             else
                 local:passthru($node, $mode)
     else if ($mode = "edit") then
-        local:passthru($node, $mode)
+        let $glyph := $node/ancestor::tei:TEI//tei:char[@xml:id = substring(string($node/@ref), 2)]
+        return  if ($glyph/tei:mapping[@type = 'standardized']) then
+                    string($glyph/tei:mapping[@type = 'standardized'])
+                else
+                    local:passthru($node, $mode)
     else if ($mode = "work") then
         let $originalGlyph := local:g($node, "orig")
         return
