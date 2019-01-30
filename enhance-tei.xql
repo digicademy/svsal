@@ -47,7 +47,7 @@ for $node in $input
 };
 
 let $wid        :=  request:get-parameter('wid', '')
-let $debug      := if ($config:debug = ("trace", "info")) then console:log("tei enricher running, requested work " || $wid || ".") else ()
+let $debug      := if ($config:debug = ("trace", "info")) then console:log("tei enhancer running, requested work " || $wid || ".") else ()
 
 let $origTEI    := util:expand(doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI)
 let $salNodesF  := doc($config:data-root || '/' || $wid || '_nodeIndex.xml')/sal:index
