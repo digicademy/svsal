@@ -1,5 +1,5 @@
 <collection xmlns="http://exist-db.org/collection-config/1.0">
-    <index xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sal="http://salamanca.adwmainz.de">
+    <index xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sal="http://salamanca.adwmainz.de">
 
         <fulltext default="none" attributes="false"/>
 
@@ -60,6 +60,15 @@
                 <field name="a.href" match="@href" type="xs:string"/>
             </create>
 
+
+<!-- RDF elements... -->
+            <create qname="rdf:Description">
+                <field name="rdf.description.about" match="@rdf:about" type="xs:anyURI"/>
+            </create>
+            <create qname="rdfs:seeAlso">
+                <field name="rdfs.seeAlso.about" match="@rdf:resource" type="xs:anyURI"/>
+            </create>
+            <create qname="rdfs:label"/>
         </range>
         
     </index>
