@@ -38,6 +38,7 @@ import module namespace console  = "http://exist-db.org/xquery/console";
 import module namespace xconfig  = "http://xtriples.spatialhumanities.de/config" at "modules/xconfig.xqm";
 
 (: ### SVSAL modules and namespaces ### :)
+declare namespace exist       = "http://exist.sourceforge.net/NS/exist";
 declare namespace http		  = "http://expath.org/ns/http-client";
 declare namespace httpclient	= "http://exist-db.org/xquery/httpclient";
 declare namespace request	   = "http://exist-db.org/xquery/request";
@@ -56,6 +57,8 @@ declare variable $setFormat         := xtriples:getFormat();
 declare variable $retrievedDocuments := map { };
 
 (: ########## SVSAL FUNCTIONS ###################################################################### :)
+
+declare option exist:timeout "43200000"; (: 12 h :)
 
 (:
 	better: build it as we go... in
