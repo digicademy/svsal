@@ -10,7 +10,7 @@ declare         namespace   tei         = "http://www.tei-c.org/ns/1.0";
 declare         namespace   itei        = "https://www.salamanca.school/indexed-tei";
 declare         namespace   util        = "http://exist-db.org/xquery/util";
 
-declare option exist:timeout "43200000"; (: 12 h :)
+declare option exist:timeout "3500000"; (: ~1h :)
 
 declare option output:method "xml";
 
@@ -33,7 +33,9 @@ declare function local:copy($input as item()*, $salNodes as map()?) as item()* {
                                         if ($sn/sal:crumbtrail/a[last()]/@href) then attribute web {$sn/sal:crumbtrail/a[last()]/@href} else (),
                                         attribute citableParent {$pn/sal:citetrail},
                                         attribute citetrail {$sn/sal:citetrail},
-                                        $att
+                                        $att,
+                                        (: give tei:text fragments rudimentary information about their context, so that rdf extraction doesn't need to access respective teiHeaders especially :)
+                                        if (local-name($node) eq 'text') then attribute in {$node/ancestor::tei:TEI/@xml:id} else ()
                                     )
                                 else
                                     attribute {name($att)} {$att}
