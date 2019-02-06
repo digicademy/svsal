@@ -7,43 +7,43 @@ declare         namespace   output      = "http://www.w3.org/2010/xslt-xquery-se
 declare         namespace   request     = "http://exist-db.org/xquery/request";
 declare         namespace   sal         = "http://salamanca.adwmainz.de";
 declare         namespace   tei         = "http://www.tei-c.org/ns/1.0";
+declare         namespace   itei        = "https://www.salamanca.school/indexed-tei";
 declare         namespace   util        = "http://exist-db.org/xquery/util";
 
 declare option exist:timeout "43200000"; (: 12 h :)
 
 declare option output:method "xml";
 
-declare function local:copy($input as item()*, $salNodes as node()) as item()* {
-for $node in $input
-   return 
-      typeswitch($node)
-        case element()
-           return
-              element {name($node)} {
-                (: copy all the attributes :)
-                for $att in $node/@*
-                    return
-                        (: if we are dealing with an xml:id attribute, and this also occurs in the _nodeIndex file, pull in more attributes from there :)
-                        if (name($att) = "xml:id" and $salNodes//sal:node[@n eq $att]) then
-                            let $sn := $salNodes//sal:node[@n eq $att][1]
-                            let $pn := $salNodes//sal:node[@n/string() eq $sn/sal:citableParent/string()][1]
-                            return (
-                                attribute title {$sn/sal:title},
-                                if ($sn/sal:crumbtrail/a[last()]/@href) then attribute web {$sn/sal:crumbtrail/a[last()]/@href} else (),
-                                attribute citableParent {$pn/sal:citetrail},
-                                attribute citetrail {$sn/sal:citetrail},
-                                $att
-                            )
-                        else
-                            attribute {name($att)} {$att}
-                ,
-                (: output all the child elements of this element recursively :)
-                for $child in $node
-                   return local:copy($child/node(), $salNodes)
 
-              }
-        (: otherwise pass it through.  Used for text(), comments, and PIs :)
-        default return $node
+declare function local:copy($input as item()*, $salNodes as map()?) as item()* {
+    for $node in $input return 
+        typeswitch($node)
+            case element()
+               return
+                  element {'itei:' || local-name($node)} {
+                        (: copy all the attributes :)
+                        for $att in $node/@*
+                            return
+                                (: if we are dealing with an xml:id attribute, and this also occurs in the _nodeIndex file, pull in more attributes from there :)
+                                if (name($att) = "xml:id" and map:get($salNodes,$att)) then
+                                    let $sn := map:get($salNodes,$att) (: TODO: why position [1]? :)
+                                    let $pn := map:get($salNodes,$sn/sal:citableParent/string())
+                                    return (
+                                        attribute title {$sn/sal:title},
+                                        if ($sn/sal:crumbtrail/a[last()]/@href) then attribute web {$sn/sal:crumbtrail/a[last()]/@href} else (),
+                                        attribute citableParent {$pn/sal:citetrail},
+                                        attribute citetrail {$sn/sal:citetrail},
+                                        $att
+                                    )
+                                else
+                                    attribute {name($att)} {$att}
+                    ,
+                    (: output all the child elements of this element recursively :)
+                    for $child in $node
+                       return local:copy($child/node(), $salNodes)
+                  }
+            (: otherwise pass it through.  Used for text(), comments, and PIs :)
+            default return $node
 };
 
 let $wid        :=  request:get-parameter('wid', '')
@@ -51,7 +51,8 @@ let $debug      := if ($config:debug = ("trace", "info")) then console:log("tei 
 
 let $origTEI    := util:expand(doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI)
 let $salNodesF  := doc($config:data-root || '/' || $wid || '_nodeIndex.xml')/sal:index
+let $salNodesM := map:merge(for $n in $salNodesF/sal:node return map:entry($n/@n/string(), $n))
 
-let $output     := local:copy($origTEI, $salNodesF)
+let $output     := local:copy($origTEI, $salNodesM)
 
 return $output
