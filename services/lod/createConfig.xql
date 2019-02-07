@@ -7,6 +7,7 @@ import module namespace config      = "http://salamanca/config" at "../../module
 declare       namespace exist       = "http://exist.sourceforge.net/NS/exist";
 declare       namespace sal         = "http://salamanca.adwmainz.de";
 declare       namespace tei         = "http://www.tei-c.org/ns/1.0";
+declare       namespace itei        = "https://www.salamanca.school/indexed-tei";
 declare       namespace util        = "http://exist-db.org/xquery/util";
 declare       namespace xi          = "http://www.w3.org/2001/XInclude";
 
@@ -79,7 +80,7 @@ let $rawConfiguration   :=  if (starts-with($resourceId, 'A') or starts-with($re
                                                         <param name="webServer"           value="{$webServer}"/>
                                                         <param name="imageServer"         value="{$imageServer}"/>
                                                       </parameters>
-                                let $prelim        := doc("svsal-xtriples-work2.xml")
+                                let $prelim        := doc("svsal-xtriples-work.xml")
                                 let $localized := transform:transform($prelim, $xslSheet, $parameters)
                                 return $localized
                             else
@@ -87,26 +88,25 @@ let $rawConfiguration   :=  if (starts-with($resourceId, 'A') or starts-with($re
 
 (: 
     metadata (teiHeader(s)) are stored separately in one or more resource(s)
-    (either one resource for a single-volume work or several $resources for a work and its volumes
+    (either one resource for a single-volume work or several $resources for a work AND its volumes
 :)
 let $workMetadata :=  if (starts-with($resourceId, 'W0')) then
                             let $workTEI := doc($config:tei-works-root || '/' || $resourceId || '.xml')/tei:TEI
                             let $workType := $workTEI/tei:text/@type
-                            let $workHeader := util:expand(<resource><document docType="{$workType}" docId="{$resourceId}">{$workTEI/tei:teiHeader}</document></resource>)
+                            let $workHeader := util:expand(<resource><header docType="{$workType}" docId="{$resourceId}">{$workTEI/tei:teiHeader}</header></resource>)
                             return
                                 if ($workType eq 'work_multivolume') then 
                                     let $volumeIds := $workTEI/tei:text/tei:group/xi:include/@href/string()
                                     (: TODO: fix the substring() workaround by stating correct rdf uris in the teiHeader in the first place :)
                                     let $volumeHeaders := for $id in $volumeIds return
                                         <resource>
-                                            <document type="work_volume" docId="{$resourceId || ':vol' || substring($id,11,1)}">
+                                            <header type="work_volume" docId="{$resourceId || ':vol' || substring($id,11,1)}">
                                                 {util:expand(doc($config:tei-works-root || '/' || $id)/tei:TEI/tei:teiHeader)}
-                                            </document>
+                                            </header>
                                         </resource>
                                     return ($workHeader, $volumeHeaders)
                                 else $workHeader
                         else ()
-
 (:
     Build collection node with sources and resource children
 :)
@@ -117,7 +117,8 @@ let $collection         :=  if (starts-with($resourceId, "authors.")) then
                             else if (starts-with($resourceId, "works.")) then
                                 <collection uri="{$config:webserver}/enhance-tei.xql?wid={substring-after($resourceId, "works.")}">
                                     {$workMetadata}
-                                    <resource uri="{{//(*:front|*:body|*:back)}}"/>
+                                    <!--<resource uri="{{//(*:front|*:body|*:back)}}"/>-->
+                                    <resource uri="{{//itei:text[not(descendant::itei:text)]}}"/>
                                 </collection>
                             else if (starts-with($resourceId, 'A')) then
                                 <collection uri="{$config:tei-authors-root}/{$resourceId}.xml">
@@ -126,7 +127,8 @@ let $collection         :=  if (starts-with($resourceId, "authors.")) then
                             else if (starts-with($resourceId, 'W0')) then
                                 <collection uri="{$config:webserver}/enhance-tei.xql?wid={$resourceId}">
                                     {$workMetadata}
-                                    <resource uri="{{//(*:front|*:body|*:back)}}"/>
+                                    <!--<resource uri="{{//(*:front|*:body|*:back)}}"/>-->
+                                    <resource uri="{{//itei:text[not(descendant::itei:text)]}}"/>
                                 </collection>
                             else if (starts-with($resourceId, 'Q')) then
                                 <collection>
