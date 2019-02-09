@@ -10,42 +10,50 @@ declare         namespace   tei         = "http://www.tei-c.org/ns/1.0";
 declare         namespace   itei        = "https://www.salamanca.school/indexed-tei";
 declare         namespace   util        = "http://exist-db.org/xquery/util";
 
+(: Reduces a TEI doc to pure structural information and indexes structural nodes according to sal:node index, thus enhancing the TEI for RDF extraction. :)
+
 declare option exist:timeout "3500000"; (: ~1h :)
 
 declare option output:method "xml";
 
+declare variable $omittableElemTypes := ("g", "lb", "cb", "hi", "choice", "abbr", "sic", "orig", "expan", "corr", "reg");
 
 declare function local:copy($input as item()*, $salNodes as map()?) as item()* {
     for $node in $input return 
         typeswitch($node)
             case element()
                return
-                  element {'itei:' || local-name($node)} {
-                        (: copy all the attributes :)
-                        for $att in $node/@*
-                            return
-                                (: if we are dealing with an xml:id attribute, and this also occurs in the _nodeIndex file, pull in more attributes from there :)
-                                if (name($att) = "xml:id" and map:get($salNodes,$att)) then
-                                    let $sn := map:get($salNodes,$att) (: TODO: why position [1]? :)
-                                    let $pn := map:get($salNodes,$sn/sal:citableParent/string())
-                                    return (
-                                        attribute title {$sn/sal:title},
-                                        if ($sn/sal:crumbtrail/a[last()]/@href) then attribute web {$sn/sal:crumbtrail/a[last()]/@href} else (),
-                                        attribute citableParent {$pn/sal:citetrail},
-                                        attribute citetrail {$sn/sal:citetrail},
-                                        $att,
-                                        (: give tei:text fragments rudimentary information about their context, so that rdf extraction doesn't need to access respective teiHeaders especially :)
-                                        if (local-name($node) eq 'text') then attribute in {$node/ancestor::tei:TEI/@xml:id} else ()
-                                    )
-                                else
-                                    attribute {name($att)} {$att}
-                    ,
-                    (: output all the child elements of this element recursively :)
-                    for $child in $node
-                       return local:copy($child/node(), $salNodes)
+                  (: remove frequent elements without semantic value :)
+                  if (local-name($node) = $omittableElemTypes) then 
+                     for $child in $node return local:copy($child/node(), $salNodes)
+                  else 
+                    element {'itei:' || local-name($node)} {
+                          (: copy all the attributes :)
+                          for $att in $node/@*
+                              return
+                                  (: if we are dealing with an xml:id attribute, and this also occurs in the _nodeIndex file, pull in more attributes from there :)
+                                  if (name($att) = "xml:id" and map:get($salNodes,$att)) then
+                                      let $sn := map:get($salNodes,$att) (: TODO: why position [1]? :)
+                                      let $pn := map:get($salNodes,$sn/sal:citableParent/string())
+                                      return (
+                                          attribute title {$sn/sal:title},
+                                          if ($sn/sal:crumbtrail/a[last()]/@href) then attribute web {$sn/sal:crumbtrail/a[last()]/@href} else (),
+                                          attribute citableParent {$pn/sal:citetrail},
+                                          attribute citetrail {$sn/sal:citetrail},
+                                          $att,
+                                          (: give tei:text fragments rudimentary information about their context, so that rdf extraction doesn't need to access respective teiHeaders especially :)
+                                          if (local-name($node) eq 'text') then attribute in {$node/ancestor::tei:TEI/@xml:id} else ()
+                                      )
+                                  else
+                                      attribute {name($att)} {$att}
+                      ,
+                      (: output all the child elements of this element recursively :)
+                      for $child in $node
+                         return local:copy($child/node(), $salNodes)
                   }
-            (: otherwise pass it through.  Used for text(), comments, and PIs :)
-            default return $node
+            case processing-instruction() return $node
+            (: remove text nodes and comments :)
+            default return ()
 };
 
 let $wid        :=  request:get-parameter('wid', '')
@@ -56,5 +64,7 @@ let $salNodesF  := doc($config:data-root || '/' || $wid || '_nodeIndex.xml')/sal
 let $salNodesM := map:merge(for $n in $salNodesF/sal:node return map:entry($n/@n/string(), $n))
 
 let $output     := local:copy($origTEI, $salNodesM)
+
+(: possible enhancement: set up $omittableAttrTypes (similar to $omittableElemTypes) with irrelevant attribute names :)
 
 return $output
