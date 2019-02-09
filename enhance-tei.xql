@@ -16,7 +16,8 @@ declare option exist:timeout "3500000"; (: ~1h :)
 
 declare option output:method "xml";
 
-declare variable $omittableElemTypes := ("g", "lb", "cb", "hi", "choice", "abbr", "sic", "orig", "expan", "corr", "reg");
+declare variable $omittableElemTypes := ("g", "lb", "cb", "hi", "choice", "abbr", "sic", "orig", "expan", "corr", "reg", "ref", "foreign");
+declare variable $omittableAttrTypes := ("anchored", "rendition", "resp", "change", "cert");
 
 declare function local:copy($input as item()*, $salNodes as map()?) as item()* {
     for $node in $input return 
@@ -29,7 +30,7 @@ declare function local:copy($input as item()*, $salNodes as map()?) as item()* {
                   else 
                     element {'itei:' || local-name($node)} {
                           (: copy all the attributes :)
-                          for $att in $node/@*
+                          for $att in $node/@*[not(name(.) = $omittableAttrTypes)]
                               return
                                   (: if we are dealing with an xml:id attribute, and this also occurs in the _nodeIndex file, pull in more attributes from there :)
                                   if (name($att) = "xml:id" and map:get($salNodes,$att)) then
@@ -64,7 +65,5 @@ let $salNodesF  := doc($config:data-root || '/' || $wid || '_nodeIndex.xml')/sal
 let $salNodesM := map:merge(for $n in $salNodesF/sal:node return map:entry($n/@n/string(), $n))
 
 let $output     := local:copy($origTEI, $salNodesM)
-
-(: possible enhancement: set up $omittableAttrTypes (similar to $omittableElemTypes) with irrelevant attribute names :)
 
 return $output
