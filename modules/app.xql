@@ -80,7 +80,7 @@ declare function app:resolvePersname($persName as element()*) {
 };
 
 (: Todo: Do we need the following? :)
-declare function app:resolveURI($string as xs:string*) {
+(:declare function app:resolveURI($string as xs:string*) {
     let $tei2htmlXslt   := doc($config:app-root || '/resources/xsl/extract_elements.xsl')
     for $id in $string
         let $doc := <div><a xml:id="{$id}" ref="#{id}">dummy</a></div>
@@ -90,7 +90,7 @@ declare function app:resolveURI($string as xs:string*) {
                         <param name="mode"       value="url" />
                     </parameters>
                     return xs:string(transform:transform($doc, $tei2htmlXslt, $xsl-parameters))
-};
+};:)
 
 declare function app:sectionTitle($targetWork as node()*, $targetNode as node()) {
     let $targetWorkId := string($targetWork/tei:TEI/@xml:id)
@@ -98,7 +98,7 @@ declare function app:sectionTitle($targetWork as node()*, $targetNode as node())
     return normalize-space(
 (: div, milestone, items and lists are named according to //tei:term[1]/@key, ./head, @n, ref->., @xml:id :)
             if ($targetNode/(self::tei:div | self::tei:milestone | self::tei:item | self::tei:list)) then
-                if ($targetNode/self::tei:item and $targetNode/parent::tei:list/@type='dict' and $targetNode//tei:term[1]/self::attribute(key)) then
+                if ($targetNode/self::tei:item and $targetNode/parent::tei:list/@type='dict' and $targetNode//tei:term[1][@key]) then
                     concat('dictionary entry: &#34;',
                             concat($targetNode//tei:term[1]/@key,
                                     if        (count($targetNode/parent::tei:list/tei:item[.//tei:term[1]/@key eq $targetNode//tei:term[1]/@key]) gt 1) then
@@ -142,7 +142,7 @@ declare function app:sectionTitle($targetWork as node()*, $targetNode as node())
                 '(process-technical) part ' | substring(string($targetNode/@xml:id), 11, 1)
 (: notes are named according to @n (with a counter if there are several in the div) or numbered :)
             else if ($targetNode/self::tei:note) then
-                if ($targetNode/self::attribute(n)) then
+                if ($targetNode[@n]) then
                     concat('Note ', normalize-space($targetNode/@n),
                             if (count($targetNode/ancestor::tei:div[1]//tei:note[upper-case(normalize-space(@n)) eq upper-case(normalize-space($targetNode/@n))]) gt 1) then
                                 concat('-', count($targetNode/preceding::tei:note[upper-case(normalize-space(@n)) eq upper-case(normalize-space($targetNode/@n))] intersect $targetNode/ancestor::tei:div[1]//tei:note) + 1)
