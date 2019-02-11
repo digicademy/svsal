@@ -261,7 +261,9 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
     let $debug            := if ($config:debug = ("trace", "info")) then console:log("Rendering " || $wid || ".") else ()
     let $start-time       := util:system-time()
     let $wid              := request:get-parameter('wid', '*')
-    let $indexedElTypes   := "pb|text|front|titlePage|titlePart|div|p|milestone|list|item|lg|back|note|head"
+    
+    (: state elements for which to create a sal:index entry: :)
+    let $indexedElTypes   := ("pb", "text", "front", "titlePage", "titlePart", "div", "p", "milestone", "list", "item", "lg", "back", "note", "head", "label")
     
     (: define the works to be fragmented: :)
     let $todo             := if ($wid = '*') then
@@ -278,17 +280,16 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                                                         xs:integer($work-raw//processing-instruction('svsal')[matches(., 'htmlFragmentationDepth="[^"]*"')][1]/replace(substring-after(., 'htmlFragmentationDepth="'), '"', ''))
                                                            else $config:fragmentationDepthDefault
                                 let $debug              := if ($config:debug = ("trace", "info")) then console:log("Rendering " || string($work-raw/@xml:id) || " at fragmentation level " || $fragmentationDepth || ".") else ()
-                                
                                 let $start-time-a := util:system-time()
 
                                 (: a rule picking those elements that should become our fragments :)
                                 let $target-set := $work//tei:text//tei:*[count(./ancestor-or-self::tei:*) eq $fragmentationDepth]
                                 let $debug              := if ($config:debug = ("trace", "info")) then console:log("  " || string(count($target-set)) || " elements to be rendered as fragments...") else ()
 
-                                (: First, create a preliminary index of nodes for generating HTML fragments (there is a second run below) :)
+                                (: First, create index of nodes for generating HTML fragments :)
                                 let $debug         := if ($config:debug = ("trace")) then console:log("  (creating preliminary index file ...)") else ()
                                 let $index1           := <sal:index work="{string($work/@xml:id)}">{
-                                                                    for $node at $pos in $work//tei:text/descendant-or-self::*[matches(local-name(.), '^(' || $indexedElTypes || ')$') and not(ancestor::tei:note)] 
+                                                                    for $node at $pos in $work//tei:text/descendant-or-self::*[@xml:id and local-name(.) = $indexedElTypes and not(ancestor::tei:note)] 
                                                                         let $debug         := if ($config:debug = ("trace")) then console:log("  (registering node " || $pos || ": " || local-name($node) || " with @xml:id " || $node/@xml:id || " ...)") else ()
                                                                         let $subtype      := if ($node/@sameAs) then
                                                                                                     "sameAs"
@@ -330,44 +331,44 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                                         </sal:index>
                                 let $debug        := if ($config:debug = ("trace")) then console:log("  (saving preliminary index file ...)") else ()
                                 let $index1SaveStatus := admin:saveFile($work/@xml:id, $work/@xml:id || "_nodeIndex.xml", $index1, "data")
+                                let $index1SaveStatusDebug := admin:saveFile($work/@xml:id, $work/@xml:id || "_nodeIndex-before.xml", $index1, "data")
                                 let $debug        := if ($config:debug = ("trace", "info")) then console:log("  Preliminary index file created.") else ()
 
-
                                 (: Next, create a ToC html file. :)
-                                let $doc    :=      util:expand(doc($config:tei-works-root || '/' || $wid ||   '.xml')/tei:TEI)
-                                let $text   :=      $doc//tei:text[@type='work_volume'] | $doc//tei:text[@type = 'work_monograph']
-                                let $elements :=    $doc//tei:text[@type = 'work_monograph']/(tei:front | tei:body | tei:back)  
-                                let $title  :=      app:WRKcombined($doc, $model, $wid)
+(:                                let $doc    :=      util:expand(doc($config:tei-works-root || '/' || $wid ||   '.xml')/tei:TEI):)
+                                let $doc := $work
+                                let $workId := $work/@xml:id
+                                let $text   :=      $work//tei:text[@type='work_volume'] | $work//tei:text[@type = 'work_monograph']
+                                let $elements :=    $work//tei:text[@type = 'work_monograph']/(tei:front | tei:body | tei:back)  
+                                let $title  :=      app:WRKcombined($work, $model, $workId)
                                 let $store  :=     
                                     <div id="tableOfConts">
                                         <ul>
                                             <li>
                                                 <b>{$title}</b> 
                                                 <span class="jstree-anchor hideMe pull-right">{admin:get-pages-from-div($text) }</span>
-                                                
-                                                    {if ($doc//tei:text[@type='work_volume']) then for $a in $doc//tei:text where $a[@type='work_volume'] return
+                                                    {if ($work//tei:text[@type='work_volume']) then for $a in $work//tei:text where $a[@type='work_volume'] return
                                                     <ul>
                                                         <li>
                                                             <a class="hideMe"><b>{concat('Volume: ', $a/@n/string())}</b></a>
-                                                            { admin:generate-toc-from-div($a/(tei:front | tei:body | tei:back), $wid)}
+                                                            { admin:generate-toc-from-div($a/(tei:front | tei:body | tei:back), $workId)}
                                                     </li></ul>
-                                                    else admin:generate-toc-from-div($elements, $wid)}
+                                                    else admin:generate-toc-from-div($elements, $workId)}
                                             </li>
                                         </ul>
                                     </div>
-                                let $tocSaveStatus := admin:saveFile($doc/@xml:id, $doc/@xml:id || "_toc.html", $store, "html")
-                                let $debug         := if ($config:debug = ("trace", "info")) then console:log("  ToC file created.") else ()
+                                let $tocSaveStatus := admin:saveFile($workId, $workId || "_toc.html", $store, "html")
+                                let $debug         := if ($config:debug = ("trace", "info")) then console:log("  ToC file created for " || $workId || ".") else ()
                                 
 
                                 (:Next, create the Pages html file. :)
-                                let $pagesDe        :=  app:WRKpreparePagination($node, $model, $wid, 'de')
-                                let $pagesEn        :=  app:WRKpreparePagination($node, $model, $wid, 'en')
-                                let $pagesEs        :=  app:WRKpreparePagination($node, $model, $wid, 'es')
-                                let $savePages     :=  (admin:saveFile($work/@xml:id, $work/@xml:id || "_pages_de.html", $pagesDe, "html"),
-                                                                  admin:saveFile($work/@xml:id, $work/@xml:id || "_pages_en.html", $pagesEn, "html"),
-                                                                  admin:saveFile($work/@xml:id, $work/@xml:id || "_pages_es.html", $pagesEs, "html"))
+                                let $pagesDe        :=  app:WRKpreparePagination($node, $model, $workId, 'de')
+                                let $pagesEn        :=  app:WRKpreparePagination($node, $model, $workId, 'en')
+                                let $pagesEs        :=  app:WRKpreparePagination($node, $model, $workId, 'es')
+                                let $savePages     :=  (admin:saveFile($workId, $workId || "_pages_de.html", $pagesDe, "html"),
+                                                                  admin:saveFile($workId, $workId || "_pages_en.html", $pagesEn, "html"),
+                                                                  admin:saveFile($workId, $workId || "_pages_es.html", $pagesEs, "html"))
                                 let $debug          := if ($config:debug = ("trace", "info")) then console:log("  Pages files created.") else ()
-
 
                                 (: Next, get "previous" and "next" fragment ids and hand the current fragment over to the renderFragment function :)
                                 let $fragments := for $section at $index in $target-set
@@ -383,7 +384,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                         let $nextId :=  if ($next) then
                                                             xs:string($next/@xml:id)
                                                         else ()
-                                        let $result :=  admin:renderFragment($work, xs:string($work/@xml:id), $section, $index, $fragmentationDepth, $prevId, $nextId, $config:serverdomain)
+                                        let $result :=  admin:renderFragment($work, xs:string($workId), $section, $index, $fragmentationDepth, $prevId, $nextId, $config:serverdomain)
                                         return <p>
                                                     <div>
                                                         {format-number($index, "0000")}: &lt;{local-name($section) || " xml:id=&quot;" || string($section/@xml:id) || "&quot;&gt;"} (Level {count($section/ancestor-or-self::tei:*)})
@@ -391,47 +392,6 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                                     {$result}
                                                 </p>
                                 
-                                (: Finally, create ultimate version of node index with proper fragment URLs, required for RDF extraction etc. :)
-                                let $debug         := if ($config:debug = ("trace")) then console:log("  (creating revised index file ...)") else ()
-                                let $index2        := <sal:index work="{string($work/@xml:id)}">{
-                                                                    for $node at $pos in $work//tei:text/descendant-or-self::*[matches(local-name(.), '^(' || $indexedElTypes || ')$') and not(ancestor::tei:note)] 
-                                                                        let $debug         := if ($config:debug = ("trace")) then console:log("  (registering node " || $pos || ": " || local-name($node) || " with @xml:id " || $node/@xml:id || " ...)") else ()
-                                                                        let $subtype         := if ($node/@sameAs) then
-                                                                                                    "sameAs"
-                                                                                                else if ($node/@corresp) then
-                                                                                                    "corresp"
-                                                                                                else if ($node/@type eq "work_part") then
-                                                                                                    "work_part"
-                                                                                                else if ($node[self::tei:milestone]/@n) then
-                                                                                                    string($node/@n)
-                                                                                                else if ($node/@type) then
-                                                                                                    string($node/@type)
-                                                                                                else ()
-                                                                        let $frag            := (($node/ancestor-or-self::tei:* | $node//tei:*) intersect $target-set)[1]
-                                                                        return (element sal:node { 
-                                                                                                    attribute type      {local-name($node)}, 
-                                                                                                    attribute subtype   {$subtype}, 
-                                                                                                    attribute n         {$node/@xml:id},
-                                                                                                    if ($node/@xml:id eq 'completeWork' and $xincludes) then
-                                                                                                      attribute xinc    {$xincludes} else
-                                                                                                      (), 
-                                                                                                    element sal:title           {app:sectionTitle($work, $node)},
-                                                                                                    element sal:fragment        {format-number(functx:index-of-node($target-set, $frag), "0000") || "_" || $frag/@xml:id},
-                                                                                                    element sal:citableParent   {string(($node/ancestor::tei:text[not(@type="work_part")] | $node/ancestor::tei:div[not(@type="work_part")][1] 
-                                                                                                                                            | $node/ancestor::tei:note | $node/ancestor::tei:item[./ancestor::tei:list/@type = 'dict'])[last()]/@xml:id)},
-                                                                                                    (: Crumbtrails include URLs with "frag=..." parameters pointing to the right HTML fragment; 
-                                                                                                    they can only be created properly if HTML fragments already exist (see render:mkUrl(...)) :)
-                                                                                                    element sal:crumbtrail      {render:getCrumbtrail($work, $node, 'html')},
-                                                                                                    element sal:citetrail       {string-join(render:getCrumbtrail($work, $node, 'numeric'), '')}
-                                                                                                }
-                                                                                )
-                                                                   }
-                                                        </sal:index>
-                                let $debug         := if ($config:debug = ("trace")) then console:log("  (saving revised index file ...)") else ()
-                                let $index2SaveStatus := admin:saveFile($work/@xml:id, $work/@xml:id || "_nodeIndex.xml", $index2, "data")
-                                let $debug              := if ($config:debug = ("trace", "info")) then console:log("  Revised index file created.") else ()
-
-
                             (: Done. The rest is reporting... :)
                                 (: See if there are any leaf elements in our text that are not matched by our rule :)
                                 let $missed-elements := $work//(tei:front|tei:body|tei:back)//tei:*[count(./ancestor-or-self::tei:*) < $fragmentationDepth][not(*)]
@@ -526,6 +486,8 @@ declare function admin:sphinx-out ($node as node(), $model as map(*), $wid as xs
     (: which parts of those works constitute a fragment that is to count as a hit? :)
     let $hits := 
             for $hit at $index in ($expanded//tei:text//(tei:titlePage|tei:head|tei:item|tei:note|tei:p[not(ancestor::tei:note | ancestor::tei:item)]|tei:lg[not(ancestor::tei:note | ancestor::tei:item  | ancestor::tei:p)]) | $expanded//tei:profileDesc//(tei:p | tei:keywords))
+
+                (: !! TODO: get teiHeader queries right (currently might lead to sequences instead of nodes, see tei:date e.g.) :)
 
                 (: for each fragment, populate our sphinx fields and attributes :)
                 let $work              := $hit/ancestor-or-self::tei:TEI
