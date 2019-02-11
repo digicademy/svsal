@@ -335,8 +335,6 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                 let $debug        := if ($config:debug = ("trace", "info")) then console:log("  Preliminary index file created.") else ()
 
                                 (: Next, create a ToC html file. :)
-(:                                let $doc    :=      util:expand(doc($config:tei-works-root || '/' || $wid ||   '.xml')/tei:TEI):)
-                                let $doc := $work
                                 let $workId := $work/@xml:id
                                 let $text   :=      $work//tei:text[@type='work_volume'] | $work//tei:text[@type = 'work_monograph']
                                 let $elements :=    $work//tei:text[@type = 'work_monograph']/(tei:front | tei:body | tei:back)  
@@ -360,7 +358,6 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                 let $tocSaveStatus := admin:saveFile($workId, $workId || "_toc.html", $store, "html")
                                 let $debug         := if ($config:debug = ("trace", "info")) then console:log("  ToC file created for " || $workId || ".") else ()
                                 
-
                                 (:Next, create the Pages html file. :)
                                 let $pagesDe        :=  app:WRKpreparePagination($node, $model, $workId, 'de')
                                 let $pagesEn        :=  app:WRKpreparePagination($node, $model, $workId, 'en')
@@ -417,7 +414,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                              {if ($config:debug = "trace") then $fragments else ()}
                                        </div>
 
-    (: Now spit everything out :)
+    (: Now put everything out :)
     let $runtime-ms       := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000 
     return <div>
                 <p>Zu rendern: {count($todo)} Werk(e); gesamte Rechenzeit:
@@ -487,31 +484,29 @@ declare function admin:sphinx-out ($node as node(), $model as map(*), $wid as xs
     let $hits := 
             for $hit at $index in ($expanded//tei:text//(tei:titlePage|tei:head|tei:item|tei:note|tei:p[not(ancestor::tei:note | ancestor::tei:item)]|tei:lg[not(ancestor::tei:note | ancestor::tei:item  | ancestor::tei:p)]) | $expanded//tei:profileDesc//(tei:p | tei:keywords))
 
-                (: !! TODO: get teiHeader queries right (currently might lead to sequences instead of nodes, see tei:date e.g.) :)
-
                 (: for each fragment, populate our sphinx fields and attributes :)
                 let $work              := $hit/ancestor-or-self::tei:TEI
                 let $work_id           := xs:string($work/@xml:id)
                 let $work_type         := xs:string($work/tei:text/@type)
-                let $work_author_name := app:formatName($work//tei:titleStmt//tei:author//tei:persName)
-                let $work_author_id   := string-join($work//tei:titleStmt//tei:author//tei:persName/@ref, " ")
-                let $work_title        := if ($work//tei:titleStmt/tei:title[@type="short"] and not($work//tei:text[@type = "working_paper"])) then
-                                            $work//tei:titleStmt/tei:title[@type="short"]/text()
-                                         else if ($work//tei:titleStmt/tei:title[@type="main"]) then
-                                            $work//tei:titleStmt/tei:title[@type="main"]/text()
-                                         else
-                                            $work//tei:titleStmt/tei:title[1]/text()
-                let $work_year        := if ($work//tei:sourceDesc//tei:date[@type = "summaryThisEd"]) then
-                                            xs:string($work//tei:sourceDesc//tei:date[@type = "summaryThisEd"])
-                                        else if  ($work//tei:sourceDesc//tei:date[@type = "thisEd"]) then
-                                            xs:string($work//tei:sourceDesc//tei:date[@type = "thisEd"])
-                                        else if  ($work//tei:sourceDesc//tei:date[@type = "summaryFirstEd"]) then
-                                            xs:string($work//tei:sourceDesc//tei:date[@type = "summaryFirstEd"])
-                                        else if  ($work//tei:sourceDesc//tei:date[@type = "firstEd"]) then
-                                            xs:string($work//tei:sourceDesc//tei:date[@type = "firstEd"])
-                                        else if  ($work//tei:date[@type ="digitizedEd"]) then
-                                            xs:string($work//tei:date[@type = "digitizedEd"])
-                                        else ()
+                let $teiHeader         := $work/tei:teiHeader
+                let $work_author_name := app:formatName($teiHeader//tei:titleStmt//tei:author//tei:persName)
+                let $work_author_id   := string-join($teiHeader//tei:titleStmt//tei:author//tei:persName/@ref, " ")
+                let $work_title        :=   if ($teiHeader//tei:titleStmt/tei:title[@type="short"] and not($work//tei:text[@type = "working_paper"])) then
+                                                $teiHeader//tei:titleStmt/tei:title[@type="short"]/text()
+                                            else if ($teiHeader//tei:titleStmt/tei:title[@type="main"]) then
+                                                $teiHeader//tei:titleStmt/tei:title[@type="main"]/text()
+                                            else $teiHeader//tei:titleStmt/tei:title[1]/text()
+                let $work_year        :=    if ($teiHeader//tei:sourceDesc//tei:date[@type = "summaryThisEd"]) then
+                                                xs:string($teiHeader//tei:sourceDesc//tei:date[@type = "summaryThisEd"])
+                                            else if  ($teiHeader//tei:sourceDesc//tei:date[@type = "thisEd"]) then
+                                                xs:string($teiHeader//tei:sourceDesc//tei:date[@type = "thisEd"])
+                                            else if  ($teiHeader//tei:sourceDesc//tei:date[@type = "summaryFirstEd"]) then
+                                                xs:string($teiHeader//tei:sourceDesc//tei:date[@type = "summaryFirstEd"])
+                                            else if  ($teiHeader//tei:sourceDesc//tei:date[@type = "firstEd"]) then
+                                                xs:string($teiHeader//tei:sourceDesc//tei:date[@type = "firstEd"])
+                                            else if  ($teiHeader//tei:date[@type ="digitizedEd"]) then
+                                                xs:string($teiHeader//tei:date[@type = "digitizedEd"])
+                                            else ()
                 let $hit_type         := local-name($hit)
                 let $hit_id           := xs:string($hit/@xml:id)
                 let $hit_citetrail    := doc($config:data-root || '/' || $work_id || '_nodeIndex.xml')//sal:node[@n = $hit_id]/sal:citetrail
