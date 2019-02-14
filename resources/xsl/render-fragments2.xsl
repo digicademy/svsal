@@ -224,7 +224,10 @@
                                 <xsl:with-param name="input" select="child::head[1]//node()"/>
                             </xsl:call-template>
                         </xsl:when>
-                        <xsl:when test="matches(@n, '^[0-9]+$') and (@unit or @type)">
+                        <xsl:when test="matches(@n, '^[0-9]+$') and (@unit eq 'number')">
+                            <xsl:value-of select="@n"/>
+                        </xsl:when>
+                        <xsl:when test="matches(@n, '^[0-9]+$') and (@unit[. ne 'number'] or @type)">
                             <xsl:value-of select="concat(xs:string(@unit), xs:string(@type), ' ', @n)"/>
                         </xsl:when>
                         <xsl:otherwise>
@@ -279,7 +282,10 @@
                                 <xsl:with-param name="input" select="child::head[1]//node()"/>
                             </xsl:call-template>
                         </xsl:when>
-                        <xsl:when test="matches(@n, '^[0-9]+$') and (@unit or @type)">
+                        <xsl:when test="matches(@n, '^[0-9]+$') and (@unit eq 'number')">
+                            <xsl:value-of select="@n"/>
+                        </xsl:when>
+                        <xsl:when test="matches(@n, '^[0-9]+$') and (@unit[. ne 'number'] or @type)">
                             <xsl:value-of select="concat(xs:string(@unit), xs:string(@type), ' ', @n)"/>
                         </xsl:when>
                         <xsl:otherwise>

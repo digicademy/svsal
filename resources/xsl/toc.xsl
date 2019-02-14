@@ -3,6 +3,8 @@
     <xsl:import href="sal-functions.xsl"/>
     <xsl:output method="html"/>
     <xsl:param name="workId" as="xs:string"/>
+    
+    <!-- stylesheet can possibly be deleted -->
 
 <!-- TODO:
     * use templates to parse head contents, not just output text() value (e.g we may have <g> elements or editorial interventions) ...
