@@ -1,4 +1,4 @@
-<xsl:stylesheet xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sal="http://salamanca.adwmainz.de" version="3.0" exclude-result-prefixes="exist sal tei xd xs xsl" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" xmlns:sal="http://salamanca.adwmainz.de" version="3.0" exclude-result-prefixes="exist sal tei xd xs xsl" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
 
 <!-- TODO:
            * tweak/tune performance: use
@@ -468,7 +468,7 @@
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:if>
-        <xsl:if test="@n and empty(@sameAs)">
+        <xsl:if test="@n and not(@sameAs)">
             <xsl:element name="div">
                 <xsl:attribute name="class">pageNumbers</xsl:attribute>
                 <xsl:element name="a">
@@ -478,10 +478,10 @@
                     <xsl:attribute name="data-canvas">
                         <xsl:choose>
                             <xsl:when test="matches(@facs, '^facs:W[0-9]{4}-[A-z]-[0-9]{4}$')">
-                                <xsl:value-of select="sal:resolveCanvasID(@facs, count(preceding::pb[substring(./@facs, 1, 12) = substring(current()/@facs, 1, 12)]) + 1, $serverDomain)"/>
+                                <xsl:value-of select="sal:resolveCanvasID(@facs, count(preceding::pb[not(@sameAs) and substring(./@facs, 1, 12) eq substring(current()/@facs, 1, 12)]) + 1, $serverDomain)"/>
                             </xsl:when>
                             <xsl:otherwise>
-                                <xsl:value-of select="sal:resolveCanvasID(@facs, count(preceding::pb) + 1, $serverDomain)"/>
+                                <xsl:value-of select="sal:resolveCanvasID(@facs, count(preceding::pb[not(@sameAs)]) + 1, $serverDomain)"/>
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:attribute>
