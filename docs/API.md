@@ -188,7 +188,7 @@ to <https://www.salamanca.school/work.html>, where the actual resource is constr
 from the parameters mentioned above, from the translation process and eventually from
 environment factors like the browser's language preference settings.
 This way,
-<https://id.salamanca.school/works/w0015:20.2.4.10?q=milagro&amp;viewer=https://facs.salamanca.school/iiif/presentation/W0015/canvas/p14>
+<https://id.salamanca.school/texts/w0015:20.2.4.10?q=milagro&amp;viewer=https://facs.salamanca.school/iiif/presentation/W0015/canvas/p14>
 might finally resolve to
 <https://www.salamanca.school/en/work.html?wid=w0015&amp;frag=0005_W0015-00-0016-d1-03ed&amp;q=milagro#W0015-00-0022-d4-03f7>.
 
