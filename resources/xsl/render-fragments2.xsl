@@ -137,6 +137,9 @@
         </xsl:element>
     </xsl:template>
     
+    
+    
+    
 
     <!-- To every <text type='work_volume'>, add a section heading and an anchor
          (to grab link, refresh filters, export/print). -->
@@ -452,6 +455,14 @@
                 <xsl:attribute name="class" select="'note-paragraph'"/>
                 <xsl:apply-templates/>
             </xsl:element>
+    </xsl:template>
+    
+    <xsl:template match="signed">
+        <div class="hauptText">
+            <div class="signed">
+                <xsl:apply-templates/>
+            </div>
+        </div>
     </xsl:template>
     
 

@@ -453,6 +453,13 @@ a .edited, a .expan, a .reg, a .corr{
     vertical-align: initial;
 }
 
+.hauptText .signed {
+    font-size:0.9em !important;
+    text-align:right !important;
+    font-style: italic;
+    padding-top:0.3em;
+}
+
 .form-inline > .form-group {
     vertical-align: top;
 }
