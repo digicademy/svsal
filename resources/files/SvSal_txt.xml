@@ -1,9 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_odds.rng"
     type="application/xml"
-    schematypens="http://relaxng.org/ns/structure/1.0"?>
-<TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:rng="http://relaxng.org/ns/structure/1.0"
-  xml:lang="en" version="0.9.3">
+    schematypens="http://relaxng.org/ns/structure/1.0"?><TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:rng="http://relaxng.org/ns/structure/1.0" xml:lang="en" version="0.9.3">
   <teiHeader>
     <fileDesc>
       <titleStmt>
@@ -22,10 +19,8 @@
     </fileDesc>
     <revisionDesc status="e_unreviewed">
       <listChange>
-        <change who="#DG" when="2018-01-14" status="e_emended_unenriched"
-          >Added element signed to textstructure.</change>
-        <change who="#DG" when="2018-12-18" status="e_emended_unenriched"
-          >Added 'number' to milestone/@unit.</change>
+        <change who="#DG" when="2018-01-14" status="e_emended_unenriched">Added element signed to textstructure.</change>
+        <change who="#DG" when="2018-12-18" status="e_emended_unenriched">Added 'number' to milestone/@unit.</change>
         <change who="#DG" when="2018-12-03" status="e_emended_unenriched">
           <p>Deleted title/@type[. eq '245a'].</p>
         </change>
@@ -70,19 +65,14 @@
           <p>Added title@type=245a,
                     ref@type=catLink,institution, date@type=summary</p>
         </change>
-        <change who="#AW" when="2014-09-02" status="e_emended_unenriched"
-          > Add "dict" list type. </change>
-        <change who="#AW" when="2014-08-05" status="e_emended_unenriched"
-          > Add mentioned element. </change>
-        <change who="#AW" when="2014-06-27" status="e_emended_unenriched"
-          > Allow text@xml:id to be
+        <change who="#AW" when="2014-09-02" status="e_emended_unenriched"> Add "dict" list type. </change>
+        <change who="#AW" when="2014-08-05" status="e_emended_unenriched"> Add mentioned element. </change>
+        <change who="#AW" when="2014-06-27" status="e_emended_unenriched"> Allow text@xml:id to be
                     VolXY (with a capital 'V') instead of volXY, so as to match how the xml files
                     are actually called. </change>
-        <change who="#AW" when="2014-05-27" status="e_emended_unenriched"
-          > Allow ref
+        <change who="#AW" when="2014-05-27" status="e_emended_unenriched"> Allow ref
                     @type="anchor-index" </change>
-        <change who="#AW" when="2014-05-14" status="e_emended_unenriched"
-          > specified dictionary and
+        <change who="#AW" when="2014-05-14" status="e_emended_unenriched"> specified dictionary and
                     analysis elements replaced exclude- with include-specifications in some
                     moduleRef instances made @status an optional attribute in revisionDesc </change>
         <change who="#AW" when="2014-04-11" status="e_emended_unenriched">
@@ -148,8 +138,7 @@
                     optional. (and whitespace formatting.)</p>
         </change>
         <change who="#AW" when="2013-09-17" status="unreviewed">
-          <p>Synched partly with <ref type="url"
-            >http://dfg-viewer.de/strukturdatenset/</ref>, this concerns
+          <p>Synched partly with <ref type="url">http://dfg-viewer.de/strukturdatenset/</ref>, this concerns
                     specific types of div and text tags.</p>
           <p>Also allowed biblscope tag as it
                         is used in seriesStmt.</p>
@@ -157,9 +146,7 @@
         <change who="#AW" when="2013-09-02" status="unreviewed">
           <p>Removed @synch (it means
                     sync in time, for speech transcription)and defined list@rendition values
-                    (like dta does as per <ref
-            type="url"
-            >www.deutsches-textarchiv.de/doku/basisformat_texterschliessung_formal#Klammerungen</ref>.
+                    (like dta does as per <ref type="url">www.deutsches-textarchiv.de/doku/basisformat_texterschliessung_formal#Klammerungen</ref>.
                     Changed @status to an xml name data type (without '/'). Also re-shuffled
                     *Spec-entries to sort on @ident. </p>
         </change>
@@ -172,35 +159,37 @@
     </front>
     <body>
       <p> for more information.TEI customization for primary source texts established by the
-                project&#13; "The School of Salamanca" of the Academy of Sciences and of
-                Literature,&#13; Mainz, Germany. Contact info.salamanca@adwmainz.de for&#13; more
-                information.info.salamanca@adwmainz.de for&#13; more information.TEI customization
-                for primary source texts established by the project&#13; "The School of Salamanca"
-                of the Academy of Sciences and of Literature,&#13; Mainz, Germany. Contact
-                info.salamanca@adwmainz.de for&#13; more information.</p>
+                project
+ "The School of Salamanca" of the Academy of Sciences and of
+                Literature,
+ Mainz, Germany. Contact info.salamanca@adwmainz.de for
+ more
+                information.info.salamanca@adwmainz.de for
+ more information.TEI customization
+                for primary source texts established by the project
+ "The School of Salamanca"
+                of the Academy of Sciences and of Literature,
+ Mainz, Germany. Contact
+                info.salamanca@adwmainz.de for
+ more information.</p>
       <schemaSpec ident="SvSal_txt" docLang="en" xml:lang="en" prefix="">
         <!-- specify modules to include (and which of their elements not to) -->
         <moduleRef key="tei" except=""/>
-        <moduleRef key="core"
-          except="add addrLine address analytic binaryObject distinct divGen gb index listBibl measure measureGrp media meeting name num postBox postCode said sp speaker stage street teiCorpus textLang time"/>
+        <moduleRef key="core" except="add addrLine address analytic binaryObject distinct divGen gb index listBibl measure measureGrp media meeting name num postBox postCode said sp speaker stage street teiCorpus textLang time"/>
         <moduleRef key="analysis" include="m pc"/>
         <!-- except="c cl interp interpGrp phr s spanGrp w" -->
         <moduleRef key="figures" except="notatedMusic"/>
         <!-- include="cell figDesc figure formula row table" -->
         <moduleRef key="gaiji" except=""/>
         <!-- include="char charDecl charName charProp g glyph glyphName localName mapping unicodeName value" -->
-        <moduleRef key="header"
-          except="biblFull category catDesc classDecl creation geoDecl handNote principal samplingDecl scriptNote segmentation stdVals taxonomy typeNote"/>
+        <moduleRef key="header" except="biblFull category catDesc classDecl creation geoDecl handNote principal samplingDecl scriptNote segmentation stdVals taxonomy typeNote"/>
         <moduleRef key="linking" include="anchor"/>
         <!-- except="ab alt altGrp join joinGrp link linkGrp seg timeline when" -->
-        <moduleRef key="namesdates"
-          except="affiliation age birth climate death district education event faith floruit geo geogFeat langKnowledge langKnown listEvent listNym listOrg listPerson listPlace listRelation location nationality nym occupation offset org person personGrp place population region relation relationGrp residence sex socecStatus state terrain trait"/>
+        <moduleRef key="namesdates" except="affiliation age birth climate death district education event faith floruit geo geogFeat langKnowledge langKnown listEvent listNym listOrg listPerson listPlace listRelation location nationality nym occupation offset org person personGrp place population region relation relationGrp residence sex socecStatus state terrain trait"/>
         <!-- include="addName affiliation age birth bloc climate country death district education event faith floruit forename genName geo geogFeat geogName langKnowledge langKnown listEvent listNym listOrg listPerson listPlace listRelation location nameLink nationality nym occupation offset org orgName persName person personGrp place placeName population region relation relationGrp residence roleName settlement sex socecStatus state surname terrain trait" -->
         <moduleRef key="tagdocs" except=""/>
-        <moduleRef key="textstructure"
-          except="closer dateline div1 div2 div3 div4 div5 div6 div7 opener postscript salute trailer"/>
-        <moduleRef key="transcr"
-          except="addSpan facsimile handNotes handShift line listTranspose metamark mod redo restore retrace sourceDoc subst substJoin surface surfaceGrp surplus transpose undo zone"/>
+        <moduleRef key="textstructure" except="closer dateline div1 div2 div3 div4 div5 div6 div7 opener postscript salute trailer"/>
+        <moduleRef key="transcr" except="addSpan facsimile handNotes handShift line listTranspose metamark mod redo restore retrace sourceDoc subst substJoin surface surfaceGrp surplus transpose undo zone"/>
         <!-- delete complete attribute classes -->
         <classSpec ident="att.coordinated" module="transcr" type="atts" mode="delete">
           <attList>
@@ -492,14 +481,14 @@
           <attList>
             <attDef ident="resp" mode="change">
               <valList type="closed" mode="replace">
-                <valItem ident="#AA"/>
-                <!-- automatic annotation -->
+                <valItem ident="#auto"/> <!-- automatic annotation -->
                 <valItem ident="#AS"/>
                 <valItem ident="#AW"/>
                 <valItem ident="#CB"/>
                 <valItem ident="#CRC"/>
                 <valItem ident="#DG"/>
                 <valItem ident="#IC"/>
+                <valItem ident="#JLE"/>
                 <valItem ident="#MLB"/>
                 <valItem ident="#TD"/>
               </valList>
@@ -559,11 +548,9 @@
           </classes>
           <attList>
             <attDef ident="sortKey" mode="change" usage="opt">
-              <desc xml:lang="en"
-                >Key that identifies the referenced work in the
+              <desc xml:lang="en">Key that identifies the referenced work in the
                                 project's web application.</desc>
-              <desc xml:lang="de"
-                >Schlüssel, über den die Zitation in der Webapp
+              <desc xml:lang="de">Schlüssel, über den die Zitation in der Webapp
                                 identifiziert wird.</desc>
             </attDef>
           </attList>
@@ -1224,9 +1211,7 @@
                     </content>
                 </macroSpec>
 -->
-        <moduleRef key="msdescription"
-          except="accMat acquisition additional additions binding bindingDesc condition custEvent custodialHist decoDesc decoNote explicit filiation finalRubric handDesc heraldry history incipit locus locusGrp musicNotation provenance recordHist rubric seal sealDesc secFol signatures source stamp support supportDesc watermark"
-        />
+        <moduleRef key="msdescription" except="accMat acquisition additional additions binding bindingDesc condition custEvent custodialHist decoDesc decoNote explicit filiation finalRubric handDesc heraldry history incipit locus locusGrp musicNotation provenance recordHist rubric seal sealDesc secFol signatures source stamp support supportDesc watermark"/>
       </schemaSpec>
     </body>
   </text>
