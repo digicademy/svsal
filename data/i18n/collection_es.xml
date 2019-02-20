@@ -332,5 +332,10 @@
     <msg key="worksList">Lista de Obras</msg>
     <msg key="catalogueRecord">Registro de Catálogo</msg>
     
+    <!-- Error handling -->
+    <msg key="error">Error</msg>
+    <msg key="pageNotFound">Esta no es la página que está buscando...</msg>
+    <msg key="bugMessage">Si encuentra un error en nuestra página, por favor infórmenos al</msg>
+    
     
 </catalogue>

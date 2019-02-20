@@ -325,4 +325,9 @@
   <msg key="worksList">Works List</msg>
   <msg key="catalogueRecord">Catalogue Record</msg>
   
+  <!-- Error handling -->
+  <msg key="error">Error</msg>
+  <msg key="pageNotFound">This is not the page you were looking for...</msg>
+  <msg key="bugMessage">In case you found a bug on our webpages, please let us know at</msg>
+  
 </catalogue>

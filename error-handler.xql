@@ -44,7 +44,9 @@ declare function local:resolve-attr($node as node()) as node()? {
         else $node
 };
 
-let $lang := "en"
+let $existPath := substring-after(request:get-attribute('javax.servlet.error.request_uri'), '/apps/salamanca')
+let $lang := net:lang($existPath)
+let $debug:= console:log('Erroneous request for: ' || request:get-attribute('javax.servlet.error.request_uri') || '. Determined exist:path: ' || $existPath || ' ; language: ' || $lang || '.')
 let $dummyMap := map:new()
 let $html-in :=
     <html xmlns="http://www.w3.org/1999/xhtml">
@@ -88,8 +90,9 @@ let $html-in :=
             <div id="wrap">
                 <div>
                     <div>
-                        <h1 class="error-title">{request:get-attribute('javax.servlet.error.status_code')}</h1>
-                        <h2 class="error-title">This is not the page you were looking for...</h2>
+                        <h1 class="error-title"><i18n:text key="error">Error</i18n:text> {' ' || request:get-attribute('javax.servlet.error.status_code')}</h1>
+                        <h2 class="error-title"><i18n:text key="pageNotFound">This is not the page you were looking for...</i18n:text></h2>
+                        <p class="error-paragraph"><i18n:text key="bugMessage">In case you found a bug in our website, please let us know at</i18n:text>{' '}<a href="mailto:info.salamanca@adwmainz.de">info.salamanca@adwmainz.de</a></p>
                         {if ($config:debug eq 'trace' or $config:instanceMode eq 'testing') then 
                             <div>
                                 <h4 class="error-paragraph">Error message:</h4>
@@ -125,38 +128,6 @@ let $html-in :=
         </body>
     </html>
 
-let $html-out := local:resolve($html-in)
+let $html-out := i18n:process(local:resolve($html-in), $lang, '/db/apps/salamanca/data/i18n', 'en')
 
 return $html-out
-
-(:
-declare option output:method        "xml";
-declare option output:media-type    "application/xml";
-declare option output:indent        "yes";
-declare option output:omit-xml-declaration "no";
-declare option output:encoding      "utf-8";
-
-
-let $lang := 'en'
-let $requestURI := request:get-attribute('javax.servlet.error.request_uri')
-let $existPath := substring-after(request:get-attribute('javax.servlet.error.request_uri'), '/apps/salamanca/')
-let $existResource := tokenize($requestURI, '/')[last()]
-let $existController := '/salamanca'
-let $existPrefix := '/apps'
-let $existRoot := 'xmldb:exist:///db/apps'
-
-return
-    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <forward url="{$existController || '/error-page.html'}"/>
-        <view>
-            <!-- pass the results through view.xql -->
-            <forward url="{$existController}/modules/view.xql">
-                <set-attribute name="lang"              value="{$lang}"/>
-                <set-attribute name="$exist:resource"   value="{$existResource}"/>
-                <set-attribute name="$exist:prefix"     value="{$existPrefix}"/>
-                <set-attribute name="$exist:controller" value="{$existController}"/>
-            </forward>
-        </view>
-    </dispatch>
-      
-:)

@@ -152,4 +152,9 @@
   <msg key="worksList">Werkliste</msg>
   <msg key="catalogueRecord">Katalogeintrag</msg>
   
+  <!-- Error handling -->
+  <msg key="error">Fehler</msg>
+  <msg key="pageNotFound">Seite nicht gefunden...</msg>
+  <msg key="bugMessage">Falls Sie einen Fehler auf unserer Webseite gefunden haben, informieren Sie uns bitte unter</msg>
+  
 </catalogue>
