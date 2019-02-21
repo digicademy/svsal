@@ -370,7 +370,7 @@ function sphinx:resultsLandingPage ($node as node(), $model as map(*), $q as xs:
 
     let $results  := $model("results")
 
-(:  **** CASE 1: Search was after "everything". ****
+(:  **** CASE 1: Search was for "everything". ****
     **** We show the top 5 results in each category,
     **** along with an "all..." button that switches to a dedicated corpus search.
 :)
@@ -636,7 +636,7 @@ declare function sphinx:keywords ($q as xs:string?) as xs:string {
 
 declare function sphinx:excerpts ($documents as node()*, $words as xs:string) as node()* {
     let $endpoint   := concat($config:sphinxRESTURL, "/excerpts")
-    let $debug :=  if ($config:debug = "info") then console:log("Excerpts needed for doc[0]: " || substring(normalize-space($documents/description_orig), 0, 150)) else ()
+    let $debug :=  if ($config:debug = ("info", "trace")) then console:log("Excerpts needed for doc[0]: " || substring(normalize-space($documents/description_orig), 0, 150)) else ()
     let $requestDoc := concat(         encode-for-uri('opts[limit]=' || $config:snippetLength),
                               '&amp;', encode-for-uri('opts[html_strip_mode]=strip'),
                               '&amp;', encode-for-uri('opts[query_mode]=true'),
@@ -646,7 +646,7 @@ declare function sphinx:excerpts ($documents as node()*, $words as xs:string) as
                               '&amp;', encode-for-uri(concat('docs[1]=', normalize-space(replace(serialize($documents/description_edit), "%26", "%26amp%3B"))))
 (:                                           normalize-space($documents/description_edit):)
                                )
-    let $tempString := replace(replace($requestDoc, '%20', '+'), '%3D', '=')
+    let $tempString := replace(replace(replace($requestDoc, '%20', '+'), '%3D', '='), '%26amp%3B', '&amp;')
     let $debug :=  if ($config:debug = "trace") then console:log("Excerpts request body: " || $tempString) else ()
     (: Querying with EXPath http client proved not to work in eXist 3.4
         let $request    := <http:request method="post">
@@ -681,7 +681,7 @@ declare function sphinx:highlight ($document as node(), $words as xs:string*) as
     let $tempString := replace(replace($requestDoc, '%20', '+'), '%3D', '=')
 (: Querying with EXPath http client proved not to work in eXist 3.4
     let $request    := <http:request method="post">
-                         <http:body media-type="application/x-www-form-urlencoded">{$requestDoc}</http:body>
+                           <http:body media-type="application/x-www-form-urlencoded">{$requestDoc}</http:body>
                        </http:request>
     let $response   := http:send-request($request, $endpoint)
 :)
