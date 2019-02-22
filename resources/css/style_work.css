@@ -538,6 +538,10 @@ a .original {
     color:#80005e;
 }
 
+.simple-char {
+    color:inherit;
+}
+
 .marginal a.collapsed:after {
     content: '...⌄';
     margin-top:-1em;
@@ -969,7 +973,6 @@ CSS-Solution from http://stackoverflow.com/questions/18192082/bootstrap-3-navbar
     color:      #333; /* text color for messages */
     background-color: white;
 }
-
 
 .toolbar
 {

@@ -210,7 +210,7 @@
                         </xsl:with-param>
                     </xsl:call-template> 
                     <xsl:choose>
-                        <xsl:when test="@n and not(matches(@n, '^[0-9]+$'))"> <!-- @n is something other than a mere number -->
+                        <xsl:when test="@n and not(matches(@n, '^\[?[0-9]+\[?$'))"> <!-- @n is something other than a mere number -->
                             <xsl:call-template name="sal:teaserString">
                                 <xsl:with-param name="identifier" select="@xml:id"/>
                                 <xsl:with-param name="mode">html</xsl:with-param>
@@ -227,10 +227,10 @@
                                 <xsl:with-param name="input" select="child::head[1]//node()"/>
                             </xsl:call-template>
                         </xsl:when>
-                        <xsl:when test="matches(@n, '^[0-9]+$') and (@unit eq 'number')">
+                        <xsl:when test="matches(@n, '^\[?[0-9]+\[?$') and (@unit eq 'number')">
                             <xsl:value-of select="@n"/>
                         </xsl:when>
-                        <xsl:when test="matches(@n, '^[0-9]+$') and (@unit[. ne 'number'] or @type)">
+                        <xsl:when test="matches(@n, '^\[?[0-9]+\[?$') and (@unit[. ne 'number'] or @type)">
                             <xsl:value-of select="concat(xs:string(@unit), xs:string(@type), ' ', @n)"/>
                         </xsl:when>
                         <xsl:otherwise>
@@ -268,7 +268,7 @@
                         </xsl:with-param>
                     </xsl:call-template>  
                     <xsl:choose>
-                        <xsl:when test="@n and not(matches(@n, '^[0-9]+$'))"> <!-- @n is something other than a mere number -->
+                        <xsl:when test="@n and not(matches(@n, '^\[?[0-9]+\[?$'))"> <!-- @n is something other than a mere number -->
                             <xsl:call-template name="sal:teaserString">
                                 <xsl:with-param name="identifier" select="@xml:id"/>
                                 <xsl:with-param name="mode">html</xsl:with-param>
@@ -285,10 +285,10 @@
                                 <xsl:with-param name="input" select="child::head[1]//node()"/>
                             </xsl:call-template>
                         </xsl:when>
-                        <xsl:when test="matches(@n, '^[0-9]+$') and (@unit eq 'number')">
+                        <xsl:when test="matches(@n, '^\[?[0-9]+\[?$') and (@unit eq 'number')">
                             <xsl:value-of select="@n"/>
                         </xsl:when>
-                        <xsl:when test="matches(@n, '^[0-9]+$') and (@unit[. ne 'number'] or @type)">
+                        <xsl:when test="matches(@n, '^\[?[0-9]+\[?$') and (@unit[. ne 'number'] or @type)">
                             <xsl:value-of select="concat(xs:string(@unit), xs:string(@type), ' ', @n)"/>
                         </xsl:when>
                         <xsl:otherwise>
@@ -417,6 +417,8 @@
             <xsl:apply-templates/>
         </h3>
     </xsl:template>
+    
+    
     <!-- Marginal headings: they should only appear as marginal labels, not as actual in-text headings -->
     <!--<xsl:template match="head[@place eq 'margin']"/>-->
     
@@ -651,21 +653,21 @@
         <xsl:apply-templates/>
     </xsl:template>
     <xsl:template match="abbr|orig|sic">
-        <xsl:variable name="editedString">
-            <xsl:apply-templates select="./parent::choice/(expan|reg|corr)" mode="pureText"/>
-        </xsl:variable>
         <xsl:choose>
             <xsl:when test="not(parent::choice)">
                 <xsl:apply-templates/>
             </xsl:when>
             <xsl:otherwise>
+                <xsl:variable name="editedString">
+                    <xsl:apply-templates select="./parent::choice/(expan|reg|corr)" mode="pureText"/>
+                </xsl:variable>
                 <span class="original {local-name(.)} unsichtbar" title="{string-join($editedString, '')}">
                     <xsl:apply-templates/>
                 </span>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    <xsl:template match="abbr|orig|sic" mode="pureText">
+    <xsl:template match="abbr|orig|sic" mode="pureText"> <!-- mode pureText for getting text-only nodes for span/@title in original-edited pairs -->
         <xsl:apply-templates mode="pureText"/>
     </xsl:template>
     <xsl:template match="expan|reg|corr">
@@ -676,57 +678,68 @@
             <xsl:apply-templates/>
         </span>
     </xsl:template>
-    <xsl:template match="expan|reg|corr" mode="pureText">
+    <xsl:template match="expan|reg|corr" mode="pureText"> <!-- mode pureText for getting text-only nodes for span/@title in original-edited pairs -->
         <xsl:apply-templates mode="pureText"/>
     </xsl:template>
     
+    <!-- Special characters (and normalizations not marked as choice) -->
     <xsl:template match="g">
+        <xsl:variable name="thisString" as="xs:string" select="./text()"/> <!-- g must have (only) one text node as child element -->
         <xsl:if test="not(key('chars', substring(@ref,2)))">
             <xsl:message terminate="yes" select="concat('Error: g/@ref has an invalid value, the char code does not exist): ', substring(@ref,2))"/>
         </xsl:if>
-        <!-- for backwards compatibility (W0004, W0013, W0015), we have to distinguish 2 cases: -->
-        <xsl:variable name="precomposedMapping" select="key('chars', substring(@ref,2))/mapping[@type='precomposed']"/>
-        <xsl:variable name="composedMapping" select="key('chars', substring(@ref,2))/mapping[@type='composed']"/>
-        <xsl:variable name="precomposedString" as="xs:string?" select="$precomposedMapping/text()"/>
-        <xsl:variable name="composedString" as="xs:string?" select="$composedMapping/text()"/>
-        <xsl:variable name="thisString" as="xs:string" select="./text()"/>
-        <!-- there are 2 cases for g elements (due to backwards compatibility with W0004, W0013, W0015): -->
+        <!-- #### Depending on the context or content of the g element, there are several possible cases: #### -->
         <xsl:choose>
-            <!-- a) element g is applied for resolving abbreviations (or g includes the 'long s' character, 
-                which is to be standardized): include original and edited/standardized form -->
-            <xsl:when test="substring(@ref,2) eq 'char017f' or ($thisString != ($precomposedString, $composedString))">
-                <xsl:variable name="originalGlyph">
+            <!-- 1. if g occurs within choice, it must be a "simple" character since the larger context has already been edited -> pass it through  -->
+            <xsl:when test="ancestor::choice">
+                <xsl:value-of select="$thisString"/>
+            </xsl:when>
+            <!-- 2. g occurs outside of choice -->
+            <xsl:otherwise>
+                <xsl:variable name="precomposedString" as="xs:string?" select="key('chars', substring(@ref,2))/mapping[@type='precomposed']/text()"/>
+                <xsl:variable name="composedString" as="xs:string?" select="key('chars', substring(@ref,2))/mapping[@type='composed']/text()"/>
+                <xsl:variable name="originalGlyph" as="xs:string">
                     <xsl:choose>
-                        <xsl:when test="$precomposedMapping">
+                        <xsl:when test="$precomposedString">
                             <xsl:value-of select="$precomposedString" disable-output-escaping="yes"/>
                         </xsl:when>
-                        <xsl:when test="$composedMapping">
-                            <xsl:value-of select="$composedString" disable-output-escaping="yes"/>
-                        </xsl:when>
                         <xsl:otherwise>
-                            <xsl:value-of select="$thisString"/>
+                            <xsl:value-of select="$composedString" disable-output-escaping="yes"/>
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:variable>
-                <span class="original glyph unsichtbar" title="{$thisString}"><xsl:value-of select="$originalGlyph"/></span>
-                <span class="edited glyph" title="{$originalGlyph}">
-                    <xsl:choose>
-                        <xsl:when test="substring(@ref, 2) eq 'char017f'">
-                            <xsl:value-of select="key('chars', substring(@ref,2))/mapping[@type='standardized']/text()"/>
-                        </xsl:when>
-                        <xsl:when test="child::text() | child::*"><xsl:apply-templates/></xsl:when>
-                        <xsl:otherwise><xsl:value-of select="$originalGlyph"/></xsl:otherwise>
-                    </xsl:choose>
-                </span>
-            </xsl:when>
-            <!-- b) g only marks special character, without containing resolved abbreviations: simply pass it through -->
-            <xsl:otherwise>
-                <xsl:apply-templates/>
+                <xsl:if test="string-length($originalGlyph) eq 0">
+                    <xsl:message terminate="yes" select="concat('ERROR: no correct mapping available for char: ', @ref)"/>
+                </xsl:if>
+                <xsl:choose>
+                    <!-- a) g has been applied for resolving abbreviations (in early texts W0004, W0013 and W0015) -> treat it like choice elements -->
+                    <xsl:when test="not($thisString = ($precomposedString, $composedString)) and not(substring(@ref, 2) = ('char017f', 'char0292'))">
+                        <span class="original glyph unsichtbar" title="{$thisString}"><xsl:value-of select="$originalGlyph"/></span>
+                        <span class="edited glyph" title="{$originalGlyph}"><xsl:value-of select="$thisString"/></span>
+                    </xsl:when>
+                    <!-- b) most common case: g simply marks a special character -> pass it through (except for the very frequent "long s" and "long z", 
+                                which are to be normalized -->
+                    <xsl:otherwise>
+                        <xsl:choose>
+                            <!-- long s and z shall be switchable in constituted mode to their standardized versions, but due to their high frequency 
+                                    we refrain from colourful highlighting (.simple-char). In case colour highlighting is desirable, simply remove .simple-char -->
+                            <xsl:when test="substring(@ref, 2) = ('char017f', 'char0292')">
+                                <xsl:variable name="standardizedGlyph" as="xs:string" select="key('chars', substring(@ref,2))/mapping[@type='standardized']/text()"/>
+                                <span class="original glyph unsichtbar simple-char" title="{$standardizedGlyph}"><xsl:value-of select="$originalGlyph"/></span>
+                                <span class="edited glyph simple-char" title="{$originalGlyph}"><xsl:value-of select="$standardizedGlyph"/></span>
+                            </xsl:when>
+                            <!-- all other "simple" special characters -->
+                            <xsl:otherwise>
+                                <xsl:apply-templates/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
     
-    <xsl:template match="g" mode="pureText">
+    <xsl:template match="g" mode="pureText"> <!-- "function" for getting text-only nodes for span/@title in original-edited pairs -->
         <xsl:variable name="originalGlyph" as="xs:string">
             <xsl:choose>
                 <xsl:when test="key('chars', substring(@ref,2))/mapping[@type='precomposed']">
@@ -742,6 +755,7 @@
         </xsl:variable>
         <xsl:value-of select="$originalGlyph"/>
     </xsl:template>
+    
     <xsl:template match="damage">
         <xsl:apply-templates/>
     </xsl:template>
