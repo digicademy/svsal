@@ -210,7 +210,7 @@
                         </xsl:with-param>
                     </xsl:call-template> 
                     <xsl:choose>
-                        <xsl:when test="@n and not(matches(@n, '^\[?[0-9]+\[?$'))"> <!-- @n is something other than a mere number -->
+                        <xsl:when test="@n and not(matches(@n, '^\[?[0-9]+\]?$'))"> <!-- @n is something other than a mere number -->
                             <xsl:call-template name="sal:teaserString">
                                 <xsl:with-param name="identifier" select="@xml:id"/>
                                 <xsl:with-param name="mode">html</xsl:with-param>
@@ -227,10 +227,10 @@
                                 <xsl:with-param name="input" select="child::head[1]//node()"/>
                             </xsl:call-template>
                         </xsl:when>
-                        <xsl:when test="matches(@n, '^\[?[0-9]+\[?$') and (@unit eq 'number')">
+                        <xsl:when test="matches(@n, '^\[?[0-9]+\]?$') and (@unit eq 'number')">
                             <xsl:value-of select="@n"/>
                         </xsl:when>
-                        <xsl:when test="matches(@n, '^\[?[0-9]+\[?$') and (@unit[. ne 'number'] or @type)">
+                        <xsl:when test="matches(@n, '^\[?[0-9]+\]?$') and (@unit[. ne 'number'] or @type)">
                             <xsl:value-of select="concat(xs:string(@unit), xs:string(@type), ' ', @n)"/>
                         </xsl:when>
                         <xsl:otherwise>
@@ -268,7 +268,7 @@
                         </xsl:with-param>
                     </xsl:call-template>  
                     <xsl:choose>
-                        <xsl:when test="@n and not(matches(@n, '^\[?[0-9]+\[?$'))"> <!-- @n is something other than a mere number -->
+                        <xsl:when test="@n and not(matches(@n, '^\[?[0-9]+\]?$'))"> <!-- @n is something other than a mere number -->
                             <xsl:call-template name="sal:teaserString">
                                 <xsl:with-param name="identifier" select="@xml:id"/>
                                 <xsl:with-param name="mode">html</xsl:with-param>
@@ -285,10 +285,10 @@
                                 <xsl:with-param name="input" select="child::head[1]//node()"/>
                             </xsl:call-template>
                         </xsl:when>
-                        <xsl:when test="matches(@n, '^\[?[0-9]+\[?$') and (@unit eq 'number')">
+                        <xsl:when test="matches(@n, '^\[?[0-9]+\]?$') and (@unit eq 'number')">
                             <xsl:value-of select="@n"/>
                         </xsl:when>
-                        <xsl:when test="matches(@n, '^\[?[0-9]+\[?$') and (@unit[. ne 'number'] or @type)">
+                        <xsl:when test="matches(@n, '^\[?[0-9]+\]?$') and (@unit[. ne 'number'] or @type)">
                             <xsl:value-of select="concat(xs:string(@unit), xs:string(@type), ' ', @n)"/>
                         </xsl:when>
                         <xsl:otherwise>
