@@ -559,12 +559,21 @@ span.label-inline {
 .pagination, .pageNumbers {
 	float: left;
 /*	margin-left: -12%;*/
-    margin-left: -18%;
+    margin-left: -15%;
 /* 	margin-top: -5.1%; */
 /*  padding-top: 5.8%; */
     display: block;
 /*    font-size: large;*/
       
+}
+
+/*.page-numbers {
+    padding: 3em !important;
+    float: right !important;
+}*/
+
+.facs-icon {
+    font-size:18px !important;
 }
 
 hr.ornament {
@@ -639,6 +648,7 @@ hr.ornament {
     font-family: Helvetica, Arial, sans-serif;
 	/*font-size: 1.4em;*//* this is a css 3 property and it means relative to the fontsize of the document root, not the current parent! */
 /*	text-align: justify; */
+	/*width:36%;*/
 	width:36%;
 	vertical-align: baseline;
     /*font-size: 1.0em;*/

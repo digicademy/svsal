@@ -485,41 +485,54 @@
             <xsl:element name="div">
                 <xsl:attribute name="class">pageNumbers</xsl:attribute>
                 <xsl:element name="a">
-                    <xsl:attribute name="class">pageNo messengers</xsl:attribute>
-                    <xsl:attribute name="href" select="sal:resolveFacsURI(@facs, $serverDomain)"/>  
-                    <!-- Resolve canvas IDs, starting at 1 for each volume in multivolume works -->
-                    <xsl:attribute name="data-canvas">
-                        <xsl:choose>
-                            <xsl:when test="matches(@facs, '^facs:W[0-9]{4}-[A-z]-[0-9]{4}$')">
-                                <xsl:value-of select="sal:resolveCanvasID(@facs, count(preceding::pb[not(@sameAs) and substring(./@facs, 1, 12) eq substring(current()/@facs, 1, 12)]) + 1, $serverDomain)"/>
+                    <!--<xsl:attribute name="class">pageNo messengers</xsl:attribute>-->
+                    <xsl:attribute name="href" select="sal:resolveFacsURI(@facs, $serverDomain)"/> 
+                    <!-- image icon -->
+                    <xsl:element name="i">
+                        <!--<xsl:attribute name="class" select="'glyphicon glyphicon-picture'"/>-->
+                        <!--  -->
+                        <xsl:attribute name="class" select="'fa fa-file-image-o facs-icon'"/>
+                    </xsl:element>
+                    <xsl:value-of select="' '"/>
+                    <xsl:element name="span">
+                        <!-- Resolve canvas IDs, starting at 1 for each volume in multivolume works -->
+                        <xsl:attribute name="class">pageNo messengers</xsl:attribute>
+                        <xsl:attribute name="data-canvas">
+                            <xsl:choose>
+                                <xsl:when test="matches(@facs, '^facs:W[0-9]{4}-[A-z]-[0-9]{4}$')">
+                                    <xsl:value-of select="sal:resolveCanvasID(@facs, count(preceding::pb[not(@sameAs) and substring(./@facs, 1, 12) eq substring(current()/@facs, 1, 12)]) + 1, $serverDomain)"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:value-of select="sal:resolveCanvasID(@facs, count(preceding::pb[not(@sameAs)]) + 1, $serverDomain)"/>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:attribute>
+                        <xsl:attribute name="data-sal-id">
+                            <xsl:value-of select="sal:mkId($workId, @xml:id)"/>
+                        </xsl:attribute>
+                        <xsl:choose><!-- create name/id attributes: take the @xml:id if possible -->
+                            <xsl:when test="@xml:id">
+                                <xsl:variable name="pageAnchor" select="concat('pageNo_', @xml:id/string())"/>
+                                <xsl:attribute name="id" select="$pageAnchor"/>
                             </xsl:when>
                             <xsl:otherwise>
-                                <xsl:value-of select="sal:resolveCanvasID(@facs, count(preceding::pb[not(@sameAs)]) + 1, $serverDomain)"/>
+                                <xsl:attribute name="id" select="concat('pageNo_', generate-id())"/>
                             </xsl:otherwise>
                         </xsl:choose>
-                    </xsl:attribute>
-                    <xsl:attribute name="data-sal-id">
-                        <xsl:value-of select="sal:mkId($workId, @xml:id)"/>
-                    </xsl:attribute>
-                    <xsl:choose><!-- create name/id attributes: take the @xml:id if possible -->
-                        <xsl:when test="@xml:id">
-                            <xsl:variable name="pageAnchor" select="concat('pageNo_', @xml:id/string())"/>
-                            <xsl:attribute name="id" select="$pageAnchor"/>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:attribute name="id" select="concat('pageNo_', generate-id())"/>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                    <xsl:choose><!-- create title attribute and text content -->
-                        <xsl:when test="contains(@n, 'fol.')"><!--For folio paging-->
-                            <xsl:attribute name="title" select="concat('View image of ', @n)"/>
-                            <xsl:value-of select="@n"/>
-                        </xsl:when>
-                        <xsl:otherwise><!--For normal paging-->
-                            <xsl:attribute name="title" select="concat('View image of page ', @n)"/>
-                            <xsl:value-of select="concat('p. ', @n)"/>
-                        </xsl:otherwise>
-                    </xsl:choose>
+                        <xsl:choose><!-- create title attribute and text content -->
+                            <xsl:when test="contains(@n, 'fol.')"><!--For folio paging-->
+                                <xsl:attribute name="title" select="concat('View image of ', @n)"/>
+                                <xsl:value-of select="@n"/>
+                            </xsl:when>
+                            <xsl:otherwise><!--For normal paging-->
+                                <xsl:attribute name="title" select="concat('View image of page ', @n)"/>
+                                <xsl:value-of select="concat('p. ', @n)"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:element>
+                    
+                    
+                    
                 </xsl:element>
             </xsl:element>
         </xsl:if>
