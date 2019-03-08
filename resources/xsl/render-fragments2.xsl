@@ -365,12 +365,22 @@
                         </xsl:attribute>
                     </xsl:if>
                     <xsl:for-each select="child::head">
-                        <h4>
+                        <h4 class="inlist-head">
                             <xsl:apply-templates/>
                         </h4>
                     </xsl:for-each>
                     <xsl:for-each select="child::*[not(self::head)]">
-                        <xsl:apply-templates/>
+                        <xsl:choose>
+                            <xsl:when test=".//list">
+                                <xsl:apply-templates/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <span class="inline-item">
+                                    <xsl:apply-templates/>
+                                </span>
+                                <xsl:text> </xsl:text>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </xsl:for-each>
                 </section>
             </xsl:when>
