@@ -405,6 +405,11 @@ declare function app:switchTitle($node as node(), $model as map (*), $lang as xs
         return 
             i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
 };
+declare function app:switchAvailability ($node as node(), $model as map (*), $lang as xs:string?) {
+    let $output := <i18n:text key="availability">Availability</i18n:text>
+        return 
+            i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
+};
 
 declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang as xs:string?) {
     for $item in (collection($config:tei-works-root)//tei:teiHeader[parent::tei:TEI//tei:text/@type = ("work_monograph", "work_multivolume")])
@@ -460,7 +465,9 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
                                              else
                                                 <i18n:text key="spanish">Spanisch</i18n:text>
                                     , $lang, "/db/apps/salamanca/data/i18n", "en")
-
+        let $facetAvailability := i18n:process(if ($WIPstatus eq 'yes') then <i18n:text key="facsimilesAvailable">Facsimiles only</i18n:text>
+                                               else <i18n:text key="fullTextAvailable">Full Text (+ Facsimiles)</i18n:text>,
+                                               $lang, "/db/apps/salamanca/data/i18n", "en")
         let $completeWork   :=  $item/parent::tei:TEI//tei:text[@xml:id="completeWork"]
         let $volIcon        :=  if ($completeWork/@type='work_multivolume') then 'icon-text' else ()
         let $volLabel       :=  if ($completeWork/@type='work_multivolume') then
@@ -494,6 +501,7 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
                                 || '"textLanguage":'  || '"' || $language       || '",'     (:facet III:)
                                 || '"printingPlace":' || '"' || $printingPlace  || '",'
                                 || '"facetPlace":'    || '"' || $facetPlace     || '",'     (:facet IV:)
+                                || '"facetAvailability":' || '"' || $facetAvailability || '",'
 (:                              ||'"sourceUrlAll":'   || '"' || $wid            || '",' :)
                                 || '"volLabel":'      || '"' || $volLabel       || '",'
                                 || string-join($volumesString, '')

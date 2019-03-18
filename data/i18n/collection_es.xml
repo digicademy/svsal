@@ -170,6 +170,9 @@
     <msg key="seriesVolume">Volumen de la colección</msg>
     <msg key="originalVolume">Volumen (original)</msg>
     <msg key="imageMetadata">Metadatos de las imágenes</msg>
+    <msg key="availability">Disponibilidad</msg>
+    <msg key="fullTextAvailable">Texto digital (+ facsímiles)</msg>
+    <msg key="facsimilesAvailable">Facsímiles</msg>
     
     <!--Work help-->
     <msg key="addFunx">Additional Functions</msg>

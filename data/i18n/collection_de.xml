@@ -104,6 +104,9 @@
   <msg key="seriesVolume">Reihenband</msg>
   <msg key="originalVolume">Band (Original)</msg>
   <msg key="imageMetadata">Bildmetadaten</msg>
+  <msg key="availability">Verfügbarkeit</msg>
+  <msg key="fullTextAvailable">Digitaler Volltext (+ Faksimiles)</msg>
+  <msg key="facsimilesAvailable">Faksimiles</msg>
   
   <!-- Meta Description Tags -->
   

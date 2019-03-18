@@ -166,6 +166,9 @@
   <msg key="seriesVolume">Series volume</msg>
   <msg key="originalVolume">Volume (original)</msg>
   <msg key="imageMetadata">Image Metadata</msg>
+  <msg key="availability">Availability</msg>
+  <msg key="fullTextAvailable">Electronic Text (+ Facsimiles)</msg>
+  <msg key="facsimilesAvailable">Facsimiles</msg>
   
   <!--Work help-->
   <msg key="addFunx">Additional Functions</msg>
