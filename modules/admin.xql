@@ -285,7 +285,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                 (: a rule picking those elements that should become our fragments :)
                                 let $target-set := $work//tei:text//tei:*[count(./ancestor-or-self::tei:*) eq $fragmentationDepth]
                                 let $debug              := if ($config:debug = ("trace", "info")) then console:log("  " || string(count($target-set)) || " elements to be rendered as fragments...") else ()
-
+                                
                                 (: First, create index of nodes for generating HTML fragments :)
                                 let $debug         := if ($config:debug = ("trace")) then console:log("  (creating preliminary index file ...)") else ()
                                 let $index1           := <sal:index work="{string($work/@xml:id)}">{
@@ -331,7 +331,6 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                                         </sal:index>
                                 let $debug        := if ($config:debug = ("trace")) then console:log("  (saving preliminary index file ...)") else ()
                                 let $index1SaveStatus := admin:saveFile($work/@xml:id, $work/@xml:id || "_nodeIndex.xml", $index1, "data")
-                                let $index1SaveStatusDebug := admin:saveFile($work/@xml:id, $work/@xml:id || "_nodeIndex-before.xml", $index1, "data")
                                 let $debug        := if ($config:debug = ("trace", "info")) then console:log("  Preliminary index file created.") else ()
 
                                 (: Next, create a ToC html file. :)
@@ -389,7 +388,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                                     {$result}
                                                 </p>
                                 
-                            (: Done. The rest is reporting... :)
+                            (: Reporting, and reindexing the database :)
                                 (: See if there are any leaf elements in our text that are not matched by our rule :)
                                 let $missed-elements := $work//(tei:front|tei:body|tei:back)//tei:*[count(./ancestor-or-self::tei:*) < $fragmentationDepth][not(*)]
                                 (: See if any of the elements we did get is lacking an xml:id attribute :)
@@ -413,9 +412,12 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                              </p>
                                              {if ($config:debug = "trace") then $fragments else ()}
                                        </div>
-
-    (: Now put everything out :)
+    (: now put everything out :)
     let $runtime-ms       := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000 
+    (: make sure that fragments are to be found, through reindexing :)
+    let $index-start-time := util:system-time()
+    let $reindex          := xmldb:reindex($config:data-root)
+    let $index-end-time := ((util:system-time() - $index-start-time) div xs:dayTimeDuration('PT1S'))
     return <div>
                 <p>Zu rendern: {count($todo)} Werk(e); gesamte Rechenzeit:
                     {if ($runtime-ms < (1000 * 60))             then format-number($runtime-ms div 1000, "#.##") || " Sek."
@@ -423,6 +425,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                       else                                           format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
                     }
                 </p>
+                <p>/db/apps/salamanca/data reindiziert in {$index-end-time} Sekunden.</p>
                 <hr/>
                 {$gerendert}
             </div>
@@ -462,10 +465,10 @@ declare function admin:renderFragment ($work as node(), $wid as xs:string, $targ
 (: Generate fragments for sphinx' indexer to grok :)
 declare function admin:sphinx-out ($node as node(), $model as map(*), $wid as xs:string*, $mode as xs:string?) {
                 (:
-                   Diese Elemente liefern wir an sphinx aus:                text//(p|head|item|note|titlePage)
-                   Diese weiteren Elemente enthalten ebenfalls Textknoten:        (fw hi l g body div front)
+                   Diese Elemente liefern wir an sphinx aus:                text//(p|head|label|signed|item|note|titlePage)
+                   Diese weiteren Elemente enthalten ebenfalls Textknoten:        (fw hi l g body div front choice expan abbr reg orig sic corr del unclear)
                             [zu ermitteln durch distinct-values(collection(/db/apps/salamanca/data)//tei:text[@type = ("work_monograph", "work_volume")]//node()[not(./ancestor-or-self::tei:p | ./ancestor-or-self::tei:head | ./ancestor-or-self::tei:list | ./ancestor-or-self::tei:titlePage)][text()])]
-                   Wir ignorieren fw, während hi, l und g immer schon in p, head, item usw. enthalten sind.
+                   Wir ignorieren fw, während hi, l, g etc. immer schon in p, head, item usw. enthalten sind.
                    => Wir müssen also noch dafür sorgen, dass front, body und div's keinen Text außerhalb von p, head, item usw. enthalten!
                 :)
 
@@ -482,7 +485,7 @@ declare function admin:sphinx-out ($node as node(), $model as map(*), $wid as xs
 
     (: which parts of those works constitute a fragment that is to count as a hit? :)
     let $hits := 
-            for $hit at $index in ($expanded//tei:text//(tei:titlePage|tei:head|tei:item|tei:note|tei:p[not(ancestor::tei:note | ancestor::tei:item)]|tei:lg[not(ancestor::tei:note | ancestor::tei:item  | ancestor::tei:p)]) | $expanded//tei:profileDesc//(tei:p | tei:keywords))
+            for $hit at $index in ($expanded//tei:text//(tei:titlePage|tei:head|tei:signed|tei:label[not(ancestor::tei:note | ancestor::tei:item)]|tei:item|tei:note|tei:p[not(ancestor::tei:note | ancestor::tei:item)]|tei:lg[not(ancestor::tei:note | ancestor::tei:item  | ancestor::tei:p)]) | $expanded//tei:profileDesc//(tei:p | tei:keywords))
 
                 (: for each fragment, populate our sphinx fields and attributes :)
                 let $work              := $hit/ancestor-or-self::tei:TEI
@@ -541,7 +544,7 @@ declare function admin:sphinx-out ($node as node(), $model as map(*), $wid as xs
                                             string-join(sphinx:dispatch($hit, "edit"), '')
                                           else
                                             "There is no xml:id in the " || $hit_type || " hit!"
-
+                
                 (: Now build a sphinx "row" for the fragment :)
                 let $sphinx_id    := xs:long(substring($work_id, functx:index-of-string-first($work_id, "0"))) * 1000000 + ( (string-to-codepoints(substring($work_id, 1, 1)) + string-to-codepoints(substring($work_id, 2, 1))) * 10000 ) + $index
                 let $html_snippet :=
@@ -611,9 +614,9 @@ declare function admin:sphinx-out ($node as node(), $model as map(*), $wid as xs
                     <sphinx:docset>
                         <p>
                             Zu indizieren: {count($todo)} Werk(e); {count($hits)} Fragmente generiert; gesamte Rechenzeit:
-                            {if ($runtime-ms < (1000 * 60))             then format-number($runtime-ms div 1000, "#.##") || " Sek."
-                              else if ($runtime-ms < (1000 * 60 * 60)) then format-number($runtime-ms div (1000 * 60), "#.##") || " Min."
-                              else                                          format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
+                            {if ($runtime-ms < (1000 * 60)) then format-number($runtime-ms div 1000, "#.##") || " Sek."
+                             else if ($runtime-ms < (1000 * 60 * 60)) then format-number($runtime-ms div (1000 * 60), "#.##") || " Min."
+                             else format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
                             }
                         </p>
                         {$hits}
