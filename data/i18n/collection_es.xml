@@ -139,8 +139,8 @@
     <msg key="titleReadingViev">Título</msg> 
     <msg key="corpusVerb">todo el corpus como archivos TEI/XML</msg>
     <msg key="worksNotice">La colección digital de fuentes del proyecto "La Escuela de Salamanca" 
-        incluye 116 obras en total, que se publicarán sucesivamente en esta página a partir de 
-        mayo de 2018. Para este fin, los textos están codificados por medio de las especificaciones 
+        incluye 116 obras en total, que se publicarán sucesivamente en esta página. 
+        Para este fin, los textos están codificados por medio de las especificaciones 
         de Text Encoding Initiative (TEI); para más información, por favor consulte las </msg>
     <msg key="alphaEditors">Editores (en orden alfabético)</msg>
     <msg key="editors">Editores</msg>

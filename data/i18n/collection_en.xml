@@ -135,7 +135,7 @@
   <!--<msg key="next">Next</msg>-->
   <msg key="corpusVerb">the whole corpus as TEI/XML files</msg>
   <msg key="worksNotice">The digital collection of sources of the project "The School of Salamanca" comprises 116 works in 
-    total, which are successively published on this page starting in May 2018. For this purpose, the texts 
+    total, which are successively published on this page. For this purpose, the texts 
     are encoded according to the specifications of the Text Encoding Initiative (TEI); for further information, please 
     refer to the </msg>
   <msg key="series">Series</msg>

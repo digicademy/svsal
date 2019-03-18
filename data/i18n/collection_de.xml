@@ -63,7 +63,7 @@
   
   <!-- works/details -->
   <msg key="worksNotice">Die digitale Quellensammlung des Projekts "Die Schule von Salamanca" besteht 
-    aus insgesamt 116 Werken, die ab Mai 2018 sukzessive auf dieser Seite zur Verfügung gestellt werden. 
+    aus insgesamt 116 Werken, die sukzessive auf dieser Seite zur Verfügung gestellt werden. 
     Hierfür werden die Texte den Spezifikationen der Text Encoding Initiative (TEI) entsprechend aufbereitet;
     für nähere Informationen siehe die </msg>
   <msg key="alphaEditors">Herausgeber (in alphabetischer Reihenfolge)</msg>
