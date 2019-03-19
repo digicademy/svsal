@@ -700,3 +700,83 @@ display:block
 .borderless thead tr th {
 border:none
 }
+.error-title {
+    text-align:center;
+    margin:1em;
+}
+.error-paragraph {
+    text-align:center;
+    margin:1em;
+    font-size:120%;
+}
+
+/* 
+ * Fontawesome & Glyphicon icons currently in use (in *all* templates/pages, except for those in Mirador):
+ * FA:
+ * - fa fa-anchor
+ * - fa fa-angle-double-down
+ * - fa fa-arrow-right
+ * - fa fa-bars
+ * - fa fa-birthday-cake
+ * - fa fa-chevron-down
+ * - fa fa-chevron-left
+ * - fa fa-chevron-right
+ * - fa fa-cogs
+ * - fa fa-copyright
+ * - fa fa-download
+ * - fa fa-envelope
+ * - fa fa-file-image-o
+ * - fa fa-file-text-o
+ * - fa fa-group
+ * - fa fa-hand-o-right
+ * - fa fa-info-circle
+ * - fa fa-share
+ * - fa fa-reply
+ * - fa fa-question-circle
+ * - fa fa-list-ul
+ * - fa fa-lock
+ * - fa fa-pencil
+ * - fa fa-plus
+ * - fa fa-refresh
+ * - fa fa-spinner
+ * - fa fa-spin
+ * - fa fa-th-list
+ * - fa fa-university
+ * - fa fa-window-close
+ * 
+ * GLYPHICON:
+ * - glyphicon-book
+ * - glyphicon-bookmark
+ * - glyphicon-check
+ * - glyphicon-chevron-left
+ * - glyphicon-chevron-right
+ * - glyphicon-console
+ * - glyphicon-download-alt
+ * - glyphicon-edit
+ * - glyphicon-eye-open
+ * - glyphicon-file
+ * - glyphicon-flag
+ * - glyphicon-hand-right
+ * - glyphicon-leaf
+ * - glyphicon-link
+ * - glyphicon-list
+ * - glyphicon-pushpin
+ * - glyphicon-new-window
+ * - glyphicon-picture
+ * - glyphicon-play
+ * - glyphicon-print
+ * - glyphicon-remove-circle
+ * - glyphicon-refresh
+ * - glyphicon-resize-full
+ * - glyphicon-resize-fullscreen
+ * - glyphicon-resize-small
+ * - glyphicon-search
+ * - glyphicon-send (?)
+ * - glyphicon-sort-by-alphabet
+ * - glyphicon-stats
+ * - glyphicon-thumbs-up
+ * - glyphicon-unchecked
+ * - glyphicon-user
+ * - glyphicon-
+ * 
+ */
