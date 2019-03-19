@@ -106,7 +106,8 @@
   <msg key="imageMetadata">Bildmetadaten</msg>
   <msg key="availability">Verfügbarkeit</msg>
   <msg key="fullTextAvailable">Digitaler Volltext (+ Faksimiles)</msg>
-  <msg key="facsimilesAvailable">Faksimiles</msg>
+  <msg key="facsimiles">Faksimiles</msg>
+  
   
   <!-- Meta Description Tags -->
   

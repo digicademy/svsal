@@ -131,7 +131,7 @@
     <msg key="extent">Extensión, formato</msg>
     <!--<msg key="dateOfOrigin">Año de publicación (fuente original)</msg>-->
     <msg key="details">Catálogo</msg>
-    <msg key="facsimiles">Imágenes</msg>
+    <msg key="facsimiles">Facsímiles</msg>
     <msg key="periodOfOrigin">Periodo de publicación</msg>
     <msg key="ownerPrimaryEd">Biblioteca</msg>
     <msg key="catLink">Enlace en el catálogo</msg>
@@ -160,7 +160,6 @@
     <msg key="volViews">Vistas del volumen</msg>
     <msg key="textViews">Vistas del texto</msg>
     <msg key="readingView">Vista de lectura</msg>
-    <msg key="facsimilesLink">Facsímiles</msg>
     <msg key="metadata">Metadatos</msg>
     <msg key="teiHeader">Encabezado TEI</msg>
     <msg key="scans">Escaneados</msg>
@@ -172,7 +171,6 @@
     <msg key="imageMetadata">Metadatos de las imágenes</msg>
     <msg key="availability">Disponibilidad</msg>
     <msg key="fullTextAvailable">Texto digital (+ facsímiles)</msg>
-    <msg key="facsimilesAvailable">Facsímiles</msg>
     
     <!--Work help-->
     <msg key="addFunx">Additional Functions</msg>

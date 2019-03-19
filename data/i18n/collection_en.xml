@@ -126,7 +126,7 @@
   <msg key="extent">Extent, format</msg>
   <!--<msg key="dateOfOrigin">Year of publication (original source)</msg>-->
   <msg key="details">Catalogue Record</msg>
-  <msg key="facsimiles">Images</msg>
+  <msg key="facsimiles">Facsimiles</msg>
   <msg key="periodOfOrigin">Period of publication</msg>
   <msg key="ownerPrimaryEd">Library</msg>
   <msg key="catLink">Catalogue link</msg>
@@ -156,7 +156,6 @@
   <msg key="volViews">Views for this Volume</msg>
   <msg key="textViews">Views for this Text</msg>
   <msg key="readingView">Reading View</msg>
-  <msg key="facsimilesLink">Facsimiles</msg>
   <msg key="metadata">Metadata</msg>
   <msg key="teiHeader">TEI Header</msg>
   <msg key="scans">Scans</msg> 
@@ -168,7 +167,6 @@
   <msg key="imageMetadata">Image Metadata</msg>
   <msg key="availability">Availability</msg>
   <msg key="fullTextAvailable">Electronic Text (+ Facsimiles)</msg>
-  <msg key="facsimilesAvailable">Facsimiles</msg>
   
   <!--Work help-->
   <msg key="addFunx">Additional Functions</msg>

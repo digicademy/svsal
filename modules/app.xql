@@ -465,7 +465,7 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
                                              else
                                                 <i18n:text key="spanish">Spanisch</i18n:text>
                                     , $lang, "/db/apps/salamanca/data/i18n", "en")
-        let $facetAvailability := i18n:process(if ($WIPstatus eq 'yes') then <i18n:text key="facsimilesAvailable">Facsimiles only</i18n:text>
+        let $facetAvailability := i18n:process(if ($WIPstatus eq 'yes') then <i18n:text key="facsimiles">Facsimiles</i18n:text>
                                                else <i18n:text key="fullTextAvailable">Full Text (+ Facsimiles)</i18n:text>,
                                                $lang, "/db/apps/salamanca/data/i18n", "en")
         let $completeWork   :=  $item/parent::tei:TEI//tei:text[@xml:id="completeWork"]
@@ -2161,7 +2161,7 @@ declare function app:WRKadditionalInfoRecord($node as node(), $model as map(*), 
     let $isPublished := app:WRKisPublished($node, $model, $workId)
     (: ({$scanCount || ' '}<i18n:text key="scans">Scans</i18n:text>) :)
     let $imagesLink := <a href="{$mirador}" target="_blank" rel="noopener noreferrer">
-                           <i18n:text key="facsimilesLink">Facsimiles</i18n:text> 
+                           <i18n:text key="facsimiles">Facsimiles</i18n:text> 
                        </a>
     let $views := 
         <div>
@@ -2312,7 +2312,7 @@ declare function app:WRKcatRecordTeaser($node as node(), $model as map(*), $wid 
                     </table>
                     <span><a href="{$recordLink}"><span class="fa fa-arrow-right"/>{' '}<i18n:text key="fullCatalogueRecord">Full catalogue record</i18n:text></a></span>
                     <br/>
-                    <span><a href="{$imagesLink}" target="_blank" rel="noopener noreferrer"><span class="fa fa-arrow-right"/>{' '}<i18n:text key="facsimilesLink">Facsimiles</i18n:text></a></span>
+                    <span><a href="{$imagesLink}" target="_blank" rel="noopener noreferrer"><span class="fa fa-arrow-right"/>{' '}<i18n:text key="facsimiles">Facsimiles</i18n:text></a></span>
                 </div>
         else ()
     let $thumbnail := <div class="col-md-3">{app:WRKcatRecordThumbnail($node, $model, $wid, 'teaser')}</div>
