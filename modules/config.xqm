@@ -208,6 +208,10 @@ declare function config:errorhandler($netVars as map()*) {
             </error-handler>
 };
 
+declare function config:getStatusCode($netVars as map()*) {
+    request:get-attribute('status-code')
+};
+
 
 (: deprecated?:
 declare function config:app-meta($node as node(), $model as map(*)) as element()* {
@@ -310,33 +314,33 @@ declare function config:app-header($node as node(), $model as map(*), $lang as x
                                  (contains(request:get-url(), 'editorial')) or
                                  (contains(request:get-url(), 'contact')) or
                                  (contains(request:get-url(), 'about'))         ) then 'active' else ()}">
-                    <a href="project.html">
+                    <a href="{$config:webserver || '/' || $lang || '/project.html'}">
                     <i class="fa fa-university" aria-hidden="true"></i>&#160;
                     <i18n:text key="project">Projekt</i18n:text></a></li>
                 <li class="{if ( (contains(request:get-url(), 'work.')) or
                                  (contains(request:get-url(), 'works.')) or
                                  (contains(request:get-url(), 'workDetails.'))  ) then 'active' else ()}">
-                    <a href="works.html">
+                    <a href="{$config:webserver || '/' || $lang || '/works.html'}">
                     <span class="glyphicon glyphicon-file" aria-hidden="true"></span>&#160;
                     <i18n:text key="works">Werke</i18n:text></a></li> 
                  
                     <li class="{if ( (contains(request:get-url(), 'dictionary')) or
                                  (contains(request:get-url(), 'lemma.'))        ) then 'active' else ()}">
-                    <a href="dictionary.html">
+                    <a href="{$config:webserver || '/' || $lang || '/dictionary.html'}">
                     <span class="glyphicon glyphicon-book" aria-hidden="true"></span>&#160;
                     <i18n:text key="dictionary">Wörterbuch</i18n:text></a></li> 
                 <li class="{if ( (contains(request:get-url(), 'author.')) or
                                  (contains(request:get-url(), 'authors.'))      ) then 'active' else ()}">
-                    <a href="authors.html">
+                    <a href="{$config:webserver || '/' || $lang || '/authors.html'}">
                     <span class="glyphicon glyphicon-user" aria-hidden="true"></span>&#160;
                     <i18n:text key="authors">Autoren</i18n:text></a></li>
                 <li class="{if ( (contains(request:get-url(), 'workingPaper.')) or
                                  (contains(request:get-url(), 'workingPapers.'))) then 'active' else ()}">
-                    <a href="workingPapers.html">
-                    <i class="fa fa-pencil" aria-hidden="true"></i>&#160;
+                    <a href="{$config:webserver || '/' || $lang || '/workingPapers.html'}">
+                    <i class="fa fa-pencil-alt" aria-hidden="true"></i>&#160;
                     <i18n:text key="workingPapers">Working Papers</i18n:text></a></li>
                 <li class="{if ( (contains(request:get-url(), 'search.'))       ) then 'active' else ()}">
-                    <a href="search.html">
+                    <a href="{$config:webserver || '/' || $lang || '/search.html'}">
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>&#160;
                     <i18n:text key="search">Suche</i18n:text></a></li>
                 <!-- language-switch dropdown on not-so-large screens -->
@@ -458,7 +462,7 @@ declare %templates:wrap
     function config:langWorkingPapers($node as node(), $model as map(*), $lang as xs:string) as element() {
     let $output := 
         <a  href="workingPapers.html">
-            <i class="fa fa-pencil" aria-hidden="true"></i>&#160;<i18n:text key="workingPapers">Working Papers</i18n:text>
+            <i class="fa fa-pencil-alt" aria-hidden="true"></i>&#160;<i18n:text key="workingPapers">Working Papers</i18n:text>
         </a>
     return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))};  
 
@@ -484,15 +488,15 @@ declare %templates:wrap
     function config:langProjektteam($node as node(), $model as map(*), $lang as xs:string) as element()  {
         if ($lang = 'en') then
             <a target="blank" href="http://www.salamanca.adwmainz.de/en/project-team-and-consultants.html">
-               <i class="fa fa-group" aria-hidden="true"></i>&#160;Project Team
+               <i class="fa fa-users" aria-hidden="true"></i>&#160;Project Team
             </a>
         else if ($lang = 'es') then
             <a target="blank" href="http://www.salamanca.adwmainz.de/es/el-equipo-de-proyecto-y-sus-consultores.html">
-               <i class="fa fa-group" aria-hidden="true"></i>&#160;Equipo del Proyecto
+               <i class="fa fa-users" aria-hidden="true"></i>&#160;Equipo del Proyecto
             </a>
         else
             <a target="blank" href="http://www.salamanca.adwmainz.de/projektbeteiligte.html">
-               <i class="fa fa-group" aria-hidden="true"></i>&#160;Projektteam
+               <i class="fa fa-users" aria-hidden="true"></i>&#160;Projektteam
             </a>
 };
 
@@ -519,7 +523,7 @@ declare %templates:wrap
     function config:langLegal($node as node(), $model as map(*), $lang as xs:string) as element()  {
     let $output := 
         <a  href="legal.html">
-           <span class="fa fa-lock" aria-hidden="true"></span>&#160;<i18n:text key="legal">Datenschutz &amp; Impressum</i18n:text>
+           <span class="fa fa-balance-scale" aria-hidden="true"></span>&#160;<i18n:text key="legal">Datenschutz &amp; Impressum</i18n:text>
         </a>
     return 
         i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))};
@@ -528,7 +532,7 @@ declare %templates:wrap
     function config:langContact($node as node(), $model as map(*), $lang as xs:string) as element()  {
     let $output := 
         <a  href="contact.html">
-            <i class="fa fa-envelope-o" aria-hidden="true"></i>&#160;<i18n:text key="contact">Kontakt</i18n:text>
+            <i class="far fa-envelope" aria-hidden="true"></i>&#160;<i18n:text key="contact">Kontakt</i18n:text>
         </a>
     return 
         i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))};       
@@ -824,7 +828,7 @@ declare function config:prevLink($node as node(), $model as map(*), $wid as xs:s
 
 declare function config:nextLink($node as node(), $model as map(*), $wid as xs:string?, $frag as xs:string?) as element(link)? {
     let $workId         := if ($wid) then $wid else $model("currentWork")/@xml:id
-    return  if (not (xmldb:collection-available($config:html-root || "/" || $workId))) then
+    return  if (not(xmldb:collection-available($config:html-root || "/" || $workId))) then
                 ()
             else
                 let $targetFragment := if ($frag and $frag || ".html" = xmldb:get-child-resources($config:html-root || "/" || $workId)) then
@@ -832,7 +836,7 @@ declare function config:nextLink($node as node(), $model as map(*), $wid as xs:s
                                         else
                                             functx:sort(xmldb:get-child-resources($config:html-root || "/" || $workId))[1]
                 let $url := doc($config:html-root || '/' || $wid || '/' || $targetFragment)//div[@id="SvSalPagination"]/a[@class="next"]/@href/string()
-                let $debug := if ($config:debug = "trace") then console:log("Nextlink: " || $url || " ($wid: " || $wid || ", $frag: " || $frag || ", $targetFragment: " || $targetFragment || ").") else ()
+                let $debug := if ($config:debug = "trace") then console:log("Nextlink: " || string-join($url, " ; ") || " ($wid: " || $wid || ", $frag: " || $frag || ", $targetFragment: " || $targetFragment || ").") else ()
                 return if ($url) then
                             <link rel="next" href="{$url}"/>
                         else ()
@@ -934,17 +938,17 @@ declare function config:footer ($node as node(), $model as map(*), $lang as xs:s
             <div class="col-md-12 hidden-sm hidden-xs" style="text-align: center;">
             <br/>
                 <p style="font-size:1.2em">
-                <a href="contact.html"><i class="fa fa-envelope-o"></i>&#32;&#32;<i18n:text key='contact'>Kontakt</i18n:text></a> 
-                | <a  href="legal.html"><i class="fa fa-lock"></i>&#32;&#32;<i18n:text key='legal'>Datenschutz &amp; Impressum</i18n:text></a> 
+                <a href="contact.html"><i class="far fa-envelope"></i>&#32;&#32;<i18n:text key='contact'>Kontakt</i18n:text></a> 
+                | <a  href="legal.html"><i class="fa fa-balance-scale"></i>&#32;&#32;<i18n:text key='legal'>Datenschutz &amp; Impressum</i18n:text></a> 
                 </p>
-                    <p><span style="color:#92A4B1;"></span>&#xA0;&#xA0; <i class="fa fa-copyright"></i>&#32;&#32;<span title="{$username}"><i18n:text key="projectName"></i18n:text> 2015-2018</span>
+                    <p><span style="color:#92A4B1;"></span>&#xA0;&#xA0; <i class="far fa-copyright"></i>&#32;&#32;<span title="{$username}"><i18n:text key="projectName"/> 2015-2019</span>
                 </p>
             </div>
         </div>
         <div class="col-sm-12 hidden-lg hidden-md" style="text-align: center">
             <p>
-            <a href="contact.html"><i class="fa fa-envelope-o"></i>&#32;&#32;<i18n:text key='contact'>Kontakt</i18n:text></a>
-                | <a  href="legal.html"><i class="fa fa-lock"></i>&#32;&#32;<i18n:text key='legal'>Datenschutz &amp; Impressum</i18n:text></a>            </p>
+            <a href="contact.html"><i class="far fa-envelope"></i>&#32;&#32;<i18n:text key='contact'>Kontakt</i18n:text></a>
+                | <a  href="legal.html"><i class="fa fa-balance-scale"></i>&#32;&#32;<i18n:text key='legal'>Datenschutz &amp; Impressum</i18n:text></a>            </p>
                 <p><span style="color:#92A4B1;"></span>&#xA0;&#xA0; <i class="fa fa-copyright"></i>&#32;&#32;<span title="{$username}"><i18n:text key="projectName"></i18n:text> 2015-2018</span>
             </p>
         </div>

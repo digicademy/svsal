@@ -1,4 +1,4 @@
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" xmlns:sal="http://salamanca.adwmainz.de" version="3.0" exclude-result-prefixes="exist sal tei xd xs xsl" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+<xsl:stylesheet xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sal="http://salamanca.adwmainz.de" version="3.0" exclude-result-prefixes="exist sal tei xd xs xsl" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
 
 <!-- TODO:
            * tweak/tune performance: use
@@ -56,7 +56,7 @@
 <!-- Backup:        <xsl:value-of select="concat('   <div>',       '<a href="',                               concat('#',$id), '">',            '<span class="    messengers glyphicon glyphicon-link"     title="    go to/link this textarea"/>',           '</a>',    '  ',    '<span class="    icon-uniE638 text-muted"/>',        '  ',    '<span class="    glyphicon glyphicon-print text-muted"/>',           '</div>')"/> -->
                 </xsl:attribute>
                 <xsl:element name="i">
-                    <xsl:attribute name="class">fa fa-hand-o-right messengers</xsl:attribute>
+                    <xsl:attribute name="class">far fa-hand-point-right messengers</xsl:attribute>
                     <xsl:attribute name="title">Open toolbox for this textarea</xsl:attribute>
                 </xsl:element>
             </xsl:element>
@@ -501,7 +501,7 @@
                     <xsl:element name="i">
                         <!--<xsl:attribute name="class" select="'glyphicon glyphicon-picture'"/>-->
                         <!--  -->
-                        <xsl:attribute name="class" select="'fa fa-file-image-o facs-icon'"/>
+                        <xsl:attribute name="class" select="'fas fa-book-open facs-icon'"/>
                     </xsl:element>
                     <xsl:value-of select="' '"/>
                     <xsl:element name="span">

@@ -711,7 +711,7 @@ border:none
 }
 
 /* 
- * Fontawesome & Glyphicon icons currently in use (in *all* templates/pages, except for those in Mirador):
+ * Fontawesome & Glyphicon icons currently in use (in *all* templates/pages, except for Mirador-related code):
  * FA:
  * - fa fa-anchor
  * - fa fa-angle-double-down
@@ -722,22 +722,21 @@ border:none
  * - fa fa-chevron-left
  * - fa fa-chevron-right
  * - fa fa-cogs
- * - fa fa-copyright
+ * - far fa-copyright
  * - fa fa-download
- * - fa fa-envelope
- * - fa fa-file-image-o
- * - fa fa-file-text-o
+ * - far fa-envelope
+ * - fas fa-book-open
+ * - fa fa-file-alt
  * - fa fa-group
- * - fa fa-hand-o-right
+ * - far fa-hand-pointer-right
  * - fa fa-info-circle
- * - fa fa-share
- * - fa fa-reply
- * - fa fa-question-circle
  * - fa fa-list-ul
- * - fa fa-lock
- * - fa fa-pencil
+ * - fa fa-balance-scale
+ * - fa fa-pencil-alt
  * - fa fa-plus
- * - fa fa-refresh
+ * - fa fa-question-circle
+ * - fa fa-reply
+ * - fa fa-share
  * - fa fa-spinner
  * - fa fa-spin
  * - fa fa-th-list
@@ -777,6 +776,5 @@ border:none
  * - glyphicon-thumbs-up
  * - glyphicon-unchecked
  * - glyphicon-user
- * - glyphicon-
  * 
  */
