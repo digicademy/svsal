@@ -87,10 +87,10 @@
   <msg key="sourceCodeDecl">The source code of our web application in an external GitHub repository.</msg>
   
   <!-- legal.html -->
-  <msg key="legalTitle">Privacy &amp; Legal Information</msg>
-  <msg key="legal">Privacy &amp; Legal Information</msg>
+  <msg key="legalTitle">Legal Information &amp; Privacy</msg>
+  <msg key="legal">Legal Information &amp; Privacy</msg>
   <msg key="legalDesc">Privacy policy of our webpage and legal information.</msg>
-  <msg key="legalShort">Privacy &amp; Legal Inf.</msg>
+  <msg key="legalShort">Legal Inf. &amp; Privacy</msg>
   <msg key="privacyDisclaimer">For the privacy policy and legal information of this website, please refer to the </msg>
   <msg key="legalDisclaimer">Please note that the description of our privacy policy and legal information are available in German only.</msg>
   

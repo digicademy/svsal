@@ -134,16 +134,16 @@
   
   <!-- project.html -->
   <msg key="guidelinesDecl">Beschreibung der Editionsprinzipien und der Textkodierung.</msg>
-  <msg key="legal">Datenschutz &amp; Impressum</msg>
-  <msg key="legalShort">Datenschutz &amp; Impressum</msg>
-  <msg key="legalDesc">Datenschutzerklärung unserer Webseite und Impressum.</msg>
   <msg key="sourceCode">Quellcode</msg>
   <msg key="sourceCodeDecl">Der Programmcode dieser Webanwendung im externen GitHub-Repositorium.</msg>
   
   <!-- legal.html -->
-  <msg key="legalTitle">Datenschutzerklärung &amp; Impressum</msg>
+  <msg key="legalTitle">Impressum &amp; Datenschutzerklärung</msg>
   <msg key="privacyDisclaimer">Für Informationen zum Datenschutz auf dieser Webseite siehe die </msg>
   <msg key="legalDisclaimer"/>
+  <msg key="legal">Impressum &amp; Datenschutz</msg>
+  <msg key="legalShort">Impressum &amp; Datenschutz</msg>
+  <msg key="legalDesc">Datenschutzerklärung unserer Webseite und Impressum.</msg>
   
   <!-- Search -->
   <msg key="searchFor">Suche nach</msg>

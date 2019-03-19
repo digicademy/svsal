@@ -93,10 +93,10 @@
     
     
     <!-- legal.html -->
-    <msg key="legalTitle">Privacidad &amp; Información legal</msg>
-    <msg key="legal">Privacidad &amp; Información legal</msg>
+    <msg key="legalTitle">Información legal &amp; Privacidad</msg>
+    <msg key="legal">Información legal &amp; Privacidad</msg>
     <msg key="legalDesc">Política de privacidad de nuestra página web e información legal.</msg>
-    <msg key="legalShort">Privacidad &amp; Inf. legal</msg>
+    <msg key="legalShort">Inf. legal &amp; Privacidad</msg>
     <msg key="privacyDisclaimer">Para informaciones sobre la privacidad en esta página web véase la </msg>
     <msg key="legalDisclaimer">Por favor tenga en cuenta que la descripción de nuestra política de privacidad y la información legal están disponibles solamente en alemán.</msg>
     
