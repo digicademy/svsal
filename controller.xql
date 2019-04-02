@@ -284,8 +284,13 @@ return
     else if (starts-with($exist:path, "/files/") or request:get-header('X-Forwarded-Host') = "files." || $config:serverdomain) then
         let $prelimPath    := if (starts-with($exist:path, "/files/")) then substring($exist:path, 7) else $exist:path
         return 
-            if ($exist:resource = ('specialchars.xml', 'works-general.xml')) then
-                let $finalPath     := "/tei/meta/" || $exist:resource
+            if ($exist:resource = ('saltei.rng', 'saltei.xml', 'SvSal_txt.rng', 'SvSal_txt.xml', 'specialchars.xml', 'works-general.xml', 'saltei-author.xml', 'saltei-author.rng', 'SvSal_author.xml', 'SvSal_author.rng')) then
+                let $resource :=    if ($exist:resource eq 'SvSal_txt.rng') then 'saltei.rng' 
+                                    else if ($exist:resource eq 'SvSal_txt.xml') then 'saltei.xml' 
+                                    else if ($exist:resource eq 'SvSal_author.xml') then 'saltei-author.xml'
+                                    else if ($exist:resource eq 'SvSal_author.rng') then 'saltei-author.rng'
+                                    else $exist:resource
+                let $finalPath     := "/tei/meta/" || $resource
                 let $debug          := if ($config:debug = ("trace", "info")) then console:log("File download requested: " || $net:forwardedForServername || $exist:path || $parameterString || ", redirecting to salamanca-data: " || $finalPath || '?' || string-join($netVars('params'), '&amp;') || ".") else ()
                 return net:forward-to-data($finalPath, $netVars, ())
             else
@@ -307,7 +312,7 @@ return
                                 case "renderTheRest.html"
                                 case "render.html"
                                 case "sphinx-admin.html" return
-                                    "view-admin.xql"
+                                     "view-admin.xql"
                                 default return
                                     "view.xql"
         return
