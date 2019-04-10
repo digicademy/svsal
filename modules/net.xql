@@ -148,6 +148,24 @@ declare function net:lang($existPath as xs:string) as xs:string {
                         $config:defaultLang
 };
 
+declare function net:format() as xs:string {
+    if (lower-case(request:get-parameter("format", "")) = map:keys($config:apiFormats)) then 
+        let $debug := if ($config:debug = ('trace', 'info')) then console:log('Format requested by parameter: format=' || lower-case(request:get-parameter("format", "")) || '.') else ()
+        return lower-case(request:get-parameter("format", ""))
+    else 
+        let $contentType := net:negotiateContentType($net:servedContentTypes, 'text/html')
+        let $debug := if ($config:debug = ('trace')) then console:log('Format determined by content type "' || $contentType || '".') else ()
+        return switch ($contentType)
+            case 'application/tei+xml'
+            case 'application/xml'
+            case 'text/xml'            return 'tei'
+            case 'text/plain'          return 'txt'
+            case 'application/rdf+xml' return 'rdf'
+            case 'image/jpeg'          return 'jpg' (: better 'img', for keeping it more generic ? :)
+            case 'application/ld+json' return 'iiif'
+            default                    return 'html'
+};
+
 (: Todo: Clean lang parameters when they arrive. It's there but I'm not sure it's working... :)
 declare function net:inject-requestParameter($injectParameter as xs:string*, $injectValue as xs:string*) as xs:string* {
     if (not($injectParameter)) then
@@ -701,59 +719,51 @@ declare function net:deliverJPG($pathComponents as xs:string*, $netVars as map()
 };
 
 (:~
-: Receives a list of (lower-cased!) path components as well as parameters for a request, validates the syntax of the request, 
-: and returns information about the requested data in a standardized way.
+: Analyzes the arguments (requested resource, passage, and parameters) of a request, does some basic validation, and 
+: returns structured information about the request (as key-value pairs). A non-empty string value for an argument key
+: signifies that the argument is valid, an empty string means that the argument was not specified, 
+: and 0 (int) stands for an erroneous argument (or combination of arguments).
 ~:)
-declare function net:APIparseTextsRequest($textsPath as xs:string?, $netVars as map()*) as map()? {
-    let $pathComponents := tokenize(lower-case($textsPath), "/")
-    let $format         := $netVars('format')
-    (: TODO: forward only substring *after* 'volX.' as passage? :)
-    let $passage :=     if (tokenize($pathComponents, ':')[2]) then tokenize($pathComponents, ':')[2] else 'unspecified'
-    (: TODO: hashes! (should hashes and passages exclude each other?) :)
-    (: TODO: deal with [txtResource].orig/.edit resource names, or enforce using mode parameter by omitting them ? :)
-    let $resource :=    if (count($pathComponents) gt 1) then 
-                            let $debug := if ($config:debug = ('trace')) then console:log('texts API: invalid resource path: .../texts/' || $textsPath || '.') else ()
-                            return 'invalid'
-                        else if (count($pathComponents) eq 0) then 'all'
-                        else 
-                            let $reqResource := tokenize(tokenize($pathComponents, ':')[1], '\.')[1]
-                            return 
-                            (: TODO: enforce usage of ':volX' (passage) instead of '_volXX' (filename) by removing the latter here altogether? :)
-                                if (matches($reqResource, '^w\d{4}(_vol\d{2})?$') and not(matches($passage, '^vol\d$'))) then 
-                                    if (doc-available($config:tei-works-root || '/' || translate($reqResource, 'wv', 'WV') || '.xml')) then translate($reqResource, 'wv', 'WV')
-                                    else 'invalid'
-                                else if (matches($reqResource, '^w\d{4}$') and matches($passage, '^vol\d$')) then 
-                                    if (doc-available($config:tei-works-root || '/' || 'W' || substring($reqResource, 2) || '_Vol0' || substring($passage, 4)) || '.xml') then
-                                        'W' || substring($reqResource, 2) || '_Vol0' || substring($passage, 4)
-                                    else 'invalid'
-                                else if (matches($reqResource, '^[Aa][Ll][Ll]$')) then
-                                    'all'
-                                else 'invalid' 
-    (:  filter out all params that aren't officially stated as valid params for the requested format, and 
-        remove duplicate params; if params have similar names but different values, the first value wins :)
-    let $validParams := $config:apiFormats($format)
-    let $params :=  map:merge(for $p in $netVars('params') return if (($p, substring-before($p, '=')) = $validParams) then map:entry(substring-before($p, '='), substring-after($p, '=')) else ())
-    (: determine what type of text is requested (this can be outsourced to the single net:deliverXYZ functions if it gets 
-        too complex here...) :)
-    let $resourceType :=    if ($resource ne 'invalid') then 
-                                if (contains($resource, '_Vol')) then 'work-volume'
-                                else if (matches($passage, '^vol\d\.')) then 'work-passage'
-                                else if ($resource eq 'all') then 'corpus'
-                                else 'work'
-                            else 'invalid'
-    (: for applications that do not distinguish single volumes: state multi-volume workID: :)
-    let $mainResource := if (starts-with($resourceType,'work')) then substring($resource,1,5) else 'unspecified'
-    let $resourceData := map {
-                        'resourceType': $resourceType,
-                        'resource': $resource,
-                        'mainResource': $mainResource,
-                        'passage': $passage,
-                        'format': $format
-                        }
-    let $completeData := map:merge(($resourceData, $params))
-    let $debug := if ($config:debug = ('trace')) then console:log('texts API: request data: ' || string-join((for $k in map:keys($completeData) return $k || '=' || map:get($completeData, $k)), '; ') || '.') else ()
-    return $completeData
-    (:  how to deal with embedded URLs / URLs as parameter values?  :)
+declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()*) as map()? {
+    let $debug := if ($config:debug = ('trace')) then console:log('Texts API: request at: .../texts/' || $path || '.') else ()
+    (: (0) normalize and check syntactical validity of path (i.e., amount and order of separators) :)
+    let $normalizedPath := replace(replace(replace(replace(lower-case($path), '^/+', ''), '/+$', ''), ':+$', ''), ':+', ':')
+    return
+        if (count(tokenize($normalizedPath, '/')) gt 0 or count(tokenize($normalizedPath, ':')) gt 1) 
+            then 
+                let $debug := if ($config:debug = ('trace')) then console:log('Texts API: invalid resource requested; normalized resource was: ', $normalizedPath) else ()
+                return map:entry('validation', 0)
+        else
+            (: (1) get all relevant request components :)
+            let $resource :=    
+                if ($normalizedPath eq '') then '*' (: no concrete resource = all works :)
+                else 
+                    let $resourceToken := tokenize(tokenize($normalizedPath, ':')[1], '\.')[1]
+                    return 
+                        if (matches($resourceToken, '^w\d{4}$') and doc-available($config:tei-works-root || '/' || translate($resourceToken, 'wv', 'WV') || '.xml')) then 
+                            translate($reqResource, 'wv', 'WV')
+                        else 0
+            let $passage :=  
+                if (count(tokenize($pathComponents, ':')) le 1) then ''
+                else if (count(tokenize($pathComponents, ':')) eq 2) then tokenize($pathComponents, ':')[2]
+                else 0
+            let $params :=
+                let $validParams := $config:apiFormats($format)
+                (:  filter out all params that aren't officially stated as valid params for the requested format, and 
+                    remove duplicate params; if params have similar names but different values, the first value wins :)
+                let $params0 := map:merge(for $p in $netVars('params') return if (($p, substring-before($p, '=')) = $validParams) then map:entry(substring-before($p, '='), substring-after($p, '=')) else ())
+                let $mode :=
+                    if (tokenize(tokenize($normalizedPath, ':')[1], '\.')[2] = ('orig', 'edit')) then tokenize(tokenize($normalizedPath, ':')[1], '\.')[2]
+                    else request:get-parameter('mode', '')
+                let $format := $netVars('format') (: rather net:format() for decoupling? :)
+                return map:merge((map:entry('mode', $mode), map:entry('format', $format), $params0))
+            let $isValid := if (0 = ($resource, $passage)) then 0 else 1
+            let $requestData := map:merge((map:entry('validation', $isValid), map:entry('resource', $resource), map:entry('passage', $passage), $params))
+            let $debug := if ($config:debug = ('trace')) then console:log('texts API: request data: ' || string-join((for $k in map:keys($requestData) return $k || '=' || map:get($requestData, $k)), '; ') || '.') else ()
+            return $requestData
+            (:  open questions:
+                    - hashtags? (are currently completely ignored here, URL rewriting seems to remove them "automatically")
+            :)
 };
 
 
