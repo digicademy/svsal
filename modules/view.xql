@@ -15,6 +15,9 @@ import module namespace request   = "http://exist-db.org/xquery/request";
 import module namespace console   = "http://exist-db.org/xquery/console";
 
 declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
+
+declare option exist:timeout "1800000"; (: 30 min :)
+
 declare option output:method "html5";
 declare option output:media-type "text/html";
 
