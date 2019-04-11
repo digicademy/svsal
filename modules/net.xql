@@ -76,7 +76,6 @@ declare function net:findNode($requestData as map()) {
         else 
             let $debug := if ($config:debug = "trace") then console:log('findNode: no node found (cts/id was "' || $requestData('mainResource') || ':' || $requestData('passage') || '").') else ()
             return ()
-            
 };
 
 (: Set language for the connection ... :)
@@ -148,6 +147,9 @@ declare function net:lang($existPath as xs:string) as xs:string {
                         $config:defaultLang
 };
 
+(: For determining the content type, the format url parameter has the highest priority,
+   only then comes content negotiation based on HTTP Accept Header (and we do not use file extensions).
+   If no (valid) format is given, the format resolves to 'html' :)
 declare function net:format() as xs:string {
     if (lower-case(request:get-parameter("format", "")) = map:keys($config:apiFormats)) then 
         let $debug := if ($config:debug = ('trace', 'info')) then console:log('Format requested by parameter: format=' || lower-case(request:get-parameter("format", "")) || '.') else ()
@@ -212,7 +214,7 @@ declare function net:redirect-with-303($absolute-path) {  (: See other :)
 };
 declare function net:redirect-with-404($absolute-path) {  (: 404 :)
     (response:set-status-code(404), 
-    <error-handler>
+    <error-handler> 
         <forward url="{$config:app-root}/error-page.html" method="get"/>
         <forward url="{$config:app-root}/modules/view.xql"/>
     </error-handler>)
@@ -240,10 +242,10 @@ declare function net:error-page($statusCode as xs:integer, $netVars as map(*), $
             </forward>
         </view>
         <!--<error-handler> 
-            <forward url="{$config:app-root}/error-page.html" method="get">
+            <forward url="{$netVars('controller')}/error-page.html" method="get">
                 <set-attribute name="status-code" value="{xs:string($statusCode)}"/>
             </forward>
-            <forward url="{$config:app-root}/modules/view-error.xql">
+            <forward url="{$netVars('controller')}/modules/view-error.xql">
                 <set-attribute name="status-code" value="{xs:string($statusCode)}"/>
             </forward>
         </error-handler>-->
@@ -346,8 +348,8 @@ func NegotiateContentType(r *http.Request, offers []string, defaultOffer string)
 		}
 	}
 	return bestOffer
-}
-:)
+}:)
+
 declare function net:negotiateContentType($offers as xs:string*, $defaultOffer as xs:string) as xs:string {
     let $bestOffer      := $defaultOffer
     let $bestQ          := -1.0
@@ -505,66 +507,6 @@ declare function net:sitemapResponse($netVars as map(*)) {
             return $sitemapIndex
 };
 
-
-(: Deliver data in one or another format ... :)
-(:declare function net:deliverTEI($pathComponents as xs:string*, $netVars as map()* ) {
-    let $reqResource    := replace($pathComponents[last()], 'w0', 'W0')
-    return if (matches($reqResource, '[aAlLwW]\d{4}(_[vV]ol\d\d)?(\.xml)?$')) then
-        let $reqWork        := tokenize(tokenize($reqResource, ':')[1], '\.')[1]
-        let $dummy          := (util:declare-option("output:method", "xml"),
-                                util:declare-option("output:media-type", "application/tei+xml"),
-                                util:declare-option("output:indent", "yes"),
-                                util:declare-option("output:expand-xincludes", "yes")
-                               )
-        let $debug          := if ($config:debug = "trace") then console:log("Serializing options: method:" || util:get-option('output:method') ||
-                                                                                                 ', media-type:' || util:get-option('output:media-type') ||
-                                                                                                 ', indent:'     || util:get-option('output:indent') ||
-                                                                                                 ', expand-xi:'  || util:get-option('output:expand-xincludes') ||
-                                                                                                 '.')
-                               else ()
-        
-        (\: parameter 'mode' must be 'meta' for teiHeader, 'full' for complete tei, or not exist at all (then resolving to 'full') :\)
-        let $mode :=    if ($netVars('params') = 'mode=meta') then 'meta' 
-                        else if ($netVars('params') = 'mode=full' or not(some $p in $netVars('params') satisfies starts-with($p, 'mode='))) then 'full'
-                        else 'error'
-        let $docPath       :=   for $subroot in $config:tei-sub-roots return 
-                                   if (doc-available($subroot || '/' || replace(replace(replace($reqWork, "w0", "W0"), '_vol', '_Vol'), '.xml', '') || '.xml')) then
-                                     $subroot || '/' || replace(replace(replace($reqWork, "w0", "W0"), '_vol', '_Vol'), '.xml', '') || '.xml'
-                                   else ()
-        let $doc           :=   if (count($docPath) eq 1 and $mode ne 'error') then
-                                    if ($mode eq 'meta') then
-                                        let $debug          :=  if ($config:debug = "trace") then console:log("forward to teiHeader export for " || $reqResource || ".") else ()
-                                        return export:WRKteiHeader($reqResource, 'metadata')
-                                    else
-                                        let $expanded   := util:expand(doc($docPath)/tei:TEI)
-                                        return $expanded
-                                else (\: does this really forward to the error page, especially if an invalid mode is given? :\)
-                                   <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                                       <forward url="{$netVars('controller')}/error-page.html" method="get"/>
-                                       <view>
-                                           <forward url="/modules/view.xql">
-                                               <set-attribute name="lang"              value="{$netVars('lang')}"/>
-                                               <set-attribute name="$exist:resource"   value="{$netVars('resource')}"/>
-                                               <set-attribute name="$exist:prefix"     value="{$netVars('prefix')}"/>
-                                               <set-attribute name="$exist:controller" value="{$netVars('controller')}"/>
-                                           </forward>
-                                       </view>
-                                       {config:errorhandler($netVars)}
-                                   </dispatch>
-        let $debug          :=  if ($config:debug = "trace") then console:log("deliver tei doc: " || $reqResource || " -> " || $reqWork || '.xml' || ".") else ()
-        let $dummy          :=  if ($mode eq 'meta') then 
-                                    response:set-header("Content-Disposition", 'attachment; filename="' || replace(replace(replace($reqWork, "w0", "W0"), '_vol', '_Vol'), '.xml', '') || '.teiHeader.xml"')
-                                else response:set-header("Content-Disposition", 'attachment; filename="' || replace(replace(replace($reqWork, "w0", "W0"), '_vol', '_Vol'), '.xml', '') || '.tei.xml"')
-        return
-            $doc
-    else if (matches($reqResource, '[Aa]ll')) then 
-        let $debug          :=  if ($config:debug = "trace") then console:log("forward to corpus export for works in tei format.") else ()
-        let $teiCorpus := $config:files-root || '/sal-tei-corpus.zip'
-        let $dummy          := response:set-header("Content-Disposition", 'attachment; filename="sal-tei-corpus.zip"')
-        return response:stream-binary(util:binary-doc($teiCorpus), 'application/octet-stream', 'sal-tei-corpus.zip')
-    else ()
-};:)
-
 (:declare function net:deliverTXT($pathComponents as xs:string*) {
     
     let $reqResource    := $pathComponents[last()]
@@ -582,33 +524,33 @@ declare function net:sitemapResponse($netVars as map(*)) {
 };:)
 
 declare function net:deliverTEI($requestData as map(), $netVars as map()*) {
-    if (starts-with($requestData('resourceType'), 'work')) then 
-        let $serialization  := (util:declare-option("output:method", "xml"),
-                                util:declare-option("output:media-type", "application/tei+xml"),
-                                util:declare-option("output:indent", "yes"),
-                                util:declare-option("output:expand-xincludes", "yes")
-                               )
+    if (matches($requestData('tei_id'), '^W\d{4}')) then 
+        let $serialization  := 
+            (util:declare-option("output:method", "xml"),
+             util:declare-option("output:media-type", "application/tei+xml"),
+             util:declare-option("output:indent", "yes"),
+             util:declare-option("output:expand-xincludes", "yes"))
         let $debug :=   if ($config:debug = "trace") then console:log("Serializing options: method:" || util:get-option('output:method') ||
                                                          ', media-type:' || util:get-option('output:media-type') ||
                                                          ', indent:'     || util:get-option('output:indent') ||
                                                          ', expand-xi:'  || util:get-option('output:expand-xincludes') ||
                                                          '.') else ()
         let $doc := if ($requestData('mode') eq 'meta') then
-                        let $debug :=  if ($config:debug = "trace") then console:log("texts API: teiHeader export for " || $requestData('resource') || ".") else ()
-                        return export:WRKteiHeader($requestData('resource'), 'metadata')
+                        let $debug :=  if ($config:debug = "trace") then console:log("[API] teiHeader export for " || $requestData('tei_id') || ".") else ()
+                        return export:WRKteiHeader($requestData('tei_id'), 'metadata')
                     else 
-                        let $debug :=  if ($config:debug = "trace") then console:log("texts API: TEI doc export for " || $requestData('resource') || ".") else ()
-                        return util:expand(doc($config:tei-works-root || '/' || $requestData('resource') || '.xml')/tei:TEI)
+                        let $debug :=  if ($config:debug = "trace") then console:log("[API] TEI doc export for " || $requestData('tei_id') || ".") else ()
+                        return util:expand(doc($config:tei-works-root || '/' || $requestData('tei_id') || '.xml')/tei:TEI)
         let $response :=    if ($requestData('mode') eq 'meta') then 
-                                response:set-header("Content-Disposition", 'attachment; filename="' || $requestData('resource') || '.teiHeader.xml"')
-                            else response:set-header("Content-Disposition", 'attachment; filename="' || $requestData('resource') || '.tei.xml"')
+                                response:set-header("Content-Disposition", 'attachment; filename="' || $requestData('tei_id') || '_teiHeader.xml"')
+                            else response:set-header("Content-Disposition", 'attachment; filename="' || $requestData('tei_id') || '_tei.xml"')
         return $doc
-    else if ($requestData('resourceType') eq 'corpus') then
-        let $debug      := if ($config:debug = "trace") then console:log("texts API: TEI corpus export.") else ()
+    else if ($requestData('tei_id') eq '*') then
+        let $debug      := if ($config:debug = "trace") then console:log("[API] TEI corpus export.") else ()
         let $corpusPath := $config:files-root || '/sal-tei-corpus.zip'
         let $response   := response:set-header("Content-Disposition", 'attachment; filename="sal-tei-corpus.zip"')
-        return response:stream-binary(util:binary-doc($corpusPath), 'application/octet-stream', 'sal-tei-corpus.zip')
-    else net:redirect-with-400($config:webserver || '/' || 'error-page.html')
+        return response:stream-binary(util:binary-doc($corpusPath), 'application/zip', 'sal-tei-corpus.zip')
+    else net:error(404, $netVars, ())
 };
 
 declare function net:deliverTXT($requestData as map(), $netVars as map()*) {
@@ -627,7 +569,7 @@ declare function net:deliverTXT($requestData as map(), $netVars as map()*) {
     else if ($requestData('resourceType') eq 'corpus') then (: as long as we don't have a txt corpus, forward corpus requests to the (html) works list :)
         let $worksList     := $config:webserver || '/' || 'works.html'
         let $debug5       := if ($config:debug = ("trace", "info")) then console:log("Redirecting to " || $worksList || " ...") else ()
-        return net:redirect-with-404($worksList)
+        return net:redirect-with-404($config:webserver || '/' || 'error-page.html')
     else net:redirect-with-400($config:webserver || '/' || 'error-page.html')
 };
 
@@ -752,35 +694,47 @@ declare function net:deliverJPG($pathComponents as xs:string*, $netVars as map()
 };
 
 (:~
-: Analyzes the arguments (requested resource, passage, and parameters) of a request, does some basic validation, and 
-: returns structured information about the request (as key-value pairs). A non-empty string value for an argument key
-: signifies that the argument is valid, an empty string means that the argument was not specified, 
-: and 0 (int) stands for an erroneous argument (or combination of arguments).
+: A basic filter and validator for URL request arguments (i.e., URL paths and parameters). A non-empty string return value for an argument key
+: signifies that the argument is valid and available, an empty string means that the argument was not specified, 
+: and 0 (int) stands for an erroneous argument.
 ~:)
 declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()*) as map()? {
-    let $debug := if ($config:debug = ('trace')) then console:log('Texts API: request at: .../texts/' || $path || '.') else ()
-    (: (0) normalize and check syntactical validity of path (i.e., amount and order of separators) :)
+    (: first, normalize and check syntactical validity of path (i.e., amount and order of separators) :)
     let $normalizedPath := replace(replace(replace(replace(lower-case($path), '^/+', ''), '/+$', ''), ':+$', ''), ':+', ':')
+    let $debug := if ($config:debug = ('trace')) then console:log('[API]: request at: .../texts/' || $path || '. Normalized path: ' || $normalizedPath) else ()
     return
-        if (count(tokenize($normalizedPath, '/')) gt 0 or count(tokenize($normalizedPath, ':')) gt 1) 
+        if (count(tokenize($normalizedPath, '/')) gt 1 or count(tokenize($normalizedPath, ':')) gt 2)
             then 
-                let $debug := if ($config:debug = ('trace')) then console:log('Texts API: invalid resource requested; normalized resource was: ', $normalizedPath) else ()
-                return map:entry('validation', 0)
+                let $debug := if ($config:debug = ('trace')) then console:log('[API] invalid resource requested; normalized resource was: ', $normalizedPath) else ()
+                return map:entry('validation', '-1')
         else
-            (: (1) get all relevant request components :)
-            let $resource :=    
-                if ($normalizedPath eq '') then '*' (: no concrete resource = all works :)
+            let $resource := (: the requested resource, as stated within the URL path :)
+                if ($normalizedPath eq '') then ''
                 else 
                     let $resourceToken := tokenize(tokenize($normalizedPath, ':')[1], '\.')[1]
-                    return 
-                        if (matches($resourceToken, '^w\d{4}$') and doc-available($config:tei-works-root || '/' || translate($resourceToken, 'wv', 'WV') || '.xml')) then 
-                            translate($reqResource, 'wv', 'WV')
-                        else 0
+                    return
+                        if (not($resourceToken)) then ''
+                        else if (matches($resourceToken, '^w\d{4}(_vol\d{2})?$') and doc-available($config:tei-works-root || '/' || translate($resourceToken, 'wv', 'WV') || '.xml')) then 
+                            translate($resourceToken, 'wv', 'WV')
+                        else '0'
             let $passage :=  
-                if (count(tokenize($pathComponents, ':')) le 1) then ''
-                else if (count(tokenize($pathComponents, ':')) eq 2) then tokenize($pathComponents, ':')[2]
-                else 0
+                if (count(tokenize($normalizedPath, ':')) le 1) then ''
+                else if (count(tokenize($normalizedPath, ':')) eq 2 and $resource ne '') then tokenize($normalizedPath, ':')[2] (: gt 2 is not possible here, see above :)
+                else '-1' (: passage without resource is 400 :)
+            let $teiId := (: the actual TEI document's id, derived from the combination of resource path and passage :)
+                if ($resource != ('0', '-1')) then 
+                    if ($resource eq '') then '*' (: all tei datasets :)
+                    else if (matches($passage, '^vol\d')) then
+                        if (doc-available($config:tei-works-root || '/' || $resource || '_Vol0' || substring($passage,4,1) || '.xml')) then 
+                            $resource || '_Vol0' || substring($passage,4,1)
+                        else '0'
+                    else $resource (: already checked whether available :)
+                else '0'
+            let $workId := (: the overarching work's main id, not distinguishing between volumes :)
+                if ($resource != ('0', '-1')) then replace($resource, '_Vol\d\d$', '')
+                else '0'
             let $params :=
+                let $format := $netVars('format') (: or net:format() :)
                 let $validParams := $config:apiFormats($format)
                 (:  filter out all params that aren't officially stated as valid params for the requested format, and 
                     remove duplicate params; if params have similar names but different values, the first value wins :)
@@ -788,13 +742,22 @@ declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()
                 let $mode :=
                     if (tokenize(tokenize($normalizedPath, ':')[1], '\.')[2] = ('orig', 'edit')) then tokenize(tokenize($normalizedPath, ':')[1], '\.')[2]
                     else request:get-parameter('mode', '')
-                let $format := $netVars('format') (: rather net:format() for decoupling? :)
                 return map:merge((map:entry('mode', $mode), map:entry('format', $format), $params0))
-            let $isValid := if (0 = ($resource, $passage)) then 0 else 1
-            let $requestData := map:merge((map:entry('validation', $isValid), map:entry('resource', $resource), map:entry('passage', $passage), $params))
-            let $debug := if ($config:debug = ('trace')) then console:log('texts API: request data: ' || string-join((for $k in map:keys($requestData) return $k || '=' || map:get($requestData, $k)), '; ') || '.') else ()
+            let $requestValidation := (: -1 has priority over 0, since it signifies a syntactically malformed request (400) :)
+                if (($resource, $passage, $teiId, $workId) = '-1') then '-1'
+                else if (($resource, $passage, $teiId, $workId) = '0') then '0'
+                else '1'
+            let $resourceData := 
+                map {'validation': $requestValidation, 
+                     'resource': $resource,
+                     'tei_id': $teiId,
+                     'work_id': $workId,
+                     'passage': $passage}
+            let $requestData := map:merge(($resourceData, $params))
+            let $debug := if ($config:debug = ('trace')) then console:log('[API] request data: ' || string-join((for $k in map:keys($requestData) return $k || '=' || map:get($requestData, $k)), ' ; ') || '.') else ()
             return $requestData
             (:  open questions:
+                    - how to deal with illegal params: ignore or error?
                     - hashtags? (are currently completely ignored here, URL rewriting seems to remove them "automatically")
             :)
 };
