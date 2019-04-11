@@ -1,4 +1,4 @@
-<?xml-model href="https://files.salamanca.school/SvSal_txt.rng"
+<?xml-model href="https://files.salamanca.school/saltei.rng"
     type="application/xml"
     schematypens="http://relaxng.org/ns/structure/1.0"?><TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="TechSearchHelp">
     <teiHeader>
