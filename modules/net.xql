@@ -217,6 +217,39 @@ declare function net:redirect-with-404($absolute-path) {  (: 404 :)
         <forward url="{$config:app-root}/modules/view.xql"/>
     </error-handler>)
 };
+
+declare function net:error($statusCode as xs:integer, $netVars as map(*), $message as xs:string?) {
+    response:set-status-code($statusCode),
+    net:error-page($statusCode, $netVars, $message)
+};
+
+declare function net:error-page($statusCode as xs:integer, $netVars as map(*), $message as xs:string?) as element(exist:dispatch) {
+    (: using just the error-handler for simply triggering an application-side error page does not work here as expected 
+       but instead creates a *server-side* error, so that we rather dispatch/forward to the error page for now (but how to get the error message then?) :)
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <forward url="{$netVars('controller') || '/error-page.html'}"/>
+        <view>
+            <forward url="{$netVars('controller')}/modules/view-error.xql">
+                <set-attribute name="lang"              value="{$netVars('lang')}"/>
+                <set-attribute name="exist:resource"   value="{$netVars('resource')}"/>
+                <set-attribute name="exist:prefix"     value="{$netVars('prefix')}"/>
+                <set-attribute name="exist:controller" value="{$netVars('controller')}"/>
+                <set-attribute name="status-code" value="{xs:string($statusCode)}"/>
+                <set-attribute name="error-message" value="{$message}"/>
+                <cache-control cache="{$net:cache-control}"/>
+            </forward>
+        </view>
+        <!--<error-handler> 
+            <forward url="{$config:app-root}/error-page.html" method="get">
+                <set-attribute name="status-code" value="{xs:string($statusCode)}"/>
+            </forward>
+            <forward url="{$config:app-root}/modules/view-error.xql">
+                <set-attribute name="status-code" value="{xs:string($statusCode)}"/>
+            </forward>
+        </error-handler>-->
+    </dispatch>
+};
+
 declare function net:redirect-with-400($absolute-path) {  (: 400 :)
     (response:set-status-code(400), 
     <error-handler>

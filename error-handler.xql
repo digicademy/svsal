@@ -8,6 +8,7 @@ import module namespace util    = "http://exist-db.org/xquery/util";
 import module namespace functx  = "http://www.functx.com";
 import module namespace config  = "http://salamanca/config"     at "modules/config.xqm";
 import module namespace net     = "http://salamanca/net"        at "modules/net.xql";
+import module namespace app     = "http://salamanca/app"        at "modules/app.xql";
 import module namespace render  = "http://salamanca/render"     at "modules/render.xql";
 import module namespace iiif    = "http://salamanca/iiif"       at "modules/iiif.xql";
 import module namespace i18n      = "http://exist-db.org/xquery/i18n"        at "i18n.xql";
@@ -46,7 +47,9 @@ declare function local:resolve-attr($node as node()) as node()? {
 
 let $existPath := substring-after(request:get-attribute('javax.servlet.error.request_uri'), '/apps/salamanca')
 let $lang := net:lang($existPath)
-let $debug:= console:log('Erroneous request for: ' || request:get-attribute('javax.servlet.error.request_uri') || '. Determined exist:path: ' || $existPath || ' ; language: ' || $lang || '.')
+let $debug:= console:log('Server-side error handler (error-handler.xql): Request URI: ' || request:get-attribute('javax.servlet.error.request_uri') 
+                         || '. Determined exist:path: ' || $existPath || ' ; language: ' || $lang || '. Server-side error message' 
+                         || request:get-attribute('javax.servlet.error.message') || '.')
 let $dummyMap := map:new()
 let $html-in :=
     <html xmlns="http://www.w3.org/1999/xhtml">
@@ -90,16 +93,10 @@ let $html-in :=
             <div id="wrap">
                 <div>
                     <div>
-                        <h1 class="error-title"><i18n:text key="error">Error</i18n:text> {' ' || request:get-attribute('javax.servlet.error.status_code')}</h1>
+                        <h1 class="error-title">{request:get-attribute('javax.servlet.error.status_code')}</h1>
                         <h2 class="error-title"><i18n:text key="pageNotFound">This is not the page you were looking for...</i18n:text></h2>
                         <p class="error-paragraph"><i18n:text key="bugMessage">In case you found a bug in our website, please let us know at</i18n:text>{' '}<a href="mailto:info.salamanca@adwmainz.de">info.salamanca@adwmainz.de</a></p>
-                        {if ($config:debug eq 'trace' or $config:instanceMode eq 'testing') then 
-                            <div>
-                                <h4 class="error-paragraph">Error message:</h4>
-                                <p class="error-paragraph">{request:get-attribute('javax.servlet.error.message')}</p>
-                            </div>
-                         else ()
-                        }
+                        {app:errorMessage(<div/>, $dummyMap)}
                     </div>
                 </div>
                 <div class="navbar navbar-default navbar-fixed-top" role="navigation">

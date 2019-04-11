@@ -35,6 +35,7 @@ import module namespace iiif      = "http://salamanca/iiif"                  at 
  : - resolve Names with online authority files
  : - dummy test function
  :)
+ 
 
 (: Concatenates name(s): surname, forename :)
 declare function app:formatName($persName as element()*) as xs:string? {
@@ -3589,3 +3590,18 @@ declare function app:imprint ($node as node(), $model as map(*), $lang as xs:str
 declare function app:errorCode($node as node(), $model as map(*)) as xs:string? {
     request:get-attribute('status-code')
 };
+
+declare function app:errorMessage($node as node(), $model as map(*)) as xs:string? {
+    let $errorMessage := if (normalize-space(request:get-attribute('javax.servlet.error.message')) ne '') then request:get-attribute('javax.servlet.error.message')
+                         else if (normalize-space(templates:error-description($node, $model)) ne '') then templates:error-description($node, $model)
+                         else if (normalize-space(request:get-attribute('error-message')) ne '') then request:get-attribute('error-message')
+                         else 'No message found...'
+    return
+        if ($config:debug eq 'trace' or $config:instanceMode eq 'testing') then 
+            <div class="error-paragraph">
+                <h4 class="error-title">Error message (debugging mode):</h4>
+                <div class="error-paragraph"><span>{' ' || $errorMessage}</span></div>
+            </div>
+        else ()
+};
+
