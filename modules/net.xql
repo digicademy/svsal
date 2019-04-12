@@ -60,22 +60,18 @@ declare variable $net:errorhandler := if (($config:instanceMode = "staging") or 
 };:)
 
 declare function net:findNode($requestData as map()) {
-    let $nodeId       := if ($requestData('passage') ne 'unspecified' and doc-available($config:data-root || '/' || $requestData('mainResource') || '_nodeIndex.xml')) then
-                            let $nodeIndex := doc($config:data-root || '/' || $requestData('mainResource') || '_nodeIndex.xml')
-                            let $id := $nodeIndex//sal:node[sal:citetrail eq $requestData('passage')][1]/@n[1]
-                            return if ($id) then $id else ()
-                         else 
-                            "completeWork" (: if there is no node index (i.e., work hasn't been rendered yet), also return complete text :)
+    let $nodeId :=    
+        if ($requestData('passage') ne ('')) then
+            let $nodeIndex := doc($config:data-root || '/' || $requestData('work_id') || '_nodeIndex.xml')
+            let $id := $nodeIndex//sal:node[sal:citetrail eq $requestData('passage')][1]/@n[1]
+            return if ($id) then $id else 'completeWork'
+        else 'completeWork' (: if no specific node has been found, return (or if work hasn't been rendered yet), return complete text :)
     return
-        if ($nodeId) then
-            let $work := util:expand(doc($config:tei-works-root || '/' || $requestData('mainResource') || '.xml')//tei:TEI)
-            let $node := $work//tei:*[@xml:id eq $nodeId]
-            let $debug := if ($config:debug = "trace") then console:log('findNode: found ' || count($node) || ' node(s): ' || $work/@xml:id || '//*[@xml:id=' 
-                                                                        || $nodeId || '] (cts/id was "' || $requestData('mainResource') || ':' || $requestData('passage') || '").') else ()
-            return $node
-        else 
-            let $debug := if ($config:debug = "trace") then console:log('findNode: no node found (cts/id was "' || $requestData('mainResource') || ':' || $requestData('passage') || '").') else ()
-            return ()
+        let $work := util:expand(doc($config:tei-works-root || '/' || $requestData('work_id') || '.xml')/tei:TEI)
+        let $node := $work//tei:*[@xml:id eq $nodeId]
+        let $debug := if ($config:debug = "trace") then console:log('findNode: found ' || count($node) || ' node(s): ' || $work/@xml:id || '//*[@xml:id=' 
+                                                                    || $nodeId || '] (cts/id was "' || $requestData('mainResource') || ':' || $requestData('passage') || '").') else ()
+        return $node
 };
 
 (: Set language for the connection ... :)
@@ -554,23 +550,23 @@ declare function net:deliverTEI($requestData as map(), $netVars as map()*) {
 };
 
 declare function net:deliverTXT($requestData as map(), $netVars as map()*) {
-    if (starts-with($requestData('resourceType'), 'work')) then 
+    if (matches($requestData('tei_id'), '^W\d{4}')) then 
         let $mode := if ($requestData('mode')) then $requestData('mode') else 'edit'
         let $node := net:findNode($requestData)
         let $serialize := (util:declare-option("output:method", "text"),
                            util:declare-option("output:media-type", "text/plain"))
-        let $debug := if ($config:debug = "trace") then console:log("Serializing options: method:" || util:get-option('output:method') ||
+        let $debug := if ($config:debug = "trace") then console:log("[API] Serializing options: method:" || util:get-option('output:method') ||
                                                                     ', media-type:' || util:get-option('output:media-type') ||
                                                                     '.') else ()
-        let $response := response:set-header("Content-Disposition", 'attachment; filename="' || $requestData('mainResource') || '.' || $mode || '.txt"')
+        let $response := response:set-header("Content-Disposition", 'attachment; filename="' || $requestData('work_id') || '_' || $requestData('passage') || '_' || $mode || '.txt"')
         return 
             if ($node) then render:dispatch($node, $mode)
-            else net:redirect-with-400($config:webserver || '/' || 'error-page.html')
-    else if ($requestData('resourceType') eq 'corpus') then (: as long as we don't have a txt corpus, forward corpus requests to the (html) works list :)
+            else net:error(404, $netVars, 'Resource could not be found.')
+    else if ($requestData('tei_id') eq '*') then (: as long as we don't have a txt corpus, forward corpus requests to the (html) works list :)
         let $worksList     := $config:webserver || '/' || 'works.html'
-        let $debug5       := if ($config:debug = ("trace", "info")) then console:log("Redirecting to " || $worksList || " ...") else ()
-        return net:redirect-with-404($config:webserver || '/' || 'error-page.html')
-    else net:redirect-with-400($config:webserver || '/' || 'error-page.html')
+        let $debug       := if ($config:debug = ("trace", "info")) then console:log("[API] Redirecting to " || $worksList || " ...") else ()
+        return net:redirect-with-303($worksList)
+    else net:error(404, $netVars, 'Resource could not be found.')
 };
 
 declare function net:deliverIIIF($path as xs:string, $netVars) {
@@ -695,8 +691,9 @@ declare function net:deliverJPG($pathComponents as xs:string*, $netVars as map()
 
 (:~
 : A basic filter and validator for URL request arguments (i.e., URL paths and parameters). A non-empty string return value for an argument key
-: signifies that the argument is valid and available, an empty string means that the argument was not specified, 
-: and 0 (int) stands for an erroneous argument.
+: signifies that the argument is valid and available, '0' means that a resource could not be found, an empty string means that the argument was not specified, 
+: and '-1' stands for a syntactically malformed argument/request.
+: Generally, a non-digit and non-empty string result means that a given resource is available, such that downstream functions need not verify any availability.
 ~:)
 declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()*) as map()? {
     (: first, normalize and check syntactical validity of path (i.e., amount and order of separators) :)
@@ -717,10 +714,17 @@ declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()
                         else if (matches($resourceToken, '^w\d{4}(_vol\d{2})?$') and doc-available($config:tei-works-root || '/' || translate($resourceToken, 'wv', 'WV') || '.xml')) then 
                             translate($resourceToken, 'wv', 'WV')
                         else '0'
-            let $passage :=  
+            let $passage := 
                 if (count(tokenize($normalizedPath, ':')) le 1) then ''
-                else if (count(tokenize($normalizedPath, ':')) eq 2 and $resource ne '') then tokenize($normalizedPath, ':')[2] (: gt 2 is not possible here, see above :)
-                else '-1' (: passage without resource is 400 :)
+                else if (count(tokenize($normalizedPath, ':')) eq 2 and $resource ne '') then 
+                    let $passageToken := tokenize($normalizedPath, ':')[2]
+                    return 
+                        if ($resource != ('0', '-1') and doc-available($config:data-root || '/' || substring($resource,1,5) || '_nodeIndex.xml')) then
+                            let $nodeIndex := doc($config:data-root || '/' || substring($resource,1,5) || '_nodeIndex.xml')
+                            return 
+                                if ($nodeIndex//sal:node[sal:citetrail eq $passageToken]) then $passageToken else '0'
+                        else '0' (: -1 ? :)
+                else '-1' (: passage without resource is error :)
             let $teiId := (: the actual TEI document's id, derived from the combination of resource path and passage :)
                 if ($resource != ('0', '-1')) then 
                     if ($resource eq '') then '*' (: all tei datasets :)
@@ -761,5 +765,4 @@ declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()
                     - hashtags? (are currently completely ignored here, URL rewriting seems to remove them "automatically")
             :)
 };
-
 
