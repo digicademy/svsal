@@ -164,6 +164,7 @@ declare variable $config:tei-sub-roots := ($config:tei-authors-root, $config:tei
 declare variable $config:resources-root := concat($config:app-root, "/resources");
 declare variable $config:data-root      := concat($config:app-root, "/data");
 declare variable $config:html-root      := concat($config:data-root, "/html");
+declare variable $config:txt-root      := concat($config:data-root, "/txt");
 declare variable $config:snippets-root  := concat($config:data-root, "/snippets");
 declare variable $config:rdf-root       := concat($config:salamanca-data-root, "/rdf");
 declare variable $config:iiif-root      := concat($config:salamanca-data-root, "/iiif");

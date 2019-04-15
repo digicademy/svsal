@@ -18,54 +18,73 @@ import module namespace sphinx      = "http://salamanca/sphinx"                 
 declare option exist:timeout "10800000"; (: 3 h :)
 
 declare function admin:cleanCollection ($wid as xs:string, $collection as xs:string) {
-    let $collectionName := if ($collection = "html") then
-                                $config:html-root || "/" || $wid
-                            else if ($collection = "data") then
-                                $config:data-root || "/"
-                            else if ($collection = "snippets") then
-                                $config:snippets-root || "/" || $wid
-                            else
-                                $config:data-root || "/trash/"
-    let $create-parent-status   :=    if ($collection = "html"    and not(xmldb:collection-available($config:html-root))) then
-                                          xmldb:create-collection($config:data-root, "html")
-                                 else if ($collection = "snippets" and not(xmldb:collection-available($config:snippets-root))) then
-                                          xmldb:create-collection($config:data-root, "snippets")
-                                 else ()
-    let $create-collection-status :=      if ($collection = "html"     and not(xmldb:collection-available($collectionName))) then
-                                          xmldb:create-collection($config:html-root, $wid)
-                                     else if ($collection = "snippets" and not(xmldb:collection-available($collectionName))) then
-                                          xmldb:create-collection($config:snippets-root, $wid)
-                                     else ()
-    let $chmod-collection-status  := xmldb:set-collection-permissions($collectionName, 'sal', 'svsal',  util:base-to-integer(0775, 8))
-    let $remove-status            := if (count(xmldb:get-child-resources($collectionName))) then
-                                         for $file in xmldb:get-child-resources($collectionName) return xmldb:remove($collectionName, $file)
-                                     else ()
+    let $collectionName := 
+        if ($collection = "html") then
+            $config:html-root || "/" || $wid
+        else if ($collection = "data") then
+            $config:data-root || "/"
+        else if ($collection = "snippets") then
+            $config:snippets-root || "/" || $wid
+        else if ($collection eq "txt") then
+            $config:txt-root || "/" || $wid
+        else
+            $config:data-root || "/trash/"
+    let $create-parent-status :=    
+        if ($collection = "html"    and not(xmldb:collection-available($config:html-root))) then
+            xmldb:create-collection($config:data-root, "html")
+        else if ($collection = "txt"    and not(xmldb:collection-available($config:txt-root))) then
+            xmldb:create-collection($config:data-root, "txt")
+        else if ($collection = "snippets" and not(xmldb:collection-available($config:snippets-root))) then
+            xmldb:create-collection($config:data-root, "snippets")
+        else ()
+    let $create-collection-status := 
+        if ($collection = "html" and not(xmldb:collection-available($collectionName))) then
+            xmldb:create-collection($config:html-root, $wid)
+        else if ($collection = "txt" and not(xmldb:collection-available($collectionName))) then
+            xmldb:create-collection($config:txt-root, $wid)
+        else if ($collection = "snippets" and not(xmldb:collection-available($collectionName))) then
+            xmldb:create-collection($config:snippets-root, $wid)
+        else ()
+    let $chmod-collection-status := xmldb:set-collection-permissions($collectionName, 'sal', 'svsal',  util:base-to-integer(0775, 8))
+    let $remove-status := 
+        if (count(xmldb:get-child-resources($collectionName))) then
+            for $file in xmldb:get-child-resources($collectionName) return xmldb:remove($collectionName, $file)
+        else ()
     return $remove-status
 };
 
-declare function admin:saveFile ($wid as xs:string, $fileName as xs:string, $content as node(), $collection as xs:string?) {
-    let $collectionName := if ($collection = "html") then
-                                $config:html-root || "/" || $wid
-                            else if ($collection = "data") then
-                                $config:data-root || "/"
-                            else if ($collection = "snippets") then
-                                $config:snippets-root || "/" || $wid
-                            else if ($collection = "rdf") then
-                                $config:rdf-root || "/"
-                            else
-                                $config:data-root || "/trash/"
-    let $create-parent-status     :=      if ($collection = "html"     and not(xmldb:collection-available($config:html-root))) then
-                                          xmldb:create-collection($config:data-root, "html")
-                                     else if ($collection = "snippets" and not(xmldb:collection-available($config:snippets-root))) then
-                                          xmldb:create-collection($config:data-root, "snippets")
-                                     else ()
-    let $create-collection-status :=      if ($collection = "html"     and not(xmldb:collection-available($collectionName))) then
-                                          xmldb:create-collection($config:html-root, $wid)
-                                     else if ($collection = "snippets" and not(xmldb:collection-available($collectionName))) then
-                                          xmldb:create-collection($config:snippets-root, $wid)
-                                     else if ($collection = "rdf"      and not(xmldb:collection-available($config:rdf-root))) then
-                                          xmldb:create-collection($config:salamanca-data-root, "rdf")
-                                     else ()
+declare function admin:saveFile ($wid as xs:string, $fileName as xs:string, $content as item(), $collection as xs:string?) {
+    let $collectionName := 
+        if ($collection = "html") then
+            $config:html-root || "/" || $wid
+        else if ($collection = "txt") then
+            $config:txt-root || "/" || $wid
+        else if ($collection = "data") then
+            $config:data-root || "/"
+        else if ($collection = "snippets") then
+            $config:snippets-root || "/" || $wid
+        else if ($collection = "rdf") then
+            $config:rdf-root || "/"
+        else
+            $config:data-root || "/trash/"
+    let $create-parent-status     :=      
+        if ($collection = "html" and not(xmldb:collection-available($config:html-root))) then
+            xmldb:create-collection($config:data-root, "html")
+        else if ($collection = "txt" and not(xmldb:collection-available($config:txt-root))) then
+            xmldb:create-collection($config:data-root, "txt")
+        else if ($collection = "snippets" and not(xmldb:collection-available($config:snippets-root))) then
+            xmldb:create-collection($config:data-root, "snippets")
+        else ()
+    let $create-collection-status :=      
+        if ($collection = "html" and not(xmldb:collection-available($collectionName))) then
+            xmldb:create-collection($config:html-root, $wid)
+        else if ($collection = "txt" and not(xmldb:collection-available($collectionName))) then
+            xmldb:create-collection($config:txt-root, $wid)
+        else if ($collection = "snippets" and not(xmldb:collection-available($collectionName))) then
+            xmldb:create-collection($config:snippets-root, $wid)
+        else if ($collection = "rdf"      and not(xmldb:collection-available($config:rdf-root))) then
+            xmldb:create-collection($config:salamanca-data-root, "rdf")
+        else ()
     let $chmod-collection-status  := xmldb:set-collection-permissions($collectionName, 'sal', 'svsal',  util:base-to-integer(0775, 8))
     let $remove-status            := if ($content and ($fileName = xmldb:get-child-resources($collectionName))) then
                                           xmldb:remove($collectionName, $fileName)
@@ -288,7 +307,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                 
                                 (: First, create index of nodes for generating HTML fragments :)
                                 let $debug         := if ($config:debug = ("trace")) then console:log("  (creating preliminary index file ...)") else ()
-                                let $index1           := <sal:index work="{string($work/@xml:id)}">{
+                                let $index           := <sal:index work="{string($work/@xml:id)}">{
                                                                     for $node at $pos in $work//tei:text/descendant-or-self::*[@xml:id and local-name(.) = $indexedElTypes and not(ancestor::tei:note)] 
                                                                         let $debug         := if ($config:debug = ("trace")) then console:log("  (registering node " || $pos || ": " || local-name($node) || " with @xml:id " || $node/@xml:id || " ...)") else ()
                                                                         let $subtype      := if ($node/@sameAs) then
@@ -330,7 +349,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                                                    }
                                                         </sal:index>
                                 let $debug        := if ($config:debug = ("trace")) then console:log("  (saving preliminary index file ...)") else ()
-                                let $index1SaveStatus := admin:saveFile($work/@xml:id, $work/@xml:id || "_nodeIndex.xml", $index1, "data")
+                                let $indexSaveStatus := admin:saveFile($work/@xml:id, $work/@xml:id || "_nodeIndex.xml", $index, "data")
                                 let $debug        := if ($config:debug = ("trace", "info")) then console:log("  Preliminary index file created.") else ()
 
                                 (: Next, create a ToC html file. :)
@@ -368,25 +387,25 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
 
                                 (: Next, get "previous" and "next" fragment ids and hand the current fragment over to the renderFragment function :)
                                 let $fragments := for $section at $index in $target-set
-                                        let $prev   :=  if ($index > 1) then
-                                                            $target-set[(xs:integer($index) - 1)]
-                                                        else ()
-                                        let $next   :=  if ($index < count($target-set)) then
-                                                            $target-set[(xs:integer($index) + 1)]
-                                                        else ()
-                                        let $prevId :=  if ($prev) then
-                                                            xs:string($prev/@xml:id)
-                                                        else ()
-                                        let $nextId :=  if ($next) then
-                                                            xs:string($next/@xml:id)
-                                                        else ()
-                                        let $result :=  admin:renderFragment($work, xs:string($workId), $section, $index, $fragmentationDepth, $prevId, $nextId, $config:serverdomain)
-                                        return <p>
-                                                    <div>
-                                                        {format-number($index, "0000")}: &lt;{local-name($section) || " xml:id=&quot;" || string($section/@xml:id) || "&quot;&gt;"} (Level {count($section/ancestor-or-self::tei:*)})
-                                                    </div>
-                                                    {$result}
-                                                </p>
+                                    let $prev   :=  if ($index > 1) then
+                                                        $target-set[(xs:integer($index) - 1)]
+                                                    else ()
+                                    let $next   :=  if ($index < count($target-set)) then
+                                                        $target-set[(xs:integer($index) + 1)]
+                                                    else ()
+                                    let $prevId :=  if ($prev) then
+                                                        xs:string($prev/@xml:id)
+                                                    else ()
+                                    let $nextId :=  if ($next) then
+                                                        xs:string($next/@xml:id)
+                                                    else ()
+                                    let $result :=  admin:renderFragment($work, xs:string($workId), $section, $index, $fragmentationDepth, $prevId, $nextId, $config:serverdomain)
+                                    return <p>
+                                                <div>
+                                                    {format-number($index, "0000")}: &lt;{local-name($section) || " xml:id=&quot;" || string($section/@xml:id) || "&quot;&gt;"} (Level {count($section/ancestor-or-self::tei:*)})
+                                                </div>
+                                                {$result}
+                                            </p>
                                 
                             (: Reporting, and reindexing the database :)
                                 (: See if there are any leaf elements in our text that are not matched by our rule :)
@@ -395,6 +414,15 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                 let $unidentified-elements := $target-set[not(@xml:id)]
                                 (: Keep track of how long this work did take :)
                                 let $runtime-ms-a := ((util:system-time() - $start-time-a) div xs:dayTimeDuration('PT1S'))  * 1000
+                                (: render and store the work's plain text :)
+                                let $txt-start-time := util:system-time()
+                                let $plainTextEdit := string-join(render:dispatch($work, 'edit'), '')
+                                let $txtEditSaveStatus := admin:saveFile($work/@xml:id, $work/@xml:id || "_edit.txt", $plainTextEdit, "txt")
+                                let $debug := if ($config:debug = ("trace", "info")) then console:log("Plain text (edit) file created and stored.") else ()
+                                let $plainTextOrig := string-join(render:dispatch($work, 'orig'), '')
+                                let $txtOrigSaveStatus := admin:saveFile($work/@xml:id, $work/@xml:id || "_orig.txt", $plainTextOrig, "txt")
+                                let $debug := if ($config:debug = ("trace", "info")) then console:log("Plain text (orig) file created and stored.") else ()
+                                let $txt-end-time := ((util:system-time() - $txt-start-time) div xs:dayTimeDuration('PT1S'))
                                 return <div>
                                              <p><a href="work.html?wid={$work/@xml:id}">{string($work/@xml:id)}</a>, Fragmentierungstiefe: <code>{$fragmentationDepth}</code></p>
                                              {if (count($missed-elements)) then <p>{count($missed-elements)} nicht erfasste Elemente:<br/>
@@ -405,11 +433,12 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                               else ()}
                                              <p>{count($target-set)} erfasste Elemente {if (count($target-set)) then "der folgenden Typen: " || <br/> else ()}
                                                 <code>{distinct-values(for $i in $target-set return local-name($i) || "(" || count($target-set[local-name(.) = local-name($i)]) || ")")}</code></p>
-                                             <p>Rechenzeit: {      if ($runtime-ms-a < (1000 * 60))      then format-number($runtime-ms-a div 1000, "#.##") || " Sek."
+                                             <p>Rechenzeit (HTML): {      if ($runtime-ms-a < (1000 * 60))      then format-number($runtime-ms-a div 1000, "#.##") || " Sek."
                                                               else if ($runtime-ms-a < (1000 * 60 * 60)) then format-number($runtime-ms-a div (1000 * 60), "#.##") || " Min."
                                                               else                                            format-number($runtime-ms-a div (1000 * 60 * 60), "#.##") || " Std."
                                                              }
                                              </p>
+                                             <p>Rechenzeit (TXT: orig und edit): {$txt-end-time} Sekunden.</p>
                                              {if ($config:debug = "trace") then $fragments else ()}
                                        </div>
     (: now put everything out :)
@@ -422,7 +451,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                 <p>Zu rendern: {count($todo)} Werk(e); gesamte Rechenzeit:
                     {if ($runtime-ms < (1000 * 60))             then format-number($runtime-ms div 1000, "#.##") || " Sek."
                       else if ($runtime-ms < (1000 * 60 * 60))  then format-number($runtime-ms div (1000 * 60), "#.##") || " Min."
-                      else                                           format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
+                      else format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
                     }
                 </p>
                 <p>/db/apps/salamanca/data reindiziert in {$index-end-time} Sekunden.</p>
