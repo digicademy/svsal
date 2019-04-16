@@ -558,9 +558,16 @@ declare function net:deliverTXT($requestData as map(), $netVars as map()*) {
         let $debug := if ($config:debug = "trace") then console:log("[API] Serializing options: method:" || util:get-option('output:method') ||
                                                                     ', media-type:' || util:get-option('output:media-type') ||
                                                                     '.') else ()
-        let $response := response:set-header("Content-Disposition", 'attachment; filename="' || $requestData('work_id') || '_' || $requestData('passage') || '_' || $mode || '.txt"')
+        let $filename := (if (not(starts-with($requestData('passage'), 'vol'))) then $requestData('tei_id') else $requestData('work_id'))
+                         || (if ($requestData('passage')) then '_' || $requestData('passage') else ()) 
+                         || '_' || $mode || '.txt'
+        let $response := response:set-header('Content-Disposition', 'attachment; filename="' || $filename || '"')
         return 
-            if ($node) then render:dispatch($node, $mode)
+            if ($node) then 
+                (: if full work is requested and the text is already available, we fetch it directly without render:dispatch :)
+                if ($requestData('passage') eq '' and not(contains($requestData('tei_id'), '_Vol')) and util:binary-doc-available($config:txt-root || '/' || $requestData('work_id') || '/' || $requestData('work_id') || '_' || $mode || '.txt')) then
+                    response:stream-binary(util:binary-doc($config:txt-root || '/' || $requestData('work_id') || '/' || $requestData('work_id') || '_' || $mode || '.txt'), 'text/plain')
+                else render:dispatch($node, $mode)
             else net:error(404, $netVars, 'Resource could not be found.')
     else if ($requestData('tei_id') eq '*') then (: as long as we don't have a txt corpus, forward corpus requests to the (html) works list :)
         let $worksList     := $config:webserver || '/' || 'works.html'
