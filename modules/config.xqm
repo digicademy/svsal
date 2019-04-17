@@ -169,6 +169,7 @@ declare variable $config:snippets-root  := concat($config:data-root, "/snippets"
 declare variable $config:rdf-root       := concat($config:salamanca-data-root, "/rdf");
 declare variable $config:iiif-root      := concat($config:salamanca-data-root, "/iiif");
 declare variable $config:files-root     := concat($config:resources-root, "/files");
+declare variable $config:corpus-files-root := concat($config:data-root, '/corpus');
 
 (: declare variable $config:home-url   := replace(replace(replace(request:get-url(), substring-after(request:get-url(), '/salamanca'), ''),'/rest/', '/'), 'localhost', 'h2250286.stratoserver.net'); :)
 

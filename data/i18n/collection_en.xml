@@ -133,7 +133,8 @@
   <msg key="ownerMaster">Digital master</msg>
   <msg key="sort">Sort</msg>
   <!--<msg key="next">Next</msg>-->
-  <msg key="corpusVerb">the whole corpus as TEI/XML files</msg>
+  <msg key="corpusVerbTEI">the complete corpus as TEI/XML files</msg>
+  <msg key="corpusVerbTXT">the complete corpus as plain text (TXT)</msg>
   <msg key="worksNotice">The digital collection of sources of the project "The School of Salamanca" comprises 116 works in 
     total, which are successively published on this page. For this purpose, the texts 
     are encoded according to the specifications of the Text Encoding Initiative (TEI); for further information, please 

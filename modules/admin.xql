@@ -443,7 +443,13 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                        </div>
     (: now put everything out :)
     let $runtime-ms       := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000 
-    (: make sure that fragments are to be found, through reindexing :)
+    (: (re-)create txt and xml corpus zips :)
+    let $corpus-start-time := util:system-time()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("Corpus packages created and stored.") else ()
+    let $createTeiCorpus := admin:createTeiCorpus()
+    let $createTxtCorpus := admin:createTxtCorpus()
+    let $corpus-end-time := ((util:system-time() - $corpus-start-time) div xs:dayTimeDuration('PT1S'))
+    (: make sure that fragments are to be found, by reindexing :)
     let $index-start-time := util:system-time()
     let $reindex          := xmldb:reindex($config:data-root)
     let $index-end-time := ((util:system-time() - $index-start-time) div xs:dayTimeDuration('PT1S'))
@@ -454,10 +460,83 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                       else format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
                     }
                 </p>
+                <p>TEI- und TXT-Corpora erstellt in {$corpus-end-time} Sekunden.</p>
                 <p>/db/apps/salamanca/data reindiziert in {$index-end-time} Sekunden.</p>
                 <hr/>
                 {$gerendert}
             </div>
+};
+
+declare function admin:createTeiCorpus() as xs:string? {
+    let $tmpCollection := $config:corpus-files-root || '/temp'
+    let $corpusCollection := if (not(xmldb:collection-available($config:corpus-files-root))) then xmldb:create-collection($config:data-root, 'corpus') else ()
+    (: Create temporary collection to be zipped :)
+    let $removeStatus := if (xmldb:collection-available($tmpCollection)) then xmldb:remove($tmpCollection) else ()
+    let $zipTmp := xmldb:create-collection($config:corpus-files-root, 'temp')  
+    (: Get TEI data, expand them and store them in the temporary collection :)
+    let $serializationOpts := 'method=xml expand-xincludes=yes omit-xml-declaration=no indent=yes encoding=UTF-8 media-type=application/tei+xml' 
+    let $works := 
+        for $reqWork in collection($config:tei-works-root)/tei:TEI/@xml:id[string-length(.) eq 5]/string()
+            return if (doc-available($config:tei-works-root || '/' || $reqWork || '.xml')) then
+                let $expanded := util:expand(doc($config:tei-works-root || '/' || $reqWork || '.xml')/tei:TEI, $serializationOpts) 
+                let $store := xmldb:store-as-binary($tmpCollection, $expanded/@xml:id || '.xml', $expanded)
+                return $expanded
+            else ()
+    (: Create a zip archive from the temporary collection and store it :)    
+    let $zip := compression:zip(xs:anyURI($tmpCollection), false())
+    let $save := xmldb:store-as-binary($config:corpus-files-root , 'sal-tei-corpus.zip', $zip)
+    (: Clean the database from temporary files/collections :)
+    let $removeStatus2 := for $work in $works return xmldb:remove($tmpCollection, $work/@xml:id || '.xml')
+    let $removeStatus3 := if (xmldb:collection-available($tmpCollection)) then xmldb:remove($tmpCollection) else ()
+    let $filepath := $config:corpus-files-root  || '/sal-tei-corpus.zip'
+    let $removeStatus4 := 
+        if (file:exists($filepath)) then
+            xmldb:remove($filepath)
+        else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Created and stored TEI corpus zip.") else ()
+    return $save
+};
+
+declare function admin:createTxtCorpus() as xs:string? {
+    let $tmpCollection := $config:corpus-files-root || '/temp'
+    let $corpusCollection := if (not(xmldb:collection-available($config:corpus-files-root))) then xmldb:create-collection($config:data-root, 'corpus') else ()
+    (: Create temporary collection to be zipped :)
+    let $removeStatus := if (xmldb:collection-available($tmpCollection)) then xmldb:remove($tmpCollection) else ()
+    let $zipTmp := xmldb:create-collection($config:corpus-files-root, 'temp')  
+    (: Get TXT data (or if they aren't available, render them officially) and store them in the temporary collection :)
+    let $storeWorks := 
+        for $wid in collection($config:tei-works-root)/tei:TEI/@xml:id[string-length(.) eq 5 and app:WRKisPublished(<dummy/>,map{},.)]/string()
+            return 
+                let $renderOrig := 
+                    if (util:binary-doc-available($config:txt-root || '/' || $wid || '/' || $wid || '_orig.txt')) then ()
+                    else 
+                        let $tei := util:expand(doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI)
+                        let $debug := if ($config:debug = ("trace", "info")) then console:log('[ADMIN] Rendering txt version of work: ' || $config:tei-works-root || '/' || $wid || '.xml') else ()
+                        let $origTxt := string-join(render:dispatch($tei, 'orig'), '')
+                        let $debug := if ($config:debug = ("trace", "info")) then console:log('[ADMIN] Rendered ' || $wid || ', string length: ' || string-length($origTxt)) else ()
+                        return admin:saveFile($wid, $wid || "_orig.txt", $origTxt, "txt")
+                let $storeOrig := xmldb:store-as-binary($tmpCollection, $wid || '_orig.txt', util:binary-doc($config:txt-root || '/' || $wid || '/' || $wid || '_orig.txt'))
+                let $renderEdit := 
+                    if (util:binary-doc-available($config:txt-root || '/' || $wid || '/' || $wid || '_edit.txt')) then ()
+                    else 
+                        let $tei := util:expand(doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI)
+                        let $editTxt := string-join(render:dispatch($tei, 'edit'), '')
+                        return admin:saveFile($wid, $wid || "_edit.txt", $editTxt, "txt")
+                let $storeEdit := xmldb:store-as-binary($tmpCollection, $wid || '_edit.txt', util:binary-doc($config:txt-root || '/' || $wid || '/' || $wid || '_edit.txt'))
+                return ($storeOrig, $storeEdit)
+    (: Create a zip archive from the temporary collection and store it :)    
+    let $zip := compression:zip(xs:anyURI($tmpCollection), false())
+    let $save := xmldb:store-as-binary($config:corpus-files-root , 'sal-txt-corpus.zip', $zip)
+    (: Clean the database from temporary files/collections :)
+    let $removeStatus2 := for $file in xmldb:get-child-resources($tmpCollection) return xmldb:remove($tmpCollection, $file)
+    let $removeStatus3 := if (xmldb:collection-available($tmpCollection)) then xmldb:remove($tmpCollection) else ()
+    let $filepath := $config:corpus-files-root  || '/sal-txt-corpus.zip'
+    let $removeStatus4 := 
+        if (file:exists($filepath)) then
+            xmldb:remove($filepath)
+        else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Created and stored TXT corpus zip.") else ()
+    return $save
 };
 
 declare function admin:renderFragment ($work as node(), $wid as xs:string, $target as node(), $targetindex as xs:integer, $fragmentationDepth as xs:integer, $prevId as xs:string?, $nextId as xs:string?, $serverDomain as xs:string?) {

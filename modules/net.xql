@@ -541,9 +541,9 @@ declare function net:deliverTEI($requestData as map(), $netVars as map()*) {
                                 response:set-header("Content-Disposition", 'attachment; filename="' || $requestData('tei_id') || '_teiHeader.xml"')
                             else response:set-header("Content-Disposition", 'attachment; filename="' || $requestData('tei_id') || '_tei.xml"')
         return $doc
-    else if ($requestData('tei_id') eq '*') then
+    else if ($requestData('tei_id') eq '*' and util:binary-doc-available($config:corpus-files-root || '/sal-tei-corpus.zip')) then
         let $debug      := if ($config:debug = "trace") then console:log("[API] TEI corpus export.") else ()
-        let $corpusPath := $config:files-root || '/sal-tei-corpus.zip'
+        let $corpusPath := $config:corpus-files-root || '/sal-tei-corpus.zip'
         let $response   := response:set-header("Content-Disposition", 'attachment; filename="sal-tei-corpus.zip"')
         return response:stream-binary(util:binary-doc($corpusPath), 'application/zip', 'sal-tei-corpus.zip')
     else net:error(404, $netVars, ())
@@ -569,10 +569,11 @@ declare function net:deliverTXT($requestData as map(), $netVars as map()*) {
                     response:stream-binary(util:binary-doc($config:txt-root || '/' || $requestData('work_id') || '/' || $requestData('work_id') || '_' || $mode || '.txt'), 'text/plain')
                 else render:dispatch($node, $mode)
             else net:error(404, $netVars, 'Resource could not be found.')
-    else if ($requestData('tei_id') eq '*') then (: as long as we don't have a txt corpus, forward corpus requests to the (html) works list :)
-        let $worksList     := $config:webserver || '/' || 'works.html'
-        let $debug       := if ($config:debug = ("trace", "info")) then console:log("[API] Redirecting to " || $worksList || " ...") else ()
-        return net:redirect-with-303($worksList)
+    else if ($requestData('tei_id') eq '*' and util:binary-doc-available($config:corpus-files-root || '/sal-txt-corpus.zip')) then
+        let $debug      := if ($config:debug = "trace") then console:log("[API] TXT corpus export.") else ()
+        let $corpusPath := $config:corpus-files-root || '/sal-txt-corpus.zip'
+        let $response   := response:set-header("Content-Disposition", 'attachment; filename="sal-txt-corpus.zip"')
+        return response:stream-binary(util:binary-doc($corpusPath), 'application/zip', 'sal-txt-corpus.zip')
     else net:error(404, $netVars, 'Resource could not be found.')
 };
 

@@ -5,15 +5,15 @@
                 <i18n:text key="administration">Administration</i18n:text>
             </h1>
         </div>
-
+        
         <div>
             <p>            
                 Link zur <a target="_new" href="https://stats.adwmainz.net/index.php?module=CoreHome&amp;action=index&amp;idSite=20&amp;period=day&amp;date=yesterday&amp;ignoreSalt=eb2d7603c7b3f98ce81efb011e901d4c#?module=Dashboard&amp;action=embeddedIndex&amp;idSite=20&amp;period=day&amp;date=yesterday&amp;ignoreSalt=eb2d7603c7b3f98ce81efb011e901d4c&amp;idDashboard=1">Piwik-Seite</a>.<br/>
                 <a href="reindex.xql" target="_new">Reindex</a> eXist-db.
             </p>
-<!--        <p><a href="admin-svn.html">SVN Functions</a>.</p> -->
+            <!--        <p><a href="admin-svn.html">SVN Functions</a>.</p> -->
         </div>
-
+        
         <div class="row" data-template="app:loadListOfWorks" data-template-sort="wid">
             <h2>Works</h2>
             <p>
@@ -34,12 +34,15 @@
                     <td data-template="rdf:needsRDFString">boing</td>
                     <td data-template="iiif:needsResourceString">boing</td>
                 </tr>
-            <br/>
-            <a href="createLists.html" role="button" class="btn btn-primary">Write/overwrite list of works and save!</a>
-            <br/>
+                <br/>
+                <a href="createLists.html" role="button" class="btn btn-primary">Write/overwrite list of works and save!</a>
+                <br/>
             </table>
             <p>
-                <span data-template="render:needsCorpusZipString">boing</span>
+                <span data-template="render:needsTeiCorpusZip">boing</span>
+            </p>
+            <p>
+                <span data-template="render:needsTxtCorpusZip">boing</span>
             </p>
         </div>
         
@@ -61,7 +64,7 @@
                     </tr>
                 </tbody>
             </table>
-
+            
         </div>
         
         <div class="row" data-template="app:loadDictionary">
@@ -81,24 +84,24 @@
                 </tbody>
             </table>
         </div>
-
+        
         <div class="row" data-template="app:loadListOfWps">
             <h2>Working Papers</h2>
             <table class="table table-hover">
                 <tbody>
                     <tr>
                         <th>WP-ID</th>
-<!--                    <th>HTML</th> -->
+                        <!--                    <th>HTML</th> -->
                         <th>Sphinx Fragmente</th>
                     </tr>
                     <tr data-template="templates:each" data-template-from="listOfWps" data-template-to="currentWp">
                         <td data-template="render:WPString">boing</td>
-<!--                    <td data-template="render:lemmaMakeHTML">boing</td>  -->
+                        <!--                    <td data-template="render:lemmaMakeHTML">boing</td>  -->
                         <td data-template="sphinx:needsSnippetsString">boing</td>
                     </tr>
                 </tbody>
             </table>
         </div>
-
+        
     </div>
 </div>

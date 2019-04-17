@@ -51,7 +51,8 @@
   <msg key="workvolume">Einzelband</msg>
   <msg key="biblInfo">Bibliographische Angaben</msg>
   <msg key="editionInfo">Digitale Edition</msg>
-  <msg key="corpusVerb">des ganzen Corpus als TEI/XML Dateien</msg>
+  <msg key="corpusVerbTEI">des ganzen Corpus als TEI/XML Dateien</msg>
+  <msg key="corpusVerbTXT">des ganzen Corpus als Plain Text (TXT)</msg>
   <msg key="download">Download </msg>
   <msg key="downloadXML">Download TEI/XML Quelldatei</msg>
   <msg key="downloadTXTEdit">Download als Plaintext (konstituierte Variante)</msg>

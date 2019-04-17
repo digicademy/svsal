@@ -1050,12 +1050,22 @@ declare %templates:wrap
 declare %templates:wrap
     function app:WRKsCorpusDownload ($node as node(), $model as map(*), $lang as xs:string?) {
     <div>
-        <a href="{$config:apiserver || '/v1/texts/all?format=tei'}">
-            <span class="glyphicon glyphicon-download-alt"/>
-            <i18n:text key="download">Download</i18n:text>
-        </a>
-        <span>{' ' || i18n:process(<i18n:text key="corpusVerb"/>, $lang, "/db/apps/salamanca/data/i18n", "en")}</span>
+        <div>
+            <a href="{$config:apiserver || '/v1/texts/all?format=tei'}">
+                <span class="glyphicon glyphicon-download-alt"/>
+                <i18n:text key="download">Download</i18n:text>
+            </a>
+            <span>{' ' || i18n:process(<i18n:text key="corpusVerbTEI"/>, $lang, "/db/apps/salamanca/data/i18n", "en")}</span>
+        </div>
+        <div>
+            <a href="{$config:apiserver || '/v1/texts/all?format=txt'}">
+                <span class="glyphicon glyphicon-download-alt"/>
+                <i18n:text key="download">Download</i18n:text>
+            </a>
+            <span>{' ' || i18n:process(<i18n:text key="corpusVerbTXT"/>, $lang, "/db/apps/salamanca/data/i18n", "en")}</span>
+        </div>
     </div>
+    
 };
 
 
