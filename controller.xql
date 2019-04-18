@@ -29,16 +29,9 @@ declare option output:encoding      "utf-8";
    ***  - Add iiif endpoints (not really working atm)
    ***  - Add passage identifiers to filenames on downloads
    ***  - Why are no hashes handled? Some are needed but lost. (http://bla.com/bla/bla.html?bla<#THISHERE!>)
-   ***  - Implement collections/lists of resources and their filters (e.g. `/texts?q=lex` resulting in a list of texts) - but which format(s)??
-   ***  - Sanitize/check all input (parameters)
-   ***  - Add formats: application/pdf, tei-simple
-   ***  - Use 40x error codes (400 and 404)
-   ***  - Refactor API to use RESTXQ
+   ***  - Implement collections/lists of resources and their filters (e.g. `/texts?q=lex` resulting in a list of texts) - but which format(s)?
    ***  - Make JSON-LD the fundamental output format (encapsulate html/xml in a json field) and diverge only when explicitly asked to do so (really?)
    ***  - Content negotiate X-Forwarded-Host={serverdomain} without subdomain
-   ***  - Error Handling and Logging:
-   ***    - Copy logging method from services/lod/extract.xql
-   ***    - Handle all "else ()" and error <dispatch>es: Print error, request info to log, redirect to homepage, give error message
 :)
 
 (: Get request, session and context information :)
@@ -56,21 +49,7 @@ let $lang               :=  net:lang($exist:path)
    only then comes content negotiation based on HTTP Accept Header (and we do not use file extensions).
    If no (valid) format is given, the format resolves to 'html'
 :)
-let $format             :=  if (lower-case(request:get-parameter("format", "")) = map:keys($config:apiFormats)) then 
-                                let $debug := if ($config:debug = ('trace', 'info')) then console:log('Format requested by parameter: format=' || lower-case(request:get-parameter("format", "")) || '.') else ()
-                                return lower-case(request:get-parameter("format", ""))
-                            else 
-                                let $contentType := net:negotiateContentType($net:servedContentTypes, 'text/html')
-                                let $debug := if ($config:debug = ('trace')) then console:log('Format determined by content type "' || $contentType || '".') else ()
-                                return switch ($contentType)
-                                    case 'application/tei+xml'
-                                    case 'application/xml'
-                                    case 'text/xml'            return 'tei'
-                                    case 'text/plain'          return 'txt'
-                                    case 'application/rdf+xml' return 'rdf'
-                                    case 'image/jpeg'          return 'jpg' (: better 'img', for keeping it more generic ? :)
-                                    case 'application/ld+json' return 'iiif'
-                                    default                    return 'html'
+let $format             :=  net:format()
 
 let $netVars            :=  map  {
                                     "path"          : $exist:path,
@@ -81,8 +60,8 @@ let $netVars            :=  map  {
                                     "lang"          : $lang,
                                     "format"        : $format,
                                     "accept"        : $net:requestedContentTypes,
-                                    "params"        : ( for $p in request:get-parameter-names() return lower-case($p) || "="  || lower-case(request:get-parameter($p, ())) )
-                                 }
+                                    "params"        : ( for $p in request:get-parameter-names() return lower-case($p) || "="  || lower-case(request:get-parameter($p, ())[1]) )
+                                 } (: if there are several params of the same type, the value of the first one wins :)
 let $parameterString    :=  if (count(request:get-parameter-names())) then
                                 "?" || string-join($netVars('params'), '&amp;')
                             else ()
@@ -103,7 +82,6 @@ let $debug              :=  if ($config:debug = "trace") then
 
 (: Here comes the actual routing ... :)
 return
-
 
     (: *** Redirects for special resources (robots.txt, sitemap, void.ttl; specified by resource name *** :)
     if (lower-case($exist:resource) = "robots.txt") then
@@ -137,7 +115,7 @@ return
 
     (: *** API (X-Forwarded-Host='api.{serverdomain}') *** :)
     else if (request:get-header('X-Forwarded-Host') = "api." || $config:serverdomain) then
-        let $debug := if ($config:debug = ("trace", "info")) then console:log("API requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
+        let $debug := if ($config:debug = ("trace", "info")) then console:log("[API] request at: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
         (: We have the following API areas, accessible by path component:
             1. /v1/texts
             a. /v1/search       (Forwards to opensphinxsearch.)
@@ -146,7 +124,7 @@ return
         :)
         let $pathComponents := tokenize(lower-case($exist:path), "/")  (: Since $exist:path starts with a slash, $pathComponents[1] is an empty string :)
          
-        let $debug := if ($config:debug = ("trace")) then console:log("This translates to API version " || $pathComponents[2] || ", endpoint " || $pathComponents[3] || ".") else ()
+        let $debug := if ($config:debug = ("trace")) then console:log("[API] This translates to API version " || $pathComponents[2] || ", endpoint " || $pathComponents[3] || ".") else ()
 
         return if ($pathComponents[3] = $config:apiEndpoints($pathComponents[2])) then  (: Check if we support the requested endpoint/version :)
             switch($pathComponents[3])
@@ -154,18 +132,19 @@ return
                     let $path := substring-after($exist:path, '/texts/')
                     let $textsRequest := net:APIparseTextsRequest($path, $netVars) 
                     return
-                        switch ($textsRequest('format')) 
-                            (: TODO: debug 400/404 redirections :)
-                            case 'tei'  return net:deliverTEI($textsRequest,$netVars)
-                            case 'txt'  return net:deliverTXT($textsRequest,$netVars)
-                            case 'iiif' return net:deliverIIIF($path, $netVars)
-                            default     return net:deliverHTML($pathComponents, $netVars)
-(:
-                            case 'rdf' return net:deliverRDF($pathComponents, $netVars)
-                            case 'iiif' return net:deliverIIIF($exist:path, $netVars) (\: TODO: debug forwarding :\)
-                            case 'jpg' return net:deliverJPG($pathComponents, $netVars)
-                            default return net:deliverHTML($pathComponents, $netVars)
-:)
+                        if ($textsRequest('validation') eq '1') then (: valid request :)
+                            switch ($textsRequest('format')) 
+                                case 'tei'  return net:deliverTEI($textsRequest,$netVars)
+                                case 'txt'  return net:deliverTXT($textsRequest,$netVars)
+                                case 'rdf' return net:deliverRDF($textsRequest, $netVars)
+                                default     return net:deliverHTML($pathComponents, $netVars)
+    (:
+                                case 'iiif' return net:deliverIIIF($exist:path, $netVars) (\: TODO: debug forwarding :\)
+                                case 'jpg' return net:deliverJPG($pathComponents, $netVars)
+                                default return net:deliverHTML($pathComponents, $netVars)
+    :)  
+                        else if ($textsRequest('validation') eq '0') then net:error(404, $netVars, ()) (: resource(s) not found :)
+                        else net:error(400, $netVars, ()) (: -1: malformed request :)
 
 (:
                         case 'tei' return
@@ -245,11 +224,11 @@ return
         let $debug        := if ($config:debug = ("trace", "info")) then console:log("TEI for " || $reqText || " requested: " || $net:forwardedForServername || '/' || $reqText || $parameterString || ".") else ()
         let $updParams    := array:append([$netVars('params')], "format=tei")
         let $parameters   := concat("?", string-join($updParams?*, "&amp;"))
-        return if (starts-with(lower-case($reqText), 'w0')) then 
-            let $debug        := if ($config:debug = ("trace", "info")) then console:log("redirect to tei api: " || $config:apiserver || "/v1/texts/" || replace($reqText, '.xml', '') || $parameters || ".") else ()
-            return net:redirect($config:apiserver || "/v1/texts/" || replace($reqText, '.xml', '') || $parameters, $netVars)
-        else
-            ()
+        return 
+            if (starts-with(lower-case($reqText), 'w0')) then 
+                let $debug        := if ($config:debug = ("trace", "info")) then console:log("redirect to tei api: " || $config:apiserver || "/v1/texts/" || replace($reqText, '.xml', '') || $parameters || ".") else ()
+                return net:redirect($config:apiserver || "/v1/texts/" || replace($reqText, '.xml', '') || $parameters, $netVars)
+            else ()
 
 
     (: *** Iiif Presentation API URI resolver *** :)
@@ -311,24 +290,25 @@ return
                                 case "render.html"
                                 case "renderTheRest.html"
                                 case "render.html"
+                                case "error-page.html"
                                 case "sphinx-admin.html" return
                                      "view-admin.xql"
                                 default return
                                     "view.xql"
         return
-            <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                <forward url="{$exist:controller || substring($exist:path, 4)}"/>
-                <view>
-                    <!-- pass the results through view.xql -->
-                    <forward url="{$exist:controller}/modules/{$viewModule}">
-                        <set-attribute name="lang"              value="{$lang}"/>
-                        <set-attribute name="$exist:resource"   value="{$exist:resource}"/>
-                        <set-attribute name="$exist:prefix"     value="{$exist:prefix}"/>
-                        <set-attribute name="$exist:controller" value="{$exist:controller}"/>
-                    </forward>
-                </view>
-                {config:errorhandler($netVars)}
-            </dispatch>
+                <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                    <forward url="{$exist:controller || substring($exist:path, 4)}"/>
+                    <view>
+                        <!-- pass the results through view.xql -->
+                        <forward url="{$exist:controller}/modules/{$viewModule}">
+                            <set-attribute name="lang"              value="{$lang}"/>
+                            <set-attribute name="$exist:resource"   value="{$exist:resource}"/>
+                            <set-attribute name="$exist:prefix"     value="{$exist:prefix}"/>
+                            <set-attribute name="$exist:controller" value="{$exist:controller}"/>
+                        </forward>
+                    </view>
+                    {config:errorhandler($netVars)}
+                </dispatch>
 
     (: If there is no language path component, redirect to a version of the site where there is one :)
     else if (ends-with($exist:resource, ".html")) then
@@ -388,4 +368,5 @@ return
         let $absolutePath   := concat($config:proto, "://", $net:forwardedForServername, '/', $lang, '/index.html',
                                     if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (),
                                     string-join(net:inject-requestParameter('', ''), '&amp;'))
-        return net:redirect($absolutePath, $netVars)
+(:        return net:redirect($absolutePath, $netVars):)
+        return net:error(404, $netVars, ())

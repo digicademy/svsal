@@ -10,6 +10,7 @@ import module namespace config      = "http://salamanca/config"                 
 import module namespace export      = "http://salamanca/export"                 at "export.xql";
 import module namespace render      = "http://salamanca/render"                 at "render.xql";
 import module namespace iiif        = "http://salamanca/iiif"                   at "iiif.xql";
+import module namespace app        = "http://salamanca/app"    at "app.xql";
 
 declare       namespace exist       = "http://exist.sourceforge.net/NS/exist";
 declare       namespace output      = "http://www.w3.org/2010/xslt-xquery-serialization";
@@ -237,15 +238,17 @@ declare function net:error-page($statusCode as xs:integer, $netVars as map(*), $
                 <cache-control cache="{$net:cache-control}"/>
             </forward>
         </view>
-        <!--<error-handler> 
+    </dispatch>
+    (: 
+    <error-handler> 
             <forward url="{$netVars('controller')}/error-page.html" method="get">
                 <set-attribute name="status-code" value="{xs:string($statusCode)}"/>
             </forward>
             <forward url="{$netVars('controller')}/modules/view-error.xql">
                 <set-attribute name="status-code" value="{xs:string($statusCode)}"/>
             </forward>
-        </error-handler>-->
-    </dispatch>
+        </error-handler>
+    :)
 };
 
 declare function net:redirect-with-400($absolute-path) {  (: 400 :)
@@ -503,22 +506,6 @@ declare function net:sitemapResponse($netVars as map(*)) {
             return $sitemapIndex
 };
 
-(:declare function net:deliverTXT($pathComponents as xs:string*) {
-    
-    let $reqResource    := $pathComponents[last()]
-    let $reqWork        := tokenize(tokenize($reqResource, ':')[1], '\.')[1]
-    let $reqVersion     := if (tokenize(tokenize($reqResource, ':')[1], '\.')[2]) then tokenize(tokenize($reqResource, ':')[1], '\.')[2]
-                           else "edit"
-    let $node           := net:findNode($reqResource)
-    let $dummy          := (util:declare-option("output:method", "text"),
-                            util:declare-option("output:media-type", "text/plain"))
-    let $debug2         := if ($config:debug = "trace") then console:log("Serializing options: method:" || util:get-option('output:method') ||
-                                                                                        ', media-type:' || util:get-option('output:media-type') ||
-                                                                                        '.') else ()
-    let $dummy          := response:set-header("Content-Disposition", 'attachment; filename="' || replace($reqWork, 'w0', 'W0') || '.' || $reqVersion || '.txt"')
-    return render:dispatch($node, $reqVersion)
-};:)
-
 declare function net:deliverTEI($requestData as map(), $netVars as map()*) {
     if (matches($requestData('tei_id'), '^W\d{4}')) then 
         let $serialization  := 
@@ -577,6 +564,28 @@ declare function net:deliverTXT($requestData as map(), $netVars as map()*) {
     else net:error(404, $netVars, 'Resource could not be found.')
 };
 
+declare function net:deliverRDF($requestData as map(), $netVars as map()*) {
+    if (starts-with($requestData('work_id'), 'W0')) then 
+        if (doc-available($config:rdf-root || '/' || $requestData('work_id') || '.rdf')) then
+            let $headers := response:set-header("Content-Disposition", 'attachment; filename="' || $requestData('work_id') || '.rdf"')
+            return doc($config:rdf-root || '/' || $requestData('work_id') || '.rdf')
+        else if (not(app:WRKisPublished(<dummy/>, map{}, $requestData('work_id')))) then (: if there is no full/published text, we can also render rdf on-the-fly :)
+            let $debug := if ($config:debug = ("trace", "info")) then console:log("Generating rdf for " || $requestData('work_id') || " ...") else ()
+            let $path := '/services/lod/extract.xql'
+            let $parameters := 
+                (<exist:add-parameter name="configuration" value="{$config:apiserver || '/xtriples/createConfig.xql?resourceId=' || $requestData('work_id') || '&amp;format=' || $config:lodFormat}"/>,
+                 <exist:add-parameter name="format" value="{$config:lodFormat}"/>)
+            let $headers := response:set-header("Content-Disposition", 'attachment; filename="' || $requestData('work_id') || '.rdf"')
+            return net:forward($path, $netVars, $parameters)
+        else net:error(404, $netVars, 'Could not find rdf resource') (: not automatically creating rdf here if not available, since this might slow down the server inacceptably :)
+    else if ($requestData('work_id') eq '*') then (: rdf of all works doesn't exist atm, redirect to HTML work overview - or rather return error? :)
+        net:redirect-with-307($config:webserver || '/' || $netVars('lang') || '/works.html')
+    else 
+        net:error(404, $netVars, 'Invalid rdf request.')
+};
+
+(: TODO::)
+
 declare function net:deliverIIIF($path as xs:string, $netVars) {
     let $reqResource    := tokenize(tokenize($path, '/iiif/')[last()], '/')[1]
     let $iiif-paras     := string-join(subsequence(tokenize(tokenize($path, '/iiif/')[last()], '/'), 2), '/')
@@ -621,22 +630,6 @@ declare function net:deliverIIIF($requestData as map(), $netVars as map()*) {
     return net:redirect($resolvedURI, $netVars)
 };
 :)
-
-declare function net:deliverRDF($pathComponents as xs:string*, $netVars as map()*) {
-    let $reqResource    := $pathComponents[last()]
-    let $reqWork        := tokenize(tokenize($reqResource, ':')[1], '\.')[1]
-    return  if (replace($reqWork, 'w0', 'W0') || '.rdf' = xmldb:get-child-resources($config:rdf-root) and not("nocache" = request:get-parameter-names())) then
-                let $debug          := if ($config:debug = ("trace", "info")) then console:log("Loading " || replace($reqWork, 'w0', 'W0') || " ...") else ()
-                let $dummy          := response:set-header("Content-Disposition", 'attachment; filename="' || replace($reqWork, 'w0', 'W0') || '.rdf.xml"')
-                return doc( $config:rdf-root || '/' || replace($reqWork, 'w0', 'W0') || '.rdf')
-            else
-                let $debug          := if ($config:debug = ("trace", "info")) then console:log("Generating rdf for " || replace($reqWork, 'w0', 'W0') || " ...") else ()
-                let $path           := '/services/lod/extract.xql'
-                let $parameters     := (<exist:add-parameter name="configuration"   value="{$config:apiserver || '/xtriples/createConfig.xql?resourceId=' || replace($reqWork, 'w0', 'W0') || '&amp;format=' || $config:lodFormat}"/>,
-                                        <exist:add-parameter name="format"          value="{$config:lodFormat}"/>)
-                let $dummy          := response:set-header("Content-Disposition", 'attachment; filename="' || $reqWork || '.rdf.xml"')
-                return net:forward($path, $netVars, $parameters)
-};
 
 declare function net:deliverHTML($pathComponents as xs:string*, $netVars as map()*) {
     let $reqResource  := $pathComponents[last()-1] || "/" || $pathComponents[last()]
@@ -743,7 +736,9 @@ declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()
                     else $resource (: already checked whether available :)
                 else '0'
             let $workId := (: the overarching work's main id, not distinguishing between volumes :)
-                if ($resource != ('0', '-1')) then replace($resource, '_Vol\d\d$', '')
+                if ($resource != ('0', '-1')) then 
+                    if ($teiId eq '*') then '*'
+                    else replace($resource, '_Vol\d\d$', '')
                 else '0'
             let $params :=
                 let $format := $netVars('format') (: or net:format() :)
@@ -769,7 +764,7 @@ declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()
             let $debug := if ($config:debug = ('trace')) then console:log('[API] request data: ' || string-join((for $k in map:keys($requestData) return $k || '=' || map:get($requestData, $k)), ' ; ') || '.') else ()
             return $requestData
             (:  open questions:
-                    - how to deal with illegal params: ignore or error?
+                    - how to deal with illegal params: ignore or error? (currently ignored)
                     - hashtags? (are currently completely ignored here, URL rewriting seems to remove them "automatically")
             :)
 };
