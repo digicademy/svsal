@@ -1049,23 +1049,19 @@ declare %templates:wrap
 
 declare %templates:wrap
     function app:WRKsCorpusDownload ($node as node(), $model as map(*), $lang as xs:string?) {
-    <div>
+    let $corpusDownloadField :=
         <div>
-            <a href="{$config:apiserver || '/v1/texts/all?format=tei'}">
-                <span class="glyphicon glyphicon-download-alt"/>
-                <i18n:text key="download">Download</i18n:text>
-            </a>
-            <span>{' ' || i18n:process(<i18n:text key="corpusVerbTEI"/>, $lang, "/db/apps/salamanca/data/i18n", "en")}</span>
+            <p><i18n:text key="downloadCorpusTitle">Download the complete corpus</i18n:text>:</p>
+            <ul>
+                <li>
+                    <a href="{$config:idserver || '/texts?format=tei'}"><span class="glyphicon glyphicon-download-alt"/>{' '}<i18n:text key="teiFiles">TEI XML</i18n:text></a>
+                </li>
+                <li>
+                    <a href="{$config:idserver || '/texts?format=txt'}"><span class="glyphicon glyphicon-download-alt"/>{' '}<i18n:text key="txtFiles">Plain text (TXT)</i18n:text></a>
+                </li>
+            </ul>
         </div>
-        <div>
-            <a href="{$config:apiserver || '/v1/texts/all?format=txt'}">
-                <span class="glyphicon glyphicon-download-alt"/>
-                <i18n:text key="download">Download</i18n:text>
-            </a>
-            <span>{' ' || i18n:process(<i18n:text key="corpusVerbTXT"/>, $lang, "/db/apps/salamanca/data/i18n", "en")}</span>
-        </div>
-    </div>
-    
+    return i18n:process($corpusDownloadField, $lang, "/db/apps/salamanca/data/i18n", "en")
 };
 
 
@@ -3218,7 +3214,7 @@ declare %templates:default
     let $downloadTXTorig :=  app:downloadTXT($node, $model, 'orig', $lang)
     let $downloadTXTedit :=  app:downloadTXT($node, $model, 'edit', $lang)
     let $downloadRDF     :=  app:downloadRDF($node, $model, $lang)
-    let $downloadCorpus  :=  app:downloadCorpusXML($node, $model, $lang)
+    (:let $downloadCorpus  :=  app:downloadCorpusXML($node, $model, $lang):)
     let $name            :=  app:WRKcombined($node, $model, $wid)
     let $top             :=  'work.html?wid=' || $wid
     let $output := 
@@ -3278,7 +3274,6 @@ declare %templates:default
                                     {$downloadTXTorig}
                                     {$downloadTXTedit}
                                     {$downloadRDF}
-                                    {$downloadCorpus}
                                     <li class="disabled">
                                         <a><span class="glyphicon glyphicon-download-alt text-muted" aria-hidden="true"></span> <span class="text-muted"> PDF</span></a>
                                     </li>
@@ -3522,11 +3517,11 @@ declare function app:downloadTXT($node as node(), $model as map(*), $mode as xs:
     return i18n:process($download, $lang, '/db/apps/salamanca/data/i18n', 'en')
 };
 
-declare function app:downloadCorpusXML($node as node(), $model as map(*), $lang as xs:string) {
+(:declare function app:downloadCorpusXML($node as node(), $model as map(*), $lang as xs:string) {
     let $hoverTitle := i18n:process(<i18n:text key="downloadCorpus">Download corpus of XML sources</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
-    let $download   := <li><a title="{$hoverTitle}" href="{$config:apiserver ||'/v1/texts/all?format=tei'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/> ZIP (XML Corpus)</a></li>
+    let $download   := <li><a title="{$hoverTitle}" href="{$config:idserver ||'/texts?format=tei'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/> ZIP (XML Corpus)</a></li>
     return $download
-};
+};:)
 
 declare function app:downloadRDF($node as node(), $model as map(*), $lang as xs:string) {
     let $wid      :=  request:get-parameter('wid', '')

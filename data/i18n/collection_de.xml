@@ -51,14 +51,15 @@
   <msg key="workvolume">Einzelband</msg>
   <msg key="biblInfo">Bibliographische Angaben</msg>
   <msg key="editionInfo">Digitale Edition</msg>
-  <msg key="corpusVerbTEI">des ganzen Corpus als TEI/XML Dateien</msg>
-  <msg key="corpusVerbTXT">des ganzen Corpus als Plain Text (TXT)</msg>
   <msg key="download">Download </msg>
   <msg key="downloadXML">Download TEI/XML Quelldatei</msg>
   <msg key="downloadTXTEdit">Download als Plaintext (konstituierte Variante)</msg>
   <msg key="downloadTXTOrig">Download als Plaintext (diplomatische Variante)</msg>
-  <msg key="downloadRDF">Download von RDF/XML Daten zu diesem Werk</msg>
+  <msg key="downloadRDF">Download der RDF/XML-Daten zu diesem Werk</msg>
   <msg key="downloadCorpus">Download des Corpus als TEI/XML Dateien</msg>
+  <msg key="downloadCorpusTitle">Download des gesamten Corpus</msg>
+  <msg key="txtFiles">Plain Text (TXT)</msg>
+  <msg key="teiFiles">TEI-XML</msg>
   
   <msg key="workNotAvailable">Dieses Werk ist noch nicht verfügbar.</msg>
   

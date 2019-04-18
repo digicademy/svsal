@@ -136,9 +136,11 @@
     <msg key="ownerPrimaryEd">Biblioteca</msg>
     <msg key="catLink">Enlace en el catálogo</msg>
     <msg key="ownerMaster">Propiedad digital</msg>
-    <msg key="titleReadingViev">Título</msg> 
-    <msg key="corpusVerbTEI">todo el corpus como archivos TEI/XML</msg>
-    <msg key="corpusVerbTXT">todo el corpus como archivos de texto simple (TXT)</msg>
+    <msg key="titleReadingViev">Título</msg>
+    <msg key="downloadCorpusTitle">Descargar el corpus completo</msg>
+    <msg key="txtFiles">Texto simple (TXT)</msg>
+    <msg key="teiFiles">TEI XML</msg>
+    
     <msg key="worksNotice">La colección digital de fuentes del proyecto "La Escuela de Salamanca" 
         incluye 116 obras en total, que se publicarán sucesivamente en esta página. 
         Para este fin, los textos están codificados por medio de las especificaciones 
