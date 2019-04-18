@@ -2181,7 +2181,7 @@ declare function app:WRKadditionalInfoRecord($node as node(), $model as map(*), 
             </ul>
         </div>
         
-    let $teiHeader := $config:apiserver || '/v1/texts/' || $workId || '?format=tei&amp;mode=meta'
+    let $teiHeader := $config:idserver || '/texts/' || $workId || '?format=tei&amp;mode=meta'
     let $teiHeaderLink :=   <a href="{$teiHeader}">
                                 <i18n:text key="teiHeader">TEI Header</i18n:text>
                             </a>
@@ -2194,7 +2194,7 @@ declare function app:WRKadditionalInfoRecord($node as node(), $model as map(*), 
                             IIIF Manifest
                         </a>
     let $rdfId := if ($workType eq 'work_volume') then substring-before($workId, '_Vol') (: redirecting to RDF dataset for the complete work :) else $workId
-    let $rdfLink := <a href="{$config:apiserver || '/v1/texts/' || $rdfId ||'?format=rdf'}">RDF</a>
+    let $rdfLink := <a href="{$config:idserver || '/texts/' || $rdfId ||'?format=rdf'}">RDF</a>
     let $metadata :=
         <div>
             <h4><i18n:text key="metadata">Metadata</i18n:text></h4>
@@ -2211,12 +2211,12 @@ declare function app:WRKadditionalInfoRecord($node as node(), $model as map(*), 
                                 <hr/>
                                 <h4><i18n:text key="download">Metadata</i18n:text></h4>
                                 <ul>
-                                    <li><a href="{$config:apiserver || '/v1/texts/' || $workId ||'?format=tei'}">XML (TEI P5)</a></li>
-                                    <li><a href="{$config:apiserver || '/v1/texts/' || $workId ||'.edit?format=txt'}">
+                                    <li><a href="{$config:idserver || '/texts/' || $workId ||'?format=tei'}">XML (TEI P5)</a></li>
+                                    <li><a href="{$config:idserver || '/texts/' || $workId ||'.edit?format=txt'}">
                                             <i18n:text key="text">Text</i18n:text> (<i18n:text key="constitutedLower">constituted</i18n:text>)
                                         </a>
                                     </li>
-                                    <li><a href="{$config:apiserver || '/v1/texts/' || $workId ||'.orig?format=txt'}">
+                                    <li><a href="{$config:idserver || '/texts/' || $workId ||'.orig?format=txt'}">
                                             <i18n:text key="text">Text</i18n:text> (<i18n:text key="diplomaticLower">diplomatic</i18n:text>)
                                         </a>
                                     </li>
@@ -3507,7 +3507,7 @@ declare function app:downloadXML($node as node(), $model as map(*), $lang as xs:
     let $wid      :=  request:get-parameter('wid', '')
     let $hoverTitle := i18n:process(<i18n:text key="downloadXML">Download TEI/XML source file</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
     let $download := 
-        if ($wid) then <li><a title="{$hoverTitle}" href="{$config:apiserver || '/v1/texts/' || $wid ||'?format=tei'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;TEI/XML</a></li>
+        if ($wid) then <li><a title="{$hoverTitle}" href="{$config:idserver || '/texts/' || $wid ||'?format=tei'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;TEI/XML</a></li>
         (:else if ($model('currentLemma'))  then <li><a title="{$hoverTitle}" href="{$config:teiserver || '/' || $model('currentLemma')/@xml:id}.xml">TEI/XML</a></li>
         else if ($model('currentAuthor')) then <li><a title="{$hoverTitle}" href="{$config:teiserver || '/' || $model('currentAuthor')/@xml:id}.xml">TEI/XML</a></li>:)
         else()
@@ -3520,8 +3520,8 @@ declare function app:downloadTXT($node as node(), $model as map(*), $mode as xs:
     let $hoverTitleOrig := i18n:process(<i18n:text key="downloadTXTOrig">Download as plaintext (diplomatic variant)</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
     
     let $download := 
-             if ($wid and ($mode eq 'edit'))                    then <li><a title="{$hoverTitleEdit}" href="{$config:apiserver || '/v1/texts/' || $wid ||'.edit?format=txt'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;TXT (<i18n:text key="constitutedLower">constituted</i18n:text>)</a></li>
-             else if ($wid and ($mode eq 'orig'))               then <li><a title="{$hoverTitleOrig}" href="{$config:apiserver || '/v1/texts/' || $wid ||'.orig?format=txt'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;TXT (<i18n:text key="diplomaticLower">diplomatic</i18n:text>)</a></li>
+             if ($wid and ($mode eq 'edit'))                    then <li><a title="{$hoverTitleEdit}" href="{$config:idserver || '/texts/' || $wid ||'?format=txt&amp;mode=edit'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;TXT (<i18n:text key="constitutedLower">constituted</i18n:text>)</a></li>
+             else if ($wid and ($mode eq 'orig'))               then <li><a title="{$hoverTitleOrig}" href="{$config:idserver || '/texts/' || $wid ||'?format=txt&amp;mode=orig'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;TXT (<i18n:text key="diplomaticLower">diplomatic</i18n:text>)</a></li>
         else()
     return i18n:process($download, $lang, '/db/apps/salamanca/data/i18n', 'en')
 };
@@ -3536,7 +3536,7 @@ declare function app:downloadRDF($node as node(), $model as map(*), $lang as xs:
     let $wid      :=  request:get-parameter('wid', '')
     let $hoverTitle := i18n:process(<i18n:text key="downloadRDF">Download RDF/XML data for this work</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
     let $download := 
-        if ($wid) then <li><a title="{$hoverTitle}" href="{$config:apiserver || '/v1/texts/' || $wid || '?format=rdf'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;RDF/XML</a></li>
+        if ($wid) then <li><a title="{$hoverTitle}" href="{$config:idserver || '/texts/' || $wid || '?format=rdf'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;RDF/XML</a></li>
         (:else if ($model('currentLemma'))  then <li><a title="{$hoverTitle}" href="{$config:dataserver || '/lemmata.' || $model('currentLemma')/@xml:id}.rdf">RDF/XML</a></li>
         else if ($model('currentAuthor')) then <li><a title="{$hoverTitle}" href="{$config:dataserver || '/authors.' || $model('currentAuthor')/@xml:id}.rdf">RDF/XML</a></li>:)
         else()
