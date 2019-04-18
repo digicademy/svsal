@@ -47,7 +47,7 @@ declare variable $config:apiEndpoints   := map  {
 (: a table of valid API parameters and values, structured by the 'format' parameter's values; 
     if there is no explicite value stated for a parameter (such as 'q'), the parameter may have any string value :)
 declare variable $config:apiFormats := map {
-                                                'html': ('mode=edit', 'mode=orig', 'q', 'lang=de', 'lang=en', 'lang=es', 'viewer'),
+                                                'html': ('mode=edit', 'mode=orig', 'mode=meta', 'q', 'lang=de', 'lang=en', 'lang=es', 'viewer'),
                                                 'iiif': ('canvas'),
                                                 'jpg': (),
                                                 'rdf': (),
@@ -339,7 +339,7 @@ declare function config:app-header($node as node(), $model as map(*), $lang as x
                 <li class="{if ( (contains(request:get-url(), 'workingPaper.')) or
                                  (contains(request:get-url(), 'workingPapers.'))) then 'active' else ()}">
                     <a href="{$config:webserver || '/' || $lang || '/workingPapers.html'}">
-                    <i class="fa fa-pencil-alt" aria-hidden="true"></i>&#160;
+                    <i class="fas fa-pencil-alt" aria-hidden="true"></i>&#160;
                     <i18n:text key="workingPapers">Working Papers</i18n:text></a></li>
                 <li class="{if ( (contains(request:get-url(), 'search.'))       ) then 'active' else ()}">
                     <a href="{$config:webserver || '/' || $lang || '/search.html'}">
@@ -464,7 +464,7 @@ declare %templates:wrap
     function config:langWorkingPapers($node as node(), $model as map(*), $lang as xs:string) as element() {
     let $output := 
         <a  href="workingPapers.html">
-            <i class="fa fa-pencil-alt" aria-hidden="true"></i>&#160;<i18n:text key="workingPapers">Working Papers</i18n:text>
+            <i class="fas fa-pencil-alt" aria-hidden="true"></i>&#160;<i18n:text key="workingPapers">Working Papers</i18n:text>
         </a>
     return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))};  
 
