@@ -2,10 +2,15 @@ module namespace i18n = 'http://exist-db.org/xquery/i18n';
 
 declare namespace request="http://exist-db.org/xquery/request"; 
 (:~
-    : I18N Internationalization Module
+    : I18N Internationalization Module:
     
     : @author Lars Windauer <lars.windauer@betterform.de>
     : @author Tobias Krebs <tobi.krebs@betterform.de>
+    
+    : SvSal extensions:
+    
+    : @author David Glück
+    : @author Andreas Wagner
 :)
 
 (:~
@@ -209,16 +214,14 @@ declare function i18n:getSelectedLanguage($node as node()*,$selectedLang as xs:s
 };
 
 (: Consumes a date in standardized format (YYYY-MM-DD) and converts it to either German, English, or Spanish. 
-@param $date    the date string, in standardized format (YYYY-MM-DD)
-@param $lang    the language to convert the date to (either "de", "en", "es")
-@param $mode    the mode/format of the resulting date; this may either be "numeric" (which yields 
-                a numeric date in the format "DD.MM.YYYY") or verbose (which results in verbose month names, e.g. "January")
-@return         the converted date as a string
-@author         David Glück
+: @param $date    the date string, in standardized format (YYYY-MM-DD)
+: @param $lang    the language to convert the date to (either "de", "en", "es")
+: @param $mode    the mode/format of the resulting date; this may either be "numeric" (which yields 
+:                 a numeric date in the format "DD.MM.YYYY") or verbose (which results in verbose month names, e.g. "January")
+: @return         the converted date as a string
 :)
 declare function i18n:convertDate($date as xs:string, $lang as xs:string, $mode) as xs:string {
     let $dateFormat := if (matches($date, '[0-9]{4}-[0-9]{2}-[0-9]{2}')) then xs:date($date) else ()
-    
     let $convertedDate :=
         if ($mode eq 'verbose') then
             if ($lang eq 'de') then format-date($dateFormat, "[D]. [MNn] [Y]", "de", (), ())
@@ -237,5 +240,31 @@ declare function i18n:convertDate($date as xs:string, $lang as xs:string, $mode)
             else ()
         else ()
     return $convertedDate
+};
+
+(: Based on a given sequence of nodes with different @xml:lang, decides which node aligns best with a given language. 
+: Currently optimized only for English-German-Spanish.
+: @param lang: the language for which to choose the respective node
+: @param nodes: the sequence of nodes from which to select the proper node
+: @return: the negotiated node, or the empty sequence if no proper node could be found
+:)
+declare function i18n:negotiateNodes($nodes as node()*, $lang as xs:string) as node()? {
+    if (count($nodes) le 1) then $nodes
+    else if ($nodes[@xml:lang eq $lang]) then $nodes[@xml:lang eq $lang][1]
+    else
+        if ($lang eq 'de') then
+            if ($nodes[@xml:lang eq 'en']) then $nodes[@xml:lang eq 'en'][1]
+            else if ($nodes[@xml:lang eq 'de']) then $nodes[@xml:lang eq 'de'][1]
+            else $nodes[1]
+        else if ($lang eq 'en') then 
+            (: preferring Spanish over German as best substitute for English due to larger diaspora :)
+            if ($nodes[@xml:lang eq 'es']) then $nodes[@xml:lang eq 'es'][1] 
+            else if ($nodes[@xml:lang eq 'de']) then $nodes[@xml:lang eq 'de'][1]
+            else $nodes[1]
+        else if ($lang eq 'es') then 
+            if ($nodes[@xml:lang eq 'en']) then $nodes[@xml:lang eq 'en'][1] 
+            else if ($nodes[@xml:lang eq 'de']) then $nodes[@xml:lang eq 'de'][1]
+            else $nodes[1]
+        else $nodes[1]
 };
 

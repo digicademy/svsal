@@ -2248,7 +2248,7 @@ declare function app:WRKcatRecordTeaser($node as node(), $model as map(*), $wid 
     let $teaserText :=
         if ($teiHeader) then
             let $digital := app:WRKeditionMetadata($node, $model, $wid)
-            let $bibliographical := app:WRKprintMetadata($node, $model, $wid)
+            let $bibliographical := app:WRKprintMetadata($node, $model, $wid, $lang)
             let $titleShort := $digital?('titleShort')
             let $volumeString := $bibliographical?('volumeNumber') || ' of ' || string($volumes)
             let $pubDate :=     if ($digital?('published') eq 'true') then
@@ -2526,7 +2526,7 @@ declare function app:WRKbibliographicalRecord($node as node(), $model as map(*),
 :)
     let $workType := $model('currentWork')/tei:text/@type/string()
     let $workId := $model('currentWork')/@xml:id/string()
-    let $bibliographical := app:WRKprintMetadata($node, $model, $workId)
+    let $bibliographical := app:WRKprintMetadata($node, $model, $workId, $lang)
     (: layout specs :)
     let $col1-width := 'col-md-3'
     let $col2-width := 'col-md-9'
@@ -2579,11 +2579,13 @@ declare function app:WRKbibliographicalRecord($node as node(), $model as map(*),
                         else ()
     
     let $title := $bibliographical?('titleMain')
-    let $extent := if ($workType eq 'work_multivolume') then () else (: no extent for mv works :)
-        <tr>
-            <td class="{$col1-width}" style="line-height: 1.2"><i18n:text key="extent">Extent</i18n:text>:</td>
-            <td class="{$col2-width}" style="line-height: 1.2">{$bibliographical?('extent')}</td>
-        </tr>
+    let $extent := 
+        if ($workType eq 'work_multivolume') then () 
+        else (: no extent for mv works :)
+            <tr>
+                <td class="{$col1-width}" style="line-height: 1.2"><i18n:text key="extent">Extent</i18n:text>:</td>
+                <td class="{$col2-width}" style="line-height: 1.2">{$bibliographical?('extent')}</td>
+            </tr>
     
     let $bibliographicalRecord :=
         <table class="borderless table table-hover">
@@ -2617,11 +2619,12 @@ declare function app:WRKbibliographicalRecord($node as node(), $model as map(*),
 (:~ 
 Bundles the bibliographical data of a (print) source.
 ~:)
-declare function app:WRKprintMetadata($node as node(), $model as map(*), $wid as xs:string?) as map(*)? {
-    let $tei := if ($wid eq $model('currentWork')/@xml:id) then $model('currentWork')
-                else if (doc-available($config:tei-works-root || '/' || $wid || '.xml')) then 
-                    doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI
-                else ()
+declare function app:WRKprintMetadata($node as node(), $model as map(*), $wid as xs:string?, $lang as xs:string?) as map(*)? {
+    let $tei := 
+        if ($wid eq $model('currentWork')/@xml:id) then $model('currentWork')
+        else if (doc-available($config:tei-works-root || '/' || $wid || '.xml')) then 
+            doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI
+        else ()
     let $workId := $tei/@xml:id
     let $type := $tei/tei:text/@type
     let $sourceDesc := $tei/tei:teiHeader/tei:fileDesc/tei:sourceDesc
@@ -2629,16 +2632,20 @@ declare function app:WRKprintMetadata($node as node(), $model as map(*), $wid as
     let $titleMain := $sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'main']/string()
     let $titleShort := $sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'short']/string()
     let $author := app:rotateFormatName($sourceDesc//tei:author/tei:persName)
-    let $pubSpan := if ($sourceDesc//tei:date[@type eq 'summaryThisEd']) then $sourceDesc//tei:date[@type eq 'summaryThisEd']/text()
-                            else if ($sourceDesc//tei:date[@type eq 'summaryFirstEd']) then $sourceDesc//tei:date[@type eq 'summaryFirstEd']/text()
-                            else ()
-    let $pubYear := if ($sourceDesc//tei:date[@type eq 'thisEd']) then $sourceDesc//tei:date[@type eq 'thisEd']/@when/string()
-                    else if ($sourceDesc//tei:date[@type eq 'firstEd']) then $sourceDesc//tei:date[@type eq 'firstEd']/@when/string()
-                    else ()
-    let $publisher :=   if ($sourceDesc//tei:publisher[@n eq 'thisEd']) then app:rotateFormatName($sourceDesc//tei:publisher[@n eq 'thisEd']/tei:persName)
-                        else app:rotateFormatName($sourceDesc//tei:publisher[@n eq 'firstEd']/tei:persName)
-    let $pubPlace :=    if ($sourceDesc//tei:pubPlace[@role eq 'thisEd']) then $sourceDesc//tei:pubPlace[@role eq 'thisEd']/@key/string()
-                        else $sourceDesc//tei:pubPlace[@role eq 'firstEd']/@key/string()
+    let $pubSpan := 
+        if ($sourceDesc//tei:date[@type eq 'summaryThisEd']) then $sourceDesc//tei:date[@type eq 'summaryThisEd']/text()
+        else if ($sourceDesc//tei:date[@type eq 'summaryFirstEd']) then $sourceDesc//tei:date[@type eq 'summaryFirstEd']/text()
+        else ()
+    let $pubYear := 
+        if ($sourceDesc//tei:date[@type eq 'thisEd']) then $sourceDesc//tei:date[@type eq 'thisEd']/@when/string()
+        else if ($sourceDesc//tei:date[@type eq 'firstEd']) then $sourceDesc//tei:date[@type eq 'firstEd']/@when/string()
+        else ()
+    let $publisher :=
+        if ($sourceDesc//tei:publisher[@n eq 'thisEd']) then app:rotateFormatName($sourceDesc//tei:publisher[@n eq 'thisEd']/tei:persName)
+        else app:rotateFormatName($sourceDesc//tei:publisher[@n eq 'firstEd']/tei:persName)
+    let $pubPlace :=    
+        if ($sourceDesc//tei:pubPlace[@role eq 'thisEd']) then $sourceDesc//tei:pubPlace[@role eq 'thisEd']/@key/string()
+        else $sourceDesc//tei:pubPlace[@role eq 'firstEd']/@key/string()
     let $volumeNumber := if ($type eq 'work_volume') then $sourceDesc//tei:series/tei:biblScope/@n/string() else ()
     let $volumeTitle := if ($type eq 'work_volume') then $sourceDesc//tei:monogr/tei:title[@type ='volume']/text() else ()
     let $totalVolumes := string(count(doc($config:tei-works-root || '/' || substring-before($workId, '_Vol') || '.xml')
@@ -2653,11 +2660,13 @@ declare function app:WRKprintMetadata($node as node(), $model as map(*), $wid as
             return $printingPlaceFirst || ' : ' || $publisherFirst || ', ' || $dateFirst
         else ()
     (: catalogue link for the print source: if there are several original sources, state only the main source :)
-    let $library := if (count($sourceDesc//tei:msDesc) gt 1) then $sourceDesc//tei:msDesc[@type eq 'main']//tei:repository/text() 
-                    else $sourceDesc//tei:msDesc//tei:repository/text()
-    let $catLink  := if (count($sourceDesc//tei:msDesc) gt 1) then $sourceDesc//tei:msDesc[@type eq 'main']//tei:idno[@type eq 'catlink']/text()
-                     else $sourceDesc//tei:msDesc//tei:idno[@type eq 'catlink']/text()
-    let $extent := if ($type eq 'work_multivolume') then () else $sourceDesc/tei:biblStruct/tei:monogr/tei:extent/text()
+    let $library := 
+        if (count($sourceDesc//tei:msDesc) gt 1) then $sourceDesc//tei:msDesc[@type eq 'main']//tei:repository/text() 
+        else $sourceDesc//tei:msDesc//tei:repository/text()
+    let $catLink  := 
+        if (count($sourceDesc//tei:msDesc) gt 1) then $sourceDesc//tei:msDesc[@type eq 'main']//tei:idno[@type eq 'catlink']/text()
+        else $sourceDesc//tei:msDesc//tei:idno[@type eq 'catlink']/text()
+    let $extent := if ($type eq 'work_multivolume') then () else i18n:negotiateNodes($sourceDesc/tei:biblStruct/tei:monogr/tei:extent, $lang)/text()
     let $status := $tei/tei:teiHeader//tei:revisionDesc/@status/string()         
     return 
         map {
