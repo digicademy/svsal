@@ -254,7 +254,7 @@ declare function i18n:negotiateNodes($nodes as node()*, $lang as xs:string) as n
     else
         if ($lang eq 'de') then
             if ($nodes[@xml:lang eq 'en']) then $nodes[@xml:lang eq 'en'][1]
-            else if ($nodes[@xml:lang eq 'de']) then $nodes[@xml:lang eq 'de'][1]
+            else if ($nodes[@xml:lang eq 'es']) then $nodes[@xml:lang eq 'es'][1]
             else $nodes[1]
         else if ($lang eq 'en') then 
             (: preferring Spanish over German as best substitute for English due to larger diaspora :)
