@@ -1064,6 +1064,15 @@ declare %templates:wrap
     return i18n:process($corpusDownloadField, $lang, "/db/apps/salamanca/data/i18n", "en")
 };
 
+declare %templates:wrap
+    function app:WRKsList ($node as node(), $model as map(*), $lang as xs:string?) {
+    let $corpusDownloadField :=
+        <div>
+            <p><a href="sources.html"><span class="fas fa-list" aria-hidden="true"/>{' '}<i18n:text key="listOfSources">List of all sources</i18n:text></a></p>
+        </div>
+    return i18n:process($corpusDownloadField, $lang, "/db/apps/salamanca/data/i18n", "en")
+};
+
 
 (: ====================== End  List functions ========================== :)
 
@@ -2796,28 +2805,26 @@ declare function app:contactEMailHTML($node as node(), $model as map(*)) {
 
 declare function app:guidelines($node as node(), $model as map(*), $lang as xs:string) {
 (:        let $store-lang := session:set-attribute("lang", $lang):)
-       
-        if ($lang eq 'de')  then
-        let $parameters :=  <parameters>
-                                <param name="exist:stop-on-warn" value="yes"/>
-                                <param name="exist:stop-on-error" value="yes"/>
-                                <param name="language" value="de"></param>
-                            </parameters>
-            return transform:transform(doc($config:tei-meta-root || "/works-general.xml")/tei:TEI//tei:div[@xml:id='guidelines-de'], doc(($config:app-root || "/resources/xsl/guidelines.xsl")), $parameters)
-        else if  ($lang eq 'en')  then 
-        let $parameters :=  <parameters>
-                                <param name="exist:stop-on-warn" value="yes"/>
-                                <param name="exist:stop-on-error" value="yes"/>
-                                <param name="language" value="en"></param>
-                            </parameters>
-            return transform:transform(doc($config:tei-meta-root || "/works-general.xml")/tei:TEI//tei:div[@xml:id='guidelines-en'], doc(($config:app-root || "/resources/xsl/guidelines.xsl")), $parameters)
-        else if  ($lang eq 'es')  then
-        let $parameters :=  <parameters>
-                                <param name="exist:stop-on-warn" value="yes"/>
-                                <param name="exist:stop-on-error" value="yes"/>
-                                <param name="language" value="es"></param>
-                            </parameters>
-            return transform:transform(doc($config:tei-meta-root || "/works-general.xml")/tei:TEI//tei:div[@xml:id='guidelines-es'], doc(($config:app-root || "/resources/xsl/guidelines.xsl")), $parameters)
+        if ($lang = ('de', 'en', 'es'))  then
+            let $guidelinesId := 'guidelines-' || $lang
+            let $parameters :=  <parameters>
+                                    <param name="exist:stop-on-warn" value="yes"/>
+                                    <param name="exist:stop-on-error" value="yes"/>
+                                    <param name="language" value="{$lang}"></param>
+                                </parameters>
+            return transform:transform(doc($config:tei-meta-root || "/works-general.xml")/tei:TEI//tei:div[@xml:id eq $guidelinesId], doc(($config:app-root || "/resources/xsl/guidelines.xsl")), $parameters)
+        else()
+};
+
+declare function app:worksList($node as node(), $model as map(*), $lang as xs:string) {
+(:        let $store-lang := session:set-attribute("lang", $lang):)
+        if ($lang = ('de', 'en', 'es') and doc-available($config:tei-meta-root || "/works-list.xml"))  then
+            let $parameters :=  <parameters>
+                                    <param name="exist:stop-on-warn" value="yes"/>
+                                    <param name="exist:stop-on-error" value="yes"/>
+                                    <param name="language" value="{$lang}"/>
+                                </parameters>
+            return transform:transform(doc($config:tei-meta-root || "/works-list.xml")/tei:TEI/tei:text, doc(($config:app-root || "/resources/xsl/worksList.xsl")), $parameters)
         else()
 };
 
@@ -3173,6 +3180,20 @@ declare
             transform:transform(doc($config:tei-meta-root || "/works-general.xml")/tei:TEI//tei:div[@xml:id='guidelines-en'], doc(($config:app-root || "/resources/xsl/guidelines.xsl")), $parameters)
         else if  ($lang eq 'es')  then
             transform:transform(doc($config:tei-meta-root || "/works-general.xml")/tei:TEI//tei:div[@xml:id='guidelines-es'], doc(($config:app-root || "/resources/xsl/guidelines.xsl")), $parameters)
+        else()
+};
+
+declare function app:tocWorksList($node as node(), $model as map(*), $lang as xs:string) {
+(:        let $store-lang := session:set-attribute("lang", $lang):)
+       
+        let $parameters :=  <parameters>
+                                <param name="exist:stop-on-warn" value="yes"/>
+                                <param name="exist:stop-on-error" value="yes"/>
+                                <param name="modus" value="toc" />
+                                <param name="language" value="{$lang}"/>
+                            </parameters>
+        return  if ($lang = ('de', 'en', 'es') and doc-available($config:tei-meta-root || "/works-list.xml"))  then
+            transform:transform(doc($config:tei-meta-root || "/works-list.xml")/tei:TEI/tei:text, doc(($config:app-root || "/resources/xsl/worksList.xsl")), $parameters)
         else()
 };
  

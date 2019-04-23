@@ -327,12 +327,18 @@
   <msg key="of">of</msg>
   
   <!-- Mirador -->
-  <msg key="worksList">Works List</msg>
+  <msg key="worksList">List of Works</msg>
   <msg key="catalogueRecord">Catalogue Record</msg>
   
   <!-- Error handling -->
   <msg key="error">Error</msg>
   <msg key="pageNotFound">This is not the page you were looking for...</msg>
   <msg key="bugMessage">In case you found a bug on our webpages, please let us know at</msg>
+  
+  <!-- worksList.html -->
+  <msg key="worksListOverview">List of Sources in the Digital Collection</msg>
+  <msg key="furtherInformationTitle">Further Information</msg>
+  <msg key="listOfSources">List of all sources</msg>
+  
   
 </catalogue>

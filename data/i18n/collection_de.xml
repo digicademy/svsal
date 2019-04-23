@@ -163,4 +163,9 @@
   <msg key="pageNotFound">Seite nicht gefunden...</msg>
   <msg key="bugMessage">Falls Sie einen Fehler auf unserer Webseite gefunden haben, informieren Sie uns bitte unter</msg>
   
+  <!-- worksList.html -->
+  <msg key="worksListOverview">Liste der Quellen in der Digitalen Quellensammlung</msg>
+  <msg key="furtherInformationTitle">Weitere Informationen</msg>
+  <msg key="listOfSources">Liste aller Quellen</msg>
+  
 </catalogue>

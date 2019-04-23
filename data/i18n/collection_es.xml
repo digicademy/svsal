@@ -340,6 +340,11 @@
     <msg key="error">Error</msg>
     <msg key="pageNotFound">Esta no es la página que está buscando...</msg>
     <msg key="bugMessage">Si encuentra un error en nuestra página, por favor infórmenos al</msg>
+   
+   <!-- worksList.html -->
+  <msg key="worksListOverview">Lista de Fuentes en la Colección Digital</msg>
+  <msg key="furtherInformationTitle">Información adicional</msg>
+    <msg key="listOfSources">Lista de todas las fuentes</msg>
     
     
 </catalogue>
