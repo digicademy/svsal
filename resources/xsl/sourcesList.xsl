@@ -2,7 +2,7 @@
     <xsl:output method="html"/>
     <xsl:param name="modus"/>
     <xsl:param name="language"/>
-
+    
     <!-- Root -->
     <xsl:template match="/">
         <xsl:choose>
@@ -46,7 +46,7 @@
     </xsl:template>
     
     <xsl:template match="bibl">
-        <p class="lead" style="text-align: justify" title="{@xml:id}">
+        <p class="lead" style="text-align: justify" title="{substring-after(@corresp, 'work:')}">
             <xsl:apply-templates/>
         </p>
     </xsl:template>
@@ -54,7 +54,7 @@
     <xsl:template match="author|persName|title|pubPlace|date">
         <xsl:apply-templates/>
     </xsl:template>
-        
+    
     <xsl:template match="ref">
         <a href="{@target}">
             <xsl:apply-templates/>
