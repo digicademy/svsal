@@ -553,7 +553,7 @@ declare %templates:wrap
     function config:langSources($node as node(), $model as map(*), $lang as xs:string) as element()  {
     let $output :=
             <a target="blank" href="sources.html">
-               <i class="fas fa-list" aria-hidden="true"></i>&#160;<i18n:text key="worksListOverview">List of Sources in the Digital Collection</i18n:text>
+               <i class="fas fa-th-list" aria-hidden="true"></i>&#160;<i18n:text key="worksListOverview">List of Sources in the Digital Collection</i18n:text>
             </a>
     return 
         i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))

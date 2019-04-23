@@ -724,9 +724,10 @@ border:none
  * - fa fa-cogs
  * - far fa-copyright
  * - fa fa-download
- * - far fa-envelope
+ * - far fa-envelope (contact)
  * - fas fa-book-open
  * - fa fa-file-alt
+ * - fa fa-file (legacy works icon, Mirador)
  * - fa fa-group
  * - far fa-hand-pointer-right
  * - fa fa-info-circle
@@ -739,8 +740,8 @@ border:none
  * - fa fa-share
  * - fa fa-spinner
  * - fa fa-spin
- * - fa fa-th-list
- * - fa fa-university
+ * - fa fa-th-list (sources list)
+ * - fa fa-university (Academy/project)
  * - fa fa-window-close
  * 
  * GLYPHICON:
@@ -753,7 +754,7 @@ border:none
  * - glyphicon-download-alt
  * - glyphicon-edit
  * - glyphicon-eye-open
- * - glyphicon-file
+ * - glyphicon-file (works icon)
  * - glyphicon-flag
  * - glyphicon-hand-right
  * - glyphicon-leaf

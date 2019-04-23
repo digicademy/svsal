@@ -1068,7 +1068,7 @@ declare %templates:wrap
     function app:WRKsList ($node as node(), $model as map(*), $lang as xs:string?) {
     let $corpusDownloadField :=
         <div>
-            <p><a href="sources.html"><span class="fas fa-list" aria-hidden="true"/>{' '}<i18n:text key="listOfSources">List of all sources</i18n:text></a></p>
+            <p><a href="sources.html"><span class="fas fa-th-list" aria-hidden="true"/>{' '}<i18n:text key="listOfSources">List of all sources</i18n:text></a></p>
         </div>
     return i18n:process($corpusDownloadField, $lang, "/db/apps/salamanca/data/i18n", "en")
 };
