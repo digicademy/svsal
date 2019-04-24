@@ -25,9 +25,10 @@ declare option output:omit-xml-declaration "no";
 declare option output:encoding      "utf-8";
 
 (: *** Todo (especially in api):
+   ***  - API landing page / default return values (depending on formats)? - currently simply redirecting to www.s.s
    ***  - Add 'meta' endpoint with json-ld, (mets/mods)
    ***  - Add iiif endpoints (not really working atm)
-   ***  - Add passage identifiers to filenames on downloads
+   ***  - Add passage identifiers to filenames on downloads (see deliverTXT, e.g.)
    ***  - Why are no hashes handled? Some are needed but lost. (http://bla.com/bla/bla.html?bla<#THISHERE!>)
    ***  - Implement collections/lists of resources and their filters (e.g. `/texts?q=lex` resulting in a list of texts) - but which format(s)?
    ***  - Make JSON-LD the fundamental output format (encapsulate html/xml in a json field) and diverge only when explicitly asked to do so (really?)
@@ -129,6 +130,7 @@ return
         return if ($pathComponents[3] = $config:apiEndpoints($pathComponents[2])) then  (: Check if we support the requested endpoint/version :)
             switch($pathComponents[3])
                 case "texts" return
+                
                     let $path := substring-after($exist:path, '/texts/')
                     let $textsRequest := net:APIparseTextsRequest($path, $netVars) 
                     return
@@ -206,9 +208,10 @@ return
                     if (tokenize($pathComponents[last()], '\?')[1] = ("extract.xql", "createconfig.xql", "xtriples.html", "changelog.html", "documentation.html", "examples.html")) then
                         let $debug := if ($config:debug = ("trace", "info")) then console:log("Forward to: /services/lod/" || tokenize($exist:path, "/")[last()]  || ".") else ()
                         return net:forward('/services/lod/' || tokenize($exist:path, "/")[last()], $netVars)
-                    else ()
-            default return ()
-        else ()
+                    else net:error(404, $netVars, ())
+            default return net:error(404, $netVars, ())
+        else if ($pathComponents[3]) then net:error(400, $netVars, ())
+        else net:redirect-with-303($config:webserver)
 
 
     (: *** Entity resolver (X-Forwarded-Host = 'id.{$config:serverdomain}') *** :)
@@ -228,7 +231,7 @@ return
             if (starts-with(lower-case($reqText), 'w0')) then 
                 let $debug        := if ($config:debug = ("trace", "info")) then console:log("redirect to tei api: " || $config:apiserver || "/v1/texts/" || replace($reqText, '.xml', '') || $parameters || ".") else ()
                 return net:redirect($config:apiserver || "/v1/texts/" || replace($reqText, '.xml', '') || $parameters, $netVars)
-            else ()
+            else net:error(404, $netVars, ())
 
 
     (: *** Iiif Presentation API URI resolver *** :)
@@ -277,38 +280,39 @@ return
                 let $debug          := if ($config:debug = ("trace", "info")) then console:log("File download requested: " || $net:forwardedForServername || $exist:path || $parameterString || ", redirecting to " || $finalPath || '?' || string-join($netVars('params'), '&amp;') || ".") else ()
                 return net:forward($finalPath, $netVars)
 
-    (: HTML files should hava a path component - we parse that and put view.xql in control :)
+    (: HTML files should have a path component - we parse that and put view.xql in control :)
     else if (ends-with($exist:resource, ".html") and substring($exist:path, 1, 4) = ("/de/", "/en/", "/es/")) then
         let $debug          := if ($config:debug = "info")  then console:log ("HTML requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
         let $debug          := if ($config:debug = "trace") then console:log ("HTML requested, translating language path component to a request attribute - $exist:path: " || $exist:path || ", redirect to: " || $exist:controller || substring($exist:path, 4) || ", parameters: [" || string-join(net:inject-requestParameter((), ()), "&amp;") || "], attributes: [].") else ()
         (: For now, we don't use net:forward here since we need a nested view/forwarding. :)
-        let $viewModule     := switch ($exist:resource)
-                                case "admin.html"
-                                case "corpus-admin.html"
-                                case "createLists.html"
-                                case "iiif-admin.html"
-                                case "render.html"
-                                case "renderTheRest.html"
-                                case "render.html"
-                                case "error-page.html"
-                                case "sphinx-admin.html" return
-                                     "view-admin.xql"
-                                default return
-                                    "view.xql"
+        let $viewModule := 
+            switch ($exist:resource)
+                case "admin.html"
+                case "corpus-admin.html"
+                case "createLists.html"
+                case "iiif-admin.html"
+                case "render.html"
+                case "renderTheRest.html"
+                case "render.html"
+                case "error-page.html"
+                case "sphinx-admin.html" return
+                     "view-admin.xql"
+                default return
+                    "view.xql"
         return
-                <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                    <forward url="{$exist:controller || substring($exist:path, 4)}"/>
-                    <view>
-                        <!-- pass the results through view.xql -->
-                        <forward url="{$exist:controller}/modules/{$viewModule}">
-                            <set-attribute name="lang"              value="{$lang}"/>
-                            <set-attribute name="$exist:resource"   value="{$exist:resource}"/>
-                            <set-attribute name="$exist:prefix"     value="{$exist:prefix}"/>
-                            <set-attribute name="$exist:controller" value="{$exist:controller}"/>
-                        </forward>
-                    </view>
-                    {config:errorhandler($netVars)}
-                </dispatch>
+            <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                <forward url="{$exist:controller || substring($exist:path, 4)}"/>
+                <view>
+                    <!-- pass the results through view.xql -->
+                    <forward url="{$exist:controller}/modules/{$viewModule}">
+                        <set-attribute name="lang"              value="{$lang}"/>
+                        <set-attribute name="$exist:resource"   value="{$exist:resource}"/>
+                        <set-attribute name="$exist:prefix"     value="{$exist:prefix}"/>
+                        <set-attribute name="$exist:controller" value="{$exist:controller}"/>
+                    </forward>
+                </view>
+                {config:errorhandler($netVars)}
+            </dispatch>
 
     (: If there is no language path component, redirect to a version of the site where there is one :)
     else if (ends-with($exist:resource, ".html")) then
@@ -321,18 +325,19 @@ return
     (: Relative path requests from sub-collections are redirected there :)
     else if (contains($exist:path, "/resources/")) then
         let $debug := if ($config:debug = "trace") then console:log("Resource requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-        return if (contains(lower-case($exist:resource), "favicon")) then
-                    if ($config:instanceMode = "testing") then
-                        net:forward("/resources/favicons/" || replace($exist:resource, "favicon", "favicon_red"), $netVars)
-                    else
-                        net:forward("/resources/favicons/" || $exist:resource, $netVars)
-               else
-                    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                        <forward url="{$exist:controller}/resources/{substring-after($exist:path, '/resources/')}">
-                            <set-header name="Expires" value="{format-dateTime(dateTime(current-date(), util:system-time()) + xs:dayTimeDuration('P7D'), 'EEE, d MMM yyyy HH:mm:ss Z' )}"/>
-                        </forward>
-                        {config:errorhandler($netVars)}
-                    </dispatch>
+        return 
+            if (contains(lower-case($exist:resource), "favicon")) then
+                if ($config:instanceMode = "testing") then
+                    net:forward("/resources/favicons/" || replace($exist:resource, "favicon", "favicon_red"), $netVars)
+                else
+                    net:forward("/resources/favicons/" || $exist:resource, $netVars)
+            else
+                <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                    <forward url="{$exist:controller}/resources/{substring-after($exist:path, '/resources/')}">
+                        <set-header name="Expires" value="{format-dateTime(dateTime(current-date(), util:system-time()) + xs:dayTimeDuration('P7D'), 'EEE, d MMM yyyy HH:mm:ss Z' )}"/>
+                    </forward>
+                    {config:errorhandler($netVars)}
+                </dispatch>
 
     (: Unspecific hostname :)
     else if (request:get-header('X-Forwarded-Host') = $config:serverdomain) then
@@ -342,7 +347,7 @@ return
                 net:redirect-with-303($config:webserver || $exist:path || $parameterString)
             else if (count(functx:value-intersect($net:requestedContentTypes, ('application/rdf+xml','application/xml','*/*')))) then
                 net:redirect-with-303($config:apiserver || $exist:path || $parameterString)
-            else ()
+            else net:error(400, $netVars, ())
 
     (: Manage exist-db shared resources :)
     else if (contains($exist:path, "/$shared/")) then
