@@ -19,6 +19,8 @@ import module namespace admin     = "http://salamanca/admin"                    
 declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
 declare option output:method "html5";
 declare option output:media-type "text/html";
+declare option exist:timeout "43200000"; (: 12 h :)
+
 
 let $config := map {
     $templates:CONFIG_APP_ROOT := $config:app-root

@@ -96,7 +96,7 @@ let $html-in :=
                         <h1 class="error-title">{request:get-attribute('javax.servlet.error.status_code')}</h1>
                         <h2 class="error-title"><i18n:text key="pageNotFound">This is not the page you were looking for...</i18n:text></h2>
                         <p class="error-paragraph"><i18n:text key="bugMessage">In case you found a bug in our website, please let us know at</i18n:text>{' '}<a href="mailto:info.salamanca@adwmainz.de">info.salamanca@adwmainz.de</a></p>
-                        {app:errorMessage(<div/>, $dummyMap)}
+                        {app:serverErrorMessage(<div/>, $dummyMap)}
                     </div>
                 </div>
                 <div class="navbar navbar-default navbar-fixed-top" role="navigation">

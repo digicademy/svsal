@@ -310,8 +310,6 @@
     <msg key="constituted">Constituido</msg>
     <msg key="diplomaticLower">diplomático</msg>
     <msg key="constitutedLower">constituido</msg>
-    <msg key="workNotAvailable">Esta obra no está aún disponible.</msg>
-    
     
     <!--news-->
     <msg key="more">más</msg>
@@ -340,7 +338,11 @@
     <msg key="error">Error</msg>
     <msg key="pageNotFound">Esta no es la página que está buscando...</msg>
     <msg key="bugMessage">Si encuentra un error en nuestra página, por favor infórmenos al</msg>
-   
+    
+    <msg key="authorNotYetAvailable">Este artículo aún no está disponible.</msg>
+    <msg key="lemmaNotYetAvailable">Esta entrada del diccionario aún no está disponible.</msg>
+    <msg key="workNotYetAvailable">Esta obra no está aún disponible.</msg>
+    
    <!-- worksList.html -->
   <msg key="worksListOverview">Lista de Fuentes en la Colección Digital</msg>
   <msg key="furtherInformationTitle">Información adicional</msg>

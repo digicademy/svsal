@@ -3647,7 +3647,7 @@ declare function app:errorCode($node as node(), $model as map(*)) as xs:string? 
     request:get-attribute('status-code')
 };
 
-declare function app:errorMessage($node as node(), $model as map(*)) as xs:string? {
+declare function app:serverErrorMessage($node as node(), $model as map(*)) as xs:string? {
     let $errorMessage := if (normalize-space(request:get-attribute('javax.servlet.error.message')) ne '') then request:get-attribute('javax.servlet.error.message')
                          else if (normalize-space(templates:error-description($node, $model)) ne '') then templates:error-description($node, $model)
                          else if (normalize-space(request:get-attribute('error-message')) ne '') then request:get-attribute('error-message')
@@ -3660,4 +3660,88 @@ declare function app:errorMessage($node as node(), $model as map(*)) as xs:strin
             </div>
         else ()
 };
+
+declare %templates:wrap function app:errorInformation($node as node(), $model as map(*), $lang as xs:string?) as xs:string? {
+    let $errorHeader :=    
+        if (request:get-attribute('error-type') eq 'work-not-yet-available') then
+            <h2 class="error-title"><i18n:text key="workNotYetAvailable">This work is not yet available.</i18n:text></h2>
+        else if (request:get-attribute('error-type') eq 'author-not-yet-available') then
+            <h2 class="error-title"><i18n:text key="authorNotYetAvailable">This article is not yet available.</i18n:text></h2>
+        else if (request:get-attribute('error-type') eq 'lemma-not-yet-available') then
+            <h2 class="error-title"><i18n:text key="lemmaNotYetAvailable">This dictionary article is not yet available.</i18n:text></h2>
+        else 
+            <div>
+                <h2 class="error-title"><i18n:text key="pageNotFound">This is not the page you were looking for...</i18n:text></h2>
+                <p class="error-paragraph"><i18n:text key="bugMessage">In case you found a bug in our website, please let us know at</i18n:text> <a href="mailto:info.salamanca@adwmainz.de">info.salamanca@adwmainz.de</a></p>
+            </div>
+    let $errorBody :=
+        if ($config:debug eq 'trace' or $config:instanceMode eq 'testing') then 
+            let $errorDesc := 
+                if (normalize-space(request:get-attribute('javax.servlet.error.message')) ne '') then request:get-attribute('javax.servlet.error.message')
+                else if (normalize-space(templates:error-description($node, $model)) ne '') then templates:error-description($node, $model)
+                else if (normalize-space(request:get-attribute('error-description')) ne '') then request:get-attribute('error-message')
+                else 'No description found...'
+            return
+                <div class="error-paragraph">
+                    <h4 class="error-title">Error message (debugging mode):</h4>
+                    <div class="error-paragraph"><span>{' ' || $errorDesc}</span></div>
+                </div>
+        else ()
+    let $errorOut :=
+        <div>
+        {$errorHeader, $errorBody}
+        </div>
+    return i18n:process($errorOut, $lang, '/db/apps/salamanca/data/i18n', 'en')
+};
+
+
+(: UTIL FUNCTIONS FOR VALIDATING WORK/AUTHOR/LEMMA IDs (in lack of a better place to put them) :)
+
+declare function app:AUTexists($aid as xs:string?) as xs:boolean {
+    if ($aid) then boolean(doc($config:tei-meta-root || '/' || 'sources-list.xml')/tei:TEI/tei:text//tei:author[lower-case(substring-after(@ref, 'author:')) eq lower-case($aid)])
+    else false()
+};
+
+(: 1 = valid & available; 0 = valid, but not yet available; -1 = not valid :)
+declare function app:AUTvalidateId($aid as xs:string?) as xs:integer {
+    if ($aid) then
+        (: TODO: additional condition when author articles are available - currently this will always resolve to -1 :)
+        if (app:AUTexists($aid)) then 0
+        else -1
+    else -1    
+};
+
+declare function app:LEMexists($lid as xs:string?) as xs:boolean {
+    (: TODO when we have a list of lemma ids :)
+    (:if ($lid) then boolean(doc(.../...) eq $lid])
+    else :)
+    false()
+};
+
+(: 1 = valid & available; 0 = valid, but not yet available; -1 = not valid :)
+declare function app:LEMvalidateId($lid as xs:string?) as xs:integer {
+    if ($lid) then
+        (: TODO: additional conditions when lemmata/entries are available - currently this will always resolve to -1 :)
+        if (app:LEMexists($lid)) then 0
+        else -1
+    else -1    
+};
+
+declare function app:WRKexists($wid as xs:string?) as xs:boolean {
+    if ($wid) then boolean(doc($config:tei-meta-root || '/' || 'sources-list.xml')/tei:TEI/tei:text//tei:bibl[lower-case(substring-after(@corresp, 'work:')) eq lower-case($wid)])
+    else false()
+};
+
+(: 2 = valid, full data available; 1 = valid, but only metadata available; 0 = valid, but not yet available; -1 = not valid :)
+declare function app:WRKvalidateId($wid as xs:string?) as xs:integer {
+    if ($wid) then
+        if (app:WRKisPublished(<dummy/>, map{}, $wid)) then 2
+        else if (doc-available($config:tei-works-root || '/' || $wid || '.xml')) then 1
+        else if (app:WRKexists($wid)) then 0
+        else -1
+    else -1    
+};
+
+(: concepts? :)
+
 

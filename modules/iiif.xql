@@ -501,10 +501,10 @@ In the case of single volume works, return:
                 return array { map { "manifestUri" : concat("iiif-out.xql?wid=", $wid), "location" :    "MPIeR iiif Service"} }
             else ()
         else ()
-    let $debug :=  if ($config:debug = "trace") then console:log(serialize($miradorData, 
+    (:let $debug :=  if ($config:debug = "trace") then console:log(serialize($miradorData, 
         <output:serialization-parameters>
             <output:method>json</output:method>
-        </output:serialization-parameters>))  else ()
+        </output:serialization-parameters>))  else ():) (: this doesn't work... :)
 
      return serialize($miradorData, 
         <output:serialization-parameters>

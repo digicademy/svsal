@@ -309,7 +309,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                 let $debug         := if ($config:debug = ("trace")) then console:log("  (creating preliminary index file ...)") else ()
                                 let $index           := <sal:index work="{string($work/@xml:id)}">{
                                                                     for $node at $pos in $work//tei:text/descendant-or-self::*[@xml:id and local-name(.) = $indexedElTypes and not(ancestor::tei:note)] 
-                                                                        let $debug         := if ($config:debug = ("trace")) then console:log("  (registering node " || $pos || ": " || local-name($node) || " with @xml:id " || $node/@xml:id || " ...)") else ()
+                                                                        let $debug         := if ($config:debug = ("trace") and local-name($node) eq 'div') then console:log("  (registering node " || $pos || ": " || local-name($node) || " with @xml:id " || $node/@xml:id || " ...)") else ()
                                                                         let $subtype      := if ($node/@sameAs) then
                                                                                                     "sameAs"
                                                                                                 else if ($node/@corresp) then

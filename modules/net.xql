@@ -38,12 +38,13 @@ declare variable $net:servedContentTypes        := (
 (:declare variable $net:requestedContentTypes     := tokenize(request:get-header('Accept'), '[,\s;]+');:)
 declare variable $net:requestedContentTypes     := tokenize(request:get-header('Accept'), '[, ]+');
 
-declare variable $net:errorhandler := if (($config:instanceMode = "staging") or ($config:debug = "trace")) then ()
-                       else
-                            <error-handler>
-                                <forward url="{$config:app-root}/en/error-page.html" method="get"/>
-                                <forward url="{$config:app-root}/modules/view.xql"/>
-                            </error-handler>;
+declare variable $net:errorhandler := 
+    if (($config:instanceMode = "staging") or ($config:debug = "trace")) then ()
+    else
+        <error-handler>
+            <forward url="{$config:app-root}/en/error-page.html" method="get"/>
+            <forward url="{$config:app-root}/modules/view.xql"/>
+        </error-handler>;
 
 (:declare function net:findNode($ctsId as xs:string?) {
     let $reqResource  := tokenize($ctsId, '/')[last()]
@@ -217,24 +218,24 @@ declare function net:redirect-with-404($absolute-path) {  (: 404 :)
     </error-handler>)
 };
 
-declare function net:error($statusCode as xs:integer, $netVars as map(*), $message as xs:string?) {
+declare function net:error($statusCode as xs:integer, $netVars as map(*), $errorType as xs:string?) {
     response:set-status-code($statusCode),
-    net:error-page($statusCode, $netVars, $message)
+    net:error-page($statusCode, $netVars, $errorType)
 };
 
-declare function net:error-page($statusCode as xs:integer, $netVars as map(*), $message as xs:string?) as element(exist:dispatch) {
+declare function net:error-page($statusCode as xs:integer, $netVars as map(*), $errorType as xs:string?) as element(exist:dispatch) {
     (: using just the error-handler for simply triggering an application-side error page does not work here as expected 
        but instead creates a *server-side* error, so that we rather dispatch/forward to the error page for now (but how to get the error message then?) :)
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <forward url="{$netVars('controller') || '/error-page.html'}"/>
         <view>
             <forward url="{$netVars('controller')}/modules/view-error.xql">
-                <set-attribute name="lang"              value="{$netVars('lang')}"/>
+                <set-attribute name="lang"             value="{$netVars('lang')}"/>
                 <set-attribute name="exist:resource"   value="{$netVars('resource')}"/>
                 <set-attribute name="exist:prefix"     value="{$netVars('prefix')}"/>
                 <set-attribute name="exist:controller" value="{$netVars('controller')}"/>
-                <set-attribute name="status-code" value="{xs:string($statusCode)}"/>
-                <set-attribute name="error-message" value="{$message}"/>
+                <set-attribute name="status-code"      value="{xs:string($statusCode)}"/>
+                <set-attribute name="error-type"      value="{$errorType}"/>
                 <cache-control cache="{$net:cache-control}"/>
             </forward>
         </view>
@@ -363,46 +364,46 @@ declare function local:negotiateCTSub($offers as xs:string*, $bestOffer as xs:st
 (:    let $newOffer   := for $spec in tokenize(replace(request:get-header('Accept'), ' ', ''), ','):)
     let $newOffer   := for $spec in $net:requestedContentTypes
 (:let $debug := if ($config:debug = ("trace", "info")) then console:log("content negotiation recursion. ---- Current accepted type: " || $spec || ".") else ():)
-
-                                let $Q      :=  if (string(number(substring-after($spec, ';q='))) != 'NaN') then
-                                                    number(substring-after($spec, ';q='))
-                                                else
-                                                    1.0 
-                                let $value  := if (contains($spec, ';')) then
-                                                    substring-before($spec, ';')
-                                               else
-                                                    $spec
-                                return
-                                            if ($Q lt $bestQ) then ()           (: previous match had stronger weight :)
-                                     else   if (starts-with($spec, '*/*')) then                 (: least specific - let $bestWild := 2  :)
-                                                if ($bestWild gt 2) then
-                                                    let $newBestWild   := 2
-                                                    let $newBestQ      := $Q
-                                                    let $newBestOffer  := $offer
-                                                    return ($newBestOffer, $newBestQ, $newBestWild)
-                                                else ()
-                                     else   if (ends-with($value, '/*')) then                   (: medium specific - let $bestWild := 1  :)
-                                               if (substring-before($offer, '/') = substring($value, 1, string-length($value) - 2) and $bestWild gt 1) then
-                                                   let $newBestWild   := 1
-                                                   let $newBestQ      := $Q
-                                                   let $newBestOffer  := $offer
-                                                   return ($newBestOffer, $newBestQ, $newBestWild)
-                                               else ()
-                                     else
-                                            if ($offer = $value and ($Q gt $bestQ or $bestWild gt 0)) then    (: perfectly specific match - let $bestWild := 0 :)
-                                                let $newBestWild   := 0
-                                                let $newBestQ      := $Q
-                                                let $newBestOffer  := $offer
+        let $Q      :=  
+            if (string(number(substring-after($spec, ';q='))) != 'NaN') then
+                number(substring-after($spec, ';q='))
+            else 1.0 
+        let $value  := 
+            if (contains($spec, ';')) then
+                substring-before($spec, ';')
+            else $spec
+        return
+            if ($Q lt $bestQ) then ()           (: previous match had stronger weight :)
+            else   if (starts-with($spec, '*/*')) then                 (: least specific - let $bestWild := 2  :)
+                if ($bestWild gt 2) then
+                    let $newBestWild   := 2
+                    let $newBestQ      := $Q
+                    let $newBestOffer  := $offer
+                    return ($newBestOffer, $newBestQ, $newBestWild)
+                else ()
+            else   if (ends-with($value, '/*')) then                   (: medium specific - let $bestWild := 1  :)
+                if (substring-before($offer, '/') = substring($value, 1, string-length($value) - 2) and $bestWild gt 1) then
+                    let $newBestWild   := 1
+                    let $newBestQ      := $Q
+                    let $newBestOffer  := $offer
+                    return ($newBestOffer, $newBestQ, $newBestWild)
+                else ()
+            else
+                if ($offer = $value and ($Q gt $bestQ or $bestWild gt 0)) then    (: perfectly specific match - let $bestWild := 0 :)
+                    let $newBestWild   := 0
+                    let $newBestQ      := $Q
+                    let $newBestOffer  := $offer
 (:let $debug := if ($config:debug = ("trace", "info")) then console:log("content negotiation recursion. ---- NewOffer: " || $newBestOffer || ',' || $newBestQ || ',' || $newBestWild || ".") else ():)
-                                                return ($newBestOffer, $newBestQ, $newBestWild)
-                                            else ()
-    let $returnOffer  :=  if (count($offers) gt 1) then
-                                if ($newOffer[1]) then
-                                    local:negotiateCTSub(subsequence($offers, 2), $newOffer[1], $newOffer[2], $newOffer[3])
-                                else
-                                    local:negotiateCTSub(subsequence($offers, 2), $bestOffer, $bestQ, $bestWild)
-                          else
-                                if ($newOffer[1]) then $newOffer[1] else $bestOffer
+                    return ($newBestOffer, $newBestQ, $newBestWild)
+                else ()
+    let $returnOffer  :=  
+        if (count($offers) gt 1) then
+            if ($newOffer[1]) then
+                local:negotiateCTSub(subsequence($offers, 2), $newOffer[1], $newOffer[2], $newOffer[3])
+            else
+                local:negotiateCTSub(subsequence($offers, 2), $bestOffer, $bestQ, $bestWild)
+        else
+            if ($newOffer[1]) then $newOffer[1] else $bestOffer
     return $returnOffer
 };
 
@@ -584,6 +585,73 @@ declare function net:deliverRDF($requestData as map(), $netVars as map()*) {
         net:error(404, $netVars, 'Invalid rdf request.')
 };
 
+declare function net:deliverTextsHTML($requestData as map(), $netVars as map()*) {
+    let $validation := app:WRKvalidateId($requestData('tei_id'))
+    return
+    if ($validation eq 2) then () (: full text available :)
+        (:let $reqResource  := $pathComponents[last()-1] || "/" || $pathComponents[last()]
+        return if (starts-with(lower-case($reqResource), 'texts/w0') or starts-with(lower-case($reqResource), 'authors/a0')) then
+            let $reqWork      := tokenize(tokenize(tokenize($reqResource, ':')[1], '/')[2], '\.')[1]
+            let $reqVersion   := if (tokenize(tokenize($reqResource, ':')[1], '\.')[2]) then
+                                    tokenize(tokenize($reqResource, ':')[1], '\.')[2]
+                                 else 'edit'
+            let $reqPassage   := tokenize($reqResource, ':')[2]
+            let $debug2       := if ($config:debug = ("trace")) then console:log("Load metadata from " || $config:rdf-root || '/' || replace($reqWork, 'w0', 'W0') || '.rdf' || " ...") else ()
+            let $metadata     := doc($config:rdf-root || '/' || replace($reqWork, 'w0', 'W0') || '.rdf')
+            let $debug3       := if ($config:debug = ("trace")) then console:log("Retrieving $metadata//rdf:Description[@rdf:about eq '" || replace(replace(replace($reqResource, 'w0', 'W0'), '.edit', ''), '.orig', '') || "']/rdfs:seeAlso[1]/@rdf:resource[contains(., '.html')]") else ()
+            let $resolvedPath := string(($metadata//rdf:Description[@rdf:about eq replace(replace(replace($reqResource, 'w0', 'W0'), '.edit', ''), '.orig', '')]/rdfs:seeAlso[1]/@rdf:resource[contains(., ".html")])[1])
+            let $debug4       := if ($config:debug = ("trace")) then console:log("Found path: " || $resolvedPath || " ...") else ()
+    
+            (\: The pathname that has been saved contains 0 or exactly one parameter for the target html fragment,
+               but it may or may not contain a hash value. We have to mix in other parameters (mode, search expression or viewer state) before the hash. :\)
+            let $pathname     := if (contains($resolvedPath, '?')) then
+                                    substring-before($resolvedPath, '?')
+                                 else if (contains($resolvedPath, '#')) then
+                                    substring-before($resolvedPath, '#')
+                                 else
+                                    $resolvedPath
+            let $hash         := if (contains($resolvedPath, '#')) then concat('#', substring-after($resolvedPath, '#')) else ()
+            let $fragParam    := if (contains($resolvedPath, '?')) then
+                                    if (contains(substring-after($resolvedPath, '?'), '#')) then
+                                        substring-before(substring-after($resolvedPath, '?'), '#')
+                                    else
+                                        substring-after($resolvedPath, '?')
+                                 else ()
+            let $updParams    := if ($reqVersion = "orig") then array:append([$netVars('params')], "mode=orig") else [$netVars('params')]
+            let $parameters   := concat(if ($fragParam or $updParams) then "?" else (), string-join(($fragParam, string-join($updParams?*, "&amp;")), "&amp;"))
+    
+    
+            let $debug5       := if ($config:debug = ("trace", "info")) then console:log("Redirecting to " || $pathname || $parameters || $hash || " ...") else ()
+            return net:redirect-with-303($pathname || $parameters || $hash )
+         else if (matches(lower-case($reqResource), '^texts/all(\?.*?)?')) then (\: forward to works list, regardless of parameters :\)
+            let $pathname     := $config:webserver || '/' || 'works.html'
+            let $debug5       := if ($config:debug = ("trace", "info")) then console:log("Redirecting to " || $pathname || " ...") else ()
+            return net:redirect-with-303($pathname)
+         else
+            let $debug2       := if ($config:debug = ("trace", "info")) then console:log("Html is acceptable, but bad input. Redirect (404) to error webpage ...") else ()
+            return net:redirect-with-404($config:webserver || '/' || 'error-page.html'):)
+    else if ($validation eq 1) then net:redirect-with-303($config:webserver || '/workDetails.html?wid=' || $requestData('tei_id')) (: only work details available :)
+    else if ($validation eq 0) then net:error(404, $netVars, 'work-not-yet-available') (: work id is valid, but there are no data :)
+    else net:error(404, $netVars, '')
+};
+
+declare function net:deliverAuthorsHTML($netVars as map()*) {
+    let $validation := app:AUTvalidateId($netVars('paramap')?('aid'))
+    let $debug := util:log('warn', 'Author id validation: ' || string($validation) || ' ; aid=' || $netVars('paramap')?('aid'))
+    return
+        if ($validation eq 1) then () (: TODO author article is available :)
+        else if ($validation eq 0) then net:error(404, $netVars, 'author-not-yet-available')
+        else net:error(404, $netVars, ())
+};
+
+declare function net:deliverConceptsHTML($netVars as map()*) {
+    let $validation := app:LEMvalidateId($netVars('paramap')?('lid'))
+    return
+        if ($validation eq 1) then () (: TODO dict. entry is available :)
+        else if ($validation eq 0) then net:error(404, $netVars, 'lemma-not-yet-available')
+        else net:error(404, $netVars, ())
+};
+
 (: TODO::)
 
 declare function net:deliverIIIF($path as xs:string, $netVars) {
@@ -631,14 +699,13 @@ declare function net:deliverIIIF($requestData as map(), $netVars as map()*) {
 };
 :)
 
-declare function net:deliverHTML($pathComponents as xs:string*, $netVars as map()*) {
+(:declare function net:deliverTextsHTML($pathComponents as xs:string*, $netVars as map()*) {
     let $reqResource  := $pathComponents[last()-1] || "/" || $pathComponents[last()]
     return if (starts-with(lower-case($reqResource), 'texts/w0') or starts-with(lower-case($reqResource), 'authors/a0')) then
         let $reqWork      := tokenize(tokenize(tokenize($reqResource, ':')[1], '/')[2], '\.')[1]
         let $reqVersion   := if (tokenize(tokenize($reqResource, ':')[1], '\.')[2]) then
                                 tokenize(tokenize($reqResource, ':')[1], '\.')[2]
-                             else
-                                "edit"
+                             else 'edit'
         let $reqPassage   := tokenize($reqResource, ':')[2]
         let $debug2       := if ($config:debug = ("trace")) then console:log("Load metadata from " || $config:rdf-root || '/' || replace($reqWork, 'w0', 'W0') || '.rdf' || " ...") else ()
         let $metadata     := doc($config:rdf-root || '/' || replace($reqWork, 'w0', 'W0') || '.rdf')
@@ -646,8 +713,8 @@ declare function net:deliverHTML($pathComponents as xs:string*, $netVars as map(
         let $resolvedPath := string(($metadata//rdf:Description[@rdf:about eq replace(replace(replace($reqResource, 'w0', 'W0'), '.edit', ''), '.orig', '')]/rdfs:seeAlso[1]/@rdf:resource[contains(., ".html")])[1])
         let $debug4       := if ($config:debug = ("trace")) then console:log("Found path: " || $resolvedPath || " ...") else ()
 
-        (: The pathname that has been saved contains 0 or exactly one parameter for the target html fragment,
-           but it may or may not contain a hash value. We have to mix in other parameters (mode, search expression or viewer state) before the hash. :)
+        (\: The pathname that has been saved contains 0 or exactly one parameter for the target html fragment,
+           but it may or may not contain a hash value. We have to mix in other parameters (mode, search expression or viewer state) before the hash. :\)
         let $pathname     := if (contains($resolvedPath, '?')) then
                                 substring-before($resolvedPath, '?')
                              else if (contains($resolvedPath, '#')) then
@@ -667,14 +734,28 @@ declare function net:deliverHTML($pathComponents as xs:string*, $netVars as map(
 
         let $debug5       := if ($config:debug = ("trace", "info")) then console:log("Redirecting to " || $pathname || $parameters || $hash || " ...") else ()
         return net:redirect-with-303($pathname || $parameters || $hash )
-     else if (matches(lower-case($reqResource), '^texts/all(\?.*?)?')) then (: forward to works list, regardless of parameters :)
+     else if (matches(lower-case($reqResource), '^texts/all(\?.*?)?')) then (\: forward to works list, regardless of parameters :\)
         let $pathname     := $config:webserver || '/' || 'works.html'
         let $debug5       := if ($config:debug = ("trace", "info")) then console:log("Redirecting to " || $pathname || " ...") else ()
         return net:redirect-with-303($pathname)
      else
         let $debug2       := if ($config:debug = ("trace", "info")) then console:log("Html is acceptable, but bad input. Redirect (404) to error webpage ...") else ()
         return net:redirect-with-404($config:webserver || '/' || 'error-page.html')
-};
+};:)
+
+(:declare function net:validateHTMLRequest($path as xs:string?, $netVars as map()*) as xs:integer {
+    let $normalizedPath := replace(lower-case($path), '/+', '/')
+    let $tokens := tokenize($normalizedPath, '/')
+    let $existResource := $netVars('resouce')
+    let $params := for $p in $netVars('paramap') return map:get()
+    let $isValid :=
+        if (count($tokens) gt 1) then false()
+        else if ($tokens != xmldb:get-child-resources($netVars('controller'))) then false()
+        (\: validate frequent id combinations :\)
+        else if ($tokens eq 'work.html') then 
+        else if ($tokens eq 'author.html')
+    return $isValid
+};:)
 
 declare function net:deliverJPG($pathComponents as xs:string*, $netVars as map()*) {
     let $reqResource  := $pathComponents[last()]
@@ -744,7 +825,7 @@ declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()
                 let $format := $netVars('format') (: or net:format() :)
                 let $validParams := $config:apiFormats($format)
                 (:  filter out all params that aren't officially stated as valid params for the requested format, and 
-                    remove duplicate params; if params have similar names but different values, the first value wins :)
+                    remove duplicate params; if there are multiple params of the same type but with different values, the first value wins :)
                 let $params0 := map:merge(for $p in $netVars('params') return if (($p, substring-before($p, '=')) = $validParams) then map:entry(substring-before($p, '='), substring-after($p, '=')) else ())
                 let $mode :=
                     if (tokenize(tokenize($normalizedPath, ':')[1], '\.')[2] = ('orig', 'edit')) then tokenize(tokenize($normalizedPath, ':')[1], '\.')[2]
@@ -763,9 +844,10 @@ declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()
             let $requestData := map:merge(($resourceData, $params))
             let $debug := if ($config:debug = ('trace')) then console:log('[API] request data: ' || string-join((for $k in map:keys($requestData) return $k || '=' || map:get($requestData, $k)), ' ; ') || '.') else ()
             return $requestData
-            (:  open questions:
+            (:  open questions / TODO:
                     - how to deal with illegal params: ignore or error? (currently ignored)
-                    - hashtags? (are currently completely ignored here, URL rewriting seems to remove them "automatically")
+                    - fragments (how to best access/validate them here?)
+                    - matrix params?
             :)
 };
 

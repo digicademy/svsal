@@ -52,17 +52,19 @@ let $lang               :=  net:lang($exist:path)
 :)
 let $format             :=  net:format()
 
-let $netVars            :=  map  {
-                                    "path"          : $exist:path,
-                                    "resource"      : $exist:resource,
-                                    "controller"    : $exist:controller,
-                                    "prefix"        : $exist:prefix,
-                                    "root"          : $exist:root,
-                                    "lang"          : $lang,
-                                    "format"        : $format,
-                                    "accept"        : $net:requestedContentTypes,
-                                    "params"        : ( for $p in request:get-parameter-names() return lower-case($p) || "="  || lower-case(request:get-parameter($p, ())[1]) )
-                                 } (: if there are several params of the same type, the value of the first one wins :)
+let $netVars :=  
+    map  {
+        "path"          : $exist:path,
+        "resource"      : $exist:resource,
+        "controller"    : $exist:controller,
+        "prefix"        : $exist:prefix,
+        "root"          : $exist:root,
+        "lang"          : $lang,
+        "format"        : $format,
+        "accept"        : $net:requestedContentTypes,
+        "params"        : ( for $p in request:get-parameter-names() return lower-case($p) || "="  || lower-case(request:get-parameter($p, ())[1]) ),
+        "paramap"       : map:merge(for $p in request:get-parameter-names() return map:entry(lower-case($p), lower-case(request:get-parameter($p, ())[1])))
+    } (: if there are several params of the same type, the value of the first one wins :)
 let $parameterString    :=  if (count(request:get-parameter-names())) then
                                 "?" || string-join($netVars('params'), '&amp;')
                             else ()
@@ -97,6 +99,8 @@ return
         let $debug          := if ($config:debug = ("trace", "info")) then console:log("VoID.ttl requested: " || $net:forwardedForServername || $exist:path || ".") else ()
         return net:forward("void.ttl", $netVars)
     else if ($exist:resource = "favicon.ico") then
+        (:let $debug := if ($config:debug = "trace") then util:log("warn", "Favicon requested: " || $net:forwardedForServername || $exist:path || ".") else ()
+        return :)
         if ($config:instanceMode = "testing") then
             net:forward("/resources/favicons/" || replace($exist:resource, "favicon", "favicon_red"), $netVars)
         else
@@ -139,7 +143,7 @@ return
                                 case 'tei'  return net:deliverTEI($textsRequest,$netVars)
                                 case 'txt'  return net:deliverTXT($textsRequest,$netVars)
                                 case 'rdf' return net:deliverRDF($textsRequest, $netVars)
-                                default     return net:deliverHTML($pathComponents, $netVars)
+                                default     return net:deliverTextsHTML($pathComponents, $netVars)
     (:
                                 case 'iiif' return net:deliverIIIF($exist:path, $netVars) (\: TODO: debug forwarding :\)
                                 case 'jpg' return net:deliverJPG($pathComponents, $netVars)
@@ -283,8 +287,10 @@ return
     (: HTML files should have a path component - we parse that and put view.xql in control :)
     else if (ends-with($exist:resource, ".html") and substring($exist:path, 1, 4) = ("/de/", "/en/", "/es/")) then
         let $debug          := if ($config:debug = "info")  then console:log ("HTML requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
+(:        let $debug          := if ($config:debug = "info")  then util:log ("warn", "HTML requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ():)
         let $debug          := if ($config:debug = "trace") then console:log ("HTML requested, translating language path component to a request attribute - $exist:path: " || $exist:path || ", redirect to: " || $exist:controller || substring($exist:path, 4) || ", parameters: [" || string-join(net:inject-requestParameter((), ()), "&amp;") || "], attributes: [].") else ()
         (: For now, we don't use net:forward here since we need a nested view/forwarding. :)
+(:        let $isValidRequest := net:validateHTMLRequest(substring($exist:path, 4), $netVars):)
         let $viewModule := 
             switch ($exist:resource)
                 case "admin.html"
@@ -299,20 +305,26 @@ return
                      "view-admin.xql"
                 default return
                     "view.xql"
+        let $resource := lower-case($exist:resource)
         return
-            <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                <forward url="{$exist:controller || substring($exist:path, 4)}"/>
-                <view>
-                    <!-- pass the results through view.xql -->
-                    <forward url="{$exist:controller}/modules/{$viewModule}">
-                        <set-attribute name="lang"              value="{$lang}"/>
-                        <set-attribute name="$exist:resource"   value="{$exist:resource}"/>
-                        <set-attribute name="$exist:prefix"     value="{$exist:prefix}"/>
-                        <set-attribute name="$exist:controller" value="{$exist:controller}"/>
-                    </forward>
-                </view>
-                {config:errorhandler($netVars)}
-            </dispatch>
+            if ($exist:resource eq 'author.html') then net:deliverAuthorsHTML($netVars)
+            else if ($exist:resource eq 'lemma.html') then net:deliverConceptsHTML($netVars)
+            else if ($exist:resource eq 'work.html') then () (:net:deliverTextsHTML($netVars):)
+            else if ($exist:resource = xmldb:get-child-resources($config:app-root)) then
+                <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                    <forward url="{$exist:controller || substring($exist:path, 4)}"/>
+                    <view>
+                        <!-- pass the results through view.xql -->
+                        <forward url="{$exist:controller}/modules/{$viewModule}">
+                            <set-attribute name="lang"              value="{$lang}"/>
+                            <set-attribute name="$exist:resource"   value="{$exist:resource}"/>
+                            <set-attribute name="$exist:prefix"     value="{$exist:prefix}"/>
+                            <set-attribute name="$exist:controller" value="{$exist:controller}"/>
+                        </forward>
+                    </view>
+                    {config:errorhandler($netVars)}
+                </dispatch>
+            else net:error(404, $netVars, ())
 
     (: If there is no language path component, redirect to a version of the site where there is one :)
     else if (ends-with($exist:resource, ".html")) then
@@ -325,6 +337,7 @@ return
     (: Relative path requests from sub-collections are redirected there :)
     else if (contains($exist:path, "/resources/")) then
         let $debug := if ($config:debug = "trace") then console:log("Resource requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
+(:        let $debug := if ($config:debug = "trace") then util:log("warn", "Favicon requested: " || $net:forwardedForServername || $exist:path || ".") else ():)
         return 
             if (contains(lower-case($exist:resource), "favicon")) then
                 if ($config:instanceMode = "testing") then

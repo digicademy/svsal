@@ -1,8 +1,6 @@
 <div xmlns:i18n="http://exist-db.org/xquery/i18n" class="templates:surround?with=templates/template_error.html&amp;at=content">
     <div data-template="i18n:translate" data-template-catalogues="data/i18n">
         <h1 class="error-title"><span data-template="app:errorCode"/></h1>
-        <h2 class="error-title"><i18n:text key="pageNotFound">This is not the page you were looking for...</i18n:text></h2>
-        <p class="error-paragraph"><i18n:text key="bugMessage">In case you found a bug in our website, please let us know at</i18n:text> <a href="mailto:info.salamanca@adwmainz.de">info.salamanca@adwmainz.de</a></p>
-        <div data-template="app:errorMessage"/>
+        <div><span data-template="app:errorInformation"/></div>
     </div>
 </div>
