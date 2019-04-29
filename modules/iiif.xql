@@ -15,6 +15,7 @@ import module namespace i18n       = "http://exist-db.org/xquery/i18n"       at 
 import module namespace templates = "http://exist-db.org/xquery/templates";
 import module namespace util       = "http://exist-db.org/xquery/util";
 import module namespace xmldb      = "http://exist-db.org/xquery/xmldb";
+import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";
 
 declare option output:method "json";
 declare option output:media-type "application/json";
@@ -52,31 +53,33 @@ or a collection resource (for a multi-volume work).
 @return:     the iiif manifest/collection
 :)
 declare function iiif:fetchResource ($wid as xs:string) as map(*)? {
-    let $workType := if (matches($wid, '^W\d{4}(_Vol\d{2})?$')) then 
-                         doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI/tei:text/@type
-                     else ()
+    let $workId := sal-util:normalizeId($wid)
+    let $workType := 
+        if (matches($workId, '^W\d{4}(_Vol\d{2})?$')) then 
+            doc($config:tei-works-root || '/' || $workId || '.xml')/tei:TEI/tei:text/@type
+        else ()
     let $output := 
         (: get multi-volume collection or single-volume manifest :)
         if ($workType = ('work_multivolume', 'work_monograph')) then
-            if (util:binary-doc-available($config:iiif-root || '/' || $wid || '.json')) then 
-                let $debug := console:log('Fetching iiif manifest for ' || $wid || ' from the DB.')
-                return json-doc($config:iiif-root || '/' || $wid || '.json')
+            if (util:binary-doc-available($config:iiif-root || '/' || $workId || '.json')) then 
+                let $debug := console:log('Fetching iiif manifest for ' || $workId || ' from the DB.')
+                return json-doc($config:iiif-root || '/' || $workId || '.json')
             else
-                let $debug := console:log('Creating iiif manifest for ' || $wid || '.')
-                return iiif:createResource($wid) 
+                let $debug := console:log('Creating iiif manifest for ' || $workId || '.')
+                return iiif:createResource($workId) 
         (: get manifest for single volume within a multi-volume work :)
         else if ($workType eq 'work_volume') then
-            let $collectionId := substring-before($wid, '_Vol')
+            let $collectionId := substring-before($workId, '_Vol')
             let $volume := 
                 (: if the resource for the collection is available in the DB, get the manifest from within the collection :)
                 if (util:binary-doc-available($config:iiif-root || '/' || $collectionId || '.json')) then
-                    let $debug := console:log('Fetching iiif manifest for ' || $wid || ' from collection for ' || $collectionId || ' from the DB.')
+                    let $debug := console:log('Fetching iiif manifest for ' || $workId || ' from collection for ' || $collectionId || ' from the DB.')
                     let $collection := json-doc($config:iiif-root || '/' || $collectionId || '.json')
-                    let $manifest := array:get(array:filter(map:get($collection, 'members'), function($a) {contains(map:get($a, '@id'), $wid)}), 1)
+                    let $manifest := array:get(array:filter(map:get($collection, 'members'), function($a) {contains(map:get($a, '@id'), $workId)}), 1)
                     return $manifest
                 else 
-                    let $debug := console:log('Creating iiif manifest for ' || $wid || '.')
-                    return iiif:createResource($wid)
+                    let $debug := console:log('Creating iiif manifest for ' || $workId || '.')
+                    return iiif:createResource($workId)
             return $volume
         else ()
     return $output 
@@ -87,7 +90,7 @@ a single volume within a multi-volume work) or a collection resource (for a mult
 @param $wid: the ID of the work or volume which the manifest is requested for
 @return:     the iiif manifest/collection :)
 declare function iiif:createResource($targetWorkId as xs:string) as map(*) {
-    let $tei  := doc($config:tei-works-root || '/' || $targetWorkId || '.xml')//tei:TEI
+    let $tei  := doc($config:tei-works-root || '/' || sal-util:normalizeId($targetWorkId) || '.xml')//tei:TEI
     let $iiifResource :=
         if ($tei) then
         (: dataset exists: :)
@@ -483,7 +486,7 @@ In the case of single volume works, return:
               ]
 :)
     let $debug :=  if ($config:debug = "trace") then console:log("iiif:MiradorData running...") else ()
-    let $tei  := doc($config:tei-works-root || '/' || $wid || '.xml')//tei:TEI
+    let $tei  := doc($config:tei-works-root || '/' || sal-util:normalizeId($wid) || '.xml')//tei:TEI
     let $miradorData :=
         if ($tei) then
         (: dataset exists: :)
@@ -527,7 +530,7 @@ declare function iiif:MiradorWindowObject($node as node(), $model as map (*), $w
 :)
 
     let $debug     :=  if ($config:debug = "trace") then console:log("iiif:MiradorData running...") else ()
-    let $tei       := doc($config:tei-works-root || '/' || $wid || '.xml')//tei:TEI
+    let $tei       := doc($config:tei-works-root || '/' || sal-util:normalizeId($wid) || '.xml')//tei:TEI
     let $manifest  :=
         if ($tei) then
         (: dataset exists: :)

@@ -11,6 +11,7 @@ import module namespace export      = "http://salamanca/export"                 
 import module namespace render      = "http://salamanca/render"                 at "render.xql";
 import module namespace iiif        = "http://salamanca/iiif"                   at "iiif.xql";
 import module namespace app        = "http://salamanca/app"    at "app.xql";
+import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";
 
 declare       namespace exist       = "http://exist.sourceforge.net/NS/exist";
 declare       namespace output      = "http://www.w3.org/2010/xslt-xquery-serialization";
@@ -276,7 +277,28 @@ declare function net:forward($relative-path as xs:string, $netVars as map(*), $a
             <cache-control cache="{$net:cache-control}"/>
             {$net:errorhandler}
         </dispatch>
-    };
+};
+
+(: kind of similar to net:forward, but with standard attribute settings and different view/path handling :)
+declare function net:forward-to-html($relative-path as xs:string, $netVars as map(*)) {
+    let $absolute-path := $netVars('controller') || $relative-path
+(:    let $absolute-path := concat($netVars('root'), $netVars('controller'), '/', $relative-path):)
+    return
+        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+            <forward url="{$absolute-path}"/>
+            <view>
+                <forward url="{$netVars('controller')}/modules/view.xql">
+                    <set-attribute name="lang"              value="{$netVars('lang')}"/>
+                    <set-attribute name="$exist:resource"   value="{$netVars('resource')}"/>
+                    <set-attribute name="$exist:prefix"     value="{$netVars('prefix')}"/>
+                    <set-attribute name="$exist:controller" value="{$netVars('controller')}"/>
+                </forward>
+            </view>
+            <cache-control cache="{$net:cache-control}"/>
+            {config:errorhandler($netVars)}
+        </dispatch>
+};
+
 declare function net:forward-to-data($relative-path as xs:string, $netVars as map(*), $attribs as element(exist:add-parameter)*) {
     let $absolute-path := concat($netVars('controller'), '/../salamanca-data/', $relative-path)
     return
@@ -581,58 +603,60 @@ declare function net:deliverRDF($requestData as map(), $netVars as map()*) {
         else net:error(404, $netVars, 'Could not find rdf resource') (: not automatically creating rdf here if not available, since this might slow down the server inacceptably :)
     else if ($requestData('work_id') eq '*') then (: rdf of all works doesn't exist atm, redirect to HTML work overview - or rather return error? :)
         net:redirect-with-307($config:webserver || '/' || $netVars('lang') || '/works.html')
-    else 
-        net:error(404, $netVars, 'Invalid rdf request.')
+    else net:error(404, $netVars, 'Invalid rdf request.')
 };
 
-declare function net:deliverTextsHTML($requestData as map(), $netVars as map()*) {
+declare function net:APIdeliverTextsHTML($requestData as map(), $netVars as map()*) {
     let $validation := app:WRKvalidateId($requestData('tei_id'))
     return
-    if ($validation eq 2) then () (: full text available :)
-        (:let $reqResource  := $pathComponents[last()-1] || "/" || $pathComponents[last()]
-        return if (starts-with(lower-case($reqResource), 'texts/w0') or starts-with(lower-case($reqResource), 'authors/a0')) then
-            let $reqWork      := tokenize(tokenize(tokenize($reqResource, ':')[1], '/')[2], '\.')[1]
-            let $reqVersion   := if (tokenize(tokenize($reqResource, ':')[1], '\.')[2]) then
-                                    tokenize(tokenize($reqResource, ':')[1], '\.')[2]
-                                 else 'edit'
-            let $reqPassage   := tokenize($reqResource, ':')[2]
-            let $debug2       := if ($config:debug = ("trace")) then console:log("Load metadata from " || $config:rdf-root || '/' || replace($reqWork, 'w0', 'W0') || '.rdf' || " ...") else ()
-            let $metadata     := doc($config:rdf-root || '/' || replace($reqWork, 'w0', 'W0') || '.rdf')
-            let $debug3       := if ($config:debug = ("trace")) then console:log("Retrieving $metadata//rdf:Description[@rdf:about eq '" || replace(replace(replace($reqResource, 'w0', 'W0'), '.edit', ''), '.orig', '') || "']/rdfs:seeAlso[1]/@rdf:resource[contains(., '.html')]") else ()
-            let $resolvedPath := string(($metadata//rdf:Description[@rdf:about eq replace(replace(replace($reqResource, 'w0', 'W0'), '.edit', ''), '.orig', '')]/rdfs:seeAlso[1]/@rdf:resource[contains(., ".html")])[1])
-            let $debug4       := if ($config:debug = ("trace")) then console:log("Found path: " || $resolvedPath || " ...") else ()
-    
-            (\: The pathname that has been saved contains 0 or exactly one parameter for the target html fragment,
-               but it may or may not contain a hash value. We have to mix in other parameters (mode, search expression or viewer state) before the hash. :\)
-            let $pathname     := if (contains($resolvedPath, '?')) then
-                                    substring-before($resolvedPath, '?')
-                                 else if (contains($resolvedPath, '#')) then
-                                    substring-before($resolvedPath, '#')
-                                 else
-                                    $resolvedPath
-            let $hash         := if (contains($resolvedPath, '#')) then concat('#', substring-after($resolvedPath, '#')) else ()
-            let $fragParam    := if (contains($resolvedPath, '?')) then
-                                    if (contains(substring-after($resolvedPath, '?'), '#')) then
-                                        substring-before(substring-after($resolvedPath, '?'), '#')
-                                    else
-                                        substring-after($resolvedPath, '?')
-                                 else ()
-            let $updParams    := if ($reqVersion = "orig") then array:append([$netVars('params')], "mode=orig") else [$netVars('params')]
+    if ($validation eq 2) then (: full text available :)
+        if (matches($requestData('work_id'), 'W\d{4}')) then
+            let $debug := if ($config:debug = ("trace")) then console:log("Load metadata from " || $config:rdf-root || '/' || $requestData('work_id') || '.rdf' || " ...") else ()
+            let $metadata := doc($config:rdf-root || '/' || $requestData('work_id') || '.rdf')
+            let $debug := if ($config:debug = ("trace")) then console:log("Retrieving $metadata//rdf:Description[@rdf:about eq '" || $requestData('work_id') || ':' || $requestData('passage') || "']/rdfs:seeAlso[1]/@rdf:resource[contains(., '.html')]") else ()
+            let $resolvedPath := string(($metadata//rdf:Description[@rdf:about eq $requestData('work_id') || ':' || $requestData('passage')]/rdfs:seeAlso[1]/@rdf:resource[contains(., ".html")])[1])
+            let $debug4 := if ($config:debug = ("trace")) then console:log("Found path: " || $resolvedPath || " ...") else ()
+            (: The pathname that has been saved contains 0 or exactly one parameter for the target html fragment,
+               but it may or may not contain a hash value. We have to mix in other parameters (mode, search expression or viewer state) before the hash. :)
+            let $pathname := (: rather firstIndexOf('[?#]') here? :)
+                if (contains($resolvedPath, '?')) then
+                    substring-before($resolvedPath, '?')
+                else if (contains($resolvedPath, '#')) then
+                    substring-before($resolvedPath, '#')
+                else $resolvedPath
+            let $hash := if (contains($resolvedPath, '#')) then concat('#', substring-after($resolvedPath, '#')) else ()
+            let $fragParam := 
+                if (contains($resolvedPath, '?')) then
+                   if (contains(substring-after($resolvedPath, '?'), '#')) then
+                       substring-before(substring-after($resolvedPath, '?'), '#')
+                   else substring-after($resolvedPath, '?')
+                else ()
+            let $updParams    := if ($requestData('mode') eq 'orig') then array:append([$netVars('params')], "mode=orig") else [$netVars('params')]
             let $parameters   := concat(if ($fragParam or $updParams) then "?" else (), string-join(($fragParam, string-join($updParams?*, "&amp;")), "&amp;"))
-    
-    
             let $debug5       := if ($config:debug = ("trace", "info")) then console:log("Redirecting to " || $pathname || $parameters || $hash || " ...") else ()
             return net:redirect-with-303($pathname || $parameters || $hash )
-         else if (matches(lower-case($reqResource), '^texts/all(\?.*?)?')) then (\: forward to works list, regardless of parameters :\)
+        else if ($requestData('work_id') eq '*') then (: forward to works list, regardless of parameters :)
             let $pathname     := $config:webserver || '/' || 'works.html'
             let $debug5       := if ($config:debug = ("trace", "info")) then console:log("Redirecting to " || $pathname || " ...") else ()
             return net:redirect-with-303($pathname)
-         else
+        else
             let $debug2       := if ($config:debug = ("trace", "info")) then console:log("Html is acceptable, but bad input. Redirect (404) to error webpage ...") else ()
-            return net:redirect-with-404($config:webserver || '/' || 'error-page.html'):)
+            return net:error(404, $netVars, ())
     else if ($validation eq 1) then net:redirect-with-303($config:webserver || '/workDetails.html?wid=' || $requestData('tei_id')) (: only work details available :)
     else if ($validation eq 0) then net:error(404, $netVars, 'work-not-yet-available') (: work id is valid, but there are no data :)
     else net:error(404, $netVars, '')
+};
+
+declare function net:deliverTextsHTML($netVars as map()*) {
+    let $wid := $netVars('paramap')?('wid')
+    let $validation := app:WRKvalidateId($wid)
+(:    let $debug := if ($config:debug = "trace") then util:log("warn", "HTML request for work :" || $wid || " ; " || "validation result: " || string($validation)) else ():)
+    return
+        if ($validation eq 2) then (: full text available :)
+            net:forward-to-html(substring($netVars('path'), 4), $netVars)
+        else if ($validation eq 1) then net:redirect-with-303($config:webserver || '/workDetails.html?wid=' || $wid) (: only work details available :)
+        else if ($validation eq 0) then net:error(404, $netVars, 'work-not-yet-available') (: work id is valid, but there are no data :)
+        else net:error(404, $netVars, '')
 };
 
 declare function net:deliverAuthorsHTML($netVars as map()*) {
@@ -661,7 +685,7 @@ declare function net:deliverIIIF($path as xs:string, $netVars) {
     let $passage        := tokenize($reqResource, ':')[2]
     let $entityPath     := concat($work, if ($passage) then concat('#', $passage) else ())
     let $debug2         := if ($config:debug = "trace") then console:log("Load metadata from " || $config:rdf-root || '/' || replace($work, 'w0', 'W0') || '.rdf' || " ...") else ()
-    let $metadata       := doc($config:rdf-root || '/' || replace($work, 'w0', 'W0') || '.rdf')
+    let $metadata       := doc($config:rdf-root || '/' || sal-util:normalizeId($work) || '.rdf')
     let $debug3         := if ($config:debug = "trace") then console:log("Retrieving $metadata//rdf:Description[@rdf:about = '" || replace($reqResource, 'w0', 'W0') || "']/rdfs:seeAlso/@rdf:resource/string()") else ()
     let $debug4         := if ($config:debug = "trace") then console:log("This gives " || count($metadata//rdf:Description[@rdf:about = replace($reqResource, 'w0', 'W0')]/rdfs:seeAlso/@rdf:resource) || " urls in total.") else ()
 
@@ -761,7 +785,7 @@ declare function net:deliverJPG($pathComponents as xs:string*, $netVars as map()
     let $reqResource  := $pathComponents[last()]
     let $reqWork      := tokenize(tokenize($reqResource, ':')[1], '\.')[1]
     let $passage      := tokenize($reqResource, ':')[2]
-    let $metadata     := doc($config:rdf-root || '/' || replace($reqWork, 'w0', 'W0') || '.rdf')
+    let $metadata     := doc($config:rdf-root || '/' || sal-util:normalizeId($reqWork) || '.rdf')
     let $debug2       := if ($config:debug = "trace") then console:log("Retrieving $metadata//rdf:Description[@rdf:about = " || $reqResource || "]/rdfs:seeAlso/@rdf:resource/string()") else ()
     let $resolvedPaths := for $url in $metadata//rdf:Description[@rdf:about = $reqResource]/rdfs:seeAlso/@rdf:resource/string()
                           where matches($url, "\.(jpg|jpeg|png|tif|tiff)$")

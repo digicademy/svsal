@@ -1,6 +1,8 @@
 xquery version "3.1";
 
+
 module namespace config         = "http://salamanca/config";
+declare       namespace exist   = "http://exist.sourceforge.net/NS/exist";
 declare namespace repo          = "http://exist-db.org/xquery/repo";
 declare namespace request       = "http://exist-db.org/xquery/request";
 declare namespace session       = "http://exist-db.org/xquery/session";
@@ -16,6 +18,7 @@ declare namespace tei           = "http://www.tei-c.org/ns/1.0";
 declare namespace app           = "http://salamanca/app";
 import module namespace net     = "http://salamanca/net"                at "net.xql";
 import module namespace i18n    = "http://exist-db.org/xquery/i18n"     at "i18n.xql";
+import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";
 import module namespace console = "http://exist-db.org/xquery/console";
 import module namespace functx  = "http://www.functx.com";
 
@@ -602,80 +605,80 @@ declare function config:formatName($persName as element()*) as xs:string? {
 declare %templates:default("language", "en") 
     function config:meta-title($node as node(), $model as map(*), $lang as xs:string, $wid as xs:string*, $q as xs:string?) as element() {  
     let $output := 
-                         if (ends-with(request:get-uri(), "/author.html")) then
-                        <title>
-                            {config:formatName($model("currentAuthor")//tei:person//tei:persName)} -
-                             <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
-                    else if (ends-with(request:get-uri(), "/authors.html")) then
-                        <title><i18n:text key="authors">Autoren</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        if (ends-with(request:get-uri(), "/author.html")) then
+            <title>
+                {config:formatName($model("currentAuthor")//tei:person//tei:persName)} -
+                 <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/authors.html")) then
+            <title><i18n:text key="authors">Autoren</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
 
-                    else if ($wid) then
-                        <title>
-                            {string-join(doc($config:tei-works-root || "/" || $wid || ".xml")//tei:sourceDesc//tei:author/tei:persName/tei:surname, ', ') || ': ' ||
-                             doc($config:tei-works-root || "/" || $wid || ".xml")//tei:sourceDesc//tei:monogr/tei:title[@type = 'short']/string()} -
-                             <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
+        else if ($wid) then (: workDetails usually leads here as well if there is a wid param :)
+            <title>
+                {string-join(doc($config:tei-works-root || "/" || sal-util:normalizeId($wid) || ".xml")//tei:sourceDesc//tei:author/tei:persName/tei:surname, ', ') || ': ' ||
+                 doc($config:tei-works-root || "/" || sal-util:normalizeId($wid) || ".xml")//tei:sourceDesc//tei:monogr/tei:title[@type = 'short']/string()} -
+                 <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
 (:                    else if (request:get-parameter('wid', '')) then
-                        <title>
-                            {replace(request:get-parameter('wid', ''), request:get-parameter('wid', ''), doc($config:tei-works-root || "/" || request:get-parameter('wid', '') || ".xml")//tei:sourceDesc//tei:author/tei:persName/tei:surname/string())||': '||
-                             replace(request:get-parameter('wid', ''), request:get-parameter('wid', ''), doc($config:tei-works-root || "/" || request:get-parameter('wid', '') || ".xml")//tei:sourceDesc//tei:title[@type = 'short']/string())} -
-                             <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
+            <title>
+                {replace(request:get-parameter('wid', ''), request:get-parameter('wid', ''), doc($config:tei-works-root || "/" || request:get-parameter('wid', '') || ".xml")//tei:sourceDesc//tei:author/tei:persName/tei:surname/string())||': '||
+                 replace(request:get-parameter('wid', ''), request:get-parameter('wid', ''), doc($config:tei-works-root || "/" || request:get-parameter('wid', '') || ".xml")//tei:sourceDesc//tei:title[@type = 'short']/string())} -
+                 <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
 :)
-                    else if (ends-with(request:get-uri(), "/workDetails.html")) then
-                        <title>
-                            {string-join($model("currentWork")//tei:sourceDesc//tei:author/tei:persName/tei:surname, '/') || ", " ||
-                             $model("currentWork")//tei:sourceDesc//tei:monogr/tei:title[@type = 'short']/string()} (<i18n:text key='detailsHeader'>Details</i18n:text>) -
-                             <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
-                    else if (ends-with(request:get-uri(), "/works.html")) then
-                        <title><i18n:text key="works">Werke</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/workDetails.html")) then
+            <title>
+                {string-join($model("currentWork")//tei:sourceDesc//tei:author/tei:persName/tei:surname, '/') || ", " ||
+                 $model("currentWork")//tei:sourceDesc//tei:monogr/tei:title[@type = 'short']/string()} (<i18n:text key='detailsHeader'>Details</i18n:text>) -
+                 <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/works.html")) then
+            <title><i18n:text key="works">Werke</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
 
-                    else if (ends-with(request:get-uri(), "/lemma.html")) then
-                        <title>
-                            {$model("currentLemma")//tei:titleStmt//tei:title[@type = 'short']/string()} -
-                             <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
-                    else if (ends-with(request:get-uri(), "/dictionary.html")) then
-                        <title><i18n:text key="dictionary">Wörterbuch</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/lemma.html")) then
+            <title>
+                {$model("currentLemma")//tei:titleStmt//tei:title[@type = 'short']/string()} -
+                 <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/dictionary.html")) then
+            <title><i18n:text key="dictionary">Wörterbuch</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
 
-                    else if (ends-with(request:get-uri(), "/newsEntry.html")) then
-                        <title>
-                            {        if ($lang eq 'de') then $model('currentNews')//tei:title[@type='main'][@xml:lang='de']/string()
-                                else if ($lang eq 'en') then $model('currentNews')//tei:title[@type='main'][@xml:lang='en']/string()
-                                else if ($lang eq 'es') then $model('currentNews')//tei:title[@type='main'][@xml:lang='es']/string()
-                                else()} -
-                             <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text>
-                        </title>
-                    else if (ends-with(request:get-uri(), "/news.html")) then
-                        <title><i18n:text key="news">Aktuelles</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/newsEntry.html")) then
+            <title>
+                {        if ($lang eq 'de') then $model('currentNews')//tei:title[@type='main'][@xml:lang='de']/string()
+                    else if ($lang eq 'en') then $model('currentNews')//tei:title[@type='main'][@xml:lang='en']/string()
+                    else if ($lang eq 'es') then $model('currentNews')//tei:title[@type='main'][@xml:lang='es']/string()
+                    else()} -
+                 <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text>
+            </title>
+        else if (ends-with(request:get-uri(), "/news.html")) then
+            <title><i18n:text key="news">Aktuelles</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
 
-                    else if (ends-with(request:get-uri(), "/workingPaper.html")) then
-                        <title>Working Paper:
-                            {
-                             $model("currentWp")//tei:titleStmt/tei:title[@type = 'short']/string()} -
-                             <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
-                    else if (ends-with(request:get-uri(), "/project.html")) then
-                        <title><i18n:text key="project">Projekt</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
-                   else if (ends-with(request:get-uri(), "/workingPapers.html")) then
-                        <title><i18n:text key="workingPapers">Working Papers</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
-                    else if (ends-with(request:get-uri(), "/editorialWorkingPapers.html")) then
-                        <title><i18n:text key="WpAbout">Über die WP Reihe</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
-                    else if (ends-with(request:get-uri(), "/search.html")) then
-                        <title>{if ($q) then $q else <i18n:text key="search">Suche</i18n:text>} - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/workingPaper.html")) then
+            <title>Working Paper:
+                {
+                 $model("currentWp")//tei:titleStmt/tei:title[@type = 'short']/string()} -
+                 <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/project.html")) then
+            <title><i18n:text key="project">Projekt</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/workingPapers.html")) then
+            <title><i18n:text key="workingPapers">Working Papers</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/editorialWorkingPapers.html")) then
+            <title><i18n:text key="WpAbout">Über die WP Reihe</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/search.html")) then
+            <title>{if ($q) then $q else <i18n:text key="search">Suche</i18n:text>} - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
 
-                    else if (ends-with(request:get-uri(), "/guidelines.html")) then
-                        <title><i18n:text key="guidelines">Editionsrichtlinien</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/guidelines.html")) then
+            <title><i18n:text key="guidelines">Editionsrichtlinien</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
 
-                    else if (ends-with(request:get-uri(), "/admin.html")) then
-                        <title><i18n:text key="administration">Administration</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
-                    else if (ends-with(request:get-uri(), "/render.html")) then
-                        <title><i18n:text key="rendering">Rendering</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
-                    else if (ends-with(request:get-uri(), "/stats.html")) then
-                        <title><i18n:text key="stats">Statistiken</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
-                    else if (ends-with(request:get-uri(), "/index.html")) then
-                        <title><i18n:text key="start">Home</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
-                    else if (ends-with(request:get-uri(), "/contact.html")) then
-                        <title><i18n:text key="contact">Kontakt</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
-                    else if (ends-with(request:get-uri(), "/")) then
-                        <title><i18n:text key="start">Home</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title> else
-                        <title><i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/admin.html")) then
+            <title><i18n:text key="administration">Administration</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/render.html")) then
+            <title><i18n:text key="rendering">Rendering</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/stats.html")) then
+            <title><i18n:text key="stats">Statistiken</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/index.html")) then
+            <title><i18n:text key="start">Home</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/contact.html")) then
+            <title><i18n:text key="contact">Kontakt</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/")) then
+            <title><i18n:text key="start">Home</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title> else
+            <title><i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
         let $debug := if ($config:debug = "trace") then console:log("Meta title: " || $output) else ()
  return
         i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "de")
@@ -788,24 +791,26 @@ declare %templates:default("lang", "en")
 };
 
 declare function local:docSubjectname($id as xs:string) as xs:string? {
-        switch (substring($id, 1, 2))
+    let $resourceId := sal-util:normalizeId($id)
+    return
+        switch (substring($resourceId, 1, 2))
             case 'A0'
-                return if (doc-available($config:tei-authors-root || '/' || $id || '.xml')) then 
-                    config:formatName(doc($config:tei-authors-root || '/' || $id || '.xml')//tei:listPerson/tei:person[1]/tei:persName)
-                else ()
+              return if (doc-available($config:tei-authors-root || '/' || $resourceId || '.xml')) then 
+                  config:formatName(doc($config:tei-authors-root || '/' || $resourceId || '.xml')//tei:listPerson/tei:person[1]/tei:persName)
+              else ()
             case 'W0'
-                return if (doc-available($config:tei-works-root || '/' || $id || '.xml')) then
-                    string-join(doc($config:tei-works-root || "/" || $id || ".xml")//tei:sourceDesc//tei:author/tei:persName/tei:surname, ', ') ||
-                                   ': ' || doc($config:tei-works-root || "/" || $id || ".xml")//tei:sourceDesc//tei:monogr/tei:title[@type = 'short']/string()
-                else ()
+              return if (doc-available($config:tei-works-root || '/' || $resourceId || '.xml')) then
+                  string-join(doc($config:tei-works-root || "/" || $resourceId || ".xml")//tei:sourceDesc//tei:author/tei:persName/tei:surname, ', ') ||
+                                 ': ' || doc($config:tei-works-root || "/" || $resourceId || ".xml")//tei:sourceDesc//tei:monogr/tei:title[@type = 'short']/string()
+              else ()
             case 'L0'
-                return if (doc-available($config:tei-lemmata-root || '/' || $id || '.xml')) then
-                    doc($config:tei-lemmata-root || '/' || $id || '.xml')//tei:titleStmt//tei:title[@type = 'short']/string()
-                else ()
+              return if (doc-available($config:tei-lemmata-root || '/' || $resourceId || '.xml')) then
+                  doc($config:tei-lemmata-root || '/' || $resourceId || '.xml')//tei:titleStmt//tei:title[@type = 'short']/string()
+              else ()
             case 'WP'
-                return if (doc-available($config:tei-workingpapers-root || '/' || $id || '.xml')) then
-                    doc($config:tei-workingpapers-root || '/' || $id || '.xml')//tei:titleStmt/tei:title[@type = 'short']/string()
-                else ()
+              return if (doc-available($config:tei-workingpapers-root || '/' || $resourceId || '.xml')) then
+                  doc($config:tei-workingpapers-root || '/' || $resourceId || '.xml')//tei:titleStmt/tei:title[@type = 'short']/string()
+              else ()
             default return ()
 };
 
@@ -823,7 +828,7 @@ declare function config:firstLink($node as node(), $model as map(*), $wid as xs:
 };
 
 declare function config:prevLink($node as node(), $model as map(*), $wid as xs:string?, $frag as xs:string?) as element(link)? {
-    let $workId         := if ($wid) then $wid else $model("currentWork")/@xml:id
+    let $workId         := if ($wid) then sal-util:normalizeId($wid) else $model("currentWork")/@xml:id
     return  if (not (xmldb:collection-available($config:html-root || "/" || $workId))) then
                 ()
             else
@@ -831,15 +836,15 @@ declare function config:prevLink($node as node(), $model as map(*), $wid as xs:s
                                             $frag || ".html"
                                         else
                                             functx:sort(xmldb:get-child-resources($config:html-root || "/" || $workId))[1]
-                let $url := doc($config:html-root || '/' || $wid || '/' || $targetFragment)//div[@id="SvSalPagination"]/a[@class="previous"]/@href/string()
-                let $debug := if ($config:debug = "trace") then console:log("Prevlink: " || $url || " ($wid: " || $wid || ", $frag: " || $frag || ", $targetFragment: " || $targetFragment || ").") else ()
+                let $url := doc($config:html-root || '/' || sal-util:normalizeId($wid) || '/' || $targetFragment)//div[@id="SvSalPagination"]/a[@class="previous"]/@href/string()
+                let $debug := if ($config:debug = "trace") then console:log("Prevlink: " || $url || " ($wid: " || sal-util:normalizeId($wid) || ", $frag: " || $frag || ", $targetFragment: " || $targetFragment || ").") else ()
                 return if ($url) then
                             <link rel="prev" href="{$url}"/>
                         else ()
 };
 
 declare function config:nextLink($node as node(), $model as map(*), $wid as xs:string?, $frag as xs:string?) as element(link)? {
-    let $workId         := if ($wid) then $wid else $model("currentWork")/@xml:id
+    let $workId := if ($wid) then sal-util:normalizeId($wid) else $model("currentWork")/@xml:id
     return  if (not(xmldb:collection-available($config:html-root || "/" || $workId))) then
                 ()
             else
@@ -847,8 +852,8 @@ declare function config:nextLink($node as node(), $model as map(*), $wid as xs:s
                                             $frag || ".html"
                                         else
                                             functx:sort(xmldb:get-child-resources($config:html-root || "/" || $workId))[1]
-                let $url := doc($config:html-root || '/' || $wid || '/' || $targetFragment)//div[@id="SvSalPagination"]/a[@class="next"]/@href/string()
-                let $debug := if ($config:debug = "trace") then console:log("Nextlink: " || string-join($url, " ; ") || " ($wid: " || $wid || ", $frag: " || $frag || ", $targetFragment: " || $targetFragment || ").") else ()
+                let $url := doc($config:html-root || '/' || sal-util:normalizeId($wid) || '/' || $targetFragment)//div[@id="SvSalPagination"]/a[@class="next"]/@href/string()
+                let $debug := if ($config:debug = "trace") then console:log("Nextlink: " || string-join($url, " ; ") || " ($wid: " || sal-util:normalizeId($wid) || ", $frag: " || $frag || ", $targetFragment: " || $targetFragment || ").") else ()
                 return if ($url) then
                             <link rel="next" href="{$url}"/>
                         else ()
