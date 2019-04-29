@@ -1256,10 +1256,10 @@ declare function app:watermark-txtonly($node as node(), $model as map(*), $wid a
 };
 
 declare %templates:wrap function app:loadSingleWork($node as node(), $model as map(*), $wid as xs:string?) {
-    let $context  :=   if (doc($config:tei-works-root || "/" || $wid || ".xml")/tei:TEI//tei:text[@type="work_multivolume"]) then
-                            util:expand(doc($config:tei-works-root || "/" || $wid || ".xml")/tei:TEI)
+    let $context  :=   if (doc($config:tei-works-root || "/" || upper-case($wid) || ".xml")/tei:TEI//tei:text[@type="work_multivolume"]) then
+                            util:expand(doc($config:tei-works-root || "/" || upper-case($wid) || ".xml")/tei:TEI)
                      else
-                            doc($config:tei-works-root || "/" || $wid || ".xml")/tei:TEI
+                            doc($config:tei-works-root || "/" || upper-case($wid) || ".xml")/tei:TEI
     return  map {"currentWork"    := $context}
 };
 
@@ -2344,10 +2344,11 @@ Determines whether a given work is officially published as part of the digital e
 @param wid: the ID of the requested work.
 ~:)
 declare function app:WRKisPublished($node as node(), $model as map(*), $wid as xs:string) as xs:boolean {
-    let $status :=  if ($wid eq $model('currentWork')/@xml:id/string()) then
+    let $workId := upper-case($wid)
+    let $status :=  if ($workId eq $model('currentWork')/@xml:id/string()) then
                         $model('currentWork')/tei:teiHeader/tei:revisionDesc/@status/string()
-                    else if (doc-available($config:tei-works-root || '/' || $wid || '.xml')) then 
-                        doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI/tei:teiHeader/tei:revisionDesc/@status/string()
+                    else if (doc-available($config:tei-works-root || '/' || $workId || '.xml')) then 
+                        doc($config:tei-works-root || '/' || $workId || '.xml')/tei:TEI/tei:teiHeader/tei:revisionDesc/@status/string()
                     else 'no_status'
     let $publishedStatus := ('g_enriched_approved', 'h_revised', 'i_revised_approved', 'z_final')
     return $status = $publishedStatus
@@ -3704,7 +3705,7 @@ declare function app:AUTexists($aid as xs:string?) as xs:boolean {
 
 (: 1 = valid & available; 0 = valid, but not yet available; -1 = not valid :)
 declare function app:AUTvalidateId($aid as xs:string?) as xs:integer {
-    if ($aid) then
+    if ($aid and matches($aid, '^[aA]\d{4}$')) then
         (: TODO: additional condition when author articles are available - currently this will always resolve to -1 :)
         if (app:AUTexists($aid)) then 0
         else -1
@@ -3720,7 +3721,7 @@ declare function app:LEMexists($lid as xs:string?) as xs:boolean {
 
 (: 1 = valid & available; 0 = valid, but not yet available; -1 = not valid :)
 declare function app:LEMvalidateId($lid as xs:string?) as xs:integer {
-    if ($lid) then
+    if ($lid and matches($lid, '^[lL]\d{4}$')) then
         (: TODO: additional conditions when lemmata/entries are available - currently this will always resolve to -1 :)
         if (app:LEMexists($lid)) then 0
         else -1
@@ -3734,9 +3735,9 @@ declare function app:WRKexists($wid as xs:string?) as xs:boolean {
 
 (: 2 = valid, full data available; 1 = valid, but only metadata available; 0 = valid, but not yet available; -1 = not valid :)
 declare function app:WRKvalidateId($wid as xs:string?) as xs:integer {
-    if ($wid) then
+    if ($wid and matches($wid, '^[wW]\d{4}(_Vol\d{2})?$')) then
         if (app:WRKisPublished(<dummy/>, map{}, $wid)) then 2
-        else if (doc-available($config:tei-works-root || '/' || $wid || '.xml')) then 1
+        else if (doc-available($config:tei-works-root || '/' || upper-case($wid) || '.xml')) then 1
         else if (app:WRKexists($wid)) then 0
         else -1
     else -1    
