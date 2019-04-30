@@ -1,4 +1,4 @@
-<xsl:stylesheet xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sal="http://salamanca.adwmainz.de" version="3.0" exclude-result-prefixes="exist sal tei xd xs xsl" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" xmlns:sal="http://salamanca.adwmainz.de" version="3.0" exclude-result-prefixes="exist sal tei xd xs xsl" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
 
 <!-- TODO:
            * tweak/tune performance: use
@@ -481,7 +481,8 @@
     <!-- BREAKS -->
     <xsl:template match="pb">                   <!-- insert a '|' and, eventually, a space to indicate pagebreaks in the text -->
 <!--        <xsl:message>Matched pb node <xsl:value-of select="@xml:id"/>.</xsl:message>-->
-        <xsl:if test="preceding::pb">
+        <!-- breaks that do not occur at the beginning/ending of a section/paragraph/heading/... are marked as "|" -->
+        <xsl:if test="preceding::pb and preceding-sibling::node()[self::text()[not(normalize-space() eq '')] or .//text()[not(normalize-space() eq '')]]                                     and following-sibling::node()[self::text()[not(normalize-space() eq '')] or .//text()[not(normalize-space() eq '')]]"> 
             <xsl:choose>
                 <xsl:when test="@break='no'">
                     <xsl:text>|</xsl:text>

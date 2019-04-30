@@ -134,7 +134,6 @@ return
         return if ($pathComponents[3] = $config:apiEndpoints($pathComponents[2])) then  (: Check if we support the requested endpoint/version :)
             switch($pathComponents[3])
                 case "texts" return
-                
                     let $path := substring-after($exist:path, '/texts/')
                     let $textsRequest := net:APIparseTextsRequest($path, $netVars) 
                     return
@@ -143,7 +142,7 @@ return
                                 case 'tei'  return net:deliverTEI($textsRequest,$netVars)
                                 case 'txt'  return net:deliverTXT($textsRequest,$netVars)
                                 case 'rdf' return net:deliverRDF($textsRequest, $netVars)
-                                default     return net:deliverTextsHTML($pathComponents, $netVars)
+                                default     return net:APIdeliverTextsHTML($textsRequest, $netVars)
     (:
                                 case 'iiif' return net:deliverIIIF($exist:path, $netVars) (\: TODO: debug forwarding :\)
                                 case 'jpg' return net:deliverJPG($pathComponents, $netVars)
@@ -291,39 +290,39 @@ return
         let $debug          := if ($config:debug = "trace") then console:log ("HTML requested, translating language path component to a request attribute - $exist:path: " || $exist:path || ", redirect to: " || $exist:controller || substring($exist:path, 4) || ", parameters: [" || string-join(net:inject-requestParameter((), ()), "&amp;") || "], attributes: [].") else ()
         (: For now, we don't use net:forward here since we need a nested view/forwarding. :)
 (:        let $isValidRequest := net:validateHTMLRequest(substring($exist:path, 4), $netVars):)
-        let $viewModule := 
-            switch ($exist:resource)
-                case "admin.html"
-                case "corpus-admin.html"
-                case "createLists.html"
-                case "iiif-admin.html"
-                case "render.html"
-                case "renderTheRest.html"
-                case "render.html"
-                case "error-page.html"
-                case "sphinx-admin.html" return
-                     "view-admin.xql"
-                default return
-                    "view.xql"
+        
         let $resource := lower-case($exist:resource)
         return
-            if ($exist:resource eq 'author.html') then net:deliverAuthorsHTML($netVars)
-            else if ($exist:resource eq 'lemma.html') then net:deliverConceptsHTML($netVars)
-            else if ($exist:resource eq 'work.html') then () (:net:deliverTextsHTML($netVars):)
-            else if ($exist:resource = xmldb:get-child-resources($config:app-root)) then
-                <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                    <forward url="{$exist:controller || substring($exist:path, 4)}"/>
-                    <view>
-                        <!-- pass the results through view.xql -->
-                        <forward url="{$exist:controller}/modules/{$viewModule}">
-                            <set-attribute name="lang"              value="{$lang}"/>
-                            <set-attribute name="$exist:resource"   value="{$exist:resource}"/>
-                            <set-attribute name="$exist:prefix"     value="{$exist:prefix}"/>
-                            <set-attribute name="$exist:controller" value="{$exist:controller}"/>
-                        </forward>
-                    </view>
-                    {config:errorhandler($netVars)}
-                </dispatch>
+            if ($resource eq 'author.html') then net:deliverAuthorsHTML($netVars)
+            else if ($resource eq 'lemma.html') then net:deliverConceptsHTML($netVars)
+            else if ($resource eq 'work.html') then net:deliverTextsHTML($netVars)
+            else if ($resource = xmldb:get-child-resources($config:app-root)) then
+                let $viewModule := 
+                    switch ($exist:resource)
+                        case "admin.html"
+                        case "corpus-admin.html"
+                        case "createLists.html"
+                        case "iiif-admin.html"
+                        case "render.html"
+                        case "renderTheRest.html"
+                        case "render.html"
+                        case "error-page.html"
+                        case "sphinx-admin.html" return "view-admin.xql"
+                        default return "view.xql"
+                return
+                    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                        <forward url="{$exist:controller || substring($exist:path, 4)}"/>
+                        <view>
+                            <!-- pass the results through view.xql -->
+                            <forward url="{$exist:controller}/modules/{$viewModule}">
+                                <set-attribute name="lang"              value="{$lang}"/>
+                                <set-attribute name="$exist:resource"   value="{$exist:resource}"/>
+                                <set-attribute name="$exist:prefix"     value="{$exist:prefix}"/>
+                                <set-attribute name="$exist:controller" value="{$exist:controller}"/>
+                            </forward>
+                        </view>
+                        {config:errorhandler($netVars)}
+                    </dispatch>
             else net:error(404, $netVars, ())
 
     (: If there is no language path component, redirect to a version of the site where there is one :)

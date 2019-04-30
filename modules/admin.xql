@@ -449,9 +449,9 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
     let $createTeiCorpus := admin:createTeiCorpus()
     let $createTxtCorpus := admin:createTxtCorpus()
     let $corpus-end-time := ((util:system-time() - $corpus-start-time) div xs:dayTimeDuration('PT1S'))
-    (: make sure that fragments are to be found, by reindexing :)
+    (: make sure that fragments are to be found by reindexing :)
     let $index-start-time := util:system-time()
-    let $reindex          := xmldb:reindex($config:data-root)
+    let $reindex          := if ($config:instanceMode ne "testing") then xmldb:reindex($config:data-root) else ()
     let $index-end-time := ((util:system-time() - $index-start-time) div xs:dayTimeDuration('PT1S'))
     return <div>
                 <p>Zu rendern: {count($todo)} Werk(e); gesamte Rechenzeit:

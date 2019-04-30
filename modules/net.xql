@@ -297,6 +297,8 @@ declare function net:forward-to-html($relative-path as xs:string, $netVars as ma
             <cache-control cache="{$net:cache-control}"/>
             {config:errorhandler($netVars)}
         </dispatch>
+(:    {for $param in map:keys($netVars('paramap')) return 
+           <add-parameter xmlns="http://exist.sourceforge.net/NS/exist" name="{$param}" value="{$netVars('paramap')?($param)}"/>}    :)
 };
 
 declare function net:forward-to-data($relative-path as xs:string, $netVars as map(*), $attribs as element(exist:add-parameter)*) {
@@ -648,15 +650,20 @@ declare function net:APIdeliverTextsHTML($requestData as map(), $netVars as map(
 };
 
 declare function net:deliverTextsHTML($netVars as map()*) {
-    let $wid := $netVars('paramap')?('wid')
+    let $wid := sal-util:normalizeId($netVars('paramap')?('wid'))
     let $validation := app:WRKvalidateId($wid)
 (:    let $debug := if ($config:debug = "trace") then util:log("warn", "HTML request for work :" || $wid || " ; " || "validation result: " || string($validation)) else ():)
     return
-        if ($validation eq 2) then (: full text available :)
+        if ($config:instanceMode eq 'testing' and count(xmldb:get-child-resources($config:html-root || '/' || $wid)) gt 0) then
+            net:forward-to-html(substring($netVars('path'), 4), $netVars) (: display prototype in testing mode :)
+        else if ($validation eq 2) then (: full text available :)
             net:forward-to-html(substring($netVars('path'), 4), $netVars)
-        else if ($validation eq 1) then net:redirect-with-303($config:webserver || '/workDetails.html?wid=' || $wid) (: only work details available :)
-        else if ($validation eq 0) then net:error(404, $netVars, 'work-not-yet-available') (: work id is valid, but there are no data :)
-        else net:error(404, $netVars, '')
+        else if ($validation eq 1) then 
+            net:redirect-with-303($config:webserver || '/workDetails.html?wid=' || $wid) (: only work details available :)
+        else if ($validation eq 0) then 
+            net:error(404, $netVars, 'work-not-yet-available') (: work id is valid, but there are no data :)
+        else 
+            net:error(404, $netVars, '')
 };
 
 declare function net:deliverAuthorsHTML($netVars as map()*) {
