@@ -112,19 +112,29 @@
                 <xsl:apply-templates select="." mode="non-recursive"/>
             </xsl:for-each>
         </xsl:if>
-        <div class="titlePage">
-            <xsl:apply-templates/>
-        </div>
+        <xsl:choose>
+            <xsl:when test="not(preceding::titlePage)">
+                <div class="titlePage">
+                    <xsl:apply-templates/>
+                </div>
+            </xsl:when>
+            <xsl:otherwise>
+                <div class="sec-titlePage">
+                    <xsl:apply-templates/>
+                </div>
+            </xsl:otherwise>
+        </xsl:choose>
+        
     </xsl:template>
     <xsl:template match="titlePart[@type='main']">
         <xsl:element name="h1">
             <xsl:apply-templates/>
         </xsl:element>
     </xsl:template>
-    <xsl:template match="titlePart[not(@type='main')]|docTitle|argument|docDate|docImprint">
+    <xsl:template match="titlePart[not(@type='main')]|docTitle|argument|docDate">
         <xsl:apply-templates/>
     </xsl:template>
-    <xsl:template match="byline|imprimatur">
+    <xsl:template match="byline|imprimatur|docImprint">
         <xsl:element name="span">
             <xsl:attribute name="class" select="'tp-paragraph'"/>
             <xsl:apply-templates/>
@@ -552,7 +562,6 @@
         <xsl:text> </xsl:text>
     </xsl:template>
     <xsl:template match="lb[not(@break='no')]"> <!-- insert a space if the break is not in a hyphenated word, otherwise insert nothing at all -->
-<!--        <xsl:message>Matched lb node <xsl:value-of select="@n"/>.</xsl:message>-->
         <xsl:text> </xsl:text>
     </xsl:template>
 <!-- Alternative: Add linebreaks in diplomatic view    

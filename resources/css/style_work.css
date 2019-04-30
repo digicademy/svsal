@@ -677,6 +677,17 @@ hr.ornament {
     margin-bottom: 10%;
         
 }
+/* subsequent title pages: identical to first one, but without blueish background or border */
+.sec-titlePage {
+    /* padding:0.2em;*/
+    line-height: 150%;
+    border-radius: 2px;
+    font-family: 'Junicode', 'Cardo', 'Andron', 'Cabin', sans-serif;
+    font-size: 1.8em;
+    display: block;
+    text-align: center;
+    margin-bottom: 10%;
+}
 
 li.toc {
     list-style-type: none; 
