@@ -531,7 +531,7 @@ declare function net:sitemapResponse($netVars as map(*)) {
             return $sitemapIndex
 };
 
-declare function net:deliverTEI($requestData as map(), $netVars as map()*) {
+declare function net:APIdeliverTEI($requestData as map(), $netVars as map()*) {
     if (matches($requestData('tei_id'), '^W\d{4}')) then 
         let $serialization  := 
             (util:declare-option("output:method", "xml"),
@@ -561,7 +561,7 @@ declare function net:deliverTEI($requestData as map(), $netVars as map()*) {
     else net:error(404, $netVars, ())
 };
 
-declare function net:deliverTXT($requestData as map(), $netVars as map()*) {
+declare function net:APIdeliverTXT($requestData as map(), $netVars as map()*) {
     if (matches($requestData('tei_id'), '^W\d{4}')) then 
         let $mode := if ($requestData('mode')) then $requestData('mode') else 'edit'
         let $node := net:findNode($requestData)
@@ -589,7 +589,7 @@ declare function net:deliverTXT($requestData as map(), $netVars as map()*) {
     else net:error(404, $netVars, 'Resource could not be found.')
 };
 
-declare function net:deliverRDF($requestData as map(), $netVars as map()*) {
+declare function net:APIdeliverRDF($requestData as map(), $netVars as map()*) {
     if (starts-with($requestData('work_id'), 'W0')) then 
         if (doc-available($config:rdf-root || '/' || $requestData('work_id') || '.rdf')) then
             let $headers := response:set-header("Content-Disposition", 'attachment; filename="' || $requestData('work_id') || '.rdf"')
@@ -609,54 +609,59 @@ declare function net:deliverRDF($requestData as map(), $netVars as map()*) {
 };
 
 declare function net:APIdeliverTextsHTML($requestData as map(), $netVars as map()*) {
-    let $validation := app:WRKvalidateId($requestData('tei_id'))
-    return
-    if ($validation eq 2) then (: full text available :)
-        if (matches($requestData('work_id'), 'W\d{4}')) then
-            let $debug := if ($config:debug = ("trace")) then console:log("Load metadata from " || $config:rdf-root || '/' || $requestData('work_id') || '.rdf' || " ...") else ()
-            let $metadata := doc($config:rdf-root || '/' || $requestData('work_id') || '.rdf')
-            let $debug := if ($config:debug = ("trace")) then console:log("Retrieving $metadata//rdf:Description[@rdf:about eq '" || $requestData('work_id') || ':' || $requestData('passage') || "']/rdfs:seeAlso[1]/@rdf:resource[contains(., '.html')]") else ()
-            let $resolvedPath := string(($metadata//rdf:Description[@rdf:about eq $requestData('work_id') || ':' || $requestData('passage')]/rdfs:seeAlso[1]/@rdf:resource[contains(., ".html")])[1])
-            let $debug4 := if ($config:debug = ("trace")) then console:log("Found path: " || $resolvedPath || " ...") else ()
-            (: The pathname that has been saved contains 0 or exactly one parameter for the target html fragment,
-               but it may or may not contain a hash value. We have to mix in other parameters (mode, search expression or viewer state) before the hash. :)
-            let $pathname := (: rather firstIndexOf('[?#]') here? :)
-                if (contains($resolvedPath, '?')) then
-                    substring-before($resolvedPath, '?')
-                else if (contains($resolvedPath, '#')) then
-                    substring-before($resolvedPath, '#')
-                else $resolvedPath
-            let $hash := if (contains($resolvedPath, '#')) then concat('#', substring-after($resolvedPath, '#')) else ()
-            let $fragParam := 
-                if (contains($resolvedPath, '?')) then
-                   if (contains(substring-after($resolvedPath, '?'), '#')) then
-                       substring-before(substring-after($resolvedPath, '?'), '#')
-                   else substring-after($resolvedPath, '?')
-                else ()
-            let $updParams    := if ($requestData('mode') eq 'orig') then array:append([$netVars('params')], "mode=orig") else [$netVars('params')]
-            let $parameters   := concat(if ($fragParam or $updParams) then "?" else (), string-join(($fragParam, string-join($updParams?*, "&amp;")), "&amp;"))
-            let $debug5       := if ($config:debug = ("trace", "info")) then console:log("Redirecting to " || $pathname || $parameters || $hash || " ...") else ()
-            return net:redirect-with-303($pathname || $parameters || $hash )
-        else if ($requestData('work_id') eq '*') then (: forward to works list, regardless of parameters :)
-            let $pathname     := $config:webserver || '/' || 'works.html'
-            let $debug5       := if ($config:debug = ("trace", "info")) then console:log("Redirecting to " || $pathname || " ...") else ()
-            return net:redirect-with-303($pathname)
-        else
-            let $debug2       := if ($config:debug = ("trace", "info")) then console:log("Html is acceptable, but bad input. Redirect (404) to error webpage ...") else ()
-            return net:error(404, $netVars, ())
-    else if ($validation eq 1) then net:redirect-with-303($config:webserver || '/workDetails.html?wid=' || $requestData('tei_id')) (: only work details available :)
-    else if ($validation eq 0) then net:error(404, $netVars, 'work-not-yet-available') (: work id is valid, but there are no data :)
+    if ($requestData('work_id') eq '*') then (: forward to works list, regardless of parameters or hashes :)
+        let $langPath := if ($requestData('lang')) then $requestData('lang') || '/' else ()
+        let $pathname     := $config:webserver || '/' || $langPath || 'works.html'
+        let $debug       := if ($config:debug = ("trace", "info")) then console:log("[API] request for all works (HTML), redirecting to " || $pathname || " ...") else ()
+        return net:redirect-with-303($pathname)
+    else
+        if ($requestData('work_status') eq 2 and $requestData('passage_status') = (1)) then (: full text available and passage not invalid :)
+            if (matches($requestData('work_id'), '^W\d{4}$')) then
+                let $debug := if ($config:debug = ("trace")) then console:log("Load metadata from " || $config:rdf-root || '/' || $requestData('work_id') || '.rdf' || " ...") else ()
+                let $metadata := doc($config:rdf-root || '/' || $requestData('work_id') || '.rdf')
+                let $resourcePath := (: with legacy resource ids, we need to append a "vol" passage :)
+                    if (contains($requestData('tei_id'), '_Vol') and not($requestData('passage'))) then 
+                        $requestData('work_id') || ':vol' || substring($requestData('tei_id'), string-length($requestData('tei_id')))
+                    else $requestData('work_id') || (if ($requestData('passage')) then ':' || $requestData('passage') else ())
+                let $debug := if ($config:debug = ("trace")) then console:log("Retrieving $metadata//rdf:Description[@rdf:about eq 'texts/" || $resourcePath || "']/rdfs:seeAlso[@rdf:resource[contains(., '.html')]][1]/@rdf:resource") else ()
+                let $resolvedPath := string($metadata//rdf:Description[@rdf:about eq 'texts/' || $resourcePath]/rdfs:seeAlso[@rdf:resource[contains(., ".html")]][1]/@rdf:resource)
+                let $debug := if ($config:debug = ("trace")) then console:log("Found path: " || $resolvedPath || " ...") else ()
+                (: The pathname that has been saved contains 0 or exactly one parameter for the target html fragment,
+                   but it may or may not contain a hash value. We have to mix in other parameters (mode, search expression or viewer state) before the hash. :)
+                let $pathname := (: get everything before params or hash :)
+                    if (contains($resolvedPath, '?')) then
+                        substring-before($resolvedPath, '?')
+                    else if (contains($resolvedPath, '#')) then
+                        substring-before($resolvedPath, '#')
+                    else $resolvedPath
+                let $hash := if (contains($resolvedPath, '#')) then concat('#', substring-after($resolvedPath, '#')) else ()
+                let $fragParam :=
+                    if (contains($resolvedPath, '?')) then
+                        if (contains(substring-after($resolvedPath, '?'), '#')) then
+                            substring-before(substring-after($resolvedPath, '?'), '#')
+                        else substring-after($resolvedPath, '?')
+                    else ()
+                let $updParams := (: cut redundant format=html and illegal (?) frag params out :)
+                    if ($requestData('mode') eq 'orig' and not($netVars('paramap')?('mode') eq 'orig')) then 
+                        array:append([$netVars('params')[not(. eq 'format=html' or starts-with(., 'frag'))]], 'mode=orig') 
+                    else [$netVars('params')[not(. eq 'format=html' or starts-with(., 'frag'))]]
+                let $parameters := concat(if ($fragParam or $updParams) then "?" else (), string-join(($fragParam, string-join($updParams?*, "&amp;")), "&amp;"))
+                let $debug := if ($config:debug = ("trace", "info")) then console:log("Redirecting to " || $pathname || $parameters || $hash || " ...") else ()
+                return net:redirect-with-303($pathname || $parameters || $hash )
+            else
+                let $debug := if ($config:debug = ("trace", "info")) then console:log("Html is acceptable, but bad input. Redirect (404) to error webpage ...") else ()
+                return net:error(404, $netVars, ())
+    else if ($requestData('work_status') eq 1) then net:redirect-with-303($config:webserver || '/workDetails.html?wid=' || $requestData('tei_id')) (: only work details available :)
+    else if ($requestData('work_status') eq 0) then net:error(404, $netVars, 'work-not-yet-available') (: work id is valid, but there are no data :)
     else net:error(404, $netVars, '')
 };
 
 declare function net:deliverTextsHTML($netVars as map()*) {
     let $wid := sal-util:normalizeId($netVars('paramap')?('wid'))
-    let $validation := app:WRKvalidateId($wid)
+    let $validation := sal-util:WRKvalidateId($wid)
 (:    let $debug := if ($config:debug = "trace") then util:log("warn", "HTML request for work :" || $wid || " ; " || "validation result: " || string($validation)) else ():)
     return
-        if ($config:instanceMode eq 'testing' and count(xmldb:get-child-resources($config:html-root || '/' || $wid)) gt 0) then
-            net:forward-to-html(substring($netVars('path'), 4), $netVars) (: display prototype in testing mode :)
-        else if ($validation eq 2) then (: full text available :)
+        if ($validation eq 2) then (: full text available :)
             net:forward-to-html(substring($netVars('path'), 4), $netVars)
         else if ($validation eq 1) then 
             net:redirect-with-303($config:webserver || '/workDetails.html?wid=' || $wid) (: only work details available :)
@@ -667,7 +672,7 @@ declare function net:deliverTextsHTML($netVars as map()*) {
 };
 
 declare function net:deliverAuthorsHTML($netVars as map()*) {
-    let $validation := app:AUTvalidateId($netVars('paramap')?('aid'))
+    let $validation := sal-util:AUTvalidateId($netVars('paramap')?('aid'))
     let $debug := util:log('warn', 'Author id validation: ' || string($validation) || ' ; aid=' || $netVars('paramap')?('aid'))
     return
         if ($validation eq 1) then () (: TODO author article is available :)
@@ -676,7 +681,7 @@ declare function net:deliverAuthorsHTML($netVars as map()*) {
 };
 
 declare function net:deliverConceptsHTML($netVars as map()*) {
-    let $validation := app:LEMvalidateId($netVars('paramap')?('lid'))
+    let $validation := sal-util:LEMvalidateId($netVars('paramap')?('lid'))
     return
         if ($validation eq 1) then () (: TODO dict. entry is available :)
         else if ($validation eq 0) then net:error(404, $netVars, 'lemma-not-yet-available')
@@ -803,20 +808,17 @@ declare function net:deliverJPG($pathComponents as xs:string*, $netVars as map()
 };
 
 (:~
-: A basic filter and validator for URL request arguments (i.e., URL paths and parameters). A non-empty string return value for an argument key
-: signifies that the argument is valid and available, '0' means that a resource could not be found, an empty string means that the argument was not specified, 
-: and '-1' stands for a syntactically malformed argument/request.
-: Generally, a non-digit and non-empty string result means that a given resource is available, such that downstream functions need not verify any availability.
+: Workhorse of api.../texts: a basic filter and validator for API request arguments (i.e., URL paths and parameters). 
 ~:)
 declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()*) as map()? {
-    (: first, normalize and check syntactical validity of path (i.e., amount and order of separators) :)
+    (: normalize path (i.e., amount and order of separators) :)
     let $normalizedPath := replace(replace(replace(replace(lower-case($path), '^/+', ''), '/+$', ''), ':+$', ''), ':+', ':')
-    let $debug := if ($config:debug = ('trace')) then console:log('[API]: request at: .../texts/' || $path || '. Normalized path: ' || $normalizedPath) else ()
+    let $debug := if ($config:debug = ('trace')) then console:log('[API] request at: .../texts/' || $path || '. Normalized path: ' || $normalizedPath) else ()
     return
         if (count(tokenize($normalizedPath, '/')) gt 1 or count(tokenize($normalizedPath, ':')) gt 2)
             then 
                 let $debug := if ($config:debug = ('trace')) then console:log('[API] invalid resource requested; normalized resource was: ', $normalizedPath) else ()
-                return map:entry('validation', '-1')
+                return map:entry('validation', -1)
         else
             let $resource := (: the requested resource, as stated within the URL path :)
                 if ($normalizedPath eq '') then ''
@@ -824,34 +826,47 @@ declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()
                     let $resourceToken := tokenize(tokenize($normalizedPath, ':')[1], '\.')[1]
                     return
                         if (not($resourceToken)) then ''
-                        else if (matches($resourceToken, '^w\d{4}(_vol\d{2})?$') and doc-available($config:tei-works-root || '/' || translate($resourceToken, 'wv', 'WV') || '.xml')) then 
+                        else if (matches($resourceToken, '^w\d{4}(_vol\d{2})?$')) then 
                             translate($resourceToken, 'wv', 'WV')
-                        else '0'
+                        else '-1'
             let $passage := 
                 if (count(tokenize($normalizedPath, ':')) le 1) then ''
-                else if (count(tokenize($normalizedPath, ':')) eq 2 and $resource ne '') then 
-                    let $passageToken := tokenize($normalizedPath, ':')[2]
-                    return 
-                        if ($resource != ('0', '-1') and doc-available($config:data-root || '/' || substring($resource,1,5) || '_nodeIndex.xml')) then
-                            let $nodeIndex := doc($config:data-root || '/' || substring($resource,1,5) || '_nodeIndex.xml')
-                            return 
-                                if ($nodeIndex//sal:node[sal:citetrail eq $passageToken]) then $passageToken else '0'
-                        else '0' (: -1 ? :)
-                else '-1' (: passage without resource is error :)
-            let $teiId := (: the actual TEI document's id, derived from the combination of resource path and passage :)
-                if ($resource != ('0', '-1')) then 
+(:                else if (true()) then for $a in tokenize($normalizedPath, ':') return console:log($a):)
+                else if (count(tokenize($normalizedPath, ':')) eq 2) then 
+                    if ($resource = ('', '-1')) then '-1' (: passage without resource is error :)
+                    else if (tokenize($normalizedPath, ':')[2]) then tokenize($normalizedPath, ':')[2]
+                    else '-1'
+                else '-1'
+            let $teiId := (: the actual TEI document's id (derived from the combination of resource and passage), but only if it exists :)
+                if ($resource ne '-1') then 
                     if ($resource eq '') then '*' (: all tei datasets :)
-                    else if (matches($passage, '^vol\d')) then
-                        if (doc-available($config:tei-works-root || '/' || $resource || '_Vol0' || substring($passage,4,1) || '.xml')) then 
-                            $resource || '_Vol0' || substring($passage,4,1)
-                        else '0'
+                    else if (matches($passage, '^vol\d')) then (: some volume :)
+                        let $volStatus := sal-util:WRKvalidateId($resource || '_Vol0' || substring($passage,4,1))
+                        return
+                            if ($volStatus ge 1) then (: a tei dataset is available :)
+                                $resource || '_Vol0' || substring($passage,4,1)
+                            else string($volStatus) (: 0 or -1 :)
                     else $resource (: already checked whether available :)
-                else '0'
+                else '-1'
+            let $teiStatus := if (starts-with($teiId, 'W')) then sal-util:WRKvalidateId($teiId) else ()
             let $workId := (: the overarching work's main id, not distinguishing between volumes :)
                 if ($resource != ('0', '-1')) then 
                     if ($teiId eq '*') then '*'
                     else replace($resource, '_Vol\d\d$', '')
                 else '0'
+            let $workStatus := 
+                if ($workId = $teiId) then $teiStatus 
+                else if (starts-with($workId, 'W')) then sal-util:WRKvalidateId($workId)
+                else ()
+            let $passageStatus := (: 1 = passage valid & existing ; 0 = not existing ; -1 = no dataset found for $wid ; empty = no passage :)
+                if ($passage) then
+                    if ($teiStatus eq 2 and $passage ne '-1' and doc-available($config:data-root || '/' || $workId || '_nodeIndex.xml')) then 
+                        let $nodeIndex := doc($config:data-root || '/' || $workId || '_nodeIndex.xml')
+                        return 
+                            if ($nodeIndex//sal:node[sal:citetrail eq $passage]) then 1
+                            else 0
+                    else -1
+                else 1
             let $params :=
                 let $format := $netVars('format') (: or net:format() :)
                 let $validParams := $config:apiFormats($format)
@@ -863,15 +878,18 @@ declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()
                     else request:get-parameter('mode', '')
                 return map:merge((map:entry('mode', $mode), map:entry('format', $format), $params0))
             let $requestValidation := (: -1 has priority over 0, since it signifies a syntactically malformed request (400) :)
-                if (($resource, $passage, $teiId, $workId) = '-1') then '-1'
-                else if (($resource, $passage, $teiId, $workId) = '0') then '0'
-                else '1'
+                if (($teiStatus, $workStatus, $passageStatus) = -1) then -1
+                else if (($teiStatus, $workStatus, $passageStatus) = 0) then 0
+                else 1
             let $resourceData := 
                 map {'validation': $requestValidation, 
                      'resource': $resource,
                      'tei_id': $teiId,
                      'work_id': $workId,
-                     'passage': $passage}
+                     'passage': $passage,
+                     'tei_status': $teiStatus,
+                     'work_status': $workStatus,
+                     'passage_status': $passageStatus}
             let $requestData := map:merge(($resourceData, $params))
             let $debug := if ($config:debug = ('trace')) then console:log('[API] request data: ' || string-join((for $k in map:keys($requestData) return $k || '=' || map:get($requestData, $k)), ' ; ') || '.') else ()
             return $requestData
