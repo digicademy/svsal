@@ -101,10 +101,16 @@
                 <object type="literal">/($currentResource/tei:teiHeader/tei:profileDesc/tei:langUsage/tei:language/text())</object>
             </statement>
 
-            <statement n="109"><!-- rdfs:seeAlso SvSal work webpage -->
+            <statement n="109"><!-- rdfs:seeAlso SvSal work full id -->
                 <subject type="uri" prepend="texts/">/($currentResource/@docId)</subject>
                 <predicate prefix="rdfs">seeAlso</predicate>
-                <object type="uri" prepend="https://id.c106-211.cloud.gwdg.de/texts/">/($currentResource/@docId)</object>
+                <object type="uri" prepend="https://id.salamanca.school/texts/">/($currentResource/@docId)</object>
+            </statement>
+            
+            <statement n="110"><!-- rdfs:seeAlso SvSal work webpage (reading view) -->
+                <subject type="uri" prepend="texts/">/($currentResource/@docId)</subject>
+                <predicate prefix="rdfs">seeAlso</predicate>
+                <object type="uri" prepend="https://www.salamanca.school/work.html?wid=">/($currentResource/@docId)</object>
             </statement>
             
             <!-- TODO/Bibliographic:
@@ -274,8 +280,8 @@
             
             <!-- p -->
             
-            <statement n="220">
-                <subject type="uri" prepend="texts/WXXXX:">/($currentResource[self::itei:text]//itei:p/@citetrail/string())</subject>
+            <statement n="220" repeat="{/min((100020, count($currentResource[self::itei:text]//itei:p)))}">
+                <subject type="uri" prepend="texts/WXXXX:">/($currentResource[self::itei:text]//itei:p)[$repeatIndex]/@citetrail/string()</subject>
                 <predicate prefix="rdf">type</predicate>
                 <object type="uri" prefix="doco">paragraph</object>
             </statement>
