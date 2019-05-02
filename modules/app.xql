@@ -3701,55 +3701,5 @@ declare %templates:wrap function app:errorInformation($node as node(), $model as
 };
 
 
-(: UTIL FUNCTIONS FOR VALIDATING WORK/AUTHOR/LEMMA IDs (in lack of a better place) :)
-
-declare function app:AUTexists($aid as xs:string?) as xs:boolean {
-    if ($aid) then boolean(doc($config:tei-meta-root || '/' || 'sources-list.xml')/tei:TEI/tei:text//tei:author[lower-case(substring-after(@ref, 'author:')) eq lower-case($aid)])
-    else false()
-};
-
-(: 1 = valid & available; 0 = valid, but not yet available; -1 = not valid :)
-declare function app:AUTvalidateId($aid as xs:string?) as xs:integer {
-    if ($aid and matches($aid, '^[aA]\d{4}$')) then
-        (: TODO: additional condition when author articles are available - currently this will always resolve to -1 :)
-        if (app:AUTexists(sal-util:normalizeId($aid))) then 0
-        else -1
-    else -1    
-};
-
-declare function app:LEMexists($lid as xs:string?) as xs:boolean {
-    (: TODO when we have a list of lemma ids :)
-    (:if ($lid) then boolean(doc(.../...) eq $lid])
-    else :)
-    false()
-};
-
-(: 1 = valid & available; 0 = valid, but not yet available; -1 = not valid :)
-declare function app:LEMvalidateId($lid as xs:string?) as xs:integer {
-    if ($lid and matches($lid, '^[lL]\d{4}$')) then
-        (: TODO: additional conditions when lemmata/entries are available - currently this will always resolve to -1 :)
-        if (app:LEMexists(sal-util:normalizeId($lid))) then 0
-        else -1
-    else -1    
-};
-
-declare function app:WRKexists($wid as xs:string?) as xs:boolean {
-    if ($wid) then boolean(doc($config:tei-meta-root || '/' || 'sources-list.xml')/tei:TEI/tei:text//tei:bibl[lower-case(substring-after(@corresp, 'work:')) eq lower-case($wid)])
-    else false()
-};
-
-(: 2 = valid, full data available; 1 = valid, but only metadata available; 0 = valid, but not yet available; -1 = not valid :)
-declare function app:WRKvalidateId($wid as xs:string?) as xs:integer {
-    if ($wid and matches($wid, '^[wW]\d{4}(_Vol\d{2})?$')) then
-        if (app:WRKisPublished(<dummy/>, map{}, $wid)) then 2
-        else if (doc-available($config:tei-works-root || '/' || sal-util:normalizeId($wid) || '.xml')) then 1
-        else if (app:WRKexists($wid)) then 0
-        else -1
-    else -1    
-};
-
-(: concepts? :)
-
-
 
 
