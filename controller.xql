@@ -62,8 +62,8 @@ let $netVars :=
         "lang"          : $lang,
         "format"        : $format,
         "accept"        : $net:requestedContentTypes,
-        "params"        : ( for $p in request:get-parameter-names() return lower-case($p) || "="  || lower-case(request:get-parameter($p, ())[1]) ),
-        "paramap"       : map:merge(for $p in request:get-parameter-names() return map:entry(lower-case($p), lower-case(request:get-parameter($p, ())[1])))
+        "params"        : ( for $p in request:get-parameter-names() return lower-case($p) || "="  || replace(lower-case(request:get-parameter($p, ())[1]), 'w0', 'W0' )),
+        "paramap"       : map:merge(for $p in request:get-parameter-names() return map:entry(lower-case($p), replace(lower-case(request:get-parameter($p, ())[1]), 'w0', 'W0' )))
     } (: if there are several params of the same type, the value of the first one wins :)
 let $parameterString    :=  if (count(request:get-parameter-names())) then
                                 "?" || string-join($netVars('params'), '&amp;')

@@ -625,7 +625,9 @@ declare function net:APIdeliverTextsHTML($requestData as map(), $netVars as map(
                     else $requestData('work_id') || (if ($requestData('passage')) then ':' || $requestData('passage') else ())
                 let $debug := if ($config:debug = ("trace")) then console:log("Retrieving $metadata//rdf:Description[@rdf:about eq 'texts/" || $resourcePath || "']/rdfs:seeAlso[@rdf:resource[contains(., '.html')]][1]/@rdf:resource") else ()
                 let $resolvedPath := 
-                    if ($requestData('frag') and not($requestData('passage'))) then 
+                    if ($requestData('mode') eq 'meta') then
+                        $config:webserver || '/workDetails.html?wid=' || $requestData('tei_id')
+                    else if ($requestData('frag') and not($requestData('passage'))) then 
                         (: prov. solution for frag params: if there only is a fragment id for a work, simply redirect to the fragment - if we have a passage, ignore it :)
                         $config:webserver || '/work.html?wid=' || $requestData('work_id') || '&amp;frag=' || replace($requestData('frag'), 'w0', 'W0')
                     else
