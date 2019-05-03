@@ -128,28 +128,31 @@ return
             c. /v1/xtriples     (Extract rdf from xml with xtriples.  See https://api.{$config:serverdomain}/v1/xtriples/xtriples.html    or http://xtriples.spatialhumanities.de/index.html)
         :)
         let $pathComponents := tokenize(lower-case($exist:path), "/")  (: Since $exist:path starts with a slash, $pathComponents[1] is an empty string :)
-         
         let $debug := if ($config:debug = ("trace")) then console:log("[API] This translates to API version " || $pathComponents[2] || ", endpoint " || $pathComponents[3] || ".") else ()
-
         return if ($pathComponents[3] = $config:apiEndpoints($pathComponents[2])) then  (: Check if we support the requested endpoint/version :)
             switch($pathComponents[3])
                 case "texts" return
                     let $path := substring-after($exist:path, '/texts/')
                     let $textsRequest := net:APIparseTextsRequest($path, $netVars) 
                     return
-                        if ($textsRequest('validation') eq '1') then (: valid request :)
-                            switch ($textsRequest('format')) 
-                                case 'tei'  return net:deliverTEI($textsRequest,$netVars)
-                                case 'txt'  return net:deliverTXT($textsRequest,$netVars)
-                                case 'rdf' return net:deliverRDF($textsRequest, $netVars)
-                                default     return net:APIdeliverTextsHTML($textsRequest, $netVars)
-    (:
-                                case 'iiif' return net:deliverIIIF($exist:path, $netVars) (\: TODO: debug forwarding :\)
-                                case 'jpg' return net:deliverJPG($pathComponents, $netVars)
-                                default return net:deliverHTML($pathComponents, $netVars)
-    :)  
-                        else if ($textsRequest('validation') eq '0') then net:error(404, $netVars, ()) (: resource(s) not found :)
-                        else net:error(400, $netVars, ()) (: -1: malformed request :)
+                        if (not($textsRequest('is_well_formed'))) then net:error(400, $netVars, ())
+                        else 
+                            if ($textsRequest('validation') eq 1) then (: fully valid request :)
+                                switch ($textsRequest('format')) 
+                                    case 'html' return net:APIdeliverTextsHTML($textsRequest, $netVars)
+                                    case 'rdf' return net:APIdeliverRDF($textsRequest, $netVars)
+                                    case 'tei'  return net:APIdeliverTEI($textsRequest,$netVars)
+                                    case 'txt'  return net:APIdeliverTXT($textsRequest,$netVars)
+                                    default return net:APIdeliverTextsHTML($textsRequest, $netVars)
+        (:
+                                    case 'iiif' return net:deliverIIIF($exist:path, $netVars) (\: TODO: debug forwarding :\)
+                                    case 'jpg' return net:deliverJPG($pathComponents, $netVars)
+                                    default return net:deliverHTML($pathComponents, $netVars)
+        :)  
+                            else if ($textsRequest('validation') eq 0) then (: one or more resource(s) not yet available :)
+                                if ($textsRequest('format') eq 'html') then net:APIdeliverTextsHTML($textsRequest, $netVars)
+                                else net:error(404, $netVars, ()) (: resource(s) not found :)
+                            else net:error(404, $netVars, ()) (: well-formed, but invalid resource(s) requested :)
 
 (:
                         case 'tei' return
@@ -286,24 +289,20 @@ return
     (: HTML files should have a path component - we parse that and put view.xql in control :)
     else if (ends-with($exist:resource, ".html") and substring($exist:path, 1, 4) = ("/de/", "/en/", "/es/")) then
         let $debug          := if ($config:debug = "info")  then console:log ("HTML requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-(:        let $debug          := if ($config:debug = "info")  then util:log ("warn", "HTML requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ():)
         let $debug          := if ($config:debug = "trace") then console:log ("HTML requested, translating language path component to a request attribute - $exist:path: " || $exist:path || ", redirect to: " || $exist:controller || substring($exist:path, 4) || ", parameters: [" || string-join(net:inject-requestParameter((), ()), "&amp;") || "], attributes: [].") else ()
         (: For now, we don't use net:forward here since we need a nested view/forwarding. :)
-(:        let $isValidRequest := net:validateHTMLRequest(substring($exist:path, 4), $netVars):)
-        
         let $resource := lower-case($exist:resource)
         return
             if ($resource eq 'author.html') then net:deliverAuthorsHTML($netVars)
             else if ($resource eq 'lemma.html') then net:deliverConceptsHTML($netVars)
             else if ($resource eq 'work.html') then net:deliverTextsHTML($netVars)
-            else if ($resource = xmldb:get-child-resources($config:app-root)) then
+            else  (: if ($resource = xmldb:get-child-resources($config:app-root)) then :)
                 let $viewModule := 
-                    switch ($exist:resource)
+                    switch ($resource)
                         case "admin.html"
                         case "corpus-admin.html"
                         case "createLists.html"
                         case "iiif-admin.html"
-                        case "render.html"
                         case "renderTheRest.html"
                         case "render.html"
                         case "error-page.html"
@@ -323,7 +322,7 @@ return
                         </view>
                         {config:errorhandler($netVars)}
                     </dispatch>
-            else net:error(404, $netVars, ())
+(:            else net:error(404, $netVars, ()):)
 
     (: If there is no language path component, redirect to a version of the site where there is one :)
     else if (ends-with($exist:resource, ".html")) then
@@ -353,7 +352,7 @@ return
 
     (: Unspecific hostname :)
     else if (request:get-header('X-Forwarded-Host') = $config:serverdomain) then
-        let $debug      := if ($config:debug = "trace") then console:log("Underspecified request at base domain (" || $exist:path || $parameterString || ") ...") else ()
+        let $debug := if ($config:debug = "trace") then console:log("Underspecified request at base domain (" || $exist:path || $parameterString || ") ...") else ()
         return
             if (count(functx:value-intersect($net:requestedContentTypes, ('text/html','application/xhtml+xml')))) then
                 net:redirect-with-303($config:webserver || $exist:path || $parameterString)

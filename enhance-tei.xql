@@ -24,7 +24,7 @@ declare function local:copy($input as item()*, $salNodes as map()?) as item()* {
         typeswitch($node)
             case element()
                return
-                  (: remove frequent elements without semantic value :)
+                  (: remove frequent, but irrelevant elements :)
                   if (local-name($node) = $omittableElemTypes) then 
                      for $child in $node return local:copy($child/node(), $salNodes)
                   else 

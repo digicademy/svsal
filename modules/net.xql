@@ -624,7 +624,18 @@ declare function net:APIdeliverTextsHTML($requestData as map(), $netVars as map(
                         $requestData('work_id') || ':vol' || substring($requestData('tei_id'), string-length($requestData('tei_id')))
                     else $requestData('work_id') || (if ($requestData('passage')) then ':' || $requestData('passage') else ())
                 let $debug := if ($config:debug = ("trace")) then console:log("Retrieving $metadata//rdf:Description[@rdf:about eq 'texts/" || $resourcePath || "']/rdfs:seeAlso[@rdf:resource[contains(., '.html')]][1]/@rdf:resource") else ()
-                let $resolvedPath := string($metadata//rdf:Description[@rdf:about eq 'texts/' || $resourcePath]/rdfs:seeAlso[@rdf:resource[contains(., ".html")]][1]/@rdf:resource)
+                let $resolvedPath := 
+                    if ($requestData('frag') and not($requestData('passage'))) then 
+                        (: prov. solution for frag params: if there only is a fragment id for a work, simply redirect to the fragment - if we have a passage, ignore it :)
+                        $config:webserver || '/work.html?wid=' || $requestData('work_id') || '&amp;frag=' || replace($requestData('frag'), 'w0', 'W0')
+                    else
+                        try {
+                            string($metadata//rdf:Description[@rdf:about eq 'texts/' || $resourcePath]/rdfs:seeAlso[@rdf:resource[contains(., ".html")]][1]/@rdf:resource)
+                            } 
+                        catch err:FORG0006 {
+                            let $debug := console:log('[API] err:FORG0006: could not resolve path ' || $resourcePath || ' in RDF for wid=' || $requestData('work_id'))
+                            return $config:webserver || '/work.html?wid=' || $resourcePath
+                        }
                 let $debug := if ($config:debug = ("trace")) then console:log("Found path: " || $resolvedPath || " ...") else ()
                 (: The pathname that has been saved contains 0 or exactly one parameter for the target html fragment,
                    but it may or may not contain a hash value. We have to mix in other parameters (mode, search expression or viewer state) before the hash. :)
@@ -641,6 +652,7 @@ declare function net:APIdeliverTextsHTML($requestData as map(), $netVars as map(
                             substring-before(substring-after($resolvedPath, '?'), '#')
                         else substring-after($resolvedPath, '?')
                     else ()
+                (: TODO: cut original frag param out :)
                 let $updParams := (: cut redundant format=html and illegal (?) frag params out :)
                     if ($requestData('mode') eq 'orig' and not($netVars('paramap')?('mode') eq 'orig')) then 
                         array:append([$netVars('params')[not(. eq 'format=html' or starts-with(., 'frag'))]], 'mode=orig') 
@@ -818,9 +830,10 @@ declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()
         if (count(tokenize($normalizedPath, '/')) gt 1 or count(tokenize($normalizedPath, ':')) gt 2)
             then 
                 let $debug := if ($config:debug = ('trace')) then console:log('[API] invalid resource requested; normalized resource was: ', $normalizedPath) else ()
-                return map:entry('validation', -1)
+                return map:entry('is_well_formed', false())
         else
-            let $resource := (: the requested resource, as stated within the URL path :)
+            (: (1) get components :)
+            let $resource :=
                 if ($normalizedPath eq '') then ''
                 else 
                     let $resourceToken := tokenize(tokenize($normalizedPath, ':')[1], '\.')[1]
@@ -831,12 +844,9 @@ declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()
                         else '-1'
             let $passage := 
                 if (count(tokenize($normalizedPath, ':')) le 1) then ''
-(:                else if (true()) then for $a in tokenize($normalizedPath, ':') return console:log($a):)
-                else if (count(tokenize($normalizedPath, ':')) eq 2) then 
-                    if ($resource = ('', '-1')) then '-1' (: passage without resource is error :)
-                    else if (tokenize($normalizedPath, ':')[2]) then tokenize($normalizedPath, ':')[2]
-                    else '-1'
-                else '-1'
+                else (: count(tokenize($normalizedPath, ':')) eq 2 (validated above) :) 
+                    if (tokenize($normalizedPath, ':')[2]) then tokenize($normalizedPath, ':')[2]
+                    else ''
             let $teiId := (: the actual TEI document's id (derived from the combination of resource and passage), but only if it exists :)
                 if ($resource ne '-1') then 
                     if ($resource eq '') then '*' (: all tei datasets :)
@@ -848,6 +858,7 @@ declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()
                             else string($volStatus) (: 0 or -1 :)
                     else $resource (: already checked whether available :)
                 else '-1'
+            (: (2) validate components :)
             let $teiStatus := if (starts-with($teiId, 'W')) then sal-util:WRKvalidateId($teiId) else ()
             let $workId := (: the overarching work's main id, not distinguishing between volumes :)
                 if ($resource != ('0', '-1')) then 
@@ -860,29 +871,35 @@ declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()
                 else ()
             let $passageStatus := (: 1 = passage valid & existing ; 0 = not existing ; -1 = no dataset found for $wid ; empty = no passage :)
                 if ($passage) then
-                    if ($teiStatus eq 2 and $passage ne '-1' and doc-available($config:data-root || '/' || $workId || '_nodeIndex.xml')) then 
+                    if ($teiStatus eq 2 and doc-available($config:data-root || '/' || $workId || '_nodeIndex.xml')) then 
                         let $nodeIndex := doc($config:data-root || '/' || $workId || '_nodeIndex.xml')
                         return 
                             if ($nodeIndex//sal:node[sal:citetrail eq $passage]) then 1
                             else 0
                     else -1
                 else 1
+            (: (3) get and filter params :)
             let $params :=
                 let $format := $netVars('format') (: or net:format() :)
                 let $validParams := $config:apiFormats($format)
-                (:  filter out all params that aren't officially stated as valid params for the requested format, and 
-                    remove duplicate params; if there are multiple params of the same type but with different values, the first value wins :)
+                (:  filter out all invalid params and remove duplicates (first value wins) :)
                 let $params0 := map:merge(for $p in $netVars('params') return if (($p, substring-before($p, '=')) = $validParams) then map:entry(substring-before($p, '='), substring-after($p, '=')) else ())
                 let $mode :=
                     if (tokenize(tokenize($normalizedPath, ':')[1], '\.')[2] = ('orig', 'edit')) then tokenize(tokenize($normalizedPath, ':')[1], '\.')[2]
                     else request:get-parameter('mode', '')
                 return map:merge((map:entry('mode', $mode), map:entry('format', $format), $params0))
-            let $requestValidation := (: -1 has priority over 0, since it signifies a syntactically malformed request (400) :)
+            (: (4) general validation and output :)
+            let $requestValidation := (: -1 (meaningless request) has priority over 0 (not (yet) available) :)
                 if (($teiStatus, $workStatus, $passageStatus) = -1) then -1
                 else if (($teiStatus, $workStatus, $passageStatus) = 0) then 0
                 else 1
+            let $isWellFormed := (: if a request is clearly malformed, we deliver this info to downstream functions :) 
+                if ($passage and not($resource)) then false()
+                (: add further cases of malformedness here :)
+                else true()
             let $resourceData := 
                 map {'validation': $requestValidation, 
+                     'is_well_formed': $isWellFormed,
                      'resource': $resource,
                      'tei_id': $teiId,
                      'work_id': $workId,

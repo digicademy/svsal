@@ -47,10 +47,10 @@ declare variable $config:serverdomain :=
 declare variable $config:apiEndpoints   := map  {
                                                     "v1": ("texts", "search", "codesharing", "xtriples")
                                                 };
-(: a table of valid API parameters and values, structured by the 'format' parameter's values; 
-    if there is no explicite value stated for a parameter (such as 'q'), the parameter may have any string value :)
+(: valid API parameters and values, aligned with the respective 'format' parameter's values; if there is no explicite value 
+    stated for a parameter (such as 'q'), the parameter may have any string value (sanitization happens elsewhere) :)
 declare variable $config:apiFormats := map {
-                                                'html': ('mode=edit', 'mode=orig', 'mode=meta', 'q', 'lang=de', 'lang=en', 'lang=es', 'viewer'),
+                                                'html': ('mode=edit', 'mode=orig', 'mode=meta', 'q', 'lang=de', 'lang=en', 'lang=es', 'viewer', 'frag'),
                                                 'iiif': ('canvas'),
                                                 'jpg': (),
                                                 'rdf': (),
