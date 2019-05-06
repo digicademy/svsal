@@ -296,6 +296,7 @@ return
             if ($resource eq 'author.html') then net:deliverAuthorsHTML($netVars)
             else if ($resource eq 'lemma.html') then net:deliverConceptsHTML($netVars)
             else if ($resource eq 'work.html') then net:deliverTextsHTML($netVars)
+            else if ($resource eq 'workingpaper.html') then net:deliverWorkingPapersHTML($netVars)
             else  (: if ($resource = xmldb:get-child-resources($config:app-root)) then :)
                 let $viewModule := 
                     switch ($resource)

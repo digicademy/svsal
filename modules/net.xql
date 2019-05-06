@@ -702,6 +702,15 @@ declare function net:deliverConceptsHTML($netVars as map()*) {
         else net:error(404, $netVars, ())
 };
 
+declare function net:deliverWorkingPapersHTML($netVars as map()*) {
+    let $debug := console:log('HELLO')
+    let $validation := sal-util:WPvalidateId($netVars('paramap')?('wpid'))
+    return
+        if ($validation eq 1) then net:forward-to-html(substring($netVars('path'), 4), $netVars)
+        else if ($validation eq 0) then net:error(404, $netVars, 'workingpaper-not-yet-available')
+        else net:error(404, $netVars, ())
+};
+
 (: TODO::)
 
 declare function net:deliverIIIF($path as xs:string, $netVars) {
