@@ -2173,7 +2173,6 @@ declare function app:WRKadditionalInfoRecord($node as node(), $model as map(*), 
     let $workId := $model('currentWork')/@xml:id/string()
     let $status := $model('currentWork')/tei:teiHeader/tei:revisionDesc/@status/string()
 
-    let $thumbnail := app:WRKcatRecordThumbnail($node, $model, $workId, 'full')
     let $mirador := 'mirador.html?wid=' || $workId
     let $scanCount := 0
     let $isPublished := app:WRKisPublished($node, $model, $workId)
@@ -2181,13 +2180,19 @@ declare function app:WRKadditionalInfoRecord($node as node(), $model as map(*), 
     let $imagesLink := <a href="{$mirador}" target="_blank" rel="noopener noreferrer">
                            <i18n:text key="facsimiles">Facsimiles</i18n:text> 
                        </a>
+    let $readingViewField :=
+        if ($isPublished) then
+            let $thumbnail := app:WRKcatRecordThumbnail($node, $model, $workId, 'full')
+            return 
+                <li><h5><i18n:text key="readingView">Reading view</i18n:text>:</h5>
+                    {$thumbnail}
+                </li>
+        else ()
     let $views := 
         <div>
             <h4><i18n:text key="textViews">Views for this Text</i18n:text></h4>
             <ul>
-                <li><h5><i18n:text key="readingView">Reading view</i18n:text>:</h5>
-                    {$thumbnail}
-                </li>
+                {$readingViewField}
                 <li>{$imagesLink}</li>
             </ul>
         </div>
@@ -2444,9 +2449,18 @@ declare function app:WRKeditionRecord($node as node(), $model as map(*), $lang a
     let $publicationDate := if ($isPublished) then i18n:convertDate($digital?('publicationDate'), $lang, 'verbose') else ()
     let $publicationInfo := 
         if ($isPublished) then
-            (<tr>
+            (
+            <tr>
                 <td class="{$col1-width}">
-                    <i18n:text key="digitalPublication">Digital publication</i18n:text>:
+                    <i18n:text key="alphaEditors">Editors (in alphabetical order)</i18n:text>:
+                </td>
+                <td class="{$col2-width}">
+                    {$digital?('alphaEditors')}
+                </td>
+            </tr>,
+            <tr>
+                <td class="{$col1-width}">
+                    <i18n:text key="digitalPublication">Electronic publication</i18n:text>:
                 </td>
                 <td class="{$col2-width}">
                     {$publicationDate}
@@ -2454,10 +2468,34 @@ declare function app:WRKeditionRecord($node as node(), $model as map(*), $lang a
             </tr>,
             <tr>
                 <td class="{$col1-width}">
-                    <i18n:text key="alphaEditors">Editors (in alphabetical order)</i18n:text>:
+                    <i18n:text key="series">Series</i18n:text>:
                 </td>
                 <td class="{$col2-width}">
-                    {$digital?('alphaEditors')}
+                    <i18n:text key="editionSeries">The School of Salamanca. A Digital Collection of Sources</i18n:text>
+                </td>
+            </tr>,
+            <tr>
+                <td class="{$col1-width}">
+                    <i18n:text key="seriesVolume">Series volume</i18n:text>:
+                </td>
+                <td class="{$col2-width}">
+                    {$digital?('currentVolume')}
+                </td>
+            </tr>,
+            <tr>
+                <td class="{$col1-width}">
+                    <i18n:text key="editorsInChief">Editors of the Series</i18n:text>:
+                </td>
+                <td class="{$col2-width}">
+                    {$digital?('seriesEditors')}
+                </td>
+            </tr>,
+            <tr>
+                <td class="{$col1-width}">
+                    <i18n:text key="digitalPublisher">Published by</i18n:text>:
+                </td>
+                <td class="{$col2-width}">
+                    {$digital?('publisher')}
                 </td>
             </tr>)
         else 
@@ -2469,25 +2507,6 @@ declare function app:WRKeditionRecord($node as node(), $model as map(*), $lang a
                     <i18n:text key="notPublished">Not yet published</i18n:text>
                 </td>
             </tr>
-    let $volumeInfo := 
-        if ($isPublished) then
-            (<tr>
-                <td class="{$col1-width}">
-                    <i18n:text key="seriesVolume">Series volume</i18n:text>:
-                </td>
-                <td class="{$col2-width}">
-                    {$digital?('currentVolume')}
-                </td>
-            </tr>,
-            <tr>
-                <td class="{$col1-width}">
-                    <i18n:text key="digitalPublisher">Published by</i18n:text>:
-                </td>
-                <td class="{$col2-width}">
-                    {$digital?('publisher')}
-                </td>
-            </tr>)
-        else ()
         
     let $editionRecord :=
         <table class="borderless table table-hover">
@@ -2501,23 +2520,6 @@ declare function app:WRKeditionRecord($node as node(), $model as map(*), $lang a
                     <td class="{$col2-width}" style="line-height: 1.2">{$digital?('author')}</td>
                 </tr>
                 {$publicationInfo}
-                <tr>
-                    <td class="{$col1-width}">
-                        <i18n:text key="series">Series</i18n:text>:
-                    </td>
-                    <td class="{$col2-width}">
-                        <i18n:text key="editionSeries">The School of Salamanca. A Digital Collection of Sources</i18n:text>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="{$col1-width}">
-                        <i18n:text key="editorsInChief">Editors of the Series</i18n:text>:
-                    </td>
-                    <td class="{$col2-width}">
-                        {$digital?('seriesEditors')}
-                    </td>
-                </tr>
-                {$volumeInfo}
             </tbody>
         </table>
         
