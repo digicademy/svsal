@@ -136,6 +136,7 @@
   <msg key="downloadCorpusTitle">Download the complete corpus</msg>
   <msg key="txtFiles">Plain text (TXT)</msg>
   <msg key="teiFiles">TEI XML</msg>
+  <msg key="proposedCitation">Proposed citation</msg>
   
   
   <msg key="worksNotice">The digital collection of sources of the project "The School of Salamanca" comprises 116 works in 
@@ -341,6 +342,10 @@
   <msg key="worksListOverview">List of Sources in the Digital Collection</msg>
   <msg key="furtherInformationTitle">Further Information</msg>
   <msg key="listOfSources">List of all sources</msg>
+  
+  <!-- general language abbreviations, conjunctions, phrases, etc. -->
+  <msg key="inLow">in</msg>
+  <msg key="editedByAbbrLow">ed. by</msg>
   
   
   

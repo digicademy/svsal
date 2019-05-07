@@ -140,6 +140,7 @@
     <msg key="downloadCorpusTitle">Descargar el corpus completo</msg>
     <msg key="txtFiles">Texto simple (TXT)</msg>
     <msg key="teiFiles">TEI XML</msg>
+    <msg key="proposedCitation">Modelo de citación recomendado</msg>
     
     <msg key="worksNotice">La colección digital de fuentes del proyecto "La Escuela de Salamanca" 
         incluye 116 obras en total, que se publicarán sucesivamente en esta página. 
@@ -346,7 +347,10 @@
    <!-- worksList.html -->
   <msg key="worksListOverview">Lista de Fuentes en la Colección Digital</msg>
   <msg key="furtherInformationTitle">Información adicional</msg>
-    <msg key="listOfSources">Lista de todas las fuentes</msg>
-    
+  <msg key="listOfSources">Lista de todas las fuentes</msg>
+  
+    <!-- general language abbreviations, conjunctions, phrases, etc. -->
+    <msg key="inLow">en</msg>
+    <msg key="editedByAbbrLow">ed. por</msg>  
     
 </catalogue>

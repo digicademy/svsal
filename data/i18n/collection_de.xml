@@ -112,6 +112,7 @@
   <msg key="availability">Verfügbarkeit</msg>
   <msg key="fullTextAvailable">Digitaler Volltext (+ Faksimiles)</msg>
   <msg key="facsimiles">Faksimiles</msg>
+  <msg key="proposedCitation">Zitiervorschlag</msg>
   
   
   <!-- Meta Description Tags -->
@@ -170,5 +171,10 @@
   <msg key="worksListOverview">Liste der Quellen in der Digitalen Quellensammlung</msg>
   <msg key="furtherInformationTitle">Weitere Informationen</msg>
   <msg key="listOfSources">Liste aller Quellen</msg>
+  
+  <!-- general language abbreviations, conjunctions, phrases, etc. -->
+  <msg key="inLow">in</msg>
+  <msg key="editedByAbbrLow">hg. von</msg>
+  
   
 </catalogue>

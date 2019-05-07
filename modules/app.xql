@@ -2201,7 +2201,7 @@ declare function app:WRKadditionalInfoRecord($node as node(), $model as map(*), 
                             IIIF Collection
                         </a>
                      else 
-                        <a href="{$iiif:presentationServer || '/' || $workId || '/manifest'}">
+                        <a href="{$iiif:presentationServer || $workId || '/manifest'}">
                             IIIF Manifest
                         </a>
     let $rdfId := if ($workType eq 'work_volume') then substring-before($workId, '_Vol') (: redirecting to RDF dataset for the complete work :) else $workId
@@ -2223,11 +2223,11 @@ declare function app:WRKadditionalInfoRecord($node as node(), $model as map(*), 
                                 <h4><i18n:text key="download">Metadata</i18n:text></h4>
                                 <ul>
                                     <li><a href="{$config:idserver || '/texts/' || $workId ||'?format=tei'}">XML (TEI P5)</a></li>
-                                    <li><a href="{$config:idserver || '/texts/' || $workId ||'.edit?format=txt'}">
+                                    <li><a href="{$config:idserver || '/texts/' || $workId ||'?format=txt&amp;mode=edit'}">
                                             <i18n:text key="text">Text</i18n:text> (<i18n:text key="constitutedLower">constituted</i18n:text>)
                                         </a>
                                     </li>
-                                    <li><a href="{$config:idserver || '/texts/' || $workId ||'.orig?format=txt'}">
+                                    <li><a href="{$config:idserver || '/texts/' || $workId ||'?format=txt&amp;mode=orig'}">
                                             <i18n:text key="text">Text</i18n:text> (<i18n:text key="diplomaticLower">diplomatic</i18n:text>)
                                         </a>
                                     </li>
@@ -2524,13 +2524,46 @@ declare function app:WRKeditionRecord($node as node(), $model as map(*), $lang a
                 {$volumeInfo}
             </tbody>
         </table>
-        (: citation recommendation? :)
+        
+        let $citation := 
+            if ($isPublished) then
+                <div class="catalogue-citation">
+                    <span style="font-weight:bold"><i18n:text key="proposedCitation">Proposed citation</i18n:text>:</span><br/>
+                    {app:makeCitationReference($node, $model, $lang)}
+                </div>
+            else ()
+        
         return
             <div>
                 <h4><i18n:text key="editionInfo">Digital Edition</i18n:text></h4>
                 <div>{$editionRecord}</div>
+                {$citation}
             </div>
 };
+
+declare function app:makeCitationReference($node as node()?, $model as map(*)?, $lang as xs:string?) as element(span) {
+    let $wid := $model('currentWork')/@xml:id/string()
+    let $author := $model('currentWork')/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:author/tei:persName/tei:surname/text()
+    let $title := $model('currentWork')/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title[@type eq 'short']/text()
+    let $digitalYear := substring($model('currentWork')/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:date[@type eq 'digitizedEd']/@when[1]/string(), 1, 4)
+    let $originalYear := 
+        if ($model('currentWork')/tei:teiHeader/tei:fileDesc/tei:sourceDesc//tei:date[@type eq 'thisEd']) then
+            $model('currentWork')/tei:teiHeader/tei:fileDesc/tei:sourceDesc//tei:date[@type eq 'thisEd']/@when
+        else $model('currentWork')/tei:teiHeader/tei:fileDesc/tei:sourceDesc//tei:date[@type eq 'firstEd']/@when
+    let $debug := console:log(count(util:expand($model('currentWork'))/tei:teiHeader/tei:fileDesc/tei:seriesStmt/tei:editor))
+    let $editors :=
+        string-join(for $ed in util:expand($model('currentWork'))/tei:teiHeader/tei:fileDesc/tei:seriesStmt/tei:editor/tei:persName 
+                        order by $ed/tei:surname
+                        return app:rotateFormatName($ed), ' &amp; ')
+    let $link := $model('currentWork')/tei:teiHeader/tei:fileDesc/tei:publicationStmt//tei:idno[@xml:id eq 'urlid']/text()
+    let $content := 
+        <span>{$author || ', ' || $title || ' (' || $digitalYear || ' [' || $originalYear || '])'|| ', '}
+            <i18n:text key="inLow">in</i18n:text>{': '}<i18n:text key="editionSeries">The School of Salamanca. A Digital Collection of Sources</i18n:text>
+            {', '}<i18n:text key="editedByAbbrLow">ed. by</i18n:text>{' ' || $editors || ' <'}<a href="{$link}">{$link}</a>{'>'}
+        </span>
+    return i18n:process($content, $lang, '/db/apps/salamanca/data/i18n', 'en')
+};
+
 
 (:~
 Creates a html (div) fragment containing bibliographic information about a print source, 

@@ -274,6 +274,11 @@ div .corpus-download {
     border:1px solid lightgray;
     border-radius:3px;
 }
+div .catalogue-citation {
+    padding:0.3em;
+    border:1px solid lightgray;
+    border-radius:3px;
+}
 #facets .facetitem,
 #facets .orderby,
 #facets .deselectstartover {
