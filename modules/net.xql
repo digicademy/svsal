@@ -690,6 +690,17 @@ declare function net:deliverTextsHTML($netVars as map()*) {
             net:error(404, $netVars, '')
 };
 
+declare function net:deliverWorkDetailsHTML($netVars as map(*)) {
+    let $wid := sal-util:normalizeId($netVars('paramap')?('wid'))
+    let $validation := sal-util:WRKvalidateId($wid)
+    return
+        switch($validation)
+            case 2
+            case 1 return net:forward-to-html(substring($netVars('path'), 4), $netVars)
+            case 0 return net:error(404, $netVars, 'work-not-yet-available')
+            default return net:error(404, $netVars, ())
+};
+
 declare function net:deliverAuthorsHTML($netVars as map()*) {
     let $validation := sal-util:AUTvalidateId($netVars('paramap')?('aid'))
     let $debug := util:log('warn', 'Author id validation: ' || string($validation) || ' ; aid=' || $netVars('paramap')?('aid'))
