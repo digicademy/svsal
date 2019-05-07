@@ -2500,10 +2500,6 @@ declare function app:WRKeditionRecord($node as node(), $model as map(*), $lang a
                     <td class="{$col1-width}" style="line-height: 1.2"><i18n:text key="author">Author</i18n:text>:</td>
                     <td class="{$col2-width}" style="line-height: 1.2">{$digital?('author')}</td>
                 </tr>
-                <tr>
-                    <td class="{$col1-width}" style="line-height: 1.2"><i18n:text key="language">Language</i18n:text>:</td>
-                    <td class="{$col2-width}" style="line-height: 1.2">{$digital?('language')}</td>
-                </tr>
                 {$publicationInfo}
                 <tr>
                     <td class="{$col1-width}">
@@ -2529,7 +2525,7 @@ declare function app:WRKeditionRecord($node as node(), $model as map(*), $lang a
             if ($isPublished) then
                 <div class="catalogue-citation">
                     <span style="font-weight:bold"><i18n:text key="proposedCitation">Proposed citation</i18n:text>:</span><br/>
-                    {app:makeCitationReference($node, $model, $lang)}
+                    {app:WRKcitationReference($node, $model, $lang, 'record')}
                 </div>
             else ()
         
@@ -2541,7 +2537,8 @@ declare function app:WRKeditionRecord($node as node(), $model as map(*), $lang a
             </div>
 };
 
-declare function app:makeCitationReference($node as node()?, $model as map(*)?, $lang as xs:string?) as element(span) {
+(: modes: "record" for generic citations in catalogue records; "reading-full", "reading-passage" :)
+declare function app:WRKcitationReference($node as node()?, $model as map(*)?, $lang as xs:string?, $mode as xs:string) as element(span) {
     let $wid := $model('currentWork')/@xml:id/string()
     let $author := $model('currentWork')/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:author/tei:persName/tei:surname/text()
     let $title := $model('currentWork')/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title[@type eq 'short']/text()
@@ -2571,16 +2568,7 @@ for embedding in a larger catalogue record. Receives the bibliographic informati
 app:WRKprintMetadata().
 ~:)
 declare function app:WRKbibliographicalRecord($node as node(), $model as map(*), $lang as xs:string?) {
-    (: *** AW: Get workDetails data from rdf rather than from TEI/nodeIndex? ***:)
-(:
-        let $metadata     := doc($config:rdf-root || '/' || sal-util:normalizeId($wid) || '.rdf')
-        let $debug1       := if ($config:debug = ("trace", "info")) then console:log("Retrieving $metadata//rdf:Description[@rdf:about = $reqResource]/rdfs:seeAlso[1]/@rdf:resource[contains(., '.html')]") else ()
-        let $resolvedPath := string(($metadata//*[@rdf:about eq $reqResource]/rdfs:seeAlso[1]/@rdf:resource[contains(., ".html")])[1])
 
-        for $item in $metadata/rdf:Description/@rdf:about[../rdf:type/@rdf:resource="http://purl.org/spar/doco/part"]
-            let $textId := $item
-            let $volNumber := ...
-:)
     let $workType := $model('currentWork')/tei:text/@type/string()
     let $workId := $model('currentWork')/@xml:id/string()
     let $bibliographical := app:WRKprintMetadata($node, $model, $workId, $lang)
@@ -2663,6 +2651,10 @@ declare function app:WRKbibliographicalRecord($node as node(), $model as map(*),
                       <td class="{$col1-width}" style="line-height: 1.2"><i18n:text key="printingPlace">Printing Place</i18n:text>:</td>
                       <td class="{$col2-width}" style="line-height: 1.2">{$bibliographical?('publicationPlace')}</td>
                 </tr>
+                <tr>
+                      <td class="{$col1-width}" style="line-height: 1.2"><i18n:text key="languageS">Language(s)</i18n:text>:</td>
+                      <td class="{$col2-width}" style="line-height: 1.2">{$bibliographical?('languages')}</td>
+                </tr>
                 {$volumeSpecifications}
                 {$extent}
                 {$origin}
@@ -2727,7 +2719,13 @@ declare function app:WRKprintMetadata($node as node(), $model as map(*), $wid as
         if (count($sourceDesc//tei:msDesc) gt 1) then i18n:negotiateNodes($sourceDesc//tei:msDesc[@type eq 'main']//tei:idno[@type eq 'catlink'], $lang)/text()
         else i18n:negotiateNodes($sourceDesc//tei:msDesc//tei:idno[@type eq 'catlink'], $lang)/text()
     let $extent := if ($type eq 'work_multivolume') then () else i18n:negotiateNodes($sourceDesc/tei:biblStruct/tei:monogr/tei:extent, $lang)/text()
-    let $status := $tei/tei:teiHeader//tei:revisionDesc/@status/string()         
+    let $languages := 
+        string-join((for $l in distinct-values($tei/tei:teiHeader/tei:profileDesc/tei:langUsage/tei:language/@ident) return
+                        if ($l eq 'es') then i18n:process(<i18n:text key="spanish">Spanish</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
+                        else if ($l eq 'la') then i18n:process(<i18n:text key="latin">Latin</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
+                        (: add further languages here, if required :)
+                        else ()), ', ')
+    let $status := $tei/tei:teiHeader//tei:revisionDesc/@status/string()
     return 
         map {
             'workId': $workId,
@@ -2746,6 +2744,7 @@ declare function app:WRKprintMetadata($node as node(), $model as map(*), $wid as
             'library': $library,
             'catLink': $catLink,
             'extent': $extent,
+            'languages': $languages,
             'status': $status
         }
 (:    TODO: make extent/format language-independent :)

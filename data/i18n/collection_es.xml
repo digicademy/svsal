@@ -120,6 +120,7 @@
     <msg key="latin">Latín</msg>
     <msg key="spanish">Español</msg>
     <msg key="language">Idioma</msg>
+    <msg key="languageS">Idioma(s)</msg>
     <msg key="material">Tipo de material</msg>
     <msg key="readWork">Leer</msg>
     <msg key="volNo">Número del tomo</msg>

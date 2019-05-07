@@ -94,6 +94,7 @@
   <msg key="ownerPrimaryEd">Bibliothek</msg>
   <msg key="notPublished">Noch nicht veröffentlicht</msg>
   <msg key="language">Sprache</msg>
+  <msg key="languageS">Sprache(n)</msg>
   <msg key="digitalPublisher">Veröffentlicht durch</msg>
   <msg key="workViews">Ansichten für dieses Werk</msg>
   <msg key="volViews">Ansichten für diesen Band</msg>
@@ -113,6 +114,9 @@
   <msg key="fullTextAvailable">Digitaler Volltext (+ Faksimiles)</msg>
   <msg key="facsimiles">Faksimiles</msg>
   <msg key="proposedCitation">Zitiervorschlag</msg>
+  
+  <msg key="latin">Latein</msg>
+  <msg key="spanish">Spanisch</msg>
   
   
   <!-- Meta Description Tags -->

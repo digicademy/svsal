@@ -115,6 +115,7 @@
   <msg key="german">German</msg>
   <msg key="english">English</msg>
   <msg key="language">Language</msg>
+  <msg key="languageS">Language(s)</msg>
   <msg key="material">Material</msg>
   <msg key="readWork">Read</msg>
   <msg key="volNo">Volume number</msg>
