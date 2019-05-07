@@ -208,7 +208,7 @@ declare function net:redirect-with-301($absolute-path) {  (: Moved permanently :
     (response:set-status-code(301), response:set-header('Location', $absolute-path))
 };
 declare function net:redirect-with-307($absolute-path) {  (: Temporary redirect :)
-    (response:set-status-code(307), response:set-header('Location', $absolute-path))
+    (response:set-status-code(307), response:set-header('Location', $absolute-path), text {''})
 };
 declare function net:redirect-with-303($absolute-path) {  (: See other :)
     (response:set-status-code(303), response:set-header('Location', $absolute-path), text {''})
@@ -594,7 +594,8 @@ declare function net:APIdeliverTXT($requestData as map(), $netVars as map()*) {
 declare function net:APIdeliverRDF($requestData as map(), $netVars as map()*) {
     if (starts-with($requestData('work_id'), 'W0')) then 
         if (doc-available($config:rdf-root || '/' || $requestData('work_id') || '.rdf')) then
-            let $headers := response:set-header("Content-Disposition", 'attachment; filename="' || $requestData('work_id') || '.rdf"')
+            let $headers1 := response:set-header('Content-Disposition', 'attachment; filename="' || $requestData('work_id') || '.rdf"')
+            let $header2 := response:set-header('Content-Type', 'application/rdf+xml')
             return doc($config:rdf-root || '/' || $requestData('work_id') || '.rdf')
         else if (not(app:WRKisPublished(<dummy/>, map{}, $requestData('work_id')))) then (: if there is no full/published text, we can also render rdf on-the-fly :)
             let $debug := if ($config:debug = ("trace", "info")) then console:log("Generating rdf for " || $requestData('work_id') || " ...") else ()
@@ -602,11 +603,13 @@ declare function net:APIdeliverRDF($requestData as map(), $netVars as map()*) {
             let $parameters := 
                 (<exist:add-parameter name="configuration" value="{$config:apiserver || '/xtriples/createConfig.xql?resourceId=' || $requestData('work_id') || '&amp;format=' || $config:lodFormat}"/>,
                  <exist:add-parameter name="format" value="{$config:lodFormat}"/>)
-            let $headers := response:set-header("Content-Disposition", 'attachment; filename="' || $requestData('work_id') || '.rdf"')
+            let $headers1 := response:set-header("Content-Disposition", 'attachment; filename="' || $requestData('work_id') || '.rdf"')
+            let $header2 := response:set-header('Content-Type', 'application/rdf+xml')
             return net:forward($path, $netVars, $parameters)
         else net:error(404, $netVars, 'Could not find rdf resource') (: not automatically creating rdf here if not available, since this might slow down the server inacceptably :)
     else if ($requestData('work_id') eq '*') then (: rdf of all works doesn't exist atm, redirect to HTML work overview - or rather return error? :)
-        net:redirect-with-307($config:webserver || '/' || $netVars('lang') || '/works.html')
+        let $debug := console:log("DEBUG MESSAGE")
+        return net:redirect-with-307($config:webserver || '/works.html')
     else net:error(404, $netVars, 'Invalid rdf request.')
 };
 
