@@ -24,17 +24,19 @@ declare variable $net:cache-control       := "no";
 
 declare variable $net:forwardedForServername    := request:get-header('X-Forwarded-Host');
 declare variable $net:servedContentTypes        := (
-                                                    'text/html',
-                                                    'text/plain',
                                                     'application/tei+xml',
                                                     'application/xhtml+xml',
                                                     'application/rdf+xml',
                                                     'application/json',
                                                     'application/pdf',
+                                                    'application/xml',
                                                     'application/zip',
                                                     'image/jpeg',
                                                     'image/png',
-                                                    'image/tiff'
+                                                    'image/tiff',
+                                                    'text/html',
+                                                    'text/plain',
+                                                    'text/xml'
                                                     );
 (:declare variable $net:requestedContentTypes     := tokenize(request:get-header('Accept'), '[,\s;]+');:)
 declare variable $net:requestedContentTypes     := tokenize(request:get-header('Accept'), '[, ]+');
@@ -703,7 +705,6 @@ declare function net:deliverConceptsHTML($netVars as map()*) {
 };
 
 declare function net:deliverWorkingPapersHTML($netVars as map()*) {
-    let $debug := console:log('HELLO')
     let $validation := sal-util:WPvalidateId($netVars('paramap')?('wpid'))
     return
         if ($validation eq 1) then net:forward-to-html(substring($netVars('path'), 4), $netVars)
@@ -713,8 +714,9 @@ declare function net:deliverWorkingPapersHTML($netVars as map()*) {
 
 (: TODO::)
 
-declare function net:deliverIIIF($path as xs:string, $netVars) {
-    let $reqResource    := tokenize(tokenize($path, '/iiif/')[last()], '/')[1]
+declare function net:APIdeliverIIIF($requestData as map()*, $netVars as map()*) {
+(:    let $reqResource    := tokenize(tokenize($path, '/iiif/')[last()], '/')[1]:)
+    let $resource := $requestData('tei_id')
     let $iiif-paras     := string-join(subsequence(tokenize(tokenize($path, '/iiif/')[last()], '/'), 2), '/')
     let $work           := tokenize(tokenize($reqResource, ':')[1], '\.')[1]   (: work[.edition]:pass.age :)
     let $passage        := tokenize($reqResource, ':')[2]
@@ -757,64 +759,6 @@ declare function net:deliverIIIF($requestData as map(), $netVars as map()*) {
     return net:redirect($resolvedURI, $netVars)
 };
 :)
-
-(:declare function net:deliverTextsHTML($pathComponents as xs:string*, $netVars as map()*) {
-    let $reqResource  := $pathComponents[last()-1] || "/" || $pathComponents[last()]
-    return if (starts-with(lower-case($reqResource), 'texts/w0') or starts-with(lower-case($reqResource), 'authors/a0')) then
-        let $reqWork      := tokenize(tokenize(tokenize($reqResource, ':')[1], '/')[2], '\.')[1]
-        let $reqVersion   := if (tokenize(tokenize($reqResource, ':')[1], '\.')[2]) then
-                                tokenize(tokenize($reqResource, ':')[1], '\.')[2]
-                             else 'edit'
-        let $reqPassage   := tokenize($reqResource, ':')[2]
-        let $debug2       := if ($config:debug = ("trace")) then console:log("Load metadata from " || $config:rdf-root || '/' || replace($reqWork, 'w0', 'W0') || '.rdf' || " ...") else ()
-        let $metadata     := doc($config:rdf-root || '/' || replace($reqWork, 'w0', 'W0') || '.rdf')
-        let $debug3       := if ($config:debug = ("trace")) then console:log("Retrieving $metadata//rdf:Description[@rdf:about eq '" || replace(replace(replace($reqResource, 'w0', 'W0'), '.edit', ''), '.orig', '') || "']/rdfs:seeAlso[1]/@rdf:resource[contains(., '.html')]") else ()
-        let $resolvedPath := string(($metadata//rdf:Description[@rdf:about eq replace(replace(replace($reqResource, 'w0', 'W0'), '.edit', ''), '.orig', '')]/rdfs:seeAlso[1]/@rdf:resource[contains(., ".html")])[1])
-        let $debug4       := if ($config:debug = ("trace")) then console:log("Found path: " || $resolvedPath || " ...") else ()
-
-        (\: The pathname that has been saved contains 0 or exactly one parameter for the target html fragment,
-           but it may or may not contain a hash value. We have to mix in other parameters (mode, search expression or viewer state) before the hash. :\)
-        let $pathname     := if (contains($resolvedPath, '?')) then
-                                substring-before($resolvedPath, '?')
-                             else if (contains($resolvedPath, '#')) then
-                                substring-before($resolvedPath, '#')
-                             else
-                                $resolvedPath
-        let $hash         := if (contains($resolvedPath, '#')) then concat('#', substring-after($resolvedPath, '#')) else ()
-        let $fragParam    := if (contains($resolvedPath, '?')) then
-                                if (contains(substring-after($resolvedPath, '?'), '#')) then
-                                    substring-before(substring-after($resolvedPath, '?'), '#')
-                                else
-                                    substring-after($resolvedPath, '?')
-                             else ()
-        let $updParams    := if ($reqVersion = "orig") then array:append([$netVars('params')], "mode=orig") else [$netVars('params')]
-        let $parameters   := concat(if ($fragParam or $updParams) then "?" else (), string-join(($fragParam, string-join($updParams?*, "&amp;")), "&amp;"))
-
-
-        let $debug5       := if ($config:debug = ("trace", "info")) then console:log("Redirecting to " || $pathname || $parameters || $hash || " ...") else ()
-        return net:redirect-with-303($pathname || $parameters || $hash )
-     else if (matches(lower-case($reqResource), '^texts/all(\?.*?)?')) then (\: forward to works list, regardless of parameters :\)
-        let $pathname     := $config:webserver || '/' || 'works.html'
-        let $debug5       := if ($config:debug = ("trace", "info")) then console:log("Redirecting to " || $pathname || " ...") else ()
-        return net:redirect-with-303($pathname)
-     else
-        let $debug2       := if ($config:debug = ("trace", "info")) then console:log("Html is acceptable, but bad input. Redirect (404) to error webpage ...") else ()
-        return net:redirect-with-404($config:webserver || '/' || 'error-page.html')
-};:)
-
-(:declare function net:validateHTMLRequest($path as xs:string?, $netVars as map()*) as xs:integer {
-    let $normalizedPath := replace(lower-case($path), '/+', '/')
-    let $tokens := tokenize($normalizedPath, '/')
-    let $existResource := $netVars('resouce')
-    let $params := for $p in $netVars('paramap') return map:get()
-    let $isValid :=
-        if (count($tokens) gt 1) then false()
-        else if ($tokens != xmldb:get-child-resources($netVars('controller'))) then false()
-        (\: validate frequent id combinations :\)
-        else if ($tokens eq 'work.html') then 
-        else if ($tokens eq 'author.html')
-    return $isValid
-};:)
 
 declare function net:deliverJPG($pathComponents as xs:string*, $netVars as map()*) {
     let $reqResource  := $pathComponents[last()]
