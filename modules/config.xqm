@@ -217,16 +217,6 @@ declare function config:getStatusCode($netVars as map()*) {
     request:get-attribute('status-code')
 };
 
-
-(: deprecated?:
-declare function config:app-meta($node as node(), $model as map(*)) as element()* {
-    <meta xmlns="http://www.w3.org/1999/xhtml" name="description" content="{$config:repo-descriptor/repo:description/text()}"/>,
-    for $author in $config:repo-descriptor/repo:author
-    return
-        <meta xmlns="http://www.w3.org/1999/xhtml" name="creator" content="{$author/text()}"/>
-};
-:)
-
 (:i18n ============================================:)
 (:language switching Startseite: für Seitentitel im Tabulator, Titel "Die Schule von Salamanca", das Menü und alle Bottons der Startseite:)
 
@@ -570,19 +560,7 @@ declare %templates:wrap
         </a>
     return 
         i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))};   
-        
-(:~
- : Returns Meta-info generated from the repo-descriptor.
- : deprecated?
- :)
-(:
-declare function config:meta-info($node as node(), $model as map(*)) as element()* {
-    <meta name="description" content="{$config:repo-descriptor/repo:description/text()}"/>,
-    for $author in $config:repo-descriptor/repo:author
-    return
-        <meta name="creator" content="{$author/text()}"/>
-};  
-:)
+
 (:~
  : ========================================================================================================================
  : Title for Browser-Tab for SingleView Work, -Lemma, -Working Paper, -Authors, -News
@@ -625,8 +603,8 @@ declare %templates:default("language", "en")
 :)
         else if (ends-with(request:get-uri(), "/workDetails.html")) then
             <title>
-                {string-join($model("currentWork")//tei:sourceDesc//tei:author/tei:persName/tei:surname, '/') || ", " ||
-                 $model("currentWork")//tei:sourceDesc//tei:monogr/tei:title[@type = 'short']/string()} (<i18n:text key='detailsHeader'>Details</i18n:text>) -
+                {string-join($model("currentWorkHeader")//tei:sourceDesc//tei:author/tei:persName/tei:surname, '/') || ", " ||
+                 $model("currentWorkHeader")//tei:sourceDesc//tei:monogr/tei:title[@type = 'short']/string()} (<i18n:text key='detailsHeader'>Details</i18n:text>) -
                  <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
         else if (ends-with(request:get-uri(), "/works.html")) then
             <title><i18n:text key="works">Werke</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
@@ -815,7 +793,7 @@ declare function local:docSubjectname($id as xs:string) as xs:string? {
 };
 
 declare function config:firstLink($node as node(), $model as map(*), $wid as xs:string?, $frag as xs:string?) as element(link)? {
-    let $workId         := if ($wid) then $wid else $model("currentWork")/@xml:id
+    let $workId         := if ($wid) then $wid else $model("currentWorkId")
     return if (not (xmldb:collection-available($config:html-root || "/" || $workId))) then
                 ()
             else
@@ -828,7 +806,7 @@ declare function config:firstLink($node as node(), $model as map(*), $wid as xs:
 };
 
 declare function config:prevLink($node as node(), $model as map(*), $wid as xs:string?, $frag as xs:string?) as element(link)? {
-    let $workId         := if ($wid) then sal-util:normalizeId($wid) else $model("currentWork")/@xml:id
+    let $workId         := if ($wid) then sal-util:normalizeId($wid) else $model("currentWorkId")
     return  if (not (xmldb:collection-available($config:html-root || "/" || $workId))) then
                 ()
             else
@@ -844,7 +822,7 @@ declare function config:prevLink($node as node(), $model as map(*), $wid as xs:s
 };
 
 declare function config:nextLink($node as node(), $model as map(*), $wid as xs:string?, $frag as xs:string?) as element(link)? {
-    let $workId := if ($wid) then sal-util:normalizeId($wid) else $model("currentWork")/@xml:id
+    let $workId := if ($wid) then sal-util:normalizeId($wid) else $model("currentWorkId")
     return  if (not(xmldb:collection-available($config:html-root || "/" || $workId))) then
                 ()
             else
@@ -859,63 +837,7 @@ declare function config:nextLink($node as node(), $model as map(*), $wid as xs:s
                         else ()
 };
 
-(:Show tab-titles Lemma:)
-(:declare %templates:default("language", "de") 
-    function config:meta-titleLem($node as node(), $model as map(*), $lang as xs:string, $lid as xs:string?) as element() {      
-    let $output := if (ends-with(request:get-uri(), "/lemma.html")) then
-        <title>
-            {$model("currentLemma")/tei:teiHeader//tei:author/tei:persName/tei:surname/string() || ", " ||
-             $model("currentLemma")/tei:teiHeader//tei:titleStmt/tei:title[@type = 'short']/string()} -
-             <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
-    else
-        <title><i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
- return
-        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "de")
-}; :) 
-(:Show tab-titles WorkingPaper:)
-(:declare %templates:default("language", "de") 
-    function config:meta-titleWP($node as node(), $model as map(*), $lang as xs:string, $wpid as xs:string?) as element() {      
-    let $output := if (ends-with(request:get-uri(), "/workingPaper.html")) then
-        <title>Working Paper:
-            {
-             $model("currentWp")/tei:teiHeader//tei:titleStmt/tei:title[@type = 'short']/string()} -
-             <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
-    else
-        <title><i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
- return
-        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "de")
-};
-(\:Show tab-titles Author:\)
-declare %templates:default("language", "de") 
-    function config:meta-titleAut($node as node(), $model as map(*), $lang as xs:string, $aid as xs:string?) as element() {      
-    let $output := if (ends-with(request:get-uri(), "/author.html")) then
-        <title>
-            {$model("currentAuthor")/tei:teiHeader//tei:author/tei:persName/tei:surname/string() || ", " ||
-             $model("currentAuthor")/tei:teiHeader//tei:author/tei:persName/tei:forename/string()} -
-             <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
-    else
-        <title><i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
- return
-        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "de")
-};  
-(\:Show tab-titles News:\)            
-declare %templates:default("language", "de") 
-    function config:meta-titleNews($node as node(), $model as map(*), $lang as xs:string, $nid as xs:string?) as element() {      
-    let $output := if (ends-with(request:get-uri(), "/newsEntry.html")) then
-        <title>
-            {   if ($lang eq 'de') then $model('currentNews')//tei:title[@type='main'][@xml:lang='de']/string()
-                else if ($lang eq 'en') then $model('currentNews')//tei:title[@type='main'][@xml:lang='en']/string()
-                else if ($lang eq 'es') then $model('currentNews')//tei:title[@type='main'][@xml:lang='es']/string()
-                else()} -
-             <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text>
-        </title>
-    else
-        <title><i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
- return
-        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "de")
-}; :) 
-
-declare function config:footer ($node as node(), $model as map(*), $lang as xs:string) {
+declare function config:footer($node as node(), $model as map(*), $lang as xs:string) {
 (: The following is disabled for security reasons:
     Vers. {doc('/db/apps/salamanca/expath-pkg.xml')/pack:package/@version/string()}
 :)

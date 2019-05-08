@@ -188,7 +188,7 @@ declare function app:workCount($node as node(), $model as map (*), $lang as xs:s
     count($model("listOfWorks"))
 };
 
-declare %templates:wrap function app:test($node as node(), $model as map(*), $lang as xs:string?) {
+(:declare %templates:wrap function app:test($node as node(), $model as map(*), $lang as xs:string?) {
         <p>
 <!--    request:get-uri(): {request:get-uri()}<br/>
         $config:app-root: {$config:app-root}<br/>
@@ -198,7 +198,7 @@ declare %templates:wrap function app:test($node as node(), $model as map(*), $la
 <!--    lang variable: {$lang}<br/>
         tei:text nodes: {$model('currentWork')//tei:text/@xml:id/string()} -->
         </p>
-};
+};:)
 
 (: ============ End helper functions ================= :)
 
@@ -750,39 +750,38 @@ declare %templates:wrap
 
 declare %templates:wrap 
     function app:WRKauthor($node as node(), $model as map(*)) {
-         <span>{app:formatName($model('currentWork')//tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName)}</span>
+         <span>{app:formatName($model('currentWorkHeader')//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName)}</span>
 };
 
-declare %templates:wrap %private
-    function app:WRKpublication($node as node(), $model as map(*)) {
-        let $root           :=      $model('currentWork')
-        let $thisEd         :=      $root//tei:pubPlace[@role = 'thisEd']
-        let $firstEd        :=      $root//tei:pubPlace[@role = 'firstEd']
-        let $publisher      :=      if ($thisEd) then $root//tei:imprint/tei:publisher[@n = 'thisEd']/tei:persName[1]/tei:surname else $root//tei:imprint/tei:publisher[@n = 'firstEd']/tei:persName[1]/tei:surname
+declare %templates:wrap %private function app:WRKpublication($node as node(), $model as map(*)) {
+        let $thisEd         :=      $model('currentWorkHeader')//tei:pubPlace[@role = 'thisEd']
+        let $firstEd        :=      $model('currentWorkHeader')//tei:pubPlace[@role = 'firstEd']
+        let $publisher      :=      if ($thisEd) then $model('currentWorkHeader')//tei:imprint/tei:publisher[@n = 'thisEd']/tei:persName[1]/tei:surname else $model('currentWorkHeader')//tei:imprint/tei:publisher[@n = 'firstEd']/tei:persName[1]/tei:surname
         let $place          :=      if ($thisEd) then $thisEd else $firstEd
         let $year           :=      if ($thisEd) 
-                                    then $root//tei:date[@type = 'thisEd']/@when/string() 
-                                    else $root//tei:date[@type = 'firstEd']/@when/string()
-        let $vol            :=      if ($root/tei:teiHeader//tei:monogr//tei:title[@type = 'volume']) 
-                                    then concat(', ', $model('currentWork')/tei:teiHeader//tei:monogr//tei:title[@type = 'volume']) 
+                                    then $model('currentWorkHeader')//tei:date[@type = 'thisEd']/@when/string() 
+                                    else $model('currentWorkHeader')//tei:date[@type = 'firstEd']/@when/string()
+        let $vol            :=      if ($model('currentWorkHeader')//tei:monogr//tei:title[@type = 'volume']) 
+                                    then concat(', ', $model('currentWorkHeader')//tei:monogr//tei:title[@type = 'volume']) 
                                     else ()                         
         let $pubDetails     :=  $place || '&#32;'||": " || $publisher || ", " || $year || $vol
         return $pubDetails
-        };
+};
 
-declare %templates:wrap %private
+(: deprecated? :)
+(:declare %templates:wrap %private
     function app:WRKlinks($node as node(), $model as map (*), $lang as xs:string?) {
         for $item in util:expand($model('currentWork'))//tei:text[@type="work_multivolume"]
         let $wid            :=  xs:string($item/ancestor::tei:TEI/@xml:id)
         let $completeWork   :=  $item[@xml:id="completeWork"]
-        let $volumesString  :=  for $volume(: at $index:) in util:expand($completeWork)//tei:text[@type="work_volume"]
+        let $volumesString  :=  for $volume(\: at $index:\) in util:expand($completeWork)//tei:text[@type="work_volume"]
             let $volId      := xs:string($volume/@xml:id)
             let $volFrag    := render:getFragmentFile($wid, $volId)
             let $volLink    :=  'work.html?wid=' || $wid || "&amp;frag=" || $volFrag || "#" || $volId
             let $volContent := $volId || '&#32;&#32;'
             return  	<a href="{$volLink}">{$volId||'&#32;'}</a>
         return $volumesString
-    };
+};:)
         
 declare %templates:wrap  
     function app:sortWRK ($node as node(), $model as map(*), $lang as xs:string?)  {
@@ -830,7 +829,7 @@ declare %templates:wrap
                                                     let $year           :=      if ($thisEd) then $root//tei:teiHeader//tei:date[@type = 'thisEd']/@when/string() 
                                                                                 else $root//tei:teiHeader//tei:date[@type = 'firstEd']/@when/string()
                                                     let $vol            :=      if ($root/tei:teiHeader//tei:monogr//tei:title[@type = 'volume']) 
-                                                                                then concat(', ', $model('currentWork')/tei:teiHeader//tei:monogr//tei:title[@type = 'volume']) 
+                                                                                then concat(', ', $model('currentWorkHeader')//tei:monogr//tei:title[@type = 'volume']) 
                                                                                 else ()                         
                                                     let $pubDetails     :=      $place || '&#32;'||": " || $publisher || ", " || $year || $vol
                                                     return $pubDetails
@@ -882,7 +881,7 @@ declare %templates:wrap
                                                     let $year           :=      if ($thisEd) then $root//tei:teiHeader//tei:date[@type = 'thisEd']/@when/string() 
                                                                                 else $root//tei:teiHeader//tei:date[@type = 'firstEd']/@when/string()
                                                     let $vol            :=      if ($root/tei:teiHeader//tei:monogr//tei:title[@type = 'volume']) 
-                                                                                then concat(', ', $model('currentWork')/tei:teiHeader//tei:monogr//tei:title[@type = 'volume']) 
+                                                                                then concat(', ', $model('currentWorkHeader')//tei:monogr//tei:title[@type = 'volume']) 
                                                                                 else ()                         
                                                     let $pubDetails     :=      $place || '&#32;'||": " || $publisher || ", " || $year || $vol
                                                     return $pubDetails
@@ -935,7 +934,7 @@ declare %templates:wrap
                                                                                 then $root//tei:teiHeader//tei:date[@type = 'thisEd']/@when/string() 
                                                                                 else $root//tei:teiHeader//tei:date[@type = 'firstEd']/@when/string()
                                                     let $vol            :=      if ($root/tei:teiHeader//tei:monogr//tei:title[@type = 'volume']) 
-                                                                                then concat(', ', $model('currentWork')/tei:teiHeader//tei:monogr//tei:title[@type = 'volume']) 
+                                                                                then concat(', ', $model('currentWorkHeader')//tei:monogr//tei:title[@type = 'volume']) 
                                                                                 else ()                         
                                                     let $pubDetails     :=      $place || '&#32;'||": " || $publisher || ", " || $year || $vol
                                                     return $pubDetails
@@ -991,7 +990,7 @@ declare %templates:wrap
                                                                                 then $root//tei:teiHeader//tei:sourceDesc//tei:date[@type = 'thisEd']/@when/string() 
                                                                                 else $root//tei:teiHeader//tei:sourceDesc//tei:date[@type = 'firstEd']/@when/string()
                                                     let $vol            :=      if ($root/tei:teiHeader//tei:monogr//tei:title[@type = 'volume']) 
-                                                                                then concat(', ', $model('currentWork')/tei:teiHeader//tei:monogr//tei:title[@type = 'volume']) 
+                                                                                then concat(', ', $model('currentWorkHeader')//tei:monogr//tei:title[@type = 'volume']) 
                                                                                 else ()                         
                                                     let $pubDetails     :=      $place || '&#32;'||": " || $publisher || ", " || $year || $vol
                                                     return $pubDetails
@@ -1219,7 +1218,7 @@ declare %templates:default
 declare function app:watermark($node as node(), $model as map(*), $wid as xs:string?, $lang as xs:string?) {
     let $watermark :=   if (($model('currentAuthor')//tei:revisionDesc/@status |
                              $model('currentLemma')//tei:revisionDesc/@status  |
-                             doc($config:tei-works-root || "/" || sal-util:normalizeId($wid) || ".xml")/tei:TEI//tei:revisionDesc/@status)[1]  (: $model("currentWork")//tei:revisionDesc/@status)[1] :)
+                             doc($config:tei-works-root || "/" || sal-util:normalizeId($wid) || ".xml")/tei:TEI//tei:revisionDesc/@status)[1]
                                                         = ('a_raw',
                                                            'b_cleared',
                                                            'c_hyph_proposed',
@@ -1234,7 +1233,7 @@ declare function app:watermark($node as node(), $model as map(*), $wid as xs:str
                             <p class="watermark-wip-text">
                                 {string(($model('currentAuthor')//tei:revisionDesc/@status |
                                          $model('currentLemma')//tei:revisionDesc/@status  |
-                                         $model("currentWork")//tei:revisionDesc/@status)[1])}          <!-- (: $model("currentWork")//tei:revisionDesc/@status)[1] :) -->
+                                         $model('currentWorkHeader')//tei:revisionDesc/@status)[1])}          
                             </p>
     return i18n:process($watermark, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
 };
@@ -1242,7 +1241,7 @@ declare function app:watermark($node as node(), $model as map(*), $wid as xs:str
 declare function app:watermark-txtonly($node as node(), $model as map(*), $wid as xs:string?, $lang as xs:string?) {
     let $watermark :=   if (($model('currentAuthor')//tei:revisionDesc/@status |
                              $model('currentLemma')//tei:revisionDesc/@status  |
-                             doc($config:tei-works-root || "/" || sal-util:normalizeId($wid) || ".xml")/tei:TEI//tei:revisionDesc/@status)[1]  (: $model("currentWork")//tei:revisionDesc/@status)[1] :)
+                             doc($config:tei-works-root || "/" || sal-util:normalizeId($wid) || ".xml")/tei:TEI//tei:revisionDesc/@status)[1] 
                                                         = ('a_raw',
                                                            'b_cleared',
                                                            'c_hyph_proposed',
@@ -1254,16 +1253,29 @@ declare function app:watermark-txtonly($node as node(), $model as map(*), $wid a
                         else
                             <span>{string(($model('currentAuthor')//tei:revisionDesc/@status |
                                      $model('currentLemma')//tei:revisionDesc/@status  |
-                                     $model("currentWork")//tei:revisionDesc/@status)[1])}</span>
+                                     $model('currentWorkHeader')//tei:revisionDesc/@status)[1])}</span>
     return $watermark
 };
-
-declare %templates:wrap function app:loadSingleWork($node as node(), $model as map(*), $wid as xs:string?) {
+(: deprecated :)
+(:declare %templates:wrap function app:loadSingleWork($node as node(), $model as map(*), $wid as xs:string?) {
     let $context  :=   if (doc($config:tei-works-root || "/" || sal-util:normalizeId($wid) || ".xml")/tei:TEI//tei:text[@type="work_multivolume"]) then
                             util:expand(doc($config:tei-works-root || "/" || sal-util:normalizeId($wid) || ".xml")/tei:TEI)
                      else
                             doc($config:tei-works-root || "/" || sal-util:normalizeId($wid) || ".xml")/tei:TEI
     return  map {"currentWork"    := $context}
+};:)
+
+declare %templates:wrap function app:loadWorkMetadata($node as node(), $model as map(*), $wid as xs:string?) {
+    let $normId := sal-util:normalizeId($wid)
+    let $workPath := $config:tei-works-root || "/" || $normId || ".xml"
+    let $header := util:expand(doc($workPath)/tei:TEI/tei:teiHeader)
+                    (: or better util:expand(doc($config:tei-works-root || "/" || sal-util:normalizeId($wid) || ".xml"))/tei:TEI/tei:teiHeader ?:)
+    let $workId := doc($workPath)/tei:TEI/@xml:id/string()
+    let $type := doc($workPath)/tei:TEI/tei:text/@type/string()
+    return  
+        map {'currentWorkHeader': $header,
+             'currentWorkId': $workId,
+             'currentWorkType': $type}
 };
 
 declare function app:displaySingleWork($node as node(), $model as map(*),
@@ -1273,7 +1285,7 @@ declare function app:displaySingleWork($node as node(), $model as map(*),
                                             $mode as xs:string?,
                                             $viewer as xs:string?, 
                                             $lang as xs:string?) {   
-    let $workId             := if ($wid) then sal-util:normalizeId($wid) else $model("currentWork")/@xml:id
+    let $workId             := if ($wid) then sal-util:normalizeId($wid) else $model('currentWorkId')
 
     let $targetFragment    :=   if (xmldb:collection-available($config:html-root || "/" || $workId)) then
                                     if ($frag and $frag || ".html" = xmldb:get-child-resources($config:html-root || "/" || $workId)) then
@@ -1347,7 +1359,7 @@ declare function app:displaySingleWork($node as node(), $model as map(*),
     let $debugOutput   := if ($config:debug = "trace") then
                                 <p>
                                     wid: {$wid}<br/>
-                                    $model("currentWork")/@xml:id: {xs:string($model("currentWork")/@xml:id)}<br/>
+                                    $model('currentWorkId'): {xs:string($model('currentWorkId'))}<br/>
                                     workId: {$workId}<br/>
                                     q: {$q}<br/>
                                     mode: {$mode}<br/>
@@ -1999,7 +2011,7 @@ Returns the type of the current work/volume in parenthesis
 ~:)
 declare %templates:wrap
     function app:WRKtype($node as node(), $model as map(*), $lang as xs:string?) {
-       let $teiType := $model('currentWork')/tei:text/@type/string()
+       let $teiType := $model('currentWorkType')
        let $type      :=  if ($teiType eq 'work_multivolume') then <i18n:text key="multivolume">Mehrbandwerk</i18n:text> 
                           else if ($teiType eq 'work_volume') then <i18n:text key="workvolume">Einzelband</i18n:text>
                           else ()
@@ -2013,28 +2025,28 @@ declare %templates:wrap
 Main title of the print source 
 ~:)
 declare function app:WRKtitleMain($node as node(), $model as map(*)) as xs:string? {
-        $model('currentWork')/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'main']/string()  
+        $model('currentWorkHeader')//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'main']/string()  
 };
 
 (:~
 Short title of the print source (for citation)
 ~:)
 declare function app:WRKtitleShort($node as node(), $model as map(*)) as xs:string? {
-       $model('currentWork')/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'short']/string()
+       $model('currentWorkHeader')//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'short']/string()
 };
 
 (:~
 Main title of the digital edition of a work/volume 
 ~:)
 declare function app:WRKeditionTitleMain($node as node(), $model as map(*)) as xs:string? {
-        $model('currentWork')/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title[@type = 'main']/string()  
+        $model('currentWorkHeader')/tei:fileDesc/tei:titleStmt/tei:title[@type = 'main']/string()  
 };
 
 (:~
 Short title of the digital edition of a work/volume (for citation)
 ~:)
 declare function app:WRKeditionTitleShort($node as node(), $model as map(*)) as xs:string? {
-       $model('currentWork')/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title[@type = 'short']/string()
+       $model('currentWorkHeader')/tei:fileDesc/tei:titleStmt/tei:title[@type = 'short']/string()
 };
 
 (:~ 
@@ -2043,7 +2055,7 @@ Creates the heading for a catalogue entry: author name: work/volume title
 ~:)
 declare %templates:wrap 
     function app:WRKcatRecordTitle($node as node(), $model as map(*), $lang as xs:string?) {
-    let $authorName := app:rotateFormatName($model('currentWork')/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:author/tei:persName)
+    let $authorName := app:rotateFormatName($model('currentWorkHeader')/tei:fileDesc/tei:titleStmt/tei:author/tei:persName)
     let $title := app:WRKeditionTitleShort($node, $model)
     let $workType := app:WRKtype($node, $model, $lang)
     return (
@@ -2080,7 +2092,7 @@ declare function app:WRKtitle($node as node(), $model as map(*), $lang as xs:str
 };  
 
 (: deprecated? see app:WRKcatRecord() :)
-declare
+(:declare
     function app:WRKdateOfOrigin($node as node(), $model as map(*), $lang as xs:string?, $wid as xs:string?) {
         let $output :=  if ($model('currentWork')//tei:text[@type = 'work_multivolume']) then
                             <tr>
@@ -2103,10 +2115,10 @@ declare
                                 </td>
                             </tr>
         return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
-};
+};:)
 
 (: deprecated? see app:WRKcatRecord() :)
-declare %templates:wrap 
+(:declare %templates:wrap 
     function app:WRKread ($node as node(), $model as map(*), $lang as xs:string?, $wid as xs:string?) {
         let $base   := $model('currentWork')
         let $status := $base//tei:revisionDesc/@status/string()
@@ -2126,7 +2138,7 @@ declare %templates:wrap
                                             <a class="{$status}" href="{if ($status = ("a_raw", "b_cleared", "c_hyph_proposed", "d_hyph_approved", "e_emended_unenriched", "f_enriched")) then 'javascript:' else $vol}">{concat($volNumber||': ', $date)}</a>{'&#xA0;-&#xA0;'}
                                         </span>  
         return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
-};
+};:)
  
 (:~ 
 Creates a (HTML) catalogue record for a work/volume.
@@ -2136,10 +2148,10 @@ Creates a (HTML) catalogue record for a work/volume.
 @param wid: ID for the current work
 @return: HTML div
 ~:)
-declare %templates:wrap function app:WRKcatRecord($node as node(), $model as map(*), $lang as xs:string?, $wid as xs:string?) {
-    let $workType := $model('currentWork')/tei:text/@type
+declare %templates:wrap function app:WRKcatRecord($node as node(), $model as map(*), $lang as xs:string?) {
+    let $workType := $model('currentWorkType')
     let $volumeIds :=   if ($workType eq 'work_multivolume') then 
-                            for $item in $model('currentWork')/tei:teiHeader/tei:fileDesc/tei:notesStmt/tei:relatedItem[@type eq 'work_volume'] return substring-after($item/@target/string(), 'work:')
+                            for $item in $model('currentWorkHeader')/tei:fileDesc/tei:notesStmt/tei:relatedItem[@type eq 'work_volume'] return substring-after($item/@target/string(), 'work:')
                         else ()
     let $volumesCount := count($volumeIds)
     let $volumesRecord :=   if ($volumesCount gt 0) then 
@@ -2171,17 +2183,18 @@ declare %templates:wrap function app:WRKcatRecord($node as node(), $model as map
 };
 
 declare function app:WRKadditionalInfoRecord($node as node(), $model as map(*), $lang as xs:string?) {
-    let $workType := $model('currentWork')/tei:text/@type/string()
-    let $workId := $model('currentWork')/@xml:id/string()
-    let $status := $model('currentWork')/tei:teiHeader/tei:revisionDesc/@status/string()
+    let $workType := $model('currentWorkType')
+    let $workId := $model('currentWorkId')
+    let $status := $model('currentWorkHeader')/tei:revisionDesc/@status/string()
 
     let $mirador := 'mirador.html?wid=' || $workId
     let $scanCount := 0
     let $isPublished := app:WRKisPublished($node, $model, $workId)
     (: ({$scanCount || ' '}<i18n:text key="scans">Scans</i18n:text>) :)
-    let $imagesLink := <a href="{$mirador}" target="_blank" rel="noopener noreferrer">
-                           <i18n:text key="facsimiles">Facsimiles</i18n:text> 
-                       </a>
+    let $imagesLink := 
+        <a href="{$mirador}" target="_blank" rel="noopener noreferrer">
+            <i18n:text key="facsimiles">Facsimiles</i18n:text> 
+        </a>
     let $readingViewField :=
         if ($isPublished) then
             let $thumbnail := app:WRKcatRecordThumbnail($node, $model, $workId, 'full')
@@ -2259,7 +2272,7 @@ for the respective volume.
 ~:)
 declare function app:WRKcatRecordTeaser($node as node(), $model as map(*), $wid as xs:string, $lang as xs:string?, $volumes as xs:integer) {
     let $teiHeader :=   
-        if ($wid eq $model('currentWork')/@xml:id/string()) then $model('currentWork')/tei:teiHeader
+        if (sal-util:normalizeId($wid) eq $model('currentWorkId')) then $model('currentWorkHeader') (: when does this ever evaluate to true? (DG) :)
         else if (doc-available($config:tei-works-root || '/' || $wid || '.xml')) then 
             doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI/tei:teiHeader
         else ()
@@ -2270,16 +2283,16 @@ declare function app:WRKcatRecordTeaser($node as node(), $model as map(*), $wid 
             let $bibliographical := app:WRKprintMetadata($node, $model, sal-util:normalizeId($wid), $lang)
             let $titleShort := $digital?('titleShort')
             let $volumeString := $bibliographical?('volumeNumber') || ' of ' || string($volumes)
-            let $pubDate :=     if ($digital?('published') eq 'true') then
+            let $pubDate :=     if ($digital?('isPublished')) then
                                     i18n:convertDate($digital?('publicationDate'), $lang, 'verbose')
                                 else ()
-            let $editors :=     if ($digital?('published') eq 'true') then $digital?('alphaEditors')
+            let $editors :=     if ($digital?('isPublished')) then $digital?('alphaEditors')
                                 else ()
             let $recordLink := 'workDetails.html?wid=' || $wid
             let $imagesLink := 'mirador.html?wid=' || $wid
             let $col1-width := 'col-md-2'
             let $col2-width := 'col-md-10'
-            let $publication := if ($digital?('published') eq 'true') then 
+            let $publication := if ($digital?('isPublished')) then 
                                     (<tr>
                                          <td class="{$col1-width}" style="line-height: 1.2">
                                              <i18n:text key="editors">Editors</i18n:text>:
@@ -2355,8 +2368,8 @@ Determines whether a given work (not volume) is officially published as part of 
 ~:)
 declare function app:WRKisPublished($node as node(), $model as map(*), $wid as xs:string) as xs:boolean {
     let $workId := sal-util:normalizeId($wid)
-    let $status :=  if ($workId eq $model('currentWork')/@xml:id/string()) then
-                        $model('currentWork')/tei:teiHeader/tei:revisionDesc/@status/string()
+    let $status :=  if ($workId eq $model('currentWorkId')) then
+                        $model('currentWorkHeader')/tei:revisionDesc/@status/string()
                     else if (doc-available($config:tei-works-root || '/' || $workId || '.xml')) then 
                         doc($config:tei-works-root || '/' || $workId || '.xml')/tei:TEI/tei:teiHeader/tei:revisionDesc/@status/string()
                     else 'no_status'
@@ -2377,12 +2390,12 @@ Creates a thumbnail image for the catalogue record of a work or volume.
 @return: HTML div
 ~:)
 declare function app:WRKcatRecordThumbnail($node as node(), $model as map(*), $wid as xs:string?, $mode as xs:string?) {
-    let $tei := 
-        if ($wid and $wid eq $model('currentWork')/@xml:id) then $model('currentWork')
-        else if (doc-available($config:tei-works-root || '/' || sal-util:normalizeId($wid) || '.xml')) then
+    (:let $tei := 
+        (\:if ($wid and $wid eq $model('currentWorkId')) then $model('currentWork')
+        else :\)if (doc-available($config:tei-works-root || '/' || sal-util:normalizeId($wid) || '.xml')) then
             doc($config:tei-works-root || '/' || sal-util:normalizeId($wid) || '.xml')/tei:TEI
-        else ()
-    let $workId := $tei/@xml:id
+        else ():)
+    let $workId := if ($wid and sal-util:normalizeId($wid) ne $model('currentWorkId')) then sal-util:normalizeId($wid) else sal-util:normalizeId($model('currentWorkId'))
     let $iiifResource := iiif:fetchResource($workId)
     let $img :=  
         if ($iiifResource?('@type') eq 'sc:Manifest') then 
@@ -2392,16 +2405,23 @@ declare function app:WRKcatRecordThumbnail($node as node(), $model as map(*), $w
             $iiifResource?('members')?(1)?('thumbnail')?('@id')
         else ()
     let $scaledImg := if ($mode eq 'full') then iiif:scaleImageURI($img, 25) else iiif:scaleImageURI($img, 20)
-    let $workType := $tei/tei:text/@type/string()
-    let $volNumber := $tei/tei:text/@n/string()
+    let $workType := 
+        if ($wid and sal-util:normalizeId($wid) ne $model('currentWorkId')) then 
+            doc($config:tei-works-root || '/' || $workId || '.xml')/tei:TEI/tei:text/@type/string()
+        else $model('currentWorkType')
+    let $volNumber := doc($config:tei-works-root || '/' || $workId || '.xml')/tei:TEI/tei:text/@n/string()
     let $target := 
         if ($workType eq 'work_volume') then
             $config:idserver || '/works.' || substring($workId,1,5) || ':vol' || $volNumber
         else
             concat('work.html?wid=', $workId)
-    let $status := $tei/tei:teiHeader//tei:revisionDesc/@status/string() 
+    let $status :=
+        if ($wid and sal-util:normalizeId($wid) ne $model('currentWorkId')) then 
+            doc($config:tei-works-root || '/' || $workId || '.xml')/tei:TEI/tei:teiHeader//tei:revisionDesc/@status/string() 
+        else $model('currentWorkHeader')/tei:revisionDesc/@status/string()
     let $isPublished := app:WRKisPublished($node, $model, $workId)
-    let $buttonText :=  
+    
+    let $buttonText :=
         if (not($isPublished)) then
             if ($workType eq 'work_multivolume') then <i18n:text key="notFullyAvailable">Not (fully) available</i18n:text>
             else <i18n:text key="notAvailable">Not available</i18n:text>
@@ -2441,9 +2461,9 @@ for embedding in a larger catalogue record. Receives the edition information mai
 app:WRKeditionMetadata().
 ~:)
 declare function app:WRKeditionRecord($node as node(), $model as map(*), $lang as xs:string?) {
-    let $workId := $model('currentWork')/@xml:id/string()
+    let $workId := $model('currentWorkId')
     let $digital := app:WRKeditionMetadata($node, $model, $workId)
-    let $status := $model('currentWork')/tei:teiHeader/tei:revisionDesc/@status/string()
+    let $status := $model('currentWorkHeader')/tei:revisionDesc/@status/string()
     (: layout specs :)
     let $col1-width := 'col-md-3'
     let $col2-width := 'col-md-9'
@@ -2543,20 +2563,19 @@ declare function app:WRKeditionRecord($node as node(), $model as map(*), $lang a
 
 (: modes: "record" for generic citations in catalogue records; "reading-full", "reading-passage" :)
 declare function app:WRKcitationReference($node as node()?, $model as map(*)?, $lang as xs:string?, $mode as xs:string) as element(span) {
-    let $wid := $model('currentWork')/@xml:id/string()
-    let $author := $model('currentWork')/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:author/tei:persName/tei:surname/text()
-    let $title := $model('currentWork')/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title[@type eq 'short']/text()
-    let $digitalYear := substring($model('currentWork')/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:date[@type eq 'digitizedEd']/@when[1]/string(), 1, 4)
+    let $wid := $model('currentWorkId')
+    let $author := $model('currentWorkHeader')/tei:fileDesc/tei:titleStmt/tei:author/tei:persName/tei:surname/text()
+    let $title := $model('currentWorkHeader')/tei:fileDesc/tei:titleStmt/tei:title[@type eq 'short']/text()
+    let $digitalYear := substring($model('currentWorkHeader')/tei:fileDesc/tei:publicationStmt/tei:date[@type eq 'digitizedEd']/@when[1]/string(), 1, 4)
     let $originalYear := 
-        if ($model('currentWork')/tei:teiHeader/tei:fileDesc/tei:sourceDesc//tei:date[@type eq 'thisEd']) then
-            $model('currentWork')/tei:teiHeader/tei:fileDesc/tei:sourceDesc//tei:date[@type eq 'thisEd']/@when
-        else $model('currentWork')/tei:teiHeader/tei:fileDesc/tei:sourceDesc//tei:date[@type eq 'firstEd']/@when
-    let $debug := console:log(count(util:expand($model('currentWork'))/tei:teiHeader/tei:fileDesc/tei:seriesStmt/tei:editor))
+        if ($model('currentWorkHeader')/tei:fileDesc/tei:sourceDesc//tei:date[@type eq 'thisEd']) then
+            $model('currentWorkHeader')/tei:fileDesc/tei:sourceDesc//tei:date[@type eq 'thisEd']/@when
+        else $model('currentWorkHeader')/tei:fileDesc/tei:sourceDesc//tei:date[@type eq 'firstEd']/@when
     let $editors :=
-        string-join(for $ed in util:expand($model('currentWork'))/tei:teiHeader/tei:fileDesc/tei:seriesStmt/tei:editor/tei:persName 
+        string-join(for $ed in $model('currentWorkHeader')/tei:fileDesc/tei:seriesStmt/tei:editor/tei:persName 
                         order by $ed/tei:surname
                         return app:rotateFormatName($ed), ' &amp; ')
-    let $link := $model('currentWork')/tei:teiHeader/tei:fileDesc/tei:publicationStmt//tei:idno[@xml:id eq 'urlid']/text()
+    let $link := $model('currentWorkHeader')/tei:fileDesc/tei:publicationStmt//tei:idno[@xml:id eq 'urlid']/text()
     let $content := 
         <span>{$author || ', ' || $title || ' (' || $digitalYear || ' [' || $originalYear || '])'|| ', '}
             <i18n:text key="inLow">in</i18n:text>{': '}<i18n:text key="editionSeries">The School of Salamanca. A Digital Collection of Sources</i18n:text>
@@ -2573,8 +2592,8 @@ app:WRKprintMetadata().
 ~:)
 declare function app:WRKbibliographicalRecord($node as node(), $model as map(*), $lang as xs:string?) {
 
-    let $workType := $model('currentWork')/tei:text/@type/string()
-    let $workId := $model('currentWork')/@xml:id/string()
+    let $workType := $model('currentWorkType')
+    let $workId := $model('currentWorkId')
     let $bibliographical := app:WRKprintMetadata($node, $model, $workId, $lang)
     (: layout specs :)
     let $col1-width := 'col-md-3'
@@ -2676,14 +2695,16 @@ declare function app:WRKbibliographicalRecord($node as node(), $model as map(*),
 Bundles the bibliographical data of a (print) source.
 ~:)
 declare function app:WRKprintMetadata($node as node(), $model as map(*), $wid as xs:string?, $lang as xs:string?) as map(*)? {
-    let $tei := 
-        if (sal-util:normalizeId($wid) eq $model('currentWork')/@xml:id) then $model('currentWork')
-        else if (doc-available($config:tei-works-root || '/' || sal-util:normalizeId($wid) || '.xml')) then 
-            doc($config:tei-works-root || '/' || sal-util:normalizeId($wid) || '.xml')/tei:TEI
-        else ()
-    let $workId := $tei/@xml:id
-    let $type := $tei/tei:text/@type
-    let $sourceDesc := $tei/tei:teiHeader/tei:fileDesc/tei:sourceDesc
+    let $workId := if ($wid and sal-util:normalizeId($wid) ne $model('currentWorkId')) then sal-util:normalizeId($wid) else $model('currentWorkId')
+    let $teiHeader := 
+        if ($wid and sal-util:normalizeId($wid) ne $model('currentWorkId')) then
+            doc($config:tei-works-root || '/' || sal-util:normalizeId($wid) || '.xml')/tei:TEI/tei:teiHeader
+        else $model('currentWorkHeader')
+    let $type := 
+        if ($wid and sal-util:normalizeId($wid) ne $model('currentWorkId')) then
+            doc($config:tei-works-root || '/' || sal-util:normalizeId($wid) || '.xml')/tei:TEI/tei:text/@type/string()
+        else $model('currentWorkType')
+    let $sourceDesc := $teiHeader/tei:fileDesc/tei:sourceDesc
     
     let $titleMain := $sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'main']/string()
     let $titleShort := $sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'short']/string()
@@ -2704,8 +2725,12 @@ declare function app:WRKprintMetadata($node as node(), $model as map(*), $wid as
         else $sourceDesc//tei:pubPlace[@role eq 'firstEd']/@key/string()
     let $volumeNumber := if ($type eq 'work_volume') then $sourceDesc//tei:series/tei:biblScope/@n/string() else ()
     let $volumeTitle := if ($type eq 'work_volume') then $sourceDesc//tei:monogr/tei:title[@type ='volume']/text() else ()
-    let $totalVolumes := string(count(doc($config:tei-works-root || '/' || substring-before($workId, '_Vol') || '.xml')
-                                              /tei:TEI/tei:teiHeader//tei:notesStmt/tei:relatedItem[@type eq 'work_volume']))
+    let $totalVolumes := 
+        if ($type eq 'work_volume') then 
+            string(count(doc($config:tei-works-root || '/' || substring-before($workId, '_Vol') || '.xml')/tei:TEI/tei:teiHeader//tei:notesStmt/tei:relatedItem[@type eq 'work_volume']))
+        (: currently not necessary: :)
+        (:else if ($type eq 'work_multivolume') then string(count($model('currentWorkheader')//tei:notesStmt/tei:relatedItem[@type eq 'work_volume'])):)
+        else '0'
     let $imprint := $pubPlace || ' : ' || $publisher || ', ' || $pubYear
     (: if text is not the first edition, also supply imprint of the first edition :)
     let $imprintFirst := 
@@ -2724,12 +2749,12 @@ declare function app:WRKprintMetadata($node as node(), $model as map(*), $wid as
         else i18n:negotiateNodes($sourceDesc//tei:msDesc//tei:idno[@type eq 'catlink'], $lang)/text()
     let $extent := if ($type eq 'work_multivolume') then () else i18n:negotiateNodes($sourceDesc/tei:biblStruct/tei:monogr/tei:extent, $lang)/text()
     let $languages := 
-        string-join((for $l in distinct-values($tei/tei:teiHeader/tei:profileDesc/tei:langUsage/tei:language/@ident) return
+        string-join((for $l in distinct-values($teiHeader/tei:profileDesc/tei:langUsage/tei:language/@ident) return
                         if ($l eq 'es') then i18n:process(<i18n:text key="spanish">Spanish</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
                         else if ($l eq 'la') then i18n:process(<i18n:text key="latin">Latin</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
                         (: add further languages here, if required :)
                         else ()), ', ')
-    let $status := $tei/tei:teiHeader//tei:revisionDesc/@status/string()
+    let $status := $teiHeader//tei:revisionDesc/@status/string()
     return 
         map {
             'workId': $workId,
@@ -2758,16 +2783,16 @@ declare function app:WRKprintMetadata($node as node(), $model as map(*), $wid as
 Bundles the digital edition metadata of a work/volume.
 ~:)
 declare function app:WRKeditionMetadata($node as node(), $model as map(*), $wid as xs:string?) as map(*)? {
-    let $tei := 
-        if (sal-util:normalizeId($wid) eq $model('currentWork')/@xml:id) then $model('currentWork')
-        else if (doc-available($config:tei-works-root || '/' || sal-util:normalizeId($wid) || '.xml')) then 
-            doc($config:tei-works-root || '/' || sal-util:normalizeId($wid) || '.xml')/tei:TEI
-        else console:log('No xml/tei dataset found for workId ' || sal-util:normalizeId($wid))
-    let $workId := $tei/@xml:id
-    let $type := $tei/tei:text/@type
-    let $teiHeader := util:expand($tei/tei:teiHeader)
+    let $workId := if ($wid and sal-util:normalizeId($wid) ne $model('currentWorkId')) then sal-util:normalizeId($wid) else $model('currentWorkId')
+    let $teiHeader := 
+        if ($wid and sal-util:normalizeId($wid) ne $model('currentWorkId')) then
+            doc($config:tei-works-root || '/' || sal-util:normalizeId($wid) || '.xml')/tei:TEI/tei:teiHeader
+        else $model('currentWorkHeader')
+    let $type := 
+        if ($wid and sal-util:normalizeId($wid) ne $model('currentWorkId')) then
+            doc($config:tei-works-root || '/' || sal-util:normalizeId($wid) || '.xml')/tei:TEI/tei:text/@type/string()
+        else $model('currentWorkType')
     let $status := $teiHeader/tei:revisionDesc/@status/string()
-    
     let $titleMain := $teiHeader/tei:fileDesc/tei:titleStmt/tei:title[@type eq 'main']/text()
     let $titleShort := $teiHeader/tei:fileDesc/tei:titleStmt/tei:title[@type eq 'short']/text()
     let $author := app:rotateFormatName($teiHeader/tei:fileDesc/tei:titleStmt/tei:author/tei:persName)
@@ -2783,15 +2808,15 @@ declare function app:WRKeditionMetadata($node as node(), $model as map(*), $wid 
     let $alphaEditors := 
         if ($isPublished) then
             string-join(for $ed in $teiHeader/tei:fileDesc/tei:titleStmt/tei:editor/tei:persName 
-                                     order by $ed/tei:surname
-                                     return app:rotateFormatName($ed), '; ')
+                             order by $ed/tei:surname
+                             return app:rotateFormatName($ed), '; ')
         else ()
     let $currentVolume := $teiHeader/tei:fileDesc/tei:seriesStmt/tei:biblScope/@n/string()
     let $seriesEditors := string-join(for $ed in $teiHeader/tei:fileDesc/tei:seriesStmt/tei:editor/tei:persName 
                                                      order by $ed/tei:surname
                                                      return app:rotateFormatName($ed), '; ')
     let $digitalMaster := $teiHeader/tei:fileDesc/tei:publicationStmt/tei:publisher/tei:orgName[1]/text()
-    let $published := if (app:WRKisPublished($node, $model, $workId)) then 'true' else 'false'
+    let $published := app:WRKisPublished($node, $model, $workId)
     
     return 
         map {
@@ -2805,7 +2830,7 @@ declare function app:WRKeditionMetadata($node as node(), $model as map(*), $wid 
             'currentVolume': $currentVolume,
             'seriesEditors': $seriesEditors,
             'publisher': $digitalMaster,
-            'published': $published
+            'isPublished': $published
         }
 };
 
@@ -2893,9 +2918,11 @@ declare function app:sourcesList($node as node(), $model as map(*), $lang as xs:
  : TODO:
  : - group bibls, and hightlight them fully
  :)
-declare %templates:default('startnodeId', 'none')
+ (: deprecated? at least, currently not in use... :)
+(: TODO: if active again, fields using $model('currentWork') need to be adjusted (see app:loadWorkMetadata) :)
+(:declare %templates:default('startnodeId', 'none')
     function app:WRKhiliteBox($node as node(), $model as map(*), $lang as xs:string, $startnodeId as xs:string, $wid as xs:string?, $q as xs:string?) {
-(:      let $store-lang       := session:set-attribute("lang", $lang):)
+(\:      let $store-lang       := session:set-attribute("lang", $lang):\)
       
       let $debug := console:log('$startnodeId = ' || $startnodeId)
 
@@ -2990,7 +3017,7 @@ declare %templates:default('startnodeId', 'none')
                     </li>
                 else ()
 
-(: searchTermSection
+(\: searchTermSection
         let $searchterm :=  if ($q and $model("results")) then
                             <section id="searchTermsSection">
                                 <b><i18n:text key="searchterm">Suchbegriff(e)</i18n:text></b>
@@ -3014,7 +3041,7 @@ declare %templates:default('startnodeId', 'none')
                     </li>
                 </ul>
             </section>
-:)
+:\)
 
 
         let $output :=
@@ -3062,17 +3089,17 @@ declare %templates:default('startnodeId', 'none')
             else ()}
         </div>
     return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
-};
+};:)
 
-
-declare (: %templates:wrap :)
+(: deprecated :)
+(:declare (\: %templates:wrap :\)
     function app:WRKhiliteBoxBak($node as node(), $model as map(*), $lang as xs:string, $q as xs:string?) {
-(:      let $store-lang := session:set-attribute("lang", $lang):)
-(:      if ($model('currentwork')//id($startnodeid)) then
+(\:      let $store-lang := session:set-attribute("lang", $lang):\)
+(\:      if ($model('currentwork')//id($startnodeid)) then
                             $model('currentwork')//id($startnodeid)
                         else
-                            $model('currentwork')//tei:text  :)
-(:      let $startnode := util:expand($model('currentwork')//tei:text) :)
+                            $model('currentwork')//tei:text  :\)
+(\:      let $startnode := util:expand($model('currentwork')//tei:text) :\)
       let $persons :=
           for $entity in $model('currentWork')//tei:text//tei:persName
             let $ansetzungsform := app:resolvePersname($entity)
@@ -3156,7 +3183,7 @@ declare (: %templates:wrap :)
             </section>
         </div>
     return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
-};
+};:)
 
 declare function app:WRKtextModus($node as node(), $model as map(*), $lang as xs:string) {
     let $output :=
@@ -3476,7 +3503,7 @@ declare %templates:default
 declare function app:WRKpreparePagination($node as node(), $model as map(*), $wid as xs:string?, $lang as xs:string?) {
 <ul id="later" class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
 {
-    let $workId    :=  if ($wid) then sal-util:normalizeId($wid) else $model("currentWork")/@xml:id
+    let $workId    :=  if ($wid) then substring-before(sal-util:normalizeId($wid), '_') else substring-before($model('currentWorkId'), '_')
     for $pb in doc($config:data-root || "/" || $workId || '_nodeIndex.xml')//sal:node[@type="pb"][not(starts-with(sal:title, 'sameAs'))][not(starts-with(sal:title, 'corresp'))]
         let $fragment := $pb/sal:fragment
         let $url      := 'work.html?wid=' || $workId || '&amp;frag=' || $fragment || '#' || concat('pageNo_', $pb/@n)
