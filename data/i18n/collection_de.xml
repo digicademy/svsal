@@ -118,6 +118,7 @@
   <msg key="fullTextAvailable">Digitaler Volltext (+ Faksimiles)</msg>
   <msg key="facsimiles">Faksimiles</msg>
   <msg key="proposedCitation">Zitiervorschlag</msg>
+  <msg key="extent">Umfang, Format</msg>
   
   <msg key="latin">Latein</msg>
   <msg key="spanish">Spanisch</msg>
