@@ -37,7 +37,7 @@ declare function iiif:needsResource($targetWorkId as xs:string) as xs:boolean {
 };
 
 declare function iiif:needsResourceString($node as node(), $model as map(*)) {
-    let $currentWorkId := (string($model('currentWork')/@xml:id))
+    let $currentWorkId := $model('currentWork')?('wid')
     return if (iiif:needsResource($currentWorkId)) then
                 <td title="source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}"><a href="iiif-admin.xql?resourceId={$currentWorkId}"><b>Create IIIF resource NOW!</b></a></td>
             else

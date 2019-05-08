@@ -30,7 +30,7 @@ declare function rdf:needsRDF($targetWorkId as xs:string) as xs:boolean {
 };
 
 declare function rdf:needsRDFString($node as node(), $model as map(*)) {
-    let $currentWorkId := max((string($model('currentWork')/@xml:id), string($model('currentAuthor')/@xml:id), string($model('currentLemma')/@xml:id), string($model('currentWp')/@xml:id)))
+    let $currentWorkId := max((string($model('currentWork')?('wid')), string($model('currentAuthor')/@xml:id), string($model('currentLemma')/@xml:id), string($model('currentWp')/@xml:id)))
     let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
                                     if (doc-available(concat($subcollection, '/', $currentWorkId, '.xml'))) then $subcollection
                                     else ()

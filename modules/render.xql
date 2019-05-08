@@ -51,23 +51,24 @@ declare function render:WPString($node as node(), $model as map(*), $lang as xs:
 };
 
 declare function render:needsRender($targetWorkId as xs:string) as xs:boolean {
-    let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
-                                    if (doc-available(concat($subcollection, '/', $targetWorkId, '.xml'))) then $subcollection
-                                    else ()
+    let $targetSubcollection := 
+        for $subcollection in $config:tei-sub-roots return 
+            if (doc-available(concat($subcollection, '/', $targetWorkId, '.xml'))) then $subcollection
+            else ()
     let $workModTime := xmldb:last-modified($targetSubcollection, $targetWorkId || '.xml')
     return
         if (substring($targetWorkId,1,2) eq "W0") then
             if ($targetWorkId || "_nodeIndex.xml" = xmldb:get-child-resources($config:data-root)) then
-                    let $renderModTime := xmldb:last-modified($config:data-root, $targetWorkId || "_nodeIndex.xml")
-                    return if ($renderModTime lt $workModTime) then true() else false()
+                let $renderModTime := xmldb:last-modified($config:data-root, $targetWorkId || "_nodeIndex.xml")
+                return if ($renderModTime lt $workModTime) then true() else false()
             else
                 true()
         else if (substring($targetWorkId,1,2) = ("A0", "L0", "WP")) then
             if (not(xmldb:collection-available($config:data-root))) then
                 true()
             else if ($targetWorkId || ".html" = xmldb:get-child-resources($config:data-root)) then
-                    let $renderModTime := xmldb:last-modified($config:data-root, $targetWorkId || ".html")
-                    return if ($renderModTime lt $workModTime) then true() else false()
+                let $renderModTime := xmldb:last-modified($config:data-root, $targetWorkId || ".html")
+                return if ($renderModTime lt $workModTime) then true() else false()
             else
                 true()
         else
@@ -75,12 +76,15 @@ declare function render:needsRender($targetWorkId as xs:string) as xs:boolean {
 };
 
 declare function render:workString($node as node(), $model as map(*), $lang as xs:string?) {
-    let $currentWorkId  := string($model('currentWork')/@xml:id)
-    return <td><a href="{$config:webserver}/en/work.html?wid={$currentWorkId}">{$currentWorkId}: {app:WRKauthor($node, $model)} - {app:WRKtitleShort($node, $model)}</a></td>
+(:    let $debug := console:log(string($model('currentWork')/@xml:id)):)
+    let $currentWorkId  := $model('currentWork')?('wid')
+    let $author := <span>{$model('currentWork')?('author')}</span>
+    let $titleShort := $model('currentWork')?('titleShort')
+    return <td><a href="{$config:webserver}/en/work.html?wid={$currentWorkId}">{$currentWorkId}: {$author} - {$titleShort}</a></td>
 };
 
 declare function render:needsRenderString($node as node(), $model as map(*)) {
-    let $currentWorkId := string($model('currentWork')/@xml:id)
+    let $currentWorkId := $model('currentWork')?('wid')
     return if (render:needsRender($currentWorkId)) then
                     <td title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}{if (xmldb:get-child-resources($config:data-root) = $currentWorkId || "_nodeIndex.xml") then concat(', rendered on: ', xmldb:last-modified($config:data-root, $currentWorkId || "_nodeIndex.xml")) else ()}"><a href="render.html?wid={$currentWorkId}"><b>Render NOW!</b></a></td>
             else

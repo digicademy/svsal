@@ -720,8 +720,28 @@ declare %templates:wrap
         ==== WORKS-LIST (no js) ====
 :)
 (:works with noscript. NOTE: this function is ONLY USED ON THE ADMIN PAGE:)
- declare %templates:wrap %templates:default("sort", "surname")
+declare %templates:wrap %templates:default("sort", "surname")
         function app:loadListOfWorks($node as node(), $model as map(*), $sort as xs:string) as map(*) {
+            let $coll := (collection($config:tei-works-root)//tei:TEI[.//tei:text/@type = ("work_monograph", "work_multivolume")]/tei:teiHeader)
+            let $result := 
+                for $item in $coll
+                    let $wid := $item/parent::tei:TEI/@xml:id/string()
+                    let $author := app:formatName($item//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName)
+                    let $titleShort := $item//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'short']/string()
+                    order by $wid ascending
+                    return 
+                        map {'wid': $wid,
+                             'author': $author,
+                             'titleShort': $titleShort}
+            return map { 'listOfWorks' := $result }     
+};
+
+
+(: Deprecated 
+    (creates a huge tree overhead - if necessary, adjust it towards more fine-grained collection access (e.g., picking only teiHeaders from collection...)) :)
+(:works with noscript. NOTE: this function is ONLY USED ON THE ADMIN PAGE:)
+(:declare %templates:wrap %templates:default("sort", "surname")
+        function app:loadListOfWorksBak($node as node(), $model as map(*), $sort as xs:string) as map(*) {
             let $coll := (collection($config:tei-works-root)//tei:TEI[.//tei:text/@type = ("work_monograph", "work_multivolume")])
             let $result := 
                             if ($sort eq 'surname') then 
@@ -745,7 +765,7 @@ declare %templates:wrap
                                     order by $item/@xml:id ascending
                                     return $item
             return map { 'listOfWorks' := $result }     
-};
+};:)
 
 
 declare %templates:wrap 

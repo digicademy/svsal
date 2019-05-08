@@ -78,7 +78,7 @@ declare function sphinx:needsSnippets($targetWorkId as xs:string) as xs:boolean 
 };
 
 declare function sphinx:needsSnippetsString($node as node(), $model as map(*)) {
-    let $currentWorkId := max((string($model('currentWork')/@xml:id), string($model('currentAuthor')/@xml:id), string($model('currentLemma')/@xml:id), string($model('currentWp')/@xml:id)))
+    let $currentWorkId := max((string($model('currentWork')?('wid')), string($model('currentAuthor')/@xml:id), string($model('currentLemma')/@xml:id), string($model('currentWp')/@xml:id)))
     let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
                                     if (doc-available(concat($subcollection, '/', $currentWorkId, '.xml'))) then $subcollection
                                     else ()
@@ -648,6 +648,8 @@ declare function sphinx:excerpts ($documents as node()*, $words as xs:string) as
                                )
     let $tempString := replace(replace(replace($requestDoc, '%20', '+'), '%3D', '='), '%26amp%3B', '&amp;')
     let $debug :=  if ($config:debug = "trace") then console:log("Excerpts request body: " || $tempString) else ()
+    let $debug := if ($config:debug = "trace") then console:log("Posted orig text snippet docs[0]=" || serialize($documents/description_orig)) else ()
+    let $debug := if ($config:debug = "trace") then console:log("Posted edit text snippet docs[1]=" || serialize($documents/description_edit)) else ()
     (: Querying with EXPath http client proved not to work in eXist 3.4
         let $request    := <http:request method="post">
                              <http:header name="Content-Type" value="application/x-www-form-urlencoded"/>
@@ -657,7 +659,8 @@ declare function sphinx:excerpts ($documents as node()*, $words as xs:string) as
     :)
     let $response   := httpclient:post($endpoint, $tempString, true(), <headers><header name="Content-Type" value="application/x-www-form-urlencoded"/></headers>)
     let $debug :=  if ($config:debug = "trace") then console:log("Excerpts response: " || serialize($response)) else ()
-    let $rspBody    := if ($response//httpclient:body/@encoding = "Base64Encoded") then parse-xml(util:base64-decode($response//httpclient:body)) else $response//httpclient:body
+    let $rspBody    :=  if ($response//httpclient:body/@encoding = "Base64Encoded") then parse-xml(util:base64-decode($response//httpclient:body)) 
+                        else $response//httpclient:body
     let $debug :=  if ($config:debug = "trace") then console:log("$rspBody: " || serialize($rspBody)) else ()
     let $debug :=  if ($config:debug = "trace" and $response//httpclient:body/@encoding = "Base64Encoded") then console:log("body decodes to: " || util:base64-decode($response//httpclient:body)) else ()
 
@@ -678,6 +681,7 @@ declare function sphinx:highlight ($document as node(), $words as xs:string*) as
                                 '&amp;', encode-for-uri(concat('words=', $words)),
                                 '&amp;', encode-for-uri(concat('docs[1]=', serialize($document)))
                                )
+(:    let $debug := console:log():)
     let $tempString := replace(replace($requestDoc, '%20', '+'), '%3D', '=')
 (: Querying with EXPath http client proved not to work in eXist 3.4
     let $request    := <http:request method="post">
