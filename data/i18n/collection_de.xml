@@ -60,6 +60,8 @@
   <msg key="downloadCorpusTitle">Download des gesamten Corpus</msg>
   <msg key="txtFiles">Plain Text (TXT)</msg>
   <msg key="teiFiles">TEI-XML</msg>
+  <msg key="citeUp">Zitieren</msg>
+  <msg key="citeThisText">Diesen Text zitieren</msg>
   
   <!-- errors -->
   <msg key="authorNotYetAvailable">Dieser Artikel ist noch nicht verfügbar.</msg>
@@ -67,8 +69,10 @@
   <msg key="workNotYetAvailable">Dieses Werk ist noch nicht verfügbar.</msg>
   
   <!-- works/details -->
-  <msg key="worksNotice">Die digitale Quellensammlung des Projekts "Die Schule von Salamanca" besteht 
-    aus insgesamt 116 Werken, die sukzessive auf dieser Seite zur Verfügung gestellt werden. 
+  <msg key="worksNotice1">Die digitale Quellensammlung des Projekts "Die Schule von Salamanca" besteht 
+    aus </msg>
+  <msg key="worksNotice2">insgesamt 116 Werken</msg>
+  <msg key="worksNotice3">, die sukzessive auf dieser Seite zur Verfügung gestellt werden. 
     Hierfür werden die Texte den Spezifikationen der Text Encoding Initiative (TEI) entsprechend aufbereitet;
     für nähere Informationen siehe die </msg>
   <msg key="alphaEditors">Herausgeber (in alphabetischer Reihenfolge)</msg>
@@ -172,7 +176,7 @@
   <msg key="bugMessage">Falls Sie einen Fehler auf unserer Webseite gefunden haben, informieren Sie uns bitte unter</msg>
   
   <!-- worksList.html -->
-  <msg key="worksListOverview">Liste der Quellen in der Digitalen Quellensammlung</msg>
+  <msg key="worksListOverview">Quellen in der Digitalen Quellensammlung</msg>
   <msg key="furtherInformationTitle">Weitere Informationen</msg>
   <msg key="listOfSources">Liste aller Quellen</msg>
   

@@ -143,8 +143,10 @@
     <msg key="teiFiles">TEI XML</msg>
     <msg key="proposedCitation">Modelo de citación recomendado</msg>
     
-    <msg key="worksNotice">La colección digital de fuentes del proyecto "La Escuela de Salamanca" 
-        incluye 116 obras en total, que se publicarán sucesivamente en esta página. 
+    <msg key="worksNotice1">La colección digital de fuentes del proyecto "La Escuela de Salamanca" 
+        incluye </msg>
+    <msg key="worksNotice2">116 obras en total</msg>
+    <msg key="worksNotice3">, que se publicarán sucesivamente en esta página. 
         Para este fin, los textos están codificados por medio de las especificaciones 
         de Text Encoding Initiative (TEI); para más información, por favor consulte las </msg>
     <msg key="alphaEditors">Editores (en orden alfabético)</msg>
@@ -312,6 +314,8 @@
     <msg key="constituted">Constituido</msg>
     <msg key="diplomaticLower">diplomático</msg>
     <msg key="constitutedLower">constituido</msg>
+    <msg key="citeUp">Citar</msg>
+    <msg key="citeThisText">Citar este texto</msg>
     
     <!--news-->
     <msg key="more">más</msg>
@@ -346,7 +350,7 @@
     <msg key="workNotYetAvailable">Esta obra no está aún disponible.</msg>
     
    <!-- worksList.html -->
-  <msg key="worksListOverview">Lista de Fuentes en la Colección Digital</msg>
+  <msg key="worksListOverview">Fuentes en la Colección Digital</msg>
   <msg key="furtherInformationTitle">Información adicional</msg>
   <msg key="listOfSources">Lista de todas las fuentes</msg>
   

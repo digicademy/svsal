@@ -1040,7 +1040,9 @@ declare %templates:wrap
     function app:WRKsNotice ($node as node(), $model as map(*), $lang as xs:string?)  {
         let $output := 
             <div style="padding:0.2em;text-align:justify">
-                    <i18n:text key="worksNotice"/>
+                    <i18n:text key="worksNotice1"/>
+                    <a href="sources.html"><i18n:text key="worksNotice2"/></a>
+                    <i18n:text key="worksNotice3"/>
                     <a href="guidelines.html">
                         <i18n:text key="guidelines">Editionsrichtlinien</i18n:text>
                     </a>.
@@ -3308,6 +3310,7 @@ declare %templates:default
     (:let $downloadCorpus  :=  app:downloadCorpusXML($node, $model, $lang):)
     let $name            :=  app:WRKcombined($node, $model, $wid)
     let $top             :=  'work.html?wid=' || $wid
+    let $citeTitle := i18n:process(<i18n:text key="citeThisText">Cite this text</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en")
     let $output := 
         
         <div class="container">
@@ -3348,8 +3351,14 @@ declare %templates:default
                             <!--Textmode Button-->
                             <div class="btn-group hidden-md hidden-sm hidden-xs">{app:WRKtextModus($node, $model, $lang)}</div>
                             <!-- Register Button-->
-                            <div class="btn-group hidden-md hidden-sm hidden-xs btn btn-link disabled">
+                            <!--<div class="btn-group hidden-md hidden-sm hidden-xs btn btn-link disabled">
                                 <span class="glyphicon glyphicon-stats text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="register">Register</i18n:text></span>
+                            </div>-->
+                            <!-- Citation reference button -->
+                            <div class="btn-group">
+                                <button title="{$citeTitle}" class="btn btn-link dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                                    <i class="fas fa-feather-alt"></i>&#xA0;<i18n:text key="citeUp">Cite</i18n:text>
+                                </button>
                             </div>
                             <!--Print-Button and Export-Dropdown-->
                             <!--<div class="btn-group hidden-md hidden-sm hidden-xs btn btn-link disabled">
@@ -3422,7 +3431,7 @@ declare %templates:default
             </div>
         </div>
     return
-        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "de")
+        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "en")
 };   
 
 (:declare %templates:wrap

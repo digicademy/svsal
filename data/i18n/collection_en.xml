@@ -140,8 +140,9 @@
   <msg key="proposedCitation">Proposed citation</msg>
   
   
-  <msg key="worksNotice">The digital collection of sources of the project "The School of Salamanca" comprises 116 works in 
-    total, which are successively published on this page. For this purpose, the texts 
+  <msg key="worksNotice1">The digital collection of sources of the project "The School of Salamanca" comprises </msg>
+  <msg key="worksNotice2">116 works in total</msg>
+  <msg key="worksNotice3">, which are successively published on this page. For this purpose, the texts 
     are encoded according to the specifications of the Text Encoding Initiative (TEI); for further information, please 
     refer to the </msg>
   <msg key="series">Series</msg>
@@ -299,6 +300,8 @@
   <msg key="constituted">Constituted</msg>
   <msg key="diplomaticLower">diplomatic</msg>
   <msg key="constitutedLower">constituted</msg>
+  <msg key="citeUp">Cite</msg>
+  <msg key="citeThisText">Cite this text</msg>
    
   <!--news-->
   <msg key="more">more</msg>
@@ -340,7 +343,7 @@
   <msg key="workNotYetAvailable">This work is not yet available.</msg>
   
   <!-- worksList.html -->
-  <msg key="worksListOverview">List of Sources in the Digital Collection</msg>
+  <msg key="worksListOverview">Sources in the Digital Collection</msg>
   <msg key="furtherInformationTitle">Further Information</msg>
   <msg key="listOfSources">List of all sources</msg>
   
