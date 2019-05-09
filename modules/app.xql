@@ -3769,7 +3769,7 @@ declare function app:serverErrorMessage($node as node(), $model as map(*)) as xs
     let $errorMessage := if (normalize-space(request:get-attribute('javax.servlet.error.message')) ne '') then request:get-attribute('javax.servlet.error.message')
                          else if (normalize-space(templates:error-description($node, $model)) ne '') then templates:error-description($node, $model)
                          else if (normalize-space(request:get-attribute('error-message')) ne '') then request:get-attribute('error-message')
-                         else 'No message found...'
+                         else 'No description found...'
     return
         if ($config:debug eq 'trace' or $config:instanceMode eq 'testing') then 
             <div class="error-paragraph">
@@ -3779,20 +3779,32 @@ declare function app:serverErrorMessage($node as node(), $model as map(*)) as xs
         else ()
 };
 
-declare %templates:wrap function app:errorInformation($node as node(), $model as map(*), $lang as xs:string?) as xs:string? {
-    let $errorHeader :=    
+declare %templates:wrap function app:errorTitle($node as node(), $model as map(*), $lang as xs:string?) { 
+    let $out :=
         if (request:get-attribute('error-type') eq 'work-not-yet-available') then
-            <h2 class="error-title"><i18n:text key="workNotYetAvailable">This work is not yet available.</i18n:text></h2>
+            <i18n:text key="workNotYetAvailable">This work is not yet available.</i18n:text>
         else if (request:get-attribute('error-type') eq 'author-not-yet-available') then
-            <h2 class="error-title"><i18n:text key="authorNotYetAvailable">This article is not yet available.</i18n:text></h2>
+            <i18n:text key="authorNotYetAvailable">This article is not yet available.</i18n:text>
         else if (request:get-attribute('error-type') eq 'lemma-not-yet-available') then
-            <h2 class="error-title"><i18n:text key="lemmaNotYetAvailable">This dictionary article is not yet available.</i18n:text></h2>
+            <i18n:text key="lemmaNotYetAvailable">This dictionary article is not yet available.</i18n:text>
         else 
-            <div>
-                <h2 class="error-title"><i18n:text key="pageNotFound">This is not the page you were looking for...</i18n:text></h2>
-                <p class="error-paragraph"><i18n:text key="bugMessage">In case you found a bug in our website, please let us know at</i18n:text> <a href="mailto:info.salamanca@adwmainz.de">info.salamanca@adwmainz.de</a></p>
-            </div>
-    let $errorBody :=
+            <i18n:text key="pageNotFound">This is not the page you were looking for...</i18n:text>
+        (:        <p class="error-paragraph"><i18n:text key="bugMessage">In case you found a bug in our website, please let us know at</i18n:text> <a href="mailto:info.salamanca@adwmainz.de">info.salamanca@adwmainz.de</a></p>  :)
+    return i18n:process($out, $lang, '/db/apps/salamanca/data/i18n', 'en')
+};
+
+(: tightly coupled to app:errorTitle, see above :)
+declare %templates:wrap function app:errorInformation($node as node(), $model as map(*), $lang as xs:string?) { 
+    if (not(request:get-attribute('error-type') eq 'work-not-yet-available'
+            or request:get-attribute('error-type') eq 'author-not-yet-available'
+            or request:get-attribute('error-type') eq 'lemma-not-yet-available')) then
+        i18n:process(<span><i18n:text key="bugMessage">In case you found a bug in our website, please let us know at</i18n:text>{' '}<a href="mailto:info.salamanca@adwmainz.de">info.salamanca@adwmainz.de</a></span>, $lang, '/db/apps/salamanca/data/i18n', 'en')
+    else ()
+};
+
+(:
+
+let $errorBody :=
         if ($config:debug eq 'trace' or $config:instanceMode eq 'testing') then 
             let $errorDesc := 
                 if (normalize-space(request:get-attribute('javax.servlet.error.message')) ne '') then request:get-attribute('javax.servlet.error.message')
@@ -3810,7 +3822,8 @@ declare %templates:wrap function app:errorInformation($node as node(), $model as
         {$errorHeader, $errorBody}
         </div>
     return i18n:process($errorOut, $lang, '/db/apps/salamanca/data/i18n', 'en')
-};
+
+:)
 
 
 
