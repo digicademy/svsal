@@ -599,8 +599,14 @@ hr.ornament {
 }
 
 .poem {
-    font-style: italic;
-    font-size:1.2em;
+    font-style:italic;
+    font-size:1.5em !important;
+/*    padding-bottom:3em !important;*/
+    text-align: left !important;
+}
+.poem-head {
+    font-size:1.5em;
+    text-align: left !important;
 }
 
 .searchResultsNav {

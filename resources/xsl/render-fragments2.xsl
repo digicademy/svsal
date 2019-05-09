@@ -430,12 +430,18 @@
         </xsl:choose>
     </xsl:template>
 
-    <!-- Headings (unless they are parts of lists) -->
-    <xsl:template match="head[not(parent::list[not(@type='dict')])]">
+    <!-- Headings (unless they are parts of non-dict lists or lg) -->
+    <xsl:template match="head[not(parent::list[not(@type='dict')] or parent::lg)]">
 <!--        <xsl:message>Matched head node <xsl:value-of select="@xml:id"/>.</xsl:message>-->
         <h3>
             <xsl:apply-templates/>
         </h3>
+    </xsl:template>
+    
+    <xsl:template match="head[parent::lg]">
+        <h5 class="poem-head">
+            <xsl:apply-templates/>
+        </h5>
     </xsl:template>
     
     
@@ -864,11 +870,18 @@
     <xsl:template match="hi">
 <!--        <xsl:message>Matched hi/<xsl:value-of select="@rendition"/> node.</xsl:message>-->
         <xsl:variable name="styles" select="tokenize(@rendition, ' ')"/>
+        <!-- names of elements that have their own, specific text alignment (thus, hi/@rendition alignment is to be omitted) -->
+        <xsl:variable name="specificAlignElems" as="xs:string*" select="('head', 'signed')"/> <!-- TODO: add more names here when necessary -->
+        <!-- elements with specific rendering (e.g., signed -> italics) -->
+        <!--<xsl:variable name="specificRenderElems" as="xs:string*"
+            select="('signed')"/>--> <!-- necessary? -->
         <xsl:variable name="css-styles">
             <xsl:if test="'#b' = $styles">font-weight:bold;</xsl:if>
             <xsl:if test="'#it' = $styles">font-style:italic;</xsl:if>
+            <xsl:if test="'#rt' = $styles">font-style: normal;</xsl:if>
             <xsl:if test="'#l-indent' = $styles">display:block;margin-left:4em;</xsl:if>
-            <xsl:if test="'#r-center' = $styles">display:block;text-align:center;</xsl:if>
+            <xsl:if test="'#r-center' = $styles and not(ancestor::*[local-name(.) = $specificAlignElems])">display:block;text-align:center;</xsl:if>
+            <xsl:if test="'#right' = $styles and not(ancestor::*[local-name(.) = $specificAlignElems])">display:block;text-align: right;</xsl:if>
             <xsl:if test="'#sc' = $styles">font-variant:small-caps;</xsl:if>
             <xsl:if test="'#spc' = $styles">letter-spacing:2px;</xsl:if>
             <xsl:if test="'#sub' = $styles">vertical-align:sub;font-size:.83em;</xsl:if>
