@@ -497,6 +497,11 @@ a .edited, a .expan, a .reg, a .corr{
     vertical-align: initial;
 }
 
+.fa-hand-point-right {
+/*    font-size:unset;*/
+    font-size:23px;
+}
+
 .hauptText .signed {
     font-size:0.9em !important;
     text-align:right !important;
@@ -1068,4 +1073,6 @@ CSS-Solution from http://stackoverflow.com/questions/18192082/bootstrap-3-navbar
     top:        0;
     background-color: #ccc;
 }
+
+/* citation anchor test */
 
