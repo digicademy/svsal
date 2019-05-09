@@ -301,7 +301,8 @@
   <msg key="diplomaticLower">diplomatic</msg>
   <msg key="constitutedLower">constituted</msg>
   <msg key="citeUp">Cite</msg>
-  <msg key="citeThisText">Cite this text</msg>
+  <msg key="citeThisWork">Cite this work</msg>
+  <msg key="accessedDate">Accessed</msg>
    
   <!--news-->
   <msg key="more">more</msg>

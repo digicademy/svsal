@@ -60,7 +60,10 @@
             </div>
         </div>
         <!-- Work-UI (Toggle Boxes, extended menu) -->
-        <div data-template="app:guiWRK"/>
+        <div data-template="app:loadWorkMetadata">
+            <div data-template="app:guiWRK"/>
+        </div>
+        
         <!-- main window -->
         <div id="content" class="container-fluid"/>
 
@@ -71,6 +74,9 @@
         <script type="text/javascript" src="resources/js/jquery.bootstrap-autohidingnavbar.js"/>
         <script type="text/javascript" src="resources/js/jquery.tooltipster.js"/>
 
+        <!-- ==== Citation reference TEST ==== -->
+        
+        
         <!-- ==== Back to top ==== -->
         <a id="backTop"/>
         <script type="text/javascript" src="resources/js/jquery.backTop.js"/>
@@ -228,6 +234,25 @@
                 });
             });
         </script>
+        
+        <!-- ==== Citation reference -->
+        <script type="text/javascript">
+            var modal = document.getElementById('citRef');
+            var btn = document.getElementById("citRefBtn");
+            var span = document.getElementsByClassName("closeCitRef")[0];
+            btn.onclick = function() {
+              modal.style.display = "block";
+            }
+            span.onclick = function() {
+              modal.style.display = "none";
+            }
+            window.onclick = function(event) {
+              if (event.target == modal) {
+                modal.style.display = "none";
+              }
+            } 
+        </script>
+        
 
         <!-- ==== Load Paginator content when clicking on dropdown-menu ==== -->
         <script type="text/javascript">
@@ -239,7 +264,7 @@
                 $("#loadMeLast").innerHtml = ($self + '#later li'); 
             }
         </script>
-
+        <!-- var $self = `<span data-template="app:loadWRKpagination"/>`; -->
         <!-- ==== TOC tree ==== -->
         <script type="text/javascript" src="resources/js/jstree.js"/>
         <!-- ==== Initialize Table of Contents ==== -->

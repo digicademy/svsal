@@ -315,7 +315,8 @@
     <msg key="diplomaticLower">diplomático</msg>
     <msg key="constitutedLower">constituido</msg>
     <msg key="citeUp">Citar</msg>
-    <msg key="citeThisText">Citar este texto</msg>
+    <msg key="citeThisWork">Citar obra</msg>
+    <msg key="accessedDate">Consultado por última vez el</msg>
     
     <!--news-->
     <msg key="more">más</msg>

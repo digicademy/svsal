@@ -1388,7 +1388,7 @@ declare function app:displaySingleWork($node as node(), $model as map(*),
                                     doc($config:html-root || "/" || $workId || "/" || $targetFragment): {substring(serialize(doc($config:html-root || "/" || $workId || "/" || $targetFragment)), 1, 300)}
                                 </p>
                             else ()
-    let $workNotAvailable := <h2><span class="glyphicon glyphicon-file"></span> <i18n:text key="workNotAvailable">Dieses Werk ist noch nicht verfügbar.</i18n:text></h2>
+    let $workNotAvailable := <h2><span class="glyphicon glyphicon-file"></span> <i18n:text key="workNotYetAvailable">This work is not yet available.</i18n:text></h2>
 
 return
     if ($targetFragment) then
@@ -2581,7 +2581,7 @@ declare function app:WRKeditionRecord($node as node(), $model as map(*), $lang a
             </div>
 };
 
-(: modes: "record" for generic citations in catalogue records; "reading-full", "reading-passage" :)
+(: modes: "record" for generic citations in catalogue records; "reading-full", "reading-passage" - only relevant for access date :)
 declare function app:WRKcitationReference($node as node()?, $model as map(*)?, $lang as xs:string?, $mode as xs:string) as element(span) {
     let $wid := $model('currentWorkId')
     let $author := $model('currentWorkHeader')/tei:fileDesc/tei:titleStmt/tei:author/tei:persName/tei:surname/text()
@@ -2596,10 +2596,20 @@ declare function app:WRKcitationReference($node as node()?, $model as map(*)?, $
                         order by $ed/tei:surname
                         return app:rotateFormatName($ed), ' &amp; ')
     let $link := $model('currentWorkHeader')/tei:fileDesc/tei:publicationStmt//tei:idno[@xml:id eq 'urlid']/text()
+    let $accessed := (: TODO: date is currently the server's date, not the client's! :)
+        if ($mode = ('reading-full', 'reading-passage')) then
+            <span>(<i18n:text key="accessedDate">Accessed</i18n:text>{' ' || i18n:convertDate(substring(string(current-date()),1,10), $lang, 'verbose')})</span> (: TODO :)
+        else ()
+    let $passage := 
+        if ($mode eq 'reading-passage') then
+            () (: TODO :)
+        else ()
     let $content := 
         <span>{$author || ', ' || $title || ' (' || $digitalYear || ' [' || $originalYear || '])'|| ', '}
             <i18n:text key="inLow">in</i18n:text>{': '}<i18n:text key="editionSeries">The School of Salamanca. A Digital Collection of Sources</i18n:text>
-            {', '}<i18n:text key="editedByAbbrLow">ed. by</i18n:text>{' ' || $editors || ' <'}<a href="{$link}">{$link}</a>{'>'}
+            {', '}<i18n:text key="editedByAbbrLow">ed. by</i18n:text>{' ' || $editors || ' <'}<a href="{$link}">{$link}</a>{'> '}
+            {$accessed}
+            {$passage}
         </span>
     return i18n:process($content, $lang, '/db/apps/salamanca/data/i18n', 'en')
 };
@@ -3357,7 +3367,7 @@ declare %templates:default
     (:let $downloadCorpus  :=  app:downloadCorpusXML($node, $model, $lang):)
     let $name            :=  app:WRKcombined($node, $model, $wid)
     let $top             :=  'work.html?wid=' || $wid
-    let $citeTitle := i18n:process(<i18n:text key="citeThisText">Cite this text</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en")
+    let $citeTitle := i18n:process(<i18n:text key="citeThisWork">Cite this work</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en")
     let $output := 
         
         <div class="container">
@@ -3389,11 +3399,12 @@ declare %templates:default
                             <div class="btn-group">
                                 <button type="button" class="btn btn-link" data-toggle="modal" data-target="#myModal">
                                     <i class="fa fa-list-ul" aria-hidden="true"> </i>&#xA0;<i18n:text key="toc">Inhalt</i18n:text>
-                                </button> 
+                                </button>
+                            </div>
                             <!--Details Button-->
+                            <div class="btn-group hidden-md hidden-sm hidden-xs">
                                {app:WRKdetailsCurrent($node, $model, $lang)}
                             </div>
-
                         <!-- Textmode, register, print and export functions, in largeish views -->
                             <!--Textmode Button-->
                             <div class="btn-group hidden-md hidden-sm hidden-xs">{app:WRKtextModus($node, $model, $lang)}</div>
@@ -3403,9 +3414,19 @@ declare %templates:default
                             </div>-->
                             <!-- Citation reference button -->
                             <div class="btn-group">
-                                <button title="{$citeTitle}" class="btn btn-link dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                                <!--<button title="{$citeTitle}" class="btn btn-link dropdown-toggle" type="button" id="dropdownBox1" data-toggle="dropdown" aria-expanded="true">-->
+                                <button type="button" class="btn btn-link" id="citRefBtn" title="{$citeTitle}"> <!-- data-toggle="modal" data-target="#citRef" -->
                                     <i class="fas fa-feather-alt"></i>&#xA0;<i18n:text key="citeUp">Cite</i18n:text>
                                 </button>
+                                <!-- The Modal -->
+                                <div id="citRef" class="citRefModal">
+                                    <!-- Modal content -->
+                                    <div class="citRefModal-content">
+                                        <span class="closeCitRef">×</span>
+                                        <p style="font-weight:bold;"><i18n:text key="proposedCitation">Proposed citation</i18n:text>:</p>
+                                        <p>{app:WRKcitationReference($node, $model, $lang, 'reading-full')}</p>
+                                    </div>
+                                </div>
                             </div>
                             <!--Print-Button and Export-Dropdown-->
                             <!--<div class="btn-group hidden-md hidden-sm hidden-xs btn btn-link disabled">
@@ -3460,9 +3481,10 @@ declare %templates:default
                                    <i class="fa fa-bars"></i>&#xA0;<i18n:text key="moreb">Mehr</i18n:text>
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li class="disabled"><a><span class="glyphicon glyphicon-stats text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="register">Register</i18n:text></span></a></li>
+                                    <!--<li class="disabled"><a><span class="glyphicon glyphicon-stats text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="register">Register</i18n:text></span></a></li>-->
                                     <li><a onclick="applyEditMode()" class="btn original unsichtbar" style="cursor: pointer;"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"/>&#xA0;<i18n:text key="constituted">Konstituiert</i18n:text></a></li>
                                     <li><a onclick="applyOrigMode()" class="btn edited" style="cursor: pointer;"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"/>&#xA0;<i18n:text key="diplomatic">Diplomatisch</i18n:text></a></li>
+                                    <li>{app:WRKdetailsCurrent($node, $model, $lang)}</li>
                                     <!--<li class="disabled"><a><span class="glyphicon glyphicon-print text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="print">Drucken</i18n:text></span></a></li>-->
                                     {$downloadXML}
                                     {$downloadTXTorig}
