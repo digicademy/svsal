@@ -349,6 +349,7 @@
     <msg key="authorNotYetAvailable">Este artículo aún no está disponible.</msg>
     <msg key="lemmaNotYetAvailable">Esta entrada del diccionario aún no está disponible.</msg>
     <msg key="workNotYetAvailable">Esta obra no está aún disponible.</msg>
+    <msg key="resourceNotYetAvailable">Este recurso no está aún disponible.</msg>
     
    <!-- worksList.html -->
   <msg key="worksListOverview">Fuentes en la Colección Digital</msg>

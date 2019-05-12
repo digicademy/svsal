@@ -342,6 +342,7 @@
   <msg key="authorNotYetAvailable">This article is not yet available.</msg>
   <msg key="lemmaNotYetAvailable">This dictionary article is not yet available.</msg>
   <msg key="workNotYetAvailable">This work is not yet available.</msg>
+  <msg key="resourceNotYetAvailable">This resource is not yet available.</msg>
   
   <!-- worksList.html -->
   <msg key="worksListOverview">Sources in the Digital Collection</msg>

@@ -68,6 +68,7 @@
   <msg key="authorNotYetAvailable">Dieser Artikel ist noch nicht verfügbar.</msg>
   <msg key="lemmaNotYetAvailable">Dieser Wörterbucheintrag ist noch nicht verfügbar.</msg>
   <msg key="workNotYetAvailable">Dieses Werk ist noch nicht verfügbar.</msg>
+  <msg key="resourceNotYetAvailable">Diese Ressource ist noch nicht verfügbar.</msg>
   
   <!-- works/details -->
   <msg key="worksNotice1">Die digitale Quellensammlung des Projekts "Die Schule von Salamanca" besteht 
