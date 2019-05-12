@@ -1,40 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<div data-template="app:loadSingleWork">
+<div data-template="app:loadWorkMetadata">
     <div xmlns:i18n="http://exist-db.org/xquery/i18n" data-template="templates:surround" data-template-with="templates/template_basic.html" data-template-at="content">
         <div data-template="i18n:translate" data-template-catalogues="data/i18n">
-            <div class="container" data-template="app:loadSingleWork">
+            <div class="container" data-template="app:loadWorkMetadata">
                 <h2 style="margin-top: 3%" class="hidden-md hidden-sm hidden-xs">
-                    <span>
-                        <span class="text-muted" data-template="app:WRKtitleShort"/>
-                    </span>
-                    <span class="text-muted" data-template="app:WRKtype"/>
-                    <hr/>
+                    <span class="text-muted" data-template="app:WRKcatRecordTitle"/>
                 </h2>
                 <h2 style="margin-top: 2%" class="hidden-lg hidden-sm hidden-xs">
-                    <span>
-                        <span class="text-muted" data-template="app:WRKtitleShort"/>
-                    </span>
-                    <span class="text-muted" data-template="app:WRKtype"/>
-                    <hr/>
+                    <span class="text-muted" data-template="app:WRKcatRecordTitle"/>
                 </h2>
                 <h2 class="hidden-lg hidden-md">
-                    <span>
-                        <span class="text-muted" data-template="app:WRKtitleShort"/>
-                    </span>
-                    <span class="text-muted" data-template="app:WRKtype"/>
-                    <hr/>
+                    <span class="text-muted" data-template="app:WRKcatRecordTitle"/>
                 </h2>
-                <div class="row-fluid">
-                    <table class="borderless table table-hover">
-                        <tr>
-                            <td class="col-md-4"><i18n:text key="author">Autor</i18n:text>:</td>
-                            <td class="col-md-8" data-template="app:WRKauthor"/>
-                        </tr>
-                        <span data-template="app:WRKtitle"/>
-                        <span data-template="app:WRKdateOfOrigin"/>
-                    </table>
-                </div>
-                <span data-template="app:bibliographicalRecord"/>
+                <div data-template="app:WRKcatRecord"/>
             </div>
         </div>
     </div>

@@ -9,6 +9,8 @@
 	version="3.0"
 	exclude-result-prefixes="exist sal tei xd xs xsl"
 	xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+    
+    <!-- stylesheet can possibly be deleted -->
 
 <!-- **** I. Import helper functions **** -->
     <xsl:include href="sal-functions.xsl"/>

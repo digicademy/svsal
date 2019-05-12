@@ -27,17 +27,15 @@
             <div class="row">
                 <div class="col-md-3 hidden-xs hidden-sm">
                     <ul class="fadeIn" id="facets" style="padding-top: 20%; padding-left: 5%"/>
-                   <!-- show this when js is disabled -->
+                    <!-- show this when js is disabled -->
                     <noscript>
                         <div style="margin-top: -13%;" data-template="app:sortWRK"/>
                     </noscript>
-                    <p id="corpusdownloadparagraph" style="padding:0.5em;border:1px solid lightgray;border-radius:3px;">
-                        <a href="resources/files/sal-tei-corpus.zip">
-                            <span class="glyphicon glyphicon-download-alt"/>
-                            <i18n:text key="download">Download</i18n:text>
-                        </a>
-                        <i18n:text key="corpusVerb"/>
-                    </p>
+                    <div class="corpus-download">
+                        <span data-template="app:WRKsCorpusDownload"/>
+                        <hr/>
+                        <span data-template="app:WRKsList"/>
+                    </div>
                 </div>
                 <div class="col-md-9" id="results" style="padding-top: 5%">
                     <!-- show this when js is disabled -->
@@ -55,7 +53,6 @@
                     var works_items = [  <span data-template="app:loadWRKfacets"/> ];
                 </script>
             </div>
-            <!--</div>-->
         </div>
     </div>
 </div>

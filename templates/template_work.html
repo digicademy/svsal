@@ -18,7 +18,7 @@
         <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
         <link rel="stylesheet" type="text/css" href="resources/css/style_work.css"/>
         <link rel="stylesheet" type="text/css" href="resources/css/jquery-ui-1.10.4.custom.css"/>
-        <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"/>
         <!--<link rel="stylesheet" type="text/css" href="resources/css/jquery.treeview.css"/>-->
         <link rel="stylesheet" type="text/css" href="resources/css/jsTree.css"/>
         <link rel="stylesheet" type="text/css" href="resources/css/tooltipster.css"/>
@@ -60,7 +60,10 @@
             </div>
         </div>
         <!-- Work-UI (Toggle Boxes, extended menu) -->
-        <div data-template="app:guiWRK"/>
+        <div data-template="app:loadWorkMetadata">
+            <div data-template="app:guiWRK"/>
+        </div>
+        
         <!-- main window -->
         <div id="content" class="container-fluid"/>
 
@@ -71,6 +74,9 @@
         <script type="text/javascript" src="resources/js/jquery.bootstrap-autohidingnavbar.js"/>
         <script type="text/javascript" src="resources/js/jquery.tooltipster.js"/>
 
+        <!-- ==== Citation reference TEST ==== -->
+        
+        
         <!-- ==== Back to top ==== -->
         <a id="backTop"/>
         <script type="text/javascript" src="resources/js/jquery.backTop.js"/>
@@ -228,6 +234,25 @@
                 });
             });
         </script>
+        
+        <!-- ==== Citation reference -->
+        <script type="text/javascript">
+            var modal = document.getElementById('citRef');
+            var btn = document.getElementById("citRefBtn");
+            var span = document.getElementsByClassName("closeCitRef")[0];
+            btn.onclick = function() {
+              modal.style.display = "block";
+            }
+            span.onclick = function() {
+              modal.style.display = "none";
+            }
+            window.onclick = function(event) {
+              if (event.target == modal) {
+                modal.style.display = "none";
+              }
+            } 
+        </script>
+        
 
         <!-- ==== Load Paginator content when clicking on dropdown-menu ==== -->
         <script type="text/javascript">
@@ -239,14 +264,14 @@
                 $("#loadMeLast").innerHtml = ($self + '#later li'); 
             }
         </script>
-
+        <!-- var $self = `<span data-template="app:loadWRKpagination"/>`; -->
         <!-- ==== TOC tree ==== -->
         <script type="text/javascript" src="resources/js/jstree.js"/>
         <!-- ==== Initialize Table of Contents ==== -->
         <script type="text/javascript">
             var tree = $("#tableOfConts");
             tree.bind("loaded.jstree", function (event, data) {
-                tree.jstree("open_all");
+                tree.jstree(true).open_node($('#tableOfConts').find('li').first());;
             });
             $('#tableOfConts').jstree({
                     "core": { }
@@ -446,7 +471,7 @@
         /**
          * JavaScript Get URL Parameter
          *
-         * @param String prop The specific URL parameter you want to retreive the value for
+         * @param String prop The specific URL parameter you want to retrieve the value for
          * @return String|Object If prop is provided a string value is returned, otherwise an object of all properties is returned
          */
         function getUrlParams( prop ) {

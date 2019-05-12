@@ -1,6 +1,8 @@
-xquery version "3.0";
+xquery version "3.1";
+
 
 module namespace config         = "http://salamanca/config";
+declare       namespace exist   = "http://exist.sourceforge.net/NS/exist";
 declare namespace repo          = "http://exist-db.org/xquery/repo";
 declare namespace request       = "http://exist-db.org/xquery/request";
 declare namespace session       = "http://exist-db.org/xquery/session";
@@ -16,13 +18,14 @@ declare namespace tei           = "http://www.tei-c.org/ns/1.0";
 declare namespace app           = "http://salamanca/app";
 import module namespace net     = "http://salamanca/net"                at "net.xql";
 import module namespace i18n    = "http://exist-db.org/xquery/i18n"     at "i18n.xql";
+import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";
 import module namespace console = "http://exist-db.org/xquery/console";
 import module namespace functx  = "http://www.functx.com";
 
 (: ==================================================================================== :)
 (: OOOooo... Configurable Section for the School of Salamanca Web-Application ...oooOOO :)
-declare variable $config:debug        := "info"; (: possible values: trace, info, none :)
-declare variable $config:instanceMode := "production"; (: possible values: staging, production :)
+declare variable $config:debug        := "trace"; (: possible values: trace, info, none :)
+declare variable $config:instanceMode := "testing"; (: possible values: testing, staging, production :)
 declare variable $config:contactEMail := "info.salamanca@adwmainz.de";
 
 (: Configure Servers :)
@@ -36,9 +39,24 @@ declare variable $config:serverdomain :=
     else if(substring-before(request:get-server-name(), ".") = $config:subdomains)
         then substring-after(request:get-server-name(), ".")
     else
-        let $alert := if ($config:debug = "trace") then console:log("Warning! Dynamic $config:serverdomain is uncertain, using servername " || request:get-server-name() || ".") else ()
-        return request:get-server-name()
+        let $fallbackDomain := 'c106-211.cloud.gwdg.de' (: request:get-server-name() :)
+        let $alert := if ($config:debug = "trace") then console:log("Warning! Dynamic $config:serverdomain is uncertain, using servername " || $fallbackDomain || ".") else ()
+        return $fallbackDomain
     ;
+
+declare variable $config:apiEndpoints   := map  {
+                                                    "v1": ("texts", "search", "codesharing", "xtriples")
+                                                };
+(: valid API parameters and values, aligned with the respective 'format' parameter's values; if there is no explicite value 
+    stated for a parameter (such as 'q'), the parameter may have any string value (sanitization happens elsewhere) :)
+declare variable $config:apiFormats := map {
+                                                'html': ('mode=edit', 'mode=orig', 'mode=meta', 'q', 'lang=de', 'lang=en', 'lang=es', 'viewer', 'frag'),
+                                                'iiif': ('canvas'),
+                                                'jpg': (),
+                                                'rdf': (),
+                                                'tei': ('mode=meta', 'mode=full'),
+                                                'txt': ('mode=edit', 'mode=orig')
+                                            };
 
 declare variable $config:webserver      := $config:proto || "://www."    || $config:serverdomain;
 declare variable $config:blogserver     := $config:proto || "://blog."   || $config:serverdomain;
@@ -46,6 +64,7 @@ declare variable $config:searchserver   := $config:proto || "://search." || $con
 declare variable $config:imageserver    := $config:proto || "://facs."   || $config:serverdomain;
 declare variable $config:dataserver     := $config:proto || "://data."   || $config:serverdomain;
 declare variable $config:apiserver      := $config:proto || "://api."    || $config:serverdomain;
+declare variable $config:apiserverTexts := $config:apiserver || '/v1/texts';
 declare variable $config:teiserver      := $config:proto || "://tei."    || $config:serverdomain;
 declare variable $config:resolveserver  := $config:proto || "://"        || $config:serverdomain;
 declare variable $config:idserver       := $config:proto || "://id."     || $config:serverdomain;
@@ -142,15 +161,18 @@ declare variable $config:tei-lemmata-root := concat($config:salamanca-data-root,
 declare variable $config:tei-news-root := concat($config:salamanca-data-root, "/tei/news");
 declare variable $config:tei-workingpapers-root := concat($config:salamanca-data-root, "/tei/workingpapers");
 declare variable $config:tei-works-root := concat($config:salamanca-data-root, "/tei/works");
+declare variable $config:tei-meta-root := concat($config:salamanca-data-root, "/tei/meta");
 declare variable $config:tei-sub-roots := ($config:tei-authors-root, $config:tei-lemmata-root, $config:tei-news-root, $config:tei-workingpapers-root, $config:tei-works-root);
 
 declare variable $config:resources-root := concat($config:app-root, "/resources");
 declare variable $config:data-root      := concat($config:app-root, "/data");
 declare variable $config:html-root      := concat($config:data-root, "/html");
+declare variable $config:txt-root      := concat($config:data-root, "/txt");
 declare variable $config:snippets-root  := concat($config:data-root, "/snippets");
 declare variable $config:rdf-root       := concat($config:salamanca-data-root, "/rdf");
 declare variable $config:iiif-root      := concat($config:salamanca-data-root, "/iiif");
 declare variable $config:files-root     := concat($config:resources-root, "/files");
+declare variable $config:corpus-files-root := concat($config:data-root, '/corpus');
 
 (: declare variable $config:home-url   := replace(replace(replace(request:get-url(), substring-after(request:get-url(), '/salamanca'), ''),'/rest/', '/'), 'localhost', 'h2250286.stratoserver.net'); :)
 
@@ -182,14 +204,18 @@ declare function config:expath-descriptor() as element(expath:package) {
     $config:expath-descriptor
 };
 
-(: deprecated?:
-declare function config:app-meta($node as node(), $model as map(*)) as element()* {
-    <meta xmlns="http://www.w3.org/1999/xhtml" name="description" content="{$config:repo-descriptor/repo:description/text()}"/>,
-    for $author in $config:repo-descriptor/repo:author
-    return
-        <meta xmlns="http://www.w3.org/1999/xhtml" name="creator" content="{$author/text()}"/>
+declare function config:errorhandler($netVars as map()*) {
+    if (($config:instanceMode = "staging") or ($config:debug = "trace") or ("debug=trace" = $netVars('params')) ) then ()
+        else
+            <error-handler>
+                <forward url="{$netVars('controller')}/error-page.html" method="get"/>
+                <forward url="{$netVars('controller')}/modules/view.xql"/>
+            </error-handler>
 };
-:)
+
+declare function config:getStatusCode($netVars as map()*) {
+    request:get-attribute('status-code')
+};
 
 (:i18n ============================================:)
 (:language switching Startseite: für Seitentitel im Tabulator, Titel "Die Schule von Salamanca", das Menü und alle Bottons der Startseite:)
@@ -283,33 +309,33 @@ declare function config:app-header($node as node(), $model as map(*), $lang as x
                                  (contains(request:get-url(), 'editorial')) or
                                  (contains(request:get-url(), 'contact')) or
                                  (contains(request:get-url(), 'about'))         ) then 'active' else ()}">
-                    <a href="project.html">
+                    <a href="{$config:webserver || '/' || $lang || '/project.html'}">
                     <i class="fa fa-university" aria-hidden="true"></i>&#160;
                     <i18n:text key="project">Projekt</i18n:text></a></li>
                 <li class="{if ( (contains(request:get-url(), 'work.')) or
                                  (contains(request:get-url(), 'works.')) or
                                  (contains(request:get-url(), 'workDetails.'))  ) then 'active' else ()}">
-                    <a href="works.html">
+                    <a href="{$config:webserver || '/' || $lang || '/works.html'}">
                     <span class="glyphicon glyphicon-file" aria-hidden="true"></span>&#160;
                     <i18n:text key="works">Werke</i18n:text></a></li> 
                  
                     <li class="{if ( (contains(request:get-url(), 'dictionary')) or
                                  (contains(request:get-url(), 'lemma.'))        ) then 'active' else ()}">
-                    <a href="dictionary.html">
+                    <a href="{$config:webserver || '/' || $lang || '/dictionary.html'}">
                     <span class="glyphicon glyphicon-book" aria-hidden="true"></span>&#160;
                     <i18n:text key="dictionary">Wörterbuch</i18n:text></a></li> 
                 <li class="{if ( (contains(request:get-url(), 'author.')) or
                                  (contains(request:get-url(), 'authors.'))      ) then 'active' else ()}">
-                    <a href="authors.html">
+                    <a href="{$config:webserver || '/' || $lang || '/authors.html'}">
                     <span class="glyphicon glyphicon-user" aria-hidden="true"></span>&#160;
                     <i18n:text key="authors">Autoren</i18n:text></a></li>
                 <li class="{if ( (contains(request:get-url(), 'workingPaper.')) or
                                  (contains(request:get-url(), 'workingPapers.'))) then 'active' else ()}">
-                    <a href="workingPapers.html">
-                    <i class="fa fa-pencil" aria-hidden="true"></i>&#160;
+                    <a href="{$config:webserver || '/' || $lang || '/workingPapers.html'}">
+                    <i class="fas fa-pencil-alt" aria-hidden="true"></i>&#160;
                     <i18n:text key="workingPapers">Working Papers</i18n:text></a></li>
                 <li class="{if ( (contains(request:get-url(), 'search.'))       ) then 'active' else ()}">
-                    <a href="search.html">
+                    <a href="{$config:webserver || '/' || $lang || '/search.html'}">
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>&#160;
                     <i18n:text key="search">Suche</i18n:text></a></li>
                 <!-- language-switch dropdown on not-so-large screens -->
@@ -431,7 +457,7 @@ declare %templates:wrap
     function config:langWorkingPapers($node as node(), $model as map(*), $lang as xs:string) as element() {
     let $output := 
         <a  href="workingPapers.html">
-            <i class="fa fa-pencil" aria-hidden="true"></i>&#160;<i18n:text key="workingPapers">Working Papers</i18n:text>
+            <i class="fas fa-pencil-alt" aria-hidden="true"></i>&#160;<i18n:text key="workingPapers">Working Papers</i18n:text>
         </a>
     return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))};  
 
@@ -457,15 +483,15 @@ declare %templates:wrap
     function config:langProjektteam($node as node(), $model as map(*), $lang as xs:string) as element()  {
         if ($lang = 'en') then
             <a target="blank" href="http://www.salamanca.adwmainz.de/en/project-team-and-consultants.html">
-               <i class="fa fa-group" aria-hidden="true"></i>&#160;Project Team
+               <i class="fa fa-users" aria-hidden="true"></i>&#160;Project Team
             </a>
         else if ($lang = 'es') then
             <a target="blank" href="http://www.salamanca.adwmainz.de/es/el-equipo-de-proyecto-y-sus-consultores.html">
-               <i class="fa fa-group" aria-hidden="true"></i>&#160;Equipo del Proyecto
+               <i class="fa fa-users" aria-hidden="true"></i>&#160;Equipo del Proyecto
             </a>
         else
             <a target="blank" href="http://www.salamanca.adwmainz.de/projektbeteiligte.html">
-               <i class="fa fa-group" aria-hidden="true"></i>&#160;Projektteam
+               <i class="fa fa-users" aria-hidden="true"></i>&#160;Projektteam
             </a>
 };
 
@@ -492,7 +518,7 @@ declare %templates:wrap
     function config:langLegal($node as node(), $model as map(*), $lang as xs:string) as element()  {
     let $output := 
         <a  href="legal.html">
-           <span class="fa fa-lock" aria-hidden="true"></span>&#160;<i18n:text key="legal">Datenschutz &amp; Impressum</i18n:text>
+           <span class="fa fa-balance-scale" aria-hidden="true"></span>&#160;<i18n:text key="legal">Datenschutz &amp; Impressum</i18n:text>
         </a>
     return 
         i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))};
@@ -501,7 +527,7 @@ declare %templates:wrap
     function config:langContact($node as node(), $model as map(*), $lang as xs:string) as element()  {
     let $output := 
         <a  href="contact.html">
-            <i class="fa fa-envelope-o" aria-hidden="true"></i>&#160;<i18n:text key="contact">Kontakt</i18n:text>
+            <i class="far fa-envelope" aria-hidden="true"></i>&#160;<i18n:text key="contact">Kontakt</i18n:text>
         </a>
     return 
         i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))};       
@@ -517,6 +543,16 @@ declare %templates:wrap
 };
 
 declare %templates:wrap
+    function config:langSources($node as node(), $model as map(*), $lang as xs:string) as element()  {
+    let $output :=
+            <a target="blank" href="sources.html">
+               <i class="fas fa-th-list" aria-hidden="true"></i>&#160;<i18n:text key="worksListOverview">List of Sources in the Digital Collection</i18n:text>
+            </a>
+    return 
+        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
+};
+
+declare %templates:wrap
     function config:searchInfoDetails($node as node(), $model as map(*), $lang as xs:string) as element()  {
     let $output := 
         <a  href="searchDetails.html">
@@ -524,19 +560,7 @@ declare %templates:wrap
         </a>
     return 
         i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))};   
-        
-(:~
- : Returns Meta-info generated from the repo-descriptor.
- : deprecated?
- :)
-(:
-declare function config:meta-info($node as node(), $model as map(*)) as element()* {
-    <meta name="description" content="{$config:repo-descriptor/repo:description/text()}"/>,
-    for $author in $config:repo-descriptor/repo:author
-    return
-        <meta name="creator" content="{$author/text()}"/>
-};  
-:)
+
 (:~
  : ========================================================================================================================
  : Title for Browser-Tab for SingleView Work, -Lemma, -Working Paper, -Authors, -News
@@ -559,80 +583,81 @@ declare function config:formatName($persName as element()*) as xs:string? {
 declare %templates:default("language", "en") 
     function config:meta-title($node as node(), $model as map(*), $lang as xs:string, $wid as xs:string*, $q as xs:string?) as element() {  
     let $output := 
-                         if (ends-with(request:get-uri(), "/author.html")) then
-                        <title>
-                            {config:formatName($model("currentAuthor")//tei:person//tei:persName)} -
-                             <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
-                    else if (ends-with(request:get-uri(), "/authors.html")) then
-                        <title><i18n:text key="authors">Autoren</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        if (ends-with(request:get-uri(), "/author.html")) then
+            <title>
+                {config:formatName($model("currentAuthor")//tei:person//tei:persName)} -
+                 <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/authors.html")) then
+            <title><i18n:text key="authors">Autoren</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
 
-                    else if ($wid) then
-                        <title>
-                            {string-join(doc($config:tei-works-root || "/" || $wid || ".xml")//tei:sourceDesc//tei:author/tei:persName/tei:surname, ', ') || ': ' ||
-                             doc($config:tei-works-root || "/" || $wid || ".xml")//tei:sourceDesc//tei:title[@type = 'short']/string()} -
-                             <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
+        else if ($wid) then (: workDetails usually leads here as well if there is a wid param :)
+            <title>
+                {string-join(doc($config:tei-works-root || "/" || sal-util:normalizeId($wid) || ".xml")//tei:sourceDesc//tei:author/tei:persName/tei:surname, ', ') || ': ' ||
+                 doc($config:tei-works-root || "/" || sal-util:normalizeId($wid) || ".xml")//tei:sourceDesc//tei:monogr/tei:title[@type = 'short']/string()} -
+                 <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
 (:                    else if (request:get-parameter('wid', '')) then
-                        <title>
-                            {replace(request:get-parameter('wid', ''), request:get-parameter('wid', ''), doc($config:tei-works-root || "/" || request:get-parameter('wid', '') || ".xml")//tei:sourceDesc//tei:author/tei:persName/tei:surname/string())||': '||
-                             replace(request:get-parameter('wid', ''), request:get-parameter('wid', ''), doc($config:tei-works-root || "/" || request:get-parameter('wid', '') || ".xml")//tei:sourceDesc//tei:title[@type = 'short']/string())} -
-                             <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
+            <title>
+                {replace(request:get-parameter('wid', ''), request:get-parameter('wid', ''), doc($config:tei-works-root || "/" || request:get-parameter('wid', '') || ".xml")//tei:sourceDesc//tei:author/tei:persName/tei:surname/string())||': '||
+                 replace(request:get-parameter('wid', ''), request:get-parameter('wid', ''), doc($config:tei-works-root || "/" || request:get-parameter('wid', '') || ".xml")//tei:sourceDesc//tei:title[@type = 'short']/string())} -
+                 <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
 :)
-                    else if (ends-with(request:get-uri(), "/workDetails.html")) then
-                        <title>
-                            {string-join($model("currentWork")//tei:sourceDesc//tei:author/tei:persName/tei:surname, '/') || ", " ||
-                             $model("currentWork")//tei:sourceDesc//tei:title[@type = 'short']/string()} (<i18n:text key='detailsHeader'>Details</i18n:text>) -
-                             <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
-                    else if (ends-with(request:get-uri(), "/works.html")) then
-                        <title><i18n:text key="works">Werke</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/workDetails.html")) then
+            <title>
+                {string-join($model("currentWorkHeader")//tei:sourceDesc//tei:author/tei:persName/tei:surname, '/') || ", " ||
+                 $model("currentWorkHeader")//tei:sourceDesc//tei:monogr/tei:title[@type = 'short']/string()} (<i18n:text key='detailsHeader'>Details</i18n:text>) -
+                 <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/works.html")) then
+            <title><i18n:text key="works">Werke</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
 
-                    else if (ends-with(request:get-uri(), "/lemma.html")) then
-                        <title>
-                            {$model("currentLemma")//tei:titleStmt//tei:title[@type = 'short']/string()} -
-                             <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
-                    else if (ends-with(request:get-uri(), "/dictionary.html")) then
-                        <title><i18n:text key="dictionary">Wörterbuch</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/lemma.html")) then
+            <title>
+                {$model("currentLemma")//tei:titleStmt//tei:title[@type = 'short']/string()} -
+                 <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/dictionary.html")) then
+            <title><i18n:text key="dictionary">Wörterbuch</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
 
-                    else if (ends-with(request:get-uri(), "/newsEntry.html")) then
-                        <title>
-                            {        if ($lang eq 'de') then $model('currentNews')//tei:title[@type='main'][@xml:lang='de']/string()
-                                else if ($lang eq 'en') then $model('currentNews')//tei:title[@type='main'][@xml:lang='en']/string()
-                                else if ($lang eq 'es') then $model('currentNews')//tei:title[@type='main'][@xml:lang='es']/string()
-                                else()} -
-                             <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text>
-                        </title>
-                    else if (ends-with(request:get-uri(), "/news.html")) then
-                        <title><i18n:text key="news">Aktuelles</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/newsEntry.html")) then
+            <title>
+                {        if ($lang eq 'de') then $model('currentNews')//tei:title[@type='main'][@xml:lang='de']/string()
+                    else if ($lang eq 'en') then $model('currentNews')//tei:title[@type='main'][@xml:lang='en']/string()
+                    else if ($lang eq 'es') then $model('currentNews')//tei:title[@type='main'][@xml:lang='es']/string()
+                    else()} -
+                 <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text>
+            </title>
+        else if (ends-with(request:get-uri(), "/news.html")) then
+            <title><i18n:text key="news">Aktuelles</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
 
-                    else if (ends-with(request:get-uri(), "/workingPaper.html")) then
-                        <title>Working Paper:
-                            {
-                             $model("currentWp")//tei:titleStmt/tei:title[@type = 'short']/string()} -
-                             <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
-                    else if (ends-with(request:get-uri(), "/project.html")) then
-                        <title><i18n:text key="project">Projekt</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
-                   else if (ends-with(request:get-uri(), "/workingPapers.html")) then
-                        <title><i18n:text key="workingPapers">Working Papers</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
-                    else if (ends-with(request:get-uri(), "/editorialWorkingPapers.html")) then
-                        <title><i18n:text key="WpAbout">Über die WP Reihe</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
-                    else if (ends-with(request:get-uri(), "/search.html")) then
-                        <title>{if ($q) then $q else <i18n:text key="search">Suche</i18n:text>} - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/workingPaper.html")) then
+            <title>Working Paper:
+                {
+                 $model("currentWp")//tei:titleStmt/tei:title[@type = 'short']/string()} -
+                 <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/project.html")) then
+            <title><i18n:text key="project">Projekt</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/workingPapers.html")) then
+            <title><i18n:text key="workingPapers">Working Papers</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/editorialWorkingPapers.html")) then
+            <title><i18n:text key="WpAbout">Über die WP Reihe</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/search.html")) then
+            <title>{if ($q) then $q else <i18n:text key="search">Suche</i18n:text>} - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
 
-                    else if (ends-with(request:get-uri(), "/guidelines.html")) then
-                        <title><i18n:text key="guidelines">Editionsrichtlinien</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/guidelines.html")) then
+            <title><i18n:text key="guidelines">Editionsrichtlinien</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
 
-                    else if (ends-with(request:get-uri(), "/admin.html")) then
-                        <title><i18n:text key="administration">Administration</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
-                    else if (ends-with(request:get-uri(), "/render.html")) then
-                        <title><i18n:text key="rendering">Rendering</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
-                    else if (ends-with(request:get-uri(), "/stats.html")) then
-                        <title><i18n:text key="stats">Statistiken</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
-                    else if (ends-with(request:get-uri(), "/index.html")) then
-                        <title><i18n:text key="start">Home</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
-                    else if (ends-with(request:get-uri(), "/contact.html")) then
-                        <title><i18n:text key="contact">Kontakt</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
-                    else if (ends-with(request:get-uri(), "/")) then
-                        <title><i18n:text key="start">Home</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title> else
-                        <title><i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/admin.html")) then
+            <title><i18n:text key="administration">Administration</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/render.html")) then
+            <title><i18n:text key="rendering">Rendering</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/stats.html")) then
+            <title><i18n:text key="stats">Statistiken</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/index.html")) then
+            <title><i18n:text key="start">Home</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/contact.html")) then
+            <title><i18n:text key="contact">Kontakt</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/")) then
+            <title><i18n:text key="start">Home</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title> else
+            <title><i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        let $debug := if ($config:debug = "trace") then console:log("Meta title: " || $output) else ()
  return
         i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "de")
 };   
@@ -744,29 +769,31 @@ declare %templates:default("lang", "en")
 };
 
 declare function local:docSubjectname($id as xs:string) as xs:string? {
-        switch (substring($id, 1, 2))
+    let $resourceId := sal-util:normalizeId($id)
+    return
+        switch (substring($resourceId, 1, 2))
             case 'A0'
-                return if (doc-available($config:tei-authors-root || '/' || $id || '.xml')) then 
-                    config:formatName(doc($config:tei-authors-root || '/' || $id || '.xml')//tei:listPerson/tei:person[1]/tei:persName)
-                else ()
+              return if (doc-available($config:tei-authors-root || '/' || $resourceId || '.xml')) then 
+                  config:formatName(doc($config:tei-authors-root || '/' || $resourceId || '.xml')//tei:listPerson/tei:person[1]/tei:persName)
+              else ()
             case 'W0'
-                return if (doc-available($config:tei-works-root || '/' || $id || '.xml')) then
-                    string-join(doc($config:tei-works-root || "/" || $id || ".xml")//tei:sourceDesc//tei:author/tei:persName/tei:surname, ', ') ||
-                                   ': ' || doc($config:tei-works-root || "/" || $id || ".xml")//tei:sourceDesc//tei:title[@type = 'short']/string()
-                else ()
+              return if (doc-available($config:tei-works-root || '/' || $resourceId || '.xml')) then
+                  string-join(doc($config:tei-works-root || "/" || $resourceId || ".xml")//tei:sourceDesc//tei:author/tei:persName/tei:surname, ', ') ||
+                                 ': ' || doc($config:tei-works-root || "/" || $resourceId || ".xml")//tei:sourceDesc//tei:monogr/tei:title[@type = 'short']/string()
+              else ()
             case 'L0'
-                return if (doc-available($config:tei-lemmata-root || '/' || $id || '.xml')) then
-                    doc($config:tei-lemmata-root || '/' || $id || '.xml')//tei:titleStmt//tei:title[@type = 'short']/string()
-                else ()
+              return if (doc-available($config:tei-lemmata-root || '/' || $resourceId || '.xml')) then
+                  doc($config:tei-lemmata-root || '/' || $resourceId || '.xml')//tei:titleStmt//tei:title[@type = 'short']/string()
+              else ()
             case 'WP'
-                return if (doc-available($config:tei-workingpapers-root || '/' || $id || '.xml')) then
-                    doc($config:tei-workingpapers-root || '/' || $id || '.xml')//tei:titleStmt/tei:title[@type = 'short']/string()
-                else ()
+              return if (doc-available($config:tei-workingpapers-root || '/' || $resourceId || '.xml')) then
+                  doc($config:tei-workingpapers-root || '/' || $resourceId || '.xml')//tei:titleStmt/tei:title[@type = 'short']/string()
+              else ()
             default return ()
 };
 
 declare function config:firstLink($node as node(), $model as map(*), $wid as xs:string?, $frag as xs:string?) as element(link)? {
-    let $workId         := if ($wid) then $wid else $model("currentWork")/@xml:id
+    let $workId         := if ($wid) then $wid else $model("currentWorkId")
     return if (not (xmldb:collection-available($config:html-root || "/" || $workId))) then
                 ()
             else
@@ -779,7 +806,7 @@ declare function config:firstLink($node as node(), $model as map(*), $wid as xs:
 };
 
 declare function config:prevLink($node as node(), $model as map(*), $wid as xs:string?, $frag as xs:string?) as element(link)? {
-    let $workId         := if ($wid) then $wid else $model("currentWork")/@xml:id
+    let $workId         := if ($wid) then sal-util:normalizeId($wid) else $model("currentWorkId")
     return  if (not (xmldb:collection-available($config:html-root || "/" || $workId))) then
                 ()
             else
@@ -787,86 +814,30 @@ declare function config:prevLink($node as node(), $model as map(*), $wid as xs:s
                                             $frag || ".html"
                                         else
                                             functx:sort(xmldb:get-child-resources($config:html-root || "/" || $workId))[1]
-                let $url := doc($config:html-root || '/' || $wid || '/' || $targetFragment)//div[@id="SvSalPagination"]/a[@class="previous"]/@href/string()
-                let $debug := if ($config:debug = "trace") then console:log("Prevlink: " || $url || " ($wid: " || $wid || ", $frag: " || $frag || ", $targetFragment: " || $targetFragment || ").") else ()
+                let $url := doc($config:html-root || '/' || sal-util:normalizeId($wid) || '/' || $targetFragment)//div[@id="SvSalPagination"]/a[@class="previous"]/@href/string()
+                let $debug := if ($config:debug = "trace") then console:log("Prevlink: " || $url || " ($wid: " || sal-util:normalizeId($wid) || ", $frag: " || $frag || ", $targetFragment: " || $targetFragment || ").") else ()
                 return if ($url) then
                             <link rel="prev" href="{$url}"/>
                         else ()
 };
 
 declare function config:nextLink($node as node(), $model as map(*), $wid as xs:string?, $frag as xs:string?) as element(link)? {
-    let $workId         := if ($wid) then $wid else $model("currentWork")/@xml:id
-    return  if (not (xmldb:collection-available($config:html-root || "/" || $workId))) then
+    let $workId := if ($wid) then sal-util:normalizeId($wid) else $model("currentWorkId")
+    return  if (not(xmldb:collection-available($config:html-root || "/" || $workId))) then
                 ()
             else
                 let $targetFragment := if ($frag and $frag || ".html" = xmldb:get-child-resources($config:html-root || "/" || $workId)) then
                                             $frag || ".html"
                                         else
                                             functx:sort(xmldb:get-child-resources($config:html-root || "/" || $workId))[1]
-                let $url := doc($config:html-root || '/' || $wid || '/' || $targetFragment)//div[@id="SvSalPagination"]/a[@class="next"]/@href/string()
-                let $debug := if ($config:debug = "trace") then console:log("Nextlink: " || $url || " ($wid: " || $wid || ", $frag: " || $frag || ", $targetFragment: " || $targetFragment || ").") else ()
+                let $url := doc($config:html-root || '/' || sal-util:normalizeId($wid) || '/' || $targetFragment)//div[@id="SvSalPagination"]/a[@class="next"]/@href/string()
+                let $debug := if ($config:debug = "trace") then console:log("Nextlink: " || string-join($url, " ; ") || " ($wid: " || sal-util:normalizeId($wid) || ", $frag: " || $frag || ", $targetFragment: " || $targetFragment || ").") else ()
                 return if ($url) then
                             <link rel="next" href="{$url}"/>
                         else ()
 };
 
-(:Show tab-titles Lemma:)
-(:declare %templates:default("language", "de") 
-    function config:meta-titleLem($node as node(), $model as map(*), $lang as xs:string, $lid as xs:string?) as element() {      
-    let $output := if (ends-with(request:get-uri(), "/lemma.html")) then
-        <title>
-            {$model("currentLemma")/tei:teiHeader//tei:author/tei:persName/tei:surname/string() || ", " ||
-             $model("currentLemma")/tei:teiHeader//tei:titleStmt/tei:title[@type = 'short']/string()} -
-             <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
-    else
-        <title><i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
- return
-        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "de")
-}; :) 
-(:Show tab-titles WorkingPaper:)
-(:declare %templates:default("language", "de") 
-    function config:meta-titleWP($node as node(), $model as map(*), $lang as xs:string, $wpid as xs:string?) as element() {      
-    let $output := if (ends-with(request:get-uri(), "/workingPaper.html")) then
-        <title>Working Paper:
-            {
-             $model("currentWp")/tei:teiHeader//tei:titleStmt/tei:title[@type = 'short']/string()} -
-             <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
-    else
-        <title><i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
- return
-        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "de")
-};
-(\:Show tab-titles Author:\)
-declare %templates:default("language", "de") 
-    function config:meta-titleAut($node as node(), $model as map(*), $lang as xs:string, $aid as xs:string?) as element() {      
-    let $output := if (ends-with(request:get-uri(), "/author.html")) then
-        <title>
-            {$model("currentAuthor")/tei:teiHeader//tei:author/tei:persName/tei:surname/string() || ", " ||
-             $model("currentAuthor")/tei:teiHeader//tei:author/tei:persName/tei:forename/string()} -
-             <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
-    else
-        <title><i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
- return
-        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "de")
-};  
-(\:Show tab-titles News:\)            
-declare %templates:default("language", "de") 
-    function config:meta-titleNews($node as node(), $model as map(*), $lang as xs:string, $nid as xs:string?) as element() {      
-    let $output := if (ends-with(request:get-uri(), "/newsEntry.html")) then
-        <title>
-            {   if ($lang eq 'de') then $model('currentNews')//tei:title[@type='main'][@xml:lang='de']/string()
-                else if ($lang eq 'en') then $model('currentNews')//tei:title[@type='main'][@xml:lang='en']/string()
-                else if ($lang eq 'es') then $model('currentNews')//tei:title[@type='main'][@xml:lang='es']/string()
-                else()} -
-             <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text>
-        </title>
-    else
-        <title><i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
- return
-        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "de")
-}; :) 
-
-declare function config:footer ($node as node(), $model as map(*), $lang as xs:string) {
+declare function config:footer($node as node(), $model as map(*), $lang as xs:string) {
 (: The following is disabled for security reasons:
     Vers. {doc('/db/apps/salamanca/expath-pkg.xml')/pack:package/@version/string()}
 :)
@@ -890,7 +861,7 @@ declare function config:footer ($node as node(), $model as map(*), $lang as xs:s
             </div>
         <!-- the Institute -->    
             <div class="col-md-3 hidden-sm hidden-xs">
-                <a href="http://www.rg.mpg.de"><img style="margin-top: 9%; float: right" class="img-responsive" src="resources/img/logos_misc/mpier.svg"/></a>
+                <a href="http://www.rg.mpg.de"><img style="margin-top: 9%; float: right; height: 100%;" class="img-responsive" src="resources/img/logos_misc/mpier.svg"/></a>
             </div>
             <div class="hidden-lg hidden-md col-sm-4" style="text-align: center;margin-top: 1%">
                 <a href="http://www.rg.mpg.de"><p><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span> Max-Planck-Institut<br/>für<br/>europäische Rechtsgeschichte</p></a>
@@ -906,17 +877,17 @@ declare function config:footer ($node as node(), $model as map(*), $lang as xs:s
             <div class="col-md-12 hidden-sm hidden-xs" style="text-align: center;">
             <br/>
                 <p style="font-size:1.2em">
-                <a href="contact.html"><i class="fa fa-envelope-o"></i>&#32;&#32;<i18n:text key='contact'>Kontakt</i18n:text></a> 
-                | <a  href="legal.html"><i class="fa fa-lock"></i>&#32;&#32;<i18n:text key='legal'>Datenschutz &amp; Impressum</i18n:text></a> 
+                <a href="contact.html"><i class="far fa-envelope"></i>&#32;&#32;<i18n:text key='contact'>Kontakt</i18n:text></a> 
+                | <a  href="legal.html"><i class="fa fa-balance-scale"></i>&#32;&#32;<i18n:text key='legal'>Datenschutz &amp; Impressum</i18n:text></a> 
                 </p>
-                    <p><span style="color:#92A4B1;"></span>&#xA0;&#xA0; <i class="fa fa-copyright"></i>&#32;&#32;<span title="{$username}"><i18n:text key="projectName"></i18n:text> 2015-2018</span>
+                    <p><span style="color:#92A4B1;"></span>&#xA0;&#xA0; <i class="far fa-copyright"></i>&#32;&#32;<span title="{$username}"><i18n:text key="projectName"/> 2015-2019</span>
                 </p>
             </div>
         </div>
         <div class="col-sm-12 hidden-lg hidden-md" style="text-align: center">
             <p>
-            <a href="contact.html"><i class="fa fa-envelope-o"></i>&#32;&#32;<i18n:text key='contact'>Kontakt</i18n:text></a>
-                | <a  href="legal.html"><i class="fa fa-lock"></i>&#32;&#32;<i18n:text key='legal'>Datenschutz &amp; Impressum</i18n:text></a>            </p>
+            <a href="contact.html"><i class="far fa-envelope"></i>&#32;&#32;<i18n:text key='contact'>Kontakt</i18n:text></a>
+                | <a  href="legal.html"><i class="fa fa-balance-scale"></i>&#32;&#32;<i18n:text key='legal'>Datenschutz &amp; Impressum</i18n:text></a>            </p>
                 <p><span style="color:#92A4B1;"></span>&#xA0;&#xA0; <i class="fa fa-copyright"></i>&#32;&#32;<span title="{$username}"><i18n:text key="projectName"></i18n:text> 2015-2018</span>
             </p>
         </div>
@@ -924,7 +895,7 @@ declare function config:footer ($node as node(), $model as map(*), $lang as xs:s
         <div class="row">   
             <div class="col-md-12" style="text-align: center">
            <!--<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons Lizenzvertrag" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />-->
-           <i18n:text key="licenceDesc"/>{$config:nbsp}<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><i18n:text key="licenceCC40">Creative Commons Namensnennung 4.0 International Lizenz</i18n:text> <span class="glyphicon glyphicon-new-window"></span></a>.
+           <i18n:text key="licenceDesc"/>{$config:nbsp}<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><i18n:text key="licenceCC40">Creative Commons Namensnennung 4.0 International Lizenz</i18n:text><span class="glyphicon glyphicon-new-window" style="padding-left:0.3em;"></span></a>.
            </div>
        </div>
     </span>

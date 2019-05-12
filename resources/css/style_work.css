@@ -431,15 +431,59 @@ li.cardoStyleLi {
     pointer-events: none;       /* click through it */
 }
 
+
+/* 
+ * Citation references:
+ */
+ 
+.citRefModal {
+  font-size:1.2em;
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.citRefModal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+.closeCitRef {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.closeCitRef:hover,
+.closeCitRef:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* cit. ref. end */
+
+
 .dictLemma {
     font-weight: bold;
 }
 
 .original, .abbr, .orig, .sic{
-    color:#DD0000;
+    color:#993333;
 }
 .edited, .expan, .reg, .corr{
-    color:#777777;
+    color:#707070;
 }
 a .edited, a .expan, a .reg, a .corr{
     color: #428bca;    
@@ -453,6 +497,18 @@ a .edited, a .expan, a .reg, a .corr{
     vertical-align: initial;
 }
 
+.fa-hand-point-right {
+/*    font-size:unset;*/
+    font-size:23px;
+}
+
+.hauptText .signed {
+    font-size:0.9em !important;
+    text-align:right !important;
+    font-style: italic;
+    padding-top:0.3em;
+}
+
 .form-inline > .form-group {
     vertical-align: top;
 }
@@ -461,6 +517,11 @@ a .edited, a .expan, a .reg, a .corr{
     font-size: 1.25em;
     top: 0.10em;
 }
+
+.inlist-head {
+    font-size:1.1em !important;
+}
+
 .navbar .glyphicon {
     font-size: 1em;
 }
@@ -520,17 +581,33 @@ a .edited, a .expan, a .reg, a .corr{
 }
 
 .marginal a:not(.collapsed) .edited {
-    color:#777777;
+    color:#707070;
+}
+
+.marginal a:not(.collapsed) .original {
+    color:#993333;
 }
 
 a .original {
-    color:#BA55D3;
+    color:#80005e;
+}
+
+.simple-char {
+    color:inherit;
 }
 
 .marginal a.collapsed:after {
-    content: '...⮛';
+    content: '...⌄';
     margin-top:-1em;
     position:absolute;
+}
+
+span.label-inline {
+    display:block;
+    text-align:center;
+    font-weight: bold;
+    font-size:28px !important;
+    padding:0.5em;
 }
 
 .pagination, .pageNumbers {
@@ -542,6 +619,19 @@ a .original {
     display: block;
 /*    font-size: large;*/
       
+}
+
+/*.page-numbers {
+    padding: 3em !important;
+    float: right !important;
+}*/
+
+.facs-icon {
+    font-size:18px !important;
+}
+
+hr.ornament {
+    width: 30%;
 }
 
 .pageNo {
@@ -558,7 +648,14 @@ a .original {
 }
 
 .poem {
-    font-style: italic;
+    font-style:italic;
+    font-size:1.5em !important;
+/*    padding-bottom:3em !important;*/
+    text-align: left !important;
+}
+.poem-head {
+    font-size:1.5em;
+    text-align: left !important;
 }
 
 .searchResultsNav {
@@ -611,6 +708,7 @@ a .original {
     font-family: Helvetica, Arial, sans-serif;
 	/*font-size: 1.4em;*//* this is a css 3 property and it means relative to the fontsize of the document root, not the current parent! */
 /*	text-align: justify; */
+	/*width:36%;*/
 	width:36%;
 	vertical-align: baseline;
     /*font-size: 1.0em;*/
@@ -633,6 +731,17 @@ a .original {
     text-align: center;
     margin-bottom: 10%;
         
+}
+/* subsequent title pages: identical to first one, but without blueish background or border */
+.sec-titlePage {
+    /* padding:0.2em;*/
+    line-height: 150%;
+    border-radius: 2px;
+    font-family: 'Junicode', 'Cardo', 'Andron', 'Cabin', sans-serif;
+    font-size: 1.8em;
+    display: block;
+    text-align: center;
+    margin-bottom: 10%;
 }
 
 li.toc {
@@ -946,7 +1055,6 @@ CSS-Solution from http://stackoverflow.com/questions/18192082/bootstrap-3-navbar
     background-color: white;
 }
 
-
 .toolbar
 {
     width:      600px;
@@ -965,4 +1073,6 @@ CSS-Solution from http://stackoverflow.com/questions/18192082/bootstrap-3-navbar
     top:        0;
     background-color: #ccc;
 }
+
+/* citation anchor test */
 

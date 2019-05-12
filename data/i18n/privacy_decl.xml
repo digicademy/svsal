@@ -1,4 +1,4 @@
-<?xml-model href="https://files.salamanca.school/SvSal_txt.rng"
+<?xml-model href="https://files.salamanca.school/saltei.rng"
     type="application/xml"
     schematypens="http://relaxng.org/ns/structure/1.0"?><TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="TechSearchHelp">
     <teiHeader>
@@ -125,7 +125,7 @@
                             unsere Server, die keinen gewöhnlichen Aufruf unseres öffentlichen Internetangebots unter der Domain salamanca.school 
                             darstellen, zusätzlich zu den <ref target="#div-know-de" type="url">oben genannten Daten</ref> die IP-Adresse des Angreifers 
                             temporär und in nicht-anonymisierter Form protokolliert und ggf. für sicherheitsrelevante Analysen weiterverarbeitet werden. 
-                            Diese Daten werden jedoch spätestens nach Ablauf von 7 Tagen 
+                            Diese Daten werden jedoch spätestens nach Ablauf von 20 Tagen 
                             gelöscht.</p> 
                         <p xml:id="p-sdfjhdfsdf">Bei offensichtlich rechtswidrigen Aktivitäten werden wir die 
                             relevanten bei uns gespeicherten Daten ggf. mit Ermittlungsbehörden teilen. Eine Weitergabe an Dritte (ausgenommen 

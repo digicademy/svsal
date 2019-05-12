@@ -4,13 +4,15 @@
   <!-- Navigation -->
   <msg key="projectName">Die Schule von Salamanca</msg>
   <msg key="guidelines">Editionsrichtlinien</msg>
+  <msg key="works">Werke</msg>
   
   <!-- index.html -->
   <msg key="introWorks">Digitale Quellensammlung mit 116 Werken, aufbereitet gemäß unserer</msg>
   
   <!-- common -->
-  
+  <msg key="externalWindow">Link in neuem Tab öffnen</msg>
   <msg key="licenceDesc">Für die Daten des Projekts "Die Schule von Salamanca" gilt (falls nicht anders angegeben) eine</msg>
+  <msg key="academy">Akademie der Wissenschaften und der Literatur | Mainz</msg>
   
   <!--author-->
   <msg key="order">Orden</msg>
@@ -40,24 +42,89 @@
     2019) sukzessive auf dieser Seite veröffentlicht.</msg>
   
   <!-- work -->
+  <msg key="text">Text</msg>
   <msg key="diplomatic">Diplomatisch</msg>
   <msg key="constituted">Konstituiert</msg>
-  
-  <msg key="corpusVerb">des ganzen Corpus als TEI/XML Dateien</msg>
+  <msg key="diplomaticLower">diplomatisch</msg>
+  <msg key="constitutedLower">konstituiert</msg>
+  <msg key="multivolume">Mehrbandwerk</msg>
+  <msg key="workvolume">Einzelband</msg>
+  <msg key="biblInfo">Bibliographische Angaben</msg>
+  <msg key="editionInfo">Digitale Edition</msg>
   <msg key="download">Download </msg>
   <msg key="downloadXML">Download TEI/XML Quelldatei</msg>
   <msg key="downloadTXTEdit">Download als Plaintext (konstituierte Variante)</msg>
   <msg key="downloadTXTOrig">Download als Plaintext (diplomatische Variante)</msg>
-  <msg key="downloadRDF">Download von RDF/XML Daten zu diesem Werk</msg>
+  <msg key="downloadRDF">Download der RDF/XML-Daten zu diesem Werk</msg>
   <msg key="downloadCorpus">Download des Corpus als TEI/XML Dateien</msg>
+  <msg key="downloadCorpusTitle">Download des gesamten Corpus</msg>
+  <msg key="txtFiles">Plain Text (TXT)</msg>
+  <msg key="teiFiles">TEI-XML</msg>
+  <msg key="citeUp">Zitieren</msg>
+  <msg key="citeThisWork">Dieses Werk zitieren</msg>
+  <msg key="accessedDate">Aufgerufen am</msg>
   
-  <msg key="workNotAvailable">Dieses Werk ist noch nicht verfügbar.</msg>
+  <!-- errors -->
+  <msg key="authorNotYetAvailable">Dieser Artikel ist noch nicht verfügbar.</msg>
+  <msg key="lemmaNotYetAvailable">Dieser Wörterbucheintrag ist noch nicht verfügbar.</msg>
+  <msg key="workNotYetAvailable">Dieses Werk ist noch nicht verfügbar.</msg>
+  <msg key="resourceNotYetAvailable">Diese Ressource ist noch nicht verfügbar.</msg>
   
   <!-- works/details -->
-  <msg key="worksNotice">Die digitale Quellensammlung des Projekts "Die Schule von Salamanca" besteht 
-    aus insgesamt 116 Werken, die ab Mai 2018 sukzessive auf dieser Seite zur Verfügung gestellt werden. 
+  <msg key="worksNotice1">Die digitale Quellensammlung des Projekts "Die Schule von Salamanca" besteht 
+    aus </msg>
+  <msg key="worksNotice2">insgesamt 116 Werken</msg>
+  <msg key="worksNotice3">, die sukzessive auf dieser Seite zur Verfügung gestellt werden. 
     Hierfür werden die Texte den Spezifikationen der Text Encoding Initiative (TEI) entsprechend aufbereitet;
     für nähere Informationen siehe die </msg>
+  <msg key="alphaEditors">Herausgeber (in alphabetischer Reihenfolge)</msg>
+  <msg key="editors">Herausgeber</msg>
+  <msg key="series">Reihe</msg>
+  <msg key="editionSeries">Die Schule von Salamanca. Eine Digitale Quellensammlung</msg>
+  <msg key="editorsInChief">Reihenherausgeber</msg>
+  <msg key="volume">Band</msg>
+  <msg key="volumes">Bände</msg>
+  <msg key="digitalPublication">Digitale Veröffentlichung</msg>
+  <msg key="dateOfOrigin">Erscheinungsjahr (Druckoriginal)</msg>
+  <msg key="volTitle">Titel des Bandes/Reihe</msg> 
+  <msg key="title">Titel</msg>
+  <msg key="titleShort">Kurztitel</msg>
+  <msg key="citationTitle">Zitiertitel</msg>
+  <msg key="pubYear">Erscheinungsjahr</msg>
+  <msg key="publisher">Drucker</msg>
+  <msg key="imprintThis">Impressum</msg>
+  <msg key="imprintFirst">Impressum der Erstausgabe</msg>
+  <msg key="catLink">Katalogisat</msg>
+  <msg key="author">Autor</msg>
+  <msg key="printingPlace">Erscheinungsort</msg>
+  <msg key="ownerPrimaryEd">Bibliothek</msg>
+  <msg key="notPublished">Noch nicht veröffentlicht</msg>
+  <msg key="language">Sprache</msg>
+  <msg key="languageS">Sprache(n)</msg>
+  <msg key="digitalPublisher">Veröffentlicht durch</msg>
+  <msg key="workViews">Ansichten für dieses Werk</msg>
+  <msg key="volViews">Ansichten für diesen Band</msg>
+  <msg key="textViews">Ansichten für diesen Text</msg>
+  <msg key="readingView">Leseansicht</msg>
+  <msg key="facsimilesLink">Faksimiles</msg>
+  <msg key="metadata">Metadaten</msg>
+  <msg key="teiHeader">TEI-Header</msg>
+  <msg key="scans">Scans</msg>
+  <msg key="notAvailable">Nicht verfügbar</msg>
+  <msg key="notFullyAvailable">Nicht (komplett) verfügbar</msg>
+  <msg key="fullCatalogueRecord">Vollständiger Katalogeintrag</msg>
+  <msg key="seriesVolume">Reihenband</msg>
+  <msg key="originalVolume">Band (Original)</msg>
+  <msg key="imageMetadata">Bildmetadaten</msg>
+  <msg key="availability">Verfügbarkeit</msg>
+  <msg key="fullTextAvailable">Digitaler Volltext (+ Faksimiles)</msg>
+  <msg key="facsimiles">Faksimiles</msg>
+  <msg key="proposedCitation">Zitiervorschlag</msg>
+  <msg key="extent">Umfang, Format</msg>
+  
+  <msg key="latin">Latein</msg>
+  <msg key="spanish">Spanisch</msg>
+  
   
   <!-- Meta Description Tags -->
   
@@ -84,15 +151,41 @@
   
   <!-- project.html -->
   <msg key="guidelinesDecl">Beschreibung der Editionsprinzipien und der Textkodierung.</msg>
-  <msg key="legal">Datenschutz &amp; Impressum</msg>
-  <msg key="legalShort">Datenschutz &amp; Impressum</msg>
-  <msg key="legalDesc">Datenschutzerklärung unserer Webseite und Impressum.</msg>
   <msg key="sourceCode">Quellcode</msg>
   <msg key="sourceCodeDecl">Der Programmcode dieser Webanwendung im externen GitHub-Repositorium.</msg>
   
   <!-- legal.html -->
-  <msg key="legalTitle">Datenschutzerklärung &amp; Impressum</msg>
+  <msg key="legalTitle">Impressum &amp; Datenschutzerklärung</msg>
   <msg key="privacyDisclaimer">Für Informationen zum Datenschutz auf dieser Webseite siehe die </msg>
   <msg key="legalDisclaimer"/>
+  <msg key="legal">Impressum &amp; Datenschutz</msg>
+  <msg key="legalShort">Impressum &amp; Datenschutz</msg>
+  <msg key="legalDesc">Datenschutzerklärung unserer Webseite und Impressum.</msg>
+  
+  <!-- Search -->
+  <msg key="searchFor">Suche nach</msg>
+  <msg key="allResults">Alle</msg>
+  
+  <!-- general language -->
+  <msg key="of">von</msg>
+  
+  <!-- Mirador -->
+  <msg key="worksList">Werkliste</msg>
+  <msg key="catalogueRecord">Katalogeintrag</msg>
+  
+  <!-- Error handling -->
+  <msg key="error">Fehler</msg>
+  <msg key="pageNotFound">Seite nicht gefunden...</msg>
+  <msg key="bugMessage">Falls Sie einen Fehler auf unserer Webseite gefunden haben, informieren Sie uns bitte unter</msg>
+  
+  <!-- worksList.html -->
+  <msg key="worksListOverview">Quellen in der Digitalen Quellensammlung</msg>
+  <msg key="furtherInformationTitle">Weitere Informationen</msg>
+  <msg key="listOfSources">Liste aller Quellen</msg>
+  
+  <!-- general language abbreviations, conjunctions, phrases, etc. -->
+  <msg key="inLow">in</msg>
+  <msg key="editedByAbbrLow">hg. von</msg>
+  
   
 </catalogue>

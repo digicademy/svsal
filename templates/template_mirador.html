@@ -1,4 +1,4 @@
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:i18n="http://exist-db.org/xquery/i18n" data-template="i18n:translate" data-template-catalogues="data/i18n">
     <head>
         <title>SvSal Mirador Instance</title>
         <link rel="stylesheet" type="text/css" href="resources/css/mirador-combined.css"/>
@@ -44,6 +44,10 @@
         <div id="content"/>
         
         <script type="text/javascript" src="resources/js/mirador/mirador.js"/>
+        
+        
+        <script type="text/javascript" src="//code.jquery.com/ui/1.11.3/jquery-ui.min.js"/>
+        
         <script type="text/javascript">
 
         /**
@@ -80,6 +84,12 @@
                 return 'en'
         };
 
+        function setZipUrl() {
+            document.getElementById('downloadImages').href = "https://c104-131.cloud.gwdg.de/sal-facs/" + getUrlParams( 'wid' ) + "/" + getUrlParams( 'wid' ) + ".zip";  // update Download button
+//          $('#viewer')[0].getElementById('downloadImages').href = "http://facs.salamanca.school/" + getUrlParams( 'wid' ) + "/" + getUrlParams( 'wid' ) + ".zip";  // update Download button
+            document.getElementById('downloadImages').setAttribute('download', getUrlParams( 'wid' ) + ".zip");  // update Download button
+        };
+        
         var MyObjects = {};
 
         $(document).ready(function(){
@@ -97,8 +107,26 @@
                     "fullScreenViewer": true,
                     "userButtons": [
                         {
-                            "label": "Download",
-                            "iconClass": "fa fa-file-archive-o",
+                            "label": '<i18n:text key="worksList"/>',
+                            "iconClass": "fa fa-file",
+                            "attributes": {
+                                "id": "works",
+                                "aria-hidden": "true",
+                                "href": "works.html"
+                            }
+                        },
+                        {
+                            "label": '<i18n:text key="catalogueRecord"/>',
+                            "iconClass": "fa fa-file-text-o",
+                            "attributes": {
+                                "id": "works",
+                                "aria-hidden": "true",
+                                "href": "workDetails.html?wid=" + $wid
+                            }
+                        },
+                        {
+                            "label": '<i18n:text key="download"/>',
+                            "iconClass": "fa fa-download",
                             "attributes": {
                                 "id": "downloadImages",
                                 "aria-hidden": "true",
@@ -116,12 +144,12 @@
                             }
                         },
                         {
-                            "label": "Privacy &amp; Legal Information",
-                            "iconClass": "fa fa-lock",
+                            "label": '<i18n:text key="legalShort"/>',
+                            "iconClass": "fa fa-balance-scale",
                             "attributes": {
                                 "id": "legal",
                                 "aria-hidden": "true",
-                                "href": "https://www.salamanca.school/legal.html"
+                                "href": "legal.html"
                             }
                         }
 // we could close the popup window from here, and eliminate its titlebar, thus saving space. But then we have nothing to grab for dragging the window around...
@@ -143,6 +171,8 @@
                 data: <span data-template="iiif:MiradorData">[{"bla": "bleh"}]</span>,
                 windowObjects : <span data-template="iiif:MiradorWindowObject">[{"bla": "bleh"}]</span>
             });
+
+            setTimeout( setZipUrl, 100 );
 // TODO: Binding to events happens in the parent html file (which includes the present file in an iframe).
 // We wait for mirador's full initialization here before calling the binding function.
 // Probably this can happen in more elegant, i.e. event-driven way.

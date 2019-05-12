@@ -38,6 +38,7 @@ import module namespace console  = "http://exist-db.org/xquery/console";
 import module namespace xconfig  = "http://xtriples.spatialhumanities.de/config" at "modules/xconfig.xqm";
 
 (: ### SVSAL modules and namespaces ### :)
+declare namespace exist       = "http://exist.sourceforge.net/NS/exist";
 declare namespace http		  = "http://expath.org/ns/http-client";
 declare namespace httpclient	= "http://exist-db.org/xquery/httpclient";
 declare namespace request	   = "http://exist-db.org/xquery/request";
@@ -56,6 +57,8 @@ declare variable $setFormat         := xtriples:getFormat();
 declare variable $retrievedDocuments := map { };
 
 (: ########## SVSAL FUNCTIONS ###################################################################### :)
+
+declare option exist:timeout "43200000"; (: 12 h :)
 
 (:
 	better: build it as we go... in
@@ -343,7 +346,6 @@ declare function local:store-file($collection as xs:string?, $fileName as xs:str
 	let $collection := 
 		if (empty($collection) or ($collection eq '')) then $tmp-collection-path
 		else $collection
-    let $login := xmldb:login($collection, "sal", "DSvS:EdQueWij-pS")
     let $createCollection := 
 		for $coll in tokenize($collection, '/')
 			let $parentColl := substring-before($collection, $coll)
@@ -411,6 +413,8 @@ let $debug4 := for $file at $index in $result
 							"...",
 							"trace"
 						  )
+
+let $log := util:log('info', 'local:store-file: finally stored ' || $fileName || ' in ' || $collection || '.')
 
 	return $result
 };
@@ -1205,7 +1209,6 @@ return (
 							"extract.xql: output in " || $setFormat  || ".",
 							"trace"
 						  )
-
 		return xtriples:getRDFTriples($xtriples, $vocabularies)
 	else if ($setFormat = "ntriples") then (
 
@@ -1271,7 +1274,6 @@ return (
 							"extract.xql: output in " || $setFormat  || ".",
 							"trace"
 						  )
-
 
 		return    xtriples:getRDF($xtriples, $vocabularies)
 )

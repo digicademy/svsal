@@ -1,4 +1,4 @@
-<xsl:stylesheet xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sal="http://salamanca.adwmainz.de" version="3.0" exclude-result-prefixes="exist sal tei xd xs xsl" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" xmlns:sal="http://salamanca.adwmainz.de" version="3.0" exclude-result-prefixes="exist sal tei xd xs xsl" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
 
 <!-- TODO:
            * tweak/tune performance: use
@@ -39,6 +39,7 @@
     <xsl:key name="chars" match="char" use="@xml:id"/>                                  <!-- Key-value array for special symbol representation -->
 
     <xsl:param name="noteTruncLimit" select="35"/>
+    
 
 <!-- *** III. Named Templates *** -->
     <xsl:template name="anchor-id">                                                     <!-- Small toolbox including anchor for the passed xml:id -->
@@ -55,7 +56,7 @@
 <!-- Backup:        <xsl:value-of select="concat('   <div>',       '<a href="',                               concat('#',$id), '">',            '<span class="    messengers glyphicon glyphicon-link"     title="    go to/link this textarea"/>',           '</a>',    '  ',    '<span class="    icon-uniE638 text-muted"/>',        '  ',    '<span class="    glyphicon glyphicon-print text-muted"/>',           '</div>')"/> -->
                 </xsl:attribute>
                 <xsl:element name="i">
-                    <xsl:attribute name="class">fa fa-hand-o-right messengers</xsl:attribute>
+                    <xsl:attribute name="class">far fa-hand-point-right messengers</xsl:attribute>
                     <xsl:attribute name="title">Open toolbox for this textarea</xsl:attribute>
                 </xsl:element>
             </xsl:element>
@@ -111,19 +112,29 @@
                 <xsl:apply-templates select="." mode="non-recursive"/>
             </xsl:for-each>
         </xsl:if>
-        <div class="titlePage">
-            <xsl:apply-templates/>
-        </div>
+        <xsl:choose>
+            <xsl:when test="not(preceding::titlePage)">
+                <div class="titlePage">
+                    <xsl:apply-templates/>
+                </div>
+            </xsl:when>
+            <xsl:otherwise>
+                <div class="sec-titlePage">
+                    <xsl:apply-templates/>
+                </div>
+            </xsl:otherwise>
+        </xsl:choose>
+        
     </xsl:template>
     <xsl:template match="titlePart[@type='main']">
         <xsl:element name="h1">
             <xsl:apply-templates/>
         </xsl:element>
     </xsl:template>
-    <xsl:template match="titlePart[not(@type='main')]|docTitle|argument|docDate|docImprint">
+    <xsl:template match="titlePart[not(@type='main')]|docTitle|argument|docDate">
         <xsl:apply-templates/>
     </xsl:template>
-    <xsl:template match="byline|imprimatur">
+    <xsl:template match="byline|imprimatur|docImprint">
         <xsl:element name="span">
             <xsl:attribute name="class" select="'tp-paragraph'"/>
             <xsl:apply-templates/>
@@ -135,6 +146,9 @@
             <xsl:apply-templates/>
         </xsl:element>
     </xsl:template>
+    
+    
+    
     
 
     <!-- To every <text type='work_volume'>, add a section heading and an anchor
@@ -179,7 +193,7 @@
     
     <!-- To every div, milestone, dictionary or dictionary entry, add a section heading and an anchor
          (to grab link, refresh filters, export/print). -->
-    <xsl:template match="div|milestone|list[@type='dict']|item[parent::list/@type='dict']">
+    <xsl:template match="div|milestone[@unit ne 'other']|list[@type='dict']|item[parent::list/@type='dict']">
 <!--        <xsl:message>Matched div/etc. node <xsl:value-of select="@xml:id"/>.</xsl:message>-->
         <xsl:if test="@xml:id=$targetId and not(preceding-sibling::*) and not((ancestor::body | ancestor::back) and preceding::front/*)">
             <xsl:for-each select="ancestor::text[@type='work_volume']/. | ancestor::div/. | ancestor::p/.">
@@ -206,7 +220,7 @@
                         </xsl:with-param>
                     </xsl:call-template> 
                     <xsl:choose>
-                        <xsl:when test="@n and not(matches(@n, '^[0-9]+$'))"> <!-- @n is something other than a mere number -->
+                        <xsl:when test="@n and not(matches(@n, '^\[?[0-9]+\]?$'))"> <!-- @n is something other than a mere number -->
                             <xsl:call-template name="sal:teaserString">
                                 <xsl:with-param name="identifier" select="@xml:id"/>
                                 <xsl:with-param name="mode">html</xsl:with-param>
@@ -217,13 +231,16 @@
                             <xsl:value-of select=".//term[1]/@key"/>
                         </xsl:when>
                         <xsl:when test="child::head">
-                            <xsl:call-template name="sal:teaserString">
+                            <xsl:call-template name="sal:teaserStringHead">
                                 <xsl:with-param name="identifier" select="@xml:id"/>
                                 <xsl:with-param name="mode">html</xsl:with-param>
-                                <xsl:with-param name="input" select="child::head[1]/text()"/>
+                                <xsl:with-param name="input" select="child::head[1]//node()"/>
                             </xsl:call-template>
                         </xsl:when>
-                        <xsl:when test="matches(@n, '^[0-9]+$') and (@unit or @type)">
+                        <xsl:when test="matches(@n, '^\[?[0-9]+\]?$') and (@unit eq 'number')">
+                            <xsl:value-of select="@n"/>
+                        </xsl:when>
+                        <xsl:when test="matches(@n, '^\[?[0-9]+\]?$') and (@unit[. ne 'number'] or @type)">
                             <xsl:value-of select="concat(xs:string(@unit), xs:string(@type), ' ', @n)"/>
                         </xsl:when>
                         <xsl:otherwise>
@@ -239,7 +256,7 @@
         </xsl:if>
         <xsl:apply-templates/>
     </xsl:template>
-    <xsl:template match="div|milestone|list[@type='dict']|item[parent::list/@type='dict']" mode="non-recursive">
+    <xsl:template match="div|milestone[@unit ne 'other']|list[@type='dict']|item[parent::list/@type='dict']" mode="non-recursive">
 <!--        <xsl:message>Matched div/etc. node <xsl:value-of select="@xml:id"/> (in non-recursive mode).</xsl:message>-->
         <xsl:if test="@xml:id">
             <xsl:choose>
@@ -261,7 +278,7 @@
                         </xsl:with-param>
                     </xsl:call-template>  
                     <xsl:choose>
-                        <xsl:when test="@n and not(matches(@n, '^[0-9]+$'))"> <!-- @n is something other than a mere number -->
+                        <xsl:when test="@n and not(matches(@n, '^\[?[0-9]+\]?$'))"> <!-- @n is something other than a mere number -->
                             <xsl:call-template name="sal:teaserString">
                                 <xsl:with-param name="identifier" select="@xml:id"/>
                                 <xsl:with-param name="mode">html</xsl:with-param>
@@ -272,13 +289,16 @@
                             <xsl:value-of select=".//term[1]/@key"/>
                         </xsl:when>
                         <xsl:when test="child::head">
-                            <xsl:call-template name="sal:teaserString">
+                            <xsl:call-template name="sal:teaserStringHead">
                                 <xsl:with-param name="identifier" select="@xml:id"/>
                                 <xsl:with-param name="mode">html</xsl:with-param>
-                                <xsl:with-param name="input" select="child::head[1]/text()"/>
+                                <xsl:with-param name="input" select="child::head[1]//node()"/>
                             </xsl:call-template>
                         </xsl:when>
-                        <xsl:when test="matches(@n, '^[0-9]+$') and (@unit or @type)">
+                        <xsl:when test="matches(@n, '^\[?[0-9]+\]?$') and (@unit eq 'number')">
+                            <xsl:value-of select="@n"/>
+                        </xsl:when>
+                        <xsl:when test="matches(@n, '^\[?[0-9]+\]?$') and (@unit[. ne 'number'] or @type)">
                             <xsl:value-of select="concat(xs:string(@unit), xs:string(@type), ' ', @n)"/>
                         </xsl:when>
                         <xsl:otherwise>
@@ -293,6 +313,35 @@
             </xsl:if>
         </xsl:if>
     </xsl:template>
+    <xsl:template match="milestone[@unit eq 'other']" mode="#all">
+        <xsl:choose>
+            <xsl:when test="@rendition='#dagger'">
+                <sup>†</sup>
+            </xsl:when>
+            <xsl:when test="@rendition='#asterisk'">
+                <xsl:text>*</xsl:text>
+            </xsl:when>
+            <xsl:otherwise/>
+        </xsl:choose>
+    </xsl:template>
+    
+    <!-- marginal labels will ONLY be displayed on the margin -->
+    <!--<xsl:template match="label[@type and @place eq 'margin']" mode="#all">
+        <xsl:if test="descendant::text()">
+            <div class="summary_title">
+                <xsl:call-template name="anchor-id">
+                    <xsl:with-param name="id">
+                        <xsl:value-of select="@xml:id"/>
+                    </xsl:with-param>
+                </xsl:call-template>
+                <xsl:call-template name="sal:teaserStringHead">
+                    <xsl:with-param name="identifier" select="@xml:id"/>
+                    <xsl:with-param name="mode">html</xsl:with-param>
+                    <xsl:with-param name="input" select=".//node()"/>
+                </xsl:call-template>
+            </div>
+        </xsl:if>
+    </xsl:template>-->
 
     <!-- Other lists (dict-type lists are handled like divs) -->
     <!-- In html, lists must contain nothing but <li>s, so we have to
@@ -326,12 +375,22 @@
                         </xsl:attribute>
                     </xsl:if>
                     <xsl:for-each select="child::head">
-                        <h4>
+                        <h4 class="inlist-head">
                             <xsl:apply-templates/>
                         </h4>
                     </xsl:for-each>
                     <xsl:for-each select="child::*[not(self::head)]">
-                        <xsl:apply-templates/>
+                        <xsl:choose>
+                            <xsl:when test=".//list">
+                                <xsl:apply-templates/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <span class="inline-item">
+                                    <xsl:apply-templates/>
+                                </span>
+                                <xsl:text> </xsl:text>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </xsl:for-each>
                 </section>
             </xsl:when>
@@ -371,14 +430,24 @@
         </xsl:choose>
     </xsl:template>
 
-    <!-- Headings (unless they are parts of lists) -->
-    <xsl:template match="head[not(parent::list[not(@type='dict')])]">
+    <!-- Headings (unless they are parts of non-dict lists or lg) -->
+    <xsl:template match="head[not(parent::list[not(@type='dict')] or parent::lg)]">
 <!--        <xsl:message>Matched head node <xsl:value-of select="@xml:id"/>.</xsl:message>-->
         <h3>
             <xsl:apply-templates/>
         </h3>
     </xsl:template>
-
+    
+    <xsl:template match="head[parent::lg]">
+        <h5 class="poem-head">
+            <xsl:apply-templates/>
+        </h5>
+    </xsl:template>
+    
+    
+    <!-- Marginal headings: they should only appear as marginal labels, not as actual in-text headings -->
+    <!--<xsl:template match="head[@place eq 'margin']"/>-->
+    
     <!-- Main Text: put <p> in html <div class="hauptText"> and create anchor if p@xml:id (or just create an html <p> if we are inside a list item);  -->
     <xsl:template match="p[not(ancestor::note or ancestor::titlePage)]">
 <!--        <xsl:message>Matched p node <xsl:value-of select="@xml:id"/>.</xsl:message>-->
@@ -416,11 +485,20 @@
             </xsl:element>
     </xsl:template>
     
+    <xsl:template match="signed">
+        <div class="hauptText">
+            <div class="signed">
+                <xsl:apply-templates/>
+            </div>
+        </div>
+    </xsl:template>
+    
 
     <!-- BREAKS -->
     <xsl:template match="pb">                   <!-- insert a '|' and, eventually, a space to indicate pagebreaks in the text -->
 <!--        <xsl:message>Matched pb node <xsl:value-of select="@xml:id"/>.</xsl:message>-->
-        <xsl:if test="preceding::pb">
+        <!-- breaks that do not occur at the beginning/ending of a section/paragraph/heading/... are marked as "|" -->
+        <xsl:if test="preceding::pb and preceding-sibling::node()[self::text()[not(normalize-space() eq '')] or .//text()[not(normalize-space() eq '')]]                                     and following-sibling::node()[self::text()[not(normalize-space() eq '')] or .//text()[not(normalize-space() eq '')]]"> 
             <xsl:choose>
                 <xsl:when test="@break='no'">
                     <xsl:text>|</xsl:text>
@@ -430,45 +508,58 @@
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:if>
-        <xsl:if test="@n and empty(@sameAs)">
+        <xsl:if test="@n and not(@sameAs)">
             <xsl:element name="div">
                 <xsl:attribute name="class">pageNumbers</xsl:attribute>
                 <xsl:element name="a">
-                    <xsl:attribute name="class">pageNo messengers</xsl:attribute>
-                    <xsl:attribute name="href" select="sal:resolveFacsURI(@facs, $serverDomain)"/>  
-                    <!-- Resolve canvas IDs, starting at 1 for each volume in multivolume works -->
-                    <xsl:attribute name="data-canvas">
-                        <xsl:choose>
-                            <xsl:when test="matches(@facs, '^facs:W[0-9]{4}-[A-z]-[0-9]{4}$')">
-                                <xsl:value-of select="sal:resolveCanvasID(@facs, count(preceding::pb[substring(./@facs, 1, 12) = substring(current()/@facs, 1, 12)]) + 1, $serverDomain)"/>
+                    <!--<xsl:attribute name="class">pageNo messengers</xsl:attribute>-->
+                    <xsl:attribute name="href" select="sal:resolveFacsURI(@facs, $serverDomain)"/> 
+                    <!-- image icon -->
+                    <xsl:element name="i">
+                        <!--<xsl:attribute name="class" select="'glyphicon glyphicon-picture'"/>-->
+                        <!--  -->
+                        <xsl:attribute name="class" select="'fas fa-book-open facs-icon'"/>
+                    </xsl:element>
+                    <xsl:value-of select="' '"/>
+                    <xsl:element name="span">
+                        <!-- Resolve canvas IDs, starting at 1 for each volume in multivolume works -->
+                        <xsl:attribute name="class">pageNo messengers</xsl:attribute>
+                        <xsl:attribute name="data-canvas">
+                            <xsl:choose>
+                                <xsl:when test="matches(@facs, '^facs:W[0-9]{4}-[A-z]-[0-9]{4}$')">
+                                    <xsl:value-of select="sal:resolveCanvasID(@facs, count(preceding::pb[not(@sameAs) and substring(./@facs, 1, 12) eq substring(current()/@facs, 1, 12)]) + 1, $serverDomain)"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:value-of select="sal:resolveCanvasID(@facs, count(preceding::pb[not(@sameAs)]) + 1, $serverDomain)"/>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:attribute>
+                        <xsl:attribute name="data-sal-id">
+                            <xsl:value-of select="sal:mkId($workId, @xml:id)"/>
+                        </xsl:attribute>
+                        <xsl:choose><!-- create name/id attributes: take the @xml:id if possible -->
+                            <xsl:when test="@xml:id">
+                                <xsl:variable name="pageAnchor" select="concat('pageNo_', @xml:id/string())"/>
+                                <xsl:attribute name="id" select="$pageAnchor"/>
                             </xsl:when>
                             <xsl:otherwise>
-                                <xsl:value-of select="sal:resolveCanvasID(@facs, count(preceding::pb) + 1, $serverDomain)"/>
+                                <xsl:attribute name="id" select="concat('pageNo_', generate-id())"/>
                             </xsl:otherwise>
                         </xsl:choose>
-                    </xsl:attribute>
-                    <xsl:attribute name="data-sal-id">
-                        <xsl:value-of select="sal:mkId($workId, @xml:id)"/>
-                    </xsl:attribute>
-                    <xsl:choose><!-- create name/id attributes: take the @xml:id if possible -->
-                        <xsl:when test="@xml:id">
-                            <xsl:variable name="pageAnchor" select="concat('pageNo_', @xml:id/string())"/>
-                            <xsl:attribute name="id" select="$pageAnchor"/>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:attribute name="id" select="concat('pageNo_', generate-id())"/>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                    <xsl:choose><!-- create title attribute and text content -->
-                        <xsl:when test="contains(@n, 'fol.')"><!--For folio paging-->
-                            <xsl:attribute name="title" select="concat('View image of ', @n)"/>
-                            <xsl:value-of select="@n"/>
-                        </xsl:when>
-                        <xsl:otherwise><!--For normal paging-->
-                            <xsl:attribute name="title" select="concat('View image of page ', @n)"/>
-                            <xsl:value-of select="concat('p. ', @n)"/>
-                        </xsl:otherwise>
-                    </xsl:choose>
+                        <xsl:choose><!-- create title attribute and text content -->
+                            <xsl:when test="contains(@n, 'fol.')"><!--For folio paging-->
+                                <xsl:attribute name="title" select="concat('View image of ', @n)"/>
+                                <xsl:value-of select="@n"/>
+                            </xsl:when>
+                            <xsl:otherwise><!--For normal paging-->
+                                <xsl:attribute name="title" select="concat('View image of page ', @n)"/>
+                                <xsl:value-of select="concat('p. ', @n)"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:element>
+                    
+                    
+                    
                 </xsl:element>
             </xsl:element>
         </xsl:if>
@@ -477,7 +568,6 @@
         <xsl:text> </xsl:text>
     </xsl:template>
     <xsl:template match="lb[not(@break='no')]"> <!-- insert a space if the break is not in a hyphenated word, otherwise insert nothing at all -->
-<!--        <xsl:message>Matched lb node <xsl:value-of select="@n"/>.</xsl:message>-->
         <xsl:text> </xsl:text>
     </xsl:template>
 <!-- Alternative: Add linebreaks in diplomatic view    
@@ -552,8 +642,8 @@
     </xsl:template>
 -->
 
-    <!-- Notes -->
-    <xsl:template match="note">
+    <!-- Notes (and, for now, marginal labels) -->
+    <xsl:template match="note|label[@place eq 'margin']">
 <!--        <xsl:message>Matched note node <xsl:value-of select="@xml:id"/>.</xsl:message>-->
         <xsl:element name="div">
             <xsl:attribute name="class">marginal container</xsl:attribute>
@@ -602,21 +692,21 @@
         <xsl:apply-templates/>
     </xsl:template>
     <xsl:template match="abbr|orig|sic">
-        <xsl:variable name="editedString">
-            <xsl:apply-templates select="./parent::choice/(expan|reg|corr)" mode="pureText"/>
-        </xsl:variable>
         <xsl:choose>
             <xsl:when test="not(parent::choice)">
                 <xsl:apply-templates/>
             </xsl:when>
             <xsl:otherwise>
+                <xsl:variable name="editedString">
+                    <xsl:apply-templates select="./parent::choice/(expan|reg|corr)" mode="pureText"/>
+                </xsl:variable>
                 <span class="original {local-name(.)} unsichtbar" title="{string-join($editedString, '')}">
                     <xsl:apply-templates/>
                 </span>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    <xsl:template match="abbr|orig|sic" mode="pureText">
+    <xsl:template match="abbr|orig|sic" mode="pureText"> <!-- mode pureText for getting text-only nodes for span/@title in original-edited pairs -->
         <xsl:apply-templates mode="pureText"/>
     </xsl:template>
     <xsl:template match="expan|reg|corr">
@@ -627,35 +717,68 @@
             <xsl:apply-templates/>
         </span>
     </xsl:template>
-    <xsl:template match="expan|reg|corr" mode="pureText">
+    <xsl:template match="expan|reg|corr" mode="pureText"> <!-- mode pureText for getting text-only nodes for span/@title in original-edited pairs -->
         <xsl:apply-templates mode="pureText"/>
     </xsl:template>
+    
+    <!-- Special characters (and normalizations not marked as choice) -->
     <xsl:template match="g">
+        <xsl:variable name="thisString" as="xs:string" select="./text()"/> <!-- g must have (only) one text node as child element -->
         <xsl:if test="not(key('chars', substring(@ref,2)))">
             <xsl:message terminate="yes" select="concat('Error: g/@ref has an invalid value, the char code does not exist): ', substring(@ref,2))"/>
         </xsl:if>
-        <xsl:variable name="originalGlyph">
-            <xsl:choose>
-                <xsl:when test="key('chars', substring(@ref,2))/mapping[@type='precomposed']">
-                    <xsl:value-of select="key('chars', substring(@ref,2))/mapping[@type='precomposed']/text()" disable-output-escaping="yes"/>
-                </xsl:when>
-                <xsl:when test="key('chars', substring(@ref,2))/mapping[@type='composed']">
-                    <xsl:value-of select="key('chars', substring(@ref,2))/mapping[@type='composed']/text()" disable-output-escaping="yes"/>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:value-of select="string(.)"/>
-                </xsl:otherwise>
-            </xsl:choose>
-        </xsl:variable>
-        <span class="original glyph unsichtbar" title="{string(.)}"><xsl:value-of select="$originalGlyph"/></span>
-        <span class="edited glyph" title="{$originalGlyph}">
-            <xsl:choose>
-                <xsl:when test="child::text() | child::*"><xsl:apply-templates/></xsl:when>
-                <xsl:otherwise><xsl:value-of select="$originalGlyph"/></xsl:otherwise>
-            </xsl:choose>
-        </span>
+        <!-- #### Depending on the context or content of the g element, there are several possible cases: #### -->
+        <xsl:choose>
+            <!-- 1. if g occurs within choice, it must be a "simple" character since the larger context has already been edited -> pass it through  -->
+            <xsl:when test="ancestor::choice">
+                <xsl:value-of select="$thisString"/>
+            </xsl:when>
+            <!-- 2. g occurs outside of choice -->
+            <xsl:otherwise>
+                <xsl:variable name="precomposedString" as="xs:string?" select="key('chars', substring(@ref,2))/mapping[@type='precomposed']/text()"/>
+                <xsl:variable name="composedString" as="xs:string?" select="key('chars', substring(@ref,2))/mapping[@type='composed']/text()"/>
+                <xsl:variable name="originalGlyph" as="xs:string">
+                    <xsl:choose>
+                        <xsl:when test="$precomposedString">
+                            <xsl:value-of select="$precomposedString" disable-output-escaping="yes"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="$composedString" disable-output-escaping="yes"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:variable>
+                <xsl:if test="string-length($originalGlyph) eq 0">
+                    <xsl:message terminate="yes" select="concat('ERROR: no correct mapping available for char: ', @ref)"/>
+                </xsl:if>
+                <xsl:choose>
+                    <!-- a) g has been applied for resolving abbreviations (in early texts W0004, W0013 and W0015) -> treat it like choice elements -->
+                    <xsl:when test="not($thisString = ($precomposedString, $composedString)) and not(substring(@ref, 2) = ('char017f', 'char0292'))">
+                        <span class="original glyph unsichtbar" title="{$thisString}"><xsl:value-of select="$originalGlyph"/></span>
+                        <span class="edited glyph" title="{$originalGlyph}"><xsl:value-of select="$thisString"/></span>
+                    </xsl:when>
+                    <!-- b) most common case: g simply marks a special character -> pass it through (except for the very frequent "long s" and "long z", 
+                                which are to be normalized -->
+                    <xsl:otherwise>
+                        <xsl:choose>
+                            <!-- long s and z shall be switchable in constituted mode to their standardized versions, but due to their high frequency 
+                                    we refrain from colourful highlighting (.simple-char). In case colour highlighting is desirable, simply remove .simple-char -->
+                            <xsl:when test="substring(@ref, 2) = ('char017f', 'char0292')">
+                                <xsl:variable name="standardizedGlyph" as="xs:string" select="key('chars', substring(@ref,2))/mapping[@type='standardized']/text()"/>
+                                <span class="original glyph unsichtbar simple-char" title="{$standardizedGlyph}"><xsl:value-of select="$originalGlyph"/></span>
+                                <span class="edited glyph simple-char" title="{$originalGlyph}"><xsl:value-of select="$standardizedGlyph"/></span>
+                            </xsl:when>
+                            <!-- all other "simple" special characters -->
+                            <xsl:otherwise>
+                                <xsl:apply-templates/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
-    <xsl:template match="g" mode="pureText">
+    
+    <xsl:template match="g" mode="pureText"> <!-- "function" for getting text-only nodes for span/@title in original-edited pairs -->
         <xsl:variable name="originalGlyph" as="xs:string">
             <xsl:choose>
                 <xsl:when test="key('chars', substring(@ref,2))/mapping[@type='precomposed']">
@@ -671,6 +794,7 @@
         </xsl:variable>
         <xsl:value-of select="$originalGlyph"/>
     </xsl:template>
+    
     <xsl:template match="damage">
         <xsl:apply-templates/>
     </xsl:template>
@@ -746,11 +870,18 @@
     <xsl:template match="hi">
 <!--        <xsl:message>Matched hi/<xsl:value-of select="@rendition"/> node.</xsl:message>-->
         <xsl:variable name="styles" select="tokenize(@rendition, ' ')"/>
+        <!-- names of elements that have their own, specific text alignment (thus, hi/@rendition alignment is to be omitted) -->
+        <xsl:variable name="specificAlignElems" as="xs:string*" select="('head', 'signed')"/> <!-- TODO: add more names here when necessary -->
+        <!-- elements with specific rendering (e.g., signed -> italics) -->
+        <!--<xsl:variable name="specificRenderElems" as="xs:string*"
+            select="('signed')"/>--> <!-- necessary? -->
         <xsl:variable name="css-styles">
             <xsl:if test="'#b' = $styles">font-weight:bold;</xsl:if>
             <xsl:if test="'#it' = $styles">font-style:italic;</xsl:if>
+            <xsl:if test="'#rt' = $styles">font-style: normal;</xsl:if>
             <xsl:if test="'#l-indent' = $styles">display:block;margin-left:4em;</xsl:if>
-            <xsl:if test="'#r-center' = $styles">display:block;text-align:center;</xsl:if>
+            <xsl:if test="'#r-center' = $styles and not(ancestor::*[local-name(.) = $specificAlignElems])">display:block;text-align:center;</xsl:if>
+            <xsl:if test="'#right' = $styles and not(ancestor::*[local-name(.) = $specificAlignElems])">display:block;text-align: right;</xsl:if>
             <xsl:if test="'#sc' = $styles">font-variant:small-caps;</xsl:if>
             <xsl:if test="'#spc' = $styles">letter-spacing:2px;</xsl:if>
             <xsl:if test="'#sub' = $styles">vertical-align:sub;font-size:.83em;</xsl:if>
@@ -798,6 +929,20 @@
             <xsl:apply-templates/>
         </span>
     </xsl:template>
+    
+    <!-- represent ornaments as short horizontal line -->
+    <xsl:template match="figure[@type eq 'ornament']">
+        <xsl:element name="hr">
+            <xsl:attribute name="class" select="'ornament'"/>
+        </xsl:element>
+    </xsl:template>
+    
+    <!-- less significant headings (i.e., h. which do not determine a dedicated div section) are tagged as label[@place=('inline','margin')], to be rendered similar to h4 -->
+    <xsl:template match="label[@place eq 'inline']">
+        <span class="label-inline">
+            <xsl:apply-templates/>
+        </span>
+    </xsl:template>
 
     <!-- For highlighting of search results -->
 <!-- <xsl:template match="exist:match">
@@ -811,4 +956,6 @@
     <xsl:template match="figDesc" mode="#all"/>
     <xsl:template match="teiHeader" mode="#all"/>
     <xsl:template match="fw" mode="#all"/>
+    <xsl:template match="text//processing-instruction()" mode="#all"/>
+    
 </xsl:stylesheet>

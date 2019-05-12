@@ -35,7 +35,8 @@ let $chmod  := for $file in $adminfiles
                     let $GR := sm:chgrp($file, $adminGrp)
                     return  if ($file eq $target || '/admin.html') then
                                     sm:chmod($file, "rw-rwS---")
-                            else if ($file eq $target || '/controller.xql') then
+                            else if ($file = ($target || '/controller.xql',
+                                              $target || '/error-handler.xql')) then
                                     sm:chmod($file, "rwxrwxr-x")
                             else if (ends-with($file, '.xql')) then
                                     sm:chmod($file, "rwxrwx---")

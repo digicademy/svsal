@@ -8,21 +8,21 @@ declare namespace tei     = "http://www.tei-c.org/ns/1.0";
 declare namespace xi      = "http://www.w3.org/2001/XInclude";
 
 import module namespace config    = "http://salamanca/config"               at "config.xqm";
+import module namespace app = "http://salamanca/app" at "app.xql";
 import module namespace console    = "http://exist-db.org/xquery/console";
 import module namespace functx     = "http://www.functx.com";
 import module namespace i18n       = "http://exist-db.org/xquery/i18n"       at "i18n.xql";
 import module namespace templates = "http://exist-db.org/xquery/templates";
 import module namespace util       = "http://exist-db.org/xquery/util";
 import module namespace xmldb      = "http://exist-db.org/xquery/xmldb";
+import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";
 
 declare option output:method "json";
 declare option output:media-type "application/json";
-
-(: relative server domain! :)
-declare variable $iiif:serverDomain := $config:serverdomain;
+ 
 declare variable $iiif:proto := $config:proto;
 
-declare variable $iiif:facsServer := $iiif:proto || "://facs." || $iiif:serverDomain;
+declare variable $iiif:facsServer := $iiif:proto || "://facs." || $config:serverdomain;
 declare variable $iiif:imageServer := $iiif:facsServer || "/iiif/image/";
 declare variable $iiif:presentationServer := $iiif:facsServer || "/iiif/presentation/";
 
@@ -37,7 +37,7 @@ declare function iiif:needsResource($targetWorkId as xs:string) as xs:boolean {
 };
 
 declare function iiif:needsResourceString($node as node(), $model as map(*)) {
-    let $currentWorkId := (string($model('currentWork')/@xml:id))
+    let $currentWorkId := $model('currentWork')?('wid')
     return if (iiif:needsResource($currentWorkId)) then
                 <td title="source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}"><a href="iiif-admin.xql?resourceId={$currentWorkId}"><b>Create IIIF resource NOW!</b></a></td>
             else
@@ -45,8 +45,52 @@ declare function iiif:needsResourceString($node as node(), $model as map(*)) {
     
 };
 
-declare function iiif:getIiifResource($targetWorkId as xs:string) as map(*) {
-    let $tei  := doc($config:tei-works-root || '/' || $targetWorkId || '.xml')//tei:TEI
+
+(: Interface function for fetching a iiif resource, either (if possible) from the database or by creating it on-the-fly.
+This resource may be either a manifest (for a single-volume work or a single volume within a multi-volume work) 
+or a collection resource (for a multi-volume work).
+@param $wid: the ID of the work or volume which the manifest is requested for
+@return:     the iiif manifest/collection
+:)
+declare function iiif:fetchResource ($wid as xs:string) as map(*)? {
+    let $workId := sal-util:normalizeId($wid)
+    let $workType := 
+        if (matches($workId, '^W\d{4}(_Vol\d{2})?$')) then 
+            doc($config:tei-works-root || '/' || $workId || '.xml')/tei:TEI/tei:text/@type
+        else ()
+    let $output := 
+        (: get multi-volume collection or single-volume manifest :)
+        if ($workType = ('work_multivolume', 'work_monograph')) then
+            if (util:binary-doc-available($config:iiif-root || '/' || $workId || '.json')) then 
+                let $debug := console:log('Fetching iiif manifest for ' || $workId || ' from the DB.')
+                return json-doc($config:iiif-root || '/' || $workId || '.json')
+            else
+                let $debug := console:log('Creating iiif manifest for ' || $workId || '.')
+                return iiif:createResource($workId) 
+        (: get manifest for single volume within a multi-volume work :)
+        else if ($workType eq 'work_volume') then
+            let $collectionId := substring-before($workId, '_Vol')
+            let $volume := 
+                (: if the resource for the collection is available in the DB, get the manifest from within the collection :)
+                if (util:binary-doc-available($config:iiif-root || '/' || $collectionId || '.json')) then
+                    let $debug := console:log('Fetching iiif manifest for ' || $workId || ' from collection for ' || $collectionId || ' from the DB.')
+                    let $collection := json-doc($config:iiif-root || '/' || $collectionId || '.json')
+                    let $manifest := array:get(array:filter(map:get($collection, 'members'), function($a) {contains(map:get($a, '@id'), $workId)}), 1)
+                    return $manifest
+                else 
+                    let $debug := console:log('Creating iiif manifest for ' || $workId || '.')
+                    return iiif:createResource($workId)
+            return $volume
+        else ()
+    return $output 
+};
+
+(: Creates a new iiif resource, either a manifest (for a single-volume work or 
+a single volume within a multi-volume work) or a collection resource (for a multi-volume work).
+@param $wid: the ID of the work or volume which the manifest is requested for
+@return:     the iiif manifest/collection :)
+declare function iiif:createResource($targetWorkId as xs:string) as map(*) {
+    let $tei  := doc($config:tei-works-root || '/' || sal-util:normalizeId($targetWorkId) || '.xml')//tei:TEI
     let $iiifResource :=
         if ($tei) then
         (: dataset exists: :)
@@ -98,14 +142,14 @@ declare function iiif:mkMultiVolumeCollection($workId as xs:string, $tei as node
         "license": $license,
         "members": $manifests
     }
-(: rendering? seeAlso? thumbnail? :)
     return $collection-out
 };
 
 (: includes single-volume works as well as single volumes as part of multi-volume works:)
 (: volumeId: xml:id of TEI node of single TEI file, e.g. "W0004" or "W0013_Vol01" :)
-declare function iiif:mkSingleVolumeManifest($volumeId as xs:string, $tei as node(), $collectionId as xs:string?) {
+declare function iiif:mkSingleVolumeManifest($volumeId as xs:string, $teiDoc as node(), $collectionId as xs:string?) {
     let $debug := if ($config:debug = "trace") then console:log("iiif:mkSingleVolumeManifest running (" || $volumeId || " requested) ...") else ()
+    let $tei := util:expand($teiDoc)
     (: File metadata section :)
     let $id := $iiif:presentationServer || $volumeId || "/manifest"
     let $label := normalize-space($tei/tei:teiHeader//tei:titleStmt/tei:title[@type="main"]/text())
@@ -140,13 +184,13 @@ declare function iiif:mkSingleVolumeManifest($volumeId as xs:string, $tei as nod
 
     (: Links to other data/formats :)
     let $seeAlso := array {
-        map {"@id": concat("http://tei.", $iiif:serverDomain, "/", substring($volumeId, 1, 5), ".xml"),
+        map {"@id": concat($config:apiserverTexts, '/', substring($volumeId, 1, 5), "?format=tei"),
             "format": "text/xml"},
-        map {"@id": concat("http://data.", $iiif:serverDomain, "/", substring($volumeId, 1, 5), ".rdf"),
+        map {"@id": concat($config:apiserverTexts, '/', substring($volumeId, 1, 5), "?format=rdf"),
             "format": "application/rdf+xml"}
     }
-    let $renderingId := if (contains($volumeId, "_")) then concat("http://id.", $iiif:serverDomain, "/works.", substring-before($volumeId, "_"), ":", substring-after($volumeId, "_"))
-                        else concat("http://id.", $iiif:serverDomain, "/works.", $volumeId) (: better: provide native .html URL? :)
+    let $renderingId := if (contains($volumeId, "_")) then concat("http://id.", $config:serverdomain, "/texts/", substring-before($volumeId, "_"), ":", substring-after($volumeId, "_"))
+                        else concat("http://id.", $config:serverdomain, "/texts/", $volumeId) (: better: provide native .html URL? :)
     let $rendering := map {
         "@id": $renderingId,
         "label": "HTML view",
@@ -211,7 +255,7 @@ declare function iiif:mkSequence($volumeId as xs:string, $tei as node(), $thumbn
     (: The startCanvas is identifiable by its containing (within "resource"/"@id") 
         the URL of the title page (=thumbnail). The following assumes that this URL can be found somewhere 
         within the first 30 canvases:)
-    let $getStartCanvas := for $i in (1 to 30)  
+    let $getStartCanvas := for $i in (1 to 15)  (: assuming that no work has less than 15 images AND that the thumbnail occurs within the first 15 images :)
                             let $canvasImage := map:get($canvases($i), "images")(1)
                             let $imageResourceId := map:get(map:get($canvasImage, "resource"), "@id")
                             let $return := if ($imageResourceId eq $thumbnailUrl) 
@@ -240,7 +284,8 @@ declare function iiif:mkCanvasFromTeiFacs($volumeId as xs:string, $facs as xs:st
     let $digilibImageId := $iiif:imageServer || iiif:teiFacs2IiifImageId($facs)
     (: get image height and width from the digilib server (i.e. from each image json file): :)
     let $options := map { "liberal": true(), "duplicates": "use-last" }
-
+    
+    let $debug := if ($config:debug = ('trace', 'info')) then console:log('Getting image resource from digilib server: ' || $digilibImageId) else ()
     let $digilibImageResource := json-doc($digilibImageId, $options)
     
     let $imageHeight := map:get($digilibImageResource, "height")
@@ -342,18 +387,8 @@ declare function iiif:mkMetadata($tei as node()) as array(*) {
     let $pubPlace := if ($monogr/tei:imprint/tei:pubPlace[@role='thisEd']) then normalize-space($monogr/tei:imprint/tei:pubPlace[@role='thisEd']/@key)
                      else if ($monogr/tei:imprint/tei:pubPlace[@role='firstEd']) then normalize-space($monogr/tei:imprint/tei:pubPlace[@role='firstEd']/@key)
                      else ()
-    let $publishers := if ($monogr/tei:imprint/tei:publisher[@n='thisEd'])
-                       then array { for $publisher in $monogr/tei:imprint/tei:publisher[@n='thisEd']//tei:persName
-                                   return map {"label": iiif:getI18nLabels("publisher"), "@value": normalize-space($publisher[text()]) } }
-                       else if ($monogr/tei:imprint/tei:publisher[@n='firstEd'])
-                       then array { for $publisher in $monogr/tei:imprint/tei:publisher[@n='firstEd']//tei:persName
-                                   return map {"label": iiif:getI18nLabels("publisher"), "@value": normalize-space($publisher[text()]) } }
-                       else ()
-(:   let $publishersI18n := for $publisher in $publishers array {
-                            map { "@value": map:get(map:get($labels, $labelKey), "en"), "@language": "en" },
-                            map { "@value": map:get(map:get($labels, $labelKey), "es"), "@language": "es" },
-                            map { "@value": map:get(map:get($labels, $labelKey), "de"), "@language": "de" } 
-                        }  :)         
+    let $publishers :=    if ($monogr/tei:imprint/tei:publisher[@n='thisEd']) then app:rotateFormatName($monogr/tei:imprint/tei:publisher[@n='thisEd']/tei:persName)
+                                else app:rotateFormatName($monogr/tei:imprint/tei:publisher[@n='firstEd']/tei:persName)        
     let $pubDate := if ($monogr/tei:imprint/tei:date[@type='thisEd']) then string($monogr/tei:imprint/tei:date[@type='thisEd']/@when)
                     else if ($monogr/tei:imprint/tei:date[@type='firstEd']) then string($monogr/tei:imprint/tei:date[@type='firstEd']/@when)
                     else ()
@@ -376,8 +411,9 @@ declare function iiif:mkMetadata($tei as node()) as array(*) {
 };
 
 declare function iiif:getThumbnailId($tei as node()) as xs:string {
-    let $thumbnailFacs := if ($tei/tei:text/tei:front//tei:titlePage[1]//tei:pb[1]) then $tei/tei:text/tei:front/tei:titlePage//tei:pb[1]/@facs
-                          else $tei/tei:text/tei:front//tei:titlePage[1]/preceding-sibling::tei:pb[1]/@facs
+    let $expandedTei := util:expand($tei)
+    let $thumbnailFacs := if ($expandedTei/tei:text/tei:front//tei:titlePage[1]//tei:pb[1]) then $expandedTei/tei:text/tei:front//tei:titlePage[1]//tei:pb[1]/@facs
+                          else $expandedTei/tei:text/tei:front//tei:titlePage[1]/preceding-sibling::tei:pb[1]/@facs
     return iiif:teiFacs2IiifImageId($thumbnailFacs)
 };
 
@@ -408,6 +444,7 @@ declare function iiif:getI18nLabels($labelKey as xs:string?) as array(*) {
 (: converts a tei:pb/@facs value (given that it has the form "facs:Wxxxx(-x)-xxxx") into an image id understandable by the Digilib server,
     such as "W0013!A!W0013-A-0009". Changes in the Digilib settings, for instance with the delimiters, might make changes in this function necessary :)
 declare function iiif:teiFacs2IiifImageId($facs as xs:string?) as xs:string {
+    let $debug := if (not(matches($facs, 'facs:W\d{4}(-[A-z])?-\d{4}'))) then error() else ()
     let $facsWork := substring-before(substring-after($facs, "facs:"), "-")
     let $facsVol := if (contains(substring-after($facs, "-"), "-")) then substring-before(substring-after($facs, "-"),"-") else ()
     let $facsImgId := substring($facs, string-length($facs) - 3, 4)
@@ -449,7 +486,7 @@ In the case of single volume works, return:
               ]
 :)
     let $debug :=  if ($config:debug = "trace") then console:log("iiif:MiradorData running...") else ()
-    let $tei  := doc($config:tei-works-root || '/' || $wid || '.xml')//tei:TEI
+    let $tei  := doc($config:tei-works-root || '/' || sal-util:normalizeId($wid) || '.xml')//tei:TEI
     let $miradorData :=
         if ($tei) then
         (: dataset exists: :)
@@ -467,10 +504,10 @@ In the case of single volume works, return:
                 return array { map { "manifestUri" : concat("iiif-out.xql?wid=", $wid), "location" :    "MPIeR iiif Service"} }
             else ()
         else ()
-    let $debug :=  if ($config:debug = "trace") then console:log(serialize($miradorData, 
+    (:let $debug :=  if ($config:debug = "trace") then console:log(serialize($miradorData, 
         <output:serialization-parameters>
             <output:method>json</output:method>
-        </output:serialization-parameters>))  else ()
+        </output:serialization-parameters>))  else ():) (: this doesn't work... :)
 
      return serialize($miradorData, 
         <output:serialization-parameters>
@@ -493,7 +530,7 @@ declare function iiif:MiradorWindowObject($node as node(), $model as map (*), $w
 :)
 
     let $debug     :=  if ($config:debug = "trace") then console:log("iiif:MiradorData running...") else ()
-    let $tei       := doc($config:tei-works-root || '/' || $wid || '.xml')//tei:TEI
+    let $tei       := doc($config:tei-works-root || '/' || sal-util:normalizeId($wid) || '.xml')//tei:TEI
     let $manifest  :=
         if ($tei) then
         (: dataset exists: :)
@@ -533,21 +570,36 @@ declare function iiif:MiradorWindowObject($node as node(), $model as map (*), $w
 };
 
 declare function iiif:getPageId($canvasId as xs:string*) {
-    let $HTMLcollection := collection($config:html-root )
+    let $htmlCollection := collection($config:html-root )
     let $results := map:new(
                             for $id in $canvasId
-                                let $htmlAnchor := $HTMLcollection//a[@data-canvas = $id]
+                                let $htmlAnchor := $htmlCollection//a[@data-canvas = $id]
                                 let $pageId     := $htmlAnchor/@data-sal-id/string()
                                 return map:entry( $id , $pageId)
                             )
     return $results
 };
 
+(:~
+Manipulates a iiif full-image URI with regards to the scale of resolution of the image resource. Note: does not check whether 
+the URI leads to an actual image.
+@param uri: the URI of the image, conforming to the iiif image api
+@param scale: a value between 0 and 100 scaling the width and height of the image (in percent)
+@return: the manipulated URI
+~:)
+declare function iiif:scaleImageURI($uri as xs:string?, $scale as xs:integer) as xs:string? {
+    if (matches($uri, '/full/.*?/.*?/default.jpg$')) then
+        let $before := replace($uri, '^(.*?/full/).*?/.*?/default.jpg$', '$1')
+        let $imgScaler := 'pct:' || string($scale)
+        let $after := replace($uri, '^.*?/full/.*?(/.*?/default.jpg)$', '$1')
+        return $before || $imgScaler || $after
+    else ()
+};
+
 
 (: TODO:
-    - create top collection for SvSal
-    (- create ranges (deprecation warning...)?;)
-    - check validity and consistency of @id on every level
-    - dealing with TEI data which has been separated into Wxxx_a, Wxxx_b etc due to performance issues
+    - create top collection comprising all SvSal works?
+    (- create ranges (deprecation warning...)?)
+    - dealing with TEI data which has been separated into Wxxx_a, Wxxx_b etc due to performance issues?
  :)
 

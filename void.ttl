@@ -41,8 +41,8 @@
 	void:openSearchDescription <https://search.salamanca.school/lemmatized> ;
 
 	void:uriSpace "http://id.salamanca.school/" ;
-	void:exampleResource <http://id.salamanca.school/works.W0013> ;
-	void:exampleResource <http://id.salamanca.school/authors.A0100> ;
+	void:exampleResource <http://id.salamanca.school/texts/W0013> ;
+	void:exampleResource <http://id.salamanca.school/authors/A0100> ;
 
 	void:vocabulary <http://xmlns.com/foaf/0.1/> ;
 	void:vocabulary <http://purl.org/vocab/bio/0.1/> ;

@@ -51,23 +51,24 @@ declare function render:WPString($node as node(), $model as map(*), $lang as xs:
 };
 
 declare function render:needsRender($targetWorkId as xs:string) as xs:boolean {
-    let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
-                                    if (doc-available(concat($subcollection, '/', $targetWorkId, '.xml'))) then $subcollection
-                                    else ()
+    let $targetSubcollection := 
+        for $subcollection in $config:tei-sub-roots return 
+            if (doc-available(concat($subcollection, '/', $targetWorkId, '.xml'))) then $subcollection
+            else ()
     let $workModTime := xmldb:last-modified($targetSubcollection, $targetWorkId || '.xml')
     return
         if (substring($targetWorkId,1,2) eq "W0") then
             if ($targetWorkId || "_nodeIndex.xml" = xmldb:get-child-resources($config:data-root)) then
-                    let $renderModTime := xmldb:last-modified($config:data-root, $targetWorkId || "_nodeIndex.xml")
-                    return if ($renderModTime lt $workModTime) then true() else false()
+                let $renderModTime := xmldb:last-modified($config:data-root, $targetWorkId || "_nodeIndex.xml")
+                return if ($renderModTime lt $workModTime) then true() else false()
             else
                 true()
         else if (substring($targetWorkId,1,2) = ("A0", "L0", "WP")) then
             if (not(xmldb:collection-available($config:data-root))) then
                 true()
             else if ($targetWorkId || ".html" = xmldb:get-child-resources($config:data-root)) then
-                    let $renderModTime := xmldb:last-modified($config:data-root, $targetWorkId || ".html")
-                    return if ($renderModTime lt $workModTime) then true() else false()
+                let $renderModTime := xmldb:last-modified($config:data-root, $targetWorkId || ".html")
+                return if ($renderModTime lt $workModTime) then true() else false()
             else
                 true()
         else
@@ -75,12 +76,15 @@ declare function render:needsRender($targetWorkId as xs:string) as xs:boolean {
 };
 
 declare function render:workString($node as node(), $model as map(*), $lang as xs:string?) {
-    let $currentWorkId  := string($model('currentWork')/@xml:id)
-    return <td><a href="{$config:webserver}/en/work.html?wid={$currentWorkId}">{$currentWorkId}: {app:WRKauthor($node, $model)} - {app:WRKtitleShort($node, $model)}</a></td>
+(:    let $debug := console:log(string($model('currentWork')/@xml:id)):)
+    let $currentWorkId  := $model('currentWork')?('wid')
+    let $author := <span>{$model('currentWork')?('author')}</span>
+    let $titleShort := $model('currentWork')?('titleShort')
+    return <td><a href="{$config:webserver}/en/work.html?wid={$currentWorkId}">{$currentWorkId}: {$author} - {$titleShort}</a></td>
 };
 
 declare function render:needsRenderString($node as node(), $model as map(*)) {
-    let $currentWorkId := string($model('currentWork')/@xml:id)
+    let $currentWorkId := $model('currentWork')?('wid')
     return if (render:needsRender($currentWorkId)) then
                     <td title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}{if (xmldb:get-child-resources($config:data-root) = $currentWorkId || "_nodeIndex.xml") then concat(', rendered on: ', xmldb:last-modified($config:data-root, $currentWorkId || "_nodeIndex.xml")) else ()}"><a href="render.html?wid={$currentWorkId}"><b>Render NOW!</b></a></td>
             else
@@ -88,19 +92,32 @@ declare function render:needsRenderString($node as node(), $model as map(*)) {
 };
 
 
-declare function render:needsCorpusZipString($node as node(), $model as map(*)) {
+declare function render:needsTeiCorpusZip($node as node(), $model as map(*)) {
     let $worksModTime := max(for $work in xmldb:get-child-resources($config:tei-works-root) return xmldb:last-modified($config:tei-works-root, $work))    
-    let $needsCorpusZip := if (util:binary-doc-available($config:files-root || '/sal-tei-corpus.zip')) then
-                let $resourceModTime := xmldb:last-modified($config:files-root, 'sal-tei-corpus.zip')
-                return if ($resourceModTime lt $worksModTime) then true() else false()
-        else
-            true()
-
+    let $needsCorpusZip := 
+        if (util:binary-doc-available($config:corpus-files-root || '/sal-tei-corpus.zip')) then
+            let $resourceModTime := xmldb:last-modified($config:corpus-files-root, 'sal-tei-corpus.zip')
+            return $resourceModTime lt $worksModTime
+        else true()
     return if ($needsCorpusZip) then
-                <td title="Most current source from: {string($worksModTime)}"><a href="corpus-admin.xql"><b>Create corpus zip NOW!</b></a></td>
+                <td title="Most current source from: {string($worksModTime)}"><a href="corpus-admin.xql?format=tei"><b>Create TEI corpus NOW!</b></a></td>
             else
-                <td title="{concat('Corpus zip created on: ', string(xmldb:last-modified($config:files-root, 'sal-tei-corpus.zip')), ', most current source from: ', string($worksModTime), '.')}">Creating corpus zip unnecessary. <small><a href="corpus-admin.xql">Create corpus zip anyway!</a></small></td>
-    
+                <td title="{concat('TEI corpus created on: ', string(xmldb:last-modified($config:corpus-files-root, 'sal-tei-corpus.zip')), ', most current source from: ', string($worksModTime), '.')}">Creating TEI corpus unnecessary. <small><a href="corpus-admin.xql?format=tei">Create TEI corpus zip anyway!</a></small></td>
+};
+
+declare function render:needsTxtCorpusZip($node as node(), $model as map(*)) {
+    if (xmldb:collection-available($config:txt-root)) then
+        let $worksModTime := max(for $work in xmldb:get-child-resources($config:txt-root) return xmldb:last-modified($config:txt-root, $work))    
+        let $needsCorpusZip := 
+            if (util:binary-doc-available($config:corpus-files-root || '/sal-txt-corpus.zip')) then
+                let $resourceModTime := xmldb:last-modified($config:corpus-files-root, 'sal-txt-corpus.zip')
+                return $resourceModTime lt $worksModTime
+            else true()
+        return if ($needsCorpusZip) then
+                    <td title="Most current source from: {string($worksModTime)}"><a href="corpus-admin.xql?format=txt"><b>Create TXT corpus NOW!</b></a></td>
+                else
+                    <td title="{concat('TXT corpus created on: ', string(xmldb:last-modified($config:corpus-files-root, 'sal-txt-corpus.zip')), ', most current source from: ', string($worksModTime), '.')}">Creating TXT corpus unnecessary. <small><a href="corpus-admin.xql?format=txt">Create TXT corpus zip anyway!</a></small></td>
+    else <td title="No txt sources available so far!"><a href="corpus-admin.xql?format=txt"><b>Create TXT corpus NOW!</b></a></td>
 };
 
 
@@ -132,13 +149,13 @@ declare function render:getCrumbtrail ($targetWork as node()*, $targetNode as no
                                             return concat('titlepage.', string(count($targetNode/preceding-sibling::tei:titlePart) + 1))
                                         case element(tei:text)                                                  (: "volX" where X is the current volume number, don't use it at all for monographs :)
                                             return if ($targetNode/@type='work_volume') then
-                                                       concat('vol', count($targetNode/preceding::tei:text[@type = 'work_volume']) + 1)
+                                                       concat('vol', count($targetNode/preceding::tei:text[@type eq 'work_volume']) + 1)
                                                    else ()
                                         case element(tei:note)                                                  (: "nX" where X is the anchor used (if it is alphanumeric) and "nXY" where Y is the number of times that X occurs inside the current div :)
                                             return concat('n',  if (matches($targetNode/@n, '[A-Za-z0-9]')) then
-                                                                    if (count($targetNode/ancestor::tei:div[1]//tei:note[@n = $targetNode/@n]) gt 1) then
+                                                                    if (count($targetNode/ancestor::tei:div[1]//tei:note[@n eq $targetNode/@n]) gt 1) then
                                                                         concat(upper-case(replace($targetNode/@n, '[^a-zA-Z0-9]', '')),
-                                                                               string(count($targetNode/ancestor::tei:div[1]//tei:note intersect $targetNode/preceding::tei:note[@n = $targetNode/@n])+1)
+                                                                               string(count($targetNode/ancestor::tei:div[1]//tei:note intersect $targetNode/preceding::tei:note[@n eq $targetNode/@n])+1)
                                                                               )
                                                                     else
                                                                        upper-case(replace($targetNode/@n, '[^a-zA-Z0-9]', ''))
@@ -595,7 +612,11 @@ declare function local:g($node as element(tei:g), $mode as xs:string) {
             else
                 local:passthru($node, $mode)
     else if ($mode = "edit") then
-        local:passthru($node, $mode)
+        let $glyph := $node/ancestor::tei:TEI//tei:char[@xml:id = substring(string($node/@ref), 2)]
+        return  if ($glyph/tei:mapping[@type = 'standardized']) then
+                    string($glyph/tei:mapping[@type = 'standardized'])
+                else
+                    local:passthru($node, $mode)
     else if ($mode = "work") then
         let $originalGlyph := local:g($node, "orig")
         return

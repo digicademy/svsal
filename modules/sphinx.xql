@@ -9,11 +9,11 @@ declare namespace templates        = "http://exist-db.org/xquery/templates";
 import module namespace functx     = "http://www.functx.com";
 import module namespace app        = "http://salamanca/app"     at "app.xql";
 import module namespace config     = "http://salamanca/config"  at "config.xqm";
+import module namespace i18n       = "http://exist-db.org/xquery/i18n"        at "i18n.xql";
 import module namespace render     = "http://salamanca/render"  at "render.xql";
 import module namespace console    = "http://exist-db.org/xquery/console";
 import module namespace http       = "http://expath.org/ns/http-client";
 import module namespace httpclient = "http://exist-db.org/xquery/httpclient";
-import module namespace i18n       = "http://exist-db.org/xquery/i18n";
 import module namespace util       = "http://exist-db.org/xquery/util";
 import module namespace xmldb      = "http://exist-db.org/xquery/xmldb";
 
@@ -78,7 +78,7 @@ declare function sphinx:needsSnippets($targetWorkId as xs:string) as xs:boolean 
 };
 
 declare function sphinx:needsSnippetsString($node as node(), $model as map(*)) {
-    let $currentWorkId := max((string($model('currentWork')/@xml:id), string($model('currentAuthor')/@xml:id), string($model('currentLemma')/@xml:id), string($model('currentWp')/@xml:id)))
+    let $currentWorkId := max((string($model('currentWork')?('wid')), string($model('currentAuthor')/@xml:id), string($model('currentLemma')/@xml:id), string($model('currentWp')/@xml:id)))
     let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
                                     if (doc-available(concat($subcollection, '/', $currentWorkId, '.xml'))) then $subcollection
                                     else ()
@@ -88,8 +88,8 @@ declare function sphinx:needsSnippetsString($node as node(), $model as map(*)) {
                     <td title="{concat('Snippets created on: ', max(for $file in xmldb:get-child-resources($config:snippets-root || '/' || $currentWorkId) return string(xmldb:last-modified($config:snippets-root || '/' || $currentWorkId, $file))), ', Source from: ', string(xmldb:last-modified($targetSubcollection, $currentWorkId || '.xml')), '.')}">Creating snippets unnecessary. <small><a href="sphinx-admin.xql?wid={$currentWorkId}">Create snippets anyway!</a></small></td>
 };
 
-declare function sphinx:passLang($node as node(), $model as map(*)) {
-    <input type="hidden" name="lang" value="{request:get-parameter('lang', 'en')}"/>
+declare function sphinx:passLang($node as node(), $model as map(*), $lang as xs:string?) {
+    <input type="hidden" name="lang" value="{request:get-parameter('lang', $lang)}"/>
 };
 
 (: ####====---- End Helper Functions ----====#### :)
@@ -174,7 +174,7 @@ function sphinx:search ($context as node()*, $model as map(*), $q as xs:string?,
 :)
             if ($field eq 'everything') then
             (: search for queryterm in sphinx_description_edit and ..._orig fields,
-                filter by work type (for now, based on  work id, as of late we also have a work_type attritute that we should start using),
+                filter by work type (for now, based on work id, as of late we also have a work_type attritute that we should start using),
                 group by work (so we don't the same document repeatedly),
                 paginate results if necessary
             :)
@@ -370,7 +370,7 @@ function sphinx:resultsLandingPage ($node as node(), $model as map(*), $q as xs:
 
     let $results  := $model("results")
 
-(:  **** CASE 1: Search was after "everything". ****
+(:  **** CASE 1: Search was for "everything". ****
     **** We show the top 5 results in each category,
     **** along with an "all..." button that switches to a dedicated corpus search.
 :)
@@ -379,10 +379,10 @@ function sphinx:resultsLandingPage ($node as node(), $model as map(*), $q as xs:
 
         (: Get Works ... :)
         let $worksLink :=           if (xs:integer($results/sal:works//opensearch:totalResults/text()) > $config:searchMultiModeLimit ) then
-                                        <span style="margin-left:7px;"><a href="search.html?field=corpus&amp;q={encode-for-uri($q)}&amp;offset=0&amp;limit={$limit}"><i18n:text key="allResults">Alle</i18n:text>...</a></span>
+                                        <span style="margin-left:7px;"><a href="search.html?field=corpus&amp;q={encode-for-uri($q)}&amp;offset=0&amp;limit={$limit}"><i18n:text key="allResults">All</i18n:text>...</a></span>
                                     else ()
         let $worksList :=           <div class="resultsSection">
-                                          <h4><i18n:text key="works">Werke</i18n:text> ({$results/sal:works//opensearch:totalResults/text()})</h4>
+                                          <h4><i18n:text key="works">Works</i18n:text> ({$results/sal:works//opensearch:totalResults/text()})</h4>
                                           <ol class="resultsList">{
                                                 for $item at $index in $results/sal:works//item
                                                     let $author         := $item/author/text()
@@ -390,7 +390,9 @@ function sphinx:resultsLandingPage ($node as node(), $model as map(*), $q as xs:
                                                     let $wid            := $item/work/text()
                                                     let $numberOfHits   := $item/sphinxNS:groupcount/text()
                                                     let $link           :=  if (contains($item/fragment_path/text(), "#")) then
-                                                                                replace($item/fragment_path/text(), '#', '&amp;q=' || encode-for-uri($q) || '#')
+                                                                                if ($item/fragment_path/text() eq '#No fragment discoverable!') then
+                                                                                    'work.html?wid=' || $wid || '&amp;q=' || encode-for-uri($q) (: workaround for avoiding hard http errors (TODO) :)
+                                                                                else replace($item/fragment_path/text(), '#', '&amp;q=' || encode-for-uri($q) || '#')
                                                                             else if (contains($item/fragment_path/text(), "?")) then
                                                                                 $item/fragment_path/text() || '&amp;q=' || encode-for-uri($q)    (: this is the url to call the frg. in the webapp :)
                                                                             else
@@ -634,7 +636,7 @@ declare function sphinx:keywords ($q as xs:string?) as xs:string {
 
 declare function sphinx:excerpts ($documents as node()*, $words as xs:string) as node()* {
     let $endpoint   := concat($config:sphinxRESTURL, "/excerpts")
-let $debug :=  if ($config:debug = "info") then console:log("Excerpts needed for doc[0]: " || substring(normalize-space($documents/description_orig), 0, 150)) else ()
+    let $debug :=  if ($config:debug = ("info", "trace")) then console:log("Excerpts needed for doc[0]: " || substring(normalize-space($documents/description_orig), 0, 150)) else ()
     let $requestDoc := concat(         encode-for-uri('opts[limit]=' || $config:snippetLength),
                               '&amp;', encode-for-uri('opts[html_strip_mode]=strip'),
                               '&amp;', encode-for-uri('opts[query_mode]=true'),
@@ -644,20 +646,23 @@ let $debug :=  if ($config:debug = "info") then console:log("Excerpts needed for
                               '&amp;', encode-for-uri(concat('docs[1]=', normalize-space(replace(serialize($documents/description_edit), "%26", "%26amp%3B"))))
 (:                                           normalize-space($documents/description_edit):)
                                )
-    let $tempString := replace(replace($requestDoc, '%20', '+'), '%3D', '=')
-let $debug :=  if ($config:debug = "trace") then console:log("Excerpts request body: " || $tempString) else ()
-(: Querying with EXPath http client proved not to work in eXist 3.4
-    let $request    := <http:request method="post">
-                         <http:header name="Content-Type" value="application/x-www-form-urlencoded"/>
-                         <http:body                  media-type="application/x-www-form-urlencoded" method="text">{$tempString}</http:body>
-                       </http:request>
-    let $response   := http:send-request($request, $endpoint)
-:)
+    let $tempString := replace(replace(replace($requestDoc, '%20', '+'), '%3D', '='), '%26amp%3B', '&amp;')
+    let $debug :=  if ($config:debug = "trace") then console:log("Excerpts request body: " || $tempString) else ()
+    let $debug := if ($config:debug = "trace") then console:log("Posted orig text snippet docs[0]=" || serialize($documents/description_orig)) else ()
+    let $debug := if ($config:debug = "trace") then console:log("Posted edit text snippet docs[1]=" || serialize($documents/description_edit)) else ()
+    (: Querying with EXPath http client proved not to work in eXist 3.4
+        let $request    := <http:request method="post">
+                             <http:header name="Content-Type" value="application/x-www-form-urlencoded"/>
+                             <http:body                  media-type="application/x-www-form-urlencoded" method="text">{$tempString}</http:body>
+                           </http:request>
+        let $response   := http:send-request($request, $endpoint)
+    :)
     let $response   := httpclient:post($endpoint, $tempString, true(), <headers><header name="Content-Type" value="application/x-www-form-urlencoded"/></headers>)
-let $debug :=  if ($config:debug = "trace") then console:log("Excerpts response: " || serialize($response)) else ()
-    let $rspBody    := if ($response//httpclient:body/@encoding = "Base64Encoded") then parse-xml(util:base64-decode($response//httpclient:body)) else $response//httpclient:body
-let $debug :=  if ($config:debug = "trace") then console:log("$rspBody: " || serialize($rspBody)) else ()
-let $debug :=  if ($config:debug = "trace" and $response//httpclient:body/@encoding = "Base64Encoded") then console:log("body decodes to: " || util:base64-decode($response//httpclient:body)) else ()
+    let $debug :=  if ($config:debug = "trace") then console:log("Excerpts response: " || serialize($response)) else ()
+    let $rspBody    :=  if ($response//httpclient:body/@encoding = "Base64Encoded") then parse-xml(util:base64-decode($response//httpclient:body)) 
+                        else $response//httpclient:body
+    let $debug :=  if ($config:debug = "trace") then console:log("$rspBody: " || serialize($rspBody)) else ()
+    let $debug :=  if ($config:debug = "trace" and $response//httpclient:body/@encoding = "Base64Encoded") then console:log("body decodes to: " || util:base64-decode($response//httpclient:body)) else ()
 
     return $rspBody//rss
 };
@@ -676,10 +681,11 @@ declare function sphinx:highlight ($document as node(), $words as xs:string*) as
                                 '&amp;', encode-for-uri(concat('words=', $words)),
                                 '&amp;', encode-for-uri(concat('docs[1]=', serialize($document)))
                                )
+(:    let $debug := console:log():)
     let $tempString := replace(replace($requestDoc, '%20', '+'), '%3D', '=')
 (: Querying with EXPath http client proved not to work in eXist 3.4
     let $request    := <http:request method="post">
-                         <http:body media-type="application/x-www-form-urlencoded">{$requestDoc}</http:body>
+                           <http:body media-type="application/x-www-form-urlencoded">{$requestDoc}</http:body>
                        </http:request>
     let $response   := http:send-request($request, $endpoint)
 :)
@@ -690,7 +696,7 @@ declare function sphinx:highlight ($document as node(), $words as xs:string*) as
     return $rspBody//rss
 };
 
-(: nicht als Parameter verfügbar:
+(: not available as parameters:
 let $sort   := request:get-parameter('sort',    '2')
 let $sortby := request:get-parameter('sortby',  'sphinx_fragment_number')
 let $ranker := request:get-parameter('ranker',  '2')
