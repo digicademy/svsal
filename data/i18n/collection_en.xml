@@ -337,7 +337,7 @@
   <!-- Error handling -->
   <msg key="error">Error</msg>
   <msg key="pageNotFound">This is not the page you were looking for...</msg>
-  <msg key="bugMessage">In case you found a bug on our webpages, please let us know at</msg>
+  <msg key="bugMessage">In case you found a bug in our webpages, please let us know at</msg>
   
   <msg key="authorNotYetAvailable">This article is not yet available.</msg>
   <msg key="lemmaNotYetAvailable">This dictionary article is not yet available.</msg>
