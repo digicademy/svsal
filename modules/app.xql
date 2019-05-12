@@ -2621,7 +2621,6 @@ for embedding in a larger catalogue record. Receives the bibliographic informati
 app:WRKprintMetadata().
 ~:)
 declare function app:WRKbibliographicalRecord($node as node(), $model as map(*), $lang as xs:string?) {
-
     let $workType := $model('currentWorkType')
     let $workId := $model('currentWorkId')
     let $bibliographical := app:WRKprintMetadata($node, $model, $workId, $lang)
@@ -2770,13 +2769,13 @@ declare function app:WRKprintMetadata($node as node(), $model as map(*), $wid as
             let $dateFirst := $sourceDesc//tei:date[@type eq 'firstEd']/@when/string()
             return $printingPlaceFirst || ' : ' || $publisherFirst || ', ' || $dateFirst
         else ()
-    (: catalogue link for the print source: if there are several original sources, state only the main source :)
+    (: catalogue link for the print source: if there are several original sources, state only the main/first source :)
     let $library := 
-        if (count($sourceDesc//tei:msDesc) gt 1) then $sourceDesc//tei:msDesc[@type eq 'main']//tei:repository/text() 
-        else $sourceDesc//tei:msDesc//tei:repository/text()
+        if ($sourceDesc//tei:msDesc[@type eq 'main']) then $sourceDesc//tei:msDesc[@type eq 'main']//tei:repository/text() 
+        else $sourceDesc//tei:msDesc[1]//tei:repository/text()
     let $catLink  := 
-        if (count($sourceDesc//tei:msDesc) gt 1) then i18n:negotiateNodes($sourceDesc//tei:msDesc[@type eq 'main']//tei:idno[@type eq 'catlink'], $lang)/text()
-        else i18n:negotiateNodes($sourceDesc//tei:msDesc//tei:idno[@type eq 'catlink'], $lang)/text()
+        if ($sourceDesc//tei:msDesc[@type eq 'main']) then i18n:negotiateNodes($sourceDesc//tei:msDesc[@type eq 'main']//tei:idno[@type eq 'catlink'], $lang)/text()
+        else i18n:negotiateNodes($sourceDesc//tei:msDesc[2]//tei:idno[@type eq 'catlink'], $lang)/text()
     let $extent := if ($type eq 'work_multivolume') then () else i18n:negotiateNodes($sourceDesc/tei:biblStruct/tei:monogr/tei:extent, $lang)/text()
     let $languages := 
         string-join((for $l in distinct-values($teiHeader/tei:profileDesc/tei:langUsage/tei:language/@ident) return
