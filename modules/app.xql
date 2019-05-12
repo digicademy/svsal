@@ -2775,7 +2775,7 @@ declare function app:WRKprintMetadata($node as node(), $model as map(*), $wid as
         else $sourceDesc//tei:msDesc[1]//tei:repository/text()
     let $catLink  := 
         if ($sourceDesc//tei:msDesc[@type eq 'main']) then i18n:negotiateNodes($sourceDesc//tei:msDesc[@type eq 'main']//tei:idno[@type eq 'catlink'], $lang)/text()
-        else i18n:negotiateNodes($sourceDesc//tei:msDesc[2]//tei:idno[@type eq 'catlink'], $lang)/text()
+        else i18n:negotiateNodes($sourceDesc//tei:msDesc[1]//tei:idno[@type eq 'catlink'], $lang)/text()
     let $extent := if ($type eq 'work_multivolume') then () else i18n:negotiateNodes($sourceDesc/tei:biblStruct/tei:monogr/tei:extent, $lang)/text()
     let $languages := 
         string-join((for $l in distinct-values($teiHeader/tei:profileDesc/tei:langUsage/tei:language/@ident) return
