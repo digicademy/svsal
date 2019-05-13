@@ -498,16 +498,23 @@
     <xsl:template match="pb">                   <!-- insert a '|' and, eventually, a space to indicate pagebreaks in the text -->
 <!--        <xsl:message>Matched pb node <xsl:value-of select="@xml:id"/>.</xsl:message>-->
         <!-- breaks that do not occur at the beginning/ending of a section/paragraph/heading/... are marked as "|" -->
-        <xsl:if test="preceding::pb and preceding-sibling::node()[self::text()[not(normalize-space() eq '')] or .//text()[not(normalize-space() eq '')]]                                     and following-sibling::node()[self::text()[not(normalize-space() eq '')] or .//text()[not(normalize-space() eq '')]]"> 
-            <xsl:choose>
-                <xsl:when test="@break='no'">
-                    <xsl:text>|</xsl:text>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:text> | </xsl:text>
-                </xsl:otherwise>
-            </xsl:choose>
-        </xsl:if>
+        <xsl:choose>
+            <xsl:when test="@type eq 'blank'">
+                <xsl:text>|</xsl:text>
+            </xsl:when>
+            <xsl:when test="preceding::pb and preceding-sibling::node()[self::text()[not(normalize-space() eq '')] or .//text()[not(normalize-space() eq '')]]                                     
+                                          and following-sibling::node()[self::text()[not(normalize-space() eq '')] or .//text()[not(normalize-space() eq '')]]">
+                <xsl:choose>
+                    <xsl:when test="@break='no'">
+                        <xsl:text>|</xsl:text>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:text> | </xsl:text>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:when>
+            <xsl:otherwise/>
+        </xsl:choose>
         <xsl:if test="@n and not(@sameAs)">
             <xsl:element name="div">
                 <xsl:attribute name="class">pageNumbers</xsl:attribute>
