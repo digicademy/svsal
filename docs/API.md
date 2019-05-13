@@ -43,12 +43,10 @@ but it diverges in some points, such as `http` instead of `urn` scheme and the e
 collections, ranges and subreferences.<sup id="anchor2">[2](#fn2)</sup> Depending on user
 feedback, we may implement this later.)
 
-Furthermore, the `all` identifier, applicable instead of a normal `{textId}`, stands for 
-the collection of all texts and, along with a format parameter, leads 
-to a single resource containing all (currently available) texts in the respective format. 
-At the moment, the only available parameter in this regard is `tei` (see below):
+A request without an `{textId}` returns a representation/collection of *all* texts, depending on the respective format. This 
+can be a corpus zip file (as with the `tei` or `txt` formats) or a list of works. E.g.:
 
-* <https://api.salamanca.school/v1/texts/all?format=tei>
+* <https://api.salamanca.school/v1/texts?format=tei>
 
 ## Parameters
 
@@ -66,7 +64,7 @@ The most important parameter is the `format` parameter that may take the followi
 * `txt` for plaintext
 * `rdf` for linked data (in [rdf/xml](https://www.w3.org/TR/rdf11-primer/) (this is also being redirected to from <https://data.salamanca.school/>)
 * `html` for web views (this is also being redirected to from <https://www.salamanca.school/>)
-* `iiif` for iiif [manifests](https://iiif.io/api/presentation/2.1/) and [image information](https://iiif.io/api/image/2.1/), depending on the actual resource being requested
+* (in the future: `iiif` for iiif [manifests](https://iiif.io/api/presentation/2.1/) and [image information](https://iiif.io/api/image/2.1/), depending on the actual resource being requested)
 * (in the future: `pdf` and `ebook` for ebook views, `mods` for METS/MODS XML)
 * (also in the future, (some of) the endpoints will be enhanced with versioning/[memento](http://mementoweb.org/guide/howto/) negotiation)
 

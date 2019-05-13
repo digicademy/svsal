@@ -266,8 +266,8 @@ return
 
     (: HTML files should have a path component - we parse that and put view.xql in control :)
     else if (ends-with($exist:resource, ".html") and substring($exist:path, 1, 4) = ("/de/", "/en/", "/es/")) then
-        let $debug          := if ($config:debug = "info")  then console:log ("HTML requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-        let $debug          := if ($config:debug = "trace") then console:log ("HTML requested, translating language path component to a request attribute - $exist:path: " || $exist:path || ", redirect to: " || $exist:controller || substring($exist:path, 4) || ", parameters: [" || string-join(net:inject-requestParameter((), ()), "&amp;") || "], attributes: [].") else ()
+        let $debug := if ($config:debug = "info")  then console:log ("[CONTROLLER] HTML requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
+        let $debug := if ($config:debug = "trace") then console:log ("[CONTROLLER] HTML requested, translating language path component to a request attribute - $exist:path: " || $exist:path || ", redirect to: " || $exist:controller || substring($exist:path, 4) || ", parameters: [" || string-join(net:inject-requestParameter((), ()), "&amp;") || "], attributes: [].") else ()
         (: For now, we don't use net:forward here since we need a nested view/forwarding. :)
         let $resource := lower-case($exist:resource)
         return
@@ -278,16 +278,17 @@ return
             else if ($resource eq 'workdetails.html') then net:deliverWorkDetailsHTML($netVars)
             else  (: if ($resource = xmldb:get-child-resources($config:app-root)) then :)
                 let $viewModule := 
-                    switch ($resource)
+                    switch ($resource) (: cases need to be lower-cased :)
                         case "admin.html"
                         case "corpus-admin.html"
-                        case "createLists.html"
+                        case "createlists.html"
                         case "iiif-admin.html"
-                        case "renderTheRest.html"
+                        case "rendertherest.html"
                         case "render.html"
                         case "error-page.html"
                         case "sphinx-admin.html" return "view-admin.xql"
                         default return "view.xql"
+                let $debug := if ($config:debug = "trace") then console:log ("[CONTROLLER] Dispatching " || $resource || " to view module " || $viewModule || ".") else ()
                 return
                     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                         <forward url="{$exist:controller || substring($exist:path, 4)}"/>

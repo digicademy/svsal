@@ -2621,7 +2621,6 @@ for embedding in a larger catalogue record. Receives the bibliographic informati
 app:WRKprintMetadata().
 ~:)
 declare function app:WRKbibliographicalRecord($node as node(), $model as map(*), $lang as xs:string?) {
-
     let $workType := $model('currentWorkType')
     let $workId := $model('currentWorkId')
     let $bibliographical := app:WRKprintMetadata($node, $model, $workId, $lang)
@@ -2770,13 +2769,13 @@ declare function app:WRKprintMetadata($node as node(), $model as map(*), $wid as
             let $dateFirst := $sourceDesc//tei:date[@type eq 'firstEd']/@when/string()
             return $printingPlaceFirst || ' : ' || $publisherFirst || ', ' || $dateFirst
         else ()
-    (: catalogue link for the print source: if there are several original sources, state only the main source :)
+    (: catalogue link for the print source: if there are several original sources, state only the main/first source :)
     let $library := 
-        if (count($sourceDesc//tei:msDesc) gt 1) then $sourceDesc//tei:msDesc[@type eq 'main']//tei:repository/text() 
-        else $sourceDesc//tei:msDesc//tei:repository/text()
+        if ($sourceDesc//tei:msDesc[@type eq 'main']) then $sourceDesc//tei:msDesc[@type eq 'main']//tei:repository/text() 
+        else $sourceDesc//tei:msDesc[1]//tei:repository/text()
     let $catLink  := 
-        if (count($sourceDesc//tei:msDesc) gt 1) then i18n:negotiateNodes($sourceDesc//tei:msDesc[@type eq 'main']//tei:idno[@type eq 'catlink'], $lang)/text()
-        else i18n:negotiateNodes($sourceDesc//tei:msDesc//tei:idno[@type eq 'catlink'], $lang)/text()
+        if ($sourceDesc//tei:msDesc[@type eq 'main']) then i18n:negotiateNodes($sourceDesc//tei:msDesc[@type eq 'main']//tei:idno[@type eq 'catlink'], $lang)/text()
+        else i18n:negotiateNodes($sourceDesc//tei:msDesc[1]//tei:idno[@type eq 'catlink'], $lang)/text()
     let $extent := if ($type eq 'work_multivolume') then () else i18n:negotiateNodes($sourceDesc/tei:biblStruct/tei:monogr/tei:extent, $lang)/text()
     let $languages := 
         string-join((for $l in distinct-values($teiHeader/tei:profileDesc/tei:langUsage/tei:language/@ident) return
@@ -3787,6 +3786,8 @@ declare %templates:wrap function app:errorTitle($node as node(), $model as map(*
             <i18n:text key="authorNotYetAvailable">This article is not yet available.</i18n:text>
         else if (request:get-attribute('error-type') eq 'lemma-not-yet-available') then
             <i18n:text key="lemmaNotYetAvailable">This dictionary article is not yet available.</i18n:text>
+        else if (request:get-attribute('error-type') eq 'resource-not-yet-available') then
+            <i18n:text key="resourceNotYetAvailable">This resource is not yet available.</i18n:text>
         else 
             <i18n:text key="pageNotFound">This is not the page you were looking for...</i18n:text>
         (:        <p class="error-paragraph"><i18n:text key="bugMessage">In case you found a bug in our website, please let us know at</i18n:text> <a href="mailto:info.salamanca@adwmainz.de">info.salamanca@adwmainz.de</a></p>  :)
@@ -3797,34 +3798,9 @@ declare %templates:wrap function app:errorTitle($node as node(), $model as map(*
 declare %templates:wrap function app:errorInformation($node as node(), $model as map(*), $lang as xs:string?) { 
     if (not(request:get-attribute('error-type') eq 'work-not-yet-available'
             or request:get-attribute('error-type') eq 'author-not-yet-available'
-            or request:get-attribute('error-type') eq 'lemma-not-yet-available')) then
+            or request:get-attribute('error-type') eq 'lemma-not-yet-available'
+            or request:get-attribute('error-type') eq 'resource-not-yet-available')) then
         i18n:process(<span><i18n:text key="bugMessage">In case you found a bug in our website, please let us know at</i18n:text>{' '}<a href="mailto:info.salamanca@adwmainz.de">info.salamanca@adwmainz.de</a></span>, $lang, '/db/apps/salamanca/data/i18n', 'en')
     else ()
 };
-
-(:
-
-let $errorBody :=
-        if ($config:debug eq 'trace' or $config:instanceMode eq 'testing') then 
-            let $errorDesc := 
-                if (normalize-space(request:get-attribute('javax.servlet.error.message')) ne '') then request:get-attribute('javax.servlet.error.message')
-                else if (normalize-space(templates:error-description($node, $model)) ne '') then templates:error-description($node, $model)
-                else if (normalize-space(request:get-attribute('error-description')) ne '') then request:get-attribute('error-message')
-                else 'No description found...'
-            return
-                <div class="error-paragraph">
-                    <h4 class="error-title">Error message (debugging mode):</h4>
-                    <div class="error-paragraph"><span>{' ' || $errorDesc}</span></div>
-                </div>
-        else ()
-    let $errorOut :=
-        <div>
-        {$errorHeader, $errorBody}
-        </div>
-    return i18n:process($errorOut, $lang, '/db/apps/salamanca/data/i18n', 'en')
-
-:)
-
-
-
 
