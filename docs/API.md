@@ -62,7 +62,7 @@ The most important parameter is the `format` parameter that may take the followi
 
 * `tei` for [TEI P5](http://www.tei-c.org/release/doc/tei-p5-doc/en/html/index.html) xml (this is also being redirected to from <https://tei.salamanca.school/>)
 * `txt` for plaintext
-* `rdf` for linked data (in [rdf/xml](https://www.w3.org/TR/rdf11-primer/) (this is also being redirected to from <https://data.salamanca.school/>)
+* `rdf` for linked data (in [rdf/xml](https://www.w3.org/TR/rdf11-primer/)
 * `html` for web views (this is also being redirected to from <https://www.salamanca.school/>)
 * (in the future: `iiif` for iiif [manifests](https://iiif.io/api/presentation/2.1/) and [image information](https://iiif.io/api/image/2.1/), depending on the actual resource being requested)
 * (in the future: `pdf` and `ebook` for ebook views, `mods` for METS/MODS XML)
