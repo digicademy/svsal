@@ -638,7 +638,8 @@ declare function net:APIdeliverTextsHTML($requestData as map(), $netVars as map(
                         $config:webserver || '/work.html?wid=' || $requestData('work_id') || '&amp;frag=' || replace($requestData('frag'), 'w0', 'W0')
                     else
                         try {
-                            string($metadata//rdf:Description[@rdf:about eq 'texts/' || $resourcePath]/rdfs:seeAlso[@rdf:resource[contains(., ".html")]][1]/@rdf:resource)
+                            let $debug := if ($config:debug = ("trace")) then console:log("bingo") else ()
+                            return string($metadata//rdf:Description[lower-case(@rdf:about/string()) eq lower-case('texts/' || $resourcePath)]/rdfs:seeAlso[@rdf:resource[contains(., ".html")]][1]/@rdf:resource)
                             } 
                         catch err:FORG0006 {
                             let $debug := console:log('[API] err:FORG0006: could not resolve path ' || $resourcePath || ' in RDF for wid=' || $requestData('work_id'))
@@ -843,8 +844,9 @@ declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()
                 if ($passage) then
                     if ($teiStatus eq 2 and doc-available($config:data-root || '/' || $workId || '_nodeIndex.xml')) then 
                         let $nodeIndex := doc($config:data-root || '/' || $workId || '_nodeIndex.xml')
+                        let $debug := if ($config:debug = ('trace')) then console:log('[API] checking node index for ' || $nodeIndex//@work[1]) else ()
                         return 
-                            if ($nodeIndex//sal:node[sal:citetrail eq $passage]) then 1
+                            if ($nodeIndex//sal:citetrail[lower-case(./text()) eq $passage]) then 1
                             else 0
                     else -1
                 else 1
