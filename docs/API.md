@@ -187,7 +187,7 @@ from the parameters mentioned above, from the translation process and eventually
 environment factors like the browser's language preference settings.
 This way,
 <https://id.salamanca.school/texts/w0015:20.2.4.10?q=milagro&amp;viewer=https://facs.salamanca.school/iiif/presentation/W0015/canvas/p14>
-might finally resolve to
+resolves to
 <https://www.salamanca.school/en/work.html?wid=w0015&amp;frag=0005_W0015-00-0016-d1-03ed&amp;q=milagro#W0015-00-0022-d4-03f7>.
 
 **NOTE: At the moment (2018-11-07), the html endpoint cannot handle the *version* identifier of the work component of the passage identifier. It would need to translate this to an explicit `mode` url parameter (which can be handled), but it doesn't. This will be fixed soon.**
