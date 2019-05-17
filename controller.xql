@@ -215,6 +215,9 @@ return
             if (starts-with(lower-case($reqText), 'w0')) then 
                 let $debug        := if ($config:debug = ("trace", "info")) then console:log("redirect to tei api: " || $config:apiserver || "/v1/texts/" || replace($reqText, '.xml', '') || $parameters || ".") else ()
                 return net:redirect($config:apiserver || "/v1/texts/" || replace($reqText, '.xml', '') || $parameters, $netVars)
+            else if (not($reqText)) then 
+                let $debug        := if ($config:debug = ("trace", "info")) then console:log("redirect to tei api: " || $config:apiserver || "/v1/texts" || $parameters || ".") else ()
+                return net:redirect($config:apiserver || "/v1/texts" || $parameters, $netVars)
             else net:error(404, $netVars, ())
 
 
