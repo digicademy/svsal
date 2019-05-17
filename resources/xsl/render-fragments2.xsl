@@ -502,8 +502,7 @@
             <xsl:when test="@type eq 'blank'">
                 <br/>
             </xsl:when>
-            <xsl:when test="preceding::pb and preceding-sibling::node()[self::text()[not(normalize-space() eq '')] or .//text()[not(normalize-space() eq '')]]                                     
-                                          and following-sibling::node()[self::text()[not(normalize-space() eq '')] or .//text()[not(normalize-space() eq '')]]">
+            <xsl:when test="preceding::pb and preceding-sibling::node()[self::text()[not(normalize-space() eq '')] or .//text()[not(normalize-space() eq '')]]                                                                                and following-sibling::node()[self::text()[not(normalize-space() eq '')] or .//text()[not(normalize-space() eq '')]]">
                 <xsl:choose>
                     <xsl:when test="@break='no'">
                         <xsl:text>|</xsl:text>
@@ -801,6 +800,9 @@
     
     <xsl:template match="damage">
         <xsl:apply-templates/>
+    </xsl:template>
+    <xsl:template match="gap[ancestor::damage]">
+        <span title="?" class="gap"/>
     </xsl:template>
     <xsl:template match="supplied">
         <span class="original unsichtbar" title="{string(.)}">[<xsl:value-of select="./text()"/>]</span> 
