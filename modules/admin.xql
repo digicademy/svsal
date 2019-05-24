@@ -311,12 +311,27 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
             let $target-set := $work//tei:text//tei:*[count(./ancestor-or-self::tei:*) eq $fragmentationDepth]
             let $debug := if ($config:debug = ("trace", "info")) then console:log("  " || string(count($target-set)) || " elements to be rendered as fragments...") else ()
             
-            (: First, create index of nodes for generating HTML fragments :)
-            let $debug := if ($config:debug = ("trace")) then console:log("  (creating preliminary index file ...)") else ()
+            (: First, get all relevant nodes :)
+            let $nodes := $work//tei:text/descendant-or-self::*[@xml:id and local-name(.) = $indexedElTypes and not(ancestor::tei:note)]
+            
+            (: Create the fragment id for each node beforehand, so that the recursive crumbtrail creation can easily get it :)
+            let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] HTML rendering: identifying fragment ids ...") else ()
+            let $fragmentIds := 
+                map:merge(
+                    for $node in $nodes
+                        let $n := $node/@xml:id/string()
+                        let $frag := (($node/ancestor-or-self::tei:* | $node//tei:*) intersect $target-set)[1]
+                        let $fragId := format-number(functx:index-of-node($target-set, $frag), "0000") || "_" || $frag/@xml:id
+                        return map:entry($n, $fragId)
+                )
+            let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] HTML rendering: fragment ids extracted.") else ()
+            
+            (: Now, create full-blown node index :)
+            let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] creating preliminary index file ...") else ()
             let $index := 
                 <sal:index work="{string($work/@xml:id)}">{
-                    for $node at $pos in $work//tei:text/descendant-or-self::*[@xml:id and local-name(.) = $indexedElTypes and not(ancestor::tei:note)] 
-                        let $debug := if ($config:debug = ("trace") and local-name($node) eq 'div') then console:log("  (registering node " || $pos || ": " || local-name($node) || " with @xml:id " || $node/@xml:id || " ...)") else ()
+                    for $node at $pos in $nodes
+                        let $debug := if ($config:debug = ("trace") and local-name($node) eq "div") then console:log("[ADMIN] registering node " || $pos || ": " || local-name($node) || " with @xml:id " || $node/@xml:id || " ...") else ()
                         let $subtype := 
                             if ($node/@sameAs) then
                                 "sameAs"
@@ -350,10 +365,8 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                             $node/ancestor::tei:note |
                                             $node/ancestor::tei:item[./ancestor::tei:list/@type = 'dict']
                                            )[last()]/@xml:id)},
-                                (: Crumbtrails include URLs with "frag=..." parameters pointing to the right HTML fragment; 
-                                they can only be created properly if HTML fragments already exist (see render:mkUrl(...)) :)
-                                element sal:crumbtrail      {render:getCrumbtrail($work, $node, 'html')},
-                                element sal:citetrail       {string-join(render:getCrumbtrail($work, $node, 'numeric'), '')}
+                                element sal:crumbtrail      {render:getCrumbtrail($work, $node, 'html-rendering', $fragmentIds)},
+                                element sal:citetrail       {string-join(render:getCrumbtrail($work, $node, 'numeric', $fragmentIds), '')}
                                 }
                             )
                            }
@@ -412,7 +425,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                     if ($prev) then
                         xs:string($prev/@xml:id)
                     else ()
-                let $nextId :=  
+                let $nextId := 
                     if ($next) then
                         xs:string($next/@xml:id)
                     else ()

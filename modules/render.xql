@@ -132,12 +132,14 @@ declare function render:needsTxtCorpusZip($node as node(), $model as map(*)) {
          corr,
          ...?
 :)
-declare function render:getCrumbtrail ($targetWork as node()*, $targetNode as node(), $mode as xs:string) {
+declare function render:getCrumbtrail ($targetWork as node()*, $targetNode as node(), $mode as xs:string, $fragmentIds as map()) {
     let $targetWorkId   := string($targetWork/@xml:id)
     let $targetNodeId   := string($targetNode/@xml:id)
     let $node :=       
         if ($mode = 'html') then
             <a href='{render:mkUrl($targetWork, $targetNode)}'>{app:sectionTitle($targetWork, $targetNode)}</a>
+        else if ($mode eq 'html-rendering') then
+            <a href='{render:mkUrlWhileRendering($targetWork, $targetNode, $fragmentIds)}'>{app:sectionTitle($targetWork, $targetNode)}</a>
         else if ($mode = 'numeric') then
             typeswitch($targetNode)
                 case element(tei:front)
@@ -247,9 +249,9 @@ declare function render:getCrumbtrail ($targetWork as node()*, $targetNode as no
                          ancestor::tei:titlePart                                                 
                         )) then
             if ($targetNode[self::tei:lb] | $targetNode[self::tei:cb]) then
-                render:getCrumbtrail($targetWork,  $targetNode/preceding::tei:pb[1], $mode)
+                render:getCrumbtrail($targetWork,  $targetNode/preceding::tei:pb[1], $mode, $fragmentIds)
             else if ($targetNode[self::tei:pb] and ($targetNode/ancestor::tei:front | $targetNode/ancestor::tei:text[1][not(@xml:id = 'completeWork' or @type = "work_part")])) then
-                render:getCrumbtrail($targetWork,  ($targetNode/ancestor::tei:front | $targetNode/ancestor::tei:text[1][not(@xml:id = 'completeWork' or @type = "work_part")])[last()], $mode)
+                render:getCrumbtrail($targetWork,  ($targetNode/ancestor::tei:front | $targetNode/ancestor::tei:text[1][not(@xml:id = 'completeWork' or @type = "work_part")])[last()], $mode, $fragmentIds)
             else if ($targetNode[self::tei:pb]) then
                 ()
             else render:getCrumbtrail($targetWork, $targetNode/(ancestor::tei:back[1]                                                                     |
@@ -261,7 +263,7 @@ declare function render:getCrumbtrail ($targetWork as node()*, $targetNode as no
                                                                 ancestor::tei:p[1][not($targetNode[self::tei:milestone] | $targetNode[self::tei:note])]   |
                                                                 ancestor::tei:text[1][not(@xml:id = 'completeWork' or @type = "work_part")]               |
                                                                 ancestor::tei:titlePart[1]
-                                                               )[last()], $mode)
+                                                               )[last()], $mode, $fragmentIds)
         else (),
         if ($targetNode[(: === get connector MARKER: ".", " » ", or none === :)
                         self::tei:back      or
@@ -288,7 +290,7 @@ declare function render:getCrumbtrail ($targetWork as node()*, $targetNode as no
                                           ancestor::tei:titlePart 
                                          )
                            ) then
-                                if ($mode = 'html') then ' » ' else if ($mode = 'numeric') then '.' else ()
+                                if ($mode = ('html', 'html-rendering')) then ' » ' else if ($mode = 'numeric') then '.' else ()
         else (),
         if ($targetNode[self::tei:front     or
                         self::tei:back      or
@@ -316,7 +318,7 @@ declare function render:mkAnchor ($targetWork as node()*, $targetNode as node())
     return <a href="{render:mkUrl($targetWork, $targetNode)}">{app:sectionTitle($targetWork, $targetNode)}</a>    
 };
 
-declare function render:mkUrl ($targetWork as node(), $targetNode as node()) {
+declare function render:mkUrl($targetWork as node(), $targetNode as node()) {
     let $targetWorkId := string($targetWork/@xml:id)
     let $targetNodeId := string($targetNode/@xml:id)
     let $viewerPage   :=      if (substring($targetWorkId, 1, 2) eq "W0") then
@@ -334,6 +336,27 @@ declare function render:mkUrl ($targetWork as node(), $targetNode as node()) {
                                     else
                                         $targetNodeId
     let $frag := render:getFragmentFile($targetWorkId, $targetNodeId)
+    return concat($viewerPage, $targetWorkId, (if ($frag) then concat('&amp;frag=', $frag) else ()), '#', $targetNodeHTMLAnchor)
+};
+
+declare function render:mkUrlWhileRendering($targetWork as node(), $targetNode as node(), $fragmentIds as map()) {
+    let $targetWorkId := string($targetWork/@xml:id)
+    let $targetNodeId := string($targetNode/@xml:id)
+    let $viewerPage   :=      if (substring($targetWorkId, 1, 2) eq "W0") then
+                            "work.html?wid="
+                         else if (substring($targetWorkId, 1, 2) eq "L0") then
+                            "lemma.html?lid="
+                         else if (substring($targetWorkId, 1, 2) eq "A0") then
+                            "author.html?aid="
+                         else if (substring($targetWorkId, 1, 2) eq "WP") then
+                            "workingPaper.html?wpid="
+                         else
+                            "index.html?wid="
+    let $targetNodeHTMLAnchor :=    if (contains($targetNodeId, '-pb-')) then
+                                        concat('pageNo_', $targetNodeId)
+                                    else
+                                        $targetNodeId
+    let $frag := $fragmentIds($targetNodeId)
     return concat($viewerPage, $targetWorkId, (if ($frag) then concat('&amp;frag=', $frag) else ()), '#', $targetNodeHTMLAnchor)
 };
 
