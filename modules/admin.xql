@@ -314,7 +314,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
             (: First, get all relevant nodes :)
             let $nodes := $work//tei:text/descendant-or-self::*[@xml:id and local-name(.) = $indexedElTypes and not(ancestor::tei:note)]
             
-            (: Create the fragment id for each node beforehand, so that the recursive crumbtrail creation can easily get it :)
+            (: Create the fragment id for each node beforehand, so that subsequent routines (e.g, recursive crumbtrail creation) can easily get it :)
             let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] HTML rendering: identifying fragment ids ...") else ()
             let $fragmentIds := 
                 map:merge(
@@ -326,8 +326,8 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                 )
             let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] HTML rendering: fragment ids extracted.") else ()
             
-            (: Now, create full-blown node index :)
-            let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] creating preliminary index file ...") else ()
+            (: Create full-blown node index :)
+            let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] HTML rendering: creating index file ...") else ()
             let $index := 
                 <sal:index work="{string($work/@xml:id)}">{
                     for $node at $pos in $nodes
@@ -344,17 +344,16 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                             else if ($node/@type) then
                                 string($node/@type)
                             else ()
-                        let $frag := (($node/ancestor-or-self::tei:* | $node//tei:*) intersect $target-set)[1]
                         return 
                             (element sal:node { 
                                 attribute type      {local-name($node)}, 
                                 attribute subtype   {$subtype}, 
                                 attribute n         {$node/@xml:id},
                                 if ($node/@xml:id eq 'completeWork' and $xincludes) then
-                                   attribute xinc    {$xincludes}
+                                    attribute xinc    {$xincludes}
                                 else (), 
                                 element sal:title           {app:sectionTitle($work, $node)},
-                                element sal:fragment        {format-number(functx:index-of-node($target-set, $frag), "0000") || "_" || $frag/@xml:id},
+                                element sal:fragment        {$fragmentIds($node/@xml:id/string())},
                                 element sal:citableParent   {
                                     string(($node/ancestor::tei:text[not(@type="work_part")] |
                                             $node/ancestor::tei:frontmatter |
@@ -502,21 +501,23 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
 };
 
 declare function admin:createTeiCorpus() as xs:string? {
-    let $tmpCollection := $config:corpus-files-root || '/temp'
+    let $tmpCollection := $config:corpus-files-root || '/tei-corpus-temp'
     let $corpusCollection := if (not(xmldb:collection-available($config:corpus-files-root))) then xmldb:create-collection($config:data-root, 'corpus') else ()
     (: Create temporary collection to be zipped :)
     let $removeStatus := if (xmldb:collection-available($tmpCollection)) then xmldb:remove($tmpCollection) else ()
-    let $zipTmp := xmldb:create-collection($config:corpus-files-root, 'temp')  
+    let $zipTmp := xmldb:create-collection($config:corpus-files-root, 'tei-corpus-temp')  
     (: Get TEI data, expand them and store them in the temporary collection :)
     let $serializationOpts := 'method=xml expand-xincludes=yes omit-xml-declaration=no indent=yes encoding=UTF-8 media-type=application/tei+xml' 
+    let $debug := util:log('warn', '[ADMIN] Identifying ' || count(collection($config:tei-works-root)/tei:TEI/@xml:id[string-length(.) eq 5]/string()) || ' works as relevant for corpus.')
     let $works := 
         for $reqWork in collection($config:tei-works-root)/tei:TEI/@xml:id[string-length(.) eq 5]/string()
             return if (doc-available($config:tei-works-root || '/' || $reqWork || '.xml')) then
                 let $expanded := util:expand(doc($config:tei-works-root || '/' || $reqWork || '.xml')/tei:TEI, $serializationOpts) 
+                let $debug := util:log('warn', '[ADMIN] temporarily storing ' || $reqWork || '.xml')
                 let $store := xmldb:store-as-binary($tmpCollection, $expanded/@xml:id || '.xml', $expanded)
                 return $expanded
             else ()
-    (: Create a zip archive from the temporary collection and store it :)    
+    (: Create a zip archive from the temporary collection and store it :)
     let $zip := compression:zip(xs:anyURI($tmpCollection), false())
     let $save := xmldb:store-as-binary($config:corpus-files-root , 'sal-tei-corpus.zip', $zip)
     (: Clean the database from temporary files/collections :)
