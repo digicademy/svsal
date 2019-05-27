@@ -58,21 +58,20 @@ declare function render:needsRender($targetWorkId as xs:string) as xs:boolean {
     let $workModTime := xmldb:last-modified($targetSubcollection, $targetWorkId || '.xml')
     return
         if (substring($targetWorkId,1,2) eq "W0") then
-            if ($targetWorkId || "_nodeIndex.xml" = xmldb:get-child-resources($config:data-root)) then
-                let $renderModTime := xmldb:last-modified($config:data-root, $targetWorkId || "_nodeIndex.xml")
+            if ($targetWorkId || "_nodeIndex.xml" = xmldb:get-child-resources($config:index-root)) then
+                let $renderModTime := xmldb:last-modified($config:index-root, $targetWorkId || "_nodeIndex.xml")
                 return if ($renderModTime lt $workModTime) then true() else false()
             else
                 true()
         else if (substring($targetWorkId,1,2) = ("A0", "L0", "WP")) then
+            (: TODO: this should point to the directory where author/lemma/... HTML will be stored... :)
             if (not(xmldb:collection-available($config:data-root))) then
                 true()
             else if ($targetWorkId || ".html" = xmldb:get-child-resources($config:data-root)) then
                 let $renderModTime := xmldb:last-modified($config:data-root, $targetWorkId || ".html")
                 return if ($renderModTime lt $workModTime) then true() else false()
-            else
-                true()
-        else
-            true()
+            else true()
+        else true()
 };
 
 declare function render:workString($node as node(), $model as map(*), $lang as xs:string?) {
@@ -86,37 +85,37 @@ declare function render:workString($node as node(), $model as map(*), $lang as x
 declare function render:needsRenderString($node as node(), $model as map(*)) {
     let $currentWorkId := $model('currentWork')?('wid')
     return if (render:needsRender($currentWorkId)) then
-                    <td title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}{if (xmldb:get-child-resources($config:data-root) = $currentWorkId || "_nodeIndex.xml") then concat(', rendered on: ', xmldb:last-modified($config:data-root, $currentWorkId || "_nodeIndex.xml")) else ()}"><a href="render.html?wid={$currentWorkId}"><b>Render NOW!</b></a></td>
+                    <td title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}{if (xmldb:get-child-resources($config:index-root) = $currentWorkId || "_nodeIndex.xml") then concat(', rendered on: ', xmldb:last-modified($config:index-root, $currentWorkId || "_nodeIndex.xml")) else ()}"><a href="render.html?wid={$currentWorkId}"><b>Render NOW!</b></a></td>
             else
-                    <td title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}, rendered on: {xmldb:last-modified($config:data-root, $currentWorkId || "_nodeIndex.xml")}">Rendering unnecessary. <small><a href="render.html?wid={$currentWorkId}">Render anyway!</a></small></td>
+                    <td title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}, rendered on: {xmldb:last-modified($config:index-root, $currentWorkId || "_nodeIndex.xml")}">Rendering unnecessary. <small><a href="render.html?wid={$currentWorkId}">Render anyway!</a></small></td>
 };
 
 
 declare function render:needsTeiCorpusZip($node as node(), $model as map(*)) {
     let $worksModTime := max(for $work in xmldb:get-child-resources($config:tei-works-root) return xmldb:last-modified($config:tei-works-root, $work))    
     let $needsCorpusZip := 
-        if (util:binary-doc-available($config:corpus-files-root || '/sal-tei-corpus.zip')) then
-            let $resourceModTime := xmldb:last-modified($config:corpus-files-root, 'sal-tei-corpus.zip')
+        if (util:binary-doc-available($config:corpus-zip-root || '/sal-tei-corpus.zip')) then
+            let $resourceModTime := xmldb:last-modified($config:corpus-zip-root, 'sal-tei-corpus.zip')
             return $resourceModTime lt $worksModTime
         else true()
     return if ($needsCorpusZip) then
                 <td title="Most current source from: {string($worksModTime)}"><a href="corpus-admin.xql?format=tei"><b>Create TEI corpus NOW!</b></a></td>
             else
-                <td title="{concat('TEI corpus created on: ', string(xmldb:last-modified($config:corpus-files-root, 'sal-tei-corpus.zip')), ', most current source from: ', string($worksModTime), '.')}">Creating TEI corpus unnecessary. <small><a href="corpus-admin.xql?format=tei">Create TEI corpus zip anyway!</a></small></td>
+                <td title="{concat('TEI corpus created on: ', string(xmldb:last-modified($config:corpus-zip-root, 'sal-tei-corpus.zip')), ', most current source from: ', string($worksModTime), '.')}">Creating TEI corpus unnecessary. <small><a href="corpus-admin.xql?format=tei">Create TEI corpus zip anyway!</a></small></td>
 };
 
 declare function render:needsTxtCorpusZip($node as node(), $model as map(*)) {
     if (xmldb:collection-available($config:txt-root)) then
         let $worksModTime := max(for $work in xmldb:get-child-resources($config:txt-root) return xmldb:last-modified($config:txt-root, $work))    
         let $needsCorpusZip := 
-            if (util:binary-doc-available($config:corpus-files-root || '/sal-txt-corpus.zip')) then
-                let $resourceModTime := xmldb:last-modified($config:corpus-files-root, 'sal-txt-corpus.zip')
+            if (util:binary-doc-available($config:corpus-zip-root || '/sal-txt-corpus.zip')) then
+                let $resourceModTime := xmldb:last-modified($config:corpus-zip-root, 'sal-txt-corpus.zip')
                 return $resourceModTime lt $worksModTime
             else true()
         return if ($needsCorpusZip) then
                     <td title="Most current source from: {string($worksModTime)}"><a href="corpus-admin.xql?format=txt"><b>Create TXT corpus NOW!</b></a></td>
                 else
-                    <td title="{concat('TXT corpus created on: ', string(xmldb:last-modified($config:corpus-files-root, 'sal-txt-corpus.zip')), ', most current source from: ', string($worksModTime), '.')}">Creating TXT corpus unnecessary. <small><a href="corpus-admin.xql?format=txt">Create TXT corpus zip anyway!</a></small></td>
+                    <td title="{concat('TXT corpus created on: ', string(xmldb:last-modified($config:corpus-zip-root, 'sal-txt-corpus.zip')), ', most current source from: ', string($worksModTime), '.')}">Creating TXT corpus unnecessary. <small><a href="corpus-admin.xql?format=txt">Create TXT corpus zip anyway!</a></small></td>
     else <td title="No txt sources available so far!"><a href="corpus-admin.xql?format=txt"><b>Create TXT corpus NOW!</b></a></td>
 };
 
@@ -361,7 +360,7 @@ declare function render:mkUrlWhileRendering($targetWork as node(), $targetNode a
 };
 
 declare function render:getFragmentFile ($targetWorkId as xs:string, $targetNodeId as xs:string) {
-    doc($config:data-root || '/' || $targetWorkId || '_nodeIndex.xml')//sal:node[@n = $targetNodeId][1]/sal:fragment/text()
+    doc($config:index-root || '/' || $targetWorkId || '_nodeIndex.xml')//sal:node[@n = $targetNodeId][1]/sal:fragment/text()
 };
 
 (: ####====---- End Helper Functions ----====#### :)

@@ -188,18 +188,6 @@ declare function app:workCount($node as node(), $model as map (*), $lang as xs:s
     count($model("listOfWorks"))
 };
 
-(:declare %templates:wrap function app:test($node as node(), $model as map(*), $lang as xs:string?) {
-        <p>
-<!--    request:get-uri(): {request:get-uri()}<br/>
-        $config:app-root: {$config:app-root}<br/>
-        $config:data-root: {$config:data-root}<br/>
-        (cerl:cnp00396685)[1]: {($model('currentWork')//tei:text//tei:persName[@ref='cerl:cnp00396685'])[1]}<br/> -->
-        resolvePersname('cerl:cnp00396685')<br/>[1]: {string(app:resolvePersname(($model('currentWork')//tei:persName[@ref='cerl:cnp00396685'])[1]))}<br/>
-<!--    lang variable: {$lang}<br/>
-        tei:text nodes: {$model('currentWork')//tei:text/@xml:id/string()} -->
-        </p>
-};:)
-
 (: ============ End helper functions ================= :)
 
 
@@ -1115,6 +1103,7 @@ declare %templates:default("field", "all")
     return map { "currentAuthor"    := $context }
 };
 
+(: TODO: adjust paths here once respective HTML is available: :)
 declare %templates:wrap
     function app:AUTloadEntryHtml($node as node(), $model as map(*), $aid as xs:string?, $lid as xs:string?){
      let $switchType         :=  if (request:get-parameter('aid', '')) then $aid else $lid
@@ -1123,22 +1112,22 @@ declare %templates:wrap
 declare %templates:wrap
     function app:AUTloadCitedHtml($node as node(), $model as map(*), $aid as xs:string?, $lid as xs:string?){
     let $switchType         :=  if (request:get-parameter('aid', '')) then $aid else $lid
-     return   doc($config:data-root || "/" || sal-util:normalizeId($switchType)||'_cited.html')/div/ul
+    return   doc($config:data-root || "/" || sal-util:normalizeId($switchType)||'_cited.html')/div/ul
 };
 declare %templates:wrap
     function app:AUTloadLemmataHtml($node as node(), $model as map(*), $aid as xs:string?, $lid as xs:string?){
     let $switchType         :=  if (request:get-parameter('aid', '')) then $aid else $lid
-     return   doc($config:data-root || "/" || sal-util:normalizeId($switchType)||'_lemmata.html')/div/ul
+    return   doc($config:data-root || "/" || sal-util:normalizeId($switchType)||'_lemmata.html')/div/ul
 };
 declare %templates:wrap
     function app:AUTloadPersonsHtml($node as node(), $model as map(*), $aid as xs:string?, $lid as xs:string?){
     let $switchType         :=  if (request:get-parameter('aid', '')) then $aid else $lid
-     return   doc($config:data-root || "/" || sal-util:normalizeId($switchType)||'_persons.html')/div/ul
+    return   doc($config:data-root || "/" || sal-util:normalizeId($switchType)||'_persons.html')/div/ul
 };
 declare %templates:wrap
     function app:AUTloadPlacesHtml($node as node(), $model as map(*), $aid as xs:string?, $lid as xs:string?){
     let $switchType         :=  if (request:get-parameter('aid', '')) then $aid else $lid
-     return  doc($config:data-root || "/" || sal-util:normalizeId($switchType)||'_places.html')/div/ul
+    return  doc($config:data-root || "/" || sal-util:normalizeId($switchType)||'_places.html')/div/ul
 };
 
 (: ====Lemma==== :)
@@ -1159,8 +1148,8 @@ declare %templates:default("field", "all")
     return map { "currentLemma"    := $context }
 };
 
-declare %templates:wrap
-    function app:LEMloadEntryHtml($node as node(), $model as map(*), $lid as xs:string?){
+(: TODO: adjust path once LEM HTML is available :)
+declare %templates:wrap function app:LEMloadEntryHtml($node as node(), $model as map(*), $lid as xs:string?){
     doc($config:data-root || "/" || sal-util:normalizeId($lid)||'.html')/span
 };
 
@@ -2150,7 +2139,7 @@ declare function app:WRKtitle($node as node(), $model as map(*), $lang as xs:str
                             let $firstEd    := $sourceDesc//tei:date[@type = 'firstEd']/@when/string()
                             let $thisEd     := $sourceDesc//tei:date[@type = 'thisEd']/@when/string()
                             let $date       := if ($thisEd) then $thisEd else $firstEd                                       
-                            let $vol        := doc($config:data-root || "/" || sal-util:normalizeId($wid) || '_nodeIndex.xml')//sal:node[@n=$volId]/sal:crumbtrail/a[last()]/@href/string()
+                            let $vol        := doc($config:index-root || "/" || sal-util:normalizeId($wid) || '_nodeIndex.xml')//sal:node[@n=$volId]/sal:crumbtrail/a[last()]/@href/string()
                             return  if ($item is ($model('currentWork')//tei:text)[last()]) then
                                             <a class="{$status}" href="{if ($status = ("a_raw", "b_cleared", "c_hyph_proposed", "d_hyph_approved", "e_emended_unenriched", "f_enriched")) then 'javascript:' else $vol}">{concat($volNumber||': ', $date)}</a>
                                     else
@@ -3545,7 +3534,7 @@ declare function app:WRKpreparePagination($node as node(), $model as map(*), $wi
 <ul id="later" class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
 {
     let $workId    :=  if ($wid) then substring-before(sal-util:normalizeId($wid), '_') else substring-before($model('currentWorkId'), '_')
-    for $pb in doc($config:data-root || "/" || $workId || '_nodeIndex.xml')//sal:node[@type="pb"][not(starts-with(sal:title, 'sameAs'))][not(starts-with(sal:title, 'corresp'))]
+    for $pb in doc($config:index-root || "/" || $workId || '_nodeIndex.xml')//sal:node[@type="pb"][not(starts-with(sal:title, 'sameAs'))][not(starts-with(sal:title, 'corresp'))]
         let $fragment := $pb/sal:fragment
         let $url      := 'work.html?wid=' || $workId || '&amp;frag=' || $fragment || '#' || concat('pageNo_', $pb/@n)
         return 
@@ -3597,7 +3586,7 @@ declare function app:WRKpreparePaginationDe ($node as node(), $model as map(*), 
 <ul id="later" class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
 {
     let $workId    :=  if ($wid) then $wid else $model("currentWork")/@xml:id
-    for $pb in doc($config:data-root || "/" || $workId || '_nodeIndex.xml')//sal:node[@type="pb"][not(starts-with(sal:title, 'sameAs'))][not(starts-with(sal:title, 'corresp'))]
+    for $pb in doc($config:index-root || "/" || $workId || '_nodeIndex.xml')//sal:node[@type="pb"][not(starts-with(sal:title, 'sameAs'))][not(starts-with(sal:title, 'corresp'))]
         let $fragment := $pb/sal:fragment
         let $volume   := if (starts-with($pb/sal:crumbtrail/a[1]/text(), 'Vol. ')) then
                             $pb/sal:crumbtrail/a[1]/text() || ','
@@ -3613,7 +3602,7 @@ declare function app:WRKpreparePaginationEn ($node as node(), $model as map(*), 
 <ul id="later" class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
 {
     let $workId    :=  if ($wid) then $wid else $model("currentWork")/@xml:id
-    for $pb in doc($config:data-root || "/" || $workId || '_nodeIndex.xml')//sal:node[@type="pb"][not(starts-with(sal:title, 'sameAs'))][not(starts-with(sal:title, 'corresp'))]
+    for $pb in doc($config:index-root || "/" || $workId || '_nodeIndex.xml')//sal:node[@type="pb"][not(starts-with(sal:title, 'sameAs'))][not(starts-with(sal:title, 'corresp'))]
         let $fragment := $pb/sal:fragment
         let $url      := 'work.html?wid='||$workId ||'&amp;' || 'frag='|| $fragment || concat('#', replace($pb/@n, 'facs_', 'pageNo_'))
     return 
@@ -3627,7 +3616,7 @@ declare function app:WRKpaginationQ ($node as node(), $model as map(*), $wid as 
 <ul id="later" class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
 { if ($q) then
     let $workId    :=  if ($wid) then $wid else $model("currentWork")/@xml:id
-    for $pb in doc($config:data-root || "/" || $workId || '_nodeIndex.xml')//sal:node[@type="pb"][not(@subtype = ('sameAs', 'corresp'))]
+    for $pb in doc($config:index-root || "/" || $workId || '_nodeIndex.xml')//sal:node[@type="pb"][not(@subtype = ('sameAs', 'corresp'))]
         let $fragment := $pb/sal:fragment
         let $volume   := () (/: if (starts-with($pb/sal:crumbtrail/a[1]/text(), 'Vol. ')) then
                             $pb/sal:crumbtrail/a[1]/text() || ','

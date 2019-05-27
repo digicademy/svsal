@@ -9,7 +9,8 @@ declare         option      exist:serialize "method=xhtml media-type=text/html i
 let $data-collection := ($config:data-root,
                          $config:app-root || '/temp/cache',
                          $config:app-root || '/services/lod/temp/cache',
-                         $config:salamanca-data-root)
+                         $config:tei-root,
+                         $config:webdata-root)
 
 (: let $login := xmldb:login($config:app-root, $cred:adminUsername, $cred:adminPassword) :)
 let $start-time := util:system-time()

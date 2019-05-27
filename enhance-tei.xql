@@ -61,7 +61,7 @@ let $wid        :=  request:get-parameter('wid', '')
 let $debug      := if ($config:debug = ("trace", "info")) then console:log("tei enhancer running, requested work " || $wid || ".") else ()
 
 let $origTEI    := util:expand(doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI)
-let $salNodesF  := doc($config:data-root || '/' || $wid || '_nodeIndex.xml')/sal:index
+let $salNodesF  := doc($config:index-root || '/' || $wid || '_nodeIndex.xml')/sal:index
 let $salNodesM := map:merge(for $n in $salNodesF/sal:node return map:entry($n/@n/string(), $n))
 
 let $output     := local:copy($origTEI, $salNodesM)

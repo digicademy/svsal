@@ -308,7 +308,7 @@
     <xsl:function name="sal:getWork" as="document-node()">
         <xsl:param name="targetWorkId" as="xs:string"/>
 
-        <xsl:variable name="filename" select="concat('../../../salamanca-data/tei/works/', $targetWorkId, '.xml')"/>   <!-- starting from app-root/resources/xsl ... -->
+        <xsl:variable name="filename" select="concat('../../../salamanca-tei/works/', $targetWorkId, '.xml')"/>   <!-- starting from app-root/resources/xsl ... -->
         <xsl:choose>
             <xsl:when test="doc-available($filename)">
                 <xsl:variable name="targetWork-Unexpanded" select="doc($filename)"/>
@@ -340,7 +340,7 @@
                 <xsl:value-of select="concat('ERROR: ', $targetWork/sal:ERROR/@description)"/>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:variable name="filename" select="concat('../../../salamanca-data/tei/works/', $targetWorkId, '.xml')"/>             <!-- starting from app-root/resources/xsl ... -->
+                <xsl:variable name="filename" select="concat('../../../salamanca-tei/works/', $targetWorkId, '.xml')"/>             <!-- starting from app-root/resources/xsl ... -->
                 <xsl:variable name="fragmentationDepth" select="count(doc($filename)/TEI/processing-instruction())"/>  <!-- Due to a bug in eXist's org.exist.dom.ProcessingInstructionImpl, our xipr.xsl has to delete processing instructions and we cannot read our PIs from the expanded work! -->
                 <xsl:variable name="targetNode" select="$targetWork/id($targetNodeId)"/>
 
@@ -372,14 +372,14 @@
     <xsl:function name="sal:getFragmentFile" as="xs:string">
         <xsl:param name="targetWorkId" as="xs:string"/>
         <xsl:param name="targetNodeId" as="xs:string"/>
-        <xsl:value-of select="doc(xs:anyURI(concat('xmldb:exist:///db/apps/salamanca/data/', $targetWorkId, '_nodeIndex.xml')))//sal:node[@n = $targetNodeId]/sal:fragment/text()"/>
+        <xsl:value-of select="doc(xs:anyURI(concat('xmldb:exist:///db/apps/salamanca-webdata/index/', $targetWorkId, '_nodeIndex.xml')))//sal:node[@n = $targetNodeId]/sal:fragment/text()"/>
     </xsl:function>
 
     <!-- For a given work-id and node-id, get the node title -->
     <xsl:function name="sal:sectionTitle" as="xs:string">
         <xsl:param name="targetWorkId" as="xs:string"/>
         <xsl:param name="targetNodeId" as="xs:string"/>
-        <xsl:value-of select="doc(xs:anyURI(concat('xmldb:exist:///db/apps/salamanca/data/', $targetWorkId, '_nodeIndex.xml')))//sal:node[@n = $targetNodeId]/sal:title/text()"/>
+        <xsl:value-of select="doc(xs:anyURI(concat('xmldb:exist:///db/apps/salamanca-webdata/index/', $targetWorkId, '_nodeIndex.xml')))//sal:node[@n = $targetNodeId]/sal:title/text()"/>
     </xsl:function>
     <xsl:function name="sal:sectionTitleOld" as="xs:string">
         <xsl:param name="targetWorkId" as="xs:string"/>
@@ -445,7 +445,7 @@
     <xsl:function name="sal:mkId" as="xs:string">
         <xsl:param name="targetWorkId" as="xs:string"/>
         <xsl:param name="targetNodeId" as="xs:string"/>
-        <xsl:variable name="metadata" select="doc(xs:anyURI(concat('xmldb:exist:///db/apps/salamanca/data/', $targetWorkId, '_nodeIndex.xml')))"/> 
+        <xsl:variable name="metadata" select="doc(xs:anyURI(concat('xmldb:exist:///db/apps/salamanca-webdata/index/', $targetWorkId, '_nodeIndex.xml')))"/> 
         <xsl:value-of select="concat($idserver, '/texts/', $targetWorkId, ':', $metadata//sal:node[@n=$targetNodeId]/sal:citetrail)"/>
         <xsl:message><xsl:value-of select="concat('XSL rendering id: ', $idserver, '/works.', $targetWorkId, ':', $metadata//sal:node[@n=$targetNodeId]/sal:citetrail)"/></xsl:message>
     </xsl:function>
@@ -454,7 +454,7 @@
     <xsl:function name="sal:mkUrl" as="xs:string">
         <xsl:param name="targetWorkId" as="xs:string"/>
         <xsl:param name="targetNodeId" as="xs:string"/>
-        <xsl:value-of select="doc(xs:anyURI(concat('xmldb:exist:///db/apps/salamanca/data/', $targetWorkId, '_nodeIndex.xml')))//sal:node[@n = $targetNodeId]/sal:crumbtrail/a[last()]/@href"/>
+        <xsl:value-of select="doc(xs:anyURI(concat('xmldb:exist:///db/apps/salamanca-webdata/index/', $targetWorkId, '_nodeIndex.xml')))//sal:node[@n = $targetNodeId]/sal:crumbtrail/a[last()]/@href"/>
     </xsl:function>
     <xsl:function name="sal:mkUrlOld" as="xs:string">
         <xsl:param name="targetWorkId" as="xs:string"/>
@@ -488,7 +488,7 @@
     <xsl:function name="sal:mkAnchor" as="element()">
         <xsl:param name="targetWorkId" as="xs:string"/>
         <xsl:param name="targetNodeId" as="xs:string"/>
-        <xsl:copy-of select="doc(xs:anyURI(concat('xmldb:exist:///db/apps/salamanca/data/', $targetWorkId, '_nodeIndex.xml')))//sal:node[@n = $targetNodeId]/sal:crumbtrail/a[last()]"/>
+        <xsl:copy-of select="doc(xs:anyURI(concat('xmldb:exist:///db/apps/salamanca-webdata/index/', $targetWorkId, '_nodeIndex.xml')))//sal:node[@n = $targetNodeId]/sal:crumbtrail/a[last()]"/>
     </xsl:function>
     <xsl:function name="sal:mkAnchorOld" as="element()">
         <xsl:param name="targetWorkId" as="xs:string"/>

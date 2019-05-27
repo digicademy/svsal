@@ -259,9 +259,9 @@ return
                                     else if ($exist:resource eq 'SvSal_author.xml') then 'saltei-author.xml'
                                     else if ($exist:resource eq 'SvSal_author.rng') then 'saltei-author.rng'
                                     else $exist:resource
-                let $finalPath     := "/tei/meta/" || $resource
-                let $debug          := if ($config:debug = ("trace", "info")) then console:log("File download requested: " || $net:forwardedForServername || $exist:path || $parameterString || ", redirecting to salamanca-data: " || $finalPath || '?' || string-join($netVars('params'), '&amp;') || ".") else ()
-                return net:forward-to-data($finalPath, $netVars, ())
+                let $finalPath     := '/meta/' || $resource
+                let $debug          := if ($config:debug = ("trace", "info")) then console:log("File download requested: " || $net:forwardedForServername || $exist:path || $parameterString || ", redirecting to directory: " || $finalPath || '?' || string-join($netVars('params'), '&amp;') || ".") else ()
+                return net:forward-to-tei($finalPath, $netVars, ())
             else
                 let $finalPath     := "/resources/files" || $prelimPath
                 let $debug          := if ($config:debug = ("trace", "info")) then console:log("File download requested: " || $net:forwardedForServername || $exist:path || $parameterString || ", redirecting to " || $finalPath || '?' || string-join($netVars('params'), '&amp;') || ".") else ()

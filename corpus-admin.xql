@@ -12,8 +12,8 @@ declare namespace tei               = "http://www.tei-c.org/ns/1.0";
 let $format := request:get-parameter('format', '')
 
 let $save :=
-    if ($format eq 'tei') then admin:createTeiCorpus()
-    else if ($format eq 'txt') then admin:createTxtCorpus() 
+    if ($format eq 'tei') then admin:createTeiCorpus('admin')
+    else if ($format eq 'txt') then admin:createTxtCorpus('admin') 
     else ()
 
 return 

@@ -31,11 +31,11 @@ declare function admin:cleanCollection ($wid as xs:string, $collection as xs:str
             $config:data-root || "/trash/"
     let $create-parent-status :=    
         if ($collection = "html"    and not(xmldb:collection-available($config:html-root))) then
-            xmldb:create-collection($config:data-root, "html")
+            xmldb:create-collection($config:webdata-root, "html")
         else if ($collection = "txt"    and not(xmldb:collection-available($config:txt-root))) then
-            xmldb:create-collection($config:data-root, "txt")
+            xmldb:create-collection($config:webdata-root, "txt")
         else if ($collection = "snippets" and not(xmldb:collection-available($config:snippets-root))) then
-            xmldb:create-collection($config:data-root, "snippets")
+            xmldb:create-collection($config:webdata-root, "snippets")
         else ()
     let $create-collection-status := 
         if ($collection = "html" and not(xmldb:collection-available($collectionName))) then
@@ -53,27 +53,39 @@ declare function admin:cleanCollection ($wid as xs:string, $collection as xs:str
     return $remove-status
 };
 
-declare function admin:saveFile ($wid as xs:string, $fileName as xs:string, $content as item(), $collection as xs:string?) {
+declare function admin:saveFile($wid as xs:string, $fileName as xs:string, $content as item(), $collection as xs:string?) {
     let $collectionName := 
         if ($collection = "html") then
             $config:html-root || "/" || $wid
+        else if ($collection eq 'index') then
+            $config:index-root || "/"
         else if ($collection = "txt") then
             $config:txt-root || "/" || $wid
         else if ($collection = "data") then
             $config:data-root || "/"
         else if ($collection = "snippets") then
             $config:snippets-root || "/" || $wid
-        else if ($collection = "rdf") then
-            $config:rdf-root || "/"
+        else if ($collection = "rdf" and starts-with(upper-case($wid), 'W0')) then
+            $config:rdf-works-root || "/"
+        else if ($collection = "rdf" and starts-with(upper-case($wid), 'A0')) then
+            $config:rdf-authors-root || "/"
+        else if ($collection = "rdf" and starts-with(upper-case($wid), 'L0')) then
+            $config:rdf-lemmata-root || "/"
         else
             $config:data-root || "/trash/"
+    (: in webdata package, parent folders are readily available, hence we don't strictly need the following anymore: :)
     let $create-parent-status     :=      
         if ($collection = "html" and not(xmldb:collection-available($config:html-root))) then
-            xmldb:create-collection($config:data-root, "html")
+            xmldb:create-collection($config:webdata-root, "html")
         else if ($collection = "txt" and not(xmldb:collection-available($config:txt-root))) then
-            xmldb:create-collection($config:data-root, "txt")
+            xmldb:create-collection($config:webdata-root, "txt")
         else if ($collection = "snippets" and not(xmldb:collection-available($config:snippets-root))) then
-            xmldb:create-collection($config:data-root, "snippets")
+            xmldb:create-collection($config:webdata-root, "snippets")
+        else if ($collection = "index" and not(xmldb:collection-available($config:index-root))) then
+            xmldb:create-collection($config:webdata-root, "index")
+        else if ($collection = "rdf" and not(xmldb:collection-available($config:rdf-root))) then
+            xmldb:create-collection($config:webdata-root, "rdf")
+        (: (TODO: rdf subroots? (but these already ship with pre-built webdata package) :)
         else ()
     let $create-collection-status :=      
         if ($collection = "html" and not(xmldb:collection-available($collectionName))) then
@@ -82,16 +94,16 @@ declare function admin:saveFile ($wid as xs:string, $fileName as xs:string, $con
             xmldb:create-collection($config:txt-root, $wid)
         else if ($collection = "snippets" and not(xmldb:collection-available($collectionName))) then
             xmldb:create-collection($config:snippets-root, $wid)
-        else if ($collection = "rdf"      and not(xmldb:collection-available($config:rdf-root))) then
-            xmldb:create-collection($config:salamanca-data-root, "rdf")
         else ()
     let $chmod-collection-status  := xmldb:set-collection-permissions($collectionName, 'sal', 'svsal',  util:base-to-integer(0775, 8))
-    let $remove-status            := if ($content and ($fileName = xmldb:get-child-resources($collectionName))) then
-                                          xmldb:remove($collectionName, $fileName)
-                                     else ()
-    let $store-status             := if ($content) then
-                                          xmldb:store($collectionName, $fileName, $content)
-                                     else ()
+    let $remove-status := 
+        if ($content and ($fileName = xmldb:get-child-resources($collectionName))) then
+            xmldb:remove($collectionName, $fileName)
+        else ()
+    let $store-status := 
+        if ($content) then
+            xmldb:store($collectionName, $fileName, $content)
+        else ()
     return $store-status
 };
 
@@ -101,17 +113,19 @@ declare function admin:saveFileWRK ($node as node(), $model as map (*), $lang as
     let $fileNameDe         :=  'works_de.xml'
     let $fileNameEn         :=  'works_en.xml'
     let $fileNameEs         :=  'works_es.xml'
-    let $contentDe          :=  <sal>
-                                    {app:WRKfinalFacets($node, $model, 'de')}
-                                </sal>
-    let $contentEn          :=  <sal>
-                                    {app:WRKfinalFacets($node, $model, 'en')}
-                                </sal>
-    let $contentEs          :=  <sal>
-                                    {app:WRKfinalFacets($node, $model, 'es')}
-                                </sal> 
-    
-    let $store              :=  (xmldb:store($config:data-root, $fileNameDe, $contentDe), xmldb:store($config:data-root, $fileNameEn, $contentEn), xmldb:store($config:data-root, $fileNameEs, $contentEs))
+    let $contentDe :=  
+        <sal>
+            {app:WRKfinalFacets($node, $model, 'de')}
+        </sal>
+    let $contentEn :=  
+        <sal>
+            {app:WRKfinalFacets($node, $model, 'en')}
+        </sal>
+    let $contentEs :=  
+        <sal>
+            {app:WRKfinalFacets($node, $model, 'es')}
+        </sal> 
+    let $store :=  (xmldb:store($config:data-root, $fileNameDe, $contentDe), xmldb:store($config:data-root, $fileNameEn, $contentEn), xmldb:store($config:data-root, $fileNameEs, $contentEs))
     return
         <span>
             <p><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> List of works saved!</p>
@@ -181,7 +195,7 @@ declare function admin:saveFileWRKnoJs ($node as node(), $model as map (*), $lan
 
 };
 
-declare %templates:wrap function admin:renderAuthorLemma ($node as node(), $model as map(*), $aid as xs:string*, $lid as xs:string*, $lang as xs:string*) {
+declare %templates:wrap function admin:renderAuthorLemma($node as node(), $model as map(*), $aid as xs:string*, $lid as xs:string*, $lang as xs:string*) {
 
     let $request            :=  request:get-parameter('aid', '')
     let $switchType         :=  if ($request) then $aid else $lid
@@ -235,7 +249,7 @@ declare function admin:generate-toc-from-div($node, $wid) {
 };                      
 
 declare function admin:toc-div($div, $wid) {
-    let $frag    :=     for $item in doc($config:data-root || "/" || $wid || '_nodeIndex.xml')//sal:node
+    let $frag    :=     for $item in doc($config:index-root || "/" || $wid || '_nodeIndex.xml')//sal:node
                         where $item/@n eq $div/@xml:id
                         return 'work.html?wid='||$wid ||'&amp;' || 'frag='|| $item/sal:fragment||'#'|| $item/@n
     let $section := $div/@xml:id/string()
@@ -247,22 +261,22 @@ declare function admin:toc-div($div, $wid) {
 };
 
 declare function admin:derive-title($node as node()) as item()* {
-     typeswitch($node)
-     case text()                    return $node
-     case element(tei:teiHeader)    return ()
-     case element(tei:choice)       return $node/tei:expan/text() | $node/tei:reg/text() | $node/tei:cor/text()
-     case element(tei:titlePart)    return ('[', $node/@type/string(), '] ',  local:passthruTOC($node))
-     case element(tei:div)          return
-                                        if($node/tei:head) then ('[', $node/@type/string(), '] ',  local:passthruTOC($node/tei:head))
-                                        else if ($node/tei:list/tei:head) then ('[', $node/@type/string(), '] ',  local:passthruTOC($node/tei:list/tei:head))
-                                        else if (not($node/tei:head | $node/tei:list/tei:head)) then  ('[', $node/@type/string(), '] ',  $node/@n/string())
-                                        else()
-     case element(tei:milestone)    return ('[', $node/@unit/string(), '] ',  $node/@n/string())
-     (:case element(tei:label)        return if ($node/@type) then ('[', $node/@type/string(), '] ', local:passthruTOC($node)) else ():)
-     case element(tei:pb)           return if (not($node[@break eq 'no'])) then ' ' else ()
-     case element(tei:cb)           return if (not($node[@break eq 'no'])) then ' ' else ()
-     case element(tei:lb)           return if (not($node[@break eq 'no'])) then ' ' else ()
-     default return local:passthruTOC($node)
+    typeswitch($node)
+        case text()                    return $node
+        case element(tei:teiHeader)    return ()
+        case element(tei:choice)       return $node/tei:expan/text() | $node/tei:reg/text() | $node/tei:cor/text()
+        case element(tei:titlePart)    return ('[', $node/@type/string(), '] ',  local:passthruTOC($node))
+        case element(tei:div) return
+            if($node/tei:head) then ('[', $node/@type/string(), '] ',  local:passthruTOC($node/tei:head))
+            else if ($node/tei:list/tei:head) then ('[', $node/@type/string(), '] ',  local:passthruTOC($node/tei:list/tei:head))
+            else if (not($node/tei:head | $node/tei:list/tei:head)) then  ('[', $node/@type/string(), '] ',  $node/@n/string())
+            else()
+        case element(tei:milestone)    return ('[', $node/@unit/string(), '] ',  $node/@n/string())
+        (:case element(tei:label)        return if ($node/@type) then ('[', $node/@type/string(), '] ', local:passthruTOC($node)) else ():)
+        case element(tei:pb)           return if (not($node[@break eq 'no'])) then ' ' else ()
+        case element(tei:cb)           return if (not($node[@break eq 'no'])) then ' ' else ()
+        case element(tei:lb)           return if (not($node[@break eq 'no'])) then ' ' else ()
+        default return local:passthruTOC($node)
 };
    
 declare function local:passthruTOC($nodes as node()*) as item()* {
@@ -270,14 +284,15 @@ declare function local:passthruTOC($nodes as node()*) as item()* {
 };
 
 declare function admin:get-pages-from-div($div) {
-    let $firstpage :=   if ($div[@type='work_volume'] | $div[@type = 'work_monograph']) then ($div//tei:pb)[1]/@n/string() 
-                        else ($div/preceding::tei:pb)[last()]/@n/string()
-    let $lastpage :=    if ($div//tei:pb) then ($div//tei:pb)[last()]/@n/string() else ()
+    let $firstpage :=   
+        if ($div[@type='work_volume'] | $div[@type = 'work_monograph']) then ($div//tei:pb)[1]/@n/string() 
+        else ($div/preceding::tei:pb)[last()]/@n/string()
+    let $lastpage := if ($div//tei:pb) then ($div//tei:pb)[last()]/@n/string() else ()
     return
         if ($firstpage ne '' or $lastpage ne '') then 
             concat(' ', string-join(($firstpage, $lastpage), ' - ')) 
         else ()
-};    
+};
 
 declare %templates:wrap function admin:renderWork($node as node(), $model as map(*), $wid as xs:string*, $lang as xs:string?) as element(div) {
     let $debug := if ($config:debug = ("trace", "info")) then console:log("Rendering " || $wid || ".") else ()
@@ -316,7 +331,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
             
             (: Create the fragment id for each node beforehand, so that subsequent routines (e.g, recursive crumbtrail creation) can easily get it :)
             let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] HTML rendering: identifying fragment ids ...") else ()
-            let $fragmentIds := 
+            let $fragmentIds :=
                 map:merge(
                     for $node in $nodes
                         let $n := $node/@xml:id/string()
@@ -371,7 +386,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                            }
                 </sal:index>
             let $debug := if ($config:debug = ("trace")) then console:log("  (saving preliminary index file ...)") else ()
-            let $indexSaveStatus := admin:saveFile($work/@xml:id, $work/@xml:id || "_nodeIndex.xml", $index, "data")
+            let $indexSaveStatus := admin:saveFile($work/@xml:id, $work/@xml:id || "_nodeIndex.xml", $index, "index")
             let $debug := if ($config:debug = ("trace", "info")) then console:log("  Preliminary index file created.") else ()
         
             (: Next, create a ToC html file. :)
@@ -379,7 +394,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
             let $text := $work//tei:text[@type='work_volume'] | $work//tei:text[@type = 'work_monograph']
             let $elements := $work//tei:text[@type = 'work_monograph']/(tei:front | tei:body | tei:back)  
             let $title := app:WRKcombined($work, $model, $workId)
-            let $store  :=     
+            let $store :=     
                 <div id="tableOfConts">
                     <ul>
                         <li>
@@ -478,12 +493,12 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
     (: (re-)create txt and xml corpus zips :)
     let $corpus-start-time := util:system-time()
     let $debug := if ($config:debug = ("trace", "info")) then console:log("Corpus packages created and stored.") else ()
-    let $createTeiCorpus := admin:createTeiCorpus()
-    let $createTxtCorpus := admin:createTxtCorpus()
+    let $createTeiCorpus := admin:createTeiCorpus(encode-for-uri($wid))
+    let $createTxtCorpus := admin:createTxtCorpus(encode-for-uri($wid))
     let $corpus-end-time := ((util:system-time() - $corpus-start-time) div xs:dayTimeDuration('PT1S'))
     (: make sure that fragments are to be found by reindexing :)
     let $index-start-time := util:system-time()
-    let $reindex          := if ($config:instanceMode ne "testing") then xmldb:reindex($config:data-root) else ()
+    let $reindex          := if ($config:instanceMode ne "testing") then xmldb:reindex($config:webdata-root) else ()
     let $index-end-time := ((util:system-time() - $index-start-time) div xs:dayTimeDuration('PT1S'))
     return 
         <div>
@@ -500,44 +515,50 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
         </div>
 };
 
-declare function admin:createTeiCorpus() as xs:string? {
-    let $tmpCollection := $config:corpus-files-root || '/tei-corpus-temp'
-    let $corpusCollection := if (not(xmldb:collection-available($config:corpus-files-root))) then xmldb:create-collection($config:data-root, 'corpus') else ()
+(:
+ @param $processId: can be any string and serves only for avoiding conflicts with parallel corpus building routines
+:)
+declare function admin:createTeiCorpus($processId as xs:string) as xs:string? {
+    let $corpusCollection := if (not(xmldb:collection-available($config:corpus-zip-root))) then xmldb:create-collection($config:webdata-root, 'corpus-zip') else ()
     (: Create temporary collection to be zipped :)
-    let $removeStatus := if (xmldb:collection-available($tmpCollection)) then xmldb:remove($tmpCollection) else ()
-    let $zipTmp := xmldb:create-collection($config:corpus-files-root, 'tei-corpus-temp')  
+    let $checkTempRoot := if (not(xmldb:collection-available($config:temp-root))) then xmldb:create-collection($config:data-root, 'temp') else ()
+    let $tempCollection := $config:temp-root || '/tei-corpus-temp-' || $processId
+    let $removeStatus := if (xmldb:collection-available($tempCollection)) then xmldb:remove($tempCollection) else ()
+    let $zipTmp := xmldb:create-collection($config:temp-root, 'tei-corpus-temp-' || $processId)  
     (: Get TEI data, expand them and store them in the temporary collection :)
     let $serializationOpts := 'method=xml expand-xincludes=yes omit-xml-declaration=no indent=yes encoding=UTF-8 media-type=application/tei+xml' 
-    let $debug := util:log('warn', '[ADMIN] Identifying ' || count(collection($config:tei-works-root)/tei:TEI/@xml:id[string-length(.) eq 5]/string()) || ' works as relevant for corpus.')
     let $works := 
         for $reqWork in collection($config:tei-works-root)/tei:TEI/@xml:id[string-length(.) eq 5]/string()
             return if (doc-available($config:tei-works-root || '/' || $reqWork || '.xml')) then
                 let $expanded := util:expand(doc($config:tei-works-root || '/' || $reqWork || '.xml')/tei:TEI, $serializationOpts) 
-                let $debug := util:log('warn', '[ADMIN] temporarily storing ' || $reqWork || '.xml')
-                let $store := xmldb:store-as-binary($tmpCollection, $expanded/@xml:id || '.xml', $expanded)
+                let $store := xmldb:store-as-binary($tempCollection, $expanded/@xml:id || '.xml', $expanded)
                 return $expanded
             else ()
     (: Create a zip archive from the temporary collection and store it :)
-    let $zip := compression:zip(xs:anyURI($tmpCollection), false())
-    let $save := xmldb:store-as-binary($config:corpus-files-root , 'sal-tei-corpus.zip', $zip)
+    let $zip := compression:zip(xs:anyURI($tempCollection), false())
     (: Clean the database from temporary files/collections :)
-    let $removeStatus2 := for $work in $works return xmldb:remove($tmpCollection, $work/@xml:id || '.xml')
-    let $removeStatus3 := if (xmldb:collection-available($tmpCollection)) then xmldb:remove($tmpCollection) else ()
-    let $filepath := $config:corpus-files-root  || '/sal-tei-corpus.zip'
+    let $removeStatus2 := for $work in $works return xmldb:remove($tempCollection, $work/@xml:id || '.xml')
+    let $removeStatus3 := if (xmldb:collection-available($tempCollection)) then xmldb:remove($tempCollection) else ()
+    let $filepath := $config:corpus-zip-root  || '/sal-tei-corpus.zip'
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Created and stored TEI corpus zip.") else ()
+    let $filepath := $config:corpus-zip-root  || '/sal-tei-corpus.zip'
     let $removeStatus4 := 
         if (file:exists($filepath)) then
             xmldb:remove($filepath)
         else ()
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Created and stored TEI corpus zip.") else ()
-    return $save
+    return xmldb:store-as-binary($config:corpus-zip-root , 'sal-tei-corpus.zip', $zip)
 };
 
-declare function admin:createTxtCorpus() as xs:string? {
-    let $tmpCollection := $config:corpus-files-root || '/temp'
-    let $corpusCollection := if (not(xmldb:collection-available($config:corpus-files-root))) then xmldb:create-collection($config:data-root, 'corpus') else ()
+(:
+ @param $processId: can be any string and serves only for avoiding conflicts with parallel corpus building routines
+:)
+declare function admin:createTxtCorpus($processId as xs:string) as xs:string? {
+    let $tempCollection := $config:temp-root || '/txt-corpus-temp-' || $processId
+    let $corpusCollection := if (not(xmldb:collection-available($config:corpus-zip-root))) then xmldb:create-collection($config:webdata-root, 'corpus-zip') else ()
+    let $checkTempRoot := if (not(xmldb:collection-available($config:temp-root))) then xmldb:create-collection($config:data-root, 'temp') else ()
     (: Create temporary collection to be zipped :)
-    let $removeStatus := if (xmldb:collection-available($tmpCollection)) then xmldb:remove($tmpCollection) else ()
-    let $zipTmp := xmldb:create-collection($config:corpus-files-root, 'temp')  
+    let $removeStatus := if (xmldb:collection-available($tempCollection)) then xmldb:remove($tempCollection) else ()
+    let $zipTmp := xmldb:create-collection($config:temp-root, 'txt-corpus-temp-' || $processId)  
     (: Get TXT data (or if they aren't available, render them officially) and store them in the temporary collection :)
     let $storeWorks := 
         for $wid in collection($config:tei-works-root)/tei:TEI/@xml:id[string-length(.) eq 5 and app:WRKisPublished(<dummy/>,map{},.)]/string()
@@ -550,28 +571,27 @@ declare function admin:createTxtCorpus() as xs:string? {
                         let $origTxt := string-join(render:dispatch($tei, 'orig'), '')
                         let $debug := if ($config:debug = ("trace", "info")) then console:log('[ADMIN] Rendered ' || $wid || ', string length: ' || string-length($origTxt)) else ()
                         return admin:saveFile($wid, $wid || "_orig.txt", $origTxt, "txt")
-                let $storeOrig := xmldb:store-as-binary($tmpCollection, $wid || '_orig.txt', util:binary-doc($config:txt-root || '/' || $wid || '/' || $wid || '_orig.txt'))
+                let $storeOrig := xmldb:store-as-binary($tempCollection, $wid || '_orig.txt', util:binary-doc($config:txt-root || '/' || $wid || '/' || $wid || '_orig.txt'))
                 let $renderEdit := 
                     if (util:binary-doc-available($config:txt-root || '/' || $wid || '/' || $wid || '_edit.txt')) then ()
                     else 
                         let $tei := util:expand(doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI)
                         let $editTxt := string-join(render:dispatch($tei, 'edit'), '')
                         return admin:saveFile($wid, $wid || "_edit.txt", $editTxt, "txt")
-                let $storeEdit := xmldb:store-as-binary($tmpCollection, $wid || '_edit.txt', util:binary-doc($config:txt-root || '/' || $wid || '/' || $wid || '_edit.txt'))
-                return ($storeOrig, $storeEdit)
+                let $storeEdit := xmldb:store-as-binary($tempCollection, $wid || '_edit.txt', util:binary-doc($config:txt-root || '/' || $wid || '/' || $wid || '_edit.txt'))
+                return ()
     (: Create a zip archive from the temporary collection and store it :)    
-    let $zip := compression:zip(xs:anyURI($tmpCollection), false())
-    let $save := xmldb:store-as-binary($config:corpus-files-root , 'sal-txt-corpus.zip', $zip)
+    let $zip := compression:zip(xs:anyURI($tempCollection), false())
     (: Clean the database from temporary files/collections :)
-    let $removeStatus2 := for $file in xmldb:get-child-resources($tmpCollection) return xmldb:remove($tmpCollection, $file)
-    let $removeStatus3 := if (xmldb:collection-available($tmpCollection)) then xmldb:remove($tmpCollection) else ()
-    let $filepath := $config:corpus-files-root  || '/sal-txt-corpus.zip'
+    let $removeStatus2 := for $file in xmldb:get-child-resources($tempCollection) return xmldb:remove($tempCollection, $file)
+    let $removeStatus3 := if (xmldb:collection-available($tempCollection)) then xmldb:remove($tempCollection) else ()
+    let $filepath := $config:corpus-zip-root  || '/sal-txt-corpus.zip'
     let $removeStatus4 := 
         if (file:exists($filepath)) then
             xmldb:remove($filepath)
         else ()
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Created and stored TXT corpus zip.") else ()
-    return $save
+    return xmldb:store-as-binary($config:corpus-zip-root , 'sal-txt-corpus.zip', $zip)
 };
 
 declare function admin:renderFragment ($work as node(), $wid as xs:string, $target as node(), $targetindex as xs:integer, $fragmentationDepth as xs:integer, $prevId as xs:string?, $nextId as xs:string?, $serverDomain as xs:string?) {
@@ -655,7 +675,7 @@ declare function admin:sphinx-out ($node as node(), $model as map(*), $wid as xs
                                             else ()
                 let $hit_type         := local-name($hit)
                 let $hit_id           := xs:string($hit/@xml:id)
-                let $hit_citetrail    := doc($config:data-root || '/' || $work_id || '_nodeIndex.xml')//sal:node[@n = $hit_id]/sal:citetrail
+                let $hit_citetrail    := doc($config:index-root || '/' || $work_id || '_nodeIndex.xml')//sal:node[@n = $hit_id]/sal:citetrail
                 let $hit_language     := xs:string($hit/ancestor-or-self::tei:*[@xml:lang][1]/@xml:lang)
                 let $hit_fragment     := if ($hit_id and xmldb:collection-available($config:html-root || '/' || $work_id)) then
                                             render:getFragmentFile($work_id, $hit_id)
