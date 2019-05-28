@@ -176,6 +176,7 @@ declare variable $config:rdf-root       := concat($config:webdata-root, "/rdf");
 declare variable $config:rdf-works-root := concat($config:rdf-root, '/works');
 declare variable $config:rdf-authors-root := concat($config:rdf-root, '/authors');
 declare variable $config:rdf-lemmata-root := concat($config:rdf-root, '/lemmata');
+declare variable $config:rdf-sub-roots := ($config:rdf-authors-root, $config:rdf-works-root, $config:rdf-lemmata-root);
 declare variable $config:iiif-root      := concat($config:webdata-root, "/iiif");
 declare variable $config:files-root     := concat($config:resources-root, "/files");
 declare variable $config:corpus-zip-root := concat($config:webdata-root, '/corpus-zip');
