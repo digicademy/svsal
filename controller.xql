@@ -202,8 +202,12 @@ return
     else if (request:get-header('X-Forwarded-Host') = "id." || $config:serverdomain) then
         let $debug1 := if ($config:debug = ("trace", "info")) then console:log("Id requested: " || $net:forwardedForServername || $exist:path || $parameterString || ". (" || net:negotiateContentType($net:servedContentTypes, '') || ')') else ()
         let $debug1 := if ($config:debug = ("trace")) then console:log("Redirect (303) to '" || $config:apiserver || "/v1" || $exist:path || $parameterString || "'.") else ()
-        return net:redirect-with-303($config:apiserver || "/v1" || replace($exist:path, '/works\.', '/texts/') || $parameterString)
-
+        return 
+            if (matches($exist:path, '(/texts|/concepts/|/authors)')) then 
+                net:redirect-with-303($config:apiserver || "/v1" || $exist:path || $parameterString)
+            else if (matches($exist:path, '/works\.')) then 
+                net:redirect-with-303($config:apiserver || "/v1" || replace($exist:path, '/works\.', '/texts/') || $parameterString)
+            else net:error(404, $netVars, ())
 
     (: *** TEI file service (X-Forwarded-Host = 'tei.{$config:serverdomain}') *** :)
     else if (request:get-header('X-Forwarded-Host') = "tei." || $config:serverdomain) then
