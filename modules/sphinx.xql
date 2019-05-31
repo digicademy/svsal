@@ -756,10 +756,10 @@ function sphinx:details ($wid as xs:string, $field as xs:string, $q as xs:string
                 {
                 for $item at $detailindex in $details//item
                     let $hit_id         := $item/hit_id/text()
-(:                    let $crumbtrail     := sphinx:addLangToCrumbtrail(<sal:crumbtrail>{sphinx:addQToCrumbtrail(doc($config:data-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $hit_id]/sal:crumbtrail, $q)}</sal:crumbtrail>, $lang):)
-                    let $crumbtrail     := <sal:crumbtrail>{sphinx:addQToCrumbtrail(doc($config:data-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $hit_id]/sal:crumbtrail, $q)}</sal:crumbtrail>
-(:                    let $bombtrail      := sphinx:addLangToCrumbtrail(                 sphinx:addQToCrumbtrail(doc($config:data-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $hit_id]/sal:crumbtrail/a[last()], $q), $lang):)
-                    let $bombtrail      :=                  sphinx:addQToCrumbtrail(doc($config:data-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $hit_id]/sal:crumbtrail/a[last()], $q)
+(:                    let $crumbtrail     := sphinx:addLangToCrumbtrail(<sal:crumbtrail>{sphinx:addQToCrumbtrail(doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $hit_id]/sal:crumbtrail, $q)}</sal:crumbtrail>, $lang):)
+                    let $crumbtrail     := <sal:crumbtrail>{sphinx:addQToCrumbtrail(doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $hit_id]/sal:crumbtrail, $q)}</sal:crumbtrail>
+(:                    let $bombtrail      := sphinx:addLangToCrumbtrail(                 sphinx:addQToCrumbtrail(doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $hit_id]/sal:crumbtrail/a[last()], $q), $lang):)
+                    let $bombtrail      :=                  sphinx:addQToCrumbtrail(doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $hit_id]/sal:crumbtrail/a[last()], $q)
 
                     let $snippets       :=  <documents>
                                                 <description_orig>
@@ -808,14 +808,11 @@ function sphinx:details ($wid as xs:string, $field as xs:string, $q as xs:string
 
 declare function sphinx:help ($node as node(), $model as map(*), $lang as xs:string?) {
     let $helpfile   := doc($config:data-root || "/i18n/search_help.xml")
-    let $helptext   :=   if ($lang = "de") then
-                                    "div_Suchhilfe_de"
-                                else if ($lang = "en") then
-                                    "div_searchHelp_en"
-                                else if ($lang = "es") then
-                                    "div_searchHelp_es"
-                                else
-                                "div_searchHelp_en"
+    let $helptext   :=   
+        if ($lang = "de") then "div_Suchhilfe_de"
+        else if ($lang = "en") then "div_searchHelp_en"
+        else if ($lang = "es") then "div_searchHelp_es"
+        else "div_searchHelp_en"
     let $html       := render:dispatch($helpfile//tei:div[@xml:id = $helptext], "html")
     return if (count($html)) then
         <div id="help" class="help">

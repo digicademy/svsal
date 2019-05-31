@@ -54,7 +54,7 @@ declare variable $net:errorhandler :=
     let $reqWork      := tokenize(tokenize($reqResource, ':')[1], '\.')[1]   (\: work:pass.age :\)
     let $reqPassage   := tokenize($reqResource, ':')[2]
     let $nodeId       := if ($reqPassage) then
-                            let $nodeIndex := doc($config:data-root || '/' || replace($reqWork, 'w0', 'W0') || '_nodeIndex.xml')
+                            let $nodeIndex := doc($config:index-root || '/' || replace($reqWork, 'w0', 'W0') || '_nodeIndex.xml')
                             return $nodeIndex//sal:node[sal:citetrail eq $reqPassage][1]/@n[1]
                          else
                             "completeWork" 
@@ -67,7 +67,7 @@ declare variable $net:errorhandler :=
 declare function net:findNode($requestData as map()) {
     let $nodeId :=    
         if ($requestData('passage') ne ('')) then
-            let $nodeIndex := doc($config:data-root || '/' || $requestData('work_id') || '_nodeIndex.xml')
+            let $nodeIndex := doc($config:index-root || '/' || $requestData('work_id') || '_nodeIndex.xml')
             let $id := $nodeIndex//sal:node[sal:citetrail eq $requestData('passage')][1]/@n[1]
             return if ($id) then $id else 'completeWork'
         else 'completeWork' (: if no specific node has been found, return (or if work hasn't been rendered yet), return complete text :)
@@ -303,8 +303,19 @@ declare function net:forward-to-html($relative-path as xs:string, $netVars as ma
            <add-parameter xmlns="http://exist.sourceforge.net/NS/exist" name="{$param}" value="{$netVars('paramap')?($param)}"/>}    :)
 };
 
-declare function net:forward-to-data($relative-path as xs:string, $netVars as map(*), $attribs as element(exist:add-parameter)*) {
-    let $absolute-path := concat($netVars('controller'), '/../salamanca-data/', $relative-path)
+declare function net:forward-to-webdata($relative-path as xs:string, $netVars as map(*), $attribs as element(exist:add-parameter)*) {
+    let $absolute-path := concat($netVars('controller'), '/../salamanca-webdata/', $relative-path)
+    return
+        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+            <forward url="{$absolute-path}" absolute="no">
+                {$attribs}
+            </forward>
+            <cache-control cache="{$net:cache-control}"/>
+            {$net:errorhandler}
+        </dispatch>
+    };
+declare function net:forward-to-tei($relative-path as xs:string, $netVars as map(*), $attribs as element(exist:add-parameter)*) {
+    let $absolute-path := concat($netVars('controller'), '/../salamanca-tei/', $relative-path)
     return
         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
             <forward url="{$absolute-path}" absolute="no">
@@ -452,7 +463,6 @@ declare function local:getDbDocumentIds($collections as xs:string*) as xs:string
 declare function local:getDbWebpageRel($documentIds as xs:string*) as xs:string* {
 (:    let $debug          := if ($config:debug = "trace") then console:log("Creating relative urls for " || string-join($documentIds, ', ') || ".") else ():)
     for $documentId in $documentIds
-(:        let $viewports := switch (doc($config:data-root || '/' || $documentId || '.xml')/tei:TEI/tei:text[1]/@type):)
         let $viewports := switch (collection($config:tei-root)/tei:TEI[@xml:id=$documentId]/tei:text[1]/@type)
                             case 'author_article'   return 'author.html?aid='
                             case 'lemma_article'    return 'lemma.html?lid='
@@ -555,9 +565,9 @@ declare function net:APIdeliverTEI($requestData as map(), $netVars as map()*) {
                                 response:set-header("Content-Disposition", 'attachment; filename="' || $requestData('tei_id') || '_teiHeader.xml"')
                             else response:set-header("Content-Disposition", 'attachment; filename="' || $requestData('tei_id') || '_tei.xml"')
         return $doc
-    else if ($requestData('tei_id') eq '*' and util:binary-doc-available($config:corpus-files-root || '/sal-tei-corpus.zip')) then
+    else if ($requestData('tei_id') eq '*' and util:binary-doc-available($config:corpus-zip-root || '/sal-tei-corpus.zip')) then
         let $debug      := if ($config:debug = "trace") then console:log("[API] TEI corpus export.") else ()
-        let $corpusPath := $config:corpus-files-root || '/sal-tei-corpus.zip'
+        let $corpusPath := $config:corpus-zip-root || '/sal-tei-corpus.zip'
         let $response   := response:set-header("Content-Disposition", 'attachment; filename="sal-tei-corpus.zip"')
         return response:stream-binary(util:binary-doc($corpusPath), 'application/zip', 'sal-tei-corpus.zip')
     else net:error(404, $netVars, ())
@@ -583,9 +593,9 @@ declare function net:APIdeliverTXT($requestData as map(), $netVars as map()*) {
                     response:stream-binary(util:binary-doc($config:txt-root || '/' || $requestData('work_id') || '/' || $requestData('work_id') || '_' || $mode || '.txt'), 'text/plain')
                 else render:dispatch($node, $mode)
             else net:error(404, $netVars, 'Resource could not be found.')
-    else if ($requestData('tei_id') eq '*' and util:binary-doc-available($config:corpus-files-root || '/sal-txt-corpus.zip')) then
+    else if ($requestData('tei_id') eq '*' and util:binary-doc-available($config:corpus-zip-root || '/sal-txt-corpus.zip')) then
         let $debug      := if ($config:debug = "trace") then console:log("[API] TXT corpus export.") else ()
-        let $corpusPath := $config:corpus-files-root || '/sal-txt-corpus.zip'
+        let $corpusPath := $config:corpus-zip-root || '/sal-txt-corpus.zip'
         let $response   := response:set-header("Content-Disposition", 'attachment; filename="sal-txt-corpus.zip"')
         return response:stream-binary(util:binary-doc($corpusPath), 'application/zip', 'sal-txt-corpus.zip')
     else net:error(404, $netVars, 'Resource could not be found.')
@@ -593,10 +603,10 @@ declare function net:APIdeliverTXT($requestData as map(), $netVars as map()*) {
 
 declare function net:APIdeliverRDF($requestData as map(), $netVars as map()*) {
     if (starts-with($requestData('work_id'), 'W0')) then 
-        if (doc-available($config:rdf-root || '/' || $requestData('work_id') || '.rdf')) then
+        if (doc-available($config:rdf-works-root || '/' || $requestData('work_id') || '.rdf')) then
             let $headers1 := response:set-header('Content-Disposition', 'attachment; filename="' || $requestData('work_id') || '.rdf"')
             let $header2 := response:set-header('Content-Type', 'application/rdf+xml')
-            return doc($config:rdf-root || '/' || $requestData('work_id') || '.rdf')
+            return doc($config:rdf-works-root || '/' || $requestData('work_id') || '.rdf')
         (: TODO: if there only is a teiHeader, we can also render rdf on-the-fly; however, the following returns almost empty RDF :)
         (:else if (sal-util:WRKvalidateId($requestData('work_id')) eq 1) then
             let $debug := if ($config:debug = ("trace", "info")) then console:log("Generating rdf for " || $requestData('work_id') || " ...") else ()
@@ -623,8 +633,8 @@ declare function net:APIdeliverTextsHTML($requestData as map(), $netVars as map(
     else
         if ($requestData('work_status') eq 2 and $requestData('passage_status') = (1)) then (: full text available and passage not invalid :)
             if (matches($requestData('work_id'), '^W\d{4}$')) then
-                let $debug := if ($config:debug = ("trace")) then console:log("Load metadata from " || $config:rdf-root || '/' || $requestData('work_id') || '.rdf' || " ...") else ()
-                let $metadata := doc($config:rdf-root || '/' || $requestData('work_id') || '.rdf')
+                let $debug := if ($config:debug = ("trace")) then console:log("Load metadata from " || $config:rdf-works-root || '/' || $requestData('work_id') || '.rdf' || " ...") else ()
+                let $metadata := doc($config:rdf-works-root || '/' || $requestData('work_id') || '.rdf')
                 let $resourcePath := (: with legacy resource ids, we need to append a "vol" passage :)
                     if (contains($requestData('tei_id'), '_Vol') and not($requestData('passage'))) then 
                         $requestData('work_id') || ':vol' || substring($requestData('tei_id'), string-length($requestData('tei_id')))
@@ -638,7 +648,7 @@ declare function net:APIdeliverTextsHTML($requestData as map(), $netVars as map(
                         $config:webserver || '/work.html?wid=' || $requestData('work_id') || '&amp;frag=' || replace($requestData('frag'), 'w0', 'W0')
                     else
                         try {
-                            string($metadata//rdf:Description[@rdf:about eq 'texts/' || $resourcePath]/rdfs:seeAlso[@rdf:resource[contains(., ".html")]][1]/@rdf:resource)
+                            string($metadata//rdf:Description[lower-case(@rdf:about/string()) eq lower-case('texts/' || $resourcePath)]/rdfs:seeAlso[@rdf:resource[contains(., ".html")]][1]/@rdf:resource)
                             } 
                         catch err:FORG0006 {
                             let $debug := console:log('[API] err:FORG0006: could not resolve path ' || $resourcePath || ' in RDF for wid=' || $requestData('work_id'))
@@ -736,8 +746,8 @@ declare function net:APIdeliverIIIF($requestData as map()*, $netVars as map()*) 
     let $work           := tokenize(tokenize($reqResource, ':')[1], '\.')[1]   (: work[.edition]:pass.age :)
     let $passage        := tokenize($reqResource, ':')[2]
     let $entityPath     := concat($work, if ($passage) then concat('#', $passage) else ())
-    let $debug2         := if ($config:debug = "trace") then console:log("Load metadata from " || $config:rdf-root || '/' || replace($work, 'w0', 'W0') || '.rdf' || " ...") else ()
-    let $metadata       := doc($config:rdf-root || '/' || sal-util:normalizeId($work) || '.rdf')
+    let $debug2         := if ($config:debug = "trace") then console:log("Load metadata from " || $config:rdf-works-root || '/' || replace($work, 'w0', 'W0') || '.rdf' || " ...") else ()
+    let $metadata       := doc($config:rdf-works-root || '/' || sal-util:normalizeId($work) || '.rdf')
     let $debug3         := if ($config:debug = "trace") then console:log("Retrieving $metadata//rdf:Description[@rdf:about = '" || replace($reqResource, 'w0', 'W0') || "']/rdfs:seeAlso/@rdf:resource/string()") else ()
     let $debug4         := if ($config:debug = "trace") then console:log("This gives " || count($metadata//rdf:Description[@rdf:about = replace($reqResource, 'w0', 'W0')]/rdfs:seeAlso/@rdf:resource) || " urls in total.") else ()
 
@@ -779,7 +789,7 @@ declare function net:deliverJPG($pathComponents as xs:string*, $netVars as map()
     let $reqResource  := $pathComponents[last()]
     let $reqWork      := tokenize(tokenize($reqResource, ':')[1], '\.')[1]
     let $passage      := tokenize($reqResource, ':')[2]
-    let $metadata     := doc($config:rdf-root || '/' || sal-util:normalizeId($reqWork) || '.rdf')
+    let $metadata     := doc(rdf-works-root || '/' || sal-util:normalizeId($reqWork) || '.rdf')
     let $debug2       := if ($config:debug = "trace") then console:log("Retrieving $metadata//rdf:Description[@rdf:about = " || $reqResource || "]/rdfs:seeAlso/@rdf:resource/string()") else ()
     let $resolvedPaths := for $url in $metadata//rdf:Description[@rdf:about = $reqResource]/rdfs:seeAlso/@rdf:resource/string()
                           where matches($url, "\.(jpg|jpeg|png|tif|tiff)$")
@@ -841,10 +851,11 @@ declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()
                 else ()
             let $passageStatus := (: 1 = passage valid & existing ; 0 = not existing ; -1 = no dataset found for $wid ; empty = no passage :)
                 if ($passage) then
-                    if ($teiStatus eq 2 and doc-available($config:data-root || '/' || $workId || '_nodeIndex.xml')) then 
-                        let $nodeIndex := doc($config:data-root || '/' || $workId || '_nodeIndex.xml')
+                    if ($teiStatus eq 2 and doc-available($config:index-root || '/' || $workId || '_nodeIndex.xml')) then 
+                        let $nodeIndex := doc($config:index-root || '/' || $workId || '_nodeIndex.xml')
+                        let $debug := if ($config:debug = ('trace')) then console:log('[API] checking node index for ' || $nodeIndex//@work[1]) else ()
                         return 
-                            if ($nodeIndex//sal:node[sal:citetrail eq $passage]) then 1
+                            if ($nodeIndex//sal:citetrail[lower-case(./text()) eq $passage]) then 1
                             else 0
                     else -1
                 else 1

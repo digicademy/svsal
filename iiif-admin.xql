@@ -24,7 +24,7 @@ let $resource := serialize(iiif:createResource($wid),
         </output:serialization-parameters>)
 
 let $create-collection-status :=     if (not(xmldb:collection-available($config:iiif-root))) then
-                                          xmldb:create-collection($config:salamanca-data-root, "iiif")
+                                          xmldb:create-collection($config:webdata-root, "iiif")
                                      else ()
 let $chmod-collection-status  := xmldb:set-collection-permissions($config:iiif-root, 'sal', 'svsal',  util:base-to-integer(0775, 8))
 let $remove-status            := if ($resource and ($wid || '.json') = xmldb:get-child-resources($config:iiif-root)) then

@@ -19,36 +19,44 @@ The whole portal consists of several different services that are integrated in o
 
 The User interface itself is plain HTML, with jquery, bootstrap and a few javascript addons. It is normally loaded by the user's browser contacting the main exist-db server.
 
-### Fileserver
+### Fileserver / Data Repositories
 
-Let's start with the hosting of source and derivative files. Besides the application server described below, we have isolated our source files to a separate repository. At the moment, this is hosted as an independent eXist-db application on the main applications' server, but ideally, we could make it possible that it be hosted even on a different machine.
+Let's start with the hosting of source and derivative files. Besides the application server described below, we have isolated our source files to a separate repository. (At the moment, this is hosted as an independent eXist-db application on the main applications' server, but ideally, we could make it possible that it be hosted even on a different machine.) The so-called "svsal-tei" package comprises the digital collection's and dictionary's source files, divided into the following subcollections:
 
-The web application expects TEI, rdf and iiif files in a "svsal-data" package in the following folder hierarchy:
+* authors
+* lemmata
+* meta (holds files with general and technical information, partially being xincluded in the works xml files)
+* news
+* workingpapers
+* works
 
-* svsal-data
-  * iiif
-  * rdf
-  * tei
-    * authors
-    * lemmata
-    * meta
-    * news
-    * workingpapers
-    * works
+For ease of deployment, derivative data (such as rdf and iiif files) are stored in a separate "svsal-webdata" package, which currently contains the following subdirectories:
+
+* corpus-zip (hosting all files of the collection's corpus in a specific format, such as txt or TEI xml, in compressed form)
+* html
+* iiif
+* index (containing registers of nodes in the TEI files, which foremost are used internally for data processing and querying)
+* rdf
+* snippets (for Sphinxsearch)
+* txt (plain text files for works)
+
 
 In fact, throughout the application, these folders/collections are addressed via the following variables, defined in _modules/config.xql_:
 
-* `$config:salamanca-data-root`
+* `$config:tei-root`
+  * `$config:tei-authors-root`
+  * `$config:tei-lemmata-root`
+  * `$config:tei-news-root`
+  * `$config:tei-workingpapers-root`
+  * `$config:tei-works-root`
+
+and
+
+* `$config:webdata-root`
   * `$config:iiif-root`
   * `$config:rdf-root`
-  * `$config:tei-root`
-    * `$config:tei-authors-root`
-    * `$config:tei-lemmata-root`
-    * `$config:tei-news-root`
-    * `$config:tei-workingpapers-root`
-    * `$config:tei-works-root`
+  * ...
 
-(The _svsal-data/tei/meta_ collection holds only two files with general information that are xincluded in the works xml files.)
 
 ### Main server application
 

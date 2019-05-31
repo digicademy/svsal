@@ -602,6 +602,16 @@ a .original {
     position:absolute;
 }
 
+span.gap:after {
+    content: '[…]';
+    color:gray;
+    font-size:70%;
+}
+
+span.blankPage {
+    display:block;
+}
+
 span.label-inline {
     display:block;
     text-align:center;
