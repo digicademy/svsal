@@ -92,8 +92,9 @@
     <!-- (*) Remember, however, that if there are ancestors to the target node that we want to render,
          we have to call the div or text templates in non-recursive mode for all such ancestors.
          (This is checked/done in the resp. target node.) -->
+    <!-- xml:space=preserve is required for keeping eXist from pretty-printing HTML data when exporting -->
     <xsl:template match="/">
-        <div class="row">
+        <div class="row" xml:space="preserve">
             <div class="col-md-12">
                 <div id="SvSalPages">
                     <div class="SvSalPage">                 <!-- main area (id/class page in order to identify page-able content -->
