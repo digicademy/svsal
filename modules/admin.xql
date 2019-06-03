@@ -344,7 +344,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
             (: Create full-blown node index :)
             let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] HTML rendering: creating index file ...") else ()
             let $index := 
-                <sal:index work="{string($work/@xml:id)}">{
+                <sal:index work="{string($work/@xml:id)}" xml:space="preserve">{
                     for $node at $pos in $nodes
                         let $debug := if ($config:debug = ("trace") and local-name($node) eq "div") then console:log("[ADMIN] registering node " || $pos || ": " || local-name($node) || " with @xml:id " || $node/@xml:id || " ...") else ()
                         let $subtype := 
@@ -497,9 +497,9 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
     let $createTxtCorpus := admin:createTxtCorpus(encode-for-uri($wid))
     let $corpus-end-time := ((util:system-time() - $corpus-start-time) div xs:dayTimeDuration('PT1S'))
     (: make sure that fragments are to be found by reindexing :)
-    let $index-start-time := util:system-time()
+    (:let $index-start-time := util:system-time()
     let $reindex          := if ($config:instanceMode ne "testing") then xmldb:reindex($config:webdata-root) else ()
-    let $index-end-time := ((util:system-time() - $index-start-time) div xs:dayTimeDuration('PT1S'))
+    let $index-end-time := ((util:system-time() - $index-start-time) div xs:dayTimeDuration('PT1S')):)
     return 
         <div>
             <p>Zu rendern: {count($todo)} Werk(e); gesamte Rechenzeit:
@@ -509,7 +509,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                 }
             </p>
             <p>TEI- und TXT-Corpora erstellt in {$corpus-end-time} Sekunden.</p>
-            <p>/db/apps/salamanca/data reindiziert in {$index-end-time} Sekunden.</p>
+            <!--<p>/db/apps/salamanca/data reindiziert in {$index-end-time} Sekunden.</p>-->
             <hr/>
             {$gerendert}
         </div>
@@ -741,7 +741,7 @@ declare function admin:sphinx-out ($node as node(), $model as map(*), $wid as xs
                         </sphinx:document>
 
                 let $sphinx_snippet :=
-                        <sphinx:document id="{$sphinx_id}">
+                        <sphinx:document id="{$sphinx_id}" xml:space="preserve">
                             <sphinx_docid>{$sphinx_id}</sphinx_docid>
                             <sphinx_work>{$work_id}</sphinx_work>
                             <sphinx_work_type>{$work_type}</sphinx_work_type>
