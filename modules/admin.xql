@@ -316,8 +316,8 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
             let $work := util:expand($work-raw)
             let $xincludes := $work-raw//tei:text//xi:include/@href
             let $fragmentationDepth := 
-                if ($work-raw//processing-instruction('svsal')[matches(., 'htmlFragmentationDepth="[^"]*"')][1]) then
-                    xs:integer($work-raw//processing-instruction('svsal')[matches(., 'htmlFragmentationDepth="[^"]*"')][1]/replace(substring-after(., 'htmlFragmentationDepth="'), '"', ''))
+                if ($work-raw//processing-instruction('svsal')[matches(., 'htmlFragmentationDepth="\d{1,2}"')]) then
+                    xs:integer($work-raw//processing-instruction('svsal')[matches(., 'htmlFragmentationDepth="\d{1,2}"')][1]/replace(., 'htmlFragmentationDepth="(\d{1,2})"', '$1'))
                 else $config:fragmentationDepthDefault
             let $debug := if ($config:debug = ("trace", "info")) then console:log("Rendering " || string($work-raw/@xml:id) || " at fragmentation level " || $fragmentationDepth || ".") else ()
             let $start-time-a := util:system-time()
