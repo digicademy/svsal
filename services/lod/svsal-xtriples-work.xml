@@ -101,7 +101,7 @@
                 <object type="literal">/($currentResource/tei:teiHeader/tei:profileDesc/tei:langUsage/tei:language/text())</object>
             </statement>
 
-            <!-- is the id actually necessary or already given indirectly? -->
+            <!-- is the id. URI actually necessary? -->
             <statement n="109"><!-- rdfs:seeAlso SvSal work full id -->
                 <subject type="uri" prepend="texts/">/($currentResource/@docId)</subject>
                 <predicate prefix="rdfs">seeAlso</predicate>
@@ -109,8 +109,8 @@
             </statement>
             
             <statement n="110"><!-- rdfs:seeAlso SvSal work webpage (reading view) -->
-                <!-- for whole works, we need to build the .html link "directly" -->
-                <condition>/boolean(not($currentResource/tei:teiHeader//tei:relatedItem[@type eq "completeWork"]))</condition>
+                <!-- for whole works, we need to build the .html link "directly" (volumes are configured below) -->
+                <condition>/boolean(not($currentResource/tei:teiHeader//tei:relatedItem[@type eq "work_multivolume"]))</condition>
                 <subject type="uri" prepend="texts/">/($currentResource/@docId)</subject>
                 <predicate prefix="rdfs">seeAlso</predicate>
                 <object type="uri" prepend="https://www.salamanca.school/work.html?wid=">/($currentResource/@docId)</object>
