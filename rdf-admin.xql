@@ -10,7 +10,7 @@ import module namespace util        = "http://exist-db.org/xquery/util";
 import module namespace xmldb       = "http://exist-db.org/xquery/xmldb";
 import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";
 
-declare option exist:timeout "10800000"; (: 3 h :)
+declare option exist:timeout "25000000"; (: ~7 h :)
 
 declare option output:media-type "text/html";
 declare option output:indent "yes";
