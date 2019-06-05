@@ -15,7 +15,7 @@ import module namespace config      = "http://salamanca/config"                 
 import module namespace render      = "http://salamanca/render"                 at "render.xql";
 import module namespace sphinx      = "http://salamanca/sphinx"                 at "sphinx.xql";
 
-declare option exist:timeout "10800000"; (: 3 h :)
+declare option exist:timeout "25000000"; (: ~7 h :)
 
 declare function admin:cleanCollection ($wid as xs:string, $collection as xs:string) {
     let $collectionName := 
