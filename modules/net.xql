@@ -866,8 +866,9 @@ declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()
                 (:  filter out all invalid params and remove duplicates (first value wins) :)
                 let $params0 := map:merge(for $p in $netVars('params') return if (($p, substring-before($p, '=')) = $validParams) then map:entry(substring-before($p, '='), substring-after($p, '=')) else ())
                 let $mode :=
-                    if (tokenize(tokenize($normalizedPath, ':')[1], '\.')[2] = ('orig', 'edit')) then tokenize(tokenize($normalizedPath, ':')[1], '\.')[2]
-                    else request:get-parameter('mode', '')
+                    if (tokenize(tokenize($normalizedPath, ':')[1], '\.')[2] = ('orig', 'edit') and ('mode=orig', 'mode=edit') = $validParams) then tokenize(tokenize($normalizedPath, ':')[1], '\.')[2]
+                    else if (request:get-parameter('mode', '') and ('mode', 'mode=' || request:get-parameter('mode', '')) = $validParams) then request:get-parameter('mode', '')
+                    else ()
                 return map:merge((map:entry('mode', $mode), map:entry('format', $format), $params0))
             (: (4) general validation and output :)
             let $requestValidation := (: -1 (meaningless request) has priority over 0 (not (yet) available) :)
