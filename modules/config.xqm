@@ -124,6 +124,43 @@ declare variable $config:databaseEntries     := ('authors',
                                                 'news'
                                                 );
 
+declare variable $config:citationLabels :=
+    map {
+        'additional': 'add.',
+        'administrative': (),
+        'article': 'art.',
+        'book': 'lib.',
+        'chapter': 'cap.',
+        'colophon': 'coloph.',
+        'source': (),
+        'commentary': 'comment.',
+        'contained_work': (),
+        'contents': 'tab.',
+        'corrigenda': 'corr.',
+        'dedication': 'dedic.',
+        'disputation': 'disp.',
+        'doubt': 'dub.',
+        'entry': (),
+        'foreword': 'pr.',
+        'gloss': 'gl.',
+        'index': 'ind.',
+        'lecture': 'relect.',
+        'map': (),
+        'part': 'p.',
+        'preface': 'praef.',
+        'privileges': 'priv.',
+        'question': 'q.',
+        'section': (),
+        'segment': 'sect.',
+        'unknown': (),
+        'work_part': (),
+        'title': 'tit.',
+        'law': 'l.',
+        'partida': 'part.',
+        'number': 'num.'
+    };
+
+
 (: OOOooo...                    End configurable section                      ...oooOOO :)
 (: ==================================================================================== :)
 
