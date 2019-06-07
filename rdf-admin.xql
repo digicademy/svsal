@@ -10,14 +10,14 @@ import module namespace util        = "http://exist-db.org/xquery/util";
 import module namespace xmldb       = "http://exist-db.org/xquery/xmldb";
 import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";
 
-declare option exist:timeout "10800000"; (: 3 h :)
+declare option exist:timeout "25000000"; (: ~7 h :)
 
 declare option output:media-type "text/html";
 declare option output:indent "yes";
 
 let $start-time := util:system-time()
 
-let $resourceId := request:get-parameter('resourceId', 'W0013')
+let $resourceId := request:get-parameter('resourceId', '')
 
 let $rid        :=  if (starts-with($resourceId, "authors/")) then
                         substring-after($resourceId, "authors/")
@@ -27,9 +27,9 @@ let $rid        :=  if (starts-with($resourceId, "authors/")) then
                         $resourceId
 
 (: for published works, rdf rendering is only permitted if there is an index file that is newer than the TEI source :)
-let $indexPath := $config:data-root || '/' || $rid || '_nodeIndex.xml'
+let $indexPath := $config:index-root || '/' || $rid || '_nodeIndex.xml'
 let $currentIndexAvailable := boolean(doc-available($indexPath)
-                                      and xmldb:last-modified($config:data-root, $rid || '_nodeIndex.xml') = max((xmldb:last-modified($config:data-root, $rid || '_nodeIndex.xml'), xmldb:last-modified($config:tei-works-root, $rid || '.xml'))))
+                                      and xmldb:last-modified($config:index-root, $rid || '_nodeIndex.xml') = max((xmldb:last-modified($config:index-root, $rid || '_nodeIndex.xml'), xmldb:last-modified($config:tei-works-root, $rid || '.xml'))))
 return
     if ((sal-util:WRKvalidateId($rid) eq 2 and $currentIndexAvailable) or sal-util:WRKvalidateId($rid) = 1) then
         let $debug := console:log("Requesting " || $config:apiserver || '/v1/xtriples/extract.xql?format=rdf&amp;configuration=' || $config:apiserver || '/v1/xtriples/createConfig.xql?resourceId=' || $rid || ' ...')

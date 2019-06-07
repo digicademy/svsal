@@ -101,6 +101,8 @@
   <msg key="notPublished">Noch nicht veröffentlicht</msg>
   <msg key="language">Sprache</msg>
   <msg key="languageS">Sprache(n)</msg>
+  <msg key="material">Material</msg>
+  <msg key="readWork">Lesen</msg>
   <msg key="digitalPublisher">Veröffentlicht durch</msg>
   <msg key="workViews">Ansichten für dieses Werk</msg>
   <msg key="volViews">Ansichten für diesen Band</msg>

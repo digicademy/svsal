@@ -1,4 +1,4 @@
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" xmlns:sal="http://salamanca.adwmainz.de" version="3.0" exclude-result-prefixes="exist sal tei xd xs xsl" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+<xsl:stylesheet xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sal="http://salamanca.adwmainz.de" version="3.0" exclude-result-prefixes="exist sal tei xd xs xsl" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
 
 <!-- TODO:
            * tweak/tune performance: use
@@ -92,8 +92,9 @@
     <!-- (*) Remember, however, that if there are ancestors to the target node that we want to render,
          we have to call the div or text templates in non-recursive mode for all such ancestors.
          (This is checked/done in the resp. target node.) -->
+    <!-- xml:space=preserve is required for keeping eXist from pretty-printing HTML data when exporting -->
     <xsl:template match="/">
-        <div class="row">
+        <div class="row" xml:space="preserve">
             <div class="col-md-12">
                 <div id="SvSalPages">
                     <div class="SvSalPage">                 <!-- main area (id/class page in order to identify page-able content -->
@@ -498,16 +499,22 @@
     <xsl:template match="pb">                   <!-- insert a '|' and, eventually, a space to indicate pagebreaks in the text -->
 <!--        <xsl:message>Matched pb node <xsl:value-of select="@xml:id"/>.</xsl:message>-->
         <!-- breaks that do not occur at the beginning/ending of a section/paragraph/heading/... are marked as "|" -->
-        <xsl:if test="preceding::pb and preceding-sibling::node()[self::text()[not(normalize-space() eq '')] or .//text()[not(normalize-space() eq '')]]                                     and following-sibling::node()[self::text()[not(normalize-space() eq '')] or .//text()[not(normalize-space() eq '')]]"> 
-            <xsl:choose>
-                <xsl:when test="@break='no'">
-                    <xsl:text>|</xsl:text>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:text> | </xsl:text>
-                </xsl:otherwise>
-            </xsl:choose>
-        </xsl:if>
+        <xsl:choose>
+            <xsl:when test="@type eq 'blank'">
+                <br/>
+            </xsl:when>
+            <xsl:when test="preceding::pb and preceding-sibling::node()[self::text()[not(normalize-space() eq '')] or .//text()[not(normalize-space() eq '')]]                                                                                and following-sibling::node()[self::text()[not(normalize-space() eq '')] or .//text()[not(normalize-space() eq '')]]">
+                <xsl:choose>
+                    <xsl:when test="@break='no'">
+                        <xsl:text>|</xsl:text>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:text> | </xsl:text>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:when>
+            <xsl:otherwise/>
+        </xsl:choose>
         <xsl:if test="@n and not(@sameAs)">
             <xsl:element name="div">
                 <xsl:attribute name="class">pageNumbers</xsl:attribute>
@@ -557,9 +564,6 @@
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:element>
-                    
-                    
-                    
                 </xsl:element>
             </xsl:element>
         </xsl:if>
@@ -797,6 +801,9 @@
     
     <xsl:template match="damage">
         <xsl:apply-templates/>
+    </xsl:template>
+    <xsl:template match="gap[ancestor::damage]">
+        <span title="?" class="gap"/>
     </xsl:template>
     <xsl:template match="supplied">
         <span class="original unsichtbar" title="{string(.)}">[<xsl:value-of select="./text()"/>]</span> 

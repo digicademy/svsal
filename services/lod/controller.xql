@@ -403,15 +403,22 @@ return
         else if (ends-with($exist:path, '.rdf')) then
             let $debug          := if ($config:debug = "trace") then console:log("LOD requested (Case 1): " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
             let $resourceId     := substring-before($exist:resource, '.rdf')
-            return  if ($exist:resource = xmldb:get-child-resources($config:rdf-root) and not("nocache" = request:get-parameter-names())) then
-                        let $debug          := if ($config:debug = ("trace", "info")) then console:log("Loading " || $resourceId || " ...") else ()
-                        return net:forward('../salamanca-data/rdf/' || $exist:resource, $net-vars)
-                    else
-                        let $debug          := if ($config:debug = ("trace", "info")) then console:log("Generating rdf for " || $resourceId || " ...") else ()
-                        let $path           := '/services/lod/extract.xql'
-                        let $parameters     := (<exist:add-parameter name="configuration"   value="{$config:apiserver || '/v1/xtriples/createConfig.xql?resourceId=' || $resourceId || '&amp;format=' || $config:lodFormat}"/>,
-                                                <exist:add-parameter name="format"          value="{$config:lodFormat}"/>)
-                        return net:forward($path, $net-vars, $parameters)
+            return  
+                if ($exist:resource = xmldb:get-child-resources($config:rdf-root) and not("nocache" = request:get-parameter-names())) then
+                    let $debug          := if ($config:debug = ("trace", "info")) then console:log("Loading " || $resourceId || " ...") else ()
+                    let $rdfPath := 
+                        if (starts-with(upper-case($exist:resource), 'W0')) then '../salamanca-webdata/rdf/works/' || $exist:resource
+                        else if (starts-with(upper-case($exist:resource), 'A0')) then '../salamanca-webdata/rdf/authors/' || $exist:resource
+                        else if (starts-with(upper-case($exist:resource), 'L0')) then '../salamanca-webdata/rdf/lemmata/' || $exist:resource
+                        else ()
+                    return 
+                        if ($rdfPath) then net:forward($rdfPath, $net-vars) else net:error(404, $net-vars, ())
+                else
+                    let $debug          := if ($config:debug = ("trace", "info")) then console:log("Generating rdf for " || $resourceId || " ...") else ()
+                    let $path           := '/services/lod/extract.xql'
+                    let $parameters     := (<exist:add-parameter name="configuration"   value="{$config:apiserver || '/v1/xtriples/createConfig.xql?resourceId=' || $resourceId || '&amp;format=' || $config:lodFormat}"/>,
+                                            <exist:add-parameter name="format"          value="{$config:lodFormat}"/>)
+                    return net:forward($path, $net-vars, $parameters)
 
 (: LOD 2. We have a request for a specific resource, but a *.html filename :)
         else if ((contains($exist:path, '/authors/') or contains($exist:path, '/works/')) and ends-with($exist:resource, '.html')) then
@@ -424,7 +431,6 @@ return
             let $resolvedPath := $config:webserver || $workOrAuthor || substring-before($exist:resource, '.htm')
             let $debug        := if ($config:debug = "trace") then console:log("Redirecting (303) to " || $resolvedPath || " ...") else ()
             return net:redirect-with-303($resolvedPath)
-
 
 (: LOD 3. We have a request for a data xml file :)
         else if ((contains($exist:path, '/authors/') or contains($exist:path, '/works/')) and ends-with($exist:path, '.xml')) then

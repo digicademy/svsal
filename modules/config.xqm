@@ -124,6 +124,43 @@ declare variable $config:databaseEntries     := ('authors',
                                                 'news'
                                                 );
 
+declare variable $config:citationLabels :=
+    map {
+        'additional': 'add.',
+        'administrative': (),
+        'article': 'art.',
+        'book': 'lib.',
+        'chapter': 'cap.',
+        'colophon': 'coloph.',
+        'source': (),
+        'commentary': 'comment.',
+        'contained_work': (),
+        'contents': 'tab.',
+        'corrigenda': 'corr.',
+        'dedication': 'dedic.',
+        'disputation': 'disp.',
+        'doubt': 'dub.',
+        'entry': (),
+        'foreword': 'pr.',
+        'gloss': 'gl.',
+        'index': 'ind.',
+        'lecture': 'relect.',
+        'map': (),
+        'part': 'p.',
+        'preface': 'praef.',
+        'privileges': 'priv.',
+        'question': 'q.',
+        'section': (),
+        'segment': 'sect.',
+        'unknown': (),
+        'work_part': (),
+        'title': 'tit.',
+        'law': 'l.',
+        'partida': 'part.',
+        'number': 'num.'
+    };
+
+
 (: OOOooo...                    End configurable section                      ...oooOOO :)
 (: ==================================================================================== :)
 
@@ -140,39 +177,46 @@ declare variable $config:app-root :=
                 substring($rawPath, 36)
             else
                 substring($rawPath, 15)
-        else
-            $rawPath
+        else $rawPath
     return
         substring-before($modulePath, "/modules")
 ;
 
 (: Path to the research data repository :)
-declare variable $config:salamanca-data-root := 
+declare variable $config:webdata-root := 
     let $modulePath := replace(system:get-module-load-path(), '^(xmldb:exist://)?(embedded-eXist-server)?(.+)$', '$3')
-    return concat(substring-before($modulePath, "/salamanca/"), "/salamanca-data");
+    return concat(substring-before($modulePath, "/salamanca/"), "/salamanca-webdata");
 
 declare variable $config:temp           := concat($config:app-root, "/temp");
 declare variable $config:toc-root       := concat($config:app-root, "/toc");
 
 (: Paths to the TEI data repositories :)
-declare variable $config:tei-root       := concat($config:salamanca-data-root, "/tei");
-declare variable $config:tei-authors-root := concat($config:salamanca-data-root, "/tei/authors");
-declare variable $config:tei-lemmata-root := concat($config:salamanca-data-root, "/tei/lemmata");
-declare variable $config:tei-news-root := concat($config:salamanca-data-root, "/tei/news");
-declare variable $config:tei-workingpapers-root := concat($config:salamanca-data-root, "/tei/workingpapers");
-declare variable $config:tei-works-root := concat($config:salamanca-data-root, "/tei/works");
-declare variable $config:tei-meta-root := concat($config:salamanca-data-root, "/tei/meta");
+declare variable $config:tei-root       := 
+    let $modulePath := replace(system:get-module-load-path(), '^(xmldb:exist://)?(embedded-eXist-server)?(.+)$', '$3')
+    return concat(substring-before($modulePath, "/salamanca/"), "/salamanca-tei");
+declare variable $config:tei-authors-root := concat($config:tei-root, "/authors");
+declare variable $config:tei-lemmata-root := concat($config:tei-root, "/lemmata");
+declare variable $config:tei-news-root := concat($config:tei-root, "/news");
+declare variable $config:tei-workingpapers-root := concat($config:tei-root, "/workingpapers");
+declare variable $config:tei-works-root := concat($config:tei-root, "/works");
+declare variable $config:tei-meta-root := concat($config:tei-root, "/meta");
 declare variable $config:tei-sub-roots := ($config:tei-authors-root, $config:tei-lemmata-root, $config:tei-news-root, $config:tei-workingpapers-root, $config:tei-works-root);
 
 declare variable $config:resources-root := concat($config:app-root, "/resources");
 declare variable $config:data-root      := concat($config:app-root, "/data");
-declare variable $config:html-root      := concat($config:data-root, "/html");
-declare variable $config:txt-root      := concat($config:data-root, "/txt");
-declare variable $config:snippets-root  := concat($config:data-root, "/snippets");
-declare variable $config:rdf-root       := concat($config:salamanca-data-root, "/rdf");
-declare variable $config:iiif-root      := concat($config:salamanca-data-root, "/iiif");
+declare variable $config:temp-root := concat($config:data-root, "/temp");
+declare variable $config:html-root      := concat($config:webdata-root, "/html");
+declare variable $config:index-root      := concat($config:webdata-root, "/index");
+declare variable $config:txt-root      := concat($config:webdata-root, "/txt");
+declare variable $config:snippets-root  := concat($config:webdata-root, "/snippets");
+declare variable $config:rdf-root       := concat($config:webdata-root, "/rdf");
+declare variable $config:rdf-works-root := concat($config:rdf-root, '/works');
+declare variable $config:rdf-authors-root := concat($config:rdf-root, '/authors');
+declare variable $config:rdf-lemmata-root := concat($config:rdf-root, '/lemmata');
+declare variable $config:rdf-sub-roots := ($config:rdf-authors-root, $config:rdf-works-root, $config:rdf-lemmata-root);
+declare variable $config:iiif-root      := concat($config:webdata-root, "/iiif");
 declare variable $config:files-root     := concat($config:resources-root, "/files");
-declare variable $config:corpus-files-root := concat($config:data-root, '/corpus');
+declare variable $config:corpus-zip-root := concat($config:webdata-root, '/corpus-zip');
 
 (: declare variable $config:home-url   := replace(replace(replace(request:get-url(), substring-after(request:get-url(), '/salamanca'), ''),'/rest/', '/'), 'localhost', 'h2250286.stratoserver.net'); :)
 

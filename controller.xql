@@ -202,8 +202,12 @@ return
     else if (request:get-header('X-Forwarded-Host') = "id." || $config:serverdomain) then
         let $debug1 := if ($config:debug = ("trace", "info")) then console:log("Id requested: " || $net:forwardedForServername || $exist:path || $parameterString || ". (" || net:negotiateContentType($net:servedContentTypes, '') || ')') else ()
         let $debug1 := if ($config:debug = ("trace")) then console:log("Redirect (303) to '" || $config:apiserver || "/v1" || $exist:path || $parameterString || "'.") else ()
-        return net:redirect-with-303($config:apiserver || "/v1" || replace($exist:path, '/works\.', '/texts/') || $parameterString)
-
+        return 
+            if (matches($exist:path, '(/texts|/concepts/|/authors)')) then 
+                net:redirect-with-303($config:apiserver || "/v1" || $exist:path || $parameterString)
+            else if (matches($exist:path, '/works\.')) then 
+                net:redirect-with-303($config:apiserver || "/v1" || replace($exist:path, '/works\.', '/texts/') || $parameterString)
+            else net:error(404, $netVars, ())
 
     (: *** TEI file service (X-Forwarded-Host = 'tei.{$config:serverdomain}') *** :)
     else if (request:get-header('X-Forwarded-Host') = "tei." || $config:serverdomain) then
@@ -215,6 +219,9 @@ return
             if (starts-with(lower-case($reqText), 'w0')) then 
                 let $debug        := if ($config:debug = ("trace", "info")) then console:log("redirect to tei api: " || $config:apiserver || "/v1/texts/" || replace($reqText, '.xml', '') || $parameters || ".") else ()
                 return net:redirect($config:apiserver || "/v1/texts/" || replace($reqText, '.xml', '') || $parameters, $netVars)
+            else if (not($reqText)) then 
+                let $debug        := if ($config:debug = ("trace", "info")) then console:log("redirect to tei api: " || $config:apiserver || "/v1/texts" || $parameters || ".") else ()
+                return net:redirect($config:apiserver || "/v1/texts" || $parameters, $netVars)
             else net:error(404, $netVars, ())
 
 
@@ -256,9 +263,9 @@ return
                                     else if ($exist:resource eq 'SvSal_author.xml') then 'saltei-author.xml'
                                     else if ($exist:resource eq 'SvSal_author.rng') then 'saltei-author.rng'
                                     else $exist:resource
-                let $finalPath     := "/tei/meta/" || $resource
-                let $debug          := if ($config:debug = ("trace", "info")) then console:log("File download requested: " || $net:forwardedForServername || $exist:path || $parameterString || ", redirecting to salamanca-data: " || $finalPath || '?' || string-join($netVars('params'), '&amp;') || ".") else ()
-                return net:forward-to-data($finalPath, $netVars, ())
+                let $finalPath     := '/meta/' || $resource
+                let $debug          := if ($config:debug = ("trace", "info")) then console:log("File download requested: " || $net:forwardedForServername || $exist:path || $parameterString || ", redirecting to directory: " || $finalPath || '?' || string-join($netVars('params'), '&amp;') || ".") else ()
+                return net:forward-to-tei($finalPath, $netVars, ())
             else
                 let $finalPath     := "/resources/files" || $prelimPath
                 let $debug          := if ($config:debug = ("trace", "info")) then console:log("File download requested: " || $net:forwardedForServername || $exist:path || $parameterString || ", redirecting to " || $finalPath || '?' || string-join($netVars('params'), '&amp;') || ".") else ()
