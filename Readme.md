@@ -34,7 +34,6 @@ While we consider some aspects of the software sufficiently consolidated and tes
 * Improve documentation - inline documentation (code comments) as well as separate description of the app's workings need improvement
 * Clean up code - some obsolete code has not been commented out, let alone removed. This also concerns files (i.e. obsolete javascript libraries or xslt stylesheets). Also, not all occurrences of hardcoded, "Salamanca-specific" information has been moved to the central configuration module (modules/config.xqm) or the localisation files at data/i18n, where such things should reside.
 * Performance - when we are satisfied with everything, we want to minify js and css code. However, we also have to revise the application more generally in terms of performance. In some cases, caching routines can certainly help (in the case of the rdf lifting service, we have started working on this, but this is not working properly right now.)
-* Error handling can certainly be done in a more orderly way.
 
 ## License
 
