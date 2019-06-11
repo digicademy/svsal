@@ -5,23 +5,7 @@
 
         <range>
 
-<!-- sal index file fields ... -->
-            <create qname="sal:node">
-                <field name="sal.node.n" match="@n" type="xs:string"/>
-                <field name="sal.node.type" match="@type" type="xs:string"/>
-                <field name="sal.node.subtype" match="@subtype" type="xs:string"/>
-            </create>
-            <create qname="sal:fragment"/>
-            <create qname="sal:crumbtrail"/>
-            <create qname="sal:citetrail"/>
-            <create qname="sal:citableParent"/>
-
-<!-- some TEI fields, relevant e.g. for TEI metadata files stored within the web app ... -->
-            <create qname="tei:char"/>
-            <create qname="tei:date">
-                <field name="tei.date.type" match="@type" type="xs:string"/>
-                <field name="tei.date.when" match="@when" type="xs:string"/>
-            </create>
+            <!-- some TEI fields, relevant e.g. for TEI metadata files stored within the web app ... -->            
             <create qname="tei:div">
                 <field name="tei.div.n" match="@n" type="xs:string"/>
                 <field name="tei.div.type" match="@type" type="xs:string"/>
@@ -29,47 +13,14 @@
             <create qname="tei:list">
                 <field name="tei.list.type" match="@type" type="xs:string"/>
             </create>
-            <create qname="tei:mapping">
-                <field name="tei.mapping.type" match="@type" type="xs:string"/>
-            </create>
             <create qname="tei:ref">
                 <field name="tei.ref.target" match="@target" type="xs:string"/>
                 <field name="tei.ref.n" match="@n" type="xs:string"/>
                 <field name="tei.ref.type" match="@type" type="xs:string"/>
             </create>
-            <create qname="tei:text">
-                <field name="tei.text.type" match="@type" type="xs:string"/>
-            </create>
-            <create qname="tei:pb">
-                <field name="tei.pb.n" match="@n" type="xs:string"/>
-                <field name="tei.pb.facs" match="@facs" type="xs:string"/>
-            </create>
-            <create qname="tei:note">
-                <field name="tei.note.n" match="@n" type="xs:string"/>
-            </create>
-            <create qname="tei:milestone">
-                <field name="tei.milestone.n" match="@n" type="xs:string"/>
-            </create>
-
-<!-- HTML elements... -->            
-            <create qname="div">
-                <field name="div.id" match="@id" type="xs:string"/>
-            </create>
-            <create qname="a">
-                <field name="a.class" match="@class" type="xs:string"/>
-                <field name="a.href" match="@href" type="xs:string"/>
-            </create>
-
-
-<!-- RDF elements... -->
-            <create qname="rdf:Description">
-                <field name="rdf.description.about" match="@rdf:about" type="xs:anyURI"/>
-            </create>
-            <create qname="rdfs:seeAlso">
-                <field name="rdfs.seeAlso.about" match="@rdf:resource" type="xs:anyURI"/>
-            </create>
-            <create qname="rdfs:label"/>
+            
+            <!-- i18n mappings? -->
+            
         </range>
-        
     </index>
 </collection>
