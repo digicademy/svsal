@@ -124,9 +124,10 @@ declare variable $config:databaseEntries     := ('authors',
                                                 'news'
                                                 );
 
-(: Scholarly citation labels of structural units (div/@type, milestone/@unit, ...), used for crumbtrails and citation references :)
+(: Scholarly citation labels of structural units (div/@type, milestone/@unit, ...), used for crumbtrails, toc, citation references :)
 declare variable $config:citationLabels :=
     map {
+        (: div labels: :)
         'additional': map {'verb': 'additiones', 'abbr': 'add.'},
         'administrative': (),
         'article': map {'verb': 'articulus', 'abbr': 'art.'},
@@ -158,7 +159,12 @@ declare variable $config:citationLabels :=
         'title': map {'verb': 'titulus', 'abbr': 'tit.'},
         'law': map {'verb': 'lex', 'abbr' :'l.'},
         'partida': map {'verb': 'partida', 'abbr': 'part.'},
-        'number': map {'verb': 'numerus', 'abbr': 'num.'}
+        (: non-div labels: :)
+        'generic': map {'verb': 'sectio', 'abbr': 'sect.'}, (: same as section :)
+        'number': map {'verb': 'numerus', 'abbr': 'num.'},
+        'back': map {'verb': 'appendix', 'abbr': 'app.'},
+        'p': map {'verb': 'paragraphus', 'abbr': 'paragr.'},
+        'note': map {'verb': 'nota', 'abbr': 'not.'}
     };
 
 

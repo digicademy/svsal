@@ -267,11 +267,20 @@ declare function admin:derive-title($node as node()) as item()* {
         case element(tei:choice)       return $node/tei:expan/text() | $node/tei:reg/text() | $node/tei:cor/text()
         case element(tei:titlePart)    return ('[', $node/@type/string(), '] ',  local:passthruTOC($node))
         case element(tei:div) return
-            if($node/tei:head) then ('[', $node/@type/string(), '] ',  local:passthruTOC($node/tei:head))
-            else if ($node/tei:list/tei:head) then ('[', $node/@type/string(), '] ',  local:passthruTOC($node/tei:list/tei:head))
-            else if (not($node/tei:head | $node/tei:list/tei:head)) then  ('[', $node/@type/string(), '] ',  $node/@n/string())
-            else()
-        case element(tei:milestone)    return ('[', $node/@unit/string(), '] ',  $node/@n/string())
+            let $divLabel := 
+                if ($config:citationLabels($node/@type/string())?('verb')) then '[ ' || $config:citationLabels($node/@type/string())?('verb') || ' ] '
+                else '[ ' || $config:citationLabels('generic')?('verb') || ' ] '
+            return
+                if($node/tei:head) then ($divLabel, local:passthruTOC($node/tei:head))
+                else if ($node/tei:list/tei:head) then ($divLabel,  local:passthruTOC($node/tei:list/tei:head))
+                else if (not($node/tei:head | $node/tei:list/tei:head)) then  ($divLabel,  $node/@n/string())
+                else()
+        case element(tei:milestone) return 
+            let $msLabel := (: due to their low-levelness, milestones are labeled in abbr. form: :)
+                if ($config:citationLabels($node/@unit/string())?('abbr')) then '[ ' || $config:citationLabels($node/@unit/string())?('abbr') || ' ] '
+                else '[ ' || $config:citationLabels('generic')?('abbr') || ' ] '
+            return
+                $msLabel || $node/@n/string()
         (:case element(tei:label)        return if ($node/@type) then ('[', $node/@type/string(), '] ', local:passthruTOC($node)) else ():)
         case element(tei:pb)           return if (not($node[@break eq 'no'])) then ' ' else ()
         case element(tei:cb)           return if (not($node[@break eq 'no'])) then ' ' else ()
