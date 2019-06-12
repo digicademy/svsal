@@ -131,97 +131,101 @@ declare function render:needsTxtCorpusZip($node as node(), $model as map(*)) {
          corr,
          ...?
 :)
+
+
 declare function render:getCrumbtrail ($targetWork as node()*, $targetNode as node(), $mode as xs:string, $fragmentIds as map()) {
     let $targetWorkId   := string($targetWork/@xml:id)
     let $targetNodeId   := string($targetNode/@xml:id)
-    let $node :=       
+    
+    (: (1) get the crumb/cite ID for the current node :)
+    let $thisCrumb :=       
         if ($mode = 'html') then
             <a href='{render:mkUrl($targetWork, $targetNode)}'>{app:sectionTitle($targetWork, $targetNode)}</a>
         else if ($mode eq 'html-rendering') then
             <a href='{render:mkUrlWhileRendering($targetWork, $targetNode, $fragmentIds)}'>{app:sectionTitle($targetWork, $targetNode)}</a>
         else if ($mode = 'numeric') then
-            typeswitch($targetNode)
-                case element(tei:front)
-                    return 'frontmatter'
-                case element(tei:back)
-                    return 'backmatter'
-                case element(tei:titlePage)
-                    return 'titlepage'
-                case element(tei:titlePart)                                             (: "titlePage.X" where X is the number of parts where this occurs :)
-                    return concat('titlepage.', string(count($targetNode/preceding-sibling::tei:titlePart) + 1))
-                case element(tei:text)                                                  (: "volX" where X is the current volume number, don't use it at all for monographs :)
-                    return 
-                        if ($targetNode/@type='work_volume') then
-                           concat('vol', count($targetNode/preceding::tei:text[@type eq 'work_volume']) + 1)
-                        else ()
-                case element(tei:note)                                                  (: "nX" where X is the anchor used (if it is alphanumeric) and "nXY" where Y is the number of times that X occurs inside the current div :)
-                    return concat('n',  if (matches($targetNode/@n, '[A-Za-z0-9]')) then
-                                            if (count($targetNode/ancestor::tei:div[1]//tei:note[@n eq $targetNode/@n]) gt 1) then
-                                                concat(upper-case(replace($targetNode/@n, '[^a-zA-Z0-9]', '')),
-                                                       string(count($targetNode/ancestor::tei:div[1]//tei:note intersect $targetNode/preceding::tei:note[@n eq $targetNode/@n])+1)
-                                                      )
-                                            else
-                                               upper-case(replace($targetNode/@n, '[^a-zA-Z0-9]', ''))
-                                        else
-                                               count($targetNode/preceding::tei:note intersect $targetNode/ancestor::tei:div[1]//tei:note) + 1)
-                case element(tei:milestone)                                             (: "XY" where X is the unit (if there is one) and Y is the anchor or the number of milestones where this occurs :)
-                    return concat(if ($targetNode/@unit) then
-                                      string($targetNode/@unit)
-                                  else (),
-                                  if ($targetNode/@n) then
-                                      replace($targetNode/@n, '[^a-zA-Z0-9]', '')
-                                  else
-                                      count($targetNode/preceding::tei:milestone intersect $targetNode/ancestor::tei:div[1]//tei:milestone) + 1)
-                case element(tei:item)                                                  (: "entryX" where X is the section title (app:sectionTitle) in capitals, use only for items in indexes and dictionary :)
-                    return 
-                        if($targetNode/ancestor::tei:list/@type = ('dict', 'index')) then
-                            concat('entry', upper-case(replace(app:sectionTitle($targetWork, $targetNode), '[^a-zA-Z0-9]', '')))
-                        else
-                            string(count($targetNode/preceding::tei:item intersect $targetNode/ancestor::tei:list[1]//tei:item) + 1)
-                case element(tei:list)
-                    return 
-                        if($targetNode/@type = ('dict', 'index', 'summaries')) then               (: dictionaries, indices and summaries get their type prepended to their number :) 
-    (:                                            return if($targetNode/@type = ('dict', 'index')) then               (\: dictionaries and indices get their type prepended to their number :\):)
-                             concat($targetNode/@type, string(count($targetNode/preceding::tei:list[@type = ('dict', 'index', 'summaries')] 
-                                                              intersect $targetNode/(ancestor::tei:div   |
-                                                                                     ancestor::tei:body  |
-                                                                                     ancestor::tei:front |
-                                                                                     ancestor::tei:back
-                                                                                    )[last()]//tei:list[@type = ('dict', 'index', 'summaries')]) + 1)
-                                   )
-                        else                                                         (: other types of lists are simply counted :)
-                            string(count($targetNode/preceding-sibling::tei:div[@type ne "work_part"]  |
-                                         $targetNode/preceding-sibling::tei:p (: [$targetNode/self::tei:p] :) | (: We happen to have lists as siblings following ps... :)
-                                         $targetNode/preceding::tei:list[not(@type = ('dict', 'index', 'summaries'))] 
-                                         intersect $targetNode/(ancestor::tei:div   |
-                                                                ancestor::tei:body  |
-                                                                ancestor::tei:front |
-                                                                ancestor::tei:back
-                                                               )[last()]//tei:list[not(@type = ('dict', 'index', 'summaries'))]) + 1)
-                case element(tei:lb)                                                    (: "pXlineY" where X is page and Y line number :)
-                    return concat('l',  if (matches($targetNode/@n, '[A-Za-z0-9]')) then
-                                            replace(substring-after($targetNode/@n, '_'), '[^a-zA-Z0-9]', '')
-                                        else
-                                            string(count($targetNode/preceding::tei:lb intersect $targetNode/preceding::tei:pb[1]/following::tei:lb) + 1)
+            (: no recursion here, makes single crumb for the current node :)
+            typeswitch($targetNode)    
+                case element(tei:front) return 'frontmatter'
+                case element(tei:back) return 'backmatter'
+                case element(tei:titlePage) return 'titlepage'
+                (: "titlePage.X" where X is the number of parts where this occurs :)
+                case element(tei:titlePart) return concat('titlepage.', string(count($targetNode/preceding-sibling::tei:titlePart) + 1))
+                (: TODO: other title page elements :)
+                case element(tei:text) return 
+                    (: "volX" where X is the current volume number, don't use it at all for monographs :)
+                    if ($targetNode/@type='work_volume') then
+                       concat('vol', count($targetNode/preceding::tei:text[@type eq 'work_volume']) + 1)
+                    else ()
+                case element(tei:note) return 
+                    (: "nX" where X is the anchor used (if it is alphanumeric) and "nXY" where Y is the number of times that X occurs inside the current div :)
+                    concat('n',  if (matches($targetNode/@n, '[A-Za-z0-9]')) then
+                        if (count($targetNode/ancestor::tei:div[1]//tei:note[@n eq $targetNode/@n]) gt 1) then
+                            concat(upper-case(replace($targetNode/@n, '[^a-zA-Z0-9]', '')),
+                                   string(count($targetNode/ancestor::tei:div[1]//tei:note intersect $targetNode/preceding::tei:note[@n eq $targetNode/@n])+1)
                                   )
-                case element(tei:pb)                                                    (: "pX" where X is page number :)
-                    return concat('p',  if (matches($targetNode/@n, '[A-Za-z0-9]')) then
-                                            upper-case(replace($targetNode/@n, '[^a-zA-Z0-9]', ''))
-                                        else
-                                            substring($targetNode/@facs, 6)
-                                  )
-                case element(tei:head)
-                    return  concat('heading', (if (count($targetNode/(
-                                                            parent::tei:back                                                            |
-                                                            parent::tei:div[@type ne "work_part"]                                       |
-                                                            parent::tei:front                                                           |
-                                                            parent::tei:list                                                            |
-                                                            parent::tei:titlePart
-                                                       )/tei:head) gt 1) then          (: We have several headings on this level of the document ... :)
-                                                   string(count($targetNode/preceding-sibling::tei:head) + 1)
-                                               else ()
-                                                )
-                                    )
+                        else upper-case(replace($targetNode/@n, '[^a-zA-Z0-9]', ''))
+                    else count($targetNode/preceding::tei:note intersect $targetNode/ancestor::tei:div[1]//tei:note) + 1)
+                case element(tei:milestone) return
+                    (: "XY" where X is the unit (if there is one) and Y is the anchor or the number of milestones where this occurs :)
+                    concat(if ($targetNode/@unit) then string($targetNode/@unit) 
+                           else (),
+                           if ($targetNode/@n) then replace($targetNode/@n, '[^a-zA-Z0-9]', '') 
+                           else count($targetNode/preceding::tei:milestone intersect $targetNode/ancestor::tei:div[1]//tei:milestone) + 1)
+                case element(tei:item) return 
+                    (: "entryX" where X is the section title (app:sectionTitle) in capitals, use only for items in indexes and dictionary (where app:sectionTitle should resolve to term/@key?) :)
+                    if($targetNode/ancestor::tei:list/@type = ('dict', 'index')) then
+                        concat('entry', upper-case(replace(app:sectionTitle($targetWork, $targetNode), '[^a-zA-Z0-9]', '')))
+                    else string(count($targetNode/preceding::tei:item intersect $targetNode/ancestor::tei:list[1]//tei:item) + 1)
+                case element(tei:list) return 
+                    (: dictionaries, indices and summaries get their type prepended to their number :)
+                    if($targetNode/@type = ('dict', 'index', 'summaries')) then
+                        concat($targetNode/@type, 
+                               string(count($targetNode/preceding::tei:list[@type = ('dict', 'index', 'summaries')] 
+                                            intersect $targetNode/(ancestor::tei:div   |
+                                                                   ancestor::tei:body  |
+                                                                   ancestor::tei:front |
+                                                                   ancestor::tei:back
+                                                                  )[last()]//tei:list[@type = ('dict', 'index', 'summaries')]) + 1)
+                               )
+                    (: other types of lists are simply counted :)
+                    else 
+                        string(count($targetNode/preceding-sibling::tei:div[@type ne "work_part"]  |
+                                     $targetNode/preceding-sibling::tei:p (: [$targetNode/self::tei:p] :) | (: We happen to have lists as siblings following ps... :)
+                                     $targetNode/preceding::tei:list[not(@type = ('dict', 'index', 'summaries'))] 
+                                     intersect $targetNode/(ancestor::tei:div   |
+                                                            ancestor::tei:body  |
+                                                            ancestor::tei:front |
+                                                            ancestor::tei:back
+                                                           )[last()]//tei:list[not(@type = ('dict', 'index', 'summaries'))]) + 1)
+                
+                case element(tei:lb) return (: INACTIVE (due to size issues with sal:index) :)                                                  
+                     (: "pXlineY" where X is page and Y line number :)
+                     concat('l',
+                            (: this is obsolete since usage of lb/@n is deprecated: :)
+                            if (matches($targetNode/@n, '[A-Za-z0-9]')) then
+                                replace(substring-after($targetNode/@n, '_'), '[^a-zA-Z0-9]', '')
+                            (: TODO: make this dependent on whether the ancestor is a marginal:  :)
+                            else string(count($targetNode/preceding::tei:lb intersect $targetNode/preceding::tei:pb[1]/following::tei:lb) + 1)
+                           )
+                case element(tei:pb) return
+                    (: "pX" where X is page number :)
+                    concat('p',  
+                           if (matches($targetNode/@n, '[A-Za-z0-9]')) then
+                               upper-case(replace($targetNode/@n, '[^a-zA-Z0-9]', ''))
+                           else substring($targetNode/@facs, 6)
+                           )
+                case element(tei:head) return 
+                    concat('heading', (if (count($targetNode/(parent::tei:back                                                            |
+                                                              parent::tei:div[@type ne "work_part"]                                       |
+                                                              parent::tei:front                                                           |
+                                                              parent::tei:list                                                            |
+                                                              parent::tei:titlePart
+                                                             )/tei:head) gt 1) then          
+                                           (: we have several headings on this level of the document ... :)
+                                           string(count($targetNode/preceding-sibling::tei:head) + 1)
+                                       else ())
+                            )
                 (: Other section types (e.g. ps and divs) are identified by number :)
                 default return string(count($targetNode/preceding-sibling::tei:div[@type ne "work_part"]  |
                                             $targetNode/preceding-sibling::tei:p (: [$targetNode/self::tei:p] :) | (: We happen to have divs as siblings following ps... :)
@@ -231,12 +235,18 @@ declare function render:getCrumbtrail ($targetWork as node()*, $targetNode as no
                                                                    ancestor::tei:body                        |
                                                                    ancestor::tei:front                       |
                                                                    ancestor::tei:back
-                                                                   )[last()]//tei:list[not (@type = ('dict', 'index', 'summaries'))]
-                                       ) + 1)
-        else (: neither html nor numeric mode :) 
+                                                                  )[last()]//tei:list[not (@type = ('dict', 'index', 'summaries'))]
+                                           ) + 1)
+            (: ### end of 'numeric' section ### :)
+        else 
+            (: neither html nor numeric mode :) 
             app:sectionTitle($targetWork, $targetNode)
-    let $crumbtrail := (
-        if ($targetNode/((: === get parent node's "name" - HERE is the RECURSION === :)
+    (: ### end of $thisCrumb ### :)
+    
+    (: (2) get related element's (e.g., ancestor's) crumbtrail/citetrail, if required, and glue it together with the current crumb :)
+    (: (a) crumbtrail/citetrail of related element: :)
+    let $crumbtrailPrefix := 
+        if ($targetNode/(
                          ancestor::tei:back                                                                  |
                          ancestor::tei:div[@type ne "work_part"]                                             |
                          ancestor::tei:front                                                                 |
@@ -247,67 +257,41 @@ declare function render:getCrumbtrail ($targetWork as node()*, $targetNode as no
                          ancestor::tei:text[not(@xml:id = 'completeWork' or @type = "work_part")]            |
                          ancestor::tei:titlePart                                                 
                         )) then
-            if ($targetNode[self::tei:lb] | $targetNode[self::tei:cb]) then
+            if ($targetNode[self::tei:lb] | $targetNode[self::tei:cb]) then (: INACTIVE :)
                 render:getCrumbtrail($targetWork,  $targetNode/preceding::tei:pb[1], $mode, $fragmentIds)
             else if ($targetNode[self::tei:pb] and ($targetNode/ancestor::tei:front | $targetNode/ancestor::tei:text[1][not(@xml:id = 'completeWork' or @type = "work_part")])) then
+                (: in front and single volumes, prepend front's or volume's crumb ID for avoiding multiple identical IDs in the same work :)
+                (: TODO: are there potential collisions if pb's crumb does not inherit from the specific section (titlePage|div)? 
+                         -> for example, with repetitive page numbers in the appendix, but such collisions should be resolved in TEI... :)
                 render:getCrumbtrail($targetWork,  ($targetNode/ancestor::tei:front | $targetNode/ancestor::tei:text[1][not(@xml:id = 'completeWork' or @type = "work_part")])[last()], $mode, $fragmentIds)
-            else if ($targetNode[self::tei:pb]) then
-                ()
-            else render:getCrumbtrail($targetWork, $targetNode/(ancestor::tei:back[1]                                                                     |
-                                                                ancestor::tei:div[@type ne "work_part"][1]                                                |
-                                                                ancestor::tei:front[1]                                                                    |
-                                                                ancestor::tei:item[ancestor::tei:list[1][@type = ('dict', 'index', 'summaries')]][1]      |
-                                                                ancestor::tei:list[@type = ('dict', 'index', 'summaries')][1]                             |
-                                                                ancestor::tei:note[1][not($targetNode[self::tei:milestone])]                              |
-                                                                ancestor::tei:p[1][not($targetNode[self::tei:milestone] | $targetNode[self::tei:note])]   |
-                                                                ancestor::tei:text[1][not(@xml:id = 'completeWork' or @type = "work_part")]               |
-                                                                ancestor::tei:titlePart[1]
-                                                               )[last()], $mode, $fragmentIds)
-        else (),
-        if ($targetNode[(: === get connector MARKER: ".", " » ", or none === :)
-                        self::tei:back      or
-                        self::tei:div[@type ne "work_part"]       or
-                        self::tei:front     or
-                        self::tei:item      or
-                        self::tei:lb        or
-                        self::tei:list      or
-                        self::tei:milestone or
-                        self::tei:note      or
-                        self::tei:p         or
-                        (self::tei:pb and (ancestor::tei:front | ancestor::tei:text[not(@xml:id = 'completeWork' or @type = "work_part")])) or
-                        self::tei:text      or
-                        self::tei:titlePage or
-                        self::tei:titlePart
-                       ] and $targetNode/(ancestor::tei:back                                                        |
-                                          ancestor::tei:div[@type ne "work_part"]                                   |
-                                          ancestor::tei:front                                                       |
-                                          ancestor::tei:item                                                        |
-                                          ancestor::tei:list                                                        |
-                                          ancestor::tei:note                                                        |
-                                          ancestor::tei:p                                                           |
-                                          ancestor::tei:text[not(@xml:id = 'completeWork' or @type = "work_part")]  |
-                                          ancestor::tei:titlePart 
-                                         )
-                           ) then
-                                if ($mode = ('html', 'html-rendering')) then ' » ' else if ($mode = 'numeric') then '.' else ()
-        else (),
-        if ($targetNode[self::tei:front     or
-                        self::tei:back      or
-                        self::tei:div[@type ne "work_part"]       or
-                        self::tei:milestone or
-                        self::tei:text      or
-                        self::tei:note      or
-                        self::tei:p         or
-                        self::tei:item      or
-                        self::tei:pb        or
-                        self::tei:lb        or
-                        self::tei:titlePage or
-                        self::tei:titlePart or
-                        self::tei:list
-                       ]) then
-                            $node                                           (: defined before/above :)
-                        else ()
-                       )
+            else if ($targetNode[self::tei:pb]) then ()
+            else 
+                (: === for all other node types, get parent node's citetrail/crumbtrail - HERE is the RECURSION === :)
+                render:getCrumbtrail($targetWork, $targetNode/(ancestor::tei:back[1]                                                                     |
+                                                               ancestor::tei:div[@type ne "work_part"][1]                                                |
+                                                               ancestor::tei:front[1]                                                                    |
+                                                               ancestor::tei:item[ancestor::tei:list[1][@type = ('dict', 'index', 'summaries')]][1]      |
+                                                               ancestor::tei:list[@type = ('dict', 'index', 'summaries')][1]                             |
+                                                               ancestor::tei:note[1][not($targetNode[self::tei:milestone])]                              |
+                                                               ancestor::tei:p[1][not($targetNode[self::tei:milestone] | $targetNode[self::tei:note])]   |
+                                                               ancestor::tei:text[1][not(@xml:id = 'completeWork' or @type = "work_part")]               |
+                                                               ancestor::tei:titlePart[1]
+                                                              )[last()], $mode, $fragmentIds)
+        else ()
+    (: (b) get connector MARKER: ".", " » ", or none :)
+    let $connector :=
+        if ($thisCrumb and $crumbtrailPrefix) then
+            if ($mode = ('html', 'html-rendering')) then ' » ' 
+            else if ($mode eq 'numeric') then '.' 
+            else ()
+        else ()
+    
+    (: (c) put it all together and out :)
+    let $crumbtrail :=
+        if ($mode = ('html', 'html-rendering')) then ($crumbtrailPrefix, $connector, $thisCrumb)
+        else if ($mode eq 'numeric') then string-join(($crumbtrailPrefix, $connector, $thisCrumb), '')
+        else ()
+        
     return $crumbtrail
 };
 
