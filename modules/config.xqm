@@ -125,47 +125,62 @@ declare variable $config:databaseEntries     := ('authors',
                                                 );
 
 (: Scholarly citation labels of structural units (div/@type, milestone/@unit, ...), used for crumbtrails, toc, citation references :)
+(: labels marked as 'citeRef': true() are used for building citation references; 
+   all labels are used for making crumbtrails;
+   (almost) all div labels are used for making TOC labels:)
 declare variable $config:citationLabels :=
     map {
-        (: div labels: :)
-        'additional': map {'verb': 'additiones', 'abbr': 'add.'},
-        'administrative': (),
-        'article': map {'verb': 'articulus', 'abbr': 'art.'},
-        'book': map {'verb': 'liber', 'abbr': 'lib.'},
-        'chapter': map {'verb': 'capitulum', 'abbr': 'cap.'},
-        'colophon': map {'verb': 'colophon', 'abbr': 'coloph.'},
-        'source': (),
-        'commentary': map {'verb': 'commentarius', 'abbr': 'comment.'},
+        (: div/@label and milestone/@unit: :)
+        'additional': map {'verb': 'additiones', 'abbr': 'add.', 'citeRef': true()},
+        'administrative': map {'verb': 'sectio', 'abbr': 'sect.'}, (: TODO: something more concrete? :)
+        'article': map {'verb': 'articulus', 'abbr': 'art.', 'citeRef': true()},
+        'book': map {'verb': 'liber', 'abbr': 'lib.', 'citeRef': true()},
+        'chapter': map {'verb': 'capitulum', 'abbr': 'cap.', 'citeRef': true()},
+        'colophon': map {'verb': 'colophon', 'abbr': 'coloph.', 'citeRef': true()},
+        'source': map {'verb': 'sectio', 'abbr': 'sect.', 'citeRef': true()}, (: TODO: something more concrete, e.g. 'auctoritas'/'auct.'? :)
+        'commentary': map {'verb': 'commentarius', 'abbr': 'comment.', 'citeRef': true()},
         'contained_work': (),
         'contents': map {'verb': 'tabula', 'abbr': 'tab.'},
-        'corrigenda': map {'verb': 'corrigenda', 'abbr': 'corr.'},
-        'dedication': map {'verb': 'dedicatio', 'abbr': 'dedic.'},
-        'disputation': map {'verb': 'disputatio', 'abbr': 'disp.'},
-        'doubt': map {'verb': 'dubium', 'abbr': 'dub.'},
-        'entry': (),
-        'foreword': map {'verb': 'prooemium', 'abbr': 'pr.'},
-        'gloss': map {'verb': 'glossa', 'abbr': 'gl.'},
-        'index': map {'verb': 'index', 'abbr': 'ind.'},
-        'lecture': map {'verb': 'relectio', 'abbr': 'relect.'},
+        'corrigenda': map {'verb': 'corrigenda', 'abbr': 'corr.', 'citeRef': true()},
+        'dedication': map {'verb': 'dedicatio', 'abbr': 'dedic.', 'citeRef': true()},
+        'disputation': map {'verb': 'disputatio', 'abbr': 'disp.', 'citeRef': true()},
+        'doubt': map {'verb': 'dubium', 'abbr': 'dub.', 'citeRef': true()},
+        'entry': (), (: 'lemma'? :)
+        'foreword': map {'verb': 'prooemium', 'abbr': 'pr.', 'citeRef': true()},
+        'gloss': map {'verb': 'glossa', 'abbr': 'gl.', 'citeRef': true()},
+        'index': map {'verb': 'index', 'abbr': 'ind.', 'citeRef': true()},
+        'lecture': map {'verb': 'relectio', 'abbr': 'relect.', 'citeRef': true()},
         'map': (),
-        'part': map {'verb': 'pars', 'abbr': 'p.'},
-        'preface': map {'verb': 'praefatio', 'abbr': 'praef.'},
-        'privileges': map {'verb': 'privilegium', 'abbr': 'priv.'},
-        'question': map {'verb': 'quaestio', 'abbr': 'q.'},
-        'section': (),
-        'segment': map {'verb': 'sectio', 'abbr': 'sect.'},
+        'part': map {'verb': 'pars', 'abbr': 'p.', 'citeRef': true()}, (: TODO: 'p.' not also for pagina? :)
+        'preface': map {'verb': 'praefatio', 'abbr': 'praef.', 'citeRef': true()},
+        'privileges': map {'verb': 'privilegium', 'abbr': 'priv.', 'citeRef': true()},
+        'question': map {'verb': 'quaestio', 'abbr': 'q.', 'citeRef': true()},
+        'section': map {'verb': 'sectio', 'abbr': 'sect.', 'citeRef': true()}, (: TODO: using section here for anything labeled 'section' (e.g. W0015) :)
+        'segment': map {'verb': 'sectio', 'abbr': 'sect.', 'citeRef': true()}, (: "explicite" sections (e.g., "Sectio I") :)
         'unknown': (),
         'work_part': (),
-        'title': map {'verb': 'titulus', 'abbr': 'tit.'},
-        'law': map {'verb': 'lex', 'abbr' :'l.'},
-        'partida': map {'verb': 'partida', 'abbr': 'part.'},
-        (: non-div labels: :)
-        'generic': map {'verb': 'sectio', 'abbr': 'sect.'}, (: same as section :)
-        'number': map {'verb': 'numerus', 'abbr': 'num.'},
+        'title': map {'verb': 'titulus', 'abbr': 'tit.', 'citeRef': true()},
+        'law': map {'verb': 'lex', 'abbr' :'l.', 'citeRef': true()},
+        'partida': map {'verb': 'partida', 'abbr': 'part.', 'citeRef': true()},
+        'number': map {'verb': 'numerus', 'abbr': 'num.', 'citeRef': true()},
+        (: element names: :)
+        'titlePage': map {'verb': 'inscriptio', 'abbr': 'inscr.'}, (: TODO :)
         'back': map {'verb': 'appendix', 'abbr': 'app.'},
-        'p': map {'verb': 'paragraphus', 'abbr': 'paragr.'},
-        'note': map {'verb': 'nota', 'abbr': 'not.'}
+        'front': map {'verb': 'praescriptio', 'abbr': 'praes.'}, (: TODO: praescriptio, praescriptum, praeparatio, praelusio? :)
+        'p': map {'verb': 'paragraphus', 'abbr': 'paragr.', 'citeRef': true()},
+        'note': map {'verb': 'nota', 'abbr': 'not.', 'citeRef': true()},
+        'list': map {'verb': 'index', 'abbr': 'ind.'}, (: same as 'index' :)
+        'item': map {'verb': 'item', 'abbr': 'it.'}, (: TODO :)
+        'lg': map {'verb': 'poema', 'abbr': 'poem.'},
+        (: generic label for everything else: :)
+        'generic': map {'verb': 'sectio', 'abbr': 'sect.'} (: same as section/segment, but not used for citeRef :)
     };
+    (: TODO: argument? :)
+
+(: Nodes that are included in sal:index :)
+declare variable $config:indexNodes := ('pb', 'text', 'front', 'titlePage', 'div', 'p', 'milestone', 'list', 
+                                        'item', 'lg', 'back', 'note', 'head', 'label', 'signed');
+
 
 
 (: OOOooo...                    End configurable section                      ...oooOOO :)

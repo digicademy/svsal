@@ -393,7 +393,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                 if ($node/@xml:id eq 'completeWork' and $xincludes) then
                                     attribute xinc    {$xincludes}
                                 else (), 
-                                element sal:title           {app:sectionTitle($work, $node)},
+                                element sal:title           {render:sectionTitle($work, $node)},
                                 element sal:fragment        {$fragmentIds($node/@xml:id/string())},
                                 element sal:citableParent   {
                                     string(($node/ancestor::tei:text[not(@type="work_part")] |

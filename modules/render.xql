@@ -133,16 +133,174 @@ declare function render:needsTxtCorpusZip($node as node(), $model as map(*)) {
 :)
 
 
-declare function render:getCrumbtrail ($targetWork as node()*, $targetNode as node(), $mode as xs:string, $fragmentIds as map()) {
-    let $targetWorkId   := string($targetWork/@xml:id)
-    let $targetNodeId   := string($targetNode/@xml:id)
+(: Create a title for a node that is used in crumbtrails (e.g., search results) and for section/citation labels in reading view: :)
+declare function render:sectionTitle($targetWork as node()*, $targetNode as node()) {
+    let $targetWorkId := string($targetWork/tei:TEI/@xml:id)
+    let $targetNodeId := string($targetNode/@xml:id)
+    (: determine label prefix for most frequent nodes: div, p, etc. (for special cases, see below) :)
+    let $nodeLabel :=
+        let $label := 
+            (: divs and milestones are already labeled (through @type|@milestone :)
+            if ($targetNode/self::tei:div) then $config:citationLabels($targetNode/@type)?('abbr')
+            else if ($targetNode/self::tei:milestone) then $config:citationLabels($targetNode/@unit)?('abbr')
+            (: other elements whose names are mapped to labels :)
+            else if ($targetNode/(self::tei:front|self::tei:back|self::tei:p|self::tei:signed|self::tei:head|self::tei:label
+                                  |self::tei:titlePage|self::tei:note|self::tei:list|self::tei:item|self::tei:lg)) then
+                $config:citationLabels(local-name($targetNode))?('abbr')
+            else $config:citationLabels('generic')?('abbr')
+        return $label (:upper-case(substring($label,1,1)) || substring($label,2):)
     
+    return normalize-space(
+        (: div, milestone, items and lists are named according to //tei:term[1]/@key, ./head, @n, ref->., @xml:id :)
+        if ($targetNode/(self::tei:div | self::tei:milestone | self::tei:item | self::tei:list)) then
+            (: title dict. item according to the term it contains: :)
+            if ($targetNode/self::tei:item and $targetNode/parent::tei:list/@type='dict' and $targetNode//tei:term[1][@key]) then
+                (: TODO: collision with div/@type='lemma'? :)
+                concat('lemma &#34;',
+                        concat($targetNode//tei:term[1]/@key,
+                                if (count($targetNode/parent::tei:list/tei:item[.//tei:term[1]/@key eq $targetNode//tei:term[1]/@key]) gt 1) then
+                                    concat('-', count($targetNode/preceding::tei:item[tei:term[1]/@key eq $targetNode//tei:term[1]/@key] intersect $targetNode/ancestor::tei:div[1]//tei:item[tei:term[1]/@key eq $targetNode//tei:term[1]/@key]) + 1)
+                                else ()
+                              ),
+                       '&#34;'
+                      )
+            (: manually added section titles have priority: :)
+            else if ($targetNode/@n and not(matches($targetNode/@n, '^[0-9]+$'))) then
+                $nodeLabel || ' &#34;' || string($targetNode/@n) || '&#34;'
+            (: if div, item or list has a heading or label, make a teaser from that: :)
+            else if ($targetNode/(tei:head|tei:label)) then
+                let $headString := normalize-space(string-join(render:dispatch(($targetNode/(tei:head|tei:label))[1], 'edit'), ''))
+                return if (string-length($headString) gt $config:chars_summary) then
+                    concat($nodeLabel, ' &#34;', normalize-space(substring($headString, 1, $config:chars_summary)), '…', '&#34;')
+                else
+                    concat($nodeLabel, ' &#34;', $headString, '&#34;')
+            (: purely numeric section titles: :)
+            else if ($targetNode/@n and (matches($targetNode/@n, '^[0-9]+$')) and ($targetNode/@type|$targetNode/@unit)) then
+                concat($nodeLabel, ' &#34;', $targetNode/@n, '&#34;')
+            (: otherwise, try to derive a title from potential references to the current node :)
+            else if ($targetWork/tei:ref[@target = concat('#', $targetNode/@xml:id)]) then
+                let $referString := normalize-space(string-join(render:dispatch($targetWork/tei:ref[@target = concat('#',$targetNode/@xml:id)][1], 'edit'), ''))
+                return if (string-length($referString) gt $config:chars_summary) then
+                    normalize-space(concat($nodeLabel, ' ', $targetNode/@n, ' &#34;', normalize-space(substring($referString, 1, $config:chars_summary)), '…', '&#34;'))
+                else
+                    normalize-space(concat($nodeLabel, ' ', $targetNode/@n, ' &#34;', $referString, '&#34;'))
+            (: when everything fails, simply take the label :)
+            else $nodeLabel
+
+        (: p's and lg's are named according to their beginning :)
+        else if ($targetNode/self::tei:p | $targetNode/self::tei:lg) then
+            let $pString := normalize-space(string-join(render:dispatch($targetNode, 'edit'), ''))
+            return if (string-length($pString) gt $config:chars_summary) then
+                        concat($nodeLabel, ' &#34;', substring($pString, 1, $config:chars_summary), '…', '&#34;')
+                    else
+                        concat($nodeLabel, ' &#34;', $pString, '&#34;')
+        else if ($targetNode/self::tei:text and $targetNode/@type='work_volume') then
+            concat('Vol. ', $targetNode/@n)
+        else if ($targetNode/self::tei:text and $targetNode/@xml:id='completeWork') then
+            '[complete work]'
+        else if ($targetNode/self::tei:text and matches($targetNode/@xml:id, 'work_part_[a-z]')) then
+            '[process-technical part] ' | substring(string($targetNode/@xml:id), 11, 1)
+        (: notes are named according to @n (with a counter if there are several in the div) or numbered :)
+        else if ($targetNode/self::tei:note) then
+            if ($targetNode[@n]) then
+                concat($nodeLabel, ' &#34;', normalize-space($targetNode/@n),
+                       if (count($targetNode/ancestor::tei:div[1]//tei:note[upper-case(normalize-space(@n)) eq upper-case(normalize-space($targetNode/@n))]) gt 1) then
+                           concat('&#34; (', string(count($targetNode/preceding::tei:note[upper-case(normalize-space(@n)) eq upper-case(normalize-space($targetNode/@n))] intersect $targetNode/ancestor::tei:div[1]//tei:note) + 1), ')')
+                       else '&#34;')
+            else concat($nodeLabel, ' (', string(count($targetNode/preceding::tei:note intersect $targetNode/ancestor::tei:div[1]//tei:note) + 1), ')')
+        else if ($targetNode/self::tei:pb) then
+            if ($targetNode/@sameAs) then
+                concat('[pb: sameAs_', $targetNode/@sameAs)
+            else if ($targetNode/@corresp) then
+                concat('[pb: corresp_', $targetNode/@corresp)
+            else
+                let $volumeString := 
+                    if ($targetNode/ancestor::tei:text[@type='work_volume']) then 
+                        concat('Vol. ', $targetNode/ancestor::tei:text[@type='work_volume']/@n, ', ') 
+                    else ()
+                return if (contains($targetNode/@n, 'fol.')) then concat($volumeString, $targetNode/@n)
+                else concat($volumeString, 'p. ', $targetNode/@n)
+        else if ($targetNode/self::tei:titlePage) then
+            let $volumeString := 
+                if ($targetNode/ancestor::tei:text[@type='work_volume']) then 
+                    concat('Vol. ', $targetNode/ancestor::tei:text[@type='work_volume']/@n, ', ') 
+                else ()
+            let $volumeCount :=
+                if (count($targetNode/ancestor::tei:text[@type='work_volume']//tei:titlePage) gt 1) then 
+                    '(' || string(count($targetNode/preceding-sibling::tei:titlePage)+1) || ')'
+                else ()
+            return $volumeString || $nodeLabel || $volumeCount
+        else if ($targetNode[self::tei:head or self::tei:label]) then
+            let $headString := normalize-space(string-join(render:dispatch($targetNode, 'edit'), ''))
+            return if (string-length($headString) gt $config:chars_summary) then
+                concat('&#34;', normalize-space(substring($headString, 1, $config:chars_summary)), '…', '&#34;')
+            else
+                concat('&#34;', $headString, '&#34;')
+        else if ($targetNode[self::tei:front or self::tei:back]) then
+            let $volumeString := 
+                if ($targetNode/ancestor::tei:text[@type='work_volume']) then 
+                    concat(' (vol. ', $targetNode/ancestor::tei:text[@type='work_volume']/@n, ')') 
+                else ()
+            return
+                $nodeLabel || $volumeString
+        (: undefined node: :)
+        else if ($targetNode//text()) then
+            let $string := normalize-space(string-join(render:dispatch($targetNode, 'edit'), ''))
+            return 
+                if (string-length($string) gt $config:chars_summary) then
+                    concat('&#34;', substring($string, 1, $config:chars_summary), '…', '&#34;')
+                else
+                    concat($nodeLabel, ' &#34;', $string, '&#34;')
+(:        else if ($nodeLabel) then $nodeLabel:)
+        else '&#34;…&#34;'
+        )
+};
+
+
+
+(:~
+~ Creates 'verbose' citation strings (to be included with citation anchors).
+~:)
+declare function render:getPassagetrail($targetWork as node()*, $targetNode as node()) {
+    (: ATM, only tei:div nodes/passages receive a citation string, but all other relevant nodes :)
+    let $thisPassage :=
+        typeswitch($targetNode)
+            case element(tei:front) return $config:citationLabels('front')?('abbr')
+            case element(tei:back) return $config:citationLabels('back')?('abbr')
+            case element(tei:titlePage) return $config:citationLabels('titlepage')?('abbr')
+            case element(tei:text) return 
+                (: "vol. X" where X is the current volume number, don't use it at all for monographs :)
+                if ($targetNode/@type='work_volume') then
+                   concat('vol. ', count($targetNode/preceding::tei:text[@type eq 'work_volume']) + 1)
+                else ()
+            (:case element(tei:note) return 
+                (\: "not. X" where X is the anchor used and "nXY" where Y is the number of times that X occurs inside the current div :\)
+                concat(
+                    $config:citationLabels('note')?('abbr'), 
+                        ' "',
+                        if ($targetNode/@n) then
+                               concat($targetNode/@n,
+                            if (count($targetNode/ancestor::tei:div[1]//tei:note[@n eq $targetNode/@n]) gt 1) then
+                                concat($targetNode/@n, 
+                                       ' (',
+                                       string(count($targetNode/ancestor::tei:div[1]//tei:note intersect $targetNode/preceding::tei:note[@n eq $targetNode/@n])+1),
+                                      ')'
+                                      )
+                            else upper-case(replace($targetNode/@n, '[^a-zA-Z0-9]', ''))
+                        else count($targetNode/preceding::tei:note intersect $targetNode/ancestor::tei:div[1]//tei:note) + 1):)
+            default return ()
+    return ()
+};
+
+
+declare function render:getCrumbtrail ($targetWork as node()*, $targetNode as node(), $mode as xs:string, $fragmentIds as map()) {
+
     (: (1) get the crumb/cite ID for the current node :)
     let $thisCrumb :=       
         if ($mode = 'html') then
-            <a href='{render:mkUrl($targetWork, $targetNode)}'>{app:sectionTitle($targetWork, $targetNode)}</a>
+            <a href='{render:mkUrl($targetWork, $targetNode)}'>{render:sectionTitle($targetWork, $targetNode)}</a>
         else if ($mode eq 'html-rendering') then
-            <a href='{render:mkUrlWhileRendering($targetWork, $targetNode, $fragmentIds)}'>{app:sectionTitle($targetWork, $targetNode)}</a>
+            <a href='{render:mkUrlWhileRendering($targetWork, $targetNode, $fragmentIds)}'>{render:sectionTitle($targetWork, $targetNode)}</a>
         else if ($mode = 'numeric') then
             (: no recursion here, makes single crumb for the current node :)
             typeswitch($targetNode)    
@@ -159,13 +317,14 @@ declare function render:getCrumbtrail ($targetWork as node()*, $targetNode as no
                     else ()
                 case element(tei:note) return 
                     (: "nX" where X is the anchor used (if it is alphanumeric) and "nXY" where Y is the number of times that X occurs inside the current div :)
-                    concat('n',  if (matches($targetNode/@n, '[A-Za-z0-9]')) then
-                        if (count($targetNode/ancestor::tei:div[1]//tei:note[@n eq $targetNode/@n]) gt 1) then
-                            concat(upper-case(replace($targetNode/@n, '[^a-zA-Z0-9]', '')),
-                                   string(count($targetNode/ancestor::tei:div[1]//tei:note intersect $targetNode/preceding::tei:note[@n eq $targetNode/@n])+1)
-                                  )
-                        else upper-case(replace($targetNode/@n, '[^a-zA-Z0-9]', ''))
-                    else count($targetNode/preceding::tei:note intersect $targetNode/ancestor::tei:div[1]//tei:note) + 1)
+                    concat('n',  
+                        if (matches($targetNode/@n, '[A-Za-z0-9]')) then
+                            if (count($targetNode/ancestor::tei:div[1]//tei:note[@n eq $targetNode/@n]) gt 1) then
+                                concat(upper-case(replace($targetNode/@n, '[^a-zA-Z0-9]', '')),
+                                       string(count($targetNode/ancestor::tei:div[1]//tei:note intersect $targetNode/preceding::tei:note[@n eq $targetNode/@n])+1)
+                                      )
+                            else upper-case(replace($targetNode/@n, '[^a-zA-Z0-9]', ''))
+                        else count($targetNode/preceding::tei:note intersect $targetNode/ancestor::tei:div[1]//tei:note) + 1)
                 case element(tei:milestone) return
                     (: "XY" where X is the unit (if there is one) and Y is the anchor or the number of milestones where this occurs :)
                     concat(if ($targetNode/@unit) then string($targetNode/@unit) 
@@ -173,9 +332,9 @@ declare function render:getCrumbtrail ($targetWork as node()*, $targetNode as no
                            if ($targetNode/@n) then replace($targetNode/@n, '[^a-zA-Z0-9]', '') 
                            else count($targetNode/preceding::tei:milestone intersect $targetNode/ancestor::tei:div[1]//tei:milestone) + 1)
                 case element(tei:item) return 
-                    (: "entryX" where X is the section title (app:sectionTitle) in capitals, use only for items in indexes and dictionary (where app:sectionTitle should resolve to term/@key?) :)
+                    (: "entryX" where X is the section title (render:sectionTitle) in capitals, use only for items in indexes and dictionary (where render:sectionTitle should resolve to term/@key?) :)
                     if($targetNode/ancestor::tei:list/@type = ('dict', 'index')) then
-                        concat('entry', upper-case(replace(app:sectionTitle($targetWork, $targetNode), '[^a-zA-Z0-9]', '')))
+                        concat('entry', upper-case(replace(render:sectionTitle($targetWork, $targetNode), '[^a-zA-Z0-9]', '')))
                     else string(count($targetNode/preceding::tei:item intersect $targetNode/ancestor::tei:list[1]//tei:item) + 1)
                 case element(tei:list) return 
                     (: dictionaries, indices and summaries get their type prepended to their number :)
@@ -198,7 +357,6 @@ declare function render:getCrumbtrail ($targetWork as node()*, $targetNode as no
                                                             ancestor::tei:front |
                                                             ancestor::tei:back
                                                            )[last()]//tei:list[not(@type = ('dict', 'index', 'summaries'))]) + 1)
-                
                 case element(tei:lb) return (: INACTIVE (due to size issues with sal:index) :)                                                  
                      (: "pXlineY" where X is page and Y line number :)
                      concat('l',
@@ -240,7 +398,7 @@ declare function render:getCrumbtrail ($targetWork as node()*, $targetNode as no
             (: ### end of 'numeric' section ### :)
         else 
             (: neither html nor numeric mode :) 
-            app:sectionTitle($targetWork, $targetNode)
+            render:sectionTitle($targetWork, $targetNode)
     (: ### end of $thisCrumb ### :)
     
     (: (2) get related element's (e.g., ancestor's) crumbtrail/citetrail, if required, and glue it together with the current crumb :)
@@ -266,7 +424,7 @@ declare function render:getCrumbtrail ($targetWork as node()*, $targetNode as no
                 render:getCrumbtrail($targetWork,  ($targetNode/ancestor::tei:front | $targetNode/ancestor::tei:text[1][not(@xml:id = 'completeWork' or @type = "work_part")])[last()], $mode, $fragmentIds)
             else if ($targetNode[self::tei:pb]) then ()
             else 
-                (: === for all other node types, get parent node's citetrail/crumbtrail - HERE is the RECURSION === :)
+                (: === for all other node types, get parent node's citetrail/crumbtrail - HERE is the deep RECURSION === :)
                 render:getCrumbtrail($targetWork, $targetNode/(ancestor::tei:back[1]                                                                     |
                                                                ancestor::tei:div[@type ne "work_part"][1]                                                |
                                                                ancestor::tei:front[1]                                                                    |
@@ -295,29 +453,31 @@ declare function render:getCrumbtrail ($targetWork as node()*, $targetNode as no
     return $crumbtrail
 };
 
-declare function render:mkAnchor ($targetWork as node()*, $targetNode as node()) {
+(: currently not in use: :)
+(:declare function render:mkAnchor ($targetWork as node()*, $targetNode as node()) {
     let $targetWorkId := string($targetWork/tei:TEI/@xml:id)
     let $targetNodeId := string($targetNode/@xml:id)
-    return <a href="{render:mkUrl($targetWork, $targetNode)}">{app:sectionTitle($targetWork, $targetNode)}</a>    
-};
+    return <a href="{render:mkUrl($targetWork, $targetNode)}">{render:sectionTitle($targetWork, $targetNode)}</a>    
+};:)
 
 declare function render:mkUrl($targetWork as node(), $targetNode as node()) {
     let $targetWorkId := string($targetWork/@xml:id)
     let $targetNodeId := string($targetNode/@xml:id)
-    let $viewerPage   :=      if (substring($targetWorkId, 1, 2) eq "W0") then
-                            "work.html?wid="
-                         else if (substring($targetWorkId, 1, 2) eq "L0") then
-                            "lemma.html?lid="
-                         else if (substring($targetWorkId, 1, 2) eq "A0") then
-                            "author.html?aid="
-                         else if (substring($targetWorkId, 1, 2) eq "WP") then
-                            "workingPaper.html?wpid="
-                         else
-                            "index.html?wid="
-    let $targetNodeHTMLAnchor :=    if (contains($targetNodeId, '-pb-')) then
-                                        concat('pageNo_', $targetNodeId)
-                                    else
-                                        $targetNodeId
+    let $viewerPage   :=      
+        if (substring($targetWorkId, 1, 2) eq "W0") then
+            "work.html?wid="
+        else if (substring($targetWorkId, 1, 2) eq "L0") then
+            "lemma.html?lid="
+        else if (substring($targetWorkId, 1, 2) eq "A0") then
+            "author.html?aid="
+        else if (substring($targetWorkId, 1, 2) eq "WP") then
+            "workingPaper.html?wpid="
+        else
+            "index.html?wid="
+    let $targetNodeHTMLAnchor :=    
+        if (contains($targetNodeId, '-pb-')) then
+            concat('pageNo_', $targetNodeId)
+        else $targetNodeId
     let $frag := render:getFragmentFile($targetWorkId, $targetNodeId)
     return concat($viewerPage, $targetWorkId, (if ($frag) then concat('&amp;frag=', $frag) else ()), '#', $targetNodeHTMLAnchor)
 };
@@ -325,20 +485,21 @@ declare function render:mkUrl($targetWork as node(), $targetNode as node()) {
 declare function render:mkUrlWhileRendering($targetWork as node(), $targetNode as node(), $fragmentIds as map()) {
     let $targetWorkId := string($targetWork/@xml:id)
     let $targetNodeId := string($targetNode/@xml:id)
-    let $viewerPage   :=      if (substring($targetWorkId, 1, 2) eq "W0") then
-                            "work.html?wid="
-                         else if (substring($targetWorkId, 1, 2) eq "L0") then
-                            "lemma.html?lid="
-                         else if (substring($targetWorkId, 1, 2) eq "A0") then
-                            "author.html?aid="
-                         else if (substring($targetWorkId, 1, 2) eq "WP") then
-                            "workingPaper.html?wpid="
-                         else
-                            "index.html?wid="
-    let $targetNodeHTMLAnchor :=    if (contains($targetNodeId, '-pb-')) then
-                                        concat('pageNo_', $targetNodeId)
-                                    else
-                                        $targetNodeId
+    let $viewerPage   :=      
+        if (substring($targetWorkId, 1, 2) eq "W0") then
+            "work.html?wid="
+        else if (substring($targetWorkId, 1, 2) eq "L0") then
+            "lemma.html?lid="
+        else if (substring($targetWorkId, 1, 2) eq "A0") then
+            "author.html?aid="
+        else if (substring($targetWorkId, 1, 2) eq "WP") then
+            "workingPaper.html?wpid="
+        else
+            "index.html?wid="
+    let $targetNodeHTMLAnchor :=    
+        if (contains($targetNodeId, '-pb-')) then
+            concat('pageNo_', $targetNodeId)
+        else $targetNodeId
     let $frag := $fragmentIds($targetNodeId)
     return concat($viewerPage, $targetWorkId, (if ($frag) then concat('&amp;frag=', $frag) else ()), '#', $targetNodeHTMLAnchor)
 };
@@ -522,8 +683,7 @@ declare function local:milestone($node as element(tei:milestone), $mode as xs:st
         if ($node/@n and not(matches($node/@n, '^[0-9]+$'))) then
             concat('[', string($node/@n), ']')
         else if ($node/@n and matches($node/@n, '^[0-9]+$')) then
-            concat('[',  string($node/@unit), ' ', string($node/@n), ']')
-(: oder das hier?:   <xsl:value-of select="key('targeting-refs', concat('#',@xml:id))[1]"/> :)
+            concat('[',  $config:citationLabels($node/@unit)?('abbr'), ' ', string($node/@n), ']')
         else
             '[*]'
     else if ($mode = "html") then
@@ -535,7 +695,7 @@ declare function local:milestone($node as element(tei:milestone), $mode as xs:st
         let $summary := if ($node/@n and not(matches($node/@n, '^[0-9]+$'))) then
                             <div class="summary_title" id="{string($node/@xml:id)}">{string($node/@n)}</div>
                         else if ($node/@n and matches($node/@n, '^[0-9]+$')) then
-                            <div class="summary_title" id="{string($node/@xml:id)}">{concat(string($node/@unit), ' ', string($node/@n))}</div>
+                            <div class="summary_title" id="{string($node/@xml:id)}">{concat($config:citationLabels($node/@unit)?('abbr'), ' ', string($node/@n))}</div>
 (: oder das hier?:   <xsl:value-of select="key('targeting-refs', concat('#',@xml:id))[1]"/> :)
                         else ()
         return ($anchor, $summary)

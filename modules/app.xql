@@ -81,7 +81,7 @@ declare function app:resolvePersname($persName as element()*) {
     else app:formatName($persName)
 };
 
-(: Todo: Do we need the following? :)
+(: inactive: :)
 (:declare function app:resolveURI($string as xs:string*) {
     let $tei2htmlXslt   := doc($config:app-root || '/resources/xsl/extract_elements.xsl')
     for $id in $string
@@ -94,95 +94,6 @@ declare function app:resolvePersname($persName as element()*) {
                     return xs:string(transform:transform($doc, $tei2htmlXslt, $xsl-parameters))
 };:)
 
-declare function app:sectionTitle($targetWork as node()*, $targetNode as node()) {
-    let $targetWorkId := string($targetWork/tei:TEI/@xml:id)
-    let $targetNodeId := string($targetNode/@xml:id)
-    return normalize-space(
-(: div, milestone, items and lists are named according to //tei:term[1]/@key, ./head, @n, ref->., @xml:id :)
-            if ($targetNode/(self::tei:div | self::tei:milestone | self::tei:item | self::tei:list)) then
-                if ($targetNode/self::tei:item and $targetNode/parent::tei:list/@type='dict' and $targetNode//tei:term[1][@key]) then
-                    concat('dictionary entry: &#34;',
-                            concat($targetNode//tei:term[1]/@key,
-                                    if        (count($targetNode/parent::tei:list/tei:item[.//tei:term[1]/@key eq $targetNode//tei:term[1]/@key]) gt 1) then
-                                        concat('-', count($targetNode/preceding::tei:item[tei:term[1]/@key eq $targetNode//tei:term[1]/@key] intersect $targetNode/ancestor::tei:div[1]//tei:item[tei:term[1]/@key eq $targetNode//tei:term[1]/@key]) + 1)
-                                    else ()
-                                  ),
-                           '&#34;'
-                          )
-                else if ($targetNode/@n and not(matches($targetNode/@n, '^[0-9]+$'))) then
-                    string($targetNode/@n)
-                else if ($targetNode/tei:head) then
-                    let $headString := normalize-space(string-join(render:dispatch(($targetNode/tei:head)[1], 'edit'), ''))
-                    return if (string-length($headString) gt $config:chars_summary) then
-                        concat($targetNode/@type, ' &#34;', normalize-space(substring($headString, 1, $config:chars_summary)), '…', '&#34;')
-                    else
-                        concat($targetNode/@type, ' &#34;', $headString, '&#34;')
-                else if ($targetNode/@n and (matches($targetNode/@n, '^[0-9]+$')) and ($targetNode/@type|$targetNode/@unit)) then
-                    concat(($targetNode/@type | $targetNode/@unit)[1], ' ', $targetNode/@n)
-                else if ($targetNode/@n and (not(matches($targetNode/@n, '^[0-9]+$'))) and ($targetNode/@unit)) then
-                    concat($targetNode/@unit[1], ' ', $targetNode/@n)
-                else if ($targetWork/tei:ref[@target = concat('#', $targetNode/@xml:id)]) then
-                    let $referString := normalize-space(string-join($targetWork/tei:ref[@target = concat('#',$targetNode/@xml:id)][1]/text(), ''))
-                    return if (string-length($referString) gt $config:chars_summary) then
-                        concat(($targetNode/@type | $targetNode/@unit)[1], ' ', $targetNode/@n, ': &#34;', normalize-space(substring($referString, 1, $config:chars_summary)), '…', '&#34;')
-                    else
-                        concat(($targetNode/@type | $targetNode/@unit)[1], ' ', $targetNode/@n, ': &#34;', $referString, '&#34;')
-                else
-                    string($targetNode/@xml:id)
-(: p's and lg's are names according to their beginning :)
-            else if ($targetNode/self::tei:p | $targetNode/self::tei:lg) then
-                let $pString := normalize-space(string-join(render:dispatch($targetNode, 'edit'), ''))
-                return if (string-length($pString) gt $config:chars_summary) then
-                            concat('Paragraph &#34;', substring($pString, 1, $config:chars_summary), '…', '&#34;')
-                        else
-                            concat('Paragraph &#34;', $pString, '&#34;')
-            else if ($targetNode/self::tei:text and $targetNode/@type='work_volume') then
-                concat('Vol. ', $targetNode/@n)
-            else if ($targetNode/self::tei:text and $targetNode/@xml:id='completeWork') then
-                'complete work'
-            else if ($targetNode/self::tei:text and matches($targetNode/@xml:id, 'work_part_[a-z]')) then
-                '(process-technical) part ' | substring(string($targetNode/@xml:id), 11, 1)
-(: notes are named according to @n (with a counter if there are several in the div) or numbered :)
-            else if ($targetNode/self::tei:note) then
-                if ($targetNode[@n]) then
-                    concat('Note ', normalize-space($targetNode/@n),
-                            if (count($targetNode/ancestor::tei:div[1]//tei:note[upper-case(normalize-space(@n)) eq upper-case(normalize-space($targetNode/@n))]) gt 1) then
-                                concat('-', count($targetNode/preceding::tei:note[upper-case(normalize-space(@n)) eq upper-case(normalize-space($targetNode/@n))] intersect $targetNode/ancestor::tei:div[1]//tei:note) + 1)
-                            else 
-                                ()
-                          )
-                else
-                    concat('Note ', 
-                            string(count($targetNode/preceding::tei:note intersect $targetNode/ancestor::tei:div[1]//tei:note) + 1))
-            else if ($targetNode/self::tei:pb) then
-                if ($targetNode/@sameAs) then
-                    concat('sameAs_', string($targetNode/@n))
-                else if ($targetNode/@corresp) then
-                    concat('corresp_', string($targetNode/@n))
-                else
-                    let $volumeString := if ($targetNode/ancestor::tei:text[@type='work_volume']) then concat('Vol. ', $targetNode/ancestor::tei:text[@type='work_volume']/@n, ', ') else ()
-                    return if (contains($targetNode/@n, 'fol.')) then concat($volumeString, ' ', $targetNode/@n)
-                    else concat($volumeString, 'p. ', $targetNode/@n)
-            else if ($targetNode/self::tei:titlePart || $targetNode/self::tei:titlePage) then
-                "Titulus"
-            else if ($targetNode/self::tei:head) then
-                let $headString := normalize-space($targetNode/string())
-                return if (string-length($headString) gt $config:chars_summary) then
-                    concat($targetNode/@type, ' &#34;', normalize-space(substring($headString, 1, $config:chars_summary)), '…', '&#34;')
-                else
-                    concat($targetNode/@type, ' &#34;', $headString, '&#34;')
-            else if ($targetNode/self::tei:front) then
-                "frontmatter"
-            else if ($targetNode/self::tei:back) then
-                "backmatter"
-            else if ($targetNode/self::tei:lb) then
-                concat('Beginning of line ', $targetNode/@n)
-            else if ($targetNode/self::tei:pb) then
-                concat('Beginning of page ', $targetNode/@n)
-            else
-                concat('Non-titleable node (', local-name($targetNode), ' ', $targetNode/@xml:id, ')')
-            )
-};
 
 declare function app:workCount($node as node(), $model as map (*), $lang as xs:string?) {
     count($model("listOfWorks"))
@@ -2981,9 +2892,9 @@ declare function app:sourcesList($node as node(), $model as map(*), $lang as xs:
 
 
       let $analyze-section-title := if (not($milestone)) then
-                                        app:sectionTitle($model('currentWork'), $analyze-section[1])
+                                        render:sectionTitle($model('currentWork'), $analyze-section[1])
                                     else
-                                        app:sectionTitle($model('currentWork'), $milestone)
+                                        render:sectionTitle($model('currentWork'), $milestone)
 
       let $persons :=
           for $entity in $analyze-section//tei:persName[@ref][not($milestone) or (. >> $milestone and . << $milestone/following::tei:milestone[1])]
