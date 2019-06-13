@@ -137,66 +137,81 @@ declare function admin:saveFileWRK ($node as node(), $model as map (*), $lang as
 
 declare function admin:saveFileWRKnoJs ($node as node(), $model as map (*), $lang as xs:string?) {
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Storing finalFacets (noJS)...") else ()
-    let $create-collection  :=  if (not(xmldb:collection-available($config:data-root))) then xmldb:create-collection(util:collection-name($config:data-root), $config:data-root) else ()
-    let $fileNameDeSn       :=  'worksNoJs_de_surname.xml'
-    let $fileNameEnSn       :=  'worksNoJs_en_surname.xml'
-    let $fileNameEsSn       :=  'worksNoJs_es_surname.xml'
-    let $contentDeSn        :=  <sal>
-                                    {app:WRKcreateListSurname($node, $model, 'de')}
-                                </sal>   
-    let $contentEnSn        :=  <sal>
-                                    {app:WRKcreateListSurname($node, $model, 'en')}
-                                </sal>
-    let $contentEsSn        :=  <sal>
-                                    {app:WRKcreateListSurname($node, $model, 'es')}
-                                </sal> 
-    let $fileNameDeTi         :=  'worksNoJs_de_title.xml'
-    let $fileNameEnTi         :=  'worksNoJs_en_title.xml'
-    let $fileNameEsTi         :=  'worksNoJs_es_title.xml'
-    let $contentDeTi        :=  <sal>
-                                    {app:WRKcreateListTitle($node, $model, 'de')}
-                                </sal>   
-    let $contentEnTi        :=  <sal>
-                                    {app:WRKcreateListTitle($node, $model, 'en')}
-                                </sal>
-    let $contentEsTi        :=  <sal>
-                                    {app:WRKcreateListTitle($node, $model, 'es')}
-                                </sal>                                
-    let $fileNameDeYe         :=  'worksNoJs_de_year.xml'
-    let $fileNameEnYe         :=  'worksNoJs_en_year.xml'
-    let $fileNameEsYe         :=  'worksNoJs_es_year.xml'
-    let $contentDeYe          :=  <sal>
-                                    {app:WRKcreateListYear($node, $model, 'de')}
-                                </sal>   
-    let $contentEnYe        :=  <sal>
-                                    {app:WRKcreateListYear($node, $model, 'en')}
-                                </sal>
-    let $contentEsYe        :=  <sal>
-                                    {app:WRKcreateListYear($node, $model, 'es')}
-                                </sal>  
-    let $fileNameDePl         :=  'worksNoJs_de_place.xml'
-    let $fileNameEnPl         :=  'worksNoJs_en_place.xml'
-    let $fileNameEsPl         :=  'worksNoJs_es_place.xml'
-    let $contentDePl          :=  <sal>
-                                    {app:WRKcreateListPlace($node, $model, 'de')}
-                                </sal>   
-    let $contentEnPl        :=  <sal>
-                                    {app:WRKcreateListPlace($node, $model, 'en')}
-                                </sal>
-    let $contentEsPl        :=  <sal>
-                                    {app:WRKcreateListPlace($node, $model, 'es')}
-                                </sal>
-    let $store              :=  (   xmldb:store($config:data-root, $fileNameDeSn, $contentDeSn), xmldb:store($config:data-root, $fileNameEnSn, $contentEnSn), xmldb:store($config:data-root, $fileNameEsSn, $contentEsSn),
-                                    xmldb:store($config:data-root, $fileNameDeTi, $contentDeTi), xmldb:store($config:data-root, $fileNameEnTi, $contentEnTi), xmldb:store($config:data-root, $fileNameEsTi, $contentEsTi),
-                                    xmldb:store($config:data-root, $fileNameDeYe, $contentDeYe), xmldb:store($config:data-root, $fileNameEnYe, $contentEnYe), xmldb:store($config:data-root, $fileNameEsYe, $contentEsYe),
-                                    xmldb:store($config:data-root, $fileNameDePl, $contentDePl), xmldb:store($config:data-root, $fileNameEnPl, $contentEnPl), xmldb:store($config:data-root, $fileNameEsPl, $contentEsPl))
+    let $create-collection  :=  
+        if (not(xmldb:collection-available($config:data-root))) then 
+            xmldb:create-collection(util:collection-name($config:data-root), $config:data-root) 
+        else ()
+    let $fileNameDeSn :=  'worksNoJs_de_surname.xml'
+    let $fileNameEnSn :=  'worksNoJs_en_surname.xml'
+    let $fileNameEsSn :=  'worksNoJs_es_surname.xml'
+    let $contentDeSn :=  
+        <sal>
+            {app:WRKcreateListSurname($node, $model, 'de')}
+        </sal>   
+    let $contentEnSn :=  
+        <sal>
+            {app:WRKcreateListSurname($node, $model, 'en')}
+        </sal>
+    let $contentEsSn :=  
+        <sal>
+            {app:WRKcreateListSurname($node, $model, 'es')}
+        </sal> 
+    let $fileNameDeTi :=  'worksNoJs_de_title.xml'
+    let $fileNameEnTi :=  'worksNoJs_en_title.xml'
+    let $fileNameEsTi :=  'worksNoJs_es_title.xml'
+    let $contentDeTi :=  
+        <sal>
+            {app:WRKcreateListTitle($node, $model, 'de')}
+        </sal>   
+    let $contentEnTi :=  
+        <sal>
+            {app:WRKcreateListTitle($node, $model, 'en')}
+        </sal>
+    let $contentEsTi := 
+        <sal>
+            {app:WRKcreateListTitle($node, $model, 'es')}
+        </sal>                                
+    let $fileNameDeYe :=  'worksNoJs_de_year.xml'
+    let $fileNameEnYe :=  'worksNoJs_en_year.xml'
+    let $fileNameEsYe :=  'worksNoJs_es_year.xml'
+    let $contentDeYe :=  
+        <sal>
+            {app:WRKcreateListYear($node, $model, 'de')}
+        </sal>   
+    let $contentEnYe := 
+        <sal>
+            {app:WRKcreateListYear($node, $model, 'en')}
+        </sal>
+    let $contentEsYe := 
+        <sal>
+            {app:WRKcreateListYear($node, $model, 'es')}
+        </sal>  
+    let $fileNameDePl :=  'worksNoJs_de_place.xml'
+    let $fileNameEnPl :=  'worksNoJs_en_place.xml'
+    let $fileNameEsPl :=  'worksNoJs_es_place.xml'
+    let $contentDePl :=  
+        <sal>
+            {app:WRKcreateListPlace($node, $model, 'de')}
+        </sal>   
+    let $contentEnPl :=  
+        <sal>
+            {app:WRKcreateListPlace($node, $model, 'en')}
+        </sal>
+    let $contentEsPl :=  
+        <sal>
+            {app:WRKcreateListPlace($node, $model, 'es')}
+        </sal>
+    let $store :=  
+        (xmldb:store($config:data-root, $fileNameDeSn, $contentDeSn), xmldb:store($config:data-root, $fileNameEnSn, $contentEnSn), xmldb:store($config:data-root, $fileNameEsSn, $contentEsSn),
+         xmldb:store($config:data-root, $fileNameDeTi, $contentDeTi), xmldb:store($config:data-root, $fileNameEnTi, $contentEnTi), xmldb:store($config:data-root, $fileNameEsTi, $contentEsTi),
+         xmldb:store($config:data-root, $fileNameDeYe, $contentDeYe), xmldb:store($config:data-root, $fileNameEnYe, $contentEnYe), xmldb:store($config:data-root, $fileNameEsYe, $contentEsYe),
+         xmldb:store($config:data-root, $fileNameDePl, $contentDePl), xmldb:store($config:data-root, $fileNameEnPl, $contentEnPl), xmldb:store($config:data-root, $fileNameEsPl, $contentEsPl))
     return      
-                            <p><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Noscript-files saved!</p>
+        <p><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Noscript-files saved!</p>
 
 };
 
 declare %templates:wrap function admin:renderAuthorLemma($node as node(), $model as map(*), $aid as xs:string*, $lid as xs:string*, $lang as xs:string*) {
-
     let $request            :=  request:get-parameter('aid', '')
     let $switchType         :=  if ($request) then $aid else $lid
     let $switchLabel1       :=  if ($request) then 'author.html' else 'lemma.html'
@@ -207,40 +222,45 @@ declare %templates:wrap function admin:renderAuthorLemma($node as node(), $model
     let $fileLemma          :=  $switchType || '_lemmata.html'
     let $filePersons        :=  $switchType || '_persons.html'
     let $filePlaces         :=  $switchType || '_places.html'
-    let $main               :=  if ($request) then 
-                                    <div>
-                                       { render:dispatch(doc($config:tei-authors-root || "/" || $aid || ".xml")//tei:body, "work")
-                                       }
-                                    </div>  
-                                else 
-                                    <div>
-                                        { render:dispatch(doc($config:tei-lemmata-root || "/" || $lid || ".xml")//tei:body, "work")
-                                        }
-                                    </div>  
-    let $cited              :=  <div>
-                                    {app:cited($node, $model, $lang, $aid, $lid)}
-                                </div>
-    let $lemmata            :=  <div>
-                                    {app:lemmata($node, $model, $lang, $aid, $lid)}
-                                </div>                                       
-    let $persons            :=  <div>
-                                    {app:persons($node, $model, $aid, $lid)}
-                                </div>   
-    let $places             :=  <div>
-                                   {app:places($node, $model, $aid, $lid)}
-                               </div>                              
-    let $store              :=  (   
-                                    xmldb:store($config:data-root, $fileMain, $main),
-                                    xmldb:store($config:data-root, $filePersons, $persons), 
-                                    xmldb:store($config:data-root, $fileCited,   $cited),
-                                    xmldb:store($config:data-root, $fileLemma,   $lemmata),
-                                    xmldb:store($config:data-root, $filePlaces,  $places)
-                                )     
-    return  <p class="lead">{$config:data-root||'/'||$switchType||'.html created'}
-                <a href="{($switchLabel1||$switchLabel2||$switchType)}">&#32;&#32;
-                    <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
-                </a>
-            </p>
+    let $main :=  
+        if ($request) then 
+            <div>
+               { render:dispatch(doc($config:tei-authors-root || "/" || $aid || ".xml")//tei:body, "work")
+               }
+            </div>  
+        else 
+            <div>
+                { render:dispatch(doc($config:tei-lemmata-root || "/" || $lid || ".xml")//tei:body, "work")
+                }
+            </div>  
+    let $cited :=  
+        <div>
+            {app:cited($node, $model, $lang, $aid, $lid)}
+        </div>
+    let $lemmata :=  
+        <div>
+            {app:lemmata($node, $model, $lang, $aid, $lid)}
+        </div>                                       
+    let $persons :=  
+        <div>
+            {app:persons($node, $model, $aid, $lid)}
+        </div>   
+    let $places :=  
+        <div>
+            {app:places($node, $model, $aid, $lid)}
+        </div>                              
+    let $store :=  
+        (xmldb:store($config:data-root, $fileMain, $main),
+         xmldb:store($config:data-root, $filePersons, $persons), 
+         xmldb:store($config:data-root, $fileCited,   $cited),
+         xmldb:store($config:data-root, $fileLemma,   $lemmata),
+         xmldb:store($config:data-root, $filePlaces,  $places))     
+    return  
+        <p class="lead">{$config:data-root||'/'||$switchType||'.html created'}
+            <a href="{($switchLabel1||$switchLabel2||$switchType)}">&#32;&#32;
+                <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+            </a>
+        </p>
 };
 
 declare function admin:generate-toc-from-div($node, $wid) {
@@ -308,9 +328,6 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
     let $start-time := util:system-time()
     let $wid := request:get-parameter('wid', '*')
     
-    (: state elements for which to create a sal:index entry: :)
-    let $indexedElTypes   := ("pb", "text", "front", "titlePage", "titlePart", "div", "p", "milestone", "list", "item", "lg", "back", "note", "head", "label")
-    
     (: define the works to be fragmented: :)
     let $todo := 
         if ($wid = '*') then
@@ -319,7 +336,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
             collection($config:tei-works-root)//tei:TEI[@xml:id = distinct-values($wid)]
 
     (: for each requested work: create fragments, insert them into the transformation, and produce some diagnostic info :)
-    let $gerendert        := 
+    let $gerendert := 
         for $work-raw in $todo
             let $cleanStatus := admin:cleanCollection($work-raw/@xml:id, "html")
             let $work := util:expand($work-raw)
@@ -336,7 +353,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
             let $debug := if ($config:debug = ("trace", "info")) then console:log("  " || string(count($target-set)) || " elements to be rendered as fragments...") else ()
             
             (: First, get all relevant nodes :)
-            let $nodes := $work//tei:text/descendant-or-self::*[@xml:id and local-name(.) = $indexedElTypes and not(ancestor::tei:note)]
+            let $nodes := $work//tei:text/descendant-or-self::*[@xml:id and local-name(.) = $config:indexNodes and not(ancestor::tei:note)]
             
             (: Create the fragment id for each node beforehand, so that subsequent routines (e.g, recursive crumbtrail creation) can easily get it :)
             let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] HTML rendering: identifying fragment ids ...") else ()
@@ -389,10 +406,11 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                             $node/ancestor::tei:item[./ancestor::tei:list/@type = 'dict']
                                            )[last()]/@xml:id)},
                                 element sal:crumbtrail      {render:getCrumbtrail($work, $node, 'html-rendering', $fragmentIds)},
-                                element sal:citetrail       {string-join(render:getCrumbtrail($work, $node, 'numeric', $fragmentIds), '')}
+                                element sal:citetrail       {render:getCrumbtrail($work, $node, 'numeric', $fragmentIds)},
+                                element sal:passagetrail    {render:getPassagetrail($work, $node)}
                                 }
                             )
-                           }
+                        }
                 </sal:index>
             let $debug := if ($config:debug = ("trace")) then console:log("  (saving preliminary index file ...)") else ()
             let $indexSaveStatus := admin:saveFile($work/@xml:id, $work/@xml:id || "_nodeIndex.xml", $index, "index")
@@ -606,16 +624,17 @@ declare function admin:createTxtCorpus($processId as xs:string) as xs:string? {
 declare function admin:renderFragment ($work as node(), $wid as xs:string, $target as node(), $targetindex as xs:integer, $fragmentationDepth as xs:integer, $prevId as xs:string?, $nextId as xs:string?, $serverDomain as xs:string?) {
     let $tei2htmlXslt      := doc($config:resources-root || '/xsl/render-fragments2.xsl')
     let $targetid          := xs:string($target/@xml:id)
-    let $xsl-parameters    :=  <parameters>
-                                 <param name="exist:stop-on-warn"  value="yes" />
-                                 <param name="exist:stop-on-error" value="yes" />
-                                 <param name="workId"        value="{$wid}" />
-                                 <param name="targetId"      value="{$targetid}" />
-                                 <param name="targetIndex"   value="{$targetindex}" />
-                                 <param name="prevId"        value="{$prevId}" />
-                                 <param name="nextId"        value="{$nextId}" />
-                                 <param name="serverDomain"  value="{$serverDomain}" />
-                               </parameters>
+    let $xsl-parameters :=  
+        <parameters>
+            <param name="exist:stop-on-warn"  value="yes" />
+            <param name="exist:stop-on-error" value="yes" />
+            <param name="workId"        value="{$wid}" />
+            <param name="targetId"      value="{$targetid}" />
+            <param name="targetIndex"   value="{$targetindex}" />
+            <param name="prevId"        value="{$prevId}" />
+            <param name="nextId"        value="{$nextId}" />
+            <param name="serverDomain"  value="{$serverDomain}" />
+        </parameters>
     let $debugOutput   := if ($config:debug = ("trace", "info")) then console:log("  Render Element " || $targetindex || ": " || $targetid || " of " || $wid || "...") else ()
     let $debugOutput   := if ($config:debug = ("trace")) then console:log("  (prevId=" || $prevId || ", nextId=" || $nextId || ", serverDomain=" || $serverDomain || ")") else ()
     let $html              := transform:transform($work, $tei2htmlXslt, $xsl-parameters)
@@ -624,14 +643,15 @@ declare function admin:renderFragment ($work as node(), $wid as xs:string, $targ
     let $fileName       := format-number($targetindex, "0000") || "_" || $targetid || ".html"
     let $storeStatus    := if ($html) then admin:saveFile($wid, $fileName, $html, "html") else ()
 
-    return <div style="border:'3px solid black';background-color:'grey';">
-                <code>{$wid}/{$fileName}:<br/>
-                        target xml:id={$targetid} <br/>
-                        prev xml:id={$prevId} <br/>
-                        next xml:id={$nextId} <br/>
-                </code>
-                {$html}
-           </div> 
+    return 
+        <div style="border:'3px solid black';background-color:'grey';">
+            <code>{$wid}/{$fileName}:<br/>
+                    target xml:id={$targetid} <br/>
+                    prev xml:id={$prevId} <br/>
+                    next xml:id={$nextId} <br/>
+            </code>
+            {$html}
+        </div> 
 };
 
 (: Generate fragments for sphinx' indexer to grok :)
@@ -644,16 +664,18 @@ declare function admin:sphinx-out ($node as node(), $model as map(*), $wid as xs
                    => Wir müssen also noch dafür sorgen, dass front, body und div's keinen Text außerhalb von p, head, item usw. enthalten!
                 :)
 
-    let $start-time       := util:system-time()
+    let $start-time := util:system-time()
 
     (: Which works are to be indexed? :)
-    let $todo             := if ($wid = '*') then
-                                collection($config:tei-root)//tei:TEI[.//tei:text[@type = ("work_multivolume", "work_monograph", "author_article", "lemma_article", "working_paper")]]
-                             else
-                                collection($config:tei-root)//tei:TEI[@xml:id = distinct-values($wid)]
-    let $expanded         := for $work-raw in $todo
-                                let $cleanStatus := admin:cleanCollection($work-raw/@xml:id, "snippets")
-                                return util:expand($work-raw)
+    let $todo := 
+        if ($wid = '*') then
+            collection($config:tei-root)//tei:TEI[.//tei:text[@type = ("work_multivolume", "work_monograph", "author_article", "lemma_article", "working_paper")]]
+        else
+            collection($config:tei-root)//tei:TEI[@xml:id = distinct-values($wid)]
+    let $expanded := 
+        for $work-raw in $todo
+            let $cleanStatus := admin:cleanCollection($work-raw/@xml:id, "snippets")
+            return util:expand($work-raw)
 
     (: which parts of those works constitute a fragment that is to count as a hit? :)
     let $hits := 
@@ -666,117 +688,126 @@ declare function admin:sphinx-out ($node as node(), $model as map(*), $wid as xs
                 let $teiHeader         := $work/tei:teiHeader
                 let $work_author_name := app:formatName($teiHeader//tei:titleStmt//tei:author//tei:persName)
                 let $work_author_id   := string-join($teiHeader//tei:titleStmt//tei:author//tei:persName/@ref, " ")
-                let $work_title        :=   if ($teiHeader//tei:titleStmt/tei:title[@type="short"] and not($work//tei:text[@type = "working_paper"])) then
-                                                $teiHeader//tei:titleStmt/tei:title[@type="short"]/text()
-                                            else if ($teiHeader//tei:titleStmt/tei:title[@type="main"]) then
-                                                $teiHeader//tei:titleStmt/tei:title[@type="main"]/text()
-                                            else $teiHeader//tei:titleStmt/tei:title[1]/text()
-                let $work_year        :=    if ($teiHeader//tei:sourceDesc//tei:date[@type = "summaryThisEd"]) then
-                                                xs:string($teiHeader//tei:sourceDesc//tei:date[@type = "summaryThisEd"])
-                                            else if  ($teiHeader//tei:sourceDesc//tei:date[@type = "thisEd"]) then
-                                                xs:string($teiHeader//tei:sourceDesc//tei:date[@type = "thisEd"])
-                                            else if  ($teiHeader//tei:sourceDesc//tei:date[@type = "summaryFirstEd"]) then
-                                                xs:string($teiHeader//tei:sourceDesc//tei:date[@type = "summaryFirstEd"])
-                                            else if  ($teiHeader//tei:sourceDesc//tei:date[@type = "firstEd"]) then
-                                                xs:string($teiHeader//tei:sourceDesc//tei:date[@type = "firstEd"])
-                                            else if  ($teiHeader//tei:date[@type ="digitizedEd"]) then
-                                                xs:string($teiHeader//tei:date[@type = "digitizedEd"])
-                                            else ()
-                let $hit_type         := local-name($hit)
-                let $hit_id           := xs:string($hit/@xml:id)
-                let $hit_citetrail    := doc($config:index-root || '/' || $work_id || '_nodeIndex.xml')//sal:node[@n = $hit_id]/sal:citetrail
-                let $hit_language     := xs:string($hit/ancestor-or-self::tei:*[@xml:lang][1]/@xml:lang)
-                let $hit_fragment     := if ($hit_id and xmldb:collection-available($config:html-root || '/' || $work_id)) then
-                                            render:getFragmentFile($work_id, $hit_id)
-                                         else ()
-                let $hit_fragment_number := if ($hit_fragment) then
-                                                xs:int(substring($hit_fragment, 1, 4))
-                                            else ()
-                let $hit_path         := if ($hit_fragment) then
-                                            $config:webserver || "/html/" || $work_id || "/" || $hit_fragment || ".html"
-                                         else
-                                            "#No fragment discoverable!"
-                let $hit_url          :=      if ($hit_fragment and substring($work_id,1,2)="W0") then
-                                            $config:idserver || "/texts/"   || $work_id || ':' || $hit_citetrail
-                                         else if (substring($work_id,1,1)="A") then
-                                            $config:idserver || "/authors/" || $work_id
-                                         else if (substring($work_id,1,1)="L") then
-                                            $config:idserver || "/lemmata/" || $work_id
-                                         else if (substring($work_id,1,2)="WP") then
-                                            $config:webserver || "/workingPaper.html?wpid=" || $work_id
-                                         else
-                                            "#No fragment discoverable!"
+                let $work_title :=   
+                    if ($teiHeader//tei:titleStmt/tei:title[@type="short"] and not($work//tei:text[@type = "working_paper"])) then
+                        $teiHeader//tei:titleStmt/tei:title[@type="short"]/text()
+                    else if ($teiHeader//tei:titleStmt/tei:title[@type="main"]) then
+                        $teiHeader//tei:titleStmt/tei:title[@type="main"]/text()
+                    else $teiHeader//tei:titleStmt/tei:title[1]/text()
+                let $work_year :=    
+                    if ($teiHeader//tei:sourceDesc//tei:date[@type = "summaryThisEd"]) then
+                        xs:string($teiHeader//tei:sourceDesc//tei:date[@type = "summaryThisEd"])
+                    else if  ($teiHeader//tei:sourceDesc//tei:date[@type = "thisEd"]) then
+                        xs:string($teiHeader//tei:sourceDesc//tei:date[@type = "thisEd"])
+                    else if  ($teiHeader//tei:sourceDesc//tei:date[@type = "summaryFirstEd"]) then
+                        xs:string($teiHeader//tei:sourceDesc//tei:date[@type = "summaryFirstEd"])
+                    else if  ($teiHeader//tei:sourceDesc//tei:date[@type = "firstEd"]) then
+                        xs:string($teiHeader//tei:sourceDesc//tei:date[@type = "firstEd"])
+                    else if  ($teiHeader//tei:date[@type ="digitizedEd"]) then
+                        xs:string($teiHeader//tei:date[@type = "digitizedEd"])
+                    else ()
+                let $hit_type := local-name($hit)
+                let $hit_id := xs:string($hit/@xml:id)
+                let $hit_citetrail := doc($config:index-root || '/' || $work_id || '_nodeIndex.xml')//sal:node[@n = $hit_id]/sal:citetrail
+                let $hit_language := xs:string($hit/ancestor-or-self::tei:*[@xml:lang][1]/@xml:lang)
+                let $hit_fragment := 
+                    if ($hit_id and xmldb:collection-available($config:html-root || '/' || $work_id)) then
+                        render:getFragmentFile($work_id, $hit_id)
+                    else ()
+                let $hit_fragment_number := 
+                    if ($hit_fragment) then
+                        xs:int(substring($hit_fragment, 1, 4))
+                    else ()
+                let $hit_path := 
+                    if ($hit_fragment) then
+                        $config:webserver || "/html/" || $work_id || "/" || $hit_fragment || ".html"
+                    else
+                        "#No fragment discoverable!"
+                let $hit_url :=      
+                    if ($hit_fragment and substring($work_id,1,2)="W0") then
+                        $config:idserver || "/texts/"   || $work_id || ':' || $hit_citetrail
+                    else if (substring($work_id,1,1)="A") then
+                        $config:idserver || "/authors/" || $work_id
+                    else if (substring($work_id,1,1)="L") then
+                        $config:idserver || "/lemmata/" || $work_id
+                    else if (substring($work_id,1,2)="WP") then
+                        $config:webserver || "/workingPaper.html?wpid=" || $work_id
+                    else
+                        "#No fragment discoverable!"
 
                 (: Here we define the to-be-indexed content! :)
-                let $hit_content_orig := if ($hit_id) then
-                                            string-join(sphinx:dispatch($hit, "orig"), '')
-                                          else
-                                            "There is no xml:id in the " || $hit_type || " hit!"
-                let $hit_content_edit := if ($hit_id) then
-                                            string-join(sphinx:dispatch($hit, "edit"), '')
-                                          else
-                                            "There is no xml:id in the " || $hit_type || " hit!"
+                let $hit_content_orig := 
+                    if ($hit_id) then
+                        string-join(sphinx:dispatch($hit, "orig"), '')
+                    else
+                        "There is no xml:id in the " || $hit_type || " hit!"
+                let $hit_content_edit := 
+                    if ($hit_id) then
+                        string-join(sphinx:dispatch($hit, "edit"), '')
+                    else
+                        "There is no xml:id in the " || $hit_type || " hit!"
                 
                 (: Now build a sphinx "row" for the fragment :)
                 let $sphinx_id    := xs:long(substring($work_id, functx:index-of-string-first($work_id, "0"))) * 1000000 + ( (string-to-codepoints(substring($work_id, 1, 1)) + string-to-codepoints(substring($work_id, 2, 1))) * 10000 ) + $index
                 let $html_snippet :=
-                        <sphinx:document id="{$sphinx_id}">
-                            <div>
-                                <h3>Hit
-                                    <sphinx_docid>{$sphinx_id}</sphinx_docid>
-                                    in <sphinx_work_type>{$work_type}</sphinx_work_type>{$config:nbsp}<sphinx_work>{$work_id}</sphinx_work>:<br/>
-                                    <sphinx_author>{$work_author_name}</sphinx_author>
-                                    {if ($work_author_id) then " (" || <sphinx_authorid>{$work_author_id}</sphinx_authorid> || ")" else ()},
-                                    <sphinx_title>{$work_title}</sphinx_title>
-                                    (<sphinx_year>{$work_year}</sphinx_year>)
-                                </h3>
-                                <h4>Hit
-                                    language: &quot;<sphinx_hit_language>{$hit_language}</sphinx_hit_language>&quot;,
-                                    node type: &lt;<sphinx_hit_type>{$hit_type}</sphinx_hit_type>&gt;,
-                                    node xml:id: &quot;<sphinx_hit_id>{$hit_id}</sphinx_hit_id>&quot;
-                                </h4>
-                                <p>
-                                    <em><sphinx_description_orig>{$hit_content_orig}</sphinx_description_orig></em>
-                                </p>
-                                <p>
-                                    <em><sphinx_description_edit>{$hit_content_edit}</sphinx_description_edit></em>
-                                </p>
-                                <p>
-                                    find it in fragment number {$hit_fragment_number} here: <a href="{$hit_path}"><sphinx_html_path>{$hit_path}</sphinx_html_path></a><br/>
-                                    or here: <a href="{$hit_url}"><sphinx_fragment_path>{$hit_url}</sphinx_fragment_path></a>
-                                </p>
-                                <hr/>
-                            </div>
-                        </sphinx:document>
+                    <sphinx:document id="{$sphinx_id}">
+                        <div>
+                            <h3>Hit
+                                <sphinx_docid>{$sphinx_id}</sphinx_docid>
+                                in <sphinx_work_type>{$work_type}</sphinx_work_type>{$config:nbsp}<sphinx_work>{$work_id}</sphinx_work>:<br/>
+                                <sphinx_author>{$work_author_name}</sphinx_author>
+                                {if ($work_author_id) then " (" || <sphinx_authorid>{$work_author_id}</sphinx_authorid> || ")" else ()},
+                                <sphinx_title>{$work_title}</sphinx_title>
+                                (<sphinx_year>{$work_year}</sphinx_year>)
+                            </h3>
+                            <h4>Hit
+                                language: &quot;<sphinx_hit_language>{$hit_language}</sphinx_hit_language>&quot;,
+                                node type: &lt;<sphinx_hit_type>{$hit_type}</sphinx_hit_type>&gt;,
+                                node xml:id: &quot;<sphinx_hit_id>{$hit_id}</sphinx_hit_id>&quot;
+                            </h4>
+                            <p>
+                                <em><sphinx_description_orig>{$hit_content_orig}</sphinx_description_orig></em>
+                            </p>
+                            <p>
+                                <em><sphinx_description_edit>{$hit_content_edit}</sphinx_description_edit></em>
+                            </p>
+                            <p>
+                                find it in fragment number {$hit_fragment_number} here: <a href="{$hit_path}"><sphinx_html_path>{$hit_path}</sphinx_html_path></a><br/>
+                                or here: <a href="{$hit_url}"><sphinx_fragment_path>{$hit_url}</sphinx_fragment_path></a>
+                            </p>
+                            <hr/>
+                        </div>
+                    </sphinx:document>
 
                 let $sphinx_snippet :=
-                        <sphinx:document id="{$sphinx_id}" xml:space="preserve">
-                            <sphinx_docid>{$sphinx_id}</sphinx_docid>
-                            <sphinx_work>{$work_id}</sphinx_work>
-                            <sphinx_work_type>{$work_type}</sphinx_work_type>
-                            <sphinx_author>{$work_author_name}</sphinx_author>
-                            <sphinx_authorid>{$work_author_id}</sphinx_authorid>
-                            <sphinx_title>{$work_title}</sphinx_title>
-                            <sphinx_year>{$work_year}</sphinx_year>
-                            <sphinx_hit_language>{$hit_language}</sphinx_hit_language>
-                            <sphinx_hit_type>{$hit_type}</sphinx_hit_type>
-                            <sphinx_hit_id>{$hit_id}</sphinx_hit_id>
-                            <sphinx_description_orig>{$hit_content_orig}</sphinx_description_orig>
-                            <sphinx_description_edit>{$hit_content_edit}</sphinx_description_edit>
-                            <sphinx_html_path>{$hit_path}</sphinx_html_path>
-                            <sphinx_fragment_path>{$hit_url}</sphinx_fragment_path>
-                            <sphinx_fragment_number>{$hit_fragment_number}</sphinx_fragment_number>
-                        </sphinx:document>
+                    <sphinx:document id="{$sphinx_id}" xml:space="preserve">
+                        <sphinx_docid>{$sphinx_id}</sphinx_docid>
+                        <sphinx_work>{$work_id}</sphinx_work>
+                        <sphinx_work_type>{$work_type}</sphinx_work_type>
+                        <sphinx_author>{$work_author_name}</sphinx_author>
+                        <sphinx_authorid>{$work_author_id}</sphinx_authorid>
+                        <sphinx_title>{$work_title}</sphinx_title>
+                        <sphinx_year>{$work_year}</sphinx_year>
+                        <sphinx_hit_language>{$hit_language}</sphinx_hit_language>
+                        <sphinx_hit_type>{$hit_type}</sphinx_hit_type>
+                        <sphinx_hit_id>{$hit_id}</sphinx_hit_id>
+                        <sphinx_description_orig>{$hit_content_orig}</sphinx_description_orig>
+                        <sphinx_description_edit>{$hit_content_edit}</sphinx_description_edit>
+                        <sphinx_html_path>{$hit_path}</sphinx_html_path>
+                        <sphinx_fragment_path>{$hit_url}</sphinx_fragment_path>
+                        <sphinx_fragment_number>{$hit_fragment_number}</sphinx_fragment_number>
+                    </sphinx:document>
 
-                let $fileName       := format-number($index, "00000") || "_" || $hit_id || ".snippet.xml"
-                let $storeStatus    := if ($hit_id) then admin:saveFile($work_id, $fileName, $sphinx_snippet, "snippets") else ()
+                let $fileName := format-number($index, "00000") || "_" || $hit_id || ".snippet.xml"
+                let $storeStatus := if ($hit_id) then admin:saveFile($work_id, $fileName, $sphinx_snippet, "snippets") else ()
 
                 order by $work_id ascending
-                return if ($mode = "html") then
-                            $html_snippet
-                        else if ($mode = "sphinx") then
-                            $sphinx_snippet
-                        else ()
+                return 
+                    if ($mode = "html") then
+                        $html_snippet
+                    else if ($mode = "sphinx") then
+                        $sphinx_snippet
+                    else ()
 
 (: Now return statistics, schema and the whole document-set :)
     let $runtime-ms := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S')) * 1000
