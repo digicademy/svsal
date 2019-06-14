@@ -81,7 +81,7 @@ declare variable $config:digilibServerManifester := "https://c104-131.cloud.gwdg
 declare variable $config:urnresolver    := 'http://nbn-resolving.de/urn/resolver.pl?';
 
 (: Configure html rendering :)
-declare variable $config:chars_summary  := 75;              (: When marginal notes, section headings etc. have to be shortened, at which point? :)
+declare variable $config:chars_summary  := 60;              (: When marginal notes, section headings etc. have to be shortened, at which point? :)
 declare variable $config:fragmentationDepthDefault  := 4;   (: At which level should xml to html fragmentation occur by default? :)
 
 (: Configure Search variables :)
@@ -132,7 +132,7 @@ declare variable $config:citationLabels :=
     map {
         (: div/@label and milestone/@unit: :)
         'additional': map {'verb': 'additiones', 'abbr': 'add.', 'citeRef': true()},
-        'administrative': map {'verb': 'sectio', 'abbr': 'sect.'}, (: TODO: something more concrete? :)
+        'administrative': map {'verb': 'administratio', 'abbr': 'admin.'}, (: TODO: something more concrete? :)
         'article': map {'verb': 'articulus', 'abbr': 'art.', 'citeRef': true()},
         'book': map {'verb': 'liber', 'abbr': 'lib.', 'citeRef': true()},
         'chapter': map {'verb': 'capitulum', 'abbr': 'cap.', 'citeRef': true()},
@@ -164,21 +164,13 @@ declare variable $config:citationLabels :=
         'partida': map {'verb': 'partida', 'abbr': 'part.', 'citeRef': true()},
         'number': map {'verb': 'numerus', 'abbr': 'num.', 'citeRef': true()},
         (: element names: :)
-        'titlePage': map {'verb': 'inscriptio', 'abbr': 'inscr.'}, (: TODO :)
-        'back': map {'verb': 'appendix', 'abbr': 'app.'},
-        'front': map {'verb': 'praescriptio', 'abbr': 'praes.'}, (: TODO: praescriptio, praescriptum, praeparatio, praelusio? :)
         'p': map {'verb': 'paragraphus', 'abbr': 'paragr.', 'citeRef': true()},
-        'note': map {'verb': 'nota', 'abbr': 'not.', 'citeRef': true()},
-        'list': map {'verb': 'index', 'abbr': 'ind.'}, (: same as 'index' :)
-        'item': map {'verb': 'item', 'abbr': 'it.'}, (: TODO :)
-        'lg': map {'verb': 'poema', 'abbr': 'poem.'},
-        (: generic label for everything else: :)
-        'generic': map {'verb': 'sectio', 'abbr': 'sect.'} (: same as section/segment, but not used for citeRef :)
+        'note': map {'verb': 'nota', 'abbr': 'not.', 'citeRef': true()}
     };
     (: TODO: argument? :)
 
 (: Nodes that are included in sal:index :)
-declare variable $config:indexNodes := ('pb', 'text', 'front', 'titlePage', 'div', 'p', 'milestone', 'list', 
+declare variable $config:indexNodes := ('pb', 'text', 'front', 'titlePage', 'titlePart', 'div', 'p', 'milestone', 'list', 
                                         'item', 'lg', 'back', 'note', 'head', 'label', 'signed');
 
 

@@ -710,45 +710,50 @@ function sphinx:details ($wid as xs:string, $field as xs:string, $q as xs:string
     let $detailsRequestHeaders  := <headers></headers>
     let $conditionParameters    := "@sphinx_work ^" || $wid
     let $alsoSearchAuthorField  := if ($field eq "corpus") then "sphinx_author," else ()
-    let $addConditionParameters :=  if ($field = ("headings", "entries")) then
-                                        $conditionParameters || " @sphinx_hit_type =head | =titlePage"
-                                    else if ($field eq "notes") then
-                                        $conditionParameters || " @sphinx_hit_type =note"
-                                    else if ($field eq "nonotes") then
-                                        $conditionParameters || " @sphinx_hit_type !note"
-                                    else
-                                        $conditionParameters
-    let $groupingParameters     := ""
-    let $sortingParameters      := "&amp;sort=2&amp;sortby=sphinx_fragment_number&amp;ranker=2"      (: sort=2 - SPH_SORT_ATTR_ASC rank=2 - SPH_RANK_NONE :)
-    let $pagingParameters       := "&amp;limit=" || $limit || "&amp;offset=" || $offset
+    let $addConditionParameters :=  
+        if ($field = ("headings", "entries")) then
+            $conditionParameters || " @sphinx_hit_type =head | =titlePage"
+        else if ($field eq "notes") then
+            $conditionParameters || " @sphinx_hit_type =note"
+        else if ($field eq "nonotes") then
+            $conditionParameters || " @sphinx_hit_type !note"
+        else
+            $conditionParameters
+    let $groupingParameters := ""
+    let $sortingParameters := "&amp;sort=2&amp;sortby=sphinx_fragment_number&amp;ranker=2"      (: sort=2 - SPH_SORT_ATTR_ASC rank=2 - SPH_RANK_NONE :)
+    let $pagingParameters := "&amp;limit=" || $limit || "&amp;offset=" || $offset
 
-    let $detailsRequest         := concat($config:sphinxRESTURL, "/search?q=",
-                                        encode-for-uri("@(" || $alsoSearchAuthorField ||
-                                                        "sphinx_description_edit,sphinx_description_orig) " || $q || $addConditionParameters),
-                                        $sortingParameters,
-                                        $pagingParameters)
-    let $details                := httpclient:get($detailsRequest, false(), $detailsRequestHeaders)//httpclient:body/rss
-
-    let $searchInfo :=  <p id="details_searchInfo">
-                            <span id="details_searchTerms"><i18n:text key="searchFor">Suche nach</i18n:text>: {string-join($details//word[not(lower-case(./text()) eq lower-case($wid))], ', ')}<br/></span>
-                            <span id="details_totalHits"><i18n:text key="found">Gefunden</i18n:text>:{$config:nbsp}<strong>{$details//opensearch:totalResults/text()}{$config:nbsp}<i18n:text key="hits">Fundstellen</i18n:text>.</strong><br/></span>
-                            <span id="details_displayRange"><h3><i18n:text key="display">Anzeige</i18n:text>:{$config:nbsp}{xs:integer($offset) + 1 || '-' || xs:integer($offset) + count($details//item)}</h3></span>
-                        </p>
+    let $detailsRequest := 
+        concat($config:sphinxRESTURL, "/search?q=",
+                encode-for-uri("@(" || $alsoSearchAuthorField ||
+                                "sphinx_description_edit,sphinx_description_orig) " || $q || $addConditionParameters),
+                $sortingParameters,
+                $pagingParameters)
+    
+    let $details:= httpclient:get($detailsRequest, false(), $detailsRequestHeaders)//httpclient:body/rss
+    
+    let $searchInfo :=  
+        <p id="details_searchInfo">
+            <span id="details_searchTerms"><i18n:text key="searchFor">Suche nach</i18n:text>: {string-join($details//word[not(lower-case(./text()) eq lower-case($wid))], ', ')}<br/></span>
+            <span id="details_totalHits"><i18n:text key="found">Gefunden</i18n:text>:{$config:nbsp}<strong>{$details//opensearch:totalResults/text()}{$config:nbsp}<i18n:text key="hits">Fundstellen</i18n:text>.</strong><br/></span>
+            <span id="details_displayRange"><h3><i18n:text key="display">Anzeige</i18n:text>:{$config:nbsp}{xs:integer($offset) + 1 || '-' || xs:integer($offset) + count($details//item)}</h3></span>
+        </p>
     let $prevDetailsPara        := "&amp;limit=" || $limit || "&amp;offset=" || xs:string(xs:integer($offset) - xs:integer($details//opensearch:itemsPerPage))
     let $nextDetailsPara        := "&amp;limit=" || $limit || "&amp;offset=" || xs:string(xs:integer($offset) + xs:integer($details//opensearch:itemsPerPage))
     let $prevDetailsURL         := concat('sphinx-client.xql?mode=details&amp;q=',encode-for-uri($q), '&amp;wid=' || $wid || '&amp;sort=2&amp;sortby=sphinx_fragment_number&amp;ranker=2' , $prevDetailsPara)
     let $nextDetailsURL         := concat('sphinx-client.xql?mode=details&amp;q=',encode-for-uri($q), '&amp;wid=' || $wid || '&amp;sort=2&amp;sortby=sphinx_fragment_number&amp;ranker=2' , $nextDetailsPara)
-    let $prevDetailsLink := if (xs:integer($offset) > 1 ) then
-                           <a href="{$prevDetailsURL}" class="loadPrev"><i class="fa fa-chevron-left"></i>&#xA0;&#xA0;<i18n:text key="prev">Zurück</i18n:text>{$config:nbsp}|{$config:nbsp}</a>
-                         else ()
-    let $nextDetailsLink := if (xs:integer($offset) + xs:integer($details//opensearch:itemsPerPage) lt xs:integer($details//opensearch:totalResults)) then
-                            <a href="{$nextDetailsURL}" class="loadNext">{$config:nbsp}|{$config:nbsp}<i18n:text key="next">Weiter</i18n:text>&#xA0;&#xA0;<i class="fa fa-chevron-right"></i></a>
-                         else ()
+    let $prevDetailsLink := 
+        if (xs:integer($offset) > 1 ) then
+            <a href="{$prevDetailsURL}" class="loadPrev"><i class="fa fa-chevron-left"></i>&#xA0;&#xA0;<i18n:text key="prev">Zurück</i18n:text>{$config:nbsp}|{$config:nbsp}</a>
+        else ()
+    let $nextDetailsLink := 
+        if (xs:integer($offset) + xs:integer($details//opensearch:itemsPerPage) lt xs:integer($details//opensearch:totalResults)) then
+            <a href="{$nextDetailsURL}" class="loadNext">{$config:nbsp}|{$config:nbsp}<i18n:text key="next">Weiter</i18n:text>&#xA0;&#xA0;<i class="fa fa-chevron-right"></i></a>
+        else ()
 
     let $output :=
         <div id="detailsDiv"> <!-- id="details_{$wid}" class="collapse resultsDetails" -->
             <h3 class="text-center" id="details_displayRange">
-<!--<i18n:text key="display">Anzeige</i18n:text>:{$config:nbsp}-->
                {$prevDetailsLink}{$config:nbsp}{xs:integer($offset) + 1 || '-' || xs:integer($offset) + count($details//item)}{$config:nbsp}{$nextDetailsLink}</h3>
                <div style="display:none;" class="spin100 text-center"> <i class="fa fa-spinner fa-spin"/></div>
             
@@ -759,16 +764,17 @@ function sphinx:details ($wid as xs:string, $field as xs:string, $q as xs:string
 (:                    let $crumbtrail     := sphinx:addLangToCrumbtrail(<sal:crumbtrail>{sphinx:addQToCrumbtrail(doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $hit_id]/sal:crumbtrail, $q)}</sal:crumbtrail>, $lang):)
                     let $crumbtrail     := <sal:crumbtrail>{sphinx:addQToCrumbtrail(doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $hit_id]/sal:crumbtrail, $q)}</sal:crumbtrail>
 (:                    let $bombtrail      := sphinx:addLangToCrumbtrail(                 sphinx:addQToCrumbtrail(doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $hit_id]/sal:crumbtrail/a[last()], $q), $lang):)
-                    let $bombtrail      :=                  sphinx:addQToCrumbtrail(doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $hit_id]/sal:crumbtrail/a[last()], $q)
+                    let $bombtrail      := sphinx:addQToCrumbtrail(doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $hit_id]/sal:crumbtrail/a[last()], $q)
 
-                    let $snippets       :=  <documents>
-                                                <description_orig>
-                                                    {$item/description_orig}
-                                                </description_orig>
-                                                <description_edit>
-                                                    {$item/description_edit}
-                                                </description_edit>
-                                            </documents>
+                    let $snippets :=  
+                        <documents>
+                            <description_orig>
+                                {$item/description_orig}
+                            </description_orig>
+                            <description_edit>
+                                {$item/description_edit}
+                            </description_edit>
+                        </documents>
                     let $excerpts       := sphinx:excerpts($snippets, $q)
                     let $description_orig    := $excerpts//item[1]/description
                     let $description_edit    := $excerpts//item[2]/description

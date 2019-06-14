@@ -1,4 +1,4 @@
-<xsl:stylesheet xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:functx="http://www.functx.com" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" xmlns:sal="http://salamanca.adwmainz.de" version="3.0" exclude-result-prefixes="xsl xi tei functx xs exist fn sal xd" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+<xsl:stylesheet xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:functx="http://www.functx.com" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sal="http://salamanca.adwmainz.de" version="3.0" exclude-result-prefixes="xsl xi tei functx xs exist fn sal xd" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
     
     <xsl:import href="xipr-1-1.xsl"/>   <!-- XInclude processing -->
 
@@ -499,6 +499,12 @@
             </xsl:attribute>
             <xsl:value-of select="sal:sectionTitle($targetWorkId, $targetNodeId)"/>
         </xsl:element>
+    </xsl:function>
+    
+    <xsl:function name="sal:getPassage" as="xs:string?">
+        <xsl:param name="targetWorkId" as="xs:string"/>
+        <xsl:param name="targetNodeId" as="xs:string"/>
+        <xsl:copy-of select="doc(xs:anyURI(concat('xmldb:exist:///db/apps/salamanca-webdata/index/', $targetWorkId, '_nodeIndex.xml')))//sal:node[@n = $targetNodeId]/sal:passagetrail/text()"/>
     </xsl:function>
 
     <!-- For a volume ID of the form "W0013-A" or "W0096-B", return a matching ID of the form "W0013_Vol01" or "W0096_Vol02";

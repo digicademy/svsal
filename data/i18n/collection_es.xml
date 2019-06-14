@@ -360,4 +360,48 @@
     <msg key="inLow">en</msg>
     <msg key="editedByAbbrLow">ed. por</msg>  
     
+    <!-- div, milestone, element types for node index derivatives -->
+    <msg key="div-administrative">Administrativo</msg>
+    <msg key="div-article">Artículo</msg>
+    <msg key="div-book">Libro</msg>
+    <msg key="div-chapter">Capítulo</msg>
+    <msg key="div-colophon">Colofón</msg>
+    <msg key="div-source">Referencia</msg>
+    <msg key="div-commentary">Comentario</msg>
+    <msg key="div-contents">Contenido</msg>
+    <msg key="div-corrigenda">Errata</msg>
+    <msg key="div-dedication">Dedicación</msg>
+    <msg key="div-disputation">Disputatio</msg>
+    <msg key="div-doubt">Dubium</msg>
+    <msg key="div-entry">Lema</msg>
+    <msg key="div-foreword">Prólogo</msg>
+    <msg key="div-gloss">Glosa</msg>
+    <msg key="div-index">Índice</msg>
+    <msg key="div-lecture">Relectio</msg>
+    <msg key="div-part">Pars</msg>
+    <msg key="div-preface">Introducción</msg>
+    <msg key="div-privileges">Privilegio</msg>
+    <msg key="div-question">Quaestio</msg>
+    <msg key="div-section">Sección</msg>
+    <msg key="div-segment">Sectio</msg>
+    <msg key="div-title">Titulus</msg>
+    <msg key="div-law">Lex</msg>
+    <msg key="div-partida">Partida</msg>
+    <msg key="ms-article">Art.</msg>
+    <msg key="ms-number">Num.</msg>
+    <msg key="ms-section">Section</msg>
+    <msg key="elem-front">Parte preliminar</msg>
+    <msg key="elem-back">Apéndice</msg>
+    <msg key="elem-p">Párrafo</msg>
+    <msg key="elem-signed">Firma</msg>
+    <msg key="elem-head">Título</msg>
+    <msg key="elem-label">Etiqueta</msg>
+    <msg key="elem-titlePage">Portada</msg>
+    <msg key="elem-note">Nota marginal</msg>
+    <msg key="elem-list">Lista</msg>
+    <msg key="elem-item">Elemento listado</msg>
+    <msg key="elem-lg">Poema</msg>
+    <msg key="elem-text-volume">Volumen</msg>
+    <msg key="crumb-generic">Pasaje</msg>
+    
 </catalogue>

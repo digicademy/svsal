@@ -189,5 +189,48 @@
   <msg key="inLow">in</msg>
   <msg key="editedByAbbrLow">hg. von</msg>
   
+  <!-- div, milestone, element types for node index derivatives -->
+  <msg key="div-administrative">Administrativ</msg>
+  <msg key="div-article">Artikel</msg>
+  <msg key="div-book">Buch</msg>
+  <msg key="div-chapter">Kapitel</msg>
+  <msg key="div-colophon">Kolophon</msg>
+  <msg key="div-source">Quelle</msg>
+  <msg key="div-commentary">Quellenkommentar</msg>
+  <msg key="div-contents">Inhaltsverzeichnis</msg>
+  <msg key="div-corrigenda">Korrigenda</msg>
+  <msg key="div-dedication">Widmung</msg>
+  <msg key="div-disputation">Disputatio</msg>
+  <msg key="div-doubt">Dubium</msg>
+  <msg key="div-entry">Lemma</msg>
+  <msg key="div-foreword">Vorwort</msg>
+  <msg key="div-gloss">Glosse</msg>
+  <msg key="div-index">Index</msg>
+  <msg key="div-lecture">Relectio</msg>
+  <msg key="div-part">Pars</msg>
+  <msg key="div-preface">Einleitung</msg>
+  <msg key="div-privileges">Privilegien</msg>
+  <msg key="div-question">Quaestio</msg>
+  <msg key="div-section">Abschnitt</msg>
+  <msg key="div-segment">Sectio</msg>
+  <msg key="div-title">Titulus</msg>
+  <msg key="div-law">Lex</msg>
+  <msg key="div-partida">Partida</msg>
+  <msg key="ms-article">Art.</msg>
+  <msg key="ms-number">Num.</msg>
+  <msg key="ms-section">Abschnitt</msg>
+  <msg key="elem-front">Titelei</msg>
+  <msg key="elem-back"/>
+  <msg key="elem-p">Absatz</msg>
+  <msg key="elem-signed">Signatur</msg>
+  <msg key="elem-head">Titel</msg>
+  <msg key="elem-label">Titel</msg>
+  <msg key="elem-titlePage">Titelseite</msg>
+  <msg key="elem-note">Marginalnote</msg>
+  <msg key="elem-list">Liste</msg>
+  <msg key="elem-item">Eintrag</msg>
+  <msg key="elem-lg">Gedicht</msg>
+  <msg key="elem-text-volume">Band</msg>
+  <msg key="crumb-generic">Abschnitt</msg>
   
 </catalogue>
