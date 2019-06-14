@@ -133,128 +133,6 @@ declare function render:needsTxtCorpusZip($node as node(), $model as map(*)) {
 :)
 
 
-(: Create a title for a node that is used in crumbtrails (e.g., search results) and for section/citation labels in reading view: :)
-declare function render:sectionTitle($targetWork as node()*, $targetNode as node()) {
-    let $targetWorkId := string($targetWork/tei:TEI/@xml:id)
-    let $targetNodeId := string($targetNode/@xml:id)
-    (: determine label prefix for most frequent nodes: div, p, etc. (for special cases, see below) :)
-    let $nodeLabel :=
-        let $label := 
-            (: divs and milestones are already labeled (through @type|@milestone :)
-            if ($targetNode/self::tei:div) then $config:citationLabels($targetNode/@type)?('abbr')
-            else if ($targetNode/self::tei:milestone) then $config:citationLabels($targetNode/@unit)?('abbr')
-            (: other elements whose names are mapped to labels :)
-            else if ($targetNode/(self::tei:front|self::tei:back|self::tei:p|self::tei:signed|self::tei:head|self::tei:label
-                                  |self::tei:titlePage|self::tei:note|self::tei:list|self::tei:item|self::tei:lg)) then
-                $config:citationLabels(local-name($targetNode))?('abbr')
-            else $config:citationLabels('generic')?('abbr')
-        return $label (:upper-case(substring($label,1,1)) || substring($label,2):)
-    
-    return normalize-space(
-        (: div, milestone, items and lists are named according to //tei:term[1]/@key, ./head, @n, ref->., @xml:id :)
-        if ($targetNode/(self::tei:div | self::tei:milestone | self::tei:item | self::tei:list)) then
-            (: title dict. item according to the term it contains: :)
-            if ($targetNode/self::tei:item and $targetNode/parent::tei:list/@type='dict' and $targetNode//tei:term[1][@key]) then
-                (: TODO: collision with div/@type='lemma'? :)
-                concat('lemma &#34;',
-                        concat($targetNode//tei:term[1]/@key,
-                                if (count($targetNode/parent::tei:list/tei:item[.//tei:term[1]/@key eq $targetNode//tei:term[1]/@key]) gt 1) then
-                                    concat('-', count($targetNode/preceding::tei:item[tei:term[1]/@key eq $targetNode//tei:term[1]/@key] intersect $targetNode/ancestor::tei:div[1]//tei:item[tei:term[1]/@key eq $targetNode//tei:term[1]/@key]) + 1)
-                                else ()
-                              ),
-                       '&#34;'
-                      )
-            (: manually added section titles have priority: :)
-            else if ($targetNode/@n and not(matches($targetNode/@n, '^[0-9]+$'))) then
-                $nodeLabel || ' &#34;' || string($targetNode/@n) || '&#34;'
-            (: if div, item or list has a heading or label, make a teaser from that: :)
-            else if ($targetNode/(tei:head|tei:label)) then
-                let $headString := normalize-space(string-join(render:dispatch(($targetNode/(tei:head|tei:label))[1], 'edit'), ''))
-                return if (string-length($headString) gt $config:chars_summary) then
-                    concat($nodeLabel, ' &#34;', normalize-space(substring($headString, 1, $config:chars_summary)), '…', '&#34;')
-                else
-                    concat($nodeLabel, ' &#34;', $headString, '&#34;')
-            (: purely numeric section titles: :)
-            else if ($targetNode/@n and (matches($targetNode/@n, '^[0-9]+$')) and ($targetNode/@type|$targetNode/@unit)) then
-                concat($nodeLabel, ' &#34;', $targetNode/@n, '&#34;')
-            (: otherwise, try to derive a title from potential references to the current node :)
-            else if ($targetWork/tei:ref[@target = concat('#', $targetNode/@xml:id)]) then
-                let $referString := normalize-space(string-join(render:dispatch($targetWork/tei:ref[@target = concat('#',$targetNode/@xml:id)][1], 'edit'), ''))
-                return if (string-length($referString) gt $config:chars_summary) then
-                    normalize-space(concat($nodeLabel, ' ', $targetNode/@n, ' &#34;', normalize-space(substring($referString, 1, $config:chars_summary)), '…', '&#34;'))
-                else
-                    normalize-space(concat($nodeLabel, ' ', $targetNode/@n, ' &#34;', $referString, '&#34;'))
-            (: when everything fails, simply take the label :)
-            else $nodeLabel
-
-        (: p's and lg's are named according to their beginning :)
-        else if ($targetNode/self::tei:p | $targetNode/self::tei:lg) then
-            let $pString := normalize-space(string-join(render:dispatch($targetNode, 'edit'), ''))
-            return if (string-length($pString) gt $config:chars_summary) then
-                        concat($nodeLabel, ' &#34;', substring($pString, 1, $config:chars_summary), '…', '&#34;')
-                    else
-                        concat($nodeLabel, ' &#34;', $pString, '&#34;')
-        else if ($targetNode/self::tei:text and $targetNode/@type='work_volume') then
-            concat('Vol. ', $targetNode/@n)
-        else if ($targetNode/self::tei:text and $targetNode/@xml:id='completeWork') then
-            '[complete work]'
-        else if ($targetNode/self::tei:text and matches($targetNode/@xml:id, 'work_part_[a-z]')) then
-            '[process-technical part] ' | substring(string($targetNode/@xml:id), 11, 1)
-        (: notes are named according to @n (with a counter if there are several in the div) or numbered :)
-        else if ($targetNode/self::tei:note) then
-            if ($targetNode[@n]) then
-                concat($nodeLabel, ' &#34;', normalize-space($targetNode/@n),
-                       if (count($targetNode/ancestor::tei:div[1]//tei:note[upper-case(normalize-space(@n)) eq upper-case(normalize-space($targetNode/@n))]) gt 1) then
-                           concat('&#34; (', string(count($targetNode/preceding::tei:note[upper-case(normalize-space(@n)) eq upper-case(normalize-space($targetNode/@n))] intersect $targetNode/ancestor::tei:div[1]//tei:note) + 1), ')')
-                       else '&#34;')
-            else concat($nodeLabel, ' (', string(count($targetNode/preceding::tei:note intersect $targetNode/ancestor::tei:div[1]//tei:note) + 1), ')')
-        else if ($targetNode/self::tei:pb) then
-            if ($targetNode/@sameAs) then
-                concat('[pb: sameAs_', $targetNode/@sameAs)
-            else if ($targetNode/@corresp) then
-                concat('[pb: corresp_', $targetNode/@corresp)
-            else
-                let $volumeString := 
-                    if ($targetNode/ancestor::tei:text[@type='work_volume']) then 
-                        concat('Vol. ', $targetNode/ancestor::tei:text[@type='work_volume']/@n, ', ') 
-                    else ()
-                return if (contains($targetNode/@n, 'fol.')) then concat($volumeString, $targetNode/@n)
-                else concat($volumeString, 'p. ', $targetNode/@n)
-        else if ($targetNode/self::tei:titlePage) then
-            let $volumeString := 
-                if ($targetNode/ancestor::tei:text[@type='work_volume']) then 
-                    concat('Vol. ', $targetNode/ancestor::tei:text[@type='work_volume']/@n, ', ') 
-                else ()
-            let $volumeCount :=
-                if (count($targetNode/ancestor::tei:text[@type='work_volume']//tei:titlePage) gt 1) then 
-                    '(' || string(count($targetNode/preceding-sibling::tei:titlePage)+1) || ')'
-                else ()
-            return $volumeString || $nodeLabel || $volumeCount
-        else if ($targetNode[self::tei:head or self::tei:label]) then
-            let $headString := normalize-space(string-join(render:dispatch($targetNode, 'edit'), ''))
-            return if (string-length($headString) gt $config:chars_summary) then
-                concat('&#34;', normalize-space(substring($headString, 1, $config:chars_summary)), '…', '&#34;')
-            else
-                concat('&#34;', $headString, '&#34;')
-        else if ($targetNode[self::tei:front or self::tei:back]) then
-            let $volumeString := 
-                if ($targetNode/ancestor::tei:text[@type='work_volume']) then 
-                    concat(' (vol. ', $targetNode/ancestor::tei:text[@type='work_volume']/@n, ')') 
-                else ()
-            return
-                $nodeLabel || $volumeString
-        (: undefined node: :)
-        else if ($targetNode//text()) then
-            let $string := normalize-space(string-join(render:dispatch($targetNode, 'edit'), ''))
-            return 
-                if (string-length($string) gt $config:chars_summary) then
-                    concat('&#34;', substring($string, 1, $config:chars_summary), '…', '&#34;')
-                else
-                    concat($nodeLabel, ' &#34;', $string, '&#34;')
-(:        else if ($nodeLabel) then $nodeLabel:)
-        else '&#34;…&#34;'
-        )
-};
 
 
 
@@ -293,17 +171,19 @@ declare function render:getPassagetrail($targetWork as node()*, $targetNode as n
 };
 
 
-declare function render:getCrumbtrail ($targetWork as node()*, $targetNode as node(), $mode as xs:string, $fragmentIds as map()) {
-
-    (: (1) get the crumb/cite ID for the current node :)
-    let $thisCrumb :=       
-        if ($mode = 'html') then
-            <a href='{render:mkUrl($targetWork, $targetNode)}'>{render:sectionTitle($targetWork, $targetNode)}</a>
-        else if ($mode eq 'html-rendering') then
-            <a href='{render:mkUrlWhileRendering($targetWork, $targetNode, $fragmentIds)}'>{render:sectionTitle($targetWork, $targetNode)}</a>
-        else if ($mode = 'numeric') then
-            (: no recursion here, makes single crumb for the current node :)
-            typeswitch($targetNode)    
+declare function render:getNodetrail ($targetWork as node()*, $targetNode as node(), $mode as xs:string, $fragmentIds as map()) {
+    (: (1) get the trail ID for the current node :)
+    let $currentNode := 
+        if ($mode eq 'crumbtrail') then
+            let $class := render:dispatch($targetNode, 'class')
+            return
+                if ($class) then
+                    <a class="{$class}" href='{render:mkUrlWhileRendering($targetWork, $targetNode, $fragmentIds)}'>{render:dispatch($targetNode, 'title')}</a>
+                else 
+                    <a href='{render:mkUrlWhileRendering($targetWork, $targetNode, $fragmentIds)}'>{render:dispatch($targetNode, 'title')}</a>
+        else if ($mode = 'citetrail') then
+            (: no recursion here, makes single ID for the current node :)
+            typeswitch($targetNode)
                 case element(tei:front) return 'frontmatter'
                 case element(tei:back) return 'backmatter'
                 case element(tei:titlePage) return 'titlepage'
@@ -372,7 +252,7 @@ declare function render:getCrumbtrail ($targetWork as node()*, $targetNode as no
                            if (matches($targetNode/@n, '[A-Za-z0-9]')) then
                                upper-case(replace($targetNode/@n, '[^a-zA-Z0-9]', ''))
                            else substring($targetNode/@facs, 6)
-                           )
+                          )
                 case element(tei:head) return 
                     concat('heading', (if (count($targetNode/(parent::tei:back                                                            |
                                                               parent::tei:div[@type ne "work_part"]                                       |
@@ -403,7 +283,7 @@ declare function render:getCrumbtrail ($targetWork as node()*, $targetNode as no
     
     (: (2) get related element's (e.g., ancestor's) crumbtrail/citetrail, if required, and glue it together with the current crumb :)
     (: (a) crumbtrail/citetrail of related element: :)
-    let $crumbtrailPrefix := 
+    let $trailPrefix := 
         if ($targetNode/(
                          ancestor::tei:back                                                                  |
                          ancestor::tei:div[@type ne "work_part"]                                             |
@@ -416,16 +296,16 @@ declare function render:getCrumbtrail ($targetWork as node()*, $targetNode as no
                          ancestor::tei:titlePart                                                 
                         )) then
             if ($targetNode[self::tei:lb] | $targetNode[self::tei:cb]) then (: INACTIVE :)
-                render:getCrumbtrail($targetWork,  $targetNode/preceding::tei:pb[1], $mode, $fragmentIds)
+                render:getNodetrail($targetWork,  $targetNode/preceding::tei:pb[1], $mode, $fragmentIds)
             else if ($targetNode[self::tei:pb] and ($targetNode/ancestor::tei:front | $targetNode/ancestor::tei:text[1][not(@xml:id = 'completeWork' or @type = "work_part")])) then
                 (: in front and single volumes, prepend front's or volume's crumb ID for avoiding multiple identical IDs in the same work :)
                 (: TODO: are there potential collisions if pb's crumb does not inherit from the specific section (titlePage|div)? 
                          -> for example, with repetitive page numbers in the appendix, but such collisions should be resolved in TEI... :)
-                render:getCrumbtrail($targetWork,  ($targetNode/ancestor::tei:front | $targetNode/ancestor::tei:text[1][not(@xml:id = 'completeWork' or @type = "work_part")])[last()], $mode, $fragmentIds)
+                render:getNodetrail($targetWork,  ($targetNode/ancestor::tei:front | $targetNode/ancestor::tei:text[1][not(@xml:id = 'completeWork' or @type = "work_part")])[last()], $mode, $fragmentIds)
             else if ($targetNode[self::tei:pb]) then ()
             else 
                 (: === for all other node types, get parent node's citetrail/crumbtrail - HERE is the deep RECURSION === :)
-                render:getCrumbtrail($targetWork, $targetNode/(ancestor::tei:back[1]                                                                     |
+                render:getNodetrail($targetWork, $targetNode/(ancestor::tei:back[1]                                                                     |
                                                                ancestor::tei:div[@type ne "work_part"][1]                                                |
                                                                ancestor::tei:front[1]                                                                    |
                                                                ancestor::tei:item[ancestor::tei:list[1][@type = ('dict', 'index', 'summaries')]][1]      |
@@ -438,19 +318,21 @@ declare function render:getCrumbtrail ($targetWork as node()*, $targetNode as no
         else ()
     (: (b) get connector MARKER: ".", " » ", or none :)
     let $connector :=
-        if ($thisCrumb and $crumbtrailPrefix) then
-            if ($mode = ('html', 'html-rendering')) then ' » ' 
-            else if ($mode eq 'numeric') then '.' 
+        if ($currentNode and $trailPrefix) then
+            if ($mode eq 'crumbtrail') then ' » ' 
+            else if ($mode eq 'citetrail') then '.' 
+            else if ($mode eq 'passagetrail') then ' '
             else ()
         else ()
     
     (: (c) put it all together and out :)
-    let $crumbtrail :=
-        if ($mode = ('html', 'html-rendering')) then ($crumbtrailPrefix, $connector, $thisCrumb)
-        else if ($mode eq 'numeric') then string-join(($crumbtrailPrefix, $connector, $thisCrumb), '')
+    let $trail :=
+        if ($mode eq 'crumbtrail') then ($trailPrefix, $connector, $currentNode)
+        else if ($mode eq 'citetrail') then string-join(($trailPrefix, $connector, $currentNode), '')
+        else if ($mode eq 'passagetrail') then string-join(($trailPrefix, $connector, $currentNode), '')
         else ()
         
-    return $crumbtrail
+    return $trail
 };
 
 (: currently not in use: :)
@@ -460,27 +342,6 @@ declare function render:getCrumbtrail ($targetWork as node()*, $targetNode as no
     return <a href="{render:mkUrl($targetWork, $targetNode)}">{render:sectionTitle($targetWork, $targetNode)}</a>    
 };:)
 
-declare function render:mkUrl($targetWork as node(), $targetNode as node()) {
-    let $targetWorkId := string($targetWork/@xml:id)
-    let $targetNodeId := string($targetNode/@xml:id)
-    let $viewerPage   :=      
-        if (substring($targetWorkId, 1, 2) eq "W0") then
-            "work.html?wid="
-        else if (substring($targetWorkId, 1, 2) eq "L0") then
-            "lemma.html?lid="
-        else if (substring($targetWorkId, 1, 2) eq "A0") then
-            "author.html?aid="
-        else if (substring($targetWorkId, 1, 2) eq "WP") then
-            "workingPaper.html?wpid="
-        else
-            "index.html?wid="
-    let $targetNodeHTMLAnchor :=    
-        if (contains($targetNodeId, '-pb-')) then
-            concat('pageNo_', $targetNodeId)
-        else $targetNodeId
-    let $frag := render:getFragmentFile($targetWorkId, $targetNodeId)
-    return concat($viewerPage, $targetWorkId, (if ($frag) then concat('&amp;frag=', $frag) else ()), '#', $targetNodeHTMLAnchor)
-};
 
 declare function render:mkUrlWhileRendering($targetWork as node(), $targetNode as node(), $fragmentIds as map()) {
     let $targetWorkId := string($targetWork/@xml:id)
@@ -516,63 +377,182 @@ declare function render:getFragmentFile ($targetWorkId as xs:string, $targetNode
 (: ####====---- Actual Rendering Typeswitch Functions ----====#### :)
 
 
+(: TODO: comment on new modes: citetrail, crumbtrail, passagetrail :)
+
+
 (: $mode can be "orig", "edit" (both being plain text modes), "html" or, even more sophisticated, "work" :)
 declare function render:dispatch($node as node(), $mode as xs:string) {
     typeswitch($node)
     (: Try to sort the following nodes based (approx.) on frequency of occurences, so fewer checks are needed. :)
-        case text()                 return local:text($node, $mode)
-
-        case element(tei:lb)        return local:linebreak($node, $mode)
-        case element(tei:pb)        return local:break($node, $mode)
-        case element(tei:cb)        return local:break($node, $mode)
+        case text()                 return render:textNode($node, $mode)
+        case element(tei:g)         return render:g($node, $mode)
+        case element(tei:lb)        return render:lb($node, $mode)
+        case element(tei:pb)        return render:pb($node, $mode)
+        case element(tei:cb)        return render:cb($node, $mode)
         case element(tei:fw)        return ()
 
-        case element(tei:head)      return local:head($node, $mode)
-        case element(tei:p)         return local:p($node, $mode)
-        case element(tei:note)      return local:note($node, $mode)
-        case element(tei:div)       return local:div($node, $mode)
-        case element(tei:milestone) return local:milestone($node, $mode)
+        case element(tei:head)      return render:head($node, $mode)
+        case element(tei:p)         return render:p($node, $mode)
+        case element(tei:note)      return render:note($node, $mode)
+        case element(tei:div)       return render:div($node, $mode)
+        case element(tei:milestone) return render:milestone($node, $mode)
         
-        case element(tei:abbr)      return local:orig($node, $mode)
-        case element(tei:orig)      return local:orig($node, $mode)
-        case element(tei:sic)       return local:orig($node, $mode)
-        case element(tei:expan)     return local:edit($node, $mode)
-        case element(tei:reg)       return local:edit($node, $mode)
-        case element(tei:corr)      return local:edit($node, $mode)
-        case element(tei:g)         return local:g($node, $mode)
+        case element(tei:abbr)      return render:origElem($node, $mode)
+        case element(tei:orig)      return render:origElem($node, $mode)
+        case element(tei:sic)       return render:origElem($node, $mode)
+        case element(tei:expan)     return render:editElem($node, $mode)
+        case element(tei:reg)       return render:editElem($node, $mode)
+        case element(tei:corr)      return render:editElem($node, $mode)
+        
+        case element(tei:persName)  return render:name($node, $mode)
+        case element(tei:placeName) return render:name($node, $mode)
+        case element(tei:orgName)   return render:name($node, $mode)
+        case element(tei:title)     return render:name($node, $mode)
+        case element(tei:term)      return render:term($node, $mode)
+        case element(tei:bibl)      return render:bibl($node, $mode)
 
-        case element(tei:persName)  return local:name($node, $mode)
-        case element(tei:placeName) return local:name($node, $mode)
-        case element(tei:orgName)   return local:name($node, $mode)
-        case element(tei:title)     return local:name($node, $mode)
-        case element(tei:term)      return local:term($node, $mode)
-        case element(tei:bibl)      return local:bibl($node, $mode)
+        case element(tei:hi)        return render:hi($node, $mode)
+        case element(tei:emph)      return render:emph($node, $mode)
+        case element(tei:ref)       return render:ref($node, $mode)
+        case element(tei:quote)     return render:quote($node, $mode)
+        case element(tei:soCalled)  return render:soCalled($node, $mode)
 
-        case element(tei:hi)        return local:hi($node, $mode)
-        case element(tei:emph)      return local:emph($node, $mode)
-        case element(tei:ref)       return local:ref($node, $mode)
-        case element(tei:quote)     return local:quote($node, $mode)
-        case element(tei:soCalled)  return local:soCalled($node, $mode)
+        case element(tei:list)      return render:list($node, $mode)
+        case element(tei:item)      return render:item($node, $mode)
+        case element(tei:gloss)     return render:gloss($node, $mode)
+        case element(tei:eg)        return render:eg($node, $mode)
 
-        case element(tei:list)      return local:list($node, $mode)
-        case element(tei:item)      return local:item($node, $mode)
-        case element(tei:gloss)     return local:gloss($node, $mode)
-        case element(tei:eg)        return local:eg($node, $mode)
+        case element(tei:birth)     return render:birth($node, $mode)
+        case element(tei:death)     return render:death($node, $mode)
 
-
-        case element(tei:birth)     return local:birth($node, $mode)
-        case element(tei:death)     return local:death($node, $mode)
-
+        case element(tei:lg)        return render:lg($node, $mode)
+        case element(tei:signed)    return render:signed($node, $mode)
+        case element(tei:titlePage) return render:titlePage($node, $mode)
+        case element(tei:label)     return render:label($node, $mode)
+        
+        case element(tei:text)      return render:text($node, $mode)
+        case element(tei:front)     return render:front($node, $mode)
+        case element(tei:back)      return render:back($node, $mode)
 
         case element(tei:figDesc)     return ()
         case element(tei:teiHeader)   return ()
         case comment()                return ()
         case processing-instruction() return ()
 
-        default return local:passthru($node, $mode)
+        default return render:passthru($node, $mode)
 };
 
-declare function local:text($node as node(), $mode as xs:string) {
+declare function render:text($node as element(tei:text), $mode as xs:string) {
+    if ($mode eq 'title') then
+        normalize-space(
+            if ($node/@type eq 'work_volume') then
+                $node/@n/string()
+            (: tei:text with solely technical information: :)
+            else if ($node/@xml:id eq 'completeWork') then
+                '[complete work]'
+            else if (matches($node/@xml:id, 'work_part_[a-z]')) then
+                '[process-technical part: ' || substring(string($node/@xml:id), 11, 1) || ']'
+            else ()
+        )
+    else if ($mode eq 'class') then
+        if ($node/@type eq 'work_volume') then 'tei-text' || $node/@type
+        else if ($node/@xml:id eq 'completeWork') then 'tei-text-' || $node/@xml:id
+        else if (matches($node/@xml:id, 'work_part_[a-z]')) then 'elem-text-' || $node/@xml:id
+        else 'tei-text'
+    else
+        render:passthru($node, $mode)
+};
+
+(: Create a title for a node that is used in crumbtrails (e.g., search results) and for section/citation labels in reading view: :)
+declare function render:sectionTitle($targetWork as node()*, $targetNode as node()) {
+    (: determine label prefix for most frequent nodes: div, p, etc. (for special cases, see below) :)
+    (:let $nodeLabel :=
+        let $label := 
+            (\: divs and milestones are already labeled (through @type|@milestone :\)
+            if ($targetNode/self::tei:div) then $config:citationLabels($targetNode/@type)?('abbr')
+            else if ($targetNode/self::tei:milestone) then $config:citationLabels($targetNode/@unit)?('abbr')
+            (\: other elements whose names are mapped to labels :\)
+            else if ($targetNode/(self::tei:front|self::tei:back|self::tei:p|self::tei:signed|self::tei:head|self::tei:label
+                                  |self::tei:titlePage|self::tei:note|self::tei:list|self::tei:item|self::tei:lg)) then
+                $config:citationLabels(local-name($targetNode))?('abbr')
+            else $config:citationLabels('generic')?('abbr')
+        return $label (\:upper-case(substring($label,1,1)) || substring($label,2):\):)
+    ()
+        
+};
+
+declare function render:lg($node as element(tei:lg), $mode as xs:string) {
+    if ($mode eq 'title') then
+        normalize-space(
+            render:teaserString($node, 'edit')
+        )
+    else if ($mode eq 'class') then
+        'tei-' || local-name($node)
+    else
+        render:passthru($node, $mode)
+};
+
+declare function render:signed($node as element(tei:signed), $mode as xs:string) {
+    if ($mode eq 'title') then
+        normalize-space(
+            render:teaserString($node, 'edit')
+        )
+    else if ($mode eq 'class') then
+        'tei-' || local-name($node)
+    else
+        render:passthru($node, $mode)
+};
+
+declare function render:titlePage($node as element(tei:titlePage), $mode as xs:string) {
+    if ($mode eq 'title') then
+        normalize-space(
+            (:let $volumeString := 
+                if ($node/ancestor::tei:text[@type='work_volume']) then 
+                    concat('Vol. ', $node/ancestor::tei:text[@type='work_volume']/@n, ', ') 
+                else ()
+            let $volumeCount :=
+                if (count($node/ancestor::tei:text[@type='work_volume']//tei:titlePage) gt 1) then 
+                    string(count($node/preceding-sibling::tei:titlePage)+1) || ', '
+                else ()
+            return $volumeCount || $volumeString:)
+            ()
+        )
+    else if ($mode eq 'class') then
+        'tei-' || local-name($node)
+    else
+        render:passthru($node, $mode)
+};
+
+declare function render:label($node as element(tei:label), $mode as xs:string) {
+    if ($mode eq 'title') then
+        normalize-space(
+            render:teaserString($node, 'edit')
+        )
+    else if ($mode eq 'class') then
+        'tei-' || local-name($node)
+    else
+        render:passthru($node, $mode)
+};
+
+declare function render:front($node as element(tei:front), $mode as xs:string) {
+    if ($mode eq 'title') then
+        ()
+    else if ($mode eq 'class') then
+        'tei-' || local-name($node)
+    else
+        render:passthru($node, $mode)
+};
+
+declare function render:back($node as element(tei:back), $mode as xs:string) {
+    if ($mode eq 'title') then
+        ()
+    else if ($mode eq 'class') then
+        'tei-' || local-name($node)
+    else
+        render:passthru($node, $mode)
+};
+
+declare function render:textNode($node as node(), $mode as xs:string) {
     if ($mode = ("orig", "edit", "html", "work")) then
         let $leadingSpace   := if (matches($node, '^\s+')) then ' ' else ()
         let $trailingSpace  := if (matches($node, '\s+$')) then ' ' else ()
@@ -582,12 +562,38 @@ declare function local:text($node as node(), $mode as xs:string) {
     else ()
 };
 
-declare function local:passthru($nodes as node()*, $mode as xs:string) as item()* {
-(:    for $node in $nodes/node() return element {name($node)} {($node/@*, local:dispatch($node, $mode))}:)
+declare function render:passthru($nodes as node()*, $mode as xs:string) as item()* {
+(:    for $node in $nodes/node() return element {name($node)} {($node/@*, render:dispatch($node, $mode))}:)
     for $node in $nodes/node() return render:dispatch($node, $mode)
 };
 
-declare function local:break($node as element(), $mode as xs:string) {
+declare function render:pb($node as element(tei:pb), $mode as xs:string) {
+    if ($mode eq 'title') then
+        normalize-space(
+            (: any pb with @sameAs and @corresp probably won't even get reached, since they typically have note ancestors :)
+            if ($node/@sameAs) then
+                concat('[pb_sameAs_', $node/@sameAs, ']')
+            else if ($node/@corresp) then
+                concat('[pb_corresp_', $node/@corresp, ']')
+            else
+                (: prepend volume prefix? :)
+                let $volumeString := ()
+                    (:if ($node/ancestor::tei:text[@type='work_volume']) then 
+                        concat('Vol. ', $node/ancestor::tei:text[@type='work_volume']/@n, ', ') 
+                    else ():)
+                return if (contains($node/@n, 'fol.')) then $volumeString || $node/@n
+                else $volumeString || 'p. ' || $node/@n
+        )
+    else if ($mode eq 'class') then
+        'tei-' || local-name($node)
+    else if ($mode = ("orig", "edit", "html", "work")) then
+        if (not($node/@break = 'no')) then
+            ' '
+        else ()
+    else ()         (: some sophisticated function to insert a pipe and a pagenumber div in the margin :)
+};
+
+declare function render:cb($node as element(tei:cb), $mode as xs:string) {
     if ($mode = ("orig", "edit", "html", "work")) then
         if (not($node/@break = 'no')) then
             ' '
@@ -595,7 +601,7 @@ declare function local:break($node as element(), $mode as xs:string) {
     else ()         (: some sophisticated function to insert a pipe and a pagenumber div in the margin :)
 };
 
-declare function local:linebreak($node as element(), $mode as xs:string) {
+declare function render:lb($node as element(tei:lb), $mode as xs:string) {
     if ($mode = ("orig", "edit", "work")) then
         if (not($node/@break = 'no')) then
             ' '
@@ -605,74 +611,136 @@ declare function local:linebreak($node as element(), $mode as xs:string) {
     else () 
 };
 
-declare function local:p($node as element(tei:p), $mode as xs:string) {
-    if ($mode = ("orig", "edit")) then
+declare function render:p($node as element(tei:p), $mode as xs:string) {
+    if ($mode eq 'title') then
+        normalize-space(
+            render:teaserString($node, 'edit')
+        )
+    else if ($mode eq 'class') then
+        'tei-' || local-name($node)
+    else if ($mode = ("orig", "edit")) then
         if ($node/ancestor::tei:note) then
             if ($node/following-sibling::tei:p) then
-                (local:passthru($node, $mode), $config:nl)
+                (render:passthru($node, $mode), $config:nl)
             else
-                local:passthru($node, $mode)
+                render:passthru($node, $mode)
         else
-            ($config:nl, local:passthru($node, $mode), $config:nl)
+            ($config:nl, render:passthru($node, $mode), $config:nl)
     else if ($mode = "html") then
         if ($node/ancestor::tei:note) then
-            local:passthru($node, $mode)
+            render:passthru($node, $mode)
         else
             <p class="hauptText" id="{$node/@xml:id}">
-                {local:passthru($node, $mode)}
+                {render:passthru($node, $mode)}
             </p>
     else if ($mode = "work") then   (: the same as in html mode except for distinguishing between paragraphs in notes and in the main text. In the latter case, make them a div, not a p and add a tool menu. :)
         if ($node/parent::tei:note) then
-            local:passthru($node, $mode)
+            render:passthru($node, $mode)
         else
             <p class="hauptText" id="{$node/@xml:id}">
-                {local:passthru($node, $mode)}
+                {render:passthru($node, $mode)}
             </p>
     else
-        local:passthru($node, $mode)
+        render:passthru($node, $mode)
 };
-declare function local:note($node as element(tei:note), $mode as xs:string) {
-    if ($mode = ("orig", "edit")) then
-        ($config:nl, "        {", local:passthru($node, $mode), "}", $config:nl)
+declare function render:note($node as element(tei:note), $mode as xs:string) {
+    if ($mode eq 'title') then
+        normalize-space(
+            if ($node/@n) then
+                let $noteNumber :=
+                    if (count($node/ancestor::tei:div[1]//tei:note[upper-case(normalize-space(@n)) eq upper-case(normalize-space($node/@n))]) gt 1) then
+                        ' (' || string(count($node/preceding::tei:note[upper-case(normalize-space(@n)) eq upper-case(normalize-space($node/@n))] intersect $node/ancestor::tei:div[1]//tei:note) + 1) || ')'
+                    else ()
+                return '&#34;' || normalize-space($node/@n) || '&#34;' || $noteNumber
+            else string(count($node/preceding::tei:note intersect $node/ancestor::tei:div[1]//tei:note) + 1)
+        )
+    else if ($mode eq 'class') then
+        'tei-' || local-name($node)
+    else if ($mode = ("orig", "edit")) then
+        ($config:nl, "        {", render:passthru($node, $mode), "}", $config:nl)
     else if ($mode = ("html", "work")) then
-        let $normalizedString := normalize-space(string-join(local:passthru($node, $mode), ' '))
+        let $normalizedString := normalize-space(string-join(render:passthru($node, $mode), ' '))
         let $identifier       := $node/@xml:id
         return
             (<sup>*</sup>,
             <span class="marginal note" id="note_{$identifier}">
                 {if (string-length($normalizedString) gt $config:chars_summary) then
                     (<a class="{string-join(for $biblKey in $node//tei:bibl/@sortKey return concat('hi_', $biblKey), ' ')}" data-toggle="collapse" data-target="#subdiv_{$identifier}">{concat('* ', substring($normalizedString, 1, $config:chars_summary), '…')}<i class="fa fa-angle-double-down"/></a>,<br/>,
-                     <span class="collapse" id="subdiv_{$identifier}">{local:passthru($node, $mode)}</span>)
+                     <span class="collapse" id="subdiv_{$identifier}">{render:passthru($node, $mode)}</span>)
                  else
-                    <span><sup>* </sup>{local:passthru($node, $mode)}</span>
+                    <span><sup>* </sup>{render:passthru($node, $mode)}</span>
                 }
             </span>)
     else
-        local:passthru($node, $mode)
+        render:passthru($node, $mode)
 };
 
-declare function local:div($node as element(tei:div), $mode as xs:string) {
-    if ($mode = "orig") then
-         ($config:nl, local:passthru($node, $mode), $config:nl)
+(:
+~  Creates a teaser string of limited length (defined in $config:chars_summary) from a given node.
+~  @param mode: must be one of 'orig', 'edit' (default)
+:)
+declare function render:teaserString($node as element(), $mode as xs:string?) as xs:string {
+    let $thisMode := if ($mode = ('orig', 'edit')) then $mode else 'edit'
+    let $string := normalize-space(string-join(render:dispatch($node, $thisMode)))
+    return 
+        if (string-length($string) gt $config:chars_summary) then
+            concat('&#34;', normalize-space(substring($string, 1, $config:chars_summary)), '…', '&#34;')
+        else
+            concat('&#34;', $string, '&#34;')
+};
+
+declare function render:div($node as element(tei:div), $mode as xs:string) {
+    if ($mode eq 'title') then
+        normalize-space(
+            if ($node/@n and not(matches($node/@n, '^[0-9]+$'))) then
+                '&#34;' || string($node/@n) || '&#34;'
+            else if ($node/(tei:head|tei:label)) then
+                render:teaserString(($node/(tei:head|tei:label))[1], 'edit')
+            (: purely numeric section titles: :)
+            else if ($node/@n and (matches($node/@n, '^[0-9]+$')) and ($node/@type)) then
+                $node/@n/string()
+            (: otherwise, try to derive a title from potential references to the current node :)
+            else if ($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)]) then
+                render:teaserString($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)][1], 'edit')
+            else ()
+        )
+    else if ($mode eq 'class') then
+        'tei-div-' || $node/@type
+    else if ($mode = "orig") then
+         ($config:nl, render:passthru($node, $mode), $config:nl)
     else if ($mode = "edit") then
         if ($node/@n and not(matches($node/@n, '^[0-9]+$'))) then
-            (concat($config:nl, '[ *', string($node/@n), '* ]'), $config:nl, local:passthru($node, $mode), $config:nl)
+            (concat($config:nl, '[ *', string($node/@n), '* ]'), $config:nl, render:passthru($node, $mode), $config:nl)
 (: oder das hier?:   <xsl:value-of select="key('targeting-refs', concat('#',@xml:id))[1]"/> :)
         else
-            ($config:nl, local:passthru($node, $mode), $config:nl)
+            ($config:nl, render:passthru($node, $mode), $config:nl)
     else if ($mode = "html") then
         if ($node/@n and not(matches($node/@n, '^[0-9]+$'))) then
-            (<h4 id="{$node/@xml:id}">{string($node/@n)}</h4>,<p id="p_{$node/@xml:id}">{local:passthru($node, $mode)}</p>)
+            (<h4 id="{$node/@xml:id}">{string($node/@n)}</h4>,<p id="p_{$node/@xml:id}">{render:passthru($node, $mode)}</p>)
 (: oder das hier?:   <xsl:value-of select="key('targeting-refs', concat('#',@xml:id))[1]"/> :)
         else
-            <div id="{$node/@xml:id}">{local:passthru($node, $mode)}</div>
+            <div id="{$node/@xml:id}">{render:passthru($node, $mode)}</div>
     else if ($mode = "work") then     (: basically, the same except for eventually adding a <div class="summary_title"/> the data for which is complicated to retrieve :)
-        local:passthru($node, $mode)
+        render:passthru($node, $mode)
     else
-        local:passthru($node, $mode)
+        render:passthru($node, $mode)
 };
-declare function local:milestone($node as element(tei:milestone), $mode as xs:string) {
-    if ($mode = "orig") then
+declare function render:milestone($node as element(tei:milestone), $mode as xs:string) {
+    if ($mode eq 'title') then
+        normalize-space(
+            if ($node/@n and not(matches($node/@n, '^[0-9]+$'))) then
+                '&#34;' || string($node/@n) || '&#34;'
+            (: purely numeric section titles: :)
+            else if ($node/@n and (matches($node/@n, '^[0-9]+$')) and ($node/@unit)) then
+                $node/@n/string()
+            (: otherwise, try to derive a title from potential references to the current node :)
+            else if ($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)]) then
+                render:teaserString($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)][1], 'edit')
+            else ()
+        )
+    else if ($mode eq 'class') then
+        'tei-milestone-' || $node/@unit
+    else if ($mode = "orig") then
         if ($node/@rendition = '#dagger') then
             '†'
         else if ($node/@rendition = '#asterisk') then
@@ -704,10 +772,15 @@ declare function local:milestone($node as element(tei:milestone), $mode as xs:st
 };
 
 (: FIXME: In the following, the #anchor does not take account of html partitioning of works. Change this to use semantic section id's. :)
-declare function local:head($node as element(tei:head), $mode as xs:string) {
-(:if ($node/@xml:id='overview') then ():)
-    if ($mode = ("orig", "edit")) then
-        (local:passthru($node, $mode), $config:nl)
+declare function render:head($node as element(tei:head), $mode as xs:string) {
+    if ($mode eq 'title') then
+        normalize-space(
+            render:teaserString($node, 'edit')
+        )
+    else if ($mode eq 'class') then
+        'tei-' || local-name($node)
+    else if ($mode = ("orig", "edit")) then
+        (render:passthru($node, $mode), $config:nl)
     else if ($mode = ("html", "work")) then
         let $lang   := request:get-attribute('lang')
         let $page   :=      if ($node/ancestor::tei:text/@type="author_article") then
@@ -721,43 +794,44 @@ declare function local:head($node as element(tei:head), $mode as xs:string) {
                 <a class="anchorjs-link" id="{$node/parent::tei:div/@xml:id}" href="{session:encode-url(xs:anyURI($page || $node/ancestor::tei:TEI/@xml:id || '#' || $node/parent::tei:div/@xml:id))}">
                     <span class="anchorjs-icon"></span>
                 </a>
-                {local:passthru($node, $mode)}
+                {render:passthru($node, $mode)}
             </h3>
     else 
-        local:passthru($node, $mode)
+        render:passthru($node, $mode)
 };
 
-declare function local:orig($node as element(), $mode as xs:string) {
+declare function render:origElem($node as element(), $mode as xs:string) {
     if ($mode = "orig") then
-        local:passthru($node, $mode)
+        render:passthru($node, $mode)
     else if ($mode = "edit") then
         if (not($node/(preceding-sibling::tei:expan|preceding-sibling::tei:reg|preceding-sibling::tei:corr|following-sibling::tei:expan|following-sibling::tei:reg|following-sibling::tei:corr))) then
-            local:passthru($node, $mode)
+            render:passthru($node, $mode)
         else ()
     else if ($mode = ("html", "work")) then
         let $editedString := render:dispatch($node/parent::tei:choice/(tei:expan|tei:reg|tei:corr), "edit")
         return  if ($node/parent::tei:choice) then
                     <span class="original {local-name($node)} unsichtbar" title="{string-join($editedString, '')}">
-                        {local:passthru($node, $mode)}
+                        {render:passthru($node, $mode)}
                     </span>
                 else
-                    local:passthru($node, $mode)
+                    render:passthru($node, $mode)
     else
-        local:passthru($node, $mode)
+        render:passthru($node, $mode)
 };
-declare function local:edit($node as element(), $mode as xs:string) {
+declare function render:editElem($node as element(), $mode as xs:string) {
     if ($mode = "orig") then ()
     else if ($mode = "edit") then
-        local:passthru($node, $mode)
+        render:passthru($node, $mode)
     else if ($mode = ("html", "work")) then
         let $originalString := render:dispatch($node/parent::tei:choice/(tei:abbr|tei:orig|tei:sic), "orig")
-        return  <span class="edited {local-name($node)}" title="{string-join($originalString, '')}">
-                    {local:passthru($node, $mode)}
-                </span>
+        return  
+            <span class="edited {local-name($node)}" title="{string-join($originalString, '')}">
+                {render:passthru($node, $mode)}
+            </span>
     else
-        local:passthru($node, $mode)
+        render:passthru($node, $mode)
 };
-declare function local:g($node as element(tei:g), $mode as xs:string) {
+declare function render:g($node as element(tei:g), $mode as xs:string) {
     if ($mode="orig") then
         let $glyph := $node/ancestor::tei:TEI//tei:char[@xml:id = substring(string($node/@ref), 2)]
         return if ($glyph/tei:mapping[@type = 'precomposed']) then
@@ -767,15 +841,15 @@ declare function local:g($node as element(tei:g), $mode as xs:string) {
             else if ($glyph/tei:mapping[@type = 'standardized']) then
                 string($glyph/tei:mapping[@type = 'standardized'])
             else
-                local:passthru($node, $mode)
+                render:passthru($node, $mode)
     else if ($mode = "edit") then
         let $glyph := $node/ancestor::tei:TEI//tei:char[@xml:id = substring(string($node/@ref), 2)]
         return  if ($glyph/tei:mapping[@type = 'standardized']) then
                     string($glyph/tei:mapping[@type = 'standardized'])
                 else
-                    local:passthru($node, $mode)
+                    render:passthru($node, $mode)
     else if ($mode = "work") then
-        let $originalGlyph := local:g($node, "orig")
+        let $originalGlyph := render:g($node, "orig")
         return
             (<span class="original glyph unsichtbar" title="{$node/text()}">
                 {$originalGlyph}
@@ -784,18 +858,18 @@ declare function local:g($node as element(tei:g), $mode as xs:string) {
                 {$node/text()}
             </span>)
     else
-        local:passthru($node, $mode)
+        render:passthru($node, $mode)
 };
 
 (: FIXME: In the following, work mode functionality has to be added - also paying attention to intervening pagebreak marginal divs :)
-declare function local:term($node as element(tei:term), $mode as xs:string) {
+declare function render:term($node as element(tei:term), $mode as xs:string) {
     if ($mode = "orig") then
-        local:passthru($node, $mode)
+        render:passthru($node, $mode)
     else if ($mode = "edit") then
         if ($node/@key) then
-            (local:passthru($node, $mode), ' [', string($node/@key), ']')
+            (render:passthru($node, $mode), ' [', string($node/@key), ']')
         else
-            local:passthru($node, $mode)
+            render:passthru($node, $mode)
     else if ($mode = ("html", "work")) then
         let $elementName    := "term"
         let $key            := $node/@key
@@ -813,22 +887,22 @@ declare function local:term($node as element(tei:term), $mode as xs:string) {
         return                
             <span class="{$classes}" title="{$key}">
                 {if ($getLemmaId) then
-                    <a href="{session:encode-url(xs:anyURI('lemma.html?lid=' || $getLemmaId))}">{local:passthru($node, $mode)}</a>
+                    <a href="{session:encode-url(xs:anyURI('lemma.html?lid=' || $getLemmaId))}">{render:passthru($node, $mode)}</a>
                  else
-                    local:passthru($node, $mode)
+                    render:passthru($node, $mode)
                 }
             </span>
     else
-        local:passthru($node, $mode)
+        render:passthru($node, $mode)
 };
-declare function local:name($node as element(*), $mode as xs:string) {
+declare function render:name($node as element(*), $mode as xs:string) {
     if ($mode = "orig") then
-        local:passthru($node, $mode)
+        render:passthru($node, $mode)
     else if ($mode = "edit") then
         if ($node/(@key|@ref)) then
-            (local:passthru($node, $mode), ' [', string-join(($node/@key, $node/@ref), '/'), ']')
+            (render:passthru($node, $mode), ' [', string-join(($node/@key, $node/@ref), '/'), ']')
         else
-            local:passthru($node, $mode)
+            render:passthru($node, $mode)
     else if ($mode = ("html", "work")) then
         let $nodeType       := local-name($node)
         let $lang           := request:get-attribute('lang')
@@ -842,163 +916,179 @@ declare function local:name($node as element(*), $mode as xs:string) {
         return
            if ($getWorkId) then
                  <span class="{($nodeType || ' hi_work_' || $getWorkId)}">
-                     <a href="{concat($config:idserver, '/works.', $getWorkId)}" title="{$key}">{local:passthru($node, $mode)}</a>
+                     <a href="{concat($config:idserver, '/works.', $getWorkId)}" title="{$key}">{render:passthru($node, $mode)}</a>
                  </span> 
            else if ($getAutId) then
                  <span class="{($nodeType || ' hi_author_' || $getAutId)}">
-                     <a href="{concat($config:idserver, '/authors.', $getAutId)}" title="{$key}">{local:passthru($node, $mode)}</a>
+                     <a href="{concat($config:idserver, '/authors.', $getAutId)}" title="{$key}">{render:passthru($node, $mode)}</a>
                  </span> 
             else if ($getCerlId) then 
                  <span class="{($nodeType || ' hi_cerl_' || $getCerlId)}">
-                    <a target="_blank" href="{('http://thesaurus.cerl.org/cgi-bin/record.pl?rid=' || $getCerlId)}" title="{$key}">{local:passthru($node, $mode)}{$config:nbsp}<span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a>
+                    <a target="_blank" href="{('http://thesaurus.cerl.org/cgi-bin/record.pl?rid=' || $getCerlId)}" title="{$key}">{render:passthru($node, $mode)}{$config:nbsp}<span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a>
                  </span>
             else if ($getGndId) then 
                  <span class="{($nodeType || ' hi_gnd_' || $getGndId)}">
-                    <a target="_blank" href="{('http://d-nb.info/' || $getGndId)}" title="{$key}">{local:passthru($node, $mode)}{$config:nbsp}<span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a>
+                    <a target="_blank" href="{('http://d-nb.info/' || $getGndId)}" title="{$key}">{render:passthru($node, $mode)}{$config:nbsp}<span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a>
                  </span>
             else if ($getGettyId) then 
                  <span class="{($nodeType || ' hi_getty_' || $getGettyId)}">
-                    <a target="_blank" href="{('http://www.getty.edu/vow/TGNFullDisplay?find=&amp;place=&amp;nation=&amp;english=Y&amp;subjectid=' || $getGettyId)}" title="{$key}">{local:passthru($node, $mode)}{$config:nbsp}<span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a>
+                    <a target="_blank" href="{('http://www.getty.edu/vow/TGNFullDisplay?find=&amp;place=&amp;nation=&amp;english=Y&amp;subjectid=' || $getGettyId)}" title="{$key}">{render:passthru($node, $mode)}{$config:nbsp}<span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a>
                  </span>
             else
-                <span>{local:passthru($node, $mode)}</span>
+                <span>{render:passthru($node, $mode)}</span>
     else
-        local:passthru($node, $mode)
+        render:passthru($node, $mode)
 };
 (: titles are dealt with using the general name function above...
-declare function local:title($node as element(tei:title), $mode as xs:string) {
+declare function render:title($node as element(tei:title), $mode as xs:string) {
     if ($mode = "orig") then
-        local:passthru($node, $mode)
+        render:passthru($node, $mode)
     else if ($mode = "edit") then
         if ($node/@key) then
             string($node/@key)
         else
-            local:passthru($node, $mode)
+            render:passthru($node, $mode)
     else if ($mode = ("html", "work")) then
         if ($node/@ref) then
-             <span class="bibl-title"><a target="blank" href="{$node/@ref}">{local:passthru($node, $mode)}<span class="glyphicon glyphicon-new-window" aria-hidden="true"/></a></span>
+             <span class="bibl-title"><a target="blank" href="{$node/@ref}">{render:passthru($node, $mode)}<span class="glyphicon glyphicon-new-window" aria-hidden="true"/></a></span>
         else
-             <span class="bibl-title">{local:passthru($node, $mode)}</span>
+             <span class="bibl-title">{render:passthru($node, $mode)}</span>
     else
-        local:passthru($node, $mode)
+        render:passthru($node, $mode)
 };:)
-declare function local:bibl($node as element(tei:bibl), $mode as xs:string) {
+declare function render:bibl($node as element(tei:bibl), $mode as xs:string) {
     if ($mode = "orig") then
-        local:passthru($node, $mode)
+        render:passthru($node, $mode)
     else if ($mode = "edit") then
         if ($node/@sortKey) then
-            (local:passthru($node, $mode), ' [', replace(string($node/@sortKey), '_', ', '), ']')
+            (render:passthru($node, $mode), ' [', replace(string($node/@sortKey), '_', ', '), ']')
         else
-            local:passthru($node, $mode)
+            render:passthru($node, $mode)
     else if ($mode = "work") then
         let $getBiblId :=  $node/@sortKey
         return if ($getBiblId) then
                     <span class="{('work hi_' || $getBiblId)}">
-                        {local:passthru($node, $mode)}
+                        {render:passthru($node, $mode)}
                     </span>
                 else
-                    local:passthru($node, $mode)
+                    render:passthru($node, $mode)
     else
-        local:passthru($node, $mode)
+        render:passthru($node, $mode)
 };
 
 
-declare function local:emph($node as element(tei:emph), $mode as xs:string) {
+declare function render:emph($node as element(tei:emph), $mode as xs:string) {
     if ($mode = ("orig", "edit")) then
-        local:passthru($node, $mode)
+        render:passthru($node, $mode)
     else if ($mode = "work") then
-            <span class="emph">{local:passthru($node, $mode)}</span>
+            <span class="emph">{render:passthru($node, $mode)}</span>
     else if ($mode = "html") then
-            <em>{local:passthru($node, $mode)}</em>
+            <em>{render:passthru($node, $mode)}</em>
     else
-        local:passthru($node, $mode)
+        render:passthru($node, $mode)
 };
-declare function local:hi($node as element(tei:hi), $mode as xs:string) {
+declare function render:hi($node as element(tei:hi), $mode as xs:string) {
     if ($mode = ("orig", "edit")) then
-        local:passthru($node, $mode)
+        render:passthru($node, $mode)
     else if ($mode = ("html", "work")) then
         if ("#b" = $node/@rendition) then
             <b>
-                {local:passthru($node, $mode)}
+                {render:passthru($node, $mode)}
             </b>
         else if ("#initCaps" = $node/@rendition) then
             <span class="initialCaps">
-                {local:passthru($node, $mode)}
+                {render:passthru($node, $mode)}
             </span>
         else if ("#it" = $node/@rendition) then
             <it>
-                {local:passthru($node, $mode)}
+                {render:passthru($node, $mode)}
             </it>
         else if ("#l-indent" = $node/@rendition) then
             <span style="display:block;margin-left:4em;">
-                {local:passthru($node, $mode)}
+                {render:passthru($node, $mode)}
             </span>
         else if ("#r-center" = $node/@rendition) then
             <span style="display:block;text-align:center;">
-                {local:passthru($node, $mode)}
+                {render:passthru($node, $mode)}
             </span>
         else if ("#sc" = $node/@rendition) then
             <span class="smallcaps">
-                {local:passthru($node, $mode)}
+                {render:passthru($node, $mode)}
             </span>
         else if ("#spc" = $node/@rendition) then
             <span class="spaced">
-                {local:passthru($node, $mode)}
+                {render:passthru($node, $mode)}
             </span>
         else if ("#sub" = $node/@rendition) then
             <sub>
-                {local:passthru($node, $mode)}
+                {render:passthru($node, $mode)}
             </sub>
         else if ("#sup" = $node/@rendition) then
             <sup>
-                {local:passthru($node, $mode)}
+                {render:passthru($node, $mode)}
             </sup>
         else
             <it>
-                {local:passthru($node, $mode)}
+                {render:passthru($node, $mode)}
             </it>
     else 
-        local:passthru($node, $mode)
+        render:passthru($node, $mode)
 };
-declare function local:ref($node as element(tei:ref), $mode as xs:string) {
+declare function render:ref($node as element(tei:ref), $mode as xs:string) {
     if ($mode = ("orig", "edit")) then
-        local:passthru($node, $mode)
+        render:passthru($node, $mode)
     else if ($mode = "html" and $node/@type = "url") then
         if (substring($node/@target, 1, 4) = "http") then
-            <a href="{$node/@target}" target="_blank">{local:passthru($node, $mode)}</a>
+            <a href="{$node/@target}" target="_blank">{render:passthru($node, $mode)}</a>
         else
-            <a href="{$node/@target}">{local:passthru($node, $mode)}</a>
+            <a href="{$node/@target}">{render:passthru($node, $mode)}</a>
     else if ($mode = "work") then                                       (: basically the same, but use the resolveURI functions to get the actual target :)
-        <a href="{$node/@target}">{local:passthru($node, $mode)}</a>
+        <a href="{$node/@target}">{render:passthru($node, $mode)}</a>
     else
-        local:passthru($node, $mode)
+        render:passthru($node, $mode)
 };
-declare function local:soCalled($node as element(tei:soCalled), $mode as xs:string) {
+declare function render:soCalled($node as element(tei:soCalled), $mode as xs:string) {
     if ($mode=("orig", "edit")) then
-        ("'", local:passthru($node, $mode), "'")
+        ("'", render:passthru($node, $mode), "'")
     else if ($mode = ("html", "work")) then
-        <span class="soCalled">{local:passthru($node, $mode)}</span>
+        <span class="soCalled">{render:passthru($node, $mode)}</span>
     else
-        ("'", local:passthru($node, $mode), "'")
+        ("'", render:passthru($node, $mode), "'")
 };
-declare function local:quote($node as element(tei:quote), $mode as xs:string) {
+declare function render:quote($node as element(tei:quote), $mode as xs:string) {
     if ($mode=("orig", "edit")) then
-        ('"', local:passthru($node, $mode), '"')
+        ('"', render:passthru($node, $mode), '"')
     else if ($mode = ("html", "work")) then
-        <span class="quote">{local:passthru($node, $mode)}</span>
+        <span class="quote">{render:passthru($node, $mode)}</span>
     else
-        ('"', local:passthru($node, $mode), '"')
+        ('"', render:passthru($node, $mode), '"')
 };
 
-declare function local:list($node as element(tei:list), $mode as xs:string) {
-    if ($mode = "orig") then
-        ($config:nl, local:passthru($node, $mode), $config:nl)
+declare function render:list($node as element(tei:list), $mode as xs:string) {
+    if ($mode eq 'title') then
+        normalize-space(
+            if ($node/@n and not(matches($node/@n, '^[0-9]+$'))) then
+                '&#34;' || string($node/@n) || '&#34;'
+            else if ($node/(tei:head|tei:label)) then
+                render:teaserString(($node/(tei:head|tei:label))[1], 'edit')
+            (: purely numeric section titles: :)
+            else if ($node/@n and (matches($node/@n, '^[0-9]+$')) and ($node/@type)) then
+                $node/@n/string()
+            (: otherwise, try to derive a title from potential references to the current node :)
+            else if ($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)]) then
+                render:teaserString($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)][1], 'edit')
+            else ()
+        )
+    else if ($mode eq 'class') then
+        'tei-' || local-name($node)
+    else if ($mode = "orig") then
+        ($config:nl, render:passthru($node, $mode), $config:nl)
     else if ($mode = "edit") then
         if ($node/@n and not(matches($node/@n, '^[0-9]+$'))) then
-            (concat($config:nl, ' [*', string($node/@n), '*]', $config:nl), local:passthru($node, $mode), $config:nl)
+            (concat($config:nl, ' [*', string($node/@n), '*]', $config:nl), render:passthru($node, $mode), $config:nl)
 (: oder das hier?:   <xsl:value-of select="key('targeting-refs', concat('#',@xml:id))[1]"/> :)
         else
-            ($config:nl, local:passthru($node, $mode), $config:nl)
+            ($config:nl, render:passthru($node, $mode), $config:nl)
     else if ($mode = ("html", "work")) then
         if ($node/@type = "ordered") then
             <section>
@@ -1006,7 +1096,7 @@ declare function local:list($node as element(tei:list), $mode as xs:string) {
                     for $head in $node/tei:head
                         return
                             <h4>
-                                {local:passthru($head, $mode)}
+                                {render:passthru($head, $mode)}
                             </h4>
                  else ()
                 }
@@ -1022,7 +1112,7 @@ declare function local:list($node as element(tei:list), $mode as xs:string) {
                 {if ($node/tei:head) then
                     for $head in $node/tei:head
                         return
-                            <h4>{local:passthru($head, $mode)}</h4>
+                            <h4>{render:passthru($head, $mode)}</h4>
                  else ()
                 }
                 {for $item in $node/tei:*[not(local-name() = "head")]
@@ -1035,7 +1125,7 @@ declare function local:list($node as element(tei:list), $mode as xs:string) {
                 {if ($node/child::tei:head) then
                     for $head in $node/tei:head
                         return
-                            <h4>{local:passthru($head, $mode)}</h4>
+                            <h4>{render:passthru($head, $mode)}</h4>
                  else ()
                 }
                 <ul>
@@ -1046,58 +1136,87 @@ declare function local:list($node as element(tei:list), $mode as xs:string) {
                 </ul>
             </figure>
     else
-        ($config:nl, local:passthru($node, $mode), $config:nl)
+        ($config:nl, render:passthru($node, $mode), $config:nl)
 };
-declare function local:item($node as element(tei:item), $mode as xs:string) {
-    if ($mode = ("orig", "edit")) then
+declare function render:item($node as element(tei:item), $mode as xs:string) {
+    if ($mode eq 'title') then
+        normalize-space(
+            if ($node/parent::tei:list/@type='dict' and $node//tei:term[1][@key]) then
+                (: TODO: collision with div/@type='lemma'? :)
+                concat(
+                    '&#34;[lemma] ',
+                        concat(
+                            $node//tei:term[1]/@key,
+                            if (count($node/parent::tei:list/tei:item[.//tei:term[1]/@key eq $node//tei:term[1]/@key]) gt 1) then
+                                concat(' - ', count($node/preceding::tei:item[tei:term[1]/@key eq $node//tei:term[1]/@key] intersect $node/ancestor::tei:div[1]//tei:item[tei:term[1]/@key eq $node//tei:term[1]/@key]) + 1)
+                            else ()
+                        ),
+                    '&#34;'
+                )
+            else if ($node/@n and not(matches($node/@n, '^[0-9]+$'))) then
+                '&#34;' || string($node/@n) || '&#34;'
+            else if ($node/(tei:head|tei:label)) then
+                render:teaserString(($node/(tei:head|tei:label))[1], 'edit')
+            (: purely numeric section titles: :)
+            else if ($node/@n and (matches($node/@n, '^[0-9]+$'))) then
+                $node/@n/string()
+            (: otherwise, try to derive a title from potential references to the current node :)
+            else if ($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)]) then
+                render:teaserString($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)][1], 'edit')
+            else ()
+        )
+    else if ($mode eq 'class') then
+        'tei-' || local-name($node)
+    else if ($mode = ("orig", "edit")) then
         let $leader :=  if ($node/parent::tei:list/@type = "numbered") then
                             '#' || $config:nbsp
                         else if ($node/parent::tei:list/@type = "simple") then
                             $config:nbsp
                         else
                             '-' || $config:nbsp
-        return ($leader, local:passthru($node, $mode), $config:nl)
+        return ($leader, render:passthru($node, $mode), $config:nl)
     else if ($mode = ("html", "work")) then
         if ($node/parent::tei:list/@type="simple") then
-            local:passthru($node, $mode)
+            render:passthru($node, $mode)
         else
-            <li>{local:passthru($node, $mode)}</li>
+            <li>{render:passthru($node, $mode)}</li>
     else
-        local:passthru($node, $mode)
+        render:passthru($node, $mode)
 };
-declare function local:gloss($node as element(tei:gloss), $mode as xs:string) {
+declare function render:gloss($node as element(tei:gloss), $mode as xs:string) {
     if ($mode = ("orig", "edit")) then
-        local:passthru($node, $mode)
+        render:passthru($node, $mode)
     else if ($mode = ("html", "work")) then
-        local:passthru($node, $mode)
+        render:passthru($node, $mode)
     else
-        local:passthru($node, $mode)
+        render:passthru($node, $mode)
 };
-declare function local:eg($node as element(tei:eg), $mode as xs:string) {
+declare function render:eg($node as element(tei:eg), $mode as xs:string) {
     if ($mode = ("orig", "edit")) then
-        local:passthru($node, $mode)
+        render:passthru($node, $mode)
     else if ($mode = ("html", "work")) then
-        <pre>{local:passthru($node, $mode)}</pre>
+        <pre>{render:passthru($node, $mode)}</pre>
     else 
-        local:passthru($node, $mode)
+        render:passthru($node, $mode)
 };
 
 
-declare function local:birth($node as element(), $mode as xs:string) {
+declare function render:birth($node as element(tei:birth), $mode as xs:string) {
     if ($mode = ("orig", "edit")) then
-        local:passthru($node, $mode)
+        render:passthru($node, $mode)
     else if ($mode = ("html", "work")) then
-        <span>*&#xA0;{local:name($node/tei:placeName[1], $mode) || ': ' || $node/tei:date[1]}</span>
+        <span>*&#xA0;{render:name($node/tei:placeName[1], $mode) || ': ' || $node/tei:date[1]}</span>
     else ()
 };
-declare function local:death($node as element(), $mode as xs:string) {
+declare function render:death($node as element(tei:death), $mode as xs:string) {
     if ($mode = ("orig", "edit")) then
-        local:passthru($node, $mode)
+        render:passthru($node, $mode)
     else if ($mode = ("html", "work")) then
-        <span>†&#xA0;{local:name($node/tei:placeName[1], $mode) || ': ' || $node/tei:date[1]}</span>
+        <span>†&#xA0;{render:name($node/tei:placeName[1], $mode) || ': ' || $node/tei:date[1]}</span>
     else ()
 };
 
 
 
-(: FIXME: Still left to be implemented: titlePage, titlePart, docTitle, text, choice, lg, l, and author fields: state etc. :)
+(: TODO: still undefined: titlePart, docTitle, choice, l, and author fields: state etc. :)
+

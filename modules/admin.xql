@@ -353,7 +353,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
             let $debug := if ($config:debug = ("trace", "info")) then console:log("  " || string(count($target-set)) || " elements to be rendered as fragments...") else ()
             
             (: First, get all relevant nodes :)
-            let $nodes := $work//tei:text/descendant-or-self::*[@xml:id and local-name(.) = $config:indexNodes and not(ancestor::tei:note)]
+            let $nodes := $work//tei:text/descendant-or-self::*[@xml:id and local-name(.) = $config:indexNodes and not(ancestor::*[@place eq 'margin'])]
             
             (: Create the fragment id for each node beforehand, so that subsequent routines (e.g, recursive crumbtrail creation) can easily get it :)
             let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] HTML rendering: identifying fragment ids ...") else ()
@@ -393,7 +393,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                 if ($node/@xml:id eq 'completeWork' and $xincludes) then
                                     attribute xinc    {$xincludes}
                                 else (), 
-                                element sal:title           {render:sectionTitle($work, $node)},
+                                element sal:title           {render:dispatch($node, 'title')},
                                 element sal:fragment        {$fragmentIds($node/@xml:id/string())},
                                 element sal:citableParent   {
                                     string(($node/ancestor::tei:text[not(@type="work_part")] |
@@ -405,9 +405,9 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                             $node/ancestor::tei:note |
                                             $node/ancestor::tei:item[./ancestor::tei:list/@type = 'dict']
                                            )[last()]/@xml:id)},
-                                element sal:crumbtrail      {render:getCrumbtrail($work, $node, 'html-rendering', $fragmentIds)},
-                                element sal:citetrail       {render:getCrumbtrail($work, $node, 'numeric', $fragmentIds)},
-                                element sal:passagetrail    {render:getPassagetrail($work, $node)}
+                                element sal:crumbtrail      {render:getNodetrail($work, $node, 'crumbtrail', $fragmentIds)},
+                                element sal:citetrail       {render:getNodetrail($work, $node, 'citetrail', $fragmentIds)}(:,
+                                element sal:passagetrail    {render:nodetrail($work, $node)}:)
                                 }
                             )
                         }
