@@ -288,8 +288,8 @@ declare function admin:derive-title($node as node()) as item()* {
         case element(tei:titlePart)    return ('[', $node/@type/string(), '] ',  local:passthruTOC($node))
         case element(tei:div) return
             let $divLabel := 
-                if ($config:citationLabels($node/@type/string())?('verb')) then '[ ' || $config:citationLabels($node/@type/string())?('verb') || ' ] '
-                else '[ ' || $config:citationLabels('generic')?('verb') || ' ] '
+                if ($config:citationLabels($node/@type/string())?('full')) then '[ ' || $config:citationLabels($node/@type/string())?('full') || ' ] '
+                else '[ ' || $config:citationLabels('generic')?('full') || ' ] '
             return
                 if($node/tei:head) then ($divLabel, local:passthruTOC($node/tei:head))
                 else if ($node/tei:list/tei:head) then ($divLabel,  local:passthruTOC($node/tei:list/tei:head))
