@@ -133,47 +133,10 @@ declare function render:needsTxtCorpusZip($node as node(), $model as map(*)) {
 :)
 
 
-
-
-
-(:~
-~ Creates 'verbose' citation strings (to be included with citation anchors).
-~:)
-declare function render:getPassagetrail($targetWork as node()*, $targetNode as node()) {
-    (: ATM, only tei:div nodes/passages receive a citation string, but all other relevant nodes :)
-    let $thisPassage :=
-        typeswitch($targetNode)
-            case element(tei:front) return $config:citationLabels('front')?('abbr')
-            case element(tei:back) return $config:citationLabels('back')?('abbr')
-            case element(tei:titlePage) return $config:citationLabels('titlepage')?('abbr')
-            case element(tei:text) return 
-                (: "vol. X" where X is the current volume number, don't use it at all for monographs :)
-                if ($targetNode/@type='work_volume') then
-                   concat('vol. ', count($targetNode/preceding::tei:text[@type eq 'work_volume']) + 1)
-                else ()
-            (:case element(tei:note) return 
-                (\: "not. X" where X is the anchor used and "nXY" where Y is the number of times that X occurs inside the current div :\)
-                concat(
-                    $config:citationLabels('note')?('abbr'), 
-                        ' "',
-                        if ($targetNode/@n) then
-                               concat($targetNode/@n,
-                            if (count($targetNode/ancestor::tei:div[1]//tei:note[@n eq $targetNode/@n]) gt 1) then
-                                concat($targetNode/@n, 
-                                       ' (',
-                                       string(count($targetNode/ancestor::tei:div[1]//tei:note intersect $targetNode/preceding::tei:note[@n eq $targetNode/@n])+1),
-                                      ')'
-                                      )
-                            else upper-case(replace($targetNode/@n, '[^a-zA-Z0-9]', ''))
-                        else count($targetNode/preceding::tei:note intersect $targetNode/ancestor::tei:div[1]//tei:note) + 1):)
-            default return ()
-    return ()
-};
-
-
-declare function render:getNodetrail ($targetWork as node()*, $targetNode as node(), $mode as xs:string, $fragmentIds as map()) {
+declare function render:getNodetrail($targetWork as node()*, $targetNode as node(), $mode as xs:string, $fragmentIds as map()) {
     (: (1) get the trail ID for the current node :)
     let $currentNode := 
+        (: no recursion here, makes single ID for the current node :)
         if ($mode eq 'crumbtrail') then
             let $class := render:dispatch($targetNode, 'class')
             return
@@ -181,9 +144,10 @@ declare function render:getNodetrail ($targetWork as node()*, $targetNode as nod
                     <a class="{$class}" href="{render:mkUrlWhileRendering($targetWork, $targetNode, $fragmentIds)}">{render:dispatch($targetNode, 'title')}</a>
                 else 
                     <a href="{render:mkUrlWhileRendering($targetWork, $targetNode, $fragmentIds)}">{render:dispatch($targetNode, 'title')}</a>
-        else if ($mode = 'citetrail') then
-            (: no recursion here, makes single ID for the current node :)
-            render:dispatch($targetNode, 'citetrail')
+        (:else if ($mode eq 'passagetrail' and render:isPassagetrailNode($targetNode)) then
+            render:dispatch($targetNode, $mode):)
+        else if ($mode = ('citetrail', 'passagetrail')) then
+            render:dispatch($targetNode, $mode)
         else 
             (: neither html nor numeric mode :) 
             render:dispatch($targetNode, 'title')
@@ -192,18 +156,24 @@ declare function render:getNodetrail ($targetWork as node()*, $targetNode as nod
             - HERE is the RECURSION :)
     (: (a) trail of related element: :)
     let $trailPrefix := 
-        if ($targetNode/ancestor::*[render:isCitetrailNode(.)]) then
-            if ($targetNode[self::tei:pb] and ($targetNode/ancestor::tei:front|$targetNode/ancestor::tei:back|$targetNode/ancestor::tei:text[1][not(@xml:id = 'completeWork' or @type = "work_part")])) then
-                (: within front, back, and single volumes, prepend front's or volume's crumb ID for avoiding multiple identical IDs in the same work :)
-                render:getNodetrail($targetWork,  ($targetNode/ancestor::tei:front|$targetNode/ancestor::tei:back|$targetNode/ancestor::tei:text[1][not(@xml:id = 'completeWork' or @type = "work_part")])[last()], $mode, $fragmentIds)
-            else if ($targetNode[self::tei:pb]) then ()
-            else 
-                (: === for all other node types, get parent node's trail (deep recursion) === :)
-                render:getNodetrail($targetWork, $targetNode/ancestor::*[render:isCitetrailNode(.)][1], $mode, $fragmentIds)
+        if ($mode = ('citetrail', 'crumbtrail')) then
+            if ($targetNode/ancestor::*[render:isCitetrailOrCrumbtrailNode(.)]) then
+                if ($targetNode[self::tei:pb] and ($targetNode/ancestor::tei:front|$targetNode/ancestor::tei:back|$targetNode/ancestor::tei:text[1][not(@xml:id = 'completeWork' or @type = "work_part")])) then
+                    (: within front, back, and single volumes, prepend front's or volume's crumb ID for avoiding multiple identical IDs in the same work :)
+                    render:getNodetrail($targetWork,  ($targetNode/ancestor::tei:front|$targetNode/ancestor::tei:back|$targetNode/ancestor::tei:text[1][not(@xml:id = 'completeWork' or @type = "work_part")])[last()], $mode, $fragmentIds)
+                else if ($targetNode[self::tei:pb]) then ()
+                else 
+                    (: === for all other node types, get parent node's trail (deep recursion) === :)
+                    render:getNodetrail($targetWork, $targetNode/ancestor::*[render:isCitetrailOrCrumbtrailNode(.)][1], $mode, $fragmentIds)
+            else ()
+        else if ($mode eq 'passagetrail') then
+            if ($targetNode/ancestor::*[render:isPassagetrailNode(.)]) then
+                render:getNodetrail($targetWork, $targetNode/ancestor::*[render:isPassagetrailNode(.)][1], $mode, $fragmentIds)
+            else ()
         else ()
-    (: (b) get connector MARKER: ".", " » ", or none :)
+    (: (b) get connector MARKER :)
     let $connector :=
-        if ($currentNode and $trailPrefix) then
+        if (count($currentNode) gt 0 and count($trailPrefix) gt 0) then
             if ($mode eq 'crumbtrail') then ' » ' 
             else if ($mode eq 'citetrail') then '.' 
             else if ($mode eq 'passagetrail') then ' '
@@ -219,10 +189,18 @@ declare function render:getNodetrail ($targetWork as node()*, $targetNode as nod
     return $trail
 };
 
+declare function render:isPassagetrailNode($node as element()) as xs:boolean {
+    boolean(
+        $node/self::tei:div[$config:citationLabels(@type)?('isCiteRef')] or
+        $node/self::tei:milestone[$config:citationLabels(@type)?('isCiteRef')] or
+        $node[$config:citationLabels(local-name(.))?('isCiteRef') and not(ancestor::tei:note)]
+    )
+};
+
 (:
-~ Determines whether a node should be identifiable through a specific citetrail.
+~ The set of nodes that should have a crumbtrail is equal to the set of nodes that should have a citetrail.
 :)
-declare function render:isCitetrailNode($node as element()) as xs:boolean {
+declare function render:isCitetrailOrCrumbtrailNode($node as element()) as xs:boolean {
     (: any element type relevant for citetrail creation must be included in one of the following functions: :)
     render:isNamedCitetrailNode($node) or render:isUnnamedCitetrailNode($node)
 };
@@ -232,12 +210,16 @@ declare function render:isCitetrailNode($node as element()) as xs:boolean {
 :)
 declare function render:isNamedCitetrailNode($node as element()) as xs:boolean {
     boolean(
+        $node/self::tei:milestone or
+        $node/self::tei:pb or
+        $node/self::tei:note or
+        $node/self::tei:head or
         $node/self::tei:back or
         $node/self::tei:front or
+        $node/self::tei:titlePage or
         $node/self::tei:div[@type ne "work_part"] or (: TODO: included temporarily for div label experiment :)
         $node/self::tei:item[ancestor::tei:list[1][@type = ('dict', 'index', 'summaries')]] or
         $node/self::tei:list[@type = ('dict', 'index', 'summaries')] or
-        $node/self::tei:note or
         $node/self::tei:text[not(@xml:id = 'completeWork' or @type = "work_part")]
     )
 };
@@ -247,20 +229,13 @@ declare function render:isNamedCitetrailNode($node as element()) as xs:boolean {
 :)
 declare function render:isUnnamedCitetrailNode($node as element()) as xs:boolean {
     boolean(
-        not(
-            (: exclude certain contexts in which such nodes may not appear :)
-            $node/ancestor::tei:note or
-            $node/ancestor::tei:lg
-        ) 
-        and (
-            (: type checking :)
-            (:$node/self::tei:div[@type ne "work_part"] or:) (: TODO: commented out for div label experiment :)
-            $node/self::tei:p or
-            $node/self::tei:signed or
-            $node/self::tei:label or (: labels, contrarily to headings, are simply counted :)
-            $node/self::tei:lg or (: count only top-level lg, not single stanzas :)
-            $node/self::tei:list[not(@type = ('dict', 'index', 'summaries'))]
-        )
+        (:$node/self::tei:div[@type ne "work_part"] or:) (: TODO: commented out for div label experiment :)
+        $node/self::tei:p[not(ancestor::tei:note)] or
+        $node/self::tei:signed or
+        $node/self::tei:label or (: labels, contrarily to headings, are simply counted :)
+        $node/self::tei:lg[not(ancestor::tei:lg)] or (: count only top-level lg, not single stanzas :)
+        $node/self::tei:list[not(@type = ('dict', 'index', 'summaries'))] or
+        $node/self::tei:item[not(ancestor::tei:list[1][@type = ('dict', 'index', 'summaries')])]
     )
 };
 
@@ -599,6 +574,14 @@ declare function render:p($node as element(tei:p), $mode as xs:string) {
         if (render:isUnnamedCitetrailNode($node)) then 
             string(count($node/preceding-sibling::*[render:isUnnamedCitetrailNode(.)]) + 1)
         else ()
+    
+    else if ($mode eq 'passagetrail') then
+        if (render:isPassagetrailNode($node)) then
+            let $prefix := $config:citationLabels(local-name($node))?('abbr')
+            let $teaser := '"' || normalize-space(substring(substring-after(render:p($node, 'title'), '"'),1,15)) || '…"'(: short teaser :)
+            return $prefix || ' ' || $teaser
+        else ()
+    
     else if ($mode = ("orig", "edit")) then
         if ($node/ancestor::tei:note) then
             if ($node/following-sibling::tei:p) then
@@ -633,13 +616,19 @@ declare function render:note($node as element(tei:note), $mode as xs:string) {
             if ($node/@n) then
                 let $noteNumber :=
                     if (count($node/ancestor::tei:div[1]//tei:note[upper-case(normalize-space(@n)) eq upper-case(normalize-space($node/@n))]) gt 1) then
-                        ' (' || string(count($node/preceding::tei:note[upper-case(normalize-space(@n)) eq upper-case(normalize-space($node/@n))] intersect $node/ancestor::tei:div[1]//tei:note) + 1) || ')'
+                        ' (' || 
+                        string(count($node/preceding::tei:note[upper-case(normalize-space(@n)) eq upper-case(normalize-space($node/@n))] 
+                                     intersect $node/ancestor::tei:div[1]//tei:note[upper-case(normalize-space(@n)) eq upper-case(normalize-space($node/@n))])
+                               + 1) 
+                        || ')'
                     else ()
                 return '&#34;' || normalize-space($node/@n) || '&#34;' || $noteNumber
             else string(count($node/preceding::tei:note intersect $node/ancestor::tei:div[1]//tei:note) + 1)
         )
+    
     else if ($mode eq 'class') then
         'tei-' || local-name($node)
+    
     else if ($mode eq 'citetrail') then
         (: "nX" where X is the anchor used (if it is alphanumeric) and "nXY" where Y is the number of times that X occurs inside the current div
             (important: nodes are citetrail children of div (not of p) and are counted as such) :)
@@ -648,13 +637,28 @@ declare function render:note($node as element(tei:note), $mode as xs:string) {
                 if (count($node/ancestor::tei:div[1]//tei:note[upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($node/@n, '[^a-zA-Z0-9]', ''))]) gt 1) then
                     concat(
                         upper-case(replace($node/@n, '[^a-zA-Z0-9]', '')),
-                        string(count($node/ancestor::tei:div[1]//tei:note intersect $node/preceding::tei:note[upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($node/@n, '[^a-zA-Z0-9]', ''))])+1)
+                        string(
+                            count($node/ancestor::tei:div[1]//tei:note[upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($node/@n, '[^a-zA-Z0-9]', ''))]
+                                  intersect $node/preceding::tei:note[upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($node/@n, '[^a-zA-Z0-9]', ''))])
+                            + 1)
                     )
                 else upper-case(replace($node/@n, '[^a-zA-Z0-9]', ''))
             else count($node/preceding::tei:note intersect $node/ancestor::tei:div[1]//tei:note) + 1
         )
+    
+    else if ($mode eq 'passagetrail') then
+        if (render:isPassagetrailNode($node)) then
+            let $prefix := $config:citationLabels(local-name($node))?('abbr')
+            let $label := 
+                if ($node/@n) then '"' || $node/@n || '"' (: TODO: what if there are several notes with the same @n in a div :)
+                else string(count($node/ancestor::*[render:isPassagetrailNode(.)[1]]//tei:note
+                                  intersect $node/preceding::tei:note) + 1) (: TODO: this can be insanely expensive wrt performance... :)
+            return $prefix || ' ' || $label
+        else ()
+        
     else if ($mode = ("orig", "edit")) then
         ($config:nl, "        {", render:passthru($node, $mode), "}", $config:nl)
+    
     else if ($mode = ("html", "work")) then
         let $normalizedString := normalize-space(string-join(render:passthru($node, $mode), ' '))
         let $identifier       := $node/@xml:id
@@ -668,6 +672,7 @@ declare function render:note($node as element(tei:note), $mode as xs:string) {
                     <span><sup>* </sup>{render:passthru($node, $mode)}</span>
                 }
             </span>)
+    
     else
         render:passthru($node, $mode)
 };
@@ -686,130 +691,163 @@ declare function render:teaserString($node as element(), $mode as xs:string?) as
             concat('&#34;', $string, '&#34;')
 };
 
+(: currently INACTIVE :)
 declare function render:body($node as element(tei:body)) {
-    () (: currently INACTIVE :)
+    render:passthru($node, $mode) 
 };
 
 declare function render:div($node as element(tei:div), $mode as xs:string) {
-    if ($mode eq 'title') then
-        normalize-space(
-            if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
-                '&#34;' || string($node/@n) || '&#34;'
-            else if ($node/(tei:head|tei:label)) then
-                render:teaserString(($node/(tei:head|tei:label))[1], 'edit')
-            (: purely numeric section titles: :)
-            else if ($node/@n and (matches($node/@n, '^[0-9\[\]]+$')) and ($node/@type)) then
-                $node/@n/string()
-            (: otherwise, try to derive a title from potential references to the current node :)
-            else if ($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)]) then
-                render:teaserString($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)][1], 'edit')
-            else ()
-        )
-    
-    else if ($mode eq 'class') then
-        'tei-div-' || $node/@type
-    
-    else if ($mode eq 'citetrail') then
-        if (render:isNamedCitetrailNode($node)) then
-            (: use abbreviated form of @type (without dot), possibly followed by position :)
-            (: TODO: div label experiment (delete the following block if this isn't deemed plausible) :)
-            let $prefix :=
-                if ($config:citationLabels($node/@type)?('abbr')) then 
-                    lower-case(substring-before($config:citationLabels($node/@type)?('abbr'), '.'))
-                else 'div' (: divs for which we haven't defined an abbr. :)
-            let $position :=
-                if (count($node/parent::*[self::tei:body or render:isCitetrailNode(.)]/tei:div[$config:citationLabels(@type)?('abbr') eq $config:citationLabels($node/@type)?('abbr')]) gt 0) then
-                    string(count($node/preceding-sibling::tei:div[$config:citationLabels(@type)?('abbr') eq $config:citationLabels($node/@type)?('abbr')]) + 1)
+    switch($mode)
+        case 'title' return
+            normalize-space(
+                if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
+                    '&#34;' || string($node/@n) || '&#34;'
+                else if ($node/(tei:head|tei:label)) then
+                    render:teaserString(($node/(tei:head|tei:label))[1], 'edit')
+                (: purely numeric section titles: :)
+                else if ($node/@n and (matches($node/@n, '^[0-9\[\]]+$')) and ($node/@type)) then
+                    $node/@n/string()
+                (: otherwise, try to derive a title from potential references to the current node :)
+                else if ($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)]) then
+                    render:teaserString($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)][1], 'edit')
                 else ()
-            return $prefix || $position
-        else if (render:isUnnamedCitetrailNode($node)) then 
-            string(count($node/preceding-sibling::*[render:isUnnamedCitetrailNode(.)]) + 1)
-        else ()
-    
-    else if ($mode = "orig") then
-         ($config:nl, render:passthru($node, $mode), $config:nl)
-    
-    else if ($mode = "edit") then
-        if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
-            (concat($config:nl, '[ *', string($node/@n), '* ]'), $config:nl, render:passthru($node, $mode), $config:nl)
-(: oder das hier?:   <xsl:value-of select="key('targeting-refs', concat('#',@xml:id))[1]"/> :)
-        else
-            ($config:nl, render:passthru($node, $mode), $config:nl)
-    
-    else if ($mode = "html") then
-        if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
-            (<h4 id="{$node/@xml:id}">{string($node/@n)}</h4>,<p id="p_{$node/@xml:id}">{render:passthru($node, $mode)}</p>)
-(: oder das hier?:   <xsl:value-of select="key('targeting-refs', concat('#',@xml:id))[1]"/> :)
-        else
-            <div id="{$node/@xml:id}">{render:passthru($node, $mode)}</div>
-    
-    else if ($mode = "work") then     (: basically, the same except for eventually adding a <div class="summary_title"/> the data for which is complicated to retrieve :)
-        render:passthru($node, $mode)
-    
-    else
-        render:passthru($node, $mode)
+            )
+        
+        case 'class' return
+            'tei-div-' || $node/@type
+        
+        case 'citetrail' return
+            if (render:isNamedCitetrailNode($node)) then
+                (: use abbreviated form of @type (without dot), possibly followed by position :)
+                (: TODO: div label experiment (delete the following block if this isn't deemed plausible) :)
+                let $prefix :=
+                    if ($config:citationLabels($node/@type)?('abbr')) then 
+                        lower-case(substring-before($config:citationLabels($node/@type)?('abbr'), '.'))
+                    else 'div' (: divs for which we haven't defined an abbr. :)
+                let $position :=
+                    if (count($node/parent::*[self::tei:body or render:isCitetrailOrCrumbtrailNode(.)]/tei:div[$config:citationLabels(@type)?('abbr') eq $config:citationLabels($node/@type)?('abbr')]) gt 1) then
+                        string(count($node/preceding-sibling::tei:div[$config:citationLabels(@type)?('abbr') eq $config:citationLabels($node/@type)?('abbr')]) + 1)
+                    else ()
+                return $prefix || $position
+            else if (render:isUnnamedCitetrailNode($node)) then 
+                string(count($node/preceding-sibling::*[render:isUnnamedCitetrailNode(.)]) + 1)
+            else ()
+        
+        case 'passagetrail' return
+            if (render:isPassagetrailNode($node)) then
+                let $prefix := lower-case($config:citationLabels($node/@type)?('abbr')) (: TODO: upper-casing with first element of passagetrail ? :)
+                let $num := 
+                    if ($node/@n[matches(., '^[0-9\[\]]+$')]) then $node/@n (:replace($node/@n, '[\[\]]', '') ? :)
+                    else 
+                        let $position := count($node/ancestor::*[render:isPassagetrailNode(.)][1]//tei:div[@type eq $node/@type and render:isPassagetrailNode(.)]
+                                               intersect $node/preceding::tei:div[@type eq $node/@type and render:isPassagetrailNode(.)]) + 1
+                        return string($position)
+                return
+                    $prefix || ' ' || $num
+            else ()
+        
+        case "orig" return
+             ($config:nl, render:passthru($node, $mode), $config:nl)
+        
+        case "edit" return
+            if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
+                (concat($config:nl, '[ *', string($node/@n), '* ]'), $config:nl, render:passthru($node, $mode), $config:nl)
+                (: oder das hier?:   <xsl:value-of select="key('targeting-refs', concat('#',@xml:id))[1]"/> :)
+            else
+                ($config:nl, render:passthru($node, $mode), $config:nl)
+        
+        case 'html' return
+            if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
+                (<h4 id="{$node/@xml:id}">{string($node/@n)}</h4>,<p id="p_{$node/@xml:id}">{render:passthru($node, $mode)}</p>)
+                (: oder das hier?:   <xsl:value-of select="key('targeting-refs', concat('#',@xml:id))[1]"/> :)
+            else
+                <div id="{$node/@xml:id}">{render:passthru($node, $mode)}</div>
+        
+        case "work" return (: basically, the same except for eventually adding a <div class="summary_title"/> the data for which is complicated to retrieve :)
+            render:passthru($node, $mode)
+        
+        default return
+            render:passthru($node, $mode)
 };
 
 
 declare function render:milestone($node as element(tei:milestone), $mode as xs:string) {
-    if ($mode eq 'title') then
-        normalize-space(
-            if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
-                '&#34;' || string($node/@n) || '&#34;'
-            (: purely numeric section titles: :)
-            else if ($node/@n and (matches($node/@n, '^[0-9\[\]]+$')) and ($node/@unit)) then
-                $node/@n/string()
-            (: otherwise, try to derive a title from potential references to the current node :)
-            else if ($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)]) then
-                render:teaserString($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)][1], 'edit')
+    switch($mode)
+        case 'title' return
+            normalize-space(
+                if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
+                    '&#34;' || string($node/@n) || '&#34;'
+                (: purely numeric section titles: :)
+                else if ($node/@n and (matches($node/@n, '^[0-9\[\]]+$')) and ($node/@unit)) then
+                    $node/@n/string()
+                (: otherwise, try to derive a title from potential references to the current node :)
+                else if ($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)]) then
+                    render:teaserString($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)][1], 'edit')
+                else ()
+            )
+            
+        case 'class' return
+            'tei-milestone-' || $node/@unit
+            
+        case 'citetrail' return
+            (: "XY" where X is the unit and Y is the anchor or the number of milestones where this occurs :)
+            if ($node/@n[matches(., '[a-zA-Z0-9]')]) then 
+                let $similarMs :=
+                    $node/ancestor::tei:div[1]//tei:milestone[@unit eq $node/@unit 
+                                                              and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($node/@n, '[^a-zA-Z0-9]', ''))]
+                let $position :=
+                    if (count($similarMs) gt 1) then
+                        string(count($node/preceding::tei:milestone intersect $similarMs) + 1) (: TODO: performance issues? :)
+                    else ()
+                return $node/@unit || upper-case(replace($node/@n, '[^a-zA-Z0-9]', '')) || $position
+            else $node/@unit || string(count($node/preceding::tei:milestone[@unit eq $node/@unit] intersect $node/ancestor::tei:div[1]//tei:milestone[@unit eq $node/@unit]) + 1)
+        
+        case 'passagetrail' return
+            if (render:isPassagetrailNode($node)) then
+                (: TODO: ATM milestone/@unit = ('article', 'section') resolves to the same abbrs as div/@type = ('article', 'section') :)
+                let $prefix := lower-case($config:citationLabels($node/@unit)?('abbr'))
+                let $num := 
+                    if ($node/@n[matches(., '^[0-9\[\]]+$')]) then $node/@n (:replace($node/@n, '[\[\]]', '') ? :)
+                    else 
+                        let $position := count($node/ancestor::*[render:isPassagetrailNode(.)][1]//tei:milestone[@unit eq $node/@unit and render:isPassagetrailNode(.)]
+                                               intersect $node/preceding::tei:milestone[@unit eq $node/@unit and render:isPassagetrailNode(.)]) + 1
+                        return string($position)
+                return
+                    $prefix || ' ' || $num
             else ()
-        )
         
-    else if ($mode eq 'class') then
-        'tei-milestone-' || $node/@unit
+        case 'orig' return
+            if ($node/@rendition = '#dagger') then '†'
+            else if ($node/@rendition = '#asterisk') then '*'
+            else '[*]'
         
-    else if ($mode eq 'citetrail') then
-        (: "XY" where X is the unit and Y is the anchor or the number of milestones where this occurs :)
-        if ($node/@n[matches(., '[a-zA-Z0-9]')]) then 
-            let $precedingMs := 
-                count($node/ancestor::tei:div[1]//tei:milestone[@unit eq $node/@unit and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($node/@n, '[^a-zA-Z0-9]', ''))])
-            return
-                if ($precedingMs gt 0) then
-                    $node/@unit || upper-case(replace($node/@n, '[^a-zA-Z0-9]', '')) || string($precedingMs + 1)
-                else $node/@unit || upper-case(replace($node/@n, '[^a-zA-Z0-9]', ''))
-        else $node/@unit || string(count($node/preceding::tei:milestone intersect $node/ancestor::tei:div[1]//tei:milestone[@unit eq $node/@unit]) + 1)
-    
-    else if ($mode = "orig") then
-        if ($node/@rendition = '#dagger') then '†'
-        else if ($node/@rendition = '#asterisk') then '*'
-        else '[*]'
-    
-    else if ($mode = "edit") then
-        if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
-            concat('[', string($node/@n), ']')
-        else if ($node/@n and matches($node/@n, '^[0-9\[\]]+$')) then
-            concat('[',  $config:citationLabels($node/@unit)?('abbr'), ' ', string($node/@n), ']')
-            (: TODO: remove normalization parentheses '[', ']' here (and elsewhere?) :)
-        else '[*]'
-    
-    else if ($mode = "html") then
-        let $anchor :=  if ($node/@rendition = '#dagger') then
-                            '†'
-                        else if ($node/@rendition = '#asterisk') then
-                            '*'
-                        else ()
-        let $summary := if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
-                            <div class="summary_title" id="{string($node/@xml:id)}">{string($node/@n)}</div>
-                        else if ($node/@n and matches($node/@n, '^[0-9\[\]]+$')) then
-                            <div class="summary_title" id="{string($node/@xml:id)}">{concat($config:citationLabels($node/@unit)?('abbr'), ' ', string($node/@n))}</div>
-(: oder das hier?:   <xsl:value-of select="key('targeting-refs', concat('#',@xml:id))[1]"/> :)
-                        else ()
-        return ($anchor, $summary)
-    
-    else if ($mode = "work") then ()    (: basically, the same except for eventually adding a <div class="summary_title"/> :)
-    
-    else ()
+        case 'edit' return
+            if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
+                concat('[', string($node/@n), ']')
+            else if ($node/@n and matches($node/@n, '^[0-9\[\]]+$')) then
+                concat('[',  $config:citationLabels($node/@unit)?('abbr'), ' ', string($node/@n), ']')
+                (: TODO: remove normalization parentheses '[', ']' here (and elsewhere?) :)
+            else '[*]'
+        
+        case "html" return
+            let $anchor :=  if ($node/@rendition = '#dagger') then
+                                '†'
+                            else if ($node/@rendition = '#asterisk') then
+                                '*'
+                            else ()
+            let $summary := if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
+                                <div class="summary_title" id="{string($node/@xml:id)}">{string($node/@n)}</div>
+                            else if ($node/@n and matches($node/@n, '^[0-9\[\]]+$')) then
+                                <div class="summary_title" id="{string($node/@xml:id)}">{concat($config:citationLabels($node/@unit)?('abbr'), ' ', string($node/@n))}</div>
+                            (: oder das hier?:   <xsl:value-of select="key('targeting-refs', concat('#',@xml:id))[1]"/> :)
+                            else ()
+            return ($anchor, $summary)
+        
+        case "work" return ()    (: basically, the same except for eventually adding a <div class="summary_title"/> :)
+        
+        default return ()
 };
+
 
 (: FIXME: In the following, the #anchor does not take account of html partitioning of works. Change this to use semantic section id's. :)
 declare function render:head($node as element(tei:head), $mode as xs:string) {
@@ -927,15 +965,17 @@ declare function render:term($node as element(tei:term), $mode as xs:string) {
         let $elementName    := "term"
         let $key            := $node/@key
         let $getLemmaId     := tokenize(tokenize($node/@ref, 'lemma:')[2], ' ')[1]
-        let $highlightName  :=  if ($node/@ref) then
-                                    concat('hi_', translate(translate(translate(tokenize($node/@ref, ' ')[1], ',', ''), ' ', ''), ':', ''))
-                                else if ($node/@key) then
-                                    concat('hi_', translate(translate(translate(tokenize($node/@key, ' ')[1], ',', ''), ' ', ''), ':', ''))
-                                else ()
-        let $dictLemmaName  :=  if ($node/ancestor::tei:list[@type="dict"] and not($node/preceding-sibling::tei:term)) then
-                                    'dictLemma'
-                                else ()
-        let $classes        := normalize-space(string-join(($elementName, $highlightName, $dictLemmaName), ' '))
+        let $highlightName  :=  
+            if ($node/@ref) then
+                concat('hi_', translate(translate(translate(tokenize($node/@ref, ' ')[1], ',', ''), ' ', ''), ':', ''))
+            else if ($node/@key) then
+                concat('hi_', translate(translate(translate(tokenize($node/@key, ' ')[1], ',', ''), ' ', ''), ':', ''))
+            else ()
+        let $dictLemmaName  :=  
+            if ($node/ancestor::tei:list[@type="dict"] and not($node/preceding-sibling::tei:term)) then
+                'dictLemma'
+            else ()
+        let $classes := normalize-space(string-join(($elementName, $highlightName, $dictLemmaName), ' '))
     
         return                
             <span class="{$classes}" title="{$key}">
@@ -1142,7 +1182,7 @@ declare function render:list($node as element(tei:list), $mode as xs:string) {
             concat(
                 $node/@type, 
                 string(
-                    count($node/preceding::tei:list 
+                    count($node/preceding::tei:list[@type eq $node/@type]
                           intersect $node/(ancestor::tei:div|ancestor::tei:body|ancestor::tei:front|ancestor::tei:back)[last()]//tei:list[@type eq $node/@type]
                     ) + 1)
                )
@@ -1224,7 +1264,11 @@ declare function render:item($node as element(tei:item), $mode as xs:string) {
                         concat(
                             $node//tei:term[1]/@key,
                             if (count($node/parent::tei:list/tei:item[.//tei:term[1]/@key eq $node//tei:term[1]/@key]) gt 1) then
-                                concat(' - ', count($node/preceding::tei:item[tei:term[1]/@key eq $node//tei:term[1]/@key] intersect $node/ancestor::tei:div[1]//tei:item[tei:term[1]/@key eq $node//tei:term[1]/@key]) + 1)
+                                concat(
+                                    ' - ', 
+                                    count($node/preceding::tei:item[tei:term[1]/@key eq $node//tei:term[1]/@key] 
+                                          intersect $node/ancestor::tei:div[1]//tei:item[tei:term[1]/@key eq $node//tei:term[1]/@key]) 
+                                    + 1)
                             else ()
                         ),
                     '&#34;'
@@ -1248,7 +1292,18 @@ declare function render:item($node as element(tei:item), $mode as xs:string) {
     else if ($mode eq 'citetrail') then
         (: "entryX" where X is the section title (render:item($node, 'title')) in capitals, use only for items in indexes and dictionary :)
         if($node/ancestor::tei:list/@type = ('dict', 'index')) then
-            concat('entry', upper-case(replace(render:item($node, 'title'), '[^a-zA-Z0-9]', '')))
+            let $title := upper-case(replace(render:item($node, 'title'), '[^a-zA-Z0-9]', ''))
+            let $position :=
+                if ($title) then
+                    let $siblings := $node/parent::tei:list/tei:item[upper-case(replace(render:item(., 'title'), '[^a-zA-Z0-9]', '')) eq $title]
+                    return
+                        if (count($siblings) gt 0) then 
+                            string(count($node/preceding-sibling::tei:item intersect $siblings) + 1)
+                        else ()
+                else if (count($node/parent::tei:list/tei:item) gt 0) then 
+                    string(count($node/preceding-sibling::tei:item) + 1)
+                else ()
+            return 'entry' || $title || $position
         else string(count($node/preceding-sibling::tei:item) + 1) (: TODO: we could also use render:isUnnamedCitetrailNode() for this :)
     
     else if ($mode = ("orig", "edit")) then

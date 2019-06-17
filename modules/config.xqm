@@ -125,53 +125,57 @@ declare variable $config:databaseEntries     := ('authors',
                                                 );
 
 (: Scholarly citation labels for structural units (div/@type, milestone/@unit, ...) :)
-(: labels marked as 'citeRef': true() are used for building citation references; 
+(: labels marked as 'isCiteRef': true() are used for building citation references; 
    (almost) all div labels are used for making TOC labels:)
 declare variable $config:citationLabels :=
     map {
         (: div/@label and milestone/@unit: :)
-        'additional': map {'full': 'additiones', 'abbr': 'add.', 'citeRef': true()},
+        'additional': map {'full': 'additiones', 'abbr': 'add.', 'isCiteRef': true()},
         'administrative': map {'full': 'administratio', 'abbr': 'admin.'},
-        'article': map {'full': 'articulus', 'abbr': 'art.', 'citeRef': true()},
-        'book': map {'full': 'liber', 'abbr': 'lib.', 'citeRef': true()},
-        'chapter': map {'full': 'capitulum', 'abbr': 'cap.', 'citeRef': true()},
-        'colophon': map {'full': 'colophon', 'abbr': 'coloph.', 'citeRef': true()},
-        'source': map {'full': 'sectio', 'abbr': 'sect.', 'citeRef': true()}, (: TODO: something more concrete, e.g. 'auctoritas'/'auct.'? :)
-        'commentary': map {'full': 'commentarius', 'abbr': 'comment.', 'citeRef': true()},
+        'article': map {'full': 'articulus', 'abbr': 'art.', 'isCiteRef': true()},
+        'book': map {'full': 'liber', 'abbr': 'lib.', 'isCiteRef': true()},
+        'chapter': map {'full': 'capitulum', 'abbr': 'cap.', 'isCiteRef': true()},
+        'colophon': map {'full': 'colophon', 'abbr': 'coloph.', 'isCiteRef': true()},
+        'source': map {'full': 'sectio', 'abbr': 'sect.', 'isCiteRef': true()}, (: TODO: something more concrete, e.g. 'auctoritas'/'auct.'? :)
+        'commentary': map {'full': 'commentarius', 'abbr': 'comment.', 'isCiteRef': true()},
         'contained_work': (),
         'contents': map {'full': 'tabula', 'abbr': 'tab.'},
-        'corrigenda': map {'full': 'corrigenda', 'abbr': 'corr.', 'citeRef': true()},
-        'dedication': map {'full': 'dedicatio', 'abbr': 'dedic.', 'citeRef': true()},
-        'disputation': map {'full': 'disputatio', 'abbr': 'disp.', 'citeRef': true()},
-        'doubt': map {'full': 'dubium', 'abbr': 'dub.', 'citeRef': true()},
+        'corrigenda': map {'full': 'corrigenda', 'abbr': 'corr.', 'isCiteRef': true()},
+        'dedication': map {'full': 'dedicatio', 'abbr': 'dedic.', 'isCiteRef': true()},
+        'disputation': map {'full': 'disputatio', 'abbr': 'disp.', 'isCiteRef': true()},
+        'doubt': map {'full': 'dubium', 'abbr': 'dub.', 'isCiteRef': true()},
         'entry': (), (: 'lemma'? :)
-        'foreword': map {'full': 'prooemium', 'abbr': 'pr.', 'citeRef': true()},
-        'gloss': map {'full': 'glossa', 'abbr': 'gl.', 'citeRef': true()},
-        'index': map {'full': 'index', 'abbr': 'ind.', 'citeRef': true()},
-        'lecture': map {'full': 'relectio', 'abbr': 'relect.', 'citeRef': true()},
+        'foreword': map {'full': 'prooemium', 'abbr': 'pr.', 'isCiteRef': true()},
+        'gloss': map {'full': 'glossa', 'abbr': 'gl.', 'isCiteRef': true()},
+        'index': map {'full': 'index', 'abbr': 'ind.', 'isCiteRef': true()},
+        'lecture': map {'full': 'relectio', 'abbr': 'relect.', 'isCiteRef': true()},
         'map': (),
-        'part': map {'full': 'pars', 'abbr': 'p.', 'citeRef': true()}, (: TODO: 'p.' not also for pagina? :)
-        'preface': map {'full': 'praefatio', 'abbr': 'praef.', 'citeRef': true()},
-        'privileges': map {'full': 'privilegium', 'abbr': 'priv.', 'citeRef': true()},
-        'question': map {'full': 'quaestio', 'abbr': 'q.', 'citeRef': true()},
-        'section': map {'full': 'sectio', 'abbr': 'sect.', 'citeRef': true()}, (: TODO: using section here for anything labeled 'section' (e.g. W0015) :)
-        'segment': map {'full': 'sectio', 'abbr': 'sect.', 'citeRef': true()}, (: TODO: sth. more distinctive for "explicite" sections (e.g., "Sectio I") :)
+        'part': map {'full': 'pars', 'abbr': 'p.', 'isCiteRef': true()}, (: note: 'p.' is also used for pb in sal:title... :)
+        'preface': map {'full': 'praefatio', 'abbr': 'praef.', 'isCiteRef': true()},
+        'privileges': map {'full': 'privilegium', 'abbr': 'priv.', 'isCiteRef': true()},
+        'question': map {'full': 'quaestio', 'abbr': 'q.', 'isCiteRef': true()},
+        'section': map {'full': 'sectio', 'abbr': 'sect.', 'isCiteRef': true()}, (: TODO: using section here for anything labeled 'section' (e.g. W0015) :)
+        'segment': map {'full': 'sectio', 'abbr': 'sect.', 'isCiteRef': true()}, (: TODO: sth. more distinctive for "explicite" sections (e.g., "Sectio I") :)
         'unknown': (),
         'work_part': (),
-        'title': map {'full': 'titulus', 'abbr': 'tit.', 'citeRef': true()},
-        'law': map {'full': 'lex', 'abbr' :'l.', 'citeRef': true()},
-        'partida': map {'full': 'partida', 'abbr': 'part.', 'citeRef': true()},
-        'number': map {'full': 'numerus', 'abbr': 'num.', 'citeRef': true()},
+        'title': map {'full': 'titulus', 'abbr': 'tit.', 'isCiteRef': true()},
+        'law': map {'full': 'lex', 'abbr' :'l.', 'isCiteRef': true()},
+        'partida': map {'full': 'partida', 'abbr': 'part.', 'isCiteRef': true()},
+        'number': map {'full': 'numerus', 'abbr': 'num.', 'isCiteRef': true()},
         (: element names: :)
-        'p': map {'full': 'paragraphus', 'abbr': 'paragr.', 'citeRef': true()},
-        'note': map {'full': 'nota', 'abbr': 'not.', 'citeRef': true()}
+        'p': map {'full': 'paragraphus', 'abbr': 'paragr.', 'isCiteRef': true()},
+        'note': map {'full': 'nota', 'abbr': 'not.', 'isCiteRef': true()}
     };
-    (: TODO: tei:argument? :)
+    (: TODO: page with isCiteRef = true()? which abbr. ('p.' is already taken)? :)
 
 (: Nodes that are included in sal:index :)
-declare variable $config:indexNodes := ('pb', 'text', 'front', 'titlePage', 'titlePart', 'div', 'p', 'milestone', 'list', 
-                                        'item', 'lg', 'back', 'note', 'head', 'label', 'signed');
-
+declare variable $config:indexNodes := ('pb', 'text', 'front', 'titlePage', 'div', 'p', 'note', 'milestone', 'list', 
+                                        'item', 'lg', 'back', 'head', 'label', 'signed'); (:   :)
+(: further candidates for sal:index: 
+    - titlePart
+    - argument
+    (for including new elements, adjust also render.xql )    
+:)
 
 
 (: OOOooo...                    End configurable section                      ...oooOOO :)

@@ -369,6 +369,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
             
             (: Create full-blown node index :)
             let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] HTML rendering: creating index file ...") else ()
+            let $debug := if ($config:debug = ("trace")) then util:log("warn", $work/@xml:id || ": Creating index file ...") else ()
             let $index := 
                 <sal:index work="{string($work/@xml:id)}" xml:space="preserve">{
                     for $node at $pos in $nodes
@@ -406,15 +407,17 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                             $node/ancestor::tei:item[./ancestor::tei:list/@type = 'dict']
                                            )[last()]/@xml:id)},
                                 element sal:crumbtrail      {render:getNodetrail($work, $node, 'crumbtrail', $fragmentIds)},
-                                element sal:citetrail       {render:getNodetrail($work, $node, 'citetrail', $fragmentIds)}(:,
-                                element sal:passagetrail    {render:nodetrail($work, $node)}:)
+                                element sal:citetrail       {render:getNodetrail($work, $node, 'citetrail', $fragmentIds)},
+                                element sal:passagetrail    {render:getNodetrail($work, $node, 'passagetrail', $fragmentIds)}
                                 }
                             )
                         }
                 </sal:index>
-            let $debug := if ($config:debug = ("trace")) then console:log("  (saving preliminary index file ...)") else ()
+            let $debug := if ($config:debug = ("trace")) then util:log("warn", $work/@xml:id || ": Saving index file ...") else ()
+            let $debug := if ($config:debug = ("trace")) then console:log("Saving  index file ...") else ()
             let $indexSaveStatus := admin:saveFile($work/@xml:id, $work/@xml:id || "_nodeIndex.xml", $index, "index")
             let $debug := if ($config:debug = ("trace", "info")) then console:log("  Preliminary index file created.") else ()
+            let $debug := if ($config:debug = ("trace")) then util:log("warn", $work/@xml:id || ": Index file created") else ()
         
             (: Next, create a ToC html file. :)
             let $workId := $work/@xml:id
@@ -440,6 +443,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                 </div>
             let $tocSaveStatus := admin:saveFile($workId, $workId || "_toc.html", $store, "html")
             let $debug         := if ($config:debug = ("trace", "info")) then console:log("  ToC file created for " || $workId || ".") else ()
+            let $debug := if ($config:debug = ("trace")) then util:log("warn", $workId || ": TOC file created ...") else ()
             
             (:Next, create the Pages html file. :)
             let $pagesDe        :=  app:WRKpreparePagination($node, $model, $workId, 'de')
@@ -451,6 +455,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                 admin:saveFile($workId, $workId || "_pages_es.html", $pagesEs, "html")
                 )
             let $debug          := if ($config:debug = ("trace", "info")) then console:log("  Pages files created.") else ()
+            let $debug := if ($config:debug = ("trace")) then util:log("warn", $workId ||": Pages file created") else ()
         
             (: Next, get "previous" and "next" fragment ids and hand the current fragment over to the renderFragment function :)
             let $fragments := for $section at $index in $target-set
