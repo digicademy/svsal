@@ -14,6 +14,7 @@ import module namespace config     = "http://salamanca/config" at "config.xqm";
 import module namespace app        = "http://salamanca/app"    at "app.xql";
 import module namespace functx     = "http://www.functx.com";
 import module namespace transform  = "http://exist-db.org/xquery/transform";
+import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";
 
 (:declare option exist:serialize       "method=html5 media-type=text/html indent=no";:)
 
@@ -192,7 +193,7 @@ declare function render:getNodetrail($targetWork as node()*, $targetNode as node
 declare function render:isPassagetrailNode($node as element()) as xs:boolean {
     boolean(
         $node/self::tei:div[$config:citationLabels(@type)?('isCiteRef')] or
-        $node/self::tei:milestone[$config:citationLabels(@type)?('isCiteRef')] or
+        $node/self::tei:milestone[$config:citationLabels(@unit)?('isCiteRef')] or
         $node[$config:citationLabels(local-name(.))?('isCiteRef') and not(ancestor::tei:note)]
     )
 };
@@ -419,8 +420,8 @@ declare function render:signed($node as element(tei:signed), $mode as xs:string)
 
 declare function render:titlePage($node as element(tei:titlePage), $mode as xs:string) {
     if ($mode eq 'title') then
-        normalize-space(
-            (:let $volumeString := 
+        (:normalize-space(
+            let $volumeString := 
                 if ($node/ancestor::tei:text[@type='work_volume']) then 
                     concat('Vol. ', $node/ancestor::tei:text[@type='work_volume']/@n, ', ') 
                 else ()
@@ -428,9 +429,9 @@ declare function render:titlePage($node as element(tei:titlePage), $mode as xs:s
                 if (count($node/ancestor::tei:text[@type='work_volume']//tei:titlePage) gt 1) then 
                     string(count($node/preceding-sibling::tei:titlePage)+1) || ', '
                 else ()
-            return $volumeCount || $volumeString:)
-            ()
-        )
+            return $volumeCount || $volumeString
+        ):)
+        ()
     else if ($mode eq 'class') then
         'tei-' || local-name($node)
     else if ($mode eq 'citetrail') then
@@ -526,6 +527,11 @@ declare function render:pb($node as element(tei:pb), $mode as xs:string) {
         if (not($node/@break = 'no')) then
             ' '
         else ()
+        
+    (: pb nodes are excellent candidates for measuring the speed/performance of document processing, 
+        since they are equally distributed throughout a document :)
+    else if ($mode eq 'debug') then
+        util:log('warn', '[RENDER] Processing tei:pb node ' || $node/@xml:id)
     
     else () (: some sophisticated function to insert a pipe and a pagenumber div in the margin :)
 };
@@ -556,7 +562,7 @@ declare function render:lb($node as element(tei:lb), $mode as xs:string) {
                 replace(substring-after($node/@n, '_'), '[^a-zA-Z0-9]', '')
             (\: TODO: make this dependent on whether the ancestor is a marginal:  :\)
             else string(count($node/preceding::tei:lb intersect $node/preceding::tei:pb[1]/following::tei:lb) + 1)
-        ):)
+    ):)
     
     else () 
 };
@@ -613,7 +619,23 @@ declare function render:p($node as element(tei:p), $mode as xs:string) {
 declare function render:note($node as element(tei:note), $mode as xs:string) {
     if ($mode eq 'title') then
         normalize-space(
-            if ($node/@n) then
+            (: experiment: create isolated copy of current section, so as not to process the whole document :)
+            let $currentSection := sal-util:copy($node/ancestor::tei:div[1])
+            let $currentNode := $currentSection//tei:note[@xml:id eq $node/@xml:id]
+            return
+                if ($node/@n) then
+                    let $noteNumber :=
+                        if (count($currentSection//tei:note[upper-case(normalize-space(@n)) eq upper-case(normalize-space($currentNode/@n))]) gt 1) then
+                            ' (' || 
+                            string(count($currentNode/preceding::tei:note[upper-case(normalize-space(@n)) eq upper-case(normalize-space($currentNode/@n))] 
+                                         intersect $currentSection//tei:note[upper-case(normalize-space(@n)) eq upper-case(normalize-space($currentNode/@n))])
+                                   + 1) 
+                            || ')'
+                        else ()
+                    return '&#34;' || normalize-space($currentNode/@n) || '&#34;' || $noteNumber
+                else string(count($currentNode/preceding::tei:note intersect $currentSection//tei:note) + 1)
+            (: without on-the-fly copying: :)
+            (:if ($node/@n) then
                 let $noteNumber :=
                     if (count($node/ancestor::tei:div[1]//tei:note[upper-case(normalize-space(@n)) eq upper-case(normalize-space($node/@n))]) gt 1) then
                         ' (' || 
@@ -623,7 +645,7 @@ declare function render:note($node as element(tei:note), $mode as xs:string) {
                         || ')'
                     else ()
                 return '&#34;' || normalize-space($node/@n) || '&#34;' || $noteNumber
-            else string(count($node/preceding::tei:note intersect $node/ancestor::tei:div[1]//tei:note) + 1)
+            else string(count($node/preceding::tei:note intersect $node/ancestor::tei:div[1]//tei:note) + 1):)
         )
     
     else if ($mode eq 'class') then
@@ -632,7 +654,25 @@ declare function render:note($node as element(tei:note), $mode as xs:string) {
     else if ($mode eq 'citetrail') then
         (: "nX" where X is the anchor used (if it is alphanumeric) and "nXY" where Y is the number of times that X occurs inside the current div
             (important: nodes are citetrail children of div (not of p) and are counted as such) :)
-        concat('n',  
+        let $currentSection := sal-util:copy($node/ancestor::tei:div[1])
+        let $currentNode := $currentSection//tei:note[@xml:id eq $node/@xml:id]
+        let $noteLabel :=
+            string(  
+                if (matches($currentNode/@n, '^[A-Za-z0-9\[\]]+$')) then
+                    if (count($currentSection//tei:note[upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))]) gt 1) then
+                        concat(
+                            upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', '')),
+                            string(
+                                count($currentSection//tei:note[upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))]
+                                      intersect $currentNode/preceding::tei:note[upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))])
+                                + 1)
+                        )
+                    else upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))
+                else count($currentNode/preceding::tei:note intersect $currentSection//tei:note) + 1
+            )
+        return 'n' || $noteLabel
+        (: without on-the-fly copying: :)
+        (:concat('n',  
             if (matches($node/@n, '^[A-Za-z0-9\[\]]+$')) then
                 if (count($node/ancestor::tei:div[1]//tei:note[upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($node/@n, '[^a-zA-Z0-9]', ''))]) gt 1) then
                     concat(
@@ -644,16 +684,25 @@ declare function render:note($node as element(tei:note), $mode as xs:string) {
                     )
                 else upper-case(replace($node/@n, '[^a-zA-Z0-9]', ''))
             else count($node/preceding::tei:note intersect $node/ancestor::tei:div[1]//tei:note) + 1
-        )
+        ):)
     
     else if ($mode eq 'passagetrail') then
         if (render:isPassagetrailNode($node)) then
+            let $currentSection := sal-util:copy($node/ancestor::*[render:isPassagetrailNode(.)][1])
+            let $currentNode := $currentSection//tei:note[@xml:id eq $node/@xml:id]
             let $prefix := $config:citationLabels(local-name($node))?('abbr')
             let $label := 
                 if ($node/@n) then '"' || $node/@n || '"' (: TODO: what if there are several notes with the same @n in a div :)
-                else string(count($node/ancestor::*[render:isPassagetrailNode(.)[1]]//tei:note
-                                  intersect $node/preceding::tei:note) + 1) (: TODO: this can be insanely expensive wrt performance... :)
+                else string(count($currentSection//tei:note
+                                  intersect $currentNode/preceding::tei:note) + 1) (: TODO: this can be insanely expensive wrt performance... :)
             return $prefix || ' ' || $label
+            (: without on-the-fly copying: :)
+            (:let $prefix := $config:citationLabels(local-name($node))?('abbr')
+            let $label := 
+                if ($node/@n) then '"' || $node/@n || '"' (\: TODO: what if there are several notes with the same @n in a div :\)
+                else string(count($node/ancestor::*[render:isPassagetrailNode(.)][1]//tei:note
+                                  intersect $node/preceding::tei:note) + 1) (\: TODO: this can be insanely expensive wrt performance... :\)
+            return $prefix || ' ' || $label:)
         else ()
         
     else if ($mode = ("orig", "edit")) then
@@ -676,6 +725,7 @@ declare function render:note($node as element(tei:note), $mode as xs:string) {
     else
         render:passthru($node, $mode)
 };
+
 
 (:
 ~  Creates a teaser string of limited length (defined in $config:chars_summary) from a given node.
@@ -738,10 +788,18 @@ declare function render:div($node as element(tei:div), $mode as xs:string) {
                 let $prefix := lower-case($config:citationLabels($node/@type)?('abbr')) (: TODO: upper-casing with first element of passagetrail ? :)
                 let $num := 
                     if ($node/@n[matches(., '^[0-9\[\]]+$')]) then $node/@n (:replace($node/@n, '[\[\]]', '') ? :)
-                    else 
+                    else if ($node/ancestor::*[render:isPassagetrailNode(.)]) then
+                        (: with on-the-fly copying: :)
+                        (:let $currentSection := sal-util:copy($node/ancestor::*[render:isPassagetrailNode(.)][1])
+                        let $currentNode := $currentSection//tei:div[@xml:id eq $node/@xml:id]
+                        let $position := count($currentSection//tei:div[@type eq $currentNode/@type and render:isPassagetrailNode(.)]
+                                               intersect $currentNode/preceding::tei:div[@type eq $currentNode/@type and render:isPassagetrailNode(.)]) + 1
+                        return string($position):)
+                        (: using the none-copy version here for sparing memory: :)
                         let $position := count($node/ancestor::*[render:isPassagetrailNode(.)][1]//tei:div[@type eq $node/@type and render:isPassagetrailNode(.)]
                                                intersect $node/preceding::tei:div[@type eq $node/@type and render:isPassagetrailNode(.)]) + 1
                         return string($position)
+                    else string(count($node/preceding-sibling::tei:div[@type eq $node/@type]) + 1)
                 return
                     $prefix || ' ' || $num
             else ()
@@ -791,16 +849,34 @@ declare function render:milestone($node as element(tei:milestone), $mode as xs:s
             
         case 'citetrail' return
             (: "XY" where X is the unit and Y is the anchor or the number of milestones where this occurs :)
+            let $currentSection := sal-util:copy($node/ancestor::tei:div[1])
+            let $currentNode := $currentSection//tei:milestone[@xml:id eq $node/@xml:id]
+            return
             if ($node/@n[matches(., '[a-zA-Z0-9]')]) then 
+                
+                let $similarMs :=
+                    $currentSection//tei:milestone[@unit eq $currentNode/@unit 
+                                                   and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))]
+                let $position :=
+                    if (count($similarMs) gt 1) then
+                        
+                        string(count($currentNode/preceding::tei:milestone intersect $similarMs) + 1) (: TODO: performance issues? :)
+                    else ()
+                return $currentNode/@unit || upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', '')) || $position
+            else $currentNode/@unit || string(count($currentNode/preceding::tei:milestone[@unit eq $node/@unit] intersect $currentSection//tei:milestone[@unit eq $currentNode/@unit]) + 1)
+            (: without on-the-fly copying: :)
+            (:if ($node/@n[matches(., '[a-zA-Z0-9]')]) then 
                 let $similarMs :=
                     $node/ancestor::tei:div[1]//tei:milestone[@unit eq $node/@unit 
                                                               and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($node/@n, '[^a-zA-Z0-9]', ''))]
                 let $position :=
                     if (count($similarMs) gt 1) then
-                        string(count($node/preceding::tei:milestone intersect $similarMs) + 1) (: TODO: performance issues? :)
+                        
+                        string(count($node/preceding::tei:milestone intersect $similarMs) + 1) (\: TODO: performance issues? :\)
                     else ()
                 return $node/@unit || upper-case(replace($node/@n, '[^a-zA-Z0-9]', '')) || $position
-            else $node/@unit || string(count($node/preceding::tei:milestone[@unit eq $node/@unit] intersect $node/ancestor::tei:div[1]//tei:milestone[@unit eq $node/@unit]) + 1)
+            else $node/@unit || string(count($node/preceding::tei:milestone[@unit eq $node/@unit] intersect $node/ancestor::tei:div[1]//tei:milestone[@unit eq $node/@unit]) + 1):)
+        
         
         case 'passagetrail' return
             if (render:isPassagetrailNode($node)) then
@@ -809,9 +885,15 @@ declare function render:milestone($node as element(tei:milestone), $mode as xs:s
                 let $num := 
                     if ($node/@n[matches(., '^[0-9\[\]]+$')]) then $node/@n (:replace($node/@n, '[\[\]]', '') ? :)
                     else 
-                        let $position := count($node/ancestor::*[render:isPassagetrailNode(.)][1]//tei:milestone[@unit eq $node/@unit and render:isPassagetrailNode(.)]
-                                               intersect $node/preceding::tei:milestone[@unit eq $node/@unit and render:isPassagetrailNode(.)]) + 1
+                        let $currentSection := sal-util:copy($node/ancestor::*[render:isPassagetrailNode(.)][1])
+                        let $currentNode := $currentSection//tei:milestone[@xml:id eq $node/@xml:id]
+                        let $position := count($currentSection//tei:milestone[@unit eq $currentNode/@unit and render:isPassagetrailNode(.)]
+                                               intersect $currentNode/preceding::tei:milestone[@unit eq $currentNode/@unit and render:isPassagetrailNode(.)]) + 1
                         return string($position)
+                        (: without on-the-fly copying: :)
+                        (:let $position := count($node/ancestor::*[render:isPassagetrailNode(.)][1]//tei:milestone[@unit eq $node/@unit and render:isPassagetrailNode(.)]
+                                               intersect $node/preceding::tei:milestone[@unit eq $node/@unit and render:isPassagetrailNode(.)]) + 1
+                        return string($position):)
                 return
                     $prefix || ' ' || $num
             else ()
@@ -971,7 +1053,7 @@ declare function render:term($node as element(tei:term), $mode as xs:string) {
             else if ($node/@key) then
                 concat('hi_', translate(translate(translate(tokenize($node/@key, ' ')[1], ',', ''), ' ', ''), ':', ''))
             else ()
-        let $dictLemmaName  :=  
+        let $dictLemmaName :=  
             if ($node/ancestor::tei:list[@type="dict"] and not($node/preceding-sibling::tei:term)) then
                 'dictLemma'
             else ()
@@ -1179,18 +1261,29 @@ declare function render:list($node as element(tei:list), $mode as xs:string) {
     else if ($mode eq 'citetrail') then
         (: dictionaries, indices and summaries get their type prepended to their number :)
         if($node/@type = ('dict', 'index', 'summaries')) then
-            concat(
+            let $currentSection := sal-util:copy($node/(ancestor::tei:div|ancestor::tei:body|ancestor::tei:front|ancestor::tei:back)[last()])
+            let $currentNode := $currentSection//tei:list[@xml:id eq $node/@xml:id]
+            return
+              concat(
+                  $currentNode/@type, 
+                  string(
+                      count($currentNode/preceding::tei:list[@type eq $currentNode/@type]
+                            intersect $currentSection//tei:list[@type eq $currentNode/@type]
+                      ) + 1)
+                 )
+            (: without on-the-fly copying: :)
+            (:concat(
                 $node/@type, 
                 string(
                     count($node/preceding::tei:list[@type eq $node/@type]
                           intersect $node/(ancestor::tei:div|ancestor::tei:body|ancestor::tei:front|ancestor::tei:back)[last()]//tei:list[@type eq $node/@type]
                     ) + 1)
-               )
+               ):)
         (: other types of lists are simply counted :)
         else if (render:isUnnamedCitetrailNode($node)) then 
             string(count($node/preceding-sibling::*[render:isUnnamedCitetrailNode(.)]) + 1)
         else ()
-            (:
+            (: OLD VERSION:
             string(count($node/preceding-sibling::tei:p|
                          ($node/preceding::tei:list[not(@type = ('dict', 'index', 'summaries'))] 
                           intersect $node/(ancestor::tei:div|ancestor::tei:body|ancestor::tei:front|ancestor::tei:back)[last()]//tei:list)) + 1):)

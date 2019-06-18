@@ -8,6 +8,25 @@ import module namespace app        = "http://salamanca/app"    at "app.xql";
 declare namespace tei = "http://www.tei-c.org/ns/1.0";
 
 
+(:
+~ Makes a copy of a node tree, to be used for making copies of subtrees on-the-fly for not having to process the whole document
+    (supposed to increase speed especially where "intersect" statements are applied).
+:)
+declare function sal-util:copy($node as element()) as node() {
+    (:util:deep-copy($node):)
+    let $xsl :=
+        <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+            <xsl:template match="@*|node()">
+                <xsl:copy>
+                    <xsl:apply-templates select="@*|node()"/>
+                </xsl:copy>
+              </xsl:template>
+          </xsl:stylesheet>
+    return
+        transform:transform($node, $xsl, ())
+};
+
+
 (: Normalizes work, author, lemma, news, and working paper ids (and returns everything else as-is :)
 declare function sal-util:normalizeId($id as xs:string?) as xs:string? {
     if ($id) then

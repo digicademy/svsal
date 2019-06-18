@@ -369,11 +369,11 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
             
             (: Create full-blown node index :)
             let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] HTML rendering: creating index file ...") else ()
-            let $debug := if ($config:debug = ("trace")) then util:log("warn", $work/@xml:id || ": Creating index file ...") else ()
             let $index := 
                 <sal:index work="{string($work/@xml:id)}" xml:space="preserve">{
                     for $node at $pos in $nodes
                         let $debug := if ($config:debug = ("trace") and local-name($node) eq "div") then console:log("[ADMIN] registering node " || $pos || ": " || local-name($node) || " with @xml:id " || $node/@xml:id || " ...") else ()
+                        let $debug := if ($config:debug = ("trace") and local-name($node) eq "pb") then render:pb($node, 'debug') else ()
                         let $subtype := 
                             if ($node/@sameAs) then
                                 "sameAs"
@@ -397,7 +397,8 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                 element sal:title           {render:dispatch($node, 'title')},
                                 element sal:fragment        {$fragmentIds($node/@xml:id/string())},
                                 element sal:citableParent   {
-                                    string(($node/ancestor::tei:text[not(@type="work_part")] |
+                                    $node/ancestor::*[render:isCitetrailOrCrumbtrailNode(.)][1]/@xml:id
+                                    (:string(($node/ancestor::tei:text[not(@type="work_part")] |
                                             $node/ancestor::tei:frontmatter |
                                             $node/ancestor::tei:backmatter |
                                             $node/ancestor::tei:titlePage |
@@ -405,7 +406,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                             $node/ancestor::tei:p[not(./ancestor::tei:note)] |
                                             $node/ancestor::tei:note |
                                             $node/ancestor::tei:item[./ancestor::tei:list/@type = 'dict']
-                                           )[last()]/@xml:id)},
+                                           )[last()]/@xml:id):)},
                                 element sal:crumbtrail      {render:getNodetrail($work, $node, 'crumbtrail', $fragmentIds)},
                                 element sal:citetrail       {render:getNodetrail($work, $node, 'citetrail', $fragmentIds)},
                                 element sal:passagetrail    {render:getNodetrail($work, $node, 'passagetrail', $fragmentIds)}
@@ -413,11 +414,9 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                             )
                         }
                 </sal:index>
-            let $debug := if ($config:debug = ("trace")) then util:log("warn", $work/@xml:id || ": Saving index file ...") else ()
             let $debug := if ($config:debug = ("trace")) then console:log("Saving  index file ...") else ()
             let $indexSaveStatus := admin:saveFile($work/@xml:id, $work/@xml:id || "_nodeIndex.xml", $index, "index")
             let $debug := if ($config:debug = ("trace", "info")) then console:log("  Preliminary index file created.") else ()
-            let $debug := if ($config:debug = ("trace")) then util:log("warn", $work/@xml:id || ": Index file created") else ()
         
             (: Next, create a ToC html file. :)
             let $workId := $work/@xml:id
@@ -443,7 +442,6 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                 </div>
             let $tocSaveStatus := admin:saveFile($workId, $workId || "_toc.html", $store, "html")
             let $debug         := if ($config:debug = ("trace", "info")) then console:log("  ToC file created for " || $workId || ".") else ()
-            let $debug := if ($config:debug = ("trace")) then util:log("warn", $workId || ": TOC file created ...") else ()
             
             (:Next, create the Pages html file. :)
             let $pagesDe        :=  app:WRKpreparePagination($node, $model, $workId, 'de')
@@ -455,7 +453,6 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                 admin:saveFile($workId, $workId || "_pages_es.html", $pagesEs, "html")
                 )
             let $debug          := if ($config:debug = ("trace", "info")) then console:log("  Pages files created.") else ()
-            let $debug := if ($config:debug = ("trace")) then util:log("warn", $workId ||": Pages file created") else ()
         
             (: Next, get "previous" and "next" fragment ids and hand the current fragment over to the renderFragment function :)
             let $fragments := for $section at $index in $target-set
@@ -521,7 +518,12 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                      {if ($config:debug = "trace") then $fragments else ()}
                </div>
     (: now put everything out :)
-    let $runtime-ms       := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000 
+    let $runtime-ms-raw       := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000 
+    let $runtime-ms :=
+        if ($runtime-ms-raw < (1000 * 60)) then format-number($runtime-ms-raw div 1000, "#.##") || " Sek."
+        else if ($runtime-ms-raw < (1000 * 60 * 60)) then format-number($runtime-ms-raw div (1000 * 60), "#.##") || " Min."
+        else format-number($runtime-ms-raw div (1000 * 60 * 60), "#.##") || " Std."
+    let $debug := if ($config:debug = ("trace", "info")) then util:log("warn", "[RENDER] Rendered HTML for " || $wid || " in " || $runtime-ms || ".") else ()
     (: (re-)create txt and xml corpus zips :)
     let $corpus-start-time := util:system-time()
     let $debug := if ($config:debug = ("trace", "info")) then console:log("Corpus packages created and stored.") else ()
@@ -535,10 +537,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
     return 
         <div>
             <p>Zu rendern: {count($todo)} Werk(e); gesamte Rechenzeit:
-                {if ($runtime-ms < (1000 * 60))             then format-number($runtime-ms div 1000, "#.##") || " Sek."
-                 else if ($runtime-ms < (1000 * 60 * 60))  then format-number($runtime-ms div (1000 * 60), "#.##") || " Min."
-                 else format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
-                }
+                {$runtime-ms}
             </p>
             <p>TEI- und TXT-Corpora erstellt in {$corpus-end-time} Sekunden.</p>
             <!--<p>/db/apps/salamanca/data reindiziert in {$index-end-time} Sekunden.</p>-->
