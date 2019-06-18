@@ -16,6 +16,7 @@ import module namespace http       = "http://expath.org/ns/http-client";
 import module namespace httpclient = "http://exist-db.org/xquery/httpclient";
 import module namespace util       = "http://exist-db.org/xquery/util";
 import module namespace xmldb      = "http://exist-db.org/xquery/xmldb";
+(:import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";:)
 
 declare copy-namespaces no-preserve, inherit;
 
@@ -762,9 +763,12 @@ function sphinx:details ($wid as xs:string, $field as xs:string, $q as xs:string
                 for $item at $detailindex in $details//item
                     let $hit_id         := $item/hit_id/text()
 (:                    let $crumbtrail     := sphinx:addLangToCrumbtrail(<sal:crumbtrail>{sphinx:addQToCrumbtrail(doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $hit_id]/sal:crumbtrail, $q)}</sal:crumbtrail>, $lang):)
-                    let $crumbtrail     := <sal:crumbtrail>{sphinx:addQToCrumbtrail(doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $hit_id]/sal:crumbtrail, $q)}</sal:crumbtrail>
-(:                    let $bombtrail      := sphinx:addLangToCrumbtrail(                 sphinx:addQToCrumbtrail(doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $hit_id]/sal:crumbtrail/a[last()], $q), $lang):)
-                    let $bombtrail      := sphinx:addQToCrumbtrail(doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $hit_id]/sal:crumbtrail/a[last()], $q)
+                    let $crumbtrailRaw := doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $hit_id]/sal:crumbtrail
+                    let $crumbtrailI18n := sphinx:addI18nToCrumbtrail($crumbtrailRaw)
+                    let $crumbtrail     := sphinx:addQToCrumbtrail($crumbtrailI18n, $q)
+(:    VERY old version:    let $bombtrail      := sphinx:addLangToCrumbtrail(                 sphinx:addQToCrumbtrail(doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $hit_id]/sal:crumbtrail/a[last()], $q), $lang):)
+(:                    let $bombtrail      := sphinx:addQToCrumbtrail(doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $hit_id]/sal:crumbtrail/a[last()], $q):)
+                    let $bombtrail := $crumbtrail/a[last()]
 
                     let $snippets :=  
                         <documents>
@@ -789,7 +793,7 @@ function sphinx:details ($wid as xs:string, $field as xs:string, $q as xs:string
                             </td>-->
                             <td>
                                 <span class="lead" style="padding-bottom: 7px; font-family: 'Junicode', 'Cardo', 'Andron', 'Cabin', sans-serif;" title="{i18n:process($statusInfo, $lang, '/db/apps/salamanca/data/i18n', 'en')}"><!--<span style="color: #777777">{$detailindex|| '. '}</span>-->{$bombtrail}</span>
-                                <div class="crumbtrail">{$crumbtrail}</div>
+                                <div class="crumbtrail">{$crumbtrail/node()}</div>
                                 <div class="result__snippet" title="{$statusInfo}">{ if ($description_edit//span) then $description_edit
                                   else if ($description_orig//span) then $description_orig
                                   else if (string-length($item/description_edit) gt $config:snippetLength) then
@@ -808,8 +812,6 @@ function sphinx:details ($wid as xs:string, $field as xs:string, $q as xs:string
 
     return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
 };
-
-
 
 
 declare function sphinx:help ($node as node(), $model as map(*), $lang as xs:string?) {
@@ -877,14 +879,21 @@ declare function sphinx:loadSnippets($wid as xs:string*) {
 declare function sphinx:addQToCrumbtrail($node as node()*, $q as xs:string*) as item()* {
     typeswitch($node)
         case element(a) return
-            <a href="{
-                        if (contains(string($node/@href), "#") and contains(string($node/@href), "?")) then
-                            replace(string($node/@href), '#', '&amp;q=' || encode-for-uri($q) || '#')
-                        else if (contains(string($node/@href), "?")) then
-                            string($node/@href) || '&amp;q=' || encode-for-uri($q)
-                        else
-                            string($node/@href) || '?q=' || encode-for-uri($q)
-                      }">{$node/text()}</a>
+            let $qUri :=
+                if (contains(string($node/@href), "#") and contains(string($node/@href), "?")) then
+                    replace(string($node/@href), '#', '&amp;q=' || encode-for-uri($q) || '#')
+                else if (contains(string($node/@href), "?")) then
+                    string($node/@href) || '&amp;q=' || encode-for-uri($q)
+                else
+                    string($node/@href) || '?q=' || encode-for-uri($q)
+            return element {'a'} {
+                attribute {'href'} {$qUri},
+                if ($node/@class) then $node/@class else (),
+                $node/node()
+            }
+(:            <a href="{$qUri}">{$node/text()}</a>:)
+        case element(sal:crumbtrail) return 
+            <sal:crumbtrail>{local:passthruCrumbtrailQ($node, $q)}</sal:crumbtrail>
         case text() return $node
         default return local:passthruCrumbtrailQ($node, $q)
 };
@@ -911,6 +920,20 @@ declare function local:passthruCrumbtrailLang($nodes as node()*, $lang as xs:str
 
 declare function local:passthruCrumbtrailQ($nodes as node()*, $q as xs:string*) as item()* {
     for $node in $nodes/node() return sphinx:addQToCrumbtrail($node, $q)
+};
+
+(:
+~ Enriches crumbtrails with i18n labels, according to the type stated in sal:crumbtrail/a/@class.
+:)
+declare function sphinx:addI18nToCrumbtrail($crumbtrail as element(sal:crumbtrail)?) as element(sal:crumbtrail)? {
+    if ($crumbtrail) then
+        <sal:crumbtrail>{
+            for $node in $crumbtrail/node() return
+                if ($node[self::a]) then 
+                        <a href="{$node/@href}"><i18n:text key="{$node/@class}"/>{if ($node/text()) then ' ' || $node/text() else ()}</a>
+                else $node
+        }</sal:crumbtrail>
+    else ()
 };
 
 declare function sphinx:dispatch($node as node(), $mode as xs:string) as item()* {
