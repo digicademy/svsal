@@ -136,7 +136,7 @@ declare variable $config:citationLabels :=
         'book': map {'full': 'liber', 'abbr': 'lib.', 'isCiteRef': true()},
         'chapter': map {'full': 'capitulum', 'abbr': 'cap.', 'isCiteRef': true()},
         'colophon': map {'full': 'colophon', 'abbr': 'coloph.', 'isCiteRef': true()},
-        'source': map {'full': 'sectio', 'abbr': 'sect.', 'isCiteRef': true()}, (: TODO: something more concrete, e.g. 'auctoritas'/'auct.'? :)
+        'source': map {'full': 'sectio', 'abbr': 'sect.', 'isCiteRef': true()}, (: TODO: something more concrete here? :)
         'commentary': map {'full': 'commentarius', 'abbr': 'comment.', 'isCiteRef': true()},
         'contained_work': (),
         'contents': map {'full': 'tabula', 'abbr': 'tab.'},
@@ -163,6 +163,9 @@ declare variable $config:citationLabels :=
         'partida': map {'full': 'partida', 'abbr': 'part.', 'isCiteRef': true()},
         'number': map {'full': 'numerus', 'abbr': 'num.', 'isCiteRef': true()},
         (: element names: :)
+        'back': map {'full': 'appendix', 'abbr': 'append.', 'isCiteRef': true()},
+        (:'front': map {'full': '', 'abbr': '', 'isCiteRef': true()},:) (: TODO :)
+        'titlePage': map {'full': 'titulus', 'abbr': 'tit.', 'isCiteRef': true()}, (: TODO: same as div/@type eq 'title' :)
         'p': map {'full': 'paragraphus', 'abbr': 'paragr.', 'isCiteRef': true()},
         'note': map {'full': 'nota', 'abbr': 'not.', 'isCiteRef': true()}
     };

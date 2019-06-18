@@ -160,7 +160,7 @@ declare function render:getNodetrail($targetWork as node()*, $targetNode as node
         if ($mode = ('citetrail', 'crumbtrail')) then
             if ($targetNode/ancestor::*[render:isCitetrailOrCrumbtrailNode(.)]) then
                 if ($targetNode[self::tei:pb] and ($targetNode/ancestor::tei:front|$targetNode/ancestor::tei:back|$targetNode/ancestor::tei:text[1][not(@xml:id = 'completeWork' or @type = "work_part")])) then
-                    (: within front, back, and single volumes, prepend front's or volume's crumb ID for avoiding multiple identical IDs in the same work :)
+                    (: within front, back, and single volumes, prepend front's or volume's trail ID for avoiding multiple identical IDs in the same work :)
                     render:getNodetrail($targetWork,  ($targetNode/ancestor::tei:front|$targetNode/ancestor::tei:back|$targetNode/ancestor::tei:text[1][not(@xml:id = 'completeWork' or @type = "work_part")])[last()], $mode, $fragmentIds)
                 else if ($targetNode[self::tei:pb]) then ()
                 else 
@@ -169,7 +169,13 @@ declare function render:getNodetrail($targetWork as node()*, $targetNode as node
             else ()
         else if ($mode eq 'passagetrail') then
             if ($targetNode/ancestor::*[render:isPassagetrailNode(.)]) then
-                render:getNodetrail($targetWork, $targetNode/ancestor::*[render:isPassagetrailNode(.)][1], $mode, $fragmentIds)
+                if ($targetNode[self::tei:pb] and ($targetNode/ancestor::tei:front|$targetNode/ancestor::tei:back|$targetNode/ancestor::tei:text[1][@type = "work_volume"])) then
+                    (: within front, back, and single volumes, prepend front's or volume's trail ID for avoiding multiple identical IDs in the same work :)
+                    render:getNodetrail($targetWork,  ($targetNode/ancestor::tei:front|$targetNode/ancestor::tei:back|$targetNode/ancestor::tei:text[1][@type = "work_volume"])[last()], $mode, $fragmentIds)
+                else if ($targetNode[self::tei:pb]) then ()
+                else 
+                    (: === for all other node types, get parent node's trail (deep recursion) === :)
+                    render:getNodetrail($targetWork, $targetNode/ancestor::*[render:isPassagetrailNode(.)][1], $mode, $fragmentIds)
             else ()
         else ()
     (: (b) get connector MARKER :)
@@ -192,8 +198,10 @@ declare function render:getNodetrail($targetWork as node()*, $targetNode as node
 
 declare function render:isPassagetrailNode($node as element()) as xs:boolean {
     boolean(
+        $node/self::tei:text[@type eq 'work_volume'] or
         $node/self::tei:div[$config:citationLabels(@type)?('isCiteRef')] or
         $node/self::tei:milestone[$config:citationLabels(@unit)?('isCiteRef')] or
+        $node/self::tei:pb[not(@sameAs or @corresp) and not(ancestor::tei:note)] or
         $node[$config:citationLabels(local-name(.))?('isCiteRef') and not(ancestor::tei:note)]
     )
 };
@@ -360,16 +368,24 @@ declare function render:text($node as element(tei:text), $mode as xs:string) {
                 '[process-technical part: ' || substring(string($node/@xml:id), 11, 1) || ']'
             else ()
         )
+    
     else if ($mode eq 'class') then
         if ($node/@type eq 'work_volume') then 'tei-text' || $node/@type
         else if ($node/@xml:id eq 'completeWork') then 'tei-text-' || $node/@xml:id
         else if (matches($node/@xml:id, 'work_part_[a-z]')) then 'elem-text-' || $node/@xml:id
         else 'tei-text'
+    
     else if ($mode eq 'citetrail') then
         (: "volX" where X is the current volume number, don't use it at all for monographs :)
         if ($node/@type eq 'work_volume') then
            concat('vol', count($node/preceding::tei:text[@type eq 'work_volume']) + 1)
         else ()
+    
+    else if ($mode eq 'passagetrail') then
+        if (render:isPassagetrailNode($node)) then
+            'vol. ' || $node/@n
+        else ()
+    
     else
         render:passthru($node, $mode)
 };
@@ -432,10 +448,16 @@ declare function render:titlePage($node as element(tei:titlePage), $mode as xs:s
             return $volumeCount || $volumeString
         ):)
         ()
+    
     else if ($mode eq 'class') then
         'tei-' || local-name($node)
+    
     else if ($mode eq 'citetrail') then
         'titlepage'
+    
+    else if ($mode eq 'passagetrail') then
+        $config:citationLabels(local-name($node))?('abbr')
+    
     else
         render:passthru($node, $mode)
 };
@@ -519,16 +541,20 @@ declare function render:pb($node as element(tei:pb), $mode as xs:string) {
                 upper-case(replace($node/@n, '[^a-zA-Z0-9]', ''))
             else substring($node/@facs, 6)
         )
-        (: TODO: are collisions thinkable, esp. if pb's crumb does not inherit from the specific section (titlePage|div)? 
+        (: TODO: are collisions possible, esp. if pb's crumb does not inherit from the specific section (titlePage|div)? 
            -> for example, with repetitive page numbers in the appendix 
             (ideally, such collisions should be resolved in TEI markup, but one never knows...) :)
+    
+    else if ($mode eq 'passagetrail') then
+        if (contains($node/@n, 'fol.')) then $node/@n
+        else 'p. ' || $node/@n
     
     else if ($mode = ("orig", "edit", "html", "work")) then
         if (not($node/@break = 'no')) then
             ' '
         else ()
         
-    (: pb nodes are excellent candidates for measuring the speed/performance of document processing, 
+    (: pb nodes are excellent candidates for tracing the speed/performance of document processing, 
         since they are equally distributed throughout a document :)
     else if ($mode eq 'debug') then
         util:log('warn', '[RENDER] Processing tei:pb node ' || $node/@xml:id)
@@ -619,7 +645,6 @@ declare function render:p($node as element(tei:p), $mode as xs:string) {
 declare function render:note($node as element(tei:note), $mode as xs:string) {
     if ($mode eq 'title') then
         normalize-space(
-            (: experiment: create isolated copy of current section, so as not to process the whole document :)
             let $currentSection := sal-util:copy($node/ancestor::tei:div[1])
             let $currentNode := $currentSection//tei:note[@xml:id eq $node/@xml:id]
             return
@@ -688,19 +713,20 @@ declare function render:note($node as element(tei:note), $mode as xs:string) {
     
     else if ($mode eq 'passagetrail') then
         if (render:isPassagetrailNode($node)) then
-            let $currentSection := sal-util:copy($node/ancestor::*[render:isPassagetrailNode(.)][1])
+            (: passagetrail parents of note are div, not p :)
+            let $currentSection := sal-util:copy($node/ancestor::*[render:isPassagetrailNode(.) and not(self::tei:p)][1])
             let $currentNode := $currentSection//tei:note[@xml:id eq $node/@xml:id]
             let $prefix := $config:citationLabels(local-name($node))?('abbr')
             let $label := 
                 if ($node/@n) then '"' || $node/@n || '"' (: TODO: what if there are several notes with the same @n in a div :)
                 else string(count($currentSection//tei:note
-                                  intersect $currentNode/preceding::tei:note) + 1) (: TODO: this can be insanely expensive wrt performance... :)
+                                  intersect $currentNode/preceding::tei:note) + 1)
             return $prefix || ' ' || $label
             (: without on-the-fly copying: :)
             (:let $prefix := $config:citationLabels(local-name($node))?('abbr')
             let $label := 
                 if ($node/@n) then '"' || $node/@n || '"' (\: TODO: what if there are several notes with the same @n in a div :\)
-                else string(count($node/ancestor::*[render:isPassagetrailNode(.)][1]//tei:note
+                else string(count($node/ancestor::*[render:isPassagetrailNode(.) and not(self::tei:p)][1]//tei:note
                                   intersect $node/preceding::tei:note) + 1) (\: TODO: this can be insanely expensive wrt performance... :\)
             return $prefix || ' ' || $label:)
         else ()
