@@ -13,7 +13,15 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
     (supposed to increase speed especially where "intersect" statements are applied).
 :)
 declare function sal-util:copy($node as element()) as node() {
+    (:element {node-name($node)}
+    {$node/@*,
+        for $child in $node/node()
+             return if ($child instance of element()) then 
+                sal-util:copy($child)
+             else $child
+    }:)
     (:util:deep-copy($node):)
+    (: this seems to be the fastest option: :)
     let $xsl :=
         <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
             <xsl:template match="@*|node()">

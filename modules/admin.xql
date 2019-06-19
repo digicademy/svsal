@@ -398,15 +398,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                                 element sal:fragment        {$fragmentIds($node/@xml:id/string())},
                                 element sal:citableParent   {
                                     $node/ancestor::*[render:isCitetrailOrCrumbtrailNode(.)][1]/@xml:id
-                                    (:string(($node/ancestor::tei:text[not(@type="work_part")] |
-                                            $node/ancestor::tei:frontmatter |
-                                            $node/ancestor::tei:backmatter |
-                                            $node/ancestor::tei:titlePage |
-                                            $node/ancestor::tei:div[not(@type="work_part")][1] |
-                                            $node/ancestor::tei:p[not(./ancestor::tei:note)] |
-                                            $node/ancestor::tei:note |
-                                            $node/ancestor::tei:item[./ancestor::tei:list/@type = 'dict']
-                                           )[last()]/@xml:id):)},
+                                    },
                                 element sal:crumbtrail      {render:getNodetrail($work, $node, 'crumbtrail', $fragmentIds)},
                                 element sal:citetrail       {render:getNodetrail($work, $node, 'citetrail', $fragmentIds)},
                                 element sal:passagetrail    {render:getNodetrail($work, $node, 'passagetrail', $fragmentIds)}
@@ -683,7 +675,7 @@ declare function admin:sphinx-out ($node as node(), $model as map(*), $wid as xs
 
     (: which parts of those works constitute a fragment that is to count as a hit? :)
     let $hits := 
-            for $hit at $index in ($expanded//tei:text//(tei:titlePage|tei:head|tei:signed|tei:label[not(ancestor::tei:note | ancestor::tei:item)]|tei:item|tei:note|tei:p[not(ancestor::tei:note | ancestor::tei:item)]|tei:lg[not(ancestor::tei:note | ancestor::tei:item  | ancestor::tei:p)]) | $expanded//tei:profileDesc//(tei:p | tei:keywords))
+            for $hit at $index in ($expanded//tei:text//(tei:titlePage|tei:head|tei:signed|tei:label[not(ancestor::tei:note|ancestor::tei:item)]|tei:item|tei:note|tei:p[not(ancestor::tei:note | ancestor::tei:item)]|tei:lg[not(ancestor::tei:note | ancestor::tei:item  | ancestor::tei:p)]) | $expanded//tei:profileDesc//(tei:p|tei:keywords))
 
                 (: for each fragment, populate our sphinx fields and attributes :)
                 let $work              := $hit/ancestor-or-self::tei:TEI
@@ -742,12 +734,12 @@ declare function admin:sphinx-out ($node as node(), $model as map(*), $wid as xs
                 (: Here we define the to-be-indexed content! :)
                 let $hit_content_orig := 
                     if ($hit_id) then
-                        string-join(sphinx:dispatch($hit, "orig"), '')
+                        string-join(render:dispatch($hit, "orig"), '')
                     else
                         "There is no xml:id in the " || $hit_type || " hit!"
                 let $hit_content_edit := 
                     if ($hit_id) then
-                        string-join(sphinx:dispatch($hit, "edit"), '')
+                        string-join(render:dispatch($hit, "edit"), '')
                     else
                         "There is no xml:id in the " || $hit_type || " hit!"
                 
