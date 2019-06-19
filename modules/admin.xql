@@ -1109,12 +1109,12 @@ declare function admin:createNodeIndex($node as node(), $model as map(*), $wid a
                      {if (count($unidentified-elements)) then <p>{count($unidentified-elements)} erfasste, aber wegen fehlender xml:id nicht verarbeitbare Fragmente:<br/>
                         {for $e in $unidentified-elements return <code>{local-name($e)}</code>}</p>
                       else ()}
-                     <p>{count($target-set)} erfasste Elemente {if (count($target-set)) then "der folgenden Typen: " || <br/> else ()}
-                        <code>{distinct-values(for $i in $target-set return local-name($i) || "(" || count($target-set[local-name(.) = local-name($i)]) || ")")}</code></p>
+                     <p>{count($index//sal:node)} erfasste Elemente {if (count($target-set)) then "der folgenden Typen: " || <br/> else ()}
+                        <code>{distinct-values(for $t in $index//sal:node/@type return $t || "(" || count($index//sal:node[@type eq $t]) || ")")}</code></p>
                      <p>Rechenzeit: {      
-                          if ($runtime-ms-a < (1000 * 60))      then format-number($runtime-ms-a div 1000, "#.##") || " Sek."
+                          if ($runtime-ms-a < (1000 * 60)) then format-number($runtime-ms-a div 1000, "#.##") || " Sek."
                           else if ($runtime-ms-a < (1000 * 60 * 60)) then format-number($runtime-ms-a div (1000 * 60), "#.##") || " Min."
-                          else                                            format-number($runtime-ms-a div (1000 * 60 * 60), "#.##") || " Std."
+                          else format-number($runtime-ms-a div (1000 * 60 * 60), "#.##") || " Std."
                         }
                      </p>
                </div>

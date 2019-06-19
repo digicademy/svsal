@@ -295,58 +295,6 @@ declare function render:dispatch($node as node(), $mode as xs:string) {
         default return render:passthru($node, $mode)
 };
 
-declare function render:persName($node as element(tei:persName), $mode as xs:string) {
-    switch($mode)
-        case 'snippets-orig' return
-            render:passthru($node, $mode)
-        case 'snippets-edit' return
-            if ($node/@key and $node/@ref) then
-                string($node/@key) || ' [' || string($node/@ref) || ']'
-            else if ($node/@key) then
-                string($node/@key)
-            else if ($node/@ref) then
-                '[' || string($node/@ref) || ']'
-            else
-                render:passthru($node, $mode)
-        default return
-            render:name($mode, $node)
-};
-
-declare function render:placeName($node as element(tei:placeName), $mode as xs:string) {
-    switch($mode)
-        case 'snippets-orig' return
-            render:passthru($node, $mode)
-        case 'snippets-edit' return
-            if ($node/@key) then
-                string($node/@key)
-            else
-                render:passthru($node, $mode)
-        default return
-            render:name($mode, $node)
-};
-
-declare function render:orgName($node as element(tei:orgName), $mode as xs:string) {
-    switch($mode)
-        case 'snippets-orig'
-        case 'snippets-edit' return
-            render:passthru($node, $mode)
-        default return
-            render:name($mode, $node)
-};
-
-declare function render:title($node as element(tei:title), $mode as xs:string) {
-    switch($mode)
-        case 'snippets-orig' return
-            render:passthru($node, $mode)
-        case 'snippets-edit' return
-            if ($node/@key) then
-                string($node/@key)
-            else
-                render:passthru($node, $mode)
-        default return
-            render:name($mode, $node)
-};
-
 
 declare function render:text($node as element(tei:text), $mode as xs:string) {
     if ($mode eq 'title') then
@@ -989,44 +937,47 @@ declare function render:milestone($node as element(tei:milestone), $mode as xs:s
 
 (: FIXME: In the following, the #anchor does not take account of html partitioning of works. Change this to use semantic section id's. :)
 declare function render:head($node as element(tei:head), $mode as xs:string) {
-    if ($mode eq 'title') then
-        normalize-space(
-            render:teaserString($node, 'edit')
-        )
-    
-    else if ($mode eq 'class') then
-        'tei-' || local-name($node)
-    
-    else if ($mode eq 'citetrail') then
-        concat(
-            'heading', 
-            (if (count($node/(parent::tei:back|parent::tei:div[@type ne "work_part"]|parent::tei:front|parent::tei:list|parent::tei:titlePart)/tei:head) gt 1) then          
-                (: we have several headings on this level of the document ... :)
-                string(count($node/preceding-sibling::tei:head) + 1)
-             else ())
-        )
-    
-    else if ($mode = ("orig", "edit")) then
-        (render:passthru($node, $mode), $config:nl)
-    
-    else if ($mode = ("html", "work")) then
-        let $lang   := request:get-attribute('lang')
-        let $page   :=      if ($node/ancestor::tei:text/@type="author_article") then
-                                "author.html?aid="
-                       else if ($node/ancestor::tei:text/@type="lemma_article") then
-                                "lemma.html?lid="
-                       else
-                                "work.html?wid="
-        return    
-            <h3 id="{$node/@xml:id}">
-                <a class="anchorjs-link" id="{$node/parent::tei:div/@xml:id}" href="{session:encode-url(xs:anyURI($page || $node/ancestor::tei:TEI/@xml:id || '#' || $node/parent::tei:div/@xml:id))}">
-                    <span class="anchorjs-icon"></span>
-                </a>
-                {render:passthru($node, $mode)}
-            </h3>
-    
-    else 
-        render:passthru($node, $mode)
+    switch($mode)
+        case 'title' return
+            normalize-space(
+                render:teaserString($node, 'edit')
+            )
+        
+        case 'class' return
+            'tei-' || local-name($node)
+        
+        case 'citetrail' return
+            concat(
+                'heading', 
+                (if (count($node/(parent::tei:back|parent::tei:div[@type ne "work_part"]|parent::tei:front|parent::tei:list|parent::tei:titlePart)/tei:head) gt 1) then          
+                    (: we have several headings on this level of the document ... :)
+                    string(count($node/preceding-sibling::tei:head) + 1)
+                 else ())
+            )
+        
+        case "orig"
+        case "edit" return
+            (render:passthru($node, $mode), $config:nl)
+        
+        case "html"
+        case "work" return
+            let $lang   := request:get-attribute('lang')
+            let $page   :=      if ($node/ancestor::tei:text/@type="author_article") then
+                                    "author.html?aid="
+                           else if ($node/ancestor::tei:text/@type="lemma_article") then
+                                    "lemma.html?lid="
+                           else
+                                    "work.html?wid="
+            return    
+                <h3 id="{$node/@xml:id}">
+                    <a class="anchorjs-link" id="{$node/parent::tei:div/@xml:id}" href="{session:encode-url(xs:anyURI($page || $node/ancestor::tei:TEI/@xml:id || '#' || $node/parent::tei:div/@xml:id))}">
+                        <span class="anchorjs-icon"></span>
+                    </a>
+                    {render:passthru($node, $mode)}
+                </h3>
+        
+        default return 
+            render:passthru($node, $mode)
 };
 
 declare function render:origElem($node as element(), $mode as xs:string) {
@@ -1328,7 +1279,8 @@ declare function render:quote($node as element(tei:quote), $mode as xs:string) {
 };
 
 declare function render:list($node as element(tei:list), $mode as xs:string) {
-    if ($mode eq 'title') then
+    switch($mode)
+    case 'title' return
         normalize-space(
             if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
                 '&#34;' || string($node/@n) || '&#34;'
@@ -1343,10 +1295,10 @@ declare function render:list($node as element(tei:list), $mode as xs:string) {
             else ()
         )
     
-    else if ($mode eq 'class') then
+    case 'class' return
         'tei-' || local-name($node)
     
-    else if ($mode eq 'citetrail') then
+    case 'citetrail' return
         (: dictionaries, indices and summaries get their type prepended to their number :)
         if($node/@type = ('dict', 'index', 'summaries')) then
             let $currentSection := sal-util:copy($node/(ancestor::tei:div|ancestor::tei:body|ancestor::tei:front|ancestor::tei:back)[last()])
@@ -1375,17 +1327,18 @@ declare function render:list($node as element(tei:list), $mode as xs:string) {
             string(count($node/preceding-sibling::tei:p|
                          ($node/preceding::tei:list[not(@type = ('dict', 'index', 'summaries'))] 
                           intersect $node/(ancestor::tei:div|ancestor::tei:body|ancestor::tei:front|ancestor::tei:back)[last()]//tei:list)) + 1):)
-    else if ($mode = "orig") then
+    case "orig" return
         ($config:nl, render:passthru($node, $mode), $config:nl)
     
-    else if ($mode = "edit") then
+    case "edit" return
         if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
             (concat($config:nl, ' [*', string($node/@n), '*]', $config:nl), render:passthru($node, $mode), $config:nl)
             (: or this?:   <xsl:value-of select="key('targeting-refs', concat('#',@xml:id))[1]"/> :)
         else
             ($config:nl, render:passthru($node, $mode), $config:nl)
     
-    else if ($mode = ("html", "work")) then
+    case "html"
+    case "work" return
         if ($node/@type = "ordered") then
             <section>
                 {if ($node/child::tei:head) then
@@ -1432,81 +1385,86 @@ declare function render:list($node as element(tei:list), $mode as xs:string) {
                 </ul>
             </figure>
     
-    else if ($mode = ('snippets-edit', 'snippets-orig')) then
+    case 'snippets-edit'
+    case 'snippets-orig' return
         render:passthru($node, $mode)
     
-    else
+    default return
         ($config:nl, render:passthru($node, $mode), $config:nl)
 };
+
 declare function render:item($node as element(tei:item), $mode as xs:string) {
-    if ($mode eq 'title') then
-        normalize-space(
-            if ($node/parent::tei:list/@type='dict' and $node//tei:term[1][@key]) then
-                (: TODO: collision with div/@type='lemma'? :)
-                concat(
-                    '&#34;',
-                        concat(
-                            $node//tei:term[1]/@key,
-                            if (count($node/parent::tei:list/tei:item[.//tei:term[1]/@key eq $node//tei:term[1]/@key]) gt 1) then
-                                concat(
-                                    ' - ', 
-                                    count($node/preceding::tei:item[tei:term[1]/@key eq $node//tei:term[1]/@key] 
-                                          intersect $node/ancestor::tei:div[1]//tei:item[tei:term[1]/@key eq $node//tei:term[1]/@key]) 
-                                    + 1)
-                            else ()
-                        ),
-                    '&#34;'
-                )
-            else if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
-                '&#34;' || string($node/@n) || '&#34;'
-            else if ($node/(tei:head|tei:label)) then
-                render:teaserString(($node/(tei:head|tei:label))[1], 'edit')
-            (: purely numeric section titles: :)
-            else if ($node/@n and (matches($node/@n, '^[0-9\[\]]+$'))) then
-                $node/@n/string()
-            (: otherwise, try to derive a title from potential references to the current node :)
-            else if ($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)]) then
-                render:teaserString($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)][1], 'edit')
-            else ()
-        )
-        
-    else if ($mode eq 'class') then
-        'tei-' || local-name($node)
-        
-    else if ($mode eq 'citetrail') then
-        (: "entryX" where X is the section title (render:item($node, 'title')) in capitals, use only for items in indexes and dictionary :)
-        if($node/ancestor::tei:list/@type = ('dict', 'index')) then
-            let $title := upper-case(replace(render:item($node, 'title'), '[^a-zA-Z0-9]', ''))
-            let $position :=
-                if ($title) then
-                    let $siblings := $node/parent::tei:list/tei:item[upper-case(replace(render:item(., 'title'), '[^a-zA-Z0-9]', '')) eq $title]
-                    return
-                        if (count($siblings) gt 0) then 
-                            string(count($node/preceding-sibling::tei:item intersect $siblings) + 1)
-                        else ()
-                else if (count($node/parent::tei:list/tei:item) gt 0) then 
-                    string(count($node/preceding-sibling::tei:item) + 1)
+    switch($mode)
+        case 'title' return
+            normalize-space(
+                if ($node/parent::tei:list/@type='dict' and $node//tei:term[1][@key]) then
+                    (: TODO: collision with div/@type='lemma'? :)
+                    concat(
+                        '&#34;',
+                            concat(
+                                $node//tei:term[1]/@key,
+                                if (count($node/parent::tei:list/tei:item[.//tei:term[1]/@key eq $node//tei:term[1]/@key]) gt 1) then
+                                    concat(
+                                        ' - ', 
+                                        count($node/preceding::tei:item[tei:term[1]/@key eq $node//tei:term[1]/@key] 
+                                              intersect $node/ancestor::tei:div[1]//tei:item[tei:term[1]/@key eq $node//tei:term[1]/@key]) 
+                                        + 1)
+                                else ()
+                            ),
+                        '&#34;'
+                    )
+                else if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
+                    '&#34;' || string($node/@n) || '&#34;'
+                else if ($node/(tei:head|tei:label)) then
+                    render:teaserString(($node/(tei:head|tei:label))[1], 'edit')
+                (: purely numeric section titles: :)
+                else if ($node/@n and (matches($node/@n, '^[0-9\[\]]+$'))) then
+                    $node/@n/string()
+                (: otherwise, try to derive a title from potential references to the current node :)
+                else if ($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)]) then
+                    render:teaserString($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)][1], 'edit')
                 else ()
-            return 'entry' || $title || $position
-        else string(count($node/preceding-sibling::tei:item) + 1) (: TODO: we could also use render:isUnnamedCitetrailNode() for this :)
-    
-    else if ($mode = ("orig", "edit")) then
-        let $leader :=  if ($node/parent::tei:list/@type = "numbered") then
-                            '#' || $config:nbsp
-                        else if ($node/parent::tei:list/@type = "simple") then
-                            $config:nbsp
-                        else
-                            '-' || $config:nbsp
-        return ($leader, render:passthru($node, $mode), $config:nl)
-   
-    else if ($mode = ("html", "work")) then
-        if ($node/parent::tei:list/@type="simple") then
+            )
+            
+        case 'class' return
+            'tei-' || local-name($node)
+            
+        case 'citetrail' return
+            (: "entryX" where X is the section title (render:item($node, 'title')) in capitals, use only for items in indexes and dictionary :)
+            if($node/ancestor::tei:list/@type = ('dict', 'index')) then
+                let $title := upper-case(replace(render:item($node, 'title'), '[^a-zA-Z0-9]', ''))
+                let $position :=
+                    if ($title) then
+                        let $siblings := $node/parent::tei:list/tei:item[upper-case(replace(render:item(., 'title'), '[^a-zA-Z0-9]', '')) eq $title]
+                        return
+                            if (count($siblings) gt 0) then 
+                                string(count($node/preceding-sibling::tei:item intersect $siblings) + 1)
+                            else ()
+                    else if (count($node/parent::tei:list/tei:item) gt 0) then 
+                        string(count($node/preceding-sibling::tei:item) + 1)
+                    else ()
+                return 'entry' || $title || $position
+            else string(count($node/preceding-sibling::tei:item) + 1) (: TODO: we could also use render:isUnnamedCitetrailNode() for this :)
+        
+        case "orig"
+        case "edit" return
+            let $leader :=  if ($node/parent::tei:list/@type = "numbered") then
+                                '#' || $config:nbsp
+                            else if ($node/parent::tei:list/@type = "simple") then
+                                $config:nbsp
+                            else
+                                '-' || $config:nbsp
+            return ($leader, render:passthru($node, $mode), $config:nl)
+       
+        case "html"
+        case "work" return
+            if ($node/parent::tei:list/@type="simple") then
+                render:passthru($node, $mode)
+            else
+                <li>{render:passthru($node, $mode)}</li>
+        
+        default return
             render:passthru($node, $mode)
-        else
-            <li>{render:passthru($node, $mode)}</li>
-    
-    else
-        render:passthru($node, $mode)
 };
 declare function render:gloss($node as element(tei:gloss), $mode as xs:string) {
     if ($mode = ("orig", "edit")) then
@@ -1544,6 +1502,58 @@ declare function render:death($node as element(tei:death), $mode as xs:string) {
     else if ($mode = ('snippets-edit', 'snippets-orig')) then
         render:passthru($node, $mode)
     else ()
+};
+
+declare function render:persName($node as element(tei:persName), $mode as xs:string) {
+    switch($mode)
+        case 'snippets-orig' return
+            render:passthru($node, $mode)
+        case 'snippets-edit' return
+            if ($node/@key and $node/@ref) then
+                string($node/@key) || ' [' || string($node/@ref) || ']'
+            else if ($node/@key) then
+                string($node/@key)
+            else if ($node/@ref) then
+                '[' || string($node/@ref) || ']'
+            else
+                render:passthru($node, $mode)
+        default return
+            render:name($mode, $node)
+};
+
+declare function render:placeName($node as element(tei:placeName), $mode as xs:string) {
+    switch($mode)
+        case 'snippets-orig' return
+            render:passthru($node, $mode)
+        case 'snippets-edit' return
+            if ($node/@key) then
+                string($node/@key)
+            else
+                render:passthru($node, $mode)
+        default return
+            render:name($mode, $node)
+};
+
+declare function render:orgName($node as element(tei:orgName), $mode as xs:string) {
+    switch($mode)
+        case 'snippets-orig'
+        case 'snippets-edit' return
+            render:passthru($node, $mode)
+        default return
+            render:name($mode, $node)
+};
+
+declare function render:title($node as element(tei:title), $mode as xs:string) {
+    switch($mode)
+        case 'snippets-orig' return
+            render:passthru($node, $mode)
+        case 'snippets-edit' return
+            if ($node/@key) then
+                string($node/@key)
+            else
+                render:passthru($node, $mode)
+        default return
+            render:name($mode, $node)
 };
 
 declare function render:abbr($node as element(tei:abbr), $mode) {
