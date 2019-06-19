@@ -4,7 +4,6 @@ import module namespace app       = "http://salamanca/app"                      
 import module namespace config    = "http://salamanca/config"                    at "config.xqm";
 import module namespace i18n      = "http://exist-db.org/xquery/i18n/templates"  at "i18n-templates.xql";
 import module namespace iiif      = "http://salamanca/iiif"                      at "iiif.xql";
-import module namespace rdf       = "http://salamanca/rdf"                       at "rdf.xql";
 import module namespace render    = "http://salamanca/render"                    at "render.xql";
 import module namespace net       = "http://salamanca/net"                       at "net.xql";
 import module namespace sphinx    = "http://salamanca/sphinx"                    at "sphinx.xql";
