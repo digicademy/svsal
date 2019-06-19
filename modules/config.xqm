@@ -171,9 +171,9 @@ declare variable $config:citationLabels :=
     };
     (: TODO: page with isCiteRef = true()? which abbr. ('p.' is already taken)? :)
 
-(: Nodes that are included in sal:index :)
-declare variable $config:indexNodes := ('pb', 'text', 'front', 'titlePage', 'div', 'p', 'note', 'milestone', 'list', 
-                                        'item', 'lg', 'back', 'head', 'label', 'signed'); (:   :)
+(: Nodes that are included in sal:index - this is actually replaced by render:isIndexNode() :)
+(:declare variable $config:indexNodes := ('pb', 'text', 'front', 'titlePage', 'div', 'p', 'note', 'milestone', 'list', 
+                                        'item', 'lg', 'back', 'head', 'label', 'signed'); :)(:   :)
 (: further candidates for sal:index: 
     - titlePart
     - argument

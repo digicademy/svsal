@@ -27,21 +27,24 @@ declare variable $adminfiles        := ($target || '/admin.html',
                                         $target || '/renderTheRest.html',
                                         $target || '/sphinx-admin.xql',
                                         $target || '/sphinx-out.html',
-                                        $target || '/sphinx-out.xql' );
+                                        $target || '/sphinx-out.xql', 
+                                        $target || '/webdata-admin.xql');
 
 
 (: Define files and folders with special permissions :)
-let $chmod  := for $file in $adminfiles
-                    let $GR := sm:chgrp($file, $adminGrp)
-                    return  if ($file eq $target || '/admin.html') then
-                                    sm:chmod($file, "rw-rwS---")
-                            else if ($file = ($target || '/controller.xql',
-                                              $target || '/error-handler.xql')) then
-                                    sm:chmod($file, "rwxrwxr-x")
-                            else if (ends-with($file, '.xql')) then
-                                    sm:chmod($file, "rwxrwx---")
-                            else
-                                    sm:chmod($file, "rw-rw----")
+let $chmod  := 
+    for $file in $adminfiles
+        let $GR := sm:chgrp($file, $adminGrp)
+        return  
+            if ($file eq $target || '/admin.html') then
+                sm:chmod($file, "rw-rwS---")
+            else if ($file = ($target || '/controller.xql',
+                              $target || '/error-handler.xql')) then
+                sm:chmod($file, "rwxrwxr-x")
+            else if (ends-with($file, '.xql')) then
+                sm:chmod($file, "rwxrwx---")
+            else
+                sm:chmod($file, "rw-rw----")
 
 (:let $chmod-cache := sm:chmod($target || 'services/lod/temp/cache', "rwxrwxrwx"):)
 
@@ -49,7 +52,7 @@ let $chmod  := for $file in $adminfiles
 let $index-app-status := xmldb:reindex($data-collection)
 return $index-app-status
 
-(: Render all the works :)
+(: Render all works :)
 (:
 for $work in collection($data-collection)//tei:TEI[.//tei:text[@type = ("work_multivolume", "work_monograph")]]
     let $success := render:renderWork(node(), map{}, $work/@xml:id)

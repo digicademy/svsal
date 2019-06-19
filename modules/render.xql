@@ -58,7 +58,7 @@ declare function render:getNodetrail($targetWork as node()*, $targetNode as node
     (: (a) trail of related element: :)
     let $trailPrefix := 
         if ($mode = ('citetrail', 'crumbtrail')) then
-            if ($targetNode/ancestor::*[render:isCitetrailOrCrumbtrailNode(.)]) then
+            if ($targetNode/ancestor::*[render:isIndexNode(.) and not(self::tei:text[not(@type eq 'work_volume')])]) then
                 if ($targetNode[self::tei:pb]) then 
                     if ($targetNode/ancestor::tei:front|$targetNode/ancestor::tei:back|$targetNode/ancestor::tei:text[1][not(@xml:id = 'completeWork' or @type = "work_part")]) then
                         (: within front, back, and single volumes, prepend front's or volume's trail ID for avoiding multiple identical IDs in the same work :)
@@ -66,13 +66,13 @@ declare function render:getNodetrail($targetWork as node()*, $targetNode as node
                     else ()
                 else if ($targetNode[self::tei:note or self::tei:milestone]) then
                     (: citable parents of notes and milestones should not be p :)
-                    render:getNodetrail($targetWork, $targetNode/ancestor::*[render:isCitetrailOrCrumbtrailNode(.) and not(self::tei:p)][1], $mode, $fragmentIds)
+                    render:getNodetrail($targetWork, $targetNode/ancestor::*[render:isIndexNode(.) and not(self::tei:p)][1], $mode, $fragmentIds)
                 else 
                     (: === for all other node types, get parent node's trail (deep recursion) === :)
-                    render:getNodetrail($targetWork, $targetNode/ancestor::*[render:isCitetrailOrCrumbtrailNode(.)][1], $mode, $fragmentIds)
+                    render:getNodetrail($targetWork, $targetNode/ancestor::*[render:isIndexNode(.)][1], $mode, $fragmentIds)
             else ()
         else if ($mode eq 'passagetrail') then
-            if ($targetNode/ancestor::*[render:isPassagetrailNode(.)]) then
+            if ($targetNode/ancestor::*[render:isPassagetrailNode(.) and not(self::tei:text[not(@type eq 'work_volume')])]) then
                 if ($targetNode[self::tei:pb]) then 
                     if ($targetNode/ancestor::tei:front|$targetNode/ancestor::tei:back|$targetNode/ancestor::tei:text[1][@type = "work_volume"]) then
                         (: within front, back, and single volumes, prepend front's or volume's trail ID for avoiding multiple identical IDs in the same work :)
@@ -107,18 +107,21 @@ declare function render:getNodetrail($targetWork as node()*, $targetNode as node
 
 declare function render:isPassagetrailNode($node as element()) as xs:boolean {
     boolean(
-        $node/self::tei:text[@type eq 'work_volume'] or
-        $node/self::tei:div[$config:citationLabels(@type)?('isCiteRef')] or
-        $node/self::tei:milestone[$config:citationLabels(@unit)?('isCiteRef')] or
-        $node/self::tei:pb[not(@sameAs or @corresp) and not(ancestor::tei:note)] or
-        $node[$config:citationLabels(local-name(.))?('isCiteRef') and not(ancestor::tei:note)]
+        $node/@xml:id and
+        (
+            $node/self::tei:text[@type eq 'work_volume'] or
+            $node/self::tei:div[$config:citationLabels(@type)?('isCiteRef')] or
+            $node/self::tei:milestone[$config:citationLabels(@unit)?('isCiteRef')] or
+            $node/self::tei:pb[not(@sameAs or @corresp) and not(ancestor::tei:note)] or
+            $node[$config:citationLabels(local-name(.))?('isCiteRef') and not(ancestor::tei:note)]
+        )
     )
 };
 
 (:
 ~ (The set of nodes that should have a crumbtrail is equal to the set of nodes that should have a citetrail.)
 :)
-declare function render:isCitetrailOrCrumbtrailNode($node as element()) as xs:boolean {
+declare function render:isIndexNode($node as element()) as xs:boolean {
     (: any element type relevant for citetrail creation must be included in one of the following functions: :)
     render:isNamedCitetrailNode($node) or render:isUnnamedCitetrailNode($node)
 };
@@ -128,17 +131,20 @@ declare function render:isCitetrailOrCrumbtrailNode($node as element()) as xs:bo
 :)
 declare function render:isNamedCitetrailNode($node as element()) as xs:boolean {
     boolean(
-        $node/self::tei:milestone or
-        $node/self::tei:pb or
-        $node/self::tei:note or
-        $node/self::tei:head or
-        $node/self::tei:back or
-        $node/self::tei:front or
-        $node/self::tei:titlePage or
-        $node/self::tei:div[@type ne "work_part"] or (: TODO: included temporarily for div label experiment :)
-        $node/self::tei:item[ancestor::tei:list[1][@type = ('dict', 'index', 'summaries')]] or
-        $node/self::tei:list[@type = ('dict', 'index', 'summaries')] or
-        $node/self::tei:text[not(@xml:id = 'completeWork' or @type = "work_part")]
+        $node/@xml:id and
+        (
+            $node/self::tei:milestone or
+            $node/self::tei:pb[not(@sameAs or @corresp)] or (: are pb/@sameAs|@corresp needed anywhere? :)
+            $node/self::tei:note or
+            $node/self::tei:head or
+            $node/self::tei:back or
+            $node/self::tei:front or
+            $node/self::tei:titlePage or
+            $node/self::tei:div[@type ne "work_part"] or (: TODO: included temporarily for div label experiment :)
+            $node/self::tei:item[ancestor::tei:list[1][@type = ('dict', 'index', 'summaries')]] or
+            $node/self::tei:list[@type = ('dict', 'index', 'summaries')] or
+            $node/self::tei:text[not(@xml:id = 'completeWork' or @type = "work_part")]
+        )
     )
 };
 
@@ -147,14 +153,17 @@ declare function render:isNamedCitetrailNode($node as element()) as xs:boolean {
 :)
 declare function render:isUnnamedCitetrailNode($node as element()) as xs:boolean {
     boolean(
-        $node/self::tei:text[@xml:id eq 'completeWork'] or (: we won't produce any trail ID for this, but we need it as a recursion anchor :)
-        (:$node/self::tei:div[@type ne "work_part"] or:) (: TODO: commented out for div label experiment :)
-        $node/self::tei:p[not(ancestor::tei:note|ancestor::tei:item)] or
-        $node/self::tei:signed or
-        $node/self::tei:label[not(ancestor::tei:lg|ancestor::tei:note|ancestor::tei:item|ancestor::tei:p)] or (: labels, contrarily to headings, are simply counted :)
-        $node/self::tei:lg[not(ancestor::tei:lg|ancestor::tei:note|ancestor::tei:item|ancestor::tei:p)] or (: count only top-level lg, not single stanzas :)
-        $node/self::tei:list[not(@type = ('dict', 'index', 'summaries'))] or
-        $node/self::tei:item[not(ancestor::tei:list[1][@type = ('dict', 'index', 'summaries')]|ancestor::tei:note|ancestor::tei:item)]
+        $node/@xml:id and
+        (
+           $node/self::tei:text[not(ancestor::tei:text)] or (: we won't produce any trail ID for this, but we need it as a recursion anchor :)
+           (:$node/self::tei:div[@type ne "work_part"] or:) (: TODO: commented out for div label experiment :)
+           $node/self::tei:p[not(ancestor::tei:note|ancestor::tei:item)] or
+           $node/self::tei:signed or
+           $node/self::tei:label[not(ancestor::tei:lg|ancestor::tei:note|ancestor::tei:item|ancestor::tei:p)] or (: labels, contrarily to headings, are simply counted :)
+           $node/self::tei:lg[not(ancestor::tei:lg|ancestor::tei:note|ancestor::tei:item|ancestor::tei:p)] or (: count only top-level lg, not single stanzas :)
+           $node/self::tei:list[not(@type = ('dict', 'index', 'summaries'))] or
+           $node/self::tei:item[not(ancestor::tei:list[1][@type = ('dict', 'index', 'summaries')]|ancestor::tei:note|ancestor::tei:item)]
+        )
     )
 };
 
@@ -813,7 +822,7 @@ declare function render:div($node as element(tei:div), $mode as xs:string) {
                         lower-case(substring-before($config:citationLabels($node/@type)?('abbr'), '.'))
                     else 'div' (: divs for which we haven't defined an abbr. :)
                 let $position :=
-                    if (count($node/parent::*[self::tei:body or render:isCitetrailOrCrumbtrailNode(.)]/tei:div[$config:citationLabels(@type)?('abbr') eq $config:citationLabels($node/@type)?('abbr')]) gt 1) then
+                    if (count($node/parent::*[self::tei:body or render:isIndexNode(.)]/tei:div[$config:citationLabels(@type)?('abbr') eq $config:citationLabels($node/@type)?('abbr')]) gt 1) then
                         string(count($node/preceding-sibling::tei:div[$config:citationLabels(@type)?('abbr') eq $config:citationLabels($node/@type)?('abbr')]) + 1)
                     else ()
                 return $prefix || $position
@@ -896,7 +905,7 @@ declare function render:milestone($node as element(tei:milestone), $mode as xs:s
             
         case 'citetrail' return
             (: "XY" where X is the unit and Y is the anchor or the number of milestones where this occurs :)
-            let $currentSection := sal-util:copy($node/ancestor::*[render:isCitetrailOrCrumbtrailNode(.) and not(self::tei:p)][1])
+            let $currentSection := sal-util:copy($node/ancestor::*[render:isIndexNode(.) and not(self::tei:p)][1])
             let $currentNode := $currentSection//tei:milestone[@xml:id eq $node/@xml:id]
             return
                 if ($node/@n[matches(., '[a-zA-Z0-9]')]) then 
@@ -914,7 +923,7 @@ declare function render:milestone($node as element(tei:milestone), $mode as xs:s
                 (: without on-the-fly copying: :)
                 (:if ($node/@n[matches(., '[a-zA-Z0-9]')]) then 
                     let $similarMs :=
-                        $node/ancestor::*[render:isCitetrailOrCrumbtrailNode(.) and not(self::tei:p)][1]//tei:milestone[@unit eq $node/@unit 
+                        $node/ancestor::*[render:isIndexNode(.) and not(self::tei:p)][1]//tei:milestone[@unit eq $node/@unit 
                                                                   and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($node/@n, '[^a-zA-Z0-9]', ''))]
                     let $position :=
                         if (count($similarMs) gt 1) then
