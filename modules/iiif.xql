@@ -26,25 +26,6 @@ declare variable $iiif:facsServer := $iiif:proto || "://facs." || $config:server
 declare variable $iiif:imageServer := $iiif:facsServer || "/iiif/image/";
 declare variable $iiif:presentationServer := $iiif:facsServer || "/iiif/presentation/";
 
-declare function iiif:needsResource($targetWorkId as xs:string) as xs:boolean {
-    let $targetWorkModTime := xmldb:last-modified($config:tei-works-root, $targetWorkId || '.xml')
-
-    return if (util:binary-doc-available($config:iiif-root || '/' || $targetWorkId || '.json')) then
-                let $resourceModTime := xmldb:last-modified($config:iiif-root, $targetWorkId || '.json')
-                return if ($resourceModTime lt $targetWorkModTime) then true() else false()
-        else
-            true()
-};
-
-declare function iiif:needsResourceString($node as node(), $model as map(*)) {
-    let $currentWorkId := $model('currentWork')?('wid')
-    return if (iiif:needsResource($currentWorkId)) then
-                <td title="source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}"><a href="iiif-admin.xql?resourceId={$currentWorkId}"><b>Create IIIF resource NOW!</b></a></td>
-            else
-                <td title="{concat('IIIF resource created on: ', string(xmldb:last-modified($config:iiif-root, $currentWorkId || '.json')), ', Source from: ', string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml')), '.')}">Creating IIIF resource unnecessary. <small><a href="iiif-admin.xql?resourceId={$currentWorkId}">Create IIIF resource anyway!</a></small></td>
-    
-};
-
 
 (: Interface function for fetching a iiif resource, either (if possible) from the database or by creating it on-the-fly.
 This resource may be either a manifest (for a single-volume work or a single volume within a multi-volume work) 

@@ -64,31 +64,6 @@ declare variable $sphinx:schema  :=
 
 (: ####====---- Helper Functions ----====#### :)
 
-declare function sphinx:needsSnippets($targetWorkId as xs:string) as xs:boolean {
-    let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
-                                    if (doc-available(concat($subcollection, '/', $targetWorkId, '.xml'))) then $subcollection
-                                    else ()
-    let $targetWorkModTime := xmldb:last-modified($targetSubcollection, $targetWorkId || '.xml')
-(:    let $newestSnippet := max(for $file in xmldb:get-child-resources($config:snippets-root || '/' || $targetWorkId) return xmldb:last-modified($config:snippets-root || '/' || $targetWorkId, $file)):)
-
-    return if (xmldb:collection-available($config:snippets-root || '/' || $targetWorkId)) then
-                let $snippetsModTime := max(for $file in xmldb:get-child-resources($config:snippets-root || '/' || $targetWorkId) return xmldb:last-modified($config:snippets-root || '/' || $targetWorkId, $file))
-                return if ($snippetsModTime lt $targetWorkModTime) then true() else false()
-        else
-            true()
-};
-
-declare function sphinx:needsSnippetsString($node as node(), $model as map(*)) {
-    let $currentWorkId := max((string($model('currentWork')?('wid')), string($model('currentAuthor')/@xml:id), string($model('currentLemma')/@xml:id), string($model('currentWp')/@xml:id)))
-    let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
-                                    if (doc-available(concat($subcollection, '/', $currentWorkId, '.xml'))) then $subcollection
-                                    else ()
-    return if (sphinx:needsSnippets($currentWorkId)) then
-                    <td title="{concat(if (xmldb:collection-available($config:snippets-root || '/' || $currentWorkId)) then concat('Snippets created on: ', max(for $file in xmldb:get-child-resources($config:snippets-root || '/' || $currentWorkId) return string(xmldb:last-modified($config:snippets-root || '/' || $currentWorkId, $file))), ', ') else (), 'Source from: ', string(xmldb:last-modified($targetSubcollection, $currentWorkId || '.xml')), '.')}"><a href="sphinx-admin.xql?wid={$currentWorkId}"><b>Create snippets NOW!</b></a></td>
-            else
-                    <td title="{concat('Snippets created on: ', max(for $file in xmldb:get-child-resources($config:snippets-root || '/' || $currentWorkId) return string(xmldb:last-modified($config:snippets-root || '/' || $currentWorkId, $file))), ', Source from: ', string(xmldb:last-modified($targetSubcollection, $currentWorkId || '.xml')), '.')}">Creating snippets unnecessary. <small><a href="sphinx-admin.xql?wid={$currentWorkId}">Create snippets anyway!</a></small></td>
-};
-
 declare function sphinx:passLang($node as node(), $model as map(*), $lang as xs:string?) {
     <input type="hidden" name="lang" value="{request:get-parameter('lang', $lang)}"/>
 };
