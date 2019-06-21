@@ -112,7 +112,7 @@ declare function render:isPassagetrailNode($node as element()) as xs:boolean {
             $node/self::tei:text[@type eq 'work_volume'] or
             $node/self::tei:div[$config:citationLabels(@type)?('isCiteRef')] or
             $node/self::tei:milestone[$config:citationLabels(@unit)?('isCiteRef')] or
-            $node/self::tei:pb[not(@sameAs or @corresp) and not(ancestor::tei:note)] or
+            $node/self::tei:pb[not(@sameAs or @corresp)] or
             $node[$config:citationLabels(local-name(.))?('isCiteRef') and not(ancestor::tei:note)]
         )
     )
@@ -810,14 +810,14 @@ declare function render:div($node as element(tei:div), $mode as xs:string) {
                     else if ($node/ancestor::*[render:isPassagetrailNode(.)]) then
                         (: using the none-copy version here for sparing memory: :)
                         if (count($node/ancestor::*[render:isPassagetrailNode(.)][1]//tei:div[@type eq $node/@type and render:isPassagetrailNode(.)]) gt 1) then 
-                            ' ' || string(count($node/ancestor::*[render:isPassagetrailNode(.)][1]//tei:div[@type eq $node/@type and render:isPassagetrailNode(.)]
+                            string(count($node/ancestor::*[render:isPassagetrailNode(.)][1]//tei:div[@type eq $node/@type and render:isPassagetrailNode(.)]
                                          intersect $node/preceding::tei:div[@type eq $node/@type and render:isPassagetrailNode(.)]) + 1)
                         else ()
                     else if (count($node/parent::*/tei:div[@type eq $node/@type]) gt 1) then 
-                        ' ' || string(count($node/preceding-sibling::tei:div[@type eq $node/@type]) + 1)
+                        string(count($node/preceding-sibling::tei:div[@type eq $node/@type]) + 1)
                     else ()
                 return
-                    $prefix || $position
+                    $prefix || (if ($position) then ' ' || $position else ())
             else ()
         
         case "orig" return
@@ -1323,6 +1323,9 @@ declare function render:list($node as element(tei:list), $mode as xs:string) {
     
     case 'class' return
         'tei-' || local-name($node)
+        
+    case 'passagetrail' return
+        ()
     
     case 'citetrail' return
         (: dictionaries, indices and summaries get their type prepended to their number :)
@@ -1471,6 +1474,9 @@ declare function render:item($node as element(tei:item), $mode as xs:string) {
                     else ()
                 return 'entry' || $title || $position
             else string(count($node/preceding-sibling::tei:item) + 1) (: TODO: we could also use render:isUnnamedCitetrailNode() for this :)
+        
+        case 'passagetrail' return
+            ()
         
         case "orig"
         case "edit" return
