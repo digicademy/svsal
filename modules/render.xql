@@ -47,8 +47,13 @@ declare function render:getNodetrail($targetWork as node()*, $targetNode as node
                     <a href="{render:mkUrlWhileRendering($targetWork, $targetNode, $fragmentIds)}">{render:dispatch($targetNode, 'title')}</a>
         (:else if ($mode eq 'passagetrail' and render:isPassagetrailNode($targetNode)) then
             render:dispatch($targetNode, $mode):)
-        else if ($mode = ('citetrail', 'passagetrail')) then
+        else if ($mode eq 'citetrail') then
             render:dispatch($targetNode, $mode)
+        else if ($mode eq 'passagetrail') then
+            (: not all nodes that are to be indexed get an *individual* passagetrail, so that we can already apply a filter here: :)
+            if (render:isPassagetrailNode($targetNode)) then
+                render:dispatch($targetNode, $mode)
+            else () (: all other nodes inherit passagetrail from their nearest passagetrail ancestor (see below) :)
         else 
             (: neither html nor numeric mode :) 
             render:dispatch($targetNode, 'title')
@@ -71,7 +76,7 @@ declare function render:getNodetrail($targetWork as node()*, $targetNode as node
                     (: === for all other node types, get parent node's trail (deep recursion) === :)
                     render:getNodetrail($targetWork, $targetNode/ancestor::*[render:isIndexNode(.)][1], $mode, $fragmentIds)
             else ()
-        else if ($mode eq 'passagetrail') then
+        else if ($mode eq 'passagetrail') then (: similar to crumbtrail/citetrail, but we need to target the nearest *passagetrail* ancestor, not the nearest index node ancestor :)
             if ($targetNode/ancestor::*[render:isPassagetrailNode(.) and not(self::tei:text[not(@type eq 'work_volume')])]) then
                 if ($targetNode[self::tei:pb]) then 
                     if ($targetNode/ancestor::tei:front|$targetNode/ancestor::tei:back|$targetNode/ancestor::tei:text[1][@type = "work_volume"]) then
@@ -98,8 +103,8 @@ declare function render:getNodetrail($targetWork as node()*, $targetNode as node
     (: (c) put it all together and out :)
     let $trail :=
         if ($mode eq 'crumbtrail') then ($trailPrefix, $connector, $currentNode)
-        else if ($mode eq 'citetrail') then string-join(($trailPrefix, $connector, $currentNode), '')
-        else if ($mode eq 'passagetrail') then string-join(($trailPrefix, $connector, $currentNode), '')
+        else if ($mode eq 'citetrail') then $trailPrefix || $connector || $currentNode
+        else if ($mode eq 'passagetrail') then $trailPrefix || $connector || $currentNode
         else ()
         
     return $trail
@@ -805,19 +810,25 @@ declare function render:div($node as element(tei:div), $mode as xs:string) {
         case 'passagetrail' return
             if (render:isPassagetrailNode($node)) then
                 let $prefix := lower-case($config:citationLabels($node/@type)?('abbr')) (: TODO: upper-casing with first element of passagetrail ? :)
-                let $position := 
-                    if ($node/@n[matches(., '^[0-9\[\]]+$')]) then $node/@n (:replace($node/@n, '[\[\]]', '') ? :)
-                    else if ($node/ancestor::*[render:isPassagetrailNode(.)]) then
-                        (: using the none-copy version here for sparing memory: :)
-                        if (count($node/ancestor::*[render:isPassagetrailNode(.)][1]//tei:div[@type eq $node/@type and render:isPassagetrailNode(.)]) gt 1) then 
-                            string(count($node/ancestor::*[render:isPassagetrailNode(.)][1]//tei:div[@type eq $node/@type and render:isPassagetrailNode(.)]
-                                         intersect $node/preceding::tei:div[@type eq $node/@type and render:isPassagetrailNode(.)]) + 1)
-                        else ()
-                    else if (count($node/parent::*/tei:div[@type eq $node/@type]) gt 1) then 
-                        string(count($node/preceding-sibling::tei:div[@type eq $node/@type]) + 1)
-                    else ()
-                return
-                    $prefix || (if ($position) then ' ' || $position else ())
+                return 
+                    if ($node/@type = ('lecture', 'gloss')) then (: TODO: 'lemma'? :)
+                        (: special cases: with these types, we provide a short teaser string instead of a numeric value :)
+                        let $teaser := '"' || normalize-space(substring(substring-after(render:div($node, 'title'), '"'),1,15)) || '…"'
+                        return $prefix || ' ' || $teaser
+                    else
+                        let $position := 
+                            if ($node/@n[matches(., '^[0-9\[\]]+$')]) then $node/@n (:replace($node/@n, '[\[\]]', '') ? :)
+                            else if ($node/ancestor::*[render:isPassagetrailNode(.)]) then
+                                (: using the none-copy version here for sparing memory: :)
+                                if (count($node/ancestor::*[render:isPassagetrailNode(.)][1]//tei:div[@type eq $node/@type and render:isPassagetrailNode(.)]) gt 1) then 
+                                    string(count($node/ancestor::*[render:isPassagetrailNode(.)][1]//tei:div[@type eq $node/@type and render:isPassagetrailNode(.)]
+                                                 intersect $node/preceding::tei:div[@type eq $node/@type and render:isPassagetrailNode(.)]) + 1)
+                                else ()
+                            else if (count($node/parent::*/tei:div[@type eq $node/@type]) gt 1) then 
+                                string(count($node/preceding-sibling::tei:div[@type eq $node/@type]) + 1)
+                            else ()
+                        return
+                            $prefix || (if ($position) then ' ' || $position else ())
             else ()
         
         case "orig" return

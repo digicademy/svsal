@@ -1093,6 +1093,7 @@ declare function admin:createNodeIndex($node as node(), $model as map(*), $wid a
                             )
                         }
                 </sal:index>
+            (: TODO: quality checking... :)
             let $debug := if ($config:debug = ("trace")) then console:log("Saving  index file ...") else ()
             let $indexSaveStatus := admin:saveFile($work/@xml:id, $work/@xml:id || "_nodeIndex.xml", $index, "index")
             let $debug := if ($config:debug = ("trace")) then console:log("Node index of "  || $work/@xml:id || " successfully created.") else ()
