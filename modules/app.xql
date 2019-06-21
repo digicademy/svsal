@@ -2496,9 +2496,12 @@ declare function app:WRKcitationReference($node as node()?, $model as map(*)?, $
                         order by $ed/tei:surname
                         return app:rotateFormatName($ed), ' &amp; ')
     let $link := $model('currentWorkHeader')/tei:fileDesc/tei:publicationStmt//tei:idno[@xml:id eq 'urlid']/text()
-    let $accessed := (: TODO: date is currently the server's date, not the client's! :)
+    let $METDate := adjust-dateTime-to-timezone(current-dateTime(), xs:dayTimeDuration('PT1H')) (: choosing MET as default timezone, rather than client's timezone, for now :)
+    let $date := i18n:convertDate(substring(string($METDate),1,10), $lang, 'verbose')
+    let $timezone := 'MET'
+    let $accessed :=
         if ($mode = ('reading-full', 'reading-passage')) then
-            <span>(<i18n:text key="accessedDate">Accessed</i18n:text>{' ' || i18n:convertDate(substring(string(current-date()),1,10), $lang, 'verbose')})</span> (: TODO :)
+            <span>(<i18n:text key="accessedDate">Accessed</i18n:text>{' ' || $date || ' (' || $timezone || ')'})</span> (: TODO :)
         else ()
     let $passage := 
         if ($mode eq 'reading-passage') then
@@ -3313,7 +3316,6 @@ declare %templates:default
                             </div>-->
                             <!-- Citation reference button -->
                             <div class="btn-group">
-                                <!--<button title="{$citeTitle}" class="btn btn-link dropdown-toggle" type="button" id="dropdownBox1" data-toggle="dropdown" aria-expanded="true">-->
                                 <button type="button" class="btn btn-link" id="citRefBtn" title="{$citeTitle}"> <!-- data-toggle="modal" data-target="#citRef" -->
                                     <i class="fas fa-feather-alt"></i>&#xA0;<i18n:text key="citeUp">Cite</i18n:text>
                                 </button>
