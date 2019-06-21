@@ -230,7 +230,7 @@
   <msg key="tei-list">Liste</msg>
   <msg key="tei-item">Eintrag</msg>
   <msg key="tei-lg">Gedicht</msg>
-  <msg key="tei-text-volume">Band</msg>
+  <msg key="tei-text-work_volume">Band</msg>
   <msg key="crumb-generic">Abschnitt</msg>
   
 </catalogue>

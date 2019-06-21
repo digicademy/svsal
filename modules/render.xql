@@ -311,7 +311,7 @@ declare function render:text($node as element(tei:text), $mode as xs:string) {
         )
     
     else if ($mode eq 'class') then
-        if ($node/@type eq 'work_volume') then 'tei-text' || $node/@type
+        if ($node/@type eq 'work_volume') then 'tei-text-' || $node/@type
         else if ($node/@xml:id eq 'completeWork') then 'tei-text-' || $node/@xml:id
         else if (matches($node/@xml:id, 'work_part_[a-z]')) then 'elem-text-' || $node/@xml:id
         else 'tei-text'

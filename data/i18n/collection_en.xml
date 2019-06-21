@@ -395,7 +395,7 @@
   <msg key="tei-list">List</msg>
   <msg key="tei-item">Item</msg>
   <msg key="tei-lg">Poem</msg>
-  <msg key="tei-text-volume">Volume</msg>
+  <msg key="tei-text-work_volume">Volume</msg>
   <msg key="crumb-generic">Passage</msg>
   
   
