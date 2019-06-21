@@ -428,17 +428,21 @@ declare function render:label($node as element(tei:label), $mode as xs:string) {
 };
 
 declare function render:front($node as element(tei:front), $mode as xs:string) {
-    if ($mode eq 'title') then
-        ()
-        
-    else if ($mode eq 'class') then
-        'tei-' || local-name($node)
-        
-    else if ($mode eq 'citetrail') then
-        'frontmatter'
-        
-    else
-        render:passthru($node, $mode)
+    switch ($mode)
+        case 'title' return
+            ()
+            
+        case 'class' return
+            'tei-' || local-name($node)
+            
+        case 'citetrail' return
+            'frontmatter'
+            
+        case 'passagetrail' return
+            $config:citationLabels(local-name($node))?('abbr')
+            
+        default return
+            render:passthru($node, $mode)
 };
 
 declare function render:body($node as element(tei:body), $mode as xs:string) {
@@ -451,17 +455,21 @@ declare function render:body($node as element(tei:body), $mode as xs:string) {
 };
 
 declare function render:back($node as element(tei:back), $mode as xs:string) {
-    if ($mode eq 'title') then
-        ()
-    
-    else if ($mode eq 'class') then
-        'tei-' || local-name($node)
-    
-    else if ($mode eq 'citetrail') then
-        'backmatter'
-    
-    else
-        render:passthru($node, $mode)
+    switch($mode)
+        case 'title' return
+            ()
+        
+        case 'class' return
+            'tei-' || local-name($node)
+        
+        case 'citetrail' return
+            'backmatter'
+            
+        case 'passagetrail' return
+            $config:citationLabels(local-name($node))?('abbr')
+        
+        default return
+            render:passthru($node, $mode)
 };
 
 declare function render:textNode($node as node(), $mode as xs:string) {
@@ -797,22 +805,19 @@ declare function render:div($node as element(tei:div), $mode as xs:string) {
         case 'passagetrail' return
             if (render:isPassagetrailNode($node)) then
                 let $prefix := lower-case($config:citationLabels($node/@type)?('abbr')) (: TODO: upper-casing with first element of passagetrail ? :)
-                let $num := 
+                let $position := 
                     if ($node/@n[matches(., '^[0-9\[\]]+$')]) then $node/@n (:replace($node/@n, '[\[\]]', '') ? :)
                     else if ($node/ancestor::*[render:isPassagetrailNode(.)]) then
-                        (: with on-the-fly copying: :)
-                        (:let $currentSection := sal-util:copy($node/ancestor::*[render:isPassagetrailNode(.)][1])
-                        let $currentNode := $currentSection//tei:div[@xml:id eq $node/@xml:id]
-                        let $position := count($currentSection//tei:div[@type eq $currentNode/@type and render:isPassagetrailNode(.)]
-                                               intersect $currentNode/preceding::tei:div[@type eq $currentNode/@type and render:isPassagetrailNode(.)]) + 1
-                        return string($position):)
                         (: using the none-copy version here for sparing memory: :)
-                        let $position := count($node/ancestor::*[render:isPassagetrailNode(.)][1]//tei:div[@type eq $node/@type and render:isPassagetrailNode(.)]
-                                               intersect $node/preceding::tei:div[@type eq $node/@type and render:isPassagetrailNode(.)]) + 1
-                        return string($position)
-                    else string(count($node/preceding-sibling::tei:div[@type eq $node/@type]) + 1)
+                        if (count($node/ancestor::*[render:isPassagetrailNode(.)][1]//tei:div[@type eq $node/@type and render:isPassagetrailNode(.)]) gt 1) then 
+                            ' ' || string(count($node/ancestor::*[render:isPassagetrailNode(.)][1]//tei:div[@type eq $node/@type and render:isPassagetrailNode(.)]
+                                         intersect $node/preceding::tei:div[@type eq $node/@type and render:isPassagetrailNode(.)]) + 1)
+                        else ()
+                    else if (count($node/parent::*/tei:div[@type eq $node/@type]) gt 1) then 
+                        ' ' || string(count($node/preceding-sibling::tei:div[@type eq $node/@type]) + 1)
+                    else ()
                 return
-                    $prefix || ' ' || $num
+                    $prefix || $position
             else ()
         
         case "orig" return

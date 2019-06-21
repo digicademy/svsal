@@ -164,7 +164,7 @@ declare variable $config:citationLabels :=
         'number': map {'full': 'numerus', 'abbr': 'num.', 'isCiteRef': true()},
         (: element names: :)
         'back': map {'full': 'appendix', 'abbr': 'append.', 'isCiteRef': true()},
-        'front': map {'full': '[front]', 'abbr': '[front]', 'isCiteRef': true()}, (: TODO :)
+        'front': map {'full': 'front', 'abbr': 'front.', 'isCiteRef': true()}, (: TODO :)
         'titlePage': map {'full': 'titulus', 'abbr': 'tit.', 'isCiteRef': true()}, (: TODO: same as div/@type eq 'title' :)
         'p': map {'full': 'paragraphus', 'abbr': 'paragr.', 'isCiteRef': true()},
         'note': map {'full': 'nota', 'abbr': 'not.', 'isCiteRef': true()}
