@@ -397,7 +397,7 @@
     <msg key="tei-head">Título</msg>
     <msg key="tei-label">Etiqueta</msg>
     <msg key="tei-titlePage">Portada</msg>
-    <msg key="tei-note">Nota marginal</msg>
+    <msg key="tei-note">Nota</msg>
     <msg key="tei-list">Lista</msg>
     <msg key="tei-item">Elemento listado</msg>
     <msg key="tei-lg">Poema</msg>

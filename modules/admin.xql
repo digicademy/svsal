@@ -128,7 +128,12 @@ declare function admin:workString($node as node(), $model as map(*), $lang as xs
     let $currentWorkId  := $model('currentWork')?('wid')
     let $author := <span>{$model('currentWork')?('author')}</span>
     let $titleShort := $model('currentWork')?('titleShort')
-    return <td><a href="{$config:webserver}/en/work.html?wid={$currentWorkId}">{$currentWorkId}: {$author} - {$titleShort}</a></td>
+    return 
+        <td>
+            <a href="{$config:webserver}/en/work.html?wid={$currentWorkId}">{$currentWorkId}: {$author} - {$titleShort}</a>
+            <br/>
+            <a style="font-weight:bold;" href="{$config:webserver}/webdata-admin.xql?wid={$currentWorkId}&amp;format=all">Create EVERYTHING (safest option)</a>
+        </td>
 };
 
 declare function admin:needsHTMLString($node as node(), $model as map(*)) {
@@ -627,7 +632,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                         {$result}
                     </p>
             
-        (: Reporting, and reindexing the database :)
+        (: Reporting (and possibly reindexing the database) :)
             (: See if there are any leaf elements in our text that are not matched by our rule :)
             let $missed-elements := $work//(tei:front|tei:body|tei:back)//tei:*[count(./ancestor-or-self::tei:*) < $fragmentationDepth][not(*)]
             (: See if any of the elements we did get is lacking an xml:id attribute :)
@@ -1075,6 +1080,7 @@ declare function admin:createNodeIndex($node as node(), $model as map(*), $wid a
                                 if ($node/@xml:id eq 'completeWork' and $xincludes) then
                                     attribute xinc    {$xincludes}
                                 else (), 
+                                attribute class {render:dispatch($node, 'class')},
                                 element sal:title           {render:dispatch($node, 'title')},
                                 element sal:fragment        {$fragmentIds($node/@xml:id/string())},
                                 element sal:citableParent   {

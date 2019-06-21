@@ -391,7 +391,7 @@
   <msg key="tei-head">Heading</msg>
   <msg key="tei-label">Titel</msg>
   <msg key="tei-titlePage">Title Page</msg>
-  <msg key="tei-note">Marginal Note</msg>
+  <msg key="tei-note">Note</msg>
   <msg key="tei-list">List</msg>
   <msg key="tei-item">Item</msg>
   <msg key="tei-lg">Poem</msg>

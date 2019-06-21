@@ -739,8 +739,8 @@ function sphinx:details ($wid as xs:string, $field as xs:string, $q as xs:string
                     let $hit_id         := $item/hit_id/text()
 (:                    let $crumbtrail     := sphinx:addLangToCrumbtrail(<sal:crumbtrail>{sphinx:addQToCrumbtrail(doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $hit_id]/sal:crumbtrail, $q)}</sal:crumbtrail>, $lang):)
                     let $crumbtrailRaw := doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $hit_id]/sal:crumbtrail
-                    let $crumbtrailI18n := sphinx:addI18nToCrumbtrail($crumbtrailRaw)
-                    let $crumbtrail     := sphinx:addQToCrumbtrail($crumbtrailI18n, $q)
+                    let $crumbtrailI18n := i18n:addLabelsToCrumbtrail($crumbtrailRaw)
+                    let $crumbtrail := sphinx:addQToCrumbtrail($crumbtrailI18n, $q)
 (:    VERY old version:    let $bombtrail      := sphinx:addLangToCrumbtrail(                 sphinx:addQToCrumbtrail(doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $hit_id]/sal:crumbtrail/a[last()], $q), $lang):)
 (:                    let $bombtrail      := sphinx:addQToCrumbtrail(doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $hit_id]/sal:crumbtrail/a[last()], $q):)
                     let $bombtrail := $crumbtrail/a[last()]
@@ -897,17 +897,4 @@ declare function local:passthruCrumbtrailQ($nodes as node()*, $q as xs:string*) 
     for $node in $nodes/node() return sphinx:addQToCrumbtrail($node, $q)
 };
 
-(:
-~ Enriches crumbtrails with i18n labels, according to the type stated in sal:crumbtrail/a/@class.
-:)
-declare function sphinx:addI18nToCrumbtrail($crumbtrail as element(sal:crumbtrail)?) as element(sal:crumbtrail)? {
-    if ($crumbtrail) then
-        <sal:crumbtrail>{
-            for $node in $crumbtrail/node() return
-                if ($node[self::a]) then 
-                        <a href="{$node/@href}"><i18n:text key="{$node/@class}"/>{if ($node/text()) then ' ' || $node/text() else ()}</a>
-                else $node
-        }</sal:crumbtrail>
-    else ()
-};
 

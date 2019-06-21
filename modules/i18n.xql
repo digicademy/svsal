@@ -1,6 +1,10 @@
 module namespace i18n = 'http://exist-db.org/xquery/i18n';
 
 declare namespace request="http://exist-db.org/xquery/request"; 
+
+declare namespace sal              = "http://salamanca.adwmainz.de";
+import module namespace util       = "http://exist-db.org/xquery/util";
+
 (:~
     : I18N Internationalization Module:
     
@@ -267,4 +271,19 @@ declare function i18n:negotiateNodes($nodes as node()*, $lang as xs:string) as n
             else $nodes[1]
         else $nodes[1]
 };
+
+(:
+~ Enriches crumbtrails with i18n labels, according to the type stated in sal:crumbtrail/a/@class.
+:)
+declare function i18n:addLabelsToCrumbtrail($crumbtrail as element(sal:crumbtrail)?) as element(sal:crumbtrail)? {
+    if ($crumbtrail) then
+        <sal:crumbtrail>{
+            for $node in $crumbtrail/node() return
+                if ($node[self::a]) then 
+                        <a href="{$node/@href}"><i18n:text key="{$node/@class}"/>{if ($node/text()) then ' ' || $node/text() else ()}</a>
+                else $node
+        }</sal:crumbtrail>
+    else ()
+};
+
 

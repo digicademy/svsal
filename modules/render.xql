@@ -230,6 +230,7 @@ declare function render:teaserString($node as element(), $mode as xs:string?) as
 ~   - 'passagetrail': passagetrail ID of a node (only for nodes that represent passagetrail sections)
 ~   - 'citetrail': citetrail ID of a node (only for nodes that represent citetrail/crumbtrail sections)
 ~   - 'crumbtrail': crumbtrail ID of a node (only for nodes that represent citetrail/crumbtrail sections)
+~   - 'class': i18n class of a node, usually to be used by HTML-/RDF-related functionalities for generating verbose labels when displaying section titles 
 :)
 
 (: $mode can be "orig", "edit" (both being plain text modes), "html" or, even more sophisticated, "work" :)
@@ -416,10 +417,12 @@ declare function render:label($node as element(tei:label), $mode as xs:string) {
         )
     else if ($mode eq 'class') then
         'tei-' || local-name($node)
+        
     else if ($mode eq 'citetrail') then
         if (render:isUnnamedCitetrailNode($node)) then 
             string(count($node/preceding-sibling::*[render:isUnnamedCitetrailNode(.)]) + 1)
         else ()
+        
     else
         render:passthru($node, $mode)
 };
@@ -427,25 +430,36 @@ declare function render:label($node as element(tei:label), $mode as xs:string) {
 declare function render:front($node as element(tei:front), $mode as xs:string) {
     if ($mode eq 'title') then
         ()
+        
     else if ($mode eq 'class') then
         'tei-' || local-name($node)
+        
     else if ($mode eq 'citetrail') then
         'frontmatter'
+        
     else
         render:passthru($node, $mode)
 };
 
 declare function render:body($node as element(tei:body), $mode as xs:string) {
-    render:passthru($node, $mode) 
+    switch($mode)
+        case 'class' return
+            'tei-' || local-name($node)
+        
+        default return
+            render:passthru($node, $mode) 
 };
 
 declare function render:back($node as element(tei:back), $mode as xs:string) {
     if ($mode eq 'title') then
         ()
+    
     else if ($mode eq 'class') then
         'tei-' || local-name($node)
+    
     else if ($mode eq 'citetrail') then
         'backmatter'
+    
     else
         render:passthru($node, $mode)
 };
@@ -461,9 +475,11 @@ declare function render:textNode($node as node(), $mode as xs:string) {
             return concat($leadingSpace, 
                           normalize-space(replace($node, '&#x0a;', ' ')),
                           $trailingSpace)
+        
         case 'snippets-orig' 
         case 'snippets-edit' return 
             $node
+        
         default return ()
 };
 
@@ -981,23 +997,28 @@ declare function render:head($node as element(tei:head), $mode as xs:string) {
 };
 
 declare function render:origElem($node as element(), $mode as xs:string) {
-    if ($mode = "orig") then
-        render:passthru($node, $mode)
-    else if ($mode = "edit") then
-        if (not($node/(preceding-sibling::tei:expan|preceding-sibling::tei:reg|preceding-sibling::tei:corr|following-sibling::tei:expan|following-sibling::tei:reg|following-sibling::tei:corr))) then
+    switch($mode)
+        case 'orig' return
             render:passthru($node, $mode)
-        else ()
-    else if ($mode = ("html", "work")) then
-        let $editedString := render:dispatch($node/parent::tei:choice/(tei:expan|tei:reg|tei:corr), "edit")
-        return  if ($node/parent::tei:choice) then
-                    <span class="original {local-name($node)} unsichtbar" title="{string-join($editedString, '')}">
-                        {render:passthru($node, $mode)}
-                    </span>
-                else
-                    render:passthru($node, $mode)
-    else
-        render:passthru($node, $mode)
+        
+        case 'edit' return
+            if (not($node/(preceding-sibling::tei:expan|preceding-sibling::tei:reg|preceding-sibling::tei:corr|following-sibling::tei:expan|following-sibling::tei:reg|following-sibling::tei:corr))) then
+                render:passthru($node, $mode)
+            else ()
+        
+        case 'html'
+        case 'work' return
+            let $editedString := render:dispatch($node/parent::tei:choice/(tei:expan|tei:reg|tei:corr), "edit")
+            return  if ($node/parent::tei:choice) then
+                        <span class="original {local-name($node)} unsichtbar" title="{string-join($editedString, '')}">
+                            {render:passthru($node, $mode)}
+                        </span>
+                    else
+                        render:passthru($node, $mode)
+        default return
+            render:passthru($node, $mode)
 };
+
 declare function render:editElem($node as element(), $mode as xs:string) {
     if ($mode = "orig") then ()
     else if ($mode = "edit") then
