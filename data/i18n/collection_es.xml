@@ -119,6 +119,8 @@
     <msg key="id">Identificación</msg>
     <msg key="latin">Latín</msg>
     <msg key="spanish">Español</msg>
+    <msg key="english">Inglés</msg>
+    <msg key="german">Alemán</msg>
     <msg key="language">Idioma</msg>
     <msg key="languageS">Idioma(s)</msg>
     <msg key="material">Tipo de material</msg>
