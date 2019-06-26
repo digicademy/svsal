@@ -105,15 +105,17 @@ declare function admin:needsHTML($targetWorkId as xs:string) as xs:boolean {
     let $workModTime := xmldb:last-modified($targetSubcollection, $targetWorkId || '.xml')
     return
         if (substring($targetWorkId,1,2) eq "W0") then
-            if ($targetWorkId || "_nodeIndex.xml" = xmldb:get-child-resources($config:index-root)) then
+            if ($targetWorkId || "_nodeIndex.xml" = xmldb:get-child-resources($config:index-root)
+                and xmldb:collection-available($config:html-root || '/' || $targetWorkId)) then
                 let $indexModTime := xmldb:last-modified($config:index-root, $targetWorkId || "_nodeIndex.xml")
-                let $someHtmlFragment := xmldb:get-child-resources($config:html-root || '/' || $targetWorkId)[1]
-                let $htmlModTime := xmldb:last-modified($config:html-root || '/' || $targetWorkId, $someHtmlFragment)
+                let $htmlModTime := 
+                    max(for $file in xmldb:get-child-resources($config:html-root || '/' || $targetWorkId) return 
+                            xmldb:last-modified($config:html-root || '/' || $targetWorkId, $file))
                 return if ($htmlModTime lt $workModTime or $htmlModTime lt $indexModTime) then true() else false()
             else
                 true()
         else if (substring($targetWorkId,1,2) = ("A0", "L0", "WP")) then
-            (: TODO: this should point to the directory where author/lemma/... HTML will be stored... :)
+            (: TODO: in the future, this should point to the directory where author/lemma/... HTML will be stored... :)
             if (not(xmldb:collection-available($config:data-root))) then
                 true()
             else if ($targetWorkId || ".html" = xmldb:get-child-resources($config:data-root)) then
