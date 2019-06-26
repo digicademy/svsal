@@ -125,6 +125,15 @@ declare function admin:needsHTML($targetWorkId as xs:string) as xs:boolean {
         else true()
 };
 
+declare function admin:needsHTMLString($node as node(), $model as map(*)) {
+    let $currentWorkId := $model('currentWork')?('wid')
+    return 
+        if (admin:needsHTML($currentWorkId)) then
+            <td title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}{if (xmldb:get-child-resources($config:index-root) = $currentWorkId || "_nodeIndex.xml") then concat(', rendered on: ', xmldb:last-modified($config:index-root, $currentWorkId || "_nodeIndex.xml")) else ()}"><a href="render.html?wid={$currentWorkId}"><b>Render NOW!</b></a></td>
+        else
+            <td title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}, rendered on: {xmldb:last-modified($config:index-root, $currentWorkId || "_nodeIndex.xml")}">Rendering unnecessary. <small><a href="render.html?wid={$currentWorkId}">Render anyway!</a></small></td>
+};
+
 declare function admin:workString($node as node(), $model as map(*), $lang as xs:string?) {
 (:    let $debug := console:log(string($model('currentWork')/@xml:id)):)
     let $currentWorkId  := $model('currentWork')?('wid')
@@ -136,14 +145,6 @@ declare function admin:workString($node as node(), $model as map(*), $lang as xs
             <br/>
             <a style="font-weight:bold;" href="{$config:webserver}/webdata-admin.xql?wid={$currentWorkId}&amp;format=all">Create EVERYTHING (safest option)</a>
         </td>
-};
-
-declare function admin:needsHTMLString($node as node(), $model as map(*)) {
-    let $currentWorkId := $model('currentWork')?('wid')
-    return if (admin:needsHTML($currentWorkId)) then
-                    <td title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}{if (xmldb:get-child-resources($config:index-root) = $currentWorkId || "_nodeIndex.xml") then concat(', rendered on: ', xmldb:last-modified($config:index-root, $currentWorkId || "_nodeIndex.xml")) else ()}"><a href="render.html?wid={$currentWorkId}"><b>Render NOW!</b></a></td>
-            else
-                    <td title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}, rendered on: {xmldb:last-modified($config:index-root, $currentWorkId || "_nodeIndex.xml")}">Rendering unnecessary. <small><a href="render.html?wid={$currentWorkId}">Render anyway!</a></small></td>
 };
 
 declare function admin:needsSphinxSnippets($targetWorkId as xs:string) as xs:boolean {
@@ -1078,16 +1079,14 @@ declare function admin:createNodeIndex($node as node(), $model as map(*), $wid a
                             (element sal:node { 
                                 attribute type      {local-name($node)}, 
                                 attribute subtype   {$subtype}, 
-                                attribute n         {$node/@xml:id},
+                                attribute n         {$node/@xml:id/string()},
                                 if ($node/@xml:id eq 'completeWork' and $xincludes) then
                                     attribute xinc    {$xincludes}
                                 else (), 
                                 attribute class {render:dispatch($node, 'class')},
                                 element sal:title           {render:dispatch($node, 'title')},
                                 element sal:fragment        {$fragmentIds($node/@xml:id/string())},
-                                element sal:citableParent   {
-                                    $node/ancestor::*[render:isIndexNode(.)][1]/@xml:id
-                                    },
+                                element sal:citableParent   {$node/ancestor::*[render:isIndexNode(.)][1]/@xml:id/string()},
                                 element sal:crumbtrail      {render:getNodetrail($work, $node, 'crumbtrail', $fragmentIds)},
                                 element sal:citetrail       {render:getNodetrail($work, $node, 'citetrail', $fragmentIds)},
                                 element sal:passagetrail    {render:getNodetrail($work, $node, 'passagetrail', $fragmentIds)}
@@ -1095,13 +1094,26 @@ declare function admin:createNodeIndex($node as node(), $model as map(*), $wid a
                             )
                         }
                 </sal:index>
-            (: TODO: quality checking... :)
-            let $debug := if ($config:debug = ("trace")) then console:log("Saving  index file ...") else ()
+            
+            (: ----------------------------------------------- :)
+            (: #### Basic quality / consistency check #### :)
+            let $resultNodes := $index//sal:node[not(@n eq 'completeWork')]
+            let $testNodes := if (count($resultNodes) eq 0) then error() else ()
+            (: every ordinary sal:node should have all of the required fields and values: :)
+            let $testAttributes := if ($testNodes[not(@class/string() and @type/string() and @n/string())]) then error() else ()
+            let $testChildren := if ($testNodes[not(sal:title and sal:fragment/text() and sal:citableParent/text() and sal:citetrail/text() and sal:crumbtrail/* and sal:passagetrail/text())]) then error() else ()
+            (: there should be as many distinctive citetrails and crumbtrails as there are ordinary sal:node elements: :)
+            let $testCitetrails := if (count($resultNodes) ne count(distinct-values($resultNodes/sal:citetrail/text()))) then error() else ()
+            (: not checking crumbtrails here ATM for not slowing down index creation too much... :)
+            (: ----------------------------------------------- :)
+            
+            (: index approved -> save as file :)
+            let $debug := if ($config:debug = ("trace")) then console:log("Saving index file ...") else ()
             let $indexSaveStatus := admin:saveFile($work/@xml:id, $work/@xml:id || "_nodeIndex.xml", $index, "index")
             let $debug := if ($config:debug = ("trace")) then console:log("Node index of "  || $work/@xml:id || " successfully created.") else ()
     
-    (: Reporting... :)
-    (: See if there are any leaf elements in our text that are not matched by our rule :)
+            (: Reporting... :)
+            (: See if there are any leaf elements in our text that are not matched by our rule :)
             let $missed-elements := $work//(tei:front|tei:body|tei:back)//tei:*[count(./ancestor-or-self::tei:*) < $fragmentationDepth][not(*)]
             (: See if any of the elements we did get is lacking an xml:id attribute :)
             let $unidentified-elements := $target-set[not(@xml:id)]
@@ -1119,7 +1131,7 @@ declare function admin:createNodeIndex($node as node(), $model as map(*), $wid a
                         {for $e in $unidentified-elements return <code>{local-name($e)}</code>}</p>
                       else ()}
                      <p>{count($index//sal:node)} erfasste Elemente {if (count($target-set)) then "der folgenden Typen: " || <br/> else ()}
-                        <code>{distinct-values(for $t in $index//sal:node/@type return $t || "(" || count($index//sal:node[@type eq $t]) || ")")}</code></p>
+                        <code>{for $t in distinct-values($index//sal:node/@type) return $t || "(" || count($index//sal:node[@type eq $t]) || ")"}</code></p>
                      <p>Rechenzeit: {      
                           if ($runtime-ms-a < (1000 * 60)) then format-number($runtime-ms-a div 1000, "#.##") || " Sek."
                           else if ($runtime-ms-a < (1000 * 60 * 60)) then format-number($runtime-ms-a div (1000 * 60), "#.##") || " Min."

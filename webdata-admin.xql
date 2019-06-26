@@ -14,5 +14,13 @@ declare option output:indent "no";
 let $mode   := request:get-parameter('mode',    'html')
 let $wid    := request:get-parameter('wid',     '')
 
-let $output :=  admin:createNodeIndex(<div/>, map{ 'dummy':= 'dummy'}, $wid)
-return $output
+let $output :=  admin:createNodeIndex(<div/>, map{'dummy':= 'dummy'}, $wid)
+return 
+<html>
+<head>
+<title>Webdata Administration - The School of Salamanca</title>
+</head>
+<body>
+{$output}
+</body>
+</html>
