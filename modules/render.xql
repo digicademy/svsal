@@ -525,7 +525,11 @@ declare function render:pb($node as element(tei:pb), $mode as xs:string) {
         case 'citetrail' return
             (: "pX" where X is page number :)
             concat('p',
-                if (matches($node/@n, '[A-Za-z0-9]')) then
+                if (matches($node/@n, '[\[\]A-Za-z0-9]') 
+                    and not($node/preceding::tei:pb[ancestor::tei:text[1] intersect $node/ancestor::tei:text[1]
+                                                    and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($node/@n, '[^a-zA-Z0-9]', ''))]
+                            )
+                   ) then
                     upper-case(replace($node/@n, '[^a-zA-Z0-9]', ''))
                 else substring($node/@facs, 6)
             )
@@ -537,10 +541,10 @@ declare function render:pb($node as element(tei:pb), $mode as xs:string) {
             if (contains($node/@n, 'fol.')) then $node/@n
             else 'p. ' || $node/@n
         
-        case "orig"
-        case "edit"
-        case "html"
-        case "work" return
+        case 'orig'
+        case 'edit'
+        case 'html'
+        case 'work' return
             if (not($node/@break = 'no')) then
                 ' '
             else ()
@@ -561,10 +565,10 @@ declare function render:pb($node as element(tei:pb), $mode as xs:string) {
 
 declare function render:cb($node as element(tei:cb), $mode as xs:string) {
     switch($mode)
-        case "orig" 
-        case "edit"
-        case "html"
-        case "work"
+        case 'orig' 
+        case 'edit'
+        case 'html'
+        case 'work'
         case 'snippets-orig'
         case 'snippets-edit' return
             if (not($node/@break = 'no')) then
@@ -576,9 +580,9 @@ declare function render:cb($node as element(tei:cb), $mode as xs:string) {
 
 declare function render:lb($node as element(tei:lb), $mode as xs:string) {
     switch($mode)
-        case "orig"
-        case "edit"
-        case "work"
+        case 'orig'
+        case 'edit'
+        case 'work'
         case 'snippets-orig'
         case 'snippets-edit' return
             if (not($node/@break = 'no')) then
@@ -623,8 +627,8 @@ declare function render:p($node as element(tei:p), $mode as xs:string) {
                 return $prefix || ' ' || $teaser
             else ()
         
-        case "orig"
-        case "edit" return
+        case 'orig'
+        case 'edit' return
             if ($node/ancestor::tei:note) then
                 if ($node/following-sibling::tei:p) then
                     (render:passthru($node, $mode), $config:nl)
@@ -747,12 +751,12 @@ declare function render:note($node as element(tei:note), $mode as xs:string) {
                 return $prefix || ' ' || $label:)
             else ()
             
-        case "orig"
-        case "edit" return
-            ($config:nl, "        {", render:passthru($node, $mode), "}", $config:nl)
+        case 'orig'
+        case 'edit' return
+            ($config:nl, '        {', render:passthru($node, $mode), '}', $config:nl)
         
-        case "html"
-        case "work" return
+        case 'html'
+        case 'work' return
             let $normalizedString := normalize-space(string-join(render:passthru($node, $mode), ' '))
             let $identifier       := $node/@xml:id
             return
@@ -831,10 +835,10 @@ declare function render:div($node as element(tei:div), $mode as xs:string) {
                             $prefix || (if ($position) then ' ' || $position else ())
             else ()
         
-        case "orig" return
+        case 'orig' return
              ($config:nl, render:passthru($node, $mode), $config:nl)
         
-        case "edit" return
+        case 'edit' return
             if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
                 (concat($config:nl, '[ *', string($node/@n), '* ]'), $config:nl, render:passthru($node, $mode), $config:nl)
                 (: oder das hier?:   <xsl:value-of select="key('targeting-refs', concat('#',@xml:id))[1]"/> :)
@@ -848,7 +852,7 @@ declare function render:div($node as element(tei:div), $mode as xs:string) {
             else
                 <div id="{$node/@xml:id}">{render:passthru($node, $mode)}</div>
         
-        case "work" return (: basically, the same except for eventually adding a <div class="summary_title"/> the data for which is complicated to retrieve :)
+        case 'work' return (: basically, the same except for eventually adding a <div class="summary_title"/> the data for which is complicated to retrieve :)
             render:passthru($node, $mode)
         
         case 'snippets-orig' return 
@@ -987,12 +991,12 @@ declare function render:head($node as element(tei:head), $mode as xs:string) {
                  else ())
             )
         
-        case "orig"
-        case "edit" return
+        case 'orig'
+        case 'edit' return
             (render:passthru($node, $mode), $config:nl)
         
-        case "html"
-        case "work" return
+        case 'html'
+        case 'work' return
             let $lang   := request:get-attribute('lang')
             let $page   :=      if ($node/ancestor::tei:text/@type="author_article") then
                                     "author.html?aid="
@@ -1051,8 +1055,8 @@ declare function render:editElem($node as element(), $mode as xs:string) {
 
 declare function render:g($node as element(tei:g), $mode as xs:string) {
     switch ($mode)
-        case "orig"
-        case "snippets-orig" return
+        case 'orig'
+        case 'snippets-orig' return
             let $glyph := $node/ancestor::tei:TEI//tei:char[@xml:id = substring(string($node/@ref), 2)] (: remove leading '#' :)
             return if ($glyph/tei:mapping[@type = 'precomposed']) then
                     string($glyph/tei:mapping[@type = 'precomposed'])
@@ -1139,7 +1143,7 @@ declare function render:name($node as element(*), $mode as xs:string) {
             (render:passthru($node, $mode), ' [', string-join(($node/@key, $node/@ref), '/'), ']')
         else
             render:passthru($node, $mode)
-    else if ($mode = ("html", "work")) then
+    else if ($mode = ('html', 'work')) then
         let $nodeType       := local-name($node)
         let $lang           := request:get-attribute('lang')
         let $getWorkId      := tokenize(tokenize($node/@ref, 'work:'  )[2], ' ')[1]
@@ -1377,8 +1381,8 @@ declare function render:list($node as element(tei:list), $mode as xs:string) {
         else
             ($config:nl, render:passthru($node, $mode), $config:nl)
     
-    case "html"
-    case "work" return
+    case 'html'
+    case 'work' return
         if ($node/@type = "ordered") then
             <section>
                 {if ($node/child::tei:head) then
@@ -1489,8 +1493,8 @@ declare function render:item($node as element(tei:item), $mode as xs:string) {
         case 'passagetrail' return
             ()
         
-        case "orig"
-        case "edit" return
+        case 'orig'
+        case 'edit' return
             let $leader :=  if ($node/parent::tei:list/@type = "numbered") then
                                 '#' || $config:nbsp
                             else if ($node/parent::tei:list/@type = "simple") then
