@@ -436,6 +436,9 @@ declare function admin:saveFileWRKnoJs ($node as node(), $model as map (*), $lan
 
 };
 
+
+(: #### RENDERING ADMINISTRATION FUNCTIONS #### :)
+
 declare %templates:wrap function admin:renderAuthorLemma($node as node(), $model as map(*), $aid as xs:string*, $lid as xs:string*, $lang as xs:string*) {
     let $request            :=  request:get-parameter('aid', '')
     let $switchType         :=  if ($request) then $aid else $lid
@@ -494,14 +497,13 @@ declare function admin:generate-toc-from-div($node, $wid) {
 };                      
 
 declare function admin:toc-div($div, $wid) {
-    let $frag    :=     for $item in doc($config:index-root || "/" || $wid || '_nodeIndex.xml')//sal:node
-                        where $item/@n eq $div/@xml:id
-                        return 'work.html?wid='||$wid ||'&amp;' || 'frag='|| $item/sal:fragment||'#'|| $item/@n
+    let $fragTrail := doc($config:index-root || "/" || $wid || '_nodeIndex.xml')//sal:node[@n eq $div/@xml:id]/sal:citetrail/text()
+    let $fragId := $config:idserver || '/texts/' || $wid || ':' || $fragTrail || '?format=html'
     let $section := $div/@xml:id/string()
     let $getTitle := admin:derive-title($div)
     return 
-        <ul><li><a class="hideMe" href="{$frag}" title="{$getTitle}">{$getTitle}<span class="jstree-anchor hideMe pull-right">{admin:get-pages-from-div($div) }</span></a>
-            { admin:generate-toc-from-div($div, $wid)}
+        <ul><li><a class="hideMe" href="{$fragId}" title="{$getTitle}">{$getTitle}<span class="jstree-anchor hideMe pull-right">{admin:get-pages-from-div($div)}</span></a>
+            {admin:generate-toc-from-div($div, $wid)}
         </li></ul>
 };
 
@@ -539,9 +541,9 @@ declare function local:passthruTOC($nodes as node()*) as item()* {
 
 declare function admin:get-pages-from-div($div) {
     let $firstpage :=   
-        if ($div[@type='work_volume'] | $div[@type = 'work_monograph']) then ($div//tei:pb)[1]/@n/string() 
-        else ($div/preceding::tei:pb)[last()]/@n/string()
-    let $lastpage := if ($div//tei:pb) then ($div//tei:pb)[last()]/@n/string() else ()
+        if ($div[@type='work_volume'] | $div[@type = 'work_monograph']) then ($div//tei:pb[not(@sameAs or @corresp)])[1]/@n/string() 
+        else ($div/preceding::tei:pb[not(@sameAs or @corresp)])[last()]/@n/string()
+    let $lastpage := if ($div//tei:pb[not(@sameAs or @corresp)]) then ($div//tei:pb[not(@sameAs or @corresp)])[last()]/@n/string() else ()
     return
         if ($firstpage ne '' or $lastpage ne '') then 
             concat(' ', string-join(($firstpage, $lastpage), ' - ')) 
@@ -581,7 +583,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                 <div id="tableOfConts">
                     <ul>
                         <li>
-                            <b>{$title}</b> 
+                            <b>{$title}</b>
                             <span class="jstree-anchor hideMe pull-right">{admin:get-pages-from-div($text) }</span>
                                 {if ($work//tei:text[@type='work_volume']) then for $a in $work//tei:text where $a[@type='work_volume'] return
                                 <ul>
@@ -595,7 +597,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                     </ul>
                 </div>
             let $tocSaveStatus := admin:saveFile($workId, $workId || "_toc.html", $store, "html")
-            let $debug         := if ($config:debug = ("trace", "info")) then console:log("  ToC file created for " || $workId || ".") else ()
+            let $debug         := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] ToC file created for " || $workId || ".") else ()
             
             (:Next, create the Pages html file. :)
             let $pagesDe        :=  app:WRKpreparePagination($node, $model, $workId, 'de')
@@ -1043,7 +1045,7 @@ declare function admin:createNodeIndex($node as node(), $model as map(*), $wid a
             (: First, get all relevant nodes :)
             let $nodes := $work//tei:text/descendant-or-self::*[render:isIndexNode(.)]
             
-            (: Create the fragment id for each node beforehand, so that recursive crumbtrail creation has it ready to hand :)
+            (: Create the fragment id for each node beforehand, so that recursive crumbtrail creation has it readily available :)
             let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Node indexing: identifying fragment ids ...") else ()
             let $fragmentIds :=
                 map:merge(
