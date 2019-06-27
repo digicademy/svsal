@@ -1006,7 +1006,22 @@ declare function admin:sphinx-out ($node as node(), $model as map(*), $wid as xs
 ~ A rule picking those elements that should become the fragments rendering a work. Requires an expanded(!) TEI work's dataset.
 :)
 declare function admin:getFragmentNodes($work as element(tei:TEI), $fragmentationDepth as xs:integer) as node()* {
-    $work//tei:text//tei:*[count(./ancestor-or-self::tei:*) eq $fragmentationDepth]
+    (for $text in $work//tei:text[@type = ('work_volume', 'work_monograph')] return 
+        (
+        (: in front, fragmentation must not go below the child level :)
+        (if ($text/tei:front//tei:*[count(./ancestor-or-self::tei:*) eq $fragmentationDepth]) then
+             $text/tei:front/*
+         else $text/tei:front),
+        (: in body and back, fragments are identified according to $fragmentationDepth :)
+        (if ($text/tei:body//tei:*[count(./ancestor-or-self::tei:*) eq $fragmentationDepth]) then
+             $text/tei:body//tei:*[count(./ancestor-or-self::tei:*) eq $fragmentationDepth]
+         else $text/tei:body),
+        (if ($text/tei:back//tei:*[count(./ancestor-or-self::tei:*) eq $fragmentationDepth]) then
+             $text/tei:back//tei:*[count(./ancestor-or-self::tei:*) eq $fragmentationDepth]
+         else $text/tei:back)
+        )
+    )
+    (:    $work//tei:text//tei:*[count(./ancestor-or-self::tei:*) eq $fragmentationDepth]:)
 };
 
 declare function admin:determineFragmentationDepth($work as element(tei:TEI)) as xs:integer {
@@ -1097,6 +1112,12 @@ declare function admin:createNodeIndex($node as node(), $model as map(*), $wid a
                         }
                 </sal:index>
             
+            
+            (: save index file :)
+            let $debug := if ($config:debug = ("trace")) then console:log("Saving index file ...") else ()
+            let $indexSaveStatus := admin:saveFile($work/@xml:id, $work/@xml:id || "_nodeIndex.xml", $index, "index")
+            let $debug := if ($config:debug = ("trace")) then console:log("Node index of "  || $work/@xml:id || " successfully created.") else ()
+            
             (: ----------------------------------------------- :)
             (: #### Basic quality / consistency check #### :)
             let $resultNodes := $index//sal:node[not(@n eq 'completeWork')]
@@ -1105,15 +1126,10 @@ declare function admin:createNodeIndex($node as node(), $model as map(*), $wid a
             let $testAttributes := if ($testNodes[not(@class/string() and @type/string() and @n/string())]) then error() else ()
             let $testChildren := if ($testNodes[not(sal:title and sal:fragment/text() and sal:citableParent/text() and sal:citetrail/text() and sal:crumbtrail/* and sal:passagetrail/text())]) then error() else ()
             (: there should be as many distinctive citetrails and crumbtrails as there are ordinary sal:node elements: :)
-            let $testCitetrails := if (count($resultNodes) ne count(distinct-values($resultNodes/sal:citetrail/text()))) then error() else ()
+            let $testCitetrails := if (count($resultNodes) ne count(distinct-values($resultNodes/sal:citetrail/text()))) then error() else () (: search these cases using: " //sal:citetrail[./text() = preceding::sal:citetrail/text()] " :)
             (: not checking crumbtrails here ATM for not slowing down index creation too much... :)
             (: ----------------------------------------------- :)
             
-            (: index approved -> save as file :)
-            let $debug := if ($config:debug = ("trace")) then console:log("Saving index file ...") else ()
-            let $indexSaveStatus := admin:saveFile($work/@xml:id, $work/@xml:id || "_nodeIndex.xml", $index, "index")
-            let $debug := if ($config:debug = ("trace")) then console:log("Node index of "  || $work/@xml:id || " successfully created.") else ()
-    
             (: Reporting... :)
             (: See if there are any leaf elements in our text that are not matched by our rule :)
             let $missed-elements := $work//(tei:front|tei:body|tei:back)//tei:*[count(./ancestor-or-self::tei:*) < $fragmentationDepth][not(*)]
