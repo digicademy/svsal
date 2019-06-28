@@ -1,4 +1,4 @@
-xquery version "3.0";
+xquery version "3.1";
 
 module namespace render            = "http://salamanca/render";
 declare namespace exist            = "http://exist.sourceforge.net/NS/exist";
@@ -63,20 +63,11 @@ declare function render:getNodetrail($targetWork as node()*, $targetNode as node
     (: (a) trail of related element: :)
     let $trailPrefix := 
         if ($mode = ('citetrail', 'crumbtrail')) then
-            if ($targetNode/ancestor::*[render:isIndexNode(.) and not(self::tei:text[not(@type eq 'work_volume')])]) then
-                if ($targetNode[self::tei:pb]) then 
-                    if ($targetNode/ancestor::tei:front|$targetNode/ancestor::tei:back|$targetNode/ancestor::tei:text[1][not(@xml:id = 'completeWork' or @type = "work_part")]) then
-                        (: within front, back, and single volumes, prepend front's or volume's trail ID for avoiding multiple identical IDs in the same work :)
-                        render:getNodetrail($targetWork,  ($targetNode/ancestor::tei:front|$targetNode/ancestor::tei:back|$targetNode/ancestor::tei:text[1][not(@xml:id = 'completeWork' or @type = "work_part")])[last()], $mode, $fragmentIds)
-                    else ()
-                else if ($targetNode[self::tei:note or self::tei:milestone]) then
-                    (: citable parents of notes and milestones should not be p :)
-                    render:getNodetrail($targetWork, $targetNode/ancestor::*[render:isIndexNode(.) and not(self::tei:p)][1], $mode, $fragmentIds)
-                else 
-                    (: === for all other node types, get parent node's trail (deep recursion) === :)
-                    render:getNodetrail($targetWork, $targetNode/ancestor::*[render:isIndexNode(.)][1], $mode, $fragmentIds)
+            if ($targetNode/ancestor::*[render:getCitableParent($targetNode)]) then
+                render:getNodetrail($targetWork, render:getCitableParent($targetNode), $mode, $fragmentIds)
             else ()
         else if ($mode eq 'passagetrail') then (: similar to crumbtrail/citetrail, but we need to target the nearest *passagetrail* ancestor, not the nearest index node ancestor :)
+            (: TODO: outsource this to a render:getPassagetrailParent($node as node()) function, analogous to render:getCitableParent() :)
             if ($targetNode/ancestor::*[render:isPassagetrailNode(.) and not(self::tei:text[not(@type eq 'work_volume')])]) then
                 if ($targetNode[self::tei:pb]) then 
                     if ($targetNode/ancestor::tei:front|$targetNode/ancestor::tei:back|$targetNode/ancestor::tei:text[1][@type = "work_volume"]) then
@@ -108,6 +99,19 @@ declare function render:getNodetrail($targetWork as node()*, $targetNode as node
         else ()
         
     return $trail
+};
+
+(: Gets the citable crumbtrail/citetrail (not passagetrail!) parent :)
+declare function render:getCitableParent($node as node()) as node()? {
+    if ($node/self::tei:milestone or $node/self::tei:note) then
+        (: notes and milestones must not have p as their citableParent :)
+        $node/ancestor::*[render:isIndexNode(.) and not(self::tei:p)][1]
+    else if ($node/self::tei:pb) then
+        if ($node/ancestor::tei:front|$node/ancestor::tei:back|$node/ancestor::tei:text[1][not(@xml:id = 'completeWork' or @type = "work_part")]) then
+            (: within front, back, and single volumes, citable parent resolves to one of those elements for avoiding collisions with identically named pb in other parts :)
+            ($node/ancestor::tei:front|$node/ancestor::tei:back|$node/ancestor::tei:text[1][not(@xml:id = 'completeWork' or @type = "work_part")])[last()]
+        else () (: TODO: this makes "ordinary" pb appear outside of any structural hierarchy - is this correct? :)
+    else $node/ancestor::*[render:isIndexNode(.)][1]
 };
 
 declare function render:isPassagetrailNode($node as element()) as xs:boolean {
@@ -184,16 +188,16 @@ declare function render:mkUrlWhileRendering($targetWork as node(), $targetNode a
     let $targetWorkId := string($targetWork/@xml:id)
     let $targetNodeId := string($targetNode/@xml:id)
     let $viewerPage   :=      
-        if (substring($targetWorkId, 1, 2) eq "W0") then
-            "work.html?wid="
-        else if (substring($targetWorkId, 1, 2) eq "L0") then
-            "lemma.html?lid="
-        else if (substring($targetWorkId, 1, 2) eq "A0") then
-            "author.html?aid="
-        else if (substring($targetWorkId, 1, 2) eq "WP") then
-            "workingPaper.html?wpid="
+        if (substring($targetWorkId, 1, 2) eq 'W0') then
+            'work.html?wid='
+        else if (substring($targetWorkId, 1, 2) eq 'L0') then
+            'lemma.html?lid='
+        else if (substring($targetWorkId, 1, 2) eq 'A0') then
+            'author.html?aid='
+        else if (substring($targetWorkId, 1, 2) eq 'WP') then
+            'workingPaper.html?wpid='
         else
-            "index.html?wid="
+            'index.html?wid='
     let $targetNodeHTMLAnchor :=    
         if (contains($targetNodeId, '-pb-')) then
             concat('pageNo_', $targetNodeId)
@@ -889,25 +893,24 @@ declare function render:milestone($node as element(tei:milestone), $mode as xs:s
             
         case 'citetrail' return
             (: "XY" where X is the unit and Y is the anchor or the number of milestones where this occurs :)
-            let $currentSection := sal-util:copy($node/ancestor::*[render:isIndexNode(.) and not(self::tei:p)][1])
+            let $currentSection := sal-util:copy(render:getCitableParent($node))
             let $currentNode := $currentSection//tei:milestone[@xml:id eq $node/@xml:id]
             return
                 if ($node/@n[matches(., '[a-zA-Z0-9]')]) then 
-                    
                     let $similarMs :=
                         $currentSection//tei:milestone[@unit eq $currentNode/@unit 
                                                        and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))]
                     let $position :=
                         if (count($similarMs) gt 1) then
-                            
-                            string(count($currentNode/preceding::tei:milestone intersect $similarMs) + 1) (: TODO: performance issues? :)
+                            (: put 'N' between @n and position, so as to avoid collisions :)
+                            'N' || string(count($currentNode/preceding::tei:milestone intersect $similarMs) + 1)
                         else ()
                     return $currentNode/@unit || upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', '')) || $position
                 else $currentNode/@unit || string(count($currentNode/preceding::tei:milestone[@unit eq $node/@unit] intersect $currentSection//tei:milestone[@unit eq $currentNode/@unit]) + 1)
-                (: without on-the-fly copying: :)
+                (: without on-the-fly copying - outdated code: :)
                 (:if ($node/@n[matches(., '[a-zA-Z0-9]')]) then 
                     let $similarMs :=
-                        $node/ancestor::*[render:isIndexNode(.) and not(self::tei:p)][1]//tei:milestone[@unit eq $node/@unit 
+                        $node/ancestor::*[render:getCitableParent($node)][1]//tei:milestone[@unit eq $node/@unit 
                                                                   and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($node/@n, '[^a-zA-Z0-9]', ''))]
                     let $position :=
                         if (count($similarMs) gt 1) then

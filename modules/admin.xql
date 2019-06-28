@@ -1103,7 +1103,7 @@ declare function admin:createNodeIndex($node as node(), $model as map(*), $wid a
                                 attribute class {render:dispatch($node, 'class')},
                                 element sal:title           {render:dispatch($node, 'title')},
                                 element sal:fragment        {$fragmentIds($node/@xml:id/string())},
-                                element sal:citableParent   {$node/ancestor::*[render:isIndexNode(.)][1]/@xml:id/string()},
+                                element sal:citableParent   {render:getCitableParent($node)/@xml:id/string()},
                                 element sal:crumbtrail      {render:getNodetrail($work, $node, 'crumbtrail', $fragmentIds)},
                                 element sal:citetrail       {render:getNodetrail($work, $node, 'citetrail', $fragmentIds)},
                                 element sal:passagetrail    {render:getNodetrail($work, $node, 'passagetrail', $fragmentIds)}
