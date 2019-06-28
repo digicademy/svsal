@@ -628,7 +628,8 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                     if ($next) then
                         xs:string($next/@xml:id)
                     else ()
-                let $result := admin:renderFragment($work, xs:string($workId), $section, $index, $fragmentationDepth, $prevId, $nextId, $config:serverdomain)
+(:                let $result := admin:renderFragment($work, xs:string($workId), $section, $index, $fragmentationDepth, $prevId, $nextId, $config:serverdomain):)
+                let $result := render:createHTMLFragment($workId, $section, $index, $prevId, $nextId)
                 return 
                     <p>
                         <div>
@@ -1008,7 +1009,7 @@ declare function admin:sphinx-out ($node as node(), $model as map(*), $wid as xs
 declare function admin:getFragmentNodes($work as element(tei:TEI), $fragmentationDepth as xs:integer) as node()* {
     (for $text in $work//tei:text[@type = ('work_volume', 'work_monograph')] return 
         (
-        (: in front, fragmentation must not go below the child level :)
+        (: in front, fragmentation must not go below the child level (child fragments shouldn't be too large here) :)
         (if ($text/tei:front//tei:*[count(./ancestor-or-self::tei:*) eq $fragmentationDepth]) then
              $text/tei:front/*
          else $text/tei:front),
@@ -1067,7 +1068,7 @@ declare function admin:createNodeIndex($node as node(), $model as map(*), $wid a
                     for $node in $nodes
                         let $n := $node/@xml:id/string()
                         let $frag := (($node/ancestor-or-self::tei:* | $node//tei:*) intersect $target-set)[1]
-                        let $fragId := format-number(functx:index-of-node($target-set, $frag), "0000") || "_" || $frag/@xml:id
+                        let $fragId := render:makeFragmentId(functx:index-of-node($target-set, $frag), $frag/@xml:id)
                         return map:entry($n, $fragId)
                 )
             let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Node indexing: fragment ids extracted.") else ()
