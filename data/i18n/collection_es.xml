@@ -272,7 +272,7 @@
     <msg key="dictDesc">Búsqueda en el texto completo de todas entradas del diccionario.</msg>
     <msg key="entriesDesc">Búsqueda en títulos de las entradas del diccionario.</msg>
     <msg key="wpDesc">Búsqueda en los resúmenes y metadata de los Working Papers.</msg>
-    
+    <msg key="sphinxHelp">¿Necesita ayuda?</msg>
     
     <!-- workingPapers -->
     <msg key="keywords">Palabras claves</msg>

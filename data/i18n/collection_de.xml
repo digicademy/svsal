@@ -167,6 +167,7 @@
   <!-- Search -->
   <msg key="searchFor">Suche nach</msg>
   <msg key="allResults">Alle</msg>
+  <msg key="sphinxHelp">Hilfe</msg>
   
   <!-- general language -->
   <msg key="of">von</msg>

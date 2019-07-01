@@ -1,32 +1,29 @@
 <div xmlns:i18n="http://exist-db.org/xquery/i18n" data-template="templates:surround" data-template-with="templates/template_search.html" data-template-at="content">
     <div class="container" data-template="i18n:translate" data-template-catalogues="data/i18n">
-
+        
         <h2 class="hidden-md hidden-sm hidden-xs" style="margin-top: 3%">
             <span class="text-muted">
                 <span class="glyphicon glyphicon-search" aria-hidden="true"/>
                 <i18n:text key="search">Suche</i18n:text>
-                <a class="btn btn-link" id="toggleHelp" target="#"><i class="fa fa-question-circle"/></a> 
             </span>
         </h2>
         <h2 class="hidden-lg hidden-sm hidden-xs" style="margin-top: 2%">
             <span class="text-muted">
                 <span class="glyphicon glyphicon-search" aria-hidden="true"/>
                 <i18n:text key="search">Suche</i18n:text>
-                <a class="btn btn-link" id="toggleHelp" target="#"><i class="fa fa-question-circle"/></a>
             </span>
         </h2>
         <h2 class="hidden-lg hidden-md">
             <span class="text-muted">
                 <span class="glyphicon glyphicon-search" aria-hidden="true"/>
                 <i18n:text key="search">Suche</i18n:text>
-                <a class="btn btn-link" id="toggleHelp" target="#"><i class="fa fa-question-circle"/></a>
             </span>
         </h2>
-
+        <br/>
         <div class="row"><!-- Search Form -->
             <div class="col-md-12">
-             
-<!--
+                
+                <!--
                 <form name="f-query" class="input form-inline searchFields" role="form" action="search.html" method="get">
                     <div class="form-group">
                         <div class="col-md-6">
@@ -77,7 +74,7 @@
                     </button>
                 </form>
 -->
-<!--
+                <!--
                 <form class="form-inline">
                     <a class="btn btn-link" id="toggleHelp" target="#">
                         <span class="icon-uniE606"></span>
@@ -118,7 +115,7 @@
                     <div class="form-group">
                         <div class="col-md-4 col-sm-5 col-xs-5">
                             <select name="field" data-template="sphinx:buildSelect" class="span12 form-control">
-<!--                            <select name="field" data-template="form-control" class="span12 form-control templates:form-control">-->
+                                <!--                            <select name="field" data-template="form-control" class="span12 form-control templates:form-control">-->
                                 <option value="everything" accesskey="1" title="&lt;i18n:text key='global'&gt;everything&lt;/i18n:text&gt;">
                                     <i18n:text key="global">Alle Datenquellen</i18n:text>
                                 </option>
@@ -153,18 +150,19 @@
                                   <span class="glyphicon glyphicon-search"/>  
                             </button>
                         </div>
+                        <a style="font-size:1.05em;" class="btn btn-link" id="toggleHelp" target="#"><i class="glyphicon glyphicon-info-sign"/> <i18n:text key="sphinxHelp">Need help?</i18n:text></a>
                         <input type="hidden" name="lang" value="en" data-template="sphinx:passLang"/>
                     </div>
                 </form>
-
+                
             </div>
         </div>
-
+        
         <div class="row"><!-- Search Results -->
             <div class="col-md-9 col-sm-12" data-template="sphinx:search">
                 <div class="searchResults" data-template="sphinx:resultsLandingPage"/>
             </div>
         </div>
-
+        
     </div>
 </div>

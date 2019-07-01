@@ -240,6 +240,7 @@
   <msg key="dictDesc">Search the full text of all dictionary entries.</msg>
   <msg key="entriesDesc">Search the headings of dictionary entries.</msg>
   <msg key="wpDesc">Search in abstracts and metadata of working papers.</msg>
+  <msg key="sphinxHelp">Need help?</msg>
   
   
   <!--common-->
