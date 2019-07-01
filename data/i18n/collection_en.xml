@@ -204,7 +204,7 @@
   <!--search-->
   <msg key="all">All</msg>
   <msg key="global">All data sources</msg>
-  <msg key="fulltext">fulltext</msg>
+  <msg key="fulltext">full text</msg>
   <msg key="headings">headings</msg>
   <msg key="heading">heading</msg>
   <msg key="head">heading</msg>
@@ -217,7 +217,7 @@
   <msg key="hit">hit</msg>
   <msg key="hits">Hits</msg>
   <msg key="lemma">lemma</msg>
-  <msg key="corpus">works</msg>
+  <msg key="corpus">Works</msg>
   <msg key="dictionarySearch">Dictionary</msg>
   <msg key="dictionaryEntries">Dictionary Entries</msg>
   <msg key="WPMetadata">abstract, keywords, etc.</msg>

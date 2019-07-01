@@ -15,6 +15,7 @@ declare namespace xhtml      = "http://www.w3.org/1999/xhtml";
 declare namespace xi         = "http://www.w3.org/2001/XInclude";
 import module namespace config    = "http://salamanca/config"                at "config.xqm";
 import module namespace render    = "http://salamanca/render"                at "render.xql";
+import module namespace render-app    = "http://salamanca/render-app"        at "render-app.xql";
 import module namespace sphinx    = "http://salamanca/sphinx"                at "sphinx.xql";
 import module namespace console   = "http://exist-db.org/xquery/console";
 import module namespace functx    = "http://www.functx.com";
@@ -1271,10 +1272,11 @@ declare function app:displaySingleWork($node as node(), $model as map(*),
     let $parametrizedDoc    := transform:transform($originalDoc, $xslSheet, $parameters)
 
     (: If we have an active query string, highlight the original html fragment accordingly :)
-    let $outHTML := if ($q) then 
-                                    sphinx:highlight($parametrizedDoc, $q)//item[1]/description
-                                 else
-                                    $parametrizedDoc
+    let $outHTML := 
+        if ($q) then 
+            sphinx:highlight($parametrizedDoc, $q)//item[1]/description
+        else
+            $parametrizedDoc
 
     let $debugOutput   := if ($config:debug = "trace") then
                                 <p>
@@ -1626,7 +1628,7 @@ declare function app:places ($node as node(), $model as map(*), $aid as xs:strin
 declare %public function app:LEMentry($node as node(), $model as map(*), $lid as xs:string) {
 (:app:LEMsummary($model('currentLemma')//tei:text):)
 (:    app:LEMsummary(doc($config:tei-lemmata-root || "/" || $lid || ".xml")//tei:text):)
-    render:dispatch(doc($config:tei-lemmata-root || "/" || sal-util:normalizeId($lid) || ".xml")//tei:body, "work")
+    render-app:dispatch(doc($config:tei-lemmata-root || "/" || sal-util:normalizeId($lid) || ".xml")//tei:body, "work")
 };
 (: Rendering is done in render.xql! :)
 
@@ -3641,7 +3643,7 @@ declare function app:legalDisclaimer ($node as node(), $model as map(*), $lang a
 declare function app:privDecl ($node as node(), $model as map(*), $lang as xs:string?) {
     let $declfile   := doc($config:data-root || "/i18n/privacy_decl.xml")
     let $decltext   := "div-privdecl-de"
-    let $html       := render:dispatch($declfile//tei:div[@xml:id = $decltext], "html")
+    let $html       := render-app:dispatch($declfile//tei:div[@xml:id = $decltext], "html")
     return if (count($html)) then
         <div id="privDecl" class="help">
             {$html}
@@ -3652,7 +3654,7 @@ declare function app:privDecl ($node as node(), $model as map(*), $lang as xs:st
 declare function app:imprint ($node as node(), $model as map(*), $lang as xs:string?) {
     let $declfile   := doc($config:data-root || "/i18n/imprint.xml")
     let $decltext   := "div-imprint-de"
-    let $html       := render:dispatch($declfile//tei:div[@xml:id = $decltext], "html")
+    let $html       := render-app:dispatch($declfile//tei:div[@xml:id = $decltext], "html")
     return if (count($html)) then
         <div id="imprint" class="help">
             {$html}

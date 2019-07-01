@@ -13,6 +13,7 @@ import module namespace xmldb       = "http://exist-db.org/xquery/xmldb";
 import module namespace app         = "http://salamanca/app"                    at "app.xql";
 import module namespace config      = "http://salamanca/config"                 at "config.xqm";
 import module namespace render      = "http://salamanca/render"                 at "render.xql";
+import module namespace render-app      = "http://salamanca/render-app"         at "render-app.xql";
 import module namespace sphinx      = "http://salamanca/sphinx"                 at "sphinx.xql";
 
 declare option exist:timeout "25000000"; (: ~7 h :)
@@ -453,12 +454,12 @@ declare %templates:wrap function admin:renderAuthorLemma($node as node(), $model
     let $main :=  
         if ($request) then 
             <div>
-               { render:dispatch(doc($config:tei-authors-root || "/" || $aid || ".xml")//tei:body, "work")
+               { render-app:dispatch(doc($config:tei-authors-root || "/" || $aid || ".xml")//tei:body, "work")
                }
             </div>  
         else 
             <div>
-                { render:dispatch(doc($config:tei-lemmata-root || "/" || $lid || ".xml")//tei:body, "work")
+                { render-app:dispatch(doc($config:tei-lemmata-root || "/" || $lid || ".xml")//tei:body, "work")
                 }
             </div>  
     let $cited :=  

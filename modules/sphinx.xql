@@ -10,7 +10,7 @@ import module namespace functx     = "http://www.functx.com";
 import module namespace app        = "http://salamanca/app"     at "app.xql";
 import module namespace config     = "http://salamanca/config"  at "config.xqm";
 import module namespace i18n       = "http://exist-db.org/xquery/i18n"        at "i18n.xql";
-import module namespace render     = "http://salamanca/render"  at "render.xql";
+import module namespace render-app = "http://salamanca/render-app"  at "render-app.xql";
 import module namespace console    = "http://exist-db.org/xquery/console";
 import module namespace http       = "http://expath.org/ns/http-client";
 import module namespace httpclient = "http://exist-db.org/xquery/httpclient";
@@ -657,17 +657,22 @@ declare function sphinx:highlight ($document as node(), $words as xs:string*) as
                                 '&amp;', encode-for-uri(concat('words=', $words)),
                                 '&amp;', encode-for-uri(concat('docs[1]=', serialize($document)))
                                )
+
 (:    let $debug := console:log():)
-    let $tempString := replace(replace($requestDoc, '%20', '+'), '%3D', '=')
+    let $tempString := replace(replace($requestDoc, '%20', '+'), '%3D', '=') (: TODO: why do we convert %20 (blank) to '+' here? :)
 (: Querying with EXPath http client proved not to work in eXist 3.4
     let $request    := <http:request method="post">
                            <http:body media-type="application/x-www-form-urlencoded">{$requestDoc}</http:body>
                        </http:request>
     let $response   := http:send-request($request, $endpoint)
 :)
+    (: problem start :)
     let $response   := httpclient:post($endpoint, $tempString, true(), <headers><header name="Content-Type" value="application/x-www-form-urlencoded"/></headers>)
+    (: eXist logs: "Could not parse http response content as XML (will try html, text or fallback to binary): The markup in the document following the root element must be well-formed." :)
     let $rspBody    := if ($response//httpclient:body/@encoding = "Base64Encoded") then parse-xml(util:base64-decode($response//httpclient:body))
                        else $response//httpclient:body
+    (: problem end :)
+    let $debug := util:log("warn", "[SPHINX]" || serialize($response//httpclient:body))
 
     return $rspBody//rss
 };
@@ -796,7 +801,7 @@ declare function sphinx:help ($node as node(), $model as map(*), $lang as xs:str
         else if ($lang = "en") then "div_searchHelp_en"
         else if ($lang = "es") then "div_searchHelp_es"
         else "div_searchHelp_en"
-    let $html       := render:dispatch($helpfile//tei:div[@xml:id = $helptext], "html")
+    let $html       := render-app:dispatch($helpfile//tei:div[@xml:id = $helptext], "html")
     return if (count($html)) then
         <div id="help" class="help">
             {sphinx:print-sectionsHelp($helpfile//tei:div[@xml:id = $helptext]/tei:div, true())}
