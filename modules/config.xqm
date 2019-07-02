@@ -136,7 +136,6 @@ declare variable $config:citationLabels :=
         'book': map {'full': 'liber', 'abbr': 'lib.', 'isCiteRef': true()},
         'chapter': map {'full': 'capitulum', 'abbr': 'cap.', 'isCiteRef': true()},
         'colophon': map {'full': 'colophon', 'abbr': 'coloph.', 'isCiteRef': true()},
-        'source': map {'full': 'sectio', 'abbr': 'sect.', 'isCiteRef': true()}, (: TODO: something more concrete here? :)
         'commentary': map {'full': 'commentarius', 'abbr': 'comment.', 'isCiteRef': true()},
         'contained_work': (),
         'contents': map {'full': 'tabula', 'abbr': 'tab.'},
@@ -148,20 +147,21 @@ declare variable $config:citationLabels :=
         'foreword': map {'full': 'prooemium', 'abbr': 'pr.', 'isCiteRef': true()},
         'gloss': map {'full': 'glossa', 'abbr': 'gl.', 'isCiteRef': true()},
         'index': map {'full': 'index', 'abbr': 'ind.', 'isCiteRef': true()},
+        'law': map {'full': 'lex', 'abbr' :'l.', 'isCiteRef': true()},
         'lecture': map {'full': 'relectio', 'abbr': 'relect.', 'isCiteRef': true()},
+        'partida': map {'full': 'partida', 'abbr': 'part.', 'isCiteRef': true()},
         'map': (),
+        'number': map {'full': 'numerus', 'abbr': 'num.', 'isCiteRef': true()}, (: only in milestone :)
         'part': map {'full': 'pars', 'abbr': 'p.', 'isCiteRef': true()}, (: note: 'p.' is also used for pb in sal:title... :)
         'preface': map {'full': 'praefatio', 'abbr': 'praef.', 'isCiteRef': true()},
         'privileges': map {'full': 'privilegium', 'abbr': 'priv.', 'isCiteRef': true()},
         'question': map {'full': 'quaestio', 'abbr': 'q.', 'isCiteRef': true()},
         'section': map {'full': 'sectio', 'abbr': 'sect.', 'isCiteRef': true()}, (: TODO: using section here for anything labeled 'section' (e.g. W0015) :)
         'segment': map {'full': 'sectio', 'abbr': 'sect.', 'isCiteRef': true()}, (: TODO: sth. more distinctive for "explicite" sections (e.g., "Sectio I") :)
+        'source': map {'full': 'sectio', 'abbr': 'sect.', 'isCiteRef': true()}, (: TODO: something more concrete here? :)
+        'title': map {'full': 'titulus', 'abbr': 'tit.', 'isCiteRef': true()},
         'unknown': (),
         'work_part': (),
-        'title': map {'full': 'titulus', 'abbr': 'tit.', 'isCiteRef': true()},
-        'law': map {'full': 'lex', 'abbr' :'l.', 'isCiteRef': true()},
-        'partida': map {'full': 'partida', 'abbr': 'part.', 'isCiteRef': true()},
-        'number': map {'full': 'numerus', 'abbr': 'num.', 'isCiteRef': true()},
         (: element names: :)
         'back': map {'full': 'appendix', 'abbr': 'append.', 'isCiteRef': true()},
         'front': map {'full': 'front', 'abbr': 'front.', 'isCiteRef': true()}, (: TODO :)
