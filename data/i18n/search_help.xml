@@ -248,7 +248,7 @@ die konstituierte Lesart durchsucht.</note>
                         among different search modes:
                         <list type="ordered">
                             <item xml:id="item_everything_en">
-                                <term xml:id="term_everything_en" ref="#option1">"All data sources"</term>
+                                <term xml:id="term_everything_en" ref="#option1">All data sources</term>
                                 <gloss target="#term_everything_en">searches for terms across all types of text, that is, including 
                                     biographic and topic-related dictionary articles as well as abstracts and keywords from 
                                     the workin papers. The results are grouped according to text types, possibly offering an option 
