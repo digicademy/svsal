@@ -152,20 +152,21 @@ declare variable $config:citationLabels :=
         'partida': map {'full': 'partida', 'abbr': 'part.', 'isCiteRef': true()},
         'map': (),
         'number': map {'full': 'numerus', 'abbr': 'num.', 'isCiteRef': true()}, (: only in milestone :)
-        'part': map {'full': 'pars', 'abbr': 'p.', 'isCiteRef': true()}, (: note: 'p.' is also used for pb in sal:title... :)
+        'part': map {'full': 'pars', 'abbr': 'pars', 'isCiteRef': true()},
         'preface': map {'full': 'praefatio', 'abbr': 'praef.', 'isCiteRef': true()},
         'privileges': map {'full': 'privilegium', 'abbr': 'priv.', 'isCiteRef': true()},
         'question': map {'full': 'quaestio', 'abbr': 'q.', 'isCiteRef': true()},
-        'section': map {'full': 'sectio', 'abbr': 'sect.', 'isCiteRef': true()}, (: TODO: using section here for anything labeled 'section' (e.g. W0015) :)
-        'segment': map {'full': 'sectio', 'abbr': 'sect.', 'isCiteRef': true()}, (: TODO: sth. more distinctive for "explicite" sections (e.g., "Sectio I") :)
-        'source': map {'full': 'sectio', 'abbr': 'sect.', 'isCiteRef': true()}, (: TODO: something more concrete here? :)
+        'section': map {'full': 'sectio', 'abbr': 'sect.'},
+        'segment': map {'full': 'sectio', 'abbr': 'sect.', 'isCiteRef': true()}, 
+        'source': map {'full': 'sectio', 'abbr': 'sect.'},
         'title': map {'full': 'titulus', 'abbr': 'tit.', 'isCiteRef': true()},
         'unknown': (),
         'work_part': (),
         (: element names: :)
         'back': map {'full': 'appendix', 'abbr': 'append.', 'isCiteRef': true()},
-        'front': map {'full': 'front', 'abbr': 'front.', 'isCiteRef': true()}, (: TODO :)
-        'titlePage': map {'full': 'titulus', 'abbr': 'tit.', 'isCiteRef': true()}, (: TODO: same as div/@type eq 'title' :)
+        'front': map {'full': 'front', 'abbr': 'front.'},
+        'titlePage': map {'full': 'titulus', 'abbr': 'tit.'},
+        'pb': map {'full': 'pagina', 'abbr': 'pag.', 'isCiteRef': true()},
         'p': map {'full': 'paragraphus', 'abbr': 'paragr.', 'isCiteRef': true()},
         'note': map {'full': 'nota', 'abbr': 'not.', 'isCiteRef': true()}
     };
