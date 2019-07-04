@@ -124,3 +124,21 @@ declare function sal-util:WRKisPublished($wid as xs:string) as xs:boolean {
 
 (: concepts? :)
 
+
+(:
+~ Removes insignificant whitespace from an HTML document/fragment.
+:)
+declare function sal-util:minifyHtml($node as node()) as node() {
+    typeswitch($node)
+        case element() return 
+            element {local-name($node)} 
+                    {$node/@*, for $n in $node/node() return sal-util:minifyHtml($n)}
+        case text() return 
+            if ($node[parent::div and normalize-space(.) eq '' and (not(preceding-sibling::*) or not(following-sibling::*))]) then ()
+            else replace($node, ' {2,}', ' ')
+        
+        (: comment(), processing-instruction() :)
+        default return ()
+};
+
+

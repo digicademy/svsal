@@ -916,7 +916,13 @@
             <xsl:if test="'#it' = $styles">font-style:italic;</xsl:if>
             <xsl:if test="'#rt' = $styles">font-style: normal;</xsl:if>
             <xsl:if test="'#l-indent' = $styles">display:block;margin-left:4em;</xsl:if>
-            <xsl:if test="'#r-center' = $styles and not(ancestor::*[local-name(.) = $specificAlignElems])">display:block;text-align:center;</xsl:if>
+            <!-- centering and right-alignment apply only in certain contexts -->
+            <xsl:if test="'#r-center' = $styles                                                       
+                          and not(ancestor::*[local-name(.) = $specificAlignElems])                                                      
+                          and not(following-sibling::node()[descendant-or-self::text()[not(normalize-space() eq '')]]                                                                      
+                                  and ancestor::p[1][.//text()[not(ancestor::hi[contains(@rendition, '#r-center')])]]                                                              
+                              )">display:block;text-align:center;</xsl:if>
+                          <!-- workaround for suppressing trailing centerings at the end of paragraphs -->
             <xsl:if test="'#right' = $styles and not(ancestor::*[local-name(.) = $specificAlignElems])">display:block;text-align: right;</xsl:if>
             <xsl:if test="'#sc' = $styles">font-variant:small-caps;</xsl:if>
             <xsl:if test="'#spc' = $styles">letter-spacing:2px;</xsl:if>
