@@ -1,4 +1,4 @@
-<xsl:stylesheet xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sal="http://salamanca.adwmainz.de" version="3.0" exclude-result-prefixes="exist sal tei xd xs xsl" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" xmlns:sal="http://salamanca.adwmainz.de" version="3.0" exclude-result-prefixes="exist sal tei xd xs xsl" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
 
 <!-- TODO:
            * tweak/tune performance: use
@@ -950,6 +950,34 @@
             <xsl:apply-templates/>
         </span>
     </xsl:template>
+    
+    <!-- TABLE elements -->
+    <xsl:template match="table">
+        <table>
+            <xsl:apply-templates/>
+        </table>
+    </xsl:template>
+    <xsl:template match="row">
+        <tr>
+            <xsl:apply-templates/>
+        </tr>
+    </xsl:template>
+    <xsl:template match="cell">
+        <xsl:choose>
+            <xsl:when test="@role eq 'label'">
+                <td class="table-label">
+                    <xsl:apply-templates/>
+                </td>
+            </xsl:when>
+            <xsl:otherwise>
+                <td>
+                    <xsl:apply-templates/>
+                </td>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    
+    
 
     <!-- For highlighting of search results -->
 <!-- <xsl:template match="exist:match">

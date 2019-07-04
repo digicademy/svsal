@@ -727,6 +727,15 @@ hr.ornament {
     bottom: -0.55em;
 }
 
+table {
+    font-size: 1.15em;
+}
+
+.table-label {
+    font-weight:bold;
+    padding-right:0.9em;
+}
+
 /*a[name] {display: block; position: relative; top: -50px; visibility: hidden;}*/
 
 .titlePage {
