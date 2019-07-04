@@ -1,4 +1,4 @@
-<xsl:stylesheet xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sal="http://salamanca.adwmainz.de" version="3.0" exclude-result-prefixes="exist sal tei xd xs xsl" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" xmlns:sal="http://salamanca.adwmainz.de" version="3.0" exclude-result-prefixes="exist sal tei xd xs xsl" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
 
 <!-- TODO:
            * tweak/tune performance: use
@@ -395,7 +395,26 @@
                     </xsl:for-each>
                 </section>
             </xsl:when>
-            <xsl:otherwise>                                         <!-- Else put an unordered list (and captions) in a figure environment of class @type -->
+            <xsl:when test="@type eq 'index' or ancestor::list[@type][1]/@type eq 'index'"> <!-- Index: unordered list -->
+                <div class="list-index">
+                    <xsl:if test="@xml:id">
+                        <xsl:attribute name="id">
+                            <xsl:value-of select="@xml:id"/>
+                        </xsl:attribute>
+                    </xsl:if>
+                    <xsl:for-each select="child::head">
+                        <h4 class="list-index-head">
+                            <xsl:apply-templates/>
+                        </h4>
+                    </xsl:for-each>
+                    <ul style="list-style-type:circle;">
+                        <xsl:for-each select="child::*[not(self::head)]">
+                            <xsl:apply-templates select="."/>
+                        </xsl:for-each>
+                    </ul>
+                </div>
+            </xsl:when>
+            <xsl:otherwise> <!-- Else put an unordered list (and captions) in a figure environment of class @type -->
                 <figure class="{@type}">
                     <xsl:if test="@xml:id">
                         <xsl:attribute name="id">
@@ -422,6 +441,11 @@
                 <xsl:text> </xsl:text>
                 <xsl:apply-templates/>
                 <xsl:text> </xsl:text>
+            </xsl:when>
+            <xsl:when test="ancestor::list[@type][1]/@type eq 'index'">
+                <li class="list-index-item">
+                    <xsl:apply-templates/>
+                </li>
             </xsl:when>
             <xsl:otherwise>
                 <li>
@@ -450,7 +474,7 @@
     <!--<xsl:template match="head[@place eq 'margin']"/>-->
     
     <!-- Main Text: put <p> in html <div class="hauptText"> and create anchor if p@xml:id (or just create an html <p> if we are inside a list item);  -->
-    <xsl:template match="p[not(ancestor::note or ancestor::titlePage)]">
+    <xsl:template match="p[not(ancestor::note or ancestor::titlePage or ancestor::item)]">
 <!--        <xsl:message>Matched p node <xsl:value-of select="@xml:id"/>.</xsl:message>-->
         <xsl:choose>
             <xsl:when test="ancestor::item[not(ancestor::list/@type = ('dict', 'index'))]">
@@ -477,13 +501,18 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    
+    <!-- p within notes -->
     <xsl:template match="p[ancestor::note]">
-<!--        <xsl:message>Matched note/p node <xsl:value-of select="@xml:id"/>.</xsl:message>-->
             <xsl:element name="span">
                 <xsl:attribute name="class" select="'note-paragraph'"/>
                 <xsl:apply-templates/>
             </xsl:element>
+    </xsl:template>
+    <!-- p within items: -->
+    <xsl:template match="p[ancestor::item]">
+        <span class="item-paragraph">
+            <xsl:apply-templates/>
+        </span>
     </xsl:template>
     
     <xsl:template match="signed">
@@ -887,13 +916,7 @@
             <xsl:if test="'#it' = $styles">font-style:italic;</xsl:if>
             <xsl:if test="'#rt' = $styles">font-style: normal;</xsl:if>
             <xsl:if test="'#l-indent' = $styles">display:block;margin-left:4em;</xsl:if>
-            <!-- centering and right-alignment apply only in certain contexts -->
-            <xsl:if test="'#r-center' = $styles 
-                          and not(ancestor::*[local-name(.) = $specificAlignElems])
-                          and not(following-sibling::node()[descendant-or-self::text()[not(normalize-space() eq '')]]
-                                  and ancestor::p[1][.//text()[not(ancestor::hi[contains(@rendition, '#r-center')])]]
-                              )">display:block;text-align:center;</xsl:if>
-                          <!-- workaround for suppressing trailing centerings at the end of paragraphs -->
+            <xsl:if test="'#r-center' = $styles and not(ancestor::*[local-name(.) = $specificAlignElems])">display:block;text-align:center;</xsl:if>
             <xsl:if test="'#right' = $styles and not(ancestor::*[local-name(.) = $specificAlignElems])">display:block;text-align: right;</xsl:if>
             <xsl:if test="'#sc' = $styles">font-variant:small-caps;</xsl:if>
             <xsl:if test="'#spc' = $styles">letter-spacing:2px;</xsl:if>

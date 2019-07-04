@@ -543,6 +543,18 @@ a .edited, a .expan, a .reg, a .corr{
     padding: 0 3px 0 3px;
 }
 
+.item-paragraph {
+    display:block;
+}
+
+.list-index-head {
+    font-size:27px !important;
+    font-weight:bold;
+}
+.list-index-item {
+    font-size:20px !important;
+}
+
 .marginal {
 	float: right;
 	clear: right;
