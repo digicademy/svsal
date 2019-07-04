@@ -317,6 +317,9 @@ declare function render:label($node as element(tei:label), $mode as xs:string) {
            render:passthru($node, $mode)
 };
 
+declare function render:classableString($str as xs:string) as xs:string? {
+    replace($str, '[,: ]', '')
+};
 
 (: ####====---- End Helper Functions ----====#### :)
 
@@ -430,6 +433,8 @@ declare function render:dispatch($node as node(), $mode as xs:string) {
         case element(tei:death)         return render:death($node, $mode)
 
         case element(tei:lg)            return render:lg($node, $mode)
+        case element(tei:l)             return render:l($node, $mode)
+        
         case element(tei:signed)        return render:signed($node, $mode) 
         
         case element(tei:titlePage)     return render:titlePage($node, $mode)
@@ -443,10 +448,17 @@ declare function render:dispatch($node as node(), $mode as xs:string) {
         case element(tei:label)         return render:label($node, $mode)
         case element(tei:argument)      return render:argument($node, $mode)
         
+        case element(tei:damage)        return render:damage($node, $mode)
+        case element(tei:gap)           return render:gap($node, $mode)
+        
         case element(tei:text)          return render:text($node, $mode) 
         case element(tei:front)         return render:front($node, $mode) 
         case element(tei:body)          return render:body($node, $mode)
         case element(tei:back)          return render:back($node, $mode)
+
+        case element(tei:table)         return render:table($node, $mode)
+        case element(tei:row)           return render:row($node, $mode)
+        case element(tei:cell)           return render:cell($node, $mode)
 
         case element(tei:figDesc)       return ()
         case element(tei:teiHeader)     return ()
@@ -509,10 +521,16 @@ declare function render:bibl($node as element(tei:bibl), $mode as xs:string) {
                 replace(string($node/@sortKey), '_', ', ')
             else
                 render:passthru($node, $mode)
-       
+        
+        case 'html' return
+            if ($node/@sortKey) then 
+                <span class="{local-name($node) || ' hi_', render:classableString(@sortKey)}">{render:passthru($node, $mode)}</span>
+            else <span>{render:passthru($node, $mode)}</span>
+        
         default return
             render:passthru($node, $mode)
 };
+
 
 declare function render:birth($node as element(tei:birth), $mode as xs:string) {
     if ($mode = ("orig", "edit")) then
@@ -521,6 +539,7 @@ declare function render:birth($node as element(tei:birth), $mode as xs:string) {
         render:passthru($node, $mode)
     else ()
 };
+
 
 declare function render:body($node as element(tei:body), $mode as xs:string) {
     switch($mode)
@@ -555,6 +574,17 @@ declare function render:cb($node as element(tei:cb), $mode as xs:string) {
         default return () (: some sophisticated function to insert a pipe and a pagenumber div in the margin :)
 };
 
+declare function render:cell($node as element(tei:cell), $mode) {
+    switch($mode)
+        case 'html' return 
+            if ($node/@role eq 'label') then 
+                <td class="table-label">{render:passthru($node, $mode)}</td>
+            else <td>{render:passthru($node, $mode)}</td>
+        
+        default return
+            render:passthru($node, $mode)
+};
+
 declare function render:choice($node as element(tei:choice), $mode as xs:string) {
     render:passthru($node, $mode)
 };
@@ -568,6 +598,12 @@ declare function render:corr($node as element(tei:corr), $mode) {
         default return
             render:editElem($node, $mode)
 };
+
+
+declare function render:damage($node as element(tei:damage), $mode as xs:string) {
+    render:passthru($node, $mode)
+};
+
 
 declare function render:death($node as element(tei:death), $mode as xs:string) {
     if ($mode = ("orig", "edit")) then
@@ -768,6 +804,17 @@ declare function render:g($node as element(tei:g), $mode as xs:string) {
             render:passthru($node, $mode)
 };
 
+
+declare function render:gap($node as element(tei:gap), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            if ($node/ancestor::tei:damage) then
+                <span title="?" class="gap"/>
+            else ()
+        default return ()
+};
+
+
 declare function render:gloss($node as element(tei:gloss), $mode as xs:string) {
     if ($mode = ("orig", "edit")) then
         render:passthru($node, $mode)
@@ -931,6 +978,15 @@ declare function render:item($node as element(tei:item), $mode as xs:string) {
 };
 
 
+declare function render:l($node as element(tei:l), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            (render:passthru($node, $mode),<br/>)
+        
+        default return render:passthru($node, $mode)
+};
+
+
 declare function render:lb($node as element(tei:lb), $mode as xs:string) {
     switch($mode)
         case 'orig'
@@ -1040,6 +1096,9 @@ declare function render:lg($node as element(tei:lg), $mode as xs:string) {
             if (render:isUnnamedCitetrailNode($node)) then 
                 string(count($node/preceding-sibling::*[render:isUnnamedCitetrailNode(.)]) + 1)
             else ()
+        
+        case 'html' return
+            <span class="poem">{render:passthru($node, $mode)}</span>
             
         default return
             render:passthru($node, $mode)
@@ -1445,12 +1504,22 @@ declare function render:placeName($node as element(tei:placeName), $mode as xs:s
 };
 
 declare function render:quote($node as element(tei:quote), $mode as xs:string) {
-    if ($mode=("orig", "edit")) then
-        ('"', render:passthru($node, $mode), '"')
-    else if ($mode = ('snippets-edit', 'snippets-orig')) then
-        render:passthru($node, $mode)
-    else
-        ('"', render:passthru($node, $mode), '"')
+    switch($mode)
+        case 'orig'
+        case 'edit' return
+            ('"', render:passthru($node, $mode), '"')
+        
+        case 'snippets-edit'
+        case 'snippets-orig' return
+            render:passthru($node, $mode)
+            
+        case 'html' return
+            <span class="quote">
+                {render:passthru($node, $mode)}
+            </span>
+        
+        default return
+            ('"', render:passthru($node, $mode), '"')
 };
 
 declare function render:ref($node as element(tei:ref), $mode as xs:string) {
@@ -1469,6 +1538,15 @@ declare function render:reg($node as element(tei:reg), $mode) {
             render:passthru($node, $mode)
         default return
             render:editElem($node, $mode)
+};
+
+declare function render:row($node as element(tei:row), $mode) {
+    switch($mode)
+        case 'html' return 
+            <tr>{render:passthru($node, $mode)}</tr>
+        
+        default return
+            render:passthru($node, $mode)
 };
 
 declare function render:sic($node as element(tei:sic), $mode) {
@@ -1520,6 +1598,14 @@ declare function render:soCalled($node as element(tei:soCalled), $mode as xs:str
         render:passthru($node, $mode)
     else
         ("'", render:passthru($node, $mode), "'")
+};
+
+declare function render:table($node as element(tei:table), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            <table>{render:passthru($node, $mode)}</table>
+            
+        default return render:passthru($node, $mode)
 };
 
 (: FIXME: In the following, work mode functionality has to be added - also paying attention to intervening pagebreak marginal divs :)
