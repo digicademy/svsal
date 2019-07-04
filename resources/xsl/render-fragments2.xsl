@@ -38,7 +38,7 @@
     <xsl:key name="targeting-refs" match="ref[@type='summary']" use="@target"/>         <!-- Key-value array for toc generation -->
     <xsl:key name="chars" match="char" use="@xml:id"/>                                  <!-- Key-value array for special symbol representation -->
 
-    <xsl:param name="noteTruncLimit" select="35"/>
+    <xsl:param name="noteTruncLimit" select="39"/>
     
 
 <!-- *** III. Named Templates *** -->
@@ -703,7 +703,7 @@
             </xsl:variable>
             
             <xsl:choose>
-                <xsl:when test="string-length(concat(@n, ' ', $normalizedString)) ge $noteTruncLimit">
+                <xsl:when test="string-length(concat(@n, ' ', $normalizedString)) gt $noteTruncLimit">
                     <xsl:variable name="id" select="concat('collapse-', @xml:id)"/>
                     <a role="button" class="collapsed note-teaser" data-toggle="collapse" href="{concat('#', $id)}" aria-expanded="false" aria-controls="{$id}">    
                         <p class="collapse" id="{$id}" aria-expanded="false">
