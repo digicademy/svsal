@@ -395,7 +395,26 @@
                     </xsl:for-each>
                 </section>
             </xsl:when>
-            <xsl:otherwise>                                         <!-- Else put an unordered list (and captions) in a figure environment of class @type -->
+            <xsl:when test="@type eq 'index' or ancestor::list[@type][1]/@type eq 'index'"> <!-- Index: unordered list -->
+                <div class="list-index">
+                    <xsl:if test="@xml:id">
+                        <xsl:attribute name="id">
+                            <xsl:value-of select="@xml:id"/>
+                        </xsl:attribute>
+                    </xsl:if>
+                    <xsl:for-each select="child::head">
+                        <h4 class="list-index-head">
+                            <xsl:apply-templates/>
+                        </h4>
+                    </xsl:for-each>
+                    <ul style="list-style-type:circle;">
+                        <xsl:for-each select="child::*[not(self::head)]">
+                            <xsl:apply-templates select="."/>
+                        </xsl:for-each>
+                    </ul>
+                </div>
+            </xsl:when>
+            <xsl:otherwise> <!-- Else put an unordered list (and captions) in a figure environment of class @type -->
                 <figure class="{@type}">
                     <xsl:if test="@xml:id">
                         <xsl:attribute name="id">
@@ -422,6 +441,11 @@
                 <xsl:text> </xsl:text>
                 <xsl:apply-templates/>
                 <xsl:text> </xsl:text>
+            </xsl:when>
+            <xsl:when test="ancestor::list[@type][1]/@type eq 'index'">
+                <li class="list-index-item">
+                    <xsl:apply-templates/>
+                </li>
             </xsl:when>
             <xsl:otherwise>
                 <li>
@@ -450,7 +474,7 @@
     <!--<xsl:template match="head[@place eq 'margin']"/>-->
     
     <!-- Main Text: put <p> in html <div class="hauptText"> and create anchor if p@xml:id (or just create an html <p> if we are inside a list item);  -->
-    <xsl:template match="p[not(ancestor::note or ancestor::titlePage)]">
+    <xsl:template match="p[not(ancestor::note or ancestor::titlePage or ancestor::item)]">
 <!--        <xsl:message>Matched p node <xsl:value-of select="@xml:id"/>.</xsl:message>-->
         <xsl:choose>
             <xsl:when test="ancestor::item[not(ancestor::list/@type = ('dict', 'index'))]">
@@ -477,13 +501,18 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    
+    <!-- p within notes -->
     <xsl:template match="p[ancestor::note]">
-<!--        <xsl:message>Matched note/p node <xsl:value-of select="@xml:id"/>.</xsl:message>-->
             <xsl:element name="span">
                 <xsl:attribute name="class" select="'note-paragraph'"/>
                 <xsl:apply-templates/>
             </xsl:element>
+    </xsl:template>
+    <!-- p within items: -->
+    <xsl:template match="p[ancestor::item]">
+        <span class="item-paragraph">
+            <xsl:apply-templates/>
+        </span>
     </xsl:template>
     
     <xsl:template match="signed">
