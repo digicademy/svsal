@@ -29,6 +29,14 @@ import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.x
 declare variable $render:noteTruncLimit := 35;
 
 declare variable $render:teaserTruncLimit := 45;
+(:
+declare variable $render:chars :=
+    if (doc-available($config:tei-meta-root || '/specialchars.xml')) then
+        map:merge(
+            for $c in doc($config:tei-meta-root || '/specialchars.xml')/tei:TEI/tei:teiHeader/tei:encodingDesc/tei:charDecl/tei:char return 
+                map:entry($c/@xml:id/string(), $c)
+        )
+    else ();:)
 
 
 (: Crumbtrail/citetrail/passagetrail administrator function :)
@@ -305,6 +313,11 @@ declare function render:label($node as element(tei:label), $mode as xs:string) {
        case 'html-title' return
            normalize-space(string-join(render:dispatch($node, 'edit')))
            
+       case 'html' return
+           <span class="label-inline">
+               {render:passthru($node, $mode)}
+           </span>
+           
        case 'class' return
            'tei-' || local-name($node)
            
@@ -395,7 +408,6 @@ declare function render:dispatch($node as node(), $mode as xs:string) {
         case element(tei:lb)            return render:lb($node, $mode)
         case element(tei:pb)            return render:pb($node, $mode)
         case element(tei:cb)            return render:cb($node, $mode)
-        case element(tei:fw)            return render:fw($node, $mode)
 
         case element(tei:head)          return render:head($node, $mode) (: snippets: passthru :)
         case element(tei:p)             return render:p($node, $mode)
@@ -450,6 +462,9 @@ declare function render:dispatch($node as node(), $mode as xs:string) {
         
         case element(tei:damage)        return render:damage($node, $mode)
         case element(tei:gap)           return render:gap($node, $mode)
+        case element(tei:supplied)      return render:supplied($node, $mode)
+        
+        case element(tei:figure)        return render:figure($node, $mode)
         
         case element(tei:text)          return render:text($node, $mode) 
         case element(tei:front)         return render:front($node, $mode) 
@@ -462,6 +477,7 @@ declare function render:dispatch($node as node(), $mode as xs:string) {
 
         case element(tei:figDesc)       return ()
         case element(tei:teiHeader)     return ()
+        case element(tei:fw)            return ()
         case comment()                  return ()
         case processing-instruction()   return ()
 
@@ -586,15 +602,25 @@ declare function render:cell($node as element(tei:cell), $mode) {
 };
 
 declare function render:choice($node as element(tei:choice), $mode as xs:string) {
-    render:passthru($node, $mode)
+    switch($mode)
+        case 'html' return
+            (: HTML: Editorial interventions: Don't hide original stuff where we have no modern alternative, otherwise
+             put it in an "orignal" class span which we make invisible by default.
+             Put our own edits in spans of class "edited" and add another class to indicate what type of edit has happened :)
+            render:passthru($node, $mode)
+        
+        default return
+            render:passthru($node, $mode)
 };
 
 declare function render:corr($node as element(tei:corr), $mode) {
     switch($mode)
         case 'snippets-orig' return 
             ()
+            
         case 'snippets-edit' return
             render:passthru($node, $mode)
+        
         default return
             render:editElem($node, $mode)
 };
@@ -726,6 +752,13 @@ declare function render:editElem($node as element(), $mode as xs:string) {
         case "orig" return ()
         case "edit" return
             render:passthru($node, $mode)
+            
+        case 'html' return
+            let $origString := string-join(render:dispatch($node/parent::choice/(abbr|orig|sic), 'orig'), '')
+            return
+                <span class="messengers edited {local-name($node)}" title="{$origString}">
+                    {render:passthru($node, $mode)}
+                </span>
         
         default return
             render:passthru($node, $mode)
@@ -747,6 +780,7 @@ declare function render:emph($node as element(tei:emph), $mode as xs:string) {
         render:passthru($node, $mode)
 };
 
+
 declare function render:expan($node as element(tei:expan), $mode) {
     switch($mode)
         case 'snippets-orig' return 
@@ -757,9 +791,17 @@ declare function render:expan($node as element(tei:expan), $mode) {
             render:editElem($node, $mode)
 };
 
-declare function render:fw($node as element(tei:fw), $mode) {
-    ()
+
+declare function render:figure($node as element(tei:figure), $mode) {
+    switch($mode)
+        case 'html' return
+            if ($node/@type eq 'ornament') then
+                <hr class="ornament"/>
+            else ()
+            
+        default return ()
 };
+
 
 declare function render:front($node as element(tei:front), $mode as xs:string) {
     switch ($mode)
@@ -779,11 +821,12 @@ declare function render:front($node as element(tei:front), $mode as xs:string) {
             render:passthru($node, $mode)
 };
 
+
 declare function render:g($node as element(tei:g), $mode as xs:string) {
     switch ($mode)
         case 'orig'
         case 'snippets-orig' return
-            let $glyph := $node/ancestor::tei:TEI//tei:char[@xml:id = substring(string($node/@ref), 2)] (: remove leading '#' :)
+            let $glyph := $node/ancestor::tei:TEI/tei:teiHeader/tei:encodingDesc/tei:charDecl/tei:char[@xml:id = substring(string($node/@ref), 2)] (: remove leading '#' :)
             return if ($glyph/tei:mapping[@type = 'precomposed']) then
                     string($glyph/tei:mapping[@type = 'precomposed'])
                 else if ($glyph/tei:mapping[@type = 'composed']) then
@@ -793,13 +836,55 @@ declare function render:g($node as element(tei:g), $mode as xs:string) {
                 else
                     render:passthru($node, $mode)
         
-        case "edit" return
+        case 'edit' return
             let $glyph := $node/ancestor::tei:TEI//tei:char[@xml:id = substring(string($node/@ref), 2)]
             return  if ($glyph/tei:mapping[@type = 'standardized']) then
                         string($glyph/tei:mapping[@type = 'standardized'])
                     else
                         render:passthru($node, $mode)
         
+        case 'html' return
+            let $thisString := xs:string($node/text())
+            let $charCode := substring($node/@ref,2)
+            let $char := $node/ancestor::tei:TEI/tei:teiHeader/tei:encodingDesc/tei:charDecl/tei:char[@xml:id eq $charCode]
+            let $test := (: make sure that the char reference is correct :)
+                if (not($char)) then 
+                    error(xs:QName('render:g'), 'g/@ref is invalid, the char code does not exist): ', $charCode)
+                else ()
+            return 
+                (: Depending on the context or content of the g element, there are several possible cases: :)
+                (: 1. if g occurs within choice, it must be a "simple" character since the larger context has already been edited -> pass it through :)
+                if ($node/ancestor::tei:choice) then
+                    $thisString
+                (: 2. g occurs outside of choice: :)
+                else
+                    let $precomposedString := string($char/tei:mapping[@type='precomposed']/text())
+                    let $composedString := string($char/tei:mapping[@type='composed']/text())
+                    let $originalGlyph :=
+                        if ($precomposedString) then $precomposedString (: TODO: does this work? (in xslt: disable-output-escaping="yes") :)
+                        else $composedString
+                    let $test := 
+                        if (string-length($originalGlyph) eq 0) then 
+                            error(xs:QName('render:g'), 'No correct mapping available for char: ', $node/@ref)
+                        else ()
+                    return
+                        (: a) g has been used for resolving abbreviations (in early texts W0004, W0013 and W0015) -> treat it like choice elements :)
+                        if (not($thisString = ($precomposedString, $composedString)) and not($charCode) = ('char017f', 'char0292')) then
+                            (<span class="original glyph unsichtbar" title="{$thisString}">{$originalGlyph}</span>,
+                            <span class="edited glyph" title="{$originalGlyph}">{$thisString}</span>)
+                        (: b) most common case: g simply marks a special character -> pass it through (except for the very frequent "long s" and "long z", 
+                                which are to be normalized :)
+                        else if ($charCode = ('char017f', 'char0292')) then
+                            (: long s and z shall be switchable in constituted mode to their standardized versions, but due to their high frequency 
+                            we refrain from colourful highlighting (.simple-char). In case colour highlighting is desirable, simply remove .simple-char :)
+                            let $standardizedGlyph := string($char/tei:mapping[@type='standardized']/text())
+                            return 
+                                (<span class="original glyph unsichtbar simple-char" title="{$standardizedGlyph}">{$originalGlyph}</span>,
+                                <span class="edited glyph simple-char" title="{$originalGlyph}">{$standardizedGlyph}</span>)
+                        else 
+                            (: all other simple characters :)
+                            render:passthru($node, $mode)
+                        
         default return (: also 'snippets-edit' :)
             render:passthru($node, $mode)
 };
@@ -1335,6 +1420,16 @@ declare function render:origElem($node as element(), $mode as xs:string) {
             if (not($node/(preceding-sibling::tei:expan|preceding-sibling::tei:reg|preceding-sibling::tei:corr|following-sibling::tei:expan|following-sibling::tei:reg|following-sibling::tei:corr))) then
                 render:passthru($node, $mode)
             else ()
+            
+        case 'html' return
+            if (not($node/parent::tei:choice)) then
+                render:passthru($node, $mode)
+            else 
+                let $editString := string-join(render:dispatch($node/parent::tei:choice/(tei:expan|tei:reg|tei:corr), 'edit'), '')
+                return
+                    <span class="original {local-name($node)} unsichtbar" title="{$editString}">
+                        {render:passthru($node, $mode)}
+                    </span>
         
         default return
             render:passthru($node, $mode)
@@ -1591,6 +1686,7 @@ declare function render:signed($node as element(tei:signed), $mode as xs:string)
             render:passthru($node, $mode)
 };
 
+
 declare function render:soCalled($node as element(tei:soCalled), $mode as xs:string) {
     if ($mode=("orig", "edit")) then
         ("'", render:passthru($node, $mode), "'")
@@ -1599,6 +1695,18 @@ declare function render:soCalled($node as element(tei:soCalled), $mode as xs:str
     else
         ("'", render:passthru($node, $mode), "'")
 };
+
+
+declare function render:supplied($node as element(tei:supplied), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            (<span class="original unsichtbar" title="{string($node)}">{'[' || $node/text() || ']'}</span>,
+            <span class="edited" title="{concat('[', string($node), ']')}">{$node/text()}</span>)
+            
+        default return
+            render:passthru($node, $mode)
+};
+
 
 declare function render:table($node as element(tei:table), $mode as xs:string) {
     switch($mode)
