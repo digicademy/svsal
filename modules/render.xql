@@ -303,32 +303,6 @@ declare function render:getHTMLSectionId($node as element()) {
         $config:idserver || '/texts/' || $workId || ':' || $citetrail
 };
 
-declare function render:label($node as element(tei:label), $mode as xs:string) {
-    switch($mode)
-       case 'title' return
-           normalize-space(
-               render:teaserString($node, 'edit')
-           )
-           
-       case 'html-title' return
-           normalize-space(string-join(render:dispatch($node, 'edit')))
-           
-       case 'html' return
-           <span class="label-inline">
-               {render:passthru($node, $mode)}
-           </span>
-           
-       case 'class' return
-           'tei-' || local-name($node)
-           
-       case 'citetrail' return
-           if (render:isUnnamedCitetrailNode($node)) then 
-               string(count($node/preceding-sibling::*[render:isUnnamedCitetrailNode(.)]) + 1)
-           else ()
-           
-       default return
-           render:passthru($node, $mode)
-};
 
 declare function render:classableString($str as xs:string) as xs:string? {
     replace($str, '[,: ]', '')
@@ -386,6 +360,15 @@ declare function render:createPaginationLinks($workId as xs:string, $fragmentInd
         </div>
 };
 
+(:
+~ Determines the type of list in which an element (item, list, head, ...) occurs.
+:)
+declare function render:determineListType($node as element()) as xs:string? {
+    if ($node[self::tei:list and @type]) then $node/@type
+    else if (ancestor::tei:list[@type]) then ancestor::tei:list[@type][1]/@type
+    else ()
+};
+
 
 (: ####====---- TEI Node Rendering Typeswitch Functions ----====#### :)
 
@@ -397,6 +380,7 @@ declare function render:createPaginationLinks($workId as xs:string, $fragmentInd
 ~   - 'citetrail': citetrail ID of a node (only for nodes that represent citetrail/crumbtrail sections)
 ~   - 'crumbtrail': crumbtrail ID of a node (only for nodes that represent citetrail/crumbtrail sections)
 ~   - 'class': i18n class of a node, usually to be used by HTML-/RDF-related functionalities for generating verbose labels when displaying section titles 
+~   - 'html': HTML snippet for the reading view
 :)
 
 (: $mode can be "orig", "edit" (both being plain text modes), "html" or, even more sophisticated, "work" :)
@@ -1072,6 +1056,34 @@ declare function render:l($node as element(tei:l), $mode as xs:string) {
 };
 
 
+declare function render:label($node as element(tei:label), $mode as xs:string) {
+    switch($mode)
+       case 'title' return
+           normalize-space(
+               render:teaserString($node, 'edit')
+           )
+           
+       case 'html-title' return
+           normalize-space(string-join(render:dispatch($node, 'edit')))
+           
+       case 'html' return
+           <span class="label-inline">
+               {render:passthru($node, $mode)}
+           </span>
+           
+       case 'class' return
+           'tei-' || local-name($node)
+           
+       case 'citetrail' return
+           if (render:isUnnamedCitetrailNode($node)) then 
+               string(count($node/preceding-sibling::*[render:isUnnamedCitetrailNode(.)]) + 1)
+           else ()
+           
+       default return
+           render:passthru($node, $mode)
+};
+
+
 declare function render:lb($node as element(tei:lb), $mode as xs:string) {
     switch($mode)
         case 'orig'
@@ -1098,73 +1110,73 @@ declare function render:lb($node as element(tei:lb), $mode as xs:string) {
 
 declare function render:list($node as element(tei:list), $mode as xs:string) {
     switch($mode)
-    case 'title' 
-    case 'html-title' return
-        normalize-space(
-            if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
-                '&#34;' || string($node/@n) || '&#34;'
-            else if ($node/(tei:head|tei:label)) then
-                render:teaserString(($node/(tei:head|tei:label))[1], 'edit')
-            (: purely numeric section titles: :)
-            else if ($node/@n and (matches($node/@n, '^[0-9\[\]]+$')) and ($node/@type)) then
-                $node/@n/string()
-            (: otherwise, try to derive a title from potential references to the current node :)
-            else if ($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)]) then
-                render:teaserString($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)][1], 'edit')
-            else ()
-        )
-    
-    case 'class' return
-        'tei-' || local-name($node)
+        case 'title' 
+        case 'html-title' return
+            normalize-space(
+                if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
+                    '&#34;' || string($node/@n) || '&#34;'
+                else if ($node/(tei:head|tei:label)) then
+                    render:teaserString(($node/(tei:head|tei:label))[1], 'edit')
+                (: purely numeric section titles: :)
+                else if ($node/@n and (matches($node/@n, '^[0-9\[\]]+$')) and ($node/@type)) then
+                    $node/@n/string()
+                (: otherwise, try to derive a title from potential references to the current node :)
+                else if ($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)]) then
+                    render:teaserString($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)][1], 'edit')
+                else ()
+            )
         
-    case 'passagetrail' return
-        ()
-    
-    case 'citetrail' return
-        (: dictionaries, indices and summaries get their type prepended to their number :)
-        if($node/@type = ('dict', 'index', 'summaries')) then
-            let $currentSection := sal-util:copy($node/(ancestor::tei:div|ancestor::tei:body|ancestor::tei:front|ancestor::tei:back)[last()])
-            let $currentNode := $currentSection//tei:list[@xml:id eq $node/@xml:id]
-            return
-              concat(
-                  $currentNode/@type, 
-                  string(
-                      count($currentNode/preceding::tei:list[@type eq $currentNode/@type]
-                            intersect $currentSection//tei:list[@type eq $currentNode/@type]
-                      ) + 1)
-                 )
-            (: without on-the-fly copying: :)
-            (:concat(
-                $node/@type, 
-                string(
-                    count($node/preceding::tei:list[@type eq $node/@type]
-                          intersect $node/(ancestor::tei:div|ancestor::tei:body|ancestor::tei:front|ancestor::tei:back)[last()]//tei:list[@type eq $node/@type]
-                    ) + 1)
-               ):)
-        (: other types of lists are simply counted :)
-        else if (render:isUnnamedCitetrailNode($node)) then 
-            string(count($node/preceding-sibling::*[render:isUnnamedCitetrailNode(.)]) + 1)
-        else ()
-            (: OLD VERSION:
-            string(count($node/preceding-sibling::tei:p|
-                         ($node/preceding::tei:list[not(@type = ('dict', 'index', 'summaries'))] 
-                          intersect $node/(ancestor::tei:div|ancestor::tei:body|ancestor::tei:front|ancestor::tei:back)[last()]//tei:list)) + 1):)
-    case "orig" return
-        ($config:nl, render:passthru($node, $mode), $config:nl)
-    
-    case "edit" return
-        if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
-            (concat($config:nl, ' [*', string($node/@n), '*]', $config:nl), render:passthru($node, $mode), $config:nl)
-            (: or this?:   <xsl:value-of select="key('targeting-refs', concat('#',@xml:id))[1]"/> :)
-        else
+        case 'class' return
+            'tei-' || local-name($node)
+            
+        case 'passagetrail' return
+            ()
+        
+        case 'citetrail' return
+            (: dictionaries, indices and summaries get their type prepended to their number :)
+            if($node/@type = ('dict', 'index', 'summaries')) then
+                let $currentSection := sal-util:copy($node/(ancestor::tei:div|ancestor::tei:body|ancestor::tei:front|ancestor::tei:back)[last()])
+                let $currentNode := $currentSection//tei:list[@xml:id eq $node/@xml:id]
+                return
+                  concat(
+                      $currentNode/@type, 
+                      string(
+                          count($currentNode/preceding::tei:list[@type eq $currentNode/@type]
+                                intersect $currentSection//tei:list[@type eq $currentNode/@type]
+                          ) + 1)
+                     )
+                (: without on-the-fly copying: :)
+                (:concat(
+                    $node/@type, 
+                    string(
+                        count($node/preceding::tei:list[@type eq $node/@type]
+                              intersect $node/(ancestor::tei:div|ancestor::tei:body|ancestor::tei:front|ancestor::tei:back)[last()]//tei:list[@type eq $node/@type]
+                        ) + 1)
+                   ):)
+            (: other types of lists are simply counted :)
+            else if (render:isUnnamedCitetrailNode($node)) then 
+                string(count($node/preceding-sibling::*[render:isUnnamedCitetrailNode(.)]) + 1)
+            else ()
+                (: OLD VERSION:
+                string(count($node/preceding-sibling::tei:p|
+                             ($node/preceding::tei:list[not(@type = ('dict', 'index', 'summaries'))] 
+                              intersect $node/(ancestor::tei:div|ancestor::tei:body|ancestor::tei:front|ancestor::tei:back)[last()]//tei:list)) + 1):)
+        case "orig" return
             ($config:nl, render:passthru($node, $mode), $config:nl)
-    
-    case 'snippets-edit'
-    case 'snippets-orig' return
-        render:passthru($node, $mode)
-    
-    default return
-        ($config:nl, render:passthru($node, $mode), $config:nl)
+        
+        case "edit" return
+            if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
+                (concat($config:nl, ' [*', string($node/@n), '*]', $config:nl), render:passthru($node, $mode), $config:nl)
+                (: or this?:   <xsl:value-of select="key('targeting-refs', concat('#',@xml:id))[1]"/> :)
+            else
+                ($config:nl, render:passthru($node, $mode), $config:nl)
+        
+        case 'snippets-edit'
+        case 'snippets-orig' return
+            render:passthru($node, $mode)
+        
+        default return
+            ($config:nl, render:passthru($node, $mode), $config:nl)
 };
 
 declare function render:lg($node as element(tei:lg), $mode as xs:string) {
@@ -1411,6 +1423,7 @@ declare function render:orig($node as element(tei:orig), $mode) {
             render:origElem($node, $mode)
 };
 
+
 declare function render:origElem($node as element(), $mode as xs:string) {
     switch($mode)
         case 'orig' return
@@ -1434,6 +1447,7 @@ declare function render:origElem($node as element(), $mode as xs:string) {
         default return
             render:passthru($node, $mode)
 };
+
 
 declare function render:p($node as element(tei:p), $mode as xs:string) {
     switch($mode)
@@ -1502,9 +1516,11 @@ declare function render:p($node as element(tei:p), $mode as xs:string) {
             render:passthru($node, $mode)
 };
 
+
 declare function render:passthru($nodes as node()*, $mode as xs:string) as item()* {
     for $node in $nodes/node() return render:dispatch($node, $mode)
 };
+
 
 declare function render:pb($node as element(tei:pb), $mode as xs:string) {
     switch($mode)
