@@ -340,7 +340,7 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
         let $workDetails    :=  'workDetails.html?wid=' ||  $wid
         let $DetailsInfo    :=  i18n:process(<i18n:text key="details">Katalogeintrag</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en")
 
-        let $workImages     :=  'mirador.html?wid=' ||  $wid
+        let $workImages     :=  'viewer.html?wid=' ||  $wid
         let $FacsInfo       :=  i18n:process(<i18n:text key="facsimiles">Bildansicht</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en")
 
         let $printingPlace  :=  if ($item//tei:pubPlace[@role = 'thisEd']) then $item//tei:pubPlace[@role = 'thisEd'] 
@@ -2109,7 +2109,7 @@ declare function app:WRKadditionalInfoRecord($node as node(), $model as map(*), 
     let $workId := $model('currentWorkId')
     let $status := $model('currentWorkHeader')/tei:revisionDesc/@status/string()
 
-    let $mirador := 'mirador.html?wid=' || $workId
+    let $mirador := 'viewer.html?wid=' || $workId
     let $scanCount := 0
     let $isPublished := app:WRKisPublished($node, $model, $workId)
     (: ({$scanCount || ' '}<i18n:text key="scans">Scans</i18n:text>) :)
@@ -2211,7 +2211,7 @@ declare function app:WRKcatRecordTeaser($node as node(), $model as map(*), $wid 
             let $editors :=     if ($digital?('isPublished')) then $digital?('alphaEditors')
                                 else ()
             let $recordLink := 'workDetails.html?wid=' || $wid
-            let $imagesLink := 'mirador.html?wid=' || $wid
+            let $imagesLink := 'viewer.html?wid=' || $wid
             let $col1-width := 'col-md-2'
             let $col2-width := 'col-md-10'
             let $publication := if ($digital?('isPublished')) then 
