@@ -465,7 +465,7 @@
 -->
 
         <div id="parent">
-            <iframe title="Mirador" id="Mirador" src="mirador.html" allowfullscreen="" style="min-width: 99%;height:99%;"/>
+            <iframe title="Mirador" id="Mirador" src="viewer.html" allowfullscreen="" style="min-width: 99%;height:99%;"/>
         </div>
         <script type="text/javascript">
         /**
@@ -505,7 +505,7 @@
 
         // Build viewer popup, but don't show it yet (jquery ui config)
 //        $(document).ready(function(){
-//            document.getElementById('Mirador').src = "mirador.html?wid=" + getUrlParams( 'wid' );
+//            document.getElementById('Mirador').src = "viewer.html?wid=" + getUrlParams( 'wid' );
 //            $('#parent').dialog({                                      // define jquery-ui dialogue properties...
 //                position:   {my: "left top", at: "left+5 bottom+40", of: "div.navbar"},
 //                autoOpen:   false,
@@ -742,7 +742,7 @@
                 $('#dropdownMenu1').click(loadPaginatorContent);
 
                 // Initialize Mirador viewer
-                document.getElementById('Mirador').src = "mirador.html?wid=" + getUrlParams( 'wid' );
+                document.getElementById('Mirador').src = "viewer.html?wid=" + getUrlParams( 'wid' );
                 $('#parent').dialog({                                      // define jquery-ui dialogue properties...
                     position:   {my: "left top", at: "left+5 bottom+40", of: "div.navbar"},
                     autoOpen:   false,
