@@ -1560,6 +1560,36 @@ declare function render:pb($node as element(tei:pb), $mode as xs:string) {
                -> for example, with repetitive page numbers in the appendix 
                 (ideally, such collisions should be resolved in TEI markup, but one never knows...) :)
         
+        case 'html' return
+            (: not(@sameAs or @corresp) should be checked upstream (render:isIndexNode()) :)
+            let $inlineBreak :=
+                if ($node[@type eq 'blank']) then (: blank pages - make a typographic line break :)
+                    <br/>
+                else if ($node[preceding::pb 
+                               and preceding-sibling::node()[descendant-or-self::text()[not(normalize-space() eq '')]]                                                                                
+                               and following-sibling::node()[descendant-or-self::text()[not(normalize-space() eq '')]]]) then
+                    (: mark page break through pipe, but not at the beginning or end of structural sections :)
+                    if ($node/@break eq 'no') then '|' else ' | '
+                else ()
+            let $link :=
+                if ($node[@n]) then
+                    let $pageAnchor := 'pageNo_' || (if ($node/@xml:id) then $node/@xml:id/string() else generate-id($node))
+                    let $title := if (contains($node/@n, 'fol.')) then 'View image of ' || $node/@n else 'View image of p. ' || $node/@n
+                    let $text := if (contains($node/@n, 'fol.')) then $node/@n else 'p. ' || $node/@n
+                    return
+                        <div class="pageNumbers">
+                           <a href="{render:resolveFacsURI($node/@facs)}">
+                               <i class="fas fa-book-open facs-icon"/>
+                               {' '}
+                               <span class="pageNo messengers" data-canvas="{render:resolveCanvasID($node)}"
+                                   data-sal-id="{render:getHTMLSectionId($node)}" id="{$pageAnchor}" title="{$title}">
+                                   {$text}
+                               </span>
+                           </a>
+                        </div>
+                else ()
+            return ($inlineBreak, $link)
+                    
         case 'passagetrail' return
             if (contains($node/@n, 'fol.')) then $node/@n
             else 'p. ' || $node/@n
@@ -1582,6 +1612,36 @@ declare function render:pb($node as element(tei:pb), $mode as xs:string) {
             util:log('warn', '[RENDER] Processing tei:pb node ' || $node/@xml:id)
         
         default return () (: some sophisticated function to insert a pipe and a pagenumber div in the margin :)
+};
+
+declare function render:resolveCanvasID($pb as element(tei:pb)) as xs:string {
+    let $facs := $pb/@facs/string()
+    return
+        if (matches($facs, '^facs:W[0-9]{4}-[A-z]-[0-9]{4}$')) then 
+            let $index := string(count($node/preceding::pb[not(@sameAs) and substring(./@facs, 1, 12) eq substring($facs, 1, 12)]) + 1)
+            return $config:imageserver || '/iiif/presentation/' || sal-util:convertVolumeID(substring($facs,6,7)) || '/canvas/p' || $index
+        else if (matches($facs, '^facs:W[0-9]{4}-[0-9]{4}$')) then
+            let $index := string(count($node/preceding::pb[not(@sameAs)]) + 1)
+            return $config:imageserver || '/iiif/presentation/' || substring($facs,6,5) || '/canvas/p' || $index
+        else error(xs:QName('render:resolveCanvasID'), 'Unknown pb/@facs value')
+};
+
+declare function render:resolveFacsURI($facs as attribute()) as xs:string {
+    let $iiifRenderParams := '/full/full/0/default.jpg'
+    return
+        if (matches($facs, 'facs:(W[0-9]{{4}})\-([0-9]{{4}})')) then (: single-volume work, e.g.: facs:W0017-0005 :)
+            let $workId := replace($facs, 'facs:(W[0-9]{{4}})\-([0-9]{{4}})', '$1')
+            let $facsId := replace($facs, 'facs:(W[0-9]{{4}})\-([0-9]{{4}})', '$2')
+            return 
+                $config:imageserver || '/iiif/image/' || $workId || '!' || $workId || '-' || $facsId || $iiifRenderParams
+        else if (matches($facs, 'facs:(W[0-9]{{4}})\-([A-z])\-([0-9]{{4}})')) then (: volume of a multi-volume work, e.g.: facs:W0013-A-0007 :)
+            let $workId := replace($facs, 'facs:(W[0-9]{{4}})\-([A-z])\-([0-9]{{4}})', '$1')
+            let $volId := replace($facs, 'facs:(W[0-9]{{4}})\-([A-z])\-([0-9]{{4}})', '$2')
+            let $facsId := replace($facs, 'facs:(W[0-9]{{4}})\-([A-z])\-([0-9]{{4}})', '$3')
+            return $config:imageserver || '/iiif/image/' || $workId || '!' || $volId || '!' || $workId 
+                        || '-' || $volId || '-' || $facsId || $iiifRenderParams
+        else error(xs:QName('render:pb'), 'Illegal facs ID (pb/@facs): ' || $facs)
+
 };
 
 declare function render:persName($node as element(tei:persName), $mode as xs:string) {

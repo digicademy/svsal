@@ -125,6 +125,32 @@ declare function sal-util:WRKisPublished($wid as xs:string) as xs:boolean {
 (: concepts? :)
 
 
+
+(:
+~ For a volume ID of the form "W0013-A" or "W0096-B", return a matching ID of the form "W0013_Vol01" or "W0096_Vol02";
+~ currently covers volume numbers up to "10", or "J"
+:)
+declare function sal-util:convertVolumeID($volId as xs:string) as xs:string {
+    let $volChar := substring($volId, 7, 1)
+    let $workId := substring($volId, 1, 5)
+    let $volInfix := '_Vol'
+    let $volN :=
+        switch($volChar)
+            case 'A' return '01'
+            case 'B' return '02'
+            case 'C' return '03'
+            case 'D' return '04'
+            case 'E' return '05'
+            case 'F' return '06'
+            case 'G' return '07'
+            case 'H' return '08'
+            case 'I' return '09'
+            case 'J' return '10'
+            default return error(xs:QName('sal-util:convertVolumeID'), 'Error: volume number not supported')
+    return $workId || $volInfix || $volN
+};
+
+
 (:
 ~ Removes insignificant whitespace from an HTML document/fragment.
 :)
