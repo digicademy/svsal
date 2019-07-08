@@ -253,6 +253,10 @@ declare function render:excludedAncestorHTML($fragmentRoot as element()) {
         return ($delimiter, $summaryTitle)
 };
 
+
+(:
+~ Creates a teaser for a certain type of structural element (i.e., certain div, milestone, list[@type='dict'], and item[parent::list/@type='dict'])
+:)
 declare function render:HTMLsectionTeaser($node as element()) {
     let $identifier := $node/@xml:id/string()
     let $fullTitle := render:dispatch($node, 'html-title')
@@ -272,7 +276,7 @@ declare function render:HTMLSectionToolbox($node as element()) as element(span) 
     let $id := $node/@xml:id/string()
     let $dataContent := 
         '&lt;div&gt;' ||
-            '&lt;a href=&#34;' || render:getHTMLSectionId($node) || '&#34;&gt;' || 
+            '&lt;a href=&#34;' || render:makeCitetrailURI($node) || '&#34;&gt;' || 
                 '&lt;span class=&#34;messengers glyphicon glyphicon-link&#34; title=&#34;go to/link this textarea&#34;/&gt;' || 
             '&lt;/a&gt;' || 
             '  ' || 
@@ -296,7 +300,7 @@ declare function render:HTMLSectionToolbox($node as element()) as element(span) 
     
 };:)
 
-declare function render:getHTMLSectionId($node as element()) {
+declare function render:makeCitetrailURI($node as element()) {
     let $citetrail := render:dispatch($node, 'citetrail')
     let $workId := $node/ancestor::tei:TEI/@xml:id
     return
@@ -368,6 +372,39 @@ declare function render:determineListType($node as element()) as xs:string? {
     else if (ancestor::tei:list[@type]) then ancestor::tei:list[@type][1]/@type
     else ()
 };
+
+
+declare function render:resolveCanvasID($pb as element(tei:pb)) as xs:string {
+    let $facs := $pb/@facs/string()
+    return
+        if (matches($facs, '^facs:W[0-9]{4}-[A-z]-[0-9]{4}$')) then 
+            let $index := string(count($node/preceding::pb[not(@sameAs) and substring(./@facs, 1, 12) eq substring($facs, 1, 12)]) + 1)
+            return $config:imageserver || '/iiif/presentation/' || sal-util:convertVolumeID(substring($facs,6,7)) || '/canvas/p' || $index
+        else if (matches($facs, '^facs:W[0-9]{4}-[0-9]{4}$')) then
+            let $index := string(count($node/preceding::pb[not(@sameAs)]) + 1)
+            return $config:imageserver || '/iiif/presentation/' || substring($facs,6,5) || '/canvas/p' || $index
+        else error(xs:QName('render:resolveCanvasID'), 'Unknown pb/@facs value')
+};
+
+
+declare function render:resolveFacsURI($facs as attribute()) as xs:string {
+    let $iiifRenderParams := '/full/full/0/default.jpg'
+    return
+        if (matches($facs, 'facs:(W[0-9]{{4}})\-([0-9]{{4}})')) then (: single-volume work, e.g.: facs:W0017-0005 :)
+            let $workId := replace($facs, 'facs:(W[0-9]{{4}})\-([0-9]{{4}})', '$1')
+            let $facsId := replace($facs, 'facs:(W[0-9]{{4}})\-([0-9]{{4}})', '$2')
+            return 
+                $config:imageserver || '/iiif/image/' || $workId || '!' || $workId || '-' || $facsId || $iiifRenderParams
+        else if (matches($facs, 'facs:(W[0-9]{{4}})\-([A-z])\-([0-9]{{4}})')) then (: volume of a multi-volume work, e.g.: facs:W0013-A-0007 :)
+            let $workId := replace($facs, 'facs:(W[0-9]{{4}})\-([A-z])\-([0-9]{{4}})', '$1')
+            let $volId := replace($facs, 'facs:(W[0-9]{{4}})\-([A-z])\-([0-9]{{4}})', '$2')
+            let $facsId := replace($facs, 'facs:(W[0-9]{{4}})\-([A-z])\-([0-9]{{4}})', '$3')
+            return $config:imageserver || '/iiif/image/' || $workId || '!' || $volId || '!' || $workId 
+                        || '-' || $volId || '-' || $facsId || $iiifRenderParams
+        else error(xs:QName('render:pb'), 'Illegal facs ID (pb/@facs): ' || $facs)
+
+};
+
 
 
 (: ####====---- TEI Node Rendering Typeswitch Functions ----====#### :)
@@ -626,6 +663,7 @@ declare function render:death($node as element(tei:death), $mode as xs:string) {
 declare function render:div($node as element(tei:div), $mode as xs:string) {
     switch($mode)
         case 'title' return
+            (: TODO: debug :)
             normalize-space(
                 if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
                     '&#34;' || string($node/@n) || '&#34;'
@@ -645,6 +683,18 @@ declare function render:div($node as element(tei:div), $mode as xs:string) {
                 (: for expanded titles, we need the full version, not just the teaser :)
                 normalize-space(string-join(render:dispatch(($node/(tei:head|tei:label))[1], 'edit'), ''))
             else render:div($node, 'title')
+        
+        case 'html' return
+            if (render:isIndexNode($node)) then
+                let $toolbox := render:HTMLSectionToolbox($node)
+                let $teaser := render:HTMLsectionTeaser($node)
+                let $sumTitle :=
+                    <div class="summary_title">
+                        {$toolbox}
+                        {$teaser}
+                    </div>
+                return ($sumTitle, render:passthru($node, $mode))
+            else render:passthru($node, $mode)
         
         case 'class' return
             'tei-div-' || $node/@type
@@ -1207,10 +1257,13 @@ declare function render:milestone($node as element(tei:milestone), $mode as xs:s
         case 'html-title' return
             normalize-space(
                 if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
-                    '&#34;' || string($node/@n) || '&#34;'
+                    '"' || string($node/@n) || '"'
                 (: purely numeric section titles: :)
                 else if ($node/@n and matches($node/@n, '^[0-9\[\]]+$') and $node/@unit) then
                     $node/@n/string()
+                (: use @unit to derive a title: :)
+                else if (matches($node/@n, '^\[?[0-9]+\]?$') and $node/@unit[. ne 'number']) then
+                    $config:citationLabels(@unit)?('abbr') || ' ' || @n
                 (: otherwise, try to derive a title from potential references to the current node :)
                 else if ($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)]) then
                     render:teaserString($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)][1], 'edit')
@@ -1218,6 +1271,20 @@ declare function render:milestone($node as element(tei:milestone), $mode as xs:s
             )
             (: TODO: bring i18n labels somehow into html-title... :)
             
+        case 'html' return
+            let $inlineText := if ($node/@rendition eq '#dagger') then <sup>†</sup> else '*'
+            return
+                if ($node/@unit ne 'other') then
+                    let $toolbox := render:HTMLSectionToolbox($node)
+                    let $teaser := render:HTMLsectionTeaser($node)      
+                    let $sumTitle :=
+                        <div class="summary_title">
+                            {$toolbox}
+                            {$teaser}
+                        </div>
+                    return ($inlineText, $sumTitle)
+                else $inlineText
+        
         case 'class' return
             'tei-milestone-' || $node/@unit
             
@@ -1582,7 +1649,7 @@ declare function render:pb($node as element(tei:pb), $mode as xs:string) {
                                <i class="fas fa-book-open facs-icon"/>
                                {' '}
                                <span class="pageNo messengers" data-canvas="{render:resolveCanvasID($node)}"
-                                   data-sal-id="{render:getHTMLSectionId($node)}" id="{$pageAnchor}" title="{$title}">
+                                   data-sal-id="{render:makeCitetrailURI($node)}" id="{$pageAnchor}" title="{$title}">
                                    {$text}
                                </span>
                            </a>
@@ -1614,35 +1681,6 @@ declare function render:pb($node as element(tei:pb), $mode as xs:string) {
         default return () (: some sophisticated function to insert a pipe and a pagenumber div in the margin :)
 };
 
-declare function render:resolveCanvasID($pb as element(tei:pb)) as xs:string {
-    let $facs := $pb/@facs/string()
-    return
-        if (matches($facs, '^facs:W[0-9]{4}-[A-z]-[0-9]{4}$')) then 
-            let $index := string(count($node/preceding::pb[not(@sameAs) and substring(./@facs, 1, 12) eq substring($facs, 1, 12)]) + 1)
-            return $config:imageserver || '/iiif/presentation/' || sal-util:convertVolumeID(substring($facs,6,7)) || '/canvas/p' || $index
-        else if (matches($facs, '^facs:W[0-9]{4}-[0-9]{4}$')) then
-            let $index := string(count($node/preceding::pb[not(@sameAs)]) + 1)
-            return $config:imageserver || '/iiif/presentation/' || substring($facs,6,5) || '/canvas/p' || $index
-        else error(xs:QName('render:resolveCanvasID'), 'Unknown pb/@facs value')
-};
-
-declare function render:resolveFacsURI($facs as attribute()) as xs:string {
-    let $iiifRenderParams := '/full/full/0/default.jpg'
-    return
-        if (matches($facs, 'facs:(W[0-9]{{4}})\-([0-9]{{4}})')) then (: single-volume work, e.g.: facs:W0017-0005 :)
-            let $workId := replace($facs, 'facs:(W[0-9]{{4}})\-([0-9]{{4}})', '$1')
-            let $facsId := replace($facs, 'facs:(W[0-9]{{4}})\-([0-9]{{4}})', '$2')
-            return 
-                $config:imageserver || '/iiif/image/' || $workId || '!' || $workId || '-' || $facsId || $iiifRenderParams
-        else if (matches($facs, 'facs:(W[0-9]{{4}})\-([A-z])\-([0-9]{{4}})')) then (: volume of a multi-volume work, e.g.: facs:W0013-A-0007 :)
-            let $workId := replace($facs, 'facs:(W[0-9]{{4}})\-([A-z])\-([0-9]{{4}})', '$1')
-            let $volId := replace($facs, 'facs:(W[0-9]{{4}})\-([A-z])\-([0-9]{{4}})', '$2')
-            let $facsId := replace($facs, 'facs:(W[0-9]{{4}})\-([A-z])\-([0-9]{{4}})', '$3')
-            return $config:imageserver || '/iiif/image/' || $workId || '!' || $volId || '!' || $workId 
-                        || '-' || $volId || '-' || $facsId || $iiifRenderParams
-        else error(xs:QName('render:pb'), 'Illegal facs ID (pb/@facs): ' || $facs)
-
-};
 
 declare function render:persName($node as element(tei:persName), $mode as xs:string) {
     switch($mode)
