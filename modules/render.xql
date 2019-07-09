@@ -26,7 +26,7 @@ import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.x
 (: SETTINGS :)
 
 (: the max. amount of characters to be shown in a note teaser :)
-declare variable $render:noteTruncLimit := 35;
+declare variable $render:noteTruncLimit := 38;
 
 declare variable $render:teaserTruncLimit := 45;
 (:
@@ -294,11 +294,6 @@ declare function render:HTMLSectionToolbox($node as element()) as element(span) 
         </span>
 };
 
-(:declare function render:resolveURI($node as element(), $target as xs:string) {
-    let $workId := $node/ancestor::tei:TEI/@xml:id
-    let $prefixDef := $node/ancestor::tei:TEI//tei:prefixDef
-    
-};:)
 
 declare function render:makeCitetrailURI($node as element()) {
     let $citetrail := render:dispatch($node, 'citetrail')
@@ -318,6 +313,8 @@ declare function render:classableString($str as xs:string) as xs:string? {
 
 
 (: ####====---- RENDERING FUNCTIONS ----====#### :)
+
+(: #### HTML Util Functions ####:)
 
 declare function render:createHTMLFragment($workId as xs:string, $fragmentRoot as element(), $fragmentIndex as xs:integer, $prevId as xs:string?, $nextId as xs:string?) as element(div) {
     <div class="row" xml:space="preserve">
@@ -375,7 +372,7 @@ declare function render:determineListType($node as element()) as xs:string? {
 
 
 declare function render:resolveCanvasID($pb as element(tei:pb)) as xs:string {
-    let $facs := $pb/@facs/string()
+    let $facs := (tokenize(normalize-space($pb/@facs/string()), ''))[1]
     return
         if (matches($facs, '^facs:W[0-9]{4}-[A-z]-[0-9]{4}$')) then 
             let $index := string(count($node/preceding::pb[not(@sameAs) and substring(./@facs, 1, 12) eq substring($facs, 1, 12)]) + 1)
@@ -387,7 +384,8 @@ declare function render:resolveCanvasID($pb as element(tei:pb)) as xs:string {
 };
 
 
-declare function render:resolveFacsURI($facs as attribute()) as xs:string {
+declare function render:resolveFacsURI($facsTargets as xs:string) as xs:string {
+    let $facs := (tokenize($facsTargets, ' '))[1]
     let $iiifRenderParams := '/full/full/0/default.jpg'
     return
         if (matches($facs, 'facs:(W[0-9]{{4}})\-([0-9]{{4}})')) then (: single-volume work, e.g.: facs:W0017-0005 :)
@@ -405,6 +403,99 @@ declare function render:resolveFacsURI($facs as attribute()) as xs:string {
 
 };
 
+(:
+~ Renders a marginal element (currently all tei:note as well as label[@place eq 'margin']; head[@place eq 'margin'] are treated as ordinary head)
+:)
+declare function render:makeMarginalHTML($node as element()) as element(div) {
+    let $label := if ($node/@n) then <span class="note-label">{$node/@n || ' '}</span> else ()
+    let $content :=
+        <div class="marginal container" id="{$node/@xml:id}">
+            {
+            if ($node/tei:p) then 
+                render:passthru($node, 'html')
+            else
+                <span class="note-paragraph">
+                    {render:passthru($node, 'html')}
+                </span>
+            }
+        </div>
+    (: determine string-length of complete note text, so as to see whether note needs to be truncated: :)
+    let $noteLength := 
+        string-length((if ($label) then @n || ' ' else ()) || normalize-space(string-join(render:dispatch($node, 'edit'), '')))
+    return
+        if ($noteLength gt $render:noteTruncLimit) then
+            let $id := 'collapse-' || @xml:id
+            return
+                <a role="button" class="collapsed note-teaser" data-toggle="collapse" href="{('#' || $id)}" 
+                   aria-expanded="false" aria-controls="{$id}">    
+                    <p class="collapse" id="{$id}" aria-expanded="false">
+                        {$content}
+                    </p>
+                </a>
+        else 
+            $content
+};
+
+
+(:
+~ Transforms a $node into an HTML link anchor (a[@href]), dispatching all its content ((render:dispatch())) and, if required,
+    preventing tei:pb from occurring within the link.
+:)
+declare function render:transformToHTMLLink($node as element(), $uri as xs:string) {
+    if (not($node/tei:pb)) then
+        <a href="{$uri}" target="_blank">{render:passthru($node, 'html')}</a>
+    else
+        (: make an anchor for the preceding part, then render the pb, then "continue" the anchor :)
+        (: TODO: ATM, this works only if pb occurs at the direct child level, and only with the first pb :)
+        let $before :=
+            <a href="{$uri}" target="_blank">
+                {for $n in $node/tei:pb[1]/preceding-sibling::node() return render:dispatch($n, 'html')}
+            </a>
+        let $break := render:dispatch($node/tei:pb[1], 'html')
+        let $after :=
+            <a href="{$uri}" target="_blank">
+                {for $n in $node/tei:pb[1]/following-sibling::node() return render:dispatch($n, 'html')}
+            </a>
+        return
+            ($before, $break, $after)
+};
+
+
+declare function render:resolveURI($node as element(), $targets as xs:string) {
+    let $currentWork := $node/ancestor-or-self::tei:TEI
+    let $target := (tokenize($targets, ' '))[1]
+    let $prefixDef := $currentWork//tei:prefixDef
+    return
+        if (matches($target, '(work:(W[A-z0-9.:_\-]+))?#(.*)')) then
+            (: target is something like "work:W...#..." :)
+            let $targetWorkId :=
+                if (replace($target, '(work:(W[A-z0-9.:_\-]+))?#(.*)', '$2')) then (: Target is a link containing a work id :)
+                    replace($target, '(work:(W[A-z0-9.:_\-]+))?#(.*)', '$2')
+                else $currentWork/@xml:id/string() (: Target is just a link to a fragment anchor, so targetWorkId = currentWork :)
+            let $anchorId := replace($target, '(work:(W[A-z0-9.:_\-]+))?#(.*)', '$3')
+            return 
+                if ($anchorId) then render:makeCitetrailURI($node) else ()
+        else if (matches($target, 'facs:((W[0-9]+)[A-z0-9.:#_\-]+)')) then (: Target is a facs string :)
+            (: Target does not contain "#", or is not a "work:..." url: :)
+            let $targetWorkId :=
+                if (replace($target, 'facs:((W[0-9]+)[A-z0-9.:#_\-]+)', '$2')) then (: extract work id from facs string :)
+                    replace($target, 'facs:((W[0-9]+)[A-z0-9.:#_\-]+)', '$2')
+                else $currentWork/@xml:id/string()
+            let $anchorId := replace($target, 'facs:((W[0-9]+)[A-z0-9.:#_\-]+)', '$1') (: extract facs string :)
+            return
+                render:makeCitetrailURI($node)
+        else if (matches($target, '(\S+):([A-z0-9.:#_\-]+)')) then 
+            (: Use the general replacement mechanism as defined by the prefixDef in works-general.xml: :)
+            let $prefix := replace($target, '(\S+):([A-z0-9.:#_\-]+)', '$1')
+            let $value := replace($target, '(\S+):([A-z0-9.:#_\-]+)', '$2')
+            return 
+                if ($prefixDef[@ident eq $prefix]) then
+                    for $p in $prefixDef[@ident eq $prefix][matches($value, @matchPattern)] return
+                        replace($value, $p/@matchPattern, $p/@replacementPattern)
+                else replace($target, '(\S+):([A-z0-9.:#_\-]+)', '$0') (: regex-group(0) :)
+        else $target    
+};         
+
 
 
 (: ####====---- TEI Node Rendering Typeswitch Functions ----====#### :)
@@ -418,6 +509,7 @@ declare function render:resolveFacsURI($facs as attribute()) as xs:string {
 ~   - 'crumbtrail': crumbtrail ID of a node (only for nodes that represent citetrail/crumbtrail sections)
 ~   - 'class': i18n class of a node, usually to be used by HTML-/RDF-related functionalities for generating verbose labels when displaying section titles 
 ~   - 'html': HTML snippet for the reading view
+~   - 'html-title': a full version of the title, for toggling of teasers in the reading view (often simply falls back to 'title', see above)
 :)
 
 (: $mode can be "orig", "edit" (both being plain text modes), "html" or, even more sophisticated, "work" :)
@@ -444,10 +536,11 @@ declare function render:dispatch($node as node(), $mode as xs:string) {
         case element(tei:reg)           return render:reg($node, $mode)
         case element(tei:corr)          return render:corr($node, $mode)
         
-        case element(tei:persName)      return render:name($node, $mode)
-        case element(tei:placeName)     return render:name($node, $mode)
-        case element(tei:orgName)       return render:name($node, $mode)
-        case element(tei:title)         return render:name($node, $mode)
+        case element(tei:persName)      return render:persName($node, $mode)
+        case element(tei:placeName)     return render:placeName($node, $mode)
+        case element(tei:docAuthor)     return render:docAuthor($node, $mode)
+        case element(tei:orgName)       return render:orgName($node, $mode)
+        case element(tei:title)         return render:title($node, $mode)
         case element(tei:term)          return render:term($node, $mode)
         case element(tei:bibl)          return render:bibl($node, $mode)
 
@@ -494,7 +587,7 @@ declare function render:dispatch($node as node(), $mode as xs:string) {
 
         case element(tei:table)         return render:table($node, $mode)
         case element(tei:row)           return render:row($node, $mode)
-        case element(tei:cell)           return render:cell($node, $mode)
+        case element(tei:cell)          return render:cell($node, $mode)
 
         case element(tei:figDesc)       return ()
         case element(tei:teiHeader)     return ()
@@ -763,6 +856,14 @@ declare function render:div($node as element(tei:div), $mode as xs:string) {
             render:passthru($node, $mode)
 };
 
+declare function render:docAuthor($node as element(tei:docAuthor), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            render:name($node, $mode)
+        default return 
+            render:passthru($node, $mode)
+};
+
 declare function render:docDate($node as element(tei:docDate), $mode as xs:string) {
     render:passthru($node, $mode)
 };
@@ -951,6 +1052,17 @@ declare function render:head($node as element(tei:head), $mode as xs:string) {
         case 'html-title' return
             normalize-space(string-join(render:dispatch($node, 'edit')))
         
+        case 'html' return
+            (: list[not(@type eq 'dict')]/head are handled in render:list() :)
+            if ($node/parent::tei:list[not(@type eq 'dict')]) then 
+                () 
+            (: within notes: :)
+            else if ($node/parent::tei:lg) then 
+                <h5 class="poem-head">{render:passthru($node, $mode)}</h5>
+            (: usual headings: :)
+            else 
+                <h3>{render:passthru($node, $mode)}</h3>
+            
         case 'class' return
             'tei-' || local-name($node)
         
@@ -1127,29 +1239,34 @@ declare function render:l($node as element(tei:l), $mode as xs:string) {
 
 declare function render:label($node as element(tei:label), $mode as xs:string) {
     switch($mode)
-       case 'title' return
-           normalize-space(
-               render:teaserString($node, 'edit')
-           )
-           
-       case 'html-title' return
-           normalize-space(string-join(render:dispatch($node, 'edit')))
-           
-       case 'html' return
-           <span class="label-inline">
-               {render:passthru($node, $mode)}
-           </span>
-           
-       case 'class' return
-           'tei-' || local-name($node)
-           
-       case 'citetrail' return
-           if (render:isUnnamedCitetrailNode($node)) then 
-               string(count($node/preceding-sibling::*[render:isUnnamedCitetrailNode(.)]) + 1)
-           else ()
-           
-       default return
-           render:passthru($node, $mode)
+        case 'title' return
+            normalize-space(
+                render:teaserString($node, 'edit')
+            )
+            
+        case 'html-title' return
+            normalize-space(string-join(render:dispatch($node, 'edit')))
+            
+        case 'html' return
+            switch($node/@place)
+                case 'margin' return
+                    render:makeMarginalHTML($node)
+                case 'inline' return
+                    <span class="label-inline">
+                        {render:passthru($node, $mode)}
+                    </span>
+                default return render:passthru($node, $mode)
+            
+        case 'class' return
+            'tei-' || local-name($node)
+            
+        case 'citetrail' return
+            if (render:isUnnamedCitetrailNode($node)) then 
+                string(count($node/preceding-sibling::*[render:isUnnamedCitetrailNode(.)]) + 1)
+            else ()
+            
+        default return
+            render:passthru($node, $mode)
 };
 
 
@@ -1426,18 +1543,70 @@ declare function render:milestone($node as element(tei:milestone), $mode as xs:s
 };
 
 declare function render:name($node as element(*), $mode as xs:string) {
-    if ($mode = "orig") then
-        render:passthru($node, $mode)
-    
-    else if ($mode = "edit") then
-        if ($node/(@key|@ref)) then
-            (render:passthru($node, $mode), ' [', string-join(($node/@key, $node/@ref), '/'), ']')
-        else
+    switch($mode)
+        case 'orig' return
             render:passthru($node, $mode)
-    
-    else
-        render:passthru($node, $mode)
+        
+        case 'edit' return
+            if ($node/(@key|@ref)) then
+                (render:passthru($node, $mode), ' [', string-join(($node/@key, $node/@ref), '/'), ']')
+            else
+                render:passthru($node, $mode)
+        
+        case 'html' return
+            let $hiliteName := if ($node/@ref) then 'hi_' || render:classableString((tokenize(@ref, ' '))[1]) else ()
+            let $dictLemma := 
+                if ($node[self::tei:term and ancestor::tei:list[@type='dict'] and not(preceding-sibling::tei:term)]) then
+                    'dictLemma'
+                else ()
+            return 
+                (: as long as any link would lead nowhere, omit linking and simply grasp the content: :)
+                <span class="{normalize-space(string-join((local-name(),$hiliteName,$dictLemma), ' '))}">
+                    {render:passthru($node, $mode)}
+                </span>
+                (: as soon as links have actual targets, execute something like the following: :)
+                (:let $resolvedURI := render:resolveURI($node, @ref)
+                return
+                    if ($node/@ref and substring($resolvedURI,1,5) = ('http:', '/exis')) then
+                        render:transformToHTMLLink($node, $resolvedURI)
+                    else 
+                        {render:passthru($node, $mode)}:)
+                (: 
+                <xsl:choose>
+                    <xsl:when test="@ref and substring(sal:resolveURI(current(), @ref)[1],1, 5) = ('http:', '/exis') ">
+                        <xsl:choose>
+                            <xsl:when test="not(./pb)"> <!-\- The entity does not contain a pagebreak intervention - no problem then -\->
+                                <xsl:element name="a">
+                                    <xsl:attribute name="href" select="sal:resolveURI(current(), @ref)"/>
+                                    <xsl:attribute name="target">_blank</xsl:attribute>
+                                    <xsl:apply-templates/>
+                                </xsl:element>
+                            </xsl:when>
+                            <xsl:otherwise>             <!-\- Otherwise, make an anchor for the preceding part, then render the pb, then "continue" the anchor -\->
+                                <xsl:element name="a">
+                                    <xsl:attribute name="href" select="sal:resolveURI(current(), @ref)"/>
+                                    <xsl:attribute name="target">_blank</xsl:attribute>
+                                    <xsl:apply-templates select="./pb/preceding-sibling::node()"/>
+                                </xsl:element>
+                                <xsl:apply-templates select="./pb"/>
+                                <xsl:element name="a">
+                                    <xsl:attribute name="href" select="sal:resolveURI(current(), @ref)"/>
+                                    <xsl:attribute name="target">_blank</xsl:attribute>
+                                    <xsl:apply-templates select="./pb/following-sibling::node()"/>
+                                </xsl:element>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:apply-templates/>
+                    </xsl:otherwise>
+                </xsl:choose>
+                :)
+        
+        default return
+            render:passthru($node, $mode)
 };
+
 
 declare function render:note($node as element(tei:note), $mode as xs:string) {
     switch($mode)
@@ -1472,6 +1641,9 @@ declare function render:note($node as element(tei:note), $mode as xs:string) {
             )
         
         case 'html-title' return ()
+        
+        case 'html' return
+            render:makeMarginalHTML($node)
         
         case 'class' return
             'tei-' || local-name($node)
@@ -1635,9 +1807,9 @@ declare function render:p($node as element(tei:p), $mode as xs:string) {
                 </span>
             (: main text: :)
             else if ($node/ancestor::item[not(ancestor::list/@type = ('dict', 'index'))]) then
-                    <p id="{$node/@xml:id}">
-                        {render:passthru($node, $mode)}
-                    </p>
+                <p id="{$node/@xml:id}">
+                    {render:passthru($node, $mode)}
+                </p>
             else
                 <div class="hauptText">
                     {render:HTMLSectionToolbox($node)}
@@ -1705,7 +1877,7 @@ declare function render:pb($node as element(tei:pb), $mode as xs:string) {
                 else if ($node[preceding::pb 
                                and preceding-sibling::node()[descendant-or-self::text()[not(normalize-space() eq '')]]                                                                                
                                and following-sibling::node()[descendant-or-self::text()[not(normalize-space() eq '')]]]) then
-                    (: mark page break through pipe, but not at the beginning or end of structural sections :)
+                    (: mark page break by means of '|', but not at the beginning or end of structural sections :)
                     if ($node/@break eq 'no') then '|' else ' | '
                 else ()
             let $link :=
@@ -1715,14 +1887,14 @@ declare function render:pb($node as element(tei:pb), $mode as xs:string) {
                     let $text := if (contains($node/@n, 'fol.')) then $node/@n else 'p. ' || $node/@n
                     return
                         <div class="pageNumbers">
-                           <a href="{render:resolveFacsURI($node/@facs)}">
-                               <i class="fas fa-book-open facs-icon"/>
-                               {' '}
-                               <span class="pageNo messengers" data-canvas="{render:resolveCanvasID($node)}"
-                                   data-sal-id="{render:makeCitetrailURI($node)}" id="{$pageAnchor}" title="{$title}">
-                                   {$text}
-                               </span>
-                           </a>
+                            <a href="{render:resolveFacsURI($node/@facs)}">
+                                <i class="fas fa-book-open facs-icon"/>
+                                {' '}
+                                <span class="pageNo messengers" data-canvas="{render:resolveCanvasID($node)}"
+                                    data-sal-id="{render:makeCitetrailURI($node)}" id="{$pageAnchor}" title="{$title}">
+                                    {$text}
+                                </span>
+                            </a>
                         </div>
                 else ()
             return ($inlineBreak, $link)
@@ -1765,6 +1937,8 @@ declare function render:persName($node as element(tei:persName), $mode as xs:str
                 '[' || string($node/@ref) || ']'
             else
                 render:passthru($node, $mode)
+        case 'html' return
+            render:name($mode, $node)
         default return
             render:name($mode, $node)
 };
@@ -1778,6 +1952,8 @@ declare function render:placeName($node as element(tei:placeName), $mode as xs:s
                 string($node/@key)
             else
                 render:passthru($node, $mode)
+        case 'html' return
+            render:name($mode, $node)
         default return
             render:name($mode, $node)
 };
@@ -1802,10 +1978,17 @@ declare function render:quote($node as element(tei:quote), $mode as xs:string) {
 };
 
 declare function render:ref($node as element(tei:ref), $mode as xs:string) {
-    if ($mode = ("orig", "edit")) then
-        render:passthru($node, $mode)
-    else
-        render:passthru($node, $mode)
+    switch($mode)
+        case 'html' return
+            if ($node/@type eq 'note-anchor') then
+                () (: omit note references :)
+            else if ($node/@target) then
+                let $resolvedUri := render:resolveURI($node, @target) (: TODO: verify that this works :)
+                return render:transformToHTMLLink($node, $resolvedUri)
+            else render:passthru($node, $mode)
+        
+        default return
+            render:passthru($node, $mode)
 };
 
 
@@ -1907,7 +2090,7 @@ declare function render:term($node as element(tei:term), $mode as xs:string) {
         case 'snippets-orig' return
             render:passthru($node, $mode)
         
-        case "edit" return
+        case 'edit' return
             if ($node/@key) then
                 (render:passthru($node, $mode), ' [', string($node/@key), ']')
             else
@@ -1918,6 +2101,9 @@ declare function render:term($node as element(tei:term), $mode as xs:string) {
                 string($node/@key)
             else
                 render:passthru($node, $mode)
+        
+        case 'html' return
+            render:name($mode, $node)
         
         default return
             render:passthru($node, $mode)
@@ -1940,6 +2126,18 @@ declare function render:text($node as element(tei:text), $mode as xs:string) {
             if ($node/@type eq 'work_volume') then
                 'Vol.' || $node/@n/string()
             else ()
+        
+        case 'html' return
+            if ($node/@type eq 'work_volume') then
+                let $delimiter := if (xs:integer($node/@n) gt 1) then <hr/> else ()
+                let $sumTitle :=
+                    <div class="summary_title">
+                        {render:HTMLSectionToolbox($node)}
+                        {' '}
+                        <b>{render:dispatch($node, 'html-title')}</b>
+                    </div>
+                return ($delimiter, $sumTitle, render:passthru($node, $mode))
+            else render:passthru($node, $mode)
         
         case 'class' return
             if ($node/@type eq 'work_volume') then 'tei-text-' || $node/@type
@@ -1983,11 +2181,16 @@ declare function render:title($node as element(tei:title), $mode as xs:string) {
     switch($mode)
         case 'snippets-orig' return
             render:passthru($node, $mode)
+        
         case 'snippets-edit' return
             if ($node/@key) then
                 string($node/@key)
             else
                 render:passthru($node, $mode)
+        
+        case 'html' return
+            render:name($mode, $node)
+        
         default return
             render:name($mode, $node)
 };
@@ -2057,4 +2260,12 @@ declare function render:titlePart($node as element(tei:titlePart), $mode as xs:s
 
 
 (: TODO: still undefined: titlePage descendants: titlePart, docTitle, ...; choice, l; author fields: state etc. :)
+
+(: TODO - Html:
+    * add line- and column breaks in diplomatic view? (problem: infinite scrolling has to comply with the current viewmode as well!)
+    * make marginal summary headings expandable/collapsible like we handle notes that are too long
+    * make bibls, ref span across (page-)breaks (like persName/placeName/... already do)
+    * teasers: break text at word boundaries
+    * what happens to notes that intervene in a <hi> passage or similar? (font-style/weight and -size should already be fixed by css...)
+:)
 

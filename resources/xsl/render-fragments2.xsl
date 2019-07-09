@@ -14,11 +14,8 @@
            * add line- and column breaks in diplomatic view (problem: infinite scrolling has to comply with the current viewmode as well!)
            * make marginal summary headings expandable/collapsible like we handle notes that are too long
            * make bibls, ref span across (page-)breaks (like persName/placeName/... already do)
-           * notes: use templates for note content AND display note only from truncate-limit onwards...
-           * notes: toggle '...' in notes when switching between full and teaser display
            * notes/marginal summaries: break teaser text at word boundaries
            * what happens to notes that intervene in a <hi> passage or similar?
-           * test <g> code and original/edited switching
 -->
 
 
@@ -532,7 +529,7 @@
             <xsl:when test="@type eq 'blank'">
                 <br/>
             </xsl:when>
-            <xsl:when test="preceding::pb and preceding-sibling::node()[self::text()[not(normalize-space() eq '')] or .//text()[not(normalize-space() eq '')]]                                                                                and following-sibling::node()[self::text()[not(normalize-space() eq '')] or .//text()[not(normalize-space() eq '')]]">
+            <xsl:when test="preceding::pb and preceding-sibling::node()[self::text()[not(normalize-space() eq '')] or .//text()[not(normalize-space() eq '')]]                                                                                                             and following-sibling::node()[self::text()[not(normalize-space() eq '')] or .//text()[not(normalize-space() eq '')]]">
                 <xsl:choose>
                     <xsl:when test="@break='no'">
                         <xsl:text>|</xsl:text>
@@ -917,11 +914,7 @@
             <xsl:if test="'#rt' = $styles">font-style: normal;</xsl:if>
             <xsl:if test="'#l-indent' = $styles">display:block;margin-left:4em;</xsl:if>
             <!-- centering and right-alignment apply only in certain contexts -->
-            <xsl:if test="'#r-center' = $styles                                                       
-                          and not(ancestor::*[local-name(.) = $specificAlignElems])                                                      
-                          and not(following-sibling::node()[descendant-or-self::text()[not(normalize-space() eq '')]]                                                                      
-                                  and ancestor::p[1][.//text()[not(ancestor::hi[contains(@rendition, '#r-center')])]]                                                              
-                              )">display:block;text-align:center;</xsl:if>
+            <xsl:if test="'#r-center' = $styles                                                                                  and not(ancestor::*[local-name(.) = $specificAlignElems])                                                                                 and not(following-sibling::node()[descendant-or-self::text()[not(normalize-space() eq '')]]                                                                                                         and ancestor::p[1][.//text()[not(ancestor::hi[contains(@rendition, '#r-center')])]]                                                                                             )">display:block;text-align:center;</xsl:if>
                           <!-- workaround for suppressing trailing centerings at the end of paragraphs -->
             <xsl:if test="'#right' = $styles and not(ancestor::*[local-name(.) = $specificAlignElems])">display:block;text-align: right;</xsl:if>
             <xsl:if test="'#sc' = $styles">font-variant:small-caps;</xsl:if>
