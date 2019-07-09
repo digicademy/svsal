@@ -257,7 +257,7 @@ declare function render:excludedAncestorHTML($fragmentRoot as element()) {
 (:
 ~ Creates a teaser for a certain type of structural element (i.e., certain div, milestone, list[@type='dict'], and item[parent::list/@type='dict'])
 :)
-declare function render:HTMLsectionTeaser($node as element()) {
+declare function render:HTMLSectionTeaser($node as element()) {
     let $identifier := $node/@xml:id/string()
     let $fullTitle := render:dispatch($node, 'html-title')
     return 
@@ -370,7 +370,7 @@ declare function render:createPaginationLinks($workId as xs:string, $fragmentInd
 declare function render:determineListType($node as element()) as xs:string? {
     if ($node[self::tei:list and @type]) then $node/@type
     else if (ancestor::tei:list[@type]) then ancestor::tei:list[@type][1]/@type
-    else ()
+    else () (: fall back to simple? :)
 };
 
 
@@ -687,7 +687,7 @@ declare function render:div($node as element(tei:div), $mode as xs:string) {
         case 'html' return
             if (render:isIndexNode($node)) then
                 let $toolbox := render:HTMLSectionToolbox($node)
-                let $teaser := render:HTMLsectionTeaser($node)
+                let $teaser := render:HTMLSectionTeaser($node)
                 let $sumTitle :=
                     <div class="summary_title">
                         {$toolbox}
@@ -1027,27 +1027,20 @@ declare function render:imprimatur($node as element(tei:imprimatur), $mode as xs
 
 declare function render:item($node as element(tei:item), $mode as xs:string) {
     switch($mode)
-        case 'title' 
-        case 'html-title' return
+        case 'title' return
             normalize-space(
                 if ($node/parent::tei:list/@type='dict' and $node//tei:term[1][@key]) then
                     (: TODO: collision with div/@type='lemma'? :)
-                    concat(
-                        '&#34;',
-                            concat(
-                                $node//tei:term[1]/@key,
-                                if (count($node/parent::tei:list/tei:item[.//tei:term[1]/@key eq $node//tei:term[1]/@key]) gt 1) then
-                                    concat(
-                                        ' - ', 
-                                        count($node/preceding::tei:item[tei:term[1]/@key eq $node//tei:term[1]/@key] 
-                                              intersect $node/ancestor::tei:div[1]//tei:item[tei:term[1]/@key eq $node//tei:term[1]/@key]) 
-                                        + 1)
-                                else ()
-                            ),
-                        '&#34;'
-                    )
+                    let $positionStr := 
+                        if (count($node/parent::tei:list/tei:item[.//tei:term[1]/@key eq $node//tei:term[1]/@key]) gt 1) then
+                             ' - ' || 
+                             string(count($node/preceding::tei:item[tei:term[1]/@key eq $node//tei:term[1]/@key] 
+                                          intersect $node/ancestor::tei:div[1]//tei:item[tei:term[1]/@key eq $node//tei:term[1]/@key]) + 1)
+                        else ()
+                    return
+                        '"' || $node//tei:term[1]/@key || $positionStr || '"'
                 else if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
-                    '&#34;' || string($node/@n) || '&#34;'
+                    '"' || string($node/@n) || '"'
                 else if ($node/(tei:head|tei:label)) then
                     render:teaserString(($node/(tei:head|tei:label))[1], 'edit')
                 (: purely numeric section titles: :)
@@ -1058,7 +1051,33 @@ declare function render:item($node as element(tei:item), $mode as xs:string) {
                     render:teaserString($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)][1], 'edit')
                 else ()
             )
-            
+        
+        case 'html-title' return
+            if (not($node/parent::tei:list/@type='dict' and $node//tei:term[1][@key])
+                and not($node/@n and not(matches($node/@n, '^[0-9\[\]]+$')))
+                and $node/(tei:head|tei:label)) 
+                then normalize-space(string-join(render:dispatch(($node/(tei:head|tei:label))[1], 'edit'), ''))
+            else render:dispatch($node, 'title')
+                
+        case 'html' return
+            if (render:isIndexNode($node) and $node/parent::tei:list/@type eq 'dict') then
+                let $toolbox := render:HTMLSectionToolbox($node)
+                let $teaser := render:HTMLSectionTeaser($node)
+                let $sumTitle :=
+                    <div class="summary_title">
+                        {$toolbox}
+                        {$teaser}
+                    </div>
+                return ($sumTitle, render:passthru($node, $mode))
+            else (: non-dict items :)
+                switch(render:determineListType($node))
+                    case 'simple' return
+                        (' ', render:passthru($node, $mode), ' ')
+                    case 'index' return
+                        <li class="list-index-item">{render:passthru($node, $mode)}</li>
+                    default return
+                        <li>{render:passthru($node, $mode)}</li>
+                
         case 'class' return
             'tei-' || local-name($node)
             
@@ -1160,11 +1179,10 @@ declare function render:lb($node as element(tei:lb), $mode as xs:string) {
 
 declare function render:list($node as element(tei:list), $mode as xs:string) {
     switch($mode)
-        case 'title' 
-        case 'html-title' return
+        case 'title' return
             normalize-space(
                 if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
-                    '&#34;' || string($node/@n) || '&#34;'
+                    '"' || string($node/@n) || '"'
                 else if ($node/(tei:head|tei:label)) then
                     render:teaserString(($node/(tei:head|tei:label))[1], 'edit')
                 (: purely numeric section titles: :)
@@ -1175,6 +1193,58 @@ declare function render:list($node as element(tei:list), $mode as xs:string) {
                     render:teaserString($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)][1], 'edit')
                 else ()
             )
+        
+        case 'html-title' return
+            if (not($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) and $node/(tei:head|tei:label)) then
+                normalize-space(string-join(render:dispatch(($node/(tei:head|tei:label))[1], 'edit')))
+            else render:dispatch($node, 'title')
+        
+        case 'html' return
+            (: available list types: "dict", "ordered", "simple", "bulleted", "gloss", "index", or "summaries" :)
+            if (render:isIndexNode($node) and $node/@type eq 'dict') then
+                (: dict-type lists are handled like divs :)
+                let $toolbox := render:HTMLSectionToolbox($node)
+                let $teaser := render:HTMLSectionTeaser($node)
+                let $sumTitle :=
+                    <div class="summary_title">
+                        {$toolbox}
+                        {$teaser}
+                    </div>
+                return ($sumTitle, render:passthru($node, $mode))
+            (: TODO: supply other list types with toolboxes as well :)
+            else
+                (: In html, lists must contain nothing but <li>s, so we have to move headings before the list 
+                   (inside a html <section>/<figure> with the actual list) and nest everything else (sub-lists) in <li>s. :)
+                switch(render:determineListType($node))
+                    (: TODO: render ordered and simple similar to index? :)
+                    case 'ordered' return (: enumerated/ordered list :)
+                        <section id="{$node/@xml:id}">
+                            {for $head in $node/tei:head return <h4>{render:passthru($head, $mode)}</h4>}
+                            <ol>
+                                {for $child in $node/*[not(self::tei:head)] return render:passthru($child, $mode)}
+                            </ol>
+                        </section>
+                    case 'simple' return (: make no list in html terms at all :)
+                        <section id="{$node/@xml:id}">
+                            {for $head in $node/tei:head return <h4 class="inlist-head">{render:passthru($head, $mode)}</h4>}
+                            {for $child in $node/*[not(self::tei:head)] return
+                                if ($child//list) then render:passthru($child, $mode)
+                                else (<span class="inline-item">{render:passthru($child, $mode)}</span>, ' ')}
+                        </section>
+                    case 'index' return (: index is always an unordered list :)
+                        <div class="list-index" id="{$node/@xml:id}">
+                            {for $head in $node/tei:head return <h4 class="list-index-head">{render:passthru($head, $mode)}</h4>}
+                            <ul style="list-style-type:circle;">
+                                {for $child in $node/*[not(self::tei:head)] return render:passthru($child, $mode)}
+                            </ul>
+                        </div>
+                    default return (: put an unordered list (and captions) in a figure environment of class @type :)
+                        <figure class="{$node/@type}" id="{$node/@xml:id}">
+                            {for $head in $node/tei:head return <h4>{render:passthru($head, $mode)}</h4>}
+                            <ul style="list-style-type:circle;">
+                                 {for $child in $node/*[not(self::tei:head)] return render:passthru($child, $mode)}
+                            </ul>
+                        </figure>
         
         case 'class' return
             'tei-' || local-name($node)
@@ -1211,10 +1281,10 @@ declare function render:list($node as element(tei:list), $mode as xs:string) {
                 string(count($node/preceding-sibling::tei:p|
                              ($node/preceding::tei:list[not(@type = ('dict', 'index', 'summaries'))] 
                               intersect $node/(ancestor::tei:div|ancestor::tei:body|ancestor::tei:front|ancestor::tei:back)[last()]//tei:list)) + 1):)
-        case "orig" return
+        case 'orig' return
             ($config:nl, render:passthru($node, $mode), $config:nl)
         
-        case "edit" return
+        case 'edit' return
             if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
                 (concat($config:nl, ' [*', string($node/@n), '*]', $config:nl), render:passthru($node, $mode), $config:nl)
                 (: or this?:   <xsl:value-of select="key('targeting-refs', concat('#',@xml:id))[1]"/> :)
@@ -1274,9 +1344,9 @@ declare function render:milestone($node as element(tei:milestone), $mode as xs:s
         case 'html' return
             let $inlineText := if ($node/@rendition eq '#dagger') then <sup>†</sup> else '*'
             return
-                if ($node/@unit ne 'other') then
+                if (render:isIndexNode($node) and $node/@unit ne 'other') then
                     let $toolbox := render:HTMLSectionToolbox($node)
-                    let $teaser := render:HTMLsectionTeaser($node)      
+                    let $teaser := render:HTMLSectionTeaser($node)      
                     let $sumTitle :=
                         <div class="summary_title">
                             {$toolbox}
