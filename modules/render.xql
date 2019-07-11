@@ -40,7 +40,7 @@ declare variable $render:chars :=
 
 
 (: Crumbtrail/citetrail/passagetrail administrator function :)
-declare function render:getNodetrail($targetWork as node()*, $targetNode as node(), $mode as xs:string, $fragmentIds as map()) {
+declare function render:getNodetrail($targetWork as node()*, $targetNode as node(), $mode as xs:string, $fragmentIds as map()?) {
     (: (1) get the trail ID for the current node :)
     let $currentNode := 
         (: no recursion here, makes single ID for the current node :)
@@ -294,9 +294,11 @@ declare function render:HTMLSectionToolbox($node as element()) as element(span) 
         </span>
 };
 
-
+(:
+~ For a node, make a full-blown URI including the citetrail of the node
+:)
 declare function render:makeCitetrailURI($node as element()) {
-    let $citetrail := render:dispatch($node, 'citetrail')
+    let $citetrail := render:getNodetrail($node/ancestor::tei:TEI, $node, 'citetrail', ())
     let $workId := $node/ancestor::tei:TEI/@xml:id
     return
         $config:idserver || '/texts/' || $workId || ':' || $citetrail
@@ -317,24 +319,33 @@ declare function render:classableString($str as xs:string) as xs:string? {
 (: #### HTML Util Functions ####:)
 
 declare function render:createHTMLFragment($workId as xs:string, $fragmentRoot as element(), $fragmentIndex as xs:integer, $prevId as xs:string?, $nextId as xs:string?) as element(div) {
-    <div class="row" xml:space="preserve">
-        <div class="col-md-12">
-            <div id="SvSalPages">
-                <div class="SvSalPage">                 <!-- main area (id/class page in order to identify page-able content -->
-                    {
-                    (: TODO: this seems to work only for a titlePage or first div within the front of a text[@type eq 'work_volume'],
-                        but what about other (body|back) ancestors excluded by a higher $fragmentationDepth? :)
-                    if ($fragmentRoot[not(preceding-sibling::*) and not((ancestor::body|ancestor::back) and preceding::front/*)]) then
-                        render:excludedAncestorHTML($fragmentRoot)
-                    else ()    
-                    }
-                    {render:dispatch($fragmentRoot, 'html')}
-                </div>
-            </div>                                      <!-- the rest (to the right) is filled by _spans_ with class marginal, possessing
-                                                             a negative right margin (this happens in eXist's work.html template) -->
+    (:let $serializationParams :=
+        <output:serialization-parameters>
+            <output:method value="html"/>
+            <output:indent value="no"/>
+        </output:serialization-parameters>
+    
+    let $fragment :=:)
+        <div class="row" xml:space="preserve">
+            <div class="col-md-12">
+                <div id="SvSalPages">
+                    <div class="SvSalPage">                 <!-- main area (id/class page in order to identify page-able content -->
+                        {
+                        (: TODO: this seems to work only for a titlePage or first div within the front of a text[@type eq 'work_volume'],
+                            but what about other (body|back) ancestors excluded by a higher $fragmentationDepth? :)
+                        if ($fragmentRoot[not(preceding-sibling::*) and not((ancestor::body|ancestor::back) and preceding::front/*)]) then
+                            render:excludedAncestorHTML($fragmentRoot)
+                        else ()    
+                        }
+                        {render:dispatch($fragmentRoot, 'html')}
+                    </div>
+                </div>                                      <!-- the rest (to the right) is filled by _spans_ with class marginal, possessing
+                                                                 a negative right margin (this happens in eXist's work.html template) -->
+            </div>
+            {render:createPaginationLinks($workId, $fragmentIndex, $prevId, $nextId)}    <!-- finally, add pagination links --> 
         </div>
-        {render:createPaginationLinks($workId, $fragmentIndex, $prevId, $nextId)}    <!-- finally, add pagination links --> 
-    </div>
+    (:return 
+        serialize($fragment, $serializationParams):)
 };
 
 declare function render:makeFragmentId($index as xs:integer, $xmlId as xs:string) as xs:string {
@@ -372,13 +383,13 @@ declare function render:determineListType($node as element()) as xs:string? {
 
 
 declare function render:resolveCanvasID($pb as element(tei:pb)) as xs:string {
-    let $facs := (tokenize(normalize-space($pb/@facs/string()), ''))[1]
+    let $facs := (tokenize(normalize-space($pb/@facs/string()), ' '))[1]
     return
         if (matches($facs, '^facs:W[0-9]{4}-[A-z]-[0-9]{4}$')) then 
-            let $index := string(count($node/preceding::pb[not(@sameAs) and substring(./@facs, 1, 12) eq substring($facs, 1, 12)]) + 1)
+            let $index := string(count($pb/preceding::pb[not(@sameAs) and substring(./@facs, 1, 12) eq substring($facs, 1, 12)]) + 1)
             return $config:imageserver || '/iiif/presentation/' || sal-util:convertVolumeID(substring($facs,6,7)) || '/canvas/p' || $index
         else if (matches($facs, '^facs:W[0-9]{4}-[0-9]{4}$')) then
-            let $index := string(count($node/preceding::pb[not(@sameAs)]) + 1)
+            let $index := string(count($pb/preceding::pb[not(@sameAs)]) + 1)
             return $config:imageserver || '/iiif/presentation/' || substring($facs,6,5) || '/canvas/p' || $index
         else error(xs:QName('render:resolveCanvasID'), 'Unknown pb/@facs value')
 };
@@ -388,15 +399,15 @@ declare function render:resolveFacsURI($facsTargets as xs:string) as xs:string {
     let $facs := (tokenize($facsTargets, ' '))[1]
     let $iiifRenderParams := '/full/full/0/default.jpg'
     return
-        if (matches($facs, 'facs:(W[0-9]{{4}})\-([0-9]{{4}})')) then (: single-volume work, e.g.: facs:W0017-0005 :)
-            let $workId := replace($facs, 'facs:(W[0-9]{{4}})\-([0-9]{{4}})', '$1')
-            let $facsId := replace($facs, 'facs:(W[0-9]{{4}})\-([0-9]{{4}})', '$2')
+        if (matches($facs, 'facs:(W[0-9]{4})\-([0-9]{4})')) then (: single-volume work, e.g.: facs:W0017-0005 :)
+            let $workId := replace($facs, 'facs:(W[0-9]{4})\-([0-9]{4})', '$1')
+            let $facsId := replace($facs, 'facs:(W[0-9]{4})\-([0-9]{4})', '$2')
             return 
                 $config:imageserver || '/iiif/image/' || $workId || '!' || $workId || '-' || $facsId || $iiifRenderParams
-        else if (matches($facs, 'facs:(W[0-9]{{4}})\-([A-z])\-([0-9]{{4}})')) then (: volume of a multi-volume work, e.g.: facs:W0013-A-0007 :)
-            let $workId := replace($facs, 'facs:(W[0-9]{{4}})\-([A-z])\-([0-9]{{4}})', '$1')
-            let $volId := replace($facs, 'facs:(W[0-9]{{4}})\-([A-z])\-([0-9]{{4}})', '$2')
-            let $facsId := replace($facs, 'facs:(W[0-9]{{4}})\-([A-z])\-([0-9]{{4}})', '$3')
+        else if (matches($facs, 'facs:(W[0-9]{4})\-([A-z])\-([0-9]{4})')) then (: volume of a multi-volume work, e.g.: facs:W0013-A-0007 :)
+            let $workId := replace($facs, 'facs:(W[0-9]{4})\-([A-z])\-([0-9]{4})', '$1')
+            let $volId := replace($facs, 'facs:(W[0-9]{4})\-([A-z])\-([0-9]{4})', '$2')
+            let $facsId := replace($facs, 'facs:(W[0-9]{4})\-([A-z])\-([0-9]{4})', '$3')
             return $config:imageserver || '/iiif/image/' || $workId || '!' || $volId || '!' || $workId 
                         || '-' || $volId || '-' || $facsId || $iiifRenderParams
         else error(xs:QName('render:pb'), 'Illegal facs ID (pb/@facs): ' || $facs)
@@ -421,10 +432,10 @@ declare function render:makeMarginalHTML($node as element()) as element(div) {
         </div>
     (: determine string-length of complete note text, so as to see whether note needs to be truncated: :)
     let $noteLength := 
-        string-length((if ($label) then @n || ' ' else ()) || normalize-space(string-join(render:dispatch($node, 'edit'), '')))
+        string-length((if ($label) then $node/@n || ' ' else ()) || normalize-space(string-join(render:dispatch($node, 'edit'), '')))
     return
         if ($noteLength gt $render:noteTruncLimit) then
-            let $id := 'collapse-' || @xml:id
+            let $id := 'collapse-' || $node/@xml:id
             return
                 <a role="button" class="collapsed note-teaser" data-toggle="collapse" href="{('#' || $id)}" 
                    aria-expanded="false" aria-controls="{$id}">    
@@ -460,13 +471,18 @@ declare function render:transformToHTMLLink($node as element(), $uri as xs:strin
             ($before, $break, $after)
 };
 
-
+(: TODO: render:makeCitetrailURI() requires actual node :)
 declare function render:resolveURI($node as element(), $targets as xs:string) {
     let $currentWork := $node/ancestor-or-self::tei:TEI
     let $target := (tokenize($targets, ' '))[1]
     let $prefixDef := $currentWork//tei:prefixDef
     return
-        if (matches($target, '(work:(W[A-z0-9.:_\-]+))?#(.*)')) then
+        if (starts-with($target, '#W')) then
+            (: target is some node within the current work :)
+            let $targetNode := $currentWork//*[@xml:id eq substring($target, 2)]
+            return
+                render:makeCitetrailURI($targetNode)
+        else if (matches($target, '(work:(W[A-z0-9.:_\-]+))?#(.*)')) then
             (: target is something like "work:W...#..." :)
             let $targetWorkId :=
                 if (replace($target, '(work:(W[A-z0-9.:_\-]+))?#(.*)', '$2')) then (: Target is a link containing a work id :)
@@ -654,7 +670,7 @@ declare function render:bibl($node as element(tei:bibl), $mode as xs:string) {
         
         case 'html' return
             if ($node/@sortKey) then 
-                <span class="{local-name($node) || ' hi_', render:classableString(@sortKey)}">{render:passthru($node, $mode)}</span>
+                <span class="{local-name($node) || ' hi_', render:classableString($node/@sortKey)}">{render:passthru($node, $mode)}</span>
             else <span>{render:passthru($node, $mode)}</span>
         
         default return
@@ -889,7 +905,7 @@ declare function render:editElem($node as element(), $mode as xs:string) {
             render:passthru($node, $mode)
             
         case 'html' return
-            let $origString := string-join(render:dispatch($node/parent::choice/(abbr|orig|sic), 'orig'), '')
+            let $origString := string-join(render:dispatch($node/parent::tei:choice/(tei:abbr|tei:orig|tei:sic), 'orig'), '')
             return
                 <span class="messengers edited {local-name($node)}" title="{$origString}">
                     {render:passthru($node, $mode)}
@@ -958,7 +974,7 @@ declare function render:front($node as element(tei:front), $mode as xs:string) {
 
 
 declare function render:g($node as element(tei:g), $mode as xs:string) {
-    switch ($mode)
+    switch($mode)
         case 'orig'
         case 'snippets-orig' return
             let $glyph := $node/ancestor::tei:TEI/tei:teiHeader/tei:encodingDesc/tei:charDecl/tei:char[@xml:id = substring(string($node/@ref), 2)] (: remove leading '#' :)
@@ -979,7 +995,10 @@ declare function render:g($node as element(tei:g), $mode as xs:string) {
                         render:passthru($node, $mode)
         
         case 'html' return
-            let $thisString := xs:string($node/text())
+            let $thisString := 
+                if (render:passthru($node, $mode)) then 
+                    string(render:passthru($node, $mode)) 
+                else error(xs:QName('render:g'), 'Found tei:g without text content') (: ensure correct character markup :)
             let $charCode := substring($node/@ref,2)
             let $char := $node/ancestor::tei:TEI/tei:teiHeader/tei:encodingDesc/tei:charDecl/tei:char[@xml:id eq $charCode]
             let $test := (: make sure that the char reference is correct :)
@@ -990,11 +1009,19 @@ declare function render:g($node as element(tei:g), $mode as xs:string) {
                 (: Depending on the context or content of the g element, there are several possible cases: :)
                 (: 1. if g occurs within choice, it must be a "simple" character since the larger context has already been edited -> pass it through :)
                 if ($node/ancestor::tei:choice) then
-                    $thisString
+                    if ($thisString) then $thisString
+                    else if ($char/tei:mapping[@type='precomposed']/text()) then string($char/tei:mapping[@type='precomposed']/text())
+                    else string($char/tei:mapping[@type='composed']/text())
                 (: 2. g occurs outside of choice: :)
                 else
-                    let $precomposedString := string($char/tei:mapping[@type='precomposed']/text())
-                    let $composedString := string($char/tei:mapping[@type='composed']/text())
+                    let $precomposedString := 
+                        if ($char/tei:mapping[@type='precomposed']/text()) then 
+                            string($char/tei:mapping[@type='precomposed']/text())
+                        else ''
+                    let $composedString := 
+                        if ($char/tei:mapping[@type='composed']/text()) then
+                            string($char/tei:mapping[@type='composed']/text())
+                        else ''
                     let $originalGlyph :=
                         if ($precomposedString) then $precomposedString (: TODO: does this work? (in xslt: disable-output-escaping="yes") :)
                         else $composedString
@@ -1004,7 +1031,9 @@ declare function render:g($node as element(tei:g), $mode as xs:string) {
                         else ()
                     return
                         (: a) g has been used for resolving abbreviations (in early texts W0004, W0013 and W0015) -> treat it like choice elements :)
-                        if (not($thisString = ($precomposedString, $composedString)) and not($charCode) = ('char017f', 'char0292')) then
+                        (:if (not(($precomposedString and $thisString eq $precomposedString) or ($composedString and $thisString eq $composedString))
+                            and not($charCode = ('char017f', 'char0292'))):)
+                        if (not($thisString = ($precomposedString, $composedString)) and not($charCode = ('char017f', 'char0292'))) then
                             (<span class="original glyph unsichtbar" title="{$thisString}">{$originalGlyph}</span>,
                             <span class="edited glyph" title="{$originalGlyph}">{$thisString}</span>)
                         (: b) most common case: g simply marks a special character -> pass it through (except for the very frequent "long s" and "long z", 
@@ -1554,14 +1583,14 @@ declare function render:name($node as element(*), $mode as xs:string) {
                 render:passthru($node, $mode)
         
         case 'html' return
-            let $hiliteName := if ($node/@ref) then 'hi_' || render:classableString((tokenize(@ref, ' '))[1]) else ()
+            let $hiliteName := if ($node/@ref) then 'hi_' || render:classableString((tokenize($node/@ref, ' '))[1]) else ()
             let $dictLemma := 
                 if ($node[self::tei:term and ancestor::tei:list[@type='dict'] and not(preceding-sibling::tei:term)]) then
                     'dictLemma'
                 else ()
             return 
                 (: as long as any link would lead nowhere, omit linking and simply grasp the content: :)
-                <span class="{normalize-space(string-join((local-name(),$hiliteName,$dictLemma), ' '))}">
+                <span class="{normalize-space(string-join((local-name($node),$hiliteName,$dictLemma), ' '))}">
                     {render:passthru($node, $mode)}
                 </span>
                 (: as soon as links have actual targets, execute something like the following: :)
@@ -1717,7 +1746,7 @@ declare function render:orgName($node as element(tei:orgName), $mode as xs:strin
         case 'snippets-edit' return
             render:passthru($node, $mode)
         default return
-            render:name($mode, $node)
+            render:name($node, $mode)
 };
 
 declare function render:orig($node as element(tei:orig), $mode) {
@@ -1870,34 +1899,35 @@ declare function render:pb($node as element(tei:pb), $mode as xs:string) {
                 (ideally, such collisions should be resolved in TEI markup, but one never knows...) :)
         
         case 'html' return
-            (: not(@sameAs or @corresp) should be checked upstream (render:isIndexNode()) :)
-            let $inlineBreak :=
-                if ($node[@type eq 'blank']) then (: blank pages - make a typographic line break :)
-                    <br/>
-                else if ($node[preceding::pb 
-                               and preceding-sibling::node()[descendant-or-self::text()[not(normalize-space() eq '')]]                                                                                
-                               and following-sibling::node()[descendant-or-self::text()[not(normalize-space() eq '')]]]) then
-                    (: mark page break by means of '|', but not at the beginning or end of structural sections :)
-                    if ($node/@break eq 'no') then '|' else ' | '
-                else ()
-            let $link :=
-                if ($node[@n]) then
-                    let $pageAnchor := 'pageNo_' || (if ($node/@xml:id) then $node/@xml:id/string() else generate-id($node))
-                    let $title := if (contains($node/@n, 'fol.')) then 'View image of ' || $node/@n else 'View image of p. ' || $node/@n
-                    let $text := if (contains($node/@n, 'fol.')) then $node/@n else 'p. ' || $node/@n
-                    return
-                        <div class="pageNumbers">
-                            <a href="{render:resolveFacsURI($node/@facs)}">
-                                <i class="fas fa-book-open facs-icon"/>
-                                {' '}
-                                <span class="pageNo messengers" data-canvas="{render:resolveCanvasID($node)}"
-                                    data-sal-id="{render:makeCitetrailURI($node)}" id="{$pageAnchor}" title="{$title}">
-                                    {$text}
-                                </span>
-                            </a>
-                        </div>
-                else ()
-            return ($inlineBreak, $link)
+            if (render:isIndexNode($node)) then 
+                let $inlineBreak :=
+                    if ($node[@type eq 'blank']) then (: blank pages - make a typographic line break :)
+                        <br/>
+                    else if ($node[preceding::pb 
+                                   and preceding-sibling::node()[descendant-or-self::text()[not(normalize-space() eq '')]]                                                                                
+                                   and following-sibling::node()[descendant-or-self::text()[not(normalize-space() eq '')]]]) then
+                        (: mark page break by means of '|', but not at the beginning or end of structural sections :)
+                        if ($node/@break eq 'no') then '|' else ' | '
+                    else ()
+                let $link :=
+                    if ($node[@n]) then
+                        let $pageAnchor := 'pageNo_' || (if ($node/@xml:id) then $node/@xml:id/string() else generate-id($node))
+                        let $title := if (contains($node/@n, 'fol.')) then 'View image of ' || $node/@n else 'View image of p. ' || $node/@n
+                        let $text := if (contains($node/@n, 'fol.')) then $node/@n else 'p. ' || $node/@n
+                        return
+                            <div class="pageNumbers">
+                                <a href="{render:resolveFacsURI($node/@facs)}">
+                                    <i class="fas fa-book-open facs-icon"/>
+                                    {' '}
+                                    <span class="pageNo messengers" data-canvas="{render:resolveCanvasID($node)}"
+                                        data-sal-id="{render:makeCitetrailURI($node)}" id="{$pageAnchor}" title="{$title}">
+                                        {$text}
+                                    </span>
+                                </a>
+                            </div>
+                    else ()
+                return ($inlineBreak, $link)
+            else ()
                     
         case 'passagetrail' return
             if (contains($node/@n, 'fol.')) then $node/@n
@@ -1928,6 +1958,7 @@ declare function render:persName($node as element(tei:persName), $mode as xs:str
     switch($mode)
         case 'snippets-orig' return
             render:passthru($node, $mode)
+        
         case 'snippets-edit' return
             if ($node/@key and $node/@ref) then
                 string($node/@key) || ' [' || string($node/@ref) || ']'
@@ -1937,10 +1968,12 @@ declare function render:persName($node as element(tei:persName), $mode as xs:str
                 '[' || string($node/@ref) || ']'
             else
                 render:passthru($node, $mode)
+        
         case 'html' return
-            render:name($mode, $node)
+            render:name($node, $mode)
+        
         default return
-            render:name($mode, $node)
+            render:name($node, $mode)
 };
 
 declare function render:placeName($node as element(tei:placeName), $mode as xs:string) {
@@ -1953,9 +1986,9 @@ declare function render:placeName($node as element(tei:placeName), $mode as xs:s
             else
                 render:passthru($node, $mode)
         case 'html' return
-            render:name($mode, $node)
+            render:name($node, $mode)
         default return
-            render:name($mode, $node)
+            render:name($node, $mode)
 };
 
 declare function render:quote($node as element(tei:quote), $mode as xs:string) {
@@ -1983,7 +2016,7 @@ declare function render:ref($node as element(tei:ref), $mode as xs:string) {
             if ($node/@type eq 'note-anchor') then
                 () (: omit note references :)
             else if ($node/@target) then
-                let $resolvedUri := render:resolveURI($node, @target) (: TODO: verify that this works :)
+                let $resolvedUri := render:resolveURI($node, $node/@target) (: TODO: verify that this works :)
                 return render:transformToHTMLLink($node, $resolvedUri)
             else render:passthru($node, $mode)
         
@@ -2103,7 +2136,7 @@ declare function render:term($node as element(tei:term), $mode as xs:string) {
                 render:passthru($node, $mode)
         
         case 'html' return
-            render:name($mode, $node)
+            render:name($node, $mode)
         
         default return
             render:passthru($node, $mode)
@@ -2170,11 +2203,14 @@ declare function render:textNode($node as node(), $mode as xs:string) {
                           normalize-space(replace($node, '&#x0a;', ' ')),
                           $trailingSpace)
         
+        case 'html'
         case 'snippets-orig' 
         case 'snippets-edit' return 
+            let $debug := util:log('warn', 'Processing textNode: ' || $node) return
             $node
         
-        default return ()
+        default return 
+            $node
 };
 
 declare function render:title($node as element(tei:title), $mode as xs:string) {
@@ -2189,10 +2225,10 @@ declare function render:title($node as element(tei:title), $mode as xs:string) {
                 render:passthru($node, $mode)
         
         case 'html' return
-            render:name($mode, $node)
+            render:name($node, $mode)
         
         default return
-            render:name($mode, $node)
+            render:name($node, $mode)
 };
 
 declare function render:titlePage($node as element(tei:titlePage), $mode as xs:string) {

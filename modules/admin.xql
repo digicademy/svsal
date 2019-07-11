@@ -629,8 +629,8 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                     if ($next) then
                         xs:string($next/@xml:id)
                     else ()
-(:                let $result := admin:renderFragment($work, xs:string($workId), $section, $index, $fragmentationDepth, $prevId, $nextId, $config:serverdomain):)
-                let $result := render:createHTMLFragment($workId, $section, $index, $prevId, $nextId)
+                let $result := admin:renderFragment($work, xs:string($workId), $section, $index, $fragmentationDepth, $prevId, $nextId, $config:serverdomain)
+(:                let $result := render:createHTMLFragment($workId, $section, $index, $prevId, $nextId):)
                 return 
                     <p>
                         <div>
@@ -639,7 +639,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                         {$result}
                     </p>
             
-        (: Reporting (and possibly reindexing the database) :)
+        (: Reporting (and, possibly, reindexing the database) :)
             (: See if there are any leaf elements in our text that are not matched by our rule :)
             let $missed-elements := $work//(tei:front|tei:body|tei:back)//tei:*[count(./ancestor-or-self::tei:*) < $fragmentationDepth][not(*)]
             (: See if any of the elements we did get is lacking an xml:id attribute :)
@@ -784,9 +784,9 @@ declare function admin:createTxtCorpus($processId as xs:string) as xs:string? {
 };
 
 declare function admin:renderFragment ($work as node(), $wid as xs:string, $target as node(), $targetindex as xs:integer, $fragmentationDepth as xs:integer, $prevId as xs:string?, $nextId as xs:string?, $serverDomain as xs:string?) {
-    let $tei2htmlXslt      := doc($config:resources-root || '/xsl/render-fragments2.xsl')
+(:    let $tei2htmlXslt      := doc($config:resources-root || '/xsl/render-fragments2.xsl'):)
     let $targetid          := xs:string($target/@xml:id)
-    let $xsl-parameters :=  
+    (:let $xsl-parameters :=  
         <parameters>
             <param name="exist:stop-on-warn"  value="yes" />
             <param name="exist:stop-on-error" value="yes" />
@@ -796,10 +796,11 @@ declare function admin:renderFragment ($work as node(), $wid as xs:string, $targ
             <param name="prevId"        value="{$prevId}" />
             <param name="nextId"        value="{$nextId}" />
             <param name="serverDomain"  value="{$serverDomain}" />
-        </parameters>
+        </parameters>:)
     let $debugOutput   := if ($config:debug = ("trace", "info")) then console:log("  Render Element " || $targetindex || ": " || $targetid || " of " || $wid || "...") else ()
     let $debugOutput   := if ($config:debug = ("trace")) then console:log("  (prevId=" || $prevId || ", nextId=" || $nextId || ", serverDomain=" || $serverDomain || ")") else ()
-    let $html              := transform:transform($work, $tei2htmlXslt, $xsl-parameters)
+(:    let $html := transform:transform($work, $tei2htmlXslt, $xsl-parameters):)
+    let $html := render:createHTMLFragment($wid, $target, $targetindex, $prevId, $nextId)
 
     (: Now for saving the fragment ... :)
     let $fileName       := format-number($targetindex, "0000") || "_" || $targetid || ".html"
