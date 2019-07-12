@@ -794,6 +794,14 @@ span.unsichtbar, .unsichtbar {
     display:none !important;
 }
 
+/*span.sal-toolbox {
+    margin-right: 0.5em;
+}*/
+
+span.sal-section-teaser{
+    padding-left:0.5em;
+}
+
 .visible {
     display:inherit;
 }

@@ -39,7 +39,7 @@ declare variable $render:chars :=
     else ();:)
 
 
-(: Crumbtrail/citetrail/passagetrail administrator function :)
+(: "Nodetrail" (crumbtrail/citetrail/passagetrail) administrator function :)
 declare function render:getNodetrail($targetWork as node()*, $targetNode as node(), $mode as xs:string, $fragmentIds as map()?) {
     (: (1) get the trail ID for the current node :)
     let $currentNode := 
@@ -98,6 +98,11 @@ declare function render:getNodetrail($targetWork as node()*, $targetNode as node
             else ()
         else ()
     (: (c) put it all together and out :)
+    (:let $debug := 
+        if ($config:debug = ('trace', 'info') and $mode eq 'citetrail') then 
+            util:log('warn', 'Making citetrail of type ' || $mode || ' for element tei:' || local-name($targetNode) || '; $currentNode: ' 
+            || string-join(($currentNode), ' ') || ', $trailPrefix:' || string-join(($trailPrefix), ' ') || '.') 
+        else ():)
     let $trail :=
         if ($mode eq 'crumbtrail') then ($trailPrefix, $connector, $currentNode)
         else if ($mode eq 'citetrail') then $trailPrefix || $connector || $currentNode
@@ -137,13 +142,15 @@ declare function render:isPassagetrailNode($node as element()) as xs:boolean {
 };
 
 (:
-~ Determines which nodes to make HTML teasers for (subset of //*[render:isIndexNode(.)] excluding low-level elements).
+~ Determines which nodes to make HTML teasers for (subset of //*[render:isIndexNode(.)] excluding low-level elements). 
+    Should mostly be used together with render:makeHTMLSummaryTitle()
 :)
-declare function render:isCitableWithTeaserHTML($node as element()) as xs:boolean {
+declare function render:isCitableWithTeaserHTML($node as node()) as xs:boolean {
     boolean(
         render:isIndexNode($node) and
         (
             not(
+                $node/self::tei:pb or
                 $node/self::tei:text[not(@type eq 'work_volume')] or
                 $node/self::tei:milestone[@type eq 'other'] or
                 $node/self::tei:note or
@@ -175,9 +182,17 @@ declare function render:isCitableHTML($node as element()) as xs:boolean {
 (:
 ~ (The set of nodes that should have a crumbtrail is equal to the set of nodes that should have a citetrail.)
 :)
-declare function render:isIndexNode($node as element()) as xs:boolean {
-    (: any element type relevant for citetrail creation must be included in one of the following functions: :)
-    render:isNamedCitetrailNode($node) or render:isUnnamedCitetrailNode($node)
+declare function render:isIndexNode($node as node()) as xs:boolean {
+    boolean(
+        not($node/self::text() or
+            $node/self::comment() or
+            $node/self::processing-instruction())
+        and
+        (
+        (: any element type relevant for citetrail creation must be included in one of the following functions: :)
+        render:isNamedCitetrailNode($node) or render:isUnnamedCitetrailNode($node)
+        )
+    )
 };
 
 (:
@@ -192,7 +207,6 @@ declare function render:isNamedCitetrailNode($node as element()) as xs:boolean {
             $node/self::tei:note or
             $node/self::tei:head or
             $node/self::tei:back or
-            $node/self::tei:body or
             $node/self::tei:front or
             $node/self::tei:titlePage or
             $node/self::tei:div[@type ne "work_part"] or (: TODO: included temporarily for div label experiment :)
@@ -286,7 +300,7 @@ declare function render:excludedAncestorHTML($fragmentRoot as element()) {
                     <hr/> 
                 else ()
             let $sumTitle := render:makeHTMLSummaryTitle($node)
-            return ($delimiter, $summaryTitle)
+            return ($delimiter, $sumTitle)
         else ()
 };
 
@@ -299,7 +313,7 @@ declare function render:makeHTMLSummaryTitle($node as element()) as element(div)
             {$toolbox}
             {if ($node/self::tei:text[@type='work_volume']) then <b>{$teaser}</b> else $teaser (: make volume teasers bold :)}
         </div>
-    return ($sumTitle, render:passthru($node, $mode))
+    return $sumTitle
 };
 
 
@@ -310,15 +324,19 @@ declare function render:HTMLSectionTeaser($node as element()) {
     let $identifier := $node/@xml:id/string()
     let $fullTitle := render:dispatch($node, 'html-title')
     return 
-        if (string-length($fullTitle) gt $render:teaserTruncLimit) then
-            (<a data-toggle="collapse" data-target="{('#restOfString' || $identifier)}">
-                {substring($fullTitle,1,$render:teaserTruncLimit) || '…'} 
-                <i class="fa fa-angle-double-down"/>
-            </a>,
-            <div class="collapse" id="{('restOfString' || $identifier)}">
-                {$fullTitle}
-            </div>)
-        else $fullTitle
+        <span class="sal-section-teaser">{
+            if (string-length($fullTitle) gt $render:teaserTruncLimit) then
+                (<a data-toggle="collapse" data-target="{('#restOfString' || $identifier)}">
+                    {substring($fullTitle,1,$render:teaserTruncLimit) || '…'} 
+                    <i class="fa fa-angle-double-down"/>
+                </a>,
+                <span class="collapse" id="{('restOfString' || $identifier)}">
+                    {$fullTitle}
+                </span>)
+            else $fullTitle
+            
+        }</span>
+        
 };
 
 declare function render:HTMLSectionToolbox($node as element()) as element(span) {
@@ -336,7 +354,7 @@ declare function render:HTMLSectionToolbox($node as element()) as element(span) 
             '&lt;span class=&#34;glyphicon glyphicon-print text-muted&#34;/&gt;' || 
         '&lt;/div&gt;'
     return
-        <span>
+        <span class="sal-toolbox">
             <a id="{$id}" href="{('#' || $id)}" data-rel="popover" data-content="{$dataContent}">
                 <i class="far fa-hand-point-right messengers" title="Open toolbox for this textarea"/>
             </a>
@@ -449,16 +467,18 @@ declare function render:resolveCanvasID($pb as element(tei:pb)) as xs:string {
 declare function render:resolveFacsURI($facsTargets as xs:string) as xs:string {
     let $facs := (tokenize($facsTargets, ' '))[1]
     let $iiifRenderParams := '/full/full/0/default.jpg'
+    let $singleVolRegex := 'facs:(W[0-9]{4})\-([0-9]{4})'
+    let $multiVolRegex := 'facs:(W[0-9]{4})\-([A-z])\-([0-9]{4})'
     return
-        if (matches($facs, 'facs:(W[0-9]{4})\-([0-9]{4})')) then (: single-volume work, e.g.: facs:W0017-0005 :)
-            let $workId := replace($facs, 'facs:(W[0-9]{4})\-([0-9]{4})', '$1')
-            let $facsId := replace($facs, 'facs:(W[0-9]{4})\-([0-9]{4})', '$2')
+        if (matches($facs, $singleVolRegex)) then (: single-volume work, e.g.: facs:W0017-0005 :)
+            let $workId := replace($facs, $singleVolRegex, '$1')
+            let $facsId := replace($facs, $singleVolRegex, '$2')
             return 
                 $config:imageserver || '/iiif/image/' || $workId || '!' || $workId || '-' || $facsId || $iiifRenderParams
-        else if (matches($facs, 'facs:(W[0-9]{4})\-([A-z])\-([0-9]{4})')) then (: volume of a multi-volume work, e.g.: facs:W0013-A-0007 :)
-            let $workId := replace($facs, 'facs:(W[0-9]{4})\-([A-z])\-([0-9]{4})', '$1')
-            let $volId := replace($facs, 'facs:(W[0-9]{4})\-([A-z])\-([0-9]{4})', '$2')
-            let $facsId := replace($facs, 'facs:(W[0-9]{4})\-([A-z])\-([0-9]{4})', '$3')
+        else if (matches($facs, $multiVolRegex)) then (: volume of a multi-volume work, e.g.: facs:W0013-A-0007 :)
+            let $workId := replace($facs, $multiVolRegex, '$1')
+            let $volId := replace($facs, $multiVolRegex, '$2')
+            let $facsId := replace($facs, $multiVolRegex, '$3')
             return $config:imageserver || '/iiif/image/' || $workId || '!' || $volId || '!' || $workId 
                         || '-' || $volId || '-' || $facsId || $iiifRenderParams
         else error(xs:QName('render:pb'), 'Illegal facs ID (pb/@facs): ' || $facs)
@@ -527,39 +547,42 @@ declare function render:resolveURI($node as element(), $targets as xs:string) {
     let $currentWork := $node/ancestor-or-self::tei:TEI
     let $target := (tokenize($targets, ' '))[1]
     let $prefixDef := $currentWork//tei:prefixDef
+    let $workScheme := '(work:(W[A-z0-9.:_\-]+))?#(.*)'
+    let $facsScheme := 'facs:((W[0-9]+)[A-z0-9.:#_\-]+)'
+    let $genericScheme := '(\S+):([A-z0-9.:#_\-]+)'
     return
         if (starts-with($target, '#W')) then
             (: target is some node within the current work :)
             let $targetNode := $currentWork//*[@xml:id eq substring($target, 2)]
             return
                 render:makeCitetrailURI($targetNode)
-        else if (matches($target, '(work:(W[A-z0-9.:_\-]+))?#(.*)')) then
+        else if (matches($target, $workScheme)) then
             (: target is something like "work:W...#..." :)
             let $targetWorkId :=
-                if (replace($target, '(work:(W[A-z0-9.:_\-]+))?#(.*)', '$2')) then (: Target is a link containing a work id :)
-                    replace($target, '(work:(W[A-z0-9.:_\-]+))?#(.*)', '$2')
+                if (replace($target, $workScheme, '$2')) then (: Target is a link containing a work id :)
+                    replace($target, $workScheme, '$2')
                 else $currentWork/@xml:id/string() (: Target is just a link to a fragment anchor, so targetWorkId = currentWork :)
-            let $anchorId := replace($target, '(work:(W[A-z0-9.:_\-]+))?#(.*)', '$3')
+            let $anchorId := replace($target, $workScheme, '$3')
             return 
                 if ($anchorId) then render:makeCitetrailURI($node) else ()
-        else if (matches($target, 'facs:((W[0-9]+)[A-z0-9.:#_\-]+)')) then (: Target is a facs string :)
+        else if (matches($target, $facsScheme)) then (: Target is a facs string :)
             (: Target does not contain "#", or is not a "work:..." url: :)
             let $targetWorkId :=
-                if (replace($target, 'facs:((W[0-9]+)[A-z0-9.:#_\-]+)', '$2')) then (: extract work id from facs string :)
-                    replace($target, 'facs:((W[0-9]+)[A-z0-9.:#_\-]+)', '$2')
+                if (replace($target, $facsScheme, '$2')) then (: extract work id from facs string :)
+                    replace($target, $facsScheme, '$2')
                 else $currentWork/@xml:id/string()
-            let $anchorId := replace($target, 'facs:((W[0-9]+)[A-z0-9.:#_\-]+)', '$1') (: extract facs string :)
+            let $anchorId := replace($target, $facsScheme, '$1') (: extract facs string :)
             return
                 render:makeCitetrailURI($node)
-        else if (matches($target, '(\S+):([A-z0-9.:#_\-]+)')) then 
+        else if (matches($target, $genericScheme)) then 
             (: Use the general replacement mechanism as defined by the prefixDef in works-general.xml: :)
-            let $prefix := replace($target, '(\S+):([A-z0-9.:#_\-]+)', '$1')
-            let $value := replace($target, '(\S+):([A-z0-9.:#_\-]+)', '$2')
+            let $prefix := replace($target, $genericScheme, '$1')
+            let $value := replace($target, $genericScheme, '$2')
             return 
                 if ($prefixDef[@ident eq $prefix]) then
                     for $p in $prefixDef[@ident eq $prefix][matches($value, @matchPattern)] return
                         replace($value, $p/@matchPattern, $p/@replacementPattern)
-                else replace($target, '(\S+):([A-z0-9.:#_\-]+)', '$0') (: regex-group(0) :)
+                else replace($target, $genericScheme, '$0') (: regex-group(0) :)
         else $target    
 };         
 
@@ -656,10 +679,14 @@ declare function render:dispatch($node as node(), $mode as xs:string) {
             case element(tei:table)         return render:table($node, $mode)
             case element(tei:row)           return render:row($node, $mode)
             case element(tei:cell)          return render:cell($node, $mode)
-    
+            
+            case element(tei:foreign)       return render:foreign($node, $mode)
+            
+            case element(tei:TEI)           return render:passthru($node, $mode)
             case element(tei:figDesc)       return ()
             case element(tei:teiHeader)     return ()
             case element(tei:fw)            return ()
+            case element()                  return error(xs:QName('render:dispatch'), 'Unkown element: ' || local-name($node) || '.')
             case comment()                  return ()
             case processing-instruction()   return ()
     
@@ -667,6 +694,7 @@ declare function render:dispatch($node as node(), $mode as xs:string) {
     return
         if ($mode eq 'html' and render:isCitableWithTeaserHTML($node)) then
             let $citationAnchor := render:makeHTMLSummaryTitle($node) (: else if render:isCitableHTML($node) then ... :)
+            let $debug := if ($config:debug = ("trace", "info")) then util:log('warn', 'Processing *[render:isCitableWithTeaserHTML(.)], local-name(): ' || local-name($node) || ', xml:id: ' || $node/@xml:id) else ()
             return ($citationAnchor, $rendering)
         else 
             $rendering
@@ -996,7 +1024,7 @@ declare function render:expan($node as element(tei:expan), $mode) {
 };
 
 
-declare function render:figure($node as element(tei:figure), $mode) {
+declare function render:figure($node as element(tei:figure), $mode as xs:string) {
     switch($mode)
         case 'html' return
             if ($node/@type eq 'ornament') then
@@ -1004,6 +1032,16 @@ declare function render:figure($node as element(tei:figure), $mode) {
             else ()
             
         default return ()
+};
+
+
+declare function render:foreign($node as element(tei:foreign), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            <span class="foreign-lang">{render:passthru($node, $mode)}</span>
+            
+        default return 
+            render:passthru($node, $mode)
 };
 
 
@@ -2240,7 +2278,7 @@ declare function render:textNode($node as node(), $mode as xs:string) {
         case 'html'
         case 'snippets-orig' 
         case 'snippets-edit' return 
-            let $debug := util:log('warn', 'Processing textNode: ' || $node) return
+(:            let $debug := util:log('warn', 'Processing textNode: ' || $node) return:)
             $node
         
         default return 
