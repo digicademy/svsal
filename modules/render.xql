@@ -91,7 +91,7 @@ declare function render:getNodetrail($targetWork as node()*, $targetNode as node
         else ()
     (: (b) get connector MARKER :)
     let $connector :=
-        if (count($currentNode) gt 0 and count($trailPrefix) gt 0) then
+        if ($currentNode and $trailPrefix) then
             if ($mode eq 'crumbtrail') then ' » ' 
             else if ($mode eq 'citetrail') then '.' 
             else if ($mode eq 'passagetrail') then ' '
@@ -104,11 +104,13 @@ declare function render:getNodetrail($targetWork as node()*, $targetNode as node
             || string-join(($currentNode), ' ') || ', $trailPrefix:' || string-join(($trailPrefix), ' ') || '.') 
         else ():)
     let $trail :=
-        if ($mode eq 'crumbtrail') then ($trailPrefix, $connector, $currentNode)
-        else if ($mode eq 'citetrail') then $trailPrefix || $connector || $currentNode
-        else if ($mode eq 'passagetrail') then $trailPrefix || $connector || $currentNode
-        else ()
-        
+        if ($connector) then
+             if ($mode eq 'crumbtrail') then ($trailPrefix, $connector, $currentNode)
+             else if ($mode eq 'citetrail') then $trailPrefix || $connector || $currentNode
+             else if ($mode eq 'passagetrail') then $trailPrefix || $connector || $currentNode
+             else ()
+        else if ($currentNode) then $currentNode
+        else () (:error(xs:QName('render:getNodetrail'), 'Could not make individual nodetrail for element ' || local-name($currentNode)):)
     return $trail
 };
 
@@ -175,7 +177,9 @@ declare function render:isCitableWithTeaserHTML($node as node()) as xs:boolean {
 :)
 declare function render:isCitableHTML($node as element()) as xs:boolean {
     boolean(
-        render:isIndexNode($node) and not(render:isCitableWithTeaserHTML($node)) (: and not occurring in title page? :)
+        render:isIndexNode($node) 
+        and not(render:isCitableWithTeaserHTML($node)) (: complement of render:isCitableWithTeaserHTML() :)
+        (: define further complements here :)
     )
 };
 
@@ -212,7 +216,7 @@ declare function render:isNamedCitetrailNode($node as element()) as xs:boolean {
             $node/self::tei:div[@type ne "work_part"] or (: TODO: included temporarily for div label experiment :)
             $node/self::tei:item[ancestor::tei:list[1][@type = ('dict', 'index', 'summaries')]] or
             $node/self::tei:list[@type = ('dict', 'index', 'summaries')] or
-            $node/self::tei:text[not(@xml:id = 'completeWork' or @type = "work_part")]
+            $node/self::tei:text[@type eq 'work_volume']
         )
     )
 };
@@ -224,7 +228,7 @@ declare function render:isUnnamedCitetrailNode($node as element()) as xs:boolean
     boolean(
         $node/@xml:id and
         (
-           $node/self::tei:text[not(ancestor::tei:text)] or (: we won't produce any trail ID for this, but we need it as a recursion anchor :)
+           (:$node/self::tei:text[not(ancestor::tei:text)] or:) (: we won't produce any trail ID for this, but we need it as a recursion anchor :)
            (:$node/self::tei:div[@type ne "work_part"] or:) (: TODO: commented out for div label experiment :)
            $node/self::tei:p[not(ancestor::tei:note|ancestor::tei:item)] or
            $node/self::tei:signed or
@@ -235,13 +239,6 @@ declare function render:isUnnamedCitetrailNode($node as element()) as xs:boolean
         )
     )
 };
-
-(: currently not in use: :)
-(:declare function render:mkAnchor ($targetWork as node()*, $targetNode as node()) {
-    let $targetWorkId := string($targetWork/tei:TEI/@xml:id)
-    let $targetNodeId := string($targetNode/@xml:id)
-    return <a href="{render:mkUrl($targetWork, $targetNode)}">{render:sectionTitle($targetWork, $targetNode)}</a>    
-};:)
 
 
 declare function render:mkUrlWhileRendering($targetWork as node(), $targetNode as node(), $fragmentIds as map()) {
@@ -681,6 +678,9 @@ declare function render:dispatch($node as node(), $mode as xs:string) {
             case element(tei:cell)          return render:cell($node, $mode)
             
             case element(tei:foreign)       return render:foreign($node, $mode)
+            case element(tei:date)          return render:date($node, $mode)
+            case element(tei:cit)           return render:cit($node, $mode)
+            case element(tei:author)        return render:author($node, $mode)
             
             case element(tei:TEI)           return render:passthru($node, $mode)
             case element(tei:figDesc)       return ()
@@ -700,23 +700,34 @@ declare function render:dispatch($node as node(), $mode as xs:string) {
             $rendering
 };
 
+
 (: ####++++ Element functions (ordered alphabetically) ++++#### :)
+
 
 declare function render:abbr($node as element(tei:abbr), $mode) {
     switch($mode)
         case 'snippets-orig' return
             render:passthru($node, $mode)
+            
         case 'snippets-edit' return
             if (not($node/preceding-sibling::tei:expan|$node/following-sibling::tei:expan)) then
                 render:passthru($node, $mode)
             else ()
+            
         default return
             render:origElem($node, $mode)
 };
 
+
 declare function render:argument($node as element(tei:argument), $mode as xs:string) {
     render:passthru($node, $mode)
 };
+
+
+declare function render:author($node as element(tei:author), $mode as xs:string) {
+    render:passthru($node, $mode)
+};
+
 
 declare function render:back($node as element(tei:back), $mode as xs:string) {
     switch($mode)
@@ -817,6 +828,7 @@ declare function render:cell($node as element(tei:cell), $mode) {
             render:passthru($node, $mode)
 };
 
+
 declare function render:choice($node as element(tei:choice), $mode as xs:string) {
     switch($mode)
         case 'html' return
@@ -828,6 +840,12 @@ declare function render:choice($node as element(tei:choice), $mode as xs:string)
         default return
             render:passthru($node, $mode)
 };
+
+
+declare function render:cit($node as element(tei:cit), $mode as xs:string) {
+    render:passthru($node, $mode)
+};
+
 
 declare function render:corr($node as element(tei:corr), $mode) {
     switch($mode)
@@ -843,6 +861,11 @@ declare function render:corr($node as element(tei:corr), $mode) {
 
 
 declare function render:damage($node as element(tei:damage), $mode as xs:string) {
+    render:passthru($node, $mode)
+};
+
+
+declare function render:date($node as element(tei:date), $mode as xs:string) {
     render:passthru($node, $mode)
 };
 
@@ -880,10 +903,6 @@ declare function render:div($node as element(tei:div), $mode as xs:string) {
             else render:div($node, 'title')
         
         case 'html' return
-            (:if (render:isCitableWithTeaserHTML($node)) then
-                let $sumTitle := render:makeHTMLSummaryTitle($node)
-                return ($sumTitle, render:passthru($node, $mode))
-            else :)
             render:passthru($node, $mode)
         
         case 'class' return
@@ -989,7 +1008,7 @@ declare function render:editElem($node as element(), $mode as xs:string) {
             let $origString := string-join(render:dispatch($node/parent::tei:choice/(tei:abbr|tei:orig|tei:sic), 'orig'), '')
             return
                 <span class="messengers edited {local-name($node)}" title="{$origString}">
-                    {render:passthru($node, $mode)}
+                    {string-join(render:passthru($node, $mode), '')}
                 </span>
         
         default return
@@ -1087,8 +1106,8 @@ declare function render:g($node as element(tei:g), $mode as xs:string) {
         
         case 'html' return
             let $thisString := 
-                if (render:passthru($node, $mode)) then 
-                    string(render:passthru($node, $mode)) 
+                if ($node/text()) then 
+                    xs:string($node/text())
                 else error(xs:QName('render:g'), 'Found tei:g without text content') (: ensure correct character markup :)
             let $charCode := substring($node/@ref,2)
             let $char := $node/ancestor::tei:TEI/tei:teiHeader/tei:encodingDesc/tei:charDecl/tei:char[@xml:id eq $charCode]
@@ -1292,10 +1311,6 @@ declare function render:item($node as element(tei:item), $mode as xs:string) {
             else render:dispatch($node, 'title')
                 
         case 'html' return
-            (:if (render:isCitableWithTeaserHTML($node)) then
-                let $sumTitle := render:makeHTMLSummaryTitle($node)
-                return ($sumTitle, render:passthru($node, $mode))
-            else :)(: non-dict items :)
                 switch(render:determineListType($node))
                     case 'simple' return
                         (' ', render:passthru($node, $mode), ' ')
@@ -1432,12 +1447,6 @@ declare function render:list($node as element(tei:list), $mode as xs:string) {
         
         case 'html' return
             (: available list types: "dict", "ordered", "simple", "bulleted", "gloss", "index", or "summaries" :)
-            (:if (render:isCitableWithTeaserHTML($node)) then
-                (\: dict-type lists are handled like divs :\)
-                let $sumTitle := render:makeHTMLSummaryTitle($node)
-                return ($sumTitle, render:passthru($node, $mode))
-            (\: TODO: supply other list types with toolboxes as well :\)
-            else:)
                 (: In html, lists must contain nothing but <li>s, so we have to move headings before the list 
                    (inside a html <section>/<figure> with the actual list) and nest everything else (sub-lists) in <li>s. :)
                 switch(render:determineListType($node))
@@ -1569,10 +1578,7 @@ declare function render:milestone($node as element(tei:milestone), $mode as xs:s
         case 'html' return
             let $inlineText := if ($node/@rendition eq '#dagger') then <sup>†</sup> else '*'
             return
-                (:if (render:isCitableWithTeaserHTML($node)) then    
-                    let $sumTitle := render:makeHTMLSummaryTitle($node)
-                    return ($inlineText, $sumTitle)
-                else :)$inlineText
+                $inlineText
         
         case 'class' return
             'tei-milestone-' || $node/@unit
@@ -1852,7 +1858,7 @@ declare function render:origElem($node as element(), $mode as xs:string) {
                 let $editString := string-join(render:dispatch($node/parent::tei:choice/(tei:expan|tei:reg|tei:corr), 'edit'), '')
                 return
                     <span class="original {local-name($node)} unsichtbar" title="{$editString}">
-                        {render:passthru($node, $mode)}
+                        {string-join(render:passthru($node, $mode), '')}
                     </span>
         
         default return
@@ -1957,8 +1963,8 @@ declare function render:pb($node as element(tei:pb), $mode as xs:string) {
             'tei-' || local-name($node)
         
         case 'citetrail' return
-            (: "pX" where X is page number :)
-            concat('p',
+            (: "pagX" where X is page number :)
+            concat('pag',
                 if (matches($node/@n, '[\[\]A-Za-z0-9]') 
                     and not($node/preceding::tei:pb[ancestor::tei:text[1] intersect $node/ancestor::tei:text[1]
                                                     and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($node/@n, '[^a-zA-Z0-9]', ''))]
@@ -2239,8 +2245,6 @@ declare function render:text($node as element(tei:text), $mode as xs:string) {
                     if ($node/@type eq 'work_volume' and $node/preceding::tei:text[@type eq 'work_volume']) 
                         then <hr/> 
                     else ()
-                (:let $sumTitle := render:makeHTMLSummaryTitle($node)
-                return ($delimiter, $sumTitle, render:passthru($node, $mode)):)
                 return ($delimiter, render:passthru($node, $mode))
             else render:passthru($node, $mode)
         
