@@ -215,7 +215,7 @@ declare function render:isNamedCitetrailNode($node as element()) as xs:boolean {
             $node/self::tei:titlePage or
             $node/self::tei:div[@type ne "work_part"] or (: TODO: included temporarily for div label experiment :)
             $node/self::tei:item[ancestor::tei:list[1][@type = ('dict', 'index', 'summaries')]] or
-            $node/self::tei:list[@type = ('dict', 'index', 'summaries')] or
+            $node/self::tei:list[@type = ('dict')] or
             $node/self::tei:text[@type eq 'work_volume']
         )
     )
@@ -234,7 +234,7 @@ declare function render:isUnnamedCitetrailNode($node as element()) as xs:boolean
            $node/self::tei:signed or
            $node/self::tei:label[not(ancestor::tei:lg|ancestor::tei:note|ancestor::tei:item|ancestor::tei:p)] or (: labels, contrarily to headings, are simply counted :)
            $node/self::tei:lg[not(ancestor::tei:lg|ancestor::tei:note|ancestor::tei:item|ancestor::tei:p)] or (: count only top-level lg, not single stanzas :)
-           $node/self::tei:list[not(@type = ('dict', 'index', 'summaries'))] or
+           $node/self::tei:list[not(@type = ('dict'))] or
            $node/self::tei:item[not(ancestor::tei:list[1][@type = ('dict', 'index', 'summaries')]|ancestor::tei:note|ancestor::tei:item)]
         )
     )
@@ -1209,13 +1209,11 @@ declare function render:head($node as element(tei:head), $mode as xs:string) {
             'tei-' || local-name($node)
         
         case 'citetrail' return
-            concat(
-                'heading', 
-                (if (count($node/(parent::tei:back|parent::tei:div[@type ne "work_part"]|parent::tei:front|parent::tei:list|parent::tei:titlePart)/tei:head) gt 1) then          
-                    (: we have several headings on this level of the document ... :)
-                    string(count($node/preceding-sibling::tei:head) + 1)
-                 else ())
-            )
+            'heading' ||
+            (if (count($node/parent::*/tei:head) gt 1) then          
+                (: we have several headings on this level of the document ... :)
+                string(count($node/preceding-sibling::tei:head) + 1)
+             else ())
         
         case 'orig'
         case 'edit' return
@@ -1491,7 +1489,7 @@ declare function render:list($node as element(tei:list), $mode as xs:string) {
         
         case 'citetrail' return
             (: dictionaries, indices and summaries get their type prepended to their number :)
-            if($node/@type = ('dict', 'index', 'summaries')) then
+            if(render:isNamedCitetrailNode($node)) then
                 let $currentSection := sal-util:copy($node/(ancestor::tei:div|ancestor::tei:body|ancestor::tei:front|ancestor::tei:back)[last()])
                 let $currentNode := $currentSection//tei:list[@xml:id eq $node/@xml:id]
                 return
