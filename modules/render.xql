@@ -26,7 +26,7 @@ import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.x
 (: SETTINGS :)
 
 (: the max. amount of characters to be shown in a note teaser :)
-declare variable $render:noteTruncLimit := 38;
+declare variable $render:noteTruncLimit := 40;
 
 declare variable $render:teaserTruncLimit := 45;
 (:
@@ -161,7 +161,7 @@ declare function render:isCitableWithTeaserHTML($node as node()) as xs:boolean {
                 $node/self::tei:front or
                 $node/self::tei:titlePage or
                 $node/self::tei:item or
-                $node/self::tei:list[not(@type = ('dict', 'index', 'summaries'))] or
+                $node/self::tei:list[not(@type = ('dict'))] or
                 $node/self::tei:p or
                 $node/self::tei:signed or
                 $node/self::tei:label or
@@ -488,31 +488,27 @@ declare function render:resolveFacsURI($facsTargets as xs:string) as xs:string {
 declare function render:makeMarginalHTML($node as element()) as element(div) {
     let $label := if ($node/@n) then <span class="note-label">{$node/@n || ' '}</span> else ()
     let $content :=
-        <div class="marginal container" id="{$node/@xml:id}">
-            {
-            if ($node/tei:p) then 
-                render:passthru($node, 'html')
-            else
-                <span class="note-paragraph">
-                    {render:passthru($node, 'html')}
-                </span>
-            }
-        </div>
+        if ($node/tei:p) then 
+            render:passthru($node, 'html')
+        else
+            <span class="note-paragraph">{render:passthru($node, 'html')}</span>
     (: determine string-length of complete note text, so as to see whether note needs to be truncated: :)
     let $noteLength := 
         string-length((if ($label) then $node/@n || ' ' else ()) || normalize-space(string-join(render:dispatch($node, 'edit'), '')))
     return
-        if ($noteLength gt $render:noteTruncLimit) then
-            let $id := 'collapse-' || $node/@xml:id
-            return
-                <a role="button" class="collapsed note-teaser" data-toggle="collapse" href="{('#' || $id)}" 
-                   aria-expanded="false" aria-controls="{$id}">    
-                    <p class="collapse" id="{$id}" aria-expanded="false">
-                        {$content}
-                    </p>
-                </a>
-        else 
-            $content
+        <div class="marginal container" id="{$node/@xml:id}">{
+            if ($noteLength gt $render:noteTruncLimit) then
+                let $id := 'collapse-' || $node/@xml:id
+                return
+                    <a role="button" class="collapsed note-teaser" data-toggle="collapse" href="{('#' || $id)}" 
+                       aria-expanded="false" aria-controls="{$id}">    
+                        <p class="collapse" id="{$id}" aria-expanded="false">
+                            {$content}
+                        </p>
+                    </a>
+            else 
+                $content
+        }</div>
 };
 
 
@@ -681,8 +677,11 @@ declare function render:dispatch($node as node(), $mode as xs:string) {
             case element(tei:date)          return render:date($node, $mode)
             case element(tei:cit)           return render:cit($node, $mode)
             case element(tei:author)        return render:author($node, $mode)
+            case element(tei:docEdition)    return render:docEdition($node, $mode)
             
             case element(tei:TEI)           return render:passthru($node, $mode)
+            case element(tei:group)         return render:passthru($node, $mode)
+            
             case element(tei:figDesc)       return ()
             case element(tei:teiHeader)     return ()
             case element(tei:fw)            return ()
@@ -912,9 +911,10 @@ declare function render:div($node as element(tei:div), $mode as xs:string) {
             if (render:isNamedCitetrailNode($node)) then
                 (: use abbreviated form of @type (without dot), possibly followed by position :)
                 (: TODO: div label experiment (delete the following block if this isn't deemed plausible) :)
+                let $abbr := $config:citationLabels($node/@type)?('abbr')
                 let $prefix :=
-                    if ($config:citationLabels($node/@type)?('abbr')) then 
-                        lower-case(substring-before($config:citationLabels($node/@type)?('abbr'), '.'))
+                    if ($abbr) then 
+                        lower-case(if (contains($abbr, '.')) then substring-before($config:citationLabels($node/@type)?('abbr'), '.') else $abbr)
                     else 'div' (: divs for which we haven't defined an abbr. :)
                 let $position :=
                     if (count($node/parent::*[self::tei:body or render:isIndexNode(.)]/tei:div[$config:citationLabels(@type)?('abbr') eq $config:citationLabels($node/@type)?('abbr')]) gt 1) then
@@ -981,6 +981,10 @@ declare function render:docAuthor($node as element(tei:docAuthor), $mode as xs:s
 };
 
 declare function render:docDate($node as element(tei:docDate), $mode as xs:string) {
+    render:passthru($node, $mode)
+};
+
+declare function render:docEdition($node as element(tei:docEdition), $mode as xs:string) {
     render:passthru($node, $mode)
 };
 
@@ -1099,10 +1103,11 @@ declare function render:g($node as element(tei:g), $mode as xs:string) {
         
         case 'edit' return
             let $glyph := $node/ancestor::tei:TEI//tei:char[@xml:id = substring(string($node/@ref), 2)]
-            return  if ($glyph/tei:mapping[@type = 'standardized']) then
-                        string($glyph/tei:mapping[@type = 'standardized'])
-                    else
-                        render:passthru($node, $mode)
+            return
+                if ($glyph/tei:mapping[@type = 'standardized']) then
+                    string($glyph/tei:mapping[@type = 'standardized'])
+                else
+                    render:passthru($node, $mode)
         
         case 'html' return
             let $thisString := 
@@ -1115,26 +1120,24 @@ declare function render:g($node as element(tei:g), $mode as xs:string) {
                 if (not($char)) then 
                     error(xs:QName('render:g'), 'g/@ref is invalid, the char code does not exist): ', $charCode)
                 else ()
+            let $precomposedString := 
+                if ($char/tei:mapping[@type='precomposed']/text()) then 
+                    string($char/tei:mapping[@type='precomposed']/text())
+                else ()
+            let $composedString := 
+                if ($char/tei:mapping[@type='composed']/text()) then
+                    string($char/tei:mapping[@type='composed']/text())
+                else ()
+            let $originalGlyph := if ($composedString) then $composedString else $precomposedString
+                (: composed strings are preferable since some precomposed chars are displayed oddly in certain contexts 
+                    (e.g. chare0303 in bold headings) :)
             return 
                 (: Depending on the context or content of the g element, there are several possible cases: :)
-                (: 1. if g occurs within choice, it must be a "simple" character since the larger context has already been edited -> pass it through :)
+                (: 1. if g occurs within choice, we can simply take an original character since any expansion should be handled through the choice mechanism :)
                 if ($node/ancestor::tei:choice) then
-                    if ($thisString) then $thisString
-                    else if ($char/tei:mapping[@type='precomposed']/text()) then string($char/tei:mapping[@type='precomposed']/text())
-                    else string($char/tei:mapping[@type='composed']/text())
+                    $originalGlyph
                 (: 2. g occurs outside of choice: :)
                 else
-                    let $precomposedString := 
-                        if ($char/tei:mapping[@type='precomposed']/text()) then 
-                            string($char/tei:mapping[@type='precomposed']/text())
-                        else ''
-                    let $composedString := 
-                        if ($char/tei:mapping[@type='composed']/text()) then
-                            string($char/tei:mapping[@type='composed']/text())
-                        else ''
-                    let $originalGlyph :=
-                        if ($precomposedString) then $precomposedString (: TODO: does this work? (in xslt: disable-output-escaping="yes") :)
-                        else $composedString
                     let $test := 
                         if (string-length($originalGlyph) eq 0) then 
                             error(xs:QName('render:g'), 'No correct mapping available for char: ', $node/@ref)
@@ -1950,13 +1953,11 @@ declare function render:pb($node as element(tei:pb), $mode as xs:string) {
                 else if ($node/@corresp) then
                     concat('[pb_corresp_', $node/@corresp, ']')
                 else
-                    (: prepend volume prefix? :)
-                    let $volumeString := ()
-                        (:if ($node/ancestor::tei:text[@type='work_volume']) then 
-                            concat('Vol. ', $node/ancestor::tei:text[@type='work_volume']/@n, ', ') 
-                        else ():)
-                    return if (contains($node/@n, 'fol.')) then $volumeString || $node/@n
-                    else $volumeString || 'p. ' || $node/@n
+                    (: not prepending 'Vol. ' prefix here :)
+                    if (contains($node/@n, 'fol.')) then 
+                        $node/@n
+                    else
+                        'p. ' || $node/@n
             )
         
         case 'class' return
@@ -1964,7 +1965,7 @@ declare function render:pb($node as element(tei:pb), $mode as xs:string) {
         
         case 'citetrail' return
             (: "pagX" where X is page number :)
-            concat('pag',
+            concat('p',
                 if (matches($node/@n, '[\[\]A-Za-z0-9]') 
                     and not($node/preceding::tei:pb[ancestor::tei:text[1] intersect $node/ancestor::tei:text[1]
                                                     and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($node/@n, '[^a-zA-Z0-9]', ''))]
@@ -1992,7 +1993,6 @@ declare function render:pb($node as element(tei:pb), $mode as xs:string) {
                     if ($node[@n]) then
                         let $pageAnchor := 'pageNo_' || (if ($node/@xml:id) then $node/@xml:id/string() else generate-id($node))
                         let $title := if (contains($node/@n, 'fol.')) then 'View image of ' || $node/@n else 'View image of p. ' || $node/@n
-                        let $text := if (contains($node/@n, 'fol.')) then $node/@n else 'p. ' || $node/@n
                         return
                             <div class="pageNumbers">
                                 <a href="{render:resolveFacsURI($node/@facs)}">
@@ -2000,7 +2000,7 @@ declare function render:pb($node as element(tei:pb), $mode as xs:string) {
                                     {' '}
                                     <span class="pageNo messengers" data-canvas="{render:resolveCanvasID($node)}"
                                         data-sal-id="{render:makeCitetrailURI($node)}" id="{$pageAnchor}" title="{$title}">
-                                        {$text}
+                                        {render:pb($node, 'html-title')}
                                     </span>
                                 </a>
                             </div>
