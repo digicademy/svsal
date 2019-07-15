@@ -288,17 +288,40 @@ declare function render:teaserString($node as element(), $mode as xs:string?) as
 ~ From a given fragment root, searches for ancestors that occur above the fragmentation level and renders them (non-recursively)
     such that they can be re-included into a fragment's HTML.
 :)
-(: TODO: should this reside rather in render:[ELEMENT] functions? :)
+(: TODO: currently, this merely creates a "Vol. X" teaser at the beginning of volumes - this means that fragmentation depth cannot go below (front|body|back)/* ! :)
 declare function render:excludedAncestorHTML($fragmentRoot as element()) {
-    for $node in $fragmentRoot/ancestor::*[render:isIndexNode(.)] return
-        if (render:isCitableWithTeaserHTML($node)) then (: at such a high level, there shouldn't be any render:isCitable() nodes :)
-            let $delimiter := 
-                if ($node/self::tei:text[@type='work_volume'] and $node/preceding::tei:text[@type='work_volume']) then 
-                    <hr/> 
-                else ()
-            let $sumTitle := render:makeHTMLSummaryTitle($node)
-            return ($delimiter, $sumTitle)
-        else ()
+    (: determine whether fragment is first structural element of volume :)
+    if ($fragmentRoot[ancestor-or-self::tei:text[@type eq 'work_volume'] 
+                      and not(preceding::*[self::tei:div or self::tei:titlePage] 
+                              intersect ancestor-or-self::tei:text[@type eq 'work_volume']//*[self::tei:div or self::tei:titlePage])]) then
+        let $delimiter := 
+            if ($fragmentRoot/ancestor-or-self::tei:text[@type='work_volume']/preceding::tei:text[@type='work_volume']) then 
+                <hr/> 
+            else ()
+        let $sumTitle := render:makeHTMLSummaryTitle($fragmentRoot/ancestor-or-self::tei:text[@type eq 'work_volume'])
+        return ($delimiter, $sumTitle)
+    else ()        
+    
+    (: functionality for generic ancestor teaser creation - needs debugging; what about ancestor headings (tei:head?) (TODO) :)
+    (:if (not($fragmentRoot/preceding-sibling::*)) then
+        let $ancestorTeasers :=
+            for $a in $fragmentRoot/ancestor::*[render:isCitableWithTeaserHTML(.) and not(preceding-sibling::*
+                                                                                          or self::tei:text[@type eq 'work_volume'])] return
+                render:makeHTMLSummaryTitle($a) (\: TODO: wrong order? :\)
+        let $volTeaser :=
+            (\: if fragment is first structural element of volume, also make a "Vol." teaser :\)
+            if ($fragmentRoot[ancestor-or-self::tei:text[@type eq 'work_volume'] 
+                              and not(preceding::*[self::tei:div or self::tei:titlePage] 
+                                      intersect ancestor-or-self::tei:text[@type eq 'work_volume']//*[self::tei:div or self::tei:titlePage])]) then
+                let $delimiter := 
+                    if ($fragmentRoot/ancestor-or-self::tei:text[@type='work_volume']/preceding::tei:text[@type='work_volume']) then 
+                        <hr/> 
+                    else ()
+                let $sumTitle := render:makeHTMLSummaryTitle($fragmentRoot/ancestor-or-self::tei:text[@type eq 'work_volume'])
+                return ($delimiter, $sumTitle)
+            else ()
+        return ($volTeaser, $ancestorTeasers)
+    else ():)
 };
 
 
@@ -443,19 +466,19 @@ declare function render:createPaginationLinks($workId as xs:string, $fragmentInd
 :)
 declare function render:determineListType($node as element()) as xs:string? {
     if ($node[self::tei:list and @type]) then $node/@type
-    else if (ancestor::tei:list[@type]) then ancestor::tei:list[@type][1]/@type
+    else if ($node/ancestor::tei:list[@type]) then $node/ancestor::tei:list[@type][1]/@type
     else () (: fall back to simple? :)
 };
 
 
 declare function render:resolveCanvasID($pb as element(tei:pb)) as xs:string {
-    let $facs := (tokenize(normalize-space($pb/@facs/string()), ' '))[1]
+    let $facs := normalize-space($pb/@facs/string())
     return
         if (matches($facs, '^facs:W[0-9]{4}-[A-z]-[0-9]{4}$')) then 
-            let $index := string(count($pb/preceding::pb[not(@sameAs) and substring(./@facs, 1, 12) eq substring($facs, 1, 12)]) + 1)
+            let $index := string(count($pb/preceding::tei:pb[not(@sameAs) and substring(@facs, 1, 12) eq substring($facs, 1, 12)]) + 1)
             return $config:imageserver || '/iiif/presentation/' || sal-util:convertVolumeID(substring($facs,6,7)) || '/canvas/p' || $index
         else if (matches($facs, '^facs:W[0-9]{4}-[0-9]{4}$')) then
-            let $index := string(count($pb/preceding::pb[not(@sameAs)]) + 1)
+            let $index := string(count($pb/preceding::tei:pb[not(@sameAs)]) + 1)
             return $config:imageserver || '/iiif/presentation/' || substring($facs,6,5) || '/canvas/p' || $index
         else error(xs:QName('render:resolveCanvasID'), 'Unknown pb/@facs value')
 };
@@ -479,7 +502,6 @@ declare function render:resolveFacsURI($facsTargets as xs:string) as xs:string {
             return $config:imageserver || '/iiif/image/' || $workId || '!' || $volId || '!' || $workId 
                         || '-' || $volId || '-' || $facsId || $iiifRenderParams
         else error(xs:QName('render:pb'), 'Illegal facs ID (pb/@facs): ' || $facs)
-
 };
 
 (:
@@ -503,6 +525,8 @@ declare function render:makeMarginalHTML($node as element()) as element(div) {
                     <a role="button" class="collapsed note-teaser" data-toggle="collapse" href="{('#' || $id)}" 
                        aria-expanded="false" aria-controls="{$id}">    
                         <p class="collapse" id="{$id}" aria-expanded="false">
+                            {$label}
+                            {' '}
                             {$content}
                         </p>
                     </a>
@@ -544,11 +568,9 @@ declare function render:resolveURI($node as element(), $targets as xs:string) {
     let $facsScheme := 'facs:((W[0-9]+)[A-z0-9.:#_\-]+)'
     let $genericScheme := '(\S+):([A-z0-9.:#_\-]+)'
     return
-        if (starts-with($target, '#W')) then
+        if (starts-with($target, '#') and $currentWork//*[@xml:id eq substring($target, 2)]) then
             (: target is some node within the current work :)
-            let $targetNode := $currentWork//*[@xml:id eq substring($target, 2)]
-            return
-                render:makeCitetrailURI($targetNode)
+            render:makeCitetrailURI($currentWork//*[@xml:id eq substring($target, 2)])
         else if (matches($target, $workScheme)) then
             (: target is something like "work:W...#..." :)
             let $targetWorkId :=
@@ -1312,13 +1334,16 @@ declare function render:item($node as element(tei:item), $mode as xs:string) {
             else render:dispatch($node, 'title')
                 
         case 'html' return
-                switch(render:determineListType($node))
-                    case 'simple' return
-                        (' ', render:passthru($node, $mode), ' ')
-                    case 'index' return
-                        <li class="list-index-item">{render:passthru($node, $mode)}</li>
-                    default return
-                        <li>{render:passthru($node, $mode)}</li>
+            (: tei:item should be handled exclusively in render:list :)
+            error()
+            (:switch(render:determineListType($node))
+                case 'simple' return
+                    (' ', render:passthru($node, $mode), ' ')
+                case 'index' 
+                case 'summaries' return
+                    <li class="list-index-item">{render:passthru($node, $mode)}</li>
+                default return
+                    <li>{render:passthru($node, $mode)}</li>:)
                 
         case 'class' return
             'tei-' || local-name($node)
@@ -1448,38 +1473,48 @@ declare function render:list($node as element(tei:list), $mode as xs:string) {
         
         case 'html' return
             (: available list types: "dict", "ordered", "simple", "bulleted", "gloss", "index", or "summaries" :)
-                (: In html, lists must contain nothing but <li>s, so we have to move headings before the list 
-                   (inside a html <section>/<figure> with the actual list) and nest everything else (sub-lists) in <li>s. :)
-                switch(render:determineListType($node))
-                    (: TODO: render ordered and simple similar to index? :)
-                    case 'ordered' return (: enumerated/ordered list :)
-                        <section id="{$node/@xml:id}">
-                            {for $head in $node/tei:head return <h4>{render:passthru($head, $mode)}</h4>}
-                            <ol>
-                                {for $child in $node/*[not(self::tei:head)] return render:passthru($child, $mode)}
-                            </ol>
-                        </section>
-                    case 'simple' return (: make no list in html terms at all :)
-                        <section id="{$node/@xml:id}">
-                            {for $head in $node/tei:head return <h4 class="inlist-head">{render:passthru($head, $mode)}</h4>}
-                            {for $child in $node/*[not(self::tei:head)] return
-                                if ($child//list) then render:passthru($child, $mode)
-                                else (<span class="inline-item">{render:passthru($child, $mode)}</span>, ' ')}
-                        </section>
-                    case 'index' return (: index is always an unordered list :)
+            (: In html, lists must contain nothing but <li>s, so we have to move headings before the list 
+               (inside a html <section>/<figure> with the actual list) and nest everything else (sub-lists) in <li>s. :)
+            switch(render:determineListType($node))
+                (: tei:item are actually handled here, not in render:item, due to the tight coupling of their layout to tei:list :)
+                case 'ordered' return (: enumerated/ordered list :)
+                    <section id="{$node/@xml:id}">
+                        {for $head in $node/tei:head return <h4>{render:passthru($head, $mode)}</h4>}
+                        <ol>
+                            {for $child in $node/*[not(self::tei:head)] return 
+                                <li>{render:passthru($child, $mode)}</li>}
+                        </ol>
+                    </section>
+                case 'simple' return (: make no list in html terms at all :)
+                    <section id="{$node/@xml:id}">
+                        {for $head in $node/tei:head return <h4 class="inlist-head">{render:passthru($head, $mode)}</h4>}
+                        {for $child in $node/*[not(self::tei:head)] return
+                            if ($child//list) then render:passthru($child, $mode)
+                            else (' ', <span class="inline-item">{render:passthru($child, $mode)}</span>, ' ')}
+                    </section>
+                case 'index'
+                case 'summaries' return (: unordered list :)
+                    let $content := 
                         <div class="list-index" id="{$node/@xml:id}">
                             {for $head in $node/tei:head return <h4 class="list-index-head">{render:passthru($head, $mode)}</h4>}
                             <ul style="list-style-type:circle;">
-                                {for $child in $node/*[not(self::tei:head)] return render:passthru($child, $mode)}
+                                {for $child in $node/*[not(self::tei:head)] return 
+                                    <li class="list-index-item">{render:passthru($child, $mode)}</li>}
                             </ul>
                         </div>
-                    default return (: put an unordered list (and captions) in a figure environment of class @type :)
-                        <figure class="{$node/@type}" id="{$node/@xml:id}">
-                            {for $head in $node/tei:head return <h4>{render:passthru($head, $mode)}</h4>}
-                            <ul style="list-style-type:circle;">
-                                 {for $child in $node/*[not(self::tei:head)] return render:passthru($child, $mode)}
-                            </ul>
-                        </figure>
+                    return
+                        (:if (not($node/ancestor::tei:list)) then
+                            <section>{$content}</section>
+                        else :)
+                        $content
+                default return (: put an unordered list (and captions) in a figure environment (why?) of class @type :)
+                    <div class="list-default" id="{$node/@xml:id}">
+                        {for $head in $node/tei:head return <h4 class="list-default-head">{render:passthru($head, $mode)}</h4>}
+                        <ul style="list-style-type:circle;">
+                             {for $child in $node/*[not(self::tei:head)] return 
+                                <li class="list-default-item">{render:passthru($child, $mode)}</li>}
+                        </ul>
+                    </div>
         
         case 'class' return
             'tei-' || local-name($node)
@@ -1981,7 +2016,7 @@ declare function render:pb($node as element(tei:pb), $mode as xs:string) {
                 let $inlineBreak :=
                     if ($node[@type eq 'blank']) then (: blank pages - make a typographic line break :)
                         <br/>
-                    else if ($node[preceding::pb 
+                    else if ($node[preceding::tei:pb 
                                    and preceding-sibling::node()[descendant-or-self::text()[not(normalize-space() eq '')]]                                                                                
                                    and following-sibling::node()[descendant-or-self::text()[not(normalize-space() eq '')]]]) then
                         (: mark page break by means of '|', but not at the beginning or end of structural sections :)

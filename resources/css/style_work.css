@@ -547,11 +547,11 @@ a .edited, a .expan, a .reg, a .corr{
     display:block;
 }
 
-.list-index-head {
+.list-index-head, .list-default-head {
     font-size:27px !important;
     font-weight:bold;
 }
-.list-index-item {
+.list-index-item, .list-default-item {
     font-size:20px !important;
 }
 
