@@ -437,7 +437,7 @@ declare function render:createHTMLFragment($workId as xs:string, $fragmentRoot a
                     </div>
                 </div>
             </div>
-            {render:createPaginationLinks($workId, $fragmentIndex, $prevId, $nextId)}    <!-- finally, add pagination links --> 
+            {render:createPaginationLinks($workId, $fragmentIndex, $prevId, $nextId) (: finally, add pagination links :)}
         </div>
         (: the rest (to the right, in col-md-12) is filled by _spans_ with class marginal, possessing
              a negative right margin (this happens in eXist's work.html template) :)
@@ -732,6 +732,12 @@ declare function render:dispatch($node as node(), $mode as xs:string) {
             return ($citationAnchor, $rendering)
         else 
             $rendering
+};
+
+declare function render:getLowStructuralAncestor($node as node()) as element()? {
+    let $lowAncestorElems :=
+        ('p', 'head', 'note', 'item', 'cell', 'label', 'docImprint', 'byline', 'imprimatur', 'titlePart', 'signed', 'lg')
+    return $node/ancestor::*[local-name() = $lowAncestorElems][1]
 };
 
 
@@ -1291,8 +1297,7 @@ declare function render:hi($node as element(tei:hi), $mode as xs:string) {
                     (: centering and right-alignment apply only in certain contexts :)
                     else if ($s eq '#r-center'
                              and not($node/ancestor::*[local-name(.) = $specificAlignElems])
-                             and not($node/following-sibling::node()[descendant-or-self::text()[not(normalize-space() eq '')]]
-                                     and $node/ancestor::tei:p[1][.//text()[not(ancestor::tei:hi[contains(@rendition, '#r-center')])]])
+                             and not(render:getLowStructuralAncestor($node)//text()[not(ancestor::tei:hi[contains(@rendition, '#r-center')])])
                          ) then
                              (: workaround for suppressing trailing centerings at the end of paragraphs :)
                          'display:block;text-align:center;'
