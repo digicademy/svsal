@@ -364,7 +364,11 @@ declare function render:HTMLSectionToolbox($node as element()) as element(span) 
     let $dataContent := 
         '&lt;div&gt;' ||
             '&lt;a href=&#34;' || render:makeCitetrailURI($node) || '&#34;&gt;' || 
-                '&lt;span class=&#34;messengers glyphicon glyphicon-link&#34; title=&#34;go to/link this textarea&#34;/&gt;' || 
+                '&lt;span class=&#34;messengers fas fa-link&#34; title=&#34;Go to/link this textarea&#34;/&gt;' || 
+            '&lt;/a&gt;' || 
+            '  ' || 
+            '&lt;a href=&#34;' || () || '&#34;&gt;' || 
+                '&lt;span class=&#34;messengers fas fa-feather-alt&#34; title=&#34;Cite this passage&#34;/&gt;' || 
             '&lt;/a&gt;' || 
             '  ' || 
             '&lt;a class=&#34;updateHiliteBox&#34; href=&#34;#34;&gt;'  || 
@@ -376,9 +380,13 @@ declare function render:HTMLSectionToolbox($node as element()) as element(span) 
     return
         <span class="sal-toolbox">
             <a id="{$id}" href="{('#' || $id)}" data-rel="popover" data-content="{$dataContent}">
-                <i class="far fa-hand-point-right messengers" title="Open toolbox for this textarea"/>
+                <i class="fas fa-link messengers" title="Open toolbox for this textarea"/>
             </a>
         </span>
+};
+
+declare function render:makePassagetrailBox($node as element()) {
+    ()
 };
 
 (:
@@ -683,6 +691,7 @@ declare function render:dispatch($node as node(), $mode as xs:string) {
             case element(tei:damage)        return render:damage($node, $mode)
             case element(tei:gap)           return render:gap($node, $mode)
             case element(tei:supplied)      return render:supplied($node, $mode)
+            case element(tei:unclear)       return render:unclear($node, $mode)
             
             case element(tei:figure)        return render:figure($node, $mode)
             
@@ -2398,6 +2407,19 @@ declare function render:titlePart($node as element(tei:titlePart), $mode as xs:s
             if ($node/@type eq 'main') then
                 <h1>{render:passthru($node, $mode)}</h1>
             else render:passthru($node, $mode)
+            
+        default return 
+            render:passthru($node, $mode)
+};
+
+
+declare function render:unclear($node as element(tei:unclear), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            (: TODO i18n title :)
+            if ($node//text()) then
+                <span title="unclear" class="sal-unclear-text">{render:passthru($node, $mode)}</span>
+            else <span title="unclear" class="sal-unclear"/>
             
         default return 
             render:passthru($node, $mode)

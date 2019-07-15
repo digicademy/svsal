@@ -502,6 +502,11 @@ a .edited, a .expan, a .reg, a .corr{
     font-size:23px;
 }
 
+.messengers .fa-link {
+/*    font-size:unset;*/
+    font-size:18px;
+}
+
 .hauptText .signed {
     font-size:0.9em !important;
     text-align:right !important;
@@ -742,6 +747,17 @@ hr.ornament {
 
 table {
     font-size: 1.15em;
+}
+
+span.sal-unclear:after {
+    color:#993333;
+    content: '[?]';
+    font-style: italic;
+}
+
+span.sal-unclear-text {
+    color:#993333;
+    border-bottom: 2px dotted #993333;
 }
 
 .table-label {
