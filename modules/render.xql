@@ -654,6 +654,8 @@ declare function render:dispatch($node as node(), $mode as xs:string) {
             case element(tei:placeName)     return render:placeName($node, $mode)
             case element(tei:docAuthor)     return render:docAuthor($node, $mode)
             case element(tei:orgName)       return render:orgName($node, $mode)
+            case element(tei:pubPlace)      return render:pubPlace($node, $mode)
+            case element(tei:publisher)     return render:publisher($node, $mode)
             case element(tei:title)         return render:title($node, $mode)
             case element(tei:term)          return render:term($node, $mode)
             case element(tei:bibl)          return render:bibl($node, $mode)
@@ -692,6 +694,8 @@ declare function render:dispatch($node as node(), $mode as xs:string) {
             case element(tei:gap)           return render:gap($node, $mode)
             case element(tei:supplied)      return render:supplied($node, $mode)
             case element(tei:unclear)       return render:unclear($node, $mode)
+            case element(tei:del)           return render:del($node, $mode)
+            case element(tei:space)         return render:space($node, $mode)
             
             case element(tei:figure)        return render:figure($node, $mode)
             
@@ -907,6 +911,19 @@ declare function render:death($node as element(tei:death), $mode as xs:string) {
         render:passthru($node, $mode)
     else ()
 };
+
+
+declare function render:del($node as element(tei:del), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            if ($node/tei:supplied) then
+                render:passthru($node, $mode)
+            else error(xs:QName('render:del'), 'Unexpected content in tei:del')
+        
+        default return 
+            render:passthru($node, $mode)
+};
+
 
 declare function render:div($node as element(tei:div), $mode as xs:string) {
     switch($mode)
@@ -1279,7 +1296,9 @@ declare function render:hi($node as element(tei:hi), $mode as xs:string) {
                          ) then
                              (: workaround for suppressing trailing centerings at the end of paragraphs :)
                          'display:block;text-align:center;'
-                    else if ($s eq '#right' and not($node/ancestor::*[local-name(.) = $specificAlignElems])) then 
+                    else if ($s eq '#right' 
+                             and not($node/ancestor::*[local-name(.) = $specificAlignElems])
+                             and not($node/ancestor::tei:item)) then 
                         'display:block;text-align: right;'
                     else if ($s eq '#sc') then 'font-variant:small-caps;'
                     else if ($s eq '#spc') then 'letter-spacing:2px;'
@@ -2112,6 +2131,45 @@ declare function render:placeName($node as element(tei:placeName), $mode as xs:s
             render:name($node, $mode)
 };
 
+(: Same as render:persName() :)
+declare function render:publisher($node as element(tei:publisher), $mode as xs:string) {
+    switch($mode)
+        case 'snippets-orig' return
+            render:passthru($node, $mode)
+        
+        case 'snippets-edit' return
+            if ($node/@key and $node/@ref) then
+                string($node/@key) || ' [' || string($node/@ref) || ']'
+            else if ($node/@key) then
+                string($node/@key)
+            else if ($node/@ref) then
+                '[' || string($node/@ref) || ']'
+            else
+                render:passthru($node, $mode)
+        
+        case 'html' return
+            render:name($node, $mode)
+        
+        default return
+            render:name($node, $mode)
+};
+
+(: Same as render:placeName() :)
+declare function render:pubPlace($node as element(tei:pubPlace), $mode as xs:string) {
+    switch($mode)
+        case 'snippets-orig' return
+            render:passthru($node, $mode)
+        case 'snippets-edit' return
+            if ($node/@key) then
+                string($node/@key)
+            else
+                render:passthru($node, $mode)
+        case 'html' return
+            render:name($node, $mode)
+        default return
+            render:name($node, $mode)
+};
+
 declare function render:quote($node as element(tei:quote), $mode as xs:string) {
     switch($mode)
         case 'orig'
@@ -2217,12 +2275,16 @@ declare function render:soCalled($node as element(tei:soCalled), $mode as xs:str
         ("'", render:passthru($node, $mode), "'")
 };
 
+declare function render:space($node as element(tei:space), $mode as xs:string) {
+    if ($node/@dim eq 'horizontal' or @rendition eq '#h-gap') then ' ' else ()
+};
+
 
 declare function render:supplied($node as element(tei:supplied), $mode as xs:string) {
     switch($mode)
         case 'html' return
-            (<span class="original unsichtbar" title="{string($node)}">{'[' || $node/text() || ']'}</span>,
-            <span class="edited" title="{concat('[', string($node), ']')}">{$node/text()}</span>)
+            (<span class="original unsichtbar" title="{string($node)}">{'[' || string-join(render:passthru($node,$mode)) || ']'}</span>,
+            <span class="edited" title="{concat('[', string($node), ']')}">{render:passthru($node,$mode)}</span>)
             
         default return
             render:passthru($node, $mode)
