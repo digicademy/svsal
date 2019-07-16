@@ -427,8 +427,6 @@ declare function render:createHTMLFragment($workId as xs:string, $fragmentRoot a
                 <div id="SvSalPages">
                     <div class="SvSalPage">                
                         {
-                        (: TODO: this seems to work only for a titlePage or first div within the front of a text[@type eq 'work_volume'],
-                            but what about other (body|back) ancestors excluded by a higher $fragmentationDepth? :)
                         if ($fragmentRoot[not(preceding-sibling::*) and not((ancestor::body|ancestor::back) and preceding::front/*)]) then
                             render:excludedAncestorHTML($fragmentRoot)
                         else ()    
@@ -439,7 +437,7 @@ declare function render:createHTMLFragment($workId as xs:string, $fragmentRoot a
             </div>
             {render:createPaginationLinks($workId, $fragmentIndex, $prevId, $nextId) (: finally, add pagination links :)}
         </div>
-        (: the rest (to the right, in col-md-12) is filled by _spans_ with class marginal, possessing
+        (: the rest (to the right, in col-md-12) is filled by _spans_ of class marginal, possessing
              a negative right margin (this happens in eXist's work.html template) :)
     (:return 
         serialize($fragment, $serializationParams):)
@@ -525,9 +523,11 @@ declare function render:makeMarginalHTML($node as element()) as element(div) {
     (: determine string-length of complete note text, so as to see whether note needs to be truncated: :)
     let $noteLength := 
         string-length((if ($label) then $node/@n || ' ' else ()) || normalize-space(string-join(render:dispatch($node, 'edit'), '')))
+    let $toolbox := render:HTMLSectionToolbox($node)
     return
-        <div class="marginal container" id="{$node/@xml:id}">{
-            if ($noteLength gt $render:noteTruncLimit) then
+        <div class="marginal container" id="{$node/@xml:id}">
+        {$toolbox}
+        {if ($noteLength gt $render:noteTruncLimit) then
                 let $id := 'collapse-' || $node/@xml:id
                 return
                     <a role="button" class="collapsed note-teaser" data-toggle="collapse" href="{('#' || $id)}" 
@@ -540,7 +540,8 @@ declare function render:makeMarginalHTML($node as element()) as element(div) {
                     </a>
             else 
                 $content
-        }</div>
+        }
+        </div>
 };
 
 
@@ -736,9 +737,16 @@ declare function render:dispatch($node as node(), $mode as xs:string) {
 
 declare function render:getLowStructuralAncestor($node as node()) as element()? {
     let $lowAncestorElems :=
-        ('p', 'head', 'note', 'item', 'cell', 'label', 'docImprint', 'byline', 'imprimatur', 'titlePart', 'signed', 'lg')
+        ('p', 'head', 'note', 'item', 'cell', 'label', 'signed', 'lg', 'titlePage')
     return $node/ancestor::*[local-name() = $lowAncestorElems][1]
 };
+
+(:declare function render:isSphinxSnippetRoot($node as node()) as xs:boolean {
+    boolean(
+        render:isIndexNode($node)
+        and ...
+    )
+};:)
 
 
 (: ####++++ Element functions (ordered alphabetically) ++++#### :)
@@ -1287,7 +1295,7 @@ declare function render:hi($node as element(tei:hi), $mode as xs:string) {
             let $styles := distinct-values(tokenize($node/@rendition, ' '))
             (: names of elements that have their own, specific text alignment 
                 (where hi/@rendition alignment is to be omitted) :)
-            let $specificAlignElems := ('head', 'signed') (: TODO: add more names here when necessary :)
+            let $specificAlignElems := ('head', 'signed', 'titlePage') (: TODO: add more names here when necessary :)
             let $cssStyles := 
                 for $s in $styles return
                     if ($s eq '#b') then 'font-weight:bold;'
