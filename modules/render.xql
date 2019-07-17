@@ -29,6 +29,9 @@ import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.x
 declare variable $render:noteTruncLimit := 40;
 
 declare variable $render:teaserTruncLimit := 45;
+
+declare variable $render:basicElemNames := ('p', 'head', 'note', 'item', 'cell', 'label', 'signed', 'lg', 'titlePage');
+
 (:
 declare variable $render:chars :=
     if (doc-available($config:tei-meta-root || '/specialchars.xml')) then
@@ -175,13 +178,21 @@ declare function render:isCitableWithTeaserHTML($node as node()) as xs:boolean {
 ~ Determines whether a node should have a citation anchor, without an additional teaser 
     (subset of the complement of //*[render:isCitableWithTeaserHTML()])
 :)
-declare function render:isCitableHTML($node as element()) as xs:boolean {
+declare function render:isBasicCitableHTML($node as element()) as xs:boolean {
     boolean(
         render:isIndexNode($node) 
-        and not(render:isCitableWithTeaserHTML($node)) (: complement of render:isCitableWithTeaserHTML() :)
-        (: define further complements here :)
+        and not(render:isCitableWithTeaserHTML($node))
+        and local-name($node) = $render:basicElemNames
     )
 };
+
+(:declare function render:isSphinxSnippetRoot($node as node()) as xs:boolean {
+    boolean(
+        render:isIndexNode($node)
+        and ...
+    )
+};:)
+
 
 (:
 ~ (The set of nodes that should have a crumbtrail is equal to the set of nodes that should have a citetrail.)
@@ -362,7 +373,7 @@ declare function render:HTMLSectionTeaser($node as element()) {
 declare function render:HTMLSectionToolbox($node as element()) as element(span) {
     let $id := $node/@xml:id/string()
     let $dataContent := 
-        '&lt;div&gt;' ||
+        '&lt;div class=&#34;sal-toolbox-body&#34;&gt;' ||
             '&lt;a href=&#34;' || render:makeCitetrailURI($node) || '&#34;&gt;' || 
                 '&lt;span class=&#34;messengers fas fa-link&#34; title=&#34;Go to/link this textarea&#34;/&gt;' || 
             '&lt;/a&gt;' || 
@@ -734,19 +745,6 @@ declare function render:dispatch($node as node(), $mode as xs:string) {
         else 
             $rendering
 };
-
-declare function render:getLowStructuralAncestor($node as node()) as element()? {
-    let $lowAncestorElems :=
-        ('p', 'head', 'note', 'item', 'cell', 'label', 'signed', 'lg', 'titlePage')
-    return $node/ancestor::*[local-name() = $lowAncestorElems][1]
-};
-
-(:declare function render:isSphinxSnippetRoot($node as node()) as xs:boolean {
-    boolean(
-        render:isIndexNode($node)
-        and ...
-    )
-};:)
 
 
 (: ####++++ Element functions (ordered alphabetically) ++++#### :)
@@ -1305,7 +1303,7 @@ declare function render:hi($node as element(tei:hi), $mode as xs:string) {
                     (: centering and right-alignment apply only in certain contexts :)
                     else if ($s eq '#r-center'
                              and not($node/ancestor::*[local-name(.) = $specificAlignElems])
-                             and not(render:getLowStructuralAncestor($node)//text()[not(ancestor::tei:hi[contains(@rendition, '#r-center')])])
+                             and not($node/ancestor::*[local-name(.) = $render:basicElemNames][1]//text()[not(ancestor::tei:hi[contains(@rendition, '#r-center')])])
                          ) then
                              (: workaround for suppressing trailing centerings at the end of paragraphs :)
                          'display:block;text-align:center;'
@@ -1998,9 +1996,9 @@ declare function render:p($node as element(tei:p), $mode as xs:string) {
             else
                 <div class="hauptText">
                     {render:HTMLSectionToolbox($node)}
-                    {' '}
                     {render:passthru($node, $mode)}
                 </div>
+                (: {' '} :)
         
         case 'snippets-orig'
         case 'snippets-edit' return

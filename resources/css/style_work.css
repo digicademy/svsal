@@ -356,6 +356,81 @@ li.cardoStyleLi {
     }
 }
 
+/* ------------------------------------------------------------------ */
+
+
+/* Essential text areas, to be rendered as "columns" from left to right:
+ * - teasers: .summary_title -> positioned relative to the main area (left) & hidden in smaller-screen view
+ * - pagination & image links: .pageNumbers -> positioned relative to the main area (left)
+ * - main area: .hauptText, .titlePage, .sec-titlePage (don't need any relative positioning)
+ * - marginals: .marginal -> -> positioned relative to the main area (right)
+ * Additionally, there are citation toolboxes (.sal-toolbox) in the main and marginal area 
+ * that are always slightly offset to the left, relative to *their* immediate container (.hauptText, .marginal, etc.)
+*/
+
+.summary_title {
+	display: inline-block;
+    position: absolute;
+    width: 19rem;
+    left:-32rem;
+	
+	
+/*	float: left;*/
+/*    clear: left;*/
+/*	margin-left: -49%;*/
+	line-height: 1.6;
+    font-family: Helvetica, Arial, sans-serif;
+/*	width:36%;*/
+	vertical-align: baseline;
+    /*font-size: 1.0em;*/
+    font-size: initial;
+/*    position: relative;*/
+/*    bottom: -0.55em;*/
+}
+
+.pageNumbers {
+    display: inline-block;
+    position: absolute;
+    width: 8rem;
+    left:-11rem;
+/*	float: left;*/
+/*    margin-left: -18%;*/
+}
+
+.hauptText .sal-toolbox,
+.titlePage .sal-toolbox, 
+.sec-titlePage .sal-toolbox {
+    display: inline-block;
+    position: absolute;
+    left: -2rem;
+}
+
+.marginal .sal-toolbox {
+    position: unset;
+    display: inline;
+    left: -2rem;
+}
+
+.sal-toolbox-body {
+    width:8rem;
+}
+
+.marginal {
+    float: right;
+	clear: right;
+	margin-right: -52%;
+    padding: 5px;
+	line-height: 1.6;
+    font-size: 20px !important; 
+    font-style: normal !important;
+    font-weight: normal !important;
+	text-indent: 0;
+	text-align: justify;
+	width:45%;
+}
+
+
+/* ------------------------------------------------------------------ */
 
 /* Classes */
 
@@ -560,19 +635,7 @@ a .edited, a .expan, a .reg, a .corr{
     font-size:20px !important;
 }
 
-.marginal {
-	float: right;
-	clear: right;
-	margin-right: -51%;
-	padding: 5px;
-	line-height: 1.6;
-    font-size: 20px !important; 
-    font-style: normal !important;
-    font-weight: normal !important;
-	text-indent: 0;
-	text-align: justify;
-	width:45%;
-}
+
 
 .note-label {
     font-style: italic;
@@ -636,17 +699,6 @@ span.label-inline {
     font-weight: bold;
     font-size:28px !important;
     padding:0.5em;
-}
-
-.pagination, .pageNumbers {
-	float: left;
-/*	margin-left: -12%;*/
-    margin-left: -18%;
-/* 	margin-top: -5.1%; */
-/*  padding-top: 5.8%; */
-    display: block;
-/*    font-size: large;*/
-      
 }
 
 /*.page-numbers {
@@ -728,23 +780,6 @@ hr.ornament {
    /* text-indent:1em;*/
 }
 
-.summary_title {
-	float: left;
-    clear: left;
-	margin-left: -49%;
-	line-height: 1.6;
-    font-family: Helvetica, Arial, sans-serif;
-	/*font-size: 1.4em;*//* this is a css 3 property and it means relative to the fontsize of the document root, not the current parent! */
-/*	text-align: justify; */
-	/*width:36%;*/
-	width:36%;
-	vertical-align: baseline;
-    /*font-size: 1.0em;*/
-    font-size: initial;
-    position: relative;
-    bottom: -0.55em;
-}
-
 table {
     font-size: 1.15em;
 }
@@ -809,10 +844,6 @@ ul.toc-sub {
 span.unsichtbar, .unsichtbar {
     display:none !important;
 }
-
-/*span.sal-toolbox {
-    margin-right: 0.5em;
-}*/
 
 span.sal-section-teaser{
     padding-left:0.5em;
@@ -1129,6 +1160,4 @@ CSS-Solution from http://stackoverflow.com/questions/18192082/bootstrap-3-navbar
     top:        0;
     background-color: #ccc;
 }
-
-/* citation anchor test */
 
