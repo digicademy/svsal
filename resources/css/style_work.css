@@ -397,18 +397,22 @@ li.cardoStyleLi {
 /*    margin-left: -18%;*/
 }
 
-.hauptText .sal-toolbox,
-.titlePage .sal-toolbox, 
-.sec-titlePage .sal-toolbox {
-    display: inline-block;
-    position: absolute;
-    left: -2rem;
-}
+/*
 
 .marginal .sal-toolbox {
     position: unset;
     display: inline;
     left: -2rem;
+}*/
+
+.sal-toolbox {
+    display: inline-block;
+    position: absolute;
+    left: -2rem;
+}
+
+.sal-toolbox-marginal {
+    
 }
 
 .sal-toolbox-body {

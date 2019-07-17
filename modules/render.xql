@@ -175,14 +175,14 @@ declare function render:isCitableWithTeaserHTML($node as node()) as xs:boolean {
 };
 
 (:
-~ Determines whether a node should have a citation anchor, without an additional teaser 
-    (subset of the complement of //*[render:isCitableWithTeaserHTML()])
+~ Determines whether a node should have a citation anchor, without an additional teaser.
 :)
-declare function render:isBasicCitableHTML($node as element()) as xs:boolean {
+declare function render:isBasicCitableHTML($node as node()) as xs:boolean {
     boolean(
         render:isIndexNode($node) 
-        and not(render:isCitableWithTeaserHTML($node))
+        and not(render:isCitableWithTeaserHTML($node)) (:complement of //*[render:isCitableWithTeaserHTML()]:)
         and local-name($node) = $render:basicElemNames
+        and not($node/ancestor::tei:titlePage)
     )
 };
 
@@ -198,16 +198,12 @@ declare function render:isBasicCitableHTML($node as element()) as xs:boolean {
 ~ (The set of nodes that should have a crumbtrail is equal to the set of nodes that should have a citetrail.)
 :)
 declare function render:isIndexNode($node as node()) as xs:boolean {
-    boolean(
-        not($node/self::text() or
-            $node/self::comment() or
-            $node/self::processing-instruction())
-        and
-        (
-        (: any element type relevant for citetrail creation must be included in one of the following functions: :)
-        render:isNamedCitetrailNode($node) or render:isUnnamedCitetrailNode($node)
-        )
-    )
+    typeswitch($node)
+        case element() return
+            (: any element type relevant for citetrail creation must be included in one of the following functions: :)
+            boolean(render:isNamedCitetrailNode($node) or render:isUnnamedCitetrailNode($node))
+        default return 
+            false()
 };
 
 (:
@@ -388,8 +384,9 @@ declare function render:HTMLSectionToolbox($node as element()) as element(span) 
             '  ' || 
             '&lt;span class=&#34;glyphicon glyphicon-print text-muted&#34;/&gt;' || 
         '&lt;/div&gt;'
+    let $class := if (render:isHTMLMarginal($node)) then 'sal-toolbox-marginal' else 'sal-toolbox'
     return
-        <span class="sal-toolbox">
+        <span class="{$class}">
             <a id="{$id}" href="{('#' || $id)}" data-rel="popover" data-content="{$dataContent}">
                 <i class="fas fa-link messengers" title="Open toolbox for this textarea"/>
             </a>
@@ -537,21 +534,21 @@ declare function render:makeMarginalHTML($node as element()) as element(div) {
     let $toolbox := render:HTMLSectionToolbox($node)
     return
         <div class="marginal container" id="{$node/@xml:id}">
-        {$toolbox}
-        {if ($noteLength gt $render:noteTruncLimit) then
-                let $id := 'collapse-' || $node/@xml:id
-                return
-                    <a role="button" class="collapsed note-teaser" data-toggle="collapse" href="{('#' || $id)}" 
-                       aria-expanded="false" aria-controls="{$id}">    
-                        <p class="collapse" id="{$id}" aria-expanded="false">
-                            {$label}
-                            {' '}
-                            {$content}
-                        </p>
-                    </a>
-            else 
-                $content
-        }
+            {$toolbox}
+            {if ($noteLength gt $render:noteTruncLimit) then
+                    let $id := 'collapse-' || $node/@xml:id
+                    return
+                        <a role="button" class="collapsed note-teaser" data-toggle="collapse" href="{('#' || $id)}" 
+                           aria-expanded="false" aria-controls="{$id}">    
+                            <p class="collapse" id="{$id}" aria-expanded="false">
+                                {$label}
+                                {' '}
+                                {$content}
+                            </p>
+                        </a>
+                else 
+                    $content
+            }
         </div>
 };
 
@@ -739,11 +736,28 @@ declare function render:dispatch($node as node(), $mode as xs:string) {
             default return render:passthru($node, $mode)
     return
         if ($mode eq 'html' and render:isCitableWithTeaserHTML($node)) then
-            let $citationAnchor := render:makeHTMLSummaryTitle($node) (: else if render:isCitableHTML($node) then ... :)
+            let $citationAnchor := render:makeHTMLSummaryTitle($node)
             let $debug := if ($config:debug = ("trace", "info")) then util:log('warn', 'Processing *[render:isCitableWithTeaserHTML(.)], local-name(): ' || local-name($node) || ', xml:id: ' || $node/@xml:id) else ()
             return ($citationAnchor, $rendering)
+        else if ($mode eq 'html' and render:isBasicCitableHTML($node)) then 
+            if (render:isHTMLMarginal($node) or render:isHTMLHeading($node) or $node/self::tei:titlePage) then 
+                $rendering
+            else 
+                let $toolbox := render:HTMLSectionToolbox($node)
+                return
+                    <div class="hauptText">
+                        {($toolbox, $rendering)}
+                    </div>
         else 
             $rendering
+};
+
+declare function render:isHTMLMarginal($node as node()) as xs:boolean {
+    boolean($node[(self::tei:note or self::tei:label) and @place eq 'margin'])
+};
+
+declare function render:isHTMLHeading($node as node()) as xs:boolean {
+    boolean($node[self::tei:head])
 };
 
 
@@ -1263,7 +1277,12 @@ declare function render:head($node as element(tei:head), $mode as xs:string) {
                 <h5 class="poem-head">{render:passthru($node, $mode)}</h5>
             (: usual headings: :)
             else 
-                <h3>{render:passthru($node, $mode)}</h3>
+                let $toolbox := render:HTMLSectionToolbox($node)
+                return
+                    <h3>
+                        {$toolbox}
+                        <span class="heading-text">{render:passthru($node, $mode)}</span>  
+                    </h3>
             
         case 'class' return
             'tei-' || local-name($node)
@@ -1994,10 +2013,10 @@ declare function render:p($node as element(tei:p), $mode as xs:string) {
                     {render:passthru($node, $mode)}
                 </p>
             else
-                <div class="hauptText">
-                    {render:HTMLSectionToolbox($node)}
-                    {render:passthru($node, $mode)}
-                </div>
+                (:<div class="hauptText">
+                    <!--{render:HTMLSectionToolbox($node)}-->
+                    {:)render:passthru($node, $mode)(:}
+                </div>:)
                 (: {' '} :)
         
         case 'snippets-orig'
@@ -2448,15 +2467,19 @@ declare function render:titlePage($node as element(tei:titlePage), $mode as xs:s
             $config:citationLabels(local-name($node))?('abbr')
         
         case 'html' return
+            let $toolbox := render:HTMLSectionToolbox($node)
             (: distinguishing first and subsequent titlePage(s) for rendering them differently :)
-            if ($node[not(preceding::titlePage)]) then
-                <div class="titlePage">
-                    {render:passthru($node, $mode)}
-                </div>
-            else
-                <div class="sec-titlePage">
-                    {render:passthru($node, $mode)}
-                </div>
+            return
+                if ($node[not(preceding::tei:titlePage)]) then
+                    <div class="titlePage">
+                        {$toolbox}
+                        {render:passthru($node, $mode)}
+                    </div>
+                else
+                    <div class="sec-titlePage">
+                        {$toolbox}
+                        {render:passthru($node, $mode)}
+                    </div>
         
         default return
             render:passthru($node, $mode)
