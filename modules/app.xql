@@ -1294,10 +1294,10 @@ declare function app:displaySingleWork($node as node(), $model as map(*),
 
 return
     if ($targetFragment) then
-    <div>
-        {$debugOutput}
-        {$outHTML}
-    </div>
+        <div>
+            {$debugOutput}
+            {$outHTML}
+        </div>
     else
     (: TODO: redirect to genuine error or resource-not-available page :)
     i18n:process($workNotAvailable, $lang, "/db/apps/salamanca/data/i18n", "en")
@@ -3446,16 +3446,19 @@ declare %templates:default
                 
 (: ==== Paginator Function ===== :)
 declare function app:WRKpreparePagination($node as node(), $model as map(*), $wid as xs:string?, $lang as xs:string?) {
-<ul id="later" class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
-{
-    let $workId    :=  if ($wid) then substring-before(sal-util:normalizeId($wid), '_') else substring-before($model('currentWorkId'), '_')
-    for $pb in doc($config:index-root || "/" || $workId || '_nodeIndex.xml')//sal:node[@type="pb"][not(starts-with(sal:title, 'sameAs'))][not(starts-with(sal:title, 'corresp'))]
-        let $fragment := $pb/sal:fragment
-        let $url      := 'work.html?wid=' || $workId || '&amp;frag=' || $fragment || '#' || concat('pageNo_', $pb/@n)
-        return 
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="{$url}">{normalize-space($pb/sal:title)}</a></li>
-}
-</ul>
+    let $workId :=  
+        if ($wid) then 
+            if (contains($wid, '_')) then substring-before(sal-util:normalizeId($wid), '_') 
+            else sal-util:normalizeId($wid)
+        else substring-before($model('currentWorkId'), '_')
+    return 
+        <ul id="later" class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">{
+            for $pb in doc($config:index-root || '/' || $workId || '_nodeIndex.xml')//sal:node[@type='pb'][not(starts-with(sal:title, 'sameAs') or starts-with(sal:title, 'corresp'))]
+                let $fragment := $pb/sal:fragment
+                let $url      := 'work.html?wid=' || $workId || '&amp;frag=' || $fragment || '#' || concat('pageNo_', $pb/@n)
+                return 
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="{$url}">{normalize-space($pb/sal:title)}</a></li>
+        }</ul>
 };
 
 declare function app:loadWRKpagination ($node as node(), $model as map (*), $wid as xs:string, $lang as xs:string, $q as xs:string?) {
@@ -3542,14 +3545,6 @@ declare function app:WRKpaginationQ ($node as node(), $model as map(*), $wid as 
         else ()
 }
 </ul>
-};
-
-declare function app:loadWRKpaginationOld ($node as node(), $model as map (*), $wid as xs:string, $q as xs:string?, $lang as xs:string) {
-    if ($q) then app:WRKpaginationQ($node, $model, $wid, $q, $lang)
-    else if (not($q) and $lang = 'de') then 'html/'||$wid||'/'||$wid||'_pages_de.html' 
-    else if (not($q) and $lang = 'en') then 'html/'||$wid||'/'||$wid||'_pages_en.html'
-    else if (not($q) and $lang = 'es') then 'html/'||$wid||'/'||$wid||'_pages_es.html'
-    else ()
 };
 :)
 
