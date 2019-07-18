@@ -393,17 +393,8 @@ li.cardoStyleLi {
     position: absolute;
     width: 8rem;
     left:-11rem;
-/*	float: left;*/
-/*    margin-left: -18%;*/
 }
 
-/*
-
-.marginal .sal-toolbox {
-    position: unset;
-    display: inline;
-    left: -2rem;
-}*/
 
 .sal-toolbox {
     display: inline-block;
@@ -416,8 +407,33 @@ li.cardoStyleLi {
     padding-right:0.8rem;
 }
 
+/* Hover animations with citation toolboxes */
+.sal-toolbox-marginal:hover ~ .marginal-body,
+.sal-toolbox:hover ~ .heading-text,
+.sal-toolbox:hover ~ .titlePage-body,
+.sal-toolbox:hover ~ .hauptText-body {
+    background-color: #F0F0F0; /* #F5F5F5 */
+    transition: background-color 0.2s linear;
+}
+
+/*.sal-toolbox ~ .hauptText-body:hover {
+    background-color:red !important;
+}*/
+
+/*.marginal-body:hover ~ .sal-toolbox-marginal {
+    background-color: red !important; 
+}
+*/
+
+.sal-toolbox a,
 .sal-toolbox-marginal a {
+    color: #B0C4DE !important;
+}
+
+.sal-toolbox:hover a,
+.sal-toolbox-marginal:hover a {
     color: #102873 !important;
+    transition: color 0.2s linear;
 }
 
 .marginal-body {

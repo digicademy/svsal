@@ -371,7 +371,7 @@ declare function render:HTMLSectionToolbox($node as element()) as element(span) 
     let $dataContent := 
         '&lt;div class=&#34;sal-toolbox-body&#34;&gt;' ||
             '&lt;a href=&#34;' || render:makeCitetrailURI($node) || '&#34;&gt;' || 
-                '&lt;span class=&#34;messengers fas fa-link&#34; title=&#34;Go to/link this textarea&#34;/&gt;' || 
+                '&lt;span class=&#34;messengers fas fa-link&#34; title=&#34;Go to/link this text area&#34;/&gt;' || 
             '&lt;/a&gt;' || 
             '  ' || 
             '&lt;a href=&#34;' || () || '&#34;&gt;' || 
@@ -384,11 +384,16 @@ declare function render:HTMLSectionToolbox($node as element()) as element(span) 
             '  ' || 
             '&lt;span class=&#34;glyphicon glyphicon-print text-muted&#34;/&gt;' || 
         '&lt;/div&gt;'
-    let $class := if (render:isHTMLMarginal($node)) then 'sal-toolbox-marginal' else 'sal-toolbox'
+    let $class := 
+        if (render:isHTMLMarginal($node)) then 
+            'sal-toolbox-marginal' 
+        (:else if (render:isCitableWithTeaserHTML($node)) then
+            'sal-toolbox-teaser':)
+        else 'sal-toolbox'
     return
         <span class="{$class}">
             <a id="{$id}" href="{('#' || $id)}" data-rel="popover" data-content="{$dataContent}">
-                <i class="fas fa-link messengers" title="Open toolbox for this textarea"/>
+                <i class="fas fa-link messengers" title="Open toolbox for this text area"/>
             </a>
         </span>
 };
@@ -535,7 +540,8 @@ declare function render:makeMarginalHTML($node as element()) as element(div) {
     return
         <div class="marginal container" id="{$node/@xml:id}">
             {$toolbox}
-            {if ($noteLength gt $render:noteTruncLimit) then
+            <div class="marginal-body">{
+                if ($noteLength gt $render:noteTruncLimit) then
                     let $id := 'collapse-' || $node/@xml:id
                     return
                         <a role="button" class="collapsed note-teaser" data-toggle="collapse" href="{('#' || $id)}" 
@@ -548,7 +554,7 @@ declare function render:makeMarginalHTML($node as element()) as element(div) {
                         </a>
                 else 
                     $content
-            }
+            }</div>
         </div>
 };
 
@@ -740,13 +746,15 @@ declare function render:dispatch($node as node(), $mode as xs:string) {
             let $debug := if ($config:debug = ("trace", "info")) then util:log('warn', 'Processing *[render:isCitableWithTeaserHTML(.)], local-name(): ' || local-name($node) || ', xml:id: ' || $node/@xml:id) else ()
             return ($citationAnchor, $rendering)
         else if ($mode eq 'html' and render:isBasicCitableHTML($node)) then 
+            (: toolboxes need to be on the sibling axis with the text body they refer to... :)
             if (render:isHTMLMarginal($node) or render:isHTMLHeading($node) or $node/self::tei:titlePage) then 
                 $rendering
             else 
                 let $toolbox := render:HTMLSectionToolbox($node)
                 return
                     <div class="hauptText">
-                        {($toolbox, $rendering)}
+                        {$toolbox}
+                        <div class="hauptText-body">{$rendering}</div>
                     </div>
         else 
             $rendering
@@ -1281,7 +1289,7 @@ declare function render:head($node as element(tei:head), $mode as xs:string) {
                 return
                     <h3>
                         {$toolbox}
-                        <span class="heading-text">{render:passthru($node, $mode)}</span>  
+                        <span class="heading-text">{render:passthru($node, $mode)}</span>
                     </h3>
             
         case 'class' return
@@ -2013,11 +2021,7 @@ declare function render:p($node as element(tei:p), $mode as xs:string) {
                     {render:passthru($node, $mode)}
                 </p>
             else
-                (:<div class="hauptText">
-                    <!--{render:HTMLSectionToolbox($node)}-->
-                    {:)render:passthru($node, $mode)(:}
-                </div>:)
-                (: {' '} :)
+                render:passthru($node, $mode)
         
         case 'snippets-orig'
         case 'snippets-edit' return
@@ -2469,17 +2473,14 @@ declare function render:titlePage($node as element(tei:titlePage), $mode as xs:s
         case 'html' return
             let $toolbox := render:HTMLSectionToolbox($node)
             (: distinguishing first and subsequent titlePage(s) for rendering them differently :)
+            let $class := if ($node[not(preceding-sibling::tei:titlePage)]) then 'titlePage' else 'sec-titlePage'
             return
-                if ($node[not(preceding::tei:titlePage)]) then
-                    <div class="titlePage">
-                        {$toolbox}
+                <div class="{$class}">
+                    {$toolbox}
+                    <div class="titlePage-body">
                         {render:passthru($node, $mode)}
                     </div>
-                else
-                    <div class="sec-titlePage">
-                        {$toolbox}
-                        {render:passthru($node, $mode)}
-                    </div>
+                </div>
         
         default return
             render:passthru($node, $mode)
