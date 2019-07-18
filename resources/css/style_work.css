@@ -412,7 +412,19 @@ li.cardoStyleLi {
 }
 
 .sal-toolbox-marginal {
-    
+    display: table-cell;
+    padding-right:0.8rem;
+}
+
+.sal-toolbox-marginal a {
+    color: #102873 !important;
+}
+
+.marginal-body {
+    display:table-cell;
+    font-size: 20px !important; 
+    font-style: normal !important;
+    font-weight: normal !important;
 }
 
 .sal-toolbox-body {
@@ -422,15 +434,14 @@ li.cardoStyleLi {
 .marginal {
     float: right;
 	clear: right;
-	margin-right: -52%;
+	margin-right: -49%;
     padding: 5px;
 	line-height: 1.6;
-    font-size: 20px !important; 
-    font-style: normal !important;
-    font-weight: normal !important;
+    
 	text-indent: 0;
 	text-align: justify;
 	width:45%;
+    display:table;
 }
 
 
