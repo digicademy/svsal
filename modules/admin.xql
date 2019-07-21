@@ -358,7 +358,6 @@ declare function admin:saveFileWRK ($node as node(), $model as map (*), $lang as
             <br/><br/>
             <a href="works.html" class="btn btn-info" role="button"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Open works.html</a>
         </span>   
-
 };
 
 declare function admin:saveFileWRKnoJs ($node as node(), $model as map (*), $lang as xs:string?) {
@@ -492,64 +491,7 @@ declare %templates:wrap function admin:renderAuthorLemma($node as node(), $model
         </p>
 };
 
-declare function admin:generate-toc-from-div($node, $wid) {
-   for $div in ($node/tei:div[@type="work_part"]/tei:div | $node/tei:div[not(@type="work_part")]| $node/*/tei:milestone[@unit ne 'other'])
-            return admin:toc-div($div, $wid)
-};                      
 
-declare function admin:toc-div($div, $wid) {
-    let $fragTrail := doc($config:index-root || "/" || $wid || '_nodeIndex.xml')//sal:node[@n eq $div/@xml:id]/sal:citetrail/text()
-    let $fragId := $config:idserver || '/texts/' || $wid || ':' || $fragTrail || '?format=html'
-    let $section := $div/@xml:id/string()
-    let $getTitle := admin:derive-title($div)
-    return 
-        <ul><li><a class="hideMe" href="{$fragId}" title="{$getTitle}">{$getTitle}<span class="jstree-anchor hideMe pull-right">{admin:get-pages-from-div($div)}</span></a>
-            {admin:generate-toc-from-div($div, $wid)}
-        </li></ul>
-};
-
-declare function admin:derive-title($node as node()) as item()* {
-    typeswitch($node)
-        case text()                    return $node
-        case element(tei:teiHeader)    return ()
-        case element(tei:choice)       return $node/tei:expan/text() | $node/tei:reg/text() | $node/tei:cor/text()
-        case element(tei:titlePart)    return ('[', $node/@type/string(), '] ',  local:passthruTOC($node))
-        case element(tei:div) return
-            let $divLabel := 
-                if ($config:citationLabels($node/@type/string())?('full')) then '[ ' || $config:citationLabels($node/@type/string())?('full') || ' ] '
-                else '[ ' || $config:citationLabels('generic')?('full') || ' ] '
-            return
-                if($node/tei:head) then ($divLabel, local:passthruTOC($node/tei:head))
-                else if ($node/tei:list/tei:head) then ($divLabel,  local:passthruTOC($node/tei:list/tei:head))
-                else if (not($node/tei:head | $node/tei:list/tei:head)) then  ($divLabel,  $node/@n/string())
-                else()
-        case element(tei:milestone) return 
-            let $msLabel := (: due to their low-levelness, milestones are labeled in abbr. form: :)
-                if ($config:citationLabels($node/@unit/string())?('abbr')) then '[ ' || $config:citationLabels($node/@unit/string())?('abbr') || ' ] '
-                else '[ ' || $config:citationLabels('generic')?('abbr') || ' ] '
-            return
-                $msLabel || $node/@n/string()
-        (:case element(tei:label)        return if ($node/@type) then ('[', $node/@type/string(), '] ', local:passthruTOC($node)) else ():)
-        case element(tei:pb)           return if (not($node[@break eq 'no'])) then ' ' else ()
-        case element(tei:cb)           return if (not($node[@break eq 'no'])) then ' ' else ()
-        case element(tei:lb)           return if (not($node[@break eq 'no'])) then ' ' else ()
-        default return local:passthruTOC($node)
-};
-   
-declare function local:passthruTOC($nodes as node()*) as item()* {
-    for $node in $nodes/node() return admin:derive-title($node)
-};
-
-declare function admin:get-pages-from-div($div) {
-    let $firstpage :=   
-        if ($div[@type='work_volume'] | $div[@type = 'work_monograph']) then ($div//tei:pb[not(@sameAs or @corresp)])[1]/@n/string() 
-        else ($div/preceding::tei:pb[not(@sameAs or @corresp)])[last()]/@n/string()
-    let $lastpage := if ($div//tei:pb[not(@sameAs or @corresp)]) then ($div//tei:pb[not(@sameAs or @corresp)])[last()]/@n/string() else ()
-    return
-        if ($firstpage ne '' or $lastpage ne '') then 
-            concat(' ', string-join(($firstpage, $lastpage), ' - ')) 
-        else ()
-};
 
 declare %templates:wrap function admin:renderWork($node as node(), $model as map(*), $wid as xs:string*, $lang as xs:string?) as element(div) {
     let $debug := if ($config:debug = ("trace", "info")) then console:log("Rendering " || $wid || ".") else ()
@@ -585,15 +527,15 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                     <ul>
                         <li>
                             <b>{$title}</b>
-                            <span class="jstree-anchor hideMe pull-right">{admin:get-pages-from-div($text) }</span>
+                            <span class="jstree-anchor hideMe pull-right">{render:get-pages-from-div($text) }</span>
                                 {if ($work//tei:text[@type='work_volume']) then for $a in $work//tei:text where $a[@type='work_volume'] return
                                 <ul>
                                     <li>
                                         <a class="hideMe"><b>{concat('Volume: ', $a/@n/string())}</b></a>
-                                        { admin:generate-toc-from-div($a/(tei:front | tei:body | tei:back), $workId)}
+                                        { render:HTMLgenerate-toc-from-div($a/(tei:front | tei:body | tei:back), $workId)}
                                     </li>
                                 </ul>
-                                else admin:generate-toc-from-div($elements, $workId)}
+                                else render:HTMLgenerate-toc-from-div($elements, $workId)}
                         </li>
                     </ul>
                 </div>
@@ -692,6 +634,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
     (:let $index-start-time := util:system-time()
     let $reindex          := if ($config:instanceMode ne "testing") then xmldb:reindex($config:webdata-root) else ()
     let $index-end-time := ((util:system-time() - $index-start-time) div xs:dayTimeDuration('PT1S')):)
+    let $debug := util:log('warn', '[ADMIN] Created HTML for work ' || $wid || ' in ' || $runtime-ms || ' ms.')
     return 
         <div>
             <p>Zu rendern: {count($todo)} Werk(e); gesamte Rechenzeit:

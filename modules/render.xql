@@ -247,6 +247,19 @@ declare function render:isUnnamedCitetrailNode($node as element()) as xs:boolean
     )
 };
 
+(: debug: :)
+declare function render:preparePaginationHTML($work as element(tei:TEI), $lang as xs:string?, $fragmentIds as map()?) as element(ul) {
+    let $workId := $work/@xml:id
+    return 
+        <ul id="later" class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">{
+            for $pb in $work//tei:text//tei:pb[render:isIndexNode(.) and not(@sameAs or @corresp)] return
+                let $fragment := $fragmentIds($pb/@xml:id/string()) (:$pb/sal:fragment:)
+                let $url      := 'work.html?wid=' || $workId || '&amp;frag=' || $fragment || '#' || concat('pageNo_', $pb/@n)
+                return 
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="{$url}">{normalize-space($pb/sal:title)}</a></li>
+        }</ul>
+};
+
 
 declare function render:mkUrlWhileRendering($targetWork as node(), $targetNode as node(), $fragmentIds as map()) {
     let $targetWorkId := string($targetWork/@xml:id)
@@ -289,6 +302,66 @@ declare function render:teaserString($node as element(), $mode as xs:string?) as
 };
 
 (: ####++++ HTML Helper Functions ++++####:)
+
+
+declare function render:HTMLgenerate-toc-from-div($node, $wid) {
+   for $div in ($node/tei:div[@type="work_part"]/tei:div | $node/tei:div[not(@type="work_part")]| $node/*/tei:milestone[@unit ne 'other'])
+            return render:HTMLToc-div($div, $wid)
+};                      
+
+declare function render:HTMLToc-div($div, $wid) {
+    let $fragTrail := doc($config:index-root || "/" || $wid || '_nodeIndex.xml')//sal:node[@n eq $div/@xml:id]/sal:citetrail/text()
+    let $fragId := $config:idserver || '/texts/' || $wid || ':' || $fragTrail || '?format=html'
+    let $section := $div/@xml:id/string()
+    let $getTitle := render:HTMLderive-title($div)
+    return 
+        <ul><li><a class="hideMe" href="{$fragId}" title="{$getTitle}">{$getTitle}<span class="jstree-anchor hideMe pull-right">{render:get-pages-from-div($div)}</span></a>
+            {render:HTMLgenerate-toc-from-div($div, $wid)}
+        </li></ul>
+};
+
+declare function render:HTMLderive-title($node as node()) as item()* {
+    typeswitch($node)
+        case text()                    return $node
+        case element(tei:teiHeader)    return ()
+        case element(tei:choice)       return $node/tei:expan/text() | $node/tei:reg/text() | $node/tei:cor/text()
+        case element(tei:titlePart)    return ('[', $node/@type/string(), '] ',  local:passthruTOC($node))
+        case element(tei:div) return
+            let $divLabel := 
+                if ($config:citationLabels($node/@type/string())?('full')) then '[ ' || $config:citationLabels($node/@type/string())?('full') || ' ] '
+                else '[ ' || $config:citationLabels('generic')?('full') || ' ] '
+            return
+                if($node/tei:head) then ($divLabel, local:passthruTOC($node/tei:head))
+                else if ($node/tei:list/tei:head) then ($divLabel,  local:passthruTOC($node/tei:list/tei:head))
+                else if (not($node/tei:head | $node/tei:list/tei:head)) then  ($divLabel,  $node/@n/string())
+                else()
+        case element(tei:milestone) return 
+            let $msLabel := (: due to their low-levelness, milestones are labeled in abbr. form: :)
+                if ($config:citationLabels($node/@unit/string())?('abbr')) then '[ ' || $config:citationLabels($node/@unit/string())?('abbr') || ' ] '
+                else '[ ' || $config:citationLabels('generic')?('abbr') || ' ] '
+            return
+                $msLabel || $node/@n/string()
+        (:case element(tei:label)        return if ($node/@type) then ('[', $node/@type/string(), '] ', local:passthruTOC($node)) else ():)
+        case element(tei:pb)           return if (not($node[@break eq 'no'])) then ' ' else ()
+        case element(tei:cb)           return if (not($node[@break eq 'no'])) then ' ' else ()
+        case element(tei:lb)           return if (not($node[@break eq 'no'])) then ' ' else ()
+        default return local:passthruTOC($node)
+};
+   
+declare function local:passthruTOC($nodes as node()*) as item()* {
+    for $node in $nodes/node() return render:HTMLderive-title($node)
+};
+
+declare function render:get-pages-from-div($div) {
+    let $firstpage :=   
+        if ($div[@type='work_volume'] | $div[@type = 'work_monograph']) then ($div//tei:pb[not(@sameAs or @corresp)])[1]/@n/string() 
+        else ($div/preceding::tei:pb[not(@sameAs or @corresp)])[last()]/@n/string()
+    let $lastpage := if ($div//tei:pb[not(@sameAs or @corresp)]) then ($div//tei:pb[not(@sameAs or @corresp)])[last()]/@n/string() else ()
+    return
+        if ($firstpage ne '' or $lastpage ne '') then 
+            concat(' ', string-join(($firstpage, $lastpage), ' - ')) 
+        else ()
+};
 
 
 (:
