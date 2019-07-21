@@ -307,7 +307,7 @@ declare function render:teaserString($node as element(), $mode as xs:string?) as
 declare function render:HTMLgenerate-toc-from-div($node, $wid) {
    for $div in ($node/tei:div[@type="work_part"]/tei:div | $node/tei:div[not(@type="work_part")]| $node/*/tei:milestone[@unit ne 'other'])
             return render:HTMLToc-div($div, $wid)
-};                      
+};
 
 declare function render:HTMLToc-div($div, $wid) {
     let $fragTrail := doc($config:index-root || "/" || $wid || '_nodeIndex.xml')//sal:node[@n eq $div/@xml:id]/sal:citetrail/text()
@@ -327,20 +327,25 @@ declare function render:HTMLderive-title($node as node()) as item()* {
         case element(tei:choice)       return $node/tei:expan/text() | $node/tei:reg/text() | $node/tei:cor/text()
         case element(tei:titlePart)    return ('[', $node/@type/string(), '] ',  local:passthruTOC($node))
         case element(tei:div) return
-            let $divLabel := 
-                if ($config:citationLabels($node/@type/string())?('full')) then '[ ' || $config:citationLabels($node/@type/string())?('full') || ' ] '
-                else '[ ' || $config:citationLabels('generic')?('full') || ' ] '
+            let $i18nKey := 
+                (: every div with a citation label should also be available in i18n files: :)
+                if ($config:citationLabels($node/@type/string())?('full')) then 'tei-div-' || $node/@type 
+                else 'tei-generic'
+            let $divLabel := ('[', <i18n:text key="{$i18nKey}"/>, ']')
             return
+                (: TODO: refactor this using render:XY($node, 'html-title') :)
                 if($node/tei:head) then ($divLabel, local:passthruTOC($node/tei:head))
                 else if ($node/tei:list/tei:head) then ($divLabel,  local:passthruTOC($node/tei:list/tei:head))
                 else if (not($node/tei:head | $node/tei:list/tei:head)) then  ($divLabel,  $node/@n/string())
-                else()
+                else ()
         case element(tei:milestone) return 
-            let $msLabel := (: due to their low-levelness, milestones are labeled in abbr. form: :)
-                if ($config:citationLabels($node/@unit/string())?('abbr')) then '[ ' || $config:citationLabels($node/@unit/string())?('abbr') || ' ] '
-                else '[ ' || $config:citationLabels('generic')?('abbr') || ' ] '
+            let $i18nKey := 
+                (: every milestone type with a citation label should also be available in i18n files: :)
+                if ($config:citationLabels($node/@unit/string())?('full')) then 'tei-ms-' || $node/@unit
+                else 'tei-generic'
+            let $msLabel := ('[', <i18n:text key="{$i18nKey}"/>, ']')
             return
-                $msLabel || $node/@n/string()
+                ($msLabel, (if ($node/@n) then (' ', $node/@n) else ()))
         (:case element(tei:label)        return if ($node/@type) then ('[', $node/@type/string(), '] ', local:passthruTOC($node)) else ():)
         case element(tei:pb)           return if (not($node[@break eq 'no'])) then ' ' else ()
         case element(tei:cb)           return if (not($node[@break eq 'no'])) then ' ' else ()

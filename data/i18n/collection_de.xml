@@ -232,6 +232,6 @@
   <msg key="tei-item">Eintrag</msg>
   <msg key="tei-lg">Gedicht</msg>
   <msg key="tei-text-work_volume">Band</msg>
-  <msg key="crumb-generic">Abschnitt</msg>
+  <msg key="tei-generic">Abschnitt</msg>
   
 </catalogue>

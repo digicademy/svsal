@@ -404,6 +404,6 @@
     <msg key="tei-item">Elemento listado</msg>
     <msg key="tei-lg">Poema</msg>
     <msg key="tei-text-work_volume">Volumen</msg>
-    <msg key="crumb-generic">Pasaje</msg>
+    <msg key="tei-generic">Pasaje</msg>
     
 </catalogue>
