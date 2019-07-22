@@ -89,7 +89,7 @@ declare function i18n:translateAttributes($node as node(), $selectedCatalogue as
         return i18n:translateAttribute($attribute, $node, $selectedCatalogue)
 };
 
-declare function i18n:translateAttribute($attribute as attribute(), $node as node(),$selectedCatalogue as node()){
+(:declare function i18n:translateAttribute($attribute as attribute(), $node as node(),$selectedCatalogue as node()){
     if(starts-with($attribute, 'i18n(')) then
         let $key := 
             if(contains($attribute, ",")) then
@@ -105,8 +105,30 @@ declare function i18n:translateAttribute($attribute as attribute(), $node as nod
             attribute {name($attribute)} {$i18nValue}
     else 
         $attribute
+};:)
 
-
+(:
+~ Modified version of the original i18n:translateAttribute() function: 
+    translates an attribute with an i18n() call *anywhere* within its string (not only at the beginning).
+:)
+declare function i18n:translateAttribute($attribute as attribute(), $node as node(),$selectedCatalogue as node()){
+    if(matches($attribute, 'i18n(.*?)')) then
+        let $match := replace($attribute, '^.*?(i18n\(.*?\)).*?$', '$1') (: takes only the first i18n() function call :)
+        let $key := 
+            if(contains($match, ",")) then
+                substring-before(substring-after($match,"i18n("),",")
+            else 
+                substring-before(substring-after($match,"i18n("),")")
+        let $i18nValue :=   
+            if(exists($selectedCatalogue//msg[@key eq $key])) then 
+                $selectedCatalogue//msg[@key eq $key]/text() 
+            else 
+                substring-before(substring-after(substring-after($match,"i18n("),","),")")
+        let $processed := replace($attribute, 'i18n\(.*?\)', $i18nValue)
+        return 
+            attribute {name($attribute)} {$processed}
+    else 
+        $attribute
 };
 
 

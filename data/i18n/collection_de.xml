@@ -63,6 +63,7 @@
   <msg key="citeUp">Zitieren</msg>
   <msg key="citeThisWork">Dieses Werk zitieren</msg>
   <msg key="accessedDate">Aufgerufen am</msg>
+  <msg key="ebook">E-Book</msg>
   
   <!-- errors -->
   <msg key="authorNotYetAvailable">Dieser Artikel ist noch nicht verfügbar.</msg>

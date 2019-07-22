@@ -319,6 +319,7 @@
     <msg key="citeUp">Citar</msg>
     <msg key="citeThisWork">Citar obra</msg>
     <msg key="accessedDate">Consultado por última vez el</msg>
+    <msg key="ebook">Libro electrónico</msg>
     
     <!--news-->
     <msg key="more">más</msg>

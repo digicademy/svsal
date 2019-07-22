@@ -3369,10 +3369,10 @@ declare %templates:default
                                     {$downloadTXTedit}
                                     {$downloadRDF}
                                     <li class="disabled">
-                                        <a><span class="glyphicon glyphicon-download-alt text-muted" aria-hidden="true"></span> <span class="text-muted"> PDF</span></a>
+                                        <a><i class="fas fa-file-pdf text-muted" aria-hidden="true"></i> <span class="text-muted"> PDF</span></a>
                                     </li>
                                     <li class="disabled">
-                                        <a><span class="glyphicon glyphicon-download-alt text-muted" aria-hidden="true"></span> <span class="text-muted"> ebook</span></a>
+                                        <a><i class="fas fa-book text-muted" aria-hidden="true"></i>&#xA0;<span class="text-muted"> <i18n:text key="ebook">E-book</i18n:text></span></a>
                                     </li>
                                 </ul>
                             </div>
@@ -3416,8 +3416,8 @@ declare %templates:default
                                     {$downloadTXTorig}
                                     {$downloadTXTedit}
                                     {$downloadRDF}
-                                    <li class="disabled"><a><span class="glyphicon glyphicon-download-alt text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted">PDF</span></a></li>   
-                                    <li class="disabled"><a><span class="glyphicon glyphicon-download-alt text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted">ebook</span></a></li>   
+                                    <li class="disabled"><a><i class="fas fa-file-pdf text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted">PDF</span></a></li>   
+                                    <li class="disabled"><a><i class="fas fa-book text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"> <i18n:text key="ebook">E-book</i18n:text></span></a></li>   
                                 </ul>
                             </div>
                         </div>
@@ -3558,7 +3558,7 @@ declare function app:downloadXML($node as node(), $model as map(*), $lang as xs:
     let $wid      :=  request:get-parameter('wid', '')
     let $hoverTitle := i18n:process(<i18n:text key="downloadXML">Download TEI/XML source file</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
     let $download := 
-        if ($wid) then <li><a title="{$hoverTitle}" href="{$config:idserver || '/texts/' || $wid ||'?format=tei'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;TEI/XML</a></li>
+        if ($wid) then <li><a title="{$hoverTitle}" href="{$config:idserver || '/texts/' || $wid ||'?format=tei'}"><i class="fas fa-file-code" aria-hidden="true"/>&#xA0;TEI XML</a></li>
         (:else if ($model('currentLemma'))  then <li><a title="{$hoverTitle}" href="{$config:teiserver || '/' || $model('currentLemma')/@xml:id}.xml">TEI/XML</a></li>
         else if ($model('currentAuthor')) then <li><a title="{$hoverTitle}" href="{$config:teiserver || '/' || $model('currentAuthor')/@xml:id}.xml">TEI/XML</a></li>:)
         else()
@@ -3566,13 +3566,15 @@ declare function app:downloadXML($node as node(), $model as map(*), $lang as xs:
 };
 
 declare function app:downloadTXT($node as node(), $model as map(*), $mode as xs:string, $lang as xs:string) {
-    let $wid      :=  request:get-parameter('wid', '')
+    let $wid := request:get-parameter('wid', '')
     let $hoverTitleEdit := i18n:process(<i18n:text key="downloadTXTEdit">Download as plaintext (constituted variant)</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
     let $hoverTitleOrig := i18n:process(<i18n:text key="downloadTXTOrig">Download as plaintext (diplomatic variant)</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
     
     let $download := 
-             if ($wid and ($mode eq 'edit'))                    then <li><a title="{$hoverTitleEdit}" href="{$config:idserver || '/texts/' || $wid ||'?format=txt&amp;mode=edit'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;TXT (<i18n:text key="constitutedLower">constituted</i18n:text>)</a></li>
-             else if ($wid and ($mode eq 'orig'))               then <li><a title="{$hoverTitleOrig}" href="{$config:idserver || '/texts/' || $wid ||'?format=txt&amp;mode=orig'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;TXT (<i18n:text key="diplomaticLower">diplomatic</i18n:text>)</a></li>
+        if ($wid and ($mode eq 'edit')) then 
+            <li><a title="{$hoverTitleEdit}" href="{$config:idserver || '/texts/' || $wid ||'?format=txt&amp;mode=edit'}"><span class="far fa-file" aria-hidden="true"/>&#xA0;TXT (<i18n:text key="constitutedLower">constituted</i18n:text>)</a></li>
+        else if ($wid and ($mode eq 'orig')) then 
+            <li><a title="{$hoverTitleOrig}" href="{$config:idserver || '/texts/' || $wid ||'?format=txt&amp;mode=orig'}"><span class="far fa-file" aria-hidden="true"/>&#xA0;TXT (<i18n:text key="diplomaticLower">diplomatic</i18n:text>)</a></li>
         else()
     return i18n:process($download, $lang, '/db/apps/salamanca/data/i18n', 'en')
 };
@@ -3587,7 +3589,7 @@ declare function app:downloadRDF($node as node(), $model as map(*), $lang as xs:
     let $wid      :=  request:get-parameter('wid', '')
     let $hoverTitle := i18n:process(<i18n:text key="downloadRDF">Download RDF/XML data for this work</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
     let $download := 
-        if ($wid) then <li><a title="{$hoverTitle}" href="{$config:idserver || '/texts/' || $wid || '?format=rdf'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;RDF/XML</a></li>
+        if ($wid) then <li><a title="{$hoverTitle}" href="{$config:idserver || '/texts/' || $wid || '?format=rdf'}"><i class="fas fa-code-branch" aria-hidden="true"/>&#xA0;RDF (XML)</a></li>
         (:else if ($model('currentLemma'))  then <li><a title="{$hoverTitle}" href="{$config:dataserver || '/lemmata.' || $model('currentLemma')/@xml:id}.rdf">RDF/XML</a></li>
         else if ($model('currentAuthor')) then <li><a title="{$hoverTitle}" href="{$config:dataserver || '/authors.' || $model('currentAuthor')/@xml:id}.rdf">RDF/XML</a></li>:)
         else()

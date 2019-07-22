@@ -241,7 +241,7 @@ declare variable $config:iiif-root      := concat($config:webdata-root, "/iiif")
 declare variable $config:files-root     := concat($config:resources-root, "/files");
 declare variable $config:corpus-zip-root := concat($config:webdata-root, '/corpus-zip');
 
-declare variable $config:i18n-root := $config:data-root || '/i18n';
+declare variable $config:i18n-root := $config:data-root || '/i18n'; (: to be used in i18n:process() :)
 
 (: declare variable $config:home-url   := replace(replace(replace(request:get-url(), substring-after(request:get-url(), '/salamanca'), ''),'/rest/', '/'), 'localhost', 'h2250286.stratoserver.net'); :)
 

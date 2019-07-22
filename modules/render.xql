@@ -315,13 +315,19 @@ declare function render:HTMLgenerateTocFromDiv($nodes as element()*, $wid as xs:
         let $fragTrail := render:getNodetrail($wid, $node, 'citetrail', ())
         let $fragId := $config:idserver || '/texts/' || $wid || ':' || $fragTrail || '?format=html'
         let $section := $node/@xml:id/string()
-        let $titleElems := render:HTMLmakeTOCTitle($node)
+        let $i18nKey := 
+            if (render:dispatch($node, 'class')) then render:dispatch($node, 'class')
+            else 'tei-generic'
+        let $label := ('[', <i18n:text key="{$i18nKey}"/>, ']')
+        let $titleString := render:dispatch($node, 'title')
+        let $titleAtt := '[i18n(' || $i18nKey || ')] ' || $titleString
+(:        let $titleElems := render:HTMLmakeTOCTitle($node):)
         (: title="{$title}" :)
         return 
             <ul>
                 <li>
-                    <a class="hideMe" href="{$fragId}" >
-                        {$titleElems}
+                    <a class="hideMe" href="{$fragId}" title="{$titleAtt}">
+                        {($label, ' ', $titleString)}
                         <span class="jstree-anchor hideMe pull-right">{render:HTMLgetPagesFromDiv($node)}</span>
                     </a>
                     {render:HTMLgenerateTocFromDiv($node, $wid)}
@@ -688,7 +694,16 @@ declare function render:resolveURI($node as element(), $targets as xs:string) {
                         replace($value, $p/@matchPattern, $p/@replacementPattern)
                 else replace($target, $genericScheme, '$0') (: regex-group(0) :)
         else $target    
-};         
+};    
+
+
+declare function render:isHTMLMarginal($node as node()) as xs:boolean {
+    boolean($node[(self::tei:note or self::tei:label) and @place eq 'margin'])
+};
+
+declare function render:isHTMLHeading($node as node()) as xs:boolean {
+    boolean($node[self::tei:head])
+};
 
 
 
@@ -826,13 +841,6 @@ declare function render:dispatch($node as node(), $mode as xs:string) {
             $rendering
 };
 
-declare function render:isHTMLMarginal($node as node()) as xs:boolean {
-    boolean($node[(self::tei:note or self::tei:label) and @place eq 'margin'])
-};
-
-declare function render:isHTMLHeading($node as node()) as xs:boolean {
-    boolean($node[self::tei:head])
-};
 
 
 (: ####++++ Element functions (ordered alphabetically) ++++#### :)
@@ -848,18 +856,29 @@ declare function render:abbr($node as element(tei:abbr), $mode) {
                 render:passthru($node, $mode)
             else ()
             
+        case 'class' return ()
+        
         default return
             render:origElem($node, $mode)
 };
 
 
 declare function render:argument($node as element(tei:argument), $mode as xs:string) {
-    render:passthru($node, $mode)
+    switch($mode)
+        case 'class' return 
+            'tei-' || local-name($node)
+        
+        default return
+            render:passthru($node, $mode)
 };
 
 
 declare function render:author($node as element(tei:author), $mode as xs:string) {
-    render:passthru($node, $mode)
+    switch($mode)
+        case 'class' return ()
+        
+        default return
+            render:passthru($node, $mode)
 };
 
 
@@ -904,6 +923,8 @@ declare function render:bibl($node as element(tei:bibl), $mode as xs:string) {
                 <span class="{local-name($node) || ' hi_', render:classableString($node/@sortKey)}">{render:passthru($node, $mode)}</span>
             else <span>{render:passthru($node, $mode)}</span>
         
+        case 'class' return ()
+        
         default return
             render:passthru($node, $mode)
 };
@@ -933,6 +954,9 @@ declare function render:byline($node as element(tei:byline), $mode as xs:string)
             <span class="tp-paragraph">
                 {render:passthru($node, $mode)}
             </span>
+        
+        case 'class' return ()
+        
         default return
             render:passthru($node, $mode)
 };
@@ -948,6 +972,8 @@ declare function render:cb($node as element(tei:cb), $mode as xs:string) {
                 ' '
             else ()
         
+        case 'class' return ()
+        
         default return () (: some sophisticated function to insert a pipe and a pagenumber div in the margin :)
 };
 
@@ -957,6 +983,8 @@ declare function render:cell($node as element(tei:cell), $mode) {
             if ($node/@role eq 'label') then 
                 <td class="table-label">{render:passthru($node, $mode)}</td>
             else <td>{render:passthru($node, $mode)}</td>
+        
+        case 'class' return ()
         
         default return
             render:passthru($node, $mode)
@@ -971,13 +999,19 @@ declare function render:choice($node as element(tei:choice), $mode as xs:string)
              Put our own edits in spans of class "edited" and add another class to indicate what type of edit has happened :)
             render:passthru($node, $mode)
         
+        case 'class' return ()
+        
         default return
             render:passthru($node, $mode)
 };
 
 
 declare function render:cit($node as element(tei:cit), $mode as xs:string) {
-    render:passthru($node, $mode)
+    switch($mode)
+        case 'class' return ()
+        
+        default return
+            render:passthru($node, $mode)
 };
 
 
@@ -995,12 +1029,20 @@ declare function render:corr($node as element(tei:corr), $mode) {
 
 
 declare function render:damage($node as element(tei:damage), $mode as xs:string) {
-    render:passthru($node, $mode)
+    switch($mode)
+        case 'class' return ()
+        
+        default return
+            render:passthru($node, $mode)
 };
 
 
 declare function render:date($node as element(tei:date), $mode as xs:string) {
-    render:passthru($node, $mode)
+    switch($mode)
+        case 'class' return ()
+        
+        default return
+            render:passthru($node, $mode)
 };
 
 
@@ -1028,15 +1070,14 @@ declare function render:del($node as element(tei:del), $mode as xs:string) {
 declare function render:div($node as element(tei:div), $mode as xs:string) {
     switch($mode)
         case 'title' return
-            (: TODO: debug :)
             normalize-space(
                 if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
-                    '&#34;' || string($node/@n) || '&#34;'
+                    string($node/@n)
                 else if ($node/(tei:head|tei:label)) then
                     render:teaserString(($node/(tei:head|tei:label))[1], 'edit')
                 (: purely numeric section titles: :)
                 else if ($node/@n and (matches($node/@n, '^[0-9\[\]]+$')) and ($node/@type)) then
-                    $node/@n/string()
+                    string($node/@n)
                 (: otherwise, try to derive a title from potential references to the current node :)
                 else if ($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)]) then
                     render:teaserString($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)][1], 'edit')
@@ -1129,11 +1170,19 @@ declare function render:docAuthor($node as element(tei:docAuthor), $mode as xs:s
 };
 
 declare function render:docDate($node as element(tei:docDate), $mode as xs:string) {
-    render:passthru($node, $mode)
+    switch($mode)
+        case 'class' return ()
+        
+        default return
+            render:passthru($node, $mode)
 };
 
 declare function render:docEdition($node as element(tei:docEdition), $mode as xs:string) {
-    render:passthru($node, $mode)
+    switch($mode)
+        case 'class' return ()
+        
+        default return
+            render:passthru($node, $mode)
 };
 
 declare function render:docImprint($node as element(tei:docImprint), $mode as xs:string) {
@@ -1147,7 +1196,11 @@ declare function render:docImprint($node as element(tei:docImprint), $mode as xs
 };
 
 declare function render:docTitle($node as element(tei:docTitle), $mode as xs:string) {
-    render:passthru($node, $mode)
+    switch($mode)
+        case 'class' return ()
+        
+        default return
+            render:passthru($node, $mode)
 };
 
 declare function render:editElem($node as element(), $mode as xs:string) {
@@ -1326,10 +1379,11 @@ declare function render:gap($node as element(tei:gap), $mode as xs:string) {
 
 
 declare function render:gloss($node as element(tei:gloss), $mode as xs:string) {
-    if ($mode = ("orig", "edit")) then
-        render:passthru($node, $mode)
-    else
-        render:passthru($node, $mode)
+    switch($mode)
+        case 'class' return ()
+        
+        default return
+            render:passthru($node, $mode)
 };
 
 (: FIXME: In the following, the #anchor does not take account of html partitioning of works. Change this to use semantic section id's. :)
@@ -1749,7 +1803,7 @@ declare function render:milestone($node as element(tei:milestone), $mode as xs:s
                 $inlineText
         
         case 'class' return
-            'tei-milestone-' || $node/@unit
+            'tei-ms-' || $node/@unit
             
         case 'citetrail' return
             (: "XY" where X is the unit and Y is the anchor or the number of milestones where this occurs :)
@@ -2212,6 +2266,8 @@ declare function render:persName($node as element(tei:persName), $mode as xs:str
         case 'html' return
             render:name($node, $mode)
         
+        case 'class' return ()
+        
         default return
             render:name($node, $mode)
 };
@@ -2227,6 +2283,7 @@ declare function render:placeName($node as element(tei:placeName), $mode as xs:s
                 render:passthru($node, $mode)
         case 'html' return
             render:name($node, $mode)
+        case 'class' return ()
         default return
             render:name($node, $mode)
 };
