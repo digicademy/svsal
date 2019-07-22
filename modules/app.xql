@@ -3499,36 +3499,6 @@ declare function app:loadWRKpagination ($node as node(), $model as map (*), $wid
                 $pagesFile
 };
 
-(: Old, language-specific variants of the preparePagination function
-declare function app:WRKpreparePaginationDe ($node as node(), $model as map(*), $wid as xs:string?) {
-<ul id="later" class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
-{
-    let $workId    :=  if ($wid) then $wid else $model("currentWork")/@xml:id
-    for $pb in doc($config:index-root || "/" || $workId || '_nodeIndex.xml')//sal:node[@type="pb"][not(starts-with(sal:title, 'sameAs'))][not(starts-with(sal:title, 'corresp'))]
-        let $fragment := $pb/sal:fragment
-        let $volume   := if (starts-with($pb/sal:crumbtrail/a[1]/text(), 'Vol. ')) then
-                            $pb/sal:crumbtrail/a[1]/text() || ','
-                         else ()
-        let $url      := 'work.html?wid='|| $workId ||'&amp;' || 'frag='|| $fragment || concat('#', replace($pb/@n, 'facs_', 'pageNo_'))
-    return 
-        <li role="presentation"><a role="menuitem" tabindex="-1" href="{$url}">{normalize-space($pb/sal:title)}</a></li>
-}
-</ul>
-};
-
-declare function app:WRKpreparePaginationEn ($node as node(), $model as map(*), $wid as xs:string?) {
-<ul id="later" class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
-{
-    let $workId    :=  if ($wid) then $wid else $model("currentWork")/@xml:id
-    for $pb in doc($config:index-root || "/" || $workId || '_nodeIndex.xml')//sal:node[@type="pb"][not(starts-with(sal:title, 'sameAs'))][not(starts-with(sal:title, 'corresp'))]
-        let $fragment := $pb/sal:fragment
-        let $url      := 'work.html?wid='||$workId ||'&amp;' || 'frag='|| $fragment || concat('#', replace($pb/@n, 'facs_', 'pageNo_'))
-    return 
-        <li role="presentation"><a role="menuitem" tabindex="-1" href="{$url}">{normalize-space($pb/sal:title)}</a></li>
-}
-</ul>
-};
-:)
 (: Old variants of the pagination loading function that differentiate too much between $q present/absent
 declare function app:WRKpaginationQ ($node as node(), $model as map(*), $wid as xs:string?, $q as xs:string?, $lang as xs:string) {
 <ul id="later" class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
