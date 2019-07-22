@@ -15,6 +15,7 @@ import module namespace app        = "http://salamanca/app"    at "app.xql";
 import module namespace functx     = "http://www.functx.com";
 import module namespace transform  = "http://exist-db.org/xquery/transform";
 import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";
+import module namespace i18n      = "http://exist-db.org/xquery/i18n"        at "i18n.xql";
 
 (:declare option exist:serialize       "method=html5 media-type=text/html indent=no";:)
 
@@ -43,7 +44,7 @@ declare variable $render:chars :=
 
 
 (: "Nodetrail" (crumbtrail/citetrail/passagetrail) administrator function :)
-declare function render:getNodetrail($targetWork as node()*, $targetNode as node(), $mode as xs:string, $fragmentIds as map()?) {
+declare function render:getNodetrail($targetWorkId as xs:string, $targetNode as node(), $mode as xs:string, $fragmentIds as map()?) {
     (: (1) get the trail ID for the current node :)
     let $currentNode := 
         (: no recursion here, makes single ID for the current node :)
@@ -51,9 +52,9 @@ declare function render:getNodetrail($targetWork as node()*, $targetNode as node
             let $class := render:dispatch($targetNode, 'class')
             return
                 if ($class) then
-                    <a class="{$class}" href="{render:mkUrlWhileRendering($targetWork, $targetNode, $fragmentIds)}">{render:dispatch($targetNode, 'title')}</a>
+                    <a class="{$class}" href="{render:mkUrlWhileRendering($targetWorkId, $targetNode, $fragmentIds)}">{render:dispatch($targetNode, 'title')}</a>
                 else 
-                    <a href="{render:mkUrlWhileRendering($targetWork, $targetNode, $fragmentIds)}">{render:dispatch($targetNode, 'title')}</a>
+                    <a href="{render:mkUrlWhileRendering($targetWorkId, $targetNode, $fragmentIds)}">{render:dispatch($targetNode, 'title')}</a>
         (:else if ($mode eq 'passagetrail' and render:isPassagetrailNode($targetNode)) then
             render:dispatch($targetNode, $mode):)
         else if ($mode eq 'citetrail') then
@@ -73,7 +74,7 @@ declare function render:getNodetrail($targetWork as node()*, $targetNode as node
     let $trailPrefix := 
         if ($mode = ('citetrail', 'crumbtrail')) then
             if ($targetNode/ancestor::*[render:getCitableParent($targetNode)]) then
-                render:getNodetrail($targetWork, render:getCitableParent($targetNode), $mode, $fragmentIds)
+                render:getNodetrail($targetWorkId, render:getCitableParent($targetNode), $mode, $fragmentIds)
             else ()
         else if ($mode eq 'passagetrail') then (: similar to crumbtrail/citetrail, but we need to target the nearest *passagetrail* ancestor, not the nearest index node ancestor :)
             (: TODO: outsource this to a render:getPassagetrailParent($node as node()) function, analogous to render:getCitableParent() :)
@@ -81,15 +82,15 @@ declare function render:getNodetrail($targetWork as node()*, $targetNode as node
                 if ($targetNode[self::tei:pb]) then 
                     if ($targetNode/ancestor::tei:front|$targetNode/ancestor::tei:back|$targetNode/ancestor::tei:text[1][@type = "work_volume"]) then
                         (: within front, back, and single volumes, prepend front's or volume's trail ID for avoiding multiple identical IDs in the same work :)
-                        render:getNodetrail($targetWork,  ($targetNode/ancestor::tei:front|$targetNode/ancestor::tei:back|$targetNode/ancestor::tei:text[1][@type = "work_volume"])[last()], $mode, $fragmentIds)
+                        render:getNodetrail($targetWorkId,  ($targetNode/ancestor::tei:front|$targetNode/ancestor::tei:back|$targetNode/ancestor::tei:text[1][@type = "work_volume"])[last()], $mode, $fragmentIds)
                     else ()
                 else if ($targetNode[self::tei:pb]) then ()
                 else if ($targetNode[self::tei:note or self::tei:milestone]) then
                     (: citable parents of notes and milestones should not be p :)
-                    render:getNodetrail($targetWork, $targetNode/ancestor::*[render:isPassagetrailNode(.) and not(self::tei:p)][1], $mode, $fragmentIds)
+                    render:getNodetrail($targetWorkId, $targetNode/ancestor::*[render:isPassagetrailNode(.) and not(self::tei:p)][1], $mode, $fragmentIds)
                 else 
                     (: === for all other node types, get parent node's trail (deep recursion) === :)
-                    render:getNodetrail($targetWork, $targetNode/ancestor::*[render:isPassagetrailNode(.)][1], $mode, $fragmentIds)
+                    render:getNodetrail($targetWorkId, $targetNode/ancestor::*[render:isPassagetrailNode(.)][1], $mode, $fragmentIds)
             else ()
         else ()
     (: (b) get connector MARKER :)
@@ -261,8 +262,7 @@ declare function render:preparePaginationHTML($work as element(tei:TEI), $lang a
 };
 
 
-declare function render:mkUrlWhileRendering($targetWork as node(), $targetNode as node(), $fragmentIds as map()) {
-    let $targetWorkId := string($targetWork/@xml:id)
+declare function render:mkUrlWhileRendering($targetWorkId as xs:string, $targetNode as node(), $fragmentIds as map()) {
     let $targetNodeId := string($targetNode/@xml:id)
     let $viewerPage   :=      
         if (substring($targetWorkId, 1, 2) eq 'W0') then
@@ -303,61 +303,47 @@ declare function render:teaserString($node as element(), $mode as xs:string?) as
 
 (: ####++++ HTML Helper Functions ++++####:)
 
-
-declare function render:HTMLgenerate-toc-from-div($node, $wid) {
-   for $div in ($node/tei:div[@type="work_part"]/tei:div | $node/tei:div[not(@type="work_part")]| $node/*/tei:milestone[@unit ne 'other'])
-            return render:HTMLToc-div($div, $wid)
+(:
+~ Recursively creates a TOC list (of lists...) for a sequence of nodes.
+:)
+declare function render:HTMLgenerateTocFromDiv($nodes as element()*, $wid as xs:string) as element(ul)* {
+    for $node in $nodes/(tei:div[@type="work_part"]/tei:div[render:isIndexNode(.)]
+                         |tei:div[not(@type="work_part")][render:isIndexNode(.)]
+                         |*/tei:milestone[@unit ne 'other'][render:isIndexNode(.)]) return
+        let $fragTrail := render:getNodetrail($wid, $node, 'citetrail', ())
+        let $fragId := $config:idserver || '/texts/' || $wid || ':' || $fragTrail || '?format=html'
+        let $section := $node/@xml:id/string()
+        let $titleElems := render:HTMLmakeTOCTitle($node)
+        (: title="{$title}" :)
+        return 
+            <ul>
+                <li>
+                    <a class="hideMe" href="{$fragId}" >
+                        {$titleElems}
+                        <span class="jstree-anchor hideMe pull-right">{render:HTMLgetPagesFromDiv($node)}</span>
+                    </a>
+                    {render:HTMLgenerateTocFromDiv($node, $wid)}
+                </li>
+            </ul>
 };
 
-declare function render:HTMLToc-div($div, $wid) {
-    let $fragTrail := doc($config:index-root || "/" || $wid || '_nodeIndex.xml')//sal:node[@n eq $div/@xml:id]/sal:citetrail/text()
-    let $fragId := $config:idserver || '/texts/' || $wid || ':' || $fragTrail || '?format=html'
-    let $section := $div/@xml:id/string()
-    let $getTitle := render:HTMLderive-title($div)
-    return 
-        <ul><li><a class="hideMe" href="{$fragId}" title="{$getTitle}">{$getTitle}<span class="jstree-anchor hideMe pull-right">{render:get-pages-from-div($div)}</span></a>
-            {render:HTMLgenerate-toc-from-div($div, $wid)}
-        </li></ul>
+declare function render:HTMLmakeTOCTitle($node as node()) as item()* {
+    let $i18nKey := 
+        (: every div or milestone type with a citation label should have an entry in i18n files: :)
+        if ($node/self::tei:div) then
+            if ($config:citationLabels($node/@type/string())?('full')) then 'tei-div-' || $node/@type 
+            else 'tei-generic'
+        else if ($node/self::tei:milestone) then
+            if ($config:citationLabels($node/@unit/string())?('full')) then 'tei-ms-' || $node/@unit
+            else 'tei-generic'
+        else ()
+    let $divLabel := ('[', <i18n:text key="{$i18nKey}"/>, ']')
+    let $titleString := render:dispatch($node, 'title')
+    return
+        ($divLabel, ' ', $titleString)
 };
 
-declare function render:HTMLderive-title($node as node()) as item()* {
-    typeswitch($node)
-        case text()                    return $node
-        case element(tei:teiHeader)    return ()
-        case element(tei:choice)       return $node/tei:expan/text() | $node/tei:reg/text() | $node/tei:cor/text()
-        case element(tei:titlePart)    return ('[', $node/@type/string(), '] ',  local:passthruTOC($node))
-        case element(tei:div) return
-            let $i18nKey := 
-                (: every div with a citation label should also be available in i18n files: :)
-                if ($config:citationLabels($node/@type/string())?('full')) then 'tei-div-' || $node/@type 
-                else 'tei-generic'
-            let $divLabel := ('[', <i18n:text key="{$i18nKey}"/>, ']')
-            return
-                (: TODO: refactor this using render:XY($node, 'html-title') :)
-                if($node/tei:head) then ($divLabel, local:passthruTOC($node/tei:head))
-                else if ($node/tei:list/tei:head) then ($divLabel,  local:passthruTOC($node/tei:list/tei:head))
-                else if (not($node/tei:head | $node/tei:list/tei:head)) then  ($divLabel,  $node/@n/string())
-                else ()
-        case element(tei:milestone) return 
-            let $i18nKey := 
-                (: every milestone type with a citation label should also be available in i18n files: :)
-                if ($config:citationLabels($node/@unit/string())?('full')) then 'tei-ms-' || $node/@unit
-                else 'tei-generic'
-            let $msLabel := ('[', <i18n:text key="{$i18nKey}"/>, ']')
-            return
-                ($msLabel, (if ($node/@n) then (' ', $node/@n) else ()))
-        (:case element(tei:label)        return if ($node/@type) then ('[', $node/@type/string(), '] ', local:passthruTOC($node)) else ():)
-        case element(tei:pb)           return if (not($node[@break eq 'no'])) then ' ' else ()
-        case element(tei:cb)           return if (not($node[@break eq 'no'])) then ' ' else ()
-        case element(tei:lb)           return if (not($node[@break eq 'no'])) then ' ' else ()
-        default return local:passthruTOC($node)
-};
-   
-declare function local:passthruTOC($nodes as node()*) as item()* {
-    for $node in $nodes/node() return render:HTMLderive-title($node)
-};
-
-declare function render:get-pages-from-div($div) {
+declare function render:HTMLgetPagesFromDiv($div) {
     let $firstpage :=   
         if ($div[@type='work_volume'] | $div[@type = 'work_monograph']) then ($div//tei:pb[not(@sameAs or @corresp)])[1]/@n/string() 
         else ($div/preceding::tei:pb[not(@sameAs or @corresp)])[last()]/@n/string()

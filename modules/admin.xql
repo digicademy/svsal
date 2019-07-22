@@ -527,15 +527,15 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                     <ul>
                         <li>
                             <b>{$title}</b>
-                            <span class="jstree-anchor hideMe pull-right">{render:get-pages-from-div($text) }</span>
+                            <span class="jstree-anchor hideMe pull-right">{render:HTMLgetPagesFromDiv($text) }</span>
                                 {if ($work//tei:text[@type='work_volume']) then for $a in $work//tei:text where $a[@type='work_volume'] return
                                 <ul>
                                     <li>
                                         <a class="hideMe"><b>{concat('Volume: ', $a/@n/string())}</b></a>
-                                        { render:HTMLgenerate-toc-from-div($a/(tei:front | tei:body | tei:back), $workId)}
+                                        { render:HTMLgenerateTocFromDiv($a/(tei:front | tei:body | tei:back), $workId)}
                                     </li>
                                 </ul>
-                                else render:HTMLgenerate-toc-from-div($elements, $workId)}
+                                else render:HTMLgenerateTocFromDiv($elements, $workId)}
                         </li>
                     </ul>
                 </div>
@@ -996,9 +996,10 @@ declare function admin:createNodeIndex($node as node(), $model as map(*), $wid a
     let $indexes := 
         for $work-raw in $todo
             let $work := util:expand($work-raw)
+            let $wid := string($work/@xml:id)
             let $xincludes := $work-raw//tei:text//xi:include/@href
             let $fragmentationDepth := admin:determineFragmentationDepth($work-raw)
-            let $debug := if ($config:debug = ("trace", "info")) then console:log("Rendering " || string($work-raw/@xml:id) || " at fragmentation level " || $fragmentationDepth || ".") else ()
+            let $debug := if ($config:debug = ("trace", "info")) then console:log("Rendering " || $wid || " at fragmentation level " || $fragmentationDepth || ".") else ()
             let $start-time-a := util:system-time()
         
             let $target-set := admin:getFragmentNodes($work, $fragmentationDepth)
@@ -1021,7 +1022,7 @@ declare function admin:createNodeIndex($node as node(), $model as map(*), $wid a
             (: Now, create full-blown node index :)
             let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Node indexing: creating index file ...") else ()
             let $index := 
-                <sal:index work="{string($work/@xml:id)}" xml:space="preserve">{
+                <sal:index work="{$wid}" xml:space="preserve">{
                     for $node at $pos in $nodes
                         let $debug := if ($config:debug = ("trace") and local-name($node) eq "pb") then render:pb($node, 'debug') else ()
                         let $subtype := 
@@ -1050,9 +1051,9 @@ declare function admin:createNodeIndex($node as node(), $model as map(*), $wid a
                                 element sal:title           {render:dispatch($node, 'title')},
                                 element sal:fragment        {$fragmentIds($node/@xml:id/string())},
                                 element sal:citableParent   {render:getCitableParent($node)/@xml:id/string()},
-                                element sal:crumbtrail      {render:getNodetrail($work, $node, 'crumbtrail', $fragmentIds)},
-                                element sal:citetrail       {render:getNodetrail($work, $node, 'citetrail', $fragmentIds)},
-                                element sal:passagetrail    {render:getNodetrail($work, $node, 'passagetrail', $fragmentIds)}
+                                element sal:crumbtrail      {render:getNodetrail($wid, $node, 'crumbtrail', $fragmentIds)},
+                                element sal:citetrail       {render:getNodetrail($wid, $node, 'citetrail', $fragmentIds)},
+                                element sal:passagetrail    {render:getNodetrail($wid, $node, 'passagetrail', $fragmentIds)}
                                 }
                             )
                         }
@@ -1061,8 +1062,8 @@ declare function admin:createNodeIndex($node as node(), $model as map(*), $wid a
             
             (: save index file :)
             let $debug := if ($config:debug = ("trace")) then console:log("Saving index file ...") else ()
-            let $indexSaveStatus := admin:saveFile($work/@xml:id, $work/@xml:id || "_nodeIndex.xml", $index, "index")
-            let $debug := if ($config:debug = ("trace")) then console:log("Node index of "  || $work/@xml:id || " successfully created.") else ()
+            let $indexSaveStatus := admin:saveFile($wid, $wid || "_nodeIndex.xml", $index, "index")
+            let $debug := if ($config:debug = ("trace")) then console:log("Node index of "  || $wid || " successfully created.") else ()
             
             (: ----------------------------------------------- :)
             (: #### Basic quality / consistency check #### :)
@@ -1086,7 +1087,7 @@ declare function admin:createNodeIndex($node as node(), $model as map(*), $wid a
             (: render and store the work's plain text :)
             return 
                 <div>
-                    <h4>{string($work/@xml:id)}</h4>
+                    <h4>{$wid}</h4>
                      <p>Fragmentierungstiefe: <code>{$fragmentationDepth}</code></p>
                      {if (count($missed-elements)) then <p>{count($missed-elements)} nicht erfasste Elemente:<br/>
                         {for $e in $missed-elements return <code>{local-name($e) || "(" || string($e/@xml:id) || "); "}</code>}</p>
