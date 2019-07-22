@@ -44,19 +44,21 @@ declare variable $config:serverdomain :=
         return $fallbackDomain
     ;
 
-declare variable $config:apiEndpoints   := map  {
-                                                    "v1": ("texts", "search", "codesharing", "xtriples")
-                                                };
+declare variable $config:apiEndpoints   := 
+    map  {
+        "v1": ("texts", "search", "codesharing", "xtriples")
+    };
 (: valid API parameters and values, aligned with the respective 'format' parameter's values; if there is no explicite value 
     stated for a parameter (such as 'q'), the parameter may have any string value (sanitization happens elsewhere) :)
-declare variable $config:apiFormats := map {
-                                                'html': ('mode=edit', 'mode=orig', 'mode=meta', 'q', 'lang=de', 'lang=en', 'lang=es', 'viewer', 'frag'),
-                                                'iiif': ('canvas'),
-                                                'jpg': (),
-                                                'rdf': (),
-                                                'tei': ('mode=meta', 'mode=full'),
-                                                'txt': ('mode=edit', 'mode=orig')
-                                            };
+declare variable $config:apiFormats := 
+    map {
+        'html': ('mode=edit', 'mode=orig', 'mode=meta', 'q', 'lang=de', 'lang=en', 'lang=es', 'viewer', 'frag'),
+        'iiif': ('canvas'),
+        'jpg': (),
+        'rdf': (),
+        'tei': ('mode=meta', 'mode=full'),
+        'txt': ('mode=edit', 'mode=orig')
+    };
 
 declare variable $config:webserver      := $config:proto || "://www."    || $config:serverdomain;
 declare variable $config:blogserver     := $config:proto || "://blog."   || $config:serverdomain;
@@ -238,6 +240,8 @@ declare variable $config:rdf-sub-roots := ($config:rdf-authors-root, $config:rdf
 declare variable $config:iiif-root      := concat($config:webdata-root, "/iiif");
 declare variable $config:files-root     := concat($config:resources-root, "/files");
 declare variable $config:corpus-zip-root := concat($config:webdata-root, '/corpus-zip');
+
+declare variable $config:i18n-root := $config:data-root || '/i18n';
 
 (: declare variable $config:home-url   := replace(replace(replace(request:get-url(), substring-after(request:get-url(), '/salamanca'), ''),'/rest/', '/'), 'localhost', 'h2250286.stratoserver.net'); :)
 

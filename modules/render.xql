@@ -283,9 +283,11 @@ declare function render:mkUrlWhileRendering($targetWorkId as xs:string, $targetN
     return concat($viewerPage, $targetWorkId, (if ($frag) then concat('&amp;frag=', $frag) else ()), '#', $targetNodeHTMLAnchor)
 };
 
+
 declare function render:getFragmentFile ($targetWorkId as xs:string, $targetNodeId as xs:string) {
     doc($config:index-root || '/' || $targetWorkId || '_nodeIndex.xml')//sal:node[@n = $targetNodeId][1]/sal:fragment/text()
 };
+
 
 (:
 ~  Creates a teaser string of limited length (defined in $config:chars_summary) from a given node.

@@ -1199,77 +1199,86 @@ declare %templates:wrap function app:loadWorkMetadata($node as node(), $model as
              'currentWorkType': $type}
 };
 
-declare function app:displaySingleWork($node as node(), $model as map(*),
-                                            $wid as xs:string?,
-                                            $frag as xs:string?,
-                                            $q as xs:string?,
-                                            $mode as xs:string?,
-                                            $viewer as xs:string?, 
-                                            $lang as xs:string?) {   
-    let $workId             := if ($wid) then sal-util:normalizeId($wid) else $model('currentWorkId')
+declare function app:displaySingleWork($node as node(), 
+                                        $model as map(*),
+                                        $wid as xs:string?,
+                                        $frag as xs:string?,
+                                        $q as xs:string?,
+                                        $mode as xs:string?,
+                                        $viewer as xs:string?, 
+                                        $lang as xs:string?) {
+    let $workId:= if ($wid) then sal-util:normalizeId($wid) else $model('currentWorkId')
 
-    let $targetFragment    :=   if (xmldb:collection-available($config:html-root || "/" || $workId)) then
-                                    if ($frag and $frag || ".html" = xmldb:get-child-resources($config:html-root || "/" || $workId)) then
-                                        $frag || ".html"
-                                    else if (xmldb:collection-available($config:html-root || "/" || $workId)) then
-                                        functx:sort(xmldb:get-child-resources($config:html-root || "/" || $workId))[1]
-                                    else ()
-                                else ()
+    let $targetFragment := 
+        if (xmldb:collection-available($config:html-root || "/" || $workId)) then
+            if ($frag and $frag || ".html" = xmldb:get-child-resources($config:html-root || "/" || $workId)) then
+                $frag || ".html"
+            else if (xmldb:collection-available($config:html-root || "/" || $workId)) then
+                functx:sort(xmldb:get-child-resources($config:html-root || "/" || $workId))[1]
+            else ()
+        else ()
 
-    let $originalDoc    := doc($config:html-root || "/" || $workId || "/" || $targetFragment)
+    let $originalDoc := doc($config:html-root || "/" || $workId || "/" || $targetFragment)
 
     (: Fill in all parameters (except frag) in pagination links :)
-    let $urlParameters  := string-join((
-                                        if (exists($q)) then 'q=' || $q else (),
-                                        if (exists($mode)) then 'mode=' || $mode else (),
-                                        if (exists($viewer)) then 'viewer=' || $viewer else (),
-                                        if (exists($lang)) then 'lang=' || $lang else ()
-                                       ), '&amp;')
-    let $xslSheet       := <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-                                <xsl:output omit-xml-declaration="yes" indent="yes"/>
-                                <xsl:param name="urlParameters"/>
+    let $urlParameters := 
+        string-join((
+            if (exists($q)) then 'q=' || $q else (),
+            if (exists($mode)) then 'mode=' || $mode else (),
+            if (exists($viewer)) then 'viewer=' || $viewer else (),
+            if (exists($lang)) then 'lang=' || $lang else ()
+            ), 
+        '&amp;')
+    
+    let $xslSheet:= 
+        <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+            <xsl:output omit-xml-declaration="yes" indent="yes"/>
+            <xsl:param name="urlParameters"/>
 
-                                <!-- Default: Copy everything -->
-                                <xsl:template match="node()|@*" priority="2">
-                                    <xsl:copy>
-                                        <xsl:apply-templates select="node()|@*"/>
-                                    </xsl:copy>
-                                </xsl:template>
+            <!-- Default: Copy everything -->
+            <xsl:template match="node()|@*" priority="2">
+                <xsl:copy>
+                    <xsl:apply-templates select="node()|@*"/>
+                </xsl:copy>
+            </xsl:template>
 
-                                <!-- Change on-site href parameters -->
-                                <xsl:template match="a/@href[not(contains(., 'http'))]" priority="80">
-                                    <xsl:variable name="openingChar">
-                                        <xsl:choose>
-                                            <xsl:when test="contains(., '?')">
-                                                <xsl:text>&amp;</xsl:text>
-                                            </xsl:when>                                                            
-                                            <xsl:otherwise>
-                                                <xsl:text>?</xsl:text>
-                                            </xsl:otherwise>
-                                        </xsl:choose>
-                                    </xsl:variable>
+            <!-- Change href parameters on-site -->
+            <xsl:template match="a/@href[not(contains(., 'http'))]" priority="80">
+                <xsl:variable name="openingChar">
+                    <xsl:choose>
+                        <xsl:when test="contains(., '?')">
+                            <xsl:text>&amp;</xsl:text>
+                        </xsl:when>                                                            
+                        <xsl:otherwise>
+                            <xsl:text>?</xsl:text>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:variable>
 
-                                    <xsl:attribute name="href">
-                                        <xsl:choose>
-                                            <xsl:when test="starts-with(., '#')">
-                                                <xsl:value-of select="."/>
-                                            </xsl:when>
-                                            <xsl:when test="contains(., '#')">
-                                                <xsl:value-of select="replace(., '#', concat($openingChar, $urlParameters, '#'))"/>
-                                            </xsl:when>                                                            
-                                            <xsl:otherwise>
-                                                <xsl:value-of select="concat(., $openingChar, $urlParameters)"/>
-                                            </xsl:otherwise>
-                                        </xsl:choose>
-                                    </xsl:attribute>
-                                </xsl:template>
-                            </xsl:stylesheet>
-    let $parameters     := <parameters>
-                                <param name="exist:stop-on-warn"  value="yes"/>
-                                <param name="exist:stop-on-error" value="yes"/>
-                                <param name="urlParameters"       value="{$urlParameters}"/>
-                            </parameters>
-    let $parametrizedDoc    := transform:transform($originalDoc, $xslSheet, $parameters)
+                <xsl:attribute name="href">
+                    <xsl:choose>
+                        <xsl:when test="starts-with(., '#')">
+                            <xsl:value-of select="."/>
+                        </xsl:when>
+                        <xsl:when test="contains(., '#')">
+                            <xsl:value-of select="replace(., '#', concat($openingChar, $urlParameters, '#'))"/>
+                        </xsl:when>                                                            
+                        <xsl:otherwise>
+                            <xsl:value-of select="concat(., $openingChar, $urlParameters)"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:attribute>
+            </xsl:template>
+        </xsl:stylesheet>
+        
+    let $parameters := 
+        <parameters>
+            <param name="exist:stop-on-warn"  value="yes"/>
+            <param name="exist:stop-on-error" value="yes"/>
+            <param name="urlParameters"       value="{$urlParameters}"/>
+        </parameters>
+    
+    let $parametrizedDoc := transform:transform($originalDoc, $xslSheet, $parameters)
 
     (: If we have an active query string, highlight the original html fragment accordingly :)
     let $outHTML := 
@@ -1278,29 +1287,31 @@ declare function app:displaySingleWork($node as node(), $model as map(*),
         else
             $parametrizedDoc
 
-    let $debugOutput   := if ($config:debug = "trace") then
-                                <p>
-                                    wid: {$wid}<br/>
-                                    $model('currentWorkId'): {xs:string($model('currentWorkId'))}<br/>
-                                    workId: {$workId}<br/>
-                                    q: {$q}<br/>
-                                    mode: {$mode}<br/>
-                                    viewer: {$viewer}<br/>
-                                    lang: {$lang}<br/>
-                                    doc($config:html-root || "/" || $workId || "/" || $targetFragment): {substring(serialize(doc($config:html-root || "/" || $workId || "/" || $targetFragment)), 1, 300)}
-                                </p>
-                            else ()
+    let $debugOutput   := 
+        if ($config:debug = "trace") then
+            <p>
+                wid: {$wid}<br/>
+                $model('currentWorkId'): {xs:string($model('currentWorkId'))}<br/>
+                workId: {$workId}<br/>
+                q: {$q}<br/>
+                mode: {$mode}<br/>
+                viewer: {$viewer}<br/>
+                lang: {$lang}<br/>
+                doc($config:html-root || "/" || $workId || "/" || $targetFragment): {substring(serialize(doc($config:html-root || "/" || $workId || "/" || $targetFragment)), 1, 300)}
+            </p>
+        else ()
     let $workNotAvailable := <h2><span class="glyphicon glyphicon-file"></span> <i18n:text key="workNotYetAvailable">This work is not yet available.</i18n:text></h2>
 
 return
     if ($targetFragment) then
         <div>
             {$debugOutput}
-            {$outHTML}
+            {$outHTML
+            (:i18n:process($outHTML, $lang, "/db/apps/salamanca/data/i18n", "en"):)}
         </div>
     else
-    (: TODO: redirect to genuine error or resource-not-available page :)
-    i18n:process($workNotAvailable, $lang, "/db/apps/salamanca/data/i18n", "en")
+        (: TODO: redirect to genuine error or resource-not-available page :)
+        i18n:process($workNotAvailable, $lang, "/db/apps/salamanca/data/i18n", "en")
     
 };
 
@@ -3119,6 +3130,7 @@ declare function app:sourcesList($node as node(), $model as map(*), $lang as xs:
     return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
 };:)
 
+
 declare function app:WRKtextModus($node as node(), $model as map(*), $lang as xs:string) {
     let $output :=
         <div>
@@ -3134,6 +3146,7 @@ declare function app:WRKtextModus($node as node(), $model as map(*), $lang as xs
     return $output
 };
 
+
 (: ------------- Construct TOC Boxes --------------------
  : Construct toc box for the (left margin of the) reading view
  :)
@@ -3144,6 +3157,7 @@ declare function app:WRKtextModus($node as node(), $model as map(*), $lang as xs
         }
     </div>
 };
+
 
 declare %private function app:print-sectionsAUT($sections as element()*) {
     if ($sections) then
@@ -3163,6 +3177,7 @@ declare %private function app:print-sectionsAUT($sections as element()*) {
         ()
 };
 
+
 declare %public function app:LEMtoc($node as node(), $model as map(*)) {
     <div>
         {
@@ -3170,6 +3185,7 @@ declare %public function app:LEMtoc($node as node(), $model as map(*)) {
         }
     </div>
 };
+
 
 declare %private function app:print-sectionsLEM($sections as element()*) {
     if ($sections) then
@@ -3189,8 +3205,8 @@ declare %private function app:print-sectionsLEM($sections as element()*) {
         ()
 };
 
-declare
-    function app:tocGuidelines($node as node(), $model as map(*), $lang as xs:string) {
+
+declare function app:tocGuidelines($node as node(), $model as map(*), $lang as xs:string) {
 (:        let $store-lang := session:set-attribute("lang", $lang):)
        
         let $parameters :=  <parameters>
@@ -3207,6 +3223,7 @@ declare
         else()
 };
 
+
 declare function app:tocSourcesList($node as node(), $model as map(*), $lang as xs:string) {
 (:        let $store-lang := session:set-attribute("lang", $lang):)
        
@@ -3222,40 +3239,46 @@ declare function app:tocSourcesList($node as node(), $model as map(*), $lang as 
 };
  
  declare function app:WRKtoc ($node as node(), $model as map(*), $wid as xs:string, $q as xs:string?, $lang as xs:string?) {
-    if ($q) then
-        let $tocDoc := doc($config:html-root || '/' || sal-util:normalizeId($wid) || '/' || sal-util:normalizeId($wid) || '_toc.html')
-        let $xslSheet       := <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-                                    <xsl:output omit-xml-declaration="yes" indent="yes"/>
-                                    <xsl:param name="q"/>
-                                    <xsl:template match="node()|@*" priority="2">
-                                        <xsl:copy>
-                                            <xsl:apply-templates select="node()|@*"/>
-                                        </xsl:copy>
-                                    </xsl:template>
-                                    <xsl:template match="a/@href" priority="80">
-                                        <xsl:attribute name="href">
-                                            <xsl:choose>
-                                                <xsl:when test="starts-with(., '#')">
-                                                    <xsl:value-of select="."/>
-                                                </xsl:when>
-                                                <xsl:when test="contains(., '#')">
-                                                    <xsl:value-of select="replace(., '#', concat('&amp;q=', $q, '#'))"/>
-                                                </xsl:when>                                                            
-                                                <xsl:otherwise>
-                                                    <xsl:value-of select="concat(., '&amp;q=', $q)"/>
-                                                </xsl:otherwise>
-                                            </xsl:choose>
-                                        </xsl:attribute>
-                                    </xsl:template>
-                                </xsl:stylesheet>
-        let $parameters :=  <parameters>
-                                <param name="exist:stop-on-warn" value="yes"/>
-                                <param name="exist:stop-on-error" value="yes"/>
-                                <param name="q" value="{$q}"/>
-                            </parameters>
-        return transform:transform($tocDoc, $xslSheet, $parameters)
-     else
-        doc($config:html-root || '/' || sal-util:normalizeId($wid) || '/' || sal-util:normalizeId($wid) || '_toc.html')
+    let $toc :=
+        if ($q) then
+            let $tocDoc := doc($config:html-root || '/' || sal-util:normalizeId($wid) || '/' || sal-util:normalizeId($wid) || '_toc.html')
+            let $xslSheet       := 
+                <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+                    <xsl:output omit-xml-declaration="yes" indent="yes"/>
+                    <xsl:param name="q"/>
+                    <xsl:template match="node()|@*" priority="2">
+                        <xsl:copy>
+                            <xsl:apply-templates select="node()|@*"/>
+                        </xsl:copy>
+                    </xsl:template>
+                    <xsl:template match="a/@href" priority="80">
+                        <xsl:attribute name="href">
+                            <xsl:choose>
+                                <xsl:when test="starts-with(., '#')">
+                                    <xsl:value-of select="."/>
+                                </xsl:when>
+                                <xsl:when test="contains(., '#')">
+                                    <xsl:value-of select="replace(., '#', concat('&amp;q=', $q, '#'))"/>
+                                </xsl:when>                                                            
+                                <xsl:otherwise>
+                                    <xsl:value-of select="concat(., '&amp;q=', $q)"/>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:attribute>
+                    </xsl:template>
+                </xsl:stylesheet>
+            let $parameters :=  
+                <parameters>
+                    <param name="exist:stop-on-warn" value="yes"/>
+                    <param name="exist:stop-on-error" value="yes"/>
+                    <param name="q" value="{$q}"/>
+                </parameters>
+            return 
+                i18n:process(transform:transform($tocDoc, $xslSheet, $parameters), $lang, $config:i18n-root, 'en')
+         else
+            doc($config:html-root || '/' || sal-util:normalizeId($wid) || '/' || sal-util:normalizeId($wid) || '_toc.html')
+    return 
+        i18n:process($toc, $lang, $config:i18n-root, 'en')
 };
 
 
