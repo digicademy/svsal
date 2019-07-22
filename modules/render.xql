@@ -305,6 +305,42 @@ declare function render:teaserString($node as element(), $mode as xs:string?) as
 
 (: ####++++ HTML Helper Functions ++++####:)
 
+(: modes: "record" for generic citations in catalogue records; "reading-full", "reading-passage" - only relevant for access date :)
+declare function render:HTMLmakeCitationReference($wid as xs:string, $fileDesc as element(tei:fileDesc), $mode as xs:string, $node as element()?) as element(span) {
+    let $author := $fileDesc/tei:titleStmt/tei:author/tei:persName/tei:surname/text()
+    let $title := $fileDesc/tei:titleStmt/tei:title[@type eq 'short']/text()
+    let $digitalYear := substring($fileDesc/tei:publicationStmt/tei:date[@type eq 'digitizedEd']/@when[1]/string(), 1, 4)
+    let $originalYear := 
+        if ($fileDesc/tei:sourceDesc//tei:date[@type eq 'thisEd']) then
+            $fileDesc/tei:sourceDesc//tei:date[@type eq 'thisEd']/@when
+        else $fileDesc/tei:sourceDesc//tei:date[@type eq 'firstEd']/@when
+    let $editors :=
+        string-join(for $ed in $fileDesc/tei:seriesStmt/tei:editor/tei:persName 
+                        order by $ed/tei:surname
+                        return app:rotateFormatName($ed), ' &amp; ')
+    let $link := $fileDesc/tei:publicationStmt//tei:idno[@xml:id eq 'urlid']/text()
+    (:let $METDate := adjust-dateTime-to-timezone(current-dateTime(), xs:dayTimeDuration('PT1H')) (\: choosing MET as default timezone, rather than client's timezone, for now :\)
+    let $date := i18n:convertDate(substring(string($METDate),1,10), $lang, 'verbose')
+    let $timezone := 'MET'
+    let $accessed :=
+        if ($mode = ('reading-full', 'reading-passage')) then
+            <span>(<i18n:text key="accessedDate">Accessed</i18n:text>{' ' || $date || ' (' || $timezone || ')'})</span> (\: TODO :\)
+        else ():)
+    let $passagetrail := 
+        if ($mode eq 'reading-passage' and $node) then
+            render:getNodetrail($wid, $node, 'passagetrail', ())
+        else ()
+    let $content := 
+        <span class="cite-rec">{$author || ', ' || $title || ' (' || $digitalYear || ' [' || $originalYear || '])'|| ', '}
+            <i18n:text key="inLow">in</i18n:text>{': '}<i18n:text key="editionSeries">The School of Salamanca. A Digital Collection of Sources</i18n:text>
+            {', '}<i18n:text key="editedByAbbrLow">ed. by</i18n:text>{' ' || $editors || ' <'}<a href="{$link}">{$link}</a>
+            {'>' || (if ($passagetrail) then ', ' || $passagetrail else ())}
+            <!--{' ' || $accessed}-->
+        </span>
+        (: TODO: access date after link, not after and passagetrail...  :)
+    return $content
+};
+
 (:
 ~ Recursively creates a TOC list (of lists...) for a sequence of nodes.
 :)

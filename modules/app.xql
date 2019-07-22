@@ -2497,37 +2497,9 @@ declare function app:WRKeditionRecord($node as node(), $model as map(*), $lang a
 (: modes: "record" for generic citations in catalogue records; "reading-full", "reading-passage" - only relevant for access date :)
 declare function app:WRKcitationReference($node as node()?, $model as map(*)?, $lang as xs:string?, $mode as xs:string) as element(span) {
     let $wid := $model('currentWorkId')
-    let $author := $model('currentWorkHeader')/tei:fileDesc/tei:titleStmt/tei:author/tei:persName/tei:surname/text()
-    let $title := $model('currentWorkHeader')/tei:fileDesc/tei:titleStmt/tei:title[@type eq 'short']/text()
-    let $digitalYear := substring($model('currentWorkHeader')/tei:fileDesc/tei:publicationStmt/tei:date[@type eq 'digitizedEd']/@when[1]/string(), 1, 4)
-    let $originalYear := 
-        if ($model('currentWorkHeader')/tei:fileDesc/tei:sourceDesc//tei:date[@type eq 'thisEd']) then
-            $model('currentWorkHeader')/tei:fileDesc/tei:sourceDesc//tei:date[@type eq 'thisEd']/@when
-        else $model('currentWorkHeader')/tei:fileDesc/tei:sourceDesc//tei:date[@type eq 'firstEd']/@when
-    let $editors :=
-        string-join(for $ed in $model('currentWorkHeader')/tei:fileDesc/tei:seriesStmt/tei:editor/tei:persName 
-                        order by $ed/tei:surname
-                        return app:rotateFormatName($ed), ' &amp; ')
-    let $link := $model('currentWorkHeader')/tei:fileDesc/tei:publicationStmt//tei:idno[@xml:id eq 'urlid']/text()
-    let $METDate := adjust-dateTime-to-timezone(current-dateTime(), xs:dayTimeDuration('PT1H')) (: choosing MET as default timezone, rather than client's timezone, for now :)
-    let $date := i18n:convertDate(substring(string($METDate),1,10), $lang, 'verbose')
-    let $timezone := 'MET'
-    let $accessed :=
-        if ($mode = ('reading-full', 'reading-passage')) then
-            <span>(<i18n:text key="accessedDate">Accessed</i18n:text>{' ' || $date || ' (' || $timezone || ')'})</span> (: TODO :)
-        else ()
-    let $passage := 
-        if ($mode eq 'reading-passage') then
-            () (: TODO :)
-        else ()
-    let $content := 
-        <span>{$author || ', ' || $title || ' (' || $digitalYear || ' [' || $originalYear || '])'|| ', '}
-            <i18n:text key="inLow">in</i18n:text>{': '}<i18n:text key="editionSeries">The School of Salamanca. A Digital Collection of Sources</i18n:text>
-            {', '}<i18n:text key="editedByAbbrLow">ed. by</i18n:text>{' ' || $editors || ' <'}<a href="{$link}">{$link}</a>{'> '}
-            {$accessed}
-            {$passage}
-        </span>
-    return i18n:process($content, $lang, '/db/apps/salamanca/data/i18n', 'en')
+    let $fileDesc := $model('currentWorkHeader')/tei:fileDesc
+    let $content := render:HTMLmakeCitationReference($wid, $fileDesc, $mode, ())
+    return i18n:process($content, $lang, $config:i18n-root, 'en')
 };
 
 
