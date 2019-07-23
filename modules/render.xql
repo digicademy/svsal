@@ -489,10 +489,10 @@ declare function render:HTMLSectionToolbox($node as element()) as element(span) 
             </a>
             <div class="sal-toolbox-body">
                 <a href="{render:makeCitetrailURI($node)}">
-                    <span class="messengers fas fa-link" title="Go to/link this text area"/>
+                    <span class="messengers fas fa-link" title="i18n(linkPass)"/>
                 </a>
                 <a href="">
-                    <span class="messengers fas fa-feather-alt" title="Cite this passage"/>
+                    <span class="messengers fas fa-feather-alt" title="i18n(citePass)"/>
                 </a>
                 <a class="updateHiliteBox" href="#" style="display:none;"> 
                     <span class="glyphicon glyphicon-refresh"/>

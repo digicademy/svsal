@@ -306,6 +306,10 @@
   <msg key="accessedDate">Accessed</msg>
   <msg key="ebook">E-book</msg>
   <msg key="openToolbox">Open toolbox for this text area</msg>
+  <msg key="citePass">Cite this passage</msg>
+  <msg key="linkPass">Go to/link this text area</msg>
+  <msg key="teiExpPass">Export TEI for this text area</msg>
+  <msg key="txtExpPass">Export plain text for this text area</msg>
    
   <!--news-->
   <msg key="more">more</msg>

@@ -65,6 +65,10 @@
   <msg key="accessedDate">Aufgerufen am</msg>
   <msg key="ebook">E-Book</msg>
   <msg key="openToolbox">Toolbox für diesen Textabschnitt öffnen</msg>
+  <msg key="citePass">Diesen Abschnitt zitieren</msg>
+  <msg key="linkPass">Diesen Textabschnitt aufrufen / verlinken</msg>
+  <msg key="teiExpPass">TEI für diesen Abschnitt exportieren</msg>
+  <msg key="txtExpPass">Plain Text für diesen Abschnitt exportieren</msg>
   
   <!-- errors -->
   <msg key="authorNotYetAvailable">Dieser Artikel ist noch nicht verfügbar.</msg>
