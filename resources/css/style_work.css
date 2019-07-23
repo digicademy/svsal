@@ -447,9 +447,17 @@ li.cardoStyleLi {
     display:none;
 }
 
-.sal-toolbox-body span {
-    padding-right:0.4rem;
+.sal-tb-btn {
     font-size:17px;
+    display:inline;
+}
+
+.sal-cite-toggle button {
+    margin-left:40%;
+}
+
+.sal-cite-toggle input {
+    margin:0.3em;
 }
 
 .marginal {
@@ -458,7 +466,6 @@ li.cardoStyleLi {
 	margin-right: -49%;
     padding: 5px;
 	line-height: 1.6;
-    
 	text-indent: 0;
 	text-align: justify;
 	width:45%;

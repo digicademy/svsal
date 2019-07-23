@@ -358,17 +358,14 @@
             });
         </script>
         
-        <!--<script type="text/javascript">
-            function openToolbox(arg) {
-                var x = document.getElementById(arg);
-                if (x.style.display === "none") {
-                    x.style.display = "block";
-                } 
-                else {
-                    x.style.display = "none";
-                }
-            } 
-        </script>-->
+        <script type="text/javascript">
+            function citeToggle(elem) {
+                var x = elem.parentElement.getElementsByTagName('input')[0];
+                x.select();
+                document.execCommand("copy");
+                alert("Copied the text: " + x.value);
+            }
+        </script>
 
         <!-- ==== Show/Hide HiliteBox ==== -->
 <!--

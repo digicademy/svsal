@@ -474,7 +474,7 @@ declare function render:HTMLSectionTeaser($node as element()) {
         
 };
 
-declare function render:HTMLSectionToolbox($node as element()) as element(span) {
+declare function render:HTMLSectionToolbox($node as element()) as element(div) {
     let $id := $node/@xml:id/string()
     let $class := 
         if (render:isHTMLMarginal($node)) then 
@@ -483,23 +483,35 @@ declare function render:HTMLSectionToolbox($node as element()) as element(span) 
             'sal-toolbox-teaser':)
         else 'sal-toolbox'
     return
-        <span class="{$class}">
+        <div class="{$class}">
             <a id="{$id}" href="{('#' || $id)}" data-rel="popover">
                 <i class="fas fa-link messengers" title="i18n(openToolbox)"/>
             </a>
             <div class="sal-toolbox-body">
-                <a href="{render:makeCitetrailURI($node)}">
+                <a class="sal-tb-btn" href="{render:makeCitetrailURI($node)}">
                     <span class="messengers fas fa-link" title="i18n(linkPass)"/>
                 </a>
-                <a href="">
-                    <span class="messengers fas fa-feather-alt" title="i18n(citePass)"/>
-                </a>
-                <a class="updateHiliteBox" href="#" style="display:none;"> 
+                <div class="sal-tb-btn dropdown">
+                    <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <span class="messengers fas fa-feather-alt" title="i18n(citePass)"/>
+                    </button>
+                    <span class="dropdown-menu">
+                        <span class="sal-cite-toggle">
+                            <span style="font-weight:bold;">Proposed citation:</span><br/>
+                            <input type="text" value="abc def ghi" class="sal-cite-text"></input>
+                            <button onclick="citeToggle(this);">Copy</button>
+                        </span>
+                    </span>
+                </div>
+                <a class="sal-tb-btn updateHiliteBox" href="#" style="display:none;"> 
                     <span class="glyphicon glyphicon-refresh"/>
                 </a>
-                <span class="glyphicon glyphicon-print text-muted"/>
             </div>
-        </span>
+        </div>
+(:    
+    Further buttons:
+    - <span class="glyphicon glyphicon-print text-muted"/> 
+:)
 };
 
 declare function render:makePassagetrailBox($node as element()) {
