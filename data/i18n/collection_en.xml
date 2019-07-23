@@ -305,6 +305,7 @@
   <msg key="citeThisWork">Cite this work</msg>
   <msg key="accessedDate">Accessed</msg>
   <msg key="ebook">E-book</msg>
+  <msg key="openToolbox">Open toolbox for this text area</msg>
    
   <!--news-->
   <msg key="more">more</msg>

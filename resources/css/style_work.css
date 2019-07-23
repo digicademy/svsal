@@ -444,7 +444,12 @@ li.cardoStyleLi {
 }
 
 .sal-toolbox-body {
-    width:8rem;
+    display:none;
+}
+
+.sal-toolbox-body span {
+    padding-right:0.4rem;
+    font-size:17px;
 }
 
 .marginal {

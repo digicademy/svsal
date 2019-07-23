@@ -320,6 +320,7 @@
     <msg key="citeThisWork">Citar obra</msg>
     <msg key="accessedDate">Consultado por última vez el</msg>
     <msg key="ebook">Libro electrónico</msg>
+    <msg key="openToolbox">Abrir caja de herramientas para este pasaje</msg>
     
     <!--news-->
     <msg key="more">más</msg>

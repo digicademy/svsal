@@ -168,7 +168,7 @@
                 delay:            1
             });
             ias.extension(new IASSpinnerExtension());
-            ias.extension(new IASTriggerExtension({ offset: 50, textPrev:   '<i18n:text key="loadPrev">Lade vorausgehende Textpassagen</i18n:text>' }));
+            ias.extension(new IASTriggerExtension({ offset: 50, textPrev: '<i18n:text key="loadPrev">Lade vorausgehende Textpassagen</i18n:text>' }));
             ias.extension(new IASPagingExtension());
             ias.extension(new IASHistoryExtension({ prev: ".previous" }));
             ias.on('scroll', function(pageNum, scrollOffset, url) {
@@ -235,7 +235,7 @@
             });
         </script>
         
-        <!-- ==== Citation reference -->
+        <!-- ==== Global citation reference ==== -->
         <script type="text/javascript">
             var modal = document.getElementById('citRef');
             var btn = document.getElementById("citRefBtn");
@@ -335,23 +335,40 @@
 
         <!-- ==== Paragraph popup with link, refresh and print icons ====  -->
         <script type="text/javascript">
-            $('[data-rel="popover"]').popover({ 
+            $('[data-rel="popover"]').popover({
                     trigger:    'click',
+                    animation: 'true',
                     placement:  'bottom',
+                    container: 'body',
+                    template: '&lt;div class="popover sal-toolbox-body"&gt;&lt;div class="popover-content"&gt;&lt;/div&gt;&lt;/div&gt;',
                     html:       true,
                     title:      function() {return $("#popover-head").html();},
-                    content:    function() {return $("#popover-content").html();}
+                    content: function(){return $(this).siblings('.sal-toolbox-body').html()}
                     // close popup by clicking outside
                 }).click(function(event) {event.preventDefault();}); // don't jump around to the anchor associated with the span
             $('body').on('click', function (event) {
                 $('[data-rel="popover"]').each(function() {
                     event.preventDefault;
-                    if (!$(this).is(event.target) &amp;&amp; $(this).has(event.target).length === 0 &amp;&amp; $('.popover').has(event.target).length === 0) {
+                    if (!$(this).is(event.target) 
+                        &amp;&amp; $(this).has(event.target).length === 0 
+                        &amp;&amp; $('.popover').has(event.target).length === 0) {
                         $(this).popover('hide');
                     }
                 });
             });
         </script>
+        
+        <!--<script type="text/javascript">
+            function openToolbox(arg) {
+                var x = document.getElementById(arg);
+                if (x.style.display === "none") {
+                    x.style.display = "block";
+                } 
+                else {
+                    x.style.display = "none";
+                }
+            } 
+        </script>-->
 
         <!-- ==== Show/Hide HiliteBox ==== -->
 <!--

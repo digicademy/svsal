@@ -476,22 +476,6 @@ declare function render:HTMLSectionTeaser($node as element()) {
 
 declare function render:HTMLSectionToolbox($node as element()) as element(span) {
     let $id := $node/@xml:id/string()
-    let $dataContent := 
-        '&lt;div class=&#34;sal-toolbox-body&#34;&gt;' ||
-            '&lt;a href=&#34;' || render:makeCitetrailURI($node) || '&#34;&gt;' || 
-                '&lt;span class=&#34;messengers fas fa-link&#34; title=&#34;Go to/link this text area&#34;/&gt;' || 
-            '&lt;/a&gt;' || 
-            '  ' || 
-            '&lt;a href=&#34;' || () || '&#34;&gt;' || 
-                '&lt;span class=&#34;messengers fas fa-feather-alt&#34; title=&#34;Cite this passage&#34;/&gt;' || 
-            '&lt;/a&gt;' || 
-            '  ' || 
-            '&lt;a class=&#34;updateHiliteBox&#34; href=&#34;#34;&gt;'  || 
-                '&lt;span class=&#34;glyphicon glyphicon-refresh&#34;/&gt;' || 
-            '&lt;/a&gt;' || 
-            '  ' || 
-            '&lt;span class=&#34;glyphicon glyphicon-print text-muted&#34;/&gt;' || 
-        '&lt;/div&gt;'
     let $class := 
         if (render:isHTMLMarginal($node)) then 
             'sal-toolbox-marginal' 
@@ -500,9 +484,21 @@ declare function render:HTMLSectionToolbox($node as element()) as element(span) 
         else 'sal-toolbox'
     return
         <span class="{$class}">
-            <a id="{$id}" href="{('#' || $id)}" data-rel="popover" data-content="{$dataContent}">
-                <i class="fas fa-link messengers" title="Open toolbox for this text area"/>
+            <a id="{$id}" href="{('#' || $id)}" data-rel="popover">
+                <i class="fas fa-link messengers" title="i18n(openToolbox)"/>
             </a>
+            <div class="sal-toolbox-body">
+                <a href="{render:makeCitetrailURI($node)}">
+                    <span class="messengers fas fa-link" title="Go to/link this text area"/>
+                </a>
+                <a href="">
+                    <span class="messengers fas fa-feather-alt" title="Cite this passage"/>
+                </a>
+                <a class="updateHiliteBox" href="#" style="display:none;"> 
+                    <span class="glyphicon glyphicon-refresh"/>
+                </a>
+                <span class="glyphicon glyphicon-print text-muted"/>
+            </div>
         </span>
 };
 

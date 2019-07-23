@@ -64,6 +64,7 @@
   <msg key="citeThisWork">Dieses Werk zitieren</msg>
   <msg key="accessedDate">Aufgerufen am</msg>
   <msg key="ebook">E-Book</msg>
+  <msg key="openToolbox">Toolbox für diesen Textabschnitt öffnen</msg>
   
   <!-- errors -->
   <msg key="authorNotYetAvailable">Dieser Artikel ist noch nicht verfügbar.</msg>
