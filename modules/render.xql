@@ -114,7 +114,7 @@ declare function render:getNodetrail($targetWorkId as xs:string, $targetNode as 
              else if ($mode eq 'passagetrail') then $trailPrefix || $connector || $currentNode
              else ()
         else if ($currentNode) then $currentNode
-        else () (:error(xs:QName('render:getNodetrail'), 'Could not make individual nodetrail for element ' || local-name($currentNode)):)
+        else () (:error(xs:QName('render:getNodetrail'), 'Could not make distinct nodetrail for element ' || local-name($currentNode)):)
     return $trail
 };
 
@@ -323,7 +323,6 @@ declare function render:HTMLmakeCitationReference($wid as xs:string, $fileDesc a
         string-join(for $ed in $fileDesc/tei:seriesStmt/tei:editor/tei:persName 
                         order by $ed/tei:surname
                         return app:rotateFormatName($ed), ' &amp; ')
-    let $link := $fileDesc/tei:publicationStmt//tei:idno[@xml:id eq 'urlid']/text()
     (:let $METDate := adjust-dateTime-to-timezone(current-dateTime(), xs:dayTimeDuration('PT1H')) (\: choosing MET as default timezone, rather than client's timezone, for now :\)
     let $date := i18n:convertDate(substring(string($METDate),1,10), $lang, 'verbose')
     let $timezone := 'MET'
@@ -331,6 +330,12 @@ declare function render:HTMLmakeCitationReference($wid as xs:string, $fileDesc a
         if ($mode = ('reading-full', 'reading-passage')) then
             <span>(<i18n:text key="accessedDate">Accessed</i18n:text>{' ' || $date || ' (' || $timezone || ')'})</span> (\: TODO :\)
         else ():)
+    let $citetrail :=
+        if ($mode eq 'reading-passage' and $node) then
+            render:getNodetrail($wid, $node, 'citetrail', ())
+        else ()
+    let $citetrailStr := if ($citetrail) then ':' || $citetrail else ()
+    let $link := $config:idserver || '/texts/' || $wid || $citetrailStr || '?format=html'
     let $passagetrail := 
         if ($mode eq 'reading-passage' and $node) then
             render:getNodetrail($wid, $node, 'passagetrail', ())
