@@ -498,15 +498,18 @@ declare function render:HTMLSectionToolbox($node as element()) as element(div) {
         (:else if (render:isCitableWithTeaserHTML($node)) then
             'sal-toolbox-teaser':)
         else 'sal-toolbox'
+    let $citetrailBaseUrl := render:makeCitetrailURI($node)
     return
         <div class="{$class}">
             <a id="{$id}" href="{('#' || $id)}" data-rel="popover">
                 <i class="fas fa-link messengers" title="i18n(openToolbox)"/>
             </a>
             <div class="sal-toolbox-body">
-                <a class="sal-tb-btn" href="{render:makeCitetrailURI($node)}">
-                    <span class="messengers fas fa-link" title="i18n(linkPass)"/>
-                </a>
+                <div class="sal-tb-btn dropdown">
+                    <a class="sal-tb-btn" href="{$citetrailBaseUrl || '?format=html'}">
+                        <span class="messengers fas fa-link" title="i18n(linkPass)"/>
+                    </a>
+                </div>
                 <div class="sal-tb-btn dropdown">
                     <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                         <span class="messengers fas fa-feather-alt" title="i18n(citePass)"/>
@@ -514,17 +517,24 @@ declare function render:HTMLSectionToolbox($node as element()) as element(div) {
                     <span class="dropdown-menu">
                         <span class="sal-cite-toggle">
                             <span style="font-weight:bold;"><i18n:text key="proposedCitation">Proposed citation:</i18n:text></span><br/>
-                            <input type="text" value="dummy" class="sal-cite-text"></input>
-                            <button onclick="citeToggle(this);">Copy</button>
+                            <!--<input type="text" value="dummy" class="sal-cite-text"></input>-->
+                            <button onclick="citeToggle(this);"><i18n:text key="copy">Copy</i18n:text></button>
                             <span class="cite-rec" style="display:none">
                                 {render:HTMLmakeCitationReference($wid, $fileDesc, 'reading-passage', $node)}
                             </span>
                         </span>
                     </span>
                 </div>
-                <a class="sal-tb-btn updateHiliteBox" href="#" style="display:none;"> 
-                    <span class="glyphicon glyphicon-refresh"/>
-                </a>
+                <div class="sal-tb-btn dropdown">
+                    <a class="sal-tb-btn" href="{$citetrailBaseUrl || '?format=txt'}">
+                        <span class="messengers far fa-file" title="i18n(txtExpPass)"/>
+                    </a>
+                </div>
+                <div class="sal-tb-btn dropdown" style="display:none;">
+                    <a class="sal-tb-btn updateHiliteBox" href="#"> 
+                        <span class="glyphicon glyphicon-refresh"/>
+                    </a>
+                </div>
             </div>
         </div>
 (:    

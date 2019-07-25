@@ -195,6 +195,7 @@
   <!-- general language abbreviations, conjunctions, phrases, etc. -->
   <msg key="inLow">in</msg>
   <msg key="editedByAbbrLow">hg. von</msg>
+  <msg key="copy">Kopieren</msg>
   
   <!-- div, milestone, element types for node index derivatives -->
   <msg key="tei-div-administrative">Administrativ</msg>

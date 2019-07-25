@@ -723,16 +723,20 @@ border:none
  * - fa fa-arrow-right
  * - fa fa-bars
  * - fa fa-birthday-cake
+ * - fas fa-file-book (Download e-Book)
  * - fa fa-chevron-down
  * - fa fa-chevron-left
  * - fa fa-chevron-right
+ * - fas fa-file-code (Download TEI-XML)
  * - fa fa-cogs
  * - far fa-copyright
+ * - fas fa-code-branch (Download RDF)
  * - fa fa-download
  * - far fa-envelope (contact)
  * - fas fa-book-open
  * - fa fa-file-alt
- * - fa fa-file (legacy works icon, Mirador)
+ * - fa fa-file (Download txt (edit & orig), Mirador)
+ * - fas fa-file-pdf (Download PDF)
  * - fa fa-group
  * - far fa-hand-point-right
  * - fa fa-info-circle
