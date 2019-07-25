@@ -350,7 +350,7 @@ declare function render:HTMLmakeCitationReference($wid as xs:string, $fileDesc a
         </span>
     let $trail :=
         if ($mode eq 'reading-passage' and $passagetrail) then
-            <span class="cite-rec-trail">{'), ' || $passagetrail}</span>
+            <span class="cite-rec-trail">{' ' || $passagetrail}</span>
         else ()
     return ($body, $trail)
 };
@@ -511,23 +511,26 @@ declare function render:HTMLSectionToolbox($node as element()) as element(div) {
                     </a>
                 </div>
                 <div class="sal-tb-btn dropdown">
-                    <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <button onclick="citeToggle(this);" type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                         <span class="messengers fas fa-feather-alt" title="i18n(citePass)"/>
                     </button>
-                    <span class="dropdown-menu">
-                        <span class="sal-cite-toggle">
-                            <span style="font-weight:bold;"><i18n:text key="proposedCitation">Proposed citation:</i18n:text></span><br/>
-                            <!--<input type="text" value="dummy" class="sal-cite-text"></input>-->
-                            <button onclick="citeToggle(this);"><i18n:text key="copy">Copy</i18n:text></button>
-                            <span class="cite-rec" style="display:none">
-                                {render:HTMLmakeCitationReference($wid, $fileDesc, 'reading-passage', $node)}
-                            </span>
+                    <div class="dropdown-menu sal-cite-toggle">
+                        <span style="font-weight:bold;"><i18n:text key="proposedCitation">Proposed citation:</i18n:text></span><br/>
+                        <button onclick="citeCopy(this);"><i18n:text key="copy">Copy</i18n:text></button>
+                        <span class="cite-rec" style="display:none">
+                            {render:HTMLmakeCitationReference($wid, $fileDesc, 'reading-passage', $node)
+                            (: <input> tag will be created on-the-fly in template_work.html :)}
                         </span>
-                    </span>
+                    </div>
                 </div>
                 <div class="sal-tb-btn dropdown">
                     <a class="sal-tb-btn" href="{$citetrailBaseUrl || '?format=txt'}">
                         <span class="messengers far fa-file" title="i18n(txtExpPass)"/>
+                    </a>
+                </div>
+                <div class="sal-tb-btn dropdown">
+                    <a class="sal-tb-btn" href="{$citetrailBaseUrl || '?format=tei'}">
+                        <span class="messengers fas fa-file-code" title="i18n(teiExpPass)"/>
                     </a>
                 </div>
                 <div class="sal-tb-btn dropdown" style="display:none;">

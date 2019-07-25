@@ -358,23 +358,37 @@
             });
         </script>
         
-        <!-- Passage citation references (gets pre-rendered work/passage citation strings and inserts the current date). -->
+        <!-- Passage citation references -->
         <script type="text/javascript">
+            // Make input tag on-the-fly: get pre-rendered work/passage citation strings and insert the current date
             function citeToggle(elem) {
-                var p = elem.parentElement;
-                var i = p.getElementsByTagName('input')[0];
-                var v1 = p.getElementsByClassName('cite-rec-body')[0].textContent;
+                var target = elem.parentElement.getElementsByClassName('sal-cite-toggle')[0];
+                if (target.getElementsByTagName('input').length > 0) {
+                    target.removeChild(target.getElementsByTagName('input')[0]); // there can maximally be one input tag
+                }
+                var input = document.createElement('input');
+                var v1 = target.getElementsByClassName('cite-rec-body')[0].textContent;
                 var v2 = getI18nAccessString();
                 var v3;
-                if (p.getElementsByClassName('cite-rec-trail')[0]) {
-                    v3 = p.getElementsByClassName('cite-rec-trail')[0].textContent;
+                if (target.getElementsByClassName('cite-rec-trail')[0]) {
+                    v3 = target.getElementsByClassName('cite-rec-trail')[0].textContent;
+                } else {
+                    v3 = '';
                 }
-                else v3 = '';
-                i.setAttribute('value', v1 + ' ' + v2 + v3);
-                i.select();
-                document.execCommand("copy");
-                alert("Copied the text: " + i.value);
+                input.setAttribute('value', v1 + ' ' + v2 + v3);
+                input.setAttribute('type', 'text');
+                input.setAttribute('class', 'sal-cite-text');
+                var button = target.getElementsByTagName('button')[0];
+                target.insertBefore(input, button);
             }
+            function citeCopy(elem) {
+                var p = elem.parentElement;
+                var input = p.getElementsByTagName('input')[0];
+                input.select();
+                document.execCommand("copy");
+                alert("Copied the text: " + input.value);
+            }
+            $('.sal-cite-toggle').width('400px');
             function getI18nAccessString() {
                 var accessed;
                 var date;
