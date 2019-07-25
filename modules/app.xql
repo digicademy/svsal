@@ -1306,12 +1306,12 @@ return
     if ($targetFragment) then
         <div>
             {$debugOutput}
-            {$outHTML
-            (:i18n:process($outHTML, $lang, "/db/apps/salamanca/data/i18n", "en"):)}
+            {(:$outHTML:)
+            i18n:process($outHTML, $lang, $config:i18n-root, "en")}
         </div>
     else
         (: TODO: redirect to genuine error or resource-not-available page :)
-        i18n:process($workNotAvailable, $lang, "/db/apps/salamanca/data/i18n", "en")
+        i18n:process($workNotAvailable, $lang, $config:i18n-root, "en")
     
 };
 

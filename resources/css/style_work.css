@@ -456,7 +456,7 @@ li.cardoStyleLi {
     margin-left:40%;
 }
 
-.sal-cite-toggle input {
+.sal-cite-toggle > * {
     margin:0.3em;
 }
 

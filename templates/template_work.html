@@ -358,12 +358,46 @@
             });
         </script>
         
+        <!-- Passage citation references (gets pre-rendered work/passage citation strings and inserts the current date). -->
         <script type="text/javascript">
             function citeToggle(elem) {
-                var x = elem.parentElement.getElementsByTagName('input')[0];
-                x.select();
+                var p = elem.parentElement;
+                var i = p.getElementsByTagName('input')[0];
+                var v1 = p.getElementsByClassName('cite-rec-body')[0].textContent;
+                var v2 = getI18nAccessString();
+                var v3;
+                if (p.getElementsByClassName('cite-rec-trail')[0]) {
+                    v3 = p.getElementsByClassName('cite-rec-trail')[0].textContent;
+                }
+                else v3 = '';
+                i.setAttribute('value', v1 + ' ' + v2 + v3);
+                i.select();
                 document.execCommand("copy");
-                alert("Copied the text: " + x.value);
+                alert("Copied the text: " + i.value);
+            }
+            function getI18nAccessString() {
+                var accessed;
+                var date;
+                var lang = getLang();
+                if (!['es', 'de', 'en'].includes(lang)) lang = 'en';
+                var current = new Date();
+                var options = { year: 'numeric', month: 'long', day: 'numeric' };
+                if (lang === 'de'){
+                    accessed = 'Aufgerufen am';
+                    date = current.toLocaleDateString('de-DE', options);
+                } else if (lang === 'es'){
+                    accessed = 'Consultado por última vez el';
+                    date = current.toLocaleDateString('es-ES', options);
+                } else {
+                    accessed = 'Accessed';
+                    date = current.toLocaleDateString('en-GB', options);
+                }
+                return '(' + accessed + ' ' + date + ')';
+            }
+            function getLang() {
+                if (getUrlParams('lang') === 'es' || window.location.href.indexOf("/es/") != -1) return 'es';
+                else if (getUrlParams('lang') === 'de' || window.location.href.indexOf("/de/") != -1) return 'de';
+                else return 'en';
             }
         </script>
 

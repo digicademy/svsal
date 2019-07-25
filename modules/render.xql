@@ -305,8 +305,13 @@ declare function render:teaserString($node as element(), $mode as xs:string?) as
 
 (: ####++++ HTML Helper Functions ++++####:)
 
-(: modes: "record" for generic citations in catalogue records; "reading-full", "reading-passage" - only relevant for access date :)
-declare function render:HTMLmakeCitationReference($wid as xs:string, $fileDesc as element(tei:fileDesc), $mode as xs:string, $node as element()?) as element(span) {
+(: Modes for generating citation recommendations: 
+    - "record" for generic citations in catalogue records 
+    - "reading-full" for generic citations in reading view; access date has to be appended elsewhere
+    - "reading-passage" for fine-granular citations in reading view, including passagetrail - this yields two <span>s, 
+        between the two of which the acces date has to be inserted (e.g., by means of JS)
+:)
+declare function render:HTMLmakeCitationReference($wid as xs:string, $fileDesc as element(tei:fileDesc), $mode as xs:string, $node as element()?) as element(span)+ {
     let $author := $fileDesc/tei:titleStmt/tei:author/tei:persName/tei:surname/text()
     let $title := $fileDesc/tei:titleStmt/tei:title[@type eq 'short']/text()
     let $digitalYear := substring($fileDesc/tei:publicationStmt/tei:date[@type eq 'digitizedEd']/@when[1]/string(), 1, 4)
@@ -330,15 +335,19 @@ declare function render:HTMLmakeCitationReference($wid as xs:string, $fileDesc a
         if ($mode eq 'reading-passage' and $node) then
             render:getNodetrail($wid, $node, 'passagetrail', ())
         else ()
-    let $content := 
-        <span class="cite-rec">{$author || ', ' || $title || ' (' || $digitalYear || ' [' || $originalYear || '])'|| ', '}
+    (:let $accessedOpen := 
+        if ($mode = ('reading-passage', 'reading-full')) then:)
+    let $body := 
+        <span class="cite-rec-body">{$author || ', ' || $title || ' (' || $digitalYear || ' [' || $originalYear || '])'|| ', '}
             <i18n:text key="inLow">in</i18n:text>{': '}<i18n:text key="editionSeries">The School of Salamanca. A Digital Collection of Sources</i18n:text>
             {', '}<i18n:text key="editedByAbbrLow">ed. by</i18n:text>{' ' || $editors || ' <'}<a href="{$link}">{$link}</a>
-            {'>' || (if ($passagetrail) then ', ' || $passagetrail else ())}
-            <!--{' ' || $accessed}-->
+            {'>'}
         </span>
-        (: TODO: access date after link, not after and passagetrail...  :)
-    return $content
+    let $trail :=
+        if ($mode eq 'reading-passage' and $passagetrail) then
+            <span class="cite-rec-trail">{'), ' || $passagetrail}</span>
+        else ()
+    return ($body, $trail)
 };
 
 (:
@@ -476,6 +485,8 @@ declare function render:HTMLSectionTeaser($node as element()) {
 
 declare function render:HTMLSectionToolbox($node as element()) as element(div) {
     let $id := $node/@xml:id/string()
+    let $wid := $node/ancestor::tei:TEI/@xml:id
+    let $fileDesc := $node/ancestor::tei:TEI/tei:teiHeader/tei:fileDesc
     let $class := 
         if (render:isHTMLMarginal($node)) then 
             'sal-toolbox-marginal' 
@@ -497,9 +508,12 @@ declare function render:HTMLSectionToolbox($node as element()) as element(div) {
                     </button>
                     <span class="dropdown-menu">
                         <span class="sal-cite-toggle">
-                            <span style="font-weight:bold;">Proposed citation:</span><br/>
-                            <input type="text" value="abc def ghi" class="sal-cite-text"></input>
+                            <span style="font-weight:bold;"><i18n:text key="proposedCitation">Proposed citation:</i18n:text></span><br/>
+                            <input type="text" value="dummy" class="sal-cite-text"></input>
                             <button onclick="citeToggle(this);">Copy</button>
+                            <span class="cite-rec" style="display:none">
+                                {render:HTMLmakeCitationReference($wid, $fileDesc, 'reading-passage', $node)}
+                            </span>
                         </span>
                     </span>
                 </div>
@@ -514,9 +528,6 @@ declare function render:HTMLSectionToolbox($node as element()) as element(div) {
 :)
 };
 
-declare function render:makePassagetrailBox($node as element()) {
-    ()
-};
 
 (:
 ~ For a node, make a full-blown URI including the citetrail of the node
