@@ -525,7 +525,7 @@ declare function render:HTMLSectionToolbox($node as element()) as element(div) {
                 </div>
                 <div class="sal-tb-btn dropdown">
                     <a class="sal-tb-btn" href="{$citetrailBaseUrl || '?format=txt'}">
-                        <span class="messengers far fa-file" title="i18n(txtExpPass)"/>
+                        <span class="messengers fas fa-align-left" title="i18n(txtExpPass)"/>
                     </a>
                 </div>
                 <div class="sal-tb-btn dropdown">

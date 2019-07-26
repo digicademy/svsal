@@ -3544,9 +3544,9 @@ declare function app:downloadTXT($node as node(), $model as map(*), $mode as xs:
     
     let $download := 
         if ($wid and ($mode eq 'edit')) then 
-            <li><a title="{$hoverTitleEdit}" href="{$config:idserver || '/texts/' || $wid ||'?format=txt&amp;mode=edit'}"><span class="far fa-file" aria-hidden="true"/>&#xA0;TXT (<i18n:text key="constitutedLower">constituted</i18n:text>)</a></li>
+            <li><a title="{$hoverTitleEdit}" href="{$config:idserver || '/texts/' || $wid ||'?format=txt&amp;mode=edit'}"><span class="fas fa-align-left" aria-hidden="true"/>&#xA0;TXT (<i18n:text key="constitutedLower">constituted</i18n:text>)</a></li>
         else if ($wid and ($mode eq 'orig')) then 
-            <li><a title="{$hoverTitleOrig}" href="{$config:idserver || '/texts/' || $wid ||'?format=txt&amp;mode=orig'}"><span class="far fa-file" aria-hidden="true"/>&#xA0;TXT (<i18n:text key="diplomaticLower">diplomatic</i18n:text>)</a></li>
+            <li><a title="{$hoverTitleOrig}" href="{$config:idserver || '/texts/' || $wid ||'?format=txt&amp;mode=orig'}"><span class="fas fa-align-left" aria-hidden="true"/>&#xA0;TXT (<i18n:text key="diplomaticLower">diplomatic</i18n:text>)</a></li>
         else()
     return i18n:process($download, $lang, '/db/apps/salamanca/data/i18n', 'en')
 };
