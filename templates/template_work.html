@@ -203,7 +203,8 @@
             });
             ias.on('rendered', function(items){                                 // Callback function to add functionality to newly loaded elements (those functions are mostly copied from below).
                                                                                 // 1. Refresh Popover Boxes...
-                $('[data-rel="popover"]')
+                    /*
+                    $('[data-rel="popover"]')
                     .popover({ 
                         trigger:    'click',
                         placement:  'bottom',
@@ -212,7 +213,22 @@
                         content:    function() {return $("#popover-content").html();}
                     })
                     .click(function(e) {e.preventDefault();});
-                                                                                // 2. Refresh ImageViewer Stuff...
+                    */
+                
+                $('[data-rel="popover"]').popover({
+                    trigger:    'click',
+                    animation: 'true',
+                    placement:  'bottom',
+                    container: 'body',
+                    template: '&lt;div class="popover sal-toolbox-body"&gt;&lt;div class="popover-content"&gt;&lt;/div&gt;&lt;/div&gt;',
+                    html:       true,
+                    title:      function() {return $("#popover-head").html();},
+                    content: function(){return $(this).siblings('.sal-toolbox-body').html()}
+                    // close popup by clicking outside
+                }).click(function(event) {event.preventDefault();});
+                $('.sal-cite-toggle').width('400px');
+                
+                // 2. Refresh ImageViewer Stuff...
                 $(".pageNo").click(function(event){
                     event.preventDefault();                                     // do not actually go to this url
                     $("#parent").dialog('open');                                // show Viewer with jquery-ui Dialog method
@@ -363,7 +379,7 @@
             // Make input tag on-the-fly: get pre-rendered work/passage citation strings and insert the current date
             function citeToggle(elem) {
                 var target = elem.parentElement.getElementsByClassName('sal-cite-toggle')[0];
-                if (target.getElementsByTagName('input').length > 0) {
+                if (target.getElementsByTagName('input').length &gt; 0) {
                     target.removeChild(target.getElementsByTagName('input')[0]); // there can maximally be one input tag
                 }
                 var input = document.createElement('input');
