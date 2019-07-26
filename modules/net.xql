@@ -550,20 +550,28 @@ declare function net:APIdeliverTEI($requestData as map(), $netVars as map()*) {
              util:declare-option("output:media-type", "application/tei+xml"),
              util:declare-option("output:indent", "yes"),
              util:declare-option("output:expand-xincludes", "yes"))
-        let $debug :=   if ($config:debug = "trace") then console:log("Serializing options: method:" || util:get-option('output:method') ||
-                                                         ', media-type:' || util:get-option('output:media-type') ||
-                                                         ', indent:'     || util:get-option('output:indent') ||
-                                                         ', expand-xi:'  || util:get-option('output:expand-xincludes') ||
-                                                         '.') else ()
-        let $doc := if ($requestData('mode') eq 'meta') then
-                        let $debug :=  if ($config:debug = "trace") then console:log("[API] teiHeader export for " || $requestData('tei_id') || ".") else ()
-                        return export:WRKteiHeader($requestData('tei_id'), 'metadata')
-                    else 
-                        let $debug :=  if ($config:debug = "trace") then console:log("[API] TEI doc export for " || $requestData('tei_id') || ".") else ()
-                        return util:expand(doc($config:tei-works-root || '/' || $requestData('tei_id') || '.xml')/tei:TEI)
-        let $response :=    if ($requestData('mode') eq 'meta') then 
-                                response:set-header("Content-Disposition", 'attachment; filename="' || $requestData('tei_id') || '_teiHeader.xml"')
-                            else response:set-header("Content-Disposition", 'attachment; filename="' || $requestData('tei_id') || '_tei.xml"')
+        let $debug :=   
+            if ($config:debug = "trace") then console:log("Serializing options: method:" || util:get-option('output:method') ||
+                ', media-type:' || util:get-option('output:media-type') ||
+                ', indent:'     || util:get-option('output:indent') ||
+                ', expand-xi:'  || util:get-option('output:expand-xincludes') ||
+                '.') 
+            else ()
+        let $doc := 
+            if ($requestData('mode') eq 'meta') then
+                let $debug :=  if ($config:debug = "trace") then console:log("[API] teiHeader export for " || $requestData("tei_id") || ".") else ()
+                return export:WRKgetTeiHeader($requestData('tei_id'), 'metadata')
+            else if ($requestData('passage') and not(matches($requestData('passage'), '^vol\d$'))) then (: volumes are handled below :)
+                let $debug :=  if ($config:debug = "trace") then console:log("[API] teiHeader export for passage " || $requestData("tei_id") || ":" || $requestData('passage') || ".") else ()
+                return export:WRKgetTeiPassage($requestData("work_id"), $requestData("passage"))
+            else 
+                let $debug :=  if ($config:debug = "trace") then console:log("[API] TEI doc export for " || $requestData('tei_id') || ".") else ()
+                return util:expand(doc($config:tei-works-root || '/' || $requestData('tei_id') || '.xml')/tei:TEI)
+        let $filename := 
+            if ($requestData('mode') eq 'meta') then $requestData('tei_id') || '_teiHeader.xml'
+            else if ($requestData('passage')) then $requestData('work_id') || '_' || $requestData('passage') || '_tei.xml'
+            else $requestData('tei_id') || '_tei.xml'
+        let $response := response:set-header("Content-Disposition", 'attachment; filename="' || $filename || '"')
         return $doc
     else if ($requestData('tei_id') eq '*' and util:binary-doc-available($config:corpus-zip-root || '/sal-tei-corpus.zip')) then
         let $debug      := if ($config:debug = "trace") then console:log("[API] TEI corpus export.") else ()
@@ -579,9 +587,12 @@ declare function net:APIdeliverTXT($requestData as map(), $netVars as map()*) {
         let $node := net:findNode($requestData)
         let $serialize := (util:declare-option("output:method", "text"),
                            util:declare-option("output:media-type", "text/plain"))
-        let $debug := if ($config:debug = "trace") then console:log("[API] Serializing options: method:" || util:get-option('output:method') ||
-                                                                    ', media-type:' || util:get-option('output:media-type') ||
-                                                                    '.') else ()
+        let $debug := 
+            if ($config:debug = "trace") then 
+                console:log("[API] Serializing options: method:" || util:get-option('output:method') ||
+                            ', media-type:' || util:get-option('output:media-type') ||
+                            '.') 
+            else ()
         let $filename := (if (not(starts-with($requestData('passage'), 'vol'))) then $requestData('tei_id') else $requestData('work_id'))
                          || (if ($requestData('passage')) then '_' || $requestData('passage') else ()) 
                          || '_' || $mode || '.txt'
