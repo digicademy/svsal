@@ -784,8 +784,17 @@ declare function admin:sphinx-out ($node as node(), $model as map(*), $wid as xs
             return util:expand($work-raw)
 
     (: which parts of those works constitute a fragment that is to count as a hit? :)
+    let $nodes := 
+        for $w in $expanded return
+            if (starts-with($w/@xml:id, 'W0')) then
+                (: works :)
+                $w/tei:text//*[render:isSphinxSnippetNode(.)]
+            else if (starts-with($w/@xml:id, 'WP')) then
+                (: working papers :)
+                $w//tei:profileDesc//(tei:p|tei:keywords)
+            else () (: TODO: authors, lemmata, etc. :)
     let $hits := 
-            for $hit at $index in ($expanded//tei:text//(tei:titlePage|tei:head|tei:signed|tei:label[not(ancestor::tei:note|ancestor::tei:item)]|tei:item|tei:note|tei:p[not(ancestor::tei:note | ancestor::tei:item)]|tei:lg[not(ancestor::tei:note | ancestor::tei:item  | ancestor::tei:p)]) | $expanded//tei:profileDesc//(tei:p|tei:keywords))
+            for $hit at $index in $nodes
 
                 (: for each fragment, populate our sphinx fields and attributes :)
                 let $work              := $hit/ancestor-or-self::tei:TEI
@@ -844,14 +853,14 @@ declare function admin:sphinx-out ($node as node(), $model as map(*), $wid as xs
                 (: Here we define the to-be-indexed content! :)
                 let $hit_content_orig := 
                     if ($hit_id) then
-                        string-join(render:dispatch($hit, "orig"), '')
+                        string-join(render:dispatch($hit, 'snippets-orig'), '')
                     else
-                        "There is no xml:id in the " || $hit_type || " hit!"
+                        'There is no xml:id in the ' || $hit_type || ' hit!'
                 let $hit_content_edit := 
                     if ($hit_id) then
-                        string-join(render:dispatch($hit, "edit"), '')
+                        string-join(render:dispatch($hit, 'snippets-edit'), '')
                     else
-                        "There is no xml:id in the " || $hit_type || " hit!"
+                        'There is no xml:id in the ' || $hit_type || ' hit!'
                 
                 (: Now build a sphinx "row" for the fragment :)
                 let $sphinx_id    := xs:long(substring($work_id, functx:index-of-string-first($work_id, "0"))) * 1000000 + ( (string-to-codepoints(substring($work_id, 1, 1)) + string-to-codepoints(substring($work_id, 2, 1))) * 10000 ) + $index
@@ -1075,6 +1084,14 @@ declare function admin:createNodeIndex($node as node(), $model as map(*), $wid a
             (: there should be as many distinctive citetrails and crumbtrails as there are ordinary sal:node elements: :)
             let $testCitetrails := if (count($resultNodes) ne count(distinct-values($resultNodes/sal:citetrail/text()))) then error() else () (: search these cases using: " //sal:citetrail[./text() = preceding::sal:citetrail/text()] " :)
             (: not checking crumbtrails here ATM for not slowing down index creation too much... :)
+            
+            (: check if all text is being captured through basic index nodes (that is, if all text is citable) :)
+            let $checkCitability := 
+                for $t in $work//tei:text//text()[normalize-space() ne ''] return
+                    if ($t[not(ancestor::*[render:isBasicNode(.) or render:isMarginalNode(.)]) and not(ancestor::tei:figDesc)]) then 
+                        let $debug := util:log('error', 'Encountered text node without ancestor::*[render:isBasicNode(.)], in line ' || $t/preceding::tei:lb[1]/@xml:id/string())
+                        return error() 
+                    else ()
             (: ----------------------------------------------- :)
             
             (: Reporting... :)

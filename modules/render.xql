@@ -120,16 +120,20 @@ declare function render:getNodetrail($targetWorkId as xs:string, $targetNode as 
 
 (: Gets the citable crumbtrail/citetrail (not passagetrail!) parent :)
 declare function render:getCitableParent($node as node()) as node()? {
-    if ($node/self::tei:milestone or $node/self::tei:note) then
-        (: notes and milestones must not have p as their citableParent :)
-        $node/ancestor::*[render:isIndexNode(.) and not(self::tei:p)][1]
-    else if ($node/self::tei:pb) then
+    if (render:isMarginalNode($node) or render:isAnchorNode($node)) then
+        (: notes, milestones etc. must not have p as their citableParent :)
+        $node/ancestor::*[render:isStructuralNode(.)][1]
+    else if (render:isPageNode($node)) then
         if ($node/ancestor::tei:front|$node/ancestor::tei:back|$node/ancestor::tei:text[1][not(@xml:id = 'completeWork' or @type = "work_part")]) then
             (: within front, back, and single volumes, citable parent resolves to one of those elements for avoiding collisions with identically named pb in other parts :)
             ($node/ancestor::tei:front|$node/ancestor::tei:back|$node/ancestor::tei:text[1][not(@xml:id = 'completeWork' or @type = "work_part")])[last()]
         else () (: TODO: this makes "ordinary" pb appear outside of any structural hierarchy - is this correct? :)
     else $node/ancestor::*[render:isIndexNode(.)][1]
 };
+
+
+
+(: ####++++---- BOOLEAN FUNCTIONS for defining different classes of nodes ----++++####  :)
 
 (:
 ~ Determines which nodes serve for "passagetrail" production.
@@ -153,24 +157,10 @@ declare function render:isPassagetrailNode($node as element()) as xs:boolean {
 :)
 declare function render:isCitableWithTeaserHTML($node as node()) as xs:boolean {
     boolean(
-        render:isIndexNode($node) and
+        not(render:isBasicCitableHTML($node)) and
         (
-            not(
-                $node/self::tei:pb or
-                $node/self::tei:text[not(@type eq 'work_volume')] or
-                $node/self::tei:milestone[@type eq 'other'] or
-                $node/self::tei:note or
-                $node/self::tei:head or
-                $node/self::tei:back or
-                $node/self::tei:front or
-                $node/self::tei:titlePage or
-                $node/self::tei:item or
-                $node/self::tei:list[not(@type = ('dict'))] or
-                $node/self::tei:p or
-                $node/self::tei:signed or
-                $node/self::tei:label or
-                $node/self::tei:lg
-            )
+            (render:isStructuralNode($node) and $node[self::tei:div or self::tei:text]) or
+            render:isAnchorNode($node)
         )
     )
 };
@@ -179,21 +169,8 @@ declare function render:isCitableWithTeaserHTML($node as node()) as xs:boolean {
 ~ Determines whether a node should have a citation anchor, without an additional teaser.
 :)
 declare function render:isBasicCitableHTML($node as node()) as xs:boolean {
-    boolean(
-        render:isIndexNode($node) 
-        and not(render:isCitableWithTeaserHTML($node)) (:complement of //*[render:isCitableWithTeaserHTML()]:)
-        and local-name($node) = $render:basicElemNames
-        and not($node/ancestor::tei:titlePage)
-    )
+    render:isBasicNode($node) or render:isMarginalNode($node)
 };
-
-(:declare function render:isSphinxSnippetRoot($node as node()) as xs:boolean {
-    boolean(
-        render:isIndexNode($node)
-        and ...
-    )
-};:)
-
 
 (:
 ~ (The set of nodes that should have a crumbtrail is equal to the set of nodes that should have a citetrail.)
@@ -201,8 +178,14 @@ declare function render:isBasicCitableHTML($node as node()) as xs:boolean {
 declare function render:isIndexNode($node as node()) as xs:boolean {
     typeswitch($node)
         case element() return
-            (: any element type relevant for citetrail creation must be included in one of the following functions: :)
-            boolean(render:isNamedCitetrailNode($node) or render:isUnnamedCitetrailNode($node))
+            (: any element type relevant for nodetrail creation must be included in one of the following functions: :)
+            boolean(
+                render:isStructuralNode($node) or
+                render:isBasicNode($node) or
+                render:isMarginalNode($node) or
+                render:isAnchorNode($node) or
+                render:isPageNode($node)
+            )
         default return 
             false()
 };
@@ -212,41 +195,116 @@ declare function render:isIndexNode($node as node()) as xs:boolean {
 :)
 declare function render:isNamedCitetrailNode($node as element()) as xs:boolean {
     boolean(
-        $node/@xml:id and
-        (
-            $node/self::tei:milestone or
-            $node/self::tei:pb[not(@sameAs or @corresp)] or (: are pb/@sameAs|@corresp needed anywhere? :)
-            $node/self::tei:note or
-            $node/self::tei:head or
-            $node/self::tei:back or
-            $node/self::tei:front or
-            $node/self::tei:titlePage or
-            $node/self::tei:div[@type ne "work_part"] or (: TODO: included temporarily for div label experiment :)
-            $node/self::tei:item[ancestor::tei:list[1][@type = ('dict', 'index', 'summaries')]] or
-            $node/self::tei:list[@type = ('dict')] or
-            $node/self::tei:text[@type eq 'work_volume']
-        )
+        render:isAnchorNode($node) or
+        render:isPageNode($node) or
+        render:isMarginalNode($node) or
+        (render:isStructuralNode($node) 
+            and $node[self::tei:text[@type eq 'work_volume'] or 
+                      self::tei:back or 
+                      self::tei:front or 
+                      self::tei:list[@type = ('dict')]]) or (: TODO: include div here? :)
+        (render:isBasicNode($node) 
+            and $node[self::tei:head or 
+                      self::tei:titlePage or 
+                      self::tei:item[ancestor::tei:list[@type = ('dict')]]])
     )
 };
 
 (:
 ~ Determines whether a node is a 'generic' citetrail element, i.e. one that isn't specially prefixed in citetrails.
+~ --> complement of render:isNamedCitetrailNode()
 :)
 declare function render:isUnnamedCitetrailNode($node as element()) as xs:boolean {
+    render:isIndexNode($node) and not(render:isNamedCitetrailNode($node))
+};
+
+(:
+~ Basically, we can determine several types of elements in a TEI/text tree:
+:)
+
+(:
+~ Anchor and page nodes occur within basic nodes, marginal nodes, or structural nodes, and have no content.
+:)
+declare function render:isAnchorNode($node as node()) as xs:boolean {
+    boolean(
+        $node/@xml:id and
+        $node/self::tei:milestone[@type ne 'other']
+    )
+};
+
+declare function render:isPageNode($node as node()) as xs:boolean {
+    boolean(
+        $node/@xml:id and
+        $node/self::tei:pb[not(@sameAs or @corresp)]
+    )
+};
+
+(:
+~ Basic nodes are mixed-content elements such as tei:p, which may contain marginal or anchor nodes. Basic nodes are 
+~ the basic foundation of the tree and all text in the tree should have exactly one basic node ancestor. 
+~ Note: all basic nodes are citable in the reading view.
+:)
+declare function render:isBasicNode($node as node()) as xs:boolean {
     boolean(
         $node/@xml:id and
         (
-           (:$node/self::tei:text[not(ancestor::tei:text)] or:) (: we won't produce any trail ID for this, but we need it as a recursion anchor :)
-           (:$node/self::tei:div[@type ne "work_part"] or:) (: TODO: commented out for div label experiment :)
-           $node/self::tei:p[not(ancestor::tei:note|ancestor::tei:item)] or
-           $node/self::tei:signed or
-           $node/self::tei:label[not(ancestor::tei:lg|ancestor::tei:note|ancestor::tei:item|ancestor::tei:p)] or (: labels, contrarily to headings, are simply counted :)
-           $node/self::tei:lg[not(ancestor::tei:lg|ancestor::tei:note|ancestor::tei:item|ancestor::tei:p)] or (: count only top-level lg, not single stanzas :)
-           $node/self::tei:list[not(@type = ('dict'))] or
-           $node/self::tei:item[not(ancestor::tei:list[1][@type = ('dict', 'index', 'summaries')]|ancestor::tei:note|ancestor::tei:item)]
-        )
+            $node/self::tei:p or
+            $node/self::tei:signed or
+            $node/self::tei:head or
+            $node/self::tei:titlePage or
+            $node/self::tei:lg or
+            $node/self::tei:item or
+            $node/self::tei:label[@place ne 'margin']
+        ) and 
+        not($node/ancestor::*[render:isMarginalNode(.)] or $node/ancestor::*[render:isBasicNode(.)]) (: basic nodes are a flat "axis" :)
     )
 };
+
+(:
+~ Marginal nodes occur within structural or basic nodes.
+:)
+declare function render:isMarginalNode($node as node()) as xs:boolean {
+    boolean(
+        $node/@xml:id and
+        (
+            $node/self::tei:note[@place eq 'margin'] or
+            $node/self::tei:label[@place eq 'margin']
+        )
+        and not($node/ancestor::*[render:isMarginalNode(.)])
+    )
+};
+
+(:
+~ Structural nodes are high-level nodes containing any of the other types of nodes (basic, marginal, anchor nodes).
+:)
+declare function render:isStructuralNode($node as node()) as xs:boolean {
+    boolean(
+        $node/@xml:id and
+        (
+            $node/self::tei:div[@type ne "work_part"] or (: TODO: comment out for div label experiment :)
+            $node/self::tei:list or
+            $node/self::tei:back or
+            $node/self::tei:front or
+            $node/self::tei:text[@type eq 'work_volume']
+        )
+        and not($node/ancestor::*[render:isBasicNode(.)]) (: exclude lists within lists :)
+    )
+};
+
+declare function render:isSphinxSnippetNode($node as node()) as xs:boolean {
+    boolean(
+        render:isBasicNode($node) or
+        render:isMarginalNode($node)
+    )
+};
+
+
+
+
+(: ####++++---- END boolean functions ----++++#### :)
+
+
+(: ####++++---- HTML helper functions ----++++#### :)
 
 (: debug: :)
 declare function render:preparePaginationHTML($work as element(tei:TEI), $lang as xs:string?, $fragmentIds as map()?) as element(ul) {
@@ -408,7 +466,7 @@ declare function render:HTMLgetPagesFromDiv($div) {
     let $lastpage := if ($div//tei:pb[not(@sameAs or @corresp)]) then ($div//tei:pb[not(@sameAs or @corresp)])[last()]/@n/string() else ()
     return
         if ($firstpage ne '' or $lastpage ne '') then 
-            concat(' ', string-join(($firstpage, $lastpage), ' - ')) 
+            concat(' ', string-join(($firstpage, $lastpage), ' - '))
         else ()
 };
 
@@ -493,7 +551,7 @@ declare function render:HTMLSectionToolbox($node as element()) as element(div) {
     let $wid := $node/ancestor::tei:TEI/@xml:id
     let $fileDesc := $node/ancestor::tei:TEI/tei:teiHeader/tei:fileDesc
     let $class := 
-        if (render:isHTMLMarginal($node)) then 
+        if (render:isMarginalNode($node)) then 
             'sal-toolbox-marginal' 
         (:else if (render:isCitableWithTeaserHTML($node)) then
             'sal-toolbox-teaser':)
@@ -770,12 +828,10 @@ declare function render:resolveURI($node as element(), $targets as xs:string) {
 };    
 
 
-declare function render:isHTMLMarginal($node as node()) as xs:boolean {
-    boolean($node[(self::tei:note or self::tei:label) and @place eq 'margin'])
-};
+(: OTHER HELPER FUNCTIONS :)
 
-declare function render:isHTMLHeading($node as node()) as xs:boolean {
-    boolean($node[self::tei:head])
+declare function render:determineUnnamedCitetrailNodePosition($node as element()) as xs:integer {
+    count($node/preceding-sibling::*[render:isUnnamedCitetrailNode(.)]) + 1
 };
 
 
@@ -794,7 +850,10 @@ declare function render:isHTMLHeading($node as node()) as xs:boolean {
 ~   - 'html-title': a full version of the title, for toggling of teasers in the reading view (often simply falls back to 'title', see above)
 :)
 
-(: $mode can be "orig", "edit" (both being plain text modes), "html" or, even more sophisticated, "work" :)
+(:
+~ @param $node : the node to be dispatched
+~ @param $mode : the mode for which the function shall generate results
+:)
 declare function render:dispatch($node as node(), $mode as xs:string) {
     let $rendering :=
         typeswitch($node)
@@ -901,7 +960,8 @@ declare function render:dispatch($node as node(), $mode as xs:string) {
             return ($citationAnchor, $rendering)
         else if ($mode eq 'html' and render:isBasicCitableHTML($node)) then 
             (: toolboxes need to be on the sibling axis with the text body they refer to... :)
-            if (render:isHTMLMarginal($node) or render:isHTMLHeading($node) or $node/self::tei:titlePage) then 
+            if (render:isMarginalNode($node) or $node/self::tei:head or $node/self::tei:titlePage) then 
+                (: for these elements, $toolboxes are created right in their render: function :)
                 $rendering
             else 
                 let $toolbox := render:HTMLSectionToolbox($node)
@@ -913,7 +973,6 @@ declare function render:dispatch($node as node(), $mode as xs:string) {
         else 
             $rendering
 };
-
 
 
 (: ####++++ Element functions (ordered alphabetically) ++++#### :)
@@ -1184,7 +1243,7 @@ declare function render:div($node as element(tei:div), $mode as xs:string) {
                     else ()
                 return $prefix || $position
             else if (render:isUnnamedCitetrailNode($node)) then 
-                string(count($node/preceding-sibling::*[render:isUnnamedCitetrailNode(.)]) + 1)
+                string(render:determineUnnamedCitetrailNodePosition($node))
             else ()
         
         case 'passagetrail' return
@@ -1622,7 +1681,7 @@ declare function render:item($node as element(tei:item), $mode as xs:string) {
                         string(count($node/preceding-sibling::tei:item) + 1)
                     else ()
                 return 'entry' || $title || $position
-            else string(count($node/preceding-sibling::tei:item) + 1) (: TODO: we could also use render:isUnnamedCitetrailNode() for this :)
+            else string(render:determineUnnamedCitetrailNodePosition($node))
         
         case 'passagetrail' return
             ()
@@ -1676,7 +1735,7 @@ declare function render:label($node as element(tei:label), $mode as xs:string) {
             
         case 'citetrail' return
             if (render:isUnnamedCitetrailNode($node)) then 
-                string(count($node/preceding-sibling::*[render:isUnnamedCitetrailNode(.)]) + 1)
+                string(render:determineUnnamedCitetrailNodePosition($node))
             else ()
             
         default return
@@ -1804,12 +1863,9 @@ declare function render:list($node as element(tei:list), $mode as xs:string) {
                    ):)
             (: other types of lists are simply counted :)
             else if (render:isUnnamedCitetrailNode($node)) then 
-                string(count($node/preceding-sibling::*[render:isUnnamedCitetrailNode(.)]) + 1)
+                string(render:determineUnnamedCitetrailNodePosition($node))
             else ()
-                (: OLD VERSION:
-                string(count($node/preceding-sibling::tei:p|
-                             ($node/preceding::tei:list[not(@type = ('dict', 'index', 'summaries'))] 
-                              intersect $node/(ancestor::tei:div|ancestor::tei:body|ancestor::tei:front|ancestor::tei:back)[last()]//tei:list)) + 1):)
+                
         case 'orig' return
             ($config:nl, render:passthru($node, $mode), $config:nl)
         
@@ -1840,7 +1896,7 @@ declare function render:lg($node as element(tei:lg), $mode as xs:string) {
             
         case 'citetrail' return
             if (render:isUnnamedCitetrailNode($node)) then 
-                string(count($node/preceding-sibling::*[render:isUnnamedCitetrailNode(.)]) + 1)
+                string(render:determineUnnamedCitetrailNodePosition($node))
             else ()
         
         case 'html' return
@@ -2174,7 +2230,7 @@ declare function render:p($node as element(tei:p), $mode as xs:string) {
         
         case 'citetrail' return
             if (render:isUnnamedCitetrailNode($node)) then 
-                string(count($node/preceding-sibling::*[render:isUnnamedCitetrailNode(.)]) + 1)
+                string(render:determineUnnamedCitetrailNodePosition($node))
             else ()
         
         case 'passagetrail' return
@@ -2218,7 +2274,8 @@ declare function render:p($node as element(tei:p), $mode as xs:string) {
         
         case 'snippets-orig'
         case 'snippets-edit' return
-            for $subnode in $node/node() where (local-name($subnode) ne 'note') return render:dispatch($subnode, $mode)
+            render:passthru($node, $mode)
+(:            for $subnode in $node/node() where (local-name($subnode) ne 'note') return render:dispatch($subnode, $mode):)
         
         default return
             render:passthru($node, $mode)
@@ -2226,7 +2283,11 @@ declare function render:p($node as element(tei:p), $mode as xs:string) {
 
 
 declare function render:passthru($nodes as node()*, $mode as xs:string) as item()* {
-    for $node in $nodes/node() return render:dispatch($node, $mode)
+    for $node in $nodes/node() return 
+        if ($mode = ('snippets-orig', 'snippets-edit') and render:isMarginalNode($node)) then 
+            (: basic separator for main text and marginals in snippet creation :)
+            ()
+        else render:dispatch($node, $mode)
 };
 
 
@@ -2477,12 +2538,13 @@ declare function render:signed($node as element(tei:signed), $mode as xs:string)
             
         case 'citetrail' return
             if (render:isUnnamedCitetrailNode($node)) then 
-                string(count($node/preceding-sibling::*[render:isUnnamedCitetrailNode(.)]) + 1)
+                string(render:determineUnnamedCitetrailNodePosition($node))
             else ()
             
         case 'snippets-orig'
         case 'snippets-edit' return
-            for $subnode in $node/node() where (local-name($subnode) ne 'note') return render:dispatch($subnode, $mode)
+            render:passthru($node, $mode)
+(:            for $subnode in $node/node() where (local-name($subnode) ne 'note') return render:dispatch($subnode, $mode):)
             
         case 'html' return
             <div class="hauptText">
