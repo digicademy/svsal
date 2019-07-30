@@ -59,6 +59,8 @@ declare function render-app:dispatch($node as node(), $mode as xs:string) {
 
         case element(tei:birth)         return render-app:birth($node, $mode) 
         case element(tei:death)         return render-app:death($node, $mode)
+        
+        case element(tei:keywords)      return render-app:keywords($node, $mode)
 
         case element(tei:figDesc)       return ()
         case element(tei:teiHeader)     return ()
@@ -80,6 +82,10 @@ declare function render-app:textNode($node as node(), $mode as xs:string) {
                           normalize-space(replace($node, '&#x0a;', ' ')),
                           $trailingSpace)
         
+        case 'snippets-orig' 
+        case 'snippets-edit' return
+            $node
+        
         default return ()
 };
 
@@ -90,7 +96,9 @@ declare function render-app:passthru($nodes as node()*, $mode as xs:string) as i
 declare function render-app:pb($node as element(tei:pb), $mode as xs:string) {
     switch($mode)
         case 'html'
-        case 'work' return
+        case 'work' 
+        case 'snippets-orig' 
+        case 'snippets-edit' return
             if (not($node/@break = 'no')) then
                 ' '
             else ()
@@ -101,7 +109,9 @@ declare function render-app:pb($node as element(tei:pb), $mode as xs:string) {
 declare function render-app:cb($node as element(tei:cb), $mode as xs:string) {
     switch($mode)
         case 'html'
-        case 'work' return
+        case 'work' 
+        case 'snippets-orig' 
+        case 'snippets-edit' return
             if (not($node/@break = 'no')) then
                 ' '
             else ()
@@ -111,7 +121,9 @@ declare function render-app:cb($node as element(tei:cb), $mode as xs:string) {
 
 declare function render-app:lb($node as element(tei:lb), $mode as xs:string) {
     switch($mode)
-        case 'work' return
+        case 'work' 
+        case 'snippets-orig' 
+        case 'snippets-edit' return
             if (not($node/@break = 'no')) then
                 ' '
             else ()
@@ -119,6 +131,10 @@ declare function render-app:lb($node as element(tei:lb), $mode as xs:string) {
         case 'html' return 
             <br/>
         default return () 
+};
+
+declare function render-app:keywords($node as element(tei:keywords), $mode as xs:string) {
+    render-app:passthru($node, $mode)
 };
 
 declare function render-app:p($node as element(tei:p), $mode as xs:string) {
@@ -138,7 +154,7 @@ declare function render-app:p($node as element(tei:p), $mode as xs:string) {
                 <p class="hauptText" id="{$node/@xml:id}">
                     {render-app:passthru($node, $mode)}
                 </p>
-        
+                
         default return
             render-app:passthru($node, $mode)
 };
@@ -238,6 +254,15 @@ declare function render-app:origElem($node as element(), $mode as xs:string) {
                         </span>
                     else
                         render-app:passthru($node, $mode)
+        
+        case 'snippets-orig' return
+            render-app:passthru($node, $mode)
+        
+        case 'snippets-edit' return
+            if (not($node/(preceding-sibling::tei:expan|preceding-sibling::tei:reg|preceding-sibling::tei:corr|following-sibling::tei:expan|following-sibling::tei:reg|following-sibling::tei:corr))) then
+                render-app:passthru($node, $mode)
+            else ()
+        
         default return
             render-app:passthru($node, $mode)
 };
@@ -251,6 +276,11 @@ declare function render-app:editElem($node as element(), $mode as xs:string) {
                 <span class="edited {local-name($node)}" title="{string-join($originalString, '')}">
                     {render-app:passthru($node, $mode)}
                 </span>
+        
+        case 'snippets-orig' return ()
+        case 'snippets-edit' return
+            render-app:passthru($node, $mode)
+        
         default return
             render-app:passthru($node, $mode)
 };
@@ -298,7 +328,16 @@ declare function render-app:term($node as element(tei:term), $mode as xs:string)
                         render-app:passthru($node, $mode)
                     }
                 </span>
-                
+        
+        case 'snippets-orig' return
+            render-app:passthru($node, $mode)
+            
+        case 'snippets-edit' return
+            if ($node/@key) then
+                string($node/@key)
+            else
+                render-app:passthru($node, $mode)
+
         default return
             render-app:passthru($node, $mode)
 };
@@ -358,7 +397,6 @@ declare function render-app:bibl($node as element(tei:bibl), $mode as xs:string)
             render-app:passthru($node, $mode)
 };
 
-
 declare function render-app:emph($node as element(tei:emph), $mode as xs:string) {
     if ($mode = "work") then
         <span class="emph">{render-app:passthru($node, $mode)}</span>
@@ -367,6 +405,7 @@ declare function render-app:emph($node as element(tei:emph), $mode as xs:string)
     else
         render-app:passthru($node, $mode)
 };
+
 declare function render-app:hi($node as element(tei:hi), $mode as xs:string) {
     if ($mode = ("html", "work")) then
         if ("#b" = $node/@rendition) then
@@ -499,6 +538,10 @@ declare function render-app:item($node as element(tei:item), $mode as xs:string)
             else
                 <li>{render-app:passthru($node, $mode)}</li>
         
+        case 'snippets-orig' 
+        case 'snippets-edit' return
+            ($config:nl, render-app:passthru($node, $mode), $config:nl)
+        
         default return
             render-app:passthru($node, $mode)
 };
@@ -529,7 +572,7 @@ declare function render-app:death($node as element(tei:death), $mode as xs:strin
 };
 
 declare function render-app:persName($node as element(tei:persName), $mode as xs:string) {
-        render-app:name($mode, $node)
+    render-app:name($mode, $node)
 };
 
 declare function render-app:placeName($node as element(tei:placeName), $mode as xs:string) {
@@ -548,8 +591,8 @@ declare function render-app:title($node as element(tei:title), $mode as xs:strin
                  <span class="bibl-title"><a target="blank" href="{$node/@ref}">{render-app:passthru($node, $mode)}<span class="glyphicon glyphicon-new-window" aria-hidden="true"/></a></span>
             else
                  <span class="bibl-title">{render-app:passthru($node, $mode)}</span>
-            default return
-                render-app:passthru($mode, $node)
+        default return
+            render-app:passthru($mode, $node)
 };
 
 declare function render-app:abbr($node as element(tei:abbr), $mode) {
