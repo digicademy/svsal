@@ -281,6 +281,32 @@
                 <object type="uri" prepend="https://www.salamanca.school/">/($currentResource//itei:div)[$repeatIndex]/@web</object>
             </statement>
             
+            <!-- head -->
+            
+            <statement n="228"> <!-- doco type -->
+                <subject type="uri" prepend="texts/WXXXX:">/($currentResource[self::itei:text]//itei:head/@citetrail/string())</subject>
+                <predicate prefix="rdf">type</predicate>
+                <object type="uri" prefix="doco">title</object>
+            </statement>
+            
+            <statement n="229" repeat="{/min((100020, count($currentResource[self::itei:text]//itei:head)))}"> <!-- rdfs label -->
+                <subject type="uri" prepend="texts/WXXXX:">/($currentResource[self::itei:text]//itei:head)[$repeatIndex]/@citetrail/string()</subject>
+                <predicate prefix="rdfs">label</predicate>
+                <object type="literal">/normalize-space(replace(($currentResource//itei:head)[$repeatIndex]/string(), '"', '\\"'))</object>
+            </statement>
+            
+            <statement n="230" repeat="{/min((100020, count($currentResource[self::itei:text]//itei:head)))}"> <!-- po isContainedBy -->
+                <subject type="uri" prepend="texts/WXXXX:">/($currentResource[self::itei:text]//itei:head)[$repeatIndex]/@citetrail/string()</subject>
+                <predicate prefix="po">isContainedBy</predicate>
+                <object type="uri" prepend="texts/WXXXX:">/($currentResource//itei:head)[$repeatIndex]/@citableParent/string()</object>
+            </statement>
+            
+            <statement n="231" repeat="{/min((100020, count($currentResource[self::itei:text]//itei:head)))}"> <!-- rdfs seeAlso -->
+                <subject type="uri" prepend="texts/WXXXX:">/($currentResource//itei:head)[$repeatIndex]/@citetrail/string()</subject>
+                <predicate prefix="rdfs">seeAlso</predicate>
+                <object type="uri" prepend="https://www.salamanca.school/">/($currentResource//itei:head)[$repeatIndex]/@web/string()</object>
+            </statement>
+            
             <!-- p -->
             
             <statement n="220" repeat="{/min((100020, count($currentResource[self::itei:text]//itei:p)))}">
@@ -307,7 +333,59 @@
                 <object type="uri" prepend="https://www.salamanca.school/">/($currentResource/descendant::itei:p)[$repeatIndex]/@web</object>
 	        </statement>
             
-            <!-- titlePage/titlePart -->
+            <!-- signed -->
+            
+            <statement n="220" repeat="{/min((100020, count($currentResource[self::itei:text]//itei:signed)))}">
+                <subject type="uri" prepend="texts/WXXXX:">/($currentResource[self::itei:text]//itei:signed)[$repeatIndex]/@citetrail/string()</subject>
+                <predicate prefix="rdf">type</predicate>
+                <object type="uri" prefix="doco">paragraph</object>
+            </statement>
+            
+            <statement n="221" repeat="{/min((100020, count($currentResource[self::itei:text]//itei:signed)))}"> <!-- rdfs label -->
+                <subject type="uri" prepend="texts/WXXXX:">/($currentResource[self::itei:text]//itei:signed)[$repeatIndex]/@citetrail/string()</subject>
+                <predicate prefix="rdfs">label</predicate>
+                <object type="literal">/replace(($currentResource//itei:signed)[$repeatIndex]/@title, '"', '\\"')</object>
+            </statement>
+            
+            <statement n="222" repeat="{/min((100020, count($currentResource[self::itei:text]//itei:signed)))}"> <!-- po isContainedBy -->
+                <subject type="uri" prepend="texts/WXXXX:">/($currentResource[self::itei:text]//itei:signed)[$repeatIndex]/@citetrail/string()</subject>
+                <predicate prefix="po">isContainedBy</predicate>
+                <object type="uri" prepend="texts/WXXXX:">/($currentResource//itei:signed)[$repeatIndex]/@citableParent/string()</object>
+            </statement>
+            
+            <statement n="223" repeat="{/min((100020, count($currentResource[self::itei:text]//itei:signed)))}"> <!-- rdfs seeAlso -->
+                <subject type="uri" prepend="texts/WXXXX:">/($currentResource[self::itei:text]//itei:signed)[$repeatIndex]/@citetrail/string()</subject>
+                <predicate prefix="rdfs">seeAlso</predicate>
+                <object type="uri" prepend="https://www.salamanca.school/">/($currentResource/descendant::itei:signed)[$repeatIndex]/@web</object>
+            </statement>
+            
+            <!-- lg -->
+            
+            <statement n="220" repeat="{/min((100020, count($currentResource[self::itei:text]//itei:lg)))}">
+                <subject type="uri" prepend="texts/WXXXX:">/($currentResource[self::itei:text]//itei:lg)[$repeatIndex]/@citetrail/string()</subject>
+                <predicate prefix="rdf">type</predicate>
+                <object type="uri" prefix="doco">paragraph</object> <!-- alternatives: "stanza" -->
+            </statement>
+            
+            <statement n="221" repeat="{/min((100020, count($currentResource[self::itei:text]//itei:lg)))}"> <!-- rdfs label -->
+                <subject type="uri" prepend="texts/WXXXX:">/($currentResource[self::itei:text]//itei:lg)[$repeatIndex]/@citetrail/string()</subject>
+                <predicate prefix="rdfs">label</predicate>
+                <object type="literal">/replace(($currentResource//itei:lg)[$repeatIndex]/@title, '"', '\\"')</object>
+            </statement>
+            
+            <statement n="222" repeat="{/min((100020, count($currentResource[self::itei:text]//itei:lg)))}"> <!-- po isContainedBy -->
+                <subject type="uri" prepend="texts/WXXXX:">/($currentResource[self::itei:text]//itei:lg)[$repeatIndex]/@citetrail/string()</subject>
+                <predicate prefix="po">isContainedBy</predicate>
+                <object type="uri" prepend="texts/WXXXX:">/($currentResource//itei:lg)[$repeatIndex]/@citableParent/string()</object>
+            </statement>
+            
+            <statement n="223" repeat="{/min((100020, count($currentResource[self::itei:text]//itei:lg)))}"> <!-- rdfs seeAlso -->
+                <subject type="uri" prepend="texts/WXXXX:">/($currentResource[self::itei:text]//itei:lg)[$repeatIndex]/@citetrail/string()</subject>
+                <predicate prefix="rdfs">seeAlso</predicate>
+                <object type="uri" prepend="https://www.salamanca.school/">/($currentResource/descendant::itei:lg)[$repeatIndex]/@web</object>
+            </statement>
+            
+            <!-- titlePage -->
             
             <statement n="224"> <!-- fabio page -->
                 <subject type="uri" prepend="texts/WXXXX:">/($currentResource[self::itei:text]//itei:titlePage/@citetrail/string())</subject>
@@ -332,6 +410,8 @@
                 <predicate prefix="rdfs">seeAlso</predicate>
                 <object type="uri" prepend="https://www.salamanca.school/">/($currentResource//itei:titlePage)[$repeatIndex]/@web/string()</object>
             </statement>
+            
+            <!-- titlePart -->
 
             <statement n="228"> <!-- doco type -->
                 <subject type="uri" prepend="texts/WXXXX:">/($currentResource[self::itei:text]//itei:titlePart/@citetrail/string())</subject>
@@ -411,29 +491,29 @@
             
             <!-- item -->
             
-            <!--<statement n="240"> <!-\- doco type -\->
+            <statement n="240"> <!-- doco type -->
                 <subject type="uri" prepend="texts/WXXXX:">/($currentResource[self::itei:text]//itei:item/@citetrail/string())</subject>
                 <predicate prefix="rdf">type</predicate>
                 <object type="uri" prefix="doco">section</object>
             </statement>
             
-            <statement n="241" repeat="{/min((100020, count($currentResource[self::itei:text]//itei:item)))}"> <!-\- rdfs label -\->
+            <statement n="241" repeat="{/min((100020, count($currentResource[self::itei:text]//itei:item)))}"> <!-- rdfs label -->
                 <subject type="uri" prepend="texts/WXXXX:">/($currentResource[self::itei:text]//itei:item)[$repeatIndex]/@citetrail/string()</subject>
                 <predicate prefix="rdfs">label</predicate>
                 <object type="literal">/replace(($currentResource//itei:item)[$repeatIndex]/@title/string(), '"', '\\"')</object>
             </statement>
             
-            <statement n="242" repeat="{/min((100020, count($currentResource[self::itei:text]//itei:item)))}"> <!-\- po isContainedBy -\->
+            <statement n="242" repeat="{/min((100020, count($currentResource[self::itei:text]//itei:item)))}"> <!-- po isContainedBy -->
                 <subject type="uri" prepend="texts/WXXXX:">/($currentResource[self::itei:text]//itei:item)[$repeatIndex]/@citetrail/string()</subject>
                 <predicate prefix="po">isContainedBy</predicate>
                 <object type="uri" prepend="texts/">/(if (($currentResource//itei:item)[$repeatIndex]/@citableParent/string()) then concat($currentResource/@in/string(), ':', ($currentResource//itei:item)[$repeatIndex]/@citableParent/string()) else $currentResource/@in/string())</object>
             </statement>
             
-            <statement n="243" repeat="{/min((100020, count($currentResource[self::itei:text]//itei:item)))}"> <!-\- rdfs seeAlso -\->
+            <statement n="243" repeat="{/min((100020, count($currentResource[self::itei:text]//itei:item)))}"> <!-- rdfs seeAlso -->
                 <subject type="uri" prepend="texts/WXXXX:">/($currentResource[self::itei:text]//itei:item)[$repeatIndex]/@citetrail/string()</subject>
                 <predicate prefix="rdfs">seeAlso</predicate>
                 <object type="uri" prepend="https://www.salamanca.school/">/($currentResource//itei:item)[$repeatIndex]/@web/string()</object>
-			</statement>-->
+			</statement>
             
             <!-- notes -->
             
@@ -459,14 +539,14 @@
                 <subject type="uri" prepend="texts/WXXXX:">/($currentResource[self::itei:text]//itei:note)[$repeatIndex]/@citetrail/string()</subject>
                 <predicate prefix="rdfs">seeAlso</predicate>
                 <object type="uri" prepend="https://www.salamanca.school/">/($currentResource//itei:note)[$repeatIndex]/@web/string()</object>
-			 </statement>
+			</statement>
             
-            <!-- label -->
+            <!-- label (all) -->
             
             <statement n="248"> <!-- doco type -->
                 <subject type="uri" prepend="texts/WXXXX:">/($currentResource[self::itei:text]//itei:label[@xml:id]/@citetrail/string())</subject>
                 <predicate prefix="rdf">type</predicate>
-                <object type="uri" prefix="doco">section</object>
+                <object type="uri" prefix="doco">label</object>
             </statement>
             
             <statement n="249" repeat="{/min((100020, count($currentResource[self::itei:text]//itei:label[@xml:id])))}"> <!-- rdfs label -->
