@@ -169,7 +169,7 @@ declare function render:isCitableWithTeaserHTML($node as node()) as xs:boolean {
 ~ Determines whether a node should have a citation anchor, without an additional teaser.
 :)
 declare function render:isBasicCitableHTML($node as node()) as xs:boolean {
-    render:isBasicNode($node) or render:isMarginalNode($node)
+    render:isMainNode($node) or render:isMarginalNode($node)
 };
 
 (:
@@ -181,7 +181,7 @@ declare function render:isIndexNode($node as node()) as xs:boolean {
             (: any element type relevant for nodetrail creation must be included in one of the following functions: :)
             boolean(
                 render:isStructuralNode($node) or
-                render:isBasicNode($node) or
+                render:isMainNode($node) or
                 render:isMarginalNode($node) or
                 render:isAnchorNode($node) or
                 render:isPageNode($node)
@@ -203,7 +203,7 @@ declare function render:isNamedCitetrailNode($node as element()) as xs:boolean {
                       self::tei:back or 
                       self::tei:front or 
                       self::tei:list[@type = ('dict')]]) or (: TODO: include div here? :)
-        (render:isBasicNode($node) 
+        (render:isMainNode($node) 
             and $node[self::tei:head or 
                       self::tei:titlePage or 
                       self::tei:item[ancestor::tei:list[@type = ('dict')]]])
@@ -223,7 +223,7 @@ declare function render:isUnnamedCitetrailNode($node as element()) as xs:boolean
 :)
 
 (:
-~ Anchor and page nodes occur within basic nodes, marginal nodes, or structural nodes, and have no content.
+~ Anchor and page nodes occur within main nodes, marginal nodes, or structural nodes, and have no content.
 :)
 declare function render:isAnchorNode($node as node()) as xs:boolean {
     boolean(
@@ -240,28 +240,44 @@ declare function render:isPageNode($node as node()) as xs:boolean {
 };
 
 (:
-~ Basic nodes are mixed-content elements such as tei:p, which may contain marginal or anchor nodes. Basic nodes are 
-~ the basic foundation of the tree and all text in the tree should have exactly one basic node ancestor. 
-~ Note: all basic nodes are citable in the reading view.
+~ Main nodes are mixed-content elements such as tei:p, which may contain marginal or anchor nodes.
+~ Note: all main nodes should be citable in the reading view.
 :)
-declare function render:isBasicNode($node as node()) as xs:boolean {
+declare function render:isMainNode($node as node()) as xs:boolean {
     boolean(
         $node/@xml:id and
         (
             $node/self::tei:p or
             $node/self::tei:signed or
-            $node/self::tei:head or
+            $node/self::tei:head[not(ancestor::tei:list)] or
             $node/self::tei:titlePage or
             $node/self::tei:lg or
-            $node/self::tei:item or
             $node/self::tei:label[@place ne 'margin']
         ) and 
-        not($node/ancestor::*[render:isMarginalNode(.)] or $node/ancestor::*[render:isBasicNode(.)]) (: basic nodes are a flat "axis" :)
+        not($node/ancestor::*[render:isMainNode(.)]
+            or $node/ancestor::*[render:isListNode(.)]
+            or $node/ancestor::*[render:isMarginalNode(.)])
     )
 };
 
 (:
-~ Marginal nodes occur within structural or basic nodes.
+~ List nodes are certain nodes within lists (list, item, head) that occur outside of main nodes and marginal nodes.
+:)
+declare function render:isListNode($node as node()) as xs:boolean {
+    boolean(
+        $node/@xml:id and
+        (
+            $node/self::tei:list or
+            $node/self::tei:item or
+            $node/self::tei:head[ancestor::tei:list]
+        ) and 
+        not($node/ancestor::*[render:isMainNode(.) or render:isMarginalNode(.)])
+        
+    )
+};
+
+(:
+~ Marginal nodes occur within structural or main nodes.
 :)
 declare function render:isMarginalNode($node as node()) as xs:boolean {
     boolean(
@@ -275,26 +291,31 @@ declare function render:isMarginalNode($node as node()) as xs:boolean {
 };
 
 (:
-~ Structural nodes are high-level nodes containing any of the other types of nodes (basic, marginal, anchor nodes).
+~ Structural nodes are high-level nodes containing any of the other types of nodes (main, marginal, anchor nodes).
 :)
 declare function render:isStructuralNode($node as node()) as xs:boolean {
     boolean(
         $node/@xml:id and
         (
             $node/self::tei:div[@type ne "work_part"] or (: TODO: comment out for div label experiment :)
-            $node/self::tei:list or
             $node/self::tei:back or
             $node/self::tei:front or
             $node/self::tei:text[@type eq 'work_volume']
         )
-        and not($node/ancestor::*[render:isBasicNode(.)]) (: exclude lists within lists :)
+        and not($node/ancestor::*[render:isMainNode(.)]) (: exclude lists within lists :)
     )
 };
 
-declare function render:isSphinxSnippetNode($node as node()) as xs:boolean {
+
+(:
+~ Basic nodes represent *all* elements at the bottom of the tree, i.e. all mixed-content elements 
+    that, in total, comprise all text nodes. To be used for Sphinx snippets, for checking consistency etc.
+:)
+declare function render:isBasicNode($node as node()) as xs:boolean {
     boolean(
-        render:isBasicNode($node) or
-        render:isMarginalNode($node)
+        render:isMainNode($node) or
+        render:isMarginalNode($node) or
+        (render:isListNode($node) and not($node/descendant::*[render:isListNode(.)]))
     )
 };
 
@@ -2273,7 +2294,7 @@ declare function render:p($node as element(tei:p), $mode as xs:string) {
 declare function render:passthru($nodes as node()*, $mode as xs:string) as item()* {
     for $node in $nodes/node() return 
         if ($mode = ('snippets-orig', 'snippets-edit') and render:isMarginalNode($node)) then 
-            (: basic separator for main text and marginals in snippet creation :)
+            (: basic separator for main and marginal nodes in snippet creation :)
             ()
         else render:dispatch($node, $mode)
 };
