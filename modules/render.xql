@@ -173,7 +173,7 @@ declare function render:isBasicCitableHTML($node as node()) as xs:boolean {
 };
 
 (:
-~ (The set of nodes that should have a crumbtrail is equal to the set of nodes that should have a citetrail.)
+~ Determines the set of nodes that are generally citable (and indexed).
 :)
 declare function render:isIndexNode($node as node()) as xs:boolean {
     typeswitch($node)
@@ -832,6 +832,25 @@ declare function render:resolveURI($node as element(), $targets as xs:string) {
 
 declare function render:determineUnnamedCitetrailNodePosition($node as element()) as xs:integer {
     count($node/preceding-sibling::*[render:isUnnamedCitetrailNode(.)]) + 1
+};
+
+(: Marginal citetrails: "nX" where X is the anchor used (if it is alphanumeric) and "nXY" where Y is the number of times that X occurs inside the current div
+    (important: nodes are citetrail children of div (not of p) and are counted as such) :)
+declare function render:makeMarginalCitetrail($node as element()) as xs:string {
+    let $currentSection := render:getCitableParent($node)
+    let $label :=
+        if (matches($node/@n, '^[A-Za-z0-9\[\]]+$')) then
+            if (count($currentSection//*[render:isMarginalNode(.) and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($node/@n, '[^a-zA-Z0-9]', ''))]) gt 1) then
+                concat(
+                    upper-case(replace($node/@n, '[^a-zA-Z0-9]', '')),
+                    string(
+                        count($currentSection//*[render:isMarginalNode(.) and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($node/@n, '[^a-zA-Z0-9]', ''))]
+                              intersect $node/preceding::*[render:isMarginalNode(.) and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($node/@n, '[^a-zA-Z0-9]', ''))])
+                        + 1)
+                )
+            else upper-case(replace($node/@n, '[^a-zA-Z0-9]', ''))
+        else string(count($node/preceding::*[render:isMarginalNode(.)] intersect $currentSection//*[render:isMarginalNode(.)]) + 1)
+    return 'n' || $label
 };
 
 
@@ -1736,7 +1755,7 @@ declare function render:label($node as element(tei:label), $mode as xs:string) {
         case 'citetrail' return
             if (render:isUnnamedCitetrailNode($node)) then 
                 string(render:determineUnnamedCitetrailNodePosition($node))
-            else ()
+            else render:makeMarginalCitetrail($node)
             
         default return
             render:passthru($node, $mode)
@@ -2108,39 +2127,7 @@ declare function render:note($node as element(tei:note), $mode as xs:string) {
             'tei-' || local-name($node)
         
         case 'citetrail' return
-            (: "nX" where X is the anchor used (if it is alphanumeric) and "nXY" where Y is the number of times that X occurs inside the current div
-                (important: nodes are citetrail children of div (not of p) and are counted as such) :)
-            let $currentSection := sal-util:copy($node/ancestor::tei:div[1])
-            let $currentNode := $currentSection//tei:note[@xml:id eq $node/@xml:id]
-            let $noteLabel :=
-                string(  
-                    if (matches($currentNode/@n, '^[A-Za-z0-9\[\]]+$')) then
-                        if (count($currentSection//tei:note[upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))]) gt 1) then
-                            concat(
-                                upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', '')),
-                                string(
-                                    count($currentSection//tei:note[upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))]
-                                          intersect $currentNode/preceding::tei:note[upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))])
-                                    + 1)
-                            )
-                        else upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))
-                    else count($currentNode/preceding::tei:note intersect $currentSection//tei:note) + 1
-                )
-            return 'n' || $noteLabel
-            (: without on-the-fly copying: :)
-            (:concat('n',  
-                if (matches($node/@n, '^[A-Za-z0-9\[\]]+$')) then
-                    if (count($node/ancestor::tei:div[1]//tei:note[upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($node/@n, '[^a-zA-Z0-9]', ''))]) gt 1) then
-                        concat(
-                            upper-case(replace($node/@n, '[^a-zA-Z0-9]', '')),
-                            string(
-                                count($node/ancestor::tei:div[1]//tei:note[upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($node/@n, '[^a-zA-Z0-9]', ''))]
-                                      intersect $node/preceding::tei:note[upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($node/@n, '[^a-zA-Z0-9]', ''))])
-                                + 1)
-                        )
-                    else upper-case(replace($node/@n, '[^a-zA-Z0-9]', ''))
-                else count($node/preceding::tei:note intersect $node/ancestor::tei:div[1]//tei:note) + 1
-            ):)
+            render:makeMarginalCitetrail($node)
         
         case 'passagetrail' return
             if (render:isPassagetrailNode($node)) then
@@ -2169,6 +2156,7 @@ declare function render:note($node as element(tei:note), $mode as xs:string) {
         default return
             render:passthru($node, $mode)
 };
+
 
 declare function render:orgName($node as element(tei:orgName), $mode as xs:string) {
     switch($mode)
