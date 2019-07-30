@@ -157,10 +157,11 @@ declare function render:isPassagetrailNode($node as element()) as xs:boolean {
 :)
 declare function render:isCitableWithTeaserHTML($node as node()) as xs:boolean {
     boolean(
-        not(render:isBasicCitableHTML($node)) and
+        not(render:isBasicNode($node)) and
         (
             (render:isStructuralNode($node) and $node[self::tei:div or self::tei:text]) or
             render:isAnchorNode($node)
+            (: TODO: lists here? :)
         )
     )
 };
@@ -168,9 +169,9 @@ declare function render:isCitableWithTeaserHTML($node as node()) as xs:boolean {
 (:
 ~ Determines whether a node should have a citation anchor, without an additional teaser.
 :)
-declare function render:isBasicCitableHTML($node as node()) as xs:boolean {
+(:declare function render:isBasicCitableHTML($node as node()) as xs:boolean {
     render:isMainNode($node) or render:isMarginalNode($node)
-};
+};:)
 
 (:
 ~ Determines the set of nodes that are generally citable (and indexed).
@@ -184,7 +185,8 @@ declare function render:isIndexNode($node as node()) as xs:boolean {
                 render:isMainNode($node) or
                 render:isMarginalNode($node) or
                 render:isAnchorNode($node) or
-                render:isPageNode($node)
+                render:isPageNode($node) or
+                render:isListNode($node)
             )
         default return 
             false()
@@ -201,11 +203,12 @@ declare function render:isNamedCitetrailNode($node as element()) as xs:boolean {
         (render:isStructuralNode($node) 
             and $node[self::tei:text[@type eq 'work_volume'] or 
                       self::tei:back or 
-                      self::tei:front or 
-                      self::tei:list[@type = ('dict')]]) or (: TODO: include div here? :)
+                      self::tei:front]) or (: TODO: include div here? :)
         (render:isMainNode($node) 
             and $node[self::tei:head or 
-                      self::tei:titlePage or 
+                      self::tei:titlePage]) or
+        (render:isListNode($node) 
+            and $node[self::tei:list[@type = ('dict')] or
                       self::tei:item[ancestor::tei:list[@type = ('dict')]]])
     )
 };
@@ -254,9 +257,7 @@ declare function render:isMainNode($node as node()) as xs:boolean {
             $node/self::tei:lg or
             $node/self::tei:label[@place ne 'margin']
         ) and 
-        not($node/ancestor::*[render:isMainNode(.)]
-            or $node/ancestor::*[render:isListNode(.)]
-            or $node/ancestor::*[render:isMarginalNode(.)])
+        not($node/ancestor::*[render:isMainNode(.) or render:isMarginalNode(.) or self::tei:list])
     )
 };
 
@@ -272,7 +273,6 @@ declare function render:isListNode($node as node()) as xs:boolean {
             $node/self::tei:head[ancestor::tei:list]
         ) and 
         not($node/ancestor::*[render:isMainNode(.) or render:isMarginalNode(.)])
-        
     )
 };
 
@@ -286,7 +286,7 @@ declare function render:isMarginalNode($node as node()) as xs:boolean {
             $node/self::tei:note[@place eq 'margin'] or
             $node/self::tei:label[@place eq 'margin']
         )
-        and not($node/ancestor::*[render:isMarginalNode(.)])
+        (:and not($node/ancestor::*[render:isMarginalNode(.)]):) (: that shouldn't be possible :)
     )
 };
 
@@ -302,7 +302,6 @@ declare function render:isStructuralNode($node as node()) as xs:boolean {
             $node/self::tei:front or
             $node/self::tei:text[@type eq 'work_volume']
         )
-        and not($node/ancestor::*[render:isMainNode(.)]) (: exclude lists within lists :)
     )
 };
 
@@ -320,9 +319,7 @@ declare function render:isBasicNode($node as node()) as xs:boolean {
 };
 
 
-
-
-(: ####++++---- END boolean functions ----++++#### :)
+(: ####++++---- END node definitions ----++++#### :)
 
 
 (: ####++++---- HTML helper functions ----++++#### :)
@@ -994,22 +991,24 @@ declare function render:dispatch($node as node(), $mode as xs:string) {
     
             default return render:passthru($node, $mode)
     return
-        if ($mode eq 'html' and render:isCitableWithTeaserHTML($node)) then
-            let $citationAnchor := render:makeHTMLSummaryTitle($node)
-            let $debug := if ($config:debug = ("trace", "info")) then util:log('warn', 'Processing *[render:isCitableWithTeaserHTML(.)], local-name(): ' || local-name($node) || ', xml:id: ' || $node/@xml:id) else ()
-            return ($citationAnchor, $rendering)
-        else if ($mode eq 'html' and render:isBasicCitableHTML($node)) then 
-            (: toolboxes need to be on the sibling axis with the text body they refer to... :)
-            if (render:isMarginalNode($node) or $node/self::tei:head or $node/self::tei:titlePage) then 
-                (: for these elements, $toolboxes are created right in their render: function :)
-                $rendering
-            else 
-                let $toolbox := render:HTMLSectionToolbox($node)
-                return
-                    <div class="hauptText">
-                        {$toolbox}
-                        <div class="hauptText-body">{$rendering}</div>
-                    </div>
+        if ($mode eq 'html') then
+            if (render:isCitableWithTeaserHTML($node)) then
+                let $citationAnchor := render:makeHTMLSummaryTitle($node)
+                let $debug := if ($config:debug = ("trace", "info")) then util:log('warn', 'Processing *[render:isCitableWithTeaserHTML(.)], local-name(): ' || local-name($node) || ', xml:id: ' || $node/@xml:id) else ()
+                return ($citationAnchor, $rendering)
+            else if (render:isBasicNode($node)) then 
+                (: toolboxes need to be on the sibling axis with the text body they refer to... :)
+                if (render:isMarginalNode($node) or $node/self::tei:head or $node/self::tei:titlePage) then 
+                    (: for these elements, $toolboxes are created right in their render: function :)
+                    $rendering
+                else 
+                    let $toolbox := render:HTMLSectionToolbox($node)
+                    return
+                        <div class="hauptText">
+                            {$toolbox}
+                            <div class="hauptText-body">{$rendering}</div>
+                        </div>
+            else $rendering
         else 
             $rendering
 };

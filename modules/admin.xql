@@ -18,7 +18,7 @@ import module namespace sphinx      = "http://salamanca/sphinx"                 
 
 declare option exist:timeout "25000000"; (: ~7 h :)
 
-(: #### UTIL FUNCTIONS for informing the admin about current status of a webdata resource (node index, HTML, snippets, etc.) :)
+(: #### UTIL FUNCTIONS for informing the admin about current status of a webdata resources (node index, HTML, snippets, etc.) :)
 
 declare function admin:needsIndex($targetWorkId as xs:string) as xs:boolean {
     let $workModTime := xmldb:last-modified($config:tei-works-root, $targetWorkId || '.xml')
@@ -492,7 +492,6 @@ declare %templates:wrap function admin:renderAuthorLemma($node as node(), $model
 };
 
 
-
 declare %templates:wrap function admin:renderWork($node as node(), $model as map(*), $wid as xs:string*, $lang as xs:string?) as element(div) {
     let $debug := if ($config:debug = ("trace", "info")) then console:log("Rendering " || $wid || ".") else ()
     let $start-time := util:system-time()
@@ -761,14 +760,7 @@ declare function admin:renderFragment ($work as node(), $wid as xs:string, $targ
 };
 
 (: Generate fragments for sphinx' indexer to grok :)
-declare function admin:sphinx-out ($node as node(), $model as map(*), $wid as xs:string*, $mode as xs:string?) {
-                (:
-                   Diese Elemente liefern wir an sphinx aus:                text//(p|head|label|signed|item|note|titlePage)
-                   Diese weiteren Elemente enthalten ebenfalls Textknoten:        (fw hi l g body div front choice expan abbr reg orig sic corr del unclear)
-                            [zu ermitteln durch distinct-values(collection(/db/apps/salamanca/data)//tei:text[@type = ("work_monograph", "work_volume")]//node()[not(./ancestor-or-self::tei:p | ./ancestor-or-self::tei:head | ./ancestor-or-self::tei:list | ./ancestor-or-self::tei:titlePage)][text()])]
-                   Wir ignorieren fw, während hi, l, g etc. immer schon in p, head, item usw. enthalten sind.
-                   => Wir müssen also noch dafür sorgen, dass front, body und div's keinen Text außerhalb von p, head, item usw. enthalten!
-                :)
+declare function admin:sphinx-out($node as node(), $model as map(*), $wid as xs:string*, $mode as xs:string?) {
 
     let $start-time := util:system-time()
 
@@ -788,141 +780,151 @@ declare function admin:sphinx-out ($node as node(), $model as map(*), $wid as xs
         for $w in $expanded return
             if (starts-with($w/@xml:id, 'W0')) then
                 (: works :)
-                $w/tei:text//*[render:isSphinxSnippetNode(.)]
+                $w/tei:text//*[render:isBasicNode(.)]
             else if (starts-with($w/@xml:id, 'WP')) then
                 (: working papers :)
                 $w//tei:profileDesc//(tei:p|tei:keywords)
             else () (: TODO: authors, lemmata, etc. :)
     let $hits := 
-            for $hit at $index in $nodes
+        for $hit at $index in $nodes
+            (: for each fragment, populate our sphinx fields and attributes :)
+            let $work              := $hit/ancestor-or-self::tei:TEI
+            let $work_id           := xs:string($work/@xml:id)
+            let $nodeType := 
+                if (starts-with($work_id, 'W0')) then 'work' 
+                else if (starts-with($work_id, 'WP')) then 'wp' 
+                else if (starts-with($work_id, 'A')) then 'author'
+                else if (starts-with($work_id, 'L')) then 'lemma'
+                else ()
+            let $work_type         := xs:string($work/tei:text/@type)
+            let $teiHeader         := $work/tei:teiHeader
+            let $work_author_name := app:formatName($teiHeader//tei:titleStmt//tei:author//tei:persName)
+            let $work_author_id   := string-join($teiHeader//tei:titleStmt//tei:author//tei:persName/@ref, " ")
+            let $work_title :=   
+                if ($teiHeader//tei:titleStmt/tei:title[@type="short"] and not($work//tei:text[@type = "working_paper"])) then
+                    $teiHeader//tei:titleStmt/tei:title[@type="short"]/text()
+                else if ($teiHeader//tei:titleStmt/tei:title[@type="main"]) then
+                    $teiHeader//tei:titleStmt/tei:title[@type="main"]/text()
+                else $teiHeader//tei:titleStmt/tei:title[1]/text()
+            let $work_year :=    
+                if ($teiHeader//tei:sourceDesc//tei:date[@type = "summaryThisEd"]) then
+                    xs:string($teiHeader//tei:sourceDesc//tei:date[@type = "summaryThisEd"])
+                else if  ($teiHeader//tei:sourceDesc//tei:date[@type = "thisEd"]) then
+                    xs:string($teiHeader//tei:sourceDesc//tei:date[@type = "thisEd"])
+                else if  ($teiHeader//tei:sourceDesc//tei:date[@type = "summaryFirstEd"]) then
+                    xs:string($teiHeader//tei:sourceDesc//tei:date[@type = "summaryFirstEd"])
+                else if  ($teiHeader//tei:sourceDesc//tei:date[@type = "firstEd"]) then
+                    xs:string($teiHeader//tei:sourceDesc//tei:date[@type = "firstEd"])
+                else if  ($teiHeader//tei:date[@type ="digitizedEd"]) then
+                    xs:string($teiHeader//tei:date[@type = "digitizedEd"])
+                else ()
+            let $hit_type := local-name($hit)
+            let $hit_id := xs:string($hit/@xml:id)
+            let $hit_citetrail := if ($nodeType eq 'work') then render:getNodetrail($work_id, $hit, 'citetrail', ()) else ()
+(:                doc($config:index-root || '/' || $work_id || '_nodeIndex.xml')//sal:node[@n = $hit_id]/sal:citetrail:)
+            let $hit_language := xs:string($hit/ancestor-or-self::tei:*[@xml:lang][1]/@xml:lang)
+            let $hit_fragment := 
+                if ($hit_id and xmldb:collection-available($config:html-root || '/' || $work_id)) then
+                    render:getFragmentFile($work_id, $hit_id)
+                else ()
+            let $hit_fragment_number := 
+                if ($hit_fragment) then
+                    xs:int(substring($hit_fragment, 1, 4))
+                else ()
+            let $hit_path := 
+                if ($hit_fragment) then
+                    $config:webserver || "/html/" || $work_id || "/" || $hit_fragment || ".html"
+                else
+                    "#No fragment discoverable!"
+            let $hit_url :=      
+                if ($hit_fragment and $nodeType eq 'work') then
+                    $config:idserver || "/texts/"   || $work_id || ':' || $hit_citetrail
+                else if ($nodeType eq 'author') then
+                    $config:idserver || "/authors/" || $work_id
+                else if ($nodeType eq 'lemma') then
+                    $config:idserver || "/lemmata/" || $work_id
+                else if ($nodeType eq 'wp') then
+                    $config:webserver || "/workingPaper.html?wpid=" || $work_id
+                else
+                    "#No fragment discoverable!"
 
-                (: for each fragment, populate our sphinx fields and attributes :)
-                let $work              := $hit/ancestor-or-self::tei:TEI
-                let $work_id           := xs:string($work/@xml:id)
-                let $work_type         := xs:string($work/tei:text/@type)
-                let $teiHeader         := $work/tei:teiHeader
-                let $work_author_name := app:formatName($teiHeader//tei:titleStmt//tei:author//tei:persName)
-                let $work_author_id   := string-join($teiHeader//tei:titleStmt//tei:author//tei:persName/@ref, " ")
-                let $work_title :=   
-                    if ($teiHeader//tei:titleStmt/tei:title[@type="short"] and not($work//tei:text[@type = "working_paper"])) then
-                        $teiHeader//tei:titleStmt/tei:title[@type="short"]/text()
-                    else if ($teiHeader//tei:titleStmt/tei:title[@type="main"]) then
-                        $teiHeader//tei:titleStmt/tei:title[@type="main"]/text()
-                    else $teiHeader//tei:titleStmt/tei:title[1]/text()
-                let $work_year :=    
-                    if ($teiHeader//tei:sourceDesc//tei:date[@type = "summaryThisEd"]) then
-                        xs:string($teiHeader//tei:sourceDesc//tei:date[@type = "summaryThisEd"])
-                    else if  ($teiHeader//tei:sourceDesc//tei:date[@type = "thisEd"]) then
-                        xs:string($teiHeader//tei:sourceDesc//tei:date[@type = "thisEd"])
-                    else if  ($teiHeader//tei:sourceDesc//tei:date[@type = "summaryFirstEd"]) then
-                        xs:string($teiHeader//tei:sourceDesc//tei:date[@type = "summaryFirstEd"])
-                    else if  ($teiHeader//tei:sourceDesc//tei:date[@type = "firstEd"]) then
-                        xs:string($teiHeader//tei:sourceDesc//tei:date[@type = "firstEd"])
-                    else if  ($teiHeader//tei:date[@type ="digitizedEd"]) then
-                        xs:string($teiHeader//tei:date[@type = "digitizedEd"])
-                    else ()
-                let $hit_type := local-name($hit)
-                let $hit_id := xs:string($hit/@xml:id)
-                let $hit_citetrail := doc($config:index-root || '/' || $work_id || '_nodeIndex.xml')//sal:node[@n = $hit_id]/sal:citetrail
-                let $hit_language := xs:string($hit/ancestor-or-self::tei:*[@xml:lang][1]/@xml:lang)
-                let $hit_fragment := 
-                    if ($hit_id and xmldb:collection-available($config:html-root || '/' || $work_id)) then
-                        render:getFragmentFile($work_id, $hit_id)
-                    else ()
-                let $hit_fragment_number := 
-                    if ($hit_fragment) then
-                        xs:int(substring($hit_fragment, 1, 4))
-                    else ()
-                let $hit_path := 
-                    if ($hit_fragment) then
-                        $config:webserver || "/html/" || $work_id || "/" || $hit_fragment || ".html"
-                    else
-                        "#No fragment discoverable!"
-                let $hit_url :=      
-                    if ($hit_fragment and substring($work_id,1,2)="W0") then
-                        $config:idserver || "/texts/"   || $work_id || ':' || $hit_citetrail
-                    else if (substring($work_id,1,1)="A") then
-                        $config:idserver || "/authors/" || $work_id
-                    else if (substring($work_id,1,1)="L") then
-                        $config:idserver || "/lemmata/" || $work_id
-                    else if (substring($work_id,1,2)="WP") then
-                        $config:webserver || "/workingPaper.html?wpid=" || $work_id
-                    else
-                        "#No fragment discoverable!"
-
-                (: Here we define the to-be-indexed content! :)
-                let $hit_content_orig := 
-                    if ($hit_id) then
+            (: Here we define the to-be-indexed content! :)
+            let $hit_content_orig := 
+                if ($hit_id) then
+                    if ($nodeType eq 'work') then
                         string-join(render:dispatch($hit, 'snippets-orig'), '')
-                    else
-                        'There is no xml:id in the ' || $hit_type || ' hit!'
-                let $hit_content_edit := 
-                    if ($hit_id) then
+                    else string-join(render-app:dispatch($hit, 'snippets-orig'), '')
+                else
+                    'There is no xml:id in the ' || $hit_type || ' hit!'
+            let $hit_content_edit := 
+                if ($hit_id) then
+                    if ($nodeType eq 'work') then
                         string-join(render:dispatch($hit, 'snippets-edit'), '')
-                    else
-                        'There is no xml:id in the ' || $hit_type || ' hit!'
-                
-                (: Now build a sphinx "row" for the fragment :)
-                let $sphinx_id    := xs:long(substring($work_id, functx:index-of-string-first($work_id, "0"))) * 1000000 + ( (string-to-codepoints(substring($work_id, 1, 1)) + string-to-codepoints(substring($work_id, 2, 1))) * 10000 ) + $index
-                let $html_snippet :=
-                    <sphinx:document id="{$sphinx_id}">
-                        <div>
-                            <h3>Hit
-                                <sphinx_docid>{$sphinx_id}</sphinx_docid>
-                                in <sphinx_work_type>{$work_type}</sphinx_work_type>{$config:nbsp}<sphinx_work>{$work_id}</sphinx_work>:<br/>
-                                <sphinx_author>{$work_author_name}</sphinx_author>
-                                {if ($work_author_id) then " (" || <sphinx_authorid>{$work_author_id}</sphinx_authorid> || ")" else ()},
-                                <sphinx_title>{$work_title}</sphinx_title>
-                                (<sphinx_year>{$work_year}</sphinx_year>)
-                            </h3>
-                            <h4>Hit
-                                language: &quot;<sphinx_hit_language>{$hit_language}</sphinx_hit_language>&quot;,
-                                node type: &lt;<sphinx_hit_type>{$hit_type}</sphinx_hit_type>&gt;,
-                                node xml:id: &quot;<sphinx_hit_id>{$hit_id}</sphinx_hit_id>&quot;
-                            </h4>
-                            <p>
-                                <em><sphinx_description_orig>{$hit_content_orig}</sphinx_description_orig></em>
-                            </p>
-                            <p>
-                                <em><sphinx_description_edit>{$hit_content_edit}</sphinx_description_edit></em>
-                            </p>
-                            <p>
-                                find it in fragment number {$hit_fragment_number} here: <a href="{$hit_path}"><sphinx_html_path>{$hit_path}</sphinx_html_path></a><br/>
-                                or here: <a href="{$hit_url}"><sphinx_fragment_path>{$hit_url}</sphinx_fragment_path></a>
-                            </p>
-                            <hr/>
-                        </div>
-                    </sphinx:document>
+                    else string-join(render-app:dispatch($hit, 'snippets-edit'), '')
+                else
+                    'There is no xml:id in the ' || $hit_type || ' hit!'
+            
+            (: Now build a sphinx "row" for the fragment :)
+            let $sphinx_id    := xs:long(substring($work_id, functx:index-of-string-first($work_id, "0"))) * 1000000 + ( (string-to-codepoints(substring($work_id, 1, 1)) + string-to-codepoints(substring($work_id, 2, 1))) * 10000 ) + $index
+            let $html_snippet :=
+                <sphinx:document id="{$sphinx_id}">
+                    <div>
+                        <h3>Hit
+                            <sphinx_docid>{$sphinx_id}</sphinx_docid>
+                            in <sphinx_work_type>{$work_type}</sphinx_work_type>{$config:nbsp}<sphinx_work>{$work_id}</sphinx_work>:<br/>
+                            <sphinx_author>{$work_author_name}</sphinx_author>
+                            {if ($work_author_id) then " (" || <sphinx_authorid>{$work_author_id}</sphinx_authorid> || ")" else ()},
+                            <sphinx_title>{$work_title}</sphinx_title>
+                            (<sphinx_year>{$work_year}</sphinx_year>)
+                        </h3>
+                        <h4>Hit
+                            language: &quot;<sphinx_hit_language>{$hit_language}</sphinx_hit_language>&quot;,
+                            node type: &lt;<sphinx_hit_type>{$hit_type}</sphinx_hit_type>&gt;,
+                            node xml:id: &quot;<sphinx_hit_id>{$hit_id}</sphinx_hit_id>&quot;
+                        </h4>
+                        <p>
+                            <em><sphinx_description_orig>{$hit_content_orig}</sphinx_description_orig></em>
+                        </p>
+                        <p>
+                            <em><sphinx_description_edit>{$hit_content_edit}</sphinx_description_edit></em>
+                        </p>
+                        <p>
+                            find it in fragment number {$hit_fragment_number} here: <a href="{$hit_path}"><sphinx_html_path>{$hit_path}</sphinx_html_path></a><br/>
+                            or here: <a href="{$hit_url}"><sphinx_fragment_path>{$hit_url}</sphinx_fragment_path></a>
+                        </p>
+                        <hr/>
+                    </div>
+                </sphinx:document>
 
-                let $sphinx_snippet :=
-                    <sphinx:document id="{$sphinx_id}" xml:space="preserve">
-                        <sphinx_docid>{$sphinx_id}</sphinx_docid>
-                        <sphinx_work>{$work_id}</sphinx_work>
-                        <sphinx_work_type>{$work_type}</sphinx_work_type>
-                        <sphinx_author>{$work_author_name}</sphinx_author>
-                        <sphinx_authorid>{$work_author_id}</sphinx_authorid>
-                        <sphinx_title>{$work_title}</sphinx_title>
-                        <sphinx_year>{$work_year}</sphinx_year>
-                        <sphinx_hit_language>{$hit_language}</sphinx_hit_language>
-                        <sphinx_hit_type>{$hit_type}</sphinx_hit_type>
-                        <sphinx_hit_id>{$hit_id}</sphinx_hit_id>
-                        <sphinx_description_orig>{$hit_content_orig}</sphinx_description_orig>
-                        <sphinx_description_edit>{$hit_content_edit}</sphinx_description_edit>
-                        <sphinx_html_path>{$hit_path}</sphinx_html_path>
-                        <sphinx_fragment_path>{$hit_url}</sphinx_fragment_path>
-                        <sphinx_fragment_number>{$hit_fragment_number}</sphinx_fragment_number>
-                    </sphinx:document>
+            let $sphinx_snippet :=
+                <sphinx:document id="{$sphinx_id}" xml:space="preserve">
+                    <sphinx_docid>{$sphinx_id}</sphinx_docid>
+                    <sphinx_work>{$work_id}</sphinx_work>
+                    <sphinx_work_type>{$work_type}</sphinx_work_type>
+                    <sphinx_author>{$work_author_name}</sphinx_author>
+                    <sphinx_authorid>{$work_author_id}</sphinx_authorid>
+                    <sphinx_title>{$work_title}</sphinx_title>
+                    <sphinx_year>{$work_year}</sphinx_year>
+                    <sphinx_hit_language>{$hit_language}</sphinx_hit_language>
+                    <sphinx_hit_type>{$hit_type}</sphinx_hit_type>
+                    <sphinx_hit_id>{$hit_id}</sphinx_hit_id>
+                    <sphinx_description_orig>{$hit_content_orig}</sphinx_description_orig>
+                    <sphinx_description_edit>{$hit_content_edit}</sphinx_description_edit>
+                    <sphinx_html_path>{$hit_path}</sphinx_html_path>
+                    <sphinx_fragment_path>{$hit_url}</sphinx_fragment_path>
+                    <sphinx_fragment_number>{$hit_fragment_number}</sphinx_fragment_number>
+                </sphinx:document>
 
-                let $fileName := format-number($index, "00000") || "_" || $hit_id || ".snippet.xml"
-                let $storeStatus := if ($hit_id) then admin:saveFile($work_id, $fileName, $sphinx_snippet, "snippets") else ()
+            let $fileName := format-number($index, "00000") || "_" || $hit_id || ".snippet.xml"
+            let $storeStatus := if ($hit_id) then admin:saveFile($work_id, $fileName, $sphinx_snippet, "snippets") else ()
 
-                order by $work_id ascending
-                return 
-                    if ($mode = "html") then
-                        $html_snippet
-                    else if ($mode = "sphinx") then
-                        $sphinx_snippet
-                    else ()
+            order by $work_id ascending
+            return 
+                if ($mode = "html") then
+                    $html_snippet
+                else if ($mode = "sphinx") then
+                    $sphinx_snippet
+                else ()
 
 (: Now return statistics, schema and the whole document-set :)
     let $runtime-ms := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S')) * 1000
@@ -1082,16 +1084,26 @@ declare function admin:createNodeIndex($node as node(), $model as map(*), $wid a
             let $testAttributes := if ($testNodes[not(@class/string() and @type/string() and @n/string())]) then error() else ()
             let $testChildren := if ($testNodes[not(sal:title and sal:fragment/text() and sal:citableParent/text() and sal:citetrail/text() and sal:crumbtrail/* and sal:passagetrail/text())]) then error() else ()
             (: there should be as many distinctive citetrails and crumbtrails as there are ordinary sal:node elements: :)
-            let $testCitetrails := if (count($resultNodes) ne count(distinct-values($resultNodes/sal:citetrail/text()))) then error() else () (: search these cases using: " //sal:citetrail[./text() = preceding::sal:citetrail/text()] " :)
+            let $testCitetrails := 
+                if (count($resultNodes) ne count(distinct-values($resultNodes/sal:citetrail/text()))
+                    or count($resultNodes/sal:citetrail[not(./text())]) gt 0) then 
+                    error() 
+                else () 
+            (: search these cases using: " //sal:citetrail[./text() = preceding::sal:citetrail/text()] "
+                or " //sal:citetrail[not(./text())] ":)
             (: not checking crumbtrails here ATM for not slowing down index creation too much... :)
             
             (: check if all text is being captured through basic index nodes (that is, if all text is citable) :)
             let $checkCitability := 
                 for $t in $work//tei:text//text()[normalize-space() ne ''] return
-                    if ($t[not(ancestor::*[render:isBasicNode(.) or render:isMarginalNode(.)]) and not(ancestor::tei:figDesc)]) then 
+                    if ($t[not(ancestor::*[render:isBasicNode(.)]) and not(ancestor::tei:figDesc)]) then 
                         let $debug := util:log('error', 'Encountered text node without ancestor::*[render:isBasicNode(.)], in line ' || $t/preceding::tei:lb[1]/@xml:id/string())
                         return error() 
                     else ()
+            (: if no xml:id is put out, try to search this cases like so:
+                //text//text()[not(ancestor::*[@xml:id and (self::p or self::signed or self::head or self::titlePage or self::lg or self::item or self::label)])]
+            :)
+            
             (: ----------------------------------------------- :)
             
             (: Reporting... :)
