@@ -399,13 +399,6 @@ declare function render:HTMLmakeCitationReference($wid as xs:string, $fileDesc a
         string-join(for $ed in $fileDesc/tei:seriesStmt/tei:editor/tei:persName 
                         order by $ed/tei:surname
                         return app:rotateFormatName($ed), ' &amp; ')
-    (:let $METDate := adjust-dateTime-to-timezone(current-dateTime(), xs:dayTimeDuration('PT1H')) (\: choosing MET as default timezone, rather than client's timezone, for now :\)
-    let $date := i18n:convertDate(substring(string($METDate),1,10), $lang, 'verbose')
-    let $timezone := 'MET'
-    let $accessed :=
-        if ($mode = ('reading-full', 'reading-passage')) then
-            <span>(<i18n:text key="accessedDate">Accessed</i18n:text>{' ' || $date || ' (' || $timezone || ')'})</span> (\: TODO :\)
-        else ():)
     let $citetrail :=
         if ($mode eq 'reading-passage' and $node) then
             render:getNodetrail($wid, $node, 'citetrail', ())
@@ -416,8 +409,6 @@ declare function render:HTMLmakeCitationReference($wid as xs:string, $fileDesc a
         if ($mode eq 'reading-passage' and $node) then
             render:getNodetrail($wid, $node, 'passagetrail', ())
         else ()
-    (:let $accessedOpen := 
-        if ($mode = ('reading-passage', 'reading-full')) then:)
     let $body := 
         <span class="cite-rec-body">{$author || ', ' || $title || ' (' || $digitalYear || ' [' || $originalYear || '])'|| ', '}
             <i18n:text key="inLow">in</i18n:text>{': '}<i18n:text key="editionSeries">The School of Salamanca. A Digital Collection of Sources</i18n:text>
@@ -581,17 +572,17 @@ declare function render:HTMLSectionToolbox($node as element()) as element(div) {
                 <i class="fas fa-link messengers" title="i18n(openToolbox)"/>
             </a>
             <div class="sal-toolbox-body">
-                <div class="sal-tb-btn dropdown">
-                    <a class="sal-tb-btn" href="{$citetrailBaseUrl || '?format=html'}">
-                        <span class="messengers fas fa-link" title="i18n(linkPass)"/>
+                <div class="sal-tb-btn">
+                    <a href="{$citetrailBaseUrl || '?format=html'}">
+                        <i class="messengers fas fa-link" title="i18n(linkPass)"/>
                     </a>
                 </div>
                 <div class="sal-tb-btn dropdown">
-                    <button onclick="citeToggle(this);" type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        <span class="messengers fas fa-feather-alt" title="i18n(citePass)"/>
-                    </button>
+                    <a href="#" onclick="citeToggle(this);" type="button" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <i class="messengers fas fa-feather-alt" title="i18n(citePass)"/>
+                    </a>
                     <div class="dropdown-menu sal-cite-toggle">
-                        <span style="font-weight:bold;"><i18n:text key="proposedCitation">Proposed citation:</i18n:text></span><br/>
+                        <span style="font-weight:bold;"><i18n:text key="proposedCitation">Proposed citation</i18n:text>:</span><br/>
                         <button onclick="citeCopy(this);"><i18n:text key="copy">Copy</i18n:text></button>
                         <span class="cite-rec" style="display:none">
                             {render:HTMLmakeCitationReference($wid, $fileDesc, 'reading-passage', $node)
@@ -599,19 +590,19 @@ declare function render:HTMLSectionToolbox($node as element()) as element(div) {
                         </span>
                     </div>
                 </div>
-                <div class="sal-tb-btn dropdown">
-                    <a class="sal-tb-btn" href="{$citetrailBaseUrl || '?format=txt'}">
-                        <span class="messengers fas fa-align-left" title="i18n(txtExpPass)"/>
+                <div class="sal-tb-btn">
+                    <a href="{$citetrailBaseUrl || '?format=txt'}">
+                        <i class="messengers fas fa-align-left" title="i18n(txtExpPass)"/>
                     </a>
                 </div>
-                <div class="sal-tb-btn dropdown">
-                    <a class="sal-tb-btn" href="{$citetrailBaseUrl || '?format=tei'}">
-                        <span class="messengers fas fa-file-code" title="i18n(teiExpPass)"/>
+                <div class="sal-tb-btn">
+                    <a href="{$citetrailBaseUrl || '?format=tei'}">
+                        <i class="messengers fas fa-file-code" title="i18n(teiExpPass)"/>
                     </a>
                 </div>
-                <div class="sal-tb-btn dropdown" style="display:none;">
-                    <a class="sal-tb-btn updateHiliteBox" href="#"> 
-                        <span class="glyphicon glyphicon-refresh"/>
+                <div class="sal-tb-btn" style="display:none;">
+                    <a class="updateHiliteBox" href="#"> 
+                        <i class="glyphicon glyphicon-refresh"/>
                     </a>
                 </div>
             </div>

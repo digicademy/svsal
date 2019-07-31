@@ -373,8 +373,6 @@ li.cardoStyleLi {
     position: absolute;
     width: 19rem;
     left:-32rem;
-	
-	
 /*	float: left;*/
 /*    clear: left;*/
 /*	margin-left: -49%;*/
@@ -387,15 +385,12 @@ li.cardoStyleLi {
 /*    position: relative;*/
 /*    bottom: -0.55em;*/
 }
-
 .pageNumbers {
     display: inline-block;
     position: absolute;
     width: 8rem;
     left:-11rem;
 }
-
-
 .sal-toolbox {
     display: inline-block;
     position: absolute;
@@ -447,17 +442,35 @@ li.cardoStyleLi {
     display:none;
 }
 
-.sal-tb-btn {
-    font-size:17px;
+div.sal-tb-btn {
+    font-size:17px !important;
     display:inline;
+}
+
+div.sal-tb-btn + div.sal-tb-btn {
+    padding-left:0.3em;
 }
 
 .sal-cite-toggle button {
     margin-left:40%;
+    border: none;
+    background-color: transparent;
+    font-weight: bold;
+    color: #102873 !important;
+    outline: none;
+    height:1.5em;
+}
+
+.sal-cite-toggle button:hover {
+    background-color: #E8E8E8 !important;
+    transition: color 0.2s linear;
 }
 
 .sal-cite-toggle > * {
     margin:0.3em;
+}
+.sal-cite-input {
+    width:95%;
 }
 
 .marginal {

@@ -1016,9 +1016,8 @@ declare function admin:determineFragmentationDepth($work as element(tei:TEI)) as
 };:)
 
 declare function admin:createNodeIndex($wid as xs:string*) {
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("Creating node index for " || $wid || ".") else ()
+(:    let $debug := if ($config:debug = ("trace", "info")) then util:log("warn", "[ADMIN] Creating node index for " || $wid || ".") else ():)
     let $start-time := util:system-time()
-    let $wid := request:get-parameter('wid', '*')
     
     (: define the works to be indexed: :)
     let $todo := 
