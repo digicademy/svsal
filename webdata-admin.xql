@@ -11,16 +11,34 @@ declare option output:media-type "text/html";
 declare option output:method "xhtml";
 declare option output:indent "no";
 
-let $mode   := request:get-parameter('mode',    'html')
-let $wid    := request:get-parameter('wid',     '')
+declare variable $snippetLength  := 1200;
 
-let $output :=  admin:createNodeIndex(<div/>, map{'dummy':= 'dummy'}, $wid)
+let $mode   := request:get-parameter('mode',    'html') (: for Sphinx, but actually used? :)
+let $wid    := request:get-parameter('wid',     '')
+let $format := request:get-parameter('format',     '')
+
+(: TODO: check for current node index here :)
+let $output :=
+    switch($format)
+        case 'index' return 
+            admin:createNodeIndex(<div/>, map{'dummy':= 'dummy'}, $wid)
+        case 'snippets' return 
+            admin:sphinx-out(<div/>, map{ 'dummy':= 'dummy'}, $wid, $mode)
+        case 'tei-corpus' return
+            admin:createTeiCorpus('admin')
+        case 'txt-corpus' return
+            admin:createTxtCorpus('admin') 
+            
+        default return 
+            ()
+
 return 
-<html>
-<head>
-<title>Webdata Administration - The School of Salamanca</title>
-</head>
-<body>
-{$output}
-</body>
-</html>
+    <html>
+        <head>
+            <title>Webdata Administration - The School of Salamanca</title>
+        </head>
+        <body>
+            <h1>Generated Webdata Output for Work(s): {$wid}</h1>
+            {$output}
+        </body>
+    </html>

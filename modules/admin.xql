@@ -15,6 +15,7 @@ import module namespace config      = "http://salamanca/config"                 
 import module namespace render      = "http://salamanca/render"                 at "render.xql";
 import module namespace render-app      = "http://salamanca/render-app"         at "render-app.xql";
 import module namespace sphinx      = "http://salamanca/sphinx"                 at "sphinx.xql";
+declare namespace output            = "http://www.w3.org/2010/xslt-xquery-serialization";
 
 declare option exist:timeout "25000000"; (: ~7 h :)
 
@@ -34,9 +35,9 @@ declare function admin:needsIndexString($node as node(), $model as map(*)) {
     let $currentWorkId := $model('currentWork')?('wid')
     return 
         if (admin:needsIndex($currentWorkId)) then
-            <td title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}{if (xmldb:get-child-resources($config:index-root) = $currentWorkId || "_nodeIndex.xml") then concat(', rendered on: ', xmldb:last-modified($config:index-root, $currentWorkId || "_nodeIndex.xml")) else ()}"><a href="webdata-admin.xql?wid={$currentWorkId}"><b>Create Node Index NOW!</b></a></td>
+            <td title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}{if (xmldb:get-child-resources($config:index-root) = $currentWorkId || "_nodeIndex.xml") then concat(', rendered on: ', xmldb:last-modified($config:index-root, $currentWorkId || "_nodeIndex.xml")) else ()}"><a href="webdata-admin.xql?wid={$currentWorkId}&amp;format=index"><b>Create Node Index NOW!</b></a></td>
         else
-            <td title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}, rendered on: {xmldb:last-modified($config:index-root, $currentWorkId || "_nodeIndex.xml")}">Node indexing unnecessary. <small><a href="webdata-admin.xql?wid={$currentWorkId}">Create Node Index anyway!</a></small></td>
+            <td title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}, rendered on: {xmldb:last-modified($config:index-root, $currentWorkId || "_nodeIndex.xml")}">Node indexing unnecessary. <small><a href="webdata-admin.xql?wid={$currentWorkId}&amp;format=index">Create Node Index anyway!</a></small></td>
 };
 
 declare function admin:needsTeiCorpusZip($node as node(), $model as map(*)) {
@@ -46,10 +47,11 @@ declare function admin:needsTeiCorpusZip($node as node(), $model as map(*)) {
             let $resourceModTime := xmldb:last-modified($config:corpus-zip-root, 'sal-tei-corpus.zip')
             return $resourceModTime lt $worksModTime
         else true()
-    return if ($needsCorpusZip) then
-                <td title="Most current source from: {string($worksModTime)}"><a href="corpus-admin.xql?format=tei"><b>Create TEI corpus NOW!</b></a></td>
-            else
-                <td title="{concat('TEI corpus created on: ', string(xmldb:last-modified($config:corpus-zip-root, 'sal-tei-corpus.zip')), ', most current source from: ', string($worksModTime), '.')}">Creating TEI corpus unnecessary. <small><a href="corpus-admin.xql?format=tei">Create TEI corpus zip anyway!</a></small></td>
+    return 
+        if ($needsCorpusZip) then
+            <td title="Most current source from: {string($worksModTime)}"><a href="webdata-admin.xql?format=tei-corpus"><b>Create TEI corpus NOW!</b></a></td>
+        else
+            <td title="{concat('TEI corpus created on: ', string(xmldb:last-modified($config:corpus-zip-root, 'sal-tei-corpus.zip')), ', most current source from: ', string($worksModTime), '.')}">Creating TEI corpus unnecessary. <small><a href="webdata-admin.xql?format=tei-corpus">Create TEI corpus zip anyway!</a></small></td>
 };
 
 declare function admin:needsTxtCorpusZip($node as node(), $model as map(*)) {
@@ -60,24 +62,27 @@ declare function admin:needsTxtCorpusZip($node as node(), $model as map(*)) {
                 let $resourceModTime := xmldb:last-modified($config:corpus-zip-root, 'sal-txt-corpus.zip')
                 return $resourceModTime lt $worksModTime
             else true()
-        return if ($needsCorpusZip) then
-                    <td title="Most current source from: {string($worksModTime)}"><a href="corpus-admin.xql?format=txt"><b>Create TXT corpus NOW!</b></a></td>
-                else
-                    <td title="{concat('TXT corpus created on: ', string(xmldb:last-modified($config:corpus-zip-root, 'sal-txt-corpus.zip')), ', most current source from: ', string($worksModTime), '.')}">Creating TXT corpus unnecessary. <small><a href="corpus-admin.xql?format=txt">Create TXT corpus zip anyway!</a></small></td>
-    else <td title="No txt sources available so far!"><a href="corpus-admin.xql?format=txt"><b>Create TXT corpus NOW!</b></a></td>
+        return 
+            if ($needsCorpusZip) then
+                <td title="Most current source from: {string($worksModTime)}"><a href="webdata-admin.xql?format=txt-corpus"><b>Create TXT corpus NOW!</b></a></td>
+            else
+                <td title="{concat('TXT corpus created on: ', string(xmldb:last-modified($config:corpus-zip-root, 'sal-txt-corpus.zip')), ', most current source from: ', string($worksModTime), '.')}">Creating TXT corpus unnecessary. <small><a href="webdata-admin.xql?format=txt-corpus">Create TXT corpus zip anyway!</a></small></td>
+    else <td title="No txt sources available so far!"><a href="webdata-admin.xql?format=txt-corpus"><b>Create TXT corpus NOW!</b></a></td>
 };
 
 declare function admin:authorString($node as node(), $model as map(*), $lang as xs:string?) {
     let $currentAuthorId  := $model('currentAuthor')/@xml:id/string()
-    return <td><a href="author.html?aid={$currentAuthorId}">{$currentAuthorId} - {app:AUTname($node, $model)}</a></td>
+    return 
+        <td><a href="author.html?aid={$currentAuthorId}">{$currentAuthorId} - {app:AUTname($node, $model)}</a></td>
 };
 
 declare function admin:authorMakeHTML($node as node(), $model as map(*)) {
     let $currentAuthorId := $model('currentAuthor')/@xml:id/string()
-    return if (admin:needsHTML($currentAuthorId)) then
-                <td title="source from: {string(xmldb:last-modified($config:tei-authors-root, $currentAuthorId || '.xml'))}{if (xmldb:collection-available($config:temp) and xmldb:get-child-resources($config:temp) = $currentAuthorId || ".html") then concat(', rendered on: ', xmldb:last-modified($config:temp, $currentAuthorId || ".html")) else ()}"><a href="renderTheRest.html?aid={$currentAuthorId}"><b>Render NOW!</b></a></td>
-            else
-                <td title="source from: {string(xmldb:last-modified($config:tei-authors-root, $currentAuthorId || '.xml'))}, Rendered on: {xmldb:last-modified($config:temp, $currentAuthorId || '.html')}">Rendering unnecessary. <small><a href="renderTheRest.html?aid={$currentAuthorId}">Render anyway!</a></small></td>
+    return 
+        if (admin:needsHTML($currentAuthorId)) then
+            <td title="source from: {string(xmldb:last-modified($config:tei-authors-root, $currentAuthorId || '.xml'))}{if (xmldb:collection-available($config:temp) and xmldb:get-child-resources($config:temp) = $currentAuthorId || ".html") then concat(', rendered on: ', xmldb:last-modified($config:temp, $currentAuthorId || ".html")) else ()}"><a href="renderTheRest.html?aid={$currentAuthorId}"><b>Render NOW!</b></a></td>
+        else
+            <td title="source from: {string(xmldb:last-modified($config:tei-authors-root, $currentAuthorId || '.xml'))}, Rendered on: {xmldb:last-modified($config:temp, $currentAuthorId || '.html')}">Rendering unnecessary. <small><a href="renderTheRest.html?aid={$currentAuthorId}">Render anyway!</a></small></td>
 };
 
 declare function admin:lemmaString($node as node(), $model as map(*), $lang as xs:string?) {
@@ -87,10 +92,11 @@ declare function admin:lemmaString($node as node(), $model as map(*), $lang as x
 
 declare function admin:lemmaMakeHTML($node as node(), $model as map(*)) {
     let $currentLemmaId := string($model('currentLemma')/@xml:id)
-    return if (admin:needsHTML($currentLemmaId)) then
-                <td title="source from: {string(xmldb:last-modified($config:tei-lemmata-root, $currentLemmaId || '.xml'))}{if (xmldb:collection-available($config:temp) and xmldb:get-child-resources($config:temp) = $currentLemmaId || ".html") then concat(', rendered on: ', xmldb:last-modified($config:temp, $currentLemmaId || ".html")) else ()}"><a href="renderTheRest.html?lid={$currentLemmaId}"><b>Render NOW!</b></a></td>
-            else
-                <td title="source from: {string(xmldb:last-modified($config:tei-lemmata-root, $currentLemmaId || '.xml'))}, Rendered on: {xmldb:last-modified($config:temp, $currentLemmaId || ".html")}">Rendering unnecessary. <small><a href="renderTheRest.html?lid={$currentLemmaId}">Render anyway!</a></small></td>
+    return 
+        if (admin:needsHTML($currentLemmaId)) then
+            <td title="source from: {string(xmldb:last-modified($config:tei-lemmata-root, $currentLemmaId || '.xml'))}{if (xmldb:collection-available($config:temp) and xmldb:get-child-resources($config:temp) = $currentLemmaId || ".html") then concat(', rendered on: ', xmldb:last-modified($config:temp, $currentLemmaId || ".html")) else ()}"><a href="renderTheRest.html?lid={$currentLemmaId}"><b>Render NOW!</b></a></td>
+        else
+            <td title="source from: {string(xmldb:last-modified($config:tei-lemmata-root, $currentLemmaId || '.xml'))}, Rendered on: {xmldb:last-modified($config:temp, $currentLemmaId || ".html")}">Rendering unnecessary. <small><a href="renderTheRest.html?lid={$currentLemmaId}">Render anyway!</a></small></td>
 };
            
 declare function admin:WPString($node as node(), $model as map(*), $lang as xs:string?) {
@@ -174,9 +180,9 @@ declare function admin:needsSphinxSnippetsString($node as node(), $model as map(
                                     if (doc-available(concat($subcollection, '/', $currentWorkId, '.xml'))) then $subcollection
                                     else ()
     return if (admin:needsSphinxSnippets($currentWorkId)) then
-                    <td title="{concat(if (xmldb:collection-available($config:snippets-root || '/' || $currentWorkId)) then concat('Snippets created on: ', max(for $file in xmldb:get-child-resources($config:snippets-root || '/' || $currentWorkId) return string(xmldb:last-modified($config:snippets-root || '/' || $currentWorkId, $file))), ', ') else (), 'Source from: ', string(xmldb:last-modified($targetSubcollection, $currentWorkId || '.xml')), '.')}"><a href="sphinx-admin.xql?wid={$currentWorkId}"><b>Create snippets NOW!</b></a></td>
+                    <td title="{concat(if (xmldb:collection-available($config:snippets-root || '/' || $currentWorkId)) then concat('Snippets created on: ', max(for $file in xmldb:get-child-resources($config:snippets-root || '/' || $currentWorkId) return string(xmldb:last-modified($config:snippets-root || '/' || $currentWorkId, $file))), ', ') else (), 'Source from: ', string(xmldb:last-modified($targetSubcollection, $currentWorkId || '.xml')), '.')}"><a href="webdata-admin.xql?wid={$currentWorkId}&amp;format=snippets"><b>Create snippets NOW!</b></a></td>
             else
-                    <td title="{concat('Snippets created on: ', max(for $file in xmldb:get-child-resources($config:snippets-root || '/' || $currentWorkId) return string(xmldb:last-modified($config:snippets-root || '/' || $currentWorkId, $file))), ', Source from: ', string(xmldb:last-modified($targetSubcollection, $currentWorkId || '.xml')), '.')}">Creating snippets unnecessary. <small><a href="sphinx-admin.xql?wid={$currentWorkId}">Create snippets anyway!</a></small></td>
+                    <td title="{concat('Snippets created on: ', max(for $file in xmldb:get-child-resources($config:snippets-root || '/' || $currentWorkId) return string(xmldb:last-modified($config:snippets-root || '/' || $currentWorkId, $file))), ', Source from: ', string(xmldb:last-modified($targetSubcollection, $currentWorkId || '.xml')), '.')}">Creating snippets unnecessary. <small><a href="webdata-admin.xql?wid={$currentWorkId}&amp;format=snippets">Create snippets anyway!</a></small></td>
 };
 
 declare function admin:needsRDF($targetWorkId as xs:string) as xs:boolean {
@@ -649,7 +655,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
 (:
  @param $processId: can be any string and serves only for avoiding conflicts with parallel corpus building routines
 :)
-declare function admin:createTeiCorpus($processId as xs:string) as xs:string? {
+declare function admin:createTeiCorpus($processId as xs:string) {
     let $corpusCollection := if (not(xmldb:collection-available($config:corpus-zip-root))) then xmldb:create-collection($config:webdata-root, 'corpus-zip') else ()
     (: Create temporary collection to be zipped :)
     let $checkTempRoot := if (not(xmldb:collection-available($config:temp-root))) then xmldb:create-collection($config:data-root, 'temp') else ()
@@ -677,13 +683,21 @@ declare function admin:createTeiCorpus($processId as xs:string) as xs:string? {
         if (file:exists($filepath)) then
             xmldb:remove($filepath)
         else ()
-    return xmldb:store-as-binary($config:corpus-zip-root , 'sal-tei-corpus.zip', $zip)
+    let $save := xmldb:store-as-binary($config:corpus-zip-root , 'sal-tei-corpus.zip', $zip)
+    return
+        <div>
+            <h2>TEI Corpus</h2>
+            <div>{
+                if ($save) then <p>Created and saved corpus zip file at {$save}.</p>    
+                else <p style="color:red">Corpus zip file could not be stored!</p>
+            }</div>
+        </div>
 };
 
 (:
  @param $processId: can be any string and serves only for avoiding conflicts with parallel corpus building routines
 :)
-declare function admin:createTxtCorpus($processId as xs:string) as xs:string? {
+declare function admin:createTxtCorpus($processId as xs:string) {
     let $tempCollection := $config:temp-root || '/txt-corpus-temp-' || $processId
     let $corpusCollection := if (not(xmldb:collection-available($config:corpus-zip-root))) then xmldb:create-collection($config:webdata-root, 'corpus-zip') else ()
     let $checkTempRoot := if (not(xmldb:collection-available($config:temp-root))) then xmldb:create-collection($config:data-root, 'temp') else ()
@@ -722,7 +736,15 @@ declare function admin:createTxtCorpus($processId as xs:string) as xs:string? {
             xmldb:remove($filepath)
         else ()
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Created and stored TXT corpus zip.") else ()
-    return xmldb:store-as-binary($config:corpus-zip-root , 'sal-txt-corpus.zip', $zip)
+    let $save := xmldb:store-as-binary($config:corpus-zip-root , 'sal-txt-corpus.zip', $zip)
+    return
+        <div>
+            <h2>TXT Corpus</h2>
+            <div>{
+                if ($save) then <p>Created and saved corpus zip file at {$save}.</p>    
+                else <p style="color:red">Corpus zip file could not be stored!</p>
+            }</div>
+        </div>
 };
 
 declare function admin:renderFragment ($work as node(), $wid as xs:string, $target as node(), $targetindex as xs:integer, $fragmentationDepth as xs:integer, $prevId as xs:string?, $nextId as xs:string?, $serverDomain as xs:string?) {
@@ -930,33 +952,33 @@ declare function admin:sphinx-out($node as node(), $model as map(*), $wid as xs:
     let $runtime-ms := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S')) * 1000
     return 
         if ($mode = "html") then
-            <html>
-            <body>
-                <sphinx:docset>
-                    <p>
-                        Zu indizieren: {count($todo)} Werk(e); {count($hits)} Fragmente generiert; gesamte Rechenzeit:
-                        {if ($runtime-ms < (1000 * 60)) then format-number($runtime-ms div 1000, "#.##") || " Sek."
-                         else if ($runtime-ms < (1000 * 60 * 60)) then format-number($runtime-ms div (1000 * 60), "#.##") || " Min."
-                         else format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
-                        }
-                    </p>
-                    {$hits}
-                </sphinx:docset>
-            </body>
-            </html>
+            <div>
+                <h2>Sphinx Snippets</h2>
+                <div>
+                    <sphinx:docset>
+                        <p>
+                            Zu indizieren: {count($todo)} Werk(e); {count($hits)} Fragmente generiert; gesamte Rechenzeit:
+                            {if ($runtime-ms < (1000 * 60)) then format-number($runtime-ms div 1000, "#.##") || " Sek."
+                             else if ($runtime-ms < (1000 * 60 * 60)) then format-number($runtime-ms div (1000 * 60), "#.##") || " Min."
+                             else format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
+                            }
+                        </p>
+                        {$hits}
+                    </sphinx:docset>
+                </div>
+            </div>
         else if ($mode = "sphinx") then
             <sphinx:docset>
                 {$sphinx:schema}
                 {$hits}
             </sphinx:docset>
         else
-            <html>
-                <body>
-                    <div>
-                        Called with unknown mode &quot;{$mode}&quot; (as httpget parameter).
-                    </div>
-                </body>
-            </html>
+            <div>
+                <h2>Sphinx Snippets</h2>
+                <div>
+                    <p>Called with unknown mode &quot;{$mode}&quot; (as httpget parameter).</p>
+                </div>
+            </div>
 };
 
 (: 
@@ -1141,14 +1163,10 @@ declare function admin:createNodeIndex($node as node(), $model as map(*), $wid a
     let $debug := if ($config:debug = ("trace", "info")) then util:log("warn", "[ADMIN] Finished node indexing for " || $wid || " in " || $runtime-ms || ".") else ()
     
     return 
-        <html>
-            <body>
-                <div>
-                    <h4>Node Indexing</h4>
-                    {$indexes}
-                </div>
-            </body>
-        </html>
+        <div>
+            <h4>Node Indexing</h4>
+            {$indexes}
+        </div>
     
     
 };

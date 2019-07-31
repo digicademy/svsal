@@ -25,9 +25,8 @@ declare variable $adminfiles        := ($target || '/admin.html',
                                         $target || '/reindex.xql',
                                         $target || '/render.html',
                                         $target || '/renderTheRest.html',
-                                        $target || '/sphinx-admin.xql',
-                                        $target || '/sphinx-out.html',
-                                        $target || '/sphinx-out.xql', 
+                                        (:$target || '/sphinx-out.html',:)
+                                        (:$target || '/sphinx-out.xql', :)
                                         $target || '/webdata-admin.xql');
 
 
