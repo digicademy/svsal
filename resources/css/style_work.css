@@ -772,12 +772,23 @@ hr.ornament {
 
 .poem {
     font-style:italic;
-    font-size:1.5em !important;
+    font-size:23px !important;
 /*    padding-bottom:3em !important;*/
     text-align: left !important;
 }
 .poem-head {
-    font-size:1.5em;
+    font-size:26px;
+    text-align: left !important;
+}
+
+.marginal .poem {
+    font-style:italic;
+    font-size:19px !important;
+/*    padding-bottom:3em !important;*/
+    text-align: left !important;
+}
+.marginal .poem-head {
+    font-size:17px;
     text-align: left !important;
 }
 
