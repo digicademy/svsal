@@ -2753,7 +2753,7 @@ declare function app:WRKeditionMetadata($node as node(), $model as map(*), $wid 
 
 (:combined title on work.html in left box:)
 declare %templates:wrap
-    function app:WRKcombined($node as node(), $model as map(*), $wid as xs:string?) {
+    function app:WRKcombined($node as node()?, $model as map(*)?, $wid as xs:string?) {
         let $path           :=  doc($config:tei-works-root || "/" || sal-util:normalizeId($wid) || ".xml")//tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr
         let $author         :=  string-join($path//tei:author/tei:persName/tei:surname, ', ')
         let $title          :=  $path//tei:title[@type = 'short']
@@ -3440,7 +3440,7 @@ declare %templates:default
 };:)
                 
 (: ==== Paginator Function ===== :)
-declare function app:WRKpreparePagination($node as node(), $model as map(*), $wid as xs:string?, $lang as xs:string?) {
+declare function app:WRKpreparePagination($node as node()?, $model as map(*)?, $wid as xs:string?, $lang as xs:string?) {
     let $workId :=  
         if ($wid) then 
             if (contains($wid, '_')) then substring-before(sal-util:normalizeId($wid), '_') 

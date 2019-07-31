@@ -35,9 +35,9 @@ declare function admin:needsIndexString($node as node(), $model as map(*)) {
     let $currentWorkId := $model('currentWork')?('wid')
     return 
         if (admin:needsIndex($currentWorkId)) then
-            <td title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}{if (xmldb:get-child-resources($config:index-root) = $currentWorkId || "_nodeIndex.xml") then concat(', rendered on: ', xmldb:last-modified($config:index-root, $currentWorkId || "_nodeIndex.xml")) else ()}"><a href="webdata-admin.xql?wid={$currentWorkId}&amp;format=index"><b>Create Node Index NOW!</b></a></td>
+            <td title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}{if (xmldb:get-child-resources($config:index-root) = $currentWorkId || "_nodeIndex.xml") then concat(', rendered on: ', xmldb:last-modified($config:index-root, $currentWorkId || "_nodeIndex.xml")) else ()}"><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=index"><b>Create Node Index NOW!</b></a></td>
         else
-            <td title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}, rendered on: {xmldb:last-modified($config:index-root, $currentWorkId || "_nodeIndex.xml")}">Node indexing unnecessary. <small><a href="webdata-admin.xql?wid={$currentWorkId}&amp;format=index">Create Node Index anyway!</a></small></td>
+            <td title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}, rendered on: {xmldb:last-modified($config:index-root, $currentWorkId || "_nodeIndex.xml")}">Node indexing unnecessary. <small><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=index">Create Node Index anyway!</a></small></td>
 };
 
 declare function admin:needsTeiCorpusZip($node as node(), $model as map(*)) {
@@ -136,9 +136,9 @@ declare function admin:needsHTMLString($node as node(), $model as map(*)) {
     let $currentWorkId := $model('currentWork')?('wid')
     return 
         if (admin:needsHTML($currentWorkId)) then
-            <td title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}{if (xmldb:get-child-resources($config:index-root) = $currentWorkId || "_nodeIndex.xml") then concat(', rendered on: ', xmldb:last-modified($config:index-root, $currentWorkId || "_nodeIndex.xml")) else ()}"><a href="render.html?wid={$currentWorkId}"><b>Render NOW!</b></a></td>
+            <td title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}{if (xmldb:get-child-resources($config:index-root) = $currentWorkId || "_nodeIndex.xml") then concat(', rendered on: ', xmldb:last-modified($config:index-root, $currentWorkId || "_nodeIndex.xml")) else ()}"><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=html"><b>Render NOW!</b></a></td>
         else
-            <td title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}, rendered on: {xmldb:last-modified($config:index-root, $currentWorkId || "_nodeIndex.xml")}">Rendering unnecessary. <small><a href="render.html?wid={$currentWorkId}">Render anyway!</a></small></td>
+            <td title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}, rendered on: {xmldb:last-modified($config:index-root, $currentWorkId || "_nodeIndex.xml")}">Rendering unnecessary. <small><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=html">Render anyway!</a></small></td>
 };
 
 declare function admin:workString($node as node(), $model as map(*), $lang as xs:string?) {
@@ -148,9 +148,9 @@ declare function admin:workString($node as node(), $model as map(*), $lang as xs
     let $titleShort := $model('currentWork')?('titleShort')
     return 
         <td>
-            <a href="{$config:webserver}/en/work.html?wid={$currentWorkId}">{$currentWorkId}: {$author} - {$titleShort}</a>
+            <a href="{$config:webserver}/en/work.html?rid={$currentWorkId}">{$currentWorkId}: {$author} - {$titleShort}</a>
             <br/>
-            <a style="font-weight:bold;" href="{$config:webserver}/webdata-admin.xql?wid={$currentWorkId}&amp;format=all">Create EVERYTHING (safest option)</a>
+            <a style="font-weight:bold;" href="{$config:webserver}/webdata-admin.xql?rid={$currentWorkId}&amp;format=all">Create EVERYTHING except IIIF (safest option)</a>
         </td>
 };
 
@@ -180,9 +180,9 @@ declare function admin:needsSphinxSnippetsString($node as node(), $model as map(
                                     if (doc-available(concat($subcollection, '/', $currentWorkId, '.xml'))) then $subcollection
                                     else ()
     return if (admin:needsSphinxSnippets($currentWorkId)) then
-                    <td title="{concat(if (xmldb:collection-available($config:snippets-root || '/' || $currentWorkId)) then concat('Snippets created on: ', max(for $file in xmldb:get-child-resources($config:snippets-root || '/' || $currentWorkId) return string(xmldb:last-modified($config:snippets-root || '/' || $currentWorkId, $file))), ', ') else (), 'Source from: ', string(xmldb:last-modified($targetSubcollection, $currentWorkId || '.xml')), '.')}"><a href="webdata-admin.xql?wid={$currentWorkId}&amp;format=snippets"><b>Create snippets NOW!</b></a></td>
+                    <td title="{concat(if (xmldb:collection-available($config:snippets-root || '/' || $currentWorkId)) then concat('Snippets created on: ', max(for $file in xmldb:get-child-resources($config:snippets-root || '/' || $currentWorkId) return string(xmldb:last-modified($config:snippets-root || '/' || $currentWorkId, $file))), ', ') else (), 'Source from: ', string(xmldb:last-modified($targetSubcollection, $currentWorkId || '.xml')), '.')}"><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=snippets"><b>Create snippets NOW!</b></a></td>
             else
-                    <td title="{concat('Snippets created on: ', max(for $file in xmldb:get-child-resources($config:snippets-root || '/' || $currentWorkId) return string(xmldb:last-modified($config:snippets-root || '/' || $currentWorkId, $file))), ', Source from: ', string(xmldb:last-modified($targetSubcollection, $currentWorkId || '.xml')), '.')}">Creating snippets unnecessary. <small><a href="webdata-admin.xql?wid={$currentWorkId}&amp;format=snippets">Create snippets anyway!</a></small></td>
+                    <td title="{concat('Snippets created on: ', max(for $file in xmldb:get-child-resources($config:snippets-root || '/' || $currentWorkId) return string(xmldb:last-modified($config:snippets-root || '/' || $currentWorkId, $file))), ', Source from: ', string(xmldb:last-modified($targetSubcollection, $currentWorkId || '.xml')), '.')}">Creating snippets unnecessary. <small><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=snippets">Create snippets anyway!</a></small></td>
 };
 
 declare function admin:needsRDF($targetWorkId as xs:string) as xs:boolean {
@@ -222,9 +222,9 @@ declare function admin:needsRDFString($node as node(), $model as map(*)) {
         else ()
     return 
         if (admin:needsRDF($currentWorkId)) then
-            <td title="{concat(if (doc-available($rdfSubcollection || '/' || $currentWorkId || '.rdf')) then concat('RDF created on: ', string(xmldb:last-modified($rdfSubcollection, $currentWorkId || '.rdf')), ', ') else (), 'Source from: ', string(xmldb:last-modified($targetSubcollection, $currentWorkId || '.xml')), '.')}"><a href="rdf-admin.xql?resourceId={$currentWorkId}"><b>Create RDF NOW!</b></a></td>
+            <td title="{concat(if (doc-available($rdfSubcollection || '/' || $currentWorkId || '.rdf')) then concat('RDF created on: ', string(xmldb:last-modified($rdfSubcollection, $currentWorkId || '.rdf')), ', ') else (), 'Source from: ', string(xmldb:last-modified($targetSubcollection, $currentWorkId || '.xml')), '.')}"><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=rdf"><b>Create RDF NOW!</b></a></td>
         else
-            <td title="{concat('RDF created on: ', string(xmldb:last-modified($rdfSubcollection, $currentWorkId || '.rdf')), ', Source from: ', string(xmldb:last-modified($targetSubcollection, $currentWorkId || '.xml')), '.')}">Creating RDF unnecessary. <small><a href="rdf-admin.xql?resourceId={$currentWorkId}">Create RDF anyway!</a></small></td>
+            <td title="{concat('RDF created on: ', string(xmldb:last-modified($rdfSubcollection, $currentWorkId || '.rdf')), ', Source from: ', string(xmldb:last-modified($targetSubcollection, $currentWorkId || '.xml')), '.')}">Creating RDF unnecessary. <small><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=rdf">Create RDF anyway!</a></small></td>
 };
 
 declare function admin:needsIIIFResource($targetWorkId as xs:string) as xs:boolean {
@@ -498,10 +498,11 @@ declare %templates:wrap function admin:renderAuthorLemma($node as node(), $model
 };
 
 
-declare %templates:wrap function admin:renderWork($node as node(), $model as map(*), $wid as xs:string*, $lang as xs:string?) as element(div) {
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("Rendering " || $wid || ".") else ()
+declare %templates:wrap function admin:renderWork($workId as xs:string*) as element(div) {
     let $start-time := util:system-time()
-    let $wid := request:get-parameter('wid', '*')
+    let $wid := if ($workId) then $workId else request:get-parameter('wid', '*')
+    
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("Rendering " || $wid || ".") else ()
     
     (: define the works to be fragmented: :)
     let $todo := 
@@ -526,7 +527,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
             let $workId := $work/@xml:id
             let $text := $work//tei:text[@type='work_volume'] | $work//tei:text[@type = 'work_monograph']
             let $elements := $work//tei:text[@type = 'work_monograph']/(tei:front | tei:body | tei:back)  
-            let $title := app:WRKcombined($work, $model, $workId)
+            let $title := app:WRKcombined($work, (), $workId)
             let $store :=     
                 <div id="tableOfConts">
                     <ul>
@@ -548,9 +549,9 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
             let $debug         := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] ToC file created for " || $workId || ".") else ()
             
             (:Next, create the Pages html file. :)
-            let $pagesDe        :=  app:WRKpreparePagination($node, $model, $workId, 'de')
-            let $pagesEn        :=  app:WRKpreparePagination($node, $model, $workId, 'en')
-            let $pagesEs        :=  app:WRKpreparePagination($node, $model, $workId, 'es')
+            let $pagesDe        :=  app:WRKpreparePagination((), (), $workId, 'de')
+            let $pagesEn        :=  app:WRKpreparePagination((), (), $workId, 'en')
+            let $pagesEs        :=  app:WRKpreparePagination((), (), $workId, 'es')
             let $savePages := (
                 admin:saveFile($workId, $workId || "_pages_de.html", $pagesDe, "html"),
                 admin:saveFile($workId, $workId || "_pages_en.html", $pagesEn, "html"),
@@ -579,12 +580,12 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
                 let $result := admin:renderFragment($work, xs:string($workId), $section, $index, $fragmentationDepth, $prevId, $nextId, $config:serverdomain)
 (:                let $result := render:createHTMLFragment($workId, $section, $index, $prevId, $nextId):)
                 return 
-                    <p>
-                        <div>
-                            {format-number($index, "0000")}: &lt;{local-name($section) || " xml:id=&quot;" || string($section/@xml:id) || "&quot;&gt;"} (Level {count($section/ancestor-or-self::tei:*)})
-                        </div>
-                        {$result}
-                    </p>
+                    <div>
+                        <h3>Fragment {$index}:</h3>
+                        <h3>{format-number($index, "0000")}: &lt;{local-name($section) || " xml:id=&quot;" || string($section/@xml:id) || "&quot;&gt;"} (Level {count($section/ancestor-or-self::tei:*)})</h3>
+                        <div style="margin-left:4em;">{$result}</div>
+                    </div>
+                    
             
         (: Reporting (and, possibly, reindexing the database) :)
             (: See if there are any leaf elements in our text that are not matched by our rule :)
@@ -642,6 +643,7 @@ declare %templates:wrap function admin:renderWork($node as node(), $model as map
     let $debug := util:log('warn', '[ADMIN] Created HTML for work ' || $wid || ' in ' || $runtime-ms || ' ms.')
     return 
         <div>
+            <h2>HTML Rendering</h2>
             <p>Zu rendern: {count($todo)} Werk(e); gesamte Rechenzeit:
                 {$runtime-ms}
             </p>
@@ -782,7 +784,7 @@ declare function admin:renderFragment ($work as node(), $wid as xs:string, $targ
 };
 
 (: Generate fragments for sphinx' indexer to grok :)
-declare function admin:sphinx-out($node as node(), $model as map(*), $wid as xs:string*, $mode as xs:string?) {
+declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
 
     let $start-time := util:system-time()
 
@@ -1013,7 +1015,7 @@ declare function admin:determineFragmentationDepth($work as element(tei:TEI)) as
     ()
 };:)
 
-declare function admin:createNodeIndex($node as node(), $model as map(*), $wid as xs:string*) {
+declare function admin:createNodeIndex($wid as xs:string*) {
     let $debug := if ($config:debug = ("trace", "info")) then console:log("Creating node index for " || $wid || ".") else ()
     let $start-time := util:system-time()
     let $wid := request:get-parameter('wid', '*')
@@ -1171,6 +1173,32 @@ declare function admin:createNodeIndex($node as node(), $model as map(*), $wid a
     
 };
 
-(:declare function admin:testMessage($node as node(), $model as map(*), $wid as xs:string*) {
-    console:log("[ADMIN] This is a test message...")
-};:)
+declare function admin:createRDF($rid as xs:string) {
+    let $rid :=  
+        if (starts-with($rid, "authors/")) then
+            substring-after($rid, "authors/")
+        else if (starts-with($rid, "texts/")) then
+            substring-after($rid, "texts/")
+        else $rid
+    let $start-time := util:system-time()
+    let $debug := 
+        console:log("Requesting " || $config:apiserver || '/v1/xtriples/extract.xql?format=rdf&amp;configuration=' 
+            || $config:apiserver || '/v1/xtriples/createConfig.xql?resourceId=' || $rid || ' ...')
+    let $rdf   :=  
+        doc($config:apiserver || '/v1/xtriples/extract.xql?format=rdf&amp;configuration=' 
+            || $config:apiserver || '/v1/xtriples/createConfig.xql?resourceId=' || $rid)
+    let $runtime-ms := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000
+    let $runtimeString := 
+        if ($runtime-ms < (1000 * 60)) then format-number($runtime-ms div 1000, "#.##") || " Sek."
+        else if ($runtime-ms < (1000 * 60 * 60))  then format-number($runtime-ms div (1000 * 60), "#.##") || " Min."
+        else format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
+    let $log  := util:log('warn', 'Extracted RDF for ' || $rid || ' in ' || $runtimeString)
+    let $save := admin:saveFile($rid, $rid || '.rdf', $rdf, 'rdf')
+    return 
+        <div>
+            <h2>RDF Extraction</h2>
+            <p>Extracted RDF in {$runtimeString} and saved at {$save}</p>
+            <div style="margin-left:5em;">{$rdf}</div>
+        </div>
+};
+
