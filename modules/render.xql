@@ -227,6 +227,7 @@ declare function render:isUnnamedCitetrailNode($node as element()) as xs:boolean
 
 (:
 ~ Anchor and page nodes occur within main nodes, marginal nodes, or structural nodes, and have no content.
+~ (NOTE: should work with on-the-fly copying of sections. )
 :)
 declare function render:isAnchorNode($node as node()) as xs:boolean {
     boolean(
@@ -235,10 +236,29 @@ declare function render:isAnchorNode($node as node()) as xs:boolean {
     )
 };
 
+(:
+~ Page nodes are regular page breaks.
+~ (NOTE: should work with on-the-fly copying of sections. )
+:)
 declare function render:isPageNode($node as node()) as xs:boolean {
     boolean(
         $node/@xml:id and
         $node/self::tei:pb[not(@sameAs or @corresp)]
+    )
+};
+
+(:
+~ Marginal nodes occur within structural or main nodes.
+~ (NOTE: should work with on-the-fly copying of sections. )
+:)
+declare function render:isMarginalNode($node as node()) as xs:boolean {
+    boolean(
+        $node/@xml:id and
+        (
+            $node/self::tei:note[@place eq 'margin'] or
+            $node/self::tei:label[@place eq 'margin']
+        )
+        (:and not($node/ancestor::*[render:isMarginalNode(.)]):) (: that shouldn't be possible :)
     )
 };
 
@@ -276,19 +296,6 @@ declare function render:isListNode($node as node()) as xs:boolean {
     )
 };
 
-(:
-~ Marginal nodes occur within structural or main nodes.
-:)
-declare function render:isMarginalNode($node as node()) as xs:boolean {
-    boolean(
-        $node/@xml:id and
-        (
-            $node/self::tei:note[@place eq 'margin'] or
-            $node/self::tei:label[@place eq 'margin']
-        )
-        (:and not($node/ancestor::*[render:isMarginalNode(.)]):) (: that shouldn't be possible :)
-    )
-};
 
 (:
 ~ Structural nodes are high-level nodes containing any of the other types of nodes (main, marginal, anchor nodes).
@@ -586,7 +593,7 @@ declare function render:HTMLSectionToolbox($node as element()) as element(div) {
                         <button onclick="citeCopy(this);"><i18n:text key="copy">Copy</i18n:text></button>
                         <span class="cite-rec" style="display:none">
                             {render:HTMLmakeCitationReference($wid, $fileDesc, 'reading-passage', $node)
-                            (: <input> tag will be created on-the-fly in template_work.html :)}
+                            (: <textarea> tag will be created on-the-fly in template_work.html :)}
                         </span>
                     </div>
                 </div>
@@ -846,22 +853,22 @@ declare function render:determineUnnamedCitetrailNodePosition($node as element()
 (: Marginal citetrails: "nX" where X is the anchor used (if it is alphanumeric) and "nXY" where Y is the number of times that X occurs inside the current div
     (important: nodes are citetrail children of div (not of p) and are counted as such) :)
 declare function render:makeMarginalCitetrail($node as element()) as xs:string {
-    let $currentSection := render:getCitableParent($node)
+    let $currentSection := sal-util:copy(render:getCitableParent($node))
+    let $currentNode := $currentSection//*[@xml:id eq $node/@xml:id]
     let $label :=
-        if (matches($node/@n, '^[A-Za-z0-9\[\]]+$')) then
-            if (count($currentSection//*[render:isMarginalNode(.) and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($node/@n, '[^a-zA-Z0-9]', ''))]) gt 1) then
+        if (matches($currentNode/@n, '^[A-Za-z0-9\[\]]+$')) then
+            if (count($currentSection//*[render:isMarginalNode(.) and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))]) gt 1) then
                 concat(
-                    upper-case(replace($node/@n, '[^a-zA-Z0-9]', '')),
+                    upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', '')),
                     string(
-                        count($currentSection//*[render:isMarginalNode(.) and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($node/@n, '[^a-zA-Z0-9]', ''))]
-                              intersect $node/preceding::*[render:isMarginalNode(.) and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($node/@n, '[^a-zA-Z0-9]', ''))])
+                        count($currentSection//*[render:isMarginalNode(.) and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))]
+                              intersect $currentNode/preceding::*[render:isMarginalNode(.) and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))])
                         + 1)
                 )
-            else upper-case(replace($node/@n, '[^a-zA-Z0-9]', ''))
-        else string(count($node/preceding::*[render:isMarginalNode(.)] intersect $currentSection//*[render:isMarginalNode(.)]) + 1)
+            else upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))
+        else string(count($currentNode/preceding::*[render:isMarginalNode(.)] intersect $currentSection//*[render:isMarginalNode(.)]) + 1)
     return 'n' || $label
 };
-
 
 
 (: ####====---- TEI Node Rendering Typeswitch Functions ----====#### :)
@@ -1882,7 +1889,7 @@ declare function render:list($node as element(tei:list), $mode as xs:string) {
                           count($currentNode/preceding::tei:list[@type eq $currentNode/@type]
                                 intersect $currentSection//tei:list[@type eq $currentNode/@type]
                           ) + 1)
-                     )
+                  )
                 (: without on-the-fly copying: :)
                 (:concat(
                     $node/@type, 
@@ -2101,7 +2108,7 @@ declare function render:note($node as element(tei:note), $mode as xs:string) {
     switch($mode)
         case 'title' return
             normalize-space(
-                let $currentSection := sal-util:copy($node/ancestor::tei:div[1])
+                let $currentSection := sal-util:copy(render:getCitableParent($node))
                 let $currentNode := $currentSection//tei:note[@xml:id eq $node/@xml:id]
                 return
                     if ($node/@n) then
