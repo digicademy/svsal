@@ -597,10 +597,14 @@ declare function render:HTMLSectionToolbox($node as element()) as element(div) {
                         </span>
                     </div>
                 </div>
-                <div class="sal-tb-btn">
-                    <a href="{$citetrailBaseUrl || '?format=txt'}">
+                <div class="sal-tb-btn dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="messengers fas fa-align-left" title="i18n(txtExpPass)"/>
                     </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="{$citetrailBaseUrl || '?format=txt&amp;mode=edit'}"><i class="messengers fas fa-align-left" title="i18n(downloadTXTEdit)"/>{' '}<i18n:text key="constitutedLower">constituted</i18n:text></a></li>
+                        <li><a href="{$citetrailBaseUrl || '?format=txt&amp;mode=orig'}"><i class="messengers fas fa-align-left" title="i18n(downloadTXTOrig)"/>{' '}<i18n:text key="diplomaticLower">diplomatic</i18n:text></a></li>
+                    </ul>
                 </div>
                 <div class="sal-tb-btn">
                     <a href="{$citetrailBaseUrl || '?format=tei'}">
@@ -2163,7 +2167,7 @@ declare function render:note($node as element(tei:note), $mode as xs:string) {
                 let $label := 
                     if ($node/@n) then '"' || $node/@n || '"' (\: TODO: what if there are several notes with the same @n in a div :\)
                     else string(count($node/ancestor::*[render:isPassagetrailNode(.) and not(self::tei:p)][1]//tei:note
-                                      intersect $node/preceding::tei:note) + 1) (\: TODO: this can be insanely expensive wrt performance... :\)
+                                      intersect $node/preceding::tei:note) + 1)
                 return $prefix || ' ' || $label:)
             else ()
             

@@ -310,6 +310,7 @@
   <msg key="linkPass">Go to/link this text area</msg>
   <msg key="teiExpPass">Export TEI for this text area</msg>
   <msg key="txtExpPass">Export plain text for this text area</msg>
+  <msg key="txtExp">Export plain text</msg>
    
   <!--news-->
   <msg key="more">more</msg>

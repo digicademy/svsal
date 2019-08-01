@@ -3253,6 +3253,20 @@ declare function app:tocSourcesList($node as node(), $model as map(*), $lang as 
         i18n:process($toc, $lang, $config:i18n-root, 'en')
 };
 
+declare function app:downloadTXT($node as node(), $model as map(*), $mode as xs:string, $lang as xs:string) {
+    let $wid := request:get-parameter('wid', '')
+    let $hoverTitleEdit := i18n:process(<i18n:text key="downloadTXTEdit">Download as plaintext (constituted variant)</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
+    let $hoverTitleOrig := i18n:process(<i18n:text key="downloadTXTOrig">Download as plaintext (diplomatic variant)</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
+    
+    let $download := 
+        if ($wid and ($mode eq 'edit')) then 
+            <li><a title="{$hoverTitleEdit}" href="{$config:idserver || '/texts/' || $wid ||'?format=txt&amp;mode=edit'}"><span class="fas fa-align-left" aria-hidden="true"/>&#xA0;TXT (<i18n:text key="constitutedLower">constituted</i18n:text>)</a></li>
+        else if ($wid and ($mode eq 'orig')) then 
+            <li><a title="{$hoverTitleOrig}" href="{$config:idserver || '/texts/' || $wid ||'?format=txt&amp;mode=orig'}"><span class="fas fa-align-left" aria-hidden="true"/>&#xA0;TXT (<i18n:text key="diplomaticLower">diplomatic</i18n:text>)</a></li>
+        else()
+    return i18n:process($download, $lang, '/db/apps/salamanca/data/i18n', 'en')
+};
+
 
 (: ================= End Html construction routines ========== :)
 
@@ -3335,10 +3349,17 @@ declare %templates:default
                                     <span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;<i18n:text key="export">Export</i18n:text>&#xA0;
                                     <span class="caret"/>
                                 </button>
-                                <ul class="dropdown-menu" role="menu">
+                                <ul class="dropdown-menu export-options" role="menu">
                                     {$downloadXML}
-                                    {$downloadTXTorig}
-                                    {$downloadTXTedit}
+                                    <li class="btn-group">
+                                        <a title="i18n(txtExp)">
+                                            <i class="messengers fas fa-align-left"/>{' '}<i18n:text key="txtFiles">Plain text (TXT)</i18n:text>
+                                        </a>
+                                        <ul role="menu">
+                                            <li><a style="color:black;" href="{$config:idserver || '/texts/' || $wid || '?format=txt&amp;mode=edit'}"><i18n:text key="constitutedLower">constituted</i18n:text></a></li>
+                                            <li><a style="color:black;" href="{$config:idserver || '/texts/' || $wid || '?format=txt&amp;mode=orig'}"><i18n:text key="diplomaticLower">diplomatic</i18n:text></a></li>
+                                        </ul>
+                                    </li>
                                     {$downloadRDF}
                                     <li class="disabled">
                                         <a><i class="fas fa-file-pdf text-muted" aria-hidden="true"></i> <span class="text-muted"> PDF</span></a>
@@ -3527,28 +3548,19 @@ declare %templates:wrap
 
 (:download XML func:)
 declare function app:downloadXML($node as node(), $model as map(*), $lang as xs:string) {
-    let $wid      :=  request:get-parameter('wid', '')
+    let $wid := request:get-parameter('wid', '')
     let $hoverTitle := i18n:process(<i18n:text key="downloadXML">Download TEI/XML source file</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
     let $download := 
-        if ($wid) then <li><a title="{$hoverTitle}" href="{$config:idserver || '/texts/' || $wid ||'?format=tei'}"><i class="fas fa-file-code" aria-hidden="true"/>&#xA0;TEI XML</a></li>
+        if ($wid) then 
+            <li>
+                <a title="{$hoverTitle}" href="{$config:idserver || '/texts/' || $wid ||'?format=tei'}">
+                    <i class="fas fa-file-code" aria-hidden="true"/>&#xA0;TEI XML
+                </a>
+            </li>
         (:else if ($model('currentLemma'))  then <li><a title="{$hoverTitle}" href="{$config:teiserver || '/' || $model('currentLemma')/@xml:id}.xml">TEI/XML</a></li>
         else if ($model('currentAuthor')) then <li><a title="{$hoverTitle}" href="{$config:teiserver || '/' || $model('currentAuthor')/@xml:id}.xml">TEI/XML</a></li>:)
         else()
     return $download
-};
-
-declare function app:downloadTXT($node as node(), $model as map(*), $mode as xs:string, $lang as xs:string) {
-    let $wid := request:get-parameter('wid', '')
-    let $hoverTitleEdit := i18n:process(<i18n:text key="downloadTXTEdit">Download as plaintext (constituted variant)</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
-    let $hoverTitleOrig := i18n:process(<i18n:text key="downloadTXTOrig">Download as plaintext (diplomatic variant)</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
-    
-    let $download := 
-        if ($wid and ($mode eq 'edit')) then 
-            <li><a title="{$hoverTitleEdit}" href="{$config:idserver || '/texts/' || $wid ||'?format=txt&amp;mode=edit'}"><span class="fas fa-align-left" aria-hidden="true"/>&#xA0;TXT (<i18n:text key="constitutedLower">constituted</i18n:text>)</a></li>
-        else if ($wid and ($mode eq 'orig')) then 
-            <li><a title="{$hoverTitleOrig}" href="{$config:idserver || '/texts/' || $wid ||'?format=txt&amp;mode=orig'}"><span class="fas fa-align-left" aria-hidden="true"/>&#xA0;TXT (<i18n:text key="diplomaticLower">diplomatic</i18n:text>)</a></li>
-        else()
-    return i18n:process($download, $lang, '/db/apps/salamanca/data/i18n', 'en')
 };
 
 (:declare function app:downloadCorpusXML($node as node(), $model as map(*), $lang as xs:string) {

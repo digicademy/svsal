@@ -322,6 +322,13 @@
                     $('#myModal').modal('hide');  
                 });
         </script>
+        
+        <!-- ==== Do not close export menu on click ==== -->
+        <script type="text/javascript">
+            $(document).on('click', '.dropdown-menu.export-options', function (e) {
+                e.stopPropagation();
+            });
+        </script>
 
         <!-- ==== Remember current position on Clicking a language link ==== -->
         <script type="text/javascript">

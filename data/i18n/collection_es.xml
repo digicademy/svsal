@@ -325,6 +325,7 @@
     <msg key="linkPass">Ir a / enlazar este pasaje</msg>
     <msg key="teiExpPass">Descargar TEI para este pasaje</msg>
     <msg key="txtExpPass">Descargar texto puro para este pasaje</msg>
+    <msg key="txtExp">Descargar texto simple</msg>
     
     <!--news-->
     <msg key="more">más</msg>

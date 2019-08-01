@@ -69,6 +69,7 @@
   <msg key="linkPass">Diesen Textabschnitt aufrufen / verlinken</msg>
   <msg key="teiExpPass">TEI für diesen Abschnitt exportieren</msg>
   <msg key="txtExpPass">Plain Text für diesen Abschnitt exportieren</msg>
+  <msg key="txtExp">Plain Text exportieren</msg>
   
   <!-- errors -->
   <msg key="authorNotYetAvailable">Dieser Artikel ist noch nicht verfügbar.</msg>
