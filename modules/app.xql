@@ -3682,3 +3682,7 @@ declare %templates:wrap function app:errorInformation($node as node(), $model as
     else ()
 };
 
+declare %templates:wrap function app:projectTeam($node as node(), $model as map(*), $lang as xs:string?) {
+    ()
+};
+
