@@ -736,29 +736,32 @@ declare %templates:default("language", "en")
 declare %templates:default("lang", "en") 
     function config:canonical-url($node as node(), $model as map(*), $lang as xs:string, $wid as xs:string*, $aid as xs:string*, $q as xs:string?) as element() {
         let $url :=  
-                     if (request:get-attribute('$exist:resource') = ("authors.html",
-                                                                     "works.html",
-                                                                     "dictionary.html",
-                                                                     "index.html",
-                                                                     "project.html",
-                                                                     "contact.html",
-                                                                     "guidelines.html",
-                                                                     "editorialWorkingPapers.html",
-                                                                     "projektbeteiligte.html",
-                                                                     "workingPapers.html",
-                                                                     "search.html"
-                                                                    )) then
-                            concat($config:webserver, '/', $lang, '/', request:get-attribute('$exist:resource'))
-                     else if (ends-with(request:get-uri(), "/author.html")) then
-                            concat($config:webserver, '/', $lang, '/author.html?',       string-join(net:inject-requestParameter('',''), '&amp;'))
-                     else if (ends-with(request:get-uri(), "/work.html")) then
-                            concat($config:webserver, '/', $lang, '/work.html?',         string-join(net:inject-requestParameter('',''), '&amp;'))
-                     else if (ends-with(request:get-uri(), "/lemma.html")) then
-                            concat($config:webserver, '/', $lang, '/lemma.html?',        string-join(net:inject-requestParameter('',''), '&amp;'))
-                     else if (ends-with(request:get-uri(), "/workingPaper.html")) then
-                            concat($config:webserver, '/', $lang, '/workingPaper.html?', string-join(net:inject-requestParameter('',''), '&amp;'))
-                     else
-                            $config:webserver
+             if (request:get-attribute('$exist:resource') = 
+                ("authors.html",
+                 "works.html",
+                 "dictionary.html",
+                 "index.html",
+                 "project.html",
+                 "contact.html",
+                 "guidelines.html",
+                 "editorialWorkingPapers.html",
+                 "projektbeteiligte.html",
+                 "workingPapers.html",
+                 "search.html"
+                )) then
+                    concat($config:webserver, '/', $lang, '/', request:get-attribute('$exist:resource'))
+             else if (ends-with(request:get-uri(), "/author.html")) then
+                    concat($config:webserver, '/', $lang, '/author.html?',       string-join(net:inject-requestParameter('',''), '&amp;'))
+             else if (ends-with(request:get-uri(), "/work.html")) then
+                    concat($config:webserver, '/', $lang, '/work.html?',         string-join(net:inject-requestParameter('',''), '&amp;'))
+             else if (ends-with(request:get-uri(), "/lemma.html")) then
+                    concat($config:webserver, '/', $lang, '/lemma.html?',        string-join(net:inject-requestParameter('',''), '&amp;'))
+             else if (ends-with(request:get-uri(), "/workingPaper.html")) then
+                    concat($config:webserver, '/', $lang, '/workingPaper.html?', string-join(net:inject-requestParameter('',''), '&amp;'))
+             else if (ends-with(request:get-uri(), "/participants.html")) then
+                    concat($config:webserver, '/', $lang, '/participants.html?',        string-join(net:inject-requestParameter('',''), '&amp;'))
+             else
+                    $config:webserver
         return
             <link rel="canonical" href="{$url}"/>
 };
@@ -766,11 +769,13 @@ declare %templates:default("lang", "en")
 declare %templates:default("lang", "en") 
     function config:hreflang-url($node as node(), $model as map(*), $lang as xs:string, $wid as xs:string*, $aid as xs:string*, $q as xs:string?) as element()* {
         for $language in ('de', 'en', 'es')
-            let $url := concat($config:webserver, '/', $language, '/', request:get-attribute('$exist:resource'),
-                                      if (count(net:inject-requestParameter('','')) gt 0) then
-                                          concat('?', string-join(net:inject-requestParameter('',''), '&amp;'))
-                                      else ()
-                              )
+            let $url := 
+                concat(
+                    $config:webserver, '/', $language, '/', request:get-attribute('$exist:resource'),
+                    if (count(net:inject-requestParameter('','')) gt 0) then
+                        concat('?', string-join(net:inject-requestParameter('',''), '&amp;'))
+                    else ()
+                )
             return
                 <link rel="alternate" hreflang="{$language}" href="{$url}"/>
 };
@@ -810,24 +815,26 @@ declare %templates:default("lang", "en")
         let $document   := functx:substring-after-last(request:get-url(), '/')
         let $id         := for $par in request:get-parameter-names()
                                 return if (matches($par, ".{1,2}id")) then request:get-parameter($par, '') else ()
-        let $template   := switch (substring-before($document, '.html'))
-                            case 'author'                   return <i18n:text key="metaAuthor">Biobibliographische Informationen über</i18n:text>
-                            case 'lemma'                    return <i18n:text key="metaLemma">Sachartikel zu</i18n:text>
-                            case 'workingPaper'             return <i18n:text key="metaWP">SvSal Working Paper</i18n:text>
-                            case 'work'                     return <i18n:text key="metaWork">Leseansicht von</i18n:text>
-                            case 'workDetails'              return <i18n:text key="metaWorkDetails">Bibliographische Daten zu</i18n:text>
-                            case 'index'                    return <i18n:text key="metaIndex">Eine Sammlung digitaler Quellen und ein Wörterbuch der juridisch-politischen Diskurse von iberischen Theologen, Juristen und Philosophen der Frühen Neuzeit.</i18n:text>
-                            case 'search'                   return <i18n:text key="metaSearch">Suche in Texten der Salmanticenser Autoren, in Wörterbuch- und biographischen Artikeln sowie in Working Papers über die Schule von Salamanca.</i18n:text>
-                            case 'contact'                  return <i18n:text key="metaContact">Möglichkeiten, das Projekt "Die Schule von Salamanca" zu kontaktieren und über Neuigkeiten auf dem Laufenden zu bleiben.</i18n:text>
-                            case 'editorialWorkingPapers'   return <i18n:text key="metaEditorial">Richtlinien und Vorgaben für die Einreichung von Vorschlägen für die Working Paper Reihe des Projekts "Die Schule von Salamanca".</i18n:text>
-                            case 'guidelines'               return <i18n:text key="metaGuidelines">Editionsrichtlinien der Erstellung der digitalen Quellenedition des Projekts "Die Schule von Salamanca".</i18n:text>
-                            case 'project'                  return <i18n:text key="metaProject">Allgemeine Informationen über das Projekt "Die Schule von Salamanca. Eine digitale Quellenedition und ein Wörterbuch ihrer juridisch-politischen Sprache".</i18n:text>
-                            case 'news'                     return <i18n:text key="metaNews">Neuigkeiten, Ankündigungen und kurze Blog-Texte des Projekts "Die Schule von Salamanca" über Theorie, Methodologie, Technik und Weiteres.</i18n:text>
-                            case 'works'                    return <i18n:text key="metaWorks">Überblick über die Quellen, die im Rahmen der digitalen Quellenedition in Text und Bild verfügbar sind. Filter- und Sortierbar.</i18n:text>
-                            case 'authors'                  return <i18n:text key="metaAuthors">Überblick über die Autoren, deren Texte in der Quellenedition und die weiterhin durch biographische Artikel beschrieben sind.</i18n:text>
-                            case 'dictionary'               return <i18n:text key="metaDictionary">Überblick über die im Projekt erarbeiteten Sachartikel des Wörterbuchs der juridisch-politischen Sprache der Schule von Salamanca</i18n:text>
-                            case 'workingPapers'            return <i18n:text key="metaWPs">Überblick über die Working Papers zur Schule von Salamanca, die im Rahmen der vom Projekt veranstalteten Reihe erschienen sind.</i18n:text>
-                            default return ()
+        let $template   := 
+            switch (substring-before($document, '.html'))
+                case 'author'                   return <i18n:text key="metaAuthor">Biobibliographische Informationen über</i18n:text>
+                case 'lemma'                    return <i18n:text key="metaLemma">Sachartikel zu</i18n:text>
+                case 'workingPaper'             return <i18n:text key="metaWP">SvSal Working Paper</i18n:text>
+                case 'work'                     return <i18n:text key="metaWork">Leseansicht von</i18n:text>
+                case 'workDetails'              return <i18n:text key="metaWorkDetails">Bibliographische Daten zu</i18n:text>
+                case 'index'                    return <i18n:text key="metaIndex">Eine Sammlung digitaler Quellen und ein Wörterbuch der juridisch-politischen Diskurse von iberischen Theologen, Juristen und Philosophen der Frühen Neuzeit.</i18n:text>
+                case 'search'                   return <i18n:text key="metaSearch">Suche in Texten der Salmanticenser Autoren, in Wörterbuch- und biographischen Artikeln sowie in Working Papers über die Schule von Salamanca.</i18n:text>
+                case 'contact'                  return <i18n:text key="metaContact">Möglichkeiten, das Projekt "Die Schule von Salamanca" zu kontaktieren und über Neuigkeiten auf dem Laufenden zu bleiben.</i18n:text>
+                case 'editorialWorkingPapers'   return <i18n:text key="metaEditorial">Richtlinien und Vorgaben für die Einreichung von Vorschlägen für die Working Paper Reihe des Projekts "Die Schule von Salamanca".</i18n:text>
+                case 'guidelines'               return <i18n:text key="metaGuidelines">Editionsrichtlinien der Erstellung der digitalen Quellenedition des Projekts "Die Schule von Salamanca".</i18n:text>
+                case 'project'                  return <i18n:text key="metaProject">Allgemeine Informationen über das Projekt "Die Schule von Salamanca. Eine digitale Quellenedition und ein Wörterbuch ihrer juridisch-politischen Sprache".</i18n:text>
+                case 'news'                     return <i18n:text key="metaNews">Neuigkeiten, Ankündigungen und kurze Blog-Texte des Projekts "Die Schule von Salamanca" über Theorie, Methodologie, Technik und Weiteres.</i18n:text>
+                case 'works'                    return <i18n:text key="metaWorks">Überblick über die Quellen, die im Rahmen der digitalen Quellenedition in Text und Bild verfügbar sind. Filter- und Sortierbar.</i18n:text>
+                case 'authors'                  return <i18n:text key="metaAuthors">Überblick über die Autoren, deren Texte in der Quellenedition und die weiterhin durch biographische Artikel beschrieben sind.</i18n:text>
+                case 'dictionary'               return <i18n:text key="metaDictionary">Überblick über die im Projekt erarbeiteten Sachartikel des Wörterbuchs der juridisch-politischen Sprache der Schule von Salamanca</i18n:text>
+                case 'workingPapers'            return <i18n:text key="metaWPs">Überblick über die Working Papers zur Schule von Salamanca, die im Rahmen der vom Projekt veranstalteten Reihe erschienen sind.</i18n:text>
+                case 'participants'             return <i18n:text key="metaParticipants"/>
+                default return ()
         let $templateLocalized  := i18n:process($template, $lang, "/db/apps/salamanca/data/i18n", "de")
         let $return             := concat($templateLocalized, if (exists($id)) then ' ' || local:docSubjectname($id) else ())  
         let $debug              := if ($config:debug = "trace") then console:log("Meta description: " || $return) else ()

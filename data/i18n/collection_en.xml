@@ -44,6 +44,7 @@
   <msg key="metaAuthors">Overview of the authors represented in the collection of works and discussed in biographical articles.</msg>
   <msg key="metaDictionary">Overview of dictionary entries of the juridical-political language of the School of Salamanca.</msg>
   <msg key="metaWPs">Overview of the working papers on the School of Salamanca published in the context of the project's WP series.</msg>
+  <msg key="metaParticipants">Overview of participants in the project "The School of Salamanca".</msg>
   
   <!-- index.html -->
   <msg key="introSearch">Search in the Digital Collection of works, dictionary and biographical entries, and Working Papers.</msg>
