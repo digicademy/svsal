@@ -359,11 +359,18 @@
     <msg key="lemmaNotYetAvailable">Esta entrada del diccionario aún no está disponible.</msg>
     <msg key="workNotYetAvailable">Esta obra no está aún disponible.</msg>
     <msg key="resourceNotYetAvailable">Este recurso no está aún disponible.</msg>
+     
+    <!-- worksList.html -->
+    <msg key="worksListOverview">Fuentes en la Colección Digital</msg>
+    <msg key="furtherInformationTitle">Información adicional</msg>
+    <msg key="listOfSources">Lista de todas las fuentes</msg>
     
-   <!-- worksList.html -->
-  <msg key="worksListOverview">Fuentes en la Colección Digital</msg>
-  <msg key="furtherInformationTitle">Información adicional</msg>
-  <msg key="listOfSources">Lista de todas las fuentes</msg>
+    <!-- project participants -->
+    <msg key="projectTeamConsultants">El Equipo del Proyecto y sus Consultantes</msg>
+    <msg key="projectDirectors">Directores del Proyecto</msg>
+    <msg key="projectTeam">Equipo del Proyecto</msg>
+    <msg key="projectAdvBoard">Consejo Científico</msg>
+    <msg key="projectCooperators">Partenariados</msg>
   
     <!-- general language abbreviations, conjunctions, phrases, etc. -->
     <msg key="inLow">en</msg>

@@ -193,6 +193,13 @@
   <msg key="furtherInformationTitle">Weitere Informationen</msg>
   <msg key="listOfSources">Liste aller Quellen</msg>
   
+  <!-- project participants -->
+  <msg key="projectTeamConsultants">Projektbeteiligte</msg>
+  <msg key="projectDirectors">Projektleiter</msg>
+  <msg key="projectTeam">Projektmitarbeitende</msg>
+  <msg key="projectAdvBoard">Beirat</msg>
+  <msg key="projectCooperators">Kooperationspartner</msg>
+  
   <!-- general language abbreviations, conjunctions, phrases, etc. -->
   <msg key="inLow">in</msg>
   <msg key="editedByAbbrLow">hg. von</msg>

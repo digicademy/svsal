@@ -3682,7 +3682,27 @@ declare %templates:wrap function app:errorInformation($node as node(), $model as
     else ()
 };
 
-declare %templates:wrap function app:projectTeam($node as node(), $model as map(*), $lang as xs:string?) {
-    ()
+declare %templates:wrap function app:participantsTitle($node as node(), $model as map(*), $lang as xs:string?, $id as xs:string?) {
+    let $id := if ($id) then $id else if (request:get-parameter('id', '')) then request:get-parameter('id', '') else ()
+    let $xmlPath := $config:tei-meta-root || '/projectteam.xml'
+    let $debug := util:log('warn', '[APP] $id=' || $id)
+    let $title :=
+        if ($id eq 'directors') then
+            <i18n:text key="projectDirectors">Directors</i18n:text>
+        else if ($id eq 'team') then
+            <i18n:text key="projectTeam">Team</i18n:text>
+        else if ($id eq 'advisoryboard') then
+            <i18n:text key="projectAdvBoard">Scientific Advisory Board</i18n:text>
+        else if ($id eq 'cooperators') then
+            <i18n:text key="projectCooperators">Project Cooperators</i18n:text>
+        else if (doc-available($xmlPath) and doc($xmlPath)//tei:person[@xml:id eq upper-case($id)]) then
+            let $persName := doc($xmlPath)//tei:person[@xml:id eq upper-case($id)]/tei:persName
+            return 
+                string-join(($persName/tei:roleName, $persName/tei:forename, $persName/tei:surname), ' ')
+        else 
+            <i18n:text key="projectTeamConsultants">Project Team and Consultants</i18n:text>
+    return 
+        if ($title instance of element(i18n:text)) then i18n:process($title, $lang, $config:i18n-root, 'en')
+        else $title
 };
 

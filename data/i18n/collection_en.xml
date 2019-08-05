@@ -357,6 +357,13 @@
   <msg key="furtherInformationTitle">Further Information</msg>
   <msg key="listOfSources">List of all sources</msg>
   
+  <!-- project participants -->
+  <msg key="projectTeamConsultants">Project Team and Consultants</msg>
+  <msg key="projectDirectors">Project Directors</msg>
+  <msg key="projectTeam">Project Team</msg>
+  <msg key="projectAdvBoard">Scientific Advisory Board</msg>
+  <msg key="projectCooperators">Co-operation Partners</msg>
+  
   <!-- general language abbreviations, conjunctions, phrases, etc. -->
   <msg key="inLow">in</msg>
   <msg key="editedByAbbrLow">ed. by</msg>

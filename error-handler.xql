@@ -59,7 +59,7 @@ let $html-in :=
             <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
             <meta name="author" content=""/>
             {config:meta-description(<meta/>, $dummyMap, $lang, (), (), ())}
-            {config:meta-title(<title/>, $dummyMap, $lang, (), ())}
+            {config:meta-title(<title/>, $dummyMap, $lang, (), (), ())}
             {config:canonical-url(<link/>, $dummyMap, $lang, (), (), ())}
             {config:hreflang-url(<link/>, $dummyMap, $lang, (), (), ())}
             

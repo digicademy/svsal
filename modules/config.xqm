@@ -15,7 +15,7 @@ declare namespace xhtml         = "http://www.w3.org/1999/xhtml";
 declare namespace expath        = "http://expath.org/ns/pkg";
 declare namespace pack          = "http://expath.org/ns/pkg";
 declare namespace tei           = "http://www.tei-c.org/ns/1.0";
-declare namespace app           = "http://salamanca/app";
+import module namespace app     = "http://salamanca/app" at "app.xql";
 import module namespace net     = "http://salamanca/net"                at "net.xql";
 import module namespace i18n    = "http://exist-db.org/xquery/i18n"     at "i18n.xql";
 import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";
@@ -650,7 +650,7 @@ declare function config:formatName($persName as element()*) as xs:string? {
 };
  
 declare %templates:default("language", "en") 
-    function config:meta-title($node as node(), $model as map(*), $lang as xs:string, $wid as xs:string*, $q as xs:string?) as element() {  
+    function config:meta-title($node as node(), $model as map(*), $lang as xs:string, $wid as xs:string*, $q as xs:string?, $id as xs:string?) as element() {  
     let $output := 
         if (ends-with(request:get-uri(), "/author.html")) then
             <title>
@@ -723,6 +723,8 @@ declare %templates:default("language", "en")
             <title><i18n:text key="start">Home</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
         else if (ends-with(request:get-uri(), "/contact.html")) then
             <title><i18n:text key="contact">Kontakt</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+        else if (ends-with(request:get-uri(), "/participants.html")) then
+            <title>{app:participantsTitle($node, $model, $lang, $id)} - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
         else if (ends-with(request:get-uri(), "/")) then
             <title><i18n:text key="start">Home</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title> else
             <title><i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
