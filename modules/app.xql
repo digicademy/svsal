@@ -3683,9 +3683,8 @@ declare %templates:wrap function app:errorInformation($node as node(), $model as
 };
 
 declare %templates:wrap function app:participantsTitle($node as node(), $model as map(*), $lang as xs:string?, $id as xs:string?) {
-    let $id := if ($id) then $id else if (request:get-parameter('id', '')) then request:get-parameter('id', '') else ()
-    let $xmlPath := $config:tei-meta-root || '/projectteam.xml'
-    let $debug := util:log('warn', '[APP] $id=' || $id)
+    let $id := if ($id) then lower-case($id) else if (request:get-parameter('id', '')) then lower-case(request:get-parameter('id', '')) else ()
+    let $teiPath := $config:tei-meta-root || '/projectteam.xml'
     let $title :=
         if ($id eq 'directors') then
             <i18n:text key="projectDirectors">Directors</i18n:text>
@@ -3695,14 +3694,63 @@ declare %templates:wrap function app:participantsTitle($node as node(), $model a
             <i18n:text key="projectAdvBoard">Scientific Advisory Board</i18n:text>
         else if ($id eq 'cooperators') then
             <i18n:text key="projectCooperators">Project Cooperators</i18n:text>
-        else if (doc-available($xmlPath) and doc($xmlPath)//tei:person[@xml:id eq upper-case($id)]) then
-            let $persName := doc($xmlPath)//tei:person[@xml:id eq upper-case($id)]/tei:persName
+        else if ($id eq 'former') then
+            <i18n:text key="projectFormer">Former Team Members</i18n:text>
+        else if (doc-available($teiPath) and doc($teiPath)//tei:person[@xml:id eq upper-case($id)]) then
+            let $name := doc($teiPath)//tei:person[@xml:id eq upper-case($id)]/tei:persName/tei:name
             return 
-                string-join(($persName/tei:roleName, $persName/tei:forename, $persName/tei:surname), ' ')
+                string($name)
         else 
             <i18n:text key="projectTeamConsultants">Project Team and Consultants</i18n:text>
     return 
         if ($title instance of element(i18n:text)) then i18n:process($title, $lang, $config:i18n-root, 'en')
         else $title
+};
+
+declare %templates:wrap function app:participantsBody($node as node(), $model as map(*), $lang as xs:string?, $id as xs:string?) {
+    let $id := if ($id) then lower-case($id) else if (request:get-parameter('id', '')) then lower-case(request:get-parameter('id', '')) else ()
+    let $tei := doc($config:tei-meta-root || '/projectteam.xml')/tei:TEI
+    let $body :=
+        if ($id = ('directors', 'team')) then
+            for $p at $i in $tei/tei:text//tei:listPerson[@xml:id eq $id]/tei:person return
+                app:makeParticipantEntry($p, $lang, 'multi', $i)
+        else if ($id = 'advisoryboard') then
+            () (: TODO :)
+        else if ($id eq 'cooperators') then
+            () (: TODO :)
+        else if ($id eq 'former') then
+            () (: TODO :)
+        else if ($tei//tei:person[@xml:id eq upper-case($id)]) then
+            let $p := $tei//tei:person[@xml:id eq upper-case($id)]
+            return
+                app:makeParticipantEntry($p, $lang, 'single', ())
+        else 
+            ()
+    return 
+(:        i18n:process($body, $lang, $config:i18n-root, 'en'):)
+        $body
+};
+
+(:
+~ Modes: 'single' if page consists of single entry; 'multi' if page consists of several entries.
+:)
+declare function app:makeParticipantEntry($person as element(tei:person), $lang as xs:string, $mode as xs:string, $index as xs:integer?) as element(div) {
+    let $multiHeader := 
+        if ($mode eq 'multi') then 
+            let $separator := if ($index gt 1) then <hr/> else ()
+            let $title := <h3>{string($person/tei:persName/tei:name)}</h3> 
+            return ($separator, $title)
+        else ()
+    let $content :=
+        <div>
+            {$multiHeader}
+            <div>
+                <h4><i18n:text key="contact">Contact</i18n:text></h4>
+                {render-app:passthru($person/tei:persName, 'participants', $lang)}
+            </div>
+            {for $e in $person/tei:persName/following-sibling::*[not(@xml:lang) or @xml:lang eq $lang] return 
+                 render-app:dispatch($e, 'participants', $lang)}
+        </div>
+    return i18n:process($content, $lang, $config:i18n-root, 'en')
 };
 

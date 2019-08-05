@@ -5,6 +5,7 @@
   <msg key="projectName">Die Schule von Salamanca</msg>
   <msg key="guidelines">Editionsrichtlinien</msg>
   <msg key="works">Werke</msg>
+  <msg key="contact">Kontakt</msg>
   
   <!-- index.html -->
   <msg key="introWorks">Digitale Quellensammlung mit 116 Werken, aufbereitet gemäß unserer</msg>
@@ -200,6 +201,12 @@
   <msg key="projectTeam">Projektmitarbeitende</msg>
   <msg key="projectAdvBoard">Beirat</msg>
   <msg key="projectCooperators">Kooperationspartner</msg>
+  <msg key="projectFormer">Ehemalige Mitarbeitende</msg>
+  <msg key="phoneAbbr">Tel.</msg>
+  <msg key="email">E-Mail</msg>
+  <msg key="cv">Curriculum Vitae</msg>
+  <msg key="researchInterests">Forschungsinteressen</msg>
+  <msg key="selectedPublications">Publikationen (Auswahl)</msg>
   
   <!-- general language abbreviations, conjunctions, phrases, etc. -->
   <msg key="inLow">in</msg>

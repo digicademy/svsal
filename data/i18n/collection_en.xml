@@ -364,6 +364,12 @@
   <msg key="projectTeam">Project Team</msg>
   <msg key="projectAdvBoard">Scientific Advisory Board</msg>
   <msg key="projectCooperators">Co-operation Partners</msg>
+  <msg key="projectFormer">Former Team Members</msg>
+  <msg key="phoneAbbr">Tel.</msg>
+  <msg key="email">Email</msg>
+  <msg key="cv">Curriculum Vitae</msg>
+  <msg key="researchInterests">Research Interests</msg>
+  <msg key="selectedPublications">Publications (Selection)</msg>
   
   <!-- general language abbreviations, conjunctions, phrases, etc. -->
   <msg key="inLow">in</msg>
