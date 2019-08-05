@@ -459,12 +459,12 @@ declare %templates:wrap function admin:renderAuthorLemma($node as node(), $model
     let $main :=  
         if ($request) then 
             <div>
-               { render-app:dispatch(doc($config:tei-authors-root || "/" || $aid || ".xml")//tei:body, "work")
+               { render-app:dispatch(doc($config:tei-authors-root || "/" || $aid || ".xml")//tei:body, "work", ())
                }
             </div>  
         else 
             <div>
-                { render-app:dispatch(doc($config:tei-lemmata-root || "/" || $lid || ".xml")//tei:body, "work")
+                { render-app:dispatch(doc($config:tei-lemmata-root || "/" || $lid || ".xml")//tei:body, "work", ())
                 }
             </div>  
     let $cited :=  
@@ -877,14 +877,14 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
                 if ($hit_id) then
                     if ($nodeType eq 'work') then
                         string-join(render:dispatch($hit, 'snippets-orig'), '')
-                    else string-join(render-app:dispatch($hit, 'snippets-orig'), '')
+                    else string-join(render-app:dispatch($hit, 'snippets-orig', ()), '')
                 else
                     'There is no xml:id in the ' || $hit_type || ' hit!'
             let $hit_content_edit := 
                 if ($hit_id) then
                     if ($nodeType eq 'work') then
                         string-join(render:dispatch($hit, 'snippets-edit'), '')
-                    else string-join(render-app:dispatch($hit, 'snippets-edit'), '')
+                    else string-join(render-app:dispatch($hit, 'snippets-edit', ()), '')
                 else
                     'There is no xml:id in the ' || $hit_type || ' hit!'
             

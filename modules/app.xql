@@ -1639,7 +1639,7 @@ declare function app:places ($node as node(), $model as map(*), $aid as xs:strin
 declare %public function app:LEMentry($node as node(), $model as map(*), $lid as xs:string) {
 (:app:LEMsummary($model('currentLemma')//tei:text):)
 (:    app:LEMsummary(doc($config:tei-lemmata-root || "/" || $lid || ".xml")//tei:text):)
-    render-app:dispatch(doc($config:tei-lemmata-root || "/" || sal-util:normalizeId($lid) || ".xml")//tei:body, "work")
+    render-app:dispatch(doc($config:tei-lemmata-root || "/" || sal-util:normalizeId($lid) || ".xml")//tei:body, "work", ())
 };
 (: Rendering is done in render.xql! :)
 
@@ -3617,7 +3617,7 @@ declare function app:legalDisclaimer ($node as node(), $model as map(*), $lang a
 declare function app:privDecl ($node as node(), $model as map(*), $lang as xs:string?) {
     let $declfile   := doc($config:data-root || "/i18n/privacy_decl.xml")
     let $decltext   := "div-privdecl-de"
-    let $html       := render-app:dispatch($declfile//tei:div[@xml:id = $decltext], "html")
+    let $html       := render-app:dispatch($declfile//tei:div[@xml:id = $decltext], "html", ())
     return if (count($html)) then
         <div id="privDecl" class="help">
             {$html}
@@ -3628,7 +3628,7 @@ declare function app:privDecl ($node as node(), $model as map(*), $lang as xs:st
 declare function app:imprint ($node as node(), $model as map(*), $lang as xs:string?) {
     let $declfile   := doc($config:data-root || "/i18n/imprint.xml")
     let $decltext   := "div-imprint-de"
-    let $html       := render-app:dispatch($declfile//tei:div[@xml:id = $decltext], "html")
+    let $html       := render-app:dispatch($declfile//tei:div[@xml:id = $decltext], "html", ())
     return if (count($html)) then
         <div id="imprint" class="help">
             {$html}
@@ -3680,5 +3680,9 @@ declare %templates:wrap function app:errorInformation($node as node(), $model as
             or request:get-attribute('error-type') eq 'resource-not-yet-available')) then
         i18n:process(<span><i18n:text key="bugMessage">In case you found a bug in our website, please let us know at</i18n:text>{' '}<a href="mailto:info.salamanca@adwmainz.de">info.salamanca@adwmainz.de</a></span>, $lang, '/db/apps/salamanca/data/i18n', 'en')
     else ()
+};
+
+declare %templates:wrap function app:projectTeam($node as node(), $model as map(*), $lang as xs:string?) {
+    ()
 };
 

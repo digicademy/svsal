@@ -801,7 +801,7 @@ declare function sphinx:help ($node as node(), $model as map(*), $lang as xs:str
         else if ($lang = "en") then "div_searchHelp_en"
         else if ($lang = "es") then "div_searchHelp_es"
         else "div_searchHelp_en"
-    let $html       := render-app:dispatch($helpfile//tei:div[@xml:id = $helptext], "html")
+    let $html       := render-app:dispatch($helpfile//tei:div[@xml:id = $helptext], "html", ())
     return if (count($html)) then
         <div id="help" class="help">
             {sphinx:print-sectionsHelp($helpfile//tei:div[@xml:id = $helptext]/tei:div, true())}
