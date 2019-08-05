@@ -321,7 +321,8 @@ declare function render:isBasicNode($node as node()) as xs:boolean {
     boolean(
         render:isMainNode($node) or
         render:isMarginalNode($node) or
-        (render:isListNode($node) and not($node/descendant::*[render:isListNode(.)]))
+        (:(render:isListNode($node) and not($node/descendant::*[render:isListNode(.)])):)
+        (render:isListNode($node) and $node/self::tei:list and not($node/descendant::tei:list)) (: complete lists, but on the lowest level :)
     )
 };
 
@@ -1578,12 +1579,11 @@ declare function render:head($node as element(tei:head), $mode as xs:string) {
                 <h5 class="poem-head">{render:passthru($node, $mode)}</h5>
             (: usual headings: :)
             else 
-                let $toolbox := render:HTMLSectionToolbox($node)
-                return
-                    <h3>
-                        {$toolbox}
-                        <span class="heading-text">{render:passthru($node, $mode)}</span>
-                    </h3>
+(:                let $toolbox := render:HTMLSectionToolbox($node)
+                return:)
+                <h3>
+                    <span class="heading-text">{render:passthru($node, $mode)}</span>
+                </h3>
             
         case 'class' return
             'tei-' || local-name($node)
@@ -1845,12 +1845,12 @@ declare function render:list($node as element(tei:list), $mode as xs:string) {
                         </ol>
                     </section>
                 case 'simple' return (: make no list in html terms at all :)
-                    <section id="{$node/@xml:id}">
+                    <div id="{$node/@xml:id}">
                         {for $head in $node/tei:head return <h4 class="inlist-head">{render:passthru($head, $mode)}</h4>}
                         {for $child in $node/*[not(self::tei:head)] return
                             if ($child//list) then render:passthru($child, $mode)
                             else (' ', <span class="inline-item">{render:passthru($child, $mode)}</span>, ' ')}
-                    </section>
+                    </div>
                 case 'index'
                 case 'summaries' return (: unordered list :)
                     let $content := 
@@ -1866,7 +1866,8 @@ declare function render:list($node as element(tei:list), $mode as xs:string) {
                             <section>{$content}</section>
                         else :)
                         $content
-                default return (: put an unordered list (and captions) in a figure environment (why?) of class @type :)
+                default return (: e.g., 'bulleted' :)
+                    (: put an unordered list (and captions) in a figure environment (why?) of class @type :)
                     <div class="list-default" id="{$node/@xml:id}">
                         {for $head in $node/tei:head return <h4 class="list-default-head">{render:passthru($head, $mode)}</h4>}
                         <ul style="list-style-type:circle;">
@@ -2557,10 +2558,8 @@ declare function render:signed($node as element(tei:signed), $mode as xs:string)
 (:            for $subnode in $node/node() where (local-name($subnode) ne 'note') return render:dispatch($subnode, $mode):)
             
         case 'html' return
-            <div class="hauptText">
-                <div class="signed">
-                    {render:passthru($node, $mode)}
-                </div>
+            <div class="signed">
+                {render:passthru($node, $mode)}
             </div>
             
         default return
