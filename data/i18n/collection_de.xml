@@ -205,7 +205,7 @@
   <msg key="phoneAbbr">Tel.</msg>
   <msg key="faxAbbr">Fax</msg>
   <msg key="email">E-Mail</msg>
-  <msg key="cv">Curriculum Vitae</msg>
+  <msg key="cv">Zur Person</msg>
   <msg key="researchInterests">Forschungsinteressen</msg>
   <msg key="selectedPublications">Publikationen (Auswahl)</msg>
   

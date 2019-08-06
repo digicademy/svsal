@@ -3737,6 +3737,7 @@ declare %templates:wrap function app:participantsBody($node as node(), $model as
         
 };
 
+
 (:
 ~ Modes: 'single' if page consists of single entry; 'multi' if page consists of several entries.
 :)
@@ -3750,6 +3751,7 @@ declare function app:makeParticipantEntry($person as element(tei:person), $lang 
     let $content :=
         <div>
             {$multiHeader}
+            <img src="resources/img/participants/{$person/@xml:id}.jpg" style="width:300px;padding:2em;float:right;"/>
             <div>
                 <h4><i18n:text key="contact">Contact</i18n:text></h4>
                 {render-app:passthru($person/tei:persName, 'participants', $lang)}
