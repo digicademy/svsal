@@ -3714,21 +3714,27 @@ declare %templates:wrap function app:participantsBody($node as node(), $model as
         if ($id = ('directors', 'team')) then
             for $p at $i in $tei/tei:text//tei:listPerson[@xml:id eq $id]/tei:person return
                 app:makeParticipantEntry($p, $lang, 'multi', $i)
-        else if ($id = 'advisoryboard') then
-            () (: TODO :)
         else if ($id eq 'cooperators') then
-            () (: TODO :)
-        else if ($id eq 'former') then
-            () (: TODO :)
+            for $p at $i in $tei/tei:text//tei:listPerson[@xml:id eq $id]/tei:person return
+                app:makeCooperatorEntry($p, $lang, $i)
+        else if ($id = ('advisoryboard', 'former')) then
+            for $p in $tei//tei:listPerson[@xml:id eq $id]/tei:person return
+                <div style="font-size:1.1em;">
+                    <p>{render-app:dispatch($p, 'participants', $lang)}</p>
+                    <br/>
+                </div>
         else if ($tei//tei:person[@xml:id eq upper-case($id)]) then
             let $p := $tei//tei:person[@xml:id eq upper-case($id)]
             return
-                app:makeParticipantEntry($p, $lang, 'single', ())
+                if ($p) then app:makeParticipantEntry($p, $lang, 'single', ()) else ()
         else 
             ()
     return 
 (:        i18n:process($body, $lang, $config:i18n-root, 'en'):)
-        $body
+        <div>
+            {$body}
+        </div>
+        
 };
 
 (:
@@ -3746,6 +3752,23 @@ declare function app:makeParticipantEntry($person as element(tei:person), $lang 
             {$multiHeader}
             <div>
                 <h4><i18n:text key="contact">Contact</i18n:text></h4>
+                {render-app:passthru($person/tei:persName, 'participants', $lang)}
+            </div>
+            {for $e in $person/tei:persName/following-sibling::*[not(@xml:lang) or @xml:lang eq $lang] return 
+                 render-app:dispatch($e, 'participants', $lang)}
+        </div>
+    return i18n:process($content, $lang, $config:i18n-root, 'en')
+};
+declare function app:makeCooperatorEntry($person as element(tei:person), $lang as xs:string, $index as xs:integer?) as element(div) {
+    let $multiHeader := 
+        let $separator := if ($index gt 1) then <hr/> else ()
+        let $title := <h3>{string($person/tei:persName/tei:name)}</h3> 
+        return ($separator, $title)
+    
+    let $content :=
+        <div>
+            {$multiHeader}
+            <div>
                 {render-app:passthru($person/tei:persName, 'participants', $lang)}
             </div>
             {for $e in $person/tei:persName/following-sibling::*[not(@xml:lang) or @xml:lang eq $lang] return 

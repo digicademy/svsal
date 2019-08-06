@@ -203,6 +203,7 @@
   <msg key="projectCooperators">Kooperationspartner</msg>
   <msg key="projectFormer">Ehemalige Mitarbeitende</msg>
   <msg key="phoneAbbr">Tel.</msg>
+  <msg key="faxAbbr">Fax</msg>
   <msg key="email">E-Mail</msg>
   <msg key="cv">Curriculum Vitae</msg>
   <msg key="researchInterests">Forschungsinteressen</msg>

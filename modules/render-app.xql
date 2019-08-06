@@ -100,7 +100,7 @@ declare function render-app:textNode($node as node(), $mode as xs:string, $lang 
         case 'snippets-orig' 
         case 'snippets-edit'
         case 'participants' return
-            $node
+            (:if (not(normalize-space($node) eq '')) then:) $node (:else ' ':)
         
         default return ()
 };
@@ -210,7 +210,10 @@ declare function render-app:note($node as element(tei:note), $mode as xs:string,
                     }
                 </span>)
         
-        case 'participants' return ()
+        case 'participants' return 
+            if ($node/@type eq 'desc') then
+                <div>{render-app:passthru($node, $mode, $lang)}</div>
+            else <span>{render-app:passthru($node, $mode, $lang)}</span>
         
         default return
             render-app:passthru($node, $mode, $lang)
@@ -682,7 +685,10 @@ declare function render-app:title($node as element(tei:title), $mode as xs:strin
 
 declare function render-app:nameNode($node as element(tei:name), $mode as xs:string, $lang as xs:string?) {
     switch($mode)
-        case 'participants' return ()
+        case 'participants' return 
+            if ($node/@type = ('org', 'place')) then
+                <span>{render-app:passthru($node, $mode, $lang)}</span>
+            else ()
         default return 
             render-app:passthru($node, $mode, $lang)
 };
@@ -690,9 +696,12 @@ declare function render-app:nameNode($node as element(tei:name), $mode as xs:str
 declare function render-app:num($node as element(tei:num), $mode as xs:string, $lang as xs:string?) {
     switch($mode)
         case 'participants' return 
-            if ($node/@type eq 'phone') then
-                <span><i18n:text key="phoneAbbr"/>{(': ', render-app:passthru($node, $mode, $lang))}</span>
-            else ()
+            switch($node/@type/string())
+                case 'phone' return
+                    <span><i18n:text key="phoneAbbr"/>{(': ', render-app:passthru($node, $mode, $lang))}</span>
+                case 'fax' return
+                    <span><i18n:text key="faxAbbr"/>{(': ', render-app:passthru($node, $mode, $lang))}</span>
+                default return ()
         default return 
             render-app:passthru($node, $mode, $lang)
 };
@@ -708,18 +717,19 @@ declare function render-app:email($node as element(tei:email), $mode as xs:strin
 declare function render-app:event($node as element(tei:event), $mode as xs:string, $lang as xs:string?) {
     switch($mode)
         case 'participants' return 
-            if ($node/@type eq 'person') then
-                <div>
-                    <h4><i18n:text key="cv"/></h4>
-                    {render-app:passthru($node, $mode, $lang)}
-                </div>
-            else if ($node/@type eq 'research_interest') then
-                <div>
-                    <h4><i18n:text key="researchInterests"/></h4>
-                    {render-app:passthru($node, $mode, $lang)}
-                </div>
-            else 
-                <div>{render-app:passthru($node, $mode, $lang)}</div>
+            switch($node/@type/string())
+                case 'person' return
+                    <div>
+                        <h4><i18n:text key="cv"/></h4>
+                        {render-app:passthru($node, $mode, $lang)}
+                    </div>
+                case 'research_interest' return
+                    <div>
+                        <h4><i18n:text key="researchInterests"/></h4>
+                        {render-app:passthru($node, $mode, $lang)}
+                    </div>
+                default return 
+                    <div>{render-app:passthru($node, $mode, $lang)}</div>
         default return 
             render-app:passthru($node, $mode, $lang)
 };
