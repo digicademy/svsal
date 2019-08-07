@@ -550,18 +550,12 @@ declare %templates:wrap
         
 declare %templates:wrap
     function config:langProjektteam($node as node(), $model as map(*), $lang as xs:string) as element()  {
-        if ($lang = 'en') then
-            <a target="blank" href="http://www.salamanca.adwmainz.de/en/project-team-and-consultants.html">
-               <i class="fa fa-users" aria-hidden="true"></i>&#160;Project Team
+        let $output :=
+            <a target="blank" href="participants.html">
+               <i class="fa fa-users" aria-hidden="true"></i>&#160;<i18n:text key="participantsTitle">Project Participants</i18n:text>
             </a>
-        else if ($lang = 'es') then
-            <a target="blank" href="http://www.salamanca.adwmainz.de/es/el-equipo-de-proyecto-y-sus-consultores.html">
-               <i class="fa fa-users" aria-hidden="true"></i>&#160;Equipo del Proyecto
-            </a>
-        else
-            <a target="blank" href="http://www.salamanca.adwmainz.de/projektbeteiligte.html">
-               <i class="fa fa-users" aria-hidden="true"></i>&#160;Projektteam
-            </a>
+    return 
+        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))        
 };
 
 declare %templates:wrap

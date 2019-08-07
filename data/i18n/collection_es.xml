@@ -87,7 +87,7 @@
     <msg key="guidelinesDecl">Descripción de los principios de la edición y de la codificación de los textos.</msg>
     <msg key="wpCreateDecl">Información sobre la preparación y presentación de nuestros Working Papers.</msg>
     <msg key="team">Equipo de trabajo</msg>
-    <msg key="teamDesc">Miembros del equipo de trabajo en la página de la Academia de Mainz.</msg>
+    <msg key="teamDesc">Miembros del equipo del proyecto, cooperaciones, consejo científico.</msg>
     <msg key="getInvolved">Contribuir</msg>
     <msg key="sourceCode">Código fuente</msg>
     <msg key="sourceCodeDecl">El código de nuestra aplicación web en un repositorio externo de GitHub.</msg>
@@ -367,6 +367,7 @@
     <msg key="listOfSources">Lista de todas las fuentes</msg>
     
     <!-- project participants -->
+    <msg key="participantsTitle">Equipo y Consultantes del Proyecto</msg>
     <msg key="projectTeamConsultants">El Equipo del Proyecto y sus Consultantes</msg>
     <msg key="projectDirectors">Directores del Proyecto</msg>
     <msg key="projectTeam">Equipo del Proyecto</msg>

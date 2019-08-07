@@ -3783,7 +3783,6 @@ declare function app:makeParticipantTeaser($person as element(tei:person), $lang
 ~ Modes: 'single' if page consists of single entry; 'multi' if page consists of several entries.
 :)
 declare function app:makeParticipantEntry($person as element(tei:person), $lang as xs:string, $mode as xs:string, $index as xs:integer?) as element(div) {
-    let $crumbtrail := ()
     let $backLink := 
         <a href="{$config:webserver || '/' || $lang || '/participants.html'}" style="font-size:1.5em;">
             <i class="fas fa-arrow-left"></i>{' '}<i18n:text key="toOverview"/>

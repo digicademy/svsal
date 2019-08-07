@@ -7,6 +7,9 @@
   <msg key="works">Werke</msg>
   <msg key="contact">Kontakt</msg>
   
+  <!-- project.html -->
+  <msg key="teamDesc">Profile der Mitarbeitenden; Kooperationen und Fachbeirat.</msg>
+  
   <!-- index.html -->
   <msg key="introWorks">Digitale Quellensammlung mit 116 Werken, aufbereitet gemäß unserer</msg>
   
@@ -196,6 +199,7 @@
   <msg key="listOfSources">Liste aller Quellen</msg>
   
   <!-- project participants -->
+  <msg key="participantsTitle">Projektbeteiligte</msg>
   <msg key="projectTeamConsultants">Projektbeteiligte</msg>
   <msg key="projectDirectors">Projektleiter</msg>
   <msg key="projectTeam">Projektmitarbeitende</msg>
