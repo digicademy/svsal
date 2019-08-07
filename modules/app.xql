@@ -3764,27 +3764,19 @@ declare %templates:wrap function app:participantsBody($node as node(), $model as
 };
 
 declare function app:makeParticipantTeaser($person as element(tei:person), $lang as xs:string, $mode as xs:string, $index as xs:integer?) as element(div) {
-    (:let $multiHeader := 
-        if ($mode eq 'multi') then 
-            let $separator := if ($index gt 1) then <hr/> else ()
-            let $title := <h3>{string($person/tei:persName/tei:name)}</h3> 
-            return ($separator, $title)
-        else ():)
-    let $content :=
-        <div class="row">
-            <div class="col-md-8">
-                <h3>
-                    <a href="{$config:webserver || '/participants.html?id=' || $person/@xml:id}">{string($person/tei:persName/tei:name)}</a>
-                </h3>
-                <div>
-                    <h4><i18n:text key="contact">Contact</i18n:text></h4>
-                    {render-app:passthru($person/tei:persName, 'participants', $lang)}
-                </div>
-                <div>{render-app:dispatch($person/tei:event[@type eq 'research_interest'], 'participants', $lang)}</div>
+    <div class="row">
+        <div class="col-md-8">
+            <h3>
+                <a href="{$config:webserver || '/' || $lang || '/participants.html?id=' || $person/@xml:id}">{string($person/tei:persName/tei:name)}</a>
+            </h3>
+            <div>
+                <h4><i18n:text key="contact">Contact</i18n:text></h4>
+                {render-app:passthru($person/tei:persName, 'participants', $lang)}
             </div>
-            <img class="col-md-4" src="resources/img/participants/{$person/@xml:id}.jpg" style="width:230px;padding:2em;"/>
+            <div>{render-app:dispatch($person/tei:event[@type eq 'research_interest'], 'participants', $lang)}</div>
         </div>
-    return $content
+        <img class="col-md-4" src="resources/img/participants/{$person/@xml:id}.jpg" style="width:230px;padding:2em;"/>
+    </div>
 };
 
 (:
@@ -3793,7 +3785,7 @@ declare function app:makeParticipantTeaser($person as element(tei:person), $lang
 declare function app:makeParticipantEntry($person as element(tei:person), $lang as xs:string, $mode as xs:string, $index as xs:integer?) as element(div) {
     let $crumbtrail := ()
     let $backLink := 
-        <a href="{$config:webserver || '/participants.html'}" style="font-size:1.5em;">
+        <a href="{$config:webserver || '/' || $lang || '/participants.html'}" style="font-size:1.5em;">
             <i class="fas fa-arrow-left"></i>{' '}<i18n:text key="toOverview"/>
         </a>
     let $content :=
@@ -3810,11 +3802,6 @@ declare function app:makeParticipantEntry($person as element(tei:person), $lang 
     return $content
 };
 declare function app:makeCooperatorEntry($person as element(tei:person), $lang as xs:string, $index as xs:integer?) as element(div) {
-    (:let $multiHeader := 
-        let $separator := if ($index gt 1) then <hr/> else ()
-        let $title := <h3>{string($person/tei:persName/tei:name)}</h3> 
-        return ($separator, $title):)
-    
     let $content :=
         <div>
             <h3>{string($person/tei:persName/tei:name)}</h3>
