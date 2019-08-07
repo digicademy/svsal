@@ -371,6 +371,7 @@
   <msg key="cv">Curriculum Vitae</msg>
   <msg key="researchInterests">Research Interests</msg>
   <msg key="selectedPublications">Publications (Selection)</msg>
+  <msg key="toOverview">Overview of project participants</msg>
   
   <!-- general language abbreviations, conjunctions, phrases, etc. -->
   <msg key="inLow">in</msg>

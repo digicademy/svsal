@@ -3713,7 +3713,7 @@ declare %templates:wrap function app:participantsBody($node as node(), $model as
     let $body :=
         if ($id = ('directors', 'team')) then
             for $p at $i in $tei/tei:text//tei:listPerson[@xml:id eq $id]/tei:person return
-                app:makeParticipantEntry($p, $lang, 'multi', $i)
+                app:makeParticipantTeaser($p, $lang, 'multi', $i)
         else if ($id eq 'cooperators') then
             for $p at $i in $tei/tei:text//tei:listPerson[@xml:id eq $id]/tei:person return
                 app:makeCooperatorEntry($p, $lang, $i)
@@ -3727,30 +3727,77 @@ declare %templates:wrap function app:participantsBody($node as node(), $model as
             let $p := $tei//tei:person[@xml:id eq upper-case($id)]
             return
                 if ($p) then app:makeParticipantEntry($p, $lang, 'single', ()) else ()
-        else 
-            ()
+        else (: show everything :)
+            <div>
+                <div>
+                    <h2><i18n:text key="projectDirectors"/></h2>
+                    {app:participantsBody($node, $model, $lang, 'directors')}
+                </div>
+                <hr/>
+                <div>
+                    <h2><i18n:text key="projectTeam"/></h2>
+                    {app:participantsBody($node, $model, $lang, 'team')}
+                </div>
+                <hr/>
+                <div>
+                    <h2><i18n:text key="projectCooperators"/></h2>
+                    {app:participantsBody($node, $model, $lang, 'cooperators')}
+                </div>
+                <hr/>
+                <div>
+                    <h2><i18n:text key="projectAdvBoard"/></h2>
+                    <br/>
+                    {app:participantsBody($node, $model, $lang, 'advisoryboard')}
+                </div>
+                <hr/>
+                <div>
+                    <h2><i18n:text key="projectFormer"/></h2>
+                    <br/>
+                    {app:participantsBody($node, $model, $lang, 'former')}
+                </div>
+            </div>
     return 
-(:        i18n:process($body, $lang, $config:i18n-root, 'en'):)
         <div>
-            {$body}
+            {i18n:process($body, $lang, $config:i18n-root, 'en')}
         </div>
         
 };
 
+declare function app:makeParticipantTeaser($person as element(tei:person), $lang as xs:string, $mode as xs:string, $index as xs:integer?) as element(div) {
+    (:let $multiHeader := 
+        if ($mode eq 'multi') then 
+            let $separator := if ($index gt 1) then <hr/> else ()
+            let $title := <h3>{string($person/tei:persName/tei:name)}</h3> 
+            return ($separator, $title)
+        else ():)
+    let $content :=
+        <div class="row">
+            <div class="col-md-8">
+                <h3>
+                    <a href="{$config:webserver || '/participants.html?id=' || $person/@xml:id}">{string($person/tei:persName/tei:name)}</a>
+                </h3>
+                <div>
+                    <h4><i18n:text key="contact">Contact</i18n:text></h4>
+                    {render-app:passthru($person/tei:persName, 'participants', $lang)}
+                </div>
+                <div>{render-app:dispatch($person/tei:event[@type eq 'research_interest'], 'participants', $lang)}</div>
+            </div>
+            <img class="col-md-4" src="resources/img/participants/{$person/@xml:id}.jpg" style="width:230px;padding:2em;"/>
+        </div>
+    return $content
+};
 
 (:
 ~ Modes: 'single' if page consists of single entry; 'multi' if page consists of several entries.
 :)
 declare function app:makeParticipantEntry($person as element(tei:person), $lang as xs:string, $mode as xs:string, $index as xs:integer?) as element(div) {
-    let $multiHeader := 
-        if ($mode eq 'multi') then 
-            let $separator := if ($index gt 1) then <hr/> else ()
-            let $title := <h3>{string($person/tei:persName/tei:name)}</h3> 
-            return ($separator, $title)
-        else ()
+    let $crumbtrail := ()
+    let $backLink := 
+        <a href="{$config:webserver || '/participants.html'}" style="font-size:1.5em;">
+            <i class="fas fa-arrow-left"></i>{' '}<i18n:text key="toOverview"/>
+        </a>
     let $content :=
         <div>
-            {$multiHeader}
             <img src="resources/img/participants/{$person/@xml:id}.jpg" style="width:300px;padding:2em;float:right;"/>
             <div>
                 <h4><i18n:text key="contact">Contact</i18n:text></h4>
@@ -3758,24 +3805,25 @@ declare function app:makeParticipantEntry($person as element(tei:person), $lang 
             </div>
             {for $e in $person/tei:persName/following-sibling::*[not(@xml:lang) or @xml:lang eq $lang] return 
                  render-app:dispatch($e, 'participants', $lang)}
+            <br/>{$backLink}<br/>
         </div>
-    return i18n:process($content, $lang, $config:i18n-root, 'en')
+    return $content
 };
 declare function app:makeCooperatorEntry($person as element(tei:person), $lang as xs:string, $index as xs:integer?) as element(div) {
-    let $multiHeader := 
+    (:let $multiHeader := 
         let $separator := if ($index gt 1) then <hr/> else ()
         let $title := <h3>{string($person/tei:persName/tei:name)}</h3> 
-        return ($separator, $title)
+        return ($separator, $title):)
     
     let $content :=
         <div>
-            {$multiHeader}
+            <h3>{string($person/tei:persName/tei:name)}</h3>
             <div>
                 {render-app:passthru($person/tei:persName, 'participants', $lang)}
             </div>
             {for $e in $person/tei:persName/following-sibling::*[not(@xml:lang) or @xml:lang eq $lang] return 
                  render-app:dispatch($e, 'participants', $lang)}
         </div>
-    return i18n:process($content, $lang, $config:i18n-root, 'en')
+    return $content
 };
 
