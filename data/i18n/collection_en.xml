@@ -307,11 +307,15 @@
   <msg key="accessedDate">Accessed</msg>
   <msg key="ebook">E-book</msg>
   <msg key="openToolbox">Open toolbox for this text area</msg>
-  <msg key="citePass">Cite this passage</msg>
-  <msg key="linkPass">Go to/link this text area</msg>
+  <msg key="citePass">Copy citation recommendation for this text area</msg>
+  <msg key="linkPass">Copy link of this text area</msg>
   <msg key="teiExpPass">Export TEI for this text area</msg>
   <msg key="txtExpPass">Export plain text for this text area</msg>
   <msg key="txtExp">Export plain text</msg>
+  <msg key="copyLink">Copy link</msg>
+  <msg key="copyCit">Copy citation</msg>
+  <msg key="txtExpShort">Export TXT</msg>
+  <msg key="teiExpShort">Export TEI</msg>
    
   <!--news-->
   <msg key="more">more</msg>

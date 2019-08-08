@@ -551,7 +551,7 @@ declare %templates:wrap
 declare %templates:wrap
     function config:langProjektteam($node as node(), $model as map(*), $lang as xs:string) as element()  {
         let $output :=
-            <a target="blank" href="participants.html">
+            <a href="participants.html">
                <i class="fa fa-users" aria-hidden="true"></i>&#160;<i18n:text key="participantsTitle">Project Participants</i18n:text>
             </a>
     return 

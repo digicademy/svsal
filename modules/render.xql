@@ -425,7 +425,7 @@ declare function render:HTMLmakeCitationReference($wid as xs:string, $fileDesc a
         </span>
     let $trail :=
         if ($mode eq 'reading-passage' and $passagetrail) then
-            <span class="cite-rec-trail">{' ' || $passagetrail}</span>
+            <span class="cite-rec-trail">{$passagetrail}</span>
         else ()
     return ($body, $trail)
 };
@@ -576,41 +576,37 @@ declare function render:HTMLSectionToolbox($node as element()) as element(div) {
     let $citetrailBaseUrl := render:makeCitetrailURI($node)
     return
         <div class="{$class}">
-            <a id="{$id}" href="{('#' || $id)}" data-rel="popover">
+            <a id="{$id}" href="{('#' || $id)}" data-rel="popover" class="sal-tb-a">
                 <i class="fas fa-link messengers" title="i18n(openToolbox)"/>
             </a>
             <div class="sal-toolbox-body">
                 <div class="sal-tb-btn">
-                    <a href="{$citetrailBaseUrl || '?format=html'}">
-                        <i class="messengers fas fa-link" title="i18n(linkPass)"/>
-                    </a>
+                    <button onclick="copyLink(this); return false;" title="i18n(linkPass)">
+                        <i class="messengers fas fa-link"/>{' '}<i18n:text key="copyLink"/>
+                    </button>
+                    <span class="cite-link" style="display:none;">{$citetrailBaseUrl || '?format=html'}</span>
+                </div>
+                <div class="sal-tb-btn">
+                    <button onclick="copyCitRef(this); return false;" title="i18n(citePass)">
+                        <i class="messengers fas fa-feather-alt"/>{' '}<i18n:text key="copyCit"/>
+                    </button>
+                    <span class="sal-cite-rec" style="display:none">
+                        {render:HTMLmakeCitationReference($wid, $fileDesc, 'reading-passage', $node)}
+                    </span>
                 </div>
                 <div class="sal-tb-btn dropdown">
-                    <a href="#" onclick="citeToggle(this);" type="button" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        <i class="messengers fas fa-feather-alt" title="i18n(citePass)"/>
-                    </a>
-                    <div class="dropdown-menu sal-cite-toggle">
-                        <span style="font-weight:bold;"><i18n:text key="proposedCitation">Proposed citation</i18n:text>:</span><br/>
-                        <button onclick="citeCopy(this);"><i18n:text key="copy">Copy</i18n:text></button>
-                        <span class="cite-rec" style="display:none">
-                            {render:HTMLmakeCitationReference($wid, $fileDesc, 'reading-passage', $node)
-                            (: <textarea> tag will be created on-the-fly in template_work.html :)}
-                        </span>
-                    </div>
-                </div>
-                <div class="sal-tb-btn dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="messengers fas fa-align-left" title="i18n(txtExpPass)"/>
-                    </a>
+                    <button class="dropdown-toggle" data-toggle="dropdown" title="i18n(txtExpPass)">
+                        <i class="messengers fas fa-align-left" title="i18n(txtExpPass)"/>{' '}<i18n:text key="txtExpShort"/>
+                    </button>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="{$citetrailBaseUrl || '?format=txt&amp;mode=edit'}"><i class="messengers fas fa-align-left" title="i18n(downloadTXTEdit)"/>{' '}<i18n:text key="constitutedLower">constituted</i18n:text></a></li>
-                        <li><a href="{$citetrailBaseUrl || '?format=txt&amp;mode=orig'}"><i class="messengers fas fa-align-left" title="i18n(downloadTXTOrig)"/>{' '}<i18n:text key="diplomaticLower">diplomatic</i18n:text></a></li>
+                        <li><a target="_blank" href="{$citetrailBaseUrl || '?format=txt&amp;mode=edit'}"><i class="messengers fas fa-align-left" title="i18n(downloadTXTEdit)"/>{' '}<i18n:text key="constitutedLower">constituted</i18n:text></a></li>
+                        <li><a target="_blank" href="{$citetrailBaseUrl || '?format=txt&amp;mode=orig'}"><i class="messengers fas fa-align-left" title="i18n(downloadTXTOrig)"/>{' '}<i18n:text key="diplomaticLower">diplomatic</i18n:text></a></li>
                     </ul>
                 </div>
                 <div class="sal-tb-btn">
-                    <a href="{$citetrailBaseUrl || '?format=tei'}">
-                        <i class="messengers fas fa-file-code" title="i18n(teiExpPass)"/>
-                    </a>
+                    <button onclick="window.location.href = '{$citetrailBaseUrl || '?format=tei'}'" title="i18n(teiExpPass)">
+                        <i class="messengers fas fa-file-code" />{' '}<i18n:text key="teiExpShort"/>
+                    </button>
                 </div>
                 <div class="sal-tb-btn" style="display:none;">
                     <a class="updateHiliteBox" href="#"> 

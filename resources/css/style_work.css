@@ -388,8 +388,8 @@ li.cardoStyleLi {
 .pageNumbers {
     display: inline-block;
     position: absolute;
-    width: 8rem;
-    left:-11rem;
+    width: 11rem;
+    left:-13rem;
 }
 .sal-toolbox {
     display: inline-block;
@@ -444,11 +444,7 @@ li.cardoStyleLi {
 
 div.sal-tb-btn {
     font-size:17px !important;
-    display:inline;
-}
-
-div.sal-tb-btn + div.sal-tb-btn {
-    padding-left:0.3em;
+    display:block;
 }
 
 .sal-cite-toggle button {
@@ -633,9 +629,23 @@ a .edited, a .expan, a .reg, a .corr{
     font-size:23px;
 }
 
-.fa-link {
-/*    font-size:unset;*/
-    font-size:18px;
+.sal-tb-a > .fa-link {
+    font-size:20px;
+}
+.sal-tb-btn button {
+    margin-left:-0.5em;
+    border: none;
+    background-color: transparent;
+    color: #102873 !important;
+    outline: none;
+}
+.sal-tb-btn:hover {
+    background-color: #E8E8E8 !important;
+    transition: color 0.2s linear;
+}
+
+.sal-toolbox-body i {
+    width:1em;
 }
 
 .hauptText .signed {
