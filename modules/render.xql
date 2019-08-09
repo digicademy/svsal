@@ -599,8 +599,8 @@ declare function render:HTMLSectionToolbox($node as element()) as element(div) {
                         <i class="messengers fas fa-align-left" title="i18n(txtExpPass)"/>{' '}<i18n:text key="txtExpShort"/>
                     </button>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a target="_blank" href="{$citetrailBaseUrl || '?format=txt&amp;mode=edit'}"><i class="messengers fas fa-align-left" title="i18n(downloadTXTEdit)"/>{' '}<i18n:text key="constitutedLower">constituted</i18n:text></a></li>
-                        <li><a target="_blank" href="{$citetrailBaseUrl || '?format=txt&amp;mode=orig'}"><i class="messengers fas fa-align-left" title="i18n(downloadTXTOrig)"/>{' '}<i18n:text key="diplomaticLower">diplomatic</i18n:text></a></li>
+                        <li><a href="{$citetrailBaseUrl || '?format=txt&amp;mode=edit'}"><i class="messengers fas fa-align-left" title="i18n(downloadTXTEdit)"/>{' '}<i18n:text key="constitutedLower">constituted</i18n:text></a></li>
+                        <li><a href="{$citetrailBaseUrl || '?format=txt&amp;mode=orig'}"><i class="messengers fas fa-align-left" title="i18n(downloadTXTOrig)"/>{' '}<i18n:text key="diplomaticLower">diplomatic</i18n:text></a></li>
                     </ul>
                 </div>
                 <div class="sal-tb-btn">
@@ -2395,6 +2395,7 @@ declare function render:persName($node as element(tei:persName), $mode as xs:str
             render:passthru($node, $mode)
         
         case 'snippets-edit' return
+            (: make persons searchable by their normalized names or IDs :)
             if ($node/@key and $node/@ref) then
                 string($node/@key) || ' [' || string($node/@ref) || ']'
             else if ($node/@key) then
@@ -2418,6 +2419,7 @@ declare function render:placeName($node as element(tei:placeName), $mode as xs:s
         case 'snippets-orig' return
             render:passthru($node, $mode)
         case 'snippets-edit' return
+            (: make persons searchable by their normalized names :)
             if ($node/@key) then
                 string($node/@key)
             else

@@ -647,6 +647,16 @@ a .edited, a .expan, a .reg, a .corr{
 .sal-toolbox-body i {
     width:1em;
 }
+span.copy-alert {
+    position:absolute; 
+    right:-17rem; 
+    background-color: #404040;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 3px;  
+    opacity:0.9;
+}
 
 .hauptText .signed {
     font-size:0.9em !important;

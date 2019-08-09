@@ -80,6 +80,7 @@
         <!-- ==== Back to top ==== -->
         <a id="backTop"/>
         <script type="text/javascript" src="resources/js/jquery.backTop.js"/>
+        <script type="text/javascript" src="resources/js/notify.js"/>
 
         <!-- ==== Scroll an anchor into view if we have one ==== -->
         <script type="text/javascript">
@@ -385,13 +386,12 @@
             function copyLink(elem) {
                 var target = elem.parentElement.getElementsByClassName('cite-link')[0];
                 var input = document.createElement('textarea');
-                input.setAttribute('style', 'display:block; width:0; height:0; opacity: 0;'); // hidden
+                input.setAttribute('style', 'width:0; height:0; opacity: 0;'); // hidden
                 input.textContent = target.textContent;
                 document.body.appendChild(input);
                 input.select();
                 document.execCommand('copy');
-                //alert("Copied: " + input.textContent);
-                //elem.setAttribute('title', 'Copied to clipboard!');
+                copyNotify(elem);
                 document.body.removeChild(input);
             }
             function copyCitRef(elem) {
@@ -411,7 +411,7 @@
                 document.body.appendChild(input);
                 input.select();
                 document.execCommand('copy');
-                //alert("Copied: " + input.textContent);
+                copyNotify(elem);
                 document.body.removeChild(input);
             }
             function getI18nAccessString() {
@@ -437,6 +437,28 @@
                 if (getUrlParams('lang') === 'es' || window.location.href.indexOf("/es/") != -1) return 'es';
                 else if (getUrlParams('lang') === 'de' || window.location.href.indexOf("/de/") != -1) return 'de';
                 else return 'en';
+            }
+            function copyNotify(elem) {
+                var del = elem.parentElement.getElementsByClassName('.copy-alert')[0];
+                if (typeof variable !== 'undefined' &amp;&amp; variable !== null) {
+                    elem.parentElement.removeChild(del);
+                }
+                var lang = getLang();
+                var msg;
+                if (lang === 'de') {
+                    msg = 'In die Zwischenablage kopiert!'
+                } else if (lang === 'es') {
+                    msg = 'Copiado al portapapeles!'
+                } else {
+                    msg = 'Copied to clipboard!'
+                }
+                var popup = document.createElement('span');
+                popup.setAttribute('class', 'copy-alert');
+                popup.textContent = msg;
+                elem.parentElement.appendChild(popup);
+                setTimeout(function() {
+                    $('.copy-alert').fadeOut(1000);
+                }, 1500);
             }
         </script>
 
