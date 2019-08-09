@@ -174,11 +174,12 @@ function sphinx:search ($context as node()*, $model as map(*), $q as xs:string?,
                                      console:log("Response for WP Query: "    || serialize($topWorkingPapers))
                                     )
                                 else ()
-                return <sal:results>
-                            <sal:works>{$topWorks//httpclient:body/rss}</sal:works>
-                            <sal:dictEntries>{$topDictEntries//httpclient:body/rss}</sal:dictEntries>
-                            <sal:workingPapers>{$topWorkingPapers//httpclient:body/rss}</sal:workingPapers>
-                       </sal:results>
+                return 
+                    <sal:results>
+                        <sal:works>{$topWorks//httpclient:body/rss}</sal:works>
+                        <sal:dictEntries>{$topDictEntries//httpclient:body/rss}</sal:dictEntries>
+                        <sal:workingPapers>{$topWorkingPapers//httpclient:body/rss}</sal:workingPapers>
+                    </sal:results>
 
 (: **** Case 2: Search "corpus" **** 
    **** We do a full corpus search, grouping results by work id.
@@ -342,49 +343,58 @@ function sphinx:search ($context as node()*, $model as map(*), $q as xs:string?,
 declare 
     %templates:default ("offset", "0")
     %templates:default ("limit", "10")
-function sphinx:resultsLandingPage ($node as node(), $model as map(*), $q as xs:string?,  $field as xs:string?, $offset as xs:integer?, $limit as xs:integer?, $sort as xs:integer?, $sortby as xs:string?, $lang as xs:string) {
-
+    function sphinx:resultsLandingPage ($node as node(), $model as map(*), $q as xs:string?,  $field as xs:string?, 
+                                        $offset as xs:integer?, $limit as xs:integer?, $sort as xs:integer?, $sortby as xs:string?, 
+                                        $lang as xs:string) {
+    
     let $results  := $model("results")
-
 (:  **** CASE 1: Search was for "everything". ****
     **** We show the top 5 results in each category,
     **** along with an "all..." button that switches to a dedicated corpus search.
 :)
     let $output := if ($field eq "everything") then
-        let $searchInfo := <p id="searchInfo"><i18n:text key="searchFor">Search for</i18n:text>: {string-join($results/sal:works//word, ', ')}</p>
-
+        let $searchInfo := 
+            <p id="searchInfo"><i18n:text key="searchFor">Search for</i18n:text>: {string-join($results/sal:works//word, ', ')}</p>
         (: Get Works ... :)
-        let $worksLink :=           if (xs:integer($results/sal:works//opensearch:totalResults/text()) > $config:searchMultiModeLimit ) then
-                                        <span style="margin-left:7px;"><a href="search.html?field=corpus&amp;q={encode-for-uri($q)}&amp;offset=0&amp;limit={$limit}"><i18n:text key="allResults">All</i18n:text>...</a></span>
-                                    else ()
-        let $worksList :=           <div class="resultsSection">
-                                          <h4><i18n:text key="works">Works</i18n:text> ({$results/sal:works//opensearch:totalResults/text()})</h4>
-                                          <ol class="resultsList">{
-                                                for $item at $index in $results/sal:works//item
-                                                    let $author         := $item/author/text()
-                                                    let $title          := $item/title/text()
-                                                    let $wid            := $item/work/text()
-                                                    let $numberOfHits   := $item/sphinxNS:groupcount/text()
-                                                    let $link           :=  if (contains($item/fragment_path/text(), "#")) then
-                                                                                if ($item/fragment_path/text() eq '#No fragment discoverable!') then
-                                                                                    'work.html?wid=' || $wid || '&amp;q=' || encode-for-uri($q) (: workaround for avoiding hard http errors (TODO) :)
-                                                                                else replace($item/fragment_path/text(), '#', '&amp;q=' || encode-for-uri($q) || '#')
-                                                                            else if (contains($item/fragment_path/text(), "?")) then
-                                                                                $item/fragment_path/text() || '&amp;q=' || encode-for-uri($q)    (: this is the url to call the frg. in the webapp :)
-                                                                            else
-                                                                                $item/fragment_path/text() || '?q=' || encode-for-uri($q)    (: this is the url to call the frg. in the webapp :)
-                                                    let $detailsLink    := <a class="toggleDetails" href="#details_{$wid}" data-target="#details_{$wid}" data-toggle="collapse">{$numberOfHits}&#xA0;<i18n:text key="hits">Fundstellen</i18n:text>&#xA0;<i class="fa fa-chevron-down"aria-hidden="true"></i></a>
-                                                    let $detailHTML     := sphinx:details($wid, $field, $q, 0, 10, $lang)
+        let $worksLink :=           
+            if (xs:integer($results/sal:works//opensearch:totalResults/text()) > $config:searchMultiModeLimit ) then
+                <span style="margin-left:7px;">
+                    <a href="search.html?field=corpus&amp;q={encode-for-uri($q)}&amp;offset=0&amp;limit={$limit}"><i18n:text key="allResults">All</i18n:text>...</a>
+                </span>
+            else ()
+        let $worksList := 
+            <div class="resultsSection">
+                <h4><i18n:text key="works">Works</i18n:text> ({$results/sal:works//opensearch:totalResults/text()})</h4>
+                <ol class="resultsList">{
+                    for $item at $index in $results/sal:works//item
+                        let $author := $item/author/text()
+                        let $title := $item/title/text()
+                        let $wid := $item/work/text()
+                        let $numberOfHits := $item/sphinxNS:groupcount/text()
+                        let $link :=  
+                            if (contains($item/fragment_path/text(), "#")) then
+                                if ($item/fragment_path/text() eq '#No fragment discoverable!') then
+                                    'work.html?wid=' || $wid || '&amp;q=' || encode-for-uri($q) (: workaround for avoiding hard http errors (TODO) :)
+                                else replace($item/fragment_path/text(), '#', '&amp;q=' || encode-for-uri($q) || '#')
+                            else if (contains($item/fragment_path/text(), "?")) then
+                                $item/fragment_path/text() || '&amp;q=' || encode-for-uri($q)    (: this is the url to call the frg. in the webapp :)
+                            else
+                                $item/fragment_path/text() || '?q=' || encode-for-uri($q)    (: this is the url to call the frg. in the webapp :)
+                        let $detailsLink := 
+                            <a class="toggleDetails" href="#details_{$wid}" data-target="#details_{$wid}" data-toggle="collapse">
+                                {$numberOfHits}&#xA0;<i18n:text key="hits">Fundstellen</i18n:text>&#xA0;<i class="fa fa-chevron-down"aria-hidden="true"></i>
+                            </a>
+                        let $detailHTML := sphinx:details($wid, $field, $q, 0, 10, $lang)
 
-                                                    return 
-                                                            <li class="lead">
-                                                                <a href="{$link}">{$author}: {$title}</a><br/>
-                                                                {$detailsLink}
-                                                                <div id="details_{$wid}" class="collapse resultsDetails">{$detailHTML}</div>
-                                                            </li>
-                                          }</ol>
-                                          {$worksLink}
-                                      </div>
+                        return 
+                            <li class="lead">
+                                <a href="{$link}">{$author}: {$title}</a><br/>
+                                {$detailsLink}
+                                <div id="details_{$wid}" class="collapse resultsDetails">{$detailHTML}</div>
+                            </li>
+                  }</ol>
+                  {$worksLink}
+              </div>
 
         (: Get Dictionary Entries ... :)
 (:        let $dictEntriesLink :=     if (xs:integer($results/sal:dictEntries//opensearch:totalResults/text()) > $config:searchMultiModeLimit ) then
@@ -416,35 +426,41 @@ function sphinx:resultsLandingPage ($node as node(), $model as map(*), $q as xs:
                                     </div>:)
 
         (: Get Working Papers ... :)
-        let $workingPapersLink :=   if (xs:integer($results/sal:workingPapers//opensearch:totalResults/text()) > $config:searchMultiModeLimit ) then
-                                        <span style="margin-left:7px;"><a href="search.html?field=wp&amp;q={encode-for-uri($q)}&amp;offset=0&amp;limit={$limit}"><i18n:text key="allResults">all</i18n:text>...</a></span>
-                                    else ()
-        let $workingPapersList :=   <div class="resultsSection">
-                                       <h4><i18n:text key="workingPapers">Working Papers</i18n:text> ({$results/sal:workingPapers//opensearch:totalResults/text()})</h4>
-                                       <ol class="resultsList">{
-                                            for $item at $index in $results/sal:workingPapers//item
-                                                let $author         := $item/author/text()
-                                                let $title          := $item/title/text()
-                                                let $wid            := $item/work/text()
-                                                let $numberOfHits   := $item/sphinxNS:groupcount/text()
-                                                let $link           :=  if (contains($item/fragment_path/text(), "#")) then
-                                                                            replace($item/fragment_path/text(), '#', '&amp;q=' || encode-for-uri($q) || '#')
-                                                                        else if (contains($item/fragment_path/text(), "?")) then
-                                                                            $item/fragment_path/text() || '&amp;q=' || encode-for-uri($q)    (: this is the url to call the frg. in the webapp :)
-                                                                        else
-                                                                            $item/fragment_path/text() || '?q=' || encode-for-uri($q)    (: this is the url to call the frg. in the webapp :)
-                                                let $detailsLink    := <a class="toggleDetails" href="#details_{$wid}" data-target="#details_{$wid}" data-toggle="collapse">{$numberOfHits}&#xA0;<i18n:text key="hits">Fundstellen</i18n:text>&#xA0;<i class="fa fa-chevron-down"aria-hidden="true"></i></a>
-                                                let $detailHTML     := sphinx:details($wid, $field, $q, 0, 10, $lang)
+        let $workingPapersLink :=   
+            if (xs:integer($results/sal:workingPapers//opensearch:totalResults/text()) > $config:searchMultiModeLimit ) then
+                <span style="margin-left:7px;"><a href="search.html?field=wp&amp;q={encode-for-uri($q)}&amp;offset=0&amp;limit={$limit}"><i18n:text key="allResults">all</i18n:text>...</a></span>
+            else ()
+        let $workingPapersList :=   
+            <div class="resultsSection">
+               <h4><i18n:text key="workingPapers">Working Papers</i18n:text> ({$results/sal:workingPapers//opensearch:totalResults/text()})</h4>
+               <ol class="resultsList">{
+                    for $item at $index in $results/sal:workingPapers//item
+                        let $author         := $item/author/text()
+                        let $title          := $item/title/text()
+                        let $wid            := $item/work/text()
+                        let $numberOfHits   := $item/sphinxNS:groupcount/text()
+                        let $link :=  
+                            if (contains($item/fragment_path/text(), "#")) then
+                                replace($item/fragment_path/text(), '#', '&amp;q=' || encode-for-uri($q) || '#')
+                            else if (contains($item/fragment_path/text(), "?")) then
+                                $item/fragment_path/text() || '&amp;q=' || encode-for-uri($q)    (: this is the url to call the frg. in the webapp :)
+                            else
+                                $item/fragment_path/text() || '?q=' || encode-for-uri($q)    (: this is the url to call the frg. in the webapp :)
+                        let $detailsLink    := 
+                            <a class="toggleDetails" href="#details_{$wid}" data-target="#details_{$wid}" data-toggle="collapse">
+                                {$numberOfHits}&#xA0;<i18n:text key="hits">Fundstellen</i18n:text>&#xA0;<i class="fa fa-chevron-down"aria-hidden="true"></i>
+                            </a>
+                        let $detailHTML     := sphinx:details($wid, $field, $q, 0, 10, $lang)
 
-                                                return 
-                                                            <li class="lead">
-                                                                <a href="{$link}">{$author}: {$title}</a><br/>
-                                                                {$detailsLink}
-                                                                <div id="details_{$wid}" class="collapse resultsDetails">{$detailHTML}</div>
-                                                            </li>
-                                       }</ol>
-                                       {$workingPapersLink}
-                                   </div>
+                        return 
+                            <li class="lead">
+                                <a href="{$link}">{$author}: {$title}</a><br/>
+                                {$detailsLink}
+                                <div id="details_{$wid}" class="collapse resultsDetails">{$detailHTML}</div>
+                            </li>
+               }</ol>
+               {$workingPapersLink}
+           </div>
         
         (: include {$dictEntriesList} once the dictionary is available :)
         return
@@ -460,37 +476,51 @@ function sphinx:resultsLandingPage ($node as node(), $model as map(*), $q as xs:
     **** along with an "details" buttons that expand the tree structure of a single work
 :)
     else if ($field = ("corpus", "headings", "notes", "nonotes")) then
-        let $searchInfo :=  <p id="searchInfo"><i18n:text key="searchFor">Suche nach</i18n:text>: {string-join($results//word[not(. = ('notar', 'head', 'titlepage'))], ', ')}<br/>
-                              <i18n:text key="found">Gefunden</i18n:text>:{$config:nbsp}<strong>{$results//opensearch:totalResults/text()}{$config:nbsp}<i18n:text key="works">Werke</i18n:text>.</strong>{$config:nbsp}
-                              <i18n:text key="display">Anzeige</i18n:text>:{$config:nbsp}{xs:integer($offset) + 1}-{xs:integer($offset) + count($results//item)}
-                            </p>
-        let $prevPageLink := if (xs:integer($results//opensearch:startIndex/text()) > 1 ) then
-                                <span><a href="search.html?field={$field}&amp;q={$q}&amp;offset={$offset - $limit}&amp;limit={$limit}"  class="prevnext_majorList"><i18n:text key="prev">Vorige</i18n:text> <i18n:text key="prev">Werke</i18n:text></a>{$config:nbsp || $config:nbsp}</span>
-                             else ()
-        let $nextPageLink := if (xs:integer($results//opensearch:startIndex/text())+xs:integer($results//opensearch:itemsPerPage/text())-1 lt xs:integer($results//opensearch:totalResults/text())) then
-                                <a href="search.html?field={$field}&amp;q={$q}&amp;offset={$offset + $limit}&amp;limit={$limit}" class="prevnext_majorList"><i18n:text key="next">Nächste</i18n:text> <i18n:text key="prev">Werke</i18n:text></a>
-                             else ()
-        let $worksList :=   <ul class="resultsList">{
-                                    for $item at $index in $results//item
-                                        let $author         := $item/author/text()
-                                        let $title          := $item/title/text()
-                                        let $wid            := $item/work/text()
-                                        let $numberOfHits   := $item/sphinxNS:groupcount/text()
-                                        let $link           :=  if (contains($item/fragment_path/text(), "#")) then
-                                                                    replace($item/fragment_path/text(), '#', '&amp;q=' || encode-for-uri($q) || '#')
-                                                                else if (contains($item/fragment_path/text(), "?")) then
-                                                                    $item/fragment_path/text() || '&amp;q=' || encode-for-uri($q)    (: this is the url to call the frg. in the webapp :)
-                                                                else
-                                                                    $item/fragment_path/text() || '?q=' || encode-for-uri($q)    (: this is the url to call the frg. in the webapp :)
-                                        let $detailsLink    := <a class="toggleDetails" href="#details_{$wid}" data-target="#details_{$wid}" data-toggle="collapse">{$numberOfHits}&#xA0;<i18n:text key="hits">Fundstellen</i18n:text>&#xA0;<i class="fa fa-chevron-down"aria-hidden="true"></i></a>
-                                        let $detailHTML     := sphinx:details($wid, $field, $q, 0, 10, $lang)
-                                        return
-                                            <li>
-                                                <a href="{$link}">{$author}: {$title}</a><br/>
-                                                {$detailsLink}
-                                                <div id="details_{$wid}" class="collapse resultsDetails">{$detailHTML}</div>
-                                            </li>
-                                }</ul>
+        let $searchInfo :=  
+            <p id="searchInfo"><i18n:text key="searchFor">Suche nach</i18n:text>: {string-join($results//word[not(. = ('notar', 'head', 'titlepage'))], ', ')}<br/>
+              <i18n:text key="found">Gefunden</i18n:text>:{$config:nbsp}<strong>{$results//opensearch:totalResults/text()}{$config:nbsp}<i18n:text key="works">Werke</i18n:text>.</strong>{$config:nbsp}
+              <i18n:text key="display">Anzeige</i18n:text>:{$config:nbsp}{xs:integer($offset) + 1}-{xs:integer($offset) + count($results//item)}
+            </p>
+        let $prevPageLink := 
+            if (xs:integer($results//opensearch:startIndex/text()) > 1 ) then
+                <span>
+                    <a href="search.html?field={$field}&amp;q={$q}&amp;offset={$offset - $limit}&amp;limit={$limit}"  class="prevnext_majorList">
+                        <i18n:text key="prev">Vorige</i18n:text> <i18n:text key="prev">Werke</i18n:text>
+                    </a>{$config:nbsp || $config:nbsp}
+                </span>
+            else ()
+        let $nextPageLink := 
+             if (xs:integer($results//opensearch:startIndex/text())+xs:integer($results//opensearch:itemsPerPage/text())-1 lt xs:integer($results//opensearch:totalResults/text())) then
+                 <a href="search.html?field={$field}&amp;q={$q}&amp;offset={$offset + $limit}&amp;limit={$limit}" class="prevnext_majorList">
+                     <i18n:text key="next">Nächste</i18n:text> <i18n:text key="prev">Werke</i18n:text>
+                 </a>
+             else ()
+        let $worksList :=   
+            <ul class="resultsList">{
+                for $item at $index in $results//item
+                    let $author         := $item/author/text()
+                    let $title          := $item/title/text()
+                    let $wid            := $item/work/text()
+                    let $numberOfHits   := $item/sphinxNS:groupcount/text()
+                    let $link :=  
+                        if (contains($item/fragment_path/text(), "#")) then
+                            replace($item/fragment_path/text(), '#', '&amp;q=' || encode-for-uri($q) || '#')
+                        else if (contains($item/fragment_path/text(), "?")) then
+                            $item/fragment_path/text() || '&amp;q=' || encode-for-uri($q)    (: this is the url to call the frg. in the webapp :)
+                        else
+                            $item/fragment_path/text() || '?q=' || encode-for-uri($q)    (: this is the url to call the frg. in the webapp :)
+                    let $detailsLink    := 
+                        <a class="toggleDetails" href="#details_{$wid}" data-target="#details_{$wid}" data-toggle="collapse">
+                            {$numberOfHits}&#xA0;<i18n:text key="hits">Fundstellen</i18n:text>&#xA0;<i class="fa fa-chevron-down"aria-hidden="true"></i>
+                        </a>
+                    let $detailHTML := sphinx:details($wid, $field, $q, 0, 10, $lang)
+                    return
+                        <li>
+                            <a href="{$link}">{$author}: {$title}</a><br/>
+                            {$detailsLink}
+                            <div id="details_{$wid}" class="collapse resultsDetails">{$detailHTML}</div>
+                        </li>
+            }</ul>
         return
             <div class="searchResults">
                 {$searchInfo}
@@ -507,37 +537,49 @@ function sphinx:resultsLandingPage ($node as node(), $model as map(*), $q as xs:
     **** along with an "details" buttons that expand the tree structure of a single work
 :)
     else if ($field = ("dict", "entries")) then
-        let $searchInfo :=  <p id="searchInfo"><i18n:text key="searchFor">Suche nach</i18n:text>: {string-join($results//word[not(string(.) eq 'head')], ', ')}<br/>
-                              <i18n:text key="found">Gefunden</i18n:text>:{$config:nbsp}<strong>{$results//opensearch:totalResults/text()}{$config:nbsp}<i18n:text key="dictionaryEntries">Wörterbucheinträge</i18n:text>.</strong>{$config:nbsp}
-                              <i18n:text key="display">Anzeige</i18n:text>:{$config:nbsp}{xs:integer($offset) + 1}-{xs:integer($offset) + count($results//item)}
-                            </p>
-        let $prevPageLink := if (xs:integer($results//opensearch:startIndex/text()) > 1 ) then
-                                <span><a href="search.html?field={$field}&amp;q={$q}&amp;offset={$offset - $limit}&amp;limit={$limit}"  class="prevnext_majorList"><i18n:text key="prev">Vorige</i18n:text> <i18n:text key="prev">Werke</i18n:text></a>{$config:nbsp || $config:nbsp}</span>
-                             else ()
-        let $nextPageLink := if (xs:integer($results//opensearch:startIndex/text())+xs:integer($results//opensearch:itemsPerPage/text())-1 lt xs:integer($results//opensearch:totalResults/text())) then
-                                <a href="search.html?field={$field}&amp;q={$q}&amp;offset={$offset + $limit}&amp;limit={$limit}" class="prevnext_majorList"><i18n:text key="next">Nächste</i18n:text> <i18n:text key="prev">Werke</i18n:text></a>
-                             else ()
-        let $entriesList :=  <ul class="resultsList">{
-                                    for $item at $index in $results//item
-                                        let $author         := $item/author/text()
-                                        let $title          := $item/title/text()
-                                        let $wid            := $item/work/text()
-                                        let $numberOfHits   := $item/sphinxNS:groupcount/text()
-                                        let $link           :=  if (contains($item/fragment_path/text(), "#")) then
-                                                                    replace($item/fragment_path/text(), '#', '&amp;q=' || encode-for-uri($q) || '#')
-                                                                else if (contains($item/fragment_path/text(), "?")) then
-                                                                    $item/fragment_path/text() || '&amp;q=' || encode-for-uri($q)    (: this is the url to call the frg. in the webapp :)
-                                                                else
-                                                                    $item/fragment_path/text() || '?q=' || encode-for-uri($q)    (: this is the url to call the frg. in the webapp :)
-                                        let $detailsLink    := <a class="toggleDetails" href="#details_{$wid}" data-target="#details_{$wid}" data-toggle="collapse">{$numberOfHits}&#xA0;<i18n:text key="hits">Fundstellen</i18n:text>&#xA0;<i class="fa fa-chevron-down"aria-hidden="true"></i></a>
-                                        let $detailHTML     := sphinx:details($wid, $field, $q, 0, 10, $lang)
-                                        return
-                                            <li>
-                                                <a href="{$link}">{$title} ({$author})</a><br/>
-                                                {$detailsLink}
-                                                <div id="details_{$wid}" class="collapse resultsDetails">{$detailHTML}</div>
-                                            </li>
-                                }</ul>
+        let $searchInfo :=  
+            <p id="searchInfo"><i18n:text key="searchFor">Suche nach</i18n:text>: {string-join($results//word[not(string(.) eq 'head')], ', ')}<br/>
+              <i18n:text key="found">Gefunden</i18n:text>:{$config:nbsp}<strong>{$results//opensearch:totalResults/text()}{$config:nbsp}<i18n:text key="dictionaryEntries">Wörterbucheinträge</i18n:text>.</strong>{$config:nbsp}
+              <i18n:text key="display">Anzeige</i18n:text>:{$config:nbsp}{xs:integer($offset) + 1}-{xs:integer($offset) + count($results//item)}
+            </p>
+        let $prevPageLink := 
+             if (xs:integer($results//opensearch:startIndex/text()) > 1 ) then
+                <span><a href="search.html?field={$field}&amp;q={$q}&amp;offset={$offset - $limit}&amp;limit={$limit}"  class="prevnext_majorList"><i18n:text key="prev">Vorige</i18n:text> <i18n:text key="prev">Werke</i18n:text></a>{$config:nbsp || $config:nbsp}</span>
+             else ()
+        let $nextPageLink := 
+             if (xs:integer($results//opensearch:startIndex/text()) + xs:integer($results//opensearch:itemsPerPage/text()) - 1 
+                 lt xs:integer($results//opensearch:totalResults/text())) then
+                    <a href="search.html?field={$field}&amp;q={$q}&amp;offset={$offset + $limit}&amp;limit={$limit}" class="prevnext_majorList">
+                        <i18n:text key="next">Nächste</i18n:text> <i18n:text key="prev">Werke</i18n:text>
+                    </a>
+             else ()
+        let $entriesList :=  
+            <ul class="resultsList">{
+                for $item at $index in $results//item
+                    let $author         := $item/author/text()
+                    let $title          := $item/title/text()
+                    let $wid            := $item/work/text()
+                    let $numberOfHits   := $item/sphinxNS:groupcount/text()
+                    let $link :=  
+                        if (contains($item/fragment_path/text(), "#")) then
+                            replace($item/fragment_path/text(), '#', '&amp;q=' || encode-for-uri($q) || '#')
+                        else if (contains($item/fragment_path/text(), "?")) then
+                            $item/fragment_path/text() || '&amp;q=' || encode-for-uri($q)    (: this is the url to call the frg. in the webapp :)
+                        else
+                            $item/fragment_path/text() || '?q=' || encode-for-uri($q)    (: this is the url to call the frg. in the webapp :)
+                    let $detailsLink    := 
+                        <a class="toggleDetails" href="#details_{$wid}" data-target="#details_{$wid}" data-toggle="collapse">
+                            {$numberOfHits}&#xA0;<i18n:text key="hits">Fundstellen</i18n:text>&#xA0;<i class="fa fa-chevron-down"aria-hidden="true"></i>
+                        </a>
+                    let $detailHTML := sphinx:details($wid, $field, $q, 0, 10, $lang)
+                    return
+                        <li>
+                            <a href="{$link}">{$title} ({$author})</a>
+                            <br/>
+                            {$detailsLink}
+                            <div id="details_{$wid}" class="collapse resultsDetails">{$detailHTML}</div>
+                        </li>
+            }</ul>
         return
             <div class="searchResults">
                 {$searchInfo}
@@ -555,37 +597,51 @@ function sphinx:resultsLandingPage ($node as node(), $model as map(*), $q as xs:
     **** along with an "details" buttons that expand the tree structure of a single work
 :)
     else if ($field eq "wp") then
-        let $searchInfo :=  <p id="searchInfo"><i18n:text key="searchFor">Suche nach</i18n:text>: {string-join($results//word, ', ')}<br/>
-                              <i18n:text key="found">Gefunden</i18n:text>:{$config:nbsp}<strong>{$results//opensearch:totalResults/text()}{$config:nbsp}<i18n:text key="workingPapers">Working Papers</i18n:text>.</strong>{$config:nbsp}
-                              <i18n:text key="display">Anzeige</i18n:text>:{$config:nbsp}{xs:integer($offset) + 1}-{xs:integer($offset) + count($results//item)}
-                            </p>
-        let $prevPageLink := if (xs:integer($results//opensearch:startIndex/text()) > 1 ) then
-                                <span><a href="search.html?field={$field}&amp;q={$q}&amp;offset={$offset - $limit}&amp;limit={$limit}"  class="prevnext_majorList"><i18n:text key="prev">Vorige</i18n:text> <i18n:text key="prev">Werke</i18n:text></a>{$config:nbsp || $config:nbsp}</span>
-                             else ()
-        let $nextPageLink := if (xs:integer($results//opensearch:startIndex/text())+xs:integer($results//opensearch:itemsPerPage/text())-1 lt xs:integer($results//opensearch:totalResults/text())) then
-                                <a href="search.html?field={$field}&amp;q={$q}&amp;offset={$offset + $limit}&amp;limit={$limit}" class="prevnext_majorList"><i18n:text key="next">Nächste</i18n:text> <i18n:text key="prev">Werke</i18n:text></a>
-                             else ()
-        let $workingPapersList :=   <ul class="resultsList">{
-                                    for $item at $index in $results//item
-                                        let $author         := $item/author/text()
-                                        let $title          := $item/title/text()
-                                        let $wid            := $item/work/text()
-                                        let $numberOfHits   := $item/sphinxNS:groupcount/text()
-                                        let $link           :=  if (contains($item/fragment_path/text(), "#")) then
-                                                                    replace($item/fragment_path/text(), '#', '&amp;q=' || encode-for-uri($q) || '#')
-                                                                else if (contains($item/fragment_path/text(), "?")) then
-                                                                    $item/fragment_path/text() || '&amp;q=' || encode-for-uri($q)    (: this is the url to call the frg. in the webapp :)
-                                                                else
-                                                                    $item/fragment_path/text() || '?q=' || encode-for-uri($q)    (: this is the url to call the frg. in the webapp :)
-                                        let $detailsLink    := <a class="toggleDetails" href="#details_{$wid}" data-target="#details_{$wid}" data-toggle="collapse">{$numberOfHits}&#xA0;<i18n:text key="hits">Fundstellen</i18n:text>&#xA0;<i class="fa fa-chevron-down"aria-hidden="true"></i></a>
-                                        let $detailHTML     := sphinx:details($wid, $field, $q, 0, 10, $lang)
-                                        return
-                                            <li>
-                                                <a href="{$link}">{$author}: {$title}</a><br/>
-                                                {$detailsLink}
-                                                <div id="details_{$wid}" class="collapse resultsDetails">{$detailHTML}</div>
-                                            </li>
-                                }</ul>
+        let $searchInfo :=  
+            <p id="searchInfo"><i18n:text key="searchFor">Suche nach</i18n:text>: {string-join($results//word, ', ')}<br/>
+              <i18n:text key="found">Gefunden</i18n:text>:{$config:nbsp}<strong>{$results//opensearch:totalResults/text()}{$config:nbsp}<i18n:text key="workingPapers">Working Papers</i18n:text>.</strong>{$config:nbsp}
+              <i18n:text key="display">Anzeige</i18n:text>:{$config:nbsp}{xs:integer($offset) + 1}-{xs:integer($offset) + count($results//item)}
+            </p>
+        let $prevPageLink := 
+            if (xs:integer($results//opensearch:startIndex/text()) > 1 ) then
+                <span>
+                    <a href="search.html?field={$field}&amp;q={$q}&amp;offset={$offset - $limit}&amp;limit={$limit}"  class="prevnext_majorList">
+                        <i18n:text key="prev">Vorige</i18n:text> <i18n:text key="prev">Werke</i18n:text>
+                    </a>{$config:nbsp || $config:nbsp}
+                </span>
+            else ()
+        let $nextPageLink := 
+            if (xs:integer($results//opensearch:startIndex/text())+xs:integer($results//opensearch:itemsPerPage/text())-1 lt xs:integer($results//opensearch:totalResults/text())) then
+                <a href="search.html?field={$field}&amp;q={$q}&amp;offset={$offset + $limit}&amp;limit={$limit}" class="prevnext_majorList">
+                    <i18n:text key="next">Nächste</i18n:text> <i18n:text key="prev">Werke</i18n:text>
+                </a>
+            else ()
+        let $workingPapersList :=   
+            <ul class="resultsList">{
+                for $item at $index in $results//item
+                    let $author         := $item/author/text()
+                    let $title          := $item/title/text()
+                    let $wid            := $item/work/text()
+                    let $numberOfHits   := $item/sphinxNS:groupcount/text()
+                    let $link           :=  
+                        if (contains($item/fragment_path/text(), "#")) then
+                            replace($item/fragment_path/text(), '#', '&amp;q=' || encode-for-uri($q) || '#')
+                        else if (contains($item/fragment_path/text(), "?")) then
+                            $item/fragment_path/text() || '&amp;q=' || encode-for-uri($q)    (: this is the url to call the frg. in the webapp :)
+                        else
+                            $item/fragment_path/text() || '?q=' || encode-for-uri($q)    (: this is the url to call the frg. in the webapp :)
+                    let $detailsLink    := 
+                        <a class="toggleDetails" href="#details_{$wid}" data-target="#details_{$wid}" data-toggle="collapse">
+                            {$numberOfHits}&#xA0;<i18n:text key="hits">Fundstellen</i18n:text>&#xA0;<i class="fa fa-chevron-down"aria-hidden="true"></i>
+                        </a>
+                    let $detailHTML := sphinx:details($wid, $field, $q, 0, 10, $lang)
+                    return
+                        <li>
+                            <a href="{$link}">{$author}: {$title}</a><br/>
+                            {$detailsLink}
+                            <div id="details_{$wid}" class="collapse resultsDetails">{$detailHTML}</div>
+                        </li>
+            }</ul>
         return
             <div class="searchResults">
                 {$searchInfo}
@@ -687,7 +743,8 @@ declare
      %templates:default ("limit", 10)
      %templates:default ("offset", 0)
      %templates:default ("lang", "en")
-function sphinx:details ($wid as xs:string, $field as xs:string, $q as xs:string, $offset as xs:integer, $limit as xs:integer, $lang as xs:string?) {
+    function sphinx:details ($wid as xs:string, $field as xs:string, $q as xs:string, $offset as xs:integer, 
+                             $limit as xs:integer, $lang as xs:string?) {
     let $detailsRequestHeaders  := <headers></headers>
     let $conditionParameters    := "@sphinx_work ^" || $wid
     let $alsoSearchAuthorField  := if ($field eq "corpus") then "sphinx_author," else ()
@@ -715,9 +772,15 @@ function sphinx:details ($wid as xs:string, $field as xs:string, $q as xs:string
     
     let $searchInfo :=  
         <p id="details_searchInfo">
-            <span id="details_searchTerms"><i18n:text key="searchFor">Suche nach</i18n:text>: {string-join($details//word[not(lower-case(./text()) eq lower-case($wid))], ', ')}<br/></span>
-            <span id="details_totalHits"><i18n:text key="found">Gefunden</i18n:text>:{$config:nbsp}<strong>{$details//opensearch:totalResults/text()}{$config:nbsp}<i18n:text key="hits">Fundstellen</i18n:text>.</strong><br/></span>
-            <span id="details_displayRange"><h3><i18n:text key="display">Anzeige</i18n:text>:{$config:nbsp}{xs:integer($offset) + 1 || '-' || xs:integer($offset) + count($details//item)}</h3></span>
+            <span id="details_searchTerms">
+                <i18n:text key="searchFor">Suche nach</i18n:text>: {string-join($details//word[not(lower-case(./text()) eq lower-case($wid))], ', ')}<br/>
+            </span>
+            <span id="details_totalHits">
+                <i18n:text key="found">Gefunden</i18n:text>:{$config:nbsp}<strong>{$details//opensearch:totalResults/text()}{$config:nbsp}<i18n:text key="hits">Fundstellen</i18n:text>.</strong><br/>
+            </span>
+            <span id="details_displayRange">
+                <h3><i18n:text key="display">Anzeige</i18n:text>:{$config:nbsp}{xs:integer($offset) + 1 || '-' || xs:integer($offset) + count($details//item)}</h3>
+            </span>
         </p>
     let $prevDetailsPara        := "&amp;limit=" || $limit || "&amp;offset=" || xs:string(xs:integer($offset) - xs:integer($details//opensearch:itemsPerPage))
     let $nextDetailsPara        := "&amp;limit=" || $limit || "&amp;offset=" || xs:string(xs:integer($offset) + xs:integer($details//opensearch:itemsPerPage))
@@ -762,10 +825,17 @@ function sphinx:details ($wid as xs:string, $field as xs:string, $q as xs:string
                     let $excerpts       := sphinx:excerpts($snippets, $q)
                     let $description_orig    := $excerpts//item[1]/description
                     let $description_edit    := $excerpts//item[2]/description
-                    let $statusInfo     := i18n:process(if      ($item/hit_type/text() = ('head'))      then <i18n:text key="heading">Überschrift</i18n:text>
-                                                        else if ($item/hit_type/text() = ('note'))      then <i18n:text key="note">Marginalnote</i18n:text>
-                                                        else if ($item/hit_type/text() = ('titlePage')) then <i18n:text key="titlepage">Titelblatt</i18n:text>
-                                                        else                                                 <i18n:text key="mainText">Haupttext</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
+                    let $statusInfo     := 
+                        i18n:process(
+                            if ($item/hit_type/text() = ('head')) then 
+                                <i18n:text key="heading">Überschrift</i18n:text>
+                            else if ($item/hit_type/text() = ('note')) then 
+                                <i18n:text key="note">Marginalnote</i18n:text>
+                            else if ($item/hit_type/text() = ('titlePage')) then 
+                                <i18n:text key="titlepage">Titelblatt</i18n:text>
+                            else
+                                <i18n:text key="mainText">Haupttext</i18n:text>, 
+                        $lang, '/db/apps/salamanca/data/i18n', 'en')
                     return
                         <tr>
                            <!--<td>
@@ -774,12 +844,13 @@ function sphinx:details ($wid as xs:string, $field as xs:string, $q as xs:string
                             <td>
                                 <span class="lead" style="padding-bottom: 7px; font-family: 'Junicode', 'Cardo', 'Andron', 'Cabin', sans-serif;" title="{i18n:process($statusInfo, $lang, '/db/apps/salamanca/data/i18n', 'en')}"><!--<span style="color: #777777">{$detailindex|| '. '}</span>-->{$bombtrail}</span>
                                 <div class="crumbtrail">{$crumbtrail/node()}</div>
-                                <div class="result__snippet" title="{$statusInfo}">{ if ($description_edit//span) then $description_edit
-                                  else if ($description_orig//span) then $description_orig
-                                  else if (string-length($item/description_edit) gt $config:snippetLength) then
-                                    substring($item/description_edit, 0, $config:snippetLength) || '...'
-                                  else
-                                    $item/description_edit/*
+                                <div class="result__snippet" title="{$statusInfo}">{ 
+                                    if ($description_edit//span) then $description_edit
+                                    else if ($description_orig//span) then $description_orig
+                                    else if (string-length($item/description_edit) gt $config:snippetLength) then
+                                        substring($item/description_edit, 0, $config:snippetLength) || '...'
+                                    else
+                                        $item/description_edit/*
                                 }</div>
                             </td>
                         </tr>
