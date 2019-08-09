@@ -581,22 +581,22 @@ declare function render:HTMLSectionToolbox($node as element()) as element(div) {
             </a>
             <div class="sal-toolbox-body">
                 <div class="sal-tb-btn">
-                    <button onclick="copyLink(this); return false;" title="i18n(linkPass)">
-                        <i class="messengers fas fa-link"/>{' '}<i18n:text key="copyLink"/>
+                    <button onclick="copyLink(this); return false;" class="messengers" title="i18n(linkPass)">
+                        <i class="fas fa-link"/>{' '}<i18n:text key="copyLink"/>
                     </button>
                     <span class="cite-link" style="display:none;">{$citetrailBaseUrl || '?format=html'}</span>
                 </div>
                 <div class="sal-tb-btn">
-                    <button onclick="copyCitRef(this); return false;" title="i18n(citePass)">
-                        <i class="messengers fas fa-feather-alt"/>{' '}<i18n:text key="copyCit"/>
+                    <button onclick="copyCitRef(this); return false;" class="messengers" title="i18n(citePass)">
+                        <i class="fas fa-feather-alt"/>{' '}<i18n:text key="copyCit"/>
                     </button>
                     <span class="sal-cite-rec" style="display:none">
                         {render:HTMLmakeCitationReference($wid, $fileDesc, 'reading-passage', $node)}
                     </span>
                 </div>
                 <div class="sal-tb-btn dropdown">
-                    <button class="dropdown-toggle" data-toggle="dropdown" title="i18n(txtExpPass)">
-                        <i class="messengers fas fa-align-left" title="i18n(txtExpPass)"/>{' '}<i18n:text key="txtExpShort"/>
+                    <button class="dropdown-toggle messengers" data-toggle="dropdown" title="i18n(txtExpPass)">
+                        <i class="fas fa-align-left" title="i18n(txtExpPass)"/>{' '}<i18n:text key="txtExpShort"/>
                     </button>
                     <ul class="dropdown-menu" role="menu">
                         <li><a href="{$citetrailBaseUrl || '?format=txt&amp;mode=edit'}"><i class="messengers fas fa-align-left" title="i18n(downloadTXTEdit)"/>{' '}<i18n:text key="constitutedLower">constituted</i18n:text></a></li>
@@ -604,8 +604,8 @@ declare function render:HTMLSectionToolbox($node as element()) as element(div) {
                     </ul>
                 </div>
                 <div class="sal-tb-btn">
-                    <button onclick="window.location.href = '{$citetrailBaseUrl || '?format=tei'}'" title="i18n(teiExpPass)">
-                        <i class="messengers fas fa-file-code" />{' '}<i18n:text key="teiExpShort"/>
+                    <button class="messengers" onclick="window.location.href = '{$citetrailBaseUrl || '?format=tei'}'" title="i18n(teiExpPass)">
+                        <i class="fas fa-file-code" />{' '}<i18n:text key="teiExpShort"/>
                     </button>
                 </div>
                 <div class="sal-tb-btn" style="display:none;">

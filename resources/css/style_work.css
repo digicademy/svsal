@@ -656,6 +656,7 @@ span.copy-alert {
     border-radius: 6px;
     padding: 3px;  
     opacity:0.9;
+    font-size:90%;
 }
 
 .hauptText .signed {
