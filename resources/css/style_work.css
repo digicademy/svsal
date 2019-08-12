@@ -369,21 +369,16 @@ li.cardoStyleLi {
 */
 
 .summary_title {
-	display: inline-block;
-    position: absolute;
-    width: 19rem;
-    left:-32rem;
-/*	float: left;*/
-/*    clear: left;*/
-/*	margin-left: -49%;*/
+    float: left;
+    clear: left;
+    position: relative;
+    width: 17.5rem;
+    margin-left:-33rem;
 	line-height: 1.6;
     font-family: Helvetica, Arial, sans-serif;
-/*	width:36%;*/
 	vertical-align: baseline;
-    /*font-size: 1.0em;*/
     font-size: initial;
-/*    position: relative;*/
-/*    bottom: -0.55em;*/
+    bottom: -0.55em;
 }
 .pageNumbers {
     display: inline-block;
@@ -935,6 +930,7 @@ span.unsichtbar, .unsichtbar {
 
 span.sal-section-teaser{
     padding-left:0.5em;
+    display:block;
 }
 
 .visible {

@@ -162,7 +162,8 @@ declare function render:isCitableWithTeaserHTML($node as node()) as xs:boolean {
             (render:isStructuralNode($node) and $node[self::tei:div or self::tei:text]) or
             render:isAnchorNode($node)
             (: TODO: lists here? :)
-        )
+        ) and
+        render:dispatch($node, 'html-title') (: if there is no title, we won't make a teaser :)
     )
 };
 
@@ -880,7 +881,6 @@ declare function render:makeMarginalCitetrail($node as element()) as xs:string {
 ~   - 'title': title of a node (only for nodes that represent sections)
 ~   - 'passagetrail': passagetrail ID of a node (only for nodes that represent passagetrail sections)
 ~   - 'citetrail': citetrail ID of a node (only for nodes that represent citetrail/crumbtrail sections)
-~   - 'crumbtrail': crumbtrail ID of a node (only for nodes that represent citetrail/crumbtrail sections)
 ~   - 'class': i18n class of a node, usually to be used by HTML-/RDF-related functionalities for generating verbose labels when displaying section titles 
 ~   - 'html': HTML snippet for the reading view
 ~   - 'html-title': a full version of the title, for toggling of teasers in the reading view (often simply falls back to 'title', see above)
@@ -1242,7 +1242,7 @@ declare function render:div($node as element(tei:div), $mode as xs:string) {
         case 'title' return
             normalize-space(
                 if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
-                    string($node/@n)
+                    '"' || string($node/@n) || '"'
                 else if ($node/(tei:head|tei:label)) then
                     render:teaserString(($node/(tei:head|tei:label))[1], 'edit')
                 (: purely numeric section titles: :)
@@ -1473,12 +1473,16 @@ declare function render:g($node as element(tei:g), $mode as xs:string) {
                     render:passthru($node, $mode)
         
         case 'edit' return
-            let $glyph := $node/ancestor::tei:TEI//tei:char[@xml:id = substring(string($node/@ref), 2)]
-            return
-                if ($glyph/tei:mapping[@type = 'standardized']) then
-                    string($glyph/tei:mapping[@type = 'standardized'])
-                else
-                    render:passthru($node, $mode)
+            if (substring($node/@ref,2) = ('char017f', 'char0292')) then
+                let $char := $node/ancestor::tei:TEI/tei:teiHeader/tei:encodingDesc/tei:charDecl/tei:char[@xml:id = substring(string($node/@ref), 2)]
+                return
+                    if ($node/text() = ($char/tei:mapping[@type = 'composed']/text(),$char/tei:mapping[@type = 'precomposed']/text())) then
+                        $char/tei:mapping[@type = 'standardized']/text()
+                    else render:passthru($node, $mode)
+            else if (render:passthru($node, $mode)) then
+                render:passthru($node, $mode)
+            else
+                error(xs:QName('render:g'), 'Found tei:g without text content')
         
         case 'html' return
             let $thisString := 
@@ -2121,7 +2125,7 @@ declare function render:note($node as element(tei:note), $mode as xs:string) {
                                        + 1) 
                                 || ')'
                             else ()
-                        return '&#34;' || normalize-space($currentNode/@n) || '&#34;' || $noteNumber
+                        return '"' || normalize-space($currentNode/@n) || '"' || $noteNumber
                     else string(count($currentNode/preceding::tei:note intersect $currentSection//tei:note) + 1)
                     (: without on-the-fly copying: :)
                     (:if ($node/@n) then
@@ -2639,7 +2643,7 @@ declare function render:text($node as element(tei:text), $mode as xs:string) {
             )
         case 'html-title' return
             if ($node/@type eq 'work_volume') then
-                'Vol.' || $node/@n/string()
+                'Vol. ' || $node/@n/string()
             else ()
         
         case 'html' return
