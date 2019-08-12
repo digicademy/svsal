@@ -52,8 +52,9 @@ return
     <html>
         <head>
             <title>Webdata Administration - The School of Salamanca</title>
-            <style>{'.summary_title {display:none;}
-                     .sal-cite-toggle {display:none !important;}'}</style>
+            <style>{'.section-title {display:none;}
+                     .sal-cite-toggle {display:none !important;}
+                     .sal-toolbox-body {display:none !important;}'}</style>
         </head>
         <body>
             <h1>Webdata Output for Resource(s): {$rid}</h1>

@@ -28,8 +28,9 @@ import module namespace i18n      = "http://exist-db.org/xquery/i18n"        at 
 
 (: the max. amount of characters to be shown in a note teaser :)
 declare variable $render:noteTruncLimit := 40;
+declare variable $render:titleTruncLimit := 25;
 
-declare variable $render:teaserTruncLimit := 45;
+(:declare variable $render:teaserTruncLimit := 45;:)
 
 declare variable $render:basicElemNames := ('p', 'head', 'note', 'item', 'cell', 'label', 'signed', 'lg', 'titlePage');
 
@@ -380,7 +381,7 @@ declare function render:getFragmentFile ($targetWorkId as xs:string, $targetNode
 :)
 declare function render:teaserString($node as element(), $mode as xs:string?) as xs:string {
     let $thisMode := if ($mode = ('orig', 'edit')) then $mode else 'edit'
-    let $string := normalize-space(string-join(render:dispatch($node, $thisMode)))
+    let $string := normalize-space(replace(string-join(render:dispatch($node, $thisMode)), '\[.*?\]', ''))
     return 
         if (string-length($string) gt $config:chars_summary) then
             concat('&#34;', normalize-space(substring($string, 1, $config:chars_summary)), '…', '&#34;')
@@ -529,23 +530,78 @@ declare function render:excludedAncestorHTML($fragmentRoot as element()) {
     else ():)
 };
 
-
+(:
+~ Creates a section title, which appears to the left of the main area.
+:)
 declare function render:makeHTMLSummaryTitle($node as element()) as element(div) {
     let $toolbox := render:HTMLSectionToolbox($node)
-    let $teaser := render:HTMLSectionTeaser($node)
-    let $sumTitle :=
-        <div class="summary_title">
+(:    let $teaser := render:HTMLSectionTeaser($node):)
+    let $fullTitle := 
+        <span class="section-title-text">{
+            if ($node/self::tei:text[@type='work_volume']) then <b>{render:dispatch($node, 'html-title')}</b>
+            else render:dispatch($node, 'html-title')
+        }</span>
+        
+    return
+        <div class="section-title container" id="{$node/@xml:id}">
             {$toolbox}
-            {if ($node/self::tei:text[@type='work_volume']) then <b>{$teaser}</b> else $teaser (: make volume teasers bold :)}
+            <div class="section-title-body">{
+                if (string-length($fullTitle) gt $render:titleTruncLimit) then
+                    let $id := 'collapse-' || $node/@xml:id
+                    return
+                        <a role="button" class="collapsed title-teaser" data-toggle="collapse" href="{('#' || $id)}" 
+                           aria-expanded="false" aria-controls="{$id}">    
+                            <p class="collapse" id="{$id}" aria-expanded="false">
+                                {$fullTitle}
+                            </p>
+                        </a>
+                else 
+                    $fullTitle
+            }</div>
         </div>
-    return $sumTitle
+};
+
+
+(:
+~ Renders a marginal element (currently all tei:note as well as label[@place eq 'margin']; head[@place eq 'margin'] are treated as ordinary head)
+:)
+declare function render:makeMarginalHTML($node as element()) as element(div) {
+    let $label := if ($node/@n) then <span class="note-label">{$node/@n || ' '}</span> else ()
+    let $content :=
+        if ($node/tei:p) then 
+            render:passthru($node, 'html')
+        else
+            <span class="note-paragraph">{render:passthru($node, 'html')}</span>
+    (: determine string-length of complete note text, so as to see whether note needs to be truncated: :)
+    let $noteLength := 
+        string-length((if ($label) then $node/@n || ' ' else ()) || normalize-space(string-join(render:dispatch($node, 'edit'), '')))
+    let $toolbox := render:HTMLSectionToolbox($node)
+    return
+        <div class="marginal container" id="{$node/@xml:id}">
+            {$toolbox}
+            <div class="marginal-body">{
+                if ($noteLength gt $render:noteTruncLimit) then
+                    let $id := 'collapse-' || $node/@xml:id
+                    return
+                        <a role="button" class="collapsed note-teaser" data-toggle="collapse" href="{('#' || $id)}" 
+                           aria-expanded="false" aria-controls="{$id}">    
+                            <p class="collapse" id="{$id}" aria-expanded="false">
+                                {$label}
+                                {' '}
+                                {$content}
+                            </p>
+                        </a>
+                else 
+                    $content
+            }</div>
+        </div>
 };
 
 
 (:
 ~ Creates a teaser for a certain type of structural element (i.e., certain div, milestone, list[@type='dict'], and item[parent::list/@type='dict'])
 :)
-declare function render:HTMLSectionTeaser($node as element()) {
+(:declare function render:HTMLSectionTeaser($node as element()) {
     let $identifier := $node/@xml:id/string()
     let $fullTitle := render:dispatch($node, 'html-title')
     return 
@@ -561,8 +617,7 @@ declare function render:HTMLSectionTeaser($node as element()) {
             else $fullTitle
             
         }</span>
-        
-};
+};:)
 
 declare function render:HTMLSectionToolbox($node as element()) as element(div) {
     let $id := $node/@xml:id/string()
@@ -571,14 +626,14 @@ declare function render:HTMLSectionToolbox($node as element()) as element(div) {
     let $class := 
         if (render:isMarginalNode($node)) then 
             'sal-toolbox-marginal' 
-        (:else if (render:isCitableWithTeaserHTML($node)) then
-            'sal-toolbox-teaser':)
+        else if (render:isCitableWithTeaserHTML($node)) then
+            'sal-toolbox-title'
         else 'sal-toolbox'
     let $citetrailBaseUrl := render:makeCitetrailURI($node)
     return
         <div class="{$class}">
             <a id="{$id}" href="{('#' || $id)}" data-rel="popover" class="sal-tb-a">
-                <i class="fas fa-link messengers" title="i18n(openToolbox)"/>
+                <i class="fas fa-hand-point-right messengers" title="i18n(openToolbox)"/>
             </a>
             <div class="sal-toolbox-body">
                 <div class="sal-tb-btn">
@@ -742,41 +797,6 @@ declare function render:resolveFacsURI($facsTargets as xs:string) as xs:string {
             return $config:imageserver || '/iiif/image/' || $workId || '!' || $volId || '!' || $workId 
                         || '-' || $volId || '-' || $facsId || $iiifRenderParams
         else error(xs:QName('render:pb'), 'Illegal facs ID (pb/@facs): ' || $facs)
-};
-
-(:
-~ Renders a marginal element (currently all tei:note as well as label[@place eq 'margin']; head[@place eq 'margin'] are treated as ordinary head)
-:)
-declare function render:makeMarginalHTML($node as element()) as element(div) {
-    let $label := if ($node/@n) then <span class="note-label">{$node/@n || ' '}</span> else ()
-    let $content :=
-        if ($node/tei:p) then 
-            render:passthru($node, 'html')
-        else
-            <span class="note-paragraph">{render:passthru($node, 'html')}</span>
-    (: determine string-length of complete note text, so as to see whether note needs to be truncated: :)
-    let $noteLength := 
-        string-length((if ($label) then $node/@n || ' ' else ()) || normalize-space(string-join(render:dispatch($node, 'edit'), '')))
-    let $toolbox := render:HTMLSectionToolbox($node)
-    return
-        <div class="marginal container" id="{$node/@xml:id}">
-            {$toolbox}
-            <div class="marginal-body">{
-                if ($noteLength gt $render:noteTruncLimit) then
-                    let $id := 'collapse-' || $node/@xml:id
-                    return
-                        <a role="button" class="collapsed note-teaser" data-toggle="collapse" href="{('#' || $id)}" 
-                           aria-expanded="false" aria-controls="{$id}">    
-                            <p class="collapse" id="{$id}" aria-expanded="false">
-                                {$label}
-                                {' '}
-                                {$content}
-                            </p>
-                        </a>
-                else 
-                    $content
-            }</div>
-        </div>
 };
 
 
@@ -993,7 +1013,6 @@ declare function render:dispatch($node as node(), $mode as xs:string) {
         if ($mode eq 'html') then
             if (render:isCitableWithTeaserHTML($node)) then
                 let $citationAnchor := render:makeHTMLSummaryTitle($node)
-                let $debug := if ($config:debug = ("trace", "info")) then util:log('warn', 'Processing *[render:isCitableWithTeaserHTML(.)], local-name(): ' || local-name($node) || ', xml:id: ' || $node/@xml:id) else ()
                 return ($citationAnchor, $rendering)
             else if (render:isBasicNode($node)) then 
                 (: toolboxes need to be on the sibling axis with the text body they refer to... :)
@@ -1258,7 +1277,7 @@ declare function render:div($node as element(tei:div), $mode as xs:string) {
             if (not($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) and $node/(tei:head|tei:label)) then
                 (: for expanded titles, we need the full version, not just the teaser :)
                 normalize-space(string-join(render:dispatch(($node/(tei:head|tei:label))[1], 'edit'), ''))
-            else render:div($node, 'title')
+            else replace(render:div($node, 'title'), '"', '')
         
         case 'html' return
             render:passthru($node, $mode)
@@ -1690,7 +1709,7 @@ declare function render:item($node as element(tei:item), $mode as xs:string) {
                 and not($node/@n and not(matches($node/@n, '^[0-9\[\]]+$')))
                 and $node/(tei:head|tei:label)) 
                 then normalize-space(string-join(render:dispatch(($node/(tei:head|tei:label))[1], 'edit'), ''))
-            else render:dispatch($node, 'title')
+            else replace(render:dispatch($node, 'title'), '"', '')
                 
         case 'html' return
             (: tei:item should be handled exclusively in render:list :)
@@ -1828,7 +1847,7 @@ declare function render:list($node as element(tei:list), $mode as xs:string) {
         case 'html-title' return
             if (not($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) and $node/(tei:head|tei:label)) then
                 normalize-space(string-join(render:dispatch(($node/(tei:head|tei:label))[1], 'edit')))
-            else render:dispatch($node, 'title')
+            else replace(render:dispatch($node, 'title'), '"', '')
         
         case 'html' return
             (: available list types: "dict", "ordered", "simple", "bulleted", "gloss", "index", or "summaries" :)
@@ -1950,13 +1969,12 @@ declare function render:lg($node as element(tei:lg), $mode as xs:string) {
 
 declare function render:milestone($node as element(tei:milestone), $mode as xs:string) {
     switch($mode)
-        case 'title' 
-        case 'html-title' return
+        case 'title' return
             normalize-space(
                 if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
                     '"' || string($node/@n) || '"'
                 (: purely numeric section titles: :)
-                else if ($node/@n and matches($node/@n, '^[0-9\[\]]+$') and $node/@unit) then
+                else if (matches($node/@n, '^[0-9\[\]]+$') and $node/@unit eq 'number') then
                     $node/@n/string()
                 (: use @unit to derive a title: :)
                 else if (matches($node/@n, '^\[?[0-9]+\]?$') and $node/@unit[. ne 'number']) then
@@ -1967,6 +1985,8 @@ declare function render:milestone($node as element(tei:milestone), $mode as xs:s
                 else ()
             )
             (: TODO: bring i18n labels somehow into html-title... :)
+        case 'html-title' return
+            replace(render:milestone($node, 'title'), '"', '')
             
         case 'html' return
             let $inlineText := if ($node/@rendition eq '#dagger') then <sup>†</sup> else '*'
@@ -2791,14 +2811,9 @@ declare function render:unclear($node as element(tei:unclear), $mode as xs:strin
             render:passthru($node, $mode)
 };
 
-
-(: TODO: still undefined: titlePage descendants: titlePart, docTitle, ...; choice, l; author fields: state etc. :)
-
 (: TODO - Html:
     * add line- and column breaks in diplomatic view? (problem: infinite scrolling has to comply with the current viewmode as well!)
-    * make marginal summary headings expandable/collapsible like we handle notes that are too long
     * make bibls, ref span across (page-)breaks (like persName/placeName/... already do)
     * teasers: break text at word boundaries
-    * what happens to notes that intervene in a <hi> passage or similar? (font-style/weight and -size should already be fixed by css...)
 :)
 

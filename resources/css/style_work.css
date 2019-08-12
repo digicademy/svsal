@@ -360,7 +360,7 @@ li.cardoStyleLi {
 
 
 /* Essential text areas, to be rendered as "columns" from left to right:
- * - teasers: .summary_title -> positioned relative to the main area (left) & hidden in smaller-screen view
+ * - teasers: .section-title -> positioned relative to the main area (left) & hidden in smaller-screen view
  * - pagination & image links: .pageNumbers -> positioned relative to the main area (left)
  * - main area: .hauptText, .titlePage, .sec-titlePage (don't need any relative positioning)
  * - marginals: .marginal -> -> positioned relative to the main area (right)
@@ -368,7 +368,7 @@ li.cardoStyleLi {
  * that are always slightly offset to the left, relative to *their* immediate container (.hauptText, .marginal, etc.)
 */
 
-.summary_title {
+/*.summary_title {
     float: left;
     clear: left;
     position: relative;
@@ -379,20 +379,22 @@ li.cardoStyleLi {
 	vertical-align: baseline;
     font-size: initial;
     bottom: -0.55em;
-}
+}*/
+
 .pageNumbers {
     display: inline-block;
     position: absolute;
-    width: 11rem;
-    left:-13rem;
+    width: 18%;
+    left:-20%;
 }
 .sal-toolbox {
     display: inline-block;
     position: absolute;
-    left: -2rem;
+    left: -3%;
 }
 
-.sal-toolbox-marginal {
+.sal-toolbox-marginal,
+.sal-toolbox-title {
     display: table-cell;
     padding-right:0.8rem;
 }
@@ -405,23 +407,15 @@ li.cardoStyleLi {
     background-color: #F0F0F0; /* #F5F5F5 */
     transition: background-color 0.2s linear;
 }
-
-/*.sal-toolbox ~ .hauptText-body:hover {
-    background-color:red !important;
-}*/
-
-/*.marginal-body:hover ~ .sal-toolbox-marginal {
-    background-color: red !important; 
-}
-*/
-
 .sal-toolbox a,
-.sal-toolbox-marginal a {
+.sal-toolbox-marginal a,
+.sal-toolbox-title a {
     color: #B0C4DE !important;
 }
 
 .sal-toolbox:hover a,
-.sal-toolbox-marginal:hover a {
+.sal-toolbox-marginal:hover a,
+.sal-toolbox-title:hover a {
     color: #102873 !important;
     transition: color 0.2s linear;
 }
@@ -432,7 +426,6 @@ li.cardoStyleLi {
     font-style: normal !important;
     font-weight: normal !important;
 }
-
 .sal-toolbox-body {
     display:none;
 }
@@ -475,6 +468,63 @@ div.sal-tb-btn {
 	width:45%;
     display:table;
 }
+
+/* Section titles */
+.section-title-body {
+    display:table-cell;
+    font-size: 18px !important; 
+    font-style: normal !important;
+    font-weight: normal !important;
+}
+.section-title-text {
+    display:inline;
+}
+.section-title {
+    float: left;
+	clear: left;
+	line-height: 1.6;
+	text-indent: 0;
+	font-family: Helvetica, Arial, sans-serif;
+	text-align: left;
+	width: 31%;
+    margin-left:-55%;
+    display:table;
+}
+.section-title p.collapse[aria-expanded="false"] {
+    display: block;
+    height: 1.6em !important;
+    overflow: hidden;
+}
+.section-title p.collapsing[aria-expanded="false"] {
+    height: 1.6em !important;
+}
+.section-title a:not(.collapsed) {
+    text-decoration: none;
+    color: black;
+}
+.section-title a:not(.collapsed) .edited {
+    color:#707070;
+}
+.section-title a:not(.collapsed) .original {
+    color:#993333;
+}
+.section-title a.collapsed:after {
+    content: '...⌄';
+    margin-top:-1em;
+    position:absolute;
+}
+/*.sal-section-title {
+    float: left;
+    clear: left;
+    position: relative;
+    width: 17.5rem;
+    margin-left:-33rem;
+	line-height: 1.6;
+    font-family: Helvetica, Arial, sans-serif;
+	vertical-align: baseline;
+    font-size: initial;
+    bottom: -0.55em;
+}*/
 
 
 /* ------------------------------------------------------------------ */
@@ -707,38 +757,35 @@ span.copy-alert {
     font-size:20px !important;
 }
 
-
-
 .note-label {
     font-style: italic;
     display:inline;
 }
-
 .note-paragraph {
     display:inline;
 }
-
 .marginal p.collapse[aria-expanded="false"] {
     display: block;
     height: 1.6em !important;
     overflow: hidden;
 }
-
 .marginal p.collapsing[aria-expanded="false"] {
     height: 1.6em !important;
 }
-
 .marginal a:not(.collapsed) {
     text-decoration: none;
     color: black;
 }
-
 .marginal a:not(.collapsed) .edited {
     color:#707070;
 }
-
 .marginal a:not(.collapsed) .original {
     color:#993333;
+}
+.marginal a.collapsed:after {
+    content: '...⌄';
+    margin-top:-1em;
+    position:absolute;
 }
 
 a .original {
@@ -747,12 +794,6 @@ a .original {
 
 .simple-char {
     color:inherit;
-}
-
-.marginal a.collapsed:after {
-    content: '...⌄';
-    margin-top:-1em;
-    position:absolute;
 }
 
 span.gap:after {
