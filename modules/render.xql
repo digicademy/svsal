@@ -405,10 +405,10 @@ declare function render:HTMLmakeCitationReference($wid as xs:string, $fileDesc a
         if ($fileDesc/tei:sourceDesc//tei:date[@type eq 'thisEd']) then
             $fileDesc/tei:sourceDesc//tei:date[@type eq 'thisEd']/@when
         else $fileDesc/tei:sourceDesc//tei:date[@type eq 'firstEd']/@when
-    let $editors :=
+    (:let $editors :=
         string-join(for $ed in $fileDesc/tei:seriesStmt/tei:editor/tei:persName 
                         order by $ed/tei:surname
-                        return app:rotateFormatName($ed), ' &amp; ')
+                        return app:rotateFormatName($ed), ' &amp; '):)
     let $citetrail :=
         if ($mode eq 'reading-passage' and $node) then
             render:getNodetrail($wid, $node, 'citetrail', ())
@@ -422,9 +422,11 @@ declare function render:HTMLmakeCitationReference($wid as xs:string, $fileDesc a
     let $body := 
         <span class="cite-rec-body">{$author || ', ' || $title || ' (' || $digitalYear || ' [' || $originalYear || '])'|| ', '}
             <i18n:text key="inLow">in</i18n:text>{': '}<i18n:text key="editionSeries">The School of Salamanca. A Digital Collection of Sources</i18n:text>
-            {', '}<i18n:text key="editedByAbbrLow">ed. by</i18n:text>{' ' || $editors || ' <'}<a href="{$link}">{$link}</a>
+            {' <'}
+            <a href="{$link}">{$link}</a>
             {'>'}
         </span>
+(:   including editors (before link): {', '}<i18n:text key="editedByAbbrLow">ed. by</i18n:text>{' ' || $editors || ' <'}     :)
     let $trail :=
         if ($mode eq 'reading-passage' and $passagetrail) then
             <span class="cite-rec-trail">{$passagetrail}</span>
