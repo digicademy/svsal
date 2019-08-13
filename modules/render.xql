@@ -619,6 +619,10 @@ declare function render:makeMarginalHTML($node as element()) as element(div) {
         }</span>
 };:)
 
+(:
+~ Creates a toolbox including export and link buttons. Should be placed as preceding sibling of the element that
+~ it refers to for JS (highlighting etc.) to work correctly. 
+:)
 declare function render:HTMLSectionToolbox($node as element()) as element(div) {
     let $id := $node/@xml:id/string()
     let $wid := $node/ancestor::tei:TEI/@xml:id
@@ -632,7 +636,7 @@ declare function render:HTMLSectionToolbox($node as element()) as element(div) {
     let $citetrailBaseUrl := render:makeCitetrailURI($node)
     return
         <div class="{$class}">
-            <a id="{$id}" href="{('#' || $id)}" data-rel="popover" class="sal-tb-a">
+            <a id="{$id}" href="#" data-rel="popover" class="sal-tb-a"><!-- href="{('#' || $id)}" -->
                 <i class="fas fa-hand-point-right messengers" title="i18n(openToolbox)"/>
             </a>
             <div class="sal-toolbox-body">
@@ -671,10 +675,6 @@ declare function render:HTMLSectionToolbox($node as element()) as element(div) {
                 </div>
             </div>
         </div>
-(:    
-    Further buttons:
-    - <span class="glyphicon glyphicon-print text-muted"/> 
-:)
 };
 
 

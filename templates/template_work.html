@@ -80,7 +80,6 @@
         <!-- ==== Back to top ==== -->
         <a id="backTop"/>
         <script type="text/javascript" src="resources/js/jquery.backTop.js"/>
-        <script type="text/javascript" src="resources/js/notify.js"/>
 
         <!-- ==== Scroll an anchor into view if we have one ==== -->
         <!--<script type="text/javascript">
@@ -90,11 +89,11 @@
 //                    console.log((window.location.origin + window.location.pathname + window.location.search
 //                             == 
 //                             this.href.split('#')[0]
-//                            ) &amp;&amp; (this.href.indexOf('#') !== -1).toString());
+//                            ) && (this.href.indexOf('#') !== -1).toString());
                     return  ((window.location.origin + window.location.pathname + window.location.search
                              == 
                              this.href.split('#')[0]
-                            ) &amp;&amp; (this.href.indexOf('#') !== -1));
+                            ) && (this.href.indexOf('#') !== -1));
                 }).click(function(event){
 //                    console.log("Click on a@href=" + $(this).attr('href') + '...')
                     z = $(this).attr('href').slice($(this).attr('href').indexOf('#'))
@@ -152,9 +151,9 @@
 
         <!-- ==== Show GUI-Nav when scolling to top ==== -->
         <script type="text/javascript">
-//            $(document).ready(function () {
-//                $(".navbar-white").autoHidingNavbar().autoHidingNavbar('setShowOnBottom', false).autoHidingNavbar('setAnimationDuration', 400);
-//            });
+            $(document).ready(function () {
+                $(".navbar-white").autoHidingNavbar().autoHidingNavbar('setShowOnBottom', false).autoHidingNavbar('setAnimationDuration', 400);
+            });
         </script>
 
         <!-- ==== InfiniteAjaxScroll for progressive enhancement ==== -->
@@ -224,7 +223,10 @@
                     template: '&lt;div class="popover sal-toolbox-body"&gt;&lt;div class="popover-content"&gt;&lt;/div&gt;&lt;/div&gt;',
                     html:       true,
                     title:      function() {return $("#popover-head").html();},
-                    content: function(){return $(this).siblings('.sal-toolbox-body').html()}
+                    content: function(){
+                        toolboxHighlight(this,'on');
+                        return $(this).siblings('.sal-toolbox-body').html()
+                    }
                     // close popup by clicking outside
                 }).click(function(event) {event.preventDefault();});
                 
@@ -347,7 +349,10 @@
                     template: '&lt;div class="popover sal-toolbox-body"&gt;&lt;div class="popover-content"&gt;&lt;/div&gt;&lt;/div&gt;',
                     html:       true,
                     title:      function() {return $("#popover-head").html();},
-                    content: function(){return $(this).siblings('.sal-toolbox-body').html()}
+                    content: function(){
+                        toolboxHighlight(this,'on');
+                        return $(this).siblings('.sal-toolbox-body').html()
+                    }
                     // close popup by clicking outside
                 }).click(function(event) {event.preventDefault();}); // don't jump around to the anchor associated with the span
             $('body').on('click', function (event) {
@@ -356,18 +361,35 @@
                     if (!$(this).is(event.target) 
                         &amp;&amp; $(this).has(event.target).length === 0 
                         &amp;&amp; $('.popover').has(event.target).length === 0) {
+                        toolboxHighlight(this,'off');
                         $(this).popover('hide');
                     }
                 });
             });
+            function toolboxHighlight(elem, mode) {
+                var target = elem.parentElement.nextElementSibling;
+                if (mode === 'on') {
+                    if (elem.parentElement.className === 'sal-toolbox-marginal') {
+                        elem.style.visibility = 'visible';
+                    }
+                    elem.style.setProperty('color', '#102873', 'important');
+                    target.style.backgroundColor = '#F0F0F0';
+                } else if (mode === 'off') {
+                    elem.style.removeProperty('color');
+                    target.style.backgroundColor = '';
+                    if (elem.parentElement.className === 'sal-toolbox-marginal') {
+                        elem.style.removeProperty('visibility');
+                    }
+                }
+            }
         </script>
         
-        <!-- Toolboxes: copy link and citation reference -->
+        <!-- Toolboxes: highlighting and copy functions -->
         <script type="text/javascript">
             function copyLink(elem) {
                 var target = elem.parentElement.getElementsByClassName('cite-link')[0];
                 var input = document.createElement('textarea');
-                input.setAttribute('style', 'width:0; height:0; opacity: 0;'); // hidden
+                input.setAttribute('style', 'width:0;height:0;opacity:0;'); // hidden
                 input.textContent = target.textContent;
                 document.body.appendChild(input);
                 input.select();

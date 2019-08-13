@@ -393,26 +393,39 @@ li.cardoStyleLi {
     left: -3%;
 }
 
-.sal-toolbox-marginal,
+
 .sal-toolbox-title {
     display: table-cell;
-    padding-right:0.8rem;
+    padding-right:0.3rem;
+}
+
+.sal-toolbox-marginal {
+    display:table-cell;
+    visibility: hidden;
+    padding-right:0.3em;
+}
+.marginal:hover .sal-toolbox-marginal {
+    visibility: visible;
+    transition:display 0.7s linear;
+}
+.sal-toolbox-body:hover .sal-toolbox-marginal {
+    visibility: visible;
 }
 
 /* Hover animations with citation toolboxes */
 .sal-toolbox-marginal:hover ~ .marginal-body,
 .sal-toolbox:hover ~ .heading-text,
 .sal-toolbox:hover ~ .titlePage-body,
-.sal-toolbox:hover ~ .hauptText-body {
+.sal-toolbox:hover ~ .hauptText-body,
+.sal-toolbox-title:hover ~ .section-title-body {
     background-color: #F0F0F0; /* #F5F5F5 */
     transition: background-color 0.2s linear;
 }
 .sal-toolbox a,
-.sal-toolbox-marginal a,
-.sal-toolbox-title a {
+.sal-toolbox-title a,
+.sal-toolbox-marginal a {
     color: #B0C4DE !important;
 }
-
 .sal-toolbox:hover a,
 .sal-toolbox-marginal:hover a,
 .sal-toolbox-title:hover a {
