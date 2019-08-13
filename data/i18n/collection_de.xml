@@ -71,6 +71,8 @@
   <msg key="openToolbox">Toolbox für diesen Textabschnitt öffnen</msg>
   <msg key="citePass">Zitierhinweis für diesen Abschnitt kopieren</msg>
   <msg key="linkPass">Link für diesen Abschnitt kopieren</msg>
+  <msg key="citeWork">Zitierhinweis für dieses Werk kopieren</msg>
+  <msg key="linkWork">Link zu diesem Werk kopieren</msg>
   <msg key="teiExpPass">TEI für diesen Abschnitt exportieren</msg>
   <msg key="txtExpPass">Plain Text für diesen Abschnitt exportieren</msg>
   <msg key="txtExp">Plain Text exportieren</msg>

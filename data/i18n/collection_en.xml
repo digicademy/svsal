@@ -309,6 +309,8 @@
   <msg key="openToolbox">Open toolbox for this text area</msg>
   <msg key="citePass">Copy citation recommendation for this text area</msg>
   <msg key="linkPass">Copy link of this text area</msg>
+  <msg key="citeWork">Copy citation recommendation for this work</msg>
+  <msg key="linkWork">Copy link to this work</msg>
   <msg key="teiExpPass">Export TEI for this text area</msg>
   <msg key="txtExpPass">Export plain text for this text area</msg>
   <msg key="txtExp">Export plain text</msg>

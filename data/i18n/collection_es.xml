@@ -321,9 +321,11 @@
     <msg key="citeThisWork">Citar obra</msg>
     <msg key="accessedDate">Consultado por última vez el</msg>
     <msg key="ebook">Libro electrónico</msg>
-    <msg key="openToolbox">Abrir caja de herramientas para este pasaje</msg>
-    <msg key="citePass">Copiar modelo de citación recomendado para este pasaje</msg>
+    <msg key="openToolbox">Abrir caja de herramientas para este pasaje</msg> <!-- TODO -->
+    <msg key="citePass">Copiar modelo de citación recomendado para este pasaje</msg> <!-- TODO -->
     <msg key="linkPass">Copiar enlace de este pasaje</msg>
+    <msg key="citeWork">Copiar modelo de citación recomendado para esta obra</msg> <!-- TODO -->
+    <msg key="linkWork">Copiar enlace de esta obra</msg>
     <msg key="teiExpPass">Descargar TEI/XML para este pasaje</msg>
     <msg key="txtExpPass">Descargar texto puro para este pasaje</msg>
     <msg key="txtExp">Descargar texto simple</msg>

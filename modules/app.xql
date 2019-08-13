@@ -2499,7 +2499,8 @@ declare function app:WRKcitationReference($node as node()?, $model as map(*)?, $
     let $wid := $model('currentWorkId')
     let $fileDesc := $model('currentWorkHeader')/tei:fileDesc
     let $content := render:HTMLmakeCitationReference($wid, $fileDesc, $mode, ())
-    return i18n:process($content, $lang, $config:i18n-root, 'en')
+(:    return i18n:process($content, $lang, $config:i18n-root, 'en'):)
+    return $content
 };
 
 
@@ -3253,7 +3254,7 @@ declare function app:tocSourcesList($node as node(), $model as map(*), $lang as 
         i18n:process($toc, $lang, $config:i18n-root, 'en')
 };
 
-declare function app:downloadTXT($node as node(), $model as map(*), $mode as xs:string, $lang as xs:string) {
+(:declare function app:downloadTXT($node as node(), $model as map(*), $mode as xs:string, $lang as xs:string) {
     let $wid := request:get-parameter('wid', '')
     let $hoverTitleEdit := i18n:process(<i18n:text key="downloadTXTEdit">Download as plaintext (constituted variant)</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
     let $hoverTitleOrig := i18n:process(<i18n:text key="downloadTXTOrig">Download as plaintext (diplomatic variant)</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
@@ -3265,7 +3266,7 @@ declare function app:downloadTXT($node as node(), $model as map(*), $mode as xs:
             <li><a title="{$hoverTitleOrig}" href="{$config:idserver || '/texts/' || $wid ||'?format=txt&amp;mode=orig'}"><span class="fas fa-align-left" aria-hidden="true"/>&#xA0;TXT (<i18n:text key="diplomaticLower">diplomatic</i18n:text>)</a></li>
         else()
     return i18n:process($download, $lang, '/db/apps/salamanca/data/i18n', 'en')
-};
+};:)
 
 
 (: ================= End Html construction routines ========== :)
@@ -3273,14 +3274,48 @@ declare function app:downloadTXT($node as node(), $model as map(*), $mode as xs:
 (:Special GUI: HUD display for work navigation:)
 declare %templates:default
     function app:guiWRK($node as node(), $model as map(*), $lang as xs:string, $wid as xs:string*, $q as xs:string?) as element() {    
+    let $idUri := $config:idserver || '/texts/' || $wid
     let $downloadXML     :=  app:downloadXML($node, $model, $lang)
-    let $downloadTXTorig :=  app:downloadTXT($node, $model, 'orig', $lang)
-    let $downloadTXTedit :=  app:downloadTXT($node, $model, 'edit', $lang)
+    let $downloadTXT :=
+        <li class="dropdown-submenu">
+            <a title="i18n(txtExp)" href="#">
+                <i class="messengers fas fa-align-left"/>{' '}<i18n:text key="txtFiles">Plain text (TXT)</i18n:text>
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                    <a href="{$idUri || '?format=txt&amp;mode=edit'}">
+                        <i18n:text key="constitutedLower">constituted</i18n:text>
+                    </a>
+                </li>
+                <li>
+                    <a href="{$idUri || '?format=txt&amp;mode=orig'}">
+                        <i18n:text key="diplomaticLower">diplomatic</i18n:text>
+                    </a>
+                </li>
+            </ul>
+        </li>
     let $downloadRDF     :=  app:downloadRDF($node, $model, $lang)
     (:let $downloadCorpus  :=  app:downloadCorpusXML($node, $model, $lang):)
     let $name            :=  app:WRKcombined($node, $model, $wid)
     let $top             :=  'work.html?wid=' || $wid
     let $citeTitle := i18n:process(<i18n:text key="citeThisWork">Cite this work</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en")
+    let $copyLink :=
+        <li>
+            <a href="#" onclick="copyLink(this); return false;" title="i18n(linkWork)">
+                <i class="messengers fas fa-link"/>{' '}<i18n:text key="copyLink"/>
+            </a>
+            <span class="cite-link" style="display:none;">{$idUri || '?format=html'}</span>
+        </li>
+    let $copyCitation :=
+        <li>
+            <a href="#" onclick="copyCitRef(this); return false;" title="i18n(citeWork)">
+                <i class="messengers fas fa-feather-alt"/>{' '}<i18n:text key="copyCit"/>
+            </a>
+            <span class="sal-cite-rec" style="display:none">
+                {app:WRKcitationReference($node, $model, $lang, 'reading-full')}
+            </span>
+        </li>
+    
     let $output := 
         
         <div class="container">
@@ -3297,6 +3332,26 @@ declare %templates:default
                     </div>
                     <div class="row-fluid">
                         <div class="btn-toolbar pull-left">
+                            <!-- Hamburger Icon, used in small and eXtra-small views only: substitutes textmode, register, print and export functions -->
+                            <div class="btn-group hidden-lg">
+                                <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                   <i class="fa fa-bars"></i>&#xA0;<i18n:text key="moreb">Mehr</i18n:text>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <!--<li class="disabled"><a><span class="glyphicon glyphicon-stats text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="register">Register</i18n:text></span></a></li>-->
+                                    <li><a onclick="applyEditMode()" class="btn original unsichtbar" style="cursor: pointer;"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"/>&#xA0;<i18n:text key="constituted">Konstituiert</i18n:text></a></li>
+                                    <li><a onclick="applyOrigMode()" class="btn edited" style="cursor: pointer;"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"/>&#xA0;<i18n:text key="diplomatic">Diplomatisch</i18n:text></a></li>
+                                    <li>{app:WRKdetailsCurrent($node, $model, $lang)}</li>
+                                    <!--<li class="disabled"><a><span class="glyphicon glyphicon-print text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="print">Drucken</i18n:text></span></a></li>-->
+                                    {$copyLink}
+                                    {$copyCitation}
+                                    {$downloadXML}
+                                    {$downloadTXT}
+                                    {$downloadRDF}
+                                    <li class="disabled"><a><i class="fas fa-file-pdf text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted">PDF</span></a></li>   
+                                    <li class="disabled"><a><i class="fas fa-book text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"> <i18n:text key="ebook">E-book</i18n:text></span></a></li>   
+                                </ul>
+                            </div>
                             <!--Paginator-Dropdown-->
                             <div class="btn-group">
                                 <div class="dropdown">
@@ -3321,45 +3376,16 @@ declare %templates:default
                         <!-- Textmode, register, print and export functions, in largeish views -->
                             <!--Textmode Button-->
                             <div class="btn-group hidden-md hidden-sm hidden-xs">{app:WRKtextModus($node, $model, $lang)}</div>
-                            <!-- Register Button-->
-                            <!--<div class="btn-group hidden-md hidden-sm hidden-xs btn btn-link disabled">
-                                <span class="glyphicon glyphicon-stats text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="register">Register</i18n:text></span>
-                            </div>-->
-                            <!-- Citation reference button -->
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-link" id="citRefBtn" title="{$citeTitle}"> <!-- data-toggle="modal" data-target="#citRef" -->
-                                    <i class="fas fa-feather-alt"></i>&#xA0;<i18n:text key="citeUp">Cite</i18n:text>
-                                </button>
-                                <!-- The Modal -->
-                                <div id="citRef" class="citRefModal">
-                                    <!-- Modal content -->
-                                    <div class="citRefModal-content">
-                                        <span class="closeCitRef">×</span>
-                                        <p style="font-weight:bold;"><i18n:text key="proposedCitation">Proposed citation</i18n:text>:</p>
-                                        <p>{app:WRKcitationReference($node, $model, $lang, 'reading-full')}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--Print-Button and Export-Dropdown-->
-                            <!--<div class="btn-group hidden-md hidden-sm hidden-xs btn btn-link disabled">
-                                <span class="glyphicon glyphicon-print text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="print">Drucken</i18n:text></span>
-                            </div>-->
                             <div class="btn-group hidden-md hidden-sm hidden-xs">
                                 <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                     <span class="glyphicon glyphicon-download-alt" aria-hidden="true"/>&#xA0;<i18n:text key="export">Export</i18n:text>&#xA0;
                                     <span class="caret"/>
                                 </button>
                                 <ul class="dropdown-menu export-options" role="menu">
+                                    {$copyLink}
+                                    {$copyCitation}
                                     {$downloadXML}
-                                    <li class="btn-group">
-                                        <a title="i18n(txtExp)">
-                                            <i class="messengers fas fa-align-left"/>{' '}<i18n:text key="txtFiles">Plain text (TXT)</i18n:text>
-                                        </a>
-                                        <ul role="menu">
-                                            <li><a style="color:black;" href="{$config:idserver || '/texts/' || $wid || '?format=txt&amp;mode=edit'}"><i18n:text key="constitutedLower">constituted</i18n:text></a></li>
-                                            <li><a style="color:black;" href="{$config:idserver || '/texts/' || $wid || '?format=txt&amp;mode=orig'}"><i18n:text key="diplomaticLower">diplomatic</i18n:text></a></li>
-                                        </ul>
-                                    </li>
+                                    {$downloadTXT}
                                     {$downloadRDF}
                                     <li class="disabled">
                                         <a><i class="fas fa-file-pdf text-muted" aria-hidden="true"></i> <span class="text-muted"> PDF</span></a>
@@ -3372,54 +3398,50 @@ declare %templates:default
                             <div class="btn-group">
                                 <a class="btn btn-link" href="legal.html"><!--<i class="fa fa-info-circle">--><i class="fas fa-balance-scale"></i>&#32; <i18n:text key="legalShort">Datenschutz&amp;Impressum</i18n:text></a>
                             </div>
-
-                        <!-- Hamburger Icon, used in small views only: substitutes textmode, print and export functions -->
-                            <!--<div class="btn-group hidden-lg hidden-md hidden-xs">
-                                <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                   <i class="fa fa-bars"></i>&#xA0;<i18n:text key="moreb">Mehr</i18n:text>
-                                </button>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li>
-                                        <a onclick="applyEditMode()"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"/>&#xA0;<i18n:text key="constituted">Konstituiert</i18n:text></a>
-                                    </li>
-                                    <li>
-                                        <a  onclick="applyOrigMode()"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"/>&#xA0;<i18n:text key="diplomatic">Diplomatisch</i18n:text></a>
-                                    </li>
-                                    <li> 
-                                        <a><span class="glyphicon glyphicon-print text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="print">Drucken</i18n:text></span></a>
-                                    </li>
-                                    {$downloadXML}
-                                    <li> 
-                                        <a href="#"><span class="glyphicon glyphicon-download-alt text-muted" aria-hidden="true"/> <span class="text-muted"> PDF</span></a>
-                                    </li>
-                                </ul>
-                            </div>-->
-                        <!-- Hamburger Icon, used in small and eXtra-small views only: substitutes textmode, register, print and export functions -->
-                            <div class="btn-group hidden-lg">
-                                <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                   <i class="fa fa-bars"></i>&#xA0;<i18n:text key="moreb">Mehr</i18n:text>
-                                </button>
-                                <ul class="dropdown-menu" role="menu">
-                                    <!--<li class="disabled"><a><span class="glyphicon glyphicon-stats text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="register">Register</i18n:text></span></a></li>-->
-                                    <li><a onclick="applyEditMode()" class="btn original unsichtbar" style="cursor: pointer;"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"/>&#xA0;<i18n:text key="constituted">Konstituiert</i18n:text></a></li>
-                                    <li><a onclick="applyOrigMode()" class="btn edited" style="cursor: pointer;"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"/>&#xA0;<i18n:text key="diplomatic">Diplomatisch</i18n:text></a></li>
-                                    <li>{app:WRKdetailsCurrent($node, $model, $lang)}</li>
-                                    <!--<li class="disabled"><a><span class="glyphicon glyphicon-print text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="print">Drucken</i18n:text></span></a></li>-->
-                                    {$downloadXML}
-                                    {$downloadTXTorig}
-                                    {$downloadTXTedit}
-                                    {$downloadRDF}
-                                    <li class="disabled"><a><i class="fas fa-file-pdf text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted">PDF</span></a></li>   
-                                    <li class="disabled"><a><i class="fas fa-book text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"> <i18n:text key="ebook">E-book</i18n:text></span></a></li>   
-                                </ul>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        
     return
         i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "en")
+    
+(:  Further buttons / icons:
+
+<!-- Register Button-->
+<!--<div class="btn-group hidden-md hidden-sm hidden-xs btn btn-link disabled">
+    <span class="glyphicon glyphicon-stats text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="register">Register</i18n:text></span>
+</div>-->
+
+<!--Print-Button and Export-Dropdown-->
+<!--<div class="btn-group hidden-md hidden-sm hidden-xs btn btn-link disabled">
+    <span class="glyphicon glyphicon-print text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="print">Drucken</i18n:text></span>
+</div>-->
+
+<!-- Hamburger Icon, used in small views only: substitutes textmode, print and export functions -->
+<!--<div class="btn-group hidden-lg hidden-md hidden-xs">
+    <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+       <i class="fa fa-bars"></i>&#xA0;<i18n:text key="moreb">Mehr</i18n:text>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+        <li>
+            <a onclick="applyEditMode()"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"/>&#xA0;<i18n:text key="constituted">Konstituiert</i18n:text></a>
+        </li>
+        <li>
+            <a  onclick="applyOrigMode()"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"/>&#xA0;<i18n:text key="diplomatic">Diplomatisch</i18n:text></a>
+        </li>
+        <li> 
+            <a><span class="glyphicon glyphicon-print text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="print">Drucken</i18n:text></span></a>
+        </li>
+        {$downloadXML}
+        <li> 
+            <a href="#"><span class="glyphicon glyphicon-download-alt text-muted" aria-hidden="true"/> <span class="text-muted"> PDF</span></a>
+        </li>
+    </ul>
+</div>-->
+
+:)
 };   
 
 (:declare %templates:wrap
