@@ -666,22 +666,31 @@ declare function sphinx:keywords ($q as xs:string?) as xs:string {
     return string-join($keywords, ' ')
 };
 
+(:
+~ Requests highlighted snippet excerpts (to be shown in the search result landing page) from Sphinx.
+:)
 declare function sphinx:excerpts ($documents as node()*, $words as xs:string) as node()* {
     let $endpoint   := concat($config:sphinxRESTURL, "/excerpts")
-    let $debug :=  if ($config:debug = ("info", "trace")) then console:log("Excerpts needed for doc[0]: " || substring(normalize-space($documents/description_orig), 0, 150)) else ()
-    let $requestDoc := concat(         encode-for-uri('opts[limit]=' || $config:snippetLength),
-                              '&amp;', encode-for-uri('opts[html_strip_mode]=strip'),
+    let $debug :=  if ($config:debug = ("info", "trace")) then util:log("warn", "[SPHINX] Excerpts needed for doc[0]: " || substring(normalize-space($documents/description_orig), 0, 150)) else ()
+    let $normalizedOrig := normalize-space(serialize($documents/description_orig))
+    let $normalizedEdit := normalize-space(serialize($documents/description_edit))
+    let $requestDoc := concat(         (:encode-for-uri('opts[limit]=' || $config:snippetLength),
+                              '&amp;',:) 
+                              encode-for-uri('opts[html_strip_mode]=strip'),
                               '&amp;', encode-for-uri('opts[query_mode]=true'),
+                              '&amp;', encode-for-uri('opts[around]=100'),
+(:                              '&amp;', encode-for-uri('opts[force_all_words]=true'),:)
                               '&amp;', encode-for-uri('words=' || $words),
-                              '&amp;', encode-for-uri(concat('docs[0]=', normalize-space(replace(serialize($documents/description_orig), "%26", "%26amp%3B")))),
+                              '&amp;', encode-for-uri(concat('docs[0]=', $normalizedOrig)),
 (:                                           normalize-space($documents/description_orig))),:)
-                              '&amp;', encode-for-uri(concat('docs[1]=', normalize-space(replace(serialize($documents/description_edit), "%26", "%26amp%3B"))))
+                              '&amp;', encode-for-uri(concat('docs[1]=', $normalizedEdit))
 (:                                           normalize-space($documents/description_edit):)
                                )
-    let $tempString := replace(replace(replace($requestDoc, '%20', '+'), '%3D', '='), '%26amp%3B', '&amp;')
-    let $debug :=  if ($config:debug = "trace") then console:log("Excerpts request body: " || $tempString) else ()
-    let $debug := if ($config:debug = "trace") then console:log("Posted orig text snippet docs[0]=" || serialize($documents/description_orig)) else ()
-    let $debug := if ($config:debug = "trace") then console:log("Posted edit text snippet docs[1]=" || serialize($documents/description_edit)) else ()
+    (:let $tempString := replace(replace(replace($requestDoc, '%20', '+'), '%3D', '='), '%26amp%3B', '&amp;'):) (:  with '+' and '&amp;' being replaced, highlighting isn't working correctly :)
+    let $tempString := replace($requestDoc, '%3D', '=')
+    let $debug :=  if ($config:debug = "trace") then util:log("warn", "[SPHINX] Excerpts request body: " || $tempString) else ()
+    let $debug := if ($config:debug = "trace") then util:log("warn", "[SPHINX] Posted orig text snippet docs[0]=" || serialize($documents/description_orig)) else ()
+    let $debug := if ($config:debug = "trace") then util:log("warn", "[SPHINX] Posted edit text snippet docs[1]=" || serialize($documents/description_edit)) else ()
     (: Querying with EXPath http client proved not to work in eXist 3.4
         let $request    := <http:request method="post">
                              <http:header name="Content-Type" value="application/x-www-form-urlencoded"/>
@@ -690,15 +699,18 @@ declare function sphinx:excerpts ($documents as node()*, $words as xs:string) as
         let $response   := http:send-request($request, $endpoint)
     :)
     let $response   := httpclient:post($endpoint, $tempString, true(), <headers><header name="Content-Type" value="application/x-www-form-urlencoded"/></headers>)
-    let $debug :=  if ($config:debug = "trace") then console:log("Excerpts response: " || serialize($response)) else ()
+    let $debug :=  if ($config:debug = "trace") then util:log("warn", "[SPHINX] Excerpts response: " || serialize($response)) else ()
     let $rspBody    :=  if ($response//httpclient:body/@encoding = "Base64Encoded") then parse-xml(util:base64-decode($response//httpclient:body)) 
                         else $response//httpclient:body
-    let $debug :=  if ($config:debug = "trace") then console:log("$rspBody: " || serialize($rspBody)) else ()
-    let $debug :=  if ($config:debug = "trace" and $response//httpclient:body/@encoding = "Base64Encoded") then console:log("body decodes to: " || util:base64-decode($response//httpclient:body)) else ()
+    let $debug :=  if ($config:debug = "trace") then util:log("warn", "[SPHINX] $rspBody: " || serialize($rspBody)) else ()
+    let $debug :=  if ($config:debug = "trace" and $response//httpclient:body/@encoding = "Base64Encoded") then util:log("warn", "[SPHINX] body decodes to: " || util:base64-decode($response//httpclient:body)) else ()
 
     return $rspBody//rss
 };
 
+(:
+~ Requests a highlighted document (e.g., an HTML fragment) from Sphinx.
+:)
 declare function sphinx:highlight ($document as node(), $words as xs:string*) as node()* {
     let $endpoint   := concat($config:sphinxRESTURL, "/excerpts")
 
@@ -715,7 +727,7 @@ declare function sphinx:highlight ($document as node(), $words as xs:string*) as
                                )
 
 (:    let $debug := console:log():)
-    let $tempString := replace(replace($requestDoc, '%20', '+'), '%3D', '=') (: TODO: why do we convert %20 (blank) to '+' here? :)
+    let $tempString := replace(replace($requestDoc, '%20', '+'), '%3D', '=') (: TODO: do we really need to convert %20 (blank) to '+' here? :)
 (: Querying with EXPath http client proved not to work in eXist 3.4
     let $request    := <http:request method="post">
                            <http:body media-type="application/x-www-form-urlencoded">{$requestDoc}</http:body>
@@ -767,7 +779,7 @@ declare
                                 "sphinx_description_edit,sphinx_description_orig) " || $q || $addConditionParameters),
                 $sortingParameters,
                 $pagingParameters)
-    
+(:    let $debug := util:log('warn', '[SPHINX] sphinx:details $detailsRequest=' || $detailsRequest):)
     let $details:= httpclient:get($detailsRequest, false(), $detailsRequestHeaders)//httpclient:body/rss
     
     let $searchInfo :=  
@@ -784,6 +796,7 @@ declare
         </p>
     let $prevDetailsPara        := "&amp;limit=" || $limit || "&amp;offset=" || xs:string(xs:integer($offset) - xs:integer($details//opensearch:itemsPerPage))
     let $nextDetailsPara        := "&amp;limit=" || $limit || "&amp;offset=" || xs:string(xs:integer($offset) + xs:integer($details//opensearch:itemsPerPage))
+    (: offer sphinx:details() (via sphinx-client.xql) for the next/previous page of snippets: :)
     let $prevDetailsURL         := concat('sphinx-client.xql?mode=details&amp;q=',encode-for-uri($q), '&amp;wid=' || $wid || '&amp;sort=2&amp;sortby=sphinx_fragment_number&amp;ranker=2' , $prevDetailsPara)
     let $nextDetailsURL         := concat('sphinx-client.xql?mode=details&amp;q=',encode-for-uri($q), '&amp;wid=' || $wid || '&amp;sort=2&amp;sortby=sphinx_fragment_number&amp;ranker=2' , $nextDetailsPara)
     let $prevDetailsLink := 
@@ -823,7 +836,7 @@ declare
                             </description_edit>
                         </documents>
                     let $excerpts       := sphinx:excerpts($snippets, $q)
-                    let $description_orig    := $excerpts//item[1]/description
+                    let $description_orig    := $excerpts//item[1]/description 
                     let $description_edit    := $excerpts//item[2]/description
                     let $statusInfo     := 
                         i18n:process(
@@ -845,12 +858,15 @@ declare
                                 <span class="lead" style="padding-bottom: 7px; font-family: 'Junicode', 'Cardo', 'Andron', 'Cabin', sans-serif;" title="{i18n:process($statusInfo, $lang, '/db/apps/salamanca/data/i18n', 'en')}"><!--<span style="color: #777777">{$detailindex|| '. '}</span>-->{$bombtrail}</span>
                                 <div class="crumbtrail">{$crumbtrail/node()}</div>
                                 <div class="result__snippet" title="{$statusInfo}">{ 
-                                    if ($description_edit//span) then $description_edit
+                                    (: if there is a <span class="hi" id="..."> within the description, terms have been highlighted by sphinx:excerpts(): :)
+                                    if ($description_edit//span) then 
+                                        let $debug := util:log('warn', '[SPHINX] Bingo: found highlighting within $description_edit:' || $description_edit//span[1]/text())
+                                        return $description_edit
                                     else if ($description_orig//span) then $description_orig
                                     else if (string-length($item/description_edit) gt $config:snippetLength) then
                                         substring($item/description_edit, 0, $config:snippetLength) || '...'
                                     else
-                                        $item/description_edit/*
+                                        $item/description_edit/text()
                                 }</div>
                             </td>
                         </tr>
