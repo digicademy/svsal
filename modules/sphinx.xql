@@ -671,7 +671,7 @@ declare function sphinx:keywords ($q as xs:string?) as xs:string {
 :)
 declare function sphinx:excerpts ($documents as node()*, $words as xs:string) as node()* {
     let $endpoint   := concat($config:sphinxRESTURL, "/excerpts")
-    let $debug :=  if ($config:debug = ("info", "trace")) then util:log("warn", "[SPHINX] Excerpts needed for doc[0]: " || substring(normalize-space($documents/description_orig), 0, 150)) else ()
+(:    let $debug :=  if ($config:debug = ("info", "trace")) then util:log("warn", "[SPHINX] Excerpts needed for doc[0]: " || substring(normalize-space($documents/description_orig), 0, 150)) else ():)
     let $normalizedOrig := normalize-space(serialize($documents/description_orig))
     let $normalizedEdit := normalize-space(serialize($documents/description_edit))
     let $requestDoc := concat(         (:encode-for-uri('opts[limit]=' || $config:snippetLength),
@@ -688,9 +688,11 @@ declare function sphinx:excerpts ($documents as node()*, $words as xs:string) as
                                )
     (:let $tempString := replace(replace(replace($requestDoc, '%20', '+'), '%3D', '='), '%26amp%3B', '&amp;'):) (:  with '+' and '&amp;' being replaced, highlighting isn't working correctly :)
     let $tempString := replace($requestDoc, '%3D', '=')
+    (:
     let $debug :=  if ($config:debug = "trace") then util:log("warn", "[SPHINX] Excerpts request body: " || $tempString) else ()
     let $debug := if ($config:debug = "trace") then util:log("warn", "[SPHINX] Posted orig text snippet docs[0]=" || serialize($documents/description_orig)) else ()
     let $debug := if ($config:debug = "trace") then util:log("warn", "[SPHINX] Posted edit text snippet docs[1]=" || serialize($documents/description_edit)) else ()
+    :)
     (: Querying with EXPath http client proved not to work in eXist 3.4
         let $request    := <http:request method="post">
                              <http:header name="Content-Type" value="application/x-www-form-urlencoded"/>
@@ -699,12 +701,13 @@ declare function sphinx:excerpts ($documents as node()*, $words as xs:string) as
         let $response   := http:send-request($request, $endpoint)
     :)
     let $response   := httpclient:post($endpoint, $tempString, true(), <headers><header name="Content-Type" value="application/x-www-form-urlencoded"/></headers>)
-    let $debug :=  if ($config:debug = "trace") then util:log("warn", "[SPHINX] Excerpts response: " || serialize($response)) else ()
+(:    let $debug :=  if ($config:debug = "trace") then util:log("warn", "[SPHINX] Excerpts response: " || serialize($response)) else ():)
     let $rspBody    :=  if ($response//httpclient:body/@encoding = "Base64Encoded") then parse-xml(util:base64-decode($response//httpclient:body)) 
                         else $response//httpclient:body
+    (:
     let $debug :=  if ($config:debug = "trace") then util:log("warn", "[SPHINX] $rspBody: " || serialize($rspBody)) else ()
     let $debug :=  if ($config:debug = "trace" and $response//httpclient:body/@encoding = "Base64Encoded") then util:log("warn", "[SPHINX] body decodes to: " || util:base64-decode($response//httpclient:body)) else ()
-
+    :)
     return $rspBody//rss
 };
 
@@ -740,7 +743,7 @@ declare function sphinx:highlight ($document as node(), $words as xs:string*) as
     let $rspBody    := if ($response//httpclient:body/@encoding = "Base64Encoded") then parse-xml(util:base64-decode($response//httpclient:body))
                        else $response//httpclient:body
     (: problem end :)
-    let $debug := util:log("warn", "[SPHINX]" || serialize($response//httpclient:body))
+(:    let $debug := util:log("warn", "[SPHINX]" || serialize($response//httpclient:body)):)
 
     return $rspBody//rss
 };
@@ -849,6 +852,14 @@ declare
                             else
                                 <i18n:text key="mainText">Haupttext</i18n:text>, 
                         $lang, '/db/apps/salamanca/data/i18n', 'en')
+                    let $resultTextRaw :=
+                        (: if there is a <span class="hi" id="..."> within the description, terms have been highlighted by sphinx:excerpts(): :)
+                        if ($description_edit//span) then $description_edit
+                        else if ($description_orig//span) then $description_orig
+                        else if (string-length($item/description_edit) gt $config:snippetLength) then
+                            substring($item/description_edit, 0, $config:snippetLength) || '...'
+                        else $item/description_edit/text()
+                    let $resultText := replace($resultTextRaw, '\[.*?\]', '') (: do not show name IDs etc. in search results (although they *are* searchable) :)
                     return
                         <tr>
                            <!--<td>
@@ -858,15 +869,7 @@ declare
                                 <span class="lead" style="padding-bottom: 7px; font-family: 'Junicode', 'Cardo', 'Andron', 'Cabin', sans-serif;" title="{i18n:process($statusInfo, $lang, '/db/apps/salamanca/data/i18n', 'en')}"><!--<span style="color: #777777">{$detailindex|| '. '}</span>-->{$bombtrail}</span>
                                 <div class="crumbtrail">{$crumbtrail/node()}</div>
                                 <div class="result__snippet" title="{$statusInfo}">{ 
-                                    (: if there is a <span class="hi" id="..."> within the description, terms have been highlighted by sphinx:excerpts(): :)
-                                    if ($description_edit//span) then 
-                                        let $debug := util:log('warn', '[SPHINX] Bingo: found highlighting within $description_edit:' || $description_edit//span[1]/text())
-                                        return $description_edit
-                                    else if ($description_orig//span) then $description_orig
-                                    else if (string-length($item/description_edit) gt $config:snippetLength) then
-                                        substring($item/description_edit, 0, $config:snippetLength) || '...'
-                                    else
-                                        $item/description_edit/text()
+                                    $resultText
                                 }</div>
                             </td>
                         </tr>
