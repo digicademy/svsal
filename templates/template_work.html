@@ -436,21 +436,18 @@
                 }
                 return '(' + accessed + ' ' + date + ')';
             }
-            function getLang() {
-                if (getUrlParams('lang') === 'es' || window.location.href.indexOf("/es/") != -1) return 'es';
-                else if (getUrlParams('lang') === 'de' || window.location.href.indexOf("/de/") != -1) return 'de';
-                else return 'en';
-            }
+            
             function copyNotify(elem) {
                 var del = elem.parentElement.getElementsByClassName('.copy-alert')[0];
                 if (typeof variable !== 'undefined' &amp;&amp; variable !== null) {
                     elem.parentElement.removeChild(del);
                 }
-                var lang = getLang();
+                var language = getLang();
+                console.log('$lang=' + language);
                 var msg;
-                if (lang === 'de') {
+                if (language === 'de') {
                     msg = 'In die Zwischenablage kopiert!'
-                } else if (lang === 'es') {
+                } else if (language === 'es') {
                     msg = 'Copiado al portapapeles!'
                 } else {
                     msg = 'Copied to clipboard!'
@@ -605,16 +602,14 @@
          * @return the content of the 'lang' url parameter or a string based on pathname components
          */
         function getLang() {
-            if (getUrlParams('lang').length &gt; 0)
-                return getUrlParams('lang')
-            else if (window.location.href.indexOf("/es/") != -1)
-                return 'es'
-            else if (window.location.href.indexOf("/de/") != -1)
-                return 'de'
-            else
-                return 'en'
+            if (getUrlParams('lang').length &gt; 0 
+                     &amp;&amp; ['de','en','es'].indexOf(getUrlParams('lang').substring(0,2)) >= 0) {
+                return getUrlParams('lang').substring(0,2);
+            }
+            else if (window.location.href.indexOf("/de/") != -1) return 'de';
+            else if (window.location.href.indexOf("/es/") != -1) return 'es';
+            else return 'en';
         };
-
         // Build viewer popup, but don't show it yet (jquery ui config)
 //        $(document).ready(function(){
 //            document.getElementById('Mirador').src = "viewer.html?wid=" + getUrlParams( 'wid' );
