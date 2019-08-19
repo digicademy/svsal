@@ -85,7 +85,6 @@ declare function render:getNodetrail($targetWorkId as xs:string, $targetNode as 
                         (: within front, back, and single volumes, prepend front's or volume's trail ID for avoiding multiple identical IDs in the same work :)
                         render:getNodetrail($targetWorkId,  ($targetNode/ancestor::tei:front|$targetNode/ancestor::tei:back|$targetNode/ancestor::tei:text[1][@type = "work_volume"])[last()], $mode, $fragmentIds)
                     else ()
-                else if ($targetNode[self::tei:pb]) then ()
                 else if ($targetNode[self::tei:note or self::tei:milestone]) then
                     (: citable parents of notes and milestones should not be p :)
                     render:getNodetrail($targetWorkId, $targetNode/ancestor::*[render:isPassagetrailNode(.) and not(self::tei:p)][1], $mode, $fragmentIds)
@@ -115,6 +114,7 @@ declare function render:getNodetrail($targetWorkId as xs:string, $targetNode as 
              else if ($mode eq 'passagetrail') then $trailPrefix || $connector || $currentNode
              else ()
         else if ($currentNode) then $currentNode
+        else if ($mode eq 'passagetrail' and $trailPrefix) then $trailPrefix (: passagetrails are not necessarily individual :)
         else () (:error(xs:QName('render:getNodetrail'), 'Could not make distinct nodetrail for element ' || local-name($currentNode)):)
     return $trail
 };
@@ -2391,8 +2391,8 @@ declare function render:pb($node as element(tei:pb), $mode as xs:string) {
             else ()
                     
         case 'passagetrail' return
-            if (contains($node/@n, 'fol.')) then $node/@n
-            else 'p. ' || $node/@n
+            if (contains($node/@n, 'fol.')) then $node/@n/string()
+            else 'p. ' || $node/@n/string()
         
         case 'orig'
         case 'edit' return

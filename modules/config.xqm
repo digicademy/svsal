@@ -140,7 +140,7 @@ declare variable $config:citationLabels :=
         'colophon': map {'full': 'colophon', 'abbr': 'coloph.', 'isCiteRef': true()},
         'commentary': map {'full': 'commentarius', 'abbr': 'comment.', 'isCiteRef': true()},
         'contained_work': (),
-        'contents': map {'full': 'tabula', 'abbr': 'tab.'},
+        'contents': map {'full': 'tabula', 'abbr': 'tab.', 'isCiteRef': true()},
         'corrigenda': map {'full': 'corrigenda', 'abbr': 'corr.', 'isCiteRef': true()},
         'dedication': map {'full': 'dedicatio', 'abbr': 'dedic.', 'isCiteRef': true()},
         'disputation': map {'full': 'disputatio', 'abbr': 'disp.', 'isCiteRef': true()},
