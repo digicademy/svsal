@@ -678,7 +678,7 @@ declare function sphinx:excerpts ($documents as node()*, $words as xs:string) as
                               '&amp;',:) 
                               encode-for-uri('opts[html_strip_mode]=strip'),
                               '&amp;', encode-for-uri('opts[query_mode]=true'),
-                              '&amp;', encode-for-uri('opts[around]=100'),
+                              '&amp;', encode-for-uri('opts[around]=7'),
 (:                              '&amp;', encode-for-uri('opts[force_all_words]=true'),:)
                               '&amp;', encode-for-uri('words=' || $words),
                               '&amp;', encode-for-uri(concat('docs[0]=', $normalizedOrig)),
@@ -854,11 +854,14 @@ declare
                         $lang, '/db/apps/salamanca/data/i18n', 'en')
                     let $resultTextRaw :=
                         (: if there is a <span class="hi" id="..."> within the description, terms have been highlighted by sphinx:excerpts(): :)
-                        if ($description_edit//span) then $description_edit
-                        else if ($description_orig//span) then $description_orig
-                        else if (string-length($item/description_edit) gt $config:snippetLength) then
+                        if ($description_edit//span) then 
+                            sphinx:normalizeExcerpt($description_edit)
+                        else if ($description_orig//span) then 
+                            sphinx:normalizeExcerpt($description_orig)
+                        else if (string-length($item/description_edit) gt $config:snippetLength) then 
                             substring($item/description_edit, 0, $config:snippetLength) || '...'
-                        else $item/description_edit/text()
+                        else 
+                            $item/description_edit/text()
                     let $resultText := replace($resultTextRaw, '\[.*?\]', '') (: do not show name IDs etc. in search results (although they *are* searchable) :)
                     return
                         <tr>
@@ -869,7 +872,7 @@ declare
                                 <span class="lead" style="padding-bottom: 7px; font-family: 'Junicode', 'Cardo', 'Andron', 'Cabin', sans-serif;" title="{i18n:process($statusInfo, $lang, '/db/apps/salamanca/data/i18n', 'en')}"><!--<span style="color: #777777">{$detailindex|| '. '}</span>-->{$bombtrail}</span>
                                 <div class="crumbtrail">{$crumbtrail/node()}</div>
                                 <div class="result__snippet" title="{$statusInfo}">{ 
-                                    $resultText
+                                    sphinx:normalizeExcerpt($resultTextRaw)
                                 }</div>
                             </td>
                         </tr>
@@ -881,6 +884,13 @@ declare
         </div>
 
     return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
+};
+
+(: Remove name IDs etc. from search excerpts as displayed in the results overview :)
+declare function sphinx:normalizeExcerpt($node as node()) {
+    if ($node/self::text() or $node instance of xs:string) then replace($node, '\[.*?\]', '') 
+    else if ($node/self::element()) then element {local-name($node)} {$node/@*, for $child in $node/node() return sphinx:normalizeExcerpt($child)}
+    else ()
 };
 
 
