@@ -210,7 +210,7 @@ declare function render:isNamedCitetrailNode($node as element()) as xs:boolean {
             and $node[self::tei:head or 
                       self::tei:titlePage]) or
         (render:isListNode($node) 
-            and $node[self::tei:list[@type = ('dict')] or
+            and $node[self::tei:list[@type = ('dict', 'index')] or
                       self::tei:item[ancestor::tei:list[@type = ('dict')]]])
     )
 };
@@ -1858,13 +1858,13 @@ declare function render:list($node as element(tei:list), $mode as xs:string) {
             switch(render:determineListType($node))
                 (: tei:item are actually handled here, not in render:item, due to the tight coupling of their layout to tei:list :)
                 case 'ordered' return (: enumerated/ordered list :)
-                    <section id="{$node/@xml:id}">
+                    <div id="{$node/@xml:id}">
                         {for $head in $node/tei:head return <h4>{render:passthru($head, $mode)}</h4>}
                         <ol>
                             {for $child in $node/*[not(self::tei:head)] return 
                                 <li>{render:passthru($child, $mode)}</li>}
                         </ol>
-                    </section>
+                    </div>
                 case 'simple' return (: make no list in html terms at all :)
                     <div id="{$node/@xml:id}">
                         {for $head in $node/tei:head return <h4 class="inlist-head">{render:passthru($head, $mode)}</h4>}
@@ -1916,14 +1916,6 @@ declare function render:list($node as element(tei:list), $mode as xs:string) {
                                 intersect $currentSection//tei:list[@type eq $currentNode/@type]
                           ) + 1)
                   )
-                (: without on-the-fly copying: :)
-                (:concat(
-                    $node/@type, 
-                    string(
-                        count($node/preceding::tei:list[@type eq $node/@type]
-                              intersect $node/(ancestor::tei:div|ancestor::tei:body|ancestor::tei:front|ancestor::tei:back)[last()]//tei:list[@type eq $node/@type]
-                        ) + 1)
-                   ):)
             (: other types of lists are simply counted :)
             else if (render:isUnnamedCitetrailNode($node)) then 
                 string(render:determineUnnamedCitetrailNodePosition($node))
@@ -2014,19 +2006,6 @@ declare function render:milestone($node as element(tei:milestone), $mode as xs:s
                         else ()
                     return $currentNode/@unit || upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', '')) || $position
                 else $currentNode/@unit || string(count($currentNode/preceding::tei:milestone[@unit eq $node/@unit] intersect $currentSection//tei:milestone[@unit eq $currentNode/@unit]) + 1)
-                (: without on-the-fly copying - outdated code: :)
-                (:if ($node/@n[matches(., '[a-zA-Z0-9]')]) then 
-                    let $similarMs :=
-                        $node/ancestor::*[render:getCitableParent($node)][1]//tei:milestone[@unit eq $node/@unit 
-                                                                  and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($node/@n, '[^a-zA-Z0-9]', ''))]
-                    let $position :=
-                        if (count($similarMs) gt 1) then
-                            
-                            string(count($node/preceding::tei:milestone intersect $similarMs) + 1) (\: TODO: performance issues? :\)
-                        else ()
-                    return $node/@unit || upper-case(replace($node/@n, '[^a-zA-Z0-9]', '')) || $position
-                else $node/@unit || string(count($node/preceding::tei:milestone[@unit eq $node/@unit] intersect $node/ancestor::tei:div[1]//tei:milestone[@unit eq $node/@unit]) + 1):)
-        
         
         case 'passagetrail' return
             if (render:isPassagetrailNode($node)) then
@@ -2041,10 +2020,6 @@ declare function render:milestone($node as element(tei:milestone), $mode as xs:s
                         let $position := count($currentSection//tei:milestone[@unit eq $currentNode/@unit and render:isPassagetrailNode(.)]
                                                intersect $currentNode/preceding::tei:milestone[@unit eq $currentNode/@unit and render:isPassagetrailNode(.)]) + 1
                         return string($position)
-                        (: without on-the-fly copying: :)
-                        (:let $position := count($node/ancestor::*[render:isPassagetrailNode(.) and not(self::tei:p)][1]//tei:milestone[@unit eq $node/@unit and render:isPassagetrailNode(.)]
-                                               intersect $node/preceding::tei:milestone[@unit eq $node/@unit and render:isPassagetrailNode(.)]) + 1
-                        return string($position):)
                 return
                     $prefix || ' ' || $num
             else ()
@@ -2149,18 +2124,6 @@ declare function render:note($node as element(tei:note), $mode as xs:string) {
                             else ()
                         return '"' || normalize-space($currentNode/@n) || '"' || $noteNumber
                     else string(count($currentNode/preceding::tei:note intersect $currentSection//tei:note) + 1)
-                    (: without on-the-fly copying: :)
-                    (:if ($node/@n) then
-                        let $noteNumber :=
-                            if (count($node/ancestor::tei:div[1]//tei:note[upper-case(normalize-space(@n)) eq upper-case(normalize-space($node/@n))]) gt 1) then
-                                ' (' || 
-                                string(count($node/preceding::tei:note[upper-case(normalize-space(@n)) eq upper-case(normalize-space($node/@n))] 
-                                             intersect $node/ancestor::tei:div[1]//tei:note[upper-case(normalize-space(@n)) eq upper-case(normalize-space($node/@n))])
-                                       + 1) 
-                                || ')'
-                            else ()
-                        return '&#34;' || normalize-space($node/@n) || '&#34;' || $noteNumber
-                    else string(count($node/preceding::tei:note intersect $node/ancestor::tei:div[1]//tei:note) + 1):)
             )
         
         case 'html-title' return ()
@@ -2185,13 +2148,6 @@ declare function render:note($node as element(tei:note), $mode as xs:string) {
                     else string(count($currentSection//tei:note
                                       intersect $currentNode/preceding::tei:note) + 1)
                 return $prefix || ' ' || $label
-                (: without on-the-fly copying: :)
-                (:let $prefix := $config:citationLabels(local-name($node))?('abbr')
-                let $label := 
-                    if ($node/@n) then '"' || $node/@n || '"' (\: TODO: what if there are several notes with the same @n in a div :\)
-                    else string(count($node/ancestor::*[render:isPassagetrailNode(.) and not(self::tei:p)][1]//tei:note
-                                      intersect $node/preceding::tei:note) + 1)
-                return $prefix || ' ' || $label:)
             else ()
             
         case 'orig'

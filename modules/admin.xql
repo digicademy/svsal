@@ -442,6 +442,26 @@ declare function admin:saveFileWRKnoJs ($node as node(), $model as map (*), $lan
 
 };
 
+declare %templates:wrap function admin:saveEditors($node as node()?, $model as map(*)?) {
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Storing finalFacets...") else ()
+    let $create-collection  :=  
+        if (not(xmldb:collection-available($config:data-root))) then 
+            xmldb:create-collection($config:app-root, "data") 
+        else ()
+    let $fileName := 'editors.xml'
+    let $content :=  
+        <sal>{
+            ()
+        }</sal>
+    let $store := xmldb:store($config:data-root, $fileNameDe, $contentDe)
+    return
+        <span>
+            <p><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> List of works saved!</p>
+            <br/><br/>
+            <a href="works.html" class="btn btn-info" role="button"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Open works.html</a>
+        </span> 
+};
+
 
 (: #### RENDERING ADMINISTRATION FUNCTIONS #### :)
 
@@ -1102,15 +1122,21 @@ declare function admin:createNodeIndex($wid as xs:string*) {
             (: ----------------------------------------------- :)
             (: #### Basic quality / consistency check #### :)
             let $resultNodes := $index//sal:node[not(@n eq 'completeWork')]
-            let $testNodes := if (count($resultNodes) eq 0) then error() else ()
+            let $testNodes := 
+                if (count($resultNodes) eq 0) then 
+                    error(xs:QName('render:createNodeIndex'), 'Node indexing did not produce any results.') 
+                else ()
             (: every ordinary sal:node should have all of the required fields and values: :)
-            let $testAttributes := if ($testNodes[not(@class/string() and @type/string() and @n/string())]) then error() else ()
+            let $testAttributes := 
+                if ($testNodes[not(@class/string() and @type/string() and @n/string())]) then 
+                    error(xs:QName('render:createNodeIndex'), 'Essential attributes are missing in at least one index node') 
+                else ()
             let $testChildren := if ($testNodes[not(sal:title and sal:fragment/text() and sal:citableParent/text() and sal:citetrail/text() and sal:crumbtrail/* and sal:passagetrail/text())]) then error() else ()
             (: there should be as many distinctive citetrails and crumbtrails as there are ordinary sal:node elements: :)
             let $testCitetrails := 
                 if (count($resultNodes) ne count(distinct-values($resultNodes/sal:citetrail/text()))
                     or count($resultNodes/sal:citetrail[not(./text())]) gt 0) then 
-                    error() 
+                    error(xs:QName('render:createNodeIndex'), 'Could not produce a unique citetrail for each sal:node.') 
                 else () 
             (: search these cases using: " //sal:citetrail[./text() = preceding::sal:citetrail/text()] "
                 or " //sal:citetrail[not(./text())] ":)
@@ -1121,9 +1147,9 @@ declare function admin:createNodeIndex($wid as xs:string*) {
                 for $t in $work//tei:text//text()[normalize-space() ne ''] return
                     if ($t[not(ancestor::*[render:isBasicNode(.)]) and not(ancestor::tei:figDesc)]) then 
                         let $debug := util:log('error', 'Encountered text node without ancestor::*[render:isBasicNode(.)], in line ' || $t/preceding::tei:lb[1]/@xml:id/string())
-                        return error() 
+                        return error(xs:QName('render:createNodeIndex'), 'Encountered text node without ancestor::*[render:isBasicNode(.)]') 
                     else ()
-            (: if no xml:id is put out, try to search this cases like so:
+            (: if no xml:id is put out, try to search these cases like so:
                 //text//text()[not(ancestor::*[@xml:id and (self::p or self::signed or self::head or self::titlePage or self::lg or self::item or self::label)])]
             :)
             
