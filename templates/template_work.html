@@ -82,18 +82,18 @@
         <script type="text/javascript" src="resources/js/jquery.backTop.js"/>
 
         <!-- ==== Scroll an anchor into view if we have one ==== -->
-        <!--<script type="text/javascript">
-            $('a').not('.note-teaser' || '.title-teaser')
+        <script type="text/javascript">
+            $('.sal-toolbox-marginal')
                 .filter(function() {
 //                    console.log("Click on a@href=" + $(this).attr('href') + '... (window.location.href being ' + window.location.href + '.)');
 //                    console.log((window.location.origin + window.location.pathname + window.location.search
 //                             == 
 //                             this.href.split('#')[0]
-//                            ) && (this.href.indexOf('#') !== -1).toString());
+//                            ) &amp;&amp; (this.href.indexOf('#') !== -1).toString());
                     return  ((window.location.origin + window.location.pathname + window.location.search
                              == 
                              this.href.split('#')[0]
-                            ) && (this.href.indexOf('#') !== -1));
+                            ) &amp;&amp; (this.href.indexOf('#') !== -1));
                 }).click(function(event){
 //                    console.log("Click on a@href=" + $(this).attr('href') + '...')
                     z = $(this).attr('href').slice($(this).attr('href').indexOf('#'))
@@ -104,16 +104,16 @@
                         event.preventDefault();
                     }
                 });
-//            $('a[href*="#"]').click(function(event){
-//                console.log("Click on a@href=" + $(this).attr('href') + '...')
-//                z = $(this).attr('href').slice($(this).attr('href').indexOf('#'))
-//                console.log("anchor =" + z + '...')
-//                if ($(z).length != 0) {
-//                    console.log("Going locally to " + z + '...')
-//                    myScrollIntoView(z);
-//                    event.preventDefault();
-//                }
-//            });
+            $('a[href*="#"]').click(function(event){
+                console.log("Click on a@href=" + $(this).attr('href') + '...')
+                z = $(this).attr('href').slice($(this).attr('href').indexOf('#'))
+                console.log("anchor =" + z + '...')
+                if ($(z).length != 0) {
+                    console.log("Going locally to " + z + '...')
+                    myScrollIntoView(z);
+                    event.preventDefault();
+                }
+            });
             function myScrollIntoView(targetId) {
                 $(targetId)[0].scrollIntoView(true);
                 var scrolledY = window.scrollY;
@@ -121,11 +121,11 @@
                   window.scroll(0, scrolledY - $(".navbar-fixed-top").outerHeight(true) - 50);
                 };
                 if($(targetId).nodeName == "A") {
-                    $(targetId).parent().effect( "highlight", {color:'LightSkyBlue'}, 1000 );
+                    $(targetId).parent().effect( "highlight", {color:'LightSkyBlue'}, 1200 );
                     //$(targetId).parent().effect( "highlight", {color:'LightSkyBlue'}, 700 );
                     //$(targetId).parent().effect( "highlight", {color:'LightSkyBlue'}, 700 );
                 } else {
-                    $(targetId).effect( "highlight", {color:'LightSkyBlue'}, 1000 );
+                    $(targetId).effect( "highlight", {color:'LightSkyBlue'}, 1200 );
                     //$(targetId).effect( "highlight", {color:'LightSkyBlue'}, 700 );
                     //$(targetId).effect( "highlight", {color:'LightSkyBlue'}, 700 );
                 }
@@ -139,7 +139,7 @@
 //                                $(targetId).parent().effect( "highlight", {color:'LightSkyBlue'}, 700 );
 //                            });
             }
-        </script>-->
+        </script>
 
         <!-- ==== Toggle diplomatic/constituated textmode ==== -->
         <script type="text/javascript" src="resources/js/sal-common.js"/>
@@ -446,11 +446,11 @@
                 console.log('$lang=' + language);
                 var msg;
                 if (language === 'de') {
-                    msg = 'In die Zwischenablage kopiert!'
+                    msg = 'In die Zwischenablage kopiert'
                 } else if (language === 'es') {
-                    msg = 'Copiado al portapapeles!'
+                    msg = 'Copiado al portapapeles'
                 } else {
-                    msg = 'Copied to clipboard!'
+                    msg = 'Copied to clipboard'
                 }
                 var popup = document.createElement('span');
                 popup.setAttribute('class', 'copy-alert');
@@ -603,7 +603,7 @@
          */
         function getLang() {
             if (getUrlParams('lang').length &gt; 0 
-                     &amp;&amp; ['de','en','es'].indexOf(getUrlParams('lang').substring(0,2)) >= 0) {
+                     &amp;&amp; ['de','en','es'].indexOf(getUrlParams('lang').substring(0,2)) &gt;= 0) {
                 return getUrlParams('lang').substring(0,2);
             }
             else if (window.location.href.indexOf("/de/") != -1) return 'de';
