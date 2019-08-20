@@ -593,9 +593,11 @@ declare function net:APIdeliverTXT($requestData as map(), $netVars as map()*) {
                             ', media-type:' || util:get-option('output:media-type') ||
                             '.') 
             else ()
-        let $filename := (if (not(starts-with($requestData('passage'), 'vol'))) then $requestData('tei_id') else $requestData('work_id'))
-                         || (if ($requestData('passage')) then '_' || $requestData('passage') else ()) 
-                         || '_' || $mode || '.txt'
+        let $verboseMode := if ($mode eq 'edit') then 'constituted' else 'diplomatic' 
+        let $filename := 
+            (if (not(starts-with($requestData('passage'), 'vol'))) then $requestData('tei_id') else $requestData('work_id'))
+             || (if ($requestData('passage')) then '_' || $requestData('passage') else ()) 
+             || '_' || $verboseMode || '.txt'
         let $response := response:set-header('Content-Disposition', 'attachment; filename="' || $filename || '"')
         return 
             if ($node) then 
