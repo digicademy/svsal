@@ -13,12 +13,12 @@ declare         namespace   util        = "http://exist-db.org/xquery/util";
 
 (: Reduces a TEI doc to pure structural information and indexes structural nodes according to sal:node index, thus enhancing the TEI for RDF extraction. :)
 
-declare option exist:timeout "3500000"; (: ~1h :)
+declare option exist:timeout '3500000'; (: ~1h :)
 
-declare option output:method "xml";
+declare option output:method 'xml';
 
-declare variable $omittableElemTypes := ("g", "lb", "cb", "hi", "choice", "abbr", "sic", "orig", "expan", "corr", "reg", "ref", "foreign");
-declare variable $omittableAttrTypes := ("anchored", "rendition", "resp", "change", "cert");
+declare variable $omittableElemTypes := ('g', 'lb', 'cb', 'hi', 'choice', 'abbr', 'sic', 'orig', 'expan', 'corr', 'reg', 'ref', 'foreign');
+declare variable $omittableAttrTypes := ('anchored', 'rendition', 'resp', 'change', 'cert');
 
 declare function local:copy($input as item()*, $salNodes as map()?) as item()* {
     for $node in $input return 
@@ -34,7 +34,7 @@ declare function local:copy($input as item()*, $salNodes as map()?) as item()* {
                           for $att in $node/@*[not(name(.) = $omittableAttrTypes)]
                               return
                                   (: if we are dealing with an xml:id attribute, and this also occurs in the _nodeIndex file, pull in more attributes from there :)
-                                  if (name($att) = "xml:id" and map:get($salNodes,$att)) then
+                                  if (name($att) = "xml:id" and map:get($salNodes,$att)) then (: equivalent to render:isIndexNode() :)
                                       let $sn := map:get($salNodes,$att)
                                       let $pn := map:get($salNodes,$sn/sal:citableParent/string())
                                       (: add (only English) label to title (also German and Spanish?) :)

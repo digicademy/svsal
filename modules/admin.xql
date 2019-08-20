@@ -1129,15 +1129,22 @@ declare function admin:createNodeIndex($wid as xs:string*) {
             (: every ordinary sal:node should have all of the required fields and values: :)
             let $testAttributes := 
                 if ($testNodes[not(@class/string() and @type/string() and @n/string())]) then 
-                    error(xs:QName('render:createNodeIndex'), 'Essential attributes are missing in at least one index node') 
+                    error(xs:QName('render:createNodeIndex'), 'Essential attributes are missing in at least one index node (in ' || $wid || ')') 
                 else ()
             let $testChildren := if ($testNodes[not(sal:title and sal:fragment/text() and sal:citableParent/text() and sal:citetrail/text() and sal:crumbtrail/* and sal:passagetrail/text())]) then error() else ()
             (: there should be as many distinctive citetrails and crumbtrails as there are ordinary sal:node elements: :)
-            let $testCitetrails := 
-                if (count($resultNodes) ne count(distinct-values($resultNodes/sal:citetrail/text()))
-                    or count($resultNodes/sal:citetrail[not(./text())]) gt 0) then 
-                    error(xs:QName('render:createNodeIndex'), 'Could not produce a unique citetrail for each sal:node.') 
+            let $testAmbiguousCitetrails := 
+                if (count($resultNodes) ne count(distinct-values($resultNodes/sal:citetrail/text()))) then 
+                    error(xs:QName('render:createNodeIndex'), 
+                          'Could not produce a unique citetrail for each sal:node (in ' || $wid || '). Problematic nodes: '
+                          || string-join(($resultNodes[sal:citetrail/text() eq following::sal:citetrail/text()]/@n), '; ')) 
                 else () 
+            let $testEmptyCitetrails :=
+                if (count($resultNodes/sal:citetrail[not(./text())]) gt 0) then
+                    error(xs:QName('render:createNodeIndex'), 
+                          'Could not produce a citetrail for one or more sal:node (in' || $wid || '). Problematic nodes: '
+                          || string-join(($resultNodes[not(sal:citetrail/text())]/@n), '; '))
+                else ()
             (: search these cases using: " //sal:citetrail[./text() = preceding::sal:citetrail/text()] "
                 or " //sal:citetrail[not(./text())] ":)
             (: not checking crumbtrails here ATM for not slowing down index creation too much... :)
@@ -1150,7 +1157,7 @@ declare function admin:createNodeIndex($wid as xs:string*) {
                         return error(xs:QName('render:createNodeIndex'), 'Encountered text node without ancestor::*[render:isBasicNode(.)]') 
                     else ()
             (: if no xml:id is put out, try to search these cases like so:
-                //text//text()[not(ancestor::*[@xml:id and (self::p or self::signed or self::head or self::titlePage or self::lg or self::item or self::label)])]
+                //text//text()[not(normalize-space() eq '')][not(ancestor::*[@xml:id and (self::p or self::signed or self::head or self::titlePage or self::lg or self::item or self::label or self::argument or self::table)])]
             :)
             
             (: ----------------------------------------------- :)

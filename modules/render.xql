@@ -277,7 +277,9 @@ declare function render:isMainNode($node as node()) as xs:boolean {
             $node/self::tei:head[not(ancestor::tei:list)] or
             $node/self::tei:titlePage or
             $node/self::tei:lg or
-            $node/self::tei:label[@place ne 'margin']
+            $node/self::tei:label[@place ne 'margin'] or
+            $node/self::tei:argument or
+            $node/self::tei:table
         ) and 
         not($node/ancestor::*[render:isMainNode(.) or render:isMarginalNode(.) or self::tei:list])
     )
@@ -414,7 +416,7 @@ declare function render:HTMLmakeCitationReference($wid as xs:string, $fileDesc a
             render:getNodetrail($wid, $node, 'citetrail', ())
         else ()
     let $citetrailStr := if ($citetrail) then ':' || $citetrail else ()
-    let $link := $config:idserver || '/texts/' || $wid || $citetrailStr || '?format=html'
+    let $link := $config:idserver || '/texts/' || $wid || $citetrailStr || (if ($mode eq 'reading-passage') then '?format=html' else ())
     let $passagetrail := 
         if ($mode eq 'reading-passage' and $node) then
             render:getNodetrail($wid, $node, 'passagetrail', ())
@@ -1058,6 +1060,11 @@ declare function render:argument($node as element(tei:argument), $mode as xs:str
     switch($mode)
         case 'class' return 
             'tei-' || local-name($node)
+        
+        case 'citetrail' return
+            if (render:isUnnamedCitetrailNode($node)) then 
+                string(render:determineUnnamedCitetrailNodePosition($node))
+            else ()
         
         default return
             render:passthru($node, $mode)
