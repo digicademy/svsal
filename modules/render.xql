@@ -326,7 +326,10 @@ declare function render:isBasicNode($node as node()) as xs:boolean {
         render:isMainNode($node) or
         render:isMarginalNode($node) or
         (:(render:isListNode($node) and not($node/descendant::*[render:isListNode(.)])):)
-        (render:isListNode($node) and $node/self::tei:list and not($node/descendant::tei:list)) (: complete lists, but on the lowest level :)
+        (render:isListNode($node) and not(descendant::*[render:isListNode(.)])
+        (:(($node/self::tei:list and not($node/descendant::tei:list))
+                                       or ($node/self::tei:head and following-sibling::tei:item[./tei:list[not($node/descendant::tei:list)]])):) (: head may occur outside of lowest-level lists... :)
+                                       ) (: complete lists, but on the lowest level :)
     )
 };
 
@@ -872,8 +875,20 @@ declare function render:resolveURI($node as element(), $targets as xs:string) {
 
 (: OTHER HELPER FUNCTIONS :)
 
+(: 
+~ Get the number of preceding nodes with purely numeric citetrails, in the same section, but (potentially) on different tree layers.
+:)
 declare function render:determineUnnamedCitetrailNodePosition($node as element()) as xs:integer {
-    count($node/preceding-sibling::*[render:isUnnamedCitetrailNode(.)]) + 1
+    let $thisCitableParent := render:getCitableParent($node)
+    return
+        if ($thisCitableParent) then
+           let $allUnnamed := $thisCitableParent//*[render:isUnnamedCitetrailNode(.)]
+           let $sameLevelUnnamed := $allUnnamed[render:getCitableParent(.) is $thisCitableParent] (: count(render:getCitableParent(.) | $thisCitableParent) eq 1 :)
+           let $precedingUnnamed := $sameLevelUnnamed[following::*[@xml:id eq $node/@xml:id]]
+           return
+               count($precedingUnnamed) + 1
+        else 
+            count($node/preceding-sibling::*[render:isUnnamedCitetrailNode(.)]) + 1
 };
 
 (: Marginal citetrails: "nX" where X is the anchor used (if it is alphanumeric) and "nXY" where Y is the number of times that X occurs inside the current div
@@ -1013,6 +1028,11 @@ declare function render:dispatch($node as node(), $mode as xs:string) {
             case processing-instruction()   return ()
     
             default return render:passthru($node, $mode)
+    (: for fine-grained debugging: :)
+    (:let $debug := 
+        if (render:isIndexNode($node)) then 
+            util:log('warn', '[RENDER] Processing node tei:' || local-name($node) || ', with @xml:id=' || $node/@xml:id) 
+        else ():)
     return
         if ($mode eq 'html') then
             if (render:isCitableWithTeaserHTML($node)) then
@@ -2583,6 +2603,11 @@ declare function render:table($node as element(tei:table), $mode as xs:string) {
     switch($mode)
         case 'html' return
             <table>{render:passthru($node, $mode)}</table>
+            
+        case 'citetrail' return
+            if (render:isUnnamedCitetrailNode($node)) then 
+                string(render:determineUnnamedCitetrailNodePosition($node))
+            else ()
             
         default return render:passthru($node, $mode)
 };

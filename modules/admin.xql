@@ -1137,7 +1137,7 @@ declare function admin:createNodeIndex($wid as xs:string*) {
                 if (count($resultNodes) ne count(distinct-values($resultNodes/sal:citetrail/text()))) then 
                     error(xs:QName('render:createNodeIndex'), 
                           'Could not produce a unique citetrail for each sal:node (in ' || $wid || '). Problematic nodes: '
-                          || string-join(($resultNodes[sal:citetrail/text() eq following::sal:citetrail/text()]/@n), '; ')) 
+                          || string-join(($resultNodes[sal:citetrail/text() = following::sal:citetrail/text()]/@n), '; ')) 
                 else () 
             let $testEmptyCitetrails :=
                 if (count($resultNodes/sal:citetrail[not(./text())]) gt 0) then
@@ -1145,7 +1145,7 @@ declare function admin:createNodeIndex($wid as xs:string*) {
                           'Could not produce a citetrail for one or more sal:node (in' || $wid || '). Problematic nodes: '
                           || string-join(($resultNodes[not(sal:citetrail/text())]/@n), '; '))
                 else ()
-            (: search these cases using: " //sal:citetrail[./text() = preceding::sal:citetrail/text()] "
+            (: search these cases using: " //sal:citetrail[./text() = following::sal:citetrail/text()] "
                 or " //sal:citetrail[not(./text())] ":)
             (: not checking crumbtrails here ATM for not slowing down index creation too much... :)
             

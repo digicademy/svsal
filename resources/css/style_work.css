@@ -443,7 +443,7 @@ li.cardoStyleLi {
     display:none;
 }
 .sal-toolbox-body .popover-content { /* overwriting Bootstrap settings here */
-    padding: 3px
+    padding: 3px;
 }
 
 div.sal-tb-btn {
