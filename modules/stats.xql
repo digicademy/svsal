@@ -10,7 +10,6 @@ declare namespace templates  = "http://exist-db.org/xquery/templates";
 import module namespace config    = "http://salamanca/config"                at "config.xqm";
 import module namespace sphinx    = "http://salamanca/sphinx"                at "sphinx.xql";
 import module namespace console   = "http://exist-db.org/xquery/console";
-import module namespace functx    = "http://www.functx.com";
 (:
 import module namespace i18n      = "http://exist-db.org/xquery/i18n"        at "i18n.xql";
 import module namespace kwic      = "http://exist-db.org/xquery/kwic";

@@ -5,17 +5,13 @@ declare namespace exist            = "http://exist.sourceforge.net/NS/exist";
 declare namespace output           = "http://www.w3.org/2010/xslt-xquery-serialization";
 declare namespace tei              = "http://www.tei-c.org/ns/1.0";
 declare namespace sal              = "http://salamanca.adwmainz.de";
-import module namespace request    = "http://exist-db.org/xquery/request";
-import module namespace templates  = "http://exist-db.org/xquery/templates";
-import module namespace xmldb      = "http://exist-db.org/xquery/xmldb";
+declare namespace i18n             = 'http://exist-db.org/xquery/i18n';
 import module namespace util       = "http://exist-db.org/xquery/util";
 import module namespace console    = "http://exist-db.org/xquery/console";
 import module namespace config     = "http://salamanca/config" at "config.xqm";
-import module namespace app        = "http://salamanca/app"    at "app.xql";
-import module namespace functx     = "http://www.functx.com";
-import module namespace transform  = "http://exist-db.org/xquery/transform";
+(:import module namespace app        = "http://salamanca/app"    at "app.xql";:)
 import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";
-import module namespace i18n      = "http://exist-db.org/xquery/i18n"        at "i18n.xql";
+(:import module namespace i18n      = "http://exist-db.org/xquery/i18n"        at "i18n.xql";:)
 
 (:declare option exist:serialize       "method=html5 media-type=text/html indent=no";:)
 
@@ -121,15 +117,12 @@ declare function render:getNodetrail($targetWorkId as xs:string, $targetNode as 
 
 (: Gets the citable crumbtrail/citetrail (not passagetrail!) parent :)
 declare function render:getCitableParent($node as node()) as node()? {
-    if (render:isMarginalNode($node) or render:isAnchorNode($node)) then
-        (: notes, milestones etc. must not have p as their citableParent :)
-        $node/ancestor::*[render:isStructuralNode(.)][1]
-    else if (render:isPageNode($node)) then
-        if ($node/ancestor::tei:front|$node/ancestor::tei:back|$node/ancestor::tei:text[1][not(@xml:id = 'completeWork' or @type = "work_part")]) then
+    if (render:isPageNode($node)) then
+        if ($node/ancestor::tei:front|$node/ancestor::tei:back|$node/ancestor::tei:text[1][not(@xml:id = 'completeWork' or @type eq 'work_part')]) then
             (: within front, back, and single volumes, citable parent resolves to one of those elements for avoiding collisions with identically named pb in other parts :)
-            ($node/ancestor::tei:front|$node/ancestor::tei:back|$node/ancestor::tei:text[1][not(@xml:id = 'completeWork' or @type = "work_part")])[last()]
+            ($node/ancestor::tei:front|$node/ancestor::tei:back|$node/ancestor::tei:text[1][not(@xml:id = 'completeWork' or @type eq 'work_part')])[last()]
         else () (: TODO: this makes "ordinary" pb appear outside of any structural hierarchy - is this correct? :)
-    else $node/ancestor::*[render:isIndexNode(.)][1]
+    else $node/ancestor::*[render:isStructuralNode(.)][1]
 };
 
 
@@ -326,7 +319,7 @@ declare function render:isBasicNode($node as node()) as xs:boolean {
         render:isMainNode($node) or
         render:isMarginalNode($node) or
         (:(render:isListNode($node) and not($node/descendant::*[render:isListNode(.)])):)
-        (render:isListNode($node) and not(descendant::*[render:isListNode(.)])
+        (render:isListNode($node) and ($node/self::tei:list and not($node/descendant::tei:list))
         (:(($node/self::tei:list and not($node/descendant::tei:list))
                                        or ($node/self::tei:head and following-sibling::tei:item[./tei:list[not($node/descendant::tei:list)]])):) (: head may occur outside of lowest-level lists... :)
                                        ) (: complete lists, but on the lowest level :)
@@ -548,7 +541,9 @@ declare function render:makeHTMLSummaryTitle($node as element()) as element(div)
             if ($node/self::tei:text[@type='work_volume']) then <b>{render:dispatch($node, 'html-title')}</b>
             else render:dispatch($node, 'html-title')
         }</span>
-        
+    (: make anchors according to the amount of structural ancestors so that JS knows what to highlight: :)
+    let $levels := count($node/ancestor::*[render:isStructuralNode(.)])
+    let $levelAnchors := for $l in (1 to $levels) return <a style="display:none;" class="div-l-{$l}"/>
     return
         <div class="section-title container" id="{$node/@xml:id}">
             {$toolbox}
@@ -565,6 +560,7 @@ declare function render:makeHTMLSummaryTitle($node as element()) as element(div)
                 else 
                     $fullTitle
             }</div>
+            {$levelAnchors}
         </div>
 };
 
@@ -879,14 +875,15 @@ declare function render:resolveURI($node as element(), $targets as xs:string) {
 ~ Get the number of preceding nodes with purely numeric citetrails, in the same section, but (potentially) on different tree layers.
 :)
 declare function render:determineUnnamedCitetrailNodePosition($node as element()) as xs:integer {
-    let $thisCitableParent := render:getCitableParent($node)
+    let $citableParent := render:getCitableParent($node)
     return
-        if ($thisCitableParent) then
-           let $allUnnamed := $thisCitableParent//*[render:isUnnamedCitetrailNode(.)]
-           let $sameLevelUnnamed := $allUnnamed[render:getCitableParent(.) is $thisCitableParent] (: count(render:getCitableParent(.) | $thisCitableParent) eq 1 :)
-           let $precedingUnnamed := $sameLevelUnnamed[following::*[@xml:id eq $node/@xml:id]]
-           return
-               count($precedingUnnamed) + 1
+        if ($citableParent) then
+            let $currentSection := sal-util:copy($citableParent) (: make copy on-the-fly for not going into performance trouble with large trees... :)
+            let $allUnnamed := $currentSection//*[render:isUnnamedCitetrailNode(.)]
+            let $sameLevelUnnamed := $allUnnamed[render:getCitableParent(.) is $currentSection] (: count(render:getCitableParent(.) | $thisCitableParent) eq 1 :)
+            let $precedingUnnamed := $sameLevelUnnamed[following::*[@xml:id eq $node/@xml:id]]
+            return
+                count($precedingUnnamed) + 1
         else 
             count($node/preceding-sibling::*[render:isUnnamedCitetrailNode(.)]) + 1
 };

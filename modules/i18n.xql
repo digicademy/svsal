@@ -3,7 +3,7 @@ module namespace i18n = 'http://exist-db.org/xquery/i18n';
 declare namespace request="http://exist-db.org/xquery/request"; 
 
 declare namespace sal              = "http://salamanca.adwmainz.de";
-import module namespace util       = "http://exist-db.org/xquery/util";
+(:import module namespace util       = "http://exist-db.org/xquery/util";:)
 
 (:~
     : I18N Internationalization Module:

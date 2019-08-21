@@ -3,7 +3,6 @@ xquery version "3.1";
 module namespace sal-util = "http://salamanca/sal-util";
 
 import module namespace config = "http://salamanca/config" at "config.xqm";
-import module namespace app        = "http://salamanca/app"    at "app.xql";
 
 declare namespace tei = "http://www.tei-c.org/ns/1.0";
 
@@ -165,6 +164,12 @@ declare function sal-util:minifyHtml($node as node()) as node() {
         
         (: comment(), processing-instruction() :)
         default return ()
+};
+
+declare function sal-util:getNodeIndexValue($wid as xs:string, $node as element()) {
+    if (doc-available($config:index-root || '/' || $wid || '.xml')) then
+        ()
+    else ()
 };
 
 

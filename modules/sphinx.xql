@@ -6,8 +6,6 @@ declare namespace tei              = "http://www.tei-c.org/ns/1.0";
 declare namespace sal              = "http://salamanca.adwmainz.de";
 declare namespace opensearch       = "http://a9.com/-/spec/opensearch/1.1/";
 declare namespace templates        = "http://exist-db.org/xquery/templates";
-import module namespace functx     = "http://www.functx.com";
-import module namespace app        = "http://salamanca/app"     at "app.xql";
 import module namespace config     = "http://salamanca/config"  at "config.xqm";
 import module namespace i18n       = "http://exist-db.org/xquery/i18n"        at "i18n.xql";
 import module namespace render-app = "http://salamanca/render-app"  at "render-app.xql";
@@ -15,8 +13,6 @@ import module namespace console    = "http://exist-db.org/xquery/console";
 import module namespace http       = "http://expath.org/ns/http-client";
 import module namespace httpclient = "http://exist-db.org/xquery/httpclient";
 import module namespace util       = "http://exist-db.org/xquery/util";
-import module namespace xmldb      = "http://exist-db.org/xquery/xmldb";
-(:import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";:)
 
 declare copy-namespaces no-preserve, inherit;
 

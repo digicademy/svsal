@@ -1,13 +1,13 @@
 xquery version "3.0";
 
-import module namespace app       = "http://salamanca/app"                       at "app.xql";
+(:import module namespace app       = "http://salamanca/app"                       at "app.xql";:)
 import module namespace config    = "http://salamanca/config"                    at "config.xqm";
 import module namespace i18n      = "http://exist-db.org/xquery/i18n/templates"  at "i18n-templates.xql";
 import module namespace iiif      = "http://salamanca/iiif"                      at "iiif.xql";
 import module namespace render    = "http://salamanca/render"                    at "render.xql";
 import module namespace net       = "http://salamanca/net"                       at "net.xql";
 import module namespace sphinx    = "http://salamanca/sphinx"                    at "sphinx.xql";
-import module namespace stats     = "http://salamanca/stats"                     at "stats.xql";
+(:import module namespace stats     = "http://salamanca/stats"                     at "stats.xql";:)
 import module namespace functx    = "http://www.functx.com"                      at "/db/system/repo/functx-1.0/functx/functx.xql";
 import module namespace templates = "http://exist-db.org/xquery/templates" ;
 import module namespace request   = "http://exist-db.org/xquery/request";

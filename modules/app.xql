@@ -20,7 +20,7 @@ import module namespace sphinx    = "http://salamanca/sphinx"                at 
 import module namespace console   = "http://exist-db.org/xquery/console";
 import module namespace functx    = "http://www.functx.com";
 import module namespace i18n      = "http://exist-db.org/xquery/i18n"        at "i18n.xql";
-import module namespace kwic      = "http://exist-db.org/xquery/kwic";
+(:import module namespace kwic      = "http://exist-db.org/xquery/kwic";:)
 import module namespace request   = "http://exist-db.org/xquery/request";
 import module namespace templates = "http://exist-db.org/xquery/templates";
 import module namespace iiif      = "http://salamanca/iiif"                  at "iiif.xql";
@@ -3702,31 +3702,6 @@ declare %templates:wrap function app:errorInformation($node as node(), $model as
             or request:get-attribute('error-type') eq 'resource-not-yet-available')) then
         i18n:process(<span><i18n:text key="bugMessage">In case you found a bug in our website, please let us know at</i18n:text>{' '}<a href="mailto:info.salamanca@adwmainz.de">info.salamanca@adwmainz.de</a></span>, $lang, '/db/apps/salamanca/data/i18n', 'en')
     else ()
-};
-
-declare %templates:wrap function app:participantsTitle($node as node(), $model as map(*), $lang as xs:string?, $id as xs:string?) {
-    let $id := if ($id) then lower-case($id) else if (request:get-parameter('id', '')) then lower-case(request:get-parameter('id', '')) else ()
-    let $teiPath := $config:tei-meta-root || '/projectteam.xml'
-    let $title :=
-        if ($id eq 'directors') then
-            <i18n:text key="projectDirectors">Directors</i18n:text>
-        else if ($id eq 'team') then
-            <i18n:text key="projectTeam">Team</i18n:text>
-        else if ($id eq 'advisoryboard') then
-            <i18n:text key="projectAdvBoard">Scientific Advisory Board</i18n:text>
-        else if ($id eq 'cooperators') then
-            <i18n:text key="projectCooperators">Project Cooperators</i18n:text>
-        else if ($id eq 'former') then
-            <i18n:text key="projectFormer">Former Team Members</i18n:text>
-        else if (doc-available($teiPath) and doc($teiPath)//tei:person[@xml:id eq upper-case($id)]) then
-            let $name := doc($teiPath)//tei:person[@xml:id eq upper-case($id)]/tei:persName/tei:name
-            return 
-                string($name)
-        else 
-            <i18n:text key="projectTeamConsultants">Project Team and Consultants</i18n:text>
-    return 
-        if ($title instance of element(i18n:text)) then i18n:process($title, $lang, $config:i18n-root, 'en')
-        else $title
 };
 
 declare %templates:wrap function app:participantsBody($node as node(), $model as map(*), $lang as xs:string?, $id as xs:string?) {

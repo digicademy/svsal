@@ -15,7 +15,6 @@ declare namespace xhtml         = "http://www.w3.org/1999/xhtml";
 declare namespace expath        = "http://expath.org/ns/pkg";
 declare namespace pack          = "http://expath.org/ns/pkg";
 declare namespace tei           = "http://www.tei-c.org/ns/1.0";
-import module namespace app     = "http://salamanca/app" at "app.xql";
 import module namespace net     = "http://salamanca/net"                at "net.xql";
 import module namespace i18n    = "http://exist-db.org/xquery/i18n"     at "i18n.xql";
 import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";
@@ -718,7 +717,7 @@ declare %templates:default("language", "en")
         else if (ends-with(request:get-uri(), "/contact.html")) then
             <title><i18n:text key="contact">Kontakt</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
         else if (ends-with(request:get-uri(), "/participants.html")) then
-            <title>{app:participantsTitle($node, $model, $lang, $id)} - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+            <title>{config:participantsTitle($node, $model, $lang, $id)} - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
         else if (ends-with(request:get-uri(), "/")) then
             <title><i18n:text key="start">Home</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title> else
             <title><i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
@@ -726,6 +725,31 @@ declare %templates:default("language", "en")
  return
         i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "de")
 };   
+
+declare %templates:wrap function config:participantsTitle($node as node(), $model as map(*), $lang as xs:string?, $id as xs:string?) {
+    let $id := if ($id) then lower-case($id) else if (request:get-parameter('id', '')) then lower-case(request:get-parameter('id', '')) else ()
+    let $teiPath := $config:tei-meta-root || '/projectteam.xml'
+    let $title :=
+        if ($id eq 'directors') then
+            <i18n:text key="projectDirectors">Directors</i18n:text>
+        else if ($id eq 'team') then
+            <i18n:text key="projectTeam">Team</i18n:text>
+        else if ($id eq 'advisoryboard') then
+            <i18n:text key="projectAdvBoard">Scientific Advisory Board</i18n:text>
+        else if ($id eq 'cooperators') then
+            <i18n:text key="projectCooperators">Project Cooperators</i18n:text>
+        else if ($id eq 'former') then
+            <i18n:text key="projectFormer">Former Team Members</i18n:text>
+        else if (doc-available($teiPath) and doc($teiPath)//tei:person[@xml:id eq upper-case($id)]) then
+            let $name := doc($teiPath)//tei:person[@xml:id eq upper-case($id)]/tei:persName/tei:name
+            return 
+                string($name)
+        else 
+            <i18n:text key="projectTeamConsultants">Project Team and Consultants</i18n:text>
+    return 
+        if ($title instance of element(i18n:text)) then i18n:process($title, $lang, $config:i18n-root, 'en')
+        else $title
+};
 
 declare %templates:default("lang", "en") 
     function config:canonical-url($node as node(), $model as map(*), $lang as xs:string, $wid as xs:string*, $aid as xs:string*, $q as xs:string?) as element() {

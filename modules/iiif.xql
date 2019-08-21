@@ -12,9 +12,7 @@ import module namespace app = "http://salamanca/app" at "app.xql";
 import module namespace console    = "http://exist-db.org/xquery/console";
 import module namespace functx     = "http://www.functx.com";
 import module namespace i18n       = "http://exist-db.org/xquery/i18n"       at "i18n.xql";
-import module namespace templates = "http://exist-db.org/xquery/templates";
 import module namespace util       = "http://exist-db.org/xquery/util";
-import module namespace xmldb      = "http://exist-db.org/xquery/xmldb";
 import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";
 
 declare option output:method "json";
