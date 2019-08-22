@@ -670,8 +670,9 @@ declare function sphinx:excerpts ($documents as node()*, $words as xs:string) as
 (:    let $debug :=  if ($config:debug = ("info", "trace")) then util:log("warn", "[SPHINX] Excerpts needed for doc[0]: " || substring(normalize-space($documents/description_orig), 0, 150)) else ():)
     let $normalizedOrig := normalize-space(serialize($documents/description_orig))
     let $normalizedEdit := normalize-space(serialize($documents/description_edit))
-    let $requestDoc := concat(         (:encode-for-uri('opts[limit]=' || $config:snippetLength),
-                              '&amp;',:) 
+    (: are parameters and delimiters (&) ecnoded correctly here, or do we need forther replace()ments? :)
+    let $requestDoc := concat(         encode-for-uri('opts[limit]=150'),
+                              '&amp;', 
                               encode-for-uri('opts[html_strip_mode]=strip'),
                               '&amp;', encode-for-uri('opts[query_mode]=true'),
                               '&amp;', encode-for-uri('opts[around]=7'),
@@ -842,16 +843,16 @@ declare
                     let $resultTextRaw :=
                         (: if there is a <span class="hi" id="..."> within the description, terms have been highlighted by sphinx:excerpts(): :)
                         if ($description_edit//span) then 
-                            let $debug := util:log('warn', $wid || ' : ' || '1') return
+(:                            let $debug := util:log('warn', $wid || ' : ' || '1') return:)
                             sphinx:normalizeExcerpt($description_edit)
                         else if ($description_orig//span) then 
-                            let $debug := util:log('warn', $wid || ' : ' || '2') return
+(:                            let $debug := util:log('warn', $wid || ' : ' || '2') return:)
                             sphinx:normalizeExcerpt($description_orig)
                         else if (string-length($item/description_edit) gt $config:snippetLength) then 
-                            let $debug := util:log('warn', $wid || ' : ' || '3') return
+(:                            let $debug := util:log('warn', $wid || ' : ' || '3') return:)
                             substring($item/description_edit, 0, $config:snippetLength) || '...'
                         else 
-                            let $debug := util:log('warn', $wid || ' : ' || '4') return
+(:                            let $debug := util:log('warn', $wid || ' : ' || '4') return:)
                             $item/description_edit/text()
                     let $resultText := replace($resultTextRaw, '\[.*?\]', '') (: do not show name IDs etc. in search results (although they *are* searchable) :)
                     (: 
