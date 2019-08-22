@@ -41,16 +41,16 @@ import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.x
 
 (: Concatenates name(s): surname, forename :)
 declare function app:formatName($persName as element()*) as xs:string? {
-    let $return-string := for $pers in $persName
-                                return
-                                        if ($pers/@key) then
-                                            normalize-space(xs:string($pers/@key))
-                                        else if ($pers/tei:surname and $pers/tei:forename) then
-                                            normalize-space(concat($pers/tei:surname, ', ', $pers/tei:forename, ' ', $pers/tei:nameLink, if ($pers/tei:addName) then ('&amp;nbsp;(' || $pers/tei:addName || ')') else ()))
-                                        else if ($pers) then
-                                            normalize-space(xs:string($pers))
-                                        else 
-                                            normalize-space($pers/text())
+    let $return-string := 
+        for $pers in $persName return
+            if ($pers/@key) then
+                normalize-space(xs:string($pers/@key))
+            else if ($pers/tei:surname and $pers/tei:forename) then
+                normalize-space(concat($pers/tei:surname, ', ', $pers/tei:forename, ' ', $pers/tei:nameLink, if ($pers/tei:addName) then ('&amp;nbsp;(' || $pers/tei:addName || ')') else ()))
+            else if ($pers) then
+                normalize-space(xs:string($pers))
+            else 
+                normalize-space($pers/text())
     return (string-join($return-string, ' &amp; '))
 };
 
@@ -69,7 +69,7 @@ declare function app:rotateFormatName($persName as element()*) as xs:string? {
 
 declare function app:resolvePersname($persName as element()*) {
     if ($persName/@key)
-         then string($persName/@key)
+        then string($persName/@key)
     else if (contains($persName/@ref, 'cerl:')) then
         let $url := "http://sru.cerl.org/thesaurus?version=1.1&amp;operation=searchRetrieve&amp;query=identifier=" || tokenize(tokenize($persName/@ref, 'cerl:')[2], ' ')[1]
         let $result := httpclient:get(xs:anyURI($url), true(), ())
@@ -377,37 +377,37 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
                                 else ()
         let $volumesString  :=  
             for $volume at $index in util:expand($completeWork)//tei:text[@type="work_volume"]
-                                        let $volId      := xs:string($volume/@xml:id)
-                                        let $volIdShort := $volume/@n
-                                        let $volFrag    := render:getFragmentFile($wid, $volId)
-                                        let $volLink    := 'work.html?wid=' || $wid || "&amp;frag=" || $volFrag || "#" || $volId
-                                        let $volContent := $volIdShort||'&#xA0;&#xA0;'
-                                        return '"vol' || $index || '":' || '"' || $volLink || '","vol' || $index || 'Cont":'|| '"' ||$volContent ||'",'
+                let $volId      := xs:string($volume/@xml:id)
+                let $volIdShort := $volume/@n
+                let $volFrag    := render:getFragmentFile($wid, $volId)
+                let $volLink    := 'work.html?wid=' || $wid || "&amp;frag=" || $volFrag || "#" || $volId
+                let $volContent := $volIdShort||'&#xA0;&#xA0;'
+                return '"vol' || $index || '":' || '"' || $volLink || '","vol' || $index || 'Cont":'|| '"' ||$volContent ||'",'
 
-        let $output         :=
-                                   '&#123;'
-                                || '"title":'         || '"' || $title          || '",'
-                                || '"status":'        || '"' || $status         || '",'
-                                || '"WIPstatus":'     || '"' || $WIPstatus      || '",'
-                                || '"monoMultiUrl":'  || '"' || $wrkLink        || '",'
-                                || '"workDetails":'   || '"' || $workDetails    || '",'
-                                || '"titAttrib":'     || '"' || $DetailsInfo    || '",'
-                                || '"workImages":'    || '"' || $workImages     || '",'
-                                || '"facsAttrib":'    || '"' || $FacsInfo       || '",'
-                                || '"printer":'       || '"' || $printer        || '",'
-                                || '"name":'          || '"' || $name           || '",'
-                                || '"sortName":'      || '"' || $sortName       || '",'     (:default sorting:)
-                                || '"nameFacet":'     || '"' || $nameFacet      || '",'     (:facet I:)
-                                || '"date":'          || '"' || $date           || '",'  
-                                || '"chronology":'    || '"' || $datefacet      || '",'     (:facet II:)
-                                || '"textLanguage":'  || '"' || $language       || '",'     (:facet III:)
-                                || '"printingPlace":' || '"' || $printingPlace  || '",'
-                                || '"facetPlace":'    || '"' || $facetPlace     || '",'     (:facet IV:)
-                                || '"facetAvailability":' || '"' || $facetAvailability || '",'
+        let $output :=
+               '&#123;'
+            || '"title":'         || '"' || $title          || '",'
+            || '"status":'        || '"' || $status         || '",'
+            || '"WIPstatus":'     || '"' || $WIPstatus      || '",'
+            || '"monoMultiUrl":'  || '"' || $wrkLink        || '",'
+            || '"workDetails":'   || '"' || $workDetails    || '",'
+            || '"titAttrib":'     || '"' || $DetailsInfo    || '",'
+            || '"workImages":'    || '"' || $workImages     || '",'
+            || '"facsAttrib":'    || '"' || $FacsInfo       || '",'
+            || '"printer":'       || '"' || $printer        || '",'
+            || '"name":'          || '"' || $name           || '",'
+            || '"sortName":'      || '"' || $sortName       || '",'     (:default sorting:)
+            || '"nameFacet":'     || '"' || $nameFacet      || '",'     (:facet I:)
+            || '"date":'          || '"' || $date           || '",'  
+            || '"chronology":'    || '"' || $datefacet      || '",'     (:facet II:)
+            || '"textLanguage":'  || '"' || $language       || '",'     (:facet III:)
+            || '"printingPlace":' || '"' || $printingPlace  || '",'
+            || '"facetPlace":'    || '"' || $facetPlace     || '",'     (:facet IV:)
+            || '"facetAvailability":' || '"' || $facetAvailability || '",'
 (:                              ||'"sourceUrlAll":'   || '"' || $wid            || '",' :)
-                                || '"volLabel":'      || '"' || $volLabel       || '",'
-                                || string-join($volumesString, '')
-                                || '&#125;' || ','
+            || '"volLabel":'      || '"' || $volLabel       || '",'
+            || string-join($volumesString, '')
+            || '&#125;' || ','
 
 (:        let $dbg := console:log($output) :)
         return $output
@@ -446,34 +446,36 @@ declare %templates:wrap %templates:default("sort", "surname")
         function app:loadListOfAuthors($node as node(), $model as map(*), $sort as xs:string) as map(*) {
             let $coll := collection($config:tei-authors-root)//tei:TEI[.//tei:text/@type eq "author_article"]
             let $result := 
-                if ($sort eq 'surname') then 
-                    for $item in $coll
-                        order by $item//tei:listPerson/tei:person[1]/tei:persName[1]/tei:surname ascending
-                        return $item
-                else if ($sort eq 'death') then 
-                    for $item in $coll
-                        let $order := substring-before($item//tei:listPerson/tei:person[1]/tei:death/tei:date[1]/@when, '-')
-                        order by $order ascending
-                        return $item
-                else if ($sort eq 'order') then 
-                    for $item in $coll
-                        order by $item//tei:listPerson/tei:person[1]/tei:affiliation[1]/tei:orgName[1]/@key ascending
-                        return $item
-                else if ($sort eq 'discipline') then 
-                    for $item in $coll
-                        order by $item//tei:listPerson/tei:person[1]/tei:occupation[last()]/@key ascending
-                        return $item
-                else if ($sort eq 'placesOfAction') then 
-                    for $item in $coll
-                        let $placeName := if ($item//tei:listPerson/tei:person[1]/(tei:affiliation | tei:occupation | tei:education)//tei:placeName/@key) then
-                                                string($item//tei:listPerson/tei:person[1]/(tei:affiliation | tei:occupation | tei:education)//tei:placeName/@key[1])
-                                          else
-                                                $item//tei:listPerson/tei:person[1]/(tei:affiliation | tei:occupation | tei:education)//tei:placeName/text()[1]                    
-                        order by $placeName ascending
-                        return $item                   
-                else
-                    for $item in $coll
-                        return $item
+                switch($sort)
+                    case 'surname' return
+                        for $item in $coll
+                            order by $item//tei:listPerson/tei:person[1]/tei:persName[1]/tei:surname ascending
+                            return $item
+                    case 'death' return
+                        for $item in $coll
+                            let $order := substring-before($item//tei:listPerson/tei:person[1]/tei:death/tei:date[1]/@when, '-')
+                            order by $order ascending
+                            return $item
+                    case 'order' return
+                        for $item in $coll
+                            order by $item//tei:listPerson/tei:person[1]/tei:affiliation[1]/tei:orgName[1]/@key ascending
+                            return $item
+                    case 'discipline' return
+                        for $item in $coll
+                            order by $item//tei:listPerson/tei:person[1]/tei:occupation[last()]/@key ascending
+                            return $item
+                    case 'placesOfAction' return
+                        for $item in $coll
+                            let $placeName := 
+                                if ($item//tei:listPerson/tei:person[1]/(tei:affiliation | tei:occupation | tei:education)//tei:placeName/@key) then
+                                    string($item//tei:listPerson/tei:person[1]/(tei:affiliation | tei:occupation | tei:education)//tei:placeName/@key[1])
+                                else
+                                    $item//tei:listPerson/tei:person[1]/(tei:affiliation | tei:occupation | tei:education)//tei:placeName/text()[1]                    
+                            order by $placeName ascending
+                            return $item                   
+                    default return
+                        for $item in $coll
+                            return $item
             return map { 'listOfAuthors' := $result }
 };
 
@@ -1359,7 +1361,7 @@ declare %templates:wrap
         return $works
 };
 
-declare %public function app:AUTentry($node as node(), $model as map(*), $aid) {
+(:declare %public function app:AUTentry($node as node(), $model as map(*), $aid) {
     app:AUTsummary(doc($config:tei-authors-root || "/" || sal-util:normalizeId($aid) || ".xml")//tei:text)
 };
 
@@ -1523,7 +1525,7 @@ declare function app:AUTsummary($node as node()) as item()* {
 
 declare function local:passthru($nodes as node()*) as item()* {
     for $node in $nodes/node() return app:AUTsummary($node)
-};
+};:)
 
 
 
@@ -1641,12 +1643,12 @@ declare %public function app:LEMentry($node as node(), $model as map(*), $lid as
 (:    app:LEMsummary(doc($config:tei-lemmata-root || "/" || $lid || ".xml")//tei:text):)
     render-app:dispatch(doc($config:tei-lemmata-root || "/" || sal-util:normalizeId($lid) || ".xml")//tei:body, "work", ())
 };
-(: Rendering is done in render.xql! :)
+(: Rendering is done in render-app.xql! :)
 
 (: ----------------- ... from NEWs -------------------
  : extract title etc. from $model('currentNews').
  :)
-declare 
+(:declare 
     function app:NEWsList($node as node(), $model as map(*), $lang as xs:string?) {
     let $image          := $model('currentNews')//tei:title[1]/tei:ref
     let $link           := <a href="{session:encode-url(xs:anyURI('newsEntry.html?nid=' || $model('currentNews')/@xml:id))}">{$model('currentNews')/@xml:id/string()}</a>
@@ -1666,7 +1668,7 @@ declare
                      else()
     let $date           := $model('currentNews')//tei:change[1]/@when/string() 
     let $output :=
-       (:imageleft:)
+       (\:imageleft:\)
         if ($image/@rendition='ImageLeft') then
             <div class="row"><hr/>
                 <div class="col-md-4 hidden-sm hidden-xs">
@@ -1702,7 +1704,7 @@ declare
                  </div>
             </div>
           
-        (: image right:)
+        (\: image right:\)
         else if ($image/@rendition='ImageRight') then
             <div class="row"><hr/>
                  <div class="col-md-8 hidden-sm hidden-xs">
@@ -1752,48 +1754,49 @@ declare %templates:wrap
                         else ()
     let $date   :=  $model('currentNews')//tei:change[1]/@when/string()
     let $output :=
-            <div>
-                <div class="row">
-                    <div class="col-md-6 col-md-offset-2 col-sm-7 hidden-xs">
-                        <h2> 
+        <div>
+            <div class="row">
+                <div class="col-md-6 col-md-offset-2 col-sm-7 hidden-xs">
+                    <h2> 
+                        <a href="news.html">
+                            <i class="fa fa-reply"></i>&#32;&#32;<!--<i18n:text key="back">zurück</i18n:text>-->
+                        </a>
+                        {$title}&#32;
+                        <span class="text-muted">{$sub}</span>
+                    </h2>
+                    <hr/>
+                    </div>
+                    <div class="col-xs-12 hidden-sm hidden-md hidden-lg">
+                         <h3> 
                             <a href="news.html">
                                 <i class="fa fa-reply"></i>&#32;&#32;<!--<i18n:text key="back">zurück</i18n:text>-->
                             </a>
-                            {$title}&#32;
-                            <span class="text-muted">{$sub}</span>
-                        </h2>
-                        <hr/>
-                        </div>
-                        <div class="col-xs-12 hidden-sm hidden-md hidden-lg">
-                             <h3> 
-                                <a href="news.html">
-                                    <i class="fa fa-reply"></i>&#32;&#32;<!--<i18n:text key="back">zurück</i18n:text>-->
-                                </a>
-                               {$title}&#32;
-                               <span class="text-muted">{$sub}</span>
-                             </h3>
-                        <hr/>
-                        </div>
-                        <div class="col-md-3 col-sm-5 hidden-xs">
-                           <img class="img-responsive" src="{$image/@target}" style="margin:15px;"/>
-                        </div>
+                           {$title}&#32;
+                           <span class="text-muted">{$sub}</span>
+                         </h3>
+                    <hr/>
                     </div>
-                    <div class="row-fluid">
-                    <div class="col-md-8 col-md-offset-2">
-                       {local:NEWsBody($node, $model, $lang), $date}
-                      <br/>
+                    <div class="col-md-3 col-sm-5 hidden-xs">
+                       <img class="img-responsive" src="{$image/@target}" style="margin:15px;"/>
                     </div>
                 </div>
+                <div class="row-fluid">
+                <div class="col-md-8 col-md-offset-2">
+                   {local:NEWsBody($node, $model, $lang), $date}
+                  <br/>
+                </div>
             </div>
+        </div>
     return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) 
 };
 
 declare function local:NEWsBody($node as node(), $model as map(*), $lang as xs:string) {
         let $doc := $model('currentNews')//tei:text
-        let $parameters :=  <parameters>
-                                <param name="exist:stop-on-warn" value="yes"/>
-                                <param name="exist:stop-on-error" value="yes"/>
-                            </parameters>
+        let $parameters :=  
+            <parameters>
+                <param name="exist:stop-on-warn" value="yes"/>
+                <param name="exist:stop-on-error" value="yes"/>
+            </parameters>
         return  
         if ($lang eq 'de')  then 
         transform:transform($doc//tei:div[@xml:lang='de'], doc(($config:app-root || "/resources/xsl/news.xsl")), $parameters)
@@ -1802,7 +1805,7 @@ declare function local:NEWsBody($node as node(), $model as map(*), $lang as xs:s
         else if  ($lang eq 'es')  then
         transform:transform($doc//tei:div[@xml:lang='es'], doc(($config:app-root || "/resources/xsl/news.xsl")), $parameters)
         else()
-};
+};:)
 
 
 (: ----------------- ... from WORKING PAPERs ------------------- all new
@@ -2170,23 +2173,24 @@ declare function app:WRKadditionalInfoRecord($node as node(), $model as map(*), 
         </div>
     
     let $teiHeaderLink := ()
-    let $download :=    if ($isPublished) then 
-                            <div>
-                                <hr/>
-                                <h4><i18n:text key="download">Metadata</i18n:text></h4>
-                                <ul>
-                                    <li><a href="{$config:idserver || '/texts/' || $workId ||'?format=tei'}">XML (TEI P5)</a></li>
-                                    <li><a href="{$config:idserver || '/texts/' || $workId ||'?format=txt&amp;mode=edit'}">
-                                            <i18n:text key="text">Text</i18n:text> (<i18n:text key="constitutedLower">constituted</i18n:text>)
-                                        </a>
-                                    </li>
-                                    <li><a href="{$config:idserver || '/texts/' || $workId ||'?format=txt&amp;mode=orig'}">
-                                            <i18n:text key="text">Text</i18n:text> (<i18n:text key="diplomaticLower">diplomatic</i18n:text>)
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        else ()
+    let $download :=    
+        if ($isPublished) then 
+            <div>
+                <hr/>
+                <h4><i18n:text key="download">Metadata</i18n:text></h4>
+                <ul>
+                    <li><a href="{$config:idserver || '/texts/' || $workId ||'?format=tei'}">XML (TEI P5)</a></li>
+                    <li><a href="{$config:idserver || '/texts/' || $workId ||'?format=txt&amp;mode=edit'}">
+                            <i18n:text key="text">Text</i18n:text> (<i18n:text key="constitutedLower">constituted</i18n:text>)
+                        </a>
+                    </li>
+                    <li><a href="{$config:idserver || '/texts/' || $workId ||'?format=txt&amp;mode=orig'}">
+                            <i18n:text key="text">Text</i18n:text> (<i18n:text key="diplomaticLower">diplomatic</i18n:text>)
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        else ()
     return 
         <div>
             {$views}
@@ -3108,12 +3112,12 @@ declare function app:WRKtextModus($node as node(), $model as map(*), $lang as xs
     let $output :=
         <div>
             <section id="switchEditsSection">
-                        <span class="original unsichtbar" style="cursor: pointer;">
-                            <a class="btn btn-link" onclick="applyEditMode()"> <span class="glyphicon glyphicon-eye-open" aria-hidden="true"/>&#xA0;<i18n:text key="diplomatic">Diplomatisch</i18n:text></a>
-                        </span>
-                        <span class="edited" style="cursor: pointer;">
-                            <a class="btn btn-link" onclick="applyOrigMode()"> <span class="glyphicon glyphicon-eye-open" aria-hidden="true"/>&#xA0;<i18n:text key="constituted">Konstituiert</i18n:text></a>
-                        </span>
+                <span class="original unsichtbar" style="cursor: pointer;">
+                    <a class="btn btn-link" onclick="applyEditMode()"> <span class="glyphicon glyphicon-eye-open" aria-hidden="true"/>&#xA0;<i18n:text key="diplomatic">Diplomatisch</i18n:text></a>
+                </span>
+                <span class="edited" style="cursor: pointer;">
+                    <a class="btn btn-link" onclick="applyOrigMode()"> <span class="glyphicon glyphicon-eye-open" aria-hidden="true"/>&#xA0;<i18n:text key="constituted">Konstituiert</i18n:text></a>
+                </span>
             </section>
         </div>
     return $output
@@ -3665,10 +3669,11 @@ declare function app:errorCode($node as node(), $model as map(*)) as xs:string? 
 };
 
 declare function app:serverErrorMessage($node as node(), $model as map(*)) as xs:string? {
-    let $errorMessage := if (normalize-space(request:get-attribute('javax.servlet.error.message')) ne '') then request:get-attribute('javax.servlet.error.message')
-                         else if (normalize-space(templates:error-description($node, $model)) ne '') then templates:error-description($node, $model)
-                         else if (normalize-space(request:get-attribute('error-message')) ne '') then request:get-attribute('error-message')
-                         else 'No description found...'
+    let $errorMessage := 
+        if (normalize-space(request:get-attribute('javax.servlet.error.message')) ne '') then request:get-attribute('javax.servlet.error.message')
+        else if (normalize-space(templates:error-description($node, $model)) ne '') then templates:error-description($node, $model)
+        else if (normalize-space(request:get-attribute('error-message')) ne '') then request:get-attribute('error-message')
+        else 'No description found...'
     return
         if ($config:debug eq 'trace' or $config:instanceMode eq 'testing') then 
             <div class="error-paragraph">

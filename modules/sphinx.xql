@@ -839,7 +839,6 @@ declare
                     let $description_orig    := $excerpts//item[1]/description 
                     let $description_edit    := $excerpts//item[2]/description
                     let $statusInfo := i18n:process(<i18n:text key="{$bombtrail/i18n:text/@key/string()}"/>, $lang, '/db/apps/salamanca/data/i18n', 'en')
-                    let $debug := util:log('warn', '[SPHINX] Status info is:' || $statusInfo)
                     let $resultTextRaw :=
                         (: if there is a <span class="hi" id="..."> within the description, terms have been highlighted by sphinx:excerpts(): :)
                         if ($description_edit//span) then 
