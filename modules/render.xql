@@ -322,10 +322,13 @@ declare function render:isBasicNode($node as node()) as xs:boolean {
         render:isMainNode($node) or
         render:isMarginalNode($node) or
         (:(render:isListNode($node) and not($node/descendant::*[render:isListNode(.)])):)
-        (render:isListNode($node) and ($node/self::tei:list and not($node/descendant::tei:list))
+        (render:isListNode($node) and (($node/self::tei:list and not($node/descendant::tei:list))
+                                       or ($node[(self::tei:item or self::tei:head) 
+                                                 and not(descendant::tei:list) 
+                                                 and following-sibling::tei:item[./tei:list[render:isListNode(.)]]]))
         (:(($node/self::tei:list and not($node/descendant::tei:list))
                                        or ($node/self::tei:head and following-sibling::tei:item[./tei:list[not($node/descendant::tei:list)]])):) (: head may occur outside of lowest-level lists... :)
-                                       ) (: complete lists, but on the lowest level :)
+                                       ) (: read as: 'lists that do not contain lists (=lists at the lowest level), or siblings thereof' :)
     )
 };
 
@@ -2490,9 +2493,10 @@ declare function render:quote($node as element(tei:quote), $mode as xs:string) {
             render:passthru($node, $mode)
             
         case 'html' return
-            <span class="quote">
-                {render:passthru($node, $mode)}
-            </span>
+            (:<span class="quote">
+                {:)render:passthru($node, $mode)(:}
+            </span>:)
+            (: how to deal with longer quotes, spanning several paragraphs or even divs? (possible solution: anchors) :)
         
         default return
             ('"', render:passthru($node, $mode), '"')

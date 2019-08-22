@@ -6,7 +6,7 @@ declare namespace output            = "http://www.w3.org/2010/xslt-xquery-serial
 import module namespace admin       = "http://salamanca/admin" at "modules/admin.xql";
 import module namespace config    = "http://salamanca/config" at "config.xqm";
 
-declare option exist:timeout "20800000"; (: 6 h :)
+declare option exist:timeout "43200000"; (: 12 h :)
 
 declare option output:media-type "text/html";
 declare option output:method "xhtml";
@@ -47,6 +47,8 @@ let $output :=
         default return 
             ()
         (: TODO: iiif-admin :)
+
+let $debug := if ($format) then util:log('warn', 'Rendered format: "' || $format || '" for resource: ' || $rid) else ()
 
 return 
     <html>
