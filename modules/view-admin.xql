@@ -1,6 +1,6 @@
 xquery version "3.0";
 
-(:import module namespace app       = "http://salamanca/app"                       at "app.xql";:)
+import module namespace app       = "http://salamanca/app"                       at "app.xql";
 import module namespace config    = "http://salamanca/config"                    at "config.xqm";
 import module namespace i18n      = "http://exist-db.org/xquery/i18n/templates"  at "i18n-templates.xql";
 import module namespace iiif      = "http://salamanca/iiif"                      at "iiif.xql";

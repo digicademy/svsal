@@ -117,12 +117,15 @@ declare function render:getNodetrail($targetWorkId as xs:string, $targetNode as 
 
 (: Gets the citable crumbtrail/citetrail (not passagetrail!) parent :)
 declare function render:getCitableParent($node as node()) as node()? {
-    if (render:isPageNode($node)) then
+    if (render:isMarginalNode($node) or render:isAnchorNode($node)) then
+        (: notes, milestones etc. must not have p as their citableParent :)
+        $node/ancestor::*[render:isStructuralNode(.)][1]
+    else if (render:isPageNode($node)) then
         if ($node/ancestor::tei:front|$node/ancestor::tei:back|$node/ancestor::tei:text[1][not(@xml:id = 'completeWork' or @type eq 'work_part')]) then
             (: within front, back, and single volumes, citable parent resolves to one of those elements for avoiding collisions with identically named pb in other parts :)
             ($node/ancestor::tei:front|$node/ancestor::tei:back|$node/ancestor::tei:text[1][not(@xml:id = 'completeWork' or @type eq 'work_part')])[last()]
         else () (: TODO: this makes "ordinary" pb appear outside of any structural hierarchy - is this correct? :)
-    else $node/ancestor::*[render:isStructuralNode(.)][1]
+    else $node/ancestor::*[render:isIndexNode(.)][1]
 };
 
 

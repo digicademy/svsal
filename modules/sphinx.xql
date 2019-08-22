@@ -837,35 +837,34 @@ declare
                     let $excerpts       := sphinx:excerpts($snippets, $q)
                     let $description_orig    := $excerpts//item[1]/description 
                     let $description_edit    := $excerpts//item[2]/description
-                    let $statusInfo     := 
-                        i18n:process(
-                            if ($item/hit_type/text() = ('head')) then 
-                                <i18n:text key="heading">Überschrift</i18n:text>
-                            else if ($item/hit_type/text() = ('note')) then 
-                                <i18n:text key="note">Marginalnote</i18n:text>
-                            else if ($item/hit_type/text() = ('titlePage')) then 
-                                <i18n:text key="titlepage">Titelblatt</i18n:text>
-                            else
-                                <i18n:text key="mainText">Haupttext</i18n:text>, 
-                        $lang, '/db/apps/salamanca/data/i18n', 'en')
+                    let $statusInfo := i18n:process(<i18n:text key="{$bombtrail/i18n:text/@key/string()}"/>, $lang, '/db/apps/salamanca/data/i18n', 'en')
+                    let $debug := util:log('warn', '[SPHINX] Status info is:' || $statusInfo)
                     let $resultTextRaw :=
                         (: if there is a <span class="hi" id="..."> within the description, terms have been highlighted by sphinx:excerpts(): :)
                         if ($description_edit//span) then 
+                            let $debug := util:log('warn', $wid || ' : ' || '1') return
                             sphinx:normalizeExcerpt($description_edit)
                         else if ($description_orig//span) then 
+                            let $debug := util:log('warn', $wid || ' : ' || '2') return
                             sphinx:normalizeExcerpt($description_orig)
                         else if (string-length($item/description_edit) gt $config:snippetLength) then 
+                            let $debug := util:log('warn', $wid || ' : ' || '3') return
                             substring($item/description_edit, 0, $config:snippetLength) || '...'
                         else 
+                            let $debug := util:log('warn', $wid || ' : ' || '4') return
                             $item/description_edit/text()
                     let $resultText := replace($resultTextRaw, '\[.*?\]', '') (: do not show name IDs etc. in search results (although they *are* searchable) :)
-                    return
-                        <tr>
-                           <!--<td>
+                    (: 
+                            <!--<td>
                                 <a href="{$crumbtrail[last()]/@href}" title="{$statusInfo}">{xs:integer($offset) + xs:integer($detailindex) || '.' || $config:nbsp || $config:triangle}</a>
                             </td>-->
+                    :)
+                    return
+                        <tr>
                             <td>
-                                <span class="lead" style="padding-bottom: 7px; font-family: 'Junicode', 'Cardo', 'Andron', 'Cabin', sans-serif;" title="{i18n:process($statusInfo, $lang, '/db/apps/salamanca/data/i18n', 'en')}"><!--<span style="color: #777777">{$detailindex|| '. '}</span>-->{$bombtrail}</span>
+                                <span class="lead" style="padding-bottom: 7px; font-family: 'Junicode', 'Cardo', 'Andron', 'Cabin', sans-serif;" title="{$statusInfo}">
+                                    {$bombtrail}
+                                </span>
                                 <div class="crumbtrail">{$crumbtrail/node()}</div>
                                 <div class="result__snippet" title="{$statusInfo}">{ 
                                     sphinx:normalizeExcerpt($resultTextRaw)
