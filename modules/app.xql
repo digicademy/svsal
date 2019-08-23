@@ -3665,7 +3665,8 @@ declare function app:imprint ($node as node(), $model as map(*), $lang as xs:str
 (: Error page functions :)
 
 declare function app:errorCode($node as node(), $model as map(*)) as xs:string? {
-    request:get-attribute('status-code')
+    if (request:get-attribute('status-code')) then request:get-attribute('status-code')
+    else '404'
 };
 
 declare function app:serverErrorMessage($node as node(), $model as map(*)) as xs:string? {
