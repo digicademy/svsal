@@ -635,6 +635,46 @@ declare function net:APIdeliverRDF($requestData as map(), $netVars as map()*) {
     else net:error(404, $netVars, 'Invalid rdf request.')
 };
 
+declare function net:APIdeliverJPG($requestData as map(), $netVars as map()*) {
+    if (starts-with($requestData('work_id'), 'W0')) then 
+        let $normalizedPassage := $requestData('passage') (: TODO: normalize passage id such that pfol123r and other pb URIs are somehow upper cased :)
+        let $reqResource := 'texts/' || $requestData('work_id') || ':' || $normalizedPassage
+        let $resolvedPath := 
+            doc($config:rdf-works-root || '/' || $requestData('work_id') || '.rdf')
+                /rdf:RDF/rdf:Description[lower-case(@rdf:about) eq $reqResource
+                                         and contains(rdfs:seeAlso/@rdf:resource, '.jpg')][1]/rdfs:seeAlso/@rdf:resource
+        let $debug := util:log('warn', '[NET] jpg 1')
+        return 
+            if ($resolvedPath) then
+                let $debug := util:log('warn', '[NET] jpg 1') return
+                net:redirect-with-303($resolvedPath)
+            else 
+                let $debug := util:log('warn', '[NET] jpg 2') return
+                net:error(404, $netVars, 'Could not find jpg resource.')
+    
+(:  
+<rdf:Description rdf:about="texts/W0004:pFOL6V">
+	<rdfs:seeAlso rdf:resource="https://facs.c106-211.cloud.gwdg.de/iiif/image/W0004!W0004-0016/full/full/0/default.jpg"/>
+</rdf:Description>
+:)
+    
+    else 
+        let $debug := util:log('warn', '[NET] jpg 3') return
+        net:error(404, $netVars, 'Invalid jpg request.')
+    (:
+    let $reqResource  := $pathComponents[last()]
+    let $reqWork      := tokenize(tokenize($reqResource, ':')[1], '\.')[1]
+    let $passage      := tokenize($reqResource, ':')[2]
+    let $metadata     := doc(rdf-works-root || '/' || sal-util:normalizeId($reqWork) || '.rdf')
+    let $debug2       := if ($config:debug = "trace") then console:log("Retrieving $metadata//rdf:Description[@rdf:about = " || $reqResource || "]/rdfs:seeAlso/@rdf:resource/string()") else ()
+    let $resolvedPaths := for $url in $metadata//rdf:Description[@rdf:about = $reqResource]/rdfs:seeAlso/@rdf:resource/string()
+                          where matches($url, "\.(jpg|jpeg|png|tif|tiff)$")
+                          return $url
+    let $resolvedPath := $resolvedPaths[1]
+    let $debug3       := if ($config:debug = ("trace", "info")) then console:log("Redirecting to " || $resolvedPath || " ...") else ()
+    return net:redirect-with-303($resolvedPath):)
+};
+
 declare function net:APIdeliverTextsHTML($requestData as map(), $netVars as map()*) {
     if ($requestData('work_id') eq '*') then (: forward to works list, regardless of parameters or hashes :)
         let $langPath := if ($requestData('lang')) then $requestData('lang') || '/' else ()
@@ -753,6 +793,7 @@ declare function net:deliverWorkingPapersHTML($netVars as map()*) {
 declare function net:APIdeliverIIIF($requestData as map()*, $netVars as map()*) {
 (:    let $reqResource    := tokenize(tokenize($path, '/iiif/')[last()], '/')[1]:)
     let $resource := $requestData('tei_id')
+    
     let $iiif-paras     := string-join(subsequence(tokenize(tokenize($path, '/iiif/')[last()], '/'), 2), '/')
     let $work           := tokenize(tokenize($reqResource, ':')[1], '\.')[1]   (: work[.edition]:pass.age :)
     let $passage        := tokenize($reqResource, ':')[2]
@@ -761,22 +802,22 @@ declare function net:APIdeliverIIIF($requestData as map()*, $netVars as map()*) 
     let $metadata       := doc($config:rdf-works-root || '/' || sal-util:normalizeId($work) || '.rdf')
     let $debug3         := if ($config:debug = "trace") then console:log("Retrieving $metadata//rdf:Description[@rdf:about = '" || replace($reqResource, 'w0', 'W0') || "']/rdfs:seeAlso/@rdf:resource/string()") else ()
     let $debug4         := if ($config:debug = "trace") then console:log("This gives " || count($metadata//rdf:Description[@rdf:about = replace($reqResource, 'w0', 'W0')]/rdfs:seeAlso/@rdf:resource) || " urls in total.") else ()
-
-    let $images         := for $url in $metadata//rdf:Description[@rdf:about = replace($reqResource, 'w0', 'W0')]/rdfs:seeAlso/@rdf:resource/string()
-                            where matches($url, "\.(jpg|jpeg|png|tif|tiff)$")
-                            return $url
+    let $images         := 
+        for $url in $metadata//rdf:Description[@rdf:about = replace($reqResource, 'w0', 'W0')]/rdfs:seeAlso/@rdf:resource/string()
+            where matches($url, "\.(jpg|jpeg|png|tif|tiff)$")
+            return $url
     let $debug5         := if ($config:debug = "trace") then console:log("Of these, " || count($images) || " are images.") else ()
     let $image          := $images[1]
     let $debug5         := if ($config:debug = "trace") then console:log("The target image being " || $image || ".") else ()
     let $prefix         := "facs." || $config:serverdomain || "/iiif/"
     let $filename       := tokenize($image, '/')[last()]
     let $debug          := if ($config:debug = ("trace")) then console:log("filename = " || $filename) else ()
-    let $fullpathname   := if (matches($filename, '\-[A-Z]\-')) then
-                                    concat(string-join((replace($work, 'w0', 'W0'), substring(string-join(functx:get-matches($filename, '-[A-Z]-'), ''), 2, 1), functx:substring-before-last($filename, '.')), '%C2%A7'), '/', $iiif-paras)
-                            else
-                                    concat(string-join((replace($work, 'w0', 'W0'), functx:substring-before-last($filename, '.')), '%C2%A7'), '/', $iiif-paras)
-    let $resolvedURI    := concat($prefix, $fullpathname)
-    let $debug5         := if ($config:debug = ("trace", "info")) then console:log("redirecting to " || $resolvedURI) else ()
+    let $fullpathname   := 
+        if (matches($filename, '\-[A-Z]\-')) then
+            concat(string-join((replace($work, 'w0', 'W0'), substring(string-join(functx:get-matches($filename, '-[A-Z]-'), ''), 2, 1), functx:substring-before-last($filename, '.')), '%C2%A7'), '/', $iiif-paras)
+        else concat(string-join((replace($work, 'w0', 'W0'), functx:substring-before-last($filename, '.')), '%C2%A7'), '/', $iiif-paras)
+    let $resolvedURI := concat($prefix, $fullpathname)
+    let $debug5 := if ($config:debug = ("trace", "info")) then console:log("redirecting to " || $resolvedURI) else ()
 
     return net:redirect($resolvedURI, $netVars)
 };
@@ -796,19 +837,7 @@ declare function net:deliverIIIF($requestData as map(), $netVars as map()*) {
 };
 :)
 
-declare function net:deliverJPG($pathComponents as xs:string*, $netVars as map()*) {
-    let $reqResource  := $pathComponents[last()]
-    let $reqWork      := tokenize(tokenize($reqResource, ':')[1], '\.')[1]
-    let $passage      := tokenize($reqResource, ':')[2]
-    let $metadata     := doc(rdf-works-root || '/' || sal-util:normalizeId($reqWork) || '.rdf')
-    let $debug2       := if ($config:debug = "trace") then console:log("Retrieving $metadata//rdf:Description[@rdf:about = " || $reqResource || "]/rdfs:seeAlso/@rdf:resource/string()") else ()
-    let $resolvedPaths := for $url in $metadata//rdf:Description[@rdf:about = $reqResource]/rdfs:seeAlso/@rdf:resource/string()
-                          where matches($url, "\.(jpg|jpeg|png|tif|tiff)$")
-                          return $url
-    let $resolvedPath := $resolvedPaths[1]
-    let $debug3       := if ($config:debug = ("trace", "info")) then console:log("Redirecting to " || $resolvedPath || " ...") else ()
-    return net:redirect-with-303($resolvedPath)
-};
+
 
 (:~
 : Workhorse of api.../texts: a basic filter and validator for API request arguments (i.e., URL paths and parameters). 
@@ -902,7 +931,7 @@ declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()
                      'work_status': $workStatus,
                      'passage_status': $passageStatus}
             let $requestData := map:merge(($resourceData, $params))
-            let $debug := if ($config:debug = ('trace')) then console:log('[API] request data: ' || string-join((for $k in map:keys($requestData) return $k || '=' || map:get($requestData, $k)), ' ; ') || '.') else ()
+            let $debug := if ($config:debug = ('trace')) then util:log('warn', '[API] request data: ' || string-join((for $k in map:keys($requestData) return $k || '=' || map:get($requestData, $k)), ' ; ') || '.') else ()
             return $requestData
             (:  open questions / TODO:
                     - how to deal with illegal params: ignore or error? (currently ignored)

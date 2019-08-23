@@ -1078,9 +1078,9 @@ declare function admin:createNodeIndex($wid as xs:string*) {
             (: node indexing has 2 stages: :)
             (: 1.) extract nested sal:nodes with rudimentary information :)
             let $indexTree := 
-                <sal:index>{
-                    render:extractNodeStructure($wid, $work//tei:text[not(ancestor::tei:text)], $xincludes, $fragmentIds)
-                }</sal:index>
+                <sal:index>
+                    {render:extractNodeStructure($wid, $work//tei:text[not(ancestor::tei:text)], $xincludes, $fragmentIds)}
+                </sal:index>
             (: 2.) flatten the index from 1.) and enrich sal:nodes with full-blown citetrails, etc. :)
             let $index := 
                 <sal:index work="{$wid}" xml:space="preserve">
@@ -1113,7 +1113,7 @@ declare function admin:createNodeIndex($wid as xs:string*) {
                 if (count($resultNodes) ne count(distinct-values($resultNodes/sal:citetrail/text()))) then 
                     error(xs:QName('render:createNodeIndex'), 
                           'Could not produce a unique citetrail for each sal:node (in ' || $wid || '). Problematic nodes: '
-                          || string-join(($resultNodes[sal:citetrail/text() = following::sal:citetrail/text()]/@n), '; ')) 
+                          || string-join(($resultNodes[sal:citetrail/text() = preceding::sal:citetrail/text()]/@n), '; ')) 
                 else () 
             (: search these cases using: " //sal:citetrail[./text() = following::sal:citetrail/text()] :)
             let $testEmptyCitetrails :=

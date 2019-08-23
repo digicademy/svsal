@@ -65,22 +65,24 @@ let $netVars :=
         "params"        : ( for $p in request:get-parameter-names() return lower-case($p) || "="  || replace(lower-case(request:get-parameter($p, ())[1]), 'w0', 'W0' )),
         "paramap"       : map:merge(for $p in request:get-parameter-names() return map:entry(lower-case($p), replace(lower-case(request:get-parameter($p, ())[1]), 'w0', 'W0' )))
     } (: if there are several params of the same type, the value of the first one wins :)
-let $parameterString    :=  if (count(request:get-parameter-names())) then
-                                "?" || string-join($netVars('params'), '&amp;')
-                            else ()
+let $parameterString    :=  
+    if (count(request:get-parameter-names())) then
+        "?" || string-join($netVars('params'), '&amp;')
+    else ()
 
 
 
 (: Print request context for debugging :)
-let $debug              :=  if ($config:debug = "trace") then
-                                console:log("Request at '" || request:get-header('X-Forwarded-Host') || "' for " || request:get-effective-uri() || "&#x0d; " ||
-                                            "HEADERS (" || count(request:get-header-names()) || "): "    || string-join(for $h in request:get-header-names()    return $h || ": " || request:get-header($h), ' ')    || "&#x0d; " ||
-                                            "ATTRIBUTES (" || count(request:attribute-names()) || "): " || string-join(for $a in request:attribute-names()     return $a || ": " || request:get-attribute($a), ' ') || "&#x0d; " ||
-                                            "PARAMETERS (" || count($netVars('params')) ||"): " || string-join($netVars('params'), '&amp;') ||
-                                            "ACCEPT (" || count($netVars('accept')) || "): " || string-join($netVars('accept'), '.') ||
-                                            "$lang: " || $lang || ", $format: " || $format || " resp. " || $netVars('format') || "."
-                                           )
-                            else ()
+let $debug :=  
+    if ($config:debug = "trace") then
+        console:log("Request at '" || request:get-header('X-Forwarded-Host') || "' for " || request:get-effective-uri() || "&#x0d; " ||
+                    "HEADERS (" || count(request:get-header-names()) || "): "    || string-join(for $h in request:get-header-names()    return $h || ": " || request:get-header($h), ' ')    || "&#x0d; " ||
+                    "ATTRIBUTES (" || count(request:attribute-names()) || "): " || string-join(for $a in request:attribute-names()     return $a || ": " || request:get-attribute($a), ' ') || "&#x0d; " ||
+                    "PARAMETERS (" || count($netVars('params')) ||"): " || string-join($netVars('params'), '&amp;') ||
+                    "ACCEPT (" || count($netVars('accept')) || "): " || string-join($netVars('accept'), '.') ||
+                    "$lang: " || $lang || ", $format: " || $format || " resp. " || $netVars('format') || "."
+                   )
+    else ()
 
 
 (: Here comes the actual routing ... :)
@@ -111,10 +113,11 @@ return
     else if (request:get-header('X-Forwarded-Host') = ("", "www." || $config:serverdomain) and
              lower-case($exist:path) = ("", "/", "/en", "/es", "/de", "/en/", "/es/", "/de/") ) then
         let $debug          := if ($config:debug = ("trace", "info")) then console:log("Homepage requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-        let $absolutePath   := concat( $config:proto, "://", if ($net:forwardedForServername) then $net:forwardedForServername else "www." || $config:serverdomain, '/', $lang, '/index.html',
-                                       if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (),
-                                       string-join(net:inject-requestParameter('', ''), '&amp;')
-                                     )
+        let $absolutePath   := 
+            concat( $config:proto, "://", if ($net:forwardedForServername) then $net:forwardedForServername else "www." || $config:serverdomain, '/', $lang, '/index.html',
+               if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (),
+               string-join(net:inject-requestParameter('', ''), '&amp;')
+            )
         return net:redirect($absolutePath, $netVars)
 
 
@@ -143,6 +146,7 @@ return
                                     case 'rdf' return net:APIdeliverRDF($textsRequest, $netVars)
                                     case 'tei'  return net:APIdeliverTEI($textsRequest,$netVars)
                                     case 'txt'  return net:APIdeliverTXT($textsRequest,$netVars)
+                                    case 'jpg'  return net:APIdeliverJPG($textsRequest, $netVars)
                                     default return net:APIdeliverTextsHTML($textsRequest, $netVars)
                                 (: TODO:
                                     case 'iiif' return net:deliverIIIF($exist:path, $netVars) (\: TODO: debug forwarding :\)
