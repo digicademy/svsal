@@ -637,11 +637,10 @@ declare function net:APIdeliverRDF($requestData as map(), $netVars as map()*) {
 
 declare function net:APIdeliverJPG($requestData as map(), $netVars as map()*) {
     if (starts-with($requestData('work_id'), 'W0')) then 
-        let $normalizedPassage := $requestData('passage') (: TODO: normalize passage id such that pfol123r and other pb URIs are somehow upper cased :)
-        let $reqResource := 'texts/' || $requestData('work_id') || ':' || $normalizedPassage
+        let $reqResource := 'texts/' || $requestData('work_id') || ':' || $requestData('passage')
         let $resolvedPath := 
             doc($config:rdf-works-root || '/' || $requestData('work_id') || '.rdf')
-                /rdf:RDF/rdf:Description[lower-case(@rdf:about) eq $reqResource
+                /rdf:RDF/rdf:Description[lower-case(@rdf:about) eq lower-case($reqResource)
                                          and contains(rdfs:seeAlso/@rdf:resource, '.jpg')][1]/rdfs:seeAlso/@rdf:resource
         let $debug := util:log('warn', '[NET] jpg 1')
         return 
