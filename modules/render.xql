@@ -417,10 +417,12 @@ declare function render:isBasicNode($node as node()) as xs:boolean {
         (render:isListNode($node) and (($node/self::tei:list and not($node/descendant::tei:list))
                                        or ($node[(self::tei:item or self::tei:head) 
                                                  and not(descendant::tei:list) 
-                                                 and following-sibling::tei:item[./tei:list[render:isListNode(.)]]]))
+                                                 and following-sibling::tei:item[./tei:list[render:isListNode(.)]]])
+                                      )
+        (: read as: 'lists that do not contain lists (=lists at the lowest level), or siblings thereof' :)
         (:(($node/self::tei:list and not($node/descendant::tei:list))
                                        or ($node/self::tei:head and following-sibling::tei:item[./tei:list[not($node/descendant::tei:list)]])):) (: head may occur outside of lowest-level lists... :)
-                                       ) (: read as: 'lists that do not contain lists (=lists at the lowest level), or siblings thereof' :)
+        )
     )
 };
 
@@ -2810,7 +2812,9 @@ declare function render:titlePage($node as element(tei:titlePage), $mode as xs:s
             'tei-' || local-name($node)
         
         case 'citetrail' return
-            'titlepage'
+            if (count($node/ancestor::tei:front//tei:titlePage) gt 1) then
+                'titlepage' || string(count($node/preceding-sibling::tei:titlePage) + 1)
+            else 'titlepage'
         
         case 'passagetrail' return
             $config:citationLabels(local-name($node))?('abbr')
