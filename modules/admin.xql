@@ -243,7 +243,6 @@ declare function admin:needsIIIFResourceString($node as node(), $model as map(*)
                 <td title="source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}"><a href="iiif-admin.xql?resourceId={$currentWorkId}"><b>Create IIIF resource NOW!</b></a></td>
             else
                 <td title="{concat('IIIF resource created on: ', string(xmldb:last-modified($config:iiif-root, $currentWorkId || '.json')), ', Source from: ', string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml')), '.')}">Creating IIIF resource unnecessary. <small><a href="iiif-admin.xql?resourceId={$currentWorkId}">Create IIIF resource anyway!</a></small></td>
-    
 };
 
 
@@ -864,7 +863,7 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
                 else ()
             let $hit_type := local-name($hit)
             let $hit_id := xs:string($hit/@xml:id)
-            let $hit_citetrail := if ($nodeType eq 'work') then render:getNodetrail($work_id, $hit, 'citetrail', ()) else ()
+            let $hit_citetrail := if ($nodeType eq 'work') then render:getNodetrail($work_id, $hit, 'citetrail') else ()
 (:                doc($config:index-root || '/' || $work_id || '_nodeIndex.xml')//sal:node[@n = $hit_id]/sal:citetrail:)
             let $hit_language := xs:string($hit/ancestor-or-self::tei:*[@xml:lang][1]/@xml:lang)
             let $hit_fragment := 
@@ -1075,51 +1074,28 @@ declare function admin:createNodeIndex($wid as xs:string*) {
             
             (: Now, create full-blown node index :)
             let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Node indexing: creating index file ...") else ()
+            
+            (: node indexing has 2 stages: :)
+            (: 1.) extract nested sal:nodes with rudimentary information :)
+            let $indexTree := 
+                <sal:index>{
+                    render:extractNodeStructure($wid, $work//tei:text[not(ancestor::tei:text)], $xincludes, $fragmentIds)
+                }</sal:index>
+            (: 2.) flatten the index from 1.) and enrich sal:nodes with full-blown citetrails, etc. :)
             let $index := 
-                <sal:index work="{$wid}" xml:space="preserve">{
-                    for $node at $pos in $nodes
-                        let $debug := if ($config:debug = ("trace") and local-name($node) eq "pb") then render:pb($node, 'debug') else ()
-                        let $subtype := 
-                            (: 'sameAs', 'corresp' and 'work_part' are excluded through render:isIndexNode(): :)
-                            (:if ($node/@sameAs) then
-                                "sameAs"
-                            else if ($node/@corresp) then
-                                "corresp"
-                            else if ($node/@type eq "work_part") then
-                                "work_part"
-                            else:) 
-                            if ($node[self::tei:milestone]/@n) then (: TODO: where is this used? :)
-                                string($node/@n)
-                            else if ($node/@type) then
-                                string($node/@type)
-                            else ()
-                        return 
-                            (element sal:node { 
-                                attribute type      {local-name($node)}, 
-                                attribute subtype   {$subtype}, 
-                                attribute n         {$node/@xml:id/string()},
-                                if ($node/@xml:id eq 'completeWork' and $xincludes) then
-                                    attribute xinc    {$xincludes}
-                                else (), 
-                                attribute class {render:dispatch($node, 'class')},
-                                element sal:title           {render:dispatch($node, 'title')},
-                                element sal:fragment        {$fragmentIds($node/@xml:id/string())},
-                                element sal:citableParent   {render:getCitableParent($node)/@xml:id/string()},
-                                element sal:crumbtrail      {render:getNodetrail($wid, $node, 'crumbtrail', $fragmentIds)},
-                                element sal:citetrail       {render:getNodetrail($wid, $node, 'citetrail', $fragmentIds)},
-                                element sal:passagetrail    {render:getNodetrail($wid, $node, 'passagetrail', $fragmentIds)}
-                                }
-                            )
-                        }
+                <sal:index work="{$wid}" xml:space="preserve">
+                    {render:createIndexNodes($indexTree)(:$indexTree/*:)}
                 </sal:index>
-            
-            
-            (: save index file :)
+                
+            (: save final index file :)
             let $debug := if ($config:debug = ("trace")) then console:log("Saving index file ...") else ()
             let $indexSaveStatus := admin:saveFile($wid, $wid || "_nodeIndex.xml", $index, "index")
             let $debug := if ($config:debug = ("trace")) then console:log("Node index of "  || $wid || " successfully created.") else ()
             
+            
+            
             (: ----------------------------------------------- :)
+            
             (: #### Basic quality / consistency check #### :)
             let $resultNodes := $index//sal:node[not(@n eq 'completeWork')]
             let $testNodes := 
@@ -1139,14 +1115,14 @@ declare function admin:createNodeIndex($wid as xs:string*) {
                           'Could not produce a unique citetrail for each sal:node (in ' || $wid || '). Problematic nodes: '
                           || string-join(($resultNodes[sal:citetrail/text() = following::sal:citetrail/text()]/@n), '; ')) 
                 else () 
+            (: search these cases using: " //sal:citetrail[./text() = following::sal:citetrail/text()] :)
             let $testEmptyCitetrails :=
                 if (count($resultNodes/sal:citetrail[not(./text())]) gt 0) then
                     error(xs:QName('render:createNodeIndex'), 
                           'Could not produce a citetrail for one or more sal:node (in' || $wid || '). Problematic nodes: '
                           || string-join(($resultNodes[not(sal:citetrail/text())]/@n), '; '))
                 else ()
-            (: search these cases using: " //sal:citetrail[./text() = following::sal:citetrail/text()] "
-                or " //sal:citetrail[not(./text())] ":)
+            (: search for " //sal:citetrail[not(./text())] ":)
             (: not checking crumbtrails here ATM for not slowing down index creation too much... :)
             
             (: check if all text is being captured through basic index nodes (that is, if all text is citable) :)
@@ -1159,6 +1135,8 @@ declare function admin:createNodeIndex($wid as xs:string*) {
             (: if no xml:id is put out, try to search these cases like so:
                 //text//text()[not(normalize-space() eq '')][not(ancestor::*[@xml:id and (self::p or self::signed or self::head or self::titlePage or self::lg or self::item or self::label or self::argument or self::table)])]
             :)
+            
+            
             
             (: ----------------------------------------------- :)
             

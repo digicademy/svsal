@@ -5,6 +5,7 @@ declare namespace request           = "http://exist-db.org/xquery/request";
 declare namespace output            = "http://www.w3.org/2010/xslt-xquery-serialization";
 import module namespace admin       = "http://salamanca/admin" at "modules/admin.xql";
 import module namespace config    = "http://salamanca/config" at "config.xqm";
+import module namespace util        = "http://exist-db.org/xquery/util";
 
 declare option exist:timeout "43200000"; (: 12 h :)
 
@@ -13,6 +14,8 @@ declare option output:method "xhtml";
 declare option output:indent "no";
 
 declare variable $snippetLength  := 1200;
+
+let $start-time := util:system-time()
 
 let $mode   := request:get-parameter('mode',    'html') (: for Sphinx, but actually used? :)
 let $rid    := request:get-parameter('rid',     '')
@@ -48,7 +51,16 @@ let $output :=
             ()
         (: TODO: iiif-admin :)
 
-let $debug := if ($format) then util:log('warn', 'Rendered format: "' || $format || '" for resource: ' || $rid) else ()
+let $runtime-ms := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S')) * 1000
+let $runtimeString := 
+    if ($runtime-ms < (1000 * 60)) then format-number($runtime-ms div 1000, "#.##") || " seconds"
+    else if ($runtime-ms < (1000 * 60 * 60))  then format-number($runtime-ms div (1000 * 60), "#.##") || " minutes"
+    else format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " hours"
+
+let $debug := 
+    if ($format) then 
+        util:log('warn', '[WEBDATA-ADMIN] Rendered format "' || $format || '" for resource "' || $rid || '" in ' || $runtimeString || '.') 
+    else ()
 
 return 
     <html>

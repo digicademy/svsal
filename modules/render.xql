@@ -30,90 +30,143 @@ declare variable $render:titleTruncLimit := 25;
 
 declare variable $render:basicElemNames := ('p', 'head', 'note', 'item', 'cell', 'label', 'signed', 'lg', 'titlePage');
 
+declare variable $render:citetrailConnector := '.';
+declare variable $render:passagetrailConnector := ' ';
+declare variable $render:crumbtrailConnector := ' » ';
+
+
+
+(: ####++++---- NODE INDEX functions ----++++#### :)
+
+
 (:
-declare variable $render:chars :=
-    if (doc-available($config:tei-meta-root || '/specialchars.xml')) then
-        map:merge(
-            for $c in doc($config:tei-meta-root || '/specialchars.xml')/tei:TEI/tei:teiHeader/tei:encodingDesc/tei:charDecl/tei:char return 
-                map:entry($c/@xml:id/string(), $c)
-        )
-    else ();:)
-
-
-(: "Nodetrail" (crumbtrail/citetrail/passagetrail) administrator function :)
-declare function render:getNodetrail($targetWorkId as xs:string, $targetNode as node(), $mode as xs:string, $fragmentIds as map()?) {
-    (: (1) get the trail ID for the current node :)
-    let $currentNode := 
-        (: no recursion here, makes single ID for the current node :)
-        if ($mode eq 'crumbtrail') then
-            let $class := render:dispatch($targetNode, 'class')
-            return
-                if ($class) then
-                    <a class="{$class}" href="{render:mkUrlWhileRendering($targetWorkId, $targetNode, $fragmentIds)}">{render:dispatch($targetNode, 'title')}</a>
-                else 
-                    <a href="{render:mkUrlWhileRendering($targetWorkId, $targetNode, $fragmentIds)}">{render:dispatch($targetNode, 'title')}</a>
-        (:else if ($mode eq 'passagetrail' and render:isPassagetrailNode($targetNode)) then
-            render:dispatch($targetNode, $mode):)
-        else if ($mode eq 'citetrail') then
-            render:dispatch($targetNode, $mode)
-        else if ($mode eq 'passagetrail') then
-            (: not all nodes that are to be indexed get an *individual* passagetrail, so that we can already apply a filter here: :)
-            if (render:isPassagetrailNode($targetNode)) then
-                render:dispatch($targetNode, $mode)
-            else () (: all other nodes inherit passagetrail from their nearest passagetrail ancestor (see below) :)
-        else 
-            (: neither html nor numeric mode :) 
-            render:dispatch($targetNode, 'title')
-    
-    (: (2) get related element's (e.g., ancestor's) trail, if required, and glue it together with the current trail ID 
-            - HERE is the RECURSION :)
-    (: (a) trail of related element: :)
-    let $trailPrefix := 
-        if ($mode = ('citetrail', 'crumbtrail')) then
-            if ($targetNode/ancestor::*[render:getCitableParent($targetNode)]) then
-                render:getNodetrail($targetWorkId, render:getCitableParent($targetNode), $mode, $fragmentIds)
-            else ()
-        else if ($mode eq 'passagetrail') then (: similar to crumbtrail/citetrail, but we need to target the nearest *passagetrail* ancestor, not the nearest index node ancestor :)
-            (: TODO: outsource this to a render:getPassagetrailParent($node as node()) function, analogous to render:getCitableParent() :)
-            if ($targetNode/ancestor::*[render:isPassagetrailNode(.) and not(self::tei:text[not(@type eq 'work_volume')])]) then
-                if ($targetNode[self::tei:pb]) then 
-                    if ($targetNode/ancestor::tei:front|$targetNode/ancestor::tei:back|$targetNode/ancestor::tei:text[1][@type = "work_volume"]) then
-                        (: within front, back, and single volumes, prepend front's or volume's trail ID for avoiding multiple identical IDs in the same work :)
-                        render:getNodetrail($targetWorkId,  ($targetNode/ancestor::tei:front|$targetNode/ancestor::tei:back|$targetNode/ancestor::tei:text[1][@type = "work_volume"])[last()], $mode, $fragmentIds)
-                    else ()
-                else if ($targetNode[self::tei:note or self::tei:milestone]) then
-                    (: citable parents of notes and milestones should not be p :)
-                    render:getNodetrail($targetWorkId, $targetNode/ancestor::*[render:isPassagetrailNode(.) and not(self::tei:p)][1], $mode, $fragmentIds)
-                else 
-                    (: === for all other node types, get parent node's trail (deep recursion) === :)
-                    render:getNodetrail($targetWorkId, $targetNode/ancestor::*[render:isPassagetrailNode(.)][1], $mode, $fragmentIds)
-            else ()
-        else ()
-    (: (b) get connector MARKER :)
-    let $connector :=
-        if ($currentNode and $trailPrefix) then
-            if ($mode eq 'crumbtrail') then ' » ' 
-            else if ($mode eq 'citetrail') then '.' 
-            else if ($mode eq 'passagetrail') then ' '
-            else ()
-        else ()
-    (: (c) put it all together and out :)
-    (:let $debug := 
-        if ($config:debug = ('trace', 'info') and $mode eq 'citetrail') then 
-            util:log('warn', 'Making citetrail of type ' || $mode || ' for element tei:' || local-name($targetNode) || '; $currentNode: ' 
-            || string-join(($currentNode), ' ') || ', $trailPrefix:' || string-join(($trailPrefix), ' ') || '.') 
-        else ():)
-    let $trail :=
-        if ($connector) then
-             if ($mode eq 'crumbtrail') then ($trailPrefix, $connector, $currentNode)
-             else if ($mode eq 'citetrail') then $trailPrefix || $connector || $currentNode
-             else if ($mode eq 'passagetrail') then $trailPrefix || $connector || $currentNode
-             else ()
-        else if ($currentNode) then $currentNode
-        else if ($mode eq 'passagetrail' and $trailPrefix) then $trailPrefix (: passagetrails are not necessarily individual :)
-        else () (:error(xs:QName('render:getNodetrail'), 'Could not make distinct nodetrail for element ' || local-name($currentNode)):)
-    return $trail
+~ Creates a tree of index nodes (sal:node), where nodes are hierarchically nested according to the hierarchy of nodes in the original TEI tree.
+~ Supplies nodes with basic information (sal:title, sal:passage, etc.), while temporary elements/attributes provide 
+~ information that can be used for the production of citetrails, crumbtrails etc. in the 
+~ final index creation through render:createIndexNodes().
+:)
+declare function render:extractNodeStructure($wid as xs:string, $input as node()*, $xincludes as attribute()*, $fragmentIds as map()?) as element(sal:node)* {
+    for $node in $input return
+        typeswitch($node)
+            case element() return
+                if (:(render:isIndexNode($node)):) ($node/@xml:id and $fragmentIds($node/@xml:id)) then
+                    let $debug := if ($config:debug = ("trace") and $node/self::tei:pb) then render:pb($node, 'debug') else ()
+                    let $subtype := 
+                        (: 'sameAs', 'corresp' and 'work_part' are excluded through render:isIndexNode(): :)
+                        (:if ($node/@sameAs) then
+                            "sameAs"
+                        else if ($node/@corresp) then
+                            "corresp"
+                        else if ($node/@type eq "work_part") then
+                            "work_part"
+                        else:) 
+                        if ($node[self::tei:milestone]/@n) then (: TODO: where is this used? :)
+                            string($node/@n)
+                        else if ($node/@type) then
+                            string($node/@type)
+                        else ()
+(:                    let $isBasicNode := if (render:isBasicNode($node)) then 'true' else 'false':)
+                    let $isNamedCitetrailNode := if (render:isNamedCitetrailNode($node)) then 'true' else 'false'
+(:                    let $category := render:getNodeCategory($node):)
+(:                    let $isPassageNode := if (render:isPassagetrailNode($node)) then 'true' else 'false':)
+                    return
+                        element sal:node {
+                            attribute type              {local-name($node)}, 
+                            attribute subtype           {$subtype}, 
+                            attribute xml:id                 {$node/@xml:id/string()},
+                            if ($node/@xml:id eq 'completeWork' and $xincludes) then
+                                attribute xinc          {$xincludes}
+                            else (), 
+                            attribute class             {render:dispatch($node, 'class')},
+(:                            attribute category          {$category},:)
+(:                            attribute isBasic           {$isBasicNode},:)
+                            attribute isNamedCit        {$isNamedCitetrailNode},
+(:                            attribute isPassage         {$isPassageNode},:)
+                            element sal:title           {render:dispatch($node, 'title')},
+                            element sal:fragment        {$fragmentIds($node/@xml:id/string())},
+                            element sal:crumb           {render:makeCrumb($wid, $node, $fragmentIds)},
+                            if (render:isPassagetrailNode($node)) then 
+                                element sal:passage {render:dispatch($node, 'passagetrail')}
+                            else (),
+                            element sal:citableParent   {render:getCitableParent($node)/@xml:id/string()},
+                            (: if the node is a named citetrail node, we include its citetrail part here already 
+                               - unnamed citetrails can be done much faster in phase 2 :)
+                            if ($isNamedCitetrailNode eq 'true') then 
+                                element sal:cit {render:dispatch($node, 'citetrail')} 
+                            else (),
+                            element sal:children        {render:extractNodeStructure($wid, $node/node(), $xincludes, $fragmentIds)}
+                        }
+                else render:extractNodeStructure($wid, $node/node(), $xincludes, $fragmentIds)
+            default return ()
 };
+
+(:
+~ Creates a flat structure of index nodes (sal:node) from a hierarchically structured preliminary index (see render:extractNodeStructure()),
+~ while enriching those nodes with final citetrails, crumbtrails, etc.
+:)
+declare function render:createIndexNodes($input as element(sal:index)) as element(sal:node)* {
+    for $node in $input//sal:node return
+        let $citetrail := render:constructCitetrail($node)
+        let $crumbtrail := render:constructCrumbtrail($node)
+        let $passagetrail := render:constructPassagetrail($node)
+        return
+            element sal:node {
+                (: copy some elements and attributes from the previous node :)
+                attribute n {$node/@xml:id/string()},
+                $node/@* except ($node/@category, $node/@isBasicNode, $node/@isNamedCit, $node/@isPassage, $node/@xml:id),
+                $node/sal:title, $node/sal:fragment, $node/sal:citableParent,
+                element sal:citetrail {$citetrail},
+                element sal:crumbtrail {$crumbtrail},
+                element sal:passagetrail {$passagetrail}
+            }
+};
+
+(: Construct passagetrail, citetrail, crumbtrail -- DEEP RECURSION :)
+declare function render:constructCitetrail($node as element(sal:node)) as xs:string {
+    let $prefix := 
+        if ($node/sal:citableParent/text() and $node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()]) then
+            render:constructCitetrail($node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()])
+        else ()
+    let $this := 
+        if ($node/sal:cit) then $node/sal:cit/text() 
+        (: if sal:cit doesn't already exist, we are dealing with a numeric/unnamed citetrail node and create the citetrail part here: :)
+        else string(count($node/preceding-sibling::sal:node[@isNamedCit eq 'false']) + 1)
+    return
+        if ($prefix and $this) then $prefix || $render:citetrailConnector || $this else $this
+};
+
+declare function render:constructCrumbtrail($node as element(sal:node)) as item()+ {
+    let $prefix := 
+        if ($node/sal:citableParent/text() and $node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()]) then
+            render:constructCrumbtrail($node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()])
+        else ()
+    let $this := $node/sal:crumb/*
+    return
+        if ($prefix and $this) then ($prefix, $render:crumbtrailConnector, $this) else $this
+};
+
+declare function render:constructPassagetrail($node as element(sal:node)) as xs:string? {
+    let $prefix := 
+        if ($node/sal:citableParent/text() and $node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()]) then
+            render:constructPassagetrail($node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()])
+        else ()
+    (: not every sal:node has a distinctive passage: :)
+    let $this := if ($node/sal:passage/text()) then $node/sal:passage/text() else ''
+    return
+        if ($prefix and $this) then 
+            $prefix || $render:passagetrailConnector || $this 
+        else $prefix || $this (: this will only return one of both, if any at all :)
+};
+
+declare function render:makeCrumb($wid as xs:string, $node as node(), $fragmentIds as map()?) as element(a)? {
+    let $class := render:dispatch($node, 'class')
+    return
+        if ($class) then
+            <a class="{$class}" href="{render:mkUrlWhileRendering($wid, $node, $fragmentIds)}">{render:dispatch($node, 'title')}</a>
+        else 
+            <a href="{render:mkUrlWhileRendering($wid, $node, $fragmentIds)}">{render:dispatch($node, 'title')}</a>
+};
+
 
 (: Gets the citable crumbtrail/citetrail (not passagetrail!) parent :)
 declare function render:getCitableParent($node as node()) as node()? {
@@ -128,6 +181,45 @@ declare function render:getCitableParent($node as node()) as node()? {
     else $node/ancestor::*[render:isIndexNode(.)][1]
 };
 
+
+(: Marginal citetrails: "nX" where X is the anchor used (if it is alphanumeric) and "nXY" where Y is the number of times that X occurs inside the current div
+    (important: nodes are citetrail children of div (not of p) and are counted as such) :)
+declare function render:makeMarginalCitetrail($node as element()) as xs:string {
+    let $currentSection := sal-util:copy(render:getCitableParent($node))
+    let $currentNode := $currentSection//*[@xml:id eq $node/@xml:id]
+    let $label :=
+        if (matches($currentNode/@n, '^[A-Za-z0-9\[\]]+$')) then
+            if (count($currentSection//*[render:isMarginalNode(.) and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))]) gt 1) then
+                concat(
+                    upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', '')),
+                    string(
+                        count($currentSection//*[render:isMarginalNode(.) and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))]
+                              intersect $currentNode/preceding::*[render:isMarginalNode(.) and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))])
+                        + 1)
+                )
+            else upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))
+        else string(count($currentNode/preceding::*[render:isMarginalNode(.)] intersect $currentSection//*[render:isMarginalNode(.)]) + 1)
+    return 'n' || $label
+};
+
+
+
+(: DEPRECATED - unnamed citetrail nodes are now processed during index time
+~ Get the number of preceding nodes with purely numeric citetrails, in the same section, but (potentially) on different tree layers.
+:)
+(:declare function render:determineUnnamedCitetrailNodePosition($node as element()) as xs:integer {
+    let $citableParent := render:getCitableParent($node)
+    return
+        if ($citableParent) then
+            let $currentSection := sal-util:copy($citableParent) (\: make copy on-the-fly for not going into performance trouble with large trees... :\)
+            let $allUnnamed := $currentSection//*[render:isUnnamedCitetrailNode(.)]
+            let $sameLevelUnnamed := $allUnnamed[render:getCitableParent(.) is $currentSection] (\: count(render:getCitableParent(.) | $thisCitableParent) eq 1 :\)
+            let $precedingUnnamed := $sameLevelUnnamed[following::*[@xml:id eq $node/@xml:id]]
+            return
+                count($precedingUnnamed) + 1
+        else 
+            count($node/preceding-sibling::*[render:isUnnamedCitetrailNode(.)]) + 1
+};:)
 
 
 (: ####++++---- BOOLEAN FUNCTIONS for defining different classes of nodes ----++++####  :)
@@ -333,7 +425,16 @@ declare function render:isBasicNode($node as node()) as xs:boolean {
 };
 
 
-(: ####++++---- END node definitions ----++++#### :)
+declare function render:getNodeCategory($node as element()) as xs:string {
+    if (render:isMainNode($node)) then 'main'
+    else if (render:isMarginalNode($node)) then 'marginal'
+    else if (render:isStructuralNode($node)) then 'structural'
+    else if (render:isListNode($node)) then 'list'
+    else if (render:isPageNode($node)) then 'page'
+    else if (render:isAnchorNode($node)) then 'anchor'
+    else error()
+};
+
 
 
 (: ####++++---- HTML helper functions ----++++#### :)
@@ -415,13 +516,13 @@ declare function render:HTMLmakeCitationReference($wid as xs:string, $fileDesc a
                         return app:rotateFormatName($ed), ' &amp; '):)
     let $citetrail :=
         if ($mode eq 'reading-passage' and $node) then
-            render:getNodetrail($wid, $node, 'citetrail', ())
+            render:getNodetrail($wid, $node, 'citetrail')
         else ()
     let $citetrailStr := if ($citetrail) then ':' || $citetrail else ()
     let $link := $config:idserver || '/texts/' || $wid || $citetrailStr || (if ($mode eq 'reading-passage') then '?format=html' else ())
     let $passagetrail := 
         if ($mode eq 'reading-passage' and $node) then
-            render:getNodetrail($wid, $node, 'passagetrail', ())
+            render:getNodetrail($wid, $node, 'passagetrail')
         else ()
     let $body := 
         <span class="cite-rec-body">{$author || ', ' || $title || ' (' || $digitalYear || ' [' || $originalYear || '])'|| ', '}
@@ -445,7 +546,7 @@ declare function render:HTMLgenerateTocFromDiv($nodes as element()*, $wid as xs:
     for $node in $nodes/(tei:div[@type="work_part"]/tei:div[render:isIndexNode(.)]
                          |tei:div[not(@type="work_part")][render:isIndexNode(.)]
                          |*/tei:milestone[@unit ne 'other'][render:isIndexNode(.)]) return
-        let $fragTrail := render:getNodetrail($wid, $node, 'citetrail', ())
+        let $fragTrail := render:getNodetrail($wid, $node, 'citetrail')
         let $fragId := $config:idserver || '/texts/' || $wid || ':' || $fragTrail || '?format=html'
         let $section := $node/@xml:id/string()
         let $i18nKey := 
@@ -687,14 +788,25 @@ declare function render:HTMLSectionToolbox($node as element()) as element(div) {
 };
 
 
+(: ####++++---- OTHER helper functions ----++++#### :)
+
 (:
 ~ For a node, make a full-blown URI including the citetrail of the node
 :)
 declare function render:makeCitetrailURI($node as element()) {
-    let $citetrail := render:getNodetrail($node/ancestor::tei:TEI, $node, 'citetrail', ())
+    let $citetrail := render:getNodetrail($node/ancestor::tei:TEI/@xml:id, $node, 'citetrail')
     let $workId := $node/ancestor::tei:TEI/@xml:id
     return
         $config:idserver || '/texts/' || $workId || ':' || $citetrail
+};
+
+declare function render:getNodetrail($wid as xs:string, $node as element(), $mode as xs:string) {
+    let $debug := 
+        if ($mode = ('citetrail', 'crumbtrail', 'passagetrail')) then () 
+        else util:log('error', '[Render] calling render:getNodetrail with unknown mode: ' || $mode)
+    return
+        doc($config:index-root || '/' || $wid || '_nodeIndex.xml')
+            /sal:index/sal:node[@n eq $node/@xml:id]/*[local-name() eq $mode]/node()
 };
 
 
@@ -875,46 +987,6 @@ declare function render:resolveURI($node as element(), $targets as xs:string) {
 };    
 
 
-(: OTHER HELPER FUNCTIONS :)
-
-(: 
-~ Get the number of preceding nodes with purely numeric citetrails, in the same section, but (potentially) on different tree layers.
-:)
-declare function render:determineUnnamedCitetrailNodePosition($node as element()) as xs:integer {
-    let $citableParent := render:getCitableParent($node)
-    return
-        if ($citableParent) then
-            let $currentSection := sal-util:copy($citableParent) (: make copy on-the-fly for not going into performance trouble with large trees... :)
-            let $allUnnamed := $currentSection//*[render:isUnnamedCitetrailNode(.)]
-            let $sameLevelUnnamed := $allUnnamed[render:getCitableParent(.) is $currentSection] (: count(render:getCitableParent(.) | $thisCitableParent) eq 1 :)
-            let $precedingUnnamed := $sameLevelUnnamed[following::*[@xml:id eq $node/@xml:id]]
-            return
-                count($precedingUnnamed) + 1
-        else 
-            count($node/preceding-sibling::*[render:isUnnamedCitetrailNode(.)]) + 1
-};
-
-(: Marginal citetrails: "nX" where X is the anchor used (if it is alphanumeric) and "nXY" where Y is the number of times that X occurs inside the current div
-    (important: nodes are citetrail children of div (not of p) and are counted as such) :)
-declare function render:makeMarginalCitetrail($node as element()) as xs:string {
-    let $currentSection := sal-util:copy(render:getCitableParent($node))
-    let $currentNode := $currentSection//*[@xml:id eq $node/@xml:id]
-    let $label :=
-        if (matches($currentNode/@n, '^[A-Za-z0-9\[\]]+$')) then
-            if (count($currentSection//*[render:isMarginalNode(.) and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))]) gt 1) then
-                concat(
-                    upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', '')),
-                    string(
-                        count($currentSection//*[render:isMarginalNode(.) and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))]
-                              intersect $currentNode/preceding::*[render:isMarginalNode(.) and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))])
-                        + 1)
-                )
-            else upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))
-        else string(count($currentNode/preceding::*[render:isMarginalNode(.)] intersect $currentSection//*[render:isMarginalNode(.)]) + 1)
-    return 'n' || $label
-};
-
-
 (: ####====---- TEI Node Rendering Typeswitch Functions ----====#### :)
 
 (:  MODES: 
@@ -922,7 +994,7 @@ declare function render:makeMarginalCitetrail($node as element()) as xs:string {
 ~   - 'snippets-orig', 'snippets-edit': plain text for Sphinx snippets
 ~   - 'title': title of a node (only for nodes that represent sections)
 ~   - 'passagetrail': passagetrail ID of a node (only for nodes that represent passagetrail sections)
-~   - 'citetrail': citetrail ID of a node (only for nodes that represent citetrail/crumbtrail sections)
+~   - 'citetrail': citetrail ID of a node (only for nodes that are render:isNamedCitetrailNode() - all other are created at index time)
 ~   - 'class': i18n class of a node, usually to be used by HTML-/RDF-related functionalities for generating verbose labels when displaying section titles 
 ~   - 'html': HTML snippet for the reading view
 ~   - 'html-title': a full version of the title, for toggling of teasers in the reading view (often simply falls back to 'title', see above)
@@ -1084,10 +1156,11 @@ declare function render:argument($node as element(tei:argument), $mode as xs:str
         case 'class' return 
             'tei-' || local-name($node)
         
-        case 'citetrail' return
-            if (render:isUnnamedCitetrailNode($node)) then 
+        case 'citetrail' return 
+            error()
+            (:if (render:isUnnamedCitetrailNode($node)) then 
                 string(render:determineUnnamedCitetrailNodePosition($node))
-            else ()
+            else ():)
         
         default return
             render:passthru($node, $mode)
@@ -1331,9 +1404,10 @@ declare function render:div($node as element(tei:div), $mode as xs:string) {
                         string(count($node/preceding-sibling::tei:div[$config:citationLabels(@type)?('abbr') eq $config:citationLabels($node/@type)?('abbr')]) + 1)
                     else ()
                 return $prefix || $position
-            else if (render:isUnnamedCitetrailNode($node)) then 
+            (:else if (render:isUnnamedCitetrailNode($node)) then 
                 string(render:determineUnnamedCitetrailNodePosition($node))
-            else ()
+            else ():)
+            else error()
         
         case 'passagetrail' return
             if (render:isPassagetrailNode($node)) then
@@ -1570,8 +1644,6 @@ declare function render:g($node as element(tei:g), $mode as xs:string) {
                         else ()
                     return
                         (: a) g has been used for resolving abbreviations (in early texts W0004, W0013 and W0015) -> treat it like choice elements :)
-                        (:if (not(($precomposedString and $thisString eq $precomposedString) or ($composedString and $thisString eq $composedString))
-                            and not($charCode = ('char017f', 'char0292'))):)
                         if (not($thisString = ($precomposedString, $composedString)) and not($charCode = ('char017f', 'char0292'))) then
                             (<span class="original glyph unsichtbar" title="{$thisString}">{$originalGlyph}</span>,
                             <span class="edited glyph" title="{$originalGlyph}">{$thisString}</span>)
@@ -1746,21 +1818,13 @@ declare function render:item($node as element(tei:item), $mode as xs:string) {
         case 'html' return
             (: tei:item should be handled exclusively in render:list :)
             error()
-            (:switch(render:determineListType($node))
-                case 'simple' return
-                    (' ', render:passthru($node, $mode), ' ')
-                case 'index' 
-                case 'summaries' return
-                    <li class="list-index-item">{render:passthru($node, $mode)}</li>
-                default return
-                    <li>{render:passthru($node, $mode)}</li>:)
                 
         case 'class' return
             'tei-' || local-name($node)
             
         case 'citetrail' return
             (: "entryX" where X is the section title (render:item($node, 'title')) in capitals, use only for items in indexes and dictionary :)
-            if($node/ancestor::tei:list/@type = ('dict', 'index')) then
+            if(render:isNamedCitetrailNode($node)) then
                 let $title := upper-case(replace(render:item($node, 'title'), '[^a-zA-Z0-9]', ''))
                 let $position :=
                     if ($title) then
@@ -1773,7 +1837,7 @@ declare function render:item($node as element(tei:item), $mode as xs:string) {
                         string(count($node/preceding-sibling::tei:item) + 1)
                     else ()
                 return 'entry' || $title || $position
-            else string(render:determineUnnamedCitetrailNodePosition($node))
+            else error() (:string(render:determineUnnamedCitetrailNodePosition($node)):)
         
         case 'passagetrail' return
             ()
@@ -1826,9 +1890,12 @@ declare function render:label($node as element(tei:label), $mode as xs:string) {
             'tei-' || local-name($node)
             
         case 'citetrail' return
-            if (render:isUnnamedCitetrailNode($node)) then 
+            if (render:isNamedCitetrailNode($node)) then
+                render:makeMarginalCitetrail($node)
+            else error()
+            (:if (render:isUnnamedCitetrailNode($node)) then 
                 string(render:determineUnnamedCitetrailNodePosition($node))
-            else render:makeMarginalCitetrail($node)
+            else render:makeMarginalCitetrail($node):)
             
         default return
             render:passthru($node, $mode)
@@ -1845,16 +1912,6 @@ declare function render:lb($node as element(tei:lb), $mode as xs:string) {
             if (not($node/@break = 'no')) then
                 ' '
             else ()
-    
-        (: INACTIVE (lb aren't relevant for sal:index): :)
-        (:case 'citetrail' return
-            (\: "pXlineY" where X is page and Y line number :\)
-            concat('l',          
-                if (matches($node/@n, '[A-Za-z0-9]')) then (\: this is obsolete since usage of lb/@n is deprecated: :\)
-                    replace(substring-after($node/@n, '_'), '[^a-zA-Z0-9]', '')
-                (\: TODO: make this dependent on whether the ancestor is a marginal:  :\)
-                else string(count($node/preceding::tei:lb intersect $node/preceding::tei:pb[1]/following::tei:lb) + 1)
-        ):)
         
         default return () 
 };
@@ -1947,9 +2004,10 @@ declare function render:list($node as element(tei:list), $mode as xs:string) {
                           ) + 1)
                   )
             (: other types of lists are simply counted :)
-            else if (render:isUnnamedCitetrailNode($node)) then 
+            (:else if (render:isUnnamedCitetrailNode($node)) then 
                 string(render:determineUnnamedCitetrailNodePosition($node))
-            else ()
+            else ():)
+            else error()
                 
         case 'orig' return
             ($config:nl, render:passthru($node, $mode), $config:nl)
@@ -1980,9 +2038,10 @@ declare function render:lg($node as element(tei:lg), $mode as xs:string) {
             'tei-' || local-name($node)
             
         case 'citetrail' return
-            if (render:isUnnamedCitetrailNode($node)) then 
+            (:if (render:isUnnamedCitetrailNode($node)) then 
                 string(render:determineUnnamedCitetrailNodePosition($node))
-            else ()
+            else ():)
+            error()
         
         case 'html' return
             <span class="poem">{render:passthru($node, $mode)}</span>
@@ -2248,9 +2307,10 @@ declare function render:p($node as element(tei:p), $mode as xs:string) {
             'tei-' || local-name($node)
         
         case 'citetrail' return
-            if (render:isUnnamedCitetrailNode($node)) then 
+            (:if (render:isUnnamedCitetrailNode($node)) then 
                 string(render:determineUnnamedCitetrailNodePosition($node))
-            else ()
+            else ():)
+            error()
         
         case 'passagetrail' return
             if (render:isPassagetrailNode($node)) then
@@ -2559,9 +2619,10 @@ declare function render:signed($node as element(tei:signed), $mode as xs:string)
             'tei-' || local-name($node)
             
         case 'citetrail' return
-            if (render:isUnnamedCitetrailNode($node)) then 
+            (:if (render:isUnnamedCitetrailNode($node)) then 
                 string(render:determineUnnamedCitetrailNodePosition($node))
-            else ()
+            else ():)
+            error()
             
         case 'snippets-orig'
         case 'snippets-edit' return
@@ -2609,9 +2670,10 @@ declare function render:table($node as element(tei:table), $mode as xs:string) {
             <table>{render:passthru($node, $mode)}</table>
             
         case 'citetrail' return
-            if (render:isUnnamedCitetrailNode($node)) then 
+            (:if (render:isUnnamedCitetrailNode($node)) then 
                 string(render:determineUnnamedCitetrailNodePosition($node))
-            else ()
+            else ():)
+            error()
             
         default return render:passthru($node, $mode)
 };
