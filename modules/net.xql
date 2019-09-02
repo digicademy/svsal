@@ -642,36 +642,15 @@ declare function net:APIdeliverJPG($requestData as map(), $netVars as map()*) {
             doc($config:rdf-works-root || '/' || $requestData('work_id') || '.rdf')
                 /rdf:RDF/rdf:Description[lower-case(@rdf:about) eq lower-case($reqResource)
                                          and contains(rdfs:seeAlso/@rdf:resource, '.jpg')][1]/rdfs:seeAlso/@rdf:resource
-        let $debug := util:log('warn', '[NET] jpg 1')
         return 
             if ($resolvedPath) then
-                let $debug := util:log('warn', '[NET] jpg 1') return
                 net:redirect-with-303($resolvedPath)
             else 
-                let $debug := util:log('warn', '[NET] jpg 2') return
                 net:error(404, $netVars, 'Could not find jpg resource.')
-    
-(:  
-<rdf:Description rdf:about="texts/W0004:pFOL6V">
-	<rdfs:seeAlso rdf:resource="https://facs.c106-211.cloud.gwdg.de/iiif/image/W0004!W0004-0016/full/full/0/default.jpg"/>
-</rdf:Description>
-:)
     
     else 
         let $debug := util:log('warn', '[NET] jpg 3') return
         net:error(404, $netVars, 'Invalid jpg request.')
-    (:
-    let $reqResource  := $pathComponents[last()]
-    let $reqWork      := tokenize(tokenize($reqResource, ':')[1], '\.')[1]
-    let $passage      := tokenize($reqResource, ':')[2]
-    let $metadata     := doc(rdf-works-root || '/' || sal-util:normalizeId($reqWork) || '.rdf')
-    let $debug2       := if ($config:debug = "trace") then console:log("Retrieving $metadata//rdf:Description[@rdf:about = " || $reqResource || "]/rdfs:seeAlso/@rdf:resource/string()") else ()
-    let $resolvedPaths := for $url in $metadata//rdf:Description[@rdf:about = $reqResource]/rdfs:seeAlso/@rdf:resource/string()
-                          where matches($url, "\.(jpg|jpeg|png|tif|tiff)$")
-                          return $url
-    let $resolvedPath := $resolvedPaths[1]
-    let $debug3       := if ($config:debug = ("trace", "info")) then console:log("Redirecting to " || $resolvedPath || " ...") else ()
-    return net:redirect-with-303($resolvedPath):)
 };
 
 declare function net:APIdeliverTextsHTML($requestData as map(), $netVars as map()*) {

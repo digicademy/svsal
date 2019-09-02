@@ -946,7 +946,7 @@ declare function render:transformToHTMLLink($node as element(), $uri as xs:strin
             ($before, $break, $after)
 };
 
-(: TODO: render:makeCitetrailURI() requires actual node :)
+(: TODO: debugging with references to extratextual entities :)
 declare function render:resolveURI($node as element(), $targets as xs:string) {
     let $currentWork := $node/ancestor-or-self::tei:TEI
     let $target := (tokenize($targets, ' '))[1]
