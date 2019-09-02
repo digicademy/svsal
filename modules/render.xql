@@ -257,6 +257,13 @@ declare function render:isCitableWithTeaserHTML($node as node()) as xs:boolean {
 };
 
 (:
+~ Other nodes that are citable, but without summary title / teaser.
+:)
+(:declare function render:isCitableWithoutTeaserHTML($node as node()) as xs:boolean {
+    boolean(...)
+};:)
+
+(:
 ~ Determines whether a node should have a citation anchor, without an additional teaser.
 :)
 (:declare function render:isBasicCitableHTML($node as node()) as xs:boolean {
@@ -1117,8 +1124,11 @@ declare function render:dispatch($node as node(), $mode as xs:string) {
                 return ($citationAnchor, $rendering)
             else if (render:isBasicNode($node)) then 
                 (: toolboxes need to be on the sibling axis with the text body they refer to... :)
-                if (render:isMarginalNode($node) or $node/self::tei:head or $node/self::tei:titlePage) then 
-                    (: for these elements, $toolboxes are created right in their render: function :)
+                if (render:isMarginalNode($node) 
+                    or $node/self::tei:head 
+                    or $node/self::tei:titlePage 
+                    or $node/self::tei:p[ancestor::tei:list]) then (: we do not make toolboxes for p within list :)
+                    (: for these elements, $toolboxes are created right in their render: function if required :)
                     $rendering
                 else 
                     let $toolbox := render:HTMLSectionToolbox($node)

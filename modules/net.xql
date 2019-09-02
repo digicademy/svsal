@@ -659,57 +659,62 @@ declare function net:APIdeliverTextsHTML($requestData as map(), $netVars as map(
         let $pathname     := $config:webserver || '/' || $langPath || 'works.html'
         let $debug       := if ($config:debug = ("trace", "info")) then console:log("[API] request for all works (HTML), redirecting to " || $pathname || " ...") else ()
         return net:redirect-with-303($pathname)
-    else
-        if ($requestData('work_status') eq 2 and $requestData('passage_status') = (1)) then (: full text available and passage not invalid :)
-            if (matches($requestData('work_id'), '^W\d{4}$')) then
-                let $debug := if ($config:debug = ("trace")) then console:log("Load metadata from " || $config:rdf-works-root || '/' || $requestData('work_id') || '.rdf' || " ...") else ()
-                let $metadata := doc($config:rdf-works-root || '/' || $requestData('work_id') || '.rdf')
-                let $resourcePath := (: with legacy resource ids, we need to append a "vol" passage :)
-                    if (contains($requestData('tei_id'), '_Vol') and not($requestData('passage'))) then 
-                        $requestData('work_id') || ':vol' || substring($requestData('tei_id'), string-length($requestData('tei_id')))
-                    else $requestData('work_id') || (if ($requestData('passage')) then ':' || $requestData('passage') else ())
-                let $debug := if ($config:debug = ("trace")) then console:log("Retrieving $metadata//rdf:Description[@rdf:about eq 'texts/" || $resourcePath || "']/rdfs:seeAlso[@rdf:resource[contains(., '.html')]][1]/@rdf:resource") else ()
-                let $resolvedPath := 
-                    if ($requestData('mode') eq 'meta') then
-                        $config:webserver || '/workDetails.html?wid=' || $requestData('tei_id')
-                    else if ($requestData('frag') and not($requestData('passage'))) then 
-                        (: prov. solution for frag params: if there only is a fragment id for a work, simply redirect to the fragment - if we have a passage, ignore it :)
-                        $config:webserver || '/work.html?wid=' || $requestData('work_id') || '&amp;frag=' || replace($requestData('frag'), 'w0', 'W0')
-                    else
-                        try {
-                            string($metadata//rdf:Description[lower-case(@rdf:about/string()) eq lower-case('texts/' || $resourcePath)]/rdfs:seeAlso[@rdf:resource[contains(., ".html")]][1]/@rdf:resource)
-                            } 
-                        catch err:FORG0006 {
-                            let $debug := console:log('[API] err:FORG0006: could not resolve path ' || $resourcePath || ' in RDF for wid=' || $requestData('work_id'))
-                            return $config:webserver || '/work.html?wid=' || $resourcePath
-                        }
-                let $debug := if ($config:debug = ("trace")) then console:log("Found path: " || $resolvedPath || " ...") else ()
-                (: The pathname that has been saved contains 0 or exactly one parameter for the target html fragment,
-                   but it may or may not contain a hash value. We have to mix in other parameters (mode, search expression or viewer state) before the hash. :)
-                let $pathname := (: get everything before params or hash :)
-                    if (contains($resolvedPath, '?')) then
-                        substring-before($resolvedPath, '?')
-                    else if (contains($resolvedPath, '#')) then
-                        substring-before($resolvedPath, '#')
-                    else $resolvedPath
-                let $hash := if (contains($resolvedPath, '#')) then concat('#', substring-after($resolvedPath, '#')) else ()
-                let $fragParam :=
-                    if (contains($resolvedPath, '?')) then
-                        if (contains(substring-after($resolvedPath, '?'), '#')) then
-                            substring-before(substring-after($resolvedPath, '?'), '#')
-                        else substring-after($resolvedPath, '?')
-                    else ()
-                (: TODO: cut original frag param out :)
-                let $updParams := (: cut redundant format=html and illegal (?) frag params out :)
-                    if ($requestData('mode') eq 'orig' and not($netVars('paramap')?('mode') eq 'orig')) then 
-                        array:append([$netVars('params')[not(. eq 'format=html' or starts-with(., 'frag'))]], 'mode=orig') 
-                    else [$netVars('params')[not(. eq 'format=html' or starts-with(., 'frag'))]]
-                let $parameters := concat(if ($fragParam or $updParams) then "?" else (), string-join(($fragParam, string-join($updParams?*, "&amp;")), "&amp;"))
-                let $debug := if ($config:debug = ("trace", "info")) then console:log("Redirecting to " || $pathname || $parameters || $hash || " ...") else ()
-                return net:redirect-with-303($pathname || $parameters || $hash )
-            else
-                let $debug := if ($config:debug = ("trace", "info")) then console:log("Html is acceptable, but bad input. Redirect (404) to error webpage ...") else ()
-                return net:error(404, $netVars, ())
+    else if ($requestData('work_status') = (1,2) 
+             (: no passage, or passage is volume (of published work, passage_status=1, or unpublished work, Passage_status=-1) :)
+             and (not($requestData('passage')) or (matches($requestData('passage'), '^vol\d$') and $requestData('passage_status') eq 1))
+             and $requestData('viewer') eq 'all') then
+        let $viewerUri := $config:webserver || '/viewer.html?wid=' || $requestData('tei_id')
+        return net:redirect-with-303($viewerUri)
+    else if ($requestData('work_status') eq 2 and $requestData('passage_status') = (1)) then (: full text available and passage not invalid :)
+        if (matches($requestData('work_id'), '^W\d{4}$')) then
+            let $debug := if ($config:debug = ("trace")) then console:log("Load metadata from " || $config:rdf-works-root || '/' || $requestData('work_id') || '.rdf' || " ...") else ()
+            let $metadata := doc($config:rdf-works-root || '/' || $requestData('work_id') || '.rdf')
+            let $resourcePath := (: with legacy resource ids, we need to append a "vol" passage :)
+                if (contains($requestData('tei_id'), '_Vol') and not($requestData('passage'))) then 
+                    $requestData('work_id') || ':vol' || substring($requestData('tei_id'), string-length($requestData('tei_id')))
+                else $requestData('work_id') || (if ($requestData('passage')) then ':' || $requestData('passage') else ())
+            let $debug := if ($config:debug = ("trace")) then console:log("Retrieving $metadata//rdf:Description[@rdf:about eq 'texts/" || $resourcePath || "']/rdfs:seeAlso[@rdf:resource[contains(., '.html')]][1]/@rdf:resource") else ()
+            let $resolvedPath := 
+                if ($requestData('mode') eq 'meta') then
+                    $config:webserver || '/workDetails.html?wid=' || $requestData('tei_id')
+                else if ($requestData('frag') and not($requestData('passage'))) then 
+                    (: prov. solution for frag params: if there only is a fragment id for a work, simply redirect to the fragment - if we have a passage, ignore it :)
+                    $config:webserver || '/work.html?wid=' || $requestData('work_id') || '&amp;frag=' || replace($requestData('frag'), 'w0', 'W0')
+                else
+                    try {
+                        string($metadata//rdf:Description[lower-case(@rdf:about/string()) eq lower-case('texts/' || $resourcePath)]/rdfs:seeAlso[@rdf:resource[contains(., ".html")]][1]/@rdf:resource)
+                        } 
+                    catch err:FORG0006 {
+                        let $debug := console:log('[API] err:FORG0006: could not resolve path ' || $resourcePath || ' in RDF for wid=' || $requestData('work_id'))
+                        return $config:webserver || '/work.html?wid=' || $resourcePath
+                    }
+            let $debug := if ($config:debug = ("trace")) then console:log("Found path: " || $resolvedPath || " ...") else ()
+            (: The pathname that has been saved contains 0 or exactly one parameter for the target html fragment,
+               but it may or may not contain a hash value. We have to mix in other parameters (mode, search expression or viewer state) before the hash. :)
+            let $pathname := (: get everything before params or hash :)
+                if (contains($resolvedPath, '?')) then
+                    substring-before($resolvedPath, '?')
+                else if (contains($resolvedPath, '#')) then
+                    substring-before($resolvedPath, '#')
+                else $resolvedPath
+            let $hash := if (contains($resolvedPath, '#')) then concat('#', substring-after($resolvedPath, '#')) else ()
+            let $fragParam :=
+                if (contains($resolvedPath, '?')) then
+                    if (contains(substring-after($resolvedPath, '?'), '#')) then
+                        substring-before(substring-after($resolvedPath, '?'), '#')
+                    else substring-after($resolvedPath, '?')
+                else ()
+            (: TODO: cut original frag param out :)
+            let $updParams := (: cut redundant format=html and illegal (?) frag params out :)
+                if ($requestData('mode') eq 'orig' and not($netVars('paramap')?('mode') eq 'orig')) then 
+                    array:append([$netVars('params')[not(. eq 'format=html' or starts-with(., 'frag'))]], 'mode=orig') 
+                else [$netVars('params')[not(. eq 'format=html' or starts-with(., 'frag'))]]
+            let $parameters := concat(if ($fragParam or $updParams) then "?" else (), string-join(($fragParam, string-join($updParams?*, "&amp;")), "&amp;"))
+            let $debug := if ($config:debug = ("trace", "info")) then console:log("Redirecting to " || $pathname || $parameters || $hash || " ...") else ()
+            return net:redirect-with-303($pathname || $parameters || $hash )
+        else
+            let $debug := if ($config:debug = ("trace", "info")) then console:log("Html is acceptable, but bad input. Redirect (404) to error webpage ...") else ()
+            return net:error(404, $netVars, ())
     else if ($requestData('work_status') eq 1) then net:redirect-with-303($config:webserver || '/workDetails.html?wid=' || $requestData('tei_id')) (: only work details available :)
     else if ($requestData('work_status') eq 0) then net:error(404, $netVars, 'work-not-yet-available') (: work id is valid, but there are no data :)
     else net:error(404, $netVars, '')
@@ -868,7 +873,9 @@ declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()
                 else if (starts-with($workId, 'W')) then sal-util:WRKvalidateId($workId)
                 else ()
             let $passageStatus := (: 1 = passage valid & existing ; 0 = not existing ; -1 = no dataset found for $wid ; empty = no passage :)
-                if ($passage) then
+                (: special case: passage is volume of work not yet published: valid :)
+                if (matches(lower-case($passage), '^vol\d$') and $workStatus eq 1 and $teiStatus eq 1) then 1
+                else if ($passage) then
                     if ($teiStatus eq 2 and doc-available($config:index-root || '/' || $workId || '_nodeIndex.xml')) then 
                         let $nodeIndex := doc($config:index-root || '/' || $workId || '_nodeIndex.xml')
                         let $debug := if ($config:debug = ('trace')) then console:log('[API] checking node index for ' || $nodeIndex//@work[1]) else ()
