@@ -1394,7 +1394,8 @@ declare function render:div($node as element(tei:div), $mode as xs:string) {
             if (not($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) and $node/(tei:head|tei:label)) then
                 (: for expanded titles, we need the full version, not just the teaser :)
                 normalize-space(string-join(render:dispatch(($node/(tei:head|tei:label))[1], 'edit'), ''))
-            else replace(render:div($node, 'title'), '"', '')
+            else if (render:div($node, 'title')) then replace(render:div($node, 'title'), '"', '')
+            else <i18n:text key="{render:div($node, 'class')}"></i18n:text> (: if everything fails, simply use the label (such as 'Preface') :)
         
         case 'html' return
             render:passthru($node, $mode)
