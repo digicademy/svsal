@@ -21,9 +21,7 @@ declare variable $adminfiles        := ($target || '/admin.html',
                                         $target || '/iiif-admin.xql',
                                         $target || '/post-install.xql',
                                         $target || '/pre-install.xql',
-                                        $target || '/rdf-admin.xql',
                                         $target || '/reindex.xql',
-                                        $target || '/render.html',
                                         $target || '/renderTheRest.html',
                                         (:$target || '/sphinx-out.html',:)
                                         (:$target || '/sphinx-out.xql', :)
