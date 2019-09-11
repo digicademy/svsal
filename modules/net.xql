@@ -403,10 +403,7 @@ declare function local:negotiateCTSub($offers as xs:string*, $bestOffer as xs:st
             if (string(number(substring-after($spec, ';q='))) != 'NaN') then
                 number(substring-after($spec, ';q='))
             else 1.0 
-        let $value  := 
-            if (contains($spec, ';')) then
-                substring-before($spec, ';')
-            else $spec
+        let $value  := normalize-space(tokenize($spec, ';')[1])
         return
             if ($Q lt $bestQ) then ()           (: previous match had stronger weight :)
             else   if (starts-with($spec, '*/*')) then                 (: least specific - let $bestWild := 2  :)

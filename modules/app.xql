@@ -1209,18 +1209,18 @@ declare function app:displaySingleWork($node as node(),
                                         $mode as xs:string?,
                                         $viewer as xs:string?, 
                                         $lang as xs:string?) {
-    let $workId:= if ($wid) then sal-util:normalizeId($wid) else $model('currentWorkId')
+    let $workId     := if ($wid) then sal-util:normalizeId($wid) else $model('currentWorkId')
+    let $htmlPath   := $config:html-root || "/" || $workId
 
     let $targetFragment := 
-        if (xmldb:collection-available($config:html-root || "/" || $workId)) then
-            if ($frag and $frag || ".html" = xmldb:get-child-resources($config:html-root || "/" || $workId)) then
+        if (xmldb:collection-available($htmlPath)) then
+            if ($frag || ".html" = xmldb:get-child-resources($htmlPath)) then
                 $frag || ".html"
-            else if (xmldb:collection-available($config:html-root || "/" || $workId)) then
-                functx:sort(xmldb:get-child-resources($config:html-root || "/" || $workId))[1]
-            else ()
+            else
+                functx:sort(xmldb:get-child-resources($htmlPath))[1]
         else ()
 
-    let $originalDoc := doc($config:html-root || "/" || $workId || "/" || $targetFragment)
+    let $originalDoc := doc($htmlPath || "/" || $targetFragment)
 
     (: Fill in all parameters (except frag) in pagination links :)
     let $urlParameters := 

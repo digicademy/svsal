@@ -9,6 +9,8 @@
             <create qname="tei:div">
                 <field name="tei.div.n" match="@n" type="xs:string"/>
                 <field name="tei.div.type" match="@type" type="xs:string"/>
+                <field name="tei.div.xmlid" match="@xml:id" type="xs:string"/>
+                <field name="tei.div.id" match="@id" type="xs:string"/>
             </create>
             <create qname="tei:list">
                 <field name="tei.list.type" match="@type" type="xs:string"/>

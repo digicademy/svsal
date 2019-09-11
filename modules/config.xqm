@@ -899,13 +899,14 @@ declare function config:firstLink($node as node(), $model as map(*), $wid as xs:
 
 declare function config:prevLink($node as node(), $model as map(*), $wid as xs:string?, $frag as xs:string?) as element(link)? {
     let $workId         := if ($wid) then sal-util:normalizeId($wid) else $model("currentWorkId")
+    let $htmlPath       := $config:html-root || "/" || $workId
     return  
-        if (not (xmldb:collection-available($config:html-root || "/" || $workId))) then ()
+        if (not (xmldb:collection-available($htmlPath))) then ()
         else
             let $targetFragment := 
-                if ($frag and $frag || ".html" = xmldb:get-child-resources($config:html-root || "/" || $workId)) then
+                if ($frag || ".html" = xmldb:get-child-resources($htmlPath)) then
                     $frag || ".html"
-                else functx:sort(xmldb:get-child-resources($config:html-root || "/" || $workId))[1]
+                else functx:sort(xmldb:get-child-resources($htmlPath))[1]
             let $url := doc($config:html-root || '/' || sal-util:normalizeId($wid) || '/' || $targetFragment)//div[@id="SvSalPagination"]/a[@class="previous"]/@href/string()
             let $debug := if ($config:debug = "trace") then console:log("Prevlink: " || $url || " ($wid: " || sal-util:normalizeId($wid) || ", $frag: " || $frag || ", $targetFragment: " || $targetFragment || ").") else ()
             return 
@@ -915,15 +916,16 @@ declare function config:prevLink($node as node(), $model as map(*), $wid as xs:s
 };
 
 declare function config:nextLink($node as node(), $model as map(*), $wid as xs:string?, $frag as xs:string?) as element(link)? {
-    let $workId := if ($wid) then sal-util:normalizeId($wid) else $model("currentWorkId")
+    let $workId         := if ($wid) then sal-util:normalizeId($wid) else $model("currentWorkId")
+    let $htmlPath       := $config:html-root || "/" || $workId
     return  
-        if (not(xmldb:collection-available($config:html-root || "/" || $workId))) then ()
+        if (not(xmldb:collection-available($htmlPath))) then ()
         else
             let $targetFragment :=
-                if ($frag and $frag || ".html" = xmldb:get-child-resources($config:html-root || "/" || $workId)) then
+                if ($frag || ".html" = xmldb:get-child-resources($htmlPath)) then
                     $frag || ".html"
                 else
-                    functx:sort(xmldb:get-child-resources($config:html-root || "/" || $workId))[1]
+                    functx:sort(xmldb:get-child-resources($htmlPath))[1]
             let $url := doc($config:html-root || '/' || sal-util:normalizeId($wid) || '/' || $targetFragment)//div[@id="SvSalPagination"]/a[@class="next"]/@href/string()
             let $debug := if ($config:debug = "trace") then console:log("Nextlink: " || string-join($url, " ; ") || " ($wid: " || sal-util:normalizeId($wid) || ", $frag: " || $frag || ", $targetFragment: " || $targetFragment || ").") else ()
             return if ($url) then

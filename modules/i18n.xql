@@ -112,7 +112,8 @@ declare function i18n:translateAttributes($node as node(), $selectedCatalogue as
     translates an attribute with an i18n() call *anywhere* within its string (not only at the beginning).
 :)
 declare function i18n:translateAttribute($attribute as attribute(), $node as node(),$selectedCatalogue as node()){
-    if(matches($attribute, 'i18n(.*?)')) then
+(:    if(matches($attribute, 'i18n(.*?)')) then   -- replace this with contains() for performance reasons. matches() uses regex, contains() does not :)
+    if(contains($attribute, 'i18n(')) then
         let $match := replace($attribute, '^.*?(i18n\(.*?\)).*?$', '$1') (: takes only the first i18n() function call :)
         let $key := 
             if(contains($match, ",")) then
