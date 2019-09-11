@@ -50,7 +50,6 @@ let $lang               :=  net:lang($exist:path)
    only then comes content negotiation based on HTTP Accept Header (and we do not use file extensions).
    If no (valid) format is given, the format resolves to 'html'
 :)
-let $format             :=  net:format()
 
 let $netVars :=  
     map  {
@@ -60,7 +59,6 @@ let $netVars :=
         "prefix"        : $exist:prefix,
         "root"          : $exist:root,
         "lang"          : $lang,
-        "format"        : $format,
         "accept"        : $net:requestedContentTypes,
         "params"        : ( for $p in request:get-parameter-names() return lower-case($p) || "="  || replace(lower-case(request:get-parameter($p, ())[1]), 'w0', 'W0' )),
         "paramap"       : map:merge(for $p in request:get-parameter-names() return map:entry(lower-case($p), replace(lower-case(request:get-parameter($p, ())[1]), 'w0', 'W0' )))
@@ -80,7 +78,7 @@ let $debug :=
                     "ATTRIBUTES (" || count(request:attribute-names()) || "): " || string-join(for $a in request:attribute-names()     return $a || ": " || request:get-attribute($a), ' ') || "&#x0d; " ||
                     "PARAMETERS (" || count($netVars('params')) ||"): " || string-join($netVars('params'), '&amp;') ||
                     "ACCEPT (" || count($netVars('accept')) || "): " || string-join($netVars('accept'), '.') ||
-                    "$lang: " || $lang || ", $format: " || $format || " resp. " || $netVars('format') || "."
+                    "$lang: " || $lang || "."
                    )
     else ()
 
@@ -130,6 +128,7 @@ return
             b. /v1/codesharing  (To expose TEI tag usage.             See https://api.{$config:serverdomain}/codesharing/codesharing.html or https://mapoflondon.uvic.ca/BLOG10.htm) 
             c. /v1/xtriples     (Extract rdf from xml with xtriples.  See https://api.{$config:serverdomain}/v1/xtriples/xtriples.html    or http://xtriples.spatialhumanities.de/index.html)
         :)
+        let $netVars :=  map:put($netVars, 'format', net:format())
         let $pathComponents := tokenize(lower-case($exist:path), "/")  (: Since $exist:path starts with a slash, $pathComponents[1] is an empty string :)
         let $debug := if ($config:debug = ("trace")) then console:log("[API] This translates to API version " || $pathComponents[2] || ", endpoint " || $pathComponents[3] || ".") else ()
         return if ($pathComponents[3] = $config:apiEndpoints($pathComponents[2])) then  (: Check if we support the requested endpoint/version :)
@@ -366,15 +365,17 @@ return
 
     (: Fallback when nothing else fits :)
     else
-        let $debug          :=  if ($config:debug = ("trace", "info")) then console:log("Page not found: " || $net:forwardedForServername || $exist:path || $parameterString || "."
-                                    || " Absolute path:" || concat($config:proto, "://", $net:forwardedForServername, '/', $lang, '/index.html',
-                                    if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (),
-                                    string-join(net:inject-requestParameter('', ''), '&amp;'))
-                                    )
-                                else ()
+        let $debug :=  
+            if ($config:debug = ("trace", "info")) then console:log("Page not found: " || $net:forwardedForServername || $exist:path || $parameterString || "."
+                || " Absolute path:" || concat($config:proto, "://", $net:forwardedForServername, '/', $lang, '/index.html',
+                if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (),
+                string-join(net:inject-requestParameter('', ''), '&amp;'))
+                )
+            else ()
 
-        let $absolutePath   := concat($config:proto, "://", $net:forwardedForServername, '/', $lang, '/index.html',
-                                    if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (),
-                                    string-join(net:inject-requestParameter('', ''), '&amp;'))
+        let $absolutePath   := 
+            concat($config:proto, "://", $net:forwardedForServername, '/', $lang, '/index.html',
+                if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (),
+                string-join(net:inject-requestParameter('', ''), '&amp;'))
 (:        return net:redirect($absolutePath, $netVars):)
         return net:error(404, $netVars, ())

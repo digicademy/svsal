@@ -21,7 +21,6 @@
                 <field name="tei.ref.type" match="@type" type="xs:string"/>
             </create>
             
-            <!-- i18n mappings? -->
             <create qname="msg">
                 <field name="key" match="@key" type="xs:string"/>
             </create>
