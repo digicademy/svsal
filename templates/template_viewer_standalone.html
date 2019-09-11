@@ -107,6 +107,24 @@
                     "fullScreenViewer": true,
                     "userButtons": [
                         {
+                            "label": '<i18n:text key="worksList"/>',
+                            "iconClass": "fa fa-file",
+                            "attributes": {
+                                "id": "works",
+                                "aria-hidden": "true",
+                                "href": "works.html"
+                            }
+                        },
+                        {
+                            "label": '<i18n:text key="catalogueRecord"/>',
+                            "iconClass": "fa fa-file-text-o",
+                            "attributes": {
+                                "id": "works",
+                                "aria-hidden": "true",
+                                "href": "workDetails.html?wid=" + $wid
+                            }
+                        },
+                        {
                             "label": '<i18n:text key="download"/>',
                             "iconClass": "fa fa-download",
                             "attributes": {
@@ -117,12 +135,12 @@
                             }
                         },
                         {
-                            "label": "Sync",
-                            "iconClass": "fa fa-refresh",
+                            "label": '<i18n:text key="legalShort"/>',
+                            "iconClass": "fa fa-balance-scale",
                             "attributes": {
-                                "id": "sync",
+                                "id": "legal",
                                 "aria-hidden": "true",
-                                "href": "#no-op"
+                                "href": "legal.html"
                             }
                         }
 // we could close the popup window from here, and eliminate its titlebar, thus saving space. But then we have nothing to grab for dragging the window around...
