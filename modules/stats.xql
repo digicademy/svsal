@@ -7,6 +7,7 @@ declare namespace output     = "http://www.w3.org/2010/xslt-xquery-serialization
 declare namespace sal        = "http://salamanca.adwmainz.de";
 declare namespace tei        = "http://www.tei-c.org/ns/1.0";
 declare namespace templates  = "http://exist-db.org/xquery/templates";
+declare namespace util       = "http://exist-db.org/xquery/util";
 import module namespace config    = "http://salamanca/config"                at "config.xqm";
 import module namespace sphinx    = "http://salamanca/sphinx"                at "sphinx.xql";
 import module namespace console   = "http://exist-db.org/xquery/console";
@@ -17,13 +18,72 @@ import module namespace request   = "http://exist-db.org/xquery/request";
 import module namespace templates = "http://exist-db.org/xquery/templates";
 :)
 
+(: temporary corpus / stopword list ids for testing :)
+declare variable $stats:texts :=
+    map {
+        'W0002': map {'corpus': '2d48af7331bcefd57aceddad39486044', 'lang': 'es'},
+        'W0003': map {'corpus': '92812b2dd584cbce029af43903c4a0e5', 'lang': 'la'},
+        'W0004': map {'corpus': '368c1dabc5ec01c30653f20937429de7', 'lang': 'es'},
+        'W0007': map {'corpus': '4c5400ed74aaee9cdd07b322a5ab6da4', 'lang': 'es'},
+        'W0010': map {'corpus': '349ec4cc5b9abb2c882327298317c1c1', 'lang': 'es'},
+        'W0013': map {'corpus': '73ecbe84ed4014de980b138c99aef85d', 'lang': 'la'},
+        'W0014': map {'corpus': '8c0501a097b017fe27a67c9794121af8', 'lang': 'la'},
+        'W0015': map {'corpus': 'f5d56c4f2fbb2c005309934fc839b34c', 'lang': 'es'},
+        'W0030': map {'corpus': 'd1ce5f298485838a046efee6f7df58a2', 'lang': 'la'},
+        'W0034': map {'corpus': '10d96859e54e8e0284fe417d9c7ba3b5', 'lang': 'es'}
+    };
+declare variable $stats:stopwords :=
+    map {
+        'es': 'keywords-fbfc59c9d04ebfeae3d00ecd223cf0d3',
+        'la': 'keywords-4a4422ee87f6548115c189eb5115d879'
+    };
+
+(:
+~ Returns the mode for displaying stats as a verbose string.
+:)
+declare function stats:mode($wid as xs:string?, $lid as xs:string?) as xs:string {
+    if (not($wid or $lid)) then
+        'all' (: show whole corpus with most frequent lemmata :)
+    else if ($wid and not($lid)) then
+        'work' (: show single text with most frequent lemmata :)
+    else if (not($wid) and $lid) then
+        'lemma' (: show single lemma across complete corpus :)
+    else
+        'work-lemma' (: show single lemma in single work :)
+};
+
+declare function stats:title($node as node(), $model as map (*), $wid as xs:string?, $lid as xs:string?, $lang as xs:string?) as xs:string? {
+    ()
+};
+
+declare function stats:head($node as node(), $model as map (*), $wid as xs:string?, $lid as xs:string?, $lang as xs:string?) as element(h3)? {
+    let $mode := stats:mode($wid, $lid)
+    return
+        switch($mode)
+            case 'all' return ()
+            case 'work' return ()
+            case 'lemma' return ()
+            case 'work-lemma' return ()
+            default return ()
+};
+
+declare function stats:body($node as node(), $model as map (*), $wid as xs:string?, $lid as xs:string?, $lang as xs:string?) as element(div)? {
+    let $mode := stats:mode($wid, $lid)
+    return
+        switch($mode)
+            case 'all' return ()
+            case 'work' return ()
+            case 'lemma' return ()
+            case 'work-lemma' return ()
+            default return ()
+};
+
 (:
 ~ Loads a (limited) amount of lemmata from a sal:lemmata list.
 :)
 declare function stats:loadListOfLemmata($node as node(), $model as map(*)) as map(*) {
     let $lemmaNodes := doc($config:data-root || "/lemmata-97.xml")//sal:lemma[@type='term'][position() le $config:stats-limit]
-    let $debug := util:log('warn', '[STATS] Found ' || count($lemmaNodes) || ' lemmata.')
-    return
+    return 
         map { 'listOfLemmata' := $lemmaNodes }
 };
 
@@ -36,24 +96,20 @@ declare function stats:lemmaCount($node as node(), $model as map (*), $lang as x
 
 
 (: All: Number of occurrences / in number of different works :)
-(:
-~ For a given lemma ($model('currentLemma'), received from iteration through $model('listOfLemmata') via templating), 
-~ creates a 
-:)
 declare %templates:wrap
         %templates:default("wid", "W0013")
     function stats:singleLemmaStats($node as node(), $model as map (*), $wid as xs:string?, $lang as xs:string?) {
 
     let $currentLemma := $model('currentLemma')
 (:    let $currentLemmaHTML   := replace(replace(replace(translate($currentLemma, ' ', '+'), '|', '&#124;'), '(', '&#40;'), ')', '&#41;'):)
-    let $currentSearch := sphinx:search($node, $model, $currentLemma, 'corpus-nogroup', 0, 200)
+    let $currentSearch := sphinx:search($node, $model, $currentLemma, 'corpus-nogroup', 0, 200) (: offset=0, limit=200 (not more than 200 matches are returned) :)
     let $currentOccurrencesCount := 
         if (count($currentSearch("results")//terms) = 1) then
             $currentSearch("results")//terms/hits/text()
         else
             sum($currentSearch("results")//terms/hits/text())
 
-    let $currentSectionsCount := xs:int($currentSearch("results")//*:totalResults)
+    let $currentSectionsCount := xs:int($currentSearch("results")//*:totalResults) (: TODO: are sections (snippets, really) a helpful information here? :)
     let $currentWorksCount := count(distinct-values($currentSearch("results")//item/work/text()))
     let $distribution := 
         <span title="({if ($currentOccurrencesCount) then 'number of occurrences/' else ()}number of sections containing the occurrences/number of works containing the sections)">
@@ -102,3 +158,10 @@ declare %templates:wrap
             {$detailsHTML}
         </p></sal:stats>
 };
+
+(:
+TODO: 
+    - in voyant ("query" param), state all forms/conjugations of the lemma that are also stated in Sphinx' index (otherwise, voyant shows
+    a different amount of occurences than Sphinx...)
+    - enhance stopword lists (especially the Spanish list is lacking many forms)
+:)
