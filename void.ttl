@@ -17,14 +17,14 @@
 	.
 
 :Salamanca a void:Dataset ;
-	foaf:homepage <http://www.salamanca.school> ;
+	foaf:homepage <https://www.salamanca.school/> ;
     dcterms:title "The School of Salamanca Data" ;
     dcterms:description "RDF data extracted from Works of and about the School of Salamanca" ;
     dcterms:creator :Salamanca_Project ;
     dcterms:publisher :ADWMainz ;
     dcterms:contributor :Salamanca_Project ;
     dcterms:contributor :Andreas_Wagner ;
-    dcterms:created "2018-05-02"^^xsd:date ;
+    dcterms:created "2019-09-11"^^xsd:date ;
 
     dcterms:license <http://www.opendatacommons.org/licenses/by/> ;
     wv:norms <http://www.opendatacommons.org/norms/odc-by-sa/> ;
@@ -36,13 +36,13 @@
     dcterms:subject <http://dbpedia.org/resource/History_of_political_thought> ;
 
     void:feature <http://www.w3.org/ns/formats/RDF_XML> ;
-    void:uriLookupEndpoint <http://id.salamanca.school/> ;
-	void:sparqlEndpoint <http://t.spatialhumanities.de/openrdf-workbench/repositories/svsal> ;
+	void:sparqlEndpoint <https://rdf4j.adwmainz.net/rdf4j-workbench/repositories/salamanca> ;
 	void:openSearchDescription <https://search.salamanca.school/lemmatized> ;
 
-	void:uriSpace "http://id.salamanca.school/" ;
-	void:exampleResource <http://id.salamanca.school/texts/W0013> ;
-	void:exampleResource <http://id.salamanca.school/authors/A0100> ;
+    void:uriLookupEndpoint <https://id.salamanca.school/> ;
+	void:uriSpace "https://id.salamanca.school/" ;
+	void:exampleResource <https://id.salamanca.school/texts/W0013> ;
+	void:exampleResource <https://id.salamanca.school/persons/A0100> ;
 
 	void:vocabulary <http://xmlns.com/foaf/0.1/> ;
 	void:vocabulary <http://purl.org/vocab/bio/0.1/> ;
@@ -56,14 +56,14 @@
 	void:classPartition [
 							void:class foaf:Person ;
 							dcterms:description "Authors of or persons in the wider context of the School of Salamanca" ;
-							void:documents 7 ;
+							void:documents 0 ;
 #							void:entities 999 ;
 #							void:triples 9999 ;
 						] ;
 	void:classPartition [
 							void:class <http://purl.org/spar/fabio/work> ;
 							dcterms:title "Works of the School of Salamanca" ;
-							void:documents 3 ;
+							void:documents 10 ;
 #							void:entities 999 ;
 #							void:triples 9999 ;
 						] ;
@@ -124,21 +124,24 @@
     rdfs:label "Projekt 'Die Schule von Salamanca. Eine digitale Quellensammlung und ein Wörterbuch ihrer juridisch-politischen Sprache'"@de ;
     rdfs:label "Project 'The School of Salamanca. Ai digital collection of sources and a dictionary of its juridical-political language'"@en ;
     rdfs:label "Proyecto 'La Escuela de Salamanca. Una Colección Digital de Fuentes y un Diccionario de su Lenguaje Jurídico-Político'"@es ;
-    foaf:homepage <http://www.salamanca.school/> ;
+    foaf:homepage <https://www.salamanca.school/> ;
     foaf:page <http://salamanca.adwmainz.de/> ;
     foaf:mailbox <mailto:info@salamanca.adwmainz.de> ;
     foaf:member :Andreas_Wagner ;
     foaf:member :Christiane_Birr ;
     foaf:member :Thomas_Duve ;
     foaf:member :David_Glueck ;
+    foaf:member :Jose_Luis_Egio ;
+    foaf:member :Cindy_Rico_Carmona ;
     foaf:member :Matthias_Lutz-Bachmann ;
     .
 
 :ADWMainz a foaf:Organization ;
-	rdfs:label "Akademie der Wissenschaften und der Literatur | Mainz" ;
-	foaf:mbox <generalsekretariat@adwmainz.de> ;
-	foaf:member :Salamanca_Project ;
-	.
+    rdfs:label "Akademie der Wissenschaften und der Literatur | Mainz" ;
+    foaf:mbox <generalsekretariat@adwmainz.de> ;
+    foaf:homepage <http://www.adwmainz.de/> ;
+    foaf:member :Salamanca_Project ;
+    .
 
 :Andreas_Wagner a foaf:Person ;
 	rdfs:label "Andreas Wagner" ;
@@ -153,17 +156,25 @@
 	owl:sameAs <https://d-nb.info/gnd/138962987> ;
 	.
 
+:Cindy_Rico_Carmona a foaf:Person ;
+	rdfs:label "Cindy Rico Carmona";
+	.
+
 :David_Glueck a foaf:Person ;
     rdfs:label "David Glück" ;
     owl:sameAs <https://orcid.org/0000-0002-0273-3844> ;
     .
 
-:Thomas_Duve a foaf:Person ;
-	rdfs:label "Thomas Duve" ;
-	owl:sameAs <https://d-nb.info/gnd/1028938721> ;
+:Jose_Luis_Egio a foaf:Person ;
+	rdfs:label "José Luis Egío" ;
 	.
 
 :Matthias_Lutz-Bachmann a foaf:Person ;
 	rdfs:label "Matthias Lutz-Bachmann" ;
 	owl:sameAs <https://d-nb.info/gnd/1022577581> ;
+	.
+
+:Thomas_Duve a foaf:Person ;
+	rdfs:label "Thomas Duve" ;
+	owl:sameAs <https://d-nb.info/gnd/1028938721> ;
 	.
