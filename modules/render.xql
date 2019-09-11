@@ -1610,7 +1610,8 @@ declare function render:g($node as element(tei:g), $mode as xs:string) {
                 else
                     render:passthru($node, $mode)
         
-        case 'edit' return
+        case 'edit' 
+        case 'snippets-edit' return
             if (substring($node/@ref,2) = ('char017f', 'char0292')) then
                 let $char := $node/ancestor::tei:TEI/tei:teiHeader/tei:encodingDesc/tei:charDecl/tei:char[@xml:id = substring(string($node/@ref), 2)]
                 return
@@ -1673,7 +1674,7 @@ declare function render:g($node as element(tei:g), $mode as xs:string) {
                             (: all other simple characters :)
                             render:passthru($node, $mode)
                         
-        default return (: also 'snippets-edit' :)
+        default return
             render:passthru($node, $mode)
 };
 
