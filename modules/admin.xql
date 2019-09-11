@@ -441,7 +441,7 @@ declare function admin:saveFileWRKnoJs ($node as node(), $model as map (*), $lan
 
 };
 
-declare %templates:wrap function admin:saveEditors($node as node()?, $model as map(*)?) {
+(:declare %templates:wrap function admin:saveEditors($node as node()?, $model as map(*)?) {
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Storing finalFacets...") else ()
     let $create-collection  :=  
         if (not(xmldb:collection-available($config:data-root))) then 
@@ -452,14 +452,14 @@ declare %templates:wrap function admin:saveEditors($node as node()?, $model as m
         <sal>{
             ()
         }</sal>
-    let $store := xmldb:store($config:data-root, $fileNameDe, $contentDe)
+    let $store := xmldb:store($config:data-root, $fileName, $content)
     return
         <span>
             <p><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> List of works saved!</p>
             <br/><br/>
             <a href="works.html" class="btn btn-info" role="button"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Open works.html</a>
         </span> 
-};
+};:)
 
 
 (: #### RENDERING ADMINISTRATION FUNCTIONS #### :)
