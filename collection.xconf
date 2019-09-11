@@ -1,10 +1,10 @@
 <collection xmlns="http://exist-db.org/collection-config/1.0">
     <index xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sal="http://salamanca.adwmainz.de">
-
+        
         <fulltext default="none" attributes="false"/>
-
+        
         <range>
-
+            
             <!-- some TEI fields, relevant e.g. for TEI metadata files stored within the web app ... -->            
             <create qname="tei:div">
                 <field name="tei.div.n" match="@n" type="xs:string"/>
@@ -22,6 +22,9 @@
             </create>
             
             <!-- i18n mappings? -->
+            <create qname="msg">
+                <field name="key" match="@key" type="xs:string"/>
+            </create>
             
         </range>
     </index>
