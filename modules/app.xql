@@ -1285,7 +1285,9 @@ declare function app:displaySingleWork($node as node(),
     (: If we have an active query string, highlight the original html fragment accordingly :)
     let $outHTML := 
         if ($q) then 
-            sphinx:highlight($parametrizedDoc, $q)//item[1]/description
+            let $highlighted := sphinx:highlight($parametrizedDoc, $q)//item[1]/description
+            return 
+                if ($highlighted) then $highlighted else $parametrizedDoc
         else
             $parametrizedDoc
 

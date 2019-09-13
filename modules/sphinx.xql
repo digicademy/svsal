@@ -13,6 +13,7 @@ import module namespace console    = "http://exist-db.org/xquery/console";
 import module namespace http       = "http://expath.org/ns/http-client";
 import module namespace httpclient = "http://exist-db.org/xquery/httpclient";
 import module namespace util       = "http://exist-db.org/xquery/util";
+import module namespace validation = "http://exist-db.org/xquery/validation";
 
 declare copy-namespaces no-preserve, inherit;
 
@@ -711,6 +712,23 @@ declare function sphinx:excerpts ($documents as node()*, $words as xs:string) as
 (:
 ~ Requests a highlighted document (e.g., an HTML fragment) from Sphinx.
 :)
+(: TODO DEBUG: for certain fragments, query words, ..., (Open)Sphinxsearch returns malformed HTML after highlighting; in these cases, we return nothing, 
+    and app:displaySingleWork makes sure that a non-highlighted version of the (beginning of the) fragment 
+    - this is certainly not ideal, but better than a server error shown to the user...
+    example:
+            ...
+            <div class="section-title-body">
+                <span class="section-title-text">COMMENTARIVS.</span>
+            </div>
+            ...
+        is returned as:
+            ...
+            <div class="section-title-body">
+                <span class="section-title-text">
+                    <span class="hi" id="hi_3">COMMENTARIVS.</span>
+            </div>
+            ...
+    :)
 declare function sphinx:highlight ($document as node(), $words as xs:string*) as node()* {
     let $endpoint   := concat($config:sphinxRESTURL, "/excerpts")
 
@@ -734,11 +752,33 @@ declare function sphinx:highlight ($document as node(), $words as xs:string*) as
                        </http:request>
     let $response   := http:send-request($request, $endpoint)
 :)
-    (: problem start :)
     let $response   := httpclient:post($endpoint, $tempString, true(), <headers><header name="Content-Type" value="application/x-www-form-urlencoded"/></headers>)
     (: eXist logs: "Could not parse http response content as XML (will try html, text or fallback to binary): The markup in the document following the root element must be well-formed." :)
-    let $rspBody    := if ($response//httpclient:body/@encoding = "Base64Encoded") then parse-xml(util:base64-decode($response//httpclient:body))
-                       else $response//httpclient:body
+    (:let $debug := util:log('warn', '[SPHINX-HIGHLIGHT] request from (open)Sphinxsearch was: &#xA;&#xA;' || $requestDoc || '&#xA;&#xA; Response from (open)Sphinxsearch was: ' 
+        || serialize(if ($response//httpclient:body/@encoding = "Base64Encoded") then util:base64-decode($response) else $response) ):)
+    
+    let $rspBody    := 
+        if ($response//httpclient:body/@encoding = "Base64Encoded") then 
+            if (validation:jaxp(util:base64-decode($response//httpclient:body), false())) then
+                (:let $debug := 
+                    if ($config:debug = "trace") then 
+                        util:log('warn', '[SPHINX] INFO: Received wellformed Base64Encoded HTML from (Open)Sphinxsearch,' || 
+                                         ' parsing HTML for output...') else ()
+                return :)
+                    parse-xml(util:base64-decode($response//httpclient:body))
+            else 
+                (:let $debug := 
+                    if ($config:debug = "trace") then 
+                        util:log('error', '[SPHINX] ERROR: Received malformed Base64Encoded HTML from (Open)Sphinxsearch,' || 
+                                         ' not trying to produce any output here for not crashing the reading view - text will NOT be highlighted...') else ()
+                return :)
+                    ()
+        else 
+            (:let $debug := 
+                if ($config:debug = "trace") then 
+                    util:log('warn', '[SPHINX] INFO: Received wellformed, non-Base64Encoded HTML from (Open)Sphinxsearch, directing to output...') else ()
+            return :)
+                $response//httpclient:body
     (: problem end :)
 (:    let $debug := util:log("warn", "[SPHINX]" || serialize($response//httpclient:body)):)
 
