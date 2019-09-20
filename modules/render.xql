@@ -9,7 +9,7 @@ declare namespace i18n             = 'http://exist-db.org/xquery/i18n';
 import module namespace util       = "http://exist-db.org/xquery/util";
 import module namespace console    = "http://exist-db.org/xquery/console";
 import module namespace config     = "http://salamanca/config" at "config.xqm";
-(:import module namespace app        = "http://salamanca/app"    at "app.xql";:)
+import module namespace app        = "http://salamanca/app"    at "app.xql";
 import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";
 (:import module namespace i18n      = "http://exist-db.org/xquery/i18n"        at "i18n.xql";:)
 
@@ -484,11 +484,6 @@ declare function render:mkUrlWhileRendering($targetWorkId as xs:string, $targetN
 };
 
 
-declare function render:getFragmentFile ($targetWorkId as xs:string, $targetNodeId as xs:string) {
-    doc($config:index-root || '/' || $targetWorkId || '_nodeIndex.xml')//sal:node[@n = $targetNodeId][1]/sal:fragment/text()
-};
-
-
 (:
 ~  Creates a teaser string of limited length (defined in $config:chars_summary) from a given node.
 ~  @param mode: must be one of 'orig', 'edit' (default)
@@ -505,48 +500,6 @@ declare function render:teaserString($node as element(), $mode as xs:string?) as
 
 (: ####++++ HTML Helper Functions ++++####:)
 
-(: Modes for generating citation recommendations: 
-    - "record" for generic citations in catalogue records 
-    - "reading-full" for generic citations in reading view; access date has to be appended elsewhere
-    - "reading-passage" for fine-granular citations in reading view, including passagetrail - this yields two <span>s, 
-        between the two of which the acces date has to be inserted (e.g., by means of JS)
-:)
-declare function render:HTMLmakeCitationReference($wid as xs:string, $fileDesc as element(tei:fileDesc), $mode as xs:string, $node as element()?) as element(span)+ {
-    let $author := $fileDesc/tei:titleStmt/tei:author/tei:persName/tei:surname/text()
-    let $title := $fileDesc/tei:titleStmt/tei:title[@type eq 'short']/text()
-    let $digitalYear := substring($fileDesc/tei:publicationStmt/tei:date[@type eq 'digitizedEd']/@when[1]/string(), 1, 4)
-    let $originalYear := 
-        if ($fileDesc/tei:sourceDesc//tei:date[@type eq 'thisEd']) then
-            $fileDesc/tei:sourceDesc//tei:date[@type eq 'thisEd']/@when
-        else $fileDesc/tei:sourceDesc//tei:date[@type eq 'firstEd']/@when
-    (:let $editors :=
-        string-join(for $ed in $fileDesc/tei:seriesStmt/tei:editor/tei:persName 
-                        order by $ed/tei:surname
-                        return app:rotateFormatName($ed), ' &amp; '):)
-    let $citetrail :=
-        if ($mode eq 'reading-passage' and $node) then
-            render:getNodetrail($wid, $node, 'citetrail')
-        else ()
-    let $citetrailStr := if ($citetrail) then ':' || $citetrail else ()
-    let $link := $config:idserver || '/texts/' || $wid || $citetrailStr || (if ($mode eq 'reading-passage') then '?format=html' else ())
-    let $passagetrail := 
-        if ($mode eq 'reading-passage' and $node) then
-            render:getNodetrail($wid, $node, 'passagetrail')
-        else ()
-    let $body := 
-        <span class="cite-rec-body">{$author || ', ' || $title || ' (' || $digitalYear || ' [' || $originalYear || '])'|| ', '}
-            <i18n:text key="inLow">in</i18n:text>{': '}<i18n:text key="editionSeries">The School of Salamanca. A Digital Collection of Sources</i18n:text>
-            {' <'}
-            <a href="{$link}">{$link}</a>
-            {'>'}
-        </span>
-(:   including editors (before link): {', '}<i18n:text key="editedByAbbrLow">ed. by</i18n:text>{' ' || $editors || ' <'}     :)
-    let $trail :=
-        if ($mode eq 'reading-passage' and $passagetrail) then
-            <span class="cite-rec-trail">{$passagetrail}</span>
-        else ()
-    return ($body, $trail)
-};
 
 (:
 ~ Recursively creates a TOC list (of lists...) for a sequence of nodes.
@@ -555,7 +508,7 @@ declare function render:HTMLgenerateTocFromDiv($nodes as element()*, $wid as xs:
     for $node in $nodes/(tei:div[@type="work_part"]/tei:div[render:isIndexNode(.)]
                          |tei:div[not(@type="work_part")][render:isIndexNode(.)]
                          |*/tei:milestone[@unit ne 'other'][render:isIndexNode(.)]) return
-        let $fragTrail := render:getNodetrail($wid, $node, 'citetrail')
+        let $fragTrail := sal-util:getNodetrail($wid, $node, 'citetrail')
         let $fragId := $config:idserver || '/texts/' || $wid || ':' || $fragTrail || '?format=html'
         let $section := $node/@xml:id/string()
         let $i18nKey := 
@@ -770,7 +723,7 @@ declare function render:HTMLSectionToolbox($node as element()) as element(div) {
                         <i class="fas fa-feather-alt"/>{' '}<i18n:text key="copyCit"/>
                     </button>
                     <span class="sal-cite-rec" style="display:none">
-                        {render:HTMLmakeCitationReference($wid, $fileDesc, 'reading-passage', $node)}
+                        {app:HTMLmakeCitationReference($wid, $fileDesc, 'reading-passage', $node)}
                     </span>
                 </div>
                 <div class="sal-tb-btn dropdown">
@@ -803,19 +756,10 @@ declare function render:HTMLSectionToolbox($node as element()) as element(div) {
 ~ For a node, make a full-blown URI including the citetrail of the node
 :)
 declare function render:makeCitetrailURI($node as element()) {
-    let $citetrail := render:getNodetrail($node/ancestor::tei:TEI/@xml:id, $node, 'citetrail')
+    let $citetrail := sal-util:getNodetrail($node/ancestor::tei:TEI/@xml:id, $node, 'citetrail')
     let $workId := $node/ancestor::tei:TEI/@xml:id
     return
         $config:idserver || '/texts/' || $workId || ':' || $citetrail
-};
-
-declare function render:getNodetrail($wid as xs:string, $node as element(), $mode as xs:string) {
-    let $debug := 
-        if ($mode = ('citetrail', 'crumbtrail', 'passagetrail')) then () 
-        else util:log('error', '[Render] calling render:getNodetrail with unknown mode: ' || $mode)
-    return
-        doc($config:index-root || '/' || $wid || '_nodeIndex.xml')
-            /sal:index/sal:node[@n eq $node/@xml:id]/*[local-name() eq $mode]/node()
 };
 
 

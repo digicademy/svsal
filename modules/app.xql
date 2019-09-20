@@ -14,7 +14,6 @@ declare namespace util       = "http://exist-db.org/xquery/util";
 declare namespace xhtml      = "http://www.w3.org/1999/xhtml";
 declare namespace xi         = "http://www.w3.org/2001/XInclude";
 import module namespace config    = "http://salamanca/config"                at "config.xqm";
-import module namespace render    = "http://salamanca/render"                at "render.xql";
 import module namespace render-app    = "http://salamanca/render-app"        at "render-app.xql";
 import module namespace sphinx    = "http://salamanca/sphinx"                at "sphinx.xql";
 import module namespace console   = "http://exist-db.org/xquery/console";
@@ -379,7 +378,7 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
             for $volume at $index in util:expand($completeWork)//tei:text[@type="work_volume"]
                 let $volId      := xs:string($volume/@xml:id)
                 let $volIdShort := $volume/@n
-                let $volFrag    := render:getFragmentFile($wid, $volId)
+                let $volFrag    := sal-util:getFragmentID($wid, $volId)
                 let $volLink    := 'work.html?wid=' || $wid || "&amp;frag=" || $volFrag || "#" || $volId
                 let $volContent := $volIdShort||'&#xA0;&#xA0;'
                 return '"vol' || $index || '":' || '"' || $volLink || '","vol' || $index || 'Cont":'|| '"' ||$volContent ||'",'
@@ -698,7 +697,7 @@ declare %templates:wrap %private function app:WRKpublication($node as node(), $m
         let $completeWork   :=  $item[@xml:id="completeWork"]
         let $volumesString  :=  for $volume(\: at $index:\) in util:expand($completeWork)//tei:text[@type="work_volume"]
             let $volId      := xs:string($volume/@xml:id)
-            let $volFrag    := render:getFragmentFile($wid, $volId)
+            let $volFrag    := sal-util:getFragmentID($wid, $volId)
             let $volLink    :=  'work.html?wid=' || $wid || "&amp;frag=" || $volFrag || "#" || $volId
             let $volContent := $volId || '&#32;&#32;'
             return  	<a href="{$volLink}">{$volId||'&#32;'}</a>
@@ -763,7 +762,7 @@ declare %templates:wrap
                                                          let $completeWork   :=  $a[@xml:id="completeWork"]
                                                          let $volumesString  :=  for $volume in util:expand($completeWork)//tei:text[@type="work_volume"]
                                                                                     let $volId      := xs:string($volume/@xml:id)
-                                                                                    let $volFrag    := render:getFragmentFile($wid, $volId)
+                                                                                    let $volFrag    := sal-util:getFragmentID($wid, $volId)
                                                                                     let $volLink    :=  'work.html?wid=' || $wid || "&amp;frag=" || $volFrag || "#" || $volId
                                                                                     let $volContent := $volId || '&#32;&#32;'
                                                          return  	<a href="{$volLink}">{$volId||'&#32;'}</a>   
@@ -815,7 +814,7 @@ declare %templates:wrap
                                                          let $completeWork   :=  $a[@xml:id="completeWork"]
                                                          let $volumesString  :=  for $volume in util:expand($completeWork)//tei:text[@type="work_volume"]
                                                                                     let $volId      := xs:string($volume/@xml:id)
-                                                                                    let $volFrag    := render:getFragmentFile($wid, $volId)
+                                                                                    let $volFrag    := sal-util:getFragmentID($wid, $volId)
                                                                                     let $volLink    :=  'work.html?wid=' || $wid || "&amp;frag=" || $volFrag || "#" || $volId
                                                                                     let $volContent := $volId || '&#32;&#32;'
                                                          return  	<a href="{$volLink}">{$volId||'&#32;'}</a>   
@@ -868,7 +867,7 @@ declare %templates:wrap
                                                          let $completeWork   :=  $a[@xml:id="completeWork"]
                                                          let $volumesString  :=  for $volume in util:expand($completeWork)//tei:text[@type="work_volume"]
                                                                                     let $volId      := xs:string($volume/@xml:id)
-                                                                                    let $volFrag    := render:getFragmentFile($wid, $volId)
+                                                                                    let $volFrag    := sal-util:getFragmentID($wid, $volId)
                                                                                     let $volLink    :=  'work.html?wid=' || $wid || "&amp;frag=" || $volFrag || "#" || $volId
                                                                                     let $volContent := $volId || '&#32;&#32;'
                                                          return  	<a href="{$volLink}">{$volId||'&#32;'}</a>   
@@ -882,60 +881,59 @@ declare %templates:wrap
                                 return $items
 };
 
-declare %templates:wrap
-    function app:WRKcreateListPlace($node as node(), $model as map(*), $lang as xs:string?) {
-        let $items      :=  for $item in (collection($config:tei-works-root)//tei:TEI)//tei:text[@type = ('work_monograph', 'work_multivolume')]
-                                let $root       :=  $item/ancestor::tei:TEI
-                                let $id         :=  (session:encode-url( xs:anyURI( 'work.html?wid=' ||  $root/@xml:id ) ))
-                                let $details    :=  (session:encode-url( xs:anyURI( 'workDetails.html?wid=' ||  $root/@xml:id ) ))
-                                let $title      :=  $root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'short']/string()
-                                let $author     :=  app:rotateFormatName($root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName)
-                                let $order      :=  if ($root/tei:teiHeader//tei:sourceDesc//tei:pubPlace[@role = 'thisEd']) then $root/tei:teiHeader//tei:sourceDesc//tei:pubPlace[@role = 'thisEd']
-                                                    else $root/tei:teiHeader//tei:sourceDesc//tei:pubPlace[@role = 'firstEd'] 
-                                order by $order ascending
-                                
-                                    return
-                                        <div class="col-md-6"> 
-                                            <div class="panel panel-default">
-                                                <div class="panel-body">
-                                                    <a class="lead" href="{$id}"><span class="glyphicon glyphicon-file"></span>&#xA0;{$title}</a>
-                                                    <br/>  
-                                                    <span class="lead">{$author}</span>
-                                                    <br/>
-                                                    {
-                                                    let $thisEd         :=      $root//tei:teiHeader//tei:sourceDesc//tei:pubPlace[@role = 'thisEd']
-                                                    let $firstEd        :=      $root//tei:teiHeader//tei:sourceDesc//tei:pubPlace[@role = 'firstEd']
-                                                    let $publisher      :=      if ($thisEd) then $root//tei:teiHeader//tei:imprint/tei:publisher[@n = 'thisEd']/tei:persName[1]/tei:surname 
-                                                                                else $root//tei:teiHeader//tei:imprint/tei:publisher[@n = 'firstEd']/tei:persName[1]/tei:surname
-                                                    let $place          :=      if ($thisEd) then $thisEd else $firstEd
-                                                    let $year           :=      if ($thisEd) 
-                                                                                then $root//tei:teiHeader//tei:sourceDesc//tei:date[@type = 'thisEd']/@when/string() 
-                                                                                else $root//tei:teiHeader//tei:sourceDesc//tei:date[@type = 'firstEd']/@when/string()
-                                                    let $vol            :=      if ($root/tei:teiHeader//tei:monogr//tei:title[@type = 'volume']) 
-                                                                                then concat(', ', $model('currentWorkHeader')//tei:monogr//tei:title[@type = 'volume']) 
-                                                                                else ()                         
-                                                    let $pubDetails     :=      $place || '&#32;'||": " || $publisher || ", " || $year || $vol
-                                                    return $pubDetails
-                                                    }
-                                                    <br/>  
-                                                    {
-                                                    let $wid    := string($root/@xml:id)
-                                                    for $a in (doc($config:tei-works-root || "/" || $wid || ".xml")/tei:TEI//tei:text[@type="work_multivolume"])
-                                                         let $completeWork   :=  $a[@xml:id="completeWork"]
-                                                         let $volumesString  :=  for $volume in util:expand($completeWork)//tei:text[@type="work_volume"]
-                                                                                    let $volId      := xs:string($volume/@xml:id)
-                                                                                    let $volFrag    := render:getFragmentFile($wid, $volId)
-                                                                                    let $volLink    :=  'work.html?wid=' || $wid || "&amp;frag=" || $volFrag || "#" || $volId
-                                                                                    let $volContent := $volId || '&#32;&#32;'
-                                                         return  	<a href="{$volLink}">{$volId||'&#32;'}</a>   
-                                                         return  $volumesString
-                                                   }
-                                                    <br/> 
-                                                   <a  href="{$details}"  title="bibliographical details about this book"> <span class="icon-info2 pull-right" style="font-size: 1.3em;"> </span></a>
-                                               </div>
-                                            </div>  
-                                        </div>
-                                return $items
+declare %templates:wrap function app:WRKcreateListPlace($node as node(), $model as map(*), $lang as xs:string?) {
+    let $items :=  
+        for $item in (collection($config:tei-works-root)//tei:TEI)//tei:text[@type = ('work_monograph', 'work_multivolume')]
+            let $root       :=  $item/ancestor::tei:TEI
+            let $id         :=  (session:encode-url( xs:anyURI( 'work.html?wid=' ||  $root/@xml:id ) ))
+            let $details    :=  (session:encode-url( xs:anyURI( 'workDetails.html?wid=' ||  $root/@xml:id ) ))
+            let $title      :=  $root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'short']/string()
+            let $author     :=  app:rotateFormatName($root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName)
+            let $order      :=  if ($root/tei:teiHeader//tei:sourceDesc//tei:pubPlace[@role = 'thisEd']) then $root/tei:teiHeader//tei:sourceDesc//tei:pubPlace[@role = 'thisEd']
+                                else $root/tei:teiHeader//tei:sourceDesc//tei:pubPlace[@role = 'firstEd'] 
+            order by $order ascending
+                return
+                    <div class="col-md-6"> 
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <a class="lead" href="{$id}"><span class="glyphicon glyphicon-file"></span>&#xA0;{$title}</a>
+                                <br/>  
+                                <span class="lead">{$author}</span>
+                                <br/>
+                                {
+                                let $thisEd         :=      $root//tei:teiHeader//tei:sourceDesc//tei:pubPlace[@role = 'thisEd']
+                                let $firstEd        :=      $root//tei:teiHeader//tei:sourceDesc//tei:pubPlace[@role = 'firstEd']
+                                let $publisher      :=      if ($thisEd) then $root//tei:teiHeader//tei:imprint/tei:publisher[@n = 'thisEd']/tei:persName[1]/tei:surname 
+                                                            else $root//tei:teiHeader//tei:imprint/tei:publisher[@n = 'firstEd']/tei:persName[1]/tei:surname
+                                let $place          :=      if ($thisEd) then $thisEd else $firstEd
+                                let $year           :=      if ($thisEd) 
+                                                            then $root//tei:teiHeader//tei:sourceDesc//tei:date[@type = 'thisEd']/@when/string() 
+                                                            else $root//tei:teiHeader//tei:sourceDesc//tei:date[@type = 'firstEd']/@when/string()
+                                let $vol            :=      if ($root/tei:teiHeader//tei:monogr//tei:title[@type = 'volume']) 
+                                                            then concat(', ', $model('currentWorkHeader')//tei:monogr//tei:title[@type = 'volume']) 
+                                                            else ()                         
+                                let $pubDetails     :=      $place || '&#32;'||": " || $publisher || ", " || $year || $vol
+                                return $pubDetails
+                                }
+                                <br/>  
+                                {
+                                let $wid    := string($root/@xml:id)
+                                for $a in (doc($config:tei-works-root || "/" || $wid || ".xml")/tei:TEI//tei:text[@type="work_multivolume"])
+                                     let $completeWork   :=  $a[@xml:id="completeWork"]
+                                     let $volumesString  :=  for $volume in util:expand($completeWork)//tei:text[@type="work_volume"]
+                                                                let $volId      := xs:string($volume/@xml:id)
+                                                                let $volFrag    := sal-util:getFragmentID($wid, $volId)
+                                                                let $volLink    :=  'work.html?wid=' || $wid || "&amp;frag=" || $volFrag || "#" || $volId
+                                                                let $volContent := $volId || '&#32;&#32;'
+                                     return  	<a href="{$volLink}">{$volId||'&#32;'}</a>   
+                                     return  $volumesString
+                               }
+                                <br/> 
+                               <a  href="{$details}"  title="bibliographical details about this book"> <span class="icon-info2 pull-right" style="font-size: 1.3em;"> </span></a>
+                           </div>
+                        </div>  
+                    </div>
+    return $items
 };
 
 declare function app:loadWRKsnoJs ($node as node(), $model as map (*), $lang as xs:string?, $sort as xs:string?) {
@@ -2504,11 +2502,53 @@ declare function app:WRKeditionRecord($node as node(), $model as map(*), $lang a
 declare function app:WRKcitationReference($node as node()?, $model as map(*)?, $lang as xs:string?, $mode as xs:string) as element(span) {
     let $wid := $model('currentWorkId')
     let $fileDesc := $model('currentWorkHeader')/tei:fileDesc
-    let $content := render:HTMLmakeCitationReference($wid, $fileDesc, $mode, ())
+    let $content := app:HTMLmakeCitationReference($wid, $fileDesc, $mode, ())
 (:    return i18n:process($content, $lang, $config:i18n-root, 'en'):)
     return $content
 };
 
+(: Modes for generating citation recommendations: 
+    - "record" for generic citations in catalogue records 
+    - "reading-full" for generic citations in reading view; access date has to be appended elsewhere
+    - "reading-passage" for fine-granular citations in reading view, including passagetrail - this yields two <span>s, 
+        between the two of which the acces date has to be inserted (e.g., by means of JS)
+:)
+declare function app:HTMLmakeCitationReference($wid as xs:string, $fileDesc as element(tei:fileDesc), $mode as xs:string, $node as element()?) as element(span)+ {
+    let $author := $fileDesc/tei:titleStmt/tei:author/tei:persName/tei:surname/text()
+    let $title := $fileDesc/tei:titleStmt/tei:title[@type eq 'short']/text()
+    let $digitalYear := substring($fileDesc/tei:publicationStmt/tei:date[@type eq 'digitizedEd']/@when[1]/string(), 1, 4)
+    let $originalYear := 
+        if ($fileDesc/tei:sourceDesc//tei:date[@type eq 'thisEd']) then
+            $fileDesc/tei:sourceDesc//tei:date[@type eq 'thisEd']/@when
+        else $fileDesc/tei:sourceDesc//tei:date[@type eq 'firstEd']/@when
+    (:let $editors :=
+        string-join(for $ed in $fileDesc/tei:seriesStmt/tei:editor/tei:persName 
+                        order by $ed/tei:surname
+                        return app:rotateFormatName($ed), ' &amp; '):)
+    let $citetrail :=
+        if ($mode eq 'reading-passage' and $node) then
+            sal-util:getNodetrail($wid, $node, 'citetrail')
+        else ()
+    let $citetrailStr := if ($citetrail) then ':' || $citetrail else ()
+    let $link := $config:idserver || '/texts/' || $wid || $citetrailStr || (if ($mode eq 'reading-passage') then '?format=html' else ())
+    let $passagetrail := 
+        if ($mode eq 'reading-passage' and $node) then
+            sal-util:getNodetrail($wid, $node, 'passagetrail')
+        else ()
+    let $body := 
+        <span class="cite-rec-body">{$author || ', ' || $title || ' (' || $digitalYear || ' [' || $originalYear || '])'|| ', '}
+            <i18n:text key="inLow">in</i18n:text>{': '}<i18n:text key="editionSeries">The School of Salamanca. A Digital Collection of Sources</i18n:text>
+            {' <'}
+            <a href="{$link}">{$link}</a>
+            {'>'}
+        </span>
+(:   including editors (before link): {', '}<i18n:text key="editedByAbbrLow">ed. by</i18n:text>{' ' || $editors || ' <'}     :)
+    let $trail :=
+        if ($mode eq 'reading-passage' and $passagetrail) then
+            <span class="cite-rec-trail">{$passagetrail}</span>
+        else ()
+    return ($body, $trail)
+};
 
 (:~
 Creates a html (div) fragment containing bibliographic information about a print source, 

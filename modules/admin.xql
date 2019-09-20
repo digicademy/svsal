@@ -15,6 +15,7 @@ import module namespace config      = "http://salamanca/config"                 
 import module namespace render      = "http://salamanca/render"                 at "render.xql";
 import module namespace render-app      = "http://salamanca/render-app"         at "render-app.xql";
 import module namespace sphinx      = "http://salamanca/sphinx"                 at "sphinx.xql";
+import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";
 declare namespace output            = "http://www.w3.org/2010/xslt-xquery-serialization";
 
 declare option exist:timeout "25000000"; (: ~7 h :)
@@ -863,12 +864,12 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
                 else ()
             let $hit_type := local-name($hit)
             let $hit_id := xs:string($hit/@xml:id)
-            let $hit_citetrail := if ($nodeType eq 'work') then render:getNodetrail($work_id, $hit, 'citetrail') else ()
+            let $hit_citetrail := if ($nodeType eq 'work') then sal-util:getNodetrail($work_id, $hit, 'citetrail') else ()
 (:                doc($config:index-root || '/' || $work_id || '_nodeIndex.xml')//sal:node[@n = $hit_id]/sal:citetrail:)
             let $hit_language := xs:string($hit/ancestor-or-self::tei:*[@xml:lang][1]/@xml:lang)
             let $hit_fragment := 
                 if ($hit_id and xmldb:collection-available($config:html-root || '/' || $work_id)) then
-                    render:getFragmentFile($work_id, $hit_id)
+                    sal-util:getFragmentID($work_id, $hit_id)
                 else ()
             let $hit_fragment_number := 
                 if ($hit_fragment) then
@@ -1150,7 +1151,7 @@ declare function admin:createNodeIndex($wid as xs:string*) {
             (: render and store the work's plain text :)
             return 
                 <div>
-                    <h4>{$wid}</h4>
+                     <h4>{$wid}</h4>
                      <p>Fragmentierungstiefe: <code>{$fragmentationDepth}</code></p>
                      {if (count($missed-elements)) then <p>{count($missed-elements)} nicht erfasste Elemente:<br/>
                         {for $e in $missed-elements return <code>{local-name($e) || "(" || string($e/@xml:id) || "); "}</code>}</p>
@@ -1192,8 +1193,9 @@ declare function admin:createRDF($rid as xs:string) {
         else $rid
     let $start-time := util:system-time()
     let $debug := 
-        console:log("Requesting " || $config:apiserver || '/v1/xtriples/extract.xql?format=rdf&amp;configuration=' 
+        util:log("warn", "Requesting " || $config:apiserver || '/v1/xtriples/extract.xql?format=rdf&amp;configuration=' 
             || $config:apiserver || '/v1/xtriples/createConfig.xql?resourceId=' || $rid || ' ...')
+    let $configuration := doc($config:apiserver || '/v1/xtriples/createConfig.xql?resourceId=' || $rid) 
     let $rdf   :=  
         doc($config:apiserver || '/v1/xtriples/extract.xql?format=rdf&amp;configuration=' 
             || $config:apiserver || '/v1/xtriples/createConfig.xql?resourceId=' || $rid)

@@ -3,9 +3,10 @@ xquery version "3.1";
 module namespace sal-util = "http://salamanca/sal-util";
 
 import module namespace config = "http://salamanca/config" at "config.xqm";
+import module namespace util       = "http://exist-db.org/xquery/util";
 
 declare namespace tei = "http://www.tei-c.org/ns/1.0";
-
+declare namespace sal = "http://salamanca.adwmainz.de";
 
 (:
 ~ Makes a copy of a node tree, to be used for making copies of subtrees on-the-fly for not having to process the whole document
@@ -170,6 +171,20 @@ declare function sal-util:getNodeIndexValue($wid as xs:string, $node as element(
     if (doc-available($config:index-root || '/' || $wid || '.xml')) then
         ()
     else ()
+};
+
+
+declare function sal-util:getFragmentID($targetWorkId as xs:string, $targetNodeId as xs:string) as xs:string? {
+    doc($config:index-root || '/' || $targetWorkId || '_nodeIndex.xml')//sal:node[@n = $targetNodeId][1]/sal:fragment/text()
+};
+
+declare function sal-util:getNodetrail($wid as xs:string, $node as element(), $mode as xs:string) {
+    let $debug := 
+        if ($mode = ('citetrail', 'crumbtrail', 'passagetrail')) then () 
+        else util:log('error', '[SAL-UTIL] calling render:getNodetrail with unknown mode: ' || $mode)
+    return
+        doc($config:index-root || '/' || $wid || '_nodeIndex.xml')
+            /sal:index/sal:node[@n eq $node/@xml:id]/*[local-name() eq $mode]/node()
 };
 
 
