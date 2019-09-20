@@ -2121,6 +2121,7 @@ declare %templates:wrap function app:WRKcatRecord($node as node(), $model as map
 declare function app:WRKadditionalInfoRecord($node as node(), $model as map(*), $lang as xs:string?) {
     let $workType := $model('currentWorkType')
     let $workId := $model('currentWorkId')
+    let $normId := sal-util:convertNumericVolumeID($workId)
     let $status := $model('currentWorkHeader')/tei:revisionDesc/@status/string()
 
     let $mirador := 'viewer_standalone.html?wid=' || $workId
@@ -2148,7 +2149,7 @@ declare function app:WRKadditionalInfoRecord($node as node(), $model as map(*), 
             </ul>
         </div>
         
-    let $teiHeader := $config:idserver || '/texts/' || $workId || '?format=tei&amp;mode=meta'
+    let $teiHeader := $config:idserver || '/texts/' || $normId || '?format=tei&amp;mode=meta'
     let $teiHeaderLink :=   <a href="{$teiHeader}">
                                 <i18n:text key="teiHeader">TEI Header</i18n:text>
                             </a>
@@ -2179,12 +2180,12 @@ declare function app:WRKadditionalInfoRecord($node as node(), $model as map(*), 
                 <hr/>
                 <h4><i18n:text key="download">Metadata</i18n:text></h4>
                 <ul>
-                    <li><a href="{$config:idserver || '/texts/' || $workId ||'?format=tei'}">XML (TEI P5)</a></li>
-                    <li><a href="{$config:idserver || '/texts/' || $workId ||'?format=txt&amp;mode=edit'}">
+                    <li><a href="{$config:idserver || '/texts/' || $normId ||'?format=tei'}">XML (TEI P5)</a></li>
+                    <li><a href="{$config:idserver || '/texts/' || $normId ||'?format=txt&amp;mode=edit'}">
                             <i18n:text key="text">Text</i18n:text> (<i18n:text key="constitutedLower">constituted</i18n:text>)
                         </a>
                     </li>
-                    <li><a href="{$config:idserver || '/texts/' || $workId ||'?format=txt&amp;mode=orig'}">
+                    <li><a href="{$config:idserver || '/texts/' || $normId ||'?format=txt&amp;mode=orig'}">
                             <i18n:text key="text">Text</i18n:text> (<i18n:text key="diplomaticLower">diplomatic</i18n:text>)
                         </a>
                     </li>
@@ -2220,41 +2221,42 @@ declare function app:WRKcatRecordTeaser($node as node(), $model as map(*), $wid 
             let $bibliographical := app:WRKprintMetadata($node, $model, sal-util:normalizeId($wid), $lang)
             let $titleShort := $digital?('titleShort')
             let $volumeString := $bibliographical?('volumeNumber') || ' of ' || string($volumes)
-            let $pubDate :=     if ($digital?('isPublished')) then
-                                    i18n:convertDate($digital?('publicationDate'), $lang, 'verbose')
-                                else ()
-            let $editors :=     if ($digital?('isPublished')) then $digital?('alphaEditors')
-                                else ()
+            let $pubDate :=     
+                if ($digital?('isPublished')) then
+                    i18n:convertDate($digital?('publicationDate'), $lang, 'verbose')
+                else ()
+            let $editors := if ($digital?('isPublished')) then $digital?('alphaEditors') else ()
             let $recordLink := 'workDetails.html?wid=' || $wid
             let $imagesLink := 'viewer_standalone.html?wid=' || $wid
             let $col1-width := 'col-md-2'
             let $col2-width := 'col-md-10'
-            let $publication := if ($digital?('isPublished')) then 
-                                    (<tr>
-                                         <td class="{$col1-width}" style="line-height: 1.2">
-                                             <i18n:text key="editors">Editors</i18n:text>:
-                                         </td>
-                                         <td class="{$col2-width}" style="line-height: 1.2">
-                                             {$editors}
-                                         </td>
-                                     </tr>,
-                                     <tr>
-                                         <td class="{$col1-width}" style="line-height: 1.2">
-                                             <i18n:text key="digitalPublication">Electronic Publication</i18n:text>:
-                                         </td>
-                                         <td class="{$col2-width}" style="line-height: 1.2">
-                                             {$pubDate}
-                                         </td>
-                                     </tr>)
-                                 else 
-                                    <tr>
-                                        <td class="{$col1-width}" style="line-height: 1.2">
-                                            <i18n:text key="digitalPublication">Electronic publication</i18n:text>:
-                                        </td>
-                                        <td class="{$col2-width}" style="line-height: 1.2">
-                                            <i18n:text key="notPublished">Not yet published</i18n:text>
-                                        </td>
-                                    </tr>
+            let $publication := 
+                if ($digital?('isPublished')) then 
+                    (<tr>
+                         <td class="{$col1-width}" style="line-height: 1.2">
+                             <i18n:text key="editors">Editors</i18n:text>:
+                         </td>
+                         <td class="{$col2-width}" style="line-height: 1.2">
+                             {$editors}
+                         </td>
+                     </tr>,
+                     <tr>
+                         <td class="{$col1-width}" style="line-height: 1.2">
+                             <i18n:text key="digitalPublication">Electronic Publication</i18n:text>:
+                         </td>
+                         <td class="{$col2-width}" style="line-height: 1.2">
+                             {$pubDate}
+                         </td>
+                     </tr>)
+                else 
+                    <tr>
+                        <td class="{$col1-width}" style="line-height: 1.2">
+                            <i18n:text key="digitalPublication">Electronic publication</i18n:text>:
+                        </td>
+                        <td class="{$col2-width}" style="line-height: 1.2">
+                            <i18n:text key="notPublished">Not yet published</i18n:text>
+                        </td>
+                    </tr>
             return 
                 <div class="col-md-9 catrecord-teasertext">
                     <table class="borderless table table-hover">
@@ -2305,11 +2307,12 @@ Determines whether a given work (not volume) is officially published as part of 
 ~:)
 declare function app:WRKisPublished($node as node(), $model as map(*), $wid as xs:string) as xs:boolean {
     let $workId := sal-util:normalizeId($wid)
-    let $status :=  if ($workId eq $model('currentWorkId')) then
-                        $model('currentWorkHeader')/tei:revisionDesc/@status/string()
-                    else if (doc-available($config:tei-works-root || '/' || $workId || '.xml')) then 
-                        doc($config:tei-works-root || '/' || $workId || '.xml')/tei:TEI/tei:teiHeader/tei:revisionDesc/@status/string()
-                    else 'no_status'
+    let $status :=  
+        if ($workId eq $model('currentWorkId')) then
+            $model('currentWorkHeader')/tei:revisionDesc/@status/string()
+        else if (doc-available($config:tei-works-root || '/' || $workId || '.xml')) then 
+            doc($config:tei-works-root || '/' || $workId || '.xml')/tei:TEI/tei:teiHeader/tei:revisionDesc/@status/string()
+        else 'no_status'
     let $publishedStatus := ('g_enriched_approved', 'h_revised', 'i_revised_approved', 'z_final')
     return $status = $publishedStatus
 };
@@ -2327,12 +2330,10 @@ Creates a thumbnail image for the catalogue record of a work or volume.
 @return: HTML div
 ~:)
 declare function app:WRKcatRecordThumbnail($node as node(), $model as map(*), $wid as xs:string?, $mode as xs:string?) {
-    (:let $tei := 
-        (\:if ($wid and $wid eq $model('currentWorkId')) then $model('currentWork')
-        else :\)if (doc-available($config:tei-works-root || '/' || sal-util:normalizeId($wid) || '.xml')) then
-            doc($config:tei-works-root || '/' || sal-util:normalizeId($wid) || '.xml')/tei:TEI
-        else ():)
-    let $workId := if ($wid and sal-util:normalizeId($wid) ne $model('currentWorkId')) then sal-util:normalizeId($wid) else sal-util:normalizeId($model('currentWorkId'))
+    let $workId := 
+        if ($wid and sal-util:normalizeId($wid) ne $model('currentWorkId')) then 
+            sal-util:normalizeId($wid) 
+        else sal-util:normalizeId($model('currentWorkId'))
     let $iiifResource := iiif:fetchResource($workId)
     let $img :=  
         if ($iiifResource?('@type') eq 'sc:Manifest') then 
@@ -2349,7 +2350,7 @@ declare function app:WRKcatRecordThumbnail($node as node(), $model as map(*), $w
     let $volNumber := doc($config:tei-works-root || '/' || $workId || '.xml')/tei:TEI/tei:text/@n/string()
     let $target := 
         if ($workType eq 'work_volume') then
-            $config:idserver || '/works.' || substring($workId,1,5) || ':vol' || $volNumber
+            $config:idserver || '/texts/' || substring($workId,1,5) || ':vol' || $volNumber || '?format=html'
         else
             concat('work.html?wid=', $workId)
     let $status :=
@@ -2500,7 +2501,7 @@ declare function app:WRKeditionRecord($node as node(), $model as map(*), $lang a
 
 (: modes: "record" for generic citations in catalogue records; "reading-full", "reading-passage" - only relevant for access date :)
 declare function app:WRKcitationReference($node as node()?, $model as map(*)?, $lang as xs:string?, $mode as xs:string) as element(span) {
-    let $wid := $model('currentWorkId')
+    let $wid := sal-util:convertNumericVolumeID($model('currentWorkId'))
     let $fileDesc := $model('currentWorkHeader')/tei:fileDesc
     let $content := app:HTMLmakeCitationReference($wid, $fileDesc, $mode, ())
 (:    return i18n:process($content, $lang, $config:i18n-root, 'en'):)

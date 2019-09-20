@@ -150,6 +150,16 @@ declare function sal-util:convertVolumeID($volId as xs:string) as xs:string {
     return $workId || $volInfix || $volN
 };
 
+declare function sal-util:convertNumericVolumeID($volId as xs:string) as xs:string? {
+    if (matches($volId, '^[Ww]\d{4}$')) then upper-case($volId)
+    else if (matches($volId, 'W\d{4}:vol\d{1,2}$')) then $volId
+    else if (matches($volId, '^[Ww]\d{4}_[Vv][Oo][Ll]\d{2}$')) then
+        let $mainN := substring($volId, 2, 4)
+        let $volN := if (substring($volId, 10,1) eq '0') then substring($volId, 11) else substring($volId, 10)
+        return 'W' || $mainN || ':vol' || $volN
+    else ()
+};
+
 
 (:
 ~ Removes insignificant whitespace from an HTML document/fragment.
