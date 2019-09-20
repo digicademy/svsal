@@ -389,7 +389,8 @@ declare function render:isListNode($node as node()) as xs:boolean {
         (
             $node/self::tei:list or
             $node/self::tei:item or
-            $node/self::tei:head[ancestor::tei:list]
+            $node/self::tei:head[ancestor::tei:list] or
+            $node/self::tei:argument[ancestor::tei:list]
         ) and 
         not($node/ancestor::*[render:isMainNode(.) or render:isMarginalNode(.)])
     )
@@ -422,7 +423,7 @@ declare function render:isBasicNode($node as node()) as xs:boolean {
         render:isMarginalNode($node) or
         (:(render:isListNode($node) and not($node/descendant::*[render:isListNode(.)])):)
         (render:isListNode($node) and (($node/self::tei:list and not($node/descendant::tei:list))
-                                       or ($node[(self::tei:item or self::tei:head) 
+                                       or ($node[(self::tei:item or self::tei:head or self::tei:argument) 
                                                  and not(descendant::tei:list) 
                                                  and following-sibling::tei:item[./tei:list[render:isListNode(.)]]])
                                       )

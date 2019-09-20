@@ -1126,12 +1126,12 @@ declare function admin:createNodeIndex($wid as xs:string*) {
             (: search for " //sal:citetrail[not(./text())] ":)
             (: not checking crumbtrails here ATM for not slowing down index creation too much... :)
             
-            (: check if all text is being captured through basic index nodes (that is, if all text is citable) :)
-            let $checkCitability := 
+            (: check whether all text is being captured through basic index nodes (that is, whether every single passage is citable) :)
+            let $checkBasicNodes := 
                 for $t in $work//tei:text//text()[normalize-space() ne ''] return
                     if ($t[not(ancestor::*[render:isBasicNode(.)]) and not(ancestor::tei:figDesc)]) then 
                         let $debug := util:log('error', 'Encountered text node without ancestor::*[render:isBasicNode(.)], in line ' || $t/preceding::tei:lb[1]/@xml:id/string())
-                        return error(xs:QName('render:createNodeIndex'), 'Encountered text node without ancestor::*[render:isBasicNode(.)]') 
+                        return error(xs:QName('render:createNodeIndex'), 'Encountered text node without ancestor::*[render:isBasicNode(.)], in line ' || $t/preceding::tei:lb[1]/@xml:id/string()) 
                     else ()
             (: if no xml:id is put out, try to search these cases like so:
                 //text//text()[not(normalize-space() eq '')][not(ancestor::*[@xml:id and (self::p or self::signed or self::head or self::titlePage or self::lg or self::item or self::label or self::argument or self::table)])]
