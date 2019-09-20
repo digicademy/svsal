@@ -404,13 +404,7 @@
                 // construct string to be copied: get pre-rendered work/passage citation strings and insert the current date
                 var v1 = target.getElementsByClassName('cite-rec-body')[0].textContent;
                 var v2 = getI18nAccessString();
-                var v3;
-                if (target.getElementsByClassName('cite-rec-trail')[0]) {
-                    v3 = ', ' + target.getElementsByClassName('cite-rec-trail')[0].textContent;
-                } else {
-                    v3 = '';
-                }
-                input.textContent = v1 + ' ' + v2 + v3;
+                input.textContent = v1 + ' ' + v2;
                 document.body.appendChild(input);
                 input.select();
                 document.execCommand('copy');

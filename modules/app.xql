@@ -2533,21 +2533,20 @@ declare function app:HTMLmakeCitationReference($wid as xs:string, $fileDesc as e
     let $link := $config:idserver || '/texts/' || $wid || $citetrailStr || (if ($mode eq 'reading-passage') then '?format=html' else ())
     let $passagetrail := 
         if ($mode eq 'reading-passage' and $node) then
-            sal-util:getNodetrail($wid, $node, 'passagetrail')
+            let $passage := sal-util:getNodetrail($wid, $node, 'passagetrail')
+            return 
+                if ($passage) then <span class="cite-rec-trail">{$passage || ', '}</span> else ()
         else ()
     let $body := 
         <span class="cite-rec-body">{$author || ', ' || $title || ' (' || $digitalYear || ' [' || $originalYear || '])'|| ', '}
+            {$passagetrail}
             <i18n:text key="inLow">in</i18n:text>{': '}<i18n:text key="editionSeries">The School of Salamanca. A Digital Collection of Sources</i18n:text>
             {' <'}
             <a href="{$link}">{$link}</a>
             {'>'}
         </span>
 (:   including editors (before link): {', '}<i18n:text key="editedByAbbrLow">ed. by</i18n:text>{' ' || $editors || ' <'}     :)
-    let $trail :=
-        if ($mode eq 'reading-passage' and $passagetrail) then
-            <span class="cite-rec-trail">{$passagetrail}</span>
-        else ()
-    return ($body, $trail)
+    return ($body)
 };
 
 (:~
