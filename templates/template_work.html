@@ -115,8 +115,6 @@
                 }
             });
             function myScrollIntoView(targetId) {
-                $("html, body").animate({ scrollTop: $(targetId)[0].position().top }, 1000);
-                
                 /*
                 $(targetId)[0].scrollIntoView(true, {behavior: 'smooth'});
                 var scrolledY = window.scrollY;
@@ -129,16 +127,14 @@
                     $(targetId).effect( "highlight", {color:'LightSkyBlue'}, 1200 );
                 }
                 */
+                $offset = $(targetId).offset().top;
+                console.log("$('" + targetId + "').offset().top = " + $offset + ".")
+                goHere = $offset - 80;
+                console.log("Go to " + goHere + ".")
+                $("html, body").animate({scrollTop: goHere}, 800, 'swing', function () {
+                                $(targetId).effect( "highlight", {color:'LightSkyBlue'}, 1200 );
+                            });
                 
-//                var $offset = $(targetId)[0].offset().top;
-//                console.log("$('" + targetId + "').offset().top = " + $offset + ".")
-//                goHere = $offset - 80;
-//                console.log("Go to " + goHere + ".")
-//                $('#wrapperWork').animate({scrollTop: goHere}, 800, 'swing', function () {
-//                                $(targetId).parent().effect( "highlight", {color:'LightSkyBlue'}, 700 );
-//                                $(targetId).parent().effect( "highlight", {color:'LightSkyBlue'}, 700 );
-//                                $(targetId).parent().effect( "highlight", {color:'LightSkyBlue'}, 700 );
-//                            });
             }
         </script>
 
