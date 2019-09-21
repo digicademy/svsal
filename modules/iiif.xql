@@ -548,9 +548,12 @@ declare function iiif:MiradorWindowObject($node as node(), $model as map (*), $w
         </output:serialization-parameters>)
 };
 
+(:
+~ Returns the canonical (citetrail) URI of the page break(s) matching one or more canvas ID(s).
+:)
 declare function iiif:getPageId($canvasId as xs:string*) {
     let $htmlCollection := collection($config:html-root )
-    let $results := map:new(
+    let $results := map:merge(
                             for $id in $canvasId
                                 let $htmlAnchor := $htmlCollection//a[@data-canvas = $id]
                                 let $pageId     := $htmlAnchor/@data-sal-id/string()

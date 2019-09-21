@@ -83,7 +83,7 @@
 
         <!-- ==== Scroll an anchor into view if we have one ==== -->
         <script type="text/javascript">
-            $('.sal-toolbox-marginal')
+            $('.sal-toolbox-marginal, .sal-toolbox-title, .sal-toolbox')
                 .filter(function() {
 //                    console.log("Click on a@href=" + $(this).attr('href') + '... (window.location.href being ' + window.location.href + '.)');
 //                    console.log((window.location.origin + window.location.pathname + window.location.search
@@ -115,21 +115,22 @@
                 }
             });
             function myScrollIntoView(targetId) {
-                $(targetId)[0].scrollIntoView(true);
+                $("html, body").animate({ scrollTop: $(targetId)[0].position().top }, 1000);
+                
+                /*
+                $(targetId)[0].scrollIntoView(true, {behavior: 'smooth'});
                 var scrolledY = window.scrollY;
                 if(scrolledY){
                   window.scroll(0, scrolledY - $(".navbar-fixed-top").outerHeight(true) - 50);
                 };
                 if($(targetId).nodeName == "A") {
                     $(targetId).parent().effect( "highlight", {color:'LightSkyBlue'}, 1200 );
-                    //$(targetId).parent().effect( "highlight", {color:'LightSkyBlue'}, 700 );
-                    //$(targetId).parent().effect( "highlight", {color:'LightSkyBlue'}, 700 );
                 } else {
                     $(targetId).effect( "highlight", {color:'LightSkyBlue'}, 1200 );
-                    //$(targetId).effect( "highlight", {color:'LightSkyBlue'}, 700 );
-                    //$(targetId).effect( "highlight", {color:'LightSkyBlue'}, 700 );
                 }
-//                var $offset = $(targetId).offset().top;
+                */
+                
+//                var $offset = $(targetId)[0].offset().top;
 //                console.log("$('" + targetId + "').offset().top = " + $offset + ".")
 //                goHere = $offset - 80;
 //                console.log("Go to " + goHere + ".")
@@ -722,17 +723,14 @@
             $('#Mirador').contents().find("#sync").on('click', function(){
                 $canvasId = document.getElementById('Mirador').contentWindow.MyObjects.myMirador.viewer.workspace.windows[0].canvasID
                 var target = $("a[data-canvas='" + $canvasId +"']");
+                var test = document.getElementById('Mirador').contentWindow.MyObjects.myMirador;
+                console.log(test);
+                console.log(target);
+                console.log('target.attr("id"): ' + target.attr('id'));
                 if (target.length) {
                     console.log('sync button has been clicked on canvasId ' + $canvasId + ', going to #' + target.attr('id'));
-// TODO use myScrollIntoView('#'+ target.attr('id'))...
-                    var $offset = target.offset();                  // Contains .top and .left
-                    $offset.top -= ($(".navbar-white").outerHeight() + 5);
-                    $('html, body').animate({
-                            'scrollTop': $offset.top
-                          }, 800, 'swing', function () {
-                                    target.parent().effect( "highlight", {color:'LightSkyBlue'}, 1000 );
-                                    target.parent().effect( "highlight", {color:'LightSkyBlue'}, 1000 );
-                                });
+                    myScrollIntoView('#'+ target.attr('id'));
+                    event.preventDefault();
                 } else {
                     console.log('sync button has been clicked, but the target element for canvasId ' + $canvasId + ' is not here.');
                     $.getJSON( 'iiif-in.xql?canvasId=' + $canvasId )

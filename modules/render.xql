@@ -2382,13 +2382,12 @@ declare function render:pb($node as element(tei:pb), $mode as xs:string) {
                         let $title := if (contains($node/@n, 'fol.')) then 'View image of ' || $node/@n else 'View image of p. ' || $node/@n
                         return
                             <div class="pageNumbers">
-                                <a href="{render:resolveFacsURI($node/@facs)}">
+                                <a href="{render:resolveFacsURI($node/@facs)}" data-canvas="{render:resolveCanvasID($node)}"
+                                   data-sal-id="{render:makeCitetrailURI($node)}" id="{$pageAnchor}" title="{$title}"
+                                   class="pageNo messengers">
                                     <i class="fas fa-book-open facs-icon"/>
                                     {' '}
-                                    <span class="pageNo messengers" data-canvas="{render:resolveCanvasID($node)}"
-                                        data-sal-id="{render:makeCitetrailURI($node)}" id="{$pageAnchor}" title="{$title}">
                                         {render:pb($node, 'html-title')}
-                                    </span>
                                 </a>
                             </div>
                     else ()
