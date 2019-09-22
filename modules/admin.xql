@@ -554,13 +554,14 @@ declare %templates:wrap function admin:renderWork($workId as xs:string*) as elem
                         <li>
                             <b>{$title}</b>
                             <span class="jstree-anchor hideMe pull-right">{render:HTMLgetPagesFromDiv($text) }</span>
-                                {if ($work//tei:text[@type='work_volume']) then for $a in $work//tei:text where $a[@type='work_volume'] return
-                                <ul>
-                                    <li>
-                                        <a class="hideMe"><b>{concat('Volume: ', $a/@n/string())}</b></a>
-                                        { render:HTMLgenerateTocFromDiv($a/(tei:front | tei:body | tei:back), $workId)}
-                                    </li>
-                                </ul>
+                                {if ($work//tei:text[@type='work_volume']) then 
+                                    for $a in $work//tei:text[@type='work_volume' and sal-util:WRKisPublished($workId || '_' || @xml:id)] return
+                                        <ul>
+                                            <li>
+                                                <a class="hideMe"><b>{concat('Volume: ', $a/@n/string())}</b></a>
+                                                { render:HTMLgenerateTocFromDiv($a/(tei:front | tei:body | tei:back), $workId)}
+                                            </li>
+                                        </ul>
                                 else render:HTMLgenerateTocFromDiv($elements, $workId)}
                         </li>
                     </ul>
