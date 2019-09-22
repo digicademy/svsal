@@ -1007,13 +1007,13 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
 ~ A rule picking those elements that should become the fragments rendering a work. Requires an expanded(!) TEI work's dataset.
 :)
 declare function admin:getFragmentNodes($work as element(tei:TEI), $fragmentationDepth as xs:integer) as node()* {
-    (for $text in $work//tei:text[@type = ('work_volume', 'work_monograph')] return 
+    (for $text in $work//tei:text[@type eq 'work_monograph' 
+                                  or (@type eq 'work_volume' and sal-util:WRKisPublished($work/@xml:id || '_' || @xml:id))] return 
         (
         (: in front, fragmentation must not go below the child level (child fragments shouldn't be too large here) :)
         (if ($text/tei:front//tei:*[count(./ancestor-or-self::tei:*) eq $fragmentationDepth]) then
              $text/tei:front/*
          else $text/tei:front),
-        (: in body and back, fragments are identified according to $fragmentationDepth :)
         (if ($text/tei:body//tei:*[count(./ancestor-or-self::tei:*) eq $fragmentationDepth]) then
              $text/tei:body//tei:*[count(./ancestor-or-self::tei:*) eq $fragmentationDepth]
          else $text/tei:body),
@@ -1059,7 +1059,13 @@ declare function admin:createNodeIndex($wid as xs:string*) {
             let $target-set := admin:getFragmentNodes($work, $fragmentationDepth)
             
             (: First, get all relevant nodes :)
-            let $nodes := $work//tei:text/descendant-or-self::*[render:isIndexNode(.)]
+            let $nodes := 
+                for $text in $work//tei:text[@type = ('work_volume', 'work_monograph')] return 
+                    (: make sure that we only grasp nodes that are within a published volume :)
+                    if (($text/@type eq 'work_volume' and sal-util:WRKisPublished($wid || '_' || $text/@xml:id))
+                        or $text/@type eq 'work_monograph') then 
+                        $text/descendant-or-self::*[render:isIndexNode(.)]
+                    else ()
             
             (: Create the fragment id for each node beforehand, so that recursive crumbtrail creation has it readily available :)
             let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Node indexing: identifying fragment ids ...") else ()
@@ -1128,7 +1134,9 @@ declare function admin:createNodeIndex($wid as xs:string*) {
             
             (: check whether all text is being captured through basic index nodes (that is, whether every single passage is citable) :)
             let $checkBasicNodes := 
-                for $t in $work//tei:text//text()[normalize-space() ne ''] return
+                for $t in $work//tei:text[@type eq 'work_monograph' 
+                                          or (@type eq 'work_volume' and sal-util:WRKisPublished($wid || '_' || @xml:id))]
+                                          //text()[normalize-space() ne ''] return
                     if ($t[not(ancestor::*[render:isBasicNode(.)]) and not(ancestor::tei:figDesc)]) then 
                         let $debug := util:log('error', 'Encountered text node without ancestor::*[render:isBasicNode(.)], in line ' || $t/preceding::tei:lb[1]/@xml:id/string())
                         return error(xs:QName('render:createNodeIndex'), 'Encountered text node without ancestor::*[render:isBasicNode(.)], in line ' || $t/preceding::tei:lb[1]/@xml:id/string()) 
