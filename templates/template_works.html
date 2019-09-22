@@ -84,14 +84,56 @@
                                         '&lt;/p&gt;' +
                                         '&lt;p class="volumeLinks"&gt;' +
                                             '&lt;span&gt;&lt;%= obj.volLabel %&gt;&lt;/span&gt;' +
-                                            '&lt;a class="workVolume" href="&lt;%= obj.vol1 %&gt;"&gt;&lt;%= obj.vol1Cont %&gt;&lt;/a&gt;' +
-                                    		    '&lt;a class="workVolume" href="&lt;%= obj.vol2 %&gt;"&gt;&lt;%= obj.vol2Cont %&gt;&lt;/a&gt;' +
-                                    		    '&lt;a class="workVolume" href="&lt;%= obj.vol3 %&gt;"&gt;&lt;%= obj.vol3Cont %&gt;&lt;/a&gt;' +
-                                  		    '&lt;a class="workVolume" href="&lt;%= obj.vol4 %&gt;"&gt;&lt;%= obj.vol4Cont %&gt;&lt;/a&gt;' +
-                                  		    '&lt;a class="workVolume" href="&lt;%= obj.vol5 %&gt;"&gt;&lt;%= obj.vol5Cont %&gt;&lt;/a&gt;' +
-                                  		    '&lt;a class="workVolume" href="&lt;%= obj.vol6 %&gt;"&gt;&lt;%= obj.vol6Cont %&gt;&lt;/a&gt;' +
-                                  		    '&lt;a class="workVolume" href="&lt;%= obj.vol7 %&gt;"&gt;&lt;%= obj.vol7Cont %&gt;&lt;/a&gt;' +
-                                  		    '&lt;a class="workVolume" href="&lt;%= obj.vol8 %&gt;"&gt;&lt;%= obj.vol8Cont %&gt;&lt;/a&gt;' +
+                                            '&lt;% if (obj.vol1) { %&gt;' +
+                                                '&lt;a class="workVolume" href="&lt;%= obj.vol1 %&gt;"&gt;&lt;%= obj.vol1Cont %&gt;&lt;/a&gt;' +
+                                            '&lt;% } else {%&gt;' +
+                                                '&lt;span class="workVolume"&gt;&lt;%= obj.vol1Cont %&gt;&lt;/span&gt;' +
+                                            '&lt;% }%&gt;' +
+                                            '&lt;% if (obj.vol2) { %&gt;' +
+                                                '&lt;a class="workVolume" href="&lt;%= obj.vol2 %&gt;"&gt;&lt;%= obj.vol2Cont %&gt;&lt;/a&gt;' +
+                                            '&lt;% } else {%&gt;' +
+                                                '&lt;span class="workVolume"&gt;&lt;%= obj.vol2Cont %&gt;&lt;/span&gt;' +
+                                            '&lt;% }%&gt;' +
+                                            '&lt;% if (obj.vol3) { %&gt;' +
+                                                '&lt;a class="workVolume" href="&lt;%= obj.vol3 %&gt;"&gt;&lt;%= obj.vol3Cont %&gt;&lt;/a&gt;' +
+                                            '&lt;% } else {%&gt;' +
+                                                '&lt;span class="workVolume"&gt;&lt;%= obj.vol3Cont %&gt;&lt;/span&gt;' +
+                                            '&lt;% }%&gt;' +
+                                            '&lt;% if (obj.vol4) { %&gt;' +
+                                                '&lt;a class="workVolume" href="&lt;%= obj.vol4 %&gt;"&gt;&lt;%= obj.vol4Cont %&gt;&lt;/a&gt;' +
+                                            '&lt;% } else {%&gt;' +
+                                                '&lt;span class="workVolume"&gt;&lt;%= obj.vol4Cont %&gt;&lt;/span&gt;' +
+                                            '&lt;% }%&gt;' +
+                                            '&lt;% if (obj.vol5) { %&gt;' +
+                                                '&lt;a class="workVolume" href="&lt;%= obj.vol5 %&gt;"&gt;&lt;%= obj.vol5Cont %&gt;&lt;/a&gt;' +
+                                            '&lt;% } else {%&gt;' +
+                                                '&lt;span class="workVolume"&gt;&lt;%= obj.vol5Cont %&gt;&lt;/span&gt;' +
+                                            '&lt;% }%&gt;' +
+                                            '&lt;% if (obj.vol6) { %&gt;' +
+                                                '&lt;a class="workVolume" href="&lt;%= obj.vol6 %&gt;"&gt;&lt;%= obj.vol6Cont %&gt;&lt;/a&gt;' +
+                                            '&lt;% } else {%&gt;' +
+                                                '&lt;span class="workVolume"&gt;&lt;%= obj.vol6Cont %&gt;&lt;/span&gt;' +
+                                            '&lt;% }%&gt;' +
+                                            '&lt;% if (obj.vol7) { %&gt;' +
+                                                '&lt;a class="workVolume" href="&lt;%= obj.vol7 %&gt;"&gt;&lt;%= obj.vol7Cont %&gt;&lt;/a&gt;' +
+                                            '&lt;% } else {%&gt;' +
+                                                '&lt;span class="workVolume"&gt;&lt;%= obj.vol7Cont %&gt;&lt;/span&gt;' +
+                                            '&lt;% }%&gt;' +
+                                            '&lt;% if (obj.vol8) { %&gt;' +
+                                                '&lt;a class="workVolume" href="&lt;%= obj.vol8 %&gt;"&gt;&lt;%= obj.vol8Cont %&gt;&lt;/a&gt;' +
+                                            '&lt;% } else {%&gt;' +
+                                                '&lt;span class="workVolume"&gt;&lt;%= obj.vol8Cont %&gt;&lt;/span&gt;' +
+                                            '&lt;% }%&gt;' +
+                                            '&lt;% if (obj.vol9) { %&gt;' +
+                                                '&lt;a class="workVolume" href="&lt;%= obj.vol9 %&gt;"&gt;&lt;%= obj.vol9Cont %&gt;&lt;/a&gt;' +
+                                            '&lt;% } else {%&gt;' +
+                                                '&lt;span class="workVolume"&gt;&lt;%= obj.vol9Cont %&gt;&lt;/span&gt;' +
+                                            '&lt;% }%&gt;' +
+                                            '&lt;% if (obj.vol10) { %&gt;' +
+                                                '&lt;a class="workVolume" href="&lt;%= obj.vol10 %&gt;"&gt;&lt;%= obj.vol10Cont %&gt;&lt;/a&gt;' +
+                                            '&lt;% } else {%&gt;' +
+                                                '&lt;span class="workVolume"&gt;&lt;%= obj.vol10Cont %&gt;&lt;/span&gt;' +
+                                            '&lt;% }%&gt;' +
                                         '&lt;/p&gt;' +
                               		    '&lt;a title="&lt;%=obj.facsAttrib %&gt;" class="workImages pull-right" target="_blank" rel="noopener noreferrer" href="&lt;%= obj.workImages %&gt;"&gt;&lt;i class="fas fa-book-open" &gt;&lt;/i&gt; &lt;%=obj.facsAttrib %&gt;&lt;/a&gt;' +
                                         '&lt;br/&gt;' +
