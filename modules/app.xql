@@ -3558,7 +3558,8 @@ declare function app:WRKpreparePagination($node as node()?, $model as map(*)?, $
         <ul id="later" class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">{
             for $pb in doc($config:index-root || '/' || $workId || '_nodeIndex.xml')//sal:node[@type='pb'][not(starts-with(sal:title, 'sameAs') or starts-with(sal:title, 'corresp'))]
                 let $fragment := $pb/sal:fragment
-                let $url      := 'work.html?wid=' || $workId || '&amp;frag=' || $fragment || '#' || concat('pageNo_', $pb/@n)
+                let $url      := $config:idserver || '/texts/' || $workId || ':' || $pb/sal:citetrail/text() 
+                (:'work.html?wid=' || $workId || '&amp;frag=' || $fragment || '#' || concat('pageNo_', $pb/@n):)
                 return 
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="{$url}">{normalize-space($pb/sal:title)}</a></li>
         }</ul>
