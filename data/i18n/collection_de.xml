@@ -237,6 +237,7 @@
   <msg key="copy">Kopieren</msg>
   
   <!-- div, milestone, element types for node index derivatives -->
+  <msg key="tei-div-additional">Addendum</msg>
   <msg key="tei-div-administrative">Administrativ</msg>
   <msg key="tei-div-article">Artikel</msg>
   <msg key="tei-div-book">Buch</msg>

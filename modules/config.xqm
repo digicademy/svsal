@@ -131,7 +131,7 @@ declare variable $config:databaseEntries     := ('authors',
 declare variable $config:citationLabels :=
     map {
         (: div/@label and milestone/@unit: :)
-        'additional': map {'full': 'additiones', 'abbr': 'add.', 'isCiteRef': true()},
+        'additional': map {'full': 'addendum', 'abbr': 'add.', 'isCiteRef': true()},
         'administrative': map {'full': 'administratio', 'abbr': 'admin.'},
         'article': map {'full': 'articulus', 'abbr': 'art.', 'isCiteRef': true()},
         'book': map {'full': 'liber', 'abbr': 'lib.', 'isCiteRef': true()},

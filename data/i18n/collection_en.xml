@@ -399,6 +399,7 @@
   
   
   <!-- div, milestone, element types for node index derivatives -->
+  <msg key="tei-div-additional">Addendum</msg>
   <msg key="tei-div-administrative">Administrative</msg>
   <msg key="tei-div-article">Article</msg>
   <msg key="tei-div-book">Book</msg>
