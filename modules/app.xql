@@ -2152,7 +2152,8 @@ declare function app:WRKadditionalInfoRecord($node as node(), $model as map(*), 
             <i18n:text key="facsimiles">Facsimiles</i18n:text> 
         </a>
     let $readingViewField :=
-        if ($isPublished) then
+        if (($workType = ('work_monograph', 'work_volume') and $isPublished)
+            or $workType eq 'work_multivolume' and sal-util:WRKisPublished(upper-case($workId) || '_Vol01')) then
             let $thumbnail := app:WRKcatRecordThumbnail($node, $model, $workId, 'full')
             return 
                 <li><h5><i18n:text key="readingView">Reading view</i18n:text>:</h5>
@@ -2371,7 +2372,7 @@ declare function app:WRKcatRecordThumbnail($node as node(), $model as map(*), $w
         if ($workType eq 'work_volume') then
             $config:idserver || '/texts/' || substring($workId,1,5) || ':vol' || $volNumber || '?format=html'
         else
-            concat('work.html?wid=', $workId)
+            $config:idserver || '/texts/' || $workId || '?format=html'
     let $status :=
         if ($wid and sal-util:normalizeId($wid) ne $model('currentWorkId')) then 
             doc($config:tei-works-root || '/' || $workId || '.xml')/tei:TEI/tei:teiHeader//tei:revisionDesc/@status/string() 
@@ -2419,13 +2420,19 @@ app:WRKeditionMetadata().
 ~:)
 declare function app:WRKeditionRecord($node as node(), $model as map(*), $lang as xs:string?) {
     let $workId := $model('currentWorkId')
+    let $workType := $model('currentWorkType')
     let $digital := app:WRKeditionMetadata($node, $model, $workId)
     let $status := $model('currentWorkHeader')/tei:revisionDesc/@status/string()
     (: layout specs :)
     let $col1-width := 'col-md-3'
     let $col2-width := 'col-md-9'
     let $isPublished := app:WRKisPublished($node, $model, $workId)
-    let $publicationDate := if ($isPublished) then i18n:convertDate($digital?('publicationDate'), $lang, 'verbose') else ()
+    let $publicationDate := 
+        if ($isPublished and $workType = ('work_monograph', 'work_volume')) then 
+            i18n:convertDate($digital?('publicationDate'), $lang, 'verbose') 
+        else if ($isPublished and $workType eq 'work_multivolume') then 
+            $model('currentWorkHeader')/tei:fileDesc/tei:publicationStmt/tei:date[@type eq 'summaryDigitizedEd']/text()
+        else ()
     let $publicationInfo := 
         if ($isPublished) then
             (
