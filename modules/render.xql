@@ -24,7 +24,7 @@ import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.x
 
 (: the max. amount of characters to be shown in a note teaser :)
 declare variable $render:noteTruncLimit := 40;
-declare variable $render:titleTruncLimit := 25;
+declare variable $render:titleTruncLimit := 15;
 
 (:declare variable $render:teaserTruncLimit := 45;:)
 
@@ -706,29 +706,33 @@ declare function render:HTMLSectionToolbox($node as element()) as element(div) {
         else if (render:isCitableWithTeaserHTML($node)) then
             'sal-toolbox-title'
         else 'sal-toolbox'
+    let $i18nSuffix := (: Suffix for determining what kind of description to display :) 
+        if ($class eq 'sal-toolbox-title' or $node/self::tei:titlePage) then 'Sect' 
+        else if ($class eq 'sal-toolbox') then 'Para' 
+        else 'Note'
     let $citetrailBaseUrl := render:makeCitetrailURI($node)
     return
         <div class="{$class}">
             <a id="{$id}" href="#" data-rel="popover" class="sal-tb-a"><!-- href="{('#' || $id)}" -->
-                <i class="fas fa-hand-point-right messengers" title="i18n(openToolbox)"/>
+                <i class="fas fa-hand-point-right messengers" title="{concat('i18n(openToolbox', $i18nSuffix, ')')}"/>
             </a>
             <div class="sal-toolbox-body">
-                <div class="sal-tb-btn">
-                    <button onclick="copyLink(this); return false;" class="messengers" title="i18n(linkPass)">
+                <div class="sal-tb-btn" title="{concat('i18n(link', $i18nSuffix, ')')}">
+                    <button onclick="copyLink(this); return false;" class="messengers">
                         <i class="fas fa-link"/>{' '}<i18n:text key="copyLink"/>
                     </button>
                     <span class="cite-link" style="display:none;">{$citetrailBaseUrl || '?format=html'}</span>
                 </div>
-                <div class="sal-tb-btn">
-                    <button onclick="copyCitRef(this); return false;" class="messengers" title="i18n(citePass)">
+                <div class="sal-tb-btn" title="{concat('i18n(cite', $i18nSuffix, ')')}">
+                    <button onclick="copyCitRef(this); return false;" class="messengers">
                         <i class="fas fa-feather-alt"/>{' '}<i18n:text key="copyCit"/>
                     </button>
                     <span class="sal-cite-rec" style="display:none">
                         {app:HTMLmakeCitationReference($wid, $fileDesc, 'reading-passage', $node)}
                     </span>
                 </div>
-                <div class="sal-tb-btn dropdown">
-                    <button class="dropdown-toggle messengers" data-toggle="dropdown" title="i18n(txtExpPass)">
+                <div class="sal-tb-btn dropdown" title="{concat('i18n(txtExp', $i18nSuffix, ')')}">
+                    <button class="dropdown-toggle messengers" data-toggle="dropdown">
                         <i class="fas fa-align-left" title="i18n(txtExpPass)"/>{' '}<i18n:text key="txtExpShort"/>
                     </button>
                     <ul class="dropdown-menu" role="menu">
@@ -736,8 +740,8 @@ declare function render:HTMLSectionToolbox($node as element()) as element(div) {
                         <li><a href="{$citetrailBaseUrl || '?format=txt&amp;mode=orig'}"><i class="messengers fas fa-align-left" title="i18n(downloadTXTOrig)"/>{' '}<i18n:text key="diplomaticLower">diplomatic</i18n:text></a></li>
                     </ul>
                 </div>
-                <div class="sal-tb-btn">
-                    <button class="messengers" onclick="window.location.href = '{$citetrailBaseUrl || '?format=tei'}'" title="i18n(teiExpPass)">
+                <div class="sal-tb-btn" title="{concat('i18n(teiExp', $i18nSuffix, ')')}">
+                    <button class="messengers" onclick="window.location.href = '{$citetrailBaseUrl || '?format=tei'}'">
                         <i class="fas fa-file-code" />{' '}<i18n:text key="teiExpShort"/>
                     </button>
                 </div>
@@ -1687,8 +1691,8 @@ declare function render:head($node as element(tei:head), $mode as xs:string) {
 
 declare function render:hi($node as element(tei:hi), $mode as xs:string) {
     switch($mode)
-        case "orig"
-        case "edit" return
+        case 'orig'
+        case 'edit' return
             render:passthru($node, $mode)
             
         case 'html' return
