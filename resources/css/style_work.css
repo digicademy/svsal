@@ -390,13 +390,13 @@ li.cardoStyleLi {
 .sal-toolbox {
     display: inline-block;
     position: absolute;
-    left: -3%;
+    left: -2.5%;
 }
 
 
 .sal-toolbox-title {
     display: table-cell;
-    padding-right:0.3rem;
+    padding-right:0.8rem;
 }
 
 .sal-toolbox-marginal {
@@ -435,9 +435,11 @@ li.cardoStyleLi {
 
 .marginal-body {
     display:table-cell;
+    text-align:left;
     font-size: 20px !important; 
     font-style: normal !important;
     font-weight: normal !important;
+    width:32rem;
 }
 .sal-toolbox-body {
     display:none;
@@ -480,7 +482,7 @@ div.sal-tb-btn {
     padding: 5px;
 	line-height: 1.6;
 	text-indent: 0;
-	text-align: justify;
+	text-align: left;
 	width:45%;
     display:table;
 }
@@ -488,6 +490,7 @@ div.sal-tb-btn {
 /* Section titles */
 .section-title-body {
     display:table-cell;
+    width:90%;
     font-size: 18px !important; 
     font-style: normal !important;
     font-weight: normal !important;
@@ -503,7 +506,7 @@ div.sal-tb-btn {
 	font-family: Helvetica, Arial, sans-serif;
 	text-align: left;
 	width: 31%;
-    margin-left:-55%;
+    margin-left:-57%;
     display:table;
 }
 .section-title p.collapse[aria-expanded="false"] {
