@@ -23,7 +23,7 @@ import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.x
 (: SETTINGS :)
 
 (: the max. amount of characters to be shown in a note teaser :)
-declare variable $render:noteTruncLimit := 40;
+declare variable $render:noteTruncLimit := 33;
 declare variable $render:titleTruncLimit := 15;
 
 (:declare variable $render:teaserTruncLimit := 45;:)
@@ -618,7 +618,7 @@ declare function render:makeHTMLSummaryTitle($node as element()) as element(div)
         <div class="section-title container" id="{$node/@xml:id}">
             {$toolbox}
             <div class="section-title-body">{
-                if (string-length($fullTitle) gt $render:titleTruncLimit) then
+                if (string-length(string($fullTitle)) gt $render:titleTruncLimit) then
                     let $id := 'collapse-' || $node/@xml:id
                     return
                         <a role="button" class="collapsed title-teaser" data-toggle="collapse" href="{('#' || $id)}" 
@@ -647,7 +647,7 @@ declare function render:makeMarginalHTML($node as element()) as element(div) {
             <span class="note-paragraph">{render:passthru($node, 'html')}</span>
     (: determine string-length of complete note text, so as to see whether note needs to be truncated: :)
     let $noteLength := 
-        string-length((if ($label) then $node/@n || ' ' else ()) || normalize-space(string-join(render:dispatch($node, 'edit'), '')))
+        string-length((if ($label) then $node/@n || ' ' else ()) || normalize-space(replace(string-join(render:dispatch($node, 'edit'), ''), '\[.*?\]', '')))
     let $toolbox := render:HTMLSectionToolbox($node)
     return
         <div class="marginal container" id="{$node/@xml:id}">
@@ -1075,8 +1075,11 @@ declare function render:dispatch($node as node(), $mode as xs:string) {
                 (: toolboxes need to be on the sibling axis with the text body they refer to... :)
                 if (render:isMarginalNode($node) 
                     or $node/self::tei:head 
-                    or $node/self::tei:titlePage 
-                    or $node/self::tei:p[ancestor::tei:list]) then (: we do not make toolboxes for p within list :)
+                    or $node/self::tei:argument (: no toolboxes for 'heading' elements such as head and argument :)
+                    or $node/self::tei:titlePage (: toolbox is produced in render:titlePage :)
+                    or $node/self::tei:p[ancestor::tei:list] (: we do not make toolboxes for p within list :)
+                    or $node/ancestor::tei:div[@type eq 'contents'] (: TOC elements do not need to be citable :)
+                    ) then 
                     (: for these elements, $toolboxes are created right in their render: function if required :)
                     $rendering
                 else 
@@ -1342,7 +1345,7 @@ declare function render:div($node as element(tei:div), $mode as xs:string) {
         case 'html-title' return
             if (not($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) and $node/(tei:head|tei:label)) then
                 (: for expanded titles, we need the full version, not just the teaser :)
-                normalize-space(string-join(render:dispatch(($node/(tei:head|tei:label))[1], 'edit'), ''))
+                normalize-space(replace(string-join(render:dispatch(($node/(tei:head|tei:label))[1], 'edit'), ''), '\[.*?\]', ''))
             else if (render:div($node, 'title')) then replace(render:div($node, 'title'), '"', '')
             else <i18n:text key="{render:div($node, 'class')}"></i18n:text> (: if everything fails, simply use the label (such as 'Preface') :)
         
@@ -1654,7 +1657,7 @@ declare function render:head($node as element(tei:head), $mode as xs:string) {
                 render:teaserString($node, 'edit')
             )
         case 'html-title' return
-            normalize-space(string-join(render:dispatch($node, 'edit')))
+            normalize-space(replace(string-join(render:dispatch($node, 'edit')), '\[.*?\]', ''))
         
         case 'html' return
             (: list[not(@type eq 'dict')]/head are handled in render:list() :)
@@ -1699,7 +1702,7 @@ declare function render:hi($node as element(tei:hi), $mode as xs:string) {
             let $styles := distinct-values(tokenize($node/@rendition, ' '))
             (: names of elements that have their own, specific text alignment 
                 (where hi/@rendition alignment is to be omitted) :)
-            let $specificAlignElems := ('head', 'signed', 'titlePage') (: TODO: add more names here when necessary :)
+            let $specificAlignElems := ('head', 'signed', 'titlePage', 'argument') (: TODO: add more element names here when necessary :)
             let $cssStyles := 
                 for $s in $styles return
                     if ($s eq '#b') then 'font-weight:bold;'
@@ -1775,7 +1778,7 @@ declare function render:item($node as element(tei:item), $mode as xs:string) {
             if (not($node/parent::tei:list/@type='dict' and $node//tei:term[1][@key])
                 and not($node/@n and not(matches($node/@n, '^[0-9\[\]]+$')))
                 and $node/(tei:head|tei:label)) 
-                then normalize-space(string-join(render:dispatch(($node/(tei:head|tei:label))[1], 'edit'), ''))
+                then normalize-space(replace(string-join(render:dispatch(($node/(tei:head|tei:label))[1], 'edit'), ''),'\[.*?\]', ''))
             else replace(render:dispatch($node, 'title'), '"', '')
                 
         case 'html' return
@@ -1837,7 +1840,7 @@ declare function render:label($node as element(tei:label), $mode as xs:string) {
             )
             
         case 'html-title' return
-            normalize-space(string-join(render:dispatch($node, 'edit')))
+            normalize-space(replace(string-join(render:dispatch($node, 'edit')), '\[.*?\]', ''))
             
         case 'html' return
             switch($node/@place)
@@ -1898,21 +1901,33 @@ declare function render:list($node as element(tei:list), $mode as xs:string) {
         
         case 'html-title' return
             if (not($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) and $node/(tei:head|tei:label)) then
-                normalize-space(string-join(render:dispatch(($node/(tei:head|tei:label))[1], 'edit')))
+                normalize-space(replace(string-join(render:dispatch(($node/(tei:head|tei:label))[1], 'edit')), '\[.*?\]', ''))
             else replace(render:dispatch($node, 'title'), '"', '')
         
         case 'html' return
             (: available list types: "dict", "ordered", "simple", "bulleted", "gloss", "index", or "summaries" :)
-            (: In html, lists must contain nothing but <li>s, so we have to move headings before the list 
-               (inside a html <section>/<figure> with the actual list) and nest everything else (sub-lists) in <li>s. :)
+            (: In html, lists must contain nothing but <li>s, so we have to move headings (and arguments) before the list 
+               and nest everything else (sub-lists) in <li>s. :)
             switch(render:determineListType($node))
                 (: tei:item are actually handled here, not in render:item, due to the tight coupling of their layout to tei:list :)
                 case 'ordered' return (: enumerated/ordered list :)
                     <div id="{$node/@xml:id}">
                         {for $head in $node/tei:head return <h4>{render:passthru($head, $mode)}</h4>}
+                        {
+                        (: in ordered lists, we outsource non-item elements before items (such as argument, p, ...) to a non-ordered, non-bulleted list :)
+                        if ($node/*[not(self::tei:head or self::tei:item) and not(preceding-sibling::tei:item)]) then
+                            <ul style="list-style: none;">
+                                {
+                                for $child in $node/*[not(self::tei:head or self::tei:item) and not(preceding-sibling::tei:item)] return
+                                    <li>{render:passthru($child, $mode)}</li>
+                                }    
+                            </ul>
+                        else ()
+                        }
                         <ol>
-                            {for $child in $node/*[not(self::tei:head)] return 
-                                <li>{render:passthru($child, $mode)}</li>}
+                            {for $child in $node/*[self::tei:item or preceding-sibling::tei:item] return 
+                                <li>{render:passthru($child, $mode)}</li>
+                            }
                         </ol>
                     </div>
                 case 'simple' return (: make no list in html terms at all :)
@@ -1920,6 +1935,8 @@ declare function render:list($node as element(tei:list), $mode as xs:string) {
                         {for $head in $node/tei:head return <h4 class="inlist-head">{render:passthru($head, $mode)}</h4>}
                         {for $child in $node/*[not(self::tei:head)] return
                             if ($child//list) then render:passthru($child, $mode)
+                            else if (not($child/self::tei:item)) then (: argument, p, etc. :)
+                                <div>{render:passthru($child, $mode)}</div>
                             else (' ', <span class="inline-item">{render:passthru($child, $mode)}</span>, ' ')}
                     </div>
                 case 'index'
@@ -1929,7 +1946,10 @@ declare function render:list($node as element(tei:list), $mode as xs:string) {
                             {for $head in $node/tei:head return <h4 class="list-index-head">{render:passthru($head, $mode)}</h4>}
                             <ul style="list-style-type:circle;">
                                 {for $child in $node/*[not(self::tei:head)] return 
-                                    <li class="list-index-item">{render:passthru($child, $mode)}</li>}
+                                    if (not($child/self::tei:item)) then (: argument, p, etc. :)
+                                        <li class="list-paragraph">{render:passthru($child, $mode)}</li>
+                                    else
+                                        <li class="list-index-item">{render:passthru($child, $mode)}</li>}
                             </ul>
                         </div>
                     return
@@ -1943,7 +1963,10 @@ declare function render:list($node as element(tei:list), $mode as xs:string) {
                         {for $head in $node/tei:head return <h4 class="list-default-head">{render:passthru($head, $mode)}</h4>}
                         <ul style="list-style-type:circle;">
                              {for $child in $node/*[not(self::tei:head)] return 
-                                <li class="list-default-item">{render:passthru($child, $mode)}</li>}
+                                  if (not($child/self::tei:item)) then (: argument, p, etc. :)
+                                      <li class="list-paragraph">{render:passthru($child, $mode)}</li>
+                                  else
+                                      <li class="list-default-item">{render:passthru($child, $mode)}</li>}
                         </ul>
                     </div>
         
@@ -1989,6 +2012,7 @@ declare function render:list($node as element(tei:list), $mode as xs:string) {
         default return
             ($config:nl, render:passthru($node, $mode), $config:nl)
 };
+
 
 declare function render:lg($node as element(tei:lg), $mode as xs:string) {
     switch($mode)

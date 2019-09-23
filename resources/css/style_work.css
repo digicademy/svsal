@@ -979,6 +979,11 @@ ul.toc-sub {
     margin-left: -2%;
 }
 
+li.list-paragraph {
+    list-style-type: none; 
+    /*  or  list-style: none; ? */
+}
+
 /*ul.cardoStyleUl {
     font-family: 'Junicode', 'Cardo', 'Andron', 'Cabin', sans-serif;
     font-size: initial;
