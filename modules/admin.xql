@@ -5,6 +5,7 @@ declare namespace exist             = "http://exist.sourceforge.net/NS/exist";
 declare namespace tei               = "http://www.tei-c.org/ns/1.0";
 declare namespace xi                = "http://www.w3.org/2001/XInclude";
 declare namespace sal               = "http://salamanca.adwmainz.de";
+declare namespace i18n             = 'http://exist-db.org/xquery/i18n';
 import module namespace console     = "http://exist-db.org/xquery/console";
 import module namespace functx      = "http://www.functx.com";
 import module namespace templates   = "http://exist-db.org/xquery/templates";
@@ -553,16 +554,25 @@ declare %templates:wrap function admin:renderWork($workId as xs:string*) as elem
                     <ul>
                         <li>
                             <b>{$title}</b>
-                            <span class="jstree-anchor hideMe pull-right">{render:HTMLgetPagesFromDiv($text) }</span>
-                                {if ($work//tei:text[@type='work_volume']) then 
-                                    for $a in $work//tei:text where $a[@type='work_volume' and sal-util:WRKisPublished($workId || '_' || @xml:id)] return
-                                        <ul>
-                                            <li>
-                                                <a class="hideMe"><b>{concat('Volume: ', $a/@n/string())}</b></a>
-                                                { render:HTMLgenerateTocFromDiv($a/(tei:front | tei:body | tei:back), $workId)}
-                                            </li>
-                                        </ul>
-                                else render:HTMLgenerateTocFromDiv($elements, $workId)}
+                            {
+                            if (not($work//tei:text[@type='work_volume'])) then
+                                <span class="jstree-anchor hideMe pull-right">{render:HTMLgetPagesFromDiv($text)}</span>
+                            else ()
+                            }
+                            {
+                            if ($work//tei:text[@type='work_volume']) then 
+                                for $a in $work//tei:text where $a[@type='work_volume' and sal-util:WRKisPublished($workId || '_' || @xml:id)] return
+                                    <ul>
+                                        <li>
+                                            <a class="hideMe">
+                                                <b><i18n:text key="volume">Volume</i18n:text>{concat(': ', $a/@n/string())}</b>
+                                                <span class="jstree-anchor hideMe pull-right">{render:HTMLgetPagesFromDiv($a)}</span>
+                                            </a>
+                                            { render:HTMLgenerateTocFromDiv($a/(tei:front | tei:body | tei:back), $workId)}
+                                        </li>
+                                    </ul>
+                            else render:HTMLgenerateTocFromDiv($elements, $workId)
+                            }
                         </li>
                     </ul>
                 </div>

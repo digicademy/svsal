@@ -1078,7 +1078,7 @@ declare function render:dispatch($node as node(), $mode as xs:string) {
                     or $node/self::tei:argument (: no toolboxes for 'heading' elements such as head and argument :)
                     or $node/self::tei:titlePage (: toolbox is produced in render:titlePage :)
                     or $node/self::tei:p[ancestor::tei:list] (: we do not make toolboxes for p within list :)
-                    or $node/ancestor::tei:div[@type eq 'contents'] (: TOC elements do not need to be citable :)
+                    or $node[ancestor::tei:list and ancestor::tei:div[@type eq 'contents']] (: TOC list elements do not need to be citable :)
                     ) then 
                     (: for these elements, $toolboxes are created right in their render: function if required :)
                     $rendering
