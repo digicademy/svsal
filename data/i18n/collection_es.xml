@@ -321,18 +321,30 @@
     <msg key="citeThisWork">Citar obra</msg>
     <msg key="accessedDate">Consultado por última vez el</msg>
     <msg key="ebook">Libro electrónico</msg>
-    <msg key="openToolbox">Abrir caja de herramientas para este pasaje</msg> <!-- TODO -->
-    <msg key="citePass">Copiar modelo de citación recomendado para este pasaje</msg> <!-- TODO -->
-    <msg key="linkPass">Copiar enlace de este pasaje</msg>
     <msg key="citeWork">Copiar modelo de citación recomendado para esta obra</msg> <!-- TODO -->
     <msg key="linkWork">Copiar enlace de esta obra</msg>
-    <msg key="teiExpPass">Descargar TEI/XML para este pasaje</msg>
-    <msg key="txtExpPass">Descargar texto puro para este pasaje</msg>
     <msg key="txtExp">Descargar texto simple</msg>
     <msg key="copyLink">Copiar enlace</msg>
     <msg key="copyCit">Copiar citación</msg>
-    <msg key="txtExpShort">Descargar TXT</msg>
+    <!-- toolboxes for single text units: -->
+    <msg key="txtExpShort">Descargar texto</msg>
     <msg key="teiExpShort">Descargar TEI</msg>
+    <msg key="openToolboxSect">Abrir caja de herramientas para esta sección</msg>
+    <msg key="openToolboxPara">Abrir caja de herramientas para este pasaje</msg>
+    <msg key="openToolboxNote">Abrir caja de herramientas para esta nota</msg>
+    <msg key="citeSect">Copiar modelo de citación recomendado para esta sección</msg>
+    <msg key="citePara">Copiar modelo de citación recomendado para este pasaje</msg>
+    <msg key="citeNote">Copiar modelo de citación recomendado para esta nota</msg>
+    <msg key="linkSect">Copiar enlace de esta obra</msg>
+    <msg key="linkPara">Copiar enlace de este pasaje</msg>
+    <msg key="linkNote">Copiar enlace de esta nota</msg>
+    <msg key="teiExpSect">Descargar sección como TEI XML</msg>
+    <msg key="teiExpPara">Descargar pasaje como TEI XML</msg>
+    <msg key="teiExpNote">Descargar nota como TEI XML</msg>
+    <msg key="txtExpSect">Descargar sección como texto puro</msg>
+    <msg key="txtExpPara">Descargar pasaje como texto puro</msg>
+    <msg key="txtExpNote">Descargar nota como texto puro</msg>
+    
     
     <!--news-->
     <msg key="more">más</msg>

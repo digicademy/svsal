@@ -68,18 +68,29 @@
   <msg key="citeThisWork">Dieses Werk zitieren</msg>
   <msg key="accessedDate">Aufgerufen am</msg>
   <msg key="ebook">E-Book</msg>
-  <msg key="openToolbox">Toolbox für diesen Textabschnitt öffnen</msg>
-  <msg key="citePass">Zitierhinweis für diesen Abschnitt kopieren</msg>
-  <msg key="linkPass">Link für diesen Abschnitt kopieren</msg>
   <msg key="citeWork">Zitierhinweis für dieses Werk kopieren</msg>
   <msg key="linkWork">Link zu diesem Werk kopieren</msg>
-  <msg key="teiExpPass">TEI für diesen Abschnitt exportieren</msg>
-  <msg key="txtExpPass">Plain Text für diesen Abschnitt exportieren</msg>
   <msg key="txtExp">Plain Text exportieren</msg>
   <msg key="copyLink">Link kopieren</msg>
   <msg key="copyCit">Zitierhinweis kopieren</msg>
-  <msg key="txtExpShort">TXT exportieren</msg>
-  <msg key="teiExpShort">TEI exportieren</msg>
+  <!-- toolboxes for single text units: -->
+  <msg key="txtExpShort">Text (TXT) exportieren</msg>
+  <msg key="teiExpShort">TEI-XML exportieren</msg>
+  <msg key="openToolboxSect">Toolbox für diesen Textabschnitt öffnen</msg>
+  <msg key="openToolboxPara">Toolbox für diesen Absatz öffnen</msg>
+  <msg key="openToolboxNote">Toolbox für diese Marginalnote öffnen</msg>
+  <msg key="citeSect">Zitierhinweis für diesen Textabschnitt kopieren</msg>
+  <msg key="citePara">Zitierhinweis für diesen Absatz kopieren</msg>
+  <msg key="citeNote">Zitierhinweis für diese Marginalnote kopieren</msg>
+  <msg key="linkSect">Link zu diesem Textabschnitt kopieren</msg>
+  <msg key="linkPara">Link zu diesem Absatz kopieren</msg>
+  <msg key="linkNote">Link zu dieser Marginalnote kopieren</msg>
+  <msg key="teiExpSect">Diesen Textabschnitt als TEI-XML exportieren</msg>
+  <msg key="teiExpPara">Diesen Absatz als TEI-XML exportieren</msg>
+  <msg key="teiExpNote">Diese Marginalnote als TEI-XML exportieren</msg>
+  <msg key="txtExpSect">Diesen Textabschnitt als plain text (TXT) exportieren</msg>
+  <msg key="txtExpPara">Diesen Absatz als plain text (TXT) exportieren</msg>
+  <msg key="txtExpNote">Diese Marginalnote als plain text (TXT) exportieren</msg>
   
   <!-- errors -->
   <msg key="authorNotYetAvailable">Dieser Artikel ist noch nicht verfügbar.</msg>

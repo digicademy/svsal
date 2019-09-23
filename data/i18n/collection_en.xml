@@ -306,18 +306,30 @@
   <msg key="citeThisWork">Cite this work</msg>
   <msg key="accessedDate">Accessed</msg>
   <msg key="ebook">E-book</msg>
-  <msg key="openToolbox">Open toolbox for this text area</msg>
-  <msg key="citePass">Copy citation recommendation for this text area</msg>
-  <msg key="linkPass">Copy link of this text area</msg>
   <msg key="citeWork">Copy citation recommendation for this work</msg>
   <msg key="linkWork">Copy link to this work</msg>
-  <msg key="teiExpPass">Export TEI for this text area</msg>
-  <msg key="txtExpPass">Export plain text for this text area</msg>
   <msg key="txtExp">Export plain text</msg>
   <msg key="copyLink">Copy link</msg>
   <msg key="copyCit">Copy citation</msg>
-  <msg key="txtExpShort">Export TXT</msg>
+  <!-- toolboxes for single text units: -->
+  <msg key="txtExpShort">Export text</msg>
   <msg key="teiExpShort">Export TEI</msg>
+  <msg key="openToolboxSect">Open toolbox for this section</msg>
+  <msg key="openToolboxPara">Open toolbox for this paragraph</msg>
+  <msg key="openToolboxNote">Open toolbox for this note</msg>
+  <msg key="citeSect">Copy citation recommendation for this section</msg>
+  <msg key="citePara">Copy citation recommendation for this paragraph</msg>
+  <msg key="citeNote">Copy citation recommendation for this note</msg>
+  <msg key="linkSect">Copy link to this section</msg>
+  <msg key="linkPara">Copy link to this paragraph</msg>
+  <msg key="linkNote">Copy link to this note</msg>
+  <msg key="teiExpSect">Export section as TEI XML</msg>
+  <msg key="teiExpPara">Export paragraph as TEI XML</msg>
+  <msg key="teiExpNote">Export note as TEI XML</msg>
+  <msg key="txtExpSect">Export section as plain text (TXT)</msg>
+  <msg key="txtExpPara">Export paragraph as plain text (TXT)</msg>
+  <msg key="txtExpNote">Export note as plain text (TXT)</msg>
+  
    
   <!--news-->
   <msg key="more">more</msg>
