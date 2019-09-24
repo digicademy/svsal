@@ -24,6 +24,7 @@ import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.x
 
 (: the max. amount of characters to be shown in a note teaser :)
 declare variable $render:noteTruncLimit := 33;
+(: the max. amount of characters to be shown in a title teaser :)
 declare variable $render:titleTruncLimit := 15;
 
 (:declare variable $render:teaserTruncLimit := 45;:)
@@ -373,7 +374,7 @@ declare function render:isMainNode($node as node()) as xs:boolean {
             $node/self::tei:titlePage or
             $node/self::tei:lg or
             $node/self::tei:label[@place ne 'margin'] or
-            $node/self::tei:argument or
+            $node/self::tei:argument[not(ancestor::tei:list)] or
             $node/self::tei:table
         ) and 
         not($node/ancestor::*[render:isMainNode(.) or render:isMarginalNode(.) or self::tei:list])
@@ -760,11 +761,12 @@ declare function render:HTMLSectionToolbox($node as element()) as element(div) {
 (:
 ~ For a node, make a full-blown URI including the citetrail of the node
 :)
-declare function render:makeCitetrailURI($node as element()) {
+declare function render:makeCitetrailURI($node as element()) as xs:string? {
     let $citetrail := sal-util:getNodetrail($node/ancestor::tei:TEI/@xml:id, $node, 'citetrail')
     let $workId := $node/ancestor::tei:TEI/@xml:id
     return
-        $config:idserver || '/texts/' || $workId || ':' || $citetrail
+        if ($citetrail) then $config:idserver || '/texts/' || $workId || ':' || $citetrail
+        else ()
 };
 
 
@@ -888,7 +890,7 @@ declare function render:transformToHTMLLink($node as element(), $uri as xs:strin
         <a href="{$uri}" target="_blank">{render:passthru($node, 'html')}</a>
     else
         (: make an anchor for the preceding part, then render the pb, then "continue" the anchor :)
-        (: TODO: ATM, this works only if pb occurs at the direct child level, and only with the first pb :)
+        (: TODO: ATM, this works only if pb occurs at the child level, and only with the first pb :)
         let $before :=
             <a href="{$uri}" target="_blank">
                 {for $n in $node/tei:pb[1]/preceding-sibling::node() return render:dispatch($n, 'html')}
@@ -1125,6 +1127,13 @@ declare function render:argument($node as element(tei:argument), $mode as xs:str
             (:if (render:isUnnamedCitetrailNode($node)) then 
                 string(render:determineUnnamedCitetrailNodePosition($node))
             else ():)
+        
+        case 'html' return
+            <div class="hauptText">
+                <div class="argument">
+                    {render:passthru($node, $mode)}
+                </div>
+            </div>
         
         default return
             render:passthru($node, $mode)
@@ -1470,12 +1479,13 @@ declare function render:editElem($node as element(), $mode as xs:string) {
             render:passthru($node, $mode)
             
         case 'html' return
-            let $origString := string-join(render:dispatch($node/parent::tei:choice/(tei:abbr|tei:orig|tei:sic), 'orig'), '')
-            return
-                <span class="messengers edited {local-name($node)}" title="{$origString}">
-                    {string-join(render:passthru($node, $mode), '')}
-                </span>
-        
+            if ($node/parent::tei:choice) then
+                let $origString := string-join(render:dispatch($node/parent::tei:choice/(tei:abbr|tei:orig|tei:sic), 'orig'), '')
+                return
+                    <span class="messengers edited {local-name($node)}" title="{$origString}">
+                        {string-join(render:passthru($node, $mode), '')}
+                    </span>
+            else render:passthru($node, $mode)
         default return
             render:passthru($node, $mode)
 };
@@ -2267,15 +2277,15 @@ declare function render:origElem($node as element(), $mode as xs:string) {
                 render:passthru($node, $mode)
             else ()
             
-        case 'html' return
-            if (not($node/parent::tei:choice)) then
-                render:passthru($node, $mode)
-            else 
+        case 'html' return 
+            if ($node/parent::tei:choice) then
                 let $editString := string-join(render:dispatch($node/parent::tei:choice/(tei:expan|tei:reg|tei:corr), 'edit'), '')
                 return
                     <span class="original {local-name($node)} unsichtbar" title="{$editString}">
                         {string-join(render:passthru($node, $mode), '')}
                     </span>
+            else 
+                render:passthru($node, $mode)
         
         default return
             render:passthru($node, $mode)

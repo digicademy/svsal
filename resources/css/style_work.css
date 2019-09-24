@@ -730,6 +730,13 @@ span.copy-alert {
     padding-top:0.3em;
 }
 
+.hauptText .argument {
+    font-size:1.0em !important;
+    text-align:left !important;
+    font-style:italic;
+    padding-top:0.2em;
+}
+
 .form-inline > .form-group {
     vertical-align: top;
 }
