@@ -510,7 +510,7 @@ declare function render:HTMLgenerateTocFromDiv($nodes as element()*, $wid as xs:
     for $node in $nodes/(tei:div[@type="work_part"]/tei:div[render:isIndexNode(.)]
                          |tei:div[not(@type="work_part")][render:isIndexNode(.)]
                          |*/tei:milestone[@unit ne 'other'][render:isIndexNode(.)]) return
-        let $fragTrail := sal-util:getNodetrail($wid, $node, 'citetrail')
+        let $fragTrail := sal-util:getNodetrail($wid, $node, 'citetrail')        
         let $fragId := $config:idserver || '/texts/' || $wid || ':' || $fragTrail || '?format=html'
         let $section := $node/@xml:id/string()
         let $i18nKey := 
@@ -2054,11 +2054,14 @@ declare function render:milestone($node as element(tei:milestone), $mode as xs:s
                 if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
                     '"' || string($node/@n) || '"'
                 (: purely numeric section titles: :)
-                else if (matches($node/@n, '^[0-9\[\]]+$') and $node/@unit eq 'number') then
-                    $node/@n/string()
+                (:else if (matches($node/@n, '^[0-9\[\]]+$') and $node/@unit eq 'number') then
+                    $node/@n/string():)
                 (: use @unit to derive a title: :)
-                else if (matches($node/@n, '^\[?[0-9]+\]?$') and $node/@unit[. ne 'number']) then
-                    $config:citationLabels($node/@unit)?('abbr') || ' ' || $node/@n
+                (:else if (matches($node/@n, '^\[?[0-9]+\]?$') and $node/@unit[. ne 'number']) then
+                    $config:citationLabels($node/@unit)?('abbr') || ' ' || $node/@n:)
+                (: if milestone has numerical information, just state the number, regardless of @unit and other attributes: :)
+                else if (matches($node/@n, '^[0-9\[\]]+$')) then
+                    $node/@n/string()
                 (: otherwise, try to derive a title from potential references to the current node :)
                 else if ($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)]) then
                     render:teaserString($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)][1], 'edit')

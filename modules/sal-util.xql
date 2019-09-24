@@ -193,8 +193,7 @@ declare function sal-util:getNodetrail($wid as xs:string, $node as element(), $m
         if ($mode = ('citetrail', 'crumbtrail', 'passagetrail')) then () 
         else util:log('error', '[SAL-UTIL] calling render:getNodetrail with unknown mode: ' || $mode)
     return
-        doc($config:index-root || '/' || $wid || '_nodeIndex.xml')
-            /sal:index/sal:node[@n eq $node/@xml:id]/*[local-name() eq $mode]/node()
+        doc($config:index-root || '/' || $wid || '_nodeIndex.xml')/sal:index/sal:node[@n eq $node/@xml:id]/*[local-name() eq $mode]/node()
 };
 
 
