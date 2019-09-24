@@ -330,7 +330,7 @@ declare function render:isUnnamedCitetrailNode($node as element()) as xs:boolean
 declare function render:isAnchorNode($node as node()) as xs:boolean {
     boolean(
         $node/@xml:id and
-        $node/self::tei:milestone[@type ne 'other']
+        $node/self::tei:milestone[@unit ne 'other']
     )
 };
 
@@ -2058,7 +2058,7 @@ declare function render:milestone($node as element(tei:milestone), $mode as xs:s
                     $node/@n/string()
                 (: use @unit to derive a title: :)
                 else if (matches($node/@n, '^\[?[0-9]+\]?$') and $node/@unit[. ne 'number']) then
-                    $config:citationLabels(@unit)?('abbr') || ' ' || @n
+                    $config:citationLabels($node/@unit)?('abbr') || ' ' || $node/@n
                 (: otherwise, try to derive a title from potential references to the current node :)
                 else if ($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)]) then
                     render:teaserString($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)][1], 'edit')
