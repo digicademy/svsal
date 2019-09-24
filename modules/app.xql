@@ -2543,7 +2543,7 @@ declare function app:WRKcitationReference($node as node()?, $model as map(*)?, $
 declare function app:HTMLmakeCitationReference($wid as xs:string, $fileDesc as element(tei:fileDesc), $mode as xs:string, $node as element()?) as element(span)+ {
     let $author := $fileDesc/tei:titleStmt/tei:author/tei:persName/tei:surname/text()
     let $title := $fileDesc/tei:titleStmt/tei:title[@type eq 'short']/text()
-    let $digitalYear := substring($fileDesc/tei:publicationStmt/tei:date[@type eq 'digitizedEd']/@when[1]/string(), 1, 4)
+    let $digitalYear := substring($fileDesc/tei:publicationStmt/tei:date[@type = ('digitizedEd', 'summaryDigitizedEd')]/@when/string()[1], 1, 4)
     let $originalYear := 
         if ($fileDesc/tei:sourceDesc//tei:date[@type eq 'thisEd']) then
             $fileDesc/tei:sourceDesc//tei:date[@type eq 'thisEd']/@when
