@@ -713,6 +713,7 @@ a .edited, a .expan, a .reg, a .corr{
 }
 span.copy-alert {
     position:absolute; 
+    white-space: nowrap;
     display:inline-block;
     background-color: #404040;
     color: #fff;
