@@ -1878,6 +1878,13 @@ declare function render:label($node as element(tei:label), $mode as xs:string) {
                 string(render:determineUnnamedCitetrailNodePosition($node))
             else render:makeMarginalCitetrail($node):)
             
+        case 'edit'
+        case 'orig' return
+            if ($node/@place eq 'margin') then (: or render:isMarginalNode($node) :)
+                (:($config:nl, '        {', render:passthru($node, $mode), '}', $config:nl):)
+                ('{', $config:nl, '        ', render:passthru($node, $mode), '        ', $config:nl, '}') 
+            else render:passthru($node, $mode) (: TODO: more fine-grained processing? (simple vs. important/heading-like labels) :)
+        
         default return
             render:passthru($node, $mode)
 };
@@ -2245,8 +2252,9 @@ declare function render:note($node as element(tei:note), $mode as xs:string) {
             else ()
             
         case 'orig'
-        case 'edit' return
-            ($config:nl, '        {', render:passthru($node, $mode), '}', $config:nl)
+        case 'edit' return (: TODO: distinguish using render:isMarginalNode($node) :)
+            (:($config:nl, '        {', render:passthru($node, $mode), '}', $config:nl):)
+            ('{', $config:nl, '        ', render:passthru($node, $mode), '        ', $config:nl, '}') 
         
         default return
             render:passthru($node, $mode)

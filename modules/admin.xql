@@ -138,9 +138,9 @@ declare function admin:needsHTMLString($node as node(), $model as map(*)) {
     let $currentWorkId := $model('currentWork')?('wid')
     return 
         if (admin:needsHTML($currentWorkId)) then
-            <td title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}{if (xmldb:get-child-resources($config:index-root) = $currentWorkId || "_nodeIndex.xml") then concat(', rendered on: ', xmldb:last-modified($config:index-root, $currentWorkId || "_nodeIndex.xml")) else ()}"><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=html"><b>Render NOW!</b></a></td>
+            <td title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}{if (xmldb:get-child-resources($config:index-root) = $currentWorkId || "_nodeIndex.xml") then concat(', rendered on: ', xmldb:last-modified($config:index-root, $currentWorkId || "_nodeIndex.xml")) else ()}"><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=html"><b>Render HTML (&amp; TXT) NOW!</b></a></td>
         else
-            <td title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}, rendered on: {xmldb:last-modified($config:index-root, $currentWorkId || "_nodeIndex.xml")}">Rendering unnecessary. <small><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=html">Render anyway!</a></small></td>
+            <td title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}, rendered on: {xmldb:last-modified($config:index-root, $currentWorkId || "_nodeIndex.xml")}">Rendering unnecessary. <small><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=html">Render HTML (&amp; TXT) anyway!</a></small></td>
 };
 
 declare function admin:workString($node as node(), $model as map(*), $lang as xs:string?) {
@@ -1077,7 +1077,7 @@ declare function admin:createNodeIndex($wid as xs:string*) {
                         or $text/@type eq 'work_monograph') then 
                         $text/descendant-or-self::*[render:isIndexNode(.)]
                     else ()
-            
+                        
             (: Create the fragment id for each node beforehand, so that recursive crumbtrail creation has it readily available :)
             let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Node indexing: identifying fragment ids ...") else ()
             let $fragmentIds :=
@@ -1089,7 +1089,7 @@ declare function admin:createNodeIndex($wid as xs:string*) {
                         return map:entry($n, $fragId)
                 )
             let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Node indexing: fragment ids extracted.") else ()
-            
+                        
             (: Now, create full-blown node index :)
             let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Node indexing: creating index file ...") else ()
             
