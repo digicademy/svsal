@@ -492,7 +492,7 @@ declare function render:mkUrlWhileRendering($targetWorkId as xs:string, $targetN
 :)
 declare function render:teaserString($node as element(), $mode as xs:string?) as xs:string {
     let $thisMode := if ($mode = ('orig', 'edit')) then $mode else 'edit'
-    let $string := normalize-space(replace(string-join(render:dispatch($node, $thisMode)), '\[.*?\]', ''))
+    let $string := normalize-space(replace(replace(string-join(render:dispatch($node, $thisMode)), '\[.*?\]', ''), '\{.*?\}', ''))
     return 
         if (string-length($string) gt $config:chars_summary) then
             concat('&#34;', normalize-space(substring($string, 1, $config:chars_summary)), '…', '&#34;')
