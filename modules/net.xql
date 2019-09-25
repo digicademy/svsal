@@ -555,7 +555,7 @@ declare function net:APIdeliverTEI($requestData as map(), $netVars as map()*) {
         let $doc := 
             if ($requestData('mode') eq 'meta') then
                 let $debug :=  if ($config:debug = "trace") then console:log("[API] teiHeader export for " || $requestData("tei_id") || ".") else ()
-                return export:WRKgetTeiHeader($requestData('tei_id'), 'metadata')
+                return export:WRKgetTeiHeader($requestData('tei_id'), 'metadata', ())
             else if ($requestData('passage') and not(matches($requestData('passage'), '^vol\d$'))) then (: volumes are handled below :)
                 let $debug :=  if ($config:debug = "trace") then console:log("[API] teiHeader export for passage " || $requestData("tei_id") || ":" || $requestData('passage') || ".") else ()
                 return export:WRKgetTeiPassage($requestData("work_id"), $requestData("passage"))
