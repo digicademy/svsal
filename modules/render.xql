@@ -1129,11 +1129,16 @@ declare function render:argument($node as element(tei:argument), $mode as xs:str
             else ():)
         
         case 'html' return
-            <div class="hauptText">
+            if (render:isBasicNode($node)) then
+                <div class="hauptText">
+                    <div class="argument">
+                        {render:passthru($node, $mode)}
+                    </div>
+                </div>
+            else
                 <div class="argument">
                     {render:passthru($node, $mode)}
                 </div>
-            </div>
         
         default return
             render:passthru($node, $mode)
