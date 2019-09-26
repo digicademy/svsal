@@ -152,7 +152,8 @@
     <msg key="worksNotice3">, que se publicarán sucesivamente en esta página. 
         Para este fin, los textos están codificados por medio de las especificaciones 
         de Text Encoding Initiative (TEI); para más información, por favor consulte las </msg>
-    <msg key="alphaEditors">Editores (en orden alfabético)</msg>
+    <msg key="techEditors">Redacción técnica</msg>
+    <msg key="scholEditors">Redacción científica</msg>
     <msg key="editors">Editores</msg>
     <msg key="series">Colección</msg>
     <msg key="editionSeries">La Escuela de Salamanca. Una Colección Digital de Fuentes</msg>

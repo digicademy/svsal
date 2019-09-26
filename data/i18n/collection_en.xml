@@ -147,7 +147,8 @@
     are encoded according to the specifications of the Text Encoding Initiative (TEI); for further information, please 
     refer to the </msg>
   <msg key="series">Series</msg>
-  <msg key="alphaEditors">Editors (in alphabetical order)</msg>
+  <msg key="techEditors">Technical editing</msg>
+  <msg key="scholEditors">Scholarly editing</msg>
   <msg key="editors">Editors</msg>
   <msg key="editionSeries">The School of Salamanca. A Digital Collection of Sources</msg>
   <msg key="editorsInChief">Series directors</msg>

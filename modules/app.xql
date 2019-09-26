@@ -1966,14 +1966,16 @@ Returns the type of the current work/volume in parenthesis
 ~:)
 declare %templates:wrap
     function app:WRKtype($node as node(), $model as map(*), $lang as xs:string?) {
-       let $teiType := $model('currentWorkType')
-       let $type      :=  if ($teiType eq 'work_multivolume') then <i18n:text key="multivolume">Mehrbandwerk</i18n:text> 
-                          else if ($teiType eq 'work_volume') then <i18n:text key="workvolume">Einzelband</i18n:text>
-                          else ()
-       let $translate := i18n:process($type, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
-       return if ($type) then
-                    ' ('|| $translate ||') '
-              else ()
+        let $teiType := $model('currentWorkType')
+        let $type :=  
+            if ($teiType eq 'work_multivolume') then <i18n:text key="multivolume">Mehrbandwerk</i18n:text> 
+            else if ($teiType eq 'work_volume') then <i18n:text key="workvolume">Einzelband</i18n:text>
+            else ()
+        let $translate := i18n:process($type, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
+        return 
+            if ($type) then
+                ' ('|| $translate ||') '
+            else ()
 };
  
 (:~
@@ -2245,21 +2247,12 @@ declare function app:WRKcatRecordTeaser($node as node(), $model as map(*), $wid 
                 if ($digital?('isPublished')) then
                     i18n:convertDate($digital?('publicationDate'), $lang, 'verbose')
                 else ()
-            let $editors := if ($digital?('isPublished')) then $digital?('alphaEditors') else ()
             let $recordLink := 'workDetails.html?wid=' || $wid
             let $imagesLink := 'viewer_standalone.html?wid=' || $wid
             let $col1-width := 'col-md-2'
             let $col2-width := 'col-md-10'
             let $publication := 
                 if ($digital?('isPublished')) then 
-                    (<tr>
-                         <td class="{$col1-width}" style="line-height: 1.2">
-                             <i18n:text key="editors">Editors</i18n:text>:
-                         </td>
-                         <td class="{$col2-width}" style="line-height: 1.2">
-                             {$editors}
-                         </td>
-                     </tr>,
                      <tr>
                          <td class="{$col1-width}" style="line-height: 1.2">
                              <i18n:text key="digitalPublication">Electronic Publication</i18n:text>:
@@ -2267,7 +2260,7 @@ declare function app:WRKcatRecordTeaser($node as node(), $model as map(*), $wid 
                          <td class="{$col2-width}" style="line-height: 1.2">
                              {$pubDate}
                          </td>
-                     </tr>)
+                     </tr>
                 else 
                     <tr>
                         <td class="{$col1-width}" style="line-height: 1.2">
@@ -2438,18 +2431,26 @@ declare function app:WRKeditionRecord($node as node(), $model as map(*), $lang a
             (
             <tr>
                 <td class="{$col1-width}">
-                    <i18n:text key="alphaEditors">Editors (in alphabetical order)</i18n:text>:
-                </td>
-                <td class="{$col2-width}">
-                    {$digital?('alphaEditors')}
-                </td>
-            </tr>,
-            <tr>
-                <td class="{$col1-width}">
                     <i18n:text key="digitalPublication">Electronic publication</i18n:text>:
                 </td>
                 <td class="{$col2-width}">
                     {$publicationDate}
+                </td>
+            </tr>,
+            <tr>
+                <td class="{$col1-width}">
+                    <i18n:text key="scholEditors">Scholarly editing</i18n:text>:
+                </td>
+                <td class="{$col2-width}">
+                    {$digital?('scholEditors')}
+                </td>
+            </tr>,
+            <tr>
+                <td class="{$col1-width}">
+                    <i18n:text key="techEditors">Technical editing</i18n:text>:
+                </td>
+                <td class="{$col2-width}">
+                    {$digital?('techEditors')}
                 </td>
             </tr>,
             <tr>
@@ -2795,10 +2796,14 @@ declare function app:WRKeditionMetadata($node as node(), $model as map(*), $wid 
         if ($isPublished) then
             $teiHeader/tei:fileDesc/tei:editionStmt/tei:edition/tei:date/@when/string()
         else ()
-    let $alphaEditors := 
+    let $scholarlyEditors := 
         if ($isPublished) then
-            string-join(for $ed in $teiHeader/tei:fileDesc/tei:titleStmt/tei:editor/tei:persName 
-                             order by $ed/tei:surname
+            string-join(for $ed in $teiHeader/tei:fileDesc/tei:titleStmt/tei:editor[contains(@role, '#scholarly')]/tei:persName
+                             return app:rotateFormatName($ed), '; ')
+        else ()
+    let $technicalEditors := 
+        if ($isPublished) then
+            string-join(for $ed in $teiHeader/tei:fileDesc/tei:titleStmt/tei:editor[contains(@role, '#technical')]/tei:persName
                              return app:rotateFormatName($ed), '; ')
         else ()
     let $currentVolume := $teiHeader/tei:fileDesc/tei:seriesStmt/tei:biblScope/@n/string()
@@ -2816,7 +2821,8 @@ declare function app:WRKeditionMetadata($node as node(), $model as map(*), $wid 
             'author': $author,
             'language': $language,
             'publicationDate': $pubDate,
-            'alphaEditors': $alphaEditors,
+            'scholEditors': $scholarlyEditors,
+            'techEditors': $technicalEditors,
             'currentVolume': $currentVolume,
             'seriesEditors': $seriesEditors,
             'publisher': $digitalMaster,
