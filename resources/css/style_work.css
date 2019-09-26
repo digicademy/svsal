@@ -947,6 +947,14 @@ span.sal-unclear-text {
     border-bottom: 2px dotted #993333;
 }
 
+/* Tables */
+.hauptText table {
+    font-size:0.9em;
+}
+table td {
+    vertical-align:top;
+    text-align:left;
+}
 .table-label {
     font-weight:bold;
     padding-right:0.9em;
