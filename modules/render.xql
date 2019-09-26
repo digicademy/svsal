@@ -1353,6 +1353,9 @@ declare function render:div($node as element(tei:div), $mode as xs:string) {
                 (: otherwise, try to derive a title from potential references to the current node :)
                 else if ($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)]) then
                     render:teaserString($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)][1], 'edit')
+                (: if there is a list/head and nothing else works, we may use that :)
+                else if ($node/tei:list/(tei:head|tei:label)) then
+                    render:teaserString(($node/tei:list/(tei:head|tei:label))[1], 'edit')
                 else ()
             )
         
