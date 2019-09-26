@@ -384,6 +384,7 @@ li.cardoStyleLi {
 .pageNumbers {
     display: inline-block;
     position: absolute;
+    text-align:left;
     width: 18%;
     left:-20%;
 }
