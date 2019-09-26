@@ -391,9 +391,11 @@ declare function iiif:mkMetadata($tei as node()) as array(*) {
 
 declare function iiif:getThumbnailId($tei as node()) as xs:string {
     let $expandedTei := util:expand($tei)
-    let $thumbnailFacs := if ($expandedTei/tei:text/tei:front//tei:titlePage[1]//tei:pb[1]) then $expandedTei/tei:text/tei:front//tei:titlePage[1]//tei:pb[1]/@facs
-                          else $expandedTei/tei:text/tei:front//tei:titlePage[1]/preceding-sibling::tei:pb[1]/@facs
-    return iiif:teiFacs2IiifImageId($thumbnailFacs)
+    let $thumbnailFacs := 
+        if ($expandedTei/tei:text/tei:front//tei:titlePage[1]//tei:pb[1]) then 
+            $expandedTei/tei:text/tei:front//tei:titlePage[1]//tei:pb[1]/@facs
+        else $expandedTei/tei:text/tei:front//tei:titlePage[1]/preceding-sibling::tei:pb[1]/@facs
+    return iiif:teiFacs2IiifImageId($thumbnailFacs[1])
 };
 
 (: Returns for a specific label keyword an array of labels in English, Spanish, and German.
