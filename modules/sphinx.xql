@@ -685,7 +685,7 @@ declare function sphinx:excerpts ($documents as node()*, $words as xs:string) as
 (:                                           normalize-space($documents/description_edit):)
                                )
     (:let $tempString := replace(replace(replace($requestDoc, '%20', '+'), '%3D', '='), '%26amp%3B', '&amp;'):) (:  with '+' and '&amp;' being replaced, highlighting isn't working correctly :)
-    let $tempString := replace($requestDoc, '%3D', '=')
+    let $tempString := (:replace( :) replace($requestDoc, '%3D', '=') (:, '%26amp%3B', '&amp;'):)
     (:
     let $debug :=  if ($config:debug = "trace") then util:log("warn", "[SPHINX] Excerpts request body: " || $tempString) else ()
     let $debug := if ($config:debug = "trace") then util:log("warn", "[SPHINX] Posted orig text snippet docs[0]=" || serialize($documents/description_orig)) else ()
@@ -700,8 +700,20 @@ declare function sphinx:excerpts ($documents as node()*, $words as xs:string) as
     :)
     let $response   := httpclient:post($endpoint, $tempString, true(), <headers><header name="Content-Type" value="application/x-www-form-urlencoded"/></headers>)
 (:    let $debug :=  if ($config:debug = "trace") then util:log("warn", "[SPHINX] Excerpts response: " || serialize($response)) else ():)
-    let $rspBody    :=  if ($response//httpclient:body/@encoding = "Base64Encoded") then parse-xml(util:base64-decode($response//httpclient:body)) 
-                        else $response//httpclient:body
+    let $rspBody    :=  
+        if ($response//httpclient:body/@encoding = "Base64Encoded") then 
+            if (validation:jaxp(util:base64-decode($response//httpclient:body), false())) then
+                (:let $debug := 
+                    if ($config:debug = "trace") then 
+                        util:log('warn', '[SPHINX] INFO: Received wellformed Base64Encoded HTML from (Open)Sphinxsearch,' || 
+                                         ' parsing HTML for output...') else ()
+                return :)
+                parse-xml(util:base64-decode($response//httpclient:body)) 
+            else ()
+        else $response//httpclient:body
+    
+    
+    
     (:
     let $debug :=  if ($config:debug = "trace") then util:log("warn", "[SPHINX] $rspBody: " || serialize($rspBody)) else ()
     let $debug :=  if ($config:debug = "trace" and $response//httpclient:body/@encoding = "Base64Encoded") then util:log("warn", "[SPHINX] body decodes to: " || util:base64-decode($response//httpclient:body)) else ()
@@ -922,8 +934,9 @@ declare
 };
 
 (: Remove name IDs etc. from search excerpts as displayed in the results overview :)
-declare function sphinx:normalizeExcerpt($node as node()) {
-    if ($node/self::text() or $node instance of xs:string) then replace($node, '\[.*?\]', '') 
+declare function sphinx:normalizeExcerpt($node as item()) {
+    if ($node instance of xs:string) then replace($node, '\[.*?\]', '')
+    else if ($node/self::text()) then replace($node, '\[.*?\]', '') 
     else if ($node/self::element()) then element {local-name($node)} {$node/@*, for $child in $node/node() return sphinx:normalizeExcerpt($child)}
     else ()
 };
