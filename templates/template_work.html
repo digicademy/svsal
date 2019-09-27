@@ -83,39 +83,8 @@
 
         <!-- ==== Scroll an anchor into view if we have one ==== -->
         <script type="text/javascript">
-            $('.sal-toolbox-marginal, .sal-toolbox-title, .sal-toolbox')
-                .filter(function() {
-//                    console.log("Click on a@href=" + $(this).attr('href') + '... (window.location.href being ' + window.location.href + '.)');
-//                    console.log((window.location.origin + window.location.pathname + window.location.search
-//                             == 
-//                             this.href.split('#')[0]
-//                            ) &amp;&amp; (this.href.indexOf('#') !== -1).toString());
-                    return  ((window.location.origin + window.location.pathname + window.location.search
-                             == 
-                             this.href.split('#')[0]
-                            ) &amp;&amp; (this.href.indexOf('#') !== -1));
-                }).click(function(event){
-//                    console.log("Click on a@href=" + $(this).attr('href') + '...')
-                    z = $(this).attr('href').slice($(this).attr('href').indexOf('#'))
-//                    console.log("anchor=" + z + '...')
-                    if ($(z).length != 0) {
-                        console.log("Going locally to " + z + '...')
-                        myScrollIntoView(z);
-                        event.preventDefault();
-                    }
-                });
-            $('a[href*="#"]').click(function(event){
-                console.log("Click on a@href=" + $(this).attr('href') + '...')
-                z = $(this).attr('href').slice($(this).attr('href').indexOf('#'))
-                console.log("anchor =" + z + '...')
-                if ($(z).length != 0) {
-                    console.log("Going locally to " + z + '...')
-                    myScrollIntoView(z);
-                    event.preventDefault();
-                }
-            });
             function myScrollIntoView(targetId) {
-                /*
+/*
                 $(targetId)[0].scrollIntoView(true, {behavior: 'smooth'});
                 var scrolledY = window.scrollY;
                 if(scrolledY){
@@ -126,7 +95,7 @@
                 } else {
                     $(targetId).effect( "highlight", {color:'LightSkyBlue'}, 1200 );
                 }
-                */
+*/
                 $offset = $(targetId).offset().top;
                 console.log("$('" + targetId + "').offset().top = " + $offset + ".")
                 goHere = $offset - 80;
@@ -136,6 +105,34 @@
                             });
                 
             }
+/*
+            $('.sal-toolbox-marginal, .sal-toolbox-title, .sal-toolbox')
+                .filter(function() {
+                    console.log("Click on a@href=" + $(this).attr('href') + '... (window.location.href being ' + window.location.href + '.)');
+                    console.log((window.location.origin + window.location.pathname + window.location.search == this.href.split('#')[0]) &amp;&amp; (this.href.indexOf('#') !== -1).toString());
+                    return     ((window.location.origin + window.location.pathname + window.location.search == this.href.split('#')[0]) &amp;&amp; (this.href.indexOf('#') !== -1));
+                })
+                .click(function(event){
+                    console.log("Click on a@href=" + $(this).attr('href') + '...')
+                    z = $(this).attr('href').slice($(this).attr('href').indexOf('#'))
+                    console.log("anchor=" + z + '...')
+                    if ($(z).length != 0) {
+                        console.log("Going locally to " + z + '...')
+                        myScrollIntoView(z);
+                        event.preventDefault();
+                    }
+                });
+*/
+            $('a[href*="#"]').click(function(event){
+                console.log("Click on a@href=" + $(this).attr('href') + '...')
+                z = $(this).attr('href').slice($(this).attr('href').indexOf('#'))
+                console.log("anchor =" + z + '...')
+                if ($(z).length != 0) {
+                    console.log("Going locally to " + z + '...')
+                    myScrollIntoView(z);
+                    event.preventDefault();
+                }
+            });
         </script>
 
         <!-- ==== Toggle diplomatic/constituated textmode ==== -->
@@ -627,7 +624,13 @@
 //        });
 
 // Bind events - this needs mirador to be fully initialized. We achieve this by having it called from the iframe html file...
+     // document.getElementById('Mirador').addEventListener("mirador.loaded", miradorLoaded);
+     // document.getElementById('Mirador').contentWindow.MyObjects.myMirador.eventEmitter.subscribe('windowAdded', miradorLoaded);
+     /// document.getElementById('Mirador').contentWindow.addEventListener('mirador.loaded', miradorLoaded());
+        window.addEventListener('message', function(message){ if(message.data.type=="mirador.loaded"){ miradorLoaded(); } });
+
         function miradorLoaded() {
+            console.log("Run miradorLoaded function.");
 
             // If we have a "viewer" URL parameter, do open it 
             if (window.location.search.indexOf("viewer=") != -1) {
@@ -717,18 +720,16 @@
 
             // Bind click event for syncing/scrolling text area
             $('#Mirador').contents().find("#sync").on('click', function(){
-                $canvasId = document.getElementById('Mirador').contentWindow.MyObjects.myMirador.viewer.workspace.windows[0].canvasID
+                var m     = document.getElementById('Mirador').contentWindow.MyObjects.myMirador;
+                $canvasId = m.viewer.workspace.windows[0].canvasID
+                console.log("Mirador's sync button has been clicked on canvasId " + $canvasId + ".");
                 var target = $("a[data-canvas='" + $canvasId +"']");
-                var test = document.getElementById('Mirador').contentWindow.MyObjects.myMirador;
-                console.log(test);
-                console.log(target);
-                console.log('target.attr("id"): ' + target.attr('id'));
                 if (target.length) {
-                    console.log('sync button has been clicked on canvasId ' + $canvasId + ', going to #' + target.attr('id'));
+                    console.log('Going to #' + target.attr('id'));
                     myScrollIntoView('#'+ target.attr('id'));
                     event.preventDefault();
                 } else {
-                    console.log('sync button has been clicked, but the target element for canvasId ' + $canvasId + ' is not here.');
+                    console.log('Target element for canvasId ' + $canvasId + ' is not in DOM.');
                     $.getJSON( 'iiif-in.xql?canvasId=' + $canvasId )
                         .done(function( json ) {
                             realTarget = json[$canvasId];
