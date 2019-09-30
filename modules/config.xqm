@@ -239,6 +239,7 @@ declare variable $config:rdf-sub-roots := ($config:rdf-authors-root, $config:rdf
 declare variable $config:iiif-root      := concat($config:webdata-root, "/iiif");
 declare variable $config:files-root     := concat($config:resources-root, "/files");
 declare variable $config:corpus-zip-root := concat($config:webdata-root, '/corpus-zip');
+declare variable $config:stats-root := concat($config:webdata-root, "/stats");
 
 declare variable $config:i18n-root := $config:data-root || '/i18n'; (: to be used in i18n:process() :)
 

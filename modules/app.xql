@@ -1014,6 +1014,14 @@ declare %templates:wrap
     return i18n:process($corpusDownloadField, $lang, "/db/apps/salamanca/data/i18n", "en")
 };
 
+declare %templates:wrap function app:corpusStats ($node as node(), $model as map(*), $lang as xs:string?) {
+    let $out :=
+        <div>
+        
+        </div>
+    return i18n:process($out, $lang, "/db/apps/salamanca/data/i18n", "en")
+};
+
 
 (: ====================== End  List functions ========================== :)
 
