@@ -141,21 +141,27 @@
   <msg key="proposedCitation">Proposed citation</msg>
   
   <!-- stats -->
+  <msg key="stats">Statistics</msg>
   <msg key="aboutCorpus">About the Corpus</msg>
   <msg key="editFacsLow">digitally edited print pages</msg>
   <msg key="editFacsUp">Digitally Edited Print Pages</msg>
   <msg key="digiFacsLow">digitized facsimiles</msg>
   <msg key="digiFacsUp">Digitized Facsimiles</msg>
+  <msg key="charsUp">Characters</msg>
   <msg key="tokensLow">tokens</msg>
   <msg key="tokensUp">Tokens</msg>
   <msg key="wordFormsLow">word forms</msg>
   <msg key="wordFormsUp">Word Forms</msg>
+  <msg key="wordsLow">words</msg>
+  <msg key="wordsUp">Words</msg>
   <msg key="addStats">More statistics</msg>
-  <msg key="tokensDesc">Tokens are strings of characters in a text, such as word forms, interpunctuation, or structural symbols</msg>
-  <msg key="wordformsDesc">Word forms are strings of characters that are interpretable as words</msg>
-  <msg key="typesDesc">Word types are word forms that are unique in the corpus</msg>
+  <msg key="tokensDesc">Tokens are strings of characters in a text, such as words, punctuation characters, or structural and other symbols</msg>
+  <msg key="wordformsDesc">Word forms comprise all different words in the corpus (for example, identical words have the same word form)</msg>
   
   <msg key="corpusStats">Corpus Statistics</msg>
+  <msg key="editInterv">Editorial Interventions</msg>
+  <msg key="editAbbr">Expanded abbreviations</msg>
+  <msg key="editSic">Corrected print errors</msg>
   
   
   <msg key="worksNotice1">The digital collection of sources of the project "The School of Salamanca" comprises </msg>

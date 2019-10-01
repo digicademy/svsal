@@ -310,7 +310,7 @@ declare function i18n:addLabelsToCrumbtrail($crumbtrail as element(sal:crumbtrai
 };
 
 (:
-~ Converts a number to a string, which in the case of a large number (1,000,000+) is abbreviated for the respective language (e.g. '1 million').
+~ Converts a number to a string, which in the case of a large number (1,000,000+) is abbreviated in the respective language (e.g. 1,300,000 -> '1.3 million').
 :)
 declare function i18n:largeIntToString($int as xs:integer, $lang as xs:string?) as xs:string {
     let $str := string($int)
@@ -319,12 +319,21 @@ declare function i18n:largeIntToString($int as xs:integer, $lang as xs:string?) 
     let $billion := if ($lang eq 'de') then 'Mrd.' else if ($lang eq 'es') then 'billones' else 'billion'
     return
         switch(string-length($str))
-            case 9
-            case 8 return substring($str,1,string-length($str)-6) || ' ' || $million
-            case 7 return substring($str,1,1) || '.' || substring($str,2,1) || ' ' || $million
-            case 12
-            case 11 return substring($str,1,string-length($str)-9) || ' ' || $billion
-            case 10 return substring($str,1,1) || '.' || substring($str,2,1) || ' ' || $billion
+            (: thousands :)
+            case 4
+            case 5
+            case 6 return 
+                if ($lang eq 'en') then 
+                    substring($str,1,string-length($str)-3) || ',' || substring($str,string-length($str)-2,3) 
+                else $str
+            (: millions :)
+            case 7
+            case 8 
+            case 9 return substring($str,1,string-length($str)-6) || $separator || substring($str,string-length($str)-5,1) || ' ' || $million
+            (: billions :)
+            case 10
+            case 11
+            case 12 return substring($str,1,string-length($str)-9) || $separator || substring($str,string-length($str)-8,1) || ' ' || $billion
             default return $str
 };
 

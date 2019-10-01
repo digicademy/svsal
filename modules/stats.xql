@@ -73,7 +73,7 @@ declare function stats:makeCorpusStats() as map(*) {
     let $tokensAllCount := count(nlp:tokenize($txtAll, 'all'))
     let $wordsAll := nlp:tokenize($txtAll, 'words')
 (:    let $debug := util:log('warn', '[STATS] $wordsAll[1:20] is: ' || string-join(subsequence($wordsAll,1,20), ', ')):)
-    let $typesAllCount := count(distinct-values($wordsAll))
+    let $wordformsAllCount := count(distinct-values($wordsAll))
     
     (: not counting tokens etc. per language, since this slows down this function quite a bit... :)
     (: lang=es :)
@@ -126,8 +126,8 @@ declare function stats:makeCorpusStats() as map(*) {
         map {
             'chars_count': $charsAllCount,
             'tokens_count': $tokensAllCount,
-            'wordforms_count': count($wordsAll),
-            'types_count': $typesAllCount,
+            'words_count': count($wordsAll),
+            'wordforms_count': $wordformsAllCount,
             'normalizations_count': map {'abbr': $resolvedAbbrCount, 'sic': $resolvedSicCount},
             'mf_lemmata': [subsequence($mfLemmata,1,15)],
             'facs_count': map {'full_text': $fullTextFacsCount, 'all': $totalFacsCount}

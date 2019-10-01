@@ -715,6 +715,25 @@ border:none
     font-size:120%;
 }
 
+div.corpus-stats {
+    padding-top:0.5em;
+    width:60%;
+}
+div.corpus-stats table {
+    font-size:1.2em;
+}
+div.corpus-stats tr:nth-child(even) {
+    background: #F0F0F0;
+}
+div.corpus-stats tr:nth-child(odd) {
+    background: #FFF;
+}
+div.corpus-stats td {
+    padding:3px 15px 3px 15px;
+    text-align:left;
+    vertical-align:top;
+}
+
 /* 
  * Fontawesome & Glyphicon icons currently in use (in *all* templates/pages, except for Mirador-related code):
  * FA:
