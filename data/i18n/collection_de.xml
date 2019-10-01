@@ -153,6 +153,24 @@
   <msg key="proposedCitation">Zitiervorschlag</msg>
   <msg key="extent">Umfang, Format</msg>
   
+  <!-- stats -->
+  <msg key="aboutCorpus">Über das Corpus</msg>
+  <msg key="editFacsLow">digital edierte Druckseiten</msg>
+  <msg key="editFacsUp">Digital edierte Druckseiten</msg>
+  <msg key="digiFacsLow">digitalisierte Faksimiles</msg>
+  <msg key="digiFacsUp">Digitalisierte Faksimiles</msg>
+  <msg key="tokensLow">Tokens</msg>
+  <msg key="tokensUp">Tokens</msg>
+  <msg key="wordFormsLow">Wortformen</msg>
+  <msg key="wordFormsUp">Wortformen</msg>
+  <msg key="addStats">Weitere Zahlen</msg>
+  <msg key="tokensDesc">Tokens sind Zeichenketten in einem Text, wie z.B. Wortformen, Interpunktion, Gliederungszeichen und andere Symbole</msg>
+  <msg key="wordformsDesc">Wortformen sind Zeichenketten/Tokens, die als Wörter interpretierbar sind</msg>
+  <msg key="typesDesc">Worttypen sind im Corpus einzigartige Wortformen</msg>
+  
+  <msg key="corpusStats">Zahlen zum Corpus</msg>
+  
+  
   <msg key="latin">Latein</msg>
   <msg key="spanish">Spanisch</msg>
   

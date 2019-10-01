@@ -146,6 +146,26 @@
     <msg key="teiFiles">TEI XML</msg>
     <msg key="proposedCitation">Modelo de citación recomendado</msg>
     
+    <!-- stats -->
+    <msg key="aboutCorpus">Información del corpus</msg>
+    <msg key="editFacsLow">páginas imprimidas editadas</msg>
+    <msg key="editFacsUp">Páginas imprimidas editadas</msg>
+    <msg key="digiFacsLow">facsímiles digitalizadas</msg>
+    <msg key="digiFacsUp">Facsímiles digitalizadas</msg>
+    <msg key="tokensLow">tokens</msg>
+    <msg key="tokensUp">Tokens</msg>
+    <msg key="wordFormsLow">formas de palabra</msg>
+    <msg key="wordFormsUp">Formas de palabra</msg>
+    <msg key="addStats">Más estadísticas</msg>
+    <!-- TODO - descriptions:-->
+    <msg key="tokensDesc">Tokens are strings of characters in a text, such as word forms, interpunctuation, or structural symbols</msg>
+    <msg key="wordformsDesc">Word forms are strings of characters that are interpretable as words</msg>
+    <msg key="typesDesc">Word types are word forms that are unique in the corpus</msg>
+    
+    <!-- TODO: -->
+    <msg key="corpusStats">Estadísticas del Corpus</msg>
+    
+    
     <msg key="worksNotice1">La colección digital de fuentes del proyecto "La Escuela de Salamanca" 
         incluye </msg>
     <msg key="worksNotice2">116 obras en total</msg>

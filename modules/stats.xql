@@ -126,8 +126,8 @@ declare function stats:makeCorpusStats() as map(*) {
         map {
             'chars_count': $charsAllCount,
             'tokens_count': $tokensAllCount,
-            'wordforms_count': map {'all': count($wordsAll)},
-            'types_count': map {'all': $typesAllCount},
+            'wordforms_count': count($wordsAll),
+            'types_count': $typesAllCount,
             'normalizations_count': map {'abbr': $resolvedAbbrCount, 'sic': $resolvedSicCount},
             'mf_lemmata': [subsequence($mfLemmata,1,15)],
             'facs_count': map {'full_text': $fullTextFacsCount, 'all': $totalFacsCount}

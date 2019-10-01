@@ -1014,14 +1014,30 @@ declare %templates:wrap
     return i18n:process($corpusDownloadField, $lang, "/db/apps/salamanca/data/i18n", "en")
 };
 
-declare %templates:wrap function app:corpusStats ($node as node(), $model as map(*), $lang as xs:string?) {
-    let $out :=
-        <div>
-        
-        </div>
-    return i18n:process($out, $lang, "/db/apps/salamanca/data/i18n", "en")
+declare %templates:wrap function app:corpusStats ($node as node(), $model as map(*), $lang as xs:string?) as element(div) {
+    if (util:binary-doc-available($config:stats-root || '/stats.json')) then
+        let $stats := json-doc($config:stats-root || '/stats.json')
+        let $tokens := i18n:largeIntToString(xs:integer($stats('tokens_count')), $lang)
+        let $wordforms := i18n:largeIntToString(xs:integer($stats('wordforms_count')), $lang)
+        let $out :=
+            <div>
+                <ul>
+                    <li>{$stats('facs_count')?('all') || ' '} <i18n:text key="digiFacsLow"/></li>
+                    <li>{$stats('facs_count')?('full_text') || ' '} <i18n:text key="editFacsLow"/></li>
+                    <li>{$tokens || ' '} <i18n:text key="tokensLow"/></li>
+                    <li>{$wordforms || ' '} <i18n:text key="wordFormsLow"/></li>
+                </ul>
+                <a href="stats.html"><i class="glyphicon glyphicon-stats"></i>{' '}<i18n:text key="addStats">More statistics</i18n:text></a>
+            </div>
+        return i18n:process($out, $lang, "/db/apps/salamanca/data/i18n", "en")
+    else ()
 };
 
+(:declare function app:getJson($path as xs:string) as map(*)? {
+    if (util:binary-doc-available($path)) then
+        json-doc($path)
+    else ()
+};:)
 
 (: ====================== End  List functions ========================== :)
 
