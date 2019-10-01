@@ -68,9 +68,11 @@ declare function stats:makeCorpusStats() {
             if (fn:unparsed-text-available($config:txt-root || '/' || $id || '/' || $id || '_edit.txt')) then
                 fn:unparsed-text($config:txt-root || '/' || $id || '/' || $id || '_edit.txt')
             else error('No (edit) txt available for published work ' || $id)
+(:    let $debug := util:log('warn', '[STATS] sending ' || count($txtAll) || ' texts to nlp:tokenize()'):)
     let $charsAllCount := string-length(replace(string-join($txtAll, ''), '\s', ''))
     let $tokensAllCount := count(nlp:tokenize($txtAll, 'all'))
     let $wordsAll := nlp:tokenize($txtAll, 'words')
+(:    let $debug := util:log('warn', '[STATS] $wordsAll[1:20] is: ' || string-join(subsequence($wordsAll,1,20), ', ')):)
     let $typesAllCount := count(distinct-values($wordsAll))
     
     (: not counting tokens etc. per language, since this slows down this function quite a bit... :)
@@ -91,12 +93,6 @@ declare function stats:makeCorpusStats() {
     let $wordsLa := nlp:tokenize($txtLa, 'words')
     let $typesLaCount := count(distinct-values($wordsLa)):)
     
-    (:let $mfTokens :=
-        for $w in $wordforms 
-            let $freq := count($tokens[. eq $w])
-            order by $freq descending
-            return map{ 'wordform': $w, 'frequency': $freq }:)
-
     (: NORMALIZATIONS :)
     let $resolvedAbbrCount :=
         count(collection($config:tei-works-root)//tei:text[@type = ('work_monograph', 'work_volume') 
@@ -140,7 +136,12 @@ declare function stats:makeCorpusStats() {
         (:            'mf_tokens': [subsequence($mfTokens,1,20)],:)
         (: types_count += , 'es': $typesEsCount, 'la': $typesLaCount :)
 
-    let $debug := util:log('warn', 'Finalized statistics: ' || serialize($out))
+    let $debugParams := 
+        <output:serialization-parameters 
+                xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
+          <output:method value="json"/>
+        </output:serialization-parameters>
+    let $debug := util:log('warn', 'Finalized statistics: ' || serialize($out, $debugParams))
 
     return $out
     (: TODO: basic description of how wf/tokens are counted (and possible pitfalls like abbreviations...) :)
