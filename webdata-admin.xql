@@ -7,11 +7,11 @@ import module namespace admin       = "http://salamanca/admin" at "modules/admin
 import module namespace config    = "http://salamanca/config" at "config.xqm";
 import module namespace util        = "http://exist-db.org/xquery/util";
 
-declare option exist:timeout "43200000"; (: 12 h :)
-
 declare option output:media-type "text/html";
 declare option output:method "xhtml";
 declare option output:indent "no";
+
+declare option exist:timeout "43200000"; (: 12 h :)
 
 declare variable $snippetLength  := 1200;
 
@@ -47,6 +47,8 @@ let $output :=
             admin:renderWork($rid),
             admin:sphinx-out($rid, $mode),
             admin:createRDF($rid))
+        case 'stats' return
+            admin:createStats()
         default return 
             ()
         (: TODO: iiif-admin :)
@@ -62,6 +64,9 @@ let $debug :=
         util:log('warn', '[WEBDATA-ADMIN] Rendered format "' || $format || '" for resource "' || $rid || '" in ' || $runtimeString || '.') 
     else ()
 
+let $title := 
+    if ($format eq 'stats') then 'Webdata Output for Corpus Stats'
+    else 'Webdata Output for Resource(s): ' || $rid
 return 
     <html>
         <head>
@@ -71,7 +76,8 @@ return
                      .sal-toolbox-body {display:none !important;}'}</style>
         </head>
         <body>
-            <h1>Webdata Output for Resource(s): {$rid}</h1>
+            <h1>{$title}</h1>
             {$output}
         </body>
     </html>
+    

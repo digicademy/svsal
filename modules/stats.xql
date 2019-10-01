@@ -41,7 +41,7 @@ declare variable $stats:stopwords :=
         'la': 'keywords-4a4422ee87f6548115c189eb5115d879'
     };
     
-declare function stats:makeCorpusStats() {
+declare function stats:makeCorpusStats() as map(*) {
     
     (: LEMMATA :)
     (: TODO: are queries syntactically correct, e.g. "ius gentium"? :)
@@ -81,7 +81,7 @@ declare function stats:makeCorpusStats() {
         for $text in collection($config:tei-works-root)//tei:text[@type = ('work_monograph', 'work_volume') 
                                                                   and sal-util:WRKisPublished(./parent::tei:TEI/@xml:id)] return
                 let $debug := util:log('warn', 'Processing text nodes for ' || $text/parent::tei:TEI/@xml:id || ' in lang=es') return
-                string-join($text//text()[ancestor::*[@xml:lang]/@xml:lang eq 'es'], '')
+                string-join($text//text()[ancestor::*[@xml:lang][1]/@xml:lang eq 'es'], '')
     let $wordsEs := nlp:tokenize($txtEs, 'words')
     let $typesEsCount := count(distinct-values($wordsEs)):)
     (: lang=la :)
@@ -132,16 +132,13 @@ declare function stats:makeCorpusStats() {
             'mf_lemmata': [subsequence($mfLemmata,1,15)],
             'facs_count': map {'full_text': $fullTextFacsCount, 'all': $totalFacsCount}
         }
-        (: wordforms_count += , 'es': count($wordsEs), 'la': count($wordsLa) :)
-        (:            'mf_tokens': [subsequence($mfTokens,1,20)],:)
-        (: types_count += , 'es': $typesEsCount, 'la': $typesLaCount :)
 
-    let $debugParams := 
+    (:let $debugParams := 
         <output:serialization-parameters 
                 xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
           <output:method value="json"/>
         </output:serialization-parameters>
-    let $debug := util:log('warn', 'Finalized statistics: ' || serialize($out, $debugParams))
+    let $debug := util:log('warn', 'Finalized statistics: ' || serialize($out, $debugParams)):)
 
     return $out
     (: TODO: basic description of how wf/tokens are counted (and possible pitfalls like abbreviations...) :)
