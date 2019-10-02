@@ -60,7 +60,6 @@ declare function export:WRKgetTeiHeader($wid as xs:string?, $mode as xs:string?,
 declare function local:processHeaderNode($wid as xs:string, $node as node(), $mode as xs:string?, $citetrail as xs:string?) {
     switch($mode)
         case 'metadata' return
-            let $debug := util:log('warn', '[EXPORT] processing in mode ' || $mode) return
             typeswitch($node)
                 case element(tei:revisionDesc) return ()
                 (:case element(tei:encodingDesc) return ():)
@@ -73,7 +72,6 @@ declare function local:processHeaderNode($wid as xs:string, $node as node(), $mo
                 default return 
                     () 
         case 'passage' return
-            let $debug := util:log('warn', '[EXPORT] processing in mode ' || $mode) return
             typeswitch($node)
                 case element(tei:notesStmt) return ()
                 case element(tei:idno) return
@@ -105,7 +103,6 @@ declare function local:processHeaderNode($wid as xs:string, $node as node(), $mo
                 default return 
                     ()        
         default return 
-            let $debug := util:log('warn', '[EXPORT] processing without mode') return
             $node
 };
 
@@ -154,8 +151,8 @@ declare function export:WRKgetTeiPassage($wid as xs:string, $citetrail as xs:str
 :)
 declare function local:wrapInAncestorNode($node as element(), $wrappedNode as element()) as element() {
     if ($node/ancestor::*[not(self::tei:TEI or self::tei:text[@type eq 'work_part'])]) then
-        let $debug := util:log('warn', '[EXPORT] number of ancestor nodes in local:wrapInAncestorNode(): ' 
-                               || count($node/ancestor::*[not(self::tei:TEI or self::tei:text[@type eq 'work_part'])]))
+        (:let $debug := util:log('warn', '[EXPORT] number of ancestor nodes in local:wrapInAncestorNode(): ' 
+                               || count($node/ancestor::*[not(self::tei:TEI or self::tei:text[@type eq 'work_part'])])):)
         let $ancestor := $node/ancestor::*[not(self::tei:TEI or self::tei:text[@type eq 'work_part'])][1]
         let $wrap := 
             element {fn:QName('http://www.tei-c.org/ns/1.0', local-name($ancestor))} {
