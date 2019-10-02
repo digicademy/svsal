@@ -733,6 +733,10 @@ div.corpus-stats td {
     text-align:left;
     vertical-align:top;
 }
+div.stats-freq-cooc {
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
 
 /* 
  * Fontawesome & Glyphicon icons currently in use (in *all* templates/pages, except for Mirador-related code):

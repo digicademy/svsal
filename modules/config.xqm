@@ -17,6 +17,7 @@ declare namespace pack          = "http://expath.org/ns/pkg";
 declare namespace tei           = "http://www.tei-c.org/ns/1.0";
 import module namespace net     = "http://salamanca/net"                at "net.xql";
 import module namespace i18n    = "http://exist-db.org/xquery/i18n"     at "i18n.xql";
+import module namespace stats       = "http://salamanca/stats" at "stats.xql";
 import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";
 import module namespace console = "http://exist-db.org/xquery/console";
 import module namespace functx  = "http://www.functx.com";
@@ -644,7 +645,8 @@ declare function config:formatName($persName as element()*) as xs:string? {
 };
  
 declare %templates:default("language", "en") 
-    function config:meta-title($node as node(), $model as map(*), $lang as xs:string, $wid as xs:string*, $q as xs:string?, $id as xs:string?) as element() {  
+    function config:meta-title($node as node(), $model as map(*), $lang as xs:string, $wid as xs:string*, 
+                               $q as xs:string?, $id as xs:string?, $lid as xs:string?) as element() {  
     let $reqResource := '/' || tokenize(request:get-uri(), '/')[last()]
     let $output := 
         switch($reqResource)
@@ -702,7 +704,7 @@ declare %templates:default("language", "en")
             case '/render.html' return
                 <title><i18n:text key="rendering">Rendering</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
             case '/stats.html' return
-                <title><i18n:text key="stats">Statistiken</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
+                <title>{stats:HTMLTitle($node, $model, $wid, $lid, $lang)} - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
             case '/index.html' return
                 <title><i18n:text key="start">Home</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
             case '/contact.html' return

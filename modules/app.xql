@@ -1035,45 +1035,6 @@ declare %templates:wrap function app:corpusStatsTeaser ($node as node(), $model 
     else ()
 };
 
-declare %templates:wrap function app:corpusStats($node as node(), $model as map(*), $lang as xs:string?) as element(div)? {
-    if (util:binary-doc-available($config:stats-root || '/stats.json')) then
-        let $stats := json-doc($config:stats-root || '/stats.json')
-        let $digiFacs := i18n:largeIntToString(xs:integer($stats('facs_count')?('all')), $lang)
-        let $editFacs := i18n:largeIntToString(xs:integer($stats('facs_count')?('full_text')), $lang)
-        let $chars := i18n:largeIntToString(xs:integer($stats('chars_count')), $lang)
-        let $tokens := i18n:largeIntToString(xs:integer($stats('tokens_count')), $lang)
-        let $words := i18n:largeIntToString(xs:integer($stats('words_count')), $lang)
-        let $wordforms := i18n:largeIntToString(xs:integer($stats('wordforms_count')), $lang)
-        let $editAbbr := i18n:largeIntToString(xs:integer($stats('normalizations_count')?('abbr')), $lang)
-        let $editSic := i18n:largeIntToString(xs:integer($stats('normalizations_count')?('sic')), $lang)
-        let $out :=
-            <div>
-                <h3><i18n:text key="corpusStats">Corpus Statistics</i18n:text></h3>
-                <div class="corpus-stats">
-                    <table class="corpus-stats-table">
-                        <tr><td><i18n:text key="digiFacsUp"/></td><td>{$digiFacs}</td></tr>
-                        <tr><td><i18n:text key="editFacsUp"/></td><td>{$editFacs}</td></tr>
-                        <tr><td><i18n:text key="charsUp"/></td><td>{$chars}</td></tr>
-                        <tr><td><i18n:text key="tokensUp"/><sup>1</sup></td><td>{$tokens}</td></tr>
-                        <tr><td><i18n:text key="wordsUp"/></td><td>{$words}</td></tr>
-                        <tr><td><i18n:text key="wordFormsUp"/><sup>2</sup></td><td>{$wordforms}</td></tr>
-                        <tr>
-                            <td><i18n:text key="editInterv"/></td>
-                            <td>
-                                <ul>
-                                    <li><i18n:text key="editAbbr"/>{': ' || $editAbbr}</li>
-                                    <li><i18n:text key="editSic"/>{': ' || $editSic}</li>
-                                </ul>
-                            </td>
-                        </tr>
-                    </table>
-                    <p><sup>1</sup>{' '}<i18n:text key="tokensDesc"/>.</p>
-                    <p><sup>2</sup>{' '}<i18n:text key="wordformsDesc"/>.</p>
-                </div>
-            </div>
-        return i18n:process($out, $lang, "/db/apps/salamanca/data/i18n", "en")
-    else ()
-};
 
 (:declare function app:getJson($path as xs:string) as map(*)? {
     if (util:binary-doc-available($path)) then

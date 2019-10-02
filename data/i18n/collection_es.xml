@@ -166,9 +166,18 @@
     <msg key="wordformsDesc">Word forms represent the set of unique words (i.e., tokens that are interpretable as words) in the corpus</msg> <!-- TODO -->
     
     <msg key="corpusStats">Estadísticas del Corpus</msg>
+    <msg key="generalStats">Datos generales</msg> <!-- TODO -->
+    <msg key="freqCooc">Frecuencias and coocurrencias de las lemas más frecuentes</msg>
+    <msg key="cooccurrences">Coocurrencias</msg>
     <msg key="editInterv">Intervenciones editoriales</msg>
     <msg key="editAbbr">Abreviaciones expandidas</msg> <!-- TODO -->
     <msg key="editSic">Errata de impresión corregidos</msg>
+    
+    <msg key="lemmas">Lemas</msg>
+    <!-- TODO: -->
+    <msg key="numOcc">number of occurrences</msg>
+    <msg key="numSectOcc">number of sections containing the occurrences</msg>
+    <msg key="numWorksOcc">number of works containing the sections</msg>
     
     <msg key="worksNotice1">La colección digital de fuentes del proyecto "La Escuela de Salamanca" 
         incluye </msg>

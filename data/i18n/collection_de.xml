@@ -169,13 +169,21 @@
   <msg key="wordFormsUp">Wortformen</msg>
   <msg key="addStats">Weitere Zahlen</msg>
   <msg key="tokensDesc">Tokens sind Zeichenketten in einem Text, wie z.B. Wörter, Interpunktion, Gliederungszeichen und andere Symbole</msg>
-  <msg key="wordformsDesc">Wortformen umfassen alle unterschiedlichen Wörter im Corpus (d.h. identische Wörter zählen als eine Wortform)</msg>
+  <msg key="wordformsDesc">Wortformen umfassen alle unterschiedlichen Wörter im Corpus (z.B. zählen zwei identische Wörter als eine Wortform)</msg>
   
-  <msg key="corpusStats">Zahlen zum Corpus</msg>
+  <msg key="corpusStats">Corpus-Statistiken</msg>
+  <msg key="generalStats">Allgemeine Daten</msg>
+  <msg key="freqCooc">Frequenzen und Kookurrenzen der häufigsten Lemmata</msg>
+  <msg key="cooccurrences">Kookurrenzen</msg>
   <msg key="editInterv">Editorische Eingriffe</msg>
   <msg key="editAbbr">Aufgelöste Abkürzungen</msg>
   <msg key="editSic">Korrigierte Druckfehler</msg>
   
+  <msg key="lemmas">Lemmata</msg>
+  <msg key="numOcc">Anzahl der Vorkommen</msg>
+  <!-- TODO: -->
+  <msg key="numSectOcc">Anzahl der Abschnitte, die Vorkommen enthalten</msg>
+  <msg key="numWorksOcc">Anzahl der Werke, die Vorkommen enthalten</msg>
   
   <msg key="latin">Latein</msg>
   <msg key="spanish">Spanisch</msg>

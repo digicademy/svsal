@@ -156,12 +156,20 @@
   <msg key="wordsUp">Words</msg>
   <msg key="addStats">More statistics</msg>
   <msg key="tokensDesc">Tokens are strings of characters in a text, such as words, punctuation characters, or structural and other symbols</msg>
-  <msg key="wordformsDesc">Word forms comprise all different words in the corpus (for example, identical words have the same word form)</msg>
+  <msg key="wordformsDesc">Word forms comprise all the different words in the corpus (for example, two identical words are of the same word form)</msg>
   
   <msg key="corpusStats">Corpus Statistics</msg>
+  <msg key="generalStats">General Numbers</msg>
+  <msg key="freqCooc">Frequencies and Cooccurrences of the Most Frequent Lemmas</msg>
+  <msg key="cooccurrences">Cooccurrences</msg>
   <msg key="editInterv">Editorial Interventions</msg>
   <msg key="editAbbr">Expanded abbreviations</msg>
   <msg key="editSic">Corrected print errors</msg>
+  
+  <msg key="lemmas">Lemmata</msg>
+  <msg key="numOcc">number of occurrences</msg>
+  <msg key="numSectOcc">number of sections containing the occurrences</msg>
+  <msg key="numWorksOcc">number of works containing the sections</msg>
   
   
   <msg key="worksNotice1">The digital collection of sources of the project "The School of Salamanca" comprises </msg>
