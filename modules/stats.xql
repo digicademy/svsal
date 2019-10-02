@@ -47,28 +47,42 @@ declare variable $stats:stopwords := (: 'all'=stopwords-gesamt.txt :)
         'all': 'keywords-d8acdac6e75498496781928ade39fcd2'
     };
     
-declare function stats:makeCorpusStats() as map(*) {
+(:
+~ Modes: 
+~   - "corpus": produces corpus-wide statistics
+~   - "work": produces statistics for a single work (in this case $wid is required)
+:)
+declare function stats:makeStats($mode as xs:string, $wid as xs:string?) as map(*) {
     
     (: LEMMATA :)
     (: TODO: are queries syntactically correct, e.g. "ius gentium"? :)
+    (: search for single work like so: "ley @sphinx_work ^W0002":)
     let $lemmataList := doc($config:data-root || '/lemmata-97.xml')//sal:lemma[@type eq 'term']
     let $mfLemmata :=
         for $l in $lemmataList 
             let $query := $l/text()
-            let $currentSearch := sphinx:search((), map{}, $query, 'corpus-nogroup', 0, 10)
+            let $currentSearch := 
+                if ($mode eq 'work') then sphinx:search((), map{}, $query, 'work-' || $wid, 0, 10) 
+                else sphinx:search((), map{}, $query, 'corpus-nogroup', 0, 10)
             let $currentOccurrencesCount := 
                 if (count($currentSearch("results")//terms) = 1) then
                     xs:integer($currentSearch("results")//terms/hits/text())
                 else
                     xs:integer(sum($currentSearch("results")//terms/hits/text()))
+                        
+(:                        let $secondWorksCount      := count(distinct-values($secondSearch("results")//item/work/text()))
+:)                        
             order by $currentOccurrencesCount descending
             return map{'lid': $l/@xml:id/string(), 'terms': $l/text(), 'freq': $currentOccurrencesCount }
     
     (: TOKENS / CHARS / WORDFORMS / TYPES :)
     (: generic, lang=all :)
     let $publishedWorkIds := 
-        collection($config:tei-works-root)//tei:TEI[./tei:text[@type = ('work_monograph', 'work_multivolume')] 
-                                                    and sal-util:WRKisPublished(./@xml:id)]/@xml:id/string()
+        if ($mode eq 'work' and $wid and sal-util:WRKisPublished($wid)) then $wid
+        else if ($mode eq 'corpus') then
+            collection($config:tei-works-root)//tei:TEI[./tei:text[@type = ('work_monograph', 'work_multivolume')] 
+                                                        and sal-util:WRKisPublished(./@xml:id)]/@xml:id/string()
+        else error()
     let $txtAll := 
         for $id in $publishedWorkIds return 
             if (fn:unparsed-text-available($config:txt-root || '/' || $id || '/' || $id || '_edit.txt')) then
@@ -99,34 +113,37 @@ declare function stats:makeCorpusStats() as map(*) {
     let $wordsLa := nlp:tokenize($txtLa, 'words')
     let $typesLaCount := count(distinct-values($wordsLa)):)
     
+    let $textCollection :=
+        if ($mode eq 'corpus') then
+            collection($config:tei-works-root)//tei:text[@type = ('work_monograph', 'work_volume') 
+                                                         and sal-util:WRKisPublished(./parent::tei:TEI/@xml:id)]
+        else if ($mode eq 'work' and sal-util:WRKisPublished($wid)) then 
+            util:expand(doc($config:tei-works-root || '/' || $wid || '.xml'))//tei:text[@type = ('work_monograph', 'work_volume')
+                                                                                        and count(.//tei:pb) ge 10] (: page number as indicator for publication status of volume :)
+        else error()
     (: NORMALIZATIONS :)
-    let $resolvedAbbrCount :=
-        count(collection($config:tei-works-root)//tei:text[@type = ('work_monograph', 'work_volume') 
-                                                           and sal-util:WRKisPublished(./parent::tei:TEI/@xml:id)]//tei:expan)
+    let $resolvedAbbrCount := count($textCollection//tei:expan)
     let $resolvedSicCount :=
-        count(collection($config:tei-works-root)//tei:text[@type = ('work_monograph', 'work_volume') 
-                                                           and sal-util:WRKisPublished(./parent::tei:TEI/@xml:id)]//tei:corr)
+        count($textCollection//tei:corr)
 
     (: FACSIMILES :)
     (: count full-text digitized images based on TEI//pb :)
-    let $fullTextFacsCount := 
-        count(
-            collection($config:tei-works-root)//tei:text[@type = ('work_monograph', 'work_volume') 
-                                                         and sal-util:WRKisPublished(./parent::tei:TEI/@xml:id)]//tei:pb[not(@sameAs or @corresp)]
-        )
+    let $fullTextFacsCount := count($textCollection//tei:pb[not(@sameAs or @corresp)])
     (: count other images based on iiif resources :)
     let $unpublishedWorkIds :=
         collection($config:tei-works-root)//tei:TEI[./tei:text[@type = ('work_monograph', 'work_volume')] 
                                                     and not(sal-util:WRKisPublished(@xml:id))]/@xml:id/string()
     let $otherFacs :=
-        for $id in $unpublishedWorkIds return (: $unpublishedWorkIds can only comprise manifests, not collections :)
-            let $iiif := iiif:fetchResource($id)
-            return
-                if (count($iiif) gt 0) then 
-                    if ($iiif('@type') eq 'sc:Manifest') then
-                        array:size(array:get($iiif('sequences'), 1)?('canvases'))
-                    else error()
-                else error('No iiif resource available for work ' || $id)
+        if ($mode eq 'corpus') then
+            for $id in $unpublishedWorkIds return (: $unpublishedWorkIds can only comprise manifests, not collections :)
+                let $iiif := iiif:fetchResource($id)
+                return
+                    if (count($iiif) gt 0) then 
+                        if ($iiif('@type') eq 'sc:Manifest') then
+                            array:size(array:get($iiif('sequences'), 1)?('canvases'))
+                        else error()
+                    else error('No iiif resource available for work ' || $id)
+        else 0
     let $totalFacsCount := $fullTextFacsCount + sum($otherFacs)
     let $out :=
         map {

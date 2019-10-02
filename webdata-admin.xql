@@ -3,9 +3,11 @@ xquery version "3.0";
 declare namespace exist             = "http://exist.sourceforge.net/NS/exist";
 declare namespace request           = "http://exist-db.org/xquery/request";
 declare namespace output            = "http://www.w3.org/2010/xslt-xquery-serialization";
+declare namespace tei        = "http://www.tei-c.org/ns/1.0";
 import module namespace admin       = "http://salamanca/admin" at "modules/admin.xql";
 import module namespace config    = "http://salamanca/config" at "config.xqm";
 import module namespace util        = "http://exist-db.org/xquery/util";
+import module namespace sal-util    = "http://salamanca/sal-util"               at "modules/sal-util.xql";
 
 declare option output:media-type "text/html";
 declare option output:method "xhtml";
@@ -48,7 +50,12 @@ let $output :=
             admin:sphinx-out($rid, $mode),
             admin:createRDF($rid))
         case 'stats' return
-            admin:createStats()
+            let $create := 
+                (admin:createStats('corpus', ()),
+                (for $workId in collection($config:tei-works-root)/tei:TEI[tei:text/@type = ('work_monograph', 'work_multivolume')
+                                                                           and sal-util:WRKisPublished(./@xml:id)]/@xml:id/string()
+                    return admin:createStats('work', $workId)))
+            return 'Corpus and work statistics successfully created!'
         default return 
             ()
         (: TODO: iiif-admin :)

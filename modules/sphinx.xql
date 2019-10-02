@@ -332,6 +332,21 @@ function sphinx:search ($context as node()*, $model as map(*), $q as xs:string?,
                 let $searchRequest           := concat($config:sphinxRESTURL, "/search?q=", "%40%28", $alsoSearchAuthorField, "sphinx_description_edit%2Csphinx_description_orig%29%20", encode-for-uri($q), $addConditionParameters, $modeConditionParameters, $groupingParameters, $pagingParameters)
                 return httpclient:get($searchRequest, false(), $searchRequestHeaders)//httpclient:body/rss
 
+            (: search for single work (field syntax: 'work-W0xxx'): not visible in ordinary search window, but necessary e.g. for statistics :)
+            else if (starts-with($field, 'work-')) then                                                           (:   Work-Type      +   hit-type               +        Fulltext fields                   have         query term :)
+            (: search for queryterm in sphinx_description_edit and ..._orig fields,
+                filter by work type (for now, based on  work id, as of late we also have a work_type attritute that we should start using),
+                group by work (so we don't the same document repeatedly),
+                paginate results if necessary
+            :)
+                let $modeConditionParameters := "%20%40sphinx_work%20%5E" || substring-after($field, 'work-')
+                let $addConditionParameters  := ""
+                let $alsoSearchAuthorField   := "sphinx_author%2C"
+                let $groupingParameters      := "&amp;groupby=sphinx_work&amp;groupfunc=4"
+                let $pagingParameters        := "&amp;offset=" || $offset || "&amp;limit=" || $limit
+                let $searchRequest           := concat($config:sphinxRESTURL, "/search?q=", "%40%28", $alsoSearchAuthorField, "sphinx_description_edit%2Csphinx_description_orig%29%20", encode-for-uri($q), $addConditionParameters, $modeConditionParameters, $groupingParameters, $pagingParameters)
+                return httpclient:get($searchRequest, false(), $searchRequestHeaders)//httpclient:body/rss
+
             else()
         return map { "results" := $hits }
     else ()
