@@ -112,6 +112,10 @@ declare function sal-util:WRKisPublished($wid as xs:string) as xs:boolean {
     return $status = $publishedStatus
 };
 
+declare function sal-util:getPublishedWorkIds() as xs:string* {
+    collection($config:tei-works-root)/tei:TEI[sal-util:WRKisPublished(@xml:id)]/@xml:id/string()
+};
+
 (: 1 = valid & existing ; 0 = not existing ; -1 = no dataset found for $wid :)
 (:declare function sal-util:WRKvalidatePassageId($wid as xs:string?, $passage as xs:string?) as xs:integer {
     if ($wid and matches($wid, '^[wW]\d{4}(_Vol\d{2})?$')) then

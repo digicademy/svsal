@@ -178,6 +178,7 @@
   <msg key="editInterv">Editorische Eingriffe</msg>
   <msg key="editAbbr">Aufgelöste Abkürzungen</msg>
   <msg key="editSic">Korrigierte Druckfehler</msg>
+  <msg key="editHyph">Auflösungen unmarkierter Worttrennungen</msg>
   
   <msg key="lemmas">Lemmata</msg>
   <msg key="numOcc">Anzahl der Vorkommen</msg>

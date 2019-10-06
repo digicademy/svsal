@@ -172,6 +172,7 @@
     <msg key="editInterv">Intervenciones editoriales</msg>
     <msg key="editAbbr">Abreviaciones expandidas</msg> <!-- TODO -->
     <msg key="editSic">Errata de impresión corregidos</msg>
+    <msg key="editHyph">Conjunción de palabras separadas sin marcar</msg>
     
     <msg key="lemmas">Lemas</msg>
     <!-- TODO: -->

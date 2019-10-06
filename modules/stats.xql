@@ -52,7 +52,7 @@ declare variable $stats:stopwords := (: 'all'=stopwords-gesamt.txt :)
 ~   - "corpus": produces corpus-wide statistics
 ~   - "work": produces statistics for a single work (in this case $wid is required)
 :)
-declare function stats:makeStats($mode as xs:string, $wid as xs:string?) as map(*) {
+declare function stats:makeCorpusStats() as map(*) {
     
     (: LEMMATA :)
     (: TODO: are queries syntactically correct, e.g. "ius gentium"? :)
@@ -61,9 +61,7 @@ declare function stats:makeStats($mode as xs:string, $wid as xs:string?) as map(
     let $mfLemmata :=
         for $l in $lemmataList 
             let $query := $l/text()
-            let $currentSearch := 
-                if ($mode eq 'work') then sphinx:search((), map{}, $query, 'work-' || $wid, 0, 10) 
-                else sphinx:search((), map{}, $query, 'corpus-nogroup', 0, 10)
+            let $currentSearch :=  sphinx:search((), map{}, $query, 'corpus-nogroup', 0, 10)
             let $currentOccurrencesCount := 
                 if (count($currentSearch("results")//terms) = 1) then
                     xs:integer($currentSearch("results")//terms/hits/text())
@@ -78,11 +76,8 @@ declare function stats:makeStats($mode as xs:string, $wid as xs:string?) as map(
     (: TOKENS / CHARS / WORDFORMS / TYPES :)
     (: generic, lang=all :)
     let $publishedWorkIds := 
-        if ($mode eq 'work' and $wid and sal-util:WRKisPublished($wid)) then $wid
-        else if ($mode eq 'corpus') then
-            collection($config:tei-works-root)//tei:TEI[./tei:text[@type = ('work_monograph', 'work_multivolume')] 
-                                                        and sal-util:WRKisPublished(./@xml:id)]/@xml:id/string()
-        else error()
+                collection($config:tei-works-root)//tei:TEI[./tei:text[@type = ('work_monograph', 'work_multivolume')] 
+                                                    and sal-util:WRKisPublished(./@xml:id)]/@xml:id/string()
     let $txtAll := 
         for $id in $publishedWorkIds return 
             if (fn:unparsed-text-available($config:txt-root || '/' || $id || '/' || $id || '_edit.txt')) then
@@ -114,17 +109,12 @@ declare function stats:makeStats($mode as xs:string, $wid as xs:string?) as map(
     let $typesLaCount := count(distinct-values($wordsLa)):)
     
     let $textCollection :=
-        if ($mode eq 'corpus') then
-            collection($config:tei-works-root)//tei:text[@type = ('work_monograph', 'work_volume') 
-                                                         and sal-util:WRKisPublished(./parent::tei:TEI/@xml:id)]
-        else if ($mode eq 'work' and sal-util:WRKisPublished($wid)) then 
-            util:expand(doc($config:tei-works-root || '/' || $wid || '.xml'))//tei:text[@type = ('work_monograph', 'work_volume')
-                                                                                        and count(.//tei:pb) ge 10] (: page number as indicator for publication status of volume :)
-        else error()
+        collection($config:tei-works-root)//tei:text[@type = ('work_monograph', 'work_volume') 
+                                                     and sal-util:WRKisPublished(./parent::tei:TEI/@xml:id)]
     (: NORMALIZATIONS :)
     let $resolvedAbbrCount := count($textCollection//tei:expan)
-    let $resolvedSicCount :=
-        count($textCollection//tei:corr)
+    let $resolvedSicCount := count($textCollection//tei:corr)
+    let $resolvedHyphenations := count($textCollection//(tei:pb|tei:cb|tei:lb)[@rendition eq '#noHyphen'])
 
     (: FACSIMILES :)
     (: count full-text digitized images based on TEI//pb :)
@@ -134,16 +124,14 @@ declare function stats:makeStats($mode as xs:string, $wid as xs:string?) as map(
         collection($config:tei-works-root)//tei:TEI[./tei:text[@type = ('work_monograph', 'work_volume')] 
                                                     and not(sal-util:WRKisPublished(@xml:id))]/@xml:id/string()
     let $otherFacs :=
-        if ($mode eq 'corpus') then
-            for $id in $unpublishedWorkIds return (: $unpublishedWorkIds can only comprise manifests, not collections :)
-                let $iiif := iiif:fetchResource($id)
-                return
-                    if (count($iiif) gt 0) then 
-                        if ($iiif('@type') eq 'sc:Manifest') then
-                            array:size(array:get($iiif('sequences'), 1)?('canvases'))
-                        else error()
-                    else error('No iiif resource available for work ' || $id)
-        else 0
+        for $id in $unpublishedWorkIds return (: $unpublishedWorkIds can only comprise manifests, not collections :)
+            let $iiif := iiif:fetchResource($id)
+            return
+                if (count($iiif) gt 0) then 
+                    if ($iiif('@type') eq 'sc:Manifest') then
+                        array:size(array:get($iiif('sequences'), 1)?('canvases'))
+                    else error()
+                else error('No iiif resource available for work ' || $id)
     let $totalFacsCount := $fullTextFacsCount + sum($otherFacs)
     let $out :=
         map {
@@ -151,7 +139,7 @@ declare function stats:makeStats($mode as xs:string, $wid as xs:string?) as map(
             'tokens_count': $tokensAllCount,
             'words_count': count($wordsAll),
             'wordforms_count': $wordformsAllCount,
-            'normalizations_count': map {'abbr': $resolvedAbbrCount, 'sic': $resolvedSicCount},
+            'normalizations_count': map {'abbr': $resolvedAbbrCount, 'sic': $resolvedSicCount, 'unmarked_hyph': $resolvedHyphenations},
             'mf_lemmata': $mfLemmata,
             'facs_count': map {'full_text': $fullTextFacsCount, 'all': $totalFacsCount}
         }
@@ -317,6 +305,7 @@ declare function stats:HTMLcorpusStats($node as node(), $model as map(*), $lang 
         let $wordforms := i18n:largeIntToString(xs:integer($stats('wordforms_count')), $lang)
         let $editAbbr := i18n:largeIntToString(xs:integer($stats('normalizations_count')?('abbr')), $lang)
         let $editSic := i18n:largeIntToString(xs:integer($stats('normalizations_count')?('sic')), $lang)
+        let $editHyph := i18n:largeIntToString(xs:integer($stats('normalizations_count')?('unmarked_hyph')), $lang)
         let $out :=
             <div>
                 <h3><i18n:text key="generalStats">General Numbers of the Corpus</i18n:text></h3>
@@ -334,6 +323,7 @@ declare function stats:HTMLcorpusStats($node as node(), $model as map(*), $lang 
                                 <ul>
                                     <li><i18n:text key="editAbbr"/>{': ' || $editAbbr}</li>
                                     <li><i18n:text key="editSic"/>{': ' || $editSic}</li>
+                                    <li><i18n:text key="editHyph"/>{': ' || $editHyph}</li>
                                 </ul>
                             </td>
                         </tr>
