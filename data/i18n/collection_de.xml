@@ -172,6 +172,8 @@
   <msg key="wordformsDesc">Wortformen umfassen alle unterschiedlichen Wörter im Corpus (z.B. zählen zwei identische Wörter als eine Wortform)</msg>
   
   <msg key="corpusStats">Corpus-Statistiken</msg>
+  <msg key="statsFor">Statistiken für</msg>
+  <msg key="forLemma">für Lemma</msg>
   <msg key="generalStats">Allgemeine Daten</msg>
   <msg key="freqCooc">Frequenzen und Kookurrenzen der häufigsten Lemmata</msg>
   <msg key="cooccurrences">Kookurrenzen</msg>
@@ -269,6 +271,7 @@
   <msg key="inLow">in</msg>
   <msg key="editedByAbbrLow">hg. von</msg>
   <msg key="copy">Kopieren</msg>
+  <msg key="inLow">in</msg>
   
   <!-- div, milestone, element types for node index derivatives -->
   <msg key="tei-div-additional">Addendum</msg>

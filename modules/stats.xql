@@ -15,6 +15,7 @@ import module namespace nlp    = "http://salamanca/nlp"                at "nlp.x
 import module namespace console   = "http://exist-db.org/xquery/console";
 import module namespace sal-util = "http://salamanca/sal-util" at "sal-util.xql";
 import module namespace iiif     = "http://salamanca/iiif" at "iiif.xql";
+import module namespace app         = "http://salamanca/app"                    at "app.xql";
 (:
 import module namespace i18n      = "http://exist-db.org/xquery/i18n"        at "i18n.xql";
 import module namespace kwic      = "http://exist-db.org/xquery/kwic";
@@ -260,16 +261,27 @@ declare %templates:wrap
     let $mode := stats:mode($wid, $lid)
     let $output :=
         switch($mode)
-            case 'all' return <i18n:text key="corpusStats">Corpus Statistics</i18n:text>
-            case 'work' return ()
-            case 'lemma' return ()
-            case 'work-lemma' return ()
+            case 'all' return i18n:process(<i18n:text key="corpusStats"/>, $lang, "/db/apps/salamanca/data/i18n", "en")
+            case 'work' return 
+                i18n:process(<i18n:text key="statsFor"/>, $lang, "/db/apps/salamanca/data/i18n", "en")
+                || ' ' || app:WRKcombinedShort($node, $model, $wid)
+            case 'lemma' return 
+                i18n:process(<i18n:text key="corpusStats"/>, $lang, "/db/apps/salamanca/data/i18n", "en")
+                || ' ' || i18n:process(<i18n:text key="forLemma"/>, $lang, "/db/apps/salamanca/data/i18n", "en")
+                || ' ' || doc($config:data-root || '/lemmata-97.xml')/sal:lemmata/sal:lemma[@xml:id eq $lid]/text()
+            case 'work-lemma' return 
+                i18n:process(<i18n:text key="corpusStats"/>, $lang, "/db/apps/salamanca/data/i18n", "en")
+                || ' ' || i18n:process(<i18n:text key="forLemma"/>, $lang, "/db/apps/salamanca/data/i18n", "en")
+                || ' ' || doc($config:data-root || '/lemmata-97.xml')/sal:lemmata/sal:lemma[@xml:id eq $lid]/text()
+                || ' ' || i18n:process(<i18n:text key="in"/>, $lang, "/db/apps/salamanca/data/i18n", "en")
+                || ' ' || app:WRKcombinedShort($node, $model, $wid)
             default return ()
     return
-        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "en")
+        (: TODO: in case of long titles, shorten this string in config:meta-title :)
+        $output
 };
 
-declare function stats:HTMLhead($node as node(), $model as map (*), $wid as xs:string?, $lid as xs:string?, $lang as xs:string?) as element(h3)? {
+(:declare function stats:HTMLhead($node as node(), $model as map (*), $wid as xs:string?, $lid as xs:string?, $lang as xs:string?) as element(h3)? {
     let $mode := stats:mode($wid, $lid)
     return
         switch($mode)
@@ -278,7 +290,7 @@ declare function stats:HTMLhead($node as node(), $model as map (*), $wid as xs:s
             case 'lemma' return ()
             case 'work-lemma' return ()
             default return ()
-};
+};:)
 
 declare function stats:HTMLbody($node as node(), $model as map (*), $wid as xs:string?, $lid as xs:string?, $lang as xs:string?) as element(div)? {
     let $mode := stats:mode($wid, $lid)
@@ -289,7 +301,11 @@ declare function stats:HTMLbody($node as node(), $model as map (*), $wid as xs:s
                     {(stats:HTMLstatsTable($node, $model, $lang, $wid), <hr/>,
                       stats:HTMLcorpusLemmaStats($node, $model, $lang))}
                 </div>
-            case 'work' return ()
+            case 'work' return 
+                <div>
+                    {(stats:HTMLstatsTable($node, $model, $lang, $wid), <hr/>,
+                      stats:HTMLworkLemmaStats($node, $model, $wid, $lang))}
+                </div>
             case 'lemma' return ()
             case 'work-lemma' return ()
             default return ()
@@ -371,7 +387,6 @@ declare %templates:wrap
                     || '&amp;' || $queries
                     || '&amp;mode=corpus&amp;chartType=bar'
                     || '&amp;corpus=' || $stats:texts('all')?('corpus')
-                    (:  :)
 (:                let $debug := util:log('warn', '$queries: ' || $queries || '; $srcLink: ' || $srcLink):)
                 let $cooccurrences :=
                     for $currentLemma in $lemmataTerms return
@@ -382,7 +397,7 @@ declare %templates:wrap
                                 $currentSearch("results")//terms/hits/text()
                             else
                                 sum($currentSearch("results")//terms/hits/text())
-                        let $currentSectionsCount := xs:int($currentSearch("results")//*:totalResults) (: TODO: are sections (snippets, really) a helpful information here? :)
+                        let $currentSectionsCount := xs:int($currentSearch("results")//*:totalResults)
                         let $currentWorksCount := count(distinct-values($currentSearch("results")//item/work/text()))
                         
                         let $desc :=
@@ -396,17 +411,19 @@ declare %templates:wrap
                         (: get frequency data for this lemma in comparison with other lemmata (cooccurrences): sphinx snippets / works :)
                         let $cooccurrencesLinks := 
                             if ($currentSectionsCount gt 0) then
-                                for $secondLemma in (for $l in $topLemmataTerms return if ($l eq $currentLemma) then () else $l)
-                                    let $secondSearch          := sphinx:search($node, $model, concat('(', $currentLemma, ') (', $secondLemma, ')'), 'corpus-nogroup', 0, 20)
-                                    let $secondSectionsCount   := xs:int($secondSearch("results")//*:totalResults)
-                                    let $secondWorksCount      := count(distinct-values($secondSearch("results")//item/work/text()))
-                                    where (($secondSectionsCount gt 0) and ($secondLemma ne $currentLemma))
-                                    order by $secondSectionsCount descending
-                                    return 
-                                        <a href='search.html?field=corpus&amp;q={encode-for-uri(concat('(', $currentLemma, ') (', $secondLemma, ')'))}&amp;action=Search'>
-                                            <span lemma="{$secondLemma}" count="{$secondSectionsCount}">{$secondLemma}</span>{' '}
-                                            <span title="(i18n(numSectOcc) / i18n(numWorksOcc))">({$secondSectionsCount}/{$secondWorksCount})</span>
-                                        </a>
+                                let $secondLemmata := for $l in $topLemmataTerms return if ($l eq $currentLemma) then () else $l
+                                return 
+                                    for $secondLemma in $secondLemmata
+                                        let $secondSearch          := sphinx:search($node, $model, concat('(', $currentLemma, ') (', $secondLemma, ')'), 'corpus-nogroup', 0, 20)
+                                        let $secondSectionsCount   := xs:int($secondSearch("results")//*:totalResults)
+                                        let $secondWorksCount      := count(distinct-values($secondSearch("results")//item/work/text()))
+                                        where (($secondSectionsCount gt 0) and ($secondLemma ne $currentLemma))
+                                        order by $secondSectionsCount descending
+                                        return 
+                                            <a href='search.html?field=corpus&amp;q={encode-for-uri(concat('(', $currentLemma, ') (', $secondLemma, ')'))}&amp;action=Search'>
+                                                <span lemma="{$secondLemma}" count="{$secondSectionsCount}">{$secondLemma}</span>{' '}
+                                                <span title="(i18n(numSectOcc) / i18n(numWorksOcc))">({$secondSectionsCount}/{$secondWorksCount})</span>
+                                            </a>
                             else ()
                         return
                             <p>
@@ -433,12 +450,101 @@ declare %templates:wrap
                 return $detailsHTML
         let $output :=
             <div>
-                <h3><i18n:title key="freqCooc">Frequencies and Cooccurrences</i18n:title></h3>
+                <h3><i18n:text key="freqCooc">Frequencies and Cooccurrences</i18n:title></h3>
                 {$fields}
             </div>
         return
             i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "en")
     else ()
+};
+
+declare %templates:wrap 
+    function stats:HTMLworkLemmaStats($node as node(), $model as map(*), $wid as xs:string?, $lang as xs:string?) {
+    if (util:binary-doc-available($config:stats-root || '/' || sal-util:normalizeId($wid) || '-stats.json')) then
+    (: display top-ranked lemmata (loaded from corpus-stats.json) in groups of 2 :)
+        let $stats := json-doc($config:stats-root || '/' || sal-util:normalizeId($wid) || '-stats.json')
+        (: show 10 most freq. lemmata :)
+        let $topLemmata := array:flatten(array:subarray($stats('mf_lemmata'),1,10))
+        let $topLemmataTerms := for $map in $topLemmata return $map('terms')
+        let $fields :=
+            for $i in (0 to 4) return
+                let $lemmaGroup := subsequence($topLemmata,1+($i*2),2)
+                let $lemmataTerms := for $map in $lemmaGroup return $map('terms')
+                let $lemmaTitle := string-join($lemmataTerms, '; ')
+                let $queryTerms := for $l in $lemmataTerms return encode-for-uri(replace($l, ' | ', ' '))
+                let $queries := string-join((for $qt in $queryTerms return 'query=' || $qt), '&amp;')
+                let $srcLink := 
+                    $stats:voyantDomain || '/tool/Trends/'
+                    ||'?stopList=' || $stats:stopwords($stats('lang'))
+                    || '&amp;withDistributions=raw' (: '&amp;withDistributions=relative' for rel. frequencies :)
+                    || '&amp;' || $queries
+                    || '&amp;mode=document'
+                    || '&amp;corpus=' || $stats:texts($wid)?('corpus')
+                    (:  :)
+(:                let $debug := util:log('warn', '$queries: ' || $queries || '; $srcLink: ' || $srcLink):)
+                let $cooccurrences :=
+                    for $currentLemma in $lemmataTerms return
+                        (: get frequency data for this lemma: total / sphinx snippets / works :)
+                        let $currentSearch := sphinx:search($node, $model, $currentLemma, 'work-' || $wid, 0, 200) (: offset=0, limit=200 (not more than 200 matches are returned) :)
+                        let $currentOccurrencesCount := 
+                            if (count($currentSearch("results")//terms) = 1) then
+                                $currentSearch("results")//terms/hits/text()
+                            else
+                                sum($currentSearch("results")//terms/hits/text())
+                        let $currentSectionsCount := xs:int($currentSearch("results")//*:totalResults) 
+                        
+                        let $desc := '(i18n(numSectOcc))'
+                        let $distribution := 
+                            <span title="{$desc}">
+                                {concat((if ($currentOccurrencesCount) then concat($currentOccurrencesCount, '/') else ()), $currentSectionsCount)}
+                            </span>
+                        
+                        (: get cooccurrences: sphinx snippets / works :)
+                        let $cooccurrencesLinks := 
+                            if ($currentSectionsCount gt 0) then
+                                let $secondLemmata := for $l in $topLemmataTerms return if ($l eq $currentLemma) then () else $l
+                                return
+                                    for $secondLemma in $secondLemmata
+                                        let $secondSearch := sphinx:search($node, $model, concat('(', $currentLemma, ') (', $secondLemma, ')'), 'work-' || $wid, 0, 20)
+                                        let $secondSectionsCount := xs:int($secondSearch("results")//*:totalResults)
+                                        order by $secondSectionsCount descending
+                                        return 
+                                            <a href='search.html?field=work-{$wid}&amp;q={encode-for-uri(concat('(', $currentLemma, ') (', $secondLemma, ')'))}&amp;action=Search'>
+                                                <span lemma="{$secondLemma}" count="{$secondSectionsCount}">{$secondLemma}</span>{' '}
+                                                <span title="(i18n(numSectOcc))">({$secondSectionsCount})</span>
+                                            </a>
+                            else ()
+                        return
+                            <p>
+                                <b><a href="search.html?field=work-{$wid}&amp;q={encode-for-uri($currentLemma)}&amp;action=Search">
+                                    <span>{$currentLemma}</span>{' '}
+                                   </a>{$distribution}: </b>
+                                {for $item in $cooccurrencesLinks (:where ($item/position() le count($topLemmata)):) return <span>{$item}; </span>}
+                            </p>
+                let $detailsHTML :=  
+                    <div class="stats-freq-cooc">
+                        <h4 style="font-weight:bold;"><i18n:text key="lemmas">Lemmata</i18n:text>{': ' || $lemmaTitle}</h4>
+                        <div>
+                            <iframe  style='width:100%;height:400px'
+                                 src='{$srcLink}'
+                                 id="details_{replace(replace($queries, 'query=', ''), ' ', '+')}"
+                                 class="resultsDetails"><!-- collapse -->
+                            </iframe>
+                        </div>
+                        <h4><i18n:text key="cooccurrences">Cooccurrences</i18n:text></h4>
+                        <div>
+                            {$cooccurrences}
+                        </div>
+                    </div>
+                return $detailsHTML
+        let $output :=
+            <div>
+                <h3><i18n:text key="freqCooc">Frequencies and Cooccurrences</i18n:title></h3>
+                {$fields}
+            </div>
+        return
+            i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "en")
+    else util:log('warn', '[STATS] Could not find json at ' || $config:stats-root || '/' || sal-util:normalizeId($wid) || '-stats.json')
 };
 
 
@@ -458,7 +564,7 @@ declare %templates:wrap
         else
             sum($currentSearch("results")//terms/hits/text())
 
-    let $currentSectionsCount := xs:int($currentSearch("results")//*:totalResults) (: TODO: are sections (snippets, really) a helpful information here? :)
+    let $currentSectionsCount := xs:int($currentSearch("results")//*:totalResults) 
     let $currentWorksCount := count(distinct-values($currentSearch("results")//item/work/text()))
     let $distribution := 
         <span title="({if ($currentOccurrencesCount) then 'number of occurrences/' else ()}number of sections containing the occurrences/number of works containing the sections)">

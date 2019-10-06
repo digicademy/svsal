@@ -159,6 +159,8 @@
   <msg key="wordformsDesc">Word forms comprise all the different words in the corpus (for example, two identical words are of the same word form)</msg>
   
   <msg key="corpusStats">Corpus Statistics</msg>
+  <msg key="statsFor">Statistics for</msg>
+  <msg key="forLemma">for lemma</msg>
   <msg key="generalStats">General Numbers</msg>
   <msg key="freqCooc">Frequencies and Cooccurrences of the Most Frequent Lemmas</msg>
   <msg key="cooccurrences">Cooccurrences</msg>
@@ -429,6 +431,7 @@
   <msg key="inLow">in</msg>
   <msg key="editedByAbbrLow">ed. by</msg>
   <msg key="copy">Copy</msg>
+  <msg key="inLow">in</msg>
   
   
   <!-- div, milestone, element types for node index derivatives -->

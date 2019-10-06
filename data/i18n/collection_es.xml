@@ -166,6 +166,8 @@
     <msg key="wordformsDesc">Word forms represent the set of unique words (i.e., tokens that are interpretable as words) in the corpus</msg> <!-- TODO -->
     
     <msg key="corpusStats">Estadísticas del Corpus</msg>
+    <msg key="statsFor">Estadísticas de</msg>
+    <msg key="forLemma">para el lema</msg>
     <msg key="generalStats">Datos generales</msg> <!-- TODO -->
     <msg key="freqCooc">Frecuencias and coocurrencias de las lemas más frecuentes</msg>
     <msg key="cooccurrences">Coocurrencias</msg>
@@ -439,6 +441,7 @@
     <msg key="inLow">en</msg>
     <msg key="editedByAbbrLow">ed. por</msg>  
     <msg key="copy">Copiar</msg>
+    <msg key="inLow">en</msg>
     
     <!-- div, milestone, element types for node index derivatives -->
     <msg key="tei-div-additional">Adenda</msg>

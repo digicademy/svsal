@@ -1272,7 +1272,7 @@ declare function admin:createStats() {
         for $wid in sal-util:getPublishedWorkIds() return
             let $log := if ($config:debug eq 'trace') then util:log('warn', '[ADMIN] Creating single work stats for ' || $wid) else ()
             let $workStats := serialize(stats:makeWorkStats($wid), $params)
-            let $saveSingle := admin:saveFile('dummy', $wid || '-stats.json', $corpusStats, 'stats')
+            let $saveSingle := admin:saveFile('dummy', $wid || '-stats.json', $workStats, 'stats')
             return $workStats
     let $runtime-ms := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000
     let $runtimeString :=
