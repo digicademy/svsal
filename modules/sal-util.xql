@@ -113,7 +113,8 @@ declare function sal-util:WRKisPublished($wid as xs:string) as xs:boolean {
 };
 
 declare function sal-util:getPublishedWorkIds() as xs:string* {
-    collection($config:tei-works-root)/tei:TEI[sal-util:WRKisPublished(@xml:id)]/@xml:id/string()
+    collection($config:tei-works-root)/tei:TEI[./tei:text/@type = ('work_monograph', 'work_multivolume') 
+                                               and sal-util:WRKisPublished(@xml:id)]/@xml:id/string()
 };
 
 (: 1 = valid & existing ; 0 = not existing ; -1 = no dataset found for $wid :)

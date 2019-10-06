@@ -165,7 +165,7 @@
   <msg key="editInterv">Editorial Interventions</msg>
   <msg key="editAbbr">Expanded abbreviations</msg>
   <msg key="editSic">Corrected print errors</msg>
-  <msg key="editHyph">Conjunctions of unmarkedly hyphenated words</msg>
+  <msg key="editHyph">Conjunctions of unmarked hyphenations</msg>
   
   <msg key="lemmas">Lemmata</msg>
   <msg key="numOcc">number of occurrences</msg>

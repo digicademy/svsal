@@ -47,13 +47,8 @@ declare variable $stats:stopwords := (: 'all'=stopwords-gesamt.txt :)
         'all': 'keywords-d8acdac6e75498496781928ade39fcd2'
     };
     
-(:
-~ Modes: 
-~   - "corpus": produces corpus-wide statistics
-~   - "work": produces statistics for a single work (in this case $wid is required)
-:)
+
 declare function stats:makeCorpusStats() as map(*) {
-    
     (: LEMMATA :)
     (: TODO: are queries syntactically correct, e.g. "ius gentium"? :)
     (: search for single work like so: "ley @sphinx_work ^W0002":)
@@ -114,7 +109,7 @@ declare function stats:makeCorpusStats() as map(*) {
     (: NORMALIZATIONS :)
     let $resolvedAbbrCount := count($textCollection//tei:expan)
     let $resolvedSicCount := count($textCollection//tei:corr)
-    let $resolvedHyphenations := count($textCollection//(tei:pb|tei:cb|tei:lb)[@rendition eq '#noHyphen'])
+    let $resolvedHyphenationsCount := count($textCollection//(tei:pb|tei:cb|tei:lb)[@rendition eq '#noHyphen'])
 
     (: FACSIMILES :)
     (: count full-text digitized images based on TEI//pb :)
@@ -135,11 +130,12 @@ declare function stats:makeCorpusStats() as map(*) {
     let $totalFacsCount := $fullTextFacsCount + sum($otherFacs)
     let $out :=
         map {
+            'id': 'corpus',
             'chars_count': $charsAllCount,
             'tokens_count': $tokensAllCount,
             'words_count': count($wordsAll),
             'wordforms_count': $wordformsAllCount,
-            'normalizations_count': map {'abbr': $resolvedAbbrCount, 'sic': $resolvedSicCount, 'unmarked_hyph': $resolvedHyphenations},
+            'normalizations_count': map {'abbr': $resolvedAbbrCount, 'sic': $resolvedSicCount, 'unmarked_hyph': $resolvedHyphenationsCount},
             'mf_lemmata': $mfLemmata,
             'facs_count': map {'full_text': $fullTextFacsCount, 'all': $totalFacsCount}
         }
@@ -155,9 +151,79 @@ declare function stats:makeCorpusStats() as map(*) {
     (: TODO: basic description of how wf/tokens are counted (and possible pitfalls like abbreviations...) :)
 };
 
+declare function stats:makeWorkStats($wid as xs:string) as map(*) {
+    (: LEMMATA :)
+    (: search for single work like so: "ley @sphinx_work ^W0002":)
+    let $lemmataList := doc($config:data-root || '/lemmata-97.xml')//sal:lemma[@type eq 'term']
+    let $mfLemmata :=
+        for $l in $lemmataList 
+            let $query := $l/text()
+            let $currentSearch :=  sphinx:search((), map{}, $query, 'work-' || $wid, 0, 10)
+            let $currentOccurrencesCount := 
+                if (count($currentSearch("results")//terms) = 1) then
+                    xs:integer($currentSearch("results")//terms/hits/text())
+                else
+                    xs:integer(sum($currentSearch("results")//terms/hits/text()))                       
+            order by $currentOccurrencesCount descending
+            return map{'lid': $l/@xml:id/string(), 'terms': $l/text(), 'freq': $currentOccurrencesCount }
+    
+    (: TOKENS / CHARS / WORDFORMS / TYPES :)
+    (: generic, lang=all :)
+    let $tei := doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI
+    let $workType := $tei/tei:text/@type/string()
+    let $text :=
+        if ($workType eq 'work_monograph') then $tei/tei:text
+        else if ($workType eq 'work_multivolume') then 
+            for $t in util:expand($tei)//tei:text[@type eq 'work_volume'] return
+                if (sal-util:WRKisPublished($tei/@xml:id || '_' || $t/@xml:id)) then $t else ()
+        else error('[STATS] $workType ' || $workType || ' does not match required types "work_monograph", "work_volume"')
+    let $txt := 
+        if (fn:unparsed-text-available($config:txt-root || '/' || $wid || '/' || $wid || '_edit.txt')) then
+            fn:unparsed-text($config:txt-root || '/' || $wid || '/' || $wid || '_edit.txt')
+        else error('[STATS] No (edit) txt available for published work ' || $wid)
+
+    let $charsCount := string-length(replace(string-join($txt, ''), '\s', ''))
+    let $tokensCount := count(nlp:tokenize($txt, 'all'))
+    let $words := nlp:tokenize($txt, 'words')
+(:    let $debug := util:log('warn', '[STATS] $wordsAll[1:20] is: ' || string-join(subsequence($wordsAll,1,20), ', ')):)
+    let $wordformsCount := count(distinct-values($words))
+    
+    (: NORMALIZATIONS :)
+    let $resolvedAbbrCount := count($text//tei:expan)
+    let $resolvedSicCount := count($text//tei:corr)
+    let $resolvedHyphenationsCount := count($text//(tei:pb|tei:cb|tei:lb)[@rendition eq '#noHyphen'])
+
+    (: FACSIMILES :)
+    (: count full-text digitized images based on TEI//pb :)
+    let $fullTextFacsCount := count($text//tei:pb[not(@sameAs or @corresp)])
+    
+    let $lang := $tei/tei:teiHeader/tei:profileDesc//tei:language[@n eq 'main']/@ident/string()
+    let $out :=
+        map {
+            'id': $wid,
+            'lang': $lang,
+            'chars_count': $charsCount,
+            'tokens_count': $tokensCount,
+            'words_count': count($words),
+            'wordforms_count': $wordformsCount,
+            'normalizations_count': map {'abbr': $resolvedAbbrCount, 'sic': $resolvedSicCount, 'unmarked_hyph': $resolvedHyphenationsCount},
+            'mf_lemmata': $mfLemmata,
+            'facs_count': map {'full_text': $fullTextFacsCount}
+        }
+
+    (:let $debugParams := 
+        <output:serialization-parameters 
+                xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
+          <output:method value="json"/>
+        </output:serialization-parameters>
+    let $debug := util:log('warn', 'Finalized statistics: ' || serialize($out, $debugParams)):)
+
+    return $out
+};
+
 
 (:
-~ Loads a (limited) amount of lemmata from a sal:lemmata list.
+~ Loads an amount of lemmata from a sal:lemmata list.
 :)
 declare function stats:loadListOfLemmata($node as node(), $model as map(*)) as map(*) {
     let $lemmaNodes := doc($config:data-root || "/lemmata-97.xml")//sal:lemma[@type='term'][position() le $config:stats-limit]
@@ -170,71 +236,6 @@ declare function stats:loadListOfLemmata($node as node(), $model as map(*)) as m
 :)
 declare function stats:lemmaCount($node as node(), $model as map (*), $lang as xs:string?) {
     <span>{string(count($model('listOfLemmata')))}</span>
-};
-
-
-(: All: Number of occurrences / in number of different works :)
-declare %templates:wrap
-        %templates:default("wid", "W0013")
-    function stats:singleLemmaStats($node as node(), $model as map (*), $wid as xs:string?, $lang as xs:string?) {
-
-    let $currentLemma := $model('currentLemma')
-(:    let $currentLemmaHTML   := replace(replace(replace(translate($currentLemma, ' ', '+'), '|', '&#124;'), '(', '&#40;'), ')', '&#41;'):)
-    let $currentSearch := sphinx:search($node, $model, $currentLemma, 'corpus-nogroup', 0, 200) (: offset=0, limit=200 (not more than 200 matches are returned) :)
-    let $currentOccurrencesCount := 
-        if (count($currentSearch("results")//terms) = 1) then
-            $currentSearch("results")//terms/hits/text()
-        else
-            sum($currentSearch("results")//terms/hits/text())
-
-    let $currentSectionsCount := xs:int($currentSearch("results")//*:totalResults) (: TODO: are sections (snippets, really) a helpful information here? :)
-    let $currentWorksCount := count(distinct-values($currentSearch("results")//item/work/text()))
-    let $distribution := 
-        <span title="({if ($currentOccurrencesCount) then 'number of occurrences/' else ()}number of sections containing the occurrences/number of works containing the sections)">
-            {concat((if ($currentOccurrencesCount) then concat($currentOccurrencesCount, '/') else ()), $currentSectionsCount, '/', $currentWorksCount)}
-        </span>
-    let $cooccurrences := 
-        if ($currentSectionsCount gt 0) then
-            for $secondLemmaRaw in $model('listOfLemmata')
-                 let $secondLemma           := $secondLemmaRaw
-        (:                                     let $secondLemmaHTML     := replace(replace(replace(translate($secondLemma, ' ', '+'), '|', '&#124;'), '(', '&#40;'), ')', '&#41;'):)
-                 let $secondSearch          := sphinx:search($node, $model, concat('(', $currentLemma, ') (', $secondLemma, ')'), 'corpus-nogroup', 0, 20)
-                 let $secondSectionsCount   := xs:int($secondSearch("results")//*:totalResults)
-                 let $secondWorksCount      := count(distinct-values($secondSearch("results")//item/work/text()))
-                 where (($secondSectionsCount gt 0) and ($secondLemma ne $currentLemma))
-                 order by $secondSectionsCount descending
-                 return <a href='search.html?field=corpus&amp;q={encode-for-uri(concat('(', $currentLemma, ') (', $secondLemma, ')'))}&amp;action=Search'><sal:secondLemma lemma="{$secondLemma}" count="{$secondSectionsCount}">{$secondLemma}</sal:secondLemma> <span title="(number of sections/number of works containing the sections)">({$secondSectionsCount}/{$secondWorksCount})</span></a>
-        else ()
-
-
-(:    let $intraWorkDistribution := :)
-(:                                href="#details_{translate(replace($currentLemma, ' | ', '|'), ' ', '+')}":)
-    let $detailsLink :=  
-        <a  class="toggleDetails"
-            data-target="#details_{translate(replace($currentLemma, ' | ', '|'), ' ', '+')}"
-            data-toggle="collapse">Frequenz von '{$currentLemma}' in W0013 <i class="fa fa-chevron-down"aria-hidden="true"></i>
-        </a>
-    let $detailsHTML :=  
-        <span>
-            {$detailsLink}<br/>
-            <iframe  style='width: 80%; height: 300px'
-                     src='//voyant-tools.org/tool/Trends/?stopList=keywords-1e40893403831dbd0a5ce8b94b7da6f7&amp;withDistributions=raw&amp;bins=30&amp;query={encode-for-uri(replace($currentLemma, ' | ', ' '))}&amp;docIndex=0&amp;mode=document&amp;corpus=c0c28e98246c4e145700560a15e4fd53'
-                     id="details_{translate(replace($currentLemma, ' | ', '|'), ' ', '+')}"
-                     class="resultsDetails"><!-- collapse -->
-            </iframe> <!-- &amp;withDistributions=raw -->
-        </span>
-
-
-    return  
-        <sal:stats><p>
-            <b><a href="search.html?field=everything&amp;q={encode-for-uri($currentLemma)}&amp;action=Search">
-                <sal:leadingLemma>{$currentLemma}</sal:leadingLemma>
-               </a>
-               {$distribution}: </b>
-            {for $item in $cooccurrences where ($item/position() le count($model('listOfLemmata'))) return <span>{$item}; </span>}
-            <br/>
-            {$detailsHTML}
-        </p></sal:stats>
 };
 
 
@@ -285,7 +286,7 @@ declare function stats:HTMLbody($node as node(), $model as map (*), $wid as xs:s
         switch($mode)
             case 'all' return 
                 <div>
-                    {(stats:HTMLcorpusStats($node, $model, $lang), <hr/>,
+                    {(stats:HTMLstatsTable($node, $model, $lang, $wid), <hr/>,
                       stats:HTMLcorpusLemmaStats($node, $model, $lang))}
                 </div>
             case 'work' return ()
@@ -294,10 +295,21 @@ declare function stats:HTMLbody($node as node(), $model as map (*), $wid as xs:s
             default return ()
 };
 
-declare function stats:HTMLcorpusStats($node as node(), $model as map(*), $lang as xs:string?) as element(div)? {
-    if (util:binary-doc-available($config:stats-root || '/stats.json')) then
-        let $stats := json-doc($config:stats-root || '/stats.json')
-        let $digiFacs := i18n:largeIntToString(xs:integer($stats('facs_count')?('all')), $lang)
+declare function stats:HTMLstatsTable($node as node(), $model as map(*), $lang as xs:string?, $wid as xs:string?) as element(div)? {
+    let $id := if ($wid) then $wid else 'corpus'
+    return
+    if (util:binary-doc-available($config:stats-root || '/' || $id || '-stats.json')) then
+        let $stats := json-doc($config:stats-root || '/' || $id || '-stats.json')
+        let $digiFacs := 
+            if ($id eq 'corpus') then 
+                <tr><td><i18n:text key="digiFacsUp"/></td><td>
+                    {i18n:largeIntToString(xs:integer($stats('facs_count')?('all')), $lang)}
+                </td></tr>
+            else ()
+        let $language :=
+            if ($id ne 'corpus') then 
+                <tr><td><i18n:text key="lang"/></td><td><i18n:text key="{$stats('lang')}"/></td></tr>
+            else ()
         let $editFacs := i18n:largeIntToString(xs:integer($stats('facs_count')?('full_text')), $lang)
         let $chars := i18n:largeIntToString(xs:integer($stats('chars_count')), $lang)
         let $tokens := i18n:largeIntToString(xs:integer($stats('tokens_count')), $lang)
@@ -311,8 +323,9 @@ declare function stats:HTMLcorpusStats($node as node(), $model as map(*), $lang 
                 <h3><i18n:text key="generalStats">General Numbers of the Corpus</i18n:text></h3>
                 <div class="corpus-stats">
                     <table class="corpus-stats-table">
-                        <tr><td><i18n:text key="digiFacsUp"/></td><td>{$digiFacs}</td></tr>
+                        {$digiFacs}
                         <tr><td><i18n:text key="editFacsUp"/></td><td>{$editFacs}</td></tr>
+                        {$language}
                         <tr><td><i18n:text key="charsUp"/></td><td>{$chars}</td></tr>
                         <tr><td><i18n:text key="tokensUp"/><sup>1</sup></td><td>{$tokens}</td></tr>
                         <tr><td><i18n:text key="wordsUp"/></td><td>{$words}</td></tr>
@@ -339,9 +352,9 @@ declare function stats:HTMLcorpusStats($node as node(), $model as map(*), $lang 
 declare %templates:wrap
     function stats:HTMLcorpusLemmaStats($node as node(), $model as map (*), $lang as xs:string?) as element(div)? {
 
-    if (util:binary-doc-available($config:stats-root || '/stats.json')) then
-        (: display top-ranked lemmata (loaded from stats.json) in groups of 5 :)
-        let $stats := json-doc($config:stats-root || '/stats.json')
+    if (util:binary-doc-available($config:stats-root || '/corpus-stats.json')) then
+        (: display top-ranked lemmata (loaded from corpus-stats.json) in groups of 5 :)
+        let $stats := json-doc($config:stats-root || '/corpus-stats.json')
         let $topLemmata := array:flatten(array:subarray($stats('mf_lemmata'),1,20))
         let $topLemmataTerms := for $map in $topLemmata return $map('terms')
         let $fields :=
@@ -427,6 +440,74 @@ declare %templates:wrap
             i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "en")
     else ()
 };
+
+
+(: DEPRECATED :)
+
+(: All: Number of occurrences / in number of different works :)
+declare %templates:wrap
+        %templates:default("wid", "W0013")
+    function stats:singleLemmaStats($node as node(), $model as map (*), $wid as xs:string?, $lang as xs:string?) {
+
+    let $currentLemma := $model('currentLemma')
+(:    let $currentLemmaHTML   := replace(replace(replace(translate($currentLemma, ' ', '+'), '|', '&#124;'), '(', '&#40;'), ')', '&#41;'):)
+    let $currentSearch := sphinx:search($node, $model, $currentLemma, 'corpus-nogroup', 0, 200) (: offset=0, limit=200 (not more than 200 matches are returned) :)
+    let $currentOccurrencesCount := 
+        if (count($currentSearch("results")//terms) = 1) then
+            $currentSearch("results")//terms/hits/text()
+        else
+            sum($currentSearch("results")//terms/hits/text())
+
+    let $currentSectionsCount := xs:int($currentSearch("results")//*:totalResults) (: TODO: are sections (snippets, really) a helpful information here? :)
+    let $currentWorksCount := count(distinct-values($currentSearch("results")//item/work/text()))
+    let $distribution := 
+        <span title="({if ($currentOccurrencesCount) then 'number of occurrences/' else ()}number of sections containing the occurrences/number of works containing the sections)">
+            {concat((if ($currentOccurrencesCount) then concat($currentOccurrencesCount, '/') else ()), $currentSectionsCount, '/', $currentWorksCount)}
+        </span>
+    let $cooccurrences := 
+        if ($currentSectionsCount gt 0) then
+            for $secondLemmaRaw in $model('listOfLemmata')
+                 let $secondLemma           := $secondLemmaRaw
+        (:                                     let $secondLemmaHTML     := replace(replace(replace(translate($secondLemma, ' ', '+'), '|', '&#124;'), '(', '&#40;'), ')', '&#41;'):)
+                 let $secondSearch          := sphinx:search($node, $model, concat('(', $currentLemma, ') (', $secondLemma, ')'), 'corpus-nogroup', 0, 20)
+                 let $secondSectionsCount   := xs:int($secondSearch("results")//*:totalResults)
+                 let $secondWorksCount      := count(distinct-values($secondSearch("results")//item/work/text()))
+                 where (($secondSectionsCount gt 0) and ($secondLemma ne $currentLemma))
+                 order by $secondSectionsCount descending
+                 return <a href='search.html?field=corpus&amp;q={encode-for-uri(concat('(', $currentLemma, ') (', $secondLemma, ')'))}&amp;action=Search'><sal:secondLemma lemma="{$secondLemma}" count="{$secondSectionsCount}">{$secondLemma}</sal:secondLemma> <span title="(number of sections/number of works containing the sections)">({$secondSectionsCount}/{$secondWorksCount})</span></a>
+        else ()
+
+
+(:    let $intraWorkDistribution := :)
+(:                                href="#details_{translate(replace($currentLemma, ' | ', '|'), ' ', '+')}":)
+    let $detailsLink :=  
+        <a  class="toggleDetails"
+            data-target="#details_{translate(replace($currentLemma, ' | ', '|'), ' ', '+')}"
+            data-toggle="collapse">Frequenz von '{$currentLemma}' in W0013 <i class="fa fa-chevron-down"aria-hidden="true"></i>
+        </a>
+    let $detailsHTML :=  
+        <span>
+            {$detailsLink}<br/>
+            <iframe  style='width: 80%; height: 300px'
+                     src='//voyant-tools.org/tool/Trends/?stopList=keywords-1e40893403831dbd0a5ce8b94b7da6f7&amp;withDistributions=raw&amp;bins=30&amp;query={encode-for-uri(replace($currentLemma, ' | ', ' '))}&amp;docIndex=0&amp;mode=document&amp;corpus=c0c28e98246c4e145700560a15e4fd53'
+                     id="details_{translate(replace($currentLemma, ' | ', '|'), ' ', '+')}"
+                     class="resultsDetails"><!-- collapse -->
+            </iframe> <!-- &amp;withDistributions=raw -->
+        </span>
+
+
+    return  
+        <sal:stats><p>
+            <b><a href="search.html?field=everything&amp;q={encode-for-uri($currentLemma)}&amp;action=Search">
+                <sal:leadingLemma>{$currentLemma}</sal:leadingLemma>
+               </a>
+               {$distribution}: </b>
+            {for $item in $cooccurrences where ($item/position() le count($model('listOfLemmata'))) return <span>{$item}; </span>}
+            <br/>
+            {$detailsHTML}
+        </p></sal:stats>
+};
+
 
 (:
 TODO: 

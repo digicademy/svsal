@@ -50,11 +50,7 @@ let $output :=
             admin:sphinx-out($rid, $mode),
             admin:createRDF($rid))
         case 'stats' return
-            let $create := 
-                (admin:createStats('corpus', ()),
-                (for $workId in collection($config:tei-works-root)/tei:TEI[tei:text/@type = ('work_monograph', 'work_multivolume')
-                                                                           and sal-util:WRKisPublished(./@xml:id)]/@xml:id/string()
-                    return admin:createStats('work', $workId)))
+            let $create := admin:createStats()
             return 'Corpus and work statistics successfully created!'
         default return 
             ()

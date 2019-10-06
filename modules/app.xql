@@ -1015,8 +1015,8 @@ declare %templates:wrap
 };
 
 declare %templates:wrap function app:corpusStatsTeaser ($node as node(), $model as map(*), $lang as xs:string?) as element(div) {
-    if (util:binary-doc-available($config:stats-root || '/stats.json')) then
-        let $stats := json-doc($config:stats-root || '/stats.json')
+    if (util:binary-doc-available($config:stats-root || '/corpus-stats.json')) then
+        let $stats := json-doc($config:stats-root || '/corpus-stats.json')
         let $digiFacs := i18n:largeIntToString(xs:integer($stats('facs_count')?('all')), $lang)
         let $editFacs := i18n:largeIntToString(xs:integer($stats('facs_count')?('full_text')), $lang)
         let $tokens := i18n:largeIntToString(xs:integer($stats('tokens_count')), $lang)

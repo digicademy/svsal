@@ -1256,7 +1256,7 @@ declare function admin:createRDF($rid as xs:string) {
 };
 
 
-declare function admin:createStats($mode as xs:string, $wid as xs:string?) {
+declare function admin:createStats() {
     let $log  := if ($config:debug eq 'trace') then util:log('warn', '[ADMIN] Starting to extract stats...') else ()
     let $start-time := util:system-time()
 (:    let $stats := stats:makeCorpusStats():)
@@ -1264,17 +1264,30 @@ declare function admin:createStats($mode as xs:string, $wid as xs:string?) {
         <output:serialization-parameters xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
             <output:method value="json"/>
         </output:serialization-parameters>
-    let $statsContent := serialize(stats:makeStats($mode, $wid), $params)
+    (: corpus stats :)
+    let $corpusStats := serialize(stats:makeCorpusStats(), $params)
+    let $save := admin:saveFile('dummy', 'corpus-stats.json', $corpusStats, 'stats')
+    (: single work stats:)
+    let $processSingleWorks :=
+        for $wid in sal-util:getPublishedWorkIds() return
+            let $log := if ($config:debug eq 'trace') then util:log('warn', '[ADMIN] Creating single work stats for ' || $wid) else ()
+            let $workStats := serialize(stats:makeWorkStats($wid), $params)
+            let $saveSingle := admin:saveFile('dummy', $wid || '-stats.json', $corpusStats, 'stats')
+            return $workStats
     let $runtime-ms := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000
-    let $runtimeString := 
+    let $runtimeString :=
         if ($runtime-ms < (1000 * 60)) then format-number($runtime-ms div 1000, "#.##") || " Sek."
         else if ($runtime-ms < (1000 * 60 * 60))  then format-number($runtime-ms div (1000 * 60), "#.##") || " Min."
         else format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
     let $log  := if ($config:debug eq 'trace') then util:log('warn', '[ADMIN] Extracted stats in ' || $runtimeString) else ()
-    let $save := 
-        if ($mode eq 'corpus') then admin:saveFile('dummy', 'corpus-stats.json', $statsContent, 'stats')
-        else admin:saveFile('dummy', $wid || '-stats.json', $statsContent, 'stats')
-    return $statsContent
+    
+    return ($corpusStats, $processSingleWorks)
 };
+
+(:
+for $workId in collection($config:tei-works-root)/tei:TEI[tei:text/@type = ('work_monograph', 'work_multivolume')
+                                                                           and sal-util:WRKisPublished(./@xml:id)]/@xml:id/string()
+                    return admin:createStats('work', $workId)
+:)
 
 
