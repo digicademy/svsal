@@ -1,99 +1,99 @@
-<sal:lemmata xmlns:sal="http://salamanca.adwmainz.de">
-    <sal:lemma xml:id="lemma_d1e161" type="term">imperium | imperio</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e164" type="term">infidelitas | infidelis | infidelidad</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e256" type="term">privilegium | privilegio</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e259" type="term">rapina | raptor | ladrón</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e262" type="term">ratio | razón</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e266" type="term">res publica</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e269" type="term">restitutio | restitución</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e272" type="term">rex | princeps | rey | principe</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e275" type="term">scandalum | escándalo</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e278" type="term">scientia (practica | moralis)</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e167" type="term">iniuria</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e202" type="term">ius gentium</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e3" type="term">absolutio</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e6" type="term">baptismus</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e9" type="term">bellum | guerra</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e12" type="term">beneficium | beneficio</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e15" type="term">blasphemia | blasfemia</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e19" type="term">bonum</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e22" type="term">carcer | prisión</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e25" type="term">casus fortuitus</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e28" type="term">causa</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e31" type="term">censura</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e34" type="term">circunstantia</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e38" type="term">civitas</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e41" type="term">clericus | clérigo</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e44" type="term">communitas | comunidad</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e47" type="term">compensatio</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e50" type="term">concubinarius | fornicator | adúltero</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e53" type="term">confessio | confesión</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e57" type="term">conscientia | conciencia</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e60" type="term">consuetudo | consuetudinario</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e63" type="term">contractus | quasi-contractus | contrato | cuasicontrato</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e66" type="term">contumelia | insulto</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e69" type="term">correctio | corrección</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e72" type="term">culpa | dolus | engaño</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e76" type="term">denuntiatio | amenaza</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e79" type="term">deus | dios</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e82" type="term">dispensatio</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e85" type="term">disputatio</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e88" type="term">doctor | magister</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e91" type="term">dominium | propiedad</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e95" type="term">donatio | donación</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e98" type="term">dubium | duda</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e101" type="term">ecclesia | ecclesiasticus | iglesia</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e104" type="term">electio | elección</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e107" type="term">emphyteusis</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e110" type="term">emptio | venditio</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e114" type="term">episcopus | obispo</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e117" type="term">exceptio | exemptus | excepción</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e120" type="term">falsarius | falsitas</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e123" type="term">fama | rumor</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e126" type="term">familia | famulus | esclavo</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e129" type="term">fides | confianza</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e133" type="term">fugere</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e136" type="term">furtum | robo</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e139" type="term">habitus | hábito</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e142" type="term">haeres | haereditas | heredero | herencia</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e145" type="term">haeresia | haereticus | herejía | hereje</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e148" type="term">homicidium | homicidio</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e152" type="term">homo | humanus | hombre | humano</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e155" type="term">honor | honoratio | homenaje</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e158" type="term">ignorantia</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e171" type="term">iniustitia | injusticia</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e174" type="term">inquisitio | inquisición</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e177" type="term">interdictum</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e180" type="term">interpretatio</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e183" type="term">inventio | invención</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e186" type="term">irregularitas | irregularidad</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e190" type="term">iudex | juez</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e193" type="term">iudicium | juicio</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e196" type="term">iuramentum | juramento</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e199" type="term">ius | derecho</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e205" type="term">iustitia | justicia</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e209" type="term">lex | ley</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e212" type="term">matrimonium | matrimonio</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e215" type="term">miles | militia | soldado | ejército</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e218" type="term">necessitas | necesidad</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e221" type="term">negotium | negotiator | negocio | empresario</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e224" type="term">obedientia | obediencia</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e228" type="term">officium</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e231" type="term">ordo | ordinare | orden | ordenar</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e234" type="term">papa | pontifex | pontífice</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e237" type="term">peccatum | pecado</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e240" type="term">poena | punitio | castigo</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e243" type="term">poenitentia | penitencia</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e247" type="term">possessio | posesión</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e250" type="term">potestas | poder</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e251" type="term">praeceptum | regla</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e253" type="term">praescriptio</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e281" type="term">servus | servitus | esclavo | esclavitud</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e282" type="term">simonia | simonía</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e285" type="term">subditus | súbdito</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e288" type="term">superstitio | superstición</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e291" type="term">tyrannus | tirano</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e294" type="term">usura</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e297" type="term">virtus | virtud</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e300" type="term">voluntas | voluntad</sal:lemma>
+<?xml version="1.0" encoding="UTF-8"?><sal:lemmata xmlns:sal="http://salamanca.adwmainz.de">
+    <sal:lemma xml:id="L0001" type="term">imperium | imperio</sal:lemma>
+    <sal:lemma xml:id="L0002" type="term">infidelitas | infidelis | infidelidad</sal:lemma>
+    <sal:lemma xml:id="L0003" type="term">privilegium | privilegio</sal:lemma>
+    <sal:lemma xml:id="L0004" type="term">rapina | raptor | ladrón</sal:lemma>
+    <sal:lemma xml:id="L0005" type="term">ratio | razón</sal:lemma>
+    <sal:lemma xml:id="L0006" type="term">res publica</sal:lemma>
+    <sal:lemma xml:id="L0007" type="term">restitutio | restitución</sal:lemma>
+    <sal:lemma xml:id="L0008" type="term">rex | princeps | rey | principe</sal:lemma>
+    <sal:lemma xml:id="L0009" type="term">scandalum | escándalo</sal:lemma>
+    <sal:lemma xml:id="L0010" type="term">scientia (practica | moralis)</sal:lemma>
+    <sal:lemma xml:id="L0011" type="term">iniuria</sal:lemma>
+    <sal:lemma xml:id="L0012" type="term">ius gentium</sal:lemma>
+    <sal:lemma xml:id="L0013" type="term">absolutio</sal:lemma>
+    <sal:lemma xml:id="L0014" type="term">baptismus</sal:lemma>
+    <sal:lemma xml:id="L0015" type="term">bellum | guerra</sal:lemma>
+    <sal:lemma xml:id="L0016" type="term">beneficium | beneficio</sal:lemma>
+    <sal:lemma xml:id="L0017" type="term">blasphemia | blasfemia</sal:lemma>
+    <sal:lemma xml:id="L0018" type="term">bonum</sal:lemma>
+    <sal:lemma xml:id="L0019" type="term">carcer | prisión</sal:lemma>
+    <sal:lemma xml:id="L0020" type="term">casus fortuitus</sal:lemma>
+    <sal:lemma xml:id="L0021" type="term">causa</sal:lemma>
+    <sal:lemma xml:id="L0022" type="term">censura</sal:lemma>
+    <sal:lemma xml:id="L0023" type="term">circunstantia</sal:lemma>
+    <sal:lemma xml:id="L0024" type="term">civitas</sal:lemma>
+    <sal:lemma xml:id="L0025" type="term">clericus | clérigo</sal:lemma>
+    <sal:lemma xml:id="L0026" type="term">communitas | comunidad</sal:lemma>
+    <sal:lemma xml:id="L0027" type="term">compensatio</sal:lemma>
+    <sal:lemma xml:id="L0028" type="term">concubinarius | fornicator | adúltero</sal:lemma>
+    <sal:lemma xml:id="L0029" type="term">confessio | confesión</sal:lemma>
+    <sal:lemma xml:id="L0030" type="term">conscientia | conciencia</sal:lemma>
+    <sal:lemma xml:id="L0031" type="term">consuetudo | consuetudinario</sal:lemma>
+    <sal:lemma xml:id="L0032" type="term">contractus | quasi-contractus | contrato | cuasicontrato</sal:lemma>
+    <sal:lemma xml:id="L0033" type="term">contumelia | insulto</sal:lemma>
+    <sal:lemma xml:id="L0034" type="term">correctio | corrección</sal:lemma>
+    <sal:lemma xml:id="L0035" type="term">culpa | dolus | engaño</sal:lemma>
+    <sal:lemma xml:id="L0036" type="term">denuntiatio | amenaza</sal:lemma>
+    <sal:lemma xml:id="L0037" type="term">deus | dios</sal:lemma>
+    <sal:lemma xml:id="L0038" type="term">dispensatio</sal:lemma>
+    <sal:lemma xml:id="L0039" type="term">disputatio</sal:lemma>
+    <sal:lemma xml:id="L0040" type="term">doctor | magister</sal:lemma>
+    <sal:lemma xml:id="L0041" type="term">dominium | propiedad</sal:lemma>
+    <sal:lemma xml:id="L0042" type="term">donatio | donación</sal:lemma>
+    <sal:lemma xml:id="L0043" type="term">dubium | duda</sal:lemma>
+    <sal:lemma xml:id="L0044" type="term">ecclesia | ecclesiasticus | iglesia</sal:lemma>
+    <sal:lemma xml:id="L0045" type="term">electio | elección</sal:lemma>
+    <sal:lemma xml:id="L0046" type="term">emphyteusis</sal:lemma>
+    <sal:lemma xml:id="L0047" type="term">emptio | venditio</sal:lemma>
+    <sal:lemma xml:id="L0048" type="term">episcopus | obispo</sal:lemma>
+    <sal:lemma xml:id="L0049" type="term">exceptio | exemptus | excepción</sal:lemma>
+    <sal:lemma xml:id="L0050" type="term">falsarius | falsitas</sal:lemma>
+    <sal:lemma xml:id="L0051" type="term">fama | rumor</sal:lemma>
+    <sal:lemma xml:id="L0052" type="term">familia | famulus | esclavo</sal:lemma>
+    <sal:lemma xml:id="L0053" type="term">fides | confianza</sal:lemma>
+    <sal:lemma xml:id="L0054" type="term">fugere</sal:lemma>
+    <sal:lemma xml:id="L0055" type="term">furtum | robo</sal:lemma>
+    <sal:lemma xml:id="L0056" type="term">habitus | hábito</sal:lemma>
+    <sal:lemma xml:id="L0057" type="term">haeres | haereditas | heredero | herencia</sal:lemma>
+    <sal:lemma xml:id="L0058" type="term">haeresia | haereticus | herejía | hereje</sal:lemma>
+    <sal:lemma xml:id="L0059" type="term">homicidium | homicidio</sal:lemma>
+    <sal:lemma xml:id="L0060" type="term">homo | humanus | hombre | humano</sal:lemma>
+    <sal:lemma xml:id="L0061" type="term">honor | honoratio | homenaje</sal:lemma>
+    <sal:lemma xml:id="L0062" type="term">ignorantia</sal:lemma>
+    <sal:lemma xml:id="L0063" type="term">iniustitia | injusticia</sal:lemma>
+    <sal:lemma xml:id="L0064" type="term">inquisitio | inquisición</sal:lemma>
+    <sal:lemma xml:id="L0065" type="term">interdictum</sal:lemma>
+    <sal:lemma xml:id="L0066" type="term">interpretatio</sal:lemma>
+    <sal:lemma xml:id="L0067" type="term">inventio | invención</sal:lemma>
+    <sal:lemma xml:id="L0068" type="term">irregularitas | irregularidad</sal:lemma>
+    <sal:lemma xml:id="L0069" type="term">iudex | juez</sal:lemma>
+    <sal:lemma xml:id="L0070" type="term">iudicium | juicio</sal:lemma>
+    <sal:lemma xml:id="L0071" type="term">iuramentum | juramento</sal:lemma>
+    <sal:lemma xml:id="L0072" type="term">ius | derecho</sal:lemma>
+    <sal:lemma xml:id="L0073" type="term">iustitia | justicia</sal:lemma>
+    <sal:lemma xml:id="L0074" type="term">lex | ley</sal:lemma>
+    <sal:lemma xml:id="L0075" type="term">matrimonium | matrimonio</sal:lemma>
+    <sal:lemma xml:id="L0076" type="term">miles | militia | soldado | ejército</sal:lemma>
+    <sal:lemma xml:id="L0077" type="term">necessitas | necesidad</sal:lemma>
+    <sal:lemma xml:id="L0078" type="term">negotium | negotiator | negocio | empresario</sal:lemma>
+    <sal:lemma xml:id="L0079" type="term">obedientia | obediencia</sal:lemma>
+    <sal:lemma xml:id="L0080" type="term">officium</sal:lemma>
+    <sal:lemma xml:id="L0081" type="term">ordo | ordinare | orden | ordenar</sal:lemma>
+    <sal:lemma xml:id="L0082" type="term">papa | pontifex | pontífice</sal:lemma>
+    <sal:lemma xml:id="L0083" type="term">peccatum | pecado</sal:lemma>
+    <sal:lemma xml:id="L0084" type="term">poena | punitio | castigo</sal:lemma>
+    <sal:lemma xml:id="L0085" type="term">poenitentia | penitencia</sal:lemma>
+    <sal:lemma xml:id="L0086" type="term">possessio | posesión</sal:lemma>
+    <sal:lemma xml:id="L0087" type="term">potestas | poder</sal:lemma>
+    <sal:lemma xml:id="L0088" type="term">praeceptum | regla</sal:lemma>
+    <sal:lemma xml:id="L0089" type="term">praescriptio</sal:lemma>
+    <sal:lemma xml:id="L0090" type="term">servus | servitus | esclavo | esclavitud</sal:lemma>
+    <sal:lemma xml:id="L0091" type="term">simonia | simonía</sal:lemma>
+    <sal:lemma xml:id="L0092" type="term">subditus | súbdito</sal:lemma>
+    <sal:lemma xml:id="L0093" type="term">superstitio | superstición</sal:lemma>
+    <sal:lemma xml:id="L0094" type="term">tyrannus | tirano</sal:lemma>
+    <sal:lemma xml:id="L0095" type="term">usura</sal:lemma>
+    <sal:lemma xml:id="L0096" type="term">virtus | virtud</sal:lemma>
+    <sal:lemma xml:id="L0097" type="term">voluntas | voluntad</sal:lemma>
 </sal:lemmata>
