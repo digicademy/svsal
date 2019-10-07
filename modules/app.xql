@@ -1015,8 +1015,8 @@ declare %templates:wrap
 };
 
 declare %templates:wrap function app:corpusStatsTeaser ($node as node(), $model as map(*), $lang as xs:string?) as element(div) {
-    if (util:binary-doc-available($config:stats-root || '/stats.json')) then
-        let $stats := json-doc($config:stats-root || '/stats.json')
+    if (util:binary-doc-available($config:stats-root || '/corpus-stats.json')) then
+        let $stats := json-doc($config:stats-root || '/corpus-stats.json')
         let $digiFacs := i18n:largeIntToString(xs:integer($stats('facs_count')?('all')), $lang)
         let $editFacs := i18n:largeIntToString(xs:integer($stats('facs_count')?('full_text')), $lang)
         let $tokens := i18n:largeIntToString(xs:integer($stats('tokens_count')), $lang)
@@ -2860,7 +2860,7 @@ declare function app:WRKeditionMetadata($node as node(), $model as map(*), $wid 
 (:combined title on work.html in left box:)
 declare %templates:wrap
     function app:WRKcombined($node as node()?, $model as map(*)?, $wid as xs:string?) {
-        let $path           :=  doc($config:tei-works-root || "/" || sal-util:normalizeId($wid) || ".xml")//tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr
+        let $path           :=  doc($config:tei-works-root || "/" || sal-util:normalizeId($wid) || ".xml")/tei:TEI/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr
         let $author         :=  string-join($path//tei:author/tei:persName/tei:surname, ', ')
         let $title          :=  $path//tei:title[@type = 'short']
         let $thisEd         :=  $path//tei:pubPlace[@role = 'thisEd']
@@ -2884,6 +2884,19 @@ declare %templates:wrap
             return ($author||':  '||$title||'. '||$pubDetails||'.') 
 };  
 
+declare %templates:wrap
+    function app:WRKcombinedShort($node as node()?, $model as map(*)?, $wid as xs:string?) as xs:string? {
+        let $path :=  doc($config:tei-works-root || "/" || sal-util:normalizeId($wid) || ".xml")/tei:TEI/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr
+        let $author :=  string-join($path//tei:author/tei:persName/tei:surname, ', ')
+        let $title :=  $path//tei:title[@type = 'short']
+        let $thisEd :=  $path//tei:pubPlace[@role = 'thisEd']
+        let $firstEd :=  $path//tei:pubPlace[@role = 'firstEd']
+        let $place := if ($thisEd) then $thisEd else $firstEd
+        let $year := if ($thisEd) then $path//tei:date[@type = 'thisEd']/@when/string() else $path//tei:date[@type = 'firstEd']/@when/string()
+        let $pubDetails :=  $place || '&#32;'||": " || $year
+        return 
+            ($author||':  '||$title||'. '||$pubDetails||'.') 
+};
 
 (:jump from work.html to corresponding work_volume in workDetails.html:)(:FIXME:)
 declare function app:WRKdetailsCurrent($node as node(), $model as map(*), $lang as xs:string?) {
