@@ -3450,7 +3450,7 @@ declare %templates:default
                     </div>
                     <div class="row-fluid">
                         <div class="btn-toolbar pull-left">
-                            <!-- Hamburger Icon, used in small and eXtra-small views only: substitutes textmode, register, print and export functions -->
+                            <!-- Hamburger Icon, used in small and eXtra-small views only: substitutes textmode, stats, print and export functions -->
                             <div class="btn-group hidden-lg">
                                 <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                    <i class="fa fa-bars"></i>&#xA0;<i18n:text key="moreb">Mehr</i18n:text>
@@ -3460,6 +3460,7 @@ declare %templates:default
                                     <li><a onclick="applyEditMode()" class="btn original unsichtbar" style="cursor: pointer;"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"/>&#xA0;<i18n:text key="constituted">Konstituiert</i18n:text></a></li>
                                     <li><a onclick="applyOrigMode()" class="btn edited" style="cursor: pointer;"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"/>&#xA0;<i18n:text key="diplomatic">Diplomatisch</i18n:text></a></li>
                                     <li>{app:WRKdetailsCurrent($node, $model, $lang)}</li>
+                                    <li><a class="btn btn-link" href="stats.html?wid={request:get-parameter('wid', '')}"><i class="glyphicon glyphicon-stats"></i>&#32; <i18n:text key="stats">Statistics</i18n:text></a></li>
                                     <!--<li class="disabled"><a><span class="glyphicon glyphicon-print text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"><i18n:text key="print">Drucken</i18n:text></span></a></li>-->
                                     {$copyLink}
                                     {$copyCitation}
@@ -3470,7 +3471,6 @@ declare %templates:default
                                     <li class="disabled"><a><i class="fas fa-book text-muted" aria-hidden="true"/>&#xA0;<span class="text-muted"> <i18n:text key="ebook">E-book</i18n:text></span></a></li>   
                                 </ul>
                             </div>
-                            <!--Paginator-Dropdown-->
                             <div class="btn-group">
                                 <div class="dropdown">
                                  <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
@@ -3481,18 +3481,17 @@ declare %templates:default
                                     {app:loadWRKpagination($node, $model, $wid, $lang, $q)}
                                 </div>
                             </div>
-                            <!--TOC-Button-->
                             <div class="btn-group">
                                 <button type="button" class="btn btn-link" data-toggle="modal" data-target="#myModal">
                                     <i class="fa fa-list-ul" aria-hidden="true"> </i>&#xA0;<i18n:text key="toc">Inhalt</i18n:text>
                                 </button>
                             </div>
-                            <!--Details Button-->
                             <div class="btn-group hidden-md hidden-sm hidden-xs">
                                {app:WRKdetailsCurrent($node, $model, $lang)}
                             </div>
-                        <!-- Textmode, register, print and export functions, in largeish views -->
-                            <!--Textmode Button-->
+                            <div class="btn-group hidden-md hidden-sm hidden-xs">
+                                <a class="btn btn-link" href="stats.html?wid={request:get-parameter('wid', '')}"><i class="glyphicon glyphicon-stats"></i>&#32; <i18n:text key="stats">Statistics</i18n:text></a>
+                            </div>
                             <div class="btn-group hidden-md hidden-sm hidden-xs">{app:WRKtextModus($node, $model, $lang)}</div>
                             <div class="btn-group hidden-md hidden-sm hidden-xs">
                                 <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">

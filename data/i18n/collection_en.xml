@@ -160,7 +160,7 @@
   
   <msg key="corpusStats">Corpus Statistics</msg>
   <msg key="statsFor">Statistics for</msg>
-  <msg key="forLemma">for lemma</msg>
+  <msg key="forLemma">for lemma(ta)</msg>
   <msg key="generalStats">General Numbers</msg>
   <msg key="freqCooc">Frequencies and Cooccurrences of the Most Frequent Lemmas</msg>
   <msg key="cooccurrences">Cooccurrences</msg>

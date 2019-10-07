@@ -6,6 +6,7 @@
   <msg key="guidelines">Editionsrichtlinien</msg>
   <msg key="works">Werke</msg>
   <msg key="contact">Kontakt</msg>
+  <msg key="lang">Sprache</msg>
   
   <!-- project.html -->
   <msg key="teamDesc">Profile der Mitarbeitenden; Kooperationen und Fachbeirat.</msg>
@@ -173,7 +174,7 @@
   
   <msg key="corpusStats">Corpus-Statistiken</msg>
   <msg key="statsFor">Statistiken für</msg>
-  <msg key="forLemma">für Lemma</msg>
+  <msg key="forLemma">für das/die Lemma(ta)</msg>
   <msg key="generalStats">Allgemeine Daten</msg>
   <msg key="freqCooc">Frequenzen und Kookkurrenzen der häufigsten Lemmata</msg>
   <msg key="cooccurrences">Kookkurrenzen</msg>

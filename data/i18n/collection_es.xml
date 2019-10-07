@@ -167,7 +167,7 @@
     
     <msg key="corpusStats">Estadísticas del Corpus</msg>
     <msg key="statsFor">Estadísticas de</msg>
-    <msg key="forLemma">para el lema</msg>
+    <msg key="forLemma">para el/los lema(s)</msg>
     <msg key="generalStats">Datos generales</msg> <!-- TODO -->
     <msg key="freqCooc">Frecuencias and coocurrencias de las lemas más frecuentes</msg>
     <msg key="cooccurrences">Coocurrencias</msg>
