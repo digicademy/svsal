@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <sal:lemmata xmlns:sal="http://salamanca.adwmainz.de">
     <sal:lemma xml:id="lemma_d1e161" type="term">imperium</sal:lemma>
     <sal:lemma xml:id="lemma_d1e164" type="term">infidelitas | infidelis</sal:lemma>
@@ -91,7 +90,6 @@
     <sal:lemma xml:id="lemma_d1e253" type="term">praescriptio</sal:lemma>
     <sal:lemma xml:id="lemma_d1e256" type="term">privilegium</sal:lemma>
     <sal:lemma xml:id="lemma_d1e259" type="term">rapina | raptor</sal:lemma>
-    <sal:lemma xml:id="lemma_d1e262" type="term">ratio</sal:lemma>
     <sal:lemma xml:id="lemma_d1e266" type="term">res publica</sal:lemma>
     <sal:lemma xml:id="lemma_d1e269" type="term">restitutio</sal:lemma>
     <sal:lemma xml:id="lemma_d1e272" type="term">rex | princeps</sal:lemma>
