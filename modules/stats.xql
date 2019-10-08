@@ -161,10 +161,10 @@ declare function stats:makeWorkStats($wid as xs:string) as map(*) {
             let $query := $l/text() || ' @sphinx_work ^' || $wid
             let $currentSearch :=  sphinx:search((), map{}, $query, 'corpus-nogroup', 0, 10)
             let $currentOccurrencesCount := 
-                if (count($currentSearch("results")//terms) = 1) then
-                    xs:integer($currentSearch("results")//terms/hits/text())
+                if (count($currentSearch("results")//opensearch:totalResults) = 1) then
+                    xs:integer($currentSearch("results")//opensearch:totalResults/text())
                 else
-                    xs:integer(sum($currentSearch("results")//terms/hits/text()))                       
+                    xs:integer(sum($currentSearch("results")//opensearch:totalResults/text()))                       
             order by $currentOccurrencesCount descending
             return map{'lid': $l/@xml:id/string(), 'terms': $l/text(), 'freq': $currentOccurrencesCount }
     
@@ -401,6 +401,7 @@ declare %templates:wrap
                 let $cooccurrences :=
                     for $currentLemma in $lemmataTerms return
                         (: get frequency data for this lemma: total / sphinx snippets / works :)
+                        (: TODO: search for exact terms, as they also occur in voyant :)
                         let $currentSearch := sphinx:search($node, $model, $currentLemma, 'corpus-nogroup', 0, 200) (: offset=0, limit=200 (not more than 200 matches are returned) :)
                         let $currentOccurrencesCount := 
                             if (count($currentSearch("results")//terms) = 1) then
@@ -574,10 +575,12 @@ declare %templates:wrap
     (: display top-ranked lemmata (loaded from corpus-stats.json) in groups of 2 :)
         let $stats := json-doc($config:stats-root || '/' || sal-util:normalizeId($wid) || '-stats.json')
         (: show 10 most freq. lemmata :)
-        let $topLemmata := array:flatten(array:subarray($stats('mf_lemmata'),1,10))
+        let $allLemmata := array:flatten($stats('mf_lemmata'))
+        let $topLemmata := subsequence((for $l in $allLemmata return if ($l('freq') gt 0) then $l else ()),1,10) (: display max. 10 terms :)
         let $topLemmataTerms := for $map in $topLemmata return $map('terms')
+        let $div := xs:integer(floor(count($topLemmataTerms) div 2))
         let $fields :=
-            for $i in (0 to 4) return
+            for $i in (0 to $div) return
                 let $lemmaGroup := subsequence($topLemmata,1+($i*2),2)
                 let $lemmataTerms := for $map in $lemmaGroup return $map('terms')
                 let $lemmaTitle := string-join($lemmataTerms, '; ')
@@ -590,7 +593,6 @@ declare %templates:wrap
                     || '&amp;' || $queries
                     || '&amp;mode=document'
                     || '&amp;corpus=' || $stats:texts($wid)?('corpus')
-                    (:  :)
 (:                let $debug := util:log('warn', '$queries: ' || $queries || '; $srcLink: ' || $srcLink):)
                 let $cooccurrences :=
                     for $currentLemma in $lemmataTerms return

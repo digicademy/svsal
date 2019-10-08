@@ -149,13 +149,6 @@ return
                                     default return net:APIdeliverTextsHTML($textsRequest, $netVars)
                                 (: TODO:
                                     case 'iiif' return net:deliverIIIF($exist:path, $netVars) (\: TODO: debug forwarding :\)
-                                    case 'jpg' return net:deliverJPG($pathComponents, $netVars)
-                                    default return net:deliverHTML($pathComponents, $netVars)
-                                    
-                                    case 'image/jpeg' return
-                                        let $debug  := if ($config:debug = ("trace", "info")) then console:log($contentType || " requested, delivering jpg: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-                                        let $pathComponents := tokenize(lower-case($exist:path), "/")
-                                        return net:deliverJPG($pathComponents, $netVars)
                                     case 'application/ld+json' return
                                         let $debug  := if ($config:debug = ("trace", "info")) then console:log($contentType || " requested, delivering iiif: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
                                         return net:deliverIIIF($path, $netVars)
@@ -163,20 +156,7 @@ return
                             else if ($textsRequest('validation') eq 0) then (: one or more resource(s) not yet available :)
                                 if ($textsRequest('format') eq 'html') then net:APIdeliverTextsHTML($textsRequest, $netVars)
                                 else net:error(404, $netVars, ()) (: resource(s) not found :)
-                            else net:error(404, $netVars, ()) (: well-formed, but invalid resource(s) requested :)
-
-(:
-                        default return
-                            let $contentType := net:negotiateContentType($net:servedContentTypes, 'text/html')
-                            let $debug1 := if ($config:debug = ("trace")) then console:log("Content type '" || $contentType || "' determines format...") else ()
-                            return switch ($contentType)
-                                case 'text/plain' return
-                                    let $debug  := if ($config:debug = ("trace", "info")) then console:log($contentType || " requested, delivering txt: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-                                    return net:deliverTXT($textsRequest,$netVars)
-                                case 'application/rdf+xml' return
-                                    let $debug  := if ($config:debug = ("trace", "info")) then console:log($contentType || " requested, delivering rdf: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-                                    return net:deliverRDF($pathComponents, $netVars)
-:)
+                            else net:error(404, $netVars, ()) (: well-formed request, but invalid resource(s) requested :)
             case "search" return
                 let $debug         := if ($config:debug = ("trace", "info")) then console:log("Search requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
                 let $absolutePath  := concat($config:searchserver, '/', substring-after($exist:path, '/search/'))
@@ -281,39 +261,40 @@ return
         (: For now, we don't use net:forward here since we need a nested view/forwarding. :)
         let $resource := lower-case($exist:resource)
         return
-            if ($resource eq 'author.html') then net:deliverAuthorsHTML($netVars)
-            else if ($resource eq 'lemma.html') then net:deliverConceptsHTML($netVars)
-            else if ($resource eq 'work.html') then net:deliverTextsHTML($netVars)
-            else if ($resource eq 'workingpaper.html') then net:deliverWorkingPapersHTML($netVars)
-            else if ($resource eq 'workdetails.html') then net:deliverWorkDetailsHTML($netVars)
-            else  (: if ($resource = xmldb:get-child-resources($config:app-root)) then :)
-                let $viewModule := 
-                    switch ($resource) (: cases need to be lower-cased :)
-                        case "admin.html"
-                        case "corpus-admin.html"
-                        case "createlists.html"
-                        case "iiif-admin.html"
-                        case "rendertherest.html"
-                        case "render.html"
-                        case "error-page.html"
-                        case "sphinx-admin.html" return "view-admin.xql"
-                        default return "view.xql"
-                let $debug := if ($config:debug = "trace") then console:log ("[CONTROLLER] Dispatching " || $resource || " to view module " || $viewModule || ".") else ()
-                return
-                    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                        <forward url="{$exist:controller || substring($exist:path, 4)}"/>
-                        <view>
-                            <!-- pass the results through view.xql -->
-                            <forward url="{$exist:controller}/modules/{$viewModule}">
-                                <set-attribute name="lang"              value="{$lang}"/>
-                                <set-attribute name="$exist:resource"   value="{$exist:resource}"/>
-                                <set-attribute name="$exist:prefix"     value="{$exist:prefix}"/>
-                                <set-attribute name="$exist:controller" value="{$exist:controller}"/>
-                            </forward>
-                        </view>
-                        {config:errorhandler($netVars)}
-                    </dispatch>
-(:            else net:error(404, $netVars, ()):)
+            switch($resource)
+                case 'author.html' return net:deliverAuthorsHTML($netVars)
+                case 'lemma.html' return net:deliverConceptsHTML($netVars)
+                case 'work.html' return net:deliverTextsHTML($netVars)
+                case 'workingpaper.html' return net:deliverWorkingPapersHTML($netVars)
+                case 'workdetails.html' return net:deliverWorkDetailsHTML($netVars)
+                default return  (: if ($resource = xmldb:get-child-resources($config:app-root)) then :)
+                    let $viewModule := 
+                        switch ($resource) (: cases need to be lower-cased :)
+                            case "admin.html"
+                            case "corpus-admin.html"
+                            case "createlists.html"
+                            case "iiif-admin.html"
+                            case "rendertherest.html"
+                            case "render.html"
+                            case "error-page.html"
+                            case "sphinx-admin.html" return "view-admin.xql"
+                            default return "view.xql"
+                    let $debug := if ($config:debug = "trace") then console:log ("[CONTROLLER] Dispatching " || $resource || " to view module " || $viewModule || ".") else ()
+                    return
+                        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                            <forward url="{$exist:controller || substring($exist:path, 4)}"/>
+                            <view>
+                                <!-- pass the results through view.xql -->
+                                <forward url="{$exist:controller}/modules/{$viewModule}">
+                                    <set-attribute name="lang"              value="{$lang}"/>
+                                    <set-attribute name="$exist:resource"   value="{$exist:resource}"/>
+                                    <set-attribute name="$exist:prefix"     value="{$exist:prefix}"/>
+                                    <set-attribute name="$exist:controller" value="{$exist:controller}"/>
+                                </forward>
+                            </view>
+                            {config:errorhandler($netVars)}
+                        </dispatch>
+    (:            else net:error(404, $netVars, ()):)
 
     (: If there is no language path component, redirect to a version of the site where there is one :)
     else if (ends-with($exist:resource, ".html")) then
