@@ -265,6 +265,8 @@
     <msg key="display">anuncio</msg>
     <msg key="prev">precedentes</msg>
     <msg key="next">siguientes</msg>
+    <msg key="prevWorks">Obras previas</msg>
+    <msg key="nextWorks">Obras siguientes</msg>
     <msg key="mainText">cuerpo del texto</msg>
     <msg key="everythingDesc">Búsqueda en obras, en entradas del diccionario y en resúmenes, palabras claves etc. de los Working Papers.</msg>
     <msg key="corpusDesc">Búsqueda en el texto completo de todas obras.</msg>

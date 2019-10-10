@@ -233,6 +233,8 @@
   <msg key="display">display</msg>
   <msg key="prev">previous</msg>
   <msg key="next">next</msg>
+  <msg key="prevWorks">Preceding works</msg>
+  <msg key="nextWorks">Following works</msg>
   <msg key="mainText">main text</msg>
   <msg key="everythingDesc">Search in works, in biographical and conceptual dictionary articles and in abstracts and keywords of working papers.</msg>
   <msg key="corpusDesc">Search the full text of all works.</msg>

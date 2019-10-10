@@ -198,6 +198,8 @@
   <msg key="searchFor">Suche nach</msg>
   <msg key="allResults">Alle</msg>
   <msg key="sphinxHelp">Hilfe</msg>
+  <msg key="prevWorks">Vorige Werke</msg>
+  <msg key="nextWorks">Nächste Werke</msg>
   
   <!-- general language -->
   <msg key="of">von</msg>
