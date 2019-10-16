@@ -11,7 +11,7 @@ import module namespace i18n       = "http://exist-db.org/xquery/i18n"        at
 import module namespace render-app = "http://salamanca/render-app"  at "render-app.xql";
 import module namespace console    = "http://exist-db.org/xquery/console";
 import module namespace http       = "http://expath.org/ns/http-client";
-import module namespace httpclient = "http://exist-db.org/xquery/httpclient";
+(:import module namespace httpclient = "http://exist-db.org/xquery/httpclient";:)
 import module namespace util       = "http://exist-db.org/xquery/util";
 import module namespace validation = "http://exist-db.org/xquery/validation";
 
@@ -301,7 +301,7 @@ function sphinx:search ($context as node()*, $model as map(*), $q as xs:string?,
                 return httpclient:get($searchRequest, false(), $searchRequestHeaders)//httpclient:body/rss
 
             else()
-        return map { "results" := $hits }
+        return map { "results": $hits }
     else ()
 };
 

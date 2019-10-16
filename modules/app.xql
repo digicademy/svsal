@@ -488,7 +488,8 @@ declare %templates:wrap %templates:default("sort", "surname")
                     default return
                         for $item in $coll
                             return $item
-            return map { 'listOfAuthors' := $result }
+            return 
+                map {'listOfAuthors' : $result}
 };
 
 declare %private
@@ -577,7 +578,7 @@ declare  %templates:wrap
                     order by $item//tei:titleStmt/tei:author[1]/tei:persName/tei:surname ascending
                     return $item
                 else() 
-            return map { 'listOfLemmata' := $result }
+            return map { 'listOfLemmata':$result }
 };
 
 declare %private
@@ -616,7 +617,7 @@ declare %templates:wrap
             let $result := for $item in collection($config:tei-news-root)//tei:TEI[.//tei:text/@type eq "news"]
                             order by $item//tei:change[1]/@when/string() descending
                             return $item
-            return map { 'listOfNews' := $result }
+            return map { 'listOfNews': $result }
 };
 
 (:  
@@ -627,7 +628,7 @@ declare %templates:wrap
             let $result := for $item in collection($config:tei-workingpapers-root)/tei:TEI[.//tei:text/@type eq "working_paper"]
                            order by $item/tei:teiHeader//tei:titleStmt/tei:title[@type='short'] descending
                            return $item
-            return map { 'listOfWps' := $result }
+            return map { 'listOfWps': $result }
 };
 
 (:  
@@ -647,7 +648,7 @@ declare %templates:wrap %templates:default("sort", "surname")
                         map {'wid': $wid,
                              'author': $author,
                              'titleShort': $titleShort}
-            return map { 'listOfWorks' := $result }     
+            return map { 'listOfWorks': $result }     
 };
 
 
@@ -678,7 +679,7 @@ declare %templates:wrap %templates:default("sort", "surname")
                                 for $item in $coll
                                     order by $item/@xml:id ascending
                                     return $item
-            return map { 'listOfWorks' := $result }     
+            return map { 'listOfWorks': $result }     
 };:)
 
 
@@ -1031,7 +1032,7 @@ declare %templates:default("field", "all")
                         return ($model("currentAuthor"))
                      else
                         ()
-    return map { "currentAuthor"    := $context }
+    return map { "currentAuthor": $context }
 };
 
 (: TODO: adjust paths here once respective HTML is available: :)
@@ -1076,7 +1077,7 @@ declare %templates:default("field", "all")
                          else if ($q) then
                             dq:search($context, $model, $wid, $aid, $lid, $q, $field)
                          else :)
-    return map { "currentLemma"    := $context }
+    return map { "currentLemma": $context }
 };
 
 (: TODO: adjust path once LEM HTML is available :)
@@ -1130,7 +1131,7 @@ declare %templates:default
                            dq:search($context, $model, $wid, $aid, $lid, $q, $field)
                          else :)
                             
-    return map { "currentNews"    := $context }
+    return map { "currentNews": $context }
 };
 
 
@@ -1150,7 +1151,7 @@ declare %templates:default
                            dq:search($context, $model, $wid, $aid, $lid, $q, $field)
                          else :)
                             
-    return map { "currentWp"    := $context }
+    return map { "currentWp": $context }
 };
 
 (: ====Work==== :)
@@ -1202,7 +1203,7 @@ declare function app:watermark-txtonly($node as node(), $model as map(*), $wid a
                             util:expand(doc($config:tei-works-root || "/" || sal-util:normalizeId($wid) || ".xml")/tei:TEI)
                      else
                             doc($config:tei-works-root || "/" || sal-util:normalizeId($wid) || ".xml")/tei:TEI
-    return  map {"currentWork"    := $context}
+    return  map {"currentWork": $context}
 };:)
 
 declare %templates:wrap function app:loadWorkMetadata($node as node(), $model as map(*), $wid as xs:string?) {

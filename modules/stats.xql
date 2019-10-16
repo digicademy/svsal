@@ -84,7 +84,7 @@ declare function stats:body($node as node(), $model as map (*), $wid as xs:strin
 declare function stats:loadListOfLemmata($node as node(), $model as map(*)) as map(*) {
     let $lemmaNodes := doc($config:data-root || "/lemmata-97.xml")//sal:lemma[@type='term'][position() le $config:stats-limit]
     return 
-        map { 'listOfLemmata' := $lemmaNodes }
+        map { 'listOfLemmata': $lemmaNodes }
 };
 
 (:
