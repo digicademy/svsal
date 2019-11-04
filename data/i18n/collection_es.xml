@@ -2,7 +2,7 @@
     <!-- Navigation -->
     <msg key="titleHeader">La Escuela de Salamanca</msg>
     <msg key="projectName">La Escuela de Salamanca</msg>
-    <msg key="titleSubHeader">Una Colección Digital de Fuentes y un Diccionario de su Lenguaje Jurídico-Político</msg>
+    <msg key="titleSubHeader">Una Colección Digital de Fuentes y un Diccionario de su Lengua Jurídica-Política</msg>
     <msg key="home">La Escuela de Salamanca</msg>
     <msg key="start">Home</msg>
     <msg key="en">Inglés</msg>
@@ -32,16 +32,16 @@
     <msg key="metaWP">SvSal Working Paper</msg>
     <msg key="metaWork">Vista de lectura de</msg>
     <msg key="metaWorkDetails">Datos bibliográficos de</msg>
-    <msg key="metaIndex">Una Colección Digital de Fuentes y un Diccionario de su Lenguaje Jurídico-Político de Teólogos, Juristas y Filósofos ibericos de la temprana edad moderna.</msg>
+    <msg key="metaIndex">Una Colección Digital de Fuentes y un Diccionario de su Lengua Jurídica-Política de Teólogos, Juristas y Filósofos ibericos de la temprana edad moderna.</msg>
     <msg key="metaSearch">Buscar en los textos de los autores salamantinos, en articulos bibliográficos y del diccionario, como también en los Working Papers sobre la escuela de Salamanca.</msg>
     <msg key="metaContact">Posibilidades para contactar el proyecto "La Escuela de Salamanca" y quedarse en la últimas noticias.</msg>
     <msg key="metaEditorial"> Directrices y especificaciones para la presentación de propuestas para la serie de Working Papers del proyecto "La Escuela de Salamanca".</msg>
     <msg key="metaGuidelines">Directrices de edición para la producción de la edición digital de fuentes del proyecto "La Escuela de Salamanca".</msg>
-    <msg key="metaProject">Información general acerca del proyecto "La Escuela de Salamanca. Una Colección Digital de Fuentes y un Diccionario de su Lenguaje Jurídico-Político".</msg>
+    <msg key="metaProject">Información general acerca del proyecto "La Escuela de Salamanca. Una Colección Digital de Fuentes y un Diccionario de su Lengua Jurídica-Política".</msg>
     <msg key="metaNews">Noticias, anuncios y textos cortos del blog del proyecto "La Escuela de Salamanca" acerca de la teoria, metodología, tecnica y otros.</msg>
     <msg key="metaWorks">Resumen de las fuentes que, estan disponibles en el marco de la edición digital de fuentes. Filtrable y clasificable.</msg>
     <msg key="metaAuthors">Resumen de los autores, cuyos textos están descritos en la edición de fuentes y con mas detalle en artículos bibliográficos</msg>
-    <msg key="metaDictionary">Resumen de los artículos del diccionario del lenguaje jurídico-político de la Escuela de Salamanca desarrollados durante el proyecto.</msg>
+    <msg key="metaDictionary">Resumen de los artículos del diccionario de la lengua jurídica-política de la Escuela de Salamanca desarrollados durante el proyecto.</msg>
     <msg key="metaWPs">Resumen acerca de los Working Papers acerca de la Escuela de Salamanca publicados en el marco de la serie organizada por el proyecto.</msg>
     <msg key="metaParticipants">Resumen acerca de las personas involucaradas en el proyecto "La Escuela de Salamanca".</msg>
     
@@ -68,7 +68,7 @@
         en la cultura universitaria protestante del antiguo Sacro Imperio. La inmensa labor desarrollada por la Escuela de Salamanca ha sido abordada desde diferentes aspectos por 
         especialistas de varias disciplinas (filósofos, legistas, historiadores y teólogos). No obstante, esta serie de esfuerzos individuales, por lo general, han permanecido 
         aislados e inconexos, lo que condujo a una fragmentación de los discursos académicos, y a la imposibilidad de plantear cuestiones metódicas generales. </msg>
-    <msg key="pojectDesc2">"La Escuela de Salamanca: Una Colección Digital de Fuentes y un Diccionario de su Lenguaje Jurídico-Político" se llevará a cabo a partir del año 2013 como un proyecto 
+    <msg key="pojectDesc2">"La Escuela de Salamanca: Una Colección Digital de Fuentes y un Diccionario de su Lengua Jurídica-Política" se llevará a cabo a partir del año 2013 como un proyecto 
         de investigación de la Academia de Ciencias y Literatura de Maguncia (Akademie der Wissenschaften und Literatur Mainz), dentro del marco del programa de proyectos de 
         investigación de larga duración, financiado por la Unión de Academias de Ciencias Alemanas (Union der Akademien der Wissenschaften). Su objetivo consiste precisamente 
         en remediar esta situación. Aspira brindar a la comunidad científica una herramienta necesaria para reconstruir los pensamientos y reflexiones de esta Escuela, a partir 
