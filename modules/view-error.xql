@@ -51,7 +51,7 @@ declare function local:resolve-attr($node as node()) as node()? {
 };
 
 let $config := map {
-    $templates:CONFIG_APP_ROOT := $config:app-root
+    $templates:CONFIG_APP_ROOT: $config:app-root
 }
 
 let $lookup := function($functionName as xs:string, $arity as xs:int) {
