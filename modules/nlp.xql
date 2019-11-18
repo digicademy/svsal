@@ -14,16 +14,22 @@ import module namespace console   = "http://exist-db.org/xquery/console";
 ~   - 'words': only tokens without punctuation are counted
 :)
 declare function nlp:tokenize($text as xs:string*, $mode as xs:string?) as xs:string* {
-    (: remove technical / non-word items (including interpunctuation) and remove excessive whitespace: :)
-    let $punctuation := '[\+\.,;\?!-–—\*¶†]'
-    let $technicalChars := '[\{\}\[\]]'
+    
+    let $punctuation := '([\+\.,;\?!\-–—\*¶†])'
+    let $technicalChars := '([\{\}]|\[.*?\])' (: filter out '{'/'}' at the beginning/ending og marg. notes, and [.*?] altogether (LOD ids) :)
+    
     let $preproc := replace(string-join($text, ' '), $technicalChars, '')
+(:    let $debug := util:log('warn', '[NLP] in mode ' || $mode || ', $preproc starts with: ' || substring($preproc, 1, 200)):)
+    
     let $normalized := 
         if ($mode eq 'all') then 
-            replace($preproc, '(' || $punctuation || ')', ' $1 ') (: make sure words and punctuation are separated :)
+            replace($preproc, $punctuation, ' $1 ') (: make sure words and punctuation are separated :)
         else if ($mode eq 'words') then
             replace($preproc, $punctuation, ' ') (: remove punctuation altogether :)
-        else replace($preproc, '(' || $punctuation || ')', ' $1 ') (: 'all' :)
+        else replace($preproc, $punctuation, ' $1 ') (: 'all' :)
+(:    let $debug := util:log('warn', '[NLP] in mode ' || $mode || ', $normalized starts with: ' || substring($normalized, 1, 200)):)
+    
     let $tokenized := tokenize($normalized, '\s+')
+    
     return $tokenized
 };
