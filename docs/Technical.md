@@ -26,7 +26,6 @@ Let's start with the hosting of source and derivative files. Besides the applica
 * authors
 * lemmata
 * meta (holds files with general and technical information, partially being xincluded in the works xml files)
-* news
 * workingpapers
 * works
 
@@ -46,7 +45,6 @@ In fact, throughout the application, these folders/collections are addressed via
 * `$config:tei-root`
   * `$config:tei-authors-root`
   * `$config:tei-lemmata-root`
-  * `$config:tei-news-root`
   * `$config:tei-workingpapers-root`
   * `$config:tei-works-root`
 

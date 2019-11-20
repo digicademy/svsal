@@ -108,7 +108,7 @@ declare function app:workCount($node as node(), $model as map (*), $lang as xs:s
  : load datasets,
  : with javascript and without javascript function
  : order: datasets for js support: authors, lemmata and works (in alphabetical order)
- : then: for simple output (without js): authors, lemmata, news, working papers, works (in alphabetical order)
+ : then: for simple output (without js): authors, lemmata, working papers, works (in alphabetical order)
  :)
 
 (: Authors with js facets:)
@@ -243,11 +243,13 @@ declare function app:AUTfinalFacets ($node as node(), $model as map (*), $lang a
 
 
 (: ==== LEMMATA-SECTION (with js) ==== :)
-declare function app:switchName ($node as node(), $model as map (*), $lang as xs:string?) {
+(: not in use :)
+(:declare function app:switchName ($node as node(), $model as map (*), $lang as xs:string?) {
 let $output := <i18n:text key="lemmata">Lemma</i18n:text>
     return 
         i18n:process($output, "de", "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
-};
+};:)
+
 declare function app:LEMfinalFacets ($node as node(), $model as map (*), $lang as xs:string?) {
     for $item in (collection($config:tei-lemmata-root)//tei:TEI[.//tei:text/@type eq "lemma_article"])
         let $title          :=  $item//tei:titleStmt/tei:title[@type='short']
@@ -609,16 +611,6 @@ declare  %templates:wrap
         </div>
 };
 
-(:  
- :      ====NEWS-LIST (no js) ====
-:)
-declare %templates:wrap
-        function app:loadListOfNews($node as node(), $model as map(*)) as map(*) {
-            let $result := for $item in collection($config:tei-news-root)//tei:TEI[.//tei:text/@type eq "news"]
-                            order by $item//tei:change[1]/@when/string() descending
-                            return $item
-            return map { 'listOfNews': $result }
-};
 
 (:  
         ==== WORKING-PAPERS-LIST (no js) ====
@@ -1020,7 +1012,7 @@ declare %templates:wrap
 
 
 
-(: =========== Load single author, lemma, news-entry, working paper, work (in alphabetical order) ============= :)
+(: =========== Load single author, lemma, working paper, work (in alphabetical order) ============= :)
 
 (: ====Author==== :)
 declare %templates:default("field", "all")
@@ -1113,25 +1105,6 @@ declare %public
                 </span>
 
             </div>
-};
-
-(: ====News==== :)
-declare %templates:default
-    function app:loadSingleNews($node as node(), $model as map(*), $nid as xs:string?){
-    let $context  := if ($nid) then
-                        doc($config:tei-news-root || "/" || sal-util:normalizeId($nid) || ".xml")/tei:TEI
-                     else if ($model("currentNews")) then
-                        let $nid := $model("currentNews")/@xml:id 
-                        return ($model("currentNews"))
-                     else
-                        ()
-   (: let $results-work := if (count($model("results"))>0) then
-                            $model("results")
-                         else if ($q) then
-                           dq:search($context, $model, $wid, $aid, $lid, $q, $field)
-                         else :)
-                            
-    return map { "currentNews": $context }
 };
 
 
@@ -1346,7 +1319,7 @@ declare function app:searchResultsNav($node as node(), $model as map(*), $q as x
     return $nav
 };
 
-(: =========== End of Load single author, lemma, news-entry, working paper, work (in alphabetical order) ============= :)
+(: =========== End of Load single author, lemma, working paper, work (in alphabetical order) ============= :)
 
 (: ============== Retrieve single *pieces* of information ... ========= :)
 
@@ -1664,168 +1637,6 @@ declare %public function app:LEMentry($node as node(), $model as map(*), $lid as
     render-app:dispatch(doc($config:tei-lemmata-root || "/" || sal-util:normalizeId($lid) || ".xml")//tei:body, "work", ())
 };
 (: Rendering is done in render-app.xql! :)
-
-(: ----------------- ... from NEWs -------------------
- : extract title etc. from $model('currentNews').
- :)
-(:declare 
-    function app:NEWsList($node as node(), $model as map(*), $lang as xs:string?) {
-    let $image          := $model('currentNews')//tei:title[1]/tei:ref
-    let $link           := <a href="{session:encode-url(xs:anyURI('newsEntry.html?nid=' || $model('currentNews')/@xml:id))}">{$model('currentNews')/@xml:id/string()}</a>
-    let $followTeaser   := <a href="{session:encode-url(xs:anyURI('newsEntry.html?nid=' || $model('currentNews')/@xml:id))}"><i18n:text key="more">mehr</i18n:text>&#32;&#32;<i class="fa fa-share"></i></a>
-    let $title :=        if ($lang eq 'de') then <span style="text-decoration: none; color: #333333;">{$model('currentNews')//tei:title[@type='main'][@xml:lang='de']/string()}</span>
-                    else if ($lang eq 'en') then <span style="text-decoration: none; color: #333333;">{$model('currentNews')//tei:title[@type='main'][@xml:lang='en']/string()}</span>
-                    else if ($lang eq 'es') then <span style="text-decoration: none; color: #333333;">{$model('currentNews')//tei:title[@type='main'][@xml:lang='es']/string()}</span>
-                    else ()
-    let $sub :=          if ($lang eq 'de') then $model('currentNews')//tei:title[@type='sub'][@xml:lang='de']/string()
-                    else if ($lang eq 'en') then $model('currentNews')//tei:title[@type='sub'][@xml:lang='en']/string()
-                    else if ($lang eq 'es') then $model('currentNews')//tei:title[@type='sub'][@xml:lang='es']/string()
-                    else ()     
-                    
-   let $teaser :=         if ($lang eq 'de')  then <p class="lead">{concat(substring($model('currentNews')//tei:div[@type='entry'][@xml:lang='de']/tei:p[1], 1 , 150), '&#32;...&#32;&#32;'), $followTeaser} </p>
-                     else if ($lang eq 'en')  then <p class="lead">{concat(substring($model('currentNews')//tei:div[@type='entry'][@xml:lang='en']/tei:p[1], 1 , 150), '&#32;...&#32;&#32;'), $followTeaser} </p>
-                     else if ($lang eq 'es')  then <p class="lead">{concat(substring($model('currentNews')//tei:div[@type='entry'][@xml:lang='es']/tei:p[1], 1 , 150), '&#32;...&#32;&#32;'), $followTeaser} </p>
-                     else()
-    let $date           := $model('currentNews')//tei:change[1]/@when/string() 
-    let $output :=
-       (\:imageleft:\)
-        if ($image/@rendition='ImageLeft') then
-            <div class="row"><hr/>
-                <div class="col-md-4 hidden-sm hidden-xs">
-                    <a style="text-decoration: none;" href="{session:encode-url(xs:anyURI('newsEntry.html?nid=' || $model('currentNews')/@xml:id))}">
-                        <img class="featurette-image img-circle img-responsive pull-left" src="{$image/@target}" style="max-height: 15em;"/>
-                     </a>
-                 </div>
-                <div class="col-md-8 hidden-sm hidden-xs">
-                     <h2>
-                        <a style="text-decoration: none;" href="{session:encode-url(xs:anyURI('newsEntry.html?nid=' || $model('currentNews')/@xml:id))}">{$title}</a>&#32;
-                        <span class="text-muted">{$sub}</span>
-                     </h2><br/><br/>
-                    {$teaser}
-                </div>
-                <div class="col-sm-8 hidden-md hidden-lg hidden-xs">
-                     <h2>
-                        <a style="text-decoration: none;" href="{session:encode-url(xs:anyURI('newsEntry.html?nid=' || $model('currentNews')/@xml:id))}">{$title}</a>&#32;
-                        <span class="text-muted">{$sub}</span>
-                     </h2><br/><br/>
-                    {$teaser}
-                </div>
-                <div class="col-xs-12 hidden-lg hidden-sm hidden-md">
-                     <h3>
-                        <a style="text-decoration: none;" href="{session:encode-url(xs:anyURI('newsEntry.html?nid=' || $model('currentNews')/@xml:id))}">{$title}</a>&#32;
-                        <span class="text-muted">{$sub}</span>
-                     </h3><br/><br/>
-                    {$teaser}
-                </div>
-                <div class="col-sm-4 hidden-md hidden-lg hidden-xs">
-                    <a style="text-decoration: none;" href="{session:encode-url(xs:anyURI('newsEntry.html?nid=' || $model('currentNews')/@xml:id))}">
-                        <img class="featurette-image img-circle img-responsive pull-right" src="{$image/@target}" style="max-height: 15em;"/>
-                     </a>
-                 </div>
-            </div>
-          
-        (\: image right:\)
-        else if ($image/@rendition='ImageRight') then
-            <div class="row"><hr/>
-                 <div class="col-md-8 hidden-sm hidden-xs">
-                    <h2><a style="text-decoration: none;" href="{session:encode-url(xs:anyURI('newsEntry.html?nid=' || $model('currentNews')/@xml:id))}">{$title}</a>&#32;
-                         <span class="text-muted">{$sub}</span>
-                     </h2><br/><br/>
-                    {$teaser}
-                 </div>
-                 <div class="col-md-4 hidden-sm hidden-xs">
-                 <a style="text-decoration: none;" href="{session:encode-url(xs:anyURI('newsEntry.html?nid=' || $model('currentNews')/@xml:id))}">
-                     <img class="featurette-image img-circle img-responsive pull-right" src="{$image/@target}" style="max-height: 15em;"/>
-                 </a>
-             </div>
-             <div class="col-sm-8 hidden-md hidden-lg hidden-xs">
-                    <h2><a style="text-decoration: none;" href="{session:encode-url(xs:anyURI('newsEntry.html?nid=' || $model('currentNews')/@xml:id))}">{$title}</a>&#32;
-                         <span class="text-muted">{$sub}</span>
-                     </h2><br/><br/>
-                    {$teaser}
-                 </div>
-                 <div class="col-xs-12 hidden-lg hidden-sm hidden-md">
-                    <h3><a style="text-decoration: none;" href="{session:encode-url(xs:anyURI('newsEntry.html?nid=' || $model('currentNews')/@xml:id))}">{$title}</a>&#32;
-                         <span class="text-muted">{$sub}</span>
-                     </h3><br/><br/>
-                    {$teaser}
-                 </div>
-                 <div class="col-sm-4 hidden-md hidden-lg hidden-xs">
-                 <a style="text-decoration: none;" href="{session:encode-url(xs:anyURI('newsEntry.html?nid=' || $model('currentNews')/@xml:id))}">
-                     <img class="featurette-image img-circle img-responsive pull-right" src="{$image/@target}" style="max-height: 15em;"/>
-                 </a>
-             </div>
-         </div>
-       else ()
-       return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) 
-};
-    
-declare %templates:wrap 
-    function app:NEWsEntry($node as node(), $model as map(*), $lang as xs:string) {
-    let $image  :=  $model('currentNews')//tei:title[1]/tei:ref
-    let $link   :=  <a href="{session:encode-url(xs:anyURI('newsEntry.html?nid=' || $model('currentNews')/@xml:id))}">{$model('currentNews')/@xml:id/string()}</a>
-    let $title  :=  if ($lang eq 'de') then $model('currentNews')//tei:title[@type='main'][@xml:lang='de']/string()
-                        else if ($lang eq 'en') then $model('currentNews')//tei:title[@type='main'][@xml:lang='en']/string()
-                        else if ($lang eq 'es') then $model('currentNews')//tei:title[@type='main'][@xml:lang='es']/string()
-                        else ()
-    let $sub    :=  if ($lang eq 'de') then $model('currentNews')//tei:title[@type='sub'][@xml:lang='de']/string()
-                        else if ($lang eq 'en') then $model('currentNews')//tei:title[@type='sub'][@xml:lang='en']/string()
-                        else if ($lang eq 'es') then $model('currentNews')//tei:title[@type='sub'][@xml:lang='es']/string()
-                        else ()
-    let $date   :=  $model('currentNews')//tei:change[1]/@when/string()
-    let $output :=
-        <div>
-            <div class="row">
-                <div class="col-md-6 col-md-offset-2 col-sm-7 hidden-xs">
-                    <h2> 
-                        <a href="news.html">
-                            <i class="fa fa-reply"></i>&#32;&#32;<!--<i18n:text key="back">zurück</i18n:text>-->
-                        </a>
-                        {$title}&#32;
-                        <span class="text-muted">{$sub}</span>
-                    </h2>
-                    <hr/>
-                    </div>
-                    <div class="col-xs-12 hidden-sm hidden-md hidden-lg">
-                         <h3> 
-                            <a href="news.html">
-                                <i class="fa fa-reply"></i>&#32;&#32;<!--<i18n:text key="back">zurück</i18n:text>-->
-                            </a>
-                           {$title}&#32;
-                           <span class="text-muted">{$sub}</span>
-                         </h3>
-                    <hr/>
-                    </div>
-                    <div class="col-md-3 col-sm-5 hidden-xs">
-                       <img class="img-responsive" src="{$image/@target}" style="margin:15px;"/>
-                    </div>
-                </div>
-                <div class="row-fluid">
-                <div class="col-md-8 col-md-offset-2">
-                   {local:NEWsBody($node, $model, $lang), $date}
-                  <br/>
-                </div>
-            </div>
-        </div>
-    return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) 
-};
-
-declare function local:NEWsBody($node as node(), $model as map(*), $lang as xs:string) {
-        let $doc := $model('currentNews')//tei:text
-        let $parameters :=  
-            <parameters>
-                <param name="exist:stop-on-warn" value="yes"/>
-                <param name="exist:stop-on-error" value="yes"/>
-            </parameters>
-        return  
-        if ($lang eq 'de')  then 
-        transform:transform($doc//tei:div[@xml:lang='de'], doc(($config:app-root || "/resources/xsl/news.xsl")), $parameters)
-        else if  ($lang eq 'en')  then 
-        transform:transform($doc//tei:div[@xml:lang='en'], doc(($config:app-root || "/resources/xsl/news.xsl")), $parameters)
-        else if  ($lang eq 'es')  then
-        transform:transform($doc//tei:div[@xml:lang='es'], doc(($config:app-root || "/resources/xsl/news.xsl")), $parameters)
-        else()
-};:)
 
 
 (: ----------------- ... from WORKING PAPERs ------------------- all new

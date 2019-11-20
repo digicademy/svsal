@@ -222,11 +222,10 @@ declare variable $config:tei-root       :=
     return concat(substring-before($modulePath, "/salamanca/"), "/salamanca-tei");
 declare variable $config:tei-authors-root := concat($config:tei-root, "/authors");
 declare variable $config:tei-lemmata-root := concat($config:tei-root, "/lemmata");
-declare variable $config:tei-news-root := concat($config:tei-root, "/news");
 declare variable $config:tei-workingpapers-root := concat($config:tei-root, "/workingpapers");
 declare variable $config:tei-works-root := concat($config:tei-root, "/works");
 declare variable $config:tei-meta-root := concat($config:tei-root, "/meta");
-declare variable $config:tei-sub-roots := ($config:tei-authors-root, $config:tei-lemmata-root, $config:tei-news-root, $config:tei-workingpapers-root, $config:tei-works-root);
+declare variable $config:tei-sub-roots := ($config:tei-authors-root, $config:tei-lemmata-root, $config:tei-workingpapers-root, $config:tei-works-root);
 
 declare variable $config:resources-root := concat($config:app-root, "/resources");
 declare variable $config:data-root      := concat($config:app-root, "/data");
@@ -368,10 +367,6 @@ declare function config:app-header($node as node(), $model as map(*), $lang as x
     let $output :=
         <div class="collapse navbar-collapse navbar-menubuilder">
             <menu class="nav navbar-nav">
-                <!--{(:
-                if(contains(request:get-url(), 'news')) then <li class="active"><a href="news.html?lang={$lang}"><span class="glyphicon glyphicon-hand-right" aria-hidden="true"></span>&#160;<i18n:text key="news">Aktuelles</i18n:text></a></li>
-                else <li><a href="news.html?lang={$lang}"><span class="glyphicon glyphicon-hand-right" aria-hidden="true"></span>&#160;<i18n:text key="news">Aktuelles</i18n:text></a></li>
-                :)} -->
                 <li class="{if (contains(request:get-url(), 'news')) then 'active' else ()}">
                     <a href="{$config:blogserver}/?lang={$lang}">
                     <span class="glyphicon glyphicon-hand-right" aria-hidden="true"></span>&#160;
@@ -443,51 +438,6 @@ declare function config:app-header($node as node(), $model as map(*), $lang as x
            i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) 
 };
 
-(: Navigation create Mobile-header menue and dropdown in work.html:)
-declare function config:app-headerWork($node as node(), $model as map(*), $lang as xs:string, $wid as xs:string*) as element()  {
-    let $output :=
-        <div class="collapse navbar-collapse navbar-menubuilder">
-            <div class="row">
-                <menu class="nav navbar-nav">
-                    <!-- For tablet/mobile view: hidden on displays smaller than 1024px -->
-                    <li class="hidden-lg"><a href="{$config:webserver}/de/{concat(request:get-attribute('$exist:resource'), if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (), string-join(net:inject-requestParameter('', ''), '&amp;'))}"><i18n:text key="de">Deutsch</i18n:text></a></li>                                               
-                    <li class="hidden-lg"><a href="{$config:webserver}/en/{concat(request:get-attribute('$exist:resource'), if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (), string-join(net:inject-requestParameter('', ''), '&amp;'))}"><i18n:text key="en">Englisch</i18n:text></a></li>
-                    <li class="hidden-lg"><a href="{$config:webserver}/es/{concat(request:get-attribute('$exist:resource'), if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (), string-join(net:inject-requestParameter('', ''), '&amp;'))}"><i18n:text key="es">Spanisch</i18n:text></a></li>
-                    <li><a href="works.html"><span class="glyphicon glyphicon-file" aria-hidden="true"></span>&#160;<i18n:text key="works">Werke</i18n:text></a></li>
-                    <li><a href="dictionary.html"><span class="glyphicon glyphicon-book" aria-hidden="true"></span>&#160;<i18n:text key="dictionary">Wörterbuch</i18n:text></a></li>
-                    <li><a href="authors.html"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&#160;<i18n:text key="authors">Autoren</i18n:text></a></li>
-                    <li><a href="search.html"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>&#160;<i18n:text key="search">Suche</i18n:text></a></li>
-                    <li><a href="workingPapers.html"><span class="glyphicon glyphicon-pushpin" aria-hidden="true"></span>&#160;<i18n:text key="workingPapers">Working Papers</i18n:text></a></li>
-                    <li><a href="news.html"><span class="glyphicon glyphicon-hand-right" aria-hidden="true"></span>&#160;<i18n:text key="news">Aktuelles</i18n:text></a></li>
-                    <li class="hidden-lg"><a href="project.html"><i18n:text key="about">Projektbeschreibung</i18n:text></a></li>
-                    <li class="hidden-lg"><a href="contact.html"><i18n:text key="contact">Kontakt</i18n:text></a></li>
-                    <li class="hidden-lg"><a href="guidelines.html"><i18n:text key="guidelines">Editionsrichtlinien</i18n:text></a></li>
-                    <li class="hidden-lg"><a href="editorialWorkingPapers.html"><i18n:text key="editorialWpHead">Editorial Working Papers</i18n:text></a></li>
-                    <li class="hidden-lg"><a href="guidelines.html"><i18n:text key="guidelines">Editionsrichtlinien</i18n:text></a></li>
-                    <li class="hidden-lg"><a href="editorialWorkingPapers.html"><i18n:text key="editorialWpHead">Editorial Working Papers</i18n:text></a></li>
-                </menu>
-                <menu class="nav navbar-nav navbar-right hidden-xs hidden-sm  hidden-md">
-                    <div class="btn-group" role="group" aria-label="...">
-                        {if ($lang = 'de') then 
-                             <a  class="btn btn-info    navbar-btn lang-switch" href="{$config:webserver}/de/{concat(request:get-attribute('$exist:resource'), if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (), string-join(net:inject-requestParameter('', ''), '&amp;'))}">de</a>
-                        else 
-                             <a  class="btn btn-default navbar-btn lang-switch" href="{$config:webserver}/de/{concat(request:get-attribute('$exist:resource'), if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (), string-join(net:inject-requestParameter('', ''), '&amp;'))}">de</a>}
-                        {if ($lang = 'en') then 
-                             <a  class="btn btn-info    navbar-btn lang-switch" href="{$config:webserver}/en/{concat(request:get-attribute('$exist:resource'), if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (), string-join(net:inject-requestParameter('', ''), '&amp;'))}">en</a>
-                         else 
-                             <a  class="btn btn-default navbar-btn lang-switch" href="{$config:webserver}/en/{concat(request:get-attribute('$exist:resource'), if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (), string-join(net:inject-requestParameter('', ''), '&amp;'))}">en</a>}
-                        {if ($lang = 'es') then 
-                             <a  class="btn btn-info    navbar-btn lang-switch" href="{$config:webserver}/es/{concat(request:get-attribute('$exist:resource'), if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (), string-join(net:inject-requestParameter('', ''), '&amp;'))}">es</a>
-                         else 
-                             <a  class="btn btn-default navbar-btn lang-switch" href="{$config:webserver}/es/{concat(request:get-attribute('$exist:resource'), if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (), string-join(net:inject-requestParameter('', ''), '&amp;'))}">es</a>}
-                    </div> 
-                </menu>
-            </div>
-        </div>
-    return
-         i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) 
-};  
-
 (:create main links on landing page:)
 declare %templates:wrap
     function config:langWorks($node as node(), $model as map(*), $lang as xs:string) as element()  {
@@ -532,16 +482,7 @@ declare %templates:wrap
             <i class="fas fa-pencil-alt" aria-hidden="true"></i>&#160;<i18n:text key="workingPapers">Working Papers</i18n:text>
         </a>
     return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))};  
-
-declare %templates:wrap
-    function config:langNews($node as node(), $model as map(*), $lang as xs:string) as element()  {
-    let $output := 
-        <a href="news.html">
-            <span class="glyphicon glyphicon-hand-right" aria-hidden="true"></span>&#160;<i18n:text key="news">Aktuelles</i18n:text>
-        </a>
-    return 
-        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))};  
-        
+ 
 declare %templates:wrap
     function config:langPrDesc($node as node(), $model as map(*), $lang as xs:string) as element()  {
     let $output := 
@@ -678,16 +619,6 @@ declare %templates:default("language", "en")
                 <title>{$model("currentLemma")//tei:titleStmt//tei:title[@type = 'short']/string()} - <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
             case '/dictionary.html' return
                 <title><i18n:text key="dictionary">Wörterbuch</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
-            case '/newsEntry.html' return
-                <title>
-                    {if ($lang eq 'de') then $model('currentNews')//tei:title[@type='main'][@xml:lang='de']/string()
-                     else if ($lang eq 'en') then $model('currentNews')//tei:title[@type='main'][@xml:lang='en']/string()
-                     else if ($lang eq 'es') then $model('currentNews')//tei:title[@type='main'][@xml:lang='es']/string()
-                     else()} -
-                     <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text>
-                </title>
-            case '/news.html' return
-                <title><i18n:text key="news">Aktuelles</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
             case '/workingPaper.html' return
                 <title>Working Paper: {$model("currentWp")//tei:titleStmt/tei:title[@type = 'short']/string()} - <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
             case '/project.html' return
