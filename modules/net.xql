@@ -543,7 +543,7 @@ declare function net:APIdeliverTEI($requestData as map(), $netVars as map()*) {
         let $serialization  := 
             (util:declare-option("output:method", "xml"),
              util:declare-option("output:media-type", "application/tei+xml"),
-             util:declare-option("output:indent", "yes"),
+             util:declare-option("output:indent", "no"),
              util:declare-option("output:expand-xincludes", "yes"))
         let $debug :=   
             if ($config:debug = "trace") then console:log("Serializing options: method:" || util:get-option('output:method') ||
