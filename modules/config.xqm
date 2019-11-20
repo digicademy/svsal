@@ -71,6 +71,10 @@ declare variable $config:resolveserver  := $config:proto || "://"        || $con
 declare variable $config:idserver       := $config:proto || "://id."     || $config:serverdomain;
 declare variable $config:softwareserver := $config:proto || "://files."  || $config:serverdomain;
 
+(: iiif-specific variables :)
+declare variable $config:iiifImageServer := $config:imageserver || "/iiif/image/";
+declare variable $config:iiifPresentationServer := $config:imageserver || "/iiif/presentation/";
+
 (: TODO: This is not used anymore, but we have yet to remove references to this variable. :)
 declare variable $config:svnserver := "";
 

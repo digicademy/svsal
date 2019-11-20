@@ -2177,11 +2177,11 @@ declare function app:WRKadditionalInfoRecord($node as node(), $model as map(*), 
                                 <i18n:text key="teiHeader">TEI Header</i18n:text>
                             </a>
     let $iiifLink := if ($workType eq 'work_multivolume') then   
-                        <a href="{$iiif:presentationServer || 'collection/' || $workId}">
+                        <a href="{$config:iiifPresentationServer || 'collection/' || $workId}">
                             IIIF Collection
                         </a>
                      else 
-                        <a href="{$iiif:presentationServer || $workId || '/manifest'}">
+                        <a href="{$config:iiifPresentationServer || $workId || '/manifest'}">
                             IIIF Manifest
                         </a>
     let $rdfId := if ($workType eq 'work_volume') then substring-before($workId, '_Vol') (: redirecting to RDF dataset for the complete work :) else $workId
