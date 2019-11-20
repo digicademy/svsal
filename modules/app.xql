@@ -1835,79 +1835,6 @@ declare %templates:wrap
         )
 };
 
-(: deprecated? see app:WRKcatRecord :)
-declare function app:WRKtitle($node as node(), $model as map(*), $lang as xs:string?) {
-    let $titleShort:=   if (app:WRKtitleShort($node, $model)) then 
-                            <tr>
-                                <td class="col-md-4">
-                                    <i18n:text key="titleShort">Zitiertitel</i18n:text>:
-                                </td>
-                                <td class="col-md-8">
-                                    {app:WRKtitleShort($node, $model)}
-                                </td>
-                           </tr>
-                        else()
-    let $titleMain :=   <tr>
-                            <td class="col-md-4">
-                                <i18n:text key="title">Titel</i18n:text>:
-                            </td>
-                            <td class="col-md-8">
-                                {app:WRKtitleMain($node, $model)}
-                            </td>
-                        </tr>
-                            
-    let $output := ($titleShort, $titleMain)
-    return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
-};  
-
-(: deprecated? see app:WRKcatRecord() :)
-(:declare
-    function app:WRKdateOfOrigin($node as node(), $model as map(*), $lang as xs:string?, $wid as xs:string?) {
-        let $output :=  if ($model('currentWork')//tei:text[@type = 'work_multivolume']) then
-                            <tr>
-                                <td class="col-md-4"><i18n:text key="periodOfOrigin">Erscheinungsverlauf</i18n:text>:</td>
-                                <td class="col-md-8">
-                                {app:WRKread($node, $model, $lang, $wid)}
-                                </td>
-                            </tr>
-                        else
-                            <tr>
-                                <td class="col-md-4"><i18n:text key="dateOfOrigin">Erscheinungsjahr</i18n:text>:</td>
-                                <td>
-                                {  if ($model('currentWork')/tei:teiHeader//tei:sourceDesc//tei:date[@type = 'thisEd']) then
-                                        $model('currentWork')/tei:teiHeader//tei:sourceDesc//tei:date[@type = 'thisEd']
-                                 else
-                                        $model('currentWork')/tei:teiHeader//tei:sourceDesc//tei:date[@type = 'firstEd']
-                                }
-                                </td>
-                                <td class="col-md-8">
-                                </td>
-                            </tr>
-        return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
-};:)
-
-(: deprecated? see app:WRKcatRecord() :)
-(:declare %templates:wrap 
-    function app:WRKread ($node as node(), $model as map(*), $lang as xs:string?, $wid as xs:string?) {
-        let $base   := $model('currentWork')
-        let $status := $base//tei:revisionDesc/@status/string()
-        let $books  := $base//tei:text[@type ='work_volume']
-        let $output := for $item in $books
-                            let $volId      := $item/@xml:id/string()
-                            let $volNumber  := $item/@n/string()
-                            let $sourceDesc  := doc($config:tei-works-root || "/" || $wid ||'_'|| $volId || '.xml')/tei:TEI//tei:fileDesc/tei:sourceDesc
-                            let $firstEd    := $sourceDesc//tei:date[@type = 'firstEd']/@when/string()
-                            let $thisEd     := $sourceDesc//tei:date[@type = 'thisEd']/@when/string()
-                            let $date       := if ($thisEd) then $thisEd else $firstEd                                       
-                            let $vol        := doc($config:index-root || "/" || sal-util:normalizeId($wid) || '_nodeIndex.xml')//sal:node[@n=$volId]/sal:crumbtrail/a[last()]/@href/string()
-                            return  if ($item is ($model('currentWork')//tei:text)[last()]) then
-                                            <a class="{$status}" href="{if ($status = ("a_raw", "b_cleared", "c_hyph_proposed", "d_hyph_approved", "e_emended_unenriched", "f_enriched")) then 'javascript:' else $vol}">{concat($volNumber||': ', $date)}</a>
-                                    else
-                                        <span>
-                                            <a class="{$status}" href="{if ($status = ("a_raw", "b_cleared", "c_hyph_proposed", "d_hyph_approved", "e_emended_unenriched", "f_enriched")) then 'javascript:' else $vol}">{concat($volNumber||': ', $date)}</a>{'&#xA0;-&#xA0;'}
-                                        </span>  
-        return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
-};:)
  
 (:~ 
 Creates a (HTML) catalogue record for a work/volume.
@@ -1919,16 +1846,27 @@ Creates a (HTML) catalogue record for a work/volume.
 ~:)
 declare %templates:wrap function app:WRKcatRecord($node as node(), $model as map(*), $lang as xs:string?) {
     let $workType := $model('currentWorkType')
-    let $volumeIds :=   if ($workType eq 'work_multivolume') then 
-                            for $item in $model('currentWorkHeader')/tei:fileDesc/tei:notesStmt/tei:relatedItem[@type eq 'work_volume'] return substring-after($item/@target/string(), 'work:')
-                        else ()
+    let $volumeIds :=   
+        if ($workType eq 'work_multivolume') then 
+            for $item in $model('currentWorkHeader')/tei:fileDesc/tei:notesStmt/tei:relatedItem[@type eq 'work_volume'] return substring-after($item/@target/string(), 'work:')
+        else ()
+    let $multivolInfo := 
+        if ($workType eq 'work_volume') then
+            <div class="col-md-8" style="padding-bottom:0.8em;">
+                <span style="font-size:1.2em;font-style:italic;"><a href="{$config:webserver || '/' || $lang || '/workDetails.html?wid=' || substring($model('currentWorkId'),1,5)}">
+                    <i class="fas fa-info-circle"></i>{' '}<i18n:text key="partOfMultivol">Part of a multivolume work</i18n:text>
+                </a></span>
+            </div>
+        else ()
     let $volumesCount := count($volumeIds)
-    let $volumesRecord :=   if ($volumesCount gt 0) then 
-                                for $id in $volumeIds return app:WRKcatRecordTeaser($node, $model, $id, $lang, $volumesCount)
-                            else ()
+    let $volumesRecord :=   
+        if ($volumesCount gt 0) then 
+            for $id in $volumeIds return app:WRKcatRecordTeaser($node, $model, $id, $lang, $volumesCount)
+        else ()
     let $output := 
         <div>
             <div class="row">
+                {$multivolInfo}
                 <div class="col-md-8">
                     {app:WRKeditionRecord($node, $model, $lang)}
                     <hr/>

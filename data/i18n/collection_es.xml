@@ -133,6 +133,8 @@
     <msg key="1stEd">Edición primera</msg>
     <msg key="thisEd">Edición presenta</msg>
     <msg key="extent">Extensión, formato</msg>
+    <msg key="partOfMultivol">Parte de una colección</msg>
+    
     <!--<msg key="dateOfOrigin">Año de publicación (fuente original)</msg>-->
     <msg key="details">Catálogo</msg>
     <msg key="facsimiles">Facsímiles</msg>
