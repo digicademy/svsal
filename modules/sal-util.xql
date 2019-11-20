@@ -211,9 +211,9 @@ declare function sal-util:getIiifUrl($workId as xs:string) as xs:string? {
         let $workType := doc($config:tei-works-root || '/' || $workId || '.xml')/tei:TEI/tei:text/@type
         return
             if ($workType eq 'work_multivolume') then (: iiif collection :)
-                $config:iiifPresentationServer || '/collection/' || $workId
+                $config:iiifPresentationServer || 'collection/' || $workId
             else (: iiif manifest :)
-                $config:iiifPresentationServer || '/' || $workId || '/manifest'
+                $config:iiifPresentationServer || $workId || '/manifest'
     else ()
 };
 
