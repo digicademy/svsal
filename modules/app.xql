@@ -3311,22 +3311,6 @@ declare %templates:default
 };:)
                 
 (: ==== Paginator Function ===== :)
-declare function app:WRKpreparePagination($node as node()?, $model as map(*)?, $wid as xs:string?, $lang as xs:string?) {
-    let $workId :=  
-        if ($wid) then 
-            if (contains($wid, '_')) then substring-before(sal-util:normalizeId($wid), '_') 
-            else sal-util:normalizeId($wid)
-        else substring-before($model('currentWorkId'), '_')
-    return 
-        <ul id="later" class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">{
-            for $pb in doc($config:index-root || '/' || $workId || '_nodeIndex.xml')//sal:node[@type='pb'][not(starts-with(sal:title, 'sameAs') or starts-with(sal:title, 'corresp'))]
-                let $fragment := $pb/sal:fragment
-                let $url      := $config:idserver || '/texts/' || $workId || ':' || $pb/sal:citetrail/text() 
-                (:'work.html?wid=' || $workId || '&amp;frag=' || $fragment || '#' || concat('pageNo_', $pb/@n):)
-                return 
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="{$url}">{normalize-space($pb/sal:title)}</a></li>
-        }</ul>
-};
 
 declare function app:loadWRKpagination ($node as node(), $model as map (*), $wid as xs:string, $lang as xs:string, $q as xs:string?) {
     let $pagesFile  :=  doc($config:html-root || '/' || sal-util:normalizeId($wid) || '/' || sal-util:normalizeId($wid) || '_pages_' || $lang || '.html')
@@ -3398,7 +3382,8 @@ declare %templates:wrap
 };
 
 (:download XML func:)
-declare function app:downloadXML($node as node(), $model as map(*), $lang as xs:string) {
+declare %private 
+    function app:downloadXML($node as node(), $model as map(*), $lang as xs:string) {
     let $wid := request:get-parameter('wid', '')
     let $hoverTitle := i18n:process(<i18n:text key="downloadXML">Download TEI/XML source file</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
     let $download := 
@@ -3420,7 +3405,8 @@ declare function app:downloadXML($node as node(), $model as map(*), $lang as xs:
     return $download
 };:)
 
-declare function app:downloadRDF($node as node(), $model as map(*), $lang as xs:string) {
+declare %private 
+    function app:downloadRDF($node as node(), $model as map(*), $lang as xs:string) {
     let $wid      :=  request:get-parameter('wid', '')
     let $hoverTitle := i18n:process(<i18n:text key="downloadRDF">Download RDF/XML data for this work</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
     let $download := 
@@ -3591,7 +3577,8 @@ declare %templates:wrap function app:participantsBody($node as node(), $model as
         
 };
 
-declare function app:makeParticipantTeaser($person as element(tei:person), $lang as xs:string, $mode as xs:string, $index as xs:integer?) as element(div) {
+declare %private 
+    function app:makeParticipantTeaser($person as element(tei:person), $lang as xs:string, $mode as xs:string, $index as xs:integer?) as element(div) {
     <div class="row">
         <div class="col-md-8">
             <h3>
@@ -3610,7 +3597,8 @@ declare function app:makeParticipantTeaser($person as element(tei:person), $lang
 (:
 ~ Modes: 'single' if page consists of single entry; 'multi' if page consists of several entries.
 :)
-declare function app:makeParticipantEntry($person as element(tei:person), $lang as xs:string, $mode as xs:string, $index as xs:integer?) as element(div) {
+declare %private 
+    function app:makeParticipantEntry($person as element(tei:person), $lang as xs:string, $mode as xs:string, $index as xs:integer?) as element(div) {
     let $backLink := 
         <a href="{$config:webserver || '/' || $lang || '/participants.html'}" style="font-size:1.5em;">
             <i class="fas fa-arrow-left"></i>{' '}<i18n:text key="toOverview"/>

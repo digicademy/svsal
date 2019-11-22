@@ -580,9 +580,9 @@ declare %templates:wrap function admin:renderWork($workId as xs:string*) as elem
             let $debug         := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] ToC file created for " || $workId || ".") else ()
             
             (:Next, create the Pages html file. :)
-            let $pagesDe        :=  app:WRKpreparePagination((), (), $workId, 'de')
-            let $pagesEn        :=  app:WRKpreparePagination((), (), $workId, 'en')
-            let $pagesEs        :=  app:WRKpreparePagination((), (), $workId, 'es')
+            let $pagesDe        :=  render:WRKpreparePagination((), (), $workId, 'de')
+            let $pagesEn        :=  render:WRKpreparePagination((), (), $workId, 'en')
+            let $pagesEs        :=  render:WRKpreparePagination((), (), $workId, 'es')
             let $savePages := (
                 admin:saveFile($workId, $workId || "_pages_de.html", $pagesDe, "html"),
                 admin:saveFile($workId, $workId || "_pages_en.html", $pagesEn, "html"),

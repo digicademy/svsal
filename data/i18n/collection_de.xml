@@ -152,7 +152,7 @@
   <msg key="facsimiles">Faksimiles</msg>
   <msg key="proposedCitation">Zitiervorschlag</msg>
   <msg key="extent">Umfang, Format</msg>
-  <msg key="partOfMultivol">Teil eines mehrbändigen Werkes</msg>
+  <msg key="partOfMultivol">Teil eines mehrbändigen Werks</msg>
   
   <msg key="latin">Latein</msg>
   <msg key="spanish">Spanisch</msg>
