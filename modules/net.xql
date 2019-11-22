@@ -547,6 +547,10 @@ declare function net:sitemapResponse($netVars as map(*)) {
             return $sitemapIndex
 };
 
+declare function net:APIdeliverStats($netVars as map(*)) {
+    ()
+};
+
 declare function net:APIdeliverTEI($requestData as map(), $netVars as map()*) {
     if (matches($requestData('tei_id'), '^W\d{4}')) then 
         let $serialization  := 

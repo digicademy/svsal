@@ -95,7 +95,6 @@ declare variable $config:snippetLength          := 1200;    (: How long are snip
 declare variable $config:searchMultiModeLimit   := 5;       (: How many entries of each category are displayed when doing a search in "everything" mode? :)
 
 (: Configure miscalleneous settings :)
-declare variable $config:stats-limit    := 15;             (: How many lemmata are evaluated on the stats page? :)
 declare variable $config:repository-uri := xs:anyURI($config:svnserver || '/04-39/trunk/svsal-data');    (: The svn server holding our data :)
 declare variable $config:lodFormat      := "rdf";
 declare variable $config:defaultLang    := "en";            (: en, es, or de :)
@@ -215,6 +214,10 @@ declare variable $config:webdata-root :=
 
 declare variable $config:temp           := concat($config:app-root, "/temp");
 declare variable $config:toc-root       := concat($config:app-root, "/toc");
+
+(: stats :)
+declare variable $config:stats-limit    := 15;             (: How many lemmata are evaluated on the stats page? :)
+declare variable $config:stats-root := concat($config:webdata-root, "/stats");
 
 (: Paths to the TEI data repositories :)
 declare variable $config:tei-root       := 

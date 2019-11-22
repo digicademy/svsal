@@ -153,28 +153,31 @@ return
                                 if ($textsRequest('format') eq 'html') then net:APIdeliverTextsHTML($textsRequest, $netVars)
                                 else net:error(404, $netVars, ()) (: resource(s) not found :)
                             else net:error(404, $netVars, ()) (: well-formed, but invalid resource(s) requested :)
-            case "search" return
-                let $debug         := if ($config:debug = ("trace", "info")) then console:log("Search requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-                let $absolutePath  := concat($config:searchserver, '/', substring-after($exist:path, '/search/'))
-                return net:redirect($absolutePath, $netVars)
-            case "codesharing" return
-                let $debug         := if ($config:debug = ("trace", "info")) then console:log("Codesharing requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-                let $parameters    := <exist:add-parameter name="outputType" value="html"/>
-                return
-                    if ($pathComponents[last()] = 'codesharing_protocol.xhtml') then
-                        net:forward('/services/codesharing/codesharing_protocol.xhtml', $netVars)      (: Protocol description html file. :)
-                    else
-                        net:forward('/services/codesharing/codesharing.xql', $netVars, $parameters)    (: Main service HTML page.  :)
-            case "xtriples" return
-                let $debug         := if ($config:debug = ("trace", "info")) then console:log("XTriples requested: " || $net:forwardedForServername || $exist:path || $parameterString || " ...") else ()
-                return
-                    if (tokenize($pathComponents[last()], '\?')[1] = ("extract.xql", "createconfig.xql", "xtriples.html", "changelog.html", "documentation.html", "examples.html")) then
-                        let $debug := if ($config:debug = ("trace", "info")) then console:log("Forward to: /services/lod/" || tokenize($exist:path, "/")[last()]  || ".") else ()
-                        return net:forward('/services/lod/' || tokenize($exist:path, "/")[last()], $netVars)
-                    else net:error(404, $netVars, ())
-            default return net:error(404, $netVars, ())
-        else if ($pathComponents[3]) then net:error(404, $netVars, ()) (: or 400, 405? :)
-        else net:redirect-with-303($config:webserver)
+                case "search" return
+                    let $debug         := if ($config:debug = ("trace", "info")) then console:log("Search requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
+                    let $absolutePath  := concat($config:searchserver, '/', substring-after($exist:path, '/search/'))
+                    return net:redirect($absolutePath, $netVars)
+                case "codesharing" return
+                    let $debug         := if ($config:debug = ("trace", "info")) then console:log("Codesharing requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
+                    let $parameters    := <exist:add-parameter name="outputType" value="html"/>
+                    return
+                        if ($pathComponents[last()] = 'codesharing_protocol.xhtml') then
+                            net:forward('/services/codesharing/codesharing_protocol.xhtml', $netVars)      (: Protocol description html file. :)
+                        else
+                            net:forward('/services/codesharing/codesharing.xql', $netVars, $parameters)    (: Main service HTML page.  :)
+                case "xtriples" return
+                    let $debug         := if ($config:debug = ("trace", "info")) then console:log("XTriples requested: " || $net:forwardedForServername || $exist:path || $parameterString || " ...") else ()
+                    return
+                        if (tokenize($pathComponents[last()], '\?')[1] = ("extract.xql", "createconfig.xql", "xtriples.html", "changelog.html", "documentation.html", "examples.html")) then
+                            let $debug := if ($config:debug = ("trace", "info")) then console:log("Forward to: /services/lod/" || tokenize($exist:path, "/")[last()]  || ".") else ()
+                            return net:forward('/services/lod/' || tokenize($exist:path, "/")[last()], $netVars)
+                        else net:error(404, $netVars, ())
+                case "stats" return
+                    let $debug         := if ($config:debug = ("trace", "info")) then console:log("Stats requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
+                    return net:APIdeliverStats($netVars)
+                default return net:error(404, $netVars, ())
+            else if ($pathComponents[3]) then net:error(404, $netVars, ()) (: or 400, 405? :)
+            else net:redirect-with-303($config:webserver)
 
 
     (: *** Entity resolver (X-Forwarded-Host = 'id.{$config:serverdomain}') *** :)

@@ -17,6 +17,7 @@ import module namespace render      = "http://salamanca/render"                 
 import module namespace render-app      = "http://salamanca/render-app"         at "render-app.xql";
 import module namespace sphinx      = "http://salamanca/sphinx"                 at "sphinx.xql";
 import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";
+import module namespace stats       = "http://salamanca/stats"                  at "stats.xql";
 declare namespace output            = "http://www.w3.org/2010/xslt-xquery-serialization";
 
 declare option exist:timeout "25000000"; (: ~7 h :)
@@ -70,6 +71,20 @@ declare function admin:needsTxtCorpusZip($node as node(), $model as map(*)) {
             else
                 <td title="{concat('TXT corpus created on: ', string(xmldb:last-modified($config:corpus-zip-root, 'sal-txt-corpus.zip')), ', most current source from: ', string($worksModTime), '.')}">Creating TXT corpus unnecessary. <small><a href="webdata-admin.xql?format=txt-corpus">Create TXT corpus zip anyway!</a></small></td>
     else <td title="No txt sources available so far!"><a href="webdata-admin.xql?format=txt-corpus"><b>Create TXT corpus NOW!</b></a></td>
+};
+
+declare function admin:needsStats($node as node(), $model as map(*)) {
+    let $worksModTime := max(for $work in xmldb:get-child-resources($config:tei-works-root) return xmldb:last-modified($config:tei-works-root, $work))    
+    let $needsStats := 
+        if (util:binary-doc-available($config:stats-root || '/stats.json')) then
+            let $resourceModTime := xmldb:last-modified($config:stats-root, 'stats.json')
+            return $resourceModTime lt $worksModTime
+        else true()
+    return 
+        if ($needsStats) then
+            <td title="Most current source from: {string($worksModTime)}"><a href="webdata-admin.xql?format=stats"><b>Create corpus stats NOW!</b></a></td>
+        else
+            <td title="{concat('Stats created on: ', string(xmldb:last-modified($config:stats-root, 'stats.json')), ', most current source from: ', string($worksModTime), '.')}">Creating corpus stats unnecessary. <small><a href="webdata-admin.xql?format=stats">Create corpus stats anyway!</a></small></td>
 };
 
 declare function admin:authorString($node as node(), $model as map(*), $lang as xs:string?) {
@@ -296,6 +311,8 @@ declare function admin:saveFile($wid as xs:string, $fileName as xs:string, $cont
             $config:txt-root || "/" || $wid
         else if ($collection = "data") then
             $config:data-root || "/"
+        else if ($collection = 'stats') then
+            $config:stats-root || "/"
         else if ($collection = "snippets") then
             $config:snippets-root || "/" || $wid
         else if ($collection = "rdf" and starts-with(upper-case($wid), 'W0')) then
@@ -318,6 +335,8 @@ declare function admin:saveFile($wid as xs:string, $fileName as xs:string, $cont
             xmldb:create-collection($config:webdata-root, "index")
         else if ($collection = "rdf" and not(xmldb:collection-available($config:rdf-root))) then
             xmldb:create-collection($config:webdata-root, "rdf")
+        else if ($collection = "stats" and not(xmldb:collection-available($config:stats-root))) then
+            xmldb:create-collection($config:webdata-root, "stats")
         (: (TODO: rdf subroots? (but these already ship with pre-built webdata package) :)
         else ()
     let $create-collection-status :=      
@@ -1212,8 +1231,10 @@ declare function admin:createRDF($rid as xs:string) {
         else $rid
     let $start-time := util:system-time()
     let $debug := 
-        util:log("warn", "Requesting " || $config:apiserver || '/v1/xtriples/extract.xql?format=rdf&amp;configuration=' 
-            || $config:apiserver || '/v1/xtriples/createConfig.xql?resourceId=' || $rid || ' ...')
+        if ($config:debug eq 'trace') then
+            util:log("warn", "Requesting " || $config:apiserver || '/v1/xtriples/extract.xql?format=rdf&amp;configuration=' 
+                || $config:apiserver || '/v1/xtriples/createConfig.xql?resourceId=' || $rid || ' ...')
+        else ()
     let $configuration := doc($config:apiserver || '/v1/xtriples/createConfig.xql?resourceId=' || $rid) 
     let $rdf   :=  
         doc($config:apiserver || '/v1/xtriples/extract.xql?format=rdf&amp;configuration=' 
@@ -1233,3 +1254,37 @@ declare function admin:createRDF($rid as xs:string) {
         </div>
 };
 
+
+declare function admin:createStats() {
+    let $log  := if ($config:debug eq 'trace') then util:log('warn', '[ADMIN] Starting to extract stats...') else ()
+    let $start-time := util:system-time()
+(:    let $stats := stats:makeCorpusStats():)
+    let $params := 
+        <output:serialization-parameters xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
+            <output:method value="json"/>
+        </output:serialization-parameters>
+    (: corpus stats :)
+    let $corpusStats := serialize(stats:makeCorpusStats(), $params)
+    let $save := admin:saveFile('dummy', 'corpus-stats.json', $corpusStats, 'stats')
+    (: single work stats:)
+    let $processSingleWorks :=
+        for $wid in sal-util:getPublishedWorkIds() return
+            let $log := if ($config:debug eq 'trace') then util:log('warn', '[ADMIN] Creating single work stats for ' || $wid) else ()
+            let $workStats := serialize(stats:makeWorkStats($wid), $params)
+            let $saveSingle := admin:saveFile('dummy', $wid || '-stats.json', $workStats, 'stats')
+            return $workStats
+    let $runtime-ms := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000
+    let $runtimeString :=
+        if ($runtime-ms < (1000 * 60)) then format-number($runtime-ms div 1000, "#.##") || " Sek."
+        else if ($runtime-ms < (1000 * 60 * 60))  then format-number($runtime-ms div (1000 * 60), "#.##") || " Min."
+        else format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
+    let $log  := if ($config:debug eq 'trace') then util:log('warn', '[ADMIN] Extracted stats in ' || $runtimeString) else ()
+    
+    return ($corpusStats, $processSingleWorks)
+};
+
+(:
+for $workId in collection($config:tei-works-root)/tei:TEI[tei:text/@type = ('work_monograph', 'work_multivolume')
+                                                                           and sal-util:WRKisPublished(./@xml:id)]/@xml:id/string()
+                    return admin:createStats('work', $workId)
+:)
