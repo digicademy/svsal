@@ -892,7 +892,7 @@ declare function html:hi($node as element(tei:hi), $mode as xs:string) {
                     (: centering and right-alignment apply only in certain contexts :)
                     else if ($s eq '#r-center'
                              and not($node/ancestor::*[local-name(.) = $specificAlignElems])
-                             and not($node/ancestor::*[local-name(.) = $index:basicElemNames][1]//text()[not(ancestor::tei:hi[contains(@rendition, '#r-center')])])
+                             and not($node/ancestor::*[local-name(.) = $html:basicElemNames][1]//text()[not(ancestor::tei:hi[contains(@rendition, '#r-center')])])
                          ) then
                              (: workaround for suppressing trailing centerings at the end of paragraphs :)
                          'display:block;text-align:center;'

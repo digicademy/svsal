@@ -444,8 +444,9 @@ declare function index:dispatch($node as node(), $mode as xs:string) {
     typeswitch($node)
     (: Try to sort the following nodes based (approx.) on frequency of occurences, so fewer checks are needed. :)
         case element(tei:pb)            return index:pb($node, $mode)
-        case element(tei:head)          return index:head($node, $mode) (: snippets: passthru :)
+        case element(tei:head)          return index:head($node, $mode)
         case element(tei:p)             return index:p($node, $mode)
+        case element(tei:signed)        return index:signed($node, $mode)
         case element(tei:note)          return index:note($node, $mode)
         case element(tei:div)           return index:div($node, $mode)
         case element(tei:milestone)     return index:milestone($node, $mode)
@@ -457,6 +458,9 @@ declare function index:dispatch($node as node(), $mode as xs:string) {
         
         case element(tei:label)         return index:label($node, $mode)
         case element(tei:argument)      return index:argument($node, $mode)
+        
+        case element(tei:titlePage)     return index:titlePage($node, $mode)
+        case element(tei:titlePart)     return index:titlePart($node, $mode)
         
         case element(tei:front)         return index:front($node, $mode) 
         case element(tei:body)          return index:body($node, $mode)
