@@ -18,6 +18,7 @@ import module namespace render-app  = "http://salamanca/render-app"         at "
 import module namespace sphinx      = "http://salamanca/sphinx"                 at "sphinx.xql";
 import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";
 import module namespace stats       = "http://salamanca/stats"                  at "stats.xql";
+import module namespace index       = "https://www.salamanca.school/factory/index" at "../factory/modules/index.xql";
 declare namespace output            = "http://www.w3.org/2010/xslt-xquery-serialization";
 
 declare option exist:timeout "25000000"; (: ~7 h :)
@@ -854,7 +855,7 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
         for $w in $expanded return
             if (starts-with($w/@xml:id, 'W0')) then
                 (: works :)
-                $w/tei:text//*[render:isBasicNode(.)]
+                $w/tei:text//*[index:isBasicNode(.)]
             else if (starts-with($w/@xml:id, 'WP')) then
                 (: working papers :)
                 $w//tei:profileDesc//(tei:p|tei:keywords)
@@ -1094,7 +1095,7 @@ declare function admin:createNodeIndex($wid as xs:string*) {
                     (: make sure that we only grasp nodes that are within a published volume :)
                     if (($text/@type eq 'work_volume' and sal-util:WRKisPublished($wid || '_' || $text/@xml:id))
                         or $text/@type eq 'work_monograph') then 
-                        $text/descendant-or-self::*[render:isIndexNode(.)]
+                        $text/descendant-or-self::*[index:isIndexNode(.)]
                     else ()
                         
             (: Create the fragment id for each node beforehand, so that recursive crumbtrail creation has it readily available :)
@@ -1104,7 +1105,7 @@ declare function admin:createNodeIndex($wid as xs:string*) {
                     for $node in $nodes
                         let $n := $node/@xml:id/string()
                         let $frag := (($node/ancestor-or-self::tei:* | $node//tei:*) intersect $target-set)[1]
-                        let $fragId := render:makeFragmentId(functx:index-of-node($target-set, $frag), $frag/@xml:id)
+                        let $fragId := index:makeFragmentId(functx:index-of-node($target-set, $frag), $frag/@xml:id)
                         return map:entry($n, $fragId)
                 )
             let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Node indexing: fragment ids extracted.") else ()
@@ -1116,12 +1117,12 @@ declare function admin:createNodeIndex($wid as xs:string*) {
             (: 1.) extract nested sal:nodes with rudimentary information :)
             let $indexTree := 
                 <sal:index>
-                    {render:extractNodeStructure($wid, $work//tei:text[not(ancestor::tei:text)], $xincludes, $fragmentIds)}
+                    {index:extractNodeStructure($wid, $work//tei:text[not(ancestor::tei:text)], $xincludes, $fragmentIds)}
                 </sal:index>
             (: 2.) flatten the index from 1.) and enrich sal:nodes with full-blown citetrails, etc. :)
             let $index := 
                 <sal:index work="{$wid}" xml:space="preserve">
-                    {render:createIndexNodes($indexTree)(:$indexTree/*:)}
+                    {index:createIndexNodes($indexTree)(:$indexTree/*:)}
                 </sal:index>
                 
             (: save final index file :)
@@ -1137,25 +1138,25 @@ declare function admin:createNodeIndex($wid as xs:string*) {
             let $resultNodes := $index//sal:node[not(@n eq 'completeWork')]
             let $testNodes := 
                 if (count($resultNodes) eq 0) then 
-                    error(xs:QName('render:createNodeIndex'), 'Node indexing did not produce any results.') 
+                    error(xs:QName('admin:createNodeIndex'), 'Node indexing did not produce any results.') 
                 else ()
             (: every ordinary sal:node should have all of the required fields and values: :)
             let $testAttributes := 
                 if ($testNodes[not(@class/string() and @type/string() and @n/string())]) then 
-                    error(xs:QName('render:createNodeIndex'), 'Essential attributes are missing in at least one index node (in ' || $wid || ')') 
+                    error(xs:QName('admin:createNodeIndex'), 'Essential attributes are missing in at least one index node (in ' || $wid || ')') 
                 else ()
             let $testChildren := if ($testNodes[not(sal:title and sal:fragment/text() and sal:citableParent/text() and sal:citetrail/text() and sal:crumbtrail/* and sal:passagetrail/text())]) then error() else ()
             (: there should be as many distinctive citetrails and crumbtrails as there are ordinary sal:node elements: :)
             let $testAmbiguousCitetrails := 
                 if (count($resultNodes) ne count(distinct-values($resultNodes/sal:citetrail/text()))) then 
-                    error(xs:QName('render:createNodeIndex'), 
+                    error(xs:QName('admin:createNodeIndex'), 
                           'Could not produce a unique citetrail for each sal:node (in ' || $wid || '). Problematic nodes: '
                           || string-join(($resultNodes[sal:citetrail/text() = preceding::sal:citetrail/text()]/@n), '; ')) 
                 else () 
             (: search these cases using: " //sal:citetrail[./text() = following::sal:citetrail/text()] :)
             let $testEmptyCitetrails :=
                 if (count($resultNodes/sal:citetrail[not(./text())]) gt 0) then
-                    error(xs:QName('render:createNodeIndex'), 
+                    error(xs:QName('admin:createNodeIndex'), 
                           'Could not produce a citetrail for one or more sal:node (in' || $wid || '). Problematic nodes: '
                           || string-join(($resultNodes[not(sal:citetrail/text())]/@n), '; '))
                 else ()
@@ -1167,9 +1168,9 @@ declare function admin:createNodeIndex($wid as xs:string*) {
                 for $t in $work//tei:text[@type eq 'work_monograph' 
                                           or (@type eq 'work_volume' and sal-util:WRKisPublished($wid || '_' || @xml:id))]
                                           //text()[normalize-space() ne ''] return
-                    if ($t[not(ancestor::*[render:isBasicNode(.)]) and not(ancestor::tei:figDesc)]) then 
-                        let $debug := util:log('error', 'Encountered text node without ancestor::*[render:isBasicNode(.)], in line ' || $t/preceding::tei:lb[1]/@xml:id/string())
-                        return error(xs:QName('render:createNodeIndex'), 'Encountered text node without ancestor::*[render:isBasicNode(.)], in line ' || $t/preceding::tei:lb[1]/@xml:id/string()) 
+                    if ($t[not(ancestor::*[index:isBasicNode(.)]) and not(ancestor::tei:figDesc)]) then 
+                        let $debug := util:log('error', 'Encountered text node without ancestor::*[index:isBasicNode(.)], in line ' || $t/preceding::tei:lb[1]/@xml:id/string())
+                        return error(xs:QName('admin:createNodeIndex'), 'Encountered text node without ancestor::*[index:isBasicNode(.)], in line ' || $t/preceding::tei:lb[1]/@xml:id/string()) 
                     else ()
             (: if no xml:id is put out, try to search these cases like so:
                 //text//text()[not(normalize-space() eq '')][not(ancestor::*[@xml:id and (self::p or self::signed or self::head or self::titlePage or self::lg or self::item or self::label or self::argument or self::table)])]
