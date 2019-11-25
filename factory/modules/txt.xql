@@ -9,11 +9,10 @@ import module namespace util       = "http://exist-db.org/xquery/util";
 import module namespace console    = "http://exist-db.org/xquery/console";
 import module namespace config     = "http://salamanca/config" at "../../modules/config.xqm";
 import module namespace sal-util    = "http://salamanca/sal-util" at "../../modules/sal-util.xql";
-import module namespace index      = "https://www.salamanca.school/factory/index"    at "index.xql";
+import module namespace index      = "https://www.salamanca.school/factory/works/index"    at "index.xql";
 
 
 (: ####++++----  
-
     Module for creating txt fragments and Sphinx snippets for works.
    
    ----++++#### :)
@@ -63,7 +62,6 @@ declare function txt:dispatch($node as node(), $mode as xs:string) {
         case element(tei:term)          return txt:term($node, $mode)
         case element(tei:bibl)          return txt:bibl($node, $mode)
     
-        case element(tei:hi)            return txt:hi($node, $mode) 
         case element(tei:quote)         return txt:quote($node, $mode)
         case element(tei:soCalled)      return txt:soCalled($node, $mode)
     
@@ -306,6 +304,10 @@ declare function txt:lb($node as element(tei:lb), $mode as xs:string) {
             else ()
         
         default return error()
+};
+
+declare function txt:lg($node as element(tei:lb), $mode as xs:string) {
+    ('&#xA;', txt:passthru($node, $mode), '&#xA;')
 };
 
 declare function txt:list($node as element(tei:list), $mode as xs:string) {
@@ -641,4 +643,3 @@ declare function txt:title($node as element(tei:title), $mode as xs:string) {
         default return
             txt:name($node, $mode)
 };
-

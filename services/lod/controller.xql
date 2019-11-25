@@ -9,7 +9,7 @@ import module namespace util    = "http://exist-db.org/xquery/util";
 import module namespace functx  = "http://www.functx.com";
 import module namespace config  = "http://salamanca/config" at "modules/xconfig.xqm";
 import module namespace net     = "http://salamanca/net"    at "modules/net.xql";
-import module namespace render  = "http://salamanca/render" at "modules/render.xql";
+import module namespace txt  = "https://www.salamanca.school/factory/works/txt" at "../factory/works/txt.xql";
 
 declare       namespace exist   = "http://exist.sourceforge.net/NS/exist";
 declare       namespace output  = "http://www.w3.org/2010/xslt-xquery-serialization";
@@ -218,9 +218,9 @@ return
                                     util:declare-option("output:media-type", "text/plain"))
             let $debug2         := if ($config:debug = "trace") then console:log("Serializing options: method:" || util:get-option('output:method') || ', media-type:' || util:get-option('output:media-type') || '.') else ()
             return  if (contains($reqWork, '.orig')) then
-                        render:dispatch($node, 'orig')
+                        txt:dispatch($node, 'orig')
                     else
-                        render:dispatch($node, 'edit')
+                        txt:dispatch($node, 'edit')
 
 
 (: --- 5. tei requested (application/tei+xml) --- :)

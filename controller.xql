@@ -8,7 +8,6 @@ import module namespace util    = "http://exist-db.org/xquery/util";
 import module namespace functx  = "http://www.functx.com";
 import module namespace config  = "http://salamanca/config"     at "modules/config.xqm";
 import module namespace net     = "http://salamanca/net"        at "modules/net.xql";
-import module namespace render  = "http://salamanca/render"     at "modules/render.xql";
 import module namespace iiif    = "http://salamanca/iiif"       at "modules/iiif.xql";
 
 declare       namespace exist   = "http://exist.sourceforge.net/NS/exist";

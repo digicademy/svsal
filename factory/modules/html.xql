@@ -1,6 +1,6 @@
 xquery version "3.1";
 
-module namespace html              = "https://www.salamanca.school/factory/html";
+module namespace html              = "https://www.salamanca.school/factory/works/html";
 declare namespace exist            = "http://exist.sourceforge.net/NS/exist";
 declare namespace output           = "http://www.w3.org/2010/xslt-xquery-serialization";
 declare namespace tei              = "http://www.tei-c.org/ns/1.0";
@@ -11,8 +11,8 @@ import module namespace console    = "http://exist-db.org/xquery/console";
 import module namespace config     = "http://salamanca/config" at "../../modules/config.xqm";
 import module namespace app        = "http://salamanca/app"    at "../../modules/app.xql";
 import module namespace sal-util   = "http://salamanca/sal-util" at "../../modules/sal-util.xql";
-import module namespace index      = "https://www.salamanca.school/factory/index"    at "index.xql";
-import module namespace txt        = "https://www.salamanca.school/factory/txt" at "txt.xql";
+import module namespace index      = "https://www.salamanca.school/factory/works/index"    at "index.xql";
+import module namespace txt        = "https://www.salamanca.school/factory/works/txt" at "txt.xql";
 
 
 (: ####++++----  
@@ -1183,7 +1183,7 @@ declare function html:p($node as element(tei:p), $mode as xs:string) {
     switch($mode)
         case 'html-title' return
             normalize-space(
-                index:teaserString($node, 'edit')
+                index:makeTeaserString($node, 'edit')
             )
         
         case 'html' return
