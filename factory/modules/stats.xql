@@ -1,6 +1,6 @@
 xquery version "3.1";
 
-module namespace stats       = "http://salamanca/stats";
+module namespace stats       = "https://www.salamanca.school/factory/works/stats";
 declare namespace exist      = "http://exist.sourceforge.net/NS/exist";
 declare namespace opensearch = "http://a9.com/-/spec/opensearch/1.1/";
 declare namespace output     = "http://www.w3.org/2010/xslt-xquery-serialization";
