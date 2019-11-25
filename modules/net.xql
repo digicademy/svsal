@@ -8,7 +8,7 @@ import module namespace response    = "http://exist-db.org/xquery/response";
 import module namespace util        = "http://exist-db.org/xquery/util";
 import module namespace config      = "http://salamanca/config"                 at "config.xqm";
 import module namespace export      = "http://salamanca/export"                 at "export.xql";
-import module namespace render      = "http://salamanca/render"                 at "render.xql";
+import module namespace render      = "http://salamanca/render"                 at "../factory/modules/render.xql";
 import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";
 
 declare       namespace exist       = "http://exist.sourceforge.net/NS/exist";
