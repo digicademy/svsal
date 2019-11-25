@@ -1,6 +1,6 @@
 xquery version "3.1";
 
-module namespace index            = "https://www.salamanca.school/factory/index";
+module namespace index            = "https://www.salamanca.school/factory/works/index";
 declare namespace exist            = "http://exist.sourceforge.net/NS/exist";
 declare namespace tei              = "http://www.tei-c.org/ns/1.0";
 declare namespace sal              = "http://salamanca.adwmainz.de";
@@ -8,6 +8,8 @@ import module namespace util       = "http://exist-db.org/xquery/util";
 import module namespace console    = "http://exist-db.org/xquery/console";
 import module namespace config     = "http://salamanca/config" at "../../modules/config.xqm";
 import module namespace sal-util    = "http://salamanca/sal-util" at "../../modules/sal-util.xql";
+import module namespace txt        = "https://www.salamanca.school/factory/txt" at "txt.xql";
+
 
 
 (: ####++++----  

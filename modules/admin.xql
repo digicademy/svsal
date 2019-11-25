@@ -13,14 +13,13 @@ import module namespace util        = "http://exist-db.org/xquery/util";
 import module namespace xmldb       = "http://exist-db.org/xquery/xmldb";
 import module namespace app         = "http://salamanca/app"                    at "app.xql";
 import module namespace config      = "http://salamanca/config"                 at "config.xqm";
-import module namespace render      = "http://salamanca/render"                 at "../factory/modules/render.xql";
 import module namespace render-app  = "http://salamanca/render-app"         at "render-app.xql";
 import module namespace sphinx      = "http://salamanca/sphinx"                 at "sphinx.xql";
 import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";
 import module namespace stats       = "http://salamanca/stats"                  at "stats.xql";
-import module namespace index       = "https://www.salamanca.school/factory/index" at "../factory/modules/index.xql";
-import module namespace html        = "https://www.salamanca.school/factory/html" at "../factory/modules/html.xql";
-import module namespace txt        = "https://www.salamanca.school/factory/txt" at "../factory/modules/txt.xql";
+import module namespace index       = "https://www.salamanca.school/factory/works/index" at "../factory/works/index.xql";
+import module namespace html        = "https://www.salamanca.school/factory/works/html" at "../factory/works/html.xql";
+import module namespace txt        = "https://www.salamanca.school/factory/works/txt" at "../factory/works/txt.xql";
 declare namespace output            = "http://www.w3.org/2010/xslt-xquery-serialization";
 
 declare option exist:timeout "25000000"; (: ~7 h :)
@@ -649,10 +648,10 @@ declare %templates:wrap function admin:renderWork($workId as xs:string*) as elem
             let $runtime-ms-a := ((util:system-time() - $start-time-a) div xs:dayTimeDuration('PT1S'))  * 1000
             (: render and store the work's plain text :)
             let $txt-start-time := util:system-time()
-            let $plainTextEdit := string-join(render:dispatch($work, 'edit'), '')
+            let $plainTextEdit := string-join(txt:dispatch($work, 'edit'), '')
             let $txtEditSaveStatus := admin:saveFile($work/@xml:id, $work/@xml:id || "_edit.txt", $plainTextEdit, "txt")
             let $debug := if ($config:debug = ("trace", "info")) then console:log("Plain text (edit) file created and stored.") else ()
-            let $plainTextOrig := string-join(render:dispatch($work, 'orig'), '')
+            let $plainTextOrig := string-join(txt:dispatch($work, 'orig'), '')
             let $txtOrigSaveStatus := admin:saveFile($work/@xml:id, $work/@xml:id || "_orig.txt", $plainTextOrig, "txt")
             let $debug := if ($config:debug = ("trace", "info")) then console:log("Plain text (orig) file created and stored.") else ()
             let $txt-end-time := ((util:system-time() - $txt-start-time) div xs:dayTimeDuration('PT1S'))
@@ -768,7 +767,7 @@ declare function admin:createTxtCorpus($processId as xs:string) {
                     else 
                         let $tei := util:expand(doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI)
                         let $debug := if ($config:debug = ("trace", "info")) then console:log('[ADMIN] Rendering txt version of work: ' || $config:tei-works-root || '/' || $wid || '.xml') else ()
-                        let $origTxt := string-join(render:dispatch($tei, 'orig'), '')
+                        let $origTxt := string-join(txt:dispatch($tei, 'orig'), '')
                         let $debug := if ($config:debug = ("trace", "info")) then console:log('[ADMIN] Rendered ' || $wid || ', string length: ' || string-length($origTxt)) else ()
                         return admin:saveFile($wid, $wid || "_orig.txt", $origTxt, "txt")
                 let $storeOrig := xmldb:store-as-binary($tempCollection, $wid || '_orig.txt', util:binary-doc($config:txt-root || '/' || $wid || '/' || $wid || '_orig.txt'))
@@ -776,7 +775,7 @@ declare function admin:createTxtCorpus($processId as xs:string) {
                     if (util:binary-doc-available($config:txt-root || '/' || $wid || '/' || $wid || '_edit.txt')) then ()
                     else 
                         let $tei := util:expand(doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI)
-                        let $editTxt := string-join(render:dispatch($tei, 'edit'), '')
+                        let $editTxt := string-join(txt:dispatch($tei, 'edit'), '')
                         return admin:saveFile($wid, $wid || "_edit.txt", $editTxt, "txt")
                 let $storeEdit := xmldb:store-as-binary($tempCollection, $wid || '_edit.txt', util:binary-doc($config:txt-root || '/' || $wid || '/' || $wid || '_edit.txt'))
                 return ()
@@ -929,14 +928,14 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
             let $hit_content_orig := 
                 if ($hit_id) then
                     if ($nodeType eq 'work') then
-                        string-join(render:dispatch($hit, 'snippets-orig'), '')
+                        string-join(txt:dispatch($hit, 'snippets-orig'), '')
                     else string-join(render-app:dispatch($hit, 'snippets-orig', ()), '')
                 else
                     'There is no xml:id in the ' || $hit_type || ' hit!'
             let $hit_content_edit := 
                 if ($hit_id) then
                     if ($nodeType eq 'work') then
-                        string-join(render:dispatch($hit, 'snippets-edit'), '')
+                        string-join(txt:dispatch($hit, 'snippets-edit'), '')
                     else string-join(render-app:dispatch($hit, 'snippets-edit', ()), '')
                 else
                     'There is no xml:id in the ' || $hit_type || ' hit!'

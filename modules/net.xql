@@ -8,8 +8,8 @@ import module namespace response    = "http://exist-db.org/xquery/response";
 import module namespace util        = "http://exist-db.org/xquery/util";
 import module namespace config      = "http://salamanca/config"                 at "config.xqm";
 import module namespace export      = "http://salamanca/export"                 at "export.xql";
-import module namespace render      = "http://salamanca/render"                 at "../factory/modules/render.xql";
 import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";
+import module namespace txt        = "https://www.salamanca.school/factory/works/txt" at "../factory/works/txt.xql";
 
 declare       namespace exist       = "http://exist.sourceforge.net/NS/exist";
 declare       namespace output      = "http://www.w3.org/2010/xslt-xquery-serialization";
@@ -609,10 +609,10 @@ declare function net:APIdeliverTXT($requestData as map(), $netVars as map()*) {
         let $response := response:set-header('Content-Disposition', 'attachment; filename="' || $filename || '"')
         return 
             if ($node) then 
-                (: if full work is requested and the text is already available, we fetch it directly without render:dispatch :)
+                (: if full work is requested and the text is already available, we fetch it directly without txt:dispatch :)
                 if ($requestData('passage') eq '' and not(contains($requestData('tei_id'), '_Vol')) and util:binary-doc-available($config:txt-root || '/' || $requestData('work_id') || '/' || $requestData('work_id') || '_' || $mode || '.txt')) then
                     response:stream-binary(util:binary-doc($config:txt-root || '/' || $requestData('work_id') || '/' || $requestData('work_id') || '_' || $mode || '.txt'), 'text/plain')
-                else render:dispatch($node, $mode)
+                else txt:dispatch($node, $mode)
             else net:error(404, $netVars, 'Resource could not be found.')
     else if ($requestData('tei_id') eq '*' and util:binary-doc-available($config:corpus-zip-root || '/sal-txt-corpus.zip')) then
         let $debug      := if ($config:debug = "trace") then console:log("[API] TXT corpus export.") else ()

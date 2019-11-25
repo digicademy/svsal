@@ -15,6 +15,14 @@ import module namespace index      = "https://www.salamanca.school/factory/index
 import module namespace txt        = "https://www.salamanca.school/factory/txt" at "txt.xql";
 
 
+(: ####++++----  
+
+    Module for creating html fragments for works.
+   
+   ----++++#### :)
+
+
+
 (: SETTINGS :)
 
 (: the max. amount of characters to be shown in a note teaser :)
