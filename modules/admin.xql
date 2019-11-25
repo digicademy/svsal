@@ -19,6 +19,8 @@ import module namespace sphinx      = "http://salamanca/sphinx"                 
 import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";
 import module namespace stats       = "http://salamanca/stats"                  at "stats.xql";
 import module namespace index       = "https://www.salamanca.school/factory/index" at "../factory/modules/index.xql";
+import module namespace html        = "https://www.salamanca.school/factory/html" at "../factory/modules/html.xql";
+import module namespace txt        = "https://www.salamanca.school/factory/txt" at "../factory/modules/txt.xql";
 declare namespace output            = "http://www.w3.org/2010/xslt-xquery-serialization";
 
 declare option exist:timeout "25000000"; (: ~7 h :)
@@ -576,7 +578,7 @@ declare %templates:wrap function admin:renderWork($workId as xs:string*) as elem
                             <b>{$title}</b>
                             {
                             if (not($work//tei:text[@type='work_volume'])) then
-                                <span class="jstree-anchor hideMe pull-right">{render:HTMLgetPagesFromDiv($text)}</span>
+                                <span class="jstree-anchor hideMe pull-right">{html:getPagesFromDiv($text)}</span>
                             else ()
                             }
                             {
@@ -586,12 +588,12 @@ declare %templates:wrap function admin:renderWork($workId as xs:string*) as elem
                                         <li>
                                             <a class="hideMe">
                                                 <b><i18n:text key="volume">Volume</i18n:text>{concat(': ', $a/@n/string())}</b>
-                                                <span class="jstree-anchor hideMe pull-right">{render:HTMLgetPagesFromDiv($a)}</span>
+                                                <span class="jstree-anchor hideMe pull-right">{html:getPagesFromDiv($a)}</span>
                                             </a>
-                                            { render:HTMLgenerateTocFromDiv($a/(tei:front | tei:body | tei:back), $workId)}
+                                            { html:generateTocFromDiv($a/(tei:front | tei:body | tei:back), $workId)}
                                         </li>
                                     </ul>
-                            else render:HTMLgenerateTocFromDiv($elements, $workId)
+                            else html:generateTocFromDiv($elements, $workId)
                             }
                         </li>
                     </ul>
@@ -600,9 +602,9 @@ declare %templates:wrap function admin:renderWork($workId as xs:string*) as elem
             let $debug         := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] ToC file created for " || $workId || ".") else ()
             
             (:Next, create the Pages html file. :)
-            let $pagesDe        :=  render:WRKpreparePagination((), (), $workId, 'de')
-            let $pagesEn        :=  render:WRKpreparePagination((), (), $workId, 'en')
-            let $pagesEs        :=  render:WRKpreparePagination((), (), $workId, 'es')
+            let $pagesDe        :=  html:makePagination((), (), $workId, 'de')
+            let $pagesEn        :=  html:makePagination((), (), $workId, 'en')
+            let $pagesEs        :=  html:makePagination((), (), $workId, 'es')
             let $savePages := (
                 admin:saveFile($workId, $workId || "_pages_de.html", $pagesDe, "html"),
                 admin:saveFile($workId, $workId || "_pages_en.html", $pagesEn, "html"),
@@ -629,7 +631,7 @@ declare %templates:wrap function admin:renderWork($workId as xs:string*) as elem
                         xs:string($next/@xml:id)
                     else ()
                 let $result := admin:renderFragment($work, xs:string($workId), $section, $index, $fragmentationDepth, $prevId, $nextId, $config:serverdomain)
-(:                let $result := render:createHTMLFragment($workId, $section, $index, $prevId, $nextId):)
+(:                let $result := html:createFragment($workId, $section, $index, $prevId, $nextId):)
                 return 
                     <div>
                         <h3>Fragment {$index}:</h3>
@@ -817,7 +819,7 @@ declare function admin:renderFragment ($work as node(), $wid as xs:string, $targ
     let $debugOutput   := if ($config:debug = ("trace", "info")) then console:log("  Render Element " || $targetindex || ": " || $targetid || " of " || $wid || "...") else ()
     let $debugOutput   := if ($config:debug = ("trace")) then console:log("  (prevId=" || $prevId || ", nextId=" || $nextId || ", serverDomain=" || $serverDomain || ")") else ()
 (:    let $html := transform:transform($work, $tei2htmlXslt, $xsl-parameters):)
-    let $html := render:createHTMLFragment($wid, $target, $targetindex, $prevId, $nextId)
+    let $html := html:createFragment($wid, $target, $targetindex, $prevId, $nextId)
 
     (: Now for saving the fragment ... :)
     let $fileName       := format-number($targetindex, "0000") || "_" || $targetid || ".html"

@@ -20,9 +20,6 @@ import module namespace sal-util    = "http://salamanca/sal-util" at "../../modu
 
 (: CONFIG :)
 
-(: the max. amount of characters to be shown in a title teaser :)
-declare variable $index:titleTruncLimit := 15;
-
 
 declare variable $index:citetrailConnector := '.';
 declare variable $index:passagetrailConnector := ' ';
@@ -413,24 +410,12 @@ declare function index:makeUrl($targetWorkId as xs:string, $targetNode as node()
 :)
 declare function index:makeTeaserString($node as element(), $mode as xs:string?) as xs:string {
     let $thisMode := if ($mode = ('orig', 'edit')) then $mode else 'edit'
-    let $string := normalize-space(replace(replace(string-join(index:dispatch($node, $thisMode)), '\[.*?\]', ''), '\{.*?\}', ''))
+    let $string := normalize-space(replace(replace(string-join(txt:dispatch($node, $thisMode)), '\[.*?\]', ''), '\{.*?\}', ''))
     return 
         if (string-length($string) gt $config:chars_summary) then
             concat('&#34;', normalize-space(substring($string, 1, $config:chars_summary)), '…', '&#34;')
         else
             concat('&#34;', $string, '&#34;')
-};
-
-
-(:
-~ For a node, make a full-blown URI including the citetrail of the node
-:)
-declare function index:makeCitetrailURI($node as element()) as xs:string? {
-    let $citetrail := sal-util:getNodetrail($node/ancestor::tei:TEI/@xml:id, $node, 'citetrail')
-    let $workId := $node/ancestor::tei:TEI/@xml:id
-    return
-        if ($citetrail) then $config:idserver || '/texts/' || $workId || ':' || $citetrail
-        else ()
 };
 
 
