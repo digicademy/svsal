@@ -307,7 +307,7 @@ declare function txt:lb($node as element(tei:lb), $mode as xs:string) {
         default return error()
 };
 
-declare function txt:lg($node as element(tei:lb), $mode as xs:string) {
+declare function txt:lg($node as element(tei:lg), $mode as xs:string) {
     ('&#xA;', txt:passthru($node, $mode), '&#xA;')
 };
 

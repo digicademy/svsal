@@ -273,10 +273,12 @@
   <msg key="tei-ms-section">Abschnitt</msg>
   <msg key="tei-front">Titelei</msg>
   <msg key="tei-back"/>
+  <msg key="tei-argument">Zusammenfassung</msg>
   <msg key="tei-p">Absatz</msg>
   <msg key="tei-signed">Signatur</msg>
   <msg key="tei-head">Titel</msg>
   <msg key="tei-label">Titel</msg>
+  <msg key="tei-table">Tabelle</msg>
   <msg key="tei-titlePage">Titelseite</msg>
   <msg key="tei-note">Marginalnote</msg>
   <msg key="tei-list">Liste</msg>

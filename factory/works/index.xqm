@@ -366,8 +366,7 @@ declare function index:isBasicNode($node as node()) as xs:boolean {
                                                  and following-sibling::tei:item[./tei:list[index:isListNode(.)]]])
                                       )
         (: read as: 'lists that do not contain lists (=lists at the lowest level), or siblings thereof' :)
-        (:(($node/self::tei:list and not($node/descendant::tei:list))
-                                       or ($node/self::tei:head and following-sibling::tei:item[./tei:list[not($node/descendant::tei:list)]])):) (: head may occur outside of lowest-level lists... :)
+        (: (this is quite a complicated XPath, but I don't know how to simplify it without breaking things...) :)
         )
     )
 };
@@ -456,6 +455,8 @@ declare function index:dispatch($node as node(), $mode as xs:string) {
 
         case element(tei:lg)            return index:lg($node, $mode)
         
+        case element(tei:table)         return index:table($node, $mode)
+        
         case element(tei:label)         return index:label($node, $mode)
         case element(tei:argument)      return index:argument($node, $mode)
         
@@ -465,14 +466,16 @@ declare function index:dispatch($node as node(), $mode as xs:string) {
         case element(tei:front)         return index:front($node, $mode) 
         case element(tei:body)          return index:body($node, $mode)
         case element(tei:back)          return index:back($node, $mode)
+        case element(tei:text)          return index:text($node, $mode)
         
         case element(tei:figDesc)       return ()
         case element(tei:teiHeader)     return ()
         case element(tei:fw)            return ()
+        case element()                  return error(QName('index:dispatch', 'Unknown element: ' || local-name($node) || ' (in mode: "' || $mode || '")'))
         case comment()                  return ()
         case processing-instruction()   return ()
 
-        default return index:passthru($node, $mode)
+        default return ()
 };
 
 
@@ -484,7 +487,7 @@ declare function index:argument($node as element(tei:argument), $mode as xs:stri
         case 'class' return 
             'tei-' || local-name($node)
         default return
-            index:passthru($node, $mode)
+            ()
 };
 
 
@@ -499,7 +502,7 @@ declare function index:back($node as element(tei:back), $mode as xs:string) {
         case 'passagetrail' return
             $config:citationLabels(local-name($node))?('abbr')
         default return
-            index:passthru($node, $mode)
+            ()
 };
 
 
@@ -508,7 +511,7 @@ declare function index:body($node as element(tei:body), $mode as xs:string) {
         case 'class' return
             'tei-' || local-name($node)
         default return
-            index:passthru($node, $mode) 
+            ()
 };
 
 
@@ -576,7 +579,7 @@ declare function index:div($node as element(tei:div), $mode as xs:string) {
             else ()
         
         default return
-            index:passthru($node, $mode)
+            ()
 };
 
 
@@ -595,7 +598,7 @@ declare function index:front($node as element(tei:front), $mode as xs:string) {
             $config:citationLabels(local-name($node))?('abbr')
             
         default return
-            index:passthru($node, $mode)
+            ()
 };
 
 
@@ -618,7 +621,7 @@ declare function index:head($node as element(tei:head), $mode as xs:string) {
              else ())
         
         default return 
-            index:passthru($node, $mode)
+            ()
 };
 
 declare function index:item($node as element(tei:item), $mode as xs:string) {
@@ -672,7 +675,7 @@ declare function index:item($node as element(tei:item), $mode as xs:string) {
             ()
         
         default return
-            index:passthru($node, $mode)
+            ()
 };
 
 
@@ -692,7 +695,7 @@ declare function index:label($node as element(tei:label), $mode as xs:string) {
             else error()
             
         default return
-            index:passthru($node, $mode)
+            ()
 };
 
 
@@ -735,7 +738,7 @@ declare function index:list($node as element(tei:list), $mode as xs:string) {
             else error()
             
         default return
-            index:passthru($node, $mode)
+            ()
 };
 
 
@@ -753,7 +756,7 @@ declare function index:lg($node as element(tei:lg), $mode as xs:string) {
             error()
             
         default return
-            index:passthru($node, $mode)
+            ()
 };
 
 declare function index:milestone($node as element(tei:milestone), $mode as xs:string) {
@@ -858,7 +861,7 @@ declare function index:note($node as element(tei:note), $mode as xs:string) {
             else ()
         
         default return
-            index:passthru($node, $mode)
+            ()
 };
 
 
@@ -883,13 +886,13 @@ declare function index:p($node as element(tei:p), $mode as xs:string) {
             else ()
         
         default return
-            index:passthru($node, $mode)
+            ()
 };
 
 
-declare function index:passthru($nodes as node()*, $mode as xs:string) as item()* {
+(:declare function index:passthru($nodes as node()*, $mode as xs:string) as item()* {
     for $node in $nodes/node() return index:dispatch($node, $mode)
-};
+};:)
 
 
 declare function index:pb($node as element(tei:pb), $mode as xs:string) {
@@ -953,8 +956,29 @@ declare function index:signed($node as element(tei:signed), $mode as xs:string) 
             error()
             
         default return
-            index:passthru($node, $mode)
+            ()
 };
+
+
+declare function index:table($node as element(tei:table), $mode as xs:string) {
+    switch($mode)
+        case 'title' return
+            if ($node/tei:head) then
+                normalize-space(
+                    index:makeTeaserString($node/tei:head, 'edit')
+                )
+            else ()
+            
+        case 'class' return
+            'tei-' || local-name($node)
+            
+        case 'citetrail' return
+            error()
+            
+        default return
+            ()
+};
+
 
 declare function index:text($node as element(tei:text), $mode as xs:string) {
     switch($mode)
@@ -988,7 +1012,7 @@ declare function index:text($node as element(tei:text), $mode as xs:string) {
             else ()
         
         default return
-            index:passthru($node, $mode)
+            ()
 };
 
 
@@ -1020,7 +1044,7 @@ declare function index:titlePage($node as element(tei:titlePage), $mode as xs:st
             $config:citationLabels(local-name($node))?('abbr')
         
         default return
-            index:passthru($node, $mode)
+            ()
 };
 
 declare function index:titlePart($node as element(tei:titlePart), $mode as xs:string) {
@@ -1038,6 +1062,6 @@ declare function index:titlePart($node as element(tei:titlePart), $mode as xs:st
             concat('titlepage.', string(count($node/preceding-sibling::tei:titlePart) + 1))
         
         default return 
-            index:passthru($node, $mode)
+            ()
 };
 

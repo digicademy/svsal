@@ -436,9 +436,11 @@
   <msg key="tei-ms-section">Section</msg>
   <msg key="tei-front">Front Matter</msg>
   <msg key="tei-back">Back Matter</msg>
+  <msg key="tei-argument">Summary</msg>
   <msg key="tei-p">Paragraph</msg>
   <msg key="tei-signed">Signature</msg>
   <msg key="tei-head">Heading</msg>
+  <msg key="tei-table">Table</msg>
   <msg key="tei-label">Titel</msg>
   <msg key="tei-titlePage">Title Page</msg>
   <msg key="tei-note">Note</msg>
