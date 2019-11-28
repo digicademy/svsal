@@ -1,5 +1,12 @@
 xquery version "3.0";
 
+(: ####++++---- 
+
+    Admin functions, mostly related to the creation of webdata formats (html, iiif, snippets, etc.).
+    Tightly coupled with modules in factory/works.
+
+ ----++++#### :)
+
 module namespace admin              = "http://salamanca/admin";
 declare namespace exist             = "http://exist.sourceforge.net/NS/exist";
 declare namespace tei               = "http://www.tei-c.org/ns/1.0";
@@ -19,7 +26,8 @@ import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.x
 import module namespace stats       = "https://www.salamanca.school/factory/works/stats" at "../factory/works/stats.xqm";
 import module namespace index       = "https://www.salamanca.school/factory/works/index" at "../factory/works/index.xqm";
 import module namespace html        = "https://www.salamanca.school/factory/works/html" at "../factory/works/html.xqm";
-import module namespace txt        = "https://www.salamanca.school/factory/works/txt" at "../factory/works/txt.xqm";
+import module namespace txt         = "https://www.salamanca.school/factory/works/txt" at "../factory/works/txt.xqm";
+import module namespace iiif        = "https://www.salamanca.school/factory/works/iiif" at "../factory/works/iiif.xqm";
 declare namespace output            = "http://www.w3.org/2010/xslt-xquery-serialization";
 
 declare option exist:timeout "25000000"; (: ~7 h :)
@@ -259,9 +267,9 @@ declare function admin:needsIIIFResource($targetWorkId as xs:string) as xs:boole
 declare function admin:needsIIIFResourceString($node as node(), $model as map(*)) {
     let $currentWorkId := $model('currentWork')?('wid')
     return if (admin:needsIIIFResource($currentWorkId)) then
-                <td title="source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}"><a href="iiif-admin.xql?resourceId={$currentWorkId}"><b>Create IIIF resource NOW!</b></a></td>
+                <td title="source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}"><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=iiif"><b>Create IIIF resource NOW!</b></a></td>
             else
-                <td title="{concat('IIIF resource created on: ', string(xmldb:last-modified($config:iiif-root, $currentWorkId || '.json')), ', Source from: ', string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml')), '.')}">Creating IIIF resource unnecessary. <small><a href="iiif-admin.xql?resourceId={$currentWorkId}">Create IIIF resource anyway!</a></small></td>
+                <td title="{concat('IIIF resource created on: ', string(xmldb:last-modified($config:iiif-root, $currentWorkId || '.json')), ', Source from: ', string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml')), '.')}">Creating IIIF resource unnecessary. <small><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=iiif">Create IIIF resource anyway!</a></small></td>
 };
 
 
@@ -311,6 +319,8 @@ declare function admin:saveFile($wid as xs:string, $fileName as xs:string, $cont
             $config:index-root || "/"
         else if ($collection = "txt") then
             $config:txt-root || "/" || $wid
+        else if ($collection = 'iiif') then
+            $config:iiif-root || "/"
         else if ($collection = "data") then
             $config:data-root || "/"
         else if ($collection = 'stats') then
@@ -325,7 +335,6 @@ declare function admin:saveFile($wid as xs:string, $fileName as xs:string, $cont
             $config:rdf-lemmata-root || "/"
         else
             $config:data-root || "/trash/"
-    (: in webdata package, parent folders are readily available, hence we don't strictly need the following anymore: :)
     let $create-parent-status     :=      
         if ($collection = "html" and not(xmldb:collection-available($config:html-root))) then
             xmldb:create-collection($config:webdata-root, "html")
@@ -335,11 +344,13 @@ declare function admin:saveFile($wid as xs:string, $fileName as xs:string, $cont
             xmldb:create-collection($config:webdata-root, "snippets")
         else if ($collection = "index" and not(xmldb:collection-available($config:index-root))) then
             xmldb:create-collection($config:webdata-root, "index")
+        else if ($collection = "iiif" and not(xmldb:collection-available($config:iiif-root))) then
+            xmldb:create-collection($config:webdata-root, "iiif")
         else if ($collection = "rdf" and not(xmldb:collection-available($config:rdf-root))) then
             xmldb:create-collection($config:webdata-root, "rdf")
         else if ($collection = "stats" and not(xmldb:collection-available($config:stats-root))) then
             xmldb:create-collection($config:webdata-root, "stats")
-        (: (TODO: rdf subroots? (but these already ship with pre-built webdata package) :)
+        (: TODO: rdf subroots (works/authors)? but these should already ship with the svsal-webdata package :)
         else ()
     let $create-collection-status :=      
         if ($collection = "html" and not(xmldb:collection-available($collectionName))) then
@@ -1254,6 +1265,30 @@ declare function admin:createRDF($rid as xs:string) {
             <p>Extracted RDF in {$runtimeString} and saved at {$save}</p>
             <div style="margin-left:5em;">{$rdf}</div>
         </div>
+};
+
+(:
+~ Creates and stores a IIIF manifest/collection for work $wid.
+:)
+declare function admin:createIIIF($wid as xs:string) {
+    let $start-time := util:system-time()
+    let $debug := 
+        if ($config:debug eq 'trace') then
+            util:log("warn", "Creation of IIIF resource requested, work id: " || $wid || ".")
+        else ()
+    let $resource := 
+        serialize(iiif:createResource($wid), 
+            <output:serialization-parameters>
+                <output:method>json</output:method>
+            </output:serialization-parameters>)
+    let $runtime-ms := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000
+    let $runtimeString := 
+        if ($runtime-ms < (1000 * 60)) then format-number($runtime-ms div 1000, "#.##") || " Sek."
+        else if ($runtime-ms < (1000 * 60 * 60))  then format-number($runtime-ms div (1000 * 60), "#.##") || " Min."
+        else format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
+    let $log  := util:log('warn', 'Extracted IIIF for ' || $wid || ' in ' || $runtimeString)
+    let $store := if ($resource) then xmldb:store($config:iiif-root, $wid || '.json', $resource) else ()
+    return $resource
 };
 
 

@@ -1,4 +1,12 @@
-xquery version "3.0";
+xquery version "3.1";
+
+(: ####++++----
+
+    This query serves as a gateway for the HTML-based admin interface (admin.html), dispatching requests for the 
+    creation of webdata (html, snippets, rdf, etc.) to xquery functions in the admin.xql module.
+    For possible webdata modes/formats, see $output.
+
+----++++#### :)
 
 declare namespace exist             = "http://exist.sourceforge.net/NS/exist";
 declare namespace request           = "http://exist-db.org/xquery/request";
@@ -40,6 +48,8 @@ let $output :=
             admin:createRDF($rid)
         case 'tei-corpus' return
             admin:createTeiCorpus('admin')
+        case 'iiif' return
+            admin:createIIIF($rid)
         case 'txt-corpus' return
             admin:createTxtCorpus('admin')
         case 'all' return
@@ -52,7 +62,6 @@ let $output :=
             return 'Corpus and work statistics successfully created!'
         default return 
             ()
-        (: TODO: iiif-admin :)
 
 let $runtime-ms := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S')) * 1000
 let $runtimeString := 
@@ -74,7 +83,7 @@ return
                      .sal-toolbox-body {display:none !important;}'}</style>
         </head>
         <body>
-            <h1>Webdata Output for Resource(s): {$rid}</h1>
+            <h1>Webdata Output for Resource(s): {$rid}, Format: {$format}</h1>
             {$output}
         </body>
     </html>
