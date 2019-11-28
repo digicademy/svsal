@@ -9,11 +9,12 @@ import module namespace util       = "http://exist-db.org/xquery/util";
 import module namespace console    = "http://exist-db.org/xquery/console";
 import module namespace config     = "http://salamanca/config" at "../../modules/config.xqm";
 import module namespace sal-util    = "http://salamanca/sal-util" at "../../modules/sal-util.xql";
-import module namespace index      = "https://www.salamanca.school/factory/works/index"    at "index.xql";
+import module namespace index      = "https://www.salamanca.school/factory/works/index"    at "index.xqm";
 
 
 (: ####++++----  
-    Module for creating txt fragments and Sphinx snippets for works.
+
+    Utility functions for transforming TEI nodes to plain text.
    
    ----++++#### :)
 

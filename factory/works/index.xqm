@@ -8,13 +8,13 @@ import module namespace util       = "http://exist-db.org/xquery/util";
 import module namespace console    = "http://exist-db.org/xquery/console";
 import module namespace config     = "http://salamanca/config" at "../../modules/config.xqm";
 import module namespace sal-util    = "http://salamanca/sal-util" at "../../modules/sal-util.xql";
-import module namespace txt        = "https://www.salamanca.school/factory/works/txt" at "txt.xql";
+import module namespace txt        = "https://www.salamanca.school/factory/works/txt" at "txt.xqm";
 
 
 
 (: ####++++----  
 
-    Module for creating the sal:index of a work, including functionality for making 
+    Functions for extracting node indices (sal:index) from TEI works; also includes functionality for making 
     citetrails, passagetrails, and crumbtrails.
    
    ----++++#### :)

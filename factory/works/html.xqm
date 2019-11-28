@@ -11,13 +11,13 @@ import module namespace console    = "http://exist-db.org/xquery/console";
 import module namespace config     = "http://salamanca/config" at "../../modules/config.xqm";
 import module namespace app        = "http://salamanca/app"    at "../../modules/app.xql";
 import module namespace sal-util   = "http://salamanca/sal-util" at "../../modules/sal-util.xql";
-import module namespace index      = "https://www.salamanca.school/factory/works/index"    at "index.xql";
-import module namespace txt        = "https://www.salamanca.school/factory/works/txt" at "txt.xql";
+import module namespace index      = "https://www.salamanca.school/factory/works/index"    at "index.xqm";
+import module namespace txt        = "https://www.salamanca.school/factory/works/txt" at "txt.xqm";
 
 
 (: ####++++----  
 
-    Module for creating html fragments for works.
+    Utility functions for transforming TEI nodes to html.
    
    ----++++#### :)
 

@@ -9,7 +9,7 @@ import module namespace util        = "http://exist-db.org/xquery/util";
 import module namespace config      = "http://salamanca/config"                 at "config.xqm";
 import module namespace export      = "http://salamanca/export"                 at "export.xql";
 import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";
-import module namespace txt        = "https://www.salamanca.school/factory/works/txt" at "../factory/works/txt.xql";
+import module namespace txt        = "https://www.salamanca.school/factory/works/txt" at "../factory/works/txt.xqm";
 
 declare       namespace exist       = "http://exist.sourceforge.net/NS/exist";
 declare       namespace output      = "http://www.w3.org/2010/xslt-xquery-serialization";

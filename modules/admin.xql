@@ -16,10 +16,10 @@ import module namespace config      = "http://salamanca/config"                 
 import module namespace render-app  = "http://salamanca/render-app"         at "render-app.xql";
 import module namespace sphinx      = "http://salamanca/sphinx"                 at "sphinx.xql";
 import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";
-import module namespace stats       = "https://www.salamanca.school/factory/works/stats" at "../factory/works/stats.xql";
-import module namespace index       = "https://www.salamanca.school/factory/works/index" at "../factory/works/index.xql";
-import module namespace html        = "https://www.salamanca.school/factory/works/html" at "../factory/works/html.xql";
-import module namespace txt        = "https://www.salamanca.school/factory/works/txt" at "../factory/works/txt.xql";
+import module namespace stats       = "https://www.salamanca.school/factory/works/stats" at "../factory/works/stats.xqm";
+import module namespace index       = "https://www.salamanca.school/factory/works/index" at "../factory/works/index.xqm";
+import module namespace html        = "https://www.salamanca.school/factory/works/html" at "../factory/works/html.xqm";
+import module namespace txt        = "https://www.salamanca.school/factory/works/txt" at "../factory/works/txt.xqm";
 declare namespace output            = "http://www.w3.org/2010/xslt-xquery-serialization";
 
 declare option exist:timeout "25000000"; (: ~7 h :)

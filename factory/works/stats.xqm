@@ -12,8 +12,15 @@ import module namespace config    = "http://salamanca/config"                at 
 import module namespace sphinx    = "http://salamanca/sphinx"                at "sphinx.xql";
 import module namespace console   = "http://exist-db.org/xquery/console";
 import module namespace iiif     = "http://salamanca/iiif" at "iiif.xql";
-import module namespace nlp    = "http://salamanca/nlp"                at "nlp.xql";
+import module namespace nlp    = "https://www.salamanca.school/factory/works/nlp" at "nlp.xqm";
 import module namespace sal-util = "http://salamanca/sal-util" at "sal-util.xql";
+
+
+(: ####++++----
+
+Functions for extracting statistical data from TEI works.
+
+----++++#### :)
 
 
 declare function stats:makeCorpusStats() as map(*) {
