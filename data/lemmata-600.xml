@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <sal:lemmata xmlns:sal="http://salamanca.adwmainz.de">
+    <!-- experimental, unrevised list of lemma candidates for the dictionary: there are no translations, and many lemmata 
+         are likely to be removed or replaced at some point -->
     <sal:lemma xml:id="lemma_d1e3" type="term" subtype="test">rex</sal:lemma>
     <sal:lemma xml:id="lemma_d1e6" type="term" subtype="test">regnum</sal:lemma>
     <sal:lemma xml:id="lemma_d1e9" type="term" subtype="test">Indio</sal:lemma>
