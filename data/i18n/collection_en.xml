@@ -126,6 +126,8 @@
   <msg key="1stEd">First edition</msg>
   <msg key="thisEd">This edition</msg>
   <msg key="extent">Extent, format</msg>
+  <msg key="partOfMultivol">Part of a multivolume work</msg>
+  
   <!--<msg key="dateOfOrigin">Year of publication (original source)</msg>-->
   <msg key="details">Catalogue Record</msg>
   <msg key="facsimiles">Facsimiles</msg>
@@ -233,6 +235,8 @@
   <msg key="display">display</msg>
   <msg key="prev">previous</msg>
   <msg key="next">next</msg>
+  <msg key="prevWorks">Preceding works</msg>
+  <msg key="nextWorks">Following works</msg>
   <msg key="mainText">main text</msg>
   <msg key="everythingDesc">Search in works, in biographical and conceptual dictionary articles and in abstracts and keywords of working papers.</msg>
   <msg key="corpusDesc">Search the full text of all works.</msg>
@@ -277,7 +281,7 @@
   
   <msg key="authorsNotice">
     Biographic articles on authors from the collection of sources of the project "The School of Salamanca" 
-    will be successively published on this page (presumably starting in 2019).</msg>
+    will be successively published on this page (presumably starting in 2020).</msg>
   
   <!--work-->
   <msg key="text">Text</msg>
@@ -352,7 +356,7 @@
   
   <!-- dictionary -->
   <msg key="dictUnderConstruction">The Dictionary of the School of Salamanca’s juridical-political language is going to be found here: approx. 200 entries with Latin and Spanish lemmata, taken directly from the sources.
-    The entries will be published successively, beginning in 2019.</msg>
+    The entries will be published successively, beginning in 2020.</msg>
   
   
   <!-- general language -->

@@ -108,7 +108,7 @@ declare function app:workCount($node as node(), $model as map (*), $lang as xs:s
  : load datasets,
  : with javascript and without javascript function
  : order: datasets for js support: authors, lemmata and works (in alphabetical order)
- : then: for simple output (without js): authors, lemmata, news, working papers, works (in alphabetical order)
+ : then: for simple output (without js): authors, lemmata, working papers, works (in alphabetical order)
  :)
 
 (: Authors with js facets:)
@@ -243,11 +243,13 @@ declare function app:AUTfinalFacets ($node as node(), $model as map (*), $lang a
 
 
 (: ==== LEMMATA-SECTION (with js) ==== :)
-declare function app:switchName ($node as node(), $model as map (*), $lang as xs:string?) {
+(: not in use :)
+(:declare function app:switchName ($node as node(), $model as map (*), $lang as xs:string?) {
 let $output := <i18n:text key="lemmata">Lemma</i18n:text>
     return 
         i18n:process($output, "de", "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
-};
+};:)
+
 declare function app:LEMfinalFacets ($node as node(), $model as map (*), $lang as xs:string?) {
     for $item in (collection($config:tei-lemmata-root)//tei:TEI[.//tei:text/@type eq "lemma_article"])
         let $title          :=  $item//tei:titleStmt/tei:title[@type='short']
@@ -488,7 +490,8 @@ declare %templates:wrap %templates:default("sort", "surname")
                     default return
                         for $item in $coll
                             return $item
-            return map { 'listOfAuthors' := $result }
+            return 
+                map {'listOfAuthors' : $result}
 };
 
 declare %private
@@ -577,7 +580,7 @@ declare  %templates:wrap
                     order by $item//tei:titleStmt/tei:author[1]/tei:persName/tei:surname ascending
                     return $item
                 else() 
-            return map { 'listOfLemmata' := $result }
+            return map { 'listOfLemmata':$result }
 };
 
 declare %private
@@ -608,16 +611,6 @@ declare  %templates:wrap
         </div>
 };
 
-(:  
- :      ====NEWS-LIST (no js) ====
-:)
-declare %templates:wrap
-        function app:loadListOfNews($node as node(), $model as map(*)) as map(*) {
-            let $result := for $item in collection($config:tei-news-root)//tei:TEI[.//tei:text/@type eq "news"]
-                            order by $item//tei:change[1]/@when/string() descending
-                            return $item
-            return map { 'listOfNews' := $result }
-};
 
 (:  
         ==== WORKING-PAPERS-LIST (no js) ====
@@ -627,7 +620,7 @@ declare %templates:wrap
             let $result := for $item in collection($config:tei-workingpapers-root)/tei:TEI[.//tei:text/@type eq "working_paper"]
                            order by $item/tei:teiHeader//tei:titleStmt/tei:title[@type='short'] descending
                            return $item
-            return map { 'listOfWps' := $result }
+            return map { 'listOfWps': $result }
 };
 
 (:  
@@ -647,7 +640,7 @@ declare %templates:wrap %templates:default("sort", "surname")
                         map {'wid': $wid,
                              'author': $author,
                              'titleShort': $titleShort}
-            return map { 'listOfWorks' := $result }     
+            return map { 'listOfWorks': $result }     
 };
 
 
@@ -678,7 +671,7 @@ declare %templates:wrap %templates:default("sort", "surname")
                                 for $item in $coll
                                     order by $item/@xml:id ascending
                                     return $item
-            return map { 'listOfWorks' := $result }     
+            return map { 'listOfWorks': $result }     
 };:)
 
 
@@ -1019,7 +1012,7 @@ declare %templates:wrap
 
 
 
-(: =========== Load single author, lemma, news-entry, working paper, work (in alphabetical order) ============= :)
+(: =========== Load single author, lemma, working paper, work (in alphabetical order) ============= :)
 
 (: ====Author==== :)
 declare %templates:default("field", "all")
@@ -1031,7 +1024,7 @@ declare %templates:default("field", "all")
                         return ($model("currentAuthor"))
                      else
                         ()
-    return map { "currentAuthor"    := $context }
+    return map { "currentAuthor": $context }
 };
 
 (: TODO: adjust paths here once respective HTML is available: :)
@@ -1076,7 +1069,7 @@ declare %templates:default("field", "all")
                          else if ($q) then
                             dq:search($context, $model, $wid, $aid, $lid, $q, $field)
                          else :)
-    return map { "currentLemma"    := $context }
+    return map { "currentLemma": $context }
 };
 
 (: TODO: adjust path once LEM HTML is available :)
@@ -1114,25 +1107,6 @@ declare %public
             </div>
 };
 
-(: ====News==== :)
-declare %templates:default
-    function app:loadSingleNews($node as node(), $model as map(*), $nid as xs:string?){
-    let $context  := if ($nid) then
-                        doc($config:tei-news-root || "/" || sal-util:normalizeId($nid) || ".xml")/tei:TEI
-                     else if ($model("currentNews")) then
-                        let $nid := $model("currentNews")/@xml:id 
-                        return ($model("currentNews"))
-                     else
-                        ()
-   (: let $results-work := if (count($model("results"))>0) then
-                            $model("results")
-                         else if ($q) then
-                           dq:search($context, $model, $wid, $aid, $lid, $q, $field)
-                         else :)
-                            
-    return map { "currentNews"    := $context }
-};
-
 
 (: ====Working paper==== :)
 declare %templates:default
@@ -1150,7 +1124,7 @@ declare %templates:default
                            dq:search($context, $model, $wid, $aid, $lid, $q, $field)
                          else :)
                             
-    return map { "currentWp"    := $context }
+    return map { "currentWp": $context }
 };
 
 (: ====Work==== :)
@@ -1202,7 +1176,7 @@ declare function app:watermark-txtonly($node as node(), $model as map(*), $wid a
                             util:expand(doc($config:tei-works-root || "/" || sal-util:normalizeId($wid) || ".xml")/tei:TEI)
                      else
                             doc($config:tei-works-root || "/" || sal-util:normalizeId($wid) || ".xml")/tei:TEI
-    return  map {"currentWork"    := $context}
+    return  map {"currentWork": $context}
 };:)
 
 declare %templates:wrap function app:loadWorkMetadata($node as node(), $model as map(*), $wid as xs:string?) {
@@ -1345,7 +1319,7 @@ declare function app:searchResultsNav($node as node(), $model as map(*), $q as x
     return $nav
 };
 
-(: =========== End of Load single author, lemma, news-entry, working paper, work (in alphabetical order) ============= :)
+(: =========== End of Load single author, lemma, working paper, work (in alphabetical order) ============= :)
 
 (: ============== Retrieve single *pieces* of information ... ========= :)
 
@@ -1664,168 +1638,6 @@ declare %public function app:LEMentry($node as node(), $model as map(*), $lid as
 };
 (: Rendering is done in render-app.xql! :)
 
-(: ----------------- ... from NEWs -------------------
- : extract title etc. from $model('currentNews').
- :)
-(:declare 
-    function app:NEWsList($node as node(), $model as map(*), $lang as xs:string?) {
-    let $image          := $model('currentNews')//tei:title[1]/tei:ref
-    let $link           := <a href="{session:encode-url(xs:anyURI('newsEntry.html?nid=' || $model('currentNews')/@xml:id))}">{$model('currentNews')/@xml:id/string()}</a>
-    let $followTeaser   := <a href="{session:encode-url(xs:anyURI('newsEntry.html?nid=' || $model('currentNews')/@xml:id))}"><i18n:text key="more">mehr</i18n:text>&#32;&#32;<i class="fa fa-share"></i></a>
-    let $title :=        if ($lang eq 'de') then <span style="text-decoration: none; color: #333333;">{$model('currentNews')//tei:title[@type='main'][@xml:lang='de']/string()}</span>
-                    else if ($lang eq 'en') then <span style="text-decoration: none; color: #333333;">{$model('currentNews')//tei:title[@type='main'][@xml:lang='en']/string()}</span>
-                    else if ($lang eq 'es') then <span style="text-decoration: none; color: #333333;">{$model('currentNews')//tei:title[@type='main'][@xml:lang='es']/string()}</span>
-                    else ()
-    let $sub :=          if ($lang eq 'de') then $model('currentNews')//tei:title[@type='sub'][@xml:lang='de']/string()
-                    else if ($lang eq 'en') then $model('currentNews')//tei:title[@type='sub'][@xml:lang='en']/string()
-                    else if ($lang eq 'es') then $model('currentNews')//tei:title[@type='sub'][@xml:lang='es']/string()
-                    else ()     
-                    
-   let $teaser :=         if ($lang eq 'de')  then <p class="lead">{concat(substring($model('currentNews')//tei:div[@type='entry'][@xml:lang='de']/tei:p[1], 1 , 150), '&#32;...&#32;&#32;'), $followTeaser} </p>
-                     else if ($lang eq 'en')  then <p class="lead">{concat(substring($model('currentNews')//tei:div[@type='entry'][@xml:lang='en']/tei:p[1], 1 , 150), '&#32;...&#32;&#32;'), $followTeaser} </p>
-                     else if ($lang eq 'es')  then <p class="lead">{concat(substring($model('currentNews')//tei:div[@type='entry'][@xml:lang='es']/tei:p[1], 1 , 150), '&#32;...&#32;&#32;'), $followTeaser} </p>
-                     else()
-    let $date           := $model('currentNews')//tei:change[1]/@when/string() 
-    let $output :=
-       (\:imageleft:\)
-        if ($image/@rendition='ImageLeft') then
-            <div class="row"><hr/>
-                <div class="col-md-4 hidden-sm hidden-xs">
-                    <a style="text-decoration: none;" href="{session:encode-url(xs:anyURI('newsEntry.html?nid=' || $model('currentNews')/@xml:id))}">
-                        <img class="featurette-image img-circle img-responsive pull-left" src="{$image/@target}" style="max-height: 15em;"/>
-                     </a>
-                 </div>
-                <div class="col-md-8 hidden-sm hidden-xs">
-                     <h2>
-                        <a style="text-decoration: none;" href="{session:encode-url(xs:anyURI('newsEntry.html?nid=' || $model('currentNews')/@xml:id))}">{$title}</a>&#32;
-                        <span class="text-muted">{$sub}</span>
-                     </h2><br/><br/>
-                    {$teaser}
-                </div>
-                <div class="col-sm-8 hidden-md hidden-lg hidden-xs">
-                     <h2>
-                        <a style="text-decoration: none;" href="{session:encode-url(xs:anyURI('newsEntry.html?nid=' || $model('currentNews')/@xml:id))}">{$title}</a>&#32;
-                        <span class="text-muted">{$sub}</span>
-                     </h2><br/><br/>
-                    {$teaser}
-                </div>
-                <div class="col-xs-12 hidden-lg hidden-sm hidden-md">
-                     <h3>
-                        <a style="text-decoration: none;" href="{session:encode-url(xs:anyURI('newsEntry.html?nid=' || $model('currentNews')/@xml:id))}">{$title}</a>&#32;
-                        <span class="text-muted">{$sub}</span>
-                     </h3><br/><br/>
-                    {$teaser}
-                </div>
-                <div class="col-sm-4 hidden-md hidden-lg hidden-xs">
-                    <a style="text-decoration: none;" href="{session:encode-url(xs:anyURI('newsEntry.html?nid=' || $model('currentNews')/@xml:id))}">
-                        <img class="featurette-image img-circle img-responsive pull-right" src="{$image/@target}" style="max-height: 15em;"/>
-                     </a>
-                 </div>
-            </div>
-          
-        (\: image right:\)
-        else if ($image/@rendition='ImageRight') then
-            <div class="row"><hr/>
-                 <div class="col-md-8 hidden-sm hidden-xs">
-                    <h2><a style="text-decoration: none;" href="{session:encode-url(xs:anyURI('newsEntry.html?nid=' || $model('currentNews')/@xml:id))}">{$title}</a>&#32;
-                         <span class="text-muted">{$sub}</span>
-                     </h2><br/><br/>
-                    {$teaser}
-                 </div>
-                 <div class="col-md-4 hidden-sm hidden-xs">
-                 <a style="text-decoration: none;" href="{session:encode-url(xs:anyURI('newsEntry.html?nid=' || $model('currentNews')/@xml:id))}">
-                     <img class="featurette-image img-circle img-responsive pull-right" src="{$image/@target}" style="max-height: 15em;"/>
-                 </a>
-             </div>
-             <div class="col-sm-8 hidden-md hidden-lg hidden-xs">
-                    <h2><a style="text-decoration: none;" href="{session:encode-url(xs:anyURI('newsEntry.html?nid=' || $model('currentNews')/@xml:id))}">{$title}</a>&#32;
-                         <span class="text-muted">{$sub}</span>
-                     </h2><br/><br/>
-                    {$teaser}
-                 </div>
-                 <div class="col-xs-12 hidden-lg hidden-sm hidden-md">
-                    <h3><a style="text-decoration: none;" href="{session:encode-url(xs:anyURI('newsEntry.html?nid=' || $model('currentNews')/@xml:id))}">{$title}</a>&#32;
-                         <span class="text-muted">{$sub}</span>
-                     </h3><br/><br/>
-                    {$teaser}
-                 </div>
-                 <div class="col-sm-4 hidden-md hidden-lg hidden-xs">
-                 <a style="text-decoration: none;" href="{session:encode-url(xs:anyURI('newsEntry.html?nid=' || $model('currentNews')/@xml:id))}">
-                     <img class="featurette-image img-circle img-responsive pull-right" src="{$image/@target}" style="max-height: 15em;"/>
-                 </a>
-             </div>
-         </div>
-       else ()
-       return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) 
-};
-    
-declare %templates:wrap 
-    function app:NEWsEntry($node as node(), $model as map(*), $lang as xs:string) {
-    let $image  :=  $model('currentNews')//tei:title[1]/tei:ref
-    let $link   :=  <a href="{session:encode-url(xs:anyURI('newsEntry.html?nid=' || $model('currentNews')/@xml:id))}">{$model('currentNews')/@xml:id/string()}</a>
-    let $title  :=  if ($lang eq 'de') then $model('currentNews')//tei:title[@type='main'][@xml:lang='de']/string()
-                        else if ($lang eq 'en') then $model('currentNews')//tei:title[@type='main'][@xml:lang='en']/string()
-                        else if ($lang eq 'es') then $model('currentNews')//tei:title[@type='main'][@xml:lang='es']/string()
-                        else ()
-    let $sub    :=  if ($lang eq 'de') then $model('currentNews')//tei:title[@type='sub'][@xml:lang='de']/string()
-                        else if ($lang eq 'en') then $model('currentNews')//tei:title[@type='sub'][@xml:lang='en']/string()
-                        else if ($lang eq 'es') then $model('currentNews')//tei:title[@type='sub'][@xml:lang='es']/string()
-                        else ()
-    let $date   :=  $model('currentNews')//tei:change[1]/@when/string()
-    let $output :=
-        <div>
-            <div class="row">
-                <div class="col-md-6 col-md-offset-2 col-sm-7 hidden-xs">
-                    <h2> 
-                        <a href="news.html">
-                            <i class="fa fa-reply"></i>&#32;&#32;<!--<i18n:text key="back">zurück</i18n:text>-->
-                        </a>
-                        {$title}&#32;
-                        <span class="text-muted">{$sub}</span>
-                    </h2>
-                    <hr/>
-                    </div>
-                    <div class="col-xs-12 hidden-sm hidden-md hidden-lg">
-                         <h3> 
-                            <a href="news.html">
-                                <i class="fa fa-reply"></i>&#32;&#32;<!--<i18n:text key="back">zurück</i18n:text>-->
-                            </a>
-                           {$title}&#32;
-                           <span class="text-muted">{$sub}</span>
-                         </h3>
-                    <hr/>
-                    </div>
-                    <div class="col-md-3 col-sm-5 hidden-xs">
-                       <img class="img-responsive" src="{$image/@target}" style="margin:15px;"/>
-                    </div>
-                </div>
-                <div class="row-fluid">
-                <div class="col-md-8 col-md-offset-2">
-                   {local:NEWsBody($node, $model, $lang), $date}
-                  <br/>
-                </div>
-            </div>
-        </div>
-    return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) 
-};
-
-declare function local:NEWsBody($node as node(), $model as map(*), $lang as xs:string) {
-        let $doc := $model('currentNews')//tei:text
-        let $parameters :=  
-            <parameters>
-                <param name="exist:stop-on-warn" value="yes"/>
-                <param name="exist:stop-on-error" value="yes"/>
-            </parameters>
-        return  
-        if ($lang eq 'de')  then 
-        transform:transform($doc//tei:div[@xml:lang='de'], doc(($config:app-root || "/resources/xsl/news.xsl")), $parameters)
-        else if  ($lang eq 'en')  then 
-        transform:transform($doc//tei:div[@xml:lang='en'], doc(($config:app-root || "/resources/xsl/news.xsl")), $parameters)
-        else if  ($lang eq 'es')  then
-        transform:transform($doc//tei:div[@xml:lang='es'], doc(($config:app-root || "/resources/xsl/news.xsl")), $parameters)
-        else()
-};:)
-
 
 (: ----------------- ... from WORKING PAPERs ------------------- all new
  : extract title etc. from $model('currentWp').
@@ -2023,79 +1835,6 @@ declare %templates:wrap
         )
 };
 
-(: deprecated? see app:WRKcatRecord :)
-declare function app:WRKtitle($node as node(), $model as map(*), $lang as xs:string?) {
-    let $titleShort:=   if (app:WRKtitleShort($node, $model)) then 
-                            <tr>
-                                <td class="col-md-4">
-                                    <i18n:text key="titleShort">Zitiertitel</i18n:text>:
-                                </td>
-                                <td class="col-md-8">
-                                    {app:WRKtitleShort($node, $model)}
-                                </td>
-                           </tr>
-                        else()
-    let $titleMain :=   <tr>
-                            <td class="col-md-4">
-                                <i18n:text key="title">Titel</i18n:text>:
-                            </td>
-                            <td class="col-md-8">
-                                {app:WRKtitleMain($node, $model)}
-                            </td>
-                        </tr>
-                            
-    let $output := ($titleShort, $titleMain)
-    return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
-};  
-
-(: deprecated? see app:WRKcatRecord() :)
-(:declare
-    function app:WRKdateOfOrigin($node as node(), $model as map(*), $lang as xs:string?, $wid as xs:string?) {
-        let $output :=  if ($model('currentWork')//tei:text[@type = 'work_multivolume']) then
-                            <tr>
-                                <td class="col-md-4"><i18n:text key="periodOfOrigin">Erscheinungsverlauf</i18n:text>:</td>
-                                <td class="col-md-8">
-                                {app:WRKread($node, $model, $lang, $wid)}
-                                </td>
-                            </tr>
-                        else
-                            <tr>
-                                <td class="col-md-4"><i18n:text key="dateOfOrigin">Erscheinungsjahr</i18n:text>:</td>
-                                <td>
-                                {  if ($model('currentWork')/tei:teiHeader//tei:sourceDesc//tei:date[@type = 'thisEd']) then
-                                        $model('currentWork')/tei:teiHeader//tei:sourceDesc//tei:date[@type = 'thisEd']
-                                 else
-                                        $model('currentWork')/tei:teiHeader//tei:sourceDesc//tei:date[@type = 'firstEd']
-                                }
-                                </td>
-                                <td class="col-md-8">
-                                </td>
-                            </tr>
-        return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
-};:)
-
-(: deprecated? see app:WRKcatRecord() :)
-(:declare %templates:wrap 
-    function app:WRKread ($node as node(), $model as map(*), $lang as xs:string?, $wid as xs:string?) {
-        let $base   := $model('currentWork')
-        let $status := $base//tei:revisionDesc/@status/string()
-        let $books  := $base//tei:text[@type ='work_volume']
-        let $output := for $item in $books
-                            let $volId      := $item/@xml:id/string()
-                            let $volNumber  := $item/@n/string()
-                            let $sourceDesc  := doc($config:tei-works-root || "/" || $wid ||'_'|| $volId || '.xml')/tei:TEI//tei:fileDesc/tei:sourceDesc
-                            let $firstEd    := $sourceDesc//tei:date[@type = 'firstEd']/@when/string()
-                            let $thisEd     := $sourceDesc//tei:date[@type = 'thisEd']/@when/string()
-                            let $date       := if ($thisEd) then $thisEd else $firstEd                                       
-                            let $vol        := doc($config:index-root || "/" || sal-util:normalizeId($wid) || '_nodeIndex.xml')//sal:node[@n=$volId]/sal:crumbtrail/a[last()]/@href/string()
-                            return  if ($item is ($model('currentWork')//tei:text)[last()]) then
-                                            <a class="{$status}" href="{if ($status = ("a_raw", "b_cleared", "c_hyph_proposed", "d_hyph_approved", "e_emended_unenriched", "f_enriched")) then 'javascript:' else $vol}">{concat($volNumber||': ', $date)}</a>
-                                    else
-                                        <span>
-                                            <a class="{$status}" href="{if ($status = ("a_raw", "b_cleared", "c_hyph_proposed", "d_hyph_approved", "e_emended_unenriched", "f_enriched")) then 'javascript:' else $vol}">{concat($volNumber||': ', $date)}</a>{'&#xA0;-&#xA0;'}
-                                        </span>  
-        return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
-};:)
  
 (:~ 
 Creates a (HTML) catalogue record for a work/volume.
@@ -2107,16 +1846,27 @@ Creates a (HTML) catalogue record for a work/volume.
 ~:)
 declare %templates:wrap function app:WRKcatRecord($node as node(), $model as map(*), $lang as xs:string?) {
     let $workType := $model('currentWorkType')
-    let $volumeIds :=   if ($workType eq 'work_multivolume') then 
-                            for $item in $model('currentWorkHeader')/tei:fileDesc/tei:notesStmt/tei:relatedItem[@type eq 'work_volume'] return substring-after($item/@target/string(), 'work:')
-                        else ()
+    let $volumeIds :=   
+        if ($workType eq 'work_multivolume') then 
+            for $item in $model('currentWorkHeader')/tei:fileDesc/tei:notesStmt/tei:relatedItem[@type eq 'work_volume'] return substring-after($item/@target/string(), 'work:')
+        else ()
+    let $multivolInfo := 
+        if ($workType eq 'work_volume') then
+            <div class="col-md-8" style="padding-bottom:0.8em;">
+                <span style="font-size:1.2em;font-style:italic;"><a href="{$config:webserver || '/' || $lang || '/workDetails.html?wid=' || substring($model('currentWorkId'),1,5)}">
+                    <i class="fas fa-info-circle"></i>{' '}<i18n:text key="partOfMultivol">Part of a multivolume work</i18n:text>
+                </a></span>
+            </div>
+        else ()
     let $volumesCount := count($volumeIds)
-    let $volumesRecord :=   if ($volumesCount gt 0) then 
-                                for $id in $volumeIds return app:WRKcatRecordTeaser($node, $model, $id, $lang, $volumesCount)
-                            else ()
+    let $volumesRecord :=   
+        if ($volumesCount gt 0) then 
+            for $id in $volumeIds return app:WRKcatRecordTeaser($node, $model, $id, $lang, $volumesCount)
+        else ()
     let $output := 
         <div>
             <div class="row">
+                {$multivolInfo}
                 <div class="col-md-8">
                     {app:WRKeditionRecord($node, $model, $lang)}
                     <hr/>
@@ -2176,11 +1926,11 @@ declare function app:WRKadditionalInfoRecord($node as node(), $model as map(*), 
                                 <i18n:text key="teiHeader">TEI Header</i18n:text>
                             </a>
     let $iiifLink := if ($workType eq 'work_multivolume') then   
-                        <a href="{$iiif:presentationServer || 'collection/' || $workId}">
+                        <a href="{$config:iiifPresentationServer || 'collection/' || $workId}">
                             IIIF Collection
                         </a>
                      else 
-                        <a href="{$iiif:presentationServer || $workId || '/manifest'}">
+                        <a href="{$config:iiifPresentationServer || $workId || '/manifest'}">
                             IIIF Manifest
                         </a>
     let $rdfId := if ($workType eq 'work_volume') then substring-before($workId, '_Vol') (: redirecting to RDF dataset for the complete work :) else $workId
@@ -3561,22 +3311,6 @@ declare %templates:default
 };:)
                 
 (: ==== Paginator Function ===== :)
-declare function app:WRKpreparePagination($node as node()?, $model as map(*)?, $wid as xs:string?, $lang as xs:string?) {
-    let $workId :=  
-        if ($wid) then 
-            if (contains($wid, '_')) then substring-before(sal-util:normalizeId($wid), '_') 
-            else sal-util:normalizeId($wid)
-        else substring-before($model('currentWorkId'), '_')
-    return 
-        <ul id="later" class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">{
-            for $pb in doc($config:index-root || '/' || $workId || '_nodeIndex.xml')//sal:node[@type='pb'][not(starts-with(sal:title, 'sameAs') or starts-with(sal:title, 'corresp'))]
-                let $fragment := $pb/sal:fragment
-                let $url      := $config:idserver || '/texts/' || $workId || ':' || $pb/sal:citetrail/text() 
-                (:'work.html?wid=' || $workId || '&amp;frag=' || $fragment || '#' || concat('pageNo_', $pb/@n):)
-                return 
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="{$url}">{normalize-space($pb/sal:title)}</a></li>
-        }</ul>
-};
 
 declare function app:loadWRKpagination ($node as node(), $model as map (*), $wid as xs:string, $lang as xs:string, $q as xs:string?) {
     let $pagesFile  :=  doc($config:html-root || '/' || sal-util:normalizeId($wid) || '/' || sal-util:normalizeId($wid) || '_pages_' || $lang || '.html')
@@ -3648,7 +3382,8 @@ declare %templates:wrap
 };
 
 (:download XML func:)
-declare function app:downloadXML($node as node(), $model as map(*), $lang as xs:string) {
+declare %private 
+    function app:downloadXML($node as node(), $model as map(*), $lang as xs:string) {
     let $wid := request:get-parameter('wid', '')
     let $hoverTitle := i18n:process(<i18n:text key="downloadXML">Download TEI/XML source file</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
     let $download := 
@@ -3670,7 +3405,8 @@ declare function app:downloadXML($node as node(), $model as map(*), $lang as xs:
     return $download
 };:)
 
-declare function app:downloadRDF($node as node(), $model as map(*), $lang as xs:string) {
+declare %private 
+    function app:downloadRDF($node as node(), $model as map(*), $lang as xs:string) {
     let $wid      :=  request:get-parameter('wid', '')
     let $hoverTitle := i18n:process(<i18n:text key="downloadRDF">Download RDF/XML data for this work</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
     let $download := 
@@ -3841,7 +3577,8 @@ declare %templates:wrap function app:participantsBody($node as node(), $model as
         
 };
 
-declare function app:makeParticipantTeaser($person as element(tei:person), $lang as xs:string, $mode as xs:string, $index as xs:integer?) as element(div) {
+declare %private 
+    function app:makeParticipantTeaser($person as element(tei:person), $lang as xs:string, $mode as xs:string, $index as xs:integer?) as element(div) {
     <div class="row">
         <div class="col-md-8">
             <h3>
@@ -3860,7 +3597,8 @@ declare function app:makeParticipantTeaser($person as element(tei:person), $lang
 (:
 ~ Modes: 'single' if page consists of single entry; 'multi' if page consists of several entries.
 :)
-declare function app:makeParticipantEntry($person as element(tei:person), $lang as xs:string, $mode as xs:string, $index as xs:integer?) as element(div) {
+declare %private 
+    function app:makeParticipantEntry($person as element(tei:person), $lang as xs:string, $mode as xs:string, $index as xs:integer?) as element(div) {
     let $backLink := 
         <a href="{$config:webserver || '/' || $lang || '/participants.html'}" style="font-size:1.5em;">
             <i class="fas fa-arrow-left"></i>{' '}<i18n:text key="toOverview"/>

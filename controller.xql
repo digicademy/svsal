@@ -142,63 +142,42 @@ return
                             if ($textsRequest('validation') eq 1) then (: fully valid request :)
                                 switch ($textsRequest('format')) 
                                     case 'html' return net:APIdeliverTextsHTML($textsRequest, $netVars)
-                                    case 'rdf' return net:APIdeliverRDF($textsRequest, $netVars)
+                                    case 'rdf'  return net:APIdeliverRDF($textsRequest, $netVars)
                                     case 'tei'  return net:APIdeliverTEI($textsRequest,$netVars)
                                     case 'txt'  return net:APIdeliverTXT($textsRequest,$netVars)
                                     case 'jpg'  return net:APIdeliverJPG($textsRequest, $netVars)
+                                    case 'iiif' return net:APIdeliverIIIF($textsRequest, $netVars) 
+                                    (: TODO: case 'application/ld+json': deliver iiif ? :)
                                     default return net:APIdeliverTextsHTML($textsRequest, $netVars)
-                                (: TODO:
-                                    case 'iiif' return net:deliverIIIF($exist:path, $netVars) (\: TODO: debug forwarding :\)
-                                    case 'jpg' return net:deliverJPG($pathComponents, $netVars)
-                                    default return net:deliverHTML($pathComponents, $netVars)
-                                    
-                                    case 'image/jpeg' return
-                                        let $debug  := if ($config:debug = ("trace", "info")) then console:log($contentType || " requested, delivering jpg: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-                                        let $pathComponents := tokenize(lower-case($exist:path), "/")
-                                        return net:deliverJPG($pathComponents, $netVars)
-                                    case 'application/ld+json' return
-                                        let $debug  := if ($config:debug = ("trace", "info")) then console:log($contentType || " requested, delivering iiif: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-                                        return net:deliverIIIF($path, $netVars)
-                                 :)
                             else if ($textsRequest('validation') eq 0) then (: one or more resource(s) not yet available :)
                                 if ($textsRequest('format') eq 'html') then net:APIdeliverTextsHTML($textsRequest, $netVars)
                                 else net:error(404, $netVars, ()) (: resource(s) not found :)
                             else net:error(404, $netVars, ()) (: well-formed, but invalid resource(s) requested :)
-
-(:
-                        default return
-                            let $contentType := net:negotiateContentType($net:servedContentTypes, 'text/html')
-                            let $debug1 := if ($config:debug = ("trace")) then console:log("Content type '" || $contentType || "' determines format...") else ()
-                            return switch ($contentType)
-                                case 'text/plain' return
-                                    let $debug  := if ($config:debug = ("trace", "info")) then console:log($contentType || " requested, delivering txt: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-                                    return net:deliverTXT($textsRequest,$netVars)
-                                case 'application/rdf+xml' return
-                                    let $debug  := if ($config:debug = ("trace", "info")) then console:log($contentType || " requested, delivering rdf: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-                                    return net:deliverRDF($pathComponents, $netVars)
-:)
-            case "search" return
-                let $debug         := if ($config:debug = ("trace", "info")) then console:log("Search requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-                let $absolutePath  := concat($config:searchserver, '/', substring-after($exist:path, '/search/'))
-                return net:redirect($absolutePath, $netVars)
-            case "codesharing" return
-                let $debug         := if ($config:debug = ("trace", "info")) then console:log("Codesharing requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-                let $parameters    := <exist:add-parameter name="outputType" value="html"/>
-                return
-                    if ($pathComponents[last()] = 'codesharing_protocol.xhtml') then
-                        net:forward('/services/codesharing/codesharing_protocol.xhtml', $netVars)      (: Protocol description html file. :)
-                    else
-                        net:forward('/services/codesharing/codesharing.xql', $netVars, $parameters)    (: Main service HTML page.  :)
-            case "xtriples" return
-                let $debug         := if ($config:debug = ("trace", "info")) then console:log("XTriples requested: " || $net:forwardedForServername || $exist:path || $parameterString || " ...") else ()
-                return
-                    if (tokenize($pathComponents[last()], '\?')[1] = ("extract.xql", "createconfig.xql", "xtriples.html", "changelog.html", "documentation.html", "examples.html")) then
-                        let $debug := if ($config:debug = ("trace", "info")) then console:log("Forward to: /services/lod/" || tokenize($exist:path, "/")[last()]  || ".") else ()
-                        return net:forward('/services/lod/' || tokenize($exist:path, "/")[last()], $netVars)
-                    else net:error(404, $netVars, ())
-            default return net:error(404, $netVars, ())
-        else if ($pathComponents[3]) then net:error(404, $netVars, ()) (: or 400, 405? :)
-        else net:redirect-with-303($config:webserver)
+                case "search" return
+                    let $debug         := if ($config:debug = ("trace", "info")) then console:log("Search requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
+                    let $absolutePath  := concat($config:searchserver, '/', substring-after($exist:path, '/search/'))
+                    return net:redirect($absolutePath, $netVars)
+                case "codesharing" return
+                    let $debug         := if ($config:debug = ("trace", "info")) then console:log("Codesharing requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
+                    let $parameters    := <exist:add-parameter name="outputType" value="html"/>
+                    return
+                        if ($pathComponents[last()] = 'codesharing_protocol.xhtml') then
+                            net:forward('/services/codesharing/codesharing_protocol.xhtml', $netVars)      (: Protocol description html file. :)
+                        else
+                            net:forward('/services/codesharing/codesharing.xql', $netVars, $parameters)    (: Main service HTML page.  :)
+                case "xtriples" return
+                    let $debug         := if ($config:debug = ("trace", "info")) then console:log("XTriples requested: " || $net:forwardedForServername || $exist:path || $parameterString || " ...") else ()
+                    return
+                        if (tokenize($pathComponents[last()], '\?')[1] = ("extract.xql", "createconfig.xql", "xtriples.html", "changelog.html", "documentation.html", "examples.html")) then
+                            let $debug := if ($config:debug = ("trace", "info")) then console:log("Forward to: /services/lod/" || tokenize($exist:path, "/")[last()]  || ".") else ()
+                            return net:forward('/services/lod/' || tokenize($exist:path, "/")[last()], $netVars)
+                        else net:error(404, $netVars, ())
+                case "stats" return
+                    let $debug         := if ($config:debug = ("trace", "info")) then console:log("Stats requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
+                    return net:APIdeliverStats($netVars)
+                default return net:error(404, $netVars, ())
+            else if ($pathComponents[3]) then net:error(404, $netVars, ()) (: or 400, 405? :)
+            else net:redirect-with-303($config:webserver)
 
 
     (: *** Entity resolver (X-Forwarded-Host = 'id.{$config:serverdomain}') *** :)

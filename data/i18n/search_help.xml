@@ -225,6 +225,28 @@ lex SENTENCE naturalis =&gt; sucht nach einem Satz, in dem sowohl lex als auch n
             </eg>
         </p>
     </div>
+    
+    <div type="section" xml:id="div_single_work_de">
+        <head xml:id="head_single_work_de">Suche in einzelnen Werken</head>
+        <p xml:id="p_lakjsfas">Die globale Suche wie auch die Suche innerhalb bestimmter Datenquellen-Kategorien
+            ("Werke: Volltext", "Werke: Noten", "Working Papers: ..." etc.) beziehen sich stets auf alle Texte innerhalb der jeweiligen 
+            Kategorie. Eine selektive Suche in einzelnen Werken der digitalen Quellensammlung ist momentan nicht
+            über die grafische Benutzeroberfläche möglich. Technisch Experimentierfreudige können jedoch bereits jetzt 
+            die Suche mittels des "@sphinx_work"-Feldoperators auf einzelne Werke beschränken.</p> 
+        <p xml:id="p_kjasdlas">Dazu ist es zunächst notwendig, die genaue "Werk-ID" des jeweiligen Werkes zu kennen. 
+            Diese Werk-ID ist fünfstellig und besteht aus der Initiale "W" (für engl. "work") gefolgt von 4 Ziffern. Sie kann 
+            am schnellsten in werkspezifischen URLs wie jenen der Werk-Leseansicht oder der Katalogeinträge im "wid="-Parameter 
+            gefunden werden; außerdem findet sie sich z.B. im Zitiervorschlag zu einem Werk, wie er etwa in dessen
+            Katalogeintrag angegeben ist, in den letzten fünf Stellen der URI: "https://id.salamanca.school/texts/[Werk-ID]".
+        </p>
+        <p xml:id="p_oijdfsi">Ist die Werk-ID ermittelt, kann die Suche im Such-Feld mittels des Feld-Operators folgendermaßen 
+            eingeschränkt werden:</p>
+        <eg>[Suchbegriff] @sphinx_work ^[Werk-ID]</eg>
+        <p xml:id="p_lshdfjlsdjf">Die Suche nach dem Begriff "lex" nur in Diego de Castillos "Tratado de Cuentas" (Werk-ID: "W0004") wäre z.B. mithilfe 
+            des folgenden Eintrags im Suchfeld möglich:</p>
+        <eg>lex @sphinx_work ^W0004</eg>
+        <p xml:id="p_saioudas">Ansonsten folgt die Such-Syntax den oben angegebenen Regeln.</p>
+    </div>
 
     <div type="section" xml:id="div_mehr_infos_de">
         <head xml:id="head_mehr_infos">Wo finde ich weitere Informationen?</head>
@@ -385,6 +407,29 @@ die konstituierte Lesart durchsucht.</note>
                     </p>
                 </div>
                 
+                <div type="section" xml:id="div_single_work_en">
+                    <head xml:id="head_single_work_en">Search within Single Works</head>
+                    <p xml:id="p_lakjsfass">When searching globally or within a specific category of "data sources" 
+                        ("Works: full text", "Works: headings", "Working Papers: ..."), all texts (of the selected category) are targeted 
+                        through the search. A more selective search for single works (instead of the whole corpus) is not 
+                        possible by means of the graphical user interface at the moment. However, the technically adventurous 
+                        may limit their search queries already through the "@sphinx_work" field operator.</p> 
+                    <p xml:id="p_kjassdlas">For this purpose, it is necessary to know the specific "work id" of the respective work. 
+                        This five-place id consists of the initial "W" (for "work") followed by four digits and can be found in 
+                        URLs of work-specific views (such as the reading view or the catalogue entry for a work) in the "wid=" parameter;
+                        alternatively, the citation proposal for a work, to be found in its catalogue entry, contains the work id in its URL:
+                        "https://id.salamanca.school/texts/[work id]".
+                    </p>
+                    <p xml:id="p_oijsdfsi">Once the respective work's id has been identified, the search can be limited to this 
+                        work through the field operator in the following way:</p>
+                    <eg>[query term] @sphinx_work ^[work id]</eg>
+                    <p xml:id="p_lshdfjlssdjf">For example, searching for the term "lex" only in Diego de Castillo's "Tratado de Cuentas" 
+                        (which has the work id "W0004") is possible by means of the following query (to be entered in the search field):
+                    </p>
+                    <eg>lex @sphinx_work ^W0004</eg>
+                    <p xml:id="p_saiousdas">Apart from that, the search syntax follows the guidelines stated above.</p>
+                </div>
+                
                 <div type="section" xml:id="div_more_info_en">
                     <head xml:id="head_more_info_en">Where to Find more Information</head>
                     <p xml:id="p_juzserdvnzu">
@@ -416,17 +461,17 @@ die konstituierte Lesart durchsucht.</note>
                                     predeterminado)</gloss>
                             </item>
                             <item xml:id="item_corpus_es">
-                                <term xml:id="term_corpus_es" ref="#option2">Corpus: Texto Completo</term>
+                                <term xml:id="term_corpus_es" ref="#option2">Obras: Texto Completo</term>
                                 <gloss target="#term_corpus_es">busca los términos de búsqueda en todas las
                                     obras editadas por nosotros.</gloss>
                             </item>
                             <item xml:id="item_headings_es">
-                                <term xml:id="term_headings_es" ref="#option3">Corpus: Títulos</term>
+                                <term xml:id="term_headings_es" ref="#option3">Obras: Títulos</term>
                                 <gloss target="#term_headings_es">busca los términos de búsqueda en todas las
                                     fuentes originales, pero solo en los títulos.</gloss>
                             </item>
                             <item xml:id="item_notes_es">
-                                <term xml:id="term_notes_es" ref="#option4">Corpus: Notas</term>
+                                <term xml:id="term_notes_es" ref="#option4">Obras: Notas</term>
                                 <gloss target="#term_notes_es">busca los términos de búsqueda en todos los
                                     textos fuente, pero solo en las notas marginales, de pie de página y
                                     finales.</gloss>
@@ -549,6 +594,32 @@ die konstituierte Lesart durchsucht.</note>
                             cual aparece tanto lex como naturalis. </eg>
                     </p>
                 </div>
+                
+                <div type="section" xml:id="div_single_work_es">
+                    <head xml:id="head_single_work_es">Busqueda en obras individuales</head>
+                    <p xml:id="p_lakfjsfass">La búsqueda global, así como la búsqueda dentro de 
+                        ciertas categorías de fuentes de datos ("Obras: Texto completo", "Obras: Notas", "Working papers: ...", etc.) 
+                        siempre se refieren a todos los textos dentro de la categoría respectiva. Una búsqueda selectiva en obras 
+                        individuales de la colección de fuentes digitales no es posible actualmente a través de la interfaz 
+                        gráfica de usuario. Sin embargo, aquellos que disfrutan la experimentación técnica pueden ahora restringir 
+                        la búsqueda a obras individuales utilizando el operador de campo "@sphinx_work".</p>
+                    <p xml:id="p_kjasdlass">Para esto, primero es necesario conocer el "Work id" (el número de identificación) de la obra 
+                        respectiva. Esta identificación tiene cinco dígitos y consta de la inicial "W" 
+                        (equivalente a la palabra inglesa "Work") seguida de 4 dígitos. 
+                        Se puede encontrar más rápidamente en los URL específicos de la obra, como las de la vista de 
+                        lectura de la obra o las entradas de catálogo en el parámetro "wid ="; Además, se encuentran en 
+                        la citación recomendada de una obra, como se indica en su entrada de catálogo, en los últimos cinco dígitos 
+                        del URI: "https://id.salamanca.school/texts/[Werk-ID]".
+                    </p>
+                    <p xml:id="p_oijfsdfsi"> Una vez sea determinada la identificación de la obra, se puede restringir la búsqueda utilizando 
+                        el operador de campo en el campo de búsqueda de la siguiente manera:</p>
+                    <eg>[Término de búsqueda] @sphinx_work ^[work id]</eg>
+                    <p xml:id="p_lshdfsjlsdjf">La búsqueda del término "lex" solo en Diego de Castillos "Tratado de Cuentas" (work id: "W0004") 
+                        sería posible con ayuda de la siguiente entrada en el campo de búsqueda:</p>
+                    <eg>lex @sphinx_work ^W0004</eg>
+                    <p xml:id="p_saifousdas">De lo contrario, la sintaxis de búsqueda sigue las reglas dadas anteriormente.</p>
+                </div>
+                
                 
                 <div type="section" xml:id="div_more_info_es">
                     <head xml:id="head_more_info_es">¿Dónde puedo encontrar más información?</head>

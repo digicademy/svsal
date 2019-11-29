@@ -9,6 +9,14 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
 declare namespace sal = "http://salamanca.adwmainz.de";
 
 (:
+
+Module for util functions that are of a general nature and/or used by multiple other modules.
+Bundling such functions here shall prevent interdependencies between larger and more specific modules.
+
+:)
+
+
+(:
 ~ Makes a copy of a node tree, to be used for making copies of subtrees on-the-fly for not having to process the whole document
     (supposed to increase speed especially where "intersect" statements are applied).
 :)
@@ -183,7 +191,6 @@ declare function sal-util:getNodeIndexValue($wid as xs:string, $node as element(
     else ()
 };
 
-
 declare function sal-util:getFragmentID($targetWorkId as xs:string, $targetNodeId as xs:string) as xs:string? {
     doc($config:index-root || '/' || $targetWorkId || '_nodeIndex.xml')//sal:node[@n = $targetNodeId][1]/sal:fragment/text()
 };
@@ -191,9 +198,23 @@ declare function sal-util:getFragmentID($targetWorkId as xs:string, $targetNodeI
 declare function sal-util:getNodetrail($wid as xs:string, $node as element(), $mode as xs:string) {
     let $debug := 
         if ($mode = ('citetrail', 'crumbtrail', 'passagetrail')) then () 
-        else util:log('error', '[SAL-UTIL] calling render:getNodetrail with unknown mode: ' || $mode)
+        else () (:util:log('error', '[SAL-UTIL] calling render:getNodetrail with unknown mode: ' || $mode):)
     return
         doc($config:index-root || '/' || $wid || '_nodeIndex.xml')/sal:index/sal:node[@n eq $node/@xml:id]/*[local-name() eq $mode]/node()
+};
+
+(:
+For a resource (work or volume) id, returns the url to the resource's iiif resource.
+:)
+declare function sal-util:getIiifUrl($workId as xs:string) as xs:string? {
+    if (doc-available($config:tei-works-root || '/' || $workId || '.xml')) then
+        let $workType := doc($config:tei-works-root || '/' || $workId || '.xml')/tei:TEI/tei:text/@type
+        return
+            if ($workType eq 'work_multivolume') then (: iiif collection :)
+                $config:iiifPresentationServer || 'collection/' || $workId
+            else (: iiif manifest :)
+                $config:iiifPresentationServer || $workId || '/manifest'
+    else ()
 };
 
 

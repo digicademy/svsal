@@ -373,7 +373,6 @@ return
         let $debug                  := if ($config:debug = ("trace", "info")) then console:log("Data requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
         return
 (: Cases:
-
     0. void.ttl
     1. *.rdf                                                OK
     2. *.html           -> www.{serverdomain}                          OK
@@ -393,7 +392,6 @@ return
             4b2. single resource
                 4b2a. rdf work
                 4b2b. rdf author
-
 :)
 
 (: LOD 0. We have a request for Metadata (Data about the dataset) :)
@@ -686,5 +684,3 @@ return
                                     if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (),
                                     string-join(net:inject-requestParameter('', ''), '&amp;'))
         return net:redirect($absolutePath, $net-vars)
-
-

@@ -18,12 +18,6 @@ import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.x
 declare option output:method "json";
 declare option output:media-type "application/json";
  
-declare variable $iiif:proto := $config:proto;
-
-declare variable $iiif:facsServer := $iiif:proto || "://facs." || $config:serverdomain;
-declare variable $iiif:imageServer := $iiif:facsServer || "/iiif/image/";
-declare variable $iiif:presentationServer := $iiif:facsServer || "/iiif/presentation/";
-
 
 (: Interface function for fetching a iiif resource, either (if possible) from the database or by creating it on-the-fly.
 This resource may be either a manifest (for a single-volume work or a single volume within a multi-volume work) 
@@ -57,8 +51,12 @@ declare function iiif:fetchResource ($wid as xs:string) as map(*)? {
                     let $manifest := array:get(array:filter(map:get($collection, 'members'), function($a) {contains(map:get($a, '@id'), $workId)}), 1)
                     return $manifest
                 else 
+                    ()
+                    (: on-the-fly-creation - disabled for performance reasons :)
+                    (:
                     let $debug := console:log('Creating iiif manifest for ' || $workId || '.')
                     return iiif:createResource($workId)
+                    :)
             return $volume
         else ()
     return $output 
@@ -87,7 +85,7 @@ declare function iiif:createResource($targetWorkId as xs:string) as map(*) {
 
 declare function iiif:mkMultiVolumeCollection($workId as xs:string, $tei as node()) as map(*) {
     let $debug := if ($config:debug = "trace") then console:log("iiif:mkMultiVolumeCollection running (" || $workId || " requested) ...") else ()
-    let $id := $iiif:presentationServer || "collection/" || $workId
+    let $id := $config:iiifPresentationServer || "collection/" || $workId
     let $label := normalize-space($tei//tei:titleStmt/tei:author) || ": " ||
         normalize-space($tei//tei:titleStmt/tei:title[@type="main"]/text()) || " [multi-volume collection]"
     let $viewingHint := "multi-part"
@@ -130,7 +128,7 @@ declare function iiif:mkSingleVolumeManifest($volumeId as xs:string, $teiDoc as 
     let $debug := if ($config:debug = "trace") then console:log("iiif:mkSingleVolumeManifest running (" || $volumeId || " requested) ...") else ()
     let $tei := util:expand($teiDoc)
     (: File metadata section :)
-    let $id := $iiif:presentationServer || $volumeId || "/manifest"
+    let $id := $config:iiifPresentationServer || $volumeId || "/manifest"
     let $label := normalize-space($tei/tei:teiHeader//tei:titleStmt/tei:title[@type="main"]/text())
 
     (: Bibliographical metadata section :)
@@ -139,9 +137,9 @@ declare function iiif:mkSingleVolumeManifest($volumeId as xs:string, $teiDoc as 
     let $description := "Coming soon..." (: TODO, depends on available description in TEI metadata :)
     (: the thumbnail works only if we have a titlePage with a pb in or before it: :)
     let $thumbnailId := iiif:getThumbnailId($tei)
-    let $thumbnailServiceId := concat($iiif:imageServer, $thumbnailId)
+    let $thumbnailServiceId := concat($config:iiifImageServer, $thumbnailId)
     let $thumbnail := map {
-        "@id": concat($iiif:imageServer, $thumbnailId, "/full/full/0/default.jpg"),
+        "@id": concat($config:iiifImageServer, $thumbnailId, "/full/full/0/default.jpg"),
         "service": map {
             "@context": "http://iiif.io/api/image/2/context.json",
             "@id": $thumbnailServiceId,
@@ -151,7 +149,7 @@ declare function iiif:mkSingleVolumeManifest($volumeId as xs:string, $teiDoc as 
 
     (: Sequences, including all the canvases and images for the volume :)
     (: currently, there is but one sequence (the default sequence/order of pages for the volume) :)
-    let $sequences := array { iiif:mkSequence($volumeId, $tei, concat($iiif:imageServer, $thumbnailId, "/full/full/0/default.jpg")) } 
+    let $sequences := array { iiif:mkSequence($volumeId, $tei, concat($config:iiifImageServer, $thumbnailId, "/full/full/0/default.jpg")) } 
 
     (: Presentation information :)
     let $viewingDirection := "left-to-right"
@@ -205,7 +203,7 @@ declare function iiif:mkSingleVolumeManifest($volumeId as xs:string, $teiDoc as 
 declare function iiif:mkSequence($volumeId as xs:string, $tei as node(), $thumbnailUrl as xs:string) {
     let $debug := if ($config:debug = "trace") then console:log("iiif:mkSequence running...") else ()
 
-    let $id := $iiif:presentationServer || $volumeId || "/sequence/normal"
+    let $id := $config:iiifPresentationServer || $volumeId || "/sequence/normal"
 
     let $canvases :=
         if (count($tei/tei:text/tei:body//tei:pb) > 15) then
@@ -257,10 +255,10 @@ declare function iiif:mkSequence($volumeId as xs:string, $tei as node(), $thumbn
 
 declare function iiif:mkCanvasFromTeiFacs($volumeId as xs:string, $facs as xs:string, $index as xs:integer) {
 
-    let $id := $iiif:presentationServer || $volumeId || "/canvas/p" || string($index)
+    let $id := $config:iiifPresentationServer || $volumeId || "/canvas/p" || string($index)
     let $label := "p. " || string($index)
 
-    let $digilibImageId := $iiif:imageServer || iiif:teiFacs2IiifImageId($facs)
+    let $digilibImageId := $config:iiifImageServer || iiif:teiFacs2IiifImageId($facs)
     (: get image height and width from the digilib server (i.e. from each image json file): :)
     let $options := map { "liberal": true(), "duplicates": "use-last" }
     
@@ -273,7 +271,7 @@ declare function iiif:mkCanvasFromTeiFacs($volumeId as xs:string, $facs as xs:st
     let $images := array {
         map {
             "@context": "http://iiif.io/api/presentation/2/context.json",
-            "@id": concat($iiif:presentationServer, $volumeId, "/annotation/p", string($index), "-image"),
+            "@id": concat($config:iiifPresentationServer, $volumeId, "/annotation/p", string($index), "-image"),
             "@type": "oa:Annotation",
             "motivation": "sc:painting",
             "resource": map {
@@ -311,14 +309,14 @@ by adding some info (such as Salamanca URLs)
 @param $index A counter supplied to the function when it is iteratively called, to be used for the pagination of canvases.
 :)
 declare function iiif:transformDigilibCanvas($volumeId as xs:string, $canvas as map(*), $index as xs:integer) {
-    let $id := $iiif:presentationServer || $volumeId || "/canvas/p" || string($index)
+    let $id := $config:iiifPresentationServer || $volumeId || "/canvas/p" || string($index)
     let $label := "p. " || string($index)
 
     let $dl-images := map:get($canvas, "images")
     let $dl-image1 := array:get($dl-images, 1) (: assumes that the "images" element contains only one relevant subelement: the first one  :)
     let $dl-resource := map:get($dl-image1, "resource")
 
-    let $digilibImageId := $iiif:imageServer || substring-before(substring-after(map:get($dl-resource, "@id"), "/Scaler/IIIF/svsal!"), "/full/full/0/default.jpg")
+    let $digilibImageId := $config:iiifImageServer || substring-before(substring-after(map:get($dl-resource, "@id"), "/Scaler/IIIF/svsal!"), "/full/full/0/default.jpg")
 
     let $imageHeight := map:get($dl-resource, "height")
     let $imageWidth := map:get($dl-resource, "width")
@@ -326,7 +324,7 @@ declare function iiif:transformDigilibCanvas($volumeId as xs:string, $canvas as 
     let $images := array {
         map {
             "@context": "http://iiif.io/api/presentation/2/context.json",
-            "@id": concat($iiif:presentationServer, $volumeId, "/annotation/p", string($index), "-image"),
+            "@id": concat($config:iiifPresentationServer, $volumeId, "/annotation/p", string($index), "-image"),
             "@type": "oa:Annotation",
             "motivation": "sc:painting",
             "resource": map {
