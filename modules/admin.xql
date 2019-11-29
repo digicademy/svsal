@@ -28,6 +28,7 @@ import module namespace index       = "https://www.salamanca.school/factory/work
 import module namespace html        = "https://www.salamanca.school/factory/works/html" at "../factory/works/html.xqm";
 import module namespace txt         = "https://www.salamanca.school/factory/works/txt" at "../factory/works/txt.xqm";
 import module namespace iiif        = "https://www.salamanca.school/factory/works/iiif" at "../factory/works/iiif.xqm";
+import module namespace httpclient = "http://exist-db.org/xquery/httpclient";
 declare namespace output            = "http://www.w3.org/2010/xslt-xquery-serialization";
 
 declare option exist:timeout "25000000"; (: ~7 h :)
@@ -1243,15 +1244,16 @@ declare function admin:createRDF($rid as xs:string) {
             substring-after($rid, "texts/")
         else $rid
     let $start-time := util:system-time()
+    let $xtriplesUrl := 
+        $config:apiserver || '/v1/xtriples/extract.xql?format=rdf&amp;configuration=' 
+        || $config:apiserver || '/v1/xtriples/createConfig.xql?resourceId=' || $rid
     let $debug := 
         if ($config:debug eq 'trace') then
-            util:log("warn", "Requesting " || $config:apiserver || '/v1/xtriples/extract.xql?format=rdf&amp;configuration=' 
-                || $config:apiserver || '/v1/xtriples/createConfig.xql?resourceId=' || $rid || ' ...')
+            util:log("warn", "Requesting " || $xtriplesUrl || ' ...')
         else ()
-    let $configuration := doc($config:apiserver || '/v1/xtriples/createConfig.xql?resourceId=' || $rid) 
-    let $rdf   :=  
-        doc($config:apiserver || '/v1/xtriples/extract.xql?format=rdf&amp;configuration=' 
-            || $config:apiserver || '/v1/xtriples/createConfig.xql?resourceId=' || $rid)
+    let $rdf := 
+        (: if this throws an "XML Parsing Error: no root element found", this might be due to the any23 service not being available :)
+        doc($xtriplesUrl) 
     let $runtime-ms := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000
     let $runtimeString := 
         if ($runtime-ms < (1000 * 60)) then format-number($runtime-ms div 1000, "#.##") || " Sek."

@@ -13,6 +13,7 @@ declare namespace transform  = "http://exist-db.org/xquery/transform";
 declare namespace util       = "http://exist-db.org/xquery/util";
 declare namespace xhtml      = "http://www.w3.org/1999/xhtml";
 declare namespace xi         = "http://www.w3.org/2001/XInclude";
+import module namespace httpclient = "http://exist-db.org/xquery/httpclient";
 import module namespace config    = "http://salamanca/config"                at "config.xqm";
 import module namespace render-app    = "http://salamanca/render-app"        at "render-app.xql";
 import module namespace sphinx    = "http://salamanca/sphinx"                at "sphinx.xql";

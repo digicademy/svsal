@@ -10,8 +10,7 @@ import module namespace config     = "http://salamanca/config"  at "config.xqm";
 import module namespace i18n       = "http://exist-db.org/xquery/i18n"        at "i18n.xql";
 import module namespace render-app = "http://salamanca/render-app"  at "render-app.xql";
 import module namespace console    = "http://exist-db.org/xquery/console";
-import module namespace http       = "http://expath.org/ns/http-client";
-(:import module namespace httpclient = "http://exist-db.org/xquery/httpclient";:)
+import module namespace httpclient = "http://exist-db.org/xquery/httpclient";
 import module namespace util       = "http://exist-db.org/xquery/util";
 import module namespace validation = "http://exist-db.org/xquery/validation";
 
