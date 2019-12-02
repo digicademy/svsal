@@ -42,6 +42,7 @@ declare function index:extractNodeStructure($wid as xs:string, $input as node()*
     for $node in $input return
         typeswitch($node)
             case element() return
+                (: index:isIndexNode($node) has already been called in admin:createIndex, so we can use that run here: :)
                 if (:(index:isIndexNode($node)):) ($node/@xml:id and $fragmentIds($node/@xml:id)) then
                     let $debug := if ($config:debug = ("trace") and $node/self::tei:pb) then index:pb($node, 'debug') else ()
                     let $subtype := 
@@ -195,6 +196,7 @@ declare function index:makeMarginalCitetrail($node as element()) as xs:string {
 (:
 ~ Determines which nodes serve for "passagetrail" production.
 :)
+(: NOTE: the tei:text[@type eq 'completeWork'] node is NOT part of the index itself :)
 declare function index:isPassagetrailNode($node as element()) as xs:boolean {
     boolean(
         index:isIndexNode($node) and

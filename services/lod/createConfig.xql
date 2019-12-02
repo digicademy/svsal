@@ -47,9 +47,9 @@ let $rawConfiguration   :=
                         <xsl:value-of select="replace(., 'https?://id.salamanca.school', $idServer)"/>
                     </xsl:attribute>
                 </xsl:template>
-                <xsl:template match="attribute::prepend[contains(., 'texts/WXXXX:')]"      priority="80">
+                <xsl:template match="attribute::prepend[contains(., 'texts/WXXXX')]"      priority="80">
                     <xsl:attribute name="prepend">
-                        <xsl:value-of select="concat('texts/', $resourceId, ':')"/>
+                        <xsl:value-of select="replace(., 'texts/WXXXX', concat('texts/', $resourceId))"/>
                     </xsl:attribute>
                 </xsl:template>
                 <xsl:template match="attribute::prepend[contains(., 'id.salamanca.school')]"      priority="80">

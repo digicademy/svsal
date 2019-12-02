@@ -26,6 +26,9 @@
         </vocabularies>
 
         <triples>
+            
+       <!-- NOTE: in the following, "WXXXX" within @prepend is a placeholder that gets replaced by the actual
+            work id through createConfig.xql -->     
 
 <!-- TODO/General:
     - Try to get rid of string() so that values are not isolated from their (indexed) nodes (ML suggestion by Joe Wicentowski)
@@ -641,9 +644,10 @@
             </statement>
 
             <statement n="302" repeat="{/min((100020, count($currentResource[self::itei:text]//itei:pb[@citetrail])))}">
-                <subject type="uri" prepend="texts/WXXXX:">/($currentResource//itei:pb[@citetrail])[$repeatIndex]/@citetrail/string()</subject>
+                <subject type="uri" prepend="texts/WXXXX:">/($currentResource[self::itei:text]//itei:pb[@citetrail])[$repeatIndex]/@citetrail/string()</subject>
                 <predicate prefix="po">isContainedBy</predicate>
-                <object type="uri" prepend="texts/">/concat($currentResource/@in, if (($currentResource//itei:pb[@citetrail])[$repeatIndex]/@citableParent/string() ne '') then concat(':', ($currentResource//itei:pb[@citetrail])[$repeatIndex]/@citableParent/string()) else ())</object>
+                <object type="uri" prepend="texts/">/('abcdefg')</object>
+                <!-- /(if (($currentResource//itei:pb[@citetrail])[$repeatIndex]/@citableParent/string() ne '') then concat($currentResource/@in/string(), ':', ($currentResource//itei:pb[@citetrail])[$repeatIndex]/@citableParent/string()) else $currentResource/@in/string()) -->
             </statement>
             
             <statement n="303" repeat="{/min((100020, count($currentResource[self::itei:text]//itei:pb[@citetrail])))}">
