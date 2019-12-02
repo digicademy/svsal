@@ -217,4 +217,9 @@ declare function sal-util:getIiifUrl($workId as xs:string) as xs:string? {
     else ()
 };
 
+declare function sal-util:getPublishedWorkIds() as xs:string* {
+    collection($config:tei-works-root)/tei:TEI[./tei:text/@type = ('work_monograph', 'work_multivolume') 
+                                               and sal-util:WRKisPublished(@xml:id)]/@xml:id/string()
+};
+
 
