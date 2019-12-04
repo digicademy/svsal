@@ -11,8 +11,8 @@ xquery version "3.1";
 declare namespace exist             = "http://exist.sourceforge.net/NS/exist";
 declare namespace request           = "http://exist-db.org/xquery/request";
 declare namespace output            = "http://www.w3.org/2010/xslt-xquery-serialization";
-import module namespace admin       = "http://salamanca/admin" at "modules/admin.xql";
-import module namespace config    = "http://salamanca/config" at "config.xqm";
+import module namespace admin       = "http://www.salamanca.school/xquery/admin" at "modules/admin.xql";
+import module namespace config    = "http://www.salamanca.school/xquery/config" at "config.xqm";
 import module namespace util        = "http://exist-db.org/xquery/util";
 
 declare option exist:timeout "43200000"; (: 12 h :)

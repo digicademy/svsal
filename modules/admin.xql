@@ -7,7 +7,7 @@ xquery version "3.0";
 
  ----++++#### :)
 
-module namespace admin              = "http://salamanca/admin";
+module namespace admin              = "http://www.salamanca.school/xquery/admin";
 declare namespace exist             = "http://exist.sourceforge.net/NS/exist";
 declare namespace tei               = "http://www.tei-c.org/ns/1.0";
 declare namespace xi                = "http://www.w3.org/2001/XInclude";
@@ -18,11 +18,11 @@ import module namespace functx      = "http://www.functx.com";
 import module namespace templates   = "http://exist-db.org/xquery/templates";
 import module namespace util        = "http://exist-db.org/xquery/util";
 import module namespace xmldb       = "http://exist-db.org/xquery/xmldb";
-import module namespace app         = "http://salamanca/app"                    at "app.xql";
-import module namespace config      = "http://salamanca/config"                 at "config.xqm";
-import module namespace render-app  = "http://salamanca/render-app"         at "render-app.xql";
-import module namespace sphinx      = "http://salamanca/sphinx"                 at "sphinx.xql";
-import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";
+import module namespace app         = "http://www.salamanca.school/xquery/app"                    at "app.xql";
+import module namespace config      = "http://www.salamanca.school/xquery/config"                 at "config.xqm";
+import module namespace render-app  = "http://www.salamanca.school/xquery/render-app"         at "render-app.xql";
+import module namespace sphinx      = "http://www.salamanca.school/xquery/sphinx"                 at "sphinx.xql";
+import module namespace sal-util    = "http://www.salamanca.school/xquery/sal-util" at "sal-util.xql";
 import module namespace stats       = "https://www.salamanca.school/factory/works/stats" at "../factory/works/stats.xqm";
 import module namespace index       = "https://www.salamanca.school/factory/works/index" at "../factory/works/index.xqm";
 import module namespace html        = "https://www.salamanca.school/factory/works/html" at "../factory/works/html.xqm";

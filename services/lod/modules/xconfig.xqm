@@ -5,7 +5,7 @@ xquery version "3.0";
  : within a module.
  :)
 module namespace xconfig = "http://xtriples.spatialhumanities.de/config";
-(:module namespace config         = "http://salamanca/config";:)
+(:module namespace config         = "http://www.salamanca.school/xquery/config";:)
 
 import module namespace console = "http://exist-db.org/xquery/console";
 declare namespace request       = "http://exist-db.org/xquery/request";

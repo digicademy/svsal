@@ -5,7 +5,7 @@ module namespace intl="http://exist-db.org/xquery/i18n/templates";
  :)
 import module namespace i18n        = "http://exist-db.org/xquery/i18n" at "i18n.xql";
 import module namespace templates   = "http://exist-db.org/xquery/templates";
-import module namespace config      = "http://salamanca/config";
+import module namespace config      = "http://www.salamanca.school/xquery/config";
 
 (:~
  : Template function: calls i18n:process on the child nodes of $node.

@@ -3,7 +3,7 @@ xquery version "3.0";
 import module namespace request     = "http://exist-db.org/xquery/request";
 import module namespace transform   = "http://exist-db.org/xquery/transform";
 import module namespace console     = "http://exist-db.org/xquery/console";
-import module namespace config      = "http://salamanca/config" at "../../modules/config.xqm";
+import module namespace config      = "http://www.salamanca.school/xquery/config" at "../../modules/config.xqm";
 declare       namespace exist       = "http://exist.sourceforge.net/NS/exist";
 declare       namespace sal         = "http://salamanca.adwmainz.de";
 declare       namespace tei         = "http://www.tei-c.org/ns/1.0";

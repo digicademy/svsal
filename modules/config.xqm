@@ -1,7 +1,7 @@
 xquery version "3.1";
 
 
-module namespace config         = "http://salamanca/config";
+module namespace config         = "http://www.salamanca.school/xquery/config";
 declare       namespace exist   = "http://exist.sourceforge.net/NS/exist";
 declare namespace repo          = "http://exist-db.org/xquery/repo";
 declare namespace request       = "http://exist-db.org/xquery/request";
@@ -15,9 +15,9 @@ declare namespace xhtml         = "http://www.w3.org/1999/xhtml";
 declare namespace expath        = "http://expath.org/ns/pkg";
 declare namespace pack          = "http://expath.org/ns/pkg";
 declare namespace tei           = "http://www.tei-c.org/ns/1.0";
-import module namespace net     = "http://salamanca/net"                at "net.xql";
+import module namespace net     = "http://www.salamanca.school/xquery/net"                at "net.xql";
 import module namespace i18n    = "http://exist-db.org/xquery/i18n"     at "i18n.xql";
-import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";
+import module namespace sal-util    = "http://www.salamanca.school/xquery/sal-util" at "sal-util.xql";
 import module namespace console = "http://exist-db.org/xquery/console";
 import module namespace functx  = "http://www.functx.com";
 

@@ -6,10 +6,10 @@ import module namespace xmldb   = "http://exist-db.org/xquery/xmldb";
 import module namespace console = "http://exist-db.org/xquery/console";
 import module namespace util    = "http://exist-db.org/xquery/util";
 import module namespace functx  = "http://www.functx.com";
-import module namespace config  = "http://salamanca/config"     at "modules/config.xqm";
-import module namespace net     = "http://salamanca/net"        at "modules/net.xql";
-import module namespace app     = "http://salamanca/app"        at "modules/app.xql";
-import module namespace iiif    = "http://salamanca/iiif"       at "modules/iiif.xql";
+import module namespace config  = "http://www.salamanca.school/xquery/config"     at "modules/config.xqm";
+import module namespace net     = "http://www.salamanca.school/xquery/net"        at "modules/net.xql";
+import module namespace app     = "http://www.salamanca.school/xquery/app"        at "modules/app.xql";
+import module namespace iiif    = "http://www.salamanca.school/xquery/iiif"       at "modules/iiif.xql";
 import module namespace i18n      = "http://exist-db.org/xquery/i18n"        at "i18n.xql";
 
 declare       namespace exist   = "http://exist.sourceforge.net/NS/exist";

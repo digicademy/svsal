@@ -18,7 +18,7 @@ xquery version "3.1";
  :
  ~:)
  
-module namespace export = "http://salamanca/export";
+module namespace export = "http://www.salamanca.school/xquery/export";
 
 declare namespace exist   = "http://exist.sourceforge.net/NS/exist";
 declare namespace output  = "http://www.w3.org/2010/xslt-xquery-serialization";
@@ -28,8 +28,8 @@ declare namespace xi      = "http://www.w3.org/2001/XInclude";
 declare namespace util       = "http://exist-db.org/xquery/util";
 (:import module namespace console    = "http://exist-db.org/xquery/console";:)
 (:import module namespace functx     = "http://www.functx.com";:)
-import module namespace config    = "http://salamanca/config"               at "config.xqm";
-import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";
+import module namespace config    = "http://www.salamanca.school/xquery/config"               at "config.xqm";
+import module namespace sal-util    = "http://www.salamanca.school/xquery/sal-util" at "sal-util.xql";
 
 
 (:~

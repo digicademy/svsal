@@ -1,8 +1,8 @@
 xquery version "3.1";
 
-module namespace sal-util = "http://salamanca/sal-util";
+module namespace sal-util = "http://www.salamanca.school/xquery/sal-util";
 
-import module namespace config = "http://salamanca/config" at "config.xqm";
+import module namespace config = "http://www.salamanca.school/xquery/config" at "config.xqm";
 import module namespace util       = "http://exist-db.org/xquery/util";
 
 declare namespace tei = "http://www.tei-c.org/ns/1.0";

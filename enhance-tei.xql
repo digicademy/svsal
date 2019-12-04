@@ -1,6 +1,6 @@
 xquery version "3.1";
 
-import module   namespace   config      = "http://salamanca/config" at "modules/config.xqm";
+import module   namespace   config      = "http://www.salamanca.school/xquery/config" at "modules/config.xqm";
 import module namespace i18n       = "http://exist-db.org/xquery/i18n"        at "i18n.xql";
 import module   namespace   console     = "http://exist-db.org/xquery/console";
 declare         namespace   exist       = "http://exist.sourceforge.net/NS/exist";

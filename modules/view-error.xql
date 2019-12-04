@@ -2,12 +2,12 @@ xquery version "3.0" encoding "UTF-8";
 
 declare namespace xhtml="http://www.w3.org/1999/xhtml";
 
-import module namespace app       = "http://salamanca/app"                       at "app.xql";
-import module namespace config    = "http://salamanca/config"                    at "config.xqm";
+import module namespace app       = "http://www.salamanca.school/xquery/app"                       at "app.xql";
+import module namespace config    = "http://www.salamanca.school/xquery/config"                    at "config.xqm";
 import module namespace i18n      = "http://exist-db.org/xquery/i18n/templates"  at "i18n-templates.xql";
-import module namespace iiif      = "http://salamanca/iiif"                      at "iiif.xql";
-import module namespace net       = "http://salamanca/net"                       at "net.xql";
-import module namespace sphinx    = "http://salamanca/sphinx"                    at "sphinx.xql";
+import module namespace iiif      = "http://www.salamanca.school/xquery/iiif"                      at "iiif.xql";
+import module namespace net       = "http://www.salamanca.school/xquery/net"                       at "net.xql";
+import module namespace sphinx    = "http://www.salamanca.school/xquery/sphinx"                    at "sphinx.xql";
 import module namespace templates = "http://exist-db.org/xquery/templates" ;
 import module namespace request   = "http://exist-db.org/xquery/request";
 import module namespace console   = "http://exist-db.org/xquery/console";

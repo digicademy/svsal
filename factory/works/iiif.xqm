@@ -14,11 +14,11 @@ declare namespace sal     = "http://salamanca.adwmainz.de";
 declare namespace tei     = "http://www.tei-c.org/ns/1.0";
 declare namespace xi      = "http://www.w3.org/2001/XInclude";
 
-import module namespace config    = "http://salamanca/config"               at "../../modules/config.xqm";
-import module namespace app = "http://salamanca/app" at "../../modules/app.xql";
+import module namespace config    = "http://www.salamanca.school/xquery/config"               at "../../modules/config.xqm";
+import module namespace app = "http://www.salamanca.school/xquery/app" at "../../modules/app.xql";
 import module namespace console    = "http://exist-db.org/xquery/console";
 import module namespace util       = "http://exist-db.org/xquery/util";
-import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";
+import module namespace sal-util    = "http://www.salamanca.school/xquery/sal-util" at "sal-util.xql";
 
 
 

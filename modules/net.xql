@@ -1,14 +1,14 @@
 xquery version "3.1";
 
-module namespace net                = "http://salamanca/net";
+module namespace net                = "http://www.salamanca.school/xquery/net";
 import module namespace console     = "http://exist-db.org/xquery/console";
 import module namespace functx      = "http://www.functx.com";
 import module namespace request     = "http://exist-db.org/xquery/request";
 import module namespace response    = "http://exist-db.org/xquery/response";
 import module namespace util        = "http://exist-db.org/xquery/util";
-import module namespace config      = "http://salamanca/config"                 at "config.xqm";
-import module namespace export      = "http://salamanca/export"                 at "export.xql";
-import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";
+import module namespace config      = "http://www.salamanca.school/xquery/config"                 at "config.xqm";
+import module namespace export      = "http://www.salamanca.school/xquery/export"                 at "export.xql";
+import module namespace sal-util    = "http://www.salamanca.school/xquery/sal-util" at "sal-util.xql";
 import module namespace txt        = "https://www.salamanca.school/factory/works/txt" at "../factory/works/txt.xqm";
 
 declare       namespace exist       = "http://exist.sourceforge.net/NS/exist";

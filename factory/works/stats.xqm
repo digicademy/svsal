@@ -8,12 +8,12 @@ declare namespace sal        = "http://salamanca.adwmainz.de";
 declare namespace tei        = "http://www.tei-c.org/ns/1.0";
 declare namespace templates  = "http://exist-db.org/xquery/templates";
 declare namespace util       = "http://exist-db.org/xquery/util";
-import module namespace config    = "http://salamanca/config"                at "config.xqm";
-import module namespace sphinx    = "http://salamanca/sphinx"                at "sphinx.xql";
+import module namespace config    = "http://www.salamanca.school/xquery/config"                at "config.xqm";
+import module namespace sphinx    = "http://www.salamanca.school/xquery/sphinx"                at "sphinx.xql";
 import module namespace console   = "http://exist-db.org/xquery/console";
-import module namespace iiif     = "http://salamanca/iiif" at "iiif.xql";
+import module namespace iiif     = "http://www.salamanca.school/xquery/iiif" at "iiif.xql";
 import module namespace nlp    = "https://www.salamanca.school/factory/works/nlp" at "nlp.xqm";
-import module namespace sal-util = "http://salamanca/sal-util" at "sal-util.xql";
+import module namespace sal-util = "http://www.salamanca.school/xquery/sal-util" at "sal-util.xql";
 
 
 (: ####++++----
@@ -58,7 +58,7 @@ declare function stats:makeCorpusStats() as map(*) {
     let $tokensAllCount := count(nlp:tokenize($txtAll, 'all'))
     let $wordsAll := nlp:tokenize($txtAll, 'words')
 (:    let $debug := util:log('warn', '[STATS] $wordsAll[1:20] is: ' || string-join(subsequence($wordsAll,1,20), ', ')):)
-    let $wordformsAllCount := count(distinct-values($wordsAll))
+    let $wordformsAllCount := count(distinct-values($wordsAll))  
     
     (: not counting tokens etc. per language, since this slows down this function quite a bit... :)
     (: lang=es :)

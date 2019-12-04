@@ -7,20 +7,20 @@ xquery version "3.1";
 
  ----++++#### :)
 
-module namespace iiif     = "http://salamanca/iiif";
+module namespace iiif     = "http://www.salamanca.school/xquery/iiif";
 declare namespace exist   = "http://exist.sourceforge.net/NS/exist";
 declare namespace output  = "http://www.w3.org/2010/xslt-xquery-serialization";
 declare namespace sal     = "http://salamanca.adwmainz.de";
 declare namespace tei     = "http://www.tei-c.org/ns/1.0";
 declare namespace xi      = "http://www.w3.org/2001/XInclude";
 
-import module namespace config    = "http://salamanca/config"               at "config.xqm";
-import module namespace app = "http://salamanca/app" at "app.xql";
+import module namespace config    = "http://www.salamanca.school/xquery/config"               at "config.xqm";
+import module namespace app = "http://www.salamanca.school/xquery/app" at "app.xql";
 import module namespace console    = "http://exist-db.org/xquery/console";
 import module namespace functx     = "http://www.functx.com";
 import module namespace i18n       = "http://exist-db.org/xquery/i18n"       at "i18n.xql";
 import module namespace util       = "http://exist-db.org/xquery/util";
-import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";
+import module namespace sal-util    = "http://www.salamanca.school/xquery/sal-util" at "sal-util.xql";
 
 declare option output:method "json";
 declare option output:media-type "application/json";

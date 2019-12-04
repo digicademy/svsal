@@ -27,4 +27,9 @@
             
         </range>
     </index>
+    
+    <triggers>
+        <trigger class="org.exist.extensions.exquery.restxq.impl.RestXqTrigger"/>
+    </triggers>
+    
 </collection>
