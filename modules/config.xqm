@@ -15,7 +15,6 @@ declare namespace xhtml         = "http://www.w3.org/1999/xhtml";
 declare namespace expath        = "http://expath.org/ns/pkg";
 declare namespace pack          = "http://expath.org/ns/pkg";
 declare namespace tei           = "http://www.tei-c.org/ns/1.0";
-import module namespace net     = "http://www.salamanca.school/xquery/net"                at "net.xql";
 import module namespace i18n    = "http://exist-db.org/xquery/i18n"     at "i18n.xql";
 import module namespace sal-util    = "http://www.salamanca.school/xquery/sal-util" at "sal-util.xql";
 import module namespace console = "http://exist-db.org/xquery/console";
@@ -414,13 +413,13 @@ declare function config:app-header($node as node(), $model as map(*), $lang as x
                         <span class="glyphicon glyphicon-flag" aria-hidden="true"></span>&#160;<i18n:text key="language">Sprache</i18n:text> <span class="caret"></span>
                     </a>
                     <menu class="dropdown-menu">
-                        <li class="hidden-lg"><a href="{$config:webserver}/de/{concat(request:get-attribute('$exist:resource'), if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (), string-join(net:inject-requestParameter('', ''), '&amp;'))}">
+                        <li class="hidden-lg"><a href="{$config:webserver}/de/{concat(request:get-attribute('$exist:resource'), if (count(config:inject-requestParameter('', '')) gt 0) then '?' else (), string-join(config:inject-requestParameter('', ''), '&amp;'))}">
                             <span class="glyphicon glyphicon-flag" aria-hidden="true"></span>&#160;
                             <i18n:text key="de">Deutsch</i18n:text></a></li>                                               
-                        <li class="hidden-lg"><a href="{$config:webserver}/en/{concat(request:get-attribute('$exist:resource'), if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (), string-join(net:inject-requestParameter('', ''), '&amp;'))}">
+                        <li class="hidden-lg"><a href="{$config:webserver}/en/{concat(request:get-attribute('$exist:resource'), if (count(config:inject-requestParameter('', '')) gt 0) then '?' else (), string-join(config:inject-requestParameter('', ''), '&amp;'))}">
                             <span class="glyphicon glyphicon-flag" aria-hidden="true"></span>&#160;
                             <i18n:text key="en">Englisch</i18n:text></a></li>
-                        <li class="hidden-lg"><a href="{$config:webserver}/es/{concat(request:get-attribute('$exist:resource'), if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (), string-join(net:inject-requestParameter('', ''), '&amp;'))}">
+                        <li class="hidden-lg"><a href="{$config:webserver}/es/{concat(request:get-attribute('$exist:resource'), if (count(config:inject-requestParameter('', '')) gt 0) then '?' else (), string-join(config:inject-requestParameter('', ''), '&amp;'))}">
                             <span class="glyphicon glyphicon-flag" aria-hidden="true"></span>&#160;
                             <i18n:text key="es">Spanisch</i18n:text></a></li>
                     </menu>
@@ -430,9 +429,9 @@ declare function config:app-header($node as node(), $model as map(*), $lang as x
             <menu class="nav navbar-nav">
                 <li class="nav navbar-nav navbar-right hidden-xs hidden-sm hidden-md">
                    <div class="btn-group" role="group" aria-label="...">
-                     <a  class="btn navbar-btn {if ($lang='de') then 'btn-info' else 'btn-default'}" href="{$config:webserver}/de/{concat(request:get-attribute('$exist:resource'), if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (), string-join(net:inject-requestParameter('', ''), '&amp;'))}">de</a>
-                     <a  class="btn navbar-btn {if ($lang='en') then 'btn-info' else 'btn-default'}" href="{$config:webserver}/en/{concat(request:get-attribute('$exist:resource'), if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (), string-join(net:inject-requestParameter('', ''), '&amp;'))}">en</a>
-                     <a  class="btn navbar-btn {if ($lang='es') then 'btn-info' else 'btn-default'}" href="{$config:webserver}/es/{concat(request:get-attribute('$exist:resource'), if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (), string-join(net:inject-requestParameter('', ''), '&amp;'))}">es</a>
+                     <a  class="btn navbar-btn {if ($lang='de') then 'btn-info' else 'btn-default'}" href="{$config:webserver}/de/{concat(request:get-attribute('$exist:resource'), if (count(config:inject-requestParameter('', '')) gt 0) then '?' else (), string-join(config:inject-requestParameter('', ''), '&amp;'))}">de</a>
+                     <a  class="btn navbar-btn {if ($lang='en') then 'btn-info' else 'btn-default'}" href="{$config:webserver}/en/{concat(request:get-attribute('$exist:resource'), if (count(config:inject-requestParameter('', '')) gt 0) then '?' else (), string-join(config:inject-requestParameter('', ''), '&amp;'))}">en</a>
+                     <a  class="btn navbar-btn {if ($lang='es') then 'btn-info' else 'btn-default'}" href="{$config:webserver}/es/{concat(request:get-attribute('$exist:resource'), if (count(config:inject-requestParameter('', '')) gt 0) then '?' else (), string-join(config:inject-requestParameter('', ''), '&amp;'))}">es</a>
                     </div> 
                 </li>
             </menu>
@@ -703,20 +702,44 @@ declare %templates:default("lang", "en")
                 return
                     switch($reqResource)
                         case '/author.html' return
-                           concat($config:webserver, '/', $lang, '/author.html?',       string-join(net:inject-requestParameter('',''), '&amp;'))
+                           concat($config:webserver, '/', $lang, '/author.html?',       string-join(config:inject-requestParameter('',''), '&amp;'))
                         case '/work.html' return
-                           concat($config:webserver, '/', $lang, '/work.html?',         string-join(net:inject-requestParameter('',''), '&amp;'))
+                           concat($config:webserver, '/', $lang, '/work.html?',         string-join(config:inject-requestParameter('',''), '&amp;'))
                         case '/lemma.html' return
-                           concat($config:webserver, '/', $lang, '/lemma.html?',        string-join(net:inject-requestParameter('',''), '&amp;'))
+                           concat($config:webserver, '/', $lang, '/lemma.html?',        string-join(config:inject-requestParameter('',''), '&amp;'))
                         case '/workingPaper.html' return
-                           concat($config:webserver, '/', $lang, '/workingPaper.html?', string-join(net:inject-requestParameter('',''), '&amp;'))
+                           concat($config:webserver, '/', $lang, '/workingPaper.html?', string-join(config:inject-requestParameter('',''), '&amp;'))
                         case '/participants.html' return
-                           concat($config:webserver, '/', $lang, '/participants.html?',        string-join(net:inject-requestParameter('',''), '&amp;'))
+                           concat($config:webserver, '/', $lang, '/participants.html?',        string-join(config:inject-requestParameter('',''), '&amp;'))
                         default return
                                $config:webserver
         return
             <link rel="canonical" href="{$url}"/>
 };
+
+
+(: NOTE: this is the same function as config:inject-requestParameter(), which we habe duplicated here for 
+    avoiding circular dependencies between net.xql and config.xqm: :)
+(: Todo: Clean lang parameters when they arrive. It's there but I'm not sure it's working... :)
+declare function config:inject-requestParameter($injectParameter as xs:string*, $injectValue as xs:string*) as xs:string* {
+    if (not($injectParameter)) then
+        for $p in request:get-parameter-names() return
+            if (not($p = "lang" and request:get-parameter($p, ()) = ('', 'de', 'en', 'es'))) then
+                $p || "=" || request:get-parameter($p, ())
+            else ()
+    else
+        let $preliminaryList := for $p in request:get-parameter-names() return
+                                    if ($p = $injectParameter and not($injectParameter = 'lang')) then
+                                        $injectParameter || "=" || $injectValue
+                                    else if (not($p = "lang" and request:get-parameter($p, ()) = ('', 'de', 'en', 'es'))) then
+                                        $p || "=" || request:get-parameter($p, ())
+                                    else ()
+        return if (not($injectParameter || "=" || $injectValue = $preliminaryList)) then
+                    (if (not($injectParameter = 'lang')) then $injectParameter || "=" || $injectValue else (), $preliminaryList)
+               else
+                    $preliminaryList
+};
+
 
 declare %templates:default("lang", "en") 
     function config:hreflang-url($node as node(), $model as map(*), $lang as xs:string, $wid as xs:string*, $aid as xs:string*, $q as xs:string?) as element()* {
@@ -724,8 +747,8 @@ declare %templates:default("lang", "en")
             let $url := 
                 concat(
                     $config:webserver, '/', $language, '/', request:get-attribute('$exist:resource'),
-                    if (count(net:inject-requestParameter('','')) gt 0) then
-                        concat('?', string-join(net:inject-requestParameter('',''), '&amp;'))
+                    if (count(config:inject-requestParameter('','')) gt 0) then
+                        concat('?', string-join(config:inject-requestParameter('',''), '&amp;'))
                     else ()
                 )
             return

@@ -5,7 +5,6 @@ xquery version "3.0";
  : within a module.
  :)
 module namespace xconfig = "http://xtriples.spatialhumanities.de/config";
-(:module namespace config         = "http://www.salamanca.school/xquery/config";:)
 
 import module namespace console = "http://exist-db.org/xquery/console";
 declare namespace request       = "http://exist-db.org/xquery/request";
@@ -68,7 +67,6 @@ declare variable $xconfig:app-root :=
         substring-before($modulePath, "/modules")
 ;
 
-declare variable $xconfig:data-root := $xconfig:app-root || "/data";
 declare variable $xconfig:repo-descriptor := doc(concat($xconfig:app-root, "/repo.xml"))/repo:meta;
 declare variable $xconfig:expath-descriptor := doc(concat($xconfig:app-root, "/expath-pkg.xml"))/expath:package;
 
