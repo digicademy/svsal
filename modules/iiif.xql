@@ -15,7 +15,6 @@ declare namespace tei     = "http://www.tei-c.org/ns/1.0";
 declare namespace xi      = "http://www.w3.org/2001/XInclude";
 
 import module namespace config    = "http://www.salamanca.school/xquery/config"               at "config.xqm";
-import module namespace app = "http://www.salamanca.school/xquery/app" at "app.xql";
 import module namespace console    = "http://exist-db.org/xquery/console";
 import module namespace functx     = "http://www.functx.com";
 import module namespace i18n       = "http://exist-db.org/xquery/i18n"       at "i18n.xql";

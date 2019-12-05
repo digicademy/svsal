@@ -49,6 +49,11 @@ declare variable $config:serverdomain :=
         let $alert := if ($config:debug = "trace") then console:log("Warning! Dynamic $config:serverdomain is uncertain, using servername " || $fallbackDomain || ".") else ()
         return $fallbackDomain
     ;
+    
+    
+(: API :)
+
+declare variable $config:currentApiVersion := 'v1';
 
 declare variable $config:apiEndpoints   := 
     map  {
@@ -65,6 +70,9 @@ declare variable $config:apiFormats :=
         'tei': ('mode=meta', 'mode=full'),
         'txt': ('mode=edit', 'mode=orig')
     };
+    
+    
+(: SERVER DOMAINS :)
 
 declare variable $config:webserver      := $config:proto || "://www."    || $config:serverdomain;
 declare variable $config:blogserver     := $config:proto || "://blog."   || $config:serverdomain;
