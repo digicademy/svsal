@@ -1,5 +1,11 @@
 xquery version "3.1";
 
+(: ####++++----  
+
+    Dispatch functions for transforming TEI nodes to plain text.
+   
+   ----++++#### :)
+
 module namespace txt               = "https://www.salamanca.school/factory/works/txt";
 declare namespace exist            = "http://exist.sourceforge.net/NS/exist";
 declare namespace output           = "http://www.w3.org/2010/xslt-xquery-serialization";
@@ -8,16 +14,27 @@ declare namespace sal              = "http://salamanca.adwmainz.de";
 import module namespace util       = "http://exist-db.org/xquery/util";
 import module namespace console    = "http://exist-db.org/xquery/console";
 import module namespace config     = "http://www.salamanca.school/xquery/config" at "../../modules/config.xqm";
-import module namespace sal-util    = "http://www.salamanca.school/xquery/sal-util" at "../../modules/sal-util.xql";
-import module namespace index      = "https://www.salamanca.school/factory/works/index"    at "index.xqm";
+import module namespace sutil    = "http://www.salamanca.school/xquery/sutil" at "../../modules/sutil.xql";
+(:import module namespace index      = "https://www.salamanca.school/factory/works/index"    at "index.xqm";:)
+(: there are some index functions referred to below, but we needed to implement workarounds that do not depend on index.xqm, so as to avoid
+   circular dependencies between index.xqm and txt.xqm :)
 
 
-(: ####++++----  
-
-    Utility functions for transforming TEI nodes to plain text.
-   
-   ----++++#### :)
-
+(: DUPLICATE of index:isMarginalNode() for avoiding import of index.xqm (due to circular dependencies...) :)
+(:
+~ Marginal nodes occur within structural or main nodes.
+~ (NOTE: should work with on-the-fly copying of sections. )
+:)
+declare function txt:isMarginalNode($node as node()) as xs:boolean {
+    boolean(
+        $node/@xml:id and
+        (
+            $node/self::tei:note[@place eq 'margin'] or
+            $node/self::tei:label[@place eq 'margin']
+        )
+        (:and not($node/ancestor::*[index:isMarginalNode(.)]):) (: that shouldn't be possible :)
+    )
+};
 
 
 
@@ -427,7 +444,7 @@ declare function txt:p($node as element(tei:p), $mode as xs:string) {
 
 declare function txt:passthru($nodes as node()*, $mode as xs:string) as item()* {
     for $node in $nodes/node() return 
-        if ($mode = ('snippets-orig', 'snippets-edit') and index:isMarginalNode($node)) then 
+        if ($mode = ('snippets-orig', 'snippets-edit') and txt:isMarginalNode($node)) then  (: and index:isMarginalNode($node) :)
             (: basic separator for main and marginal nodes in snippet creation :)
             ()
         else txt:dispatch($node, $mode)

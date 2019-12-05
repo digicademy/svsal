@@ -18,7 +18,7 @@ import module namespace rest = "http://exquery.org/ns/restxq";
 
 import module namespace config      = "http://www.salamanca.school/xquery/config"                 at "config.xqm";
 import module namespace export      = "http://www.salamanca.school/xquery/export"                 at "export.xql";
-import module namespace sal-util    = "http://www.salamanca.school/xquery/sal-util" at "sal-util.xql";
+import module namespace sutil    = "http://www.salamanca.school/xquery/sutil" at "sutil.xql";
 import module namespace txt        = "https://www.salamanca.school/factory/works/txt" at "../factory/works/txt.xqm";
 
 declare       namespace exist       = "http://exist.sourceforge.net/NS/exist";
@@ -112,6 +112,27 @@ function net:redirectIdConceptsRequests($rid) {
 :)
 
 
+
+
+(: Todo: Clean lang parameters when they arrive. It's there but I'm not sure it's working... :)
+declare function net:inject-requestParameter($injectParameter as xs:string*, $injectValue as xs:string*) as xs:string* {
+    if (not($injectParameter)) then
+        for $p in request:get-parameter-names() return
+            if (not($p = "lang" and request:get-parameter($p, ()) = ('', 'de', 'en', 'es'))) then
+                $p || "=" || request:get-parameter($p, ())
+            else ()
+    else
+        let $preliminaryList := for $p in request:get-parameter-names() return
+                                    if ($p = $injectParameter and not($injectParameter = 'lang')) then
+                                        $injectParameter || "=" || $injectValue
+                                    else if (not($p = "lang" and request:get-parameter($p, ()) = ('', 'de', 'en', 'es'))) then
+                                        $p || "=" || request:get-parameter($p, ())
+                                    else ()
+        return if (not($injectParameter || "=" || $injectValue = $preliminaryList)) then
+                    (if (not($injectParameter = 'lang')) then $injectParameter || "=" || $injectValue else (), $preliminaryList)
+               else
+                    $preliminaryList
+};
 
 
 declare function net:findNode($requestData as map()) {
@@ -661,7 +682,7 @@ declare function net:APIdeliverRDF($requestData as map(), $netVars as map()*) {
             let $header2 := response:set-header('Content-Type', 'application/rdf+xml')
             return doc($config:rdf-works-root || '/' || $requestData('work_id') || '.rdf')
         (: TODO: if there only is a teiHeader, we can also render rdf on-the-fly; however, the following returns almost empty RDF :)
-        (:else if (sal-util:WRKvalidateId($requestData('work_id')) eq 1) then
+        (:else if (sutil:WRKvalidateId($requestData('work_id')) eq 1) then
             let $debug := if ($config:debug = ("trace", "info")) then console:log("Generating rdf for " || $requestData('work_id') || " ...") else ()
             let $path := '/services/lod/extract.xql'
             let $parameters := 
@@ -669,7 +690,7 @@ declare function net:APIdeliverRDF($requestData as map(), $netVars as map()*) {
             let $headers1 := response:set-header("Content-Disposition", 'attachment; filename="' || $requestData('work_id') || '.rdf"')
             let $header2 := response:set-header('Content-Type', 'application/rdf+xml')
             return net:forward($path, $netVars, $parameters):)
-        else if (sal-util:WRKvalidateId($requestData('work_id')) ge 0) then net:error(404, $netVars, 'resource-not-yet-available')
+        else if (sutil:WRKvalidateId($requestData('work_id')) ge 0) then net:error(404, $netVars, 'resource-not-yet-available')
         else net:error(404, $netVars, 'Could not find rdf resource') (: not automatically creating rdf here if not available, since this might slow down the server inacceptably :)
     else if ($requestData('work_id') eq '*') then (: rdf of all works doesn't exist atm, redirect to HTML work overview - or rather return error? :)
         let $debug := console:log("DEBUG MESSAGE")
@@ -773,7 +794,7 @@ declare function net:APIdeliverIIIF($requestData as map()*, $netVars as map()*) 
         let $pathname     := $config:webserver || '/' || $langPath || 'works.html'
         return net:redirect-with-303($pathname)
     else
-        let $iiifUrl := sal-util:getIiifUrl($requestData('tei_id'))
+        let $iiifUrl := sutil:getIiifUrl($requestData('tei_id'))
         let $header := response:set-header('Content-Type', 'application/json')
         return
             if ($iiifUrl) then
@@ -783,8 +804,8 @@ declare function net:APIdeliverIIIF($requestData as map()*, $netVars as map()*) 
 
 
 declare function net:deliverTextsHTML($netVars as map()*) {
-    let $wid := sal-util:normalizeId($netVars('paramap')?('wid'))
-    let $validation := sal-util:WRKvalidateId($wid)
+    let $wid := sutil:normalizeId($netVars('paramap')?('wid'))
+    let $validation := sutil:WRKvalidateId($wid)
 (:    let $debug := if ($config:debug = "trace") then util:log("warn", "HTML request for work :" || $wid || " ; " || "validation result: " || string($validation)) else ():)
     return
         if ($validation eq 2) then (: full text available :)
@@ -798,8 +819,8 @@ declare function net:deliverTextsHTML($netVars as map()*) {
 };
 
 declare function net:deliverWorkDetailsHTML($netVars as map(*)) {
-    let $wid := sal-util:normalizeId($netVars('paramap')?('wid'))
-    let $validation := sal-util:WRKvalidateId($wid)
+    let $wid := sutil:normalizeId($netVars('paramap')?('wid'))
+    let $validation := sutil:WRKvalidateId($wid)
     return
         switch($validation)
             case 2
@@ -809,7 +830,7 @@ declare function net:deliverWorkDetailsHTML($netVars as map(*)) {
 };
 
 declare function net:deliverAuthorsHTML($netVars as map()*) {
-    let $validation := sal-util:AUTvalidateId($netVars('paramap')?('aid'))
+    let $validation := sutil:AUTvalidateId($netVars('paramap')?('aid'))
     let $debug := util:log('warn', 'Author id validation: ' || string($validation) || ' ; aid=' || $netVars('paramap')?('aid'))
     return
         if ($validation eq 1) then () (: TODO author article is available :)
@@ -818,7 +839,7 @@ declare function net:deliverAuthorsHTML($netVars as map()*) {
 };
 
 declare function net:deliverConceptsHTML($netVars as map()*) {
-    let $validation := sal-util:LEMvalidateId($netVars('paramap')?('lid'))
+    let $validation := sutil:LEMvalidateId($netVars('paramap')?('lid'))
     return
         if ($validation eq 1) then () (: TODO dict. entry is available :)
         else if ($validation eq 0) then net:error(404, $netVars, 'lemma-not-yet-available')
@@ -826,7 +847,7 @@ declare function net:deliverConceptsHTML($netVars as map()*) {
 };
 
 declare function net:deliverWorkingPapersHTML($netVars as map()*) {
-    let $validation := sal-util:WPvalidateId($netVars('paramap')?('wpid'))
+    let $validation := sutil:WPvalidateId($netVars('paramap')?('wpid'))
     return
         if ($validation eq 1) then net:forward-to-html(substring($netVars('path'), 4), $netVars)
         else if ($validation eq 0) then net:error(404, $netVars, 'workingpaper-not-yet-available')
@@ -866,7 +887,7 @@ declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()
                 if ($resource ne '-1') then 
                     if ($resource eq '') then '*' (: all tei datasets :)
                     else if (matches($passage, '^vol\d')) then (: some volume :)
-                        let $volStatus := sal-util:WRKvalidateId($resource || '_Vol0' || substring($passage,4,1))
+                        let $volStatus := sutil:WRKvalidateId($resource || '_Vol0' || substring($passage,4,1))
                         return
                             if ($volStatus ge 1) then (: a tei dataset is available :)
                                 $resource || '_Vol0' || substring($passage,4,1)
@@ -874,7 +895,7 @@ declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()
                     else $resource (: already checked whether available :)
                 else '-1'
             (: (2) validate components :)
-            let $teiStatus := if (starts-with($teiId, 'W')) then sal-util:WRKvalidateId($teiId) else ()
+            let $teiStatus := if (starts-with($teiId, 'W')) then sutil:WRKvalidateId($teiId) else ()
             let $workId := (: the overarching work's main id, not distinguishing between volumes :)
                 if ($resource != ('0', '-1')) then 
                     if ($teiId eq '*') then '*'
@@ -882,7 +903,7 @@ declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()
                 else '0'
             let $workStatus := 
                 if ($workId = $teiId) then $teiStatus 
-                else if (starts-with($workId, 'W')) then sal-util:WRKvalidateId($workId)
+                else if (starts-with($workId, 'W')) then sutil:WRKvalidateId($workId)
                 else ()
             let $passageStatus := (: 1 = passage valid & existing ; 0 = not existing ; -1 = no dataset found for $wid ; empty = no passage :)
                 (: special case: passage is volume of work not yet published: valid :)

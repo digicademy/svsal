@@ -10,7 +10,7 @@ import module namespace util       = "http://exist-db.org/xquery/util";
 import module namespace console    = "http://exist-db.org/xquery/console";
 import module namespace config     = "http://www.salamanca.school/xquery/config" at "../../modules/config.xqm";
 import module namespace app        = "http://www.salamanca.school/xquery/app"    at "../../modules/app.xql";
-import module namespace sal-util   = "http://www.salamanca.school/xquery/sal-util" at "../../modules/sal-util.xql";
+import module namespace sutil   = "http://www.salamanca.school/xquery/sutil" at "../../modules/sutil.xql";
 import module namespace index      = "https://www.salamanca.school/factory/works/index"    at "index.xqm";
 import module namespace txt        = "https://www.salamanca.school/factory/works/txt" at "txt.xqm";
 
@@ -73,7 +73,7 @@ declare function html:generateTocFromDiv($nodes as element()*, $wid as xs:string
     for $node in $nodes/(tei:div[@type="work_part"]/tei:div[index:isIndexNode(.)]
                          |tei:div[not(@type="work_part")][index:isIndexNode(.)]
                          |*/tei:milestone[@unit ne 'other'][index:isIndexNode(.)]) return
-        let $fragTrail := sal-util:getNodetrail($wid, $node, 'citetrail')        
+        let $fragTrail := sutil:getNodetrail($wid, $node, 'citetrail')        
         let $fragId := $config:idserver || '/texts/' || $wid || ':' || $fragTrail || '?format=html'
         let $section := $node/@xml:id/string()
         let $i18nKey := 
@@ -299,8 +299,8 @@ declare function html:makeSectionToolbox($node as element()) as element(div) {
 declare function html:makePagination($node as node()?, $model as map(*)?, $wid as xs:string?, $lang as xs:string?) {
     let $workId :=  
         if ($wid) then 
-            if (contains($wid, '_')) then substring-before(sal-util:normalizeId($wid), '_') 
-            else sal-util:normalizeId($wid)
+            if (contains($wid, '_')) then substring-before(sutil:normalizeId($wid), '_') 
+            else sutil:normalizeId($wid)
         else substring-before($model('currentWorkId'), '_')
     return 
         <ul id="later" class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">{
@@ -376,7 +376,7 @@ declare function html:resolveCanvasID($pb as element(tei:pb)) as xs:string {
     return
         if (matches($facs, '^facs:W[0-9]{4}-[A-z]-[0-9]{4}$')) then 
             let $index := string(count($pb/preceding::tei:pb[not(@sameAs) and substring(@facs, 1, 12) eq substring($facs, 1, 12)]) + 1)
-            return $config:imageserver || '/iiif/presentation/' || sal-util:convertVolumeID(substring($facs,6,7)) || '/canvas/p' || $index
+            return $config:imageserver || '/iiif/presentation/' || sutil:convertVolumeID(substring($facs,6,7)) || '/canvas/p' || $index
         else if (matches($facs, '^facs:W[0-9]{4}-[0-9]{4}$')) then
             let $index := string(count($pb/preceding::tei:pb[not(@sameAs)]) + 1)
             return $config:imageserver || '/iiif/presentation/' || substring($facs,6,5) || '/canvas/p' || $index
@@ -434,7 +434,7 @@ declare function html:transformToLink($node as element(), $uri as xs:string) {
 ~ For a node, make a full-blown URI including the citetrail of the node
 :)
 declare function html:makeCitetrailURI($node as element()) as xs:string? {
-    let $citetrail := sal-util:getNodetrail($node/ancestor::tei:TEI/@xml:id, $node, 'citetrail')
+    let $citetrail := sutil:getNodetrail($node/ancestor::tei:TEI/@xml:id, $node, 'citetrail')
     let $workId := $node/ancestor::tei:TEI/@xml:id
     return
         if ($citetrail) then $config:idserver || '/texts/' || $workId || ':' || $citetrail

@@ -7,7 +7,7 @@ declare namespace sal              = "http://salamanca.adwmainz.de";
 import module namespace util       = "http://exist-db.org/xquery/util";
 import module namespace console    = "http://exist-db.org/xquery/console";
 import module namespace config     = "http://www.salamanca.school/xquery/config" at "../../modules/config.xqm";
-import module namespace sal-util    = "http://www.salamanca.school/xquery/sal-util" at "../../modules/sal-util.xql";
+import module namespace sutil    = "http://www.salamanca.school/xquery/sutil" at "../../modules/sutil.xql";
 import module namespace txt        = "https://www.salamanca.school/factory/works/txt" at "txt.xqm";
 
 
@@ -173,7 +173,7 @@ declare function index:getCitableParent($node as node()) as node()? {
 (: Marginal citetrails: "nX" where X is the anchor used (if it is alphanumeric) and "nXY" where Y is the number of times that X occurs inside the current div
     (important: nodes are citetrail children of div (not of p) and are counted as such) :)
 declare function index:makeMarginalCitetrail($node as element()) as xs:string {
-    let $currentSection := sal-util:copy(index:getCitableParent($node))
+    let $currentSection := sutil:copy(index:getCitableParent($node))
     let $currentNode := $currentSection//*[@xml:id eq $node/@xml:id]
     let $label :=
         if (matches($currentNode/@n, '^[A-Za-z0-9\[\]]+$')) then
@@ -288,6 +288,7 @@ declare function index:isPageNode($node as node()) as xs:boolean {
 ~ Marginal nodes occur within structural or main nodes.
 ~ (NOTE: should work with on-the-fly copying of sections. )
 :)
+(: TODO: if this is changed, we also need to change txt:isMarginalNode() :)
 declare function index:isMarginalNode($node as node()) as xs:boolean {
     boolean(
         $node/@xml:id and
@@ -727,7 +728,7 @@ declare function index:list($node as element(tei:list), $mode as xs:string) {
         case 'citetrail' return
             (: dictionaries, indices and summaries get their type prepended to their number :)
             if(index:isNamedCitetrailNode($node)) then
-                let $currentSection := sal-util:copy($node/(ancestor::tei:div|ancestor::tei:body|ancestor::tei:front|ancestor::tei:back)[last()])
+                let $currentSection := sutil:copy($node/(ancestor::tei:div|ancestor::tei:body|ancestor::tei:front|ancestor::tei:back)[last()])
                 let $currentNode := $currentSection//tei:list[@xml:id eq $node/@xml:id]
                 return
                   concat(
@@ -787,7 +788,7 @@ declare function index:milestone($node as element(tei:milestone), $mode as xs:st
             
         case 'citetrail' return
             (: "XY" where X is the unit and Y is the anchor or the number of milestones where this occurs :)
-            let $currentSection := sal-util:copy(index:getCitableParent($node))
+            let $currentSection := sutil:copy(index:getCitableParent($node))
             let $currentNode := $currentSection//tei:milestone[@xml:id eq $node/@xml:id]
             return
                 if ($node/@n[matches(., '[a-zA-Z0-9]')]) then 
@@ -810,7 +811,7 @@ declare function index:milestone($node as element(tei:milestone), $mode as xs:st
                 let $num := 
                     if ($node/@n[matches(., '^[0-9\[\]]+$')]) then $node/@n (:replace($node/@n, '[\[\]]', '') ? :)
                     else 
-                        let $currentSection := sal-util:copy($node/ancestor::*[index:isPassagetrailNode(.) and not(self::tei:p)][1])
+                        let $currentSection := sutil:copy($node/ancestor::*[index:isPassagetrailNode(.) and not(self::tei:p)][1])
                         let $currentNode := $currentSection//tei:milestone[@xml:id eq $node/@xml:id]
                         let $position := count($currentSection//tei:milestone[@unit eq $currentNode/@unit and index:isPassagetrailNode(.)]
                                                intersect $currentNode/preceding::tei:milestone[@unit eq $currentNode/@unit and index:isPassagetrailNode(.)]) + 1
@@ -827,7 +828,7 @@ declare function index:note($node as element(tei:note), $mode as xs:string) {
     switch($mode)
         case 'title' return
             normalize-space(
-                let $currentSection := sal-util:copy(index:getCitableParent($node))
+                let $currentSection := sutil:copy(index:getCitableParent($node))
                 let $currentNode := $currentSection//tei:note[@xml:id eq $node/@xml:id]
                 return
                     if ($node/@n) then
@@ -852,7 +853,7 @@ declare function index:note($node as element(tei:note), $mode as xs:string) {
         case 'passagetrail' return
             if (index:isPassagetrailNode($node)) then
                 (: passagetrail parents of note are div, not p :)
-                let $currentSection := sal-util:copy($node/ancestor::*[index:isPassagetrailNode(.) and not(self::tei:p)][1])
+                let $currentSection := sutil:copy($node/ancestor::*[index:isPassagetrailNode(.) and not(self::tei:p)][1])
                 let $currentNode := $currentSection//tei:note[@xml:id eq $node/@xml:id]
                 let $prefix := $config:citationLabels(local-name($node))?('abbr')
                 let $label := 

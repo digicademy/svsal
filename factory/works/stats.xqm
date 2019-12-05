@@ -13,7 +13,7 @@ import module namespace sphinx    = "http://www.salamanca.school/xquery/sphinx" 
 import module namespace console   = "http://exist-db.org/xquery/console";
 import module namespace iiif     = "http://www.salamanca.school/xquery/iiif" at "iiif.xql";
 import module namespace nlp    = "https://www.salamanca.school/factory/works/nlp" at "nlp.xqm";
-import module namespace sal-util = "http://www.salamanca.school/xquery/sal-util" at "sal-util.xql";
+import module namespace sutil = "http://www.salamanca.school/xquery/sutil" at "sutil.xql";
 
 
 (: ####++++----
@@ -47,7 +47,7 @@ declare function stats:makeCorpusStats() as map(*) {
     (: generic, lang=all :)
     let $publishedWorkIds := 
                 collection($config:tei-works-root)//tei:TEI[./tei:text[@type = ('work_monograph', 'work_multivolume')] 
-                                                    and sal-util:WRKisPublished(./@xml:id)]/@xml:id/string()
+                                                    and sutil:WRKisPublished(./@xml:id)]/@xml:id/string()
     let $txtAll := 
         for $id in $publishedWorkIds return 
             if (fn:unparsed-text-available($config:txt-root || '/' || $id || '/' || $id || '_edit.txt')) then
@@ -64,7 +64,7 @@ declare function stats:makeCorpusStats() as map(*) {
     (: lang=es :)
     (:let $txtEs := 
         for $text in collection($config:tei-works-root)//tei:text[@type = ('work_monograph', 'work_volume') 
-                                                                  and sal-util:WRKisPublished(./parent::tei:TEI/@xml:id)] return
+                                                                  and sutil:WRKisPublished(./parent::tei:TEI/@xml:id)] return
                 let $debug := util:log('warn', 'Processing text nodes for ' || $text/parent::tei:TEI/@xml:id || ' in lang=es') return
                 string-join($text//text()[ancestor::*[@xml:lang][1]/@xml:lang eq 'es'], '')
     let $wordsEs := nlp:tokenize($txtEs, 'words')
@@ -72,7 +72,7 @@ declare function stats:makeCorpusStats() as map(*) {
     (: lang=la :)
     (:let $txtLa := 
         for $text in collection($config:tei-works-root)//tei:text[@type = ('work_monograph', 'work_volume') 
-                                                                  and sal-util:WRKisPublished(./parent::tei:TEI/@xml:id)] return
+                                                                  and sutil:WRKisPublished(./parent::tei:TEI/@xml:id)] return
                 let $debug := util:log('warn', 'Processing text nodes for ' || $text/parent::tei:TEI/@xml:id || ' in lang=la') return
                 string-join($text//text()[ancestor::*[@xml:lang]/@xml:lang eq 'la'], '')
     let $wordsLa := nlp:tokenize($txtLa, 'words')
@@ -80,7 +80,7 @@ declare function stats:makeCorpusStats() as map(*) {
     
     let $textCollection :=
         collection($config:tei-works-root)//tei:text[@type = ('work_monograph', 'work_volume') 
-                                                     and sal-util:WRKisPublished(./parent::tei:TEI/@xml:id)]
+                                                     and sutil:WRKisPublished(./parent::tei:TEI/@xml:id)]
     (: NORMALIZATIONS :)
     let $resolvedAbbrCount := count($textCollection//tei:expan)
     let $resolvedSicCount := count($textCollection//tei:corr)
@@ -92,7 +92,7 @@ declare function stats:makeCorpusStats() as map(*) {
     (: count other images based on iiif resources :)
     let $unpublishedWorkIds :=
         collection($config:tei-works-root)//tei:TEI[./tei:text[@type = ('work_monograph', 'work_volume')] 
-                                                    and not(sal-util:WRKisPublished(@xml:id))]/@xml:id/string()
+                                                    and not(sutil:WRKisPublished(@xml:id))]/@xml:id/string()
     let $otherFacs :=
         for $id in $unpublishedWorkIds return (: $unpublishedWorkIds can only comprise manifests, not collections :)
             let $iiif := iiif:fetchResource($id)
@@ -150,7 +150,7 @@ declare function stats:makeWorkStats($wid as xs:string) as map(*) {
         if ($workType eq 'work_monograph') then $tei/tei:text
         else if ($workType eq 'work_multivolume') then 
             for $t in util:expand($tei)//tei:text[@type eq 'work_volume'] return
-                if (sal-util:WRKisPublished($tei/@xml:id || '_' || $t/@xml:id)) then $t else ()
+                if (sutil:WRKisPublished($tei/@xml:id || '_' || $t/@xml:id)) then $t else ()
         else error('[STATS] $workType ' || $workType || ' does not match required types "work_monograph", "work_volume"')
     let $txt := 
         if (fn:unparsed-text-available($config:txt-root || '/' || $wid || '/' || $wid || '_edit.txt')) then

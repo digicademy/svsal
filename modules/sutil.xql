@@ -1,6 +1,6 @@
 xquery version "3.1";
 
-module namespace sal-util = "http://www.salamanca.school/xquery/sal-util";
+module namespace sutil = "http://www.salamanca.school/xquery/sutil";
 
 import module namespace config = "http://www.salamanca.school/xquery/config" at "config.xqm";
 import module namespace util       = "http://exist-db.org/xquery/util";
@@ -20,12 +20,12 @@ Bundling such functions here shall prevent interdependencies between larger and 
 ~ Makes a copy of a node tree, to be used for making copies of subtrees on-the-fly for not having to process the whole document
     (supposed to increase speed especially where "intersect" statements are applied).
 :)
-declare function sal-util:copy($node as element()) as node() {
+declare function sutil:copy($node as element()) as node() {
     (:element {node-name($node)}
     {$node/@*,
         for $child in $node/node()
              return if ($child instance of element()) then 
-                sal-util:copy($child)
+                sutil:copy($child)
              else $child
     }:)
     (:util:deep-copy($node):)
@@ -44,7 +44,7 @@ declare function sal-util:copy($node as element()) as node() {
 
 
 (: Normalizes work, author, lemma, news, and working paper ids (and returns everything else as-is :)
-declare function sal-util:normalizeId($id as xs:string?) as xs:string? {
+declare function sutil:normalizeId($id as xs:string?) as xs:string? {
     if ($id) then
         if      (matches($id, '^[wW]\d{4}(_[vV][oO][lL]\d{2})?$')) then translate($id, 'wvLO', 'WVlo')
         else if (matches($id, '^[lLaAnN]\d{4}$')) then upper-case($id) (: lemma, author, news :)
@@ -56,21 +56,21 @@ declare function sal-util:normalizeId($id as xs:string?) as xs:string? {
 
 (: validate work/author/... IDs :)
 
-declare function sal-util:AUTexists($aid as xs:string?) as xs:boolean {
+declare function sutil:AUTexists($aid as xs:string?) as xs:boolean {
     if ($aid) then boolean(doc($config:tei-meta-root || '/' || 'sources-list.xml')/tei:TEI/tei:text//tei:author[lower-case(substring-after(@ref, 'author:')) eq lower-case($aid)])
     else false()
 };
 
 (: 1 = valid & available; 0 = valid, but not yet available; -1 = not valid :)
-declare function sal-util:AUTvalidateId($aid as xs:string?) as xs:integer {
+declare function sutil:AUTvalidateId($aid as xs:string?) as xs:integer {
     if ($aid and matches($aid, '^[aA]\d{4}$')) then
         (: TODO: additional condition when author articles are available - currently this will always resolve to -1 :)
-        if (sal-util:AUTexists(sal-util:normalizeId($aid))) then 0
+        if (sutil:AUTexists(sutil:normalizeId($aid))) then 0
         else -1
     else -1    
 };
 
-declare function sal-util:LEMexists($lid as xs:string?) as xs:boolean {
+declare function sutil:LEMexists($lid as xs:string?) as xs:boolean {
     (: TODO when we have a list of lemma ids :)
     (:if ($lid) then boolean(doc(.../...) eq $lid])
     else :)
@@ -78,41 +78,41 @@ declare function sal-util:LEMexists($lid as xs:string?) as xs:boolean {
 };
 
 (: 1 = valid & available; 0 = valid, but not yet available; -1 = not valid :)
-declare function sal-util:LEMvalidateId($lid as xs:string?) as xs:integer {
+declare function sutil:LEMvalidateId($lid as xs:string?) as xs:integer {
     if ($lid and matches($lid, '^[lL]\d{4}$')) then
         (: TODO: additional conditions when lemmata/entries are available - currently this will always resolve to -1 :)
-        if (sal-util:LEMexists(sal-util:normalizeId($lid))) then 0
+        if (sutil:LEMexists(sutil:normalizeId($lid))) then 0
         else -1
     else -1    
 };
 
 (: 1 = WP is published ; 0 = WP not yet available (not yet defined) ; -1 = WP does not exist :)
-declare function sal-util:WPvalidateId($wpid as xs:string?) as xs:integer {
-    if ($wpid and matches($wpid, '^[wW][pP]\d{4}$') and sal-util:WPisPublished($wpid)) then 1
+declare function sutil:WPvalidateId($wpid as xs:string?) as xs:integer {
+    if ($wpid and matches($wpid, '^[wW][pP]\d{4}$') and sutil:WPisPublished($wpid)) then 1
     else -1
 };
 
-declare function sal-util:WPisPublished($wpid as xs:string?) as xs:boolean {
+declare function sutil:WPisPublished($wpid as xs:string?) as xs:boolean {
     boolean($wpid and doc-available($config:tei-workingpapers-root || '/' || upper-case($wpid) || '.xml')) 
 };
 
-declare function sal-util:WRKexists($wid as xs:string?) as xs:boolean {
+declare function sutil:WRKexists($wid as xs:string?) as xs:boolean {
     if ($wid) then boolean(doc($config:tei-meta-root || '/' || 'sources-list.xml')/tei:TEI/tei:text//tei:bibl[lower-case(substring-after(@corresp, 'work:')) eq lower-case($wid)])
     else false()
 };
 
 (: 2 = valid, full data available; 1 = valid, but only metadata available; 0 = valid, but not yet available; -1 = not valid :)
-declare function sal-util:WRKvalidateId($wid as xs:string?) as xs:integer {
+declare function sutil:WRKvalidateId($wid as xs:string?) as xs:integer {
     if ($wid and matches($wid, '^[wW]\d{4}(_Vol\d{2})?$')) then
-        if (sal-util:WRKisPublished($wid)) then 2
-        else if (doc-available($config:tei-works-root || '/' || sal-util:normalizeId($wid) || '.xml')) then 1
-        else if (sal-util:WRKexists($wid)) then 0
+        if (sutil:WRKisPublished($wid)) then 2
+        else if (doc-available($config:tei-works-root || '/' || sutil:normalizeId($wid) || '.xml')) then 1
+        else if (sutil:WRKexists($wid)) then 0
         else -1
     else -1    
 };
 
-declare function sal-util:WRKisPublished($wid as xs:string) as xs:boolean {
-    let $workId := sal-util:normalizeId($wid)
+declare function sutil:WRKisPublished($wid as xs:string) as xs:boolean {
+    let $workId := sutil:normalizeId($wid)
     let $status :=  if (doc-available($config:tei-works-root || '/' || $workId || '.xml')) then 
                         doc($config:tei-works-root || '/' || $workId || '.xml')/tei:TEI/tei:teiHeader/tei:revisionDesc/@status/string()
                     else 'no_status'
@@ -121,11 +121,11 @@ declare function sal-util:WRKisPublished($wid as xs:string) as xs:boolean {
 };
 
 (: 1 = valid & existing ; 0 = not existing ; -1 = no dataset found for $wid :)
-(:declare function sal-util:WRKvalidatePassageId($wid as xs:string?, $passage as xs:string?) as xs:integer {
+(:declare function sutil:WRKvalidatePassageId($wid as xs:string?, $passage as xs:string?) as xs:integer {
     if ($wid and matches($wid, '^[wW]\d{4}(_Vol\d{2})?$')) then
-        if (sal-util:WRKisPublished($wid)) then 2
-        else if (doc-available($config:tei-works-root || '/' || sal-util:normalizeId($wid) || '.xml')) then 1
-        else if (sal-util:WRKexists($wid)) then 0
+        if (sutil:WRKisPublished($wid)) then 2
+        else if (doc-available($config:tei-works-root || '/' || sutil:normalizeId($wid) || '.xml')) then 1
+        else if (sutil:WRKexists($wid)) then 0
         else -1
     else -1    
 };:)
@@ -138,7 +138,7 @@ declare function sal-util:WRKisPublished($wid as xs:string) as xs:boolean {
 ~ For a volume ID of the form "W0013-A" or "W0096-B", return a matching ID of the form "W0013_Vol01" or "W0096_Vol02";
 ~ currently covers volume numbers up to "10", or "J"
 :)
-declare function sal-util:convertVolumeID($volId as xs:string) as xs:string {
+declare function sutil:convertVolumeID($volId as xs:string) as xs:string {
     let $volChar := substring($volId, 7, 1)
     let $workId := substring($volId, 1, 5)
     let $volInfix := '_Vol'
@@ -154,11 +154,11 @@ declare function sal-util:convertVolumeID($volId as xs:string) as xs:string {
             case 'H' return '08'
             case 'I' return '09'
             case 'J' return '10'
-            default return error(xs:QName('sal-util:convertVolumeID'), 'Error: volume number not supported')
+            default return error(xs:QName('sutil:convertVolumeID'), 'Error: volume number not supported')
     return $workId || $volInfix || $volN
 };
 
-declare function sal-util:convertNumericVolumeID($volId as xs:string) as xs:string? {
+declare function sutil:convertNumericVolumeID($volId as xs:string) as xs:string? {
     if (matches($volId, '^[Ww]\d{4}$')) then upper-case($volId)
     else if (matches($volId, 'W\d{4}:vol\d{1,2}$')) then $volId
     else if (matches($volId, '^[Ww]\d{4}_[Vv][Oo][Ll]\d{2}$')) then
@@ -172,11 +172,11 @@ declare function sal-util:convertNumericVolumeID($volId as xs:string) as xs:stri
 (:
 ~ Removes insignificant whitespace from an HTML document/fragment.
 :)
-declare function sal-util:minifyHtml($node as node()) as node() {
+declare function sutil:minifyHtml($node as node()) as node() {
     typeswitch($node)
         case element() return 
             element {local-name($node)} 
-                    {$node/@*, for $n in $node/node() return sal-util:minifyHtml($n)}
+                    {$node/@*, for $n in $node/node() return sutil:minifyHtml($n)}
         case text() return 
             if ($node[parent::div and normalize-space(.) eq '' and (not(preceding-sibling::*) or not(following-sibling::*))]) then ()
             else replace($node, ' {2,}', ' ')
@@ -185,20 +185,20 @@ declare function sal-util:minifyHtml($node as node()) as node() {
         default return ()
 };
 
-declare function sal-util:getNodeIndexValue($wid as xs:string, $node as element()) {
+declare function sutil:getNodeIndexValue($wid as xs:string, $node as element()) {
     if (doc-available($config:index-root || '/' || $wid || '.xml')) then
         ()
     else ()
 };
 
-declare function sal-util:getFragmentID($targetWorkId as xs:string, $targetNodeId as xs:string) as xs:string? {
+declare function sutil:getFragmentID($targetWorkId as xs:string, $targetNodeId as xs:string) as xs:string? {
     doc($config:index-root || '/' || $targetWorkId || '_nodeIndex.xml')//sal:node[@n = $targetNodeId][1]/sal:fragment/text()
 };
 
-declare function sal-util:getNodetrail($wid as xs:string, $node as element(), $mode as xs:string) {
+declare function sutil:getNodetrail($wid as xs:string, $node as element(), $mode as xs:string) {
     let $debug := 
         if ($mode = ('citetrail', 'crumbtrail', 'passagetrail')) then () 
-        else () (:util:log('error', '[SAL-UTIL] calling render:getNodetrail with unknown mode: ' || $mode):)
+        else () (:util:log('error', '[sutil] calling render:getNodetrail with unknown mode: ' || $mode):)
     return
         doc($config:index-root || '/' || $wid || '_nodeIndex.xml')/sal:index/sal:node[@n eq $node/@xml:id]/*[local-name() eq $mode]/node()
 };
@@ -206,7 +206,7 @@ declare function sal-util:getNodetrail($wid as xs:string, $node as element(), $m
 (:
 For a resource (work or volume) id, returns the url to the resource's iiif resource.
 :)
-declare function sal-util:getIiifUrl($workId as xs:string) as xs:string? {
+declare function sutil:getIiifUrl($workId as xs:string) as xs:string? {
     if (doc-available($config:tei-works-root || '/' || $workId || '.xml')) then
         let $workType := doc($config:tei-works-root || '/' || $workId || '.xml')/tei:TEI/tei:text/@type
         return
@@ -217,9 +217,29 @@ declare function sal-util:getIiifUrl($workId as xs:string) as xs:string? {
     else ()
 };
 
-declare function sal-util:getPublishedWorkIds() as xs:string* {
+declare function sutil:getPublishedWorkIds() as xs:string* {
     collection($config:tei-works-root)/tei:TEI[./tei:text/@type = ('work_monograph', 'work_multivolume') 
-                                               and sal-util:WRKisPublished(@xml:id)]/@xml:id/string()
+                                               and sutil:WRKisPublished(@xml:id)]/@xml:id/string()
+};
+
+
+(:~
+ : ========================================================================================================================
+ : Title for Browser-Tab for SingleView Work, -Lemma, -Working Paper, -Authors, -News
+ :)
+ (:Name wird zusammengesetzt, Nachname, Vorname:)
+declare function sutil:formatName($persName as element()*) as xs:string? {
+    let $return-string := 
+        for $pers in $persName return
+            if ($pers/@key) then
+                normalize-space(xs:string($pers/@key))
+            else if ($pers/tei:surname and $pers/tei:forename) then
+                normalize-space(concat($pers/tei:surname, ', ', $pers/tei:forename, ' ', $pers/tei:nameLink, if ($pers/tei:addName) then ('&amp;nbsp;(&amp;lt;' || $pers/tei:addName || '&amp;gt;)') else ()))
+            else if ($pers) then
+                normalize-space(xs:string($pers))
+            else 
+                normalize-space($pers/text())
+    return (string-join($return-string, ' &amp; '))
 };
 
 

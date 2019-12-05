@@ -22,6 +22,7 @@ declare namespace transform  = "http://exist-db.org/xquery/transform";
 declare namespace util       = "http://exist-db.org/xquery/util";
 declare namespace xhtml      = "http://www.w3.org/1999/xhtml";
 declare namespace xi         = "http://www.w3.org/2001/XInclude";
+
 import module namespace httpclient = "http://exist-db.org/xquery/httpclient";
 import module namespace config    = "http://www.salamanca.school/xquery/config"                at "config.xqm";
 import module namespace render-app    = "http://www.salamanca.school/xquery/render-app"        at "render-app.xql";
@@ -29,11 +30,10 @@ import module namespace sphinx    = "http://www.salamanca.school/xquery/sphinx" 
 import module namespace console   = "http://exist-db.org/xquery/console";
 import module namespace functx    = "http://www.functx.com";
 import module namespace i18n      = "http://exist-db.org/xquery/i18n"        at "i18n.xql";
-(:import module namespace kwic      = "http://exist-db.org/xquery/kwic";:)
 import module namespace request   = "http://exist-db.org/xquery/request";
 import module namespace templates = "http://exist-db.org/xquery/templates";
 import module namespace iiif      = "http://www.salamanca.school/xquery/iiif"                  at "iiif.xql";
-import module namespace sal-util    = "http://www.salamanca.school/xquery/sal-util" at "sal-util.xql";
+import module namespace sutil    = "http://www.salamanca.school/xquery/sutil" at "sutil.xql";
 
 (: declare option output:method            "html5";     :)
 (: declare option output:media-type        "text/html"; :)
@@ -47,21 +47,6 @@ import module namespace sal-util    = "http://www.salamanca.school/xquery/sal-ut
  : - dummy test function
  :)
  
-
-(: Concatenates name(s): surname, forename :)
-declare function app:formatName($persName as element()*) as xs:string? {
-    let $return-string := 
-        for $pers in $persName return
-            if ($pers/@key) then
-                normalize-space(xs:string($pers/@key))
-            else if ($pers/tei:surname and $pers/tei:forename) then
-                normalize-space(concat($pers/tei:surname, ', ', $pers/tei:forename, ' ', $pers/tei:nameLink, if ($pers/tei:addName) then ('&amp;nbsp;(' || $pers/tei:addName || ')') else ()))
-            else if ($pers) then
-                normalize-space(xs:string($pers))
-            else 
-                normalize-space($pers/text())
-    return (string-join($return-string, ' &amp; '))
-};
 
 (: Concatenates name(s): forename surname:)
 declare function app:rotateFormatName($persName as element()*) as xs:string? {
@@ -87,8 +72,8 @@ declare function app:resolvePersname($persName as element()*) {
                then $cerl
                else if ($persName/@key)
                     then string($persName/@key)
-                    else app:formatName($persName)
-    else app:formatName($persName)
+                    else sutil:formatName($persName)
+    else sutil:formatName($persName)
 };
 
 (: inactive: :)
@@ -149,7 +134,7 @@ declare function app:AUTfinalFacets ($node as node(), $model as map (*), $lang a
         let $aid            :=  xs:string($item/ancestor::tei:TEI/@xml:id)
         let $authorUrl      :=  'author.html?aid=' || $aid
         let $status         :=  xs:string($item/ancestor-or-self::tei:TEI//tei:revisionDesc/@status)
-        let $name           :=  app:formatName($item/tei:persName[1])
+        let $name           :=  sutil:formatName($item/tei:persName[1])
         let $sortName       :=  $item//tei:persName[1]/tei:surname
         let $firstChar      :=  substring($sortName, 1, 1)
         let $nameFacet      :=       if ($firstChar = ('A','B','C','D','E','F')) then 'A - F'
@@ -341,7 +326,7 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
             else "no"
         let $wrkLink        :=  'work.html?wid=' || $wid
 
-        let $name           :=  app:formatName($item/tei:fileDesc/tei:titleStmt/tei:author/tei:persName)
+        let $name           :=  sutil:formatName($item/tei:fileDesc/tei:titleStmt/tei:author/tei:persName)
         let $sortName       :=  lower-case($item/tei:fileDesc/tei:titleStmt/tei:author/tei:persName/tei:surname) (:lower-casing for equal sorting:)
         let $firstChar      :=  upper-case(substring($item/tei:fileDesc/tei:titleStmt/tei:author//tei:surname, 1, 1))
         let $nameFacet      :=       
@@ -400,9 +385,9 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
             for $volume at $index in util:expand($completeWork)//tei:text[@type="work_volume"]
                 let $volId      := xs:string($volume/@xml:id)
                 let $volIdShort := $volume/@n
-                let $volFrag    := sal-util:getFragmentID($wid, $volId)
+                let $volFrag    := sutil:getFragmentID($wid, $volId)
                 let $volLink    := 
-                    if (sal-util:WRKisPublished($wid || '_' || $volId)) then 'work.html?wid=' || $wid || "&amp;frag=" || $volFrag || "#" || $volId
+                    if (sutil:WRKisPublished($wid || '_' || $volId)) then 'work.html?wid=' || $wid || "&amp;frag=" || $volFrag || "#" || $volId
                     (: existence of link serves as indicator for single volumes' publication status (whether published or not) in works list :)
                     else ()
                 let $volContent := $volIdShort||'&#xA0;&#xA0;'
@@ -509,7 +494,7 @@ declare %private
         let $nameLink := 
             <a class="lead" href="{session:encode-url(xs:anyURI('author.html?aid=' || $model('currentAuthor')/@xml:id))}">
                 <span class="glyphicon glyphicon-user"></span>
-               &#xA0;{app:formatName($model('currentAuthor')/tei:persName[1])}
+               &#xA0;{sutil:formatName($model('currentAuthor')/tei:persName[1])}
             </a>
         return $nameLink
 };
@@ -643,7 +628,7 @@ declare %templates:wrap %templates:default("sort", "surname")
             let $result := 
                 for $item in $coll
                     let $wid := $item/parent::tei:TEI/@xml:id/string()
-                    let $author := app:formatName($item//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName)
+                    let $author := sutil:formatName($item//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName)
                     let $titleShort := $item//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'short']/string()
                     order by $wid ascending
                     return 
@@ -687,7 +672,7 @@ declare %templates:wrap %templates:default("sort", "surname")
 
 declare %templates:wrap 
     function app:WRKauthor($node as node(), $model as map(*)) {
-         <span>{app:formatName($model('currentWorkHeader')//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName)}</span>
+         <span>{sutil:formatName($model('currentWorkHeader')//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName)}</span>
 };
 
 declare %templates:wrap %private function app:WRKpublication($node as node(), $model as map(*)) {
@@ -713,7 +698,7 @@ declare %templates:wrap %private function app:WRKpublication($node as node(), $m
         let $completeWork   :=  $item[@xml:id="completeWork"]
         let $volumesString  :=  for $volume(\: at $index:\) in util:expand($completeWork)//tei:text[@type="work_volume"]
             let $volId      := xs:string($volume/@xml:id)
-            let $volFrag    := sal-util:getFragmentID($wid, $volId)
+            let $volFrag    := sutil:getFragmentID($wid, $volId)
             let $volLink    :=  'work.html?wid=' || $wid || "&amp;frag=" || $volFrag || "#" || $volId
             let $volContent := $volId || '&#32;&#32;'
             return  	<a href="{$volLink}">{$volId||'&#32;'}</a>
@@ -742,9 +727,9 @@ declare  %templates:wrap
 
 declare function app:WRKsingleVolumeString($wid as xs:string, $volume as element(tei:text)) {
     let $volId      := xs:string($volume/@xml:id)
-    let $volFrag    := sal-util:getFragmentID($wid, $volId)
+    let $volFrag    := sutil:getFragmentID($wid, $volId)
     let $volLink    :=  
-        if (sal-util:WRKisPublished($wid || '_' || $volId)) then 'work.html?wid=' || $wid || "&amp;frag=" || $volFrag || "#" || $volId
+        if (sutil:WRKisPublished($wid || '_' || $volId)) then 'work.html?wid=' || $wid || "&amp;frag=" || $volFrag || "#" || $volId
         (: existence of link serves as indicator for single volumes' publication status (whether published or not) :)
         else ()
     let $volContent := $volId || '&#32;&#32;'
@@ -1028,7 +1013,7 @@ declare %templates:wrap
 declare %templates:default("field", "all")
     function app:loadSingleAuthor($node as node(), $model as map(*), $aid as xs:string?){
     let $context  := if ($aid) then
-                        util:expand(doc($config:tei-authors-root || "/" || sal-util:normalizeId($aid) || ".xml")/tei:TEI)
+                        util:expand(doc($config:tei-authors-root || "/" || sutil:normalizeId($aid) || ".xml")/tei:TEI)
                      else if ($model("currentAuthor")) then
                         let $aid := $model("currentAuthor")/@xml:id 
                         return ($model("currentAuthor"))
@@ -1041,34 +1026,34 @@ declare %templates:default("field", "all")
 declare %templates:wrap
     function app:AUTloadEntryHtml($node as node(), $model as map(*), $aid as xs:string?, $lid as xs:string?){
      let $switchType         :=  if (request:get-parameter('aid', '')) then $aid else $lid
-     return   doc($config:data-root || "/" || sal-util:normalizeId($switchType)||'.html')/div
+     return   doc($config:data-root || "/" || sutil:normalizeId($switchType)||'.html')/div
 };
 declare %templates:wrap
     function app:AUTloadCitedHtml($node as node(), $model as map(*), $aid as xs:string?, $lid as xs:string?){
     let $switchType         :=  if (request:get-parameter('aid', '')) then $aid else $lid
-    return   doc($config:data-root || "/" || sal-util:normalizeId($switchType)||'_cited.html')/div/ul
+    return   doc($config:data-root || "/" || sutil:normalizeId($switchType)||'_cited.html')/div/ul
 };
 declare %templates:wrap
     function app:AUTloadLemmataHtml($node as node(), $model as map(*), $aid as xs:string?, $lid as xs:string?){
     let $switchType         :=  if (request:get-parameter('aid', '')) then $aid else $lid
-    return   doc($config:data-root || "/" || sal-util:normalizeId($switchType)||'_lemmata.html')/div/ul
+    return   doc($config:data-root || "/" || sutil:normalizeId($switchType)||'_lemmata.html')/div/ul
 };
 declare %templates:wrap
     function app:AUTloadPersonsHtml($node as node(), $model as map(*), $aid as xs:string?, $lid as xs:string?){
     let $switchType         :=  if (request:get-parameter('aid', '')) then $aid else $lid
-    return   doc($config:data-root || "/" || sal-util:normalizeId($switchType)||'_persons.html')/div/ul
+    return   doc($config:data-root || "/" || sutil:normalizeId($switchType)||'_persons.html')/div/ul
 };
 declare %templates:wrap
     function app:AUTloadPlacesHtml($node as node(), $model as map(*), $aid as xs:string?, $lid as xs:string?){
     let $switchType         :=  if (request:get-parameter('aid', '')) then $aid else $lid
-    return  doc($config:data-root || "/" || sal-util:normalizeId($switchType)||'_places.html')/div/ul
+    return  doc($config:data-root || "/" || sutil:normalizeId($switchType)||'_places.html')/div/ul
 };
 
 (: ====Lemma==== :)
 declare %templates:default("field", "all")
     function app:loadSingleLemma($node as node(), $model as map(*), $lid as xs:string?) {
     let $context  := if ($lid) then
-                        util:expand(doc($config:tei-lemmata-root || "/" || sal-util:normalizeId($lid) || ".xml")/tei:TEI)
+                        util:expand(doc($config:tei-lemmata-root || "/" || sutil:normalizeId($lid) || ".xml")/tei:TEI)
                      else if ($model("currentLemma")) then
                         let $lid := $model("currentLemma")/@xml:id
                         return ($model("currentLemma"))
@@ -1084,7 +1069,7 @@ declare %templates:default("field", "all")
 
 (: TODO: adjust path once LEM HTML is available :)
 declare %templates:wrap function app:LEMloadEntryHtml($node as node(), $model as map(*), $lid as xs:string?){
-    doc($config:data-root || "/" || sal-util:normalizeId($lid)||'.html')/span
+    doc($config:data-root || "/" || sutil:normalizeId($lid)||'.html')/span
 };
 
 declare %public
@@ -1096,7 +1081,7 @@ declare %public
     let $doc        :=  if ($q and $model("results")) then
                             util:expand($model("results")/ancestor::tei:TEI)
                         else
-                            util:expand(doc($config:tei-lemmata-root || "/" || sal-util:normalizeId($lemma-id) || ".xml")/tei:TEI)
+                            util:expand(doc($config:tei-lemmata-root || "/" || sutil:normalizeId($lemma-id) || ".xml")/tei:TEI)
     let $stylesheet := doc(xs:anyURI($config:app-root || "/resources/xsl/reading_view.xsl"))
     let $parameters :=  <parameters>
                             <param name="exist:stop-on-warn" value="yes"/>
@@ -1122,7 +1107,7 @@ declare %public
 declare %templates:default
     function app:loadSingleWp($node as node(), $model as map(*), $wpid as xs:string?){
     let $context  := if ($wpid) then
-                        doc($config:tei-workingpapers-root || "/" || sal-util:normalizeId($wpid) || ".xml")/tei:TEI
+                        doc($config:tei-workingpapers-root || "/" || sutil:normalizeId($wpid) || ".xml")/tei:TEI
                      else if ($model("currentWp")) then
                         let $wpid := $model("currentWp")/@xml:id 
                         return ($model("currentWp"))
@@ -1142,7 +1127,7 @@ declare %templates:default
 declare function app:watermark($node as node(), $model as map(*), $wid as xs:string?, $lang as xs:string?) {
     let $watermark :=   if (($model('currentAuthor')//tei:revisionDesc/@status |
                              $model('currentLemma')//tei:revisionDesc/@status  |
-                             doc($config:tei-works-root || "/" || sal-util:normalizeId($wid) || ".xml")/tei:TEI//tei:revisionDesc/@status)[1]
+                             doc($config:tei-works-root || "/" || sutil:normalizeId($wid) || ".xml")/tei:TEI//tei:revisionDesc/@status)[1]
                                                         = ('a_raw',
                                                            'b_cleared',
                                                            'c_hyph_proposed',
@@ -1165,7 +1150,7 @@ declare function app:watermark($node as node(), $model as map(*), $wid as xs:str
 declare function app:watermark-txtonly($node as node(), $model as map(*), $wid as xs:string?, $lang as xs:string?) {
     let $watermark :=   if (($model('currentAuthor')//tei:revisionDesc/@status |
                              $model('currentLemma')//tei:revisionDesc/@status  |
-                             doc($config:tei-works-root || "/" || sal-util:normalizeId($wid) || ".xml")/tei:TEI//tei:revisionDesc/@status)[1] 
+                             doc($config:tei-works-root || "/" || sutil:normalizeId($wid) || ".xml")/tei:TEI//tei:revisionDesc/@status)[1] 
                                                         = ('a_raw',
                                                            'b_cleared',
                                                            'c_hyph_proposed',
@@ -1182,18 +1167,18 @@ declare function app:watermark-txtonly($node as node(), $model as map(*), $wid a
 };
 (: deprecated :)
 (:declare %templates:wrap function app:loadSingleWork($node as node(), $model as map(*), $wid as xs:string?) {
-    let $context  :=   if (doc($config:tei-works-root || "/" || sal-util:normalizeId($wid) || ".xml")/tei:TEI//tei:text[@type="work_multivolume"]) then
-                            util:expand(doc($config:tei-works-root || "/" || sal-util:normalizeId($wid) || ".xml")/tei:TEI)
+    let $context  :=   if (doc($config:tei-works-root || "/" || sutil:normalizeId($wid) || ".xml")/tei:TEI//tei:text[@type="work_multivolume"]) then
+                            util:expand(doc($config:tei-works-root || "/" || sutil:normalizeId($wid) || ".xml")/tei:TEI)
                      else
-                            doc($config:tei-works-root || "/" || sal-util:normalizeId($wid) || ".xml")/tei:TEI
+                            doc($config:tei-works-root || "/" || sutil:normalizeId($wid) || ".xml")/tei:TEI
     return  map {"currentWork": $context}
 };:)
 
 declare %templates:wrap function app:loadWorkMetadata($node as node(), $model as map(*), $wid as xs:string?) {
-    let $normId := sal-util:normalizeId($wid)
+    let $normId := sutil:normalizeId($wid)
     let $workPath := $config:tei-works-root || "/" || $normId || ".xml"
     let $header := util:expand(doc($workPath)/tei:TEI/tei:teiHeader)
-                    (: or better util:expand(doc($config:tei-works-root || "/" || sal-util:normalizeId($wid) || ".xml"))/tei:TEI/tei:teiHeader ?:)
+                    (: or better util:expand(doc($config:tei-works-root || "/" || sutil:normalizeId($wid) || ".xml"))/tei:TEI/tei:teiHeader ?:)
     let $workId := doc($workPath)/tei:TEI/@xml:id/string()
     let $type := doc($workPath)/tei:TEI/tei:text/@type/string()
     return  
@@ -1210,7 +1195,7 @@ declare function app:displaySingleWork($node as node(),
                                         $mode as xs:string?,
                                         $viewer as xs:string?, 
                                         $lang as xs:string?) {
-    let $workId     := if ($wid) then sal-util:normalizeId($wid) else $model('currentWorkId')
+    let $workId     := if ($wid) then sutil:normalizeId($wid) else $model('currentWorkId')
     let $htmlPath   := $config:html-root || "/" || $workId
 
     let $targetFragment := 
@@ -1365,7 +1350,7 @@ declare %templates:wrap
 };
 
 (:declare %public function app:AUTentry($node as node(), $model as map(*), $aid) {
-    app:AUTsummary(doc($config:tei-authors-root || "/" || sal-util:normalizeId($aid) || ".xml")//tei:text)
+    app:AUTsummary(doc($config:tei-authors-root || "/" || sutil:normalizeId($aid) || ".xml")//tei:text)
 };
 
 declare function app:AUTsummary($node as node()) as item()* {
@@ -1551,11 +1536,11 @@ declare function local:placeNames($node as node()) {
 declare function app:cited ($node as node(), $model as map(*), $lang as xs:string?, $aid as xs:string?, $lid as xs:string?) {
         <ul class="list-unstyled">
         {(:let $analyze-section  := if (request:get-parameter('aid', '')) then $model('currentAuthor')//tei:text else  $model('currentLemma')//tei:text:)
-        let $analyze-section  := if (request:get-parameter('aid', '')) then doc($config:tei-authors-root || "/" || sal-util:normalizeId($aid) || ".xml")//tei:text else  doc($config:tei-lemmata-root || "/" || sal-util:normalizeId($lid) || ".xml")//tei:text
+        let $analyze-section  := if (request:get-parameter('aid', '')) then doc($config:tei-authors-root || "/" || sutil:normalizeId($aid) || ".xml")//tei:text else  doc($config:tei-lemmata-root || "/" || sutil:normalizeId($lid) || ".xml")//tei:text
         let $cited :=
             for $entity in $analyze-section//tei:bibl[@sortKey]
                 let $ansetzungsform := $entity/@sortKey/string()
-                let $author         := app:formatName($entity//tei:persName[1])
+                let $author         := sutil:formatName($entity//tei:persName[1])
                 let $title          :=  if ($entity//tei:title/@key) then
                                             ($entity//tei:title/@key)[1]
                                         else ()
@@ -1577,7 +1562,7 @@ declare function app:cited ($node as node(), $model as map(*), $lang as xs:strin
 declare function app:lemmata ($node as node(), $model as map(*), $lang as xs:string?, $aid as xs:string?, $lid as xs:string?) {
         <ul class="list-unstyled">
             {(:let $analyze-section  := if (request:get-parameter('aid', '')) then $model('currentAuthor')//tei:text else  $model('currentLemma')//tei:text:)
-            let $analyze-section  := if (request:get-parameter('aid', '')) then doc($config:tei-authors-root || "/" || sal-util:normalizeId($aid) || ".xml")//tei:text else  doc($config:tei-lemmata-root || "/" || sal-util:normalizeId($lid) || ".xml")//tei:text
+            let $analyze-section  := if (request:get-parameter('aid', '')) then doc($config:tei-authors-root || "/" || sutil:normalizeId($aid) || ".xml")//tei:text else  doc($config:tei-lemmata-root || "/" || sutil:normalizeId($lid) || ".xml")//tei:text
             let $lemmata :=
                 for $entity in $analyze-section//tei:term
                     let $ansetzungsform := $entity/@key/string()
@@ -1595,9 +1580,9 @@ declare function app:persons($node as node(), $model as map(*), $aid as xs:strin
         <ul class="list-unstyled">{
             let $analyze-section :=
                 if (request:get-parameter('aid', '')) then
-                    doc($config:tei-authors-root || "/" || sal-util:normalizeId($aid) || ".xml")//tei:text
+                    doc($config:tei-authors-root || "/" || sutil:normalizeId($aid) || ".xml")//tei:text
                 else
-                    doc($config:tei-lemmata-root || "/" || sal-util:normalizeId($lid) || ".xml")//tei:text
+                    doc($config:tei-lemmata-root || "/" || sutil:normalizeId($lid) || ".xml")//tei:text
             let $persons :=
                 for $entity in $analyze-section//tei:persName[not(parent::tei:author)]
                     let $ansetzungsform := app:resolvePersname($entity)
@@ -1616,7 +1601,7 @@ declare function app:persons($node as node(), $model as map(*), $aid as xs:strin
 
 declare function app:places ($node as node(), $model as map(*), $aid as xs:string?, $lid as xs:string?) {
         <ul class="list-unstyled">{
-             let $analyze-section  := if (request:get-parameter('aid', '')) then doc($config:tei-authors-root || "/" || sal-util:normalizeId($aid) || ".xml")//tei:text else  doc($config:tei-lemmata-root || "/" || sal-util:normalizeId($lid) || ".xml")//tei:text
+             let $analyze-section  := if (request:get-parameter('aid', '')) then doc($config:tei-authors-root || "/" || sutil:normalizeId($aid) || ".xml")//tei:text else  doc($config:tei-lemmata-root || "/" || sutil:normalizeId($lid) || ".xml")//tei:text
              let $places :=
                      for $entity in $analyze-section//tei:placeName
                         let $ansetzungsform := if ($entity/@key) then
@@ -1644,7 +1629,7 @@ declare function app:places ($node as node(), $model as map(*), $aid as xs:strin
 declare %public function app:LEMentry($node as node(), $model as map(*), $lid as xs:string) {
 (:app:LEMsummary($model('currentLemma')//tei:text):)
 (:    app:LEMsummary(doc($config:tei-lemmata-root || "/" || $lid || ".xml")//tei:text):)
-    render-app:dispatch(doc($config:tei-lemmata-root || "/" || sal-util:normalizeId($lid) || ".xml")//tei:body, "work", ())
+    render-app:dispatch(doc($config:tei-lemmata-root || "/" || sutil:normalizeId($lid) || ".xml")//tei:body, "work", ())
 };
 (: Rendering is done in render-app.xql! :)
 
@@ -1902,7 +1887,7 @@ declare %templates:wrap function app:WRKcatRecord($node as node(), $model as map
 declare function app:WRKadditionalInfoRecord($node as node(), $model as map(*), $lang as xs:string?) {
     let $workType := $model('currentWorkType')
     let $workId := $model('currentWorkId')
-    let $normId := sal-util:convertNumericVolumeID($workId)
+    let $normId := sutil:convertNumericVolumeID($workId)
     let $status := $model('currentWorkHeader')/tei:revisionDesc/@status/string()
 
     let $mirador := 'viewer_standalone.html?wid=' || $workId
@@ -1915,7 +1900,7 @@ declare function app:WRKadditionalInfoRecord($node as node(), $model as map(*), 
         </a>
     let $readingViewField :=
         if (($workType = ('work_monograph', 'work_volume') and $isPublished)
-            or $workType eq 'work_multivolume' and sal-util:WRKisPublished(upper-case($workId) || '_Vol01')) then
+            or $workType eq 'work_multivolume' and sutil:WRKisPublished(upper-case($workId) || '_Vol01')) then
             let $thumbnail := app:WRKcatRecordThumbnail($node, $model, $workId, 'full')
             return 
                 <li><h5><i18n:text key="readingView">Reading view</i18n:text>:</h5>
@@ -1992,15 +1977,15 @@ for the respective volume.
 ~:)
 declare function app:WRKcatRecordTeaser($node as node(), $model as map(*), $wid as xs:string, $lang as xs:string?, $volumes as xs:integer) {
     let $teiHeader :=   
-        if (sal-util:normalizeId($wid) eq $model('currentWorkId')) then $model('currentWorkHeader') (: when does this ever evaluate to true? (DG) :)
+        if (sutil:normalizeId($wid) eq $model('currentWorkId')) then $model('currentWorkHeader') (: when does this ever evaluate to true? (DG) :)
         else if (doc-available($config:tei-works-root || '/' || $wid || '.xml')) then 
             doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI/tei:teiHeader
         else ()
     let $log := if ($config:debug = ('trace', 'info')) then console:log('Creating cat record teaser for work/volume:' || $wid) else ()
     let $teaserText :=
         if ($teiHeader) then
-            let $digital := app:WRKeditionMetadata($node, $model, sal-util:normalizeId($wid))
-            let $bibliographical := app:WRKprintMetadata($node, $model, sal-util:normalizeId($wid), $lang)
+            let $digital := app:WRKeditionMetadata($node, $model, sutil:normalizeId($wid))
+            let $bibliographical := app:WRKprintMetadata($node, $model, sutil:normalizeId($wid), $lang)
             let $titleShort := $digital?('titleShort')
             let $volumeString := $bibliographical?('volumeNumber') || ' of ' || string($volumes)
             let $pubDate :=     
@@ -2079,7 +2064,7 @@ Determines whether a given work (not volume) is officially published as part of 
 @param wid: the ID of the requested work.
 ~:)
 declare function app:WRKisPublished($node as node(), $model as map(*), $wid as xs:string) as xs:boolean {
-    let $workId := sal-util:normalizeId($wid)
+    let $workId := sutil:normalizeId($wid)
     let $status :=  
         if ($workId eq $model('currentWorkId')) then
             $model('currentWorkHeader')/tei:revisionDesc/@status/string()
@@ -2094,7 +2079,7 @@ declare function app:WRKisPublished($node as node(), $model as map(*), $wid as x
 : Determines whether a work - regardless of its status of publication - is a work from the collection of sources.
 ~:)
 declare function app:WRKisInCollectionOfSources($wid as xs:string) as xs:boolean {
-    boolean(doc($config:tei-meta-root || '/sources-list.xml')/tei:TEI/tei:text//tei:bibl[substring-after(@corresp, 'work:' eq sal-util:normalizeId($wid))])
+    boolean(doc($config:tei-meta-root || '/sources-list.xml')/tei:TEI/tei:text//tei:bibl[substring-after(@corresp, 'work:' eq sutil:normalizeId($wid))])
 };
 
 (:~
@@ -2104,9 +2089,9 @@ Creates a thumbnail image for the catalogue record of a work or volume.
 ~:)
 declare function app:WRKcatRecordThumbnail($node as node(), $model as map(*), $wid as xs:string?, $mode as xs:string?) {
     let $workId := 
-        if ($wid and sal-util:normalizeId($wid) ne $model('currentWorkId')) then 
-            sal-util:normalizeId($wid) 
-        else sal-util:normalizeId($model('currentWorkId'))
+        if ($wid and sutil:normalizeId($wid) ne $model('currentWorkId')) then 
+            sutil:normalizeId($wid) 
+        else sutil:normalizeId($model('currentWorkId'))
     let $iiifResource := iiif:fetchResource($workId)
     let $img :=  
         if ($iiifResource?('@type') eq 'sc:Manifest') then 
@@ -2117,7 +2102,7 @@ declare function app:WRKcatRecordThumbnail($node as node(), $model as map(*), $w
         else ()
     let $scaledImg := if ($mode eq 'full') then iiif:scaleImageURI($img, 25) else iiif:scaleImageURI($img, 20)
     let $workType := 
-        if ($wid and sal-util:normalizeId($wid) ne $model('currentWorkId')) then 
+        if ($wid and sutil:normalizeId($wid) ne $model('currentWorkId')) then 
             doc($config:tei-works-root || '/' || $workId || '.xml')/tei:TEI/tei:text/@type/string()
         else $model('currentWorkType')
     let $volNumber := doc($config:tei-works-root || '/' || $workId || '.xml')/tei:TEI/tei:text/@n/string()
@@ -2127,7 +2112,7 @@ declare function app:WRKcatRecordThumbnail($node as node(), $model as map(*), $w
         else
             $config:idserver || '/texts/' || $workId || '?format=html'
     let $status :=
-        if ($wid and sal-util:normalizeId($wid) ne $model('currentWorkId')) then 
+        if ($wid and sutil:normalizeId($wid) ne $model('currentWorkId')) then 
             doc($config:tei-works-root || '/' || $workId || '.xml')/tei:TEI/tei:teiHeader//tei:revisionDesc/@status/string() 
         else $model('currentWorkHeader')/tei:revisionDesc/@status/string()
     let $isPublished := app:WRKisPublished($node, $model, $workId)
@@ -2288,7 +2273,7 @@ declare function app:WRKeditionRecord($node as node(), $model as map(*), $lang a
 
 (: modes: "record" for generic citations in catalogue records; "reading-full", "reading-passage" - only relevant for access date :)
 declare function app:WRKcitationReference($node as node()?, $model as map(*)?, $lang as xs:string?, $mode as xs:string) as element(span) {
-    let $wid := sal-util:convertNumericVolumeID($model('currentWorkId'))
+    let $wid := sutil:convertNumericVolumeID($model('currentWorkId'))
     let $fileDesc := $model('currentWorkHeader')/tei:fileDesc
     let $content := app:HTMLmakeCitationReference($wid, $fileDesc, $mode, ())
 (:    return i18n:process($content, $lang, $config:i18n-root, 'en'):)
@@ -2315,13 +2300,13 @@ declare function app:HTMLmakeCitationReference($wid as xs:string, $fileDesc as e
                         return app:rotateFormatName($ed), ' &amp; '):)
     let $citetrail :=
         if ($mode eq 'reading-passage' and $node) then
-            sal-util:getNodetrail($wid, $node, 'citetrail')
+            sutil:getNodetrail($wid, $node, 'citetrail')
         else ()
     let $citetrailStr := if ($citetrail) then ':' || $citetrail else ()
     let $link := $config:idserver || '/texts/' || $wid || $citetrailStr || (if ($mode eq 'reading-passage') then '?format=html' else ())
     let $passagetrail := 
         if ($mode eq 'reading-passage' and $node) then
-            let $passage := sal-util:getNodetrail($wid, $node, 'passagetrail')
+            let $passage := sutil:getNodetrail($wid, $node, 'passagetrail')
             return 
                 if ($passage) then <span class="cite-rec-trail">{$passage || ', '}</span> else ()
         else ()
@@ -2446,14 +2431,14 @@ declare function app:WRKbibliographicalRecord($node as node(), $model as map(*),
 Bundles the bibliographical data of a (print) source.
 ~:)
 declare function app:WRKprintMetadata($node as node(), $model as map(*), $wid as xs:string?, $lang as xs:string?) as map(*)? {
-    let $workId := if ($wid and sal-util:normalizeId($wid) ne $model('currentWorkId')) then sal-util:normalizeId($wid) else $model('currentWorkId')
+    let $workId := if ($wid and sutil:normalizeId($wid) ne $model('currentWorkId')) then sutil:normalizeId($wid) else $model('currentWorkId')
     let $teiHeader := 
-        if ($wid and sal-util:normalizeId($wid) ne $model('currentWorkId')) then
-            doc($config:tei-works-root || '/' || sal-util:normalizeId($wid) || '.xml')/tei:TEI/tei:teiHeader
+        if ($wid and sutil:normalizeId($wid) ne $model('currentWorkId')) then
+            doc($config:tei-works-root || '/' || sutil:normalizeId($wid) || '.xml')/tei:TEI/tei:teiHeader
         else $model('currentWorkHeader')
     let $type := 
-        if ($wid and sal-util:normalizeId($wid) ne $model('currentWorkId')) then
-            doc($config:tei-works-root || '/' || sal-util:normalizeId($wid) || '.xml')/tei:TEI/tei:text/@type/string()
+        if ($wid and sutil:normalizeId($wid) ne $model('currentWorkId')) then
+            doc($config:tei-works-root || '/' || sutil:normalizeId($wid) || '.xml')/tei:TEI/tei:text/@type/string()
         else $model('currentWorkType')
     let $sourceDesc := $teiHeader/tei:fileDesc/tei:sourceDesc
     
@@ -2534,14 +2519,14 @@ declare function app:WRKprintMetadata($node as node(), $model as map(*), $wid as
 Bundles the digital edition metadata of a work/volume.
 ~:)
 declare function app:WRKeditionMetadata($node as node(), $model as map(*), $wid as xs:string?) as map(*)? {
-    let $workId := if ($wid and sal-util:normalizeId($wid) ne $model('currentWorkId')) then sal-util:normalizeId($wid) else $model('currentWorkId')
+    let $workId := if ($wid and sutil:normalizeId($wid) ne $model('currentWorkId')) then sutil:normalizeId($wid) else $model('currentWorkId')
     let $teiHeader := 
-        if ($wid and sal-util:normalizeId($wid) ne $model('currentWorkId')) then
-            doc($config:tei-works-root || '/' || sal-util:normalizeId($wid) || '.xml')/tei:TEI/tei:teiHeader
+        if ($wid and sutil:normalizeId($wid) ne $model('currentWorkId')) then
+            doc($config:tei-works-root || '/' || sutil:normalizeId($wid) || '.xml')/tei:TEI/tei:teiHeader
         else $model('currentWorkHeader')
     let $type := 
-        if ($wid and sal-util:normalizeId($wid) ne $model('currentWorkId')) then
-            doc($config:tei-works-root || '/' || sal-util:normalizeId($wid) || '.xml')/tei:TEI/tei:text/@type/string()
+        if ($wid and sutil:normalizeId($wid) ne $model('currentWorkId')) then
+            doc($config:tei-works-root || '/' || sutil:normalizeId($wid) || '.xml')/tei:TEI/tei:text/@type/string()
         else $model('currentWorkType')
     let $status := $teiHeader/tei:revisionDesc/@status/string()
     let $titleMain := $teiHeader/tei:fileDesc/tei:titleStmt/tei:title[@type eq 'main']/text()
@@ -2593,7 +2578,7 @@ declare function app:WRKeditionMetadata($node as node(), $model as map(*), $wid 
 (:combined title on work.html in left box:)
 declare %templates:wrap
     function app:WRKcombined($node as node()?, $model as map(*)?, $wid as xs:string?) {
-        let $path           :=  doc($config:tei-works-root || "/" || sal-util:normalizeId($wid) || ".xml")//tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr
+        let $path           :=  doc($config:tei-works-root || "/" || sutil:normalizeId($wid) || ".xml")//tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr
         let $author         :=  string-join($path//tei:author/tei:persName/tei:surname, ', ')
         let $title          :=  $path//tei:title[@type = 'short']
         let $thisEd         :=  $path//tei:pubPlace[@role = 'thisEd']
@@ -2687,14 +2672,14 @@ declare function app:sourcesList($node as node(), $model as map(*), $lang as xs:
             $model('currentWork')
         else
             if ($wid) then
-                let $debug := console:log('Getting work based on $wid = ' || $config:tei-works-root || "/" || sal-util:normalizeId($wid) || ".xml." )
-                return doc($config:tei-works-root || "/" || sal-util:normalizeId($wid) || ".xml")
+                let $debug := console:log('Getting work based on $wid = ' || $config:tei-works-root || "/" || sutil:normalizeId($wid) || ".xml." )
+                return doc($config:tei-works-root || "/" || sutil:normalizeId($wid) || ".xml")
             else ()
       let $debug := console:log('count($work) = ' || count($work))
 
       let $workId         := 
         if ($wid) then
-            sal-util:normalizeId($wid)
+            sutil:normalizeId($wid)
         else
             $work/@xml:id
       let $debug := console:log('$workId = ' || $workId)
@@ -2759,7 +2744,7 @@ declare function app:sourcesList($node as node(), $model as map(*), $lang as xs:
         let $titles :=
          for $entity in $analyze-section//tei:bibl[@sortKey][not($milestone) or (. >> $milestone and . << $milestone/following::tei:milestone[1])]
             let $ansetzungsform := string($entity/@sortKey)
-            let $author         := app:formatName($entity//tei:persName)
+            let $author         := sutil:formatName($entity//tei:persName)
             let $title          := if ($entity//tei:title/@key) then $entity//tei:title/@key else ()
             let $display-title  := if ($author and $title) then
                                        concat($author, ': ', $title)
@@ -3052,7 +3037,7 @@ declare function app:tocSourcesList($node as node(), $model as map(*), $lang as 
  declare function app:WRKtoc ($node as node(), $model as map(*), $wid as xs:string, $q as xs:string?, $lang as xs:string?) {
     let $toc :=
         if ($q) then
-            let $tocDoc := doc($config:html-root || '/' || sal-util:normalizeId($wid) || '/' || sal-util:normalizeId($wid) || '_toc.html')
+            let $tocDoc := doc($config:html-root || '/' || sutil:normalizeId($wid) || '/' || sutil:normalizeId($wid) || '_toc.html')
             let $xslSheet       := 
                 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
                     <xsl:output omit-xml-declaration="yes" indent="yes"/>
@@ -3087,7 +3072,7 @@ declare function app:tocSourcesList($node as node(), $model as map(*), $lang as 
             return 
                 i18n:process(transform:transform($tocDoc, $xslSheet, $parameters), $lang, $config:i18n-root, 'en')
          else
-            doc($config:html-root || '/' || sal-util:normalizeId($wid) || '/' || sal-util:normalizeId($wid) || '_toc.html')
+            doc($config:html-root || '/' || sutil:normalizeId($wid) || '/' || sutil:normalizeId($wid) || '_toc.html')
     return 
         i18n:process($toc, $lang, $config:i18n-root, 'en')
 };
@@ -3323,7 +3308,7 @@ declare %templates:default
 (: ==== Paginator Function ===== :)
 
 declare function app:loadWRKpagination ($node as node(), $model as map (*), $wid as xs:string, $lang as xs:string, $q as xs:string?) {
-    let $pagesFile  :=  doc($config:html-root || '/' || sal-util:normalizeId($wid) || '/' || sal-util:normalizeId($wid) || '_pages_' || $lang || '.html')
+    let $pagesFile  :=  doc($config:html-root || '/' || sutil:normalizeId($wid) || '/' || sutil:normalizeId($wid) || '_pages_' || $lang || '.html')
 (:    let $dbg := console:log(substring(serialize($pagesFile),1,300)):)
     let $xslSheet   := <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
                             <xsl:output omit-xml-declaration="yes" indent="yes"/>

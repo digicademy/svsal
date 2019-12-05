@@ -29,7 +29,7 @@ declare namespace util       = "http://exist-db.org/xquery/util";
 (:import module namespace console    = "http://exist-db.org/xquery/console";:)
 (:import module namespace functx     = "http://www.functx.com";:)
 import module namespace config    = "http://www.salamanca.school/xquery/config"               at "config.xqm";
-import module namespace sal-util    = "http://www.salamanca.school/xquery/sal-util" at "sal-util.xql";
+import module namespace sutil    = "http://www.salamanca.school/xquery/sutil" at "sutil.xql";
 
 
 (:~
@@ -38,8 +38,8 @@ Fetches the teiHeader of a work's dataset.
 ~:)
 declare function export:WRKgetTeiHeader($wid as xs:string?, $mode as xs:string?, $citetrail as xs:string?) as element(tei:teiHeader) {
     let $expanded := 
-        if (doc-available($config:tei-works-root || '/' || sal-util:normalizeId($wid) || '.xml')) then 
-            util:expand(doc($config:tei-works-root || '/' || sal-util:normalizeId($wid) || '.xml')/tei:TEI/tei:teiHeader)
+        if (doc-available($config:tei-works-root || '/' || sutil:normalizeId($wid) || '.xml')) then 
+            util:expand(doc($config:tei-works-root || '/' || sutil:normalizeId($wid) || '.xml')/tei:TEI/tei:teiHeader)
         else ()
     let $header :=  
         if ($mode = ('metadata', 'passage')) then 
@@ -122,8 +122,8 @@ declare function local:copyHeaderElement($wid as xs:string, $node as node(), $mo
 ~ For a given citetrail, returns the respective TEI node (hierarchically embedded) and a teiHeader.
 :)
 declare function export:WRKgetTeiPassage($wid as xs:string, $citetrail as xs:string) as element(tei:TEI)? {
-    let $workPath := $config:tei-works-root || '/' || sal-util:normalizeId($wid) || '.xml'
-    let $indexPath := $config:index-root || '/' || sal-util:normalizeId($wid) || '_nodeIndex.xml'
+    let $workPath := $config:tei-works-root || '/' || sutil:normalizeId($wid) || '.xml'
+    let $indexPath := $config:index-root || '/' || sutil:normalizeId($wid) || '_nodeIndex.xml'
     let $tei := 
         if (doc-available($workPath) and doc-available($indexPath)) 
             then util:expand(doc($workPath)/tei:TEI)

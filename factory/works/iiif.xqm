@@ -18,7 +18,7 @@ import module namespace config    = "http://www.salamanca.school/xquery/config" 
 import module namespace app = "http://www.salamanca.school/xquery/app" at "../../modules/app.xql";
 import module namespace console    = "http://exist-db.org/xquery/console";
 import module namespace util       = "http://exist-db.org/xquery/util";
-import module namespace sal-util    = "http://www.salamanca.school/xquery/sal-util" at "sal-util.xql";
+import module namespace sutil    = "http://www.salamanca.school/xquery/sutil" at "sutil.xql";
 
 
 
@@ -27,7 +27,7 @@ a single volume within a multi-volume work) or a collection resource (for a mult
 @param $wid: the ID of the work or volume which the manifest is requested for
 @return:     the iiif manifest/collection :)
 declare function iiif:createResource($targetWorkId as xs:string) as map(*) {
-    let $tei  := doc($config:tei-works-root || '/' || sal-util:normalizeId($targetWorkId) || '.xml')//tei:TEI
+    let $tei  := doc($config:tei-works-root || '/' || sutil:normalizeId($targetWorkId) || '.xml')//tei:TEI
     let $iiifResource :=
         if ($tei) then
         (: dataset exists: :)

@@ -22,7 +22,7 @@ import module namespace app         = "http://www.salamanca.school/xquery/app"  
 import module namespace config      = "http://www.salamanca.school/xquery/config"                 at "config.xqm";
 import module namespace render-app  = "http://www.salamanca.school/xquery/render-app"         at "render-app.xql";
 import module namespace sphinx      = "http://www.salamanca.school/xquery/sphinx"                 at "sphinx.xql";
-import module namespace sal-util    = "http://www.salamanca.school/xquery/sal-util" at "sal-util.xql";
+import module namespace sutil    = "http://www.salamanca.school/xquery/sutil" at "sutil.xql";
 import module namespace stats       = "https://www.salamanca.school/factory/works/stats" at "../factory/works/stats.xqm";
 import module namespace index       = "https://www.salamanca.school/factory/works/index" at "../factory/works/index.xqm";
 import module namespace html        = "https://www.salamanca.school/factory/works/html" at "../factory/works/html.xqm";
@@ -594,7 +594,7 @@ declare %templates:wrap function admin:renderWork($workId as xs:string*) as elem
                             }
                             {
                             if ($work//tei:text[@type='work_volume']) then 
-                                for $a in $work//tei:text where $a[@type='work_volume' and sal-util:WRKisPublished($workId || '_' || @xml:id)] return
+                                for $a in $work//tei:text where $a[@type='work_volume' and sutil:WRKisPublished($workId || '_' || @xml:id)] return
                                     <ul>
                                         <li>
                                             <a class="hideMe">
@@ -886,7 +886,7 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
                 else ()
             let $work_type         := xs:string($work/tei:text/@type)
             let $teiHeader         := $work/tei:teiHeader
-            let $work_author_name := app:formatName($teiHeader//tei:titleStmt//tei:author//tei:persName)
+            let $work_author_name := sutil:formatName($teiHeader//tei:titleStmt//tei:author//tei:persName)
             let $work_author_id   := string-join($teiHeader//tei:titleStmt//tei:author//tei:persName/@ref, " ")
             let $work_title :=   
                 if ($teiHeader//tei:titleStmt/tei:title[@type="short"] and not($work//tei:text[@type = "working_paper"])) then
@@ -908,12 +908,12 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
                 else ()
             let $hit_type := local-name($hit)
             let $hit_id := xs:string($hit/@xml:id)
-            let $hit_citetrail := if ($nodeType eq 'work') then sal-util:getNodetrail($work_id, $hit, 'citetrail') else ()
+            let $hit_citetrail := if ($nodeType eq 'work') then sutil:getNodetrail($work_id, $hit, 'citetrail') else ()
 (:                doc($config:index-root || '/' || $work_id || '_nodeIndex.xml')//sal:node[@n = $hit_id]/sal:citetrail:)
             let $hit_language := xs:string($hit/ancestor-or-self::tei:*[@xml:lang][1]/@xml:lang)
             let $hit_fragment := 
                 if ($hit_id and xmldb:collection-available($config:html-root || '/' || $work_id)) then
-                    sal-util:getFragmentID($work_id, $hit_id)
+                    sutil:getFragmentID($work_id, $hit_id)
                 else ()
             let $hit_fragment_number := 
                 if ($hit_fragment) then
@@ -1052,7 +1052,7 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
 :)
 declare function admin:getFragmentNodes($work as element(tei:TEI), $fragmentationDepth as xs:integer) as node()* {
     (for $text in $work//tei:text[@type eq 'work_monograph' 
-                                  or (@type eq 'work_volume' and sal-util:WRKisPublished($work/@xml:id || '_' || @xml:id))] return 
+                                  or (@type eq 'work_volume' and sutil:WRKisPublished($work/@xml:id || '_' || @xml:id))] return 
         (
         (: in front, fragmentation must not go below the child level (child fragments shouldn't be too large here) :)
         (if ($text/tei:front//tei:*[count(./ancestor-or-self::tei:*) eq $fragmentationDepth]) then
@@ -1106,7 +1106,7 @@ declare function admin:createNodeIndex($wid as xs:string*) {
             let $nodes := 
                 for $text in $work//tei:text[@type = ('work_volume', 'work_monograph')] return 
                     (: make sure that we only grasp nodes that are within a published volume :)
-                    if (($text/@type eq 'work_volume' and sal-util:WRKisPublished($wid || '_' || $text/@xml:id))
+                    if (($text/@type eq 'work_volume' and sutil:WRKisPublished($wid || '_' || $text/@xml:id))
                         or $text/@type eq 'work_monograph') then 
                         $text/descendant-or-self::*[index:isIndexNode(.)]
                     else ()
@@ -1179,7 +1179,7 @@ declare function admin:createNodeIndex($wid as xs:string*) {
             (: check whether all text is being captured through basic index nodes (that is, whether every single passage is citable) :)
             let $checkBasicNodes := 
                 for $t in $work//tei:text[@type eq 'work_monograph' 
-                                          or (@type eq 'work_volume' and sal-util:WRKisPublished($wid || '_' || @xml:id))]
+                                          or (@type eq 'work_volume' and sutil:WRKisPublished($wid || '_' || @xml:id))]
                                           //text()[normalize-space() ne ''] return
                     if ($t[not(ancestor::*[index:isBasicNode(.)]) and not(ancestor::tei:figDesc)]) then 
                         let $debug := util:log('error', 'Encountered text node without ancestor::*[index:isBasicNode(.)], in line ' || $t/preceding::tei:lb[1]/@xml:id/string())
@@ -1307,7 +1307,7 @@ declare function admin:createStats() {
     let $save := admin:saveFile('dummy', 'corpus-stats.json', $corpusStats, 'stats')
     (: single work stats:)
     let $processSingleWorks :=
-        for $wid in sal-util:getPublishedWorkIds() return
+        for $wid in sutil:getPublishedWorkIds() return
             let $log := if ($config:debug eq 'trace') then util:log('warn', '[ADMIN] Creating single work stats for ' || $wid) else ()
             let $workStats := serialize(stats:makeWorkStats($wid), $params)
             let $saveSingle := admin:saveFile('dummy', $wid || '-stats.json', $workStats, 'stats')
@@ -1324,6 +1324,6 @@ declare function admin:createStats() {
 
 (:
 for $workId in collection($config:tei-works-root)/tei:TEI[tei:text/@type = ('work_monograph', 'work_multivolume')
-                                                                           and sal-util:WRKisPublished(./@xml:id)]/@xml:id/string()
+                                                                           and sutil:WRKisPublished(./@xml:id)]/@xml:id/string()
                     return admin:createStats('work', $workId)
 :)

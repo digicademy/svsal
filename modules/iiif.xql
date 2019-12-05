@@ -19,7 +19,7 @@ import module namespace console    = "http://exist-db.org/xquery/console";
 import module namespace functx     = "http://www.functx.com";
 import module namespace i18n       = "http://exist-db.org/xquery/i18n"       at "i18n.xql";
 import module namespace util       = "http://exist-db.org/xquery/util";
-import module namespace sal-util    = "http://www.salamanca.school/xquery/sal-util" at "sal-util.xql";
+import module namespace sutil    = "http://www.salamanca.school/xquery/sutil" at "sutil.xql";
 
 declare option output:method "json";
 declare option output:media-type "application/json";
@@ -32,7 +32,7 @@ or a collection resource (for a multi-volume work).
 @return:     the iiif manifest/collection
 :)
 declare function iiif:fetchResource($wid as xs:string) as map(*)? {
-    let $workId := sal-util:normalizeId($wid)
+    let $workId := sutil:normalizeId($wid)
     let $workType := 
         if (matches($workId, '^W\d{4}(_Vol\d{2})?$')) then 
             doc($config:tei-works-root || '/' || $workId || '.xml')/tei:TEI/tei:text/@type
@@ -89,7 +89,7 @@ In the case of single volume works, return:
               ]
 :)
     let $debug :=  if ($config:debug = "trace") then console:log("iiif:MiradorData running...") else ()
-    let $tei  := doc($config:tei-works-root || '/' || sal-util:normalizeId($wid) || '.xml')//tei:TEI
+    let $tei  := doc($config:tei-works-root || '/' || sutil:normalizeId($wid) || '.xml')//tei:TEI
     let $miradorData :=
         if ($tei) then
         (: dataset exists: :)
@@ -133,7 +133,7 @@ declare function iiif:MiradorWindowObject($node as node(), $model as map (*), $w
 :)
 
     let $debug     :=  if ($config:debug = "trace") then console:log("iiif:MiradorData running...") else ()
-    let $tei       := doc($config:tei-works-root || '/' || sal-util:normalizeId($wid) || '.xml')//tei:TEI
+    let $tei       := doc($config:tei-works-root || '/' || sutil:normalizeId($wid) || '.xml')//tei:TEI
     let $manifest  :=
         if ($tei) then
         (: dataset exists: :)

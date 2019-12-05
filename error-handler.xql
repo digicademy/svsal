@@ -11,6 +11,7 @@ import module namespace net     = "http://www.salamanca.school/xquery/net"      
 import module namespace app     = "http://www.salamanca.school/xquery/app"        at "modules/app.xql";
 import module namespace iiif    = "http://www.salamanca.school/xquery/iiif"       at "modules/iiif.xql";
 import module namespace i18n      = "http://exist-db.org/xquery/i18n"        at "i18n.xql";
+import module namespace gui    = "http://www.salamanca.school/xquery/gui"                    at "modules/gui.xqm";
 
 declare       namespace exist   = "http://exist.sourceforge.net/NS/exist";
 declare       namespace output  = "http://www.w3.org/2010/xslt-xquery-serialization";
@@ -57,10 +58,10 @@ let $html-in :=
             <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
             <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
             <meta name="author" content=""/>
-            {config:meta-description(<meta/>, $dummyMap, $lang, (), (), ())}
-            {config:meta-title(<title/>, $dummyMap, $lang, (), (), ())}
-            {config:canonical-url(<link/>, $dummyMap, $lang, (), (), ())}
-            {config:hreflang-url(<link/>, $dummyMap, $lang, (), (), ())}
+            {gui:metaDescription(<meta/>, $dummyMap, $lang, (), (), ())}
+            {gui:metaTitle(<title/>, $dummyMap, $lang, (), (), ())}
+            {gui:canonicalUrl(<link/>, $dummyMap, $lang, (), (), ())}
+            {gui:hreflangUrl(<link/>, $dummyMap, $lang, (), (), ())}
             
             <!-- ==== CSS ==== -->
             <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
@@ -100,8 +101,8 @@ let $html-in :=
                 </div>
                 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
                     <div class="container">
-                        {config:logo(<a/>, $dummyMap, $lang)}
-                        {config:app-header(<div/>, $dummyMap, $lang, (), (), (), (), ())}
+                        {gui:logo(<a/>, $dummyMap, $lang)}
+                        {gui:header(<div/>, $dummyMap, $lang, (), (), (), (), ())}
                     </div>
                 </div>
                 
@@ -117,7 +118,7 @@ let $html-in :=
             <h2/>
             <div id="footer">
                 <div class="container">
-                    {config:footer (<div/>, $dummyMap, $lang)}
+                    {gui:footer (<div/>, $dummyMap, $lang)}
                 </div>
             </div>
             
