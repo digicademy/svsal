@@ -1,6 +1,14 @@
 xquery version "3.1";
 
 
+(: ####++++----
+
+    Configuration variables defining the application context, and helper functions 
+    to access the application context from within a module/template.
+
+ ----++++#### :)
+
+
 module namespace config         = "http://www.salamanca.school/xquery/config";
 declare       namespace exist   = "http://exist.sourceforge.net/NS/exist";
 declare namespace repo          = "http://exist-db.org/xquery/repo";
@@ -362,7 +370,18 @@ declare function config:logo($node as node(), $model as map(*), $lang as xs:stri
             </a>   
         </div>
     return 
-        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))};  
+        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
+};  
+
+
+(: 
+    NOTE: many of the functions below can also be found in eXist's config module
+    (http://exist-db.org/xquery/apps/config), but are "overwritten" here.
+    Since most of these functions are really HTML-heavy and don't seem to have much to do with 
+    the app context itself, perhaps it would be wise to outsource them into a dedicated module, 
+    but I'm not sure if this would break something with eXist's default config/templating system. 
+:)
+
 
 (: Navigation:  create header menue and dropdown:)
 declare function config:app-header($node as node(), $model as map(*), $lang as xs:string, $aid as xs:string?, $lid as xs:string?, $nid as xs:string?, $wpid as xs:string?, $wid as xs:string?) as element()  {
@@ -718,8 +737,6 @@ declare %templates:default("lang", "en")
 };
 
 
-(: NOTE: this is the same function as config:inject-requestParameter(), which we habe duplicated here for 
-    avoiding circular dependencies between net.xql and config.xqm: :)
 (: Todo: Clean lang parameters when they arrive. It's there but I'm not sure it's working... :)
 declare function config:inject-requestParameter($injectParameter as xs:string*, $injectValue as xs:string*) as xs:string* {
     if (not($injectParameter)) then

@@ -1,5 +1,13 @@
 xquery version "3.1";
 
+
+(: ####++++----
+
+    General functions and variables for responding to web requests.
+
+ ----++++#### :)
+
+
 module namespace net                = "http://www.salamanca.school/xquery/net";
 import module namespace console     = "http://exist-db.org/xquery/console";
 import module namespace functx      = "http://www.functx.com";
@@ -166,27 +174,6 @@ declare function net:format() as xs:string {
             case 'application/ld+json' return 'iiif'
             default                    return 'html'
 };
-
-(: Todo: Clean lang parameters when they arrive. It's there but I'm not sure it's working... :)
-declare function net:inject-requestParameter($injectParameter as xs:string*, $injectValue as xs:string*) as xs:string* {
-    if (not($injectParameter)) then
-        for $p in request:get-parameter-names() return
-            if (not($p = "lang" and request:get-parameter($p, ()) = ('', 'de', 'en', 'es'))) then
-                $p || "=" || request:get-parameter($p, ())
-            else ()
-    else
-        let $preliminaryList := for $p in request:get-parameter-names() return
-                                    if ($p = $injectParameter and not($injectParameter = 'lang')) then
-                                        $injectParameter || "=" || $injectValue
-                                    else if (not($p = "lang" and request:get-parameter($p, ()) = ('', 'de', 'en', 'es'))) then
-                                        $p || "=" || request:get-parameter($p, ())
-                                    else ()
-        return if (not($injectParameter || "=" || $injectValue = $preliminaryList)) then
-                    (if (not($injectParameter = 'lang')) then $injectParameter || "=" || $injectValue else (), $preliminaryList)
-               else
-                    $preliminaryList
-};
-
 
 
 (: Diverse redirection/forwarding functions ... :)

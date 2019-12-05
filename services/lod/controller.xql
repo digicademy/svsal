@@ -166,8 +166,8 @@ return
     else if (request:get-header('X-Forwarded-Host') = ("", "www." || $config:serverdomain) and $exist:path = ("", "/", "/en", "/es", "/de", "/en/", "/es/", "/de/") ) then
         let $debug          := if ($config:debug = ("trace", "info")) then console:log("Homepage requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
         let $absolutePath   := concat($config:proto, "://", $net:forwardedForServername, '/', $lang, '/index.html',
-                                    if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (),
-                                    string-join(net:inject-requestParameter('', ''), '&amp;'))
+                                    if (count(config:inject-requestParameter('', '')) gt 0) then '?' else (),
+                                    string-join(config:inject-requestParameter('', ''), '&amp;'))
         return net:redirect($absolutePath, $net-vars)
 
 
@@ -617,7 +617,7 @@ return
     (: HTML files should hava a path component - we parse that and put view.xql in control :)
     else if (ends-with($exist:resource, ".html") and substring($exist:path, 1, 4) = ("/de/", "/en/", "/es/")) then
         let $debug          := if ($config:debug = "info")  then console:log ("HTML requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-        let $debug          := if ($config:debug = "trace") then console:log ("HTML requested, translating language path component to a request attribute - $exist:path: " || $exist:path || ", redirect to: " || $exist:controller || substring($exist:path, 4) || ", parameters: [" || string-join(net:inject-requestParameter((), ()), "&amp;") || "], attributes: [].") else ()
+        let $debug          := if ($config:debug = "trace") then console:log ("HTML requested, translating language path component to a request attribute - $exist:path: " || $exist:path || ", redirect to: " || $exist:controller || substring($exist:path, 4) || ", parameters: [" || string-join(config:inject-requestParameter((), ()), "&amp;") || "], attributes: [].") else ()
         (: For now, we don't use net:forward here since we need a nested view/forwarding. :)
         return
             <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
@@ -638,8 +638,8 @@ return
     else if (ends-with($exist:resource, ".html")) then
         let $absolutePath   := concat($config:proto, "://", $net:forwardedForServername, '/', $lang, $exist:path,
 (:        let $absolutePath   := concat('/exist/apps/salamanca/', $lang, $exist:path,:)
-                                        if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (),
-                                        string-join(net:inject-requestParameter('', ''), '&amp;'))
+                                        if (count(config:inject-requestParameter('', '')) gt 0) then '?' else (),
+                                        string-join(config:inject-requestParameter('', ''), '&amp;'))
         let $debug          := if ($config:debug = ("trace", "info")) then console:log("HTML requested: " || $net:forwardedForServername || $exist:path || $parameterString || ", redirecting to " || $absolutePath || "...") else ()
         return net:redirect($absolutePath, $net-vars)
 
@@ -675,12 +675,12 @@ return
          let $debug          := if ($config:debug = ("trace", "info")) then console:log("Page not found: " || $net:forwardedForServername || $exist:path || $parameterString || "."
 
         || " Absolute path:" || concat($config:proto, "://", $net:forwardedForServername, '/', $lang, '/index.html',
-                                    if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (),
-                                    string-join(net:inject-requestParameter('', ''), '&amp;'))
+                                    if (count(config:inject-requestParameter('', '')) gt 0) then '?' else (),
+                                    string-join(config:inject-requestParameter('', ''), '&amp;'))
 
                                     ) else ()
 
         let $absolutePath   := concat($config:proto, "://", $net:forwardedForServername, '/', $lang, '/index.html',
-                                    if (count(net:inject-requestParameter('', '')) gt 0) then '?' else (),
-                                    string-join(net:inject-requestParameter('', ''), '&amp;'))
+                                    if (count(config:inject-requestParameter('', '')) gt 0) then '?' else (),
+                                    string-join(config:inject-requestParameter('', ''), '&amp;'))
         return net:redirect($absolutePath, $net-vars)

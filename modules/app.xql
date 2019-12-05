@@ -1,5 +1,14 @@
 xquery version "3.1";
 
+
+(: ####++++----
+
+    "Workhorse" module of the app providing large parts of the content-related app logic (such
+    as functionality for displaying work/author/lemma overviews, catalogue records, working paper records, etc).
+
+ ----++++#### :)
+
+
 module namespace app         = "http://www.salamanca.school/xquery/app";
 declare namespace exist      = "http://exist.sourceforge.net/NS/exist";
 declare namespace opensearch = "http://a9.com/-/spec/opensearch/1.1/";
