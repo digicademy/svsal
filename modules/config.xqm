@@ -28,6 +28,7 @@ import module namespace console = "http://exist-db.org/xquery/console";
 declare variable $config:debug        := "trace"; (: possible values: trace, info, none :)
 declare variable $config:instanceMode := "testing"; (: possible values: testing, staging, production :)
 declare variable $config:contactEMail := "info.salamanca@adwmainz.de";
+declare variable $config:defaultTestserver := 'c106-211.cloud.gwdg.de';
 
 (: Configure Servers :)
 declare variable $config:proto          := if (request:get-header('X-Forwarded-Proto') = "https") then "https" else request:get-scheme();
@@ -40,12 +41,11 @@ declare variable $config:serverdomain :=
     else if(substring-before(request:get-server-name(), ".") = $config:subdomains)
         then substring-after(request:get-server-name(), ".")
     else
-        let $fallbackDomain := 'c106-211.cloud.gwdg.de' (: request:get-server-name() :)
+        let $fallbackDomain := $config:defaultTestserver (: request:get-server-name() :)
         let $alert := if ($config:debug = "trace") then console:log("Warning! Dynamic $config:serverdomain is uncertain, using servername " || $fallbackDomain || ".") else ()
         return $fallbackDomain
     ;
-    
-    
+ 
 (: API :)
 
 declare variable $config:currentApiVersion := 'v1';

@@ -14,7 +14,6 @@ import module namespace functx      = "http://www.functx.com";
 import module namespace request     = "http://exist-db.org/xquery/request";
 import module namespace response    = "http://exist-db.org/xquery/response";
 import module namespace util        = "http://exist-db.org/xquery/util";
-import module namespace rest = "http://exquery.org/ns/restxq";
 
 import module namespace config      = "http://www.salamanca.school/xquery/config"                 at "config.xqm";
 import module namespace export      = "http://www.salamanca.school/xquery/export"                 at "export.xql";
@@ -73,43 +72,7 @@ declare variable $net:errorhandler :=
 };:)
 
 
-(: 
-RESTXQ FUNCTIONS for redirecting "id." URLs to the api
 
-This is necessary since the upstream XQueryUrlRewrite servlet doesn't accept URLs containing colons, so that
-all "id." URLs are forwarded to the RestXQ servlet and end up here 
-:)
-
-declare 
-%rest:GET
-%rest:path("/texts/{$rid}")
-function net:redirectIdTextsRequest($rid) {
-    net:redirect-with-303($config:apiserver || '/' || $config:currentApiVersion || '/texts/' || $rid)
-};
-
-declare 
-%rest:GET
-%rest:path("/works.{$rid}")
-function net:redirectIdTextsRequestLegacy($rid) {
-    net:redirect-with-303($config:apiserver || '/' || $config:currentApiVersion || '/texts/' || $rid)
-};
-
-(: the following endpoints aren't available yet, they are here for the sake of completeness :)
-(:
-declare 
-%rest:GET
-%rest:path("/authors/{$rid}")
-function net:redirectIdAuthorsRequest($rid) {
-    net:redirect-with-303($config:apiserver || '/' || $config:currentApiVersion || '/authors/' || $rid)
-};
-
-declare 
-%rest:GET
-%rest:path("/concepts/{$rid}")
-function net:redirectIdConceptsRequests($rid) {
-    net:redirect-with-303($config:apiserver || '/' || $config:currentApiVersion || '/concepts/' || $rid)
-};
-:)
 
 
 
