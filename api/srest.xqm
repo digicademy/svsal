@@ -17,13 +17,14 @@ declare namespace exist = "http://exist.sourceforge.net/NS/exist";
 import module namespace rest = "http://exquery.org/ns/restxq";
 import module namespace http = "http://expath.org/ns/http-client";
 
+import module namespace config = "http://www.salamanca.school/xquery/config" at "../modules/config.xqm";
+
 
 (: CONFIG VARIABLES :)
 (: some of these variables occur in similar form in config.xqm, but need to be "duplicated" here 
  since RestXQ does not get along well with the request module (which is required by config.xqm) :)
 
 declare variable $srest:proto := 'https://';
-declare variable $srest:currentApiVersion := 'v1';
 
 (: RESTXQ FUNCTIONS for redirecting requests with "id." URLs to current API endpoints. :)
 
@@ -46,7 +47,7 @@ declare
 %rest:query-param("canvas", "{$canvas}", "")
 %rest:header-param("X-Forwarded-Host", "{$host}")
 function srest:redirectIdTextsDocRequest($rid, $host, $format, $mode, $q, $lang, $viewer, $frag, $canvas) {
-    srest:redirect-with-303($srest:proto || 'api.' || srest:getDomain($host) || '/' || $srest:currentApiVersion || 
+    srest:redirect-with-303($srest:proto || 'api.' || srest:getDomain($host) || '/' || $config:currentApiVersion || 
                             '/texts/' || $rid 
                             || srest:getQueryParams($format, $mode, $q, $lang, $viewer, $frag, $canvas))
 };
@@ -64,7 +65,7 @@ declare
 %rest:query-param("canvas", "{$canvas}", "")
 %rest:header-param("X-Forwarded-Host", "{$host}")
 function srest:redirectIdTextsDocRequestLegacy($rid, $host, $format, $mode, $q, $lang, $viewer, $frag, $canvas) {
-    srest:redirect-with-303($srest:proto || 'api.' || srest:getDomain($host) || '/' || $srest:currentApiVersion || 
+    srest:redirect-with-303($srest:proto || 'api.' || srest:getDomain($host) || '/' || $config:currentApiVersion || 
                             '/texts/' || $rid || srest:getQueryParams($format, $mode, $q, $lang, $viewer, $frag, $canvas))
 };
 
@@ -76,7 +77,7 @@ declare
 %rest:query-param("lang", "{$lang}", "en")
 %rest:header-param("X-Forwarded-Host", "{$host}")
 function srest:redirectIdTextsCorpusRequest($rid, $host, $format, $lang) {
-    srest:redirect-with-303($srest:proto || 'api.' || srest:getDomain($host) || '/' || $srest:currentApiVersion || 
+    srest:redirect-with-303($srest:proto || 'api.' || srest:getDomain($host) || '/' || $config:currentApiVersion || 
                             '/texts')
 };
 

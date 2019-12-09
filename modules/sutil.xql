@@ -10,7 +10,7 @@ declare namespace sal = "http://salamanca.adwmainz.de";
 
 (:
 
-Module for util functions that are of a general nature and/or used by multiple other modules.
+Module for util functions that are of a general nature and used by multiple other modules.
 Bundling such functions here shall prevent interdependencies between larger and more specific modules.
 
 :)
@@ -168,22 +168,6 @@ declare function sutil:convertNumericVolumeID($volId as xs:string) as xs:string?
     else ()
 };
 
-
-(:
-~ Removes insignificant whitespace from an HTML document/fragment.
-:)
-declare function sutil:minifyHtml($node as node()) as node() {
-    typeswitch($node)
-        case element() return 
-            element {local-name($node)} 
-                    {$node/@*, for $n in $node/node() return sutil:minifyHtml($n)}
-        case text() return 
-            if ($node[parent::div and normalize-space(.) eq '' and (not(preceding-sibling::*) or not(following-sibling::*))]) then ()
-            else replace($node, ' {2,}', ' ')
-        
-        (: comment(), processing-instruction() :)
-        default return ()
-};
 
 declare function sutil:getNodeIndexValue($wid as xs:string, $node as element()) {
     if (doc-available($config:index-root || '/' || $wid || '.xml')) then
