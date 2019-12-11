@@ -26,15 +26,67 @@ import module namespace config = "http://www.salamanca.school/xquery/config" at 
 
 declare variable $srest:proto := 'https://';
 
-declare variable $srest:serializeJson :=
+declare variable $srest:jsonOutputParams :=
     <output:serialization-parameters>
         <output:method>json</output:method>
     </output:serialization-parameters>;
     
+declare variable $srest:teiOutputParams :=
+    <output:serialization-parameters>
+        <output:method>xml</output:method>
+        <output:indent>no</output:indent>
+        <output:media-type>application/tei+xml</output:media-type>
+    </output:serialization-parameters>;
+    
+declare variable $srest:txtOutputParams :=
+    <output:serialization-parameters>
+        <output:method>text</output:method>
+    </output:serialization-parameters>;
+    
 
-(: REST ERROR MESSAGES :)
+(: REST RESPONSE FUNCTIONS :)
 
-declare function srest:error404() {
+(: Content Wrappers :)
+
+declare function srest:deliverTEI($content, $name as xs:string?) {
+    let $filename := if ($name) then $name || '.xml' else $content/@xml:id/string() || '.xml'
+    let $filename := translate($filename, ':', '_')
+    let $contentDisposition := 'inline; filename="' || $filename || '"'
+    return
+        <rest:response>
+            {$srest:teiOutputParams}
+            <http:response status="200">    
+                <http:header name="Content-Type" value="application/tei+xml; charset=utf-8"/>
+                <http:header name="Content-Disposition" value="{$contentDisposition}"/>
+            </http:response>
+        </rest:response>,
+        $content
+};
+
+declare function srest:deliverHTML($content) {
+    <rest:response>
+        <http:response status="200">
+            <http:header name="Content-Type" value="text/html; charset=utf-8"/>
+        </http:response>
+    </rest:response>,
+    $content
+};
+
+
+(: Redirects :)
+
+declare function srest:redirect-with-303($absoluteUrl as xs:string) {
+    <rest:response>
+        <http:response status="303">
+            <http:header name="Location" value="{$absoluteUrl}"/>
+        </http:response>
+    </rest:response>
+};
+
+
+(: Errors :)
+
+declare function srest:error404NotFound() {
     <rest:response>
         <http:response status="404">
             <http:header name="Content-Language" value="en"/>
@@ -48,7 +100,7 @@ declare function srest:error404() {
                 'message': 'Resource not found.'
             }
         }, 
-        $srest:serializeJson)
+        $srest:jsonOutputParams)
 };
 
 declare function srest:error404NotYetAvailable() {
@@ -65,7 +117,7 @@ declare function srest:error404NotYetAvailable() {
                 'message': 'Resource not yet available.'
             }
         }, 
-        $srest:serializeJson)
+        $srest:jsonOutputParams)
 };
 
 declare function srest:error400BadResource() {
@@ -82,17 +134,9 @@ declare function srest:error400BadResource() {
                 'message': 'Resource identifier syntax is invalid, must be of the form: work_id[:passage_id]'
             }
         }, 
-        $srest:serializeJson)
+        $srest:jsonOutputParams)
 };
 
-
-
-declare variable $srest:error400 := map {
-    'error': map {
-        'status': 400,
-        'message': 'Bad request.'
-    }
-};
 
 
 (: RESTXQ FUNCTIONS for redirecting requests with "id." URLs to current API endpoints. :)
@@ -115,6 +159,7 @@ declare
 %rest:query-param("frag", "{$frag}", "")
 %rest:query-param("canvas", "{$canvas}", "")
 %rest:header-param("X-Forwarded-Host", "{$host}")
+%output:indent("no")
 function srest:redirectIdTextsDocRequest($rid, $host, $format, $mode, $q, $lang, $viewer, $frag, $canvas) {
     srest:redirect-with-303($srest:proto || 'api.' || srest:getDomain($host) || '/' || $config:currentApiVersion || 
                             '/texts/' || $rid 
@@ -133,6 +178,7 @@ declare
 %rest:query-param("frag", "{$frag}", "")
 %rest:query-param("canvas", "{$canvas}", "")
 %rest:header-param("X-Forwarded-Host", "{$host}")
+%output:indent("no")
 function srest:redirectIdTextsDocRequestLegacy($rid, $host, $format, $mode, $q, $lang, $viewer, $frag, $canvas) {
     srest:redirect-with-303($srest:proto || 'api.' || srest:getDomain($host) || '/' || $config:currentApiVersion || 
                             '/texts/' || $rid || srest:getQueryParams($format, $mode, $q, $lang, $viewer, $frag, $canvas))
@@ -145,6 +191,7 @@ declare
 %rest:query-param("format", "{$format}", "html")
 %rest:query-param("lang", "{$lang}", "en")
 %rest:header-param("X-Forwarded-Host", "{$host}")
+%output:indent("no")
 function srest:redirectIdTextsCorpusRequest($rid, $host, $format, $lang) {
     srest:redirect-with-303($srest:proto || 'api.' || srest:getDomain($host) || '/' || $config:currentApiVersion || 
                             '/texts')
@@ -171,10 +218,3 @@ declare function srest:getDomain($xForwardedHost as xs:string) as xs:string? {
         $xForwardedHost
 };
 
-declare function srest:redirect-with-303($url) {
-    <rest:response>
-        <http:response status="303">
-            <http:header name="Location" value="{$url}"/>
-        </http:response>
-    </rest:response>
-};
