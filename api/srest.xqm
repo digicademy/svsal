@@ -26,6 +26,75 @@ import module namespace config = "http://www.salamanca.school/xquery/config" at 
 
 declare variable $srest:proto := 'https://';
 
+declare variable $srest:serializeJson :=
+    <output:serialization-parameters>
+        <output:method>json</output:method>
+    </output:serialization-parameters>;
+    
+
+(: REST ERROR MESSAGES :)
+
+declare function srest:error404() {
+    <rest:response>
+        <http:response status="404">
+            <http:header name="Content-Language" value="en"/>
+            <http:header name="Content-Type" value="application/json; charset=utf-8"/>
+        </http:response>
+    </rest:response>,
+    serialize(
+        map {
+            'error': map {
+                'status': 404,
+                'message': 'Resource not found.'
+            }
+        }, 
+        $srest:serializeJson)
+};
+
+declare function srest:error404NotYetAvailable() {
+    <rest:response>
+        <http:response status="404">
+            <http:header name="Content-Language" value="en"/>
+            <http:header name="Content-Type" value="application/json; charset=utf-8"/>
+        </http:response>
+    </rest:response>,
+    serialize(
+        map {
+            'error': map {
+                'status': 404,
+                'message': 'Resource not yet available.'
+            }
+        }, 
+        $srest:serializeJson)
+};
+
+declare function srest:error400BadResource() {
+    <rest:response>
+        <http:response status="400">
+            <http:header name="Content-Language" value="en"/>
+            <http:header name="Content-Type" value="application/json; charset=utf-8"/>
+        </http:response>
+    </rest:response>,
+    serialize(
+        map {
+            'error': map {
+                'status': 400,
+                'message': 'Resource identifier syntax is invalid, must be of the form: work_id[:passage_id]'
+            }
+        }, 
+        $srest:serializeJson)
+};
+
+
+
+declare variable $srest:error400 := map {
+    'error': map {
+        'status': 400,
+        'message': 'Bad request.'
+    }
+};
+
+
 (: RESTXQ FUNCTIONS for redirecting requests with "id." URLs to current API endpoints. :)
 
 (:
@@ -80,6 +149,8 @@ function srest:redirectIdTextsCorpusRequest($rid, $host, $format, $lang) {
     srest:redirect-with-303($srest:proto || 'api.' || srest:getDomain($host) || '/' || $config:currentApiVersion || 
                             '/texts')
 };
+
+(: TODO: content type via Accept header :)
 
 
 (: TODO add authors and concepts endpoints here when available :)
