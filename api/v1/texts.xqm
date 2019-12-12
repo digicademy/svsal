@@ -89,8 +89,6 @@ declare %private function textsv1:TEIdeliverDoc($rid as xs:string, $mode as xs:s
     return 
         if ($resource('tei_status') eq 2 and $resource('valid') and not($mode eq 'meta')) then 
             (: full, valid doc/fragment requested :)
-            let $serialize := util:declare-option("output:indent", "no")
-            return
             srest:deliverTEI(
                 util:expand(doc($config:tei-works-root || '/' || $resource('tei_doc') || '.xml')/tei:TEI, 'indent="no"'),
                 $resource('rid')
@@ -119,7 +117,7 @@ declare function textsv1:validateResourceId($rid as xs:string?) as map(*) {
     (: the returned map has negative or no values by default;
        while validating the resource more and more deeply (see below), we update the map gradually :)
     let $valMap := map {
-        'valid': false(), (: states if resource is valid/available :)
+        'valid': false(), (: states if resource is valid/available, i.e. if it refers to a (valid passage within a) text that is published :)
         'work_id': (), (: the id of the work (5-place, without any volume suffix) :)
         'rid_main': (), (: the "main" part of the resource id, before any colon or dot (if there are any). Case is normalized :)
         'tei_doc': (), (: the id of the TEI dataset for the work/volume, as found in $config:tei-works-root (without ".xml") :)
@@ -128,7 +126,9 @@ declare function textsv1:validateResourceId($rid as xs:string?) as map(*) {
         'passage_status': 0, (: the status of the passage: 1 if passage is available, 0 if not :)
         'wellformed': false(), (: states if resource id is syntactically well-formed :)
         'legacy_mode': (), (: legacy resource ids may contain a mode parameter such as "W0004.orig", which may be relevant for HTML/TXT delivery :)
-        'rid': $rid (: the originally requested resource id :)
+        'rid': $rid, (: the originally requested resource id :)
+        'request_type': () (: if the resource is valid, states whether a full "text" or a "passage" was requested. 
+                              Note that volumes count as "text" in this case, not as "passage". :)
     }
     
     (: first, we parse the resource id and determine the main component (before ":" or "."), 
@@ -172,10 +172,13 @@ declare function textsv1:validateResourceId($rid as xs:string?) as map(*) {
                         (: (passages that refer to mere volumes have already been treated above) :)
                         if (doc($config:index-root || '/' || $valMap('work_id') || '_nodeIndex.xml')//sal:citetrail[./text() eq $valMap('passage')]) then
                             let $valMap := map:put($valMap, 'passage_status', 1)
-                            return map:put($valMap, 'valid', true())
+                            let $valMap := map:put($valMap, 'valid', true())
+                            return map:put($valMap, 'request_type', true())
                         else $valMap
-                    else map:put($valMap, 'valid', true())        
-                else $valMap
+                    else
+                        let $valMap := map:put($valMap, 'valid', true())
+                        return map:put($valMap, 'request_type', true())
+                else $valMap (: also applies to invalid volume numbers :)
         else 
             (: syntactically invalid request - no further validation necessary :)
             $valMap
