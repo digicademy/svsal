@@ -56,26 +56,6 @@ declare variable $net:errorhandler :=
             <forward url="{$config:app-root}/modules/view.xql"/>
         </error-handler>;
 
-(:declare function net:findNode($ctsId as xs:string?) {
-    let $reqResource  := tokenize($ctsId, '/')[last()]
-    let $reqWork      := tokenize(tokenize($reqResource, ':')[1], '\.')[1]   (\: work:pass.age :\)
-    let $reqPassage   := tokenize($reqResource, ':')[2]
-    let $nodeId       := if ($reqPassage) then
-                            let $nodeIndex := doc($config:index-root || '/' || replace($reqWork, 'w0', 'W0') || '_nodeIndex.xml')
-                            return $nodeIndex//sal:node[sal:citetrail eq $reqPassage][1]/@n[1]
-                         else
-                            "completeWork" 
-    let $work         := util:expand(doc($config:tei-works-root || '/' || replace($reqWork, 'w0', 'W0') || '.xml')//tei:TEI)
-    let $node         := $work//tei:*[@xml:id eq $nodeId]
-    let $debug        := if ($config:debug = "trace") then console:log('findNode returns ' || count($node) || ' node(s): ' || $work/@xml:id || '//*[@xml:id=' || $nodeId || '] (cts/id was "' || $ctsId || '").') else ()
-    return $node
-};:)
-
-
-
-
-
-
 
 (: Todo: Clean lang parameters when they arrive. It's there but I'm not sure it's working... :)
 declare function net:inject-requestParameter($injectParameter as xs:string*, $injectValue as xs:string*) as xs:string* {
@@ -97,21 +77,6 @@ declare function net:inject-requestParameter($injectParameter as xs:string*, $in
                     $preliminaryList
 };
 
-
-declare function net:findNode($requestData as map()) {
-    let $nodeId :=    
-        if ($requestData('passage') ne ('')) then
-            let $nodeIndex := doc($config:index-root || '/' || $requestData('work_id') || '_nodeIndex.xml')
-            let $id := $nodeIndex//sal:node[sal:citetrail eq $requestData('passage')][1]/@n[1]
-            return if ($id) then $id else 'completeWork'
-        else 'completeWork' (: if no specific node has been found, return (or if work hasn't been rendered yet), return complete text :)
-    return
-        let $work := util:expand(doc($config:tei-works-root || '/' || $requestData('work_id') || '.xml')/tei:TEI)
-        let $node := $work//tei:*[@xml:id eq $nodeId]
-        let $debug := if ($config:debug = "trace") then console:log('findNode: found ' || count($node) || ' node(s): ' || $work/@xml:id || '//*[@xml:id=' 
-                                                                    || $nodeId || '] (cts/id was "' || $requestData('mainResource') || ':' || $requestData('passage') || '").') else ()
-        return $node
-};
 
 (: Set language for the connection ... :)
 declare function net:lang($existPath as xs:string) as xs:string {
@@ -608,7 +573,7 @@ declare function net:APIdeliverTEI($requestData as map(), $netVars as map()*) {
 declare function net:APIdeliverTXT($requestData as map(), $netVars as map()*) {
     if (matches($requestData('tei_id'), '^W\d{4}')) then 
         let $mode := if ($requestData('mode')) then $requestData('mode') else 'edit'
-        let $node := net:findNode($requestData)
+        let $node := () (:sutil:getNodeFromCitetrail...:)
         let $serialize := (util:declare-option("output:method", "text"),
                            util:declare-option("output:media-type", "text/plain"))
         let $debug := 

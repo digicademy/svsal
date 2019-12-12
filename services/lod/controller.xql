@@ -10,6 +10,7 @@ import module namespace functx  = "http://www.functx.com";
 import module namespace config  = "http://www.salamanca.school/xquery/config" at "../../modules/config.xqm";
 import module namespace net     = "http://www.salamanca.school/xquery/net"    at "../../modules/net.xql";
 import module namespace txt  = "https://www.salamanca.school/factory/works/txt" at "../factory/works/txt.xql";
+import module namespace sutil    = "http://www.salamanca.school/xquery/sutil" at "../../sutil.xql";
 
 declare       namespace exist   = "http://exist.sourceforge.net/NS/exist";
 declare       namespace output  = "http://www.w3.org/2010/xslt-xquery-serialization";
@@ -213,7 +214,7 @@ return
             let $debug          := if ($config:debug = ("trace", "info")) then console:log("TXT requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
             let $reqResource    := replace(tokenize($exist:path, '/')[last()], '\|', '/')
             let $reqWork        := tokenize($exist:path, ':')[1]
-            let $node           := net:findNode($reqResource)
+            let $node           := sutil:findNode($reqResource)
             let $ret            := (util:declare-option("output:method", "text"),
                                     util:declare-option("output:media-type", "text/plain"))
             let $debug2         := if ($config:debug = "trace") then console:log("Serializing options: method:" || util:get-option('output:method') || ', media-type:' || util:get-option('output:media-type') || '.') else ()

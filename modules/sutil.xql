@@ -226,4 +226,21 @@ declare function sutil:formatName($persName as element()*) as xs:string? {
     return (string-join($return-string, ' &amp; '))
 };
 
+(:
+~ For a $citetrail and a $workId, fetches the matching node from the respective TEI dataset.
+:)
+declare function sutil:getTeiNodeFromCitetrail($workId as xs:string, $citetrail as xs:string?) as element()? {
+    let $nodeId :=    
+        if ($citetrail) then
+            let $nodeIndex := doc($config:index-root || '/' || sutil:normalizeId($workId) || '_nodeIndex.xml')
+            let $id := $nodeIndex//sal:node[sal:citetrail eq $citetrail][1]/@n[1]
+            return $id 
+        else 'completeWork'
+    return
+        let $work := util:expand(doc($config:tei-works-root || '/' || sutil:normalizeId($workId) || '.xml')/tei:TEI)
+        let $node := $work//tei:*[@xml:id eq $nodeId]
+        return $node
+};
+
+
 
