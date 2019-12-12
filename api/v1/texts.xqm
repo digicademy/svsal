@@ -16,7 +16,7 @@ declare namespace exist = "http://exist.sourceforge.net/NS/exist";
 import module namespace rest = "http://exquery.org/ns/restxq";
 import module namespace util = "http://exist-db.org/xquery/util";
 
-import module namespace srest = "http://www.salamanca.school/xquery/srest" at "../srest.xqm";
+import module namespace api = "http://www.salamanca.school/xquery/api" at "../api.xqm";
 import module namespace sutil = "http://www.salamanca.school/xquery/sutil" at "../../modules/sutil.xql";
 import module namespace config = "http://www.salamanca.school/xquery/config" at "../../modules/config.xqm";
 import module namespace export = "http://www.salamanca.school/xquery/export" at "../../modules/export.xql";
@@ -37,7 +37,7 @@ function textsv1:getCorpus($format) {
         case 'tei' return
             let $zipPath := $config:corpus-zip-root || '/sal-tei-corpus.zip'
             return 
-                srest:deliverZIP(
+                api:deliverZIP(
                     util:binary-doc($zipPath),
                     'sal-tei-corpus'
                 )
@@ -97,27 +97,27 @@ declare %private function textsv1:TEIdeliverDoc($rid as xs:string, $mode as xs:s
         if ($resource('tei_status') eq 2 and $resource('valid') and not($mode eq 'meta')) then 
             (: full, valid doc/fragment requested :)
             if ($resource('request_type') eq 'full') then
-                srest:deliverTEI(
+                api:deliverTEI(
                     util:expand(doc($config:tei-works-root || '/' || $resource('tei_id') || '.xml')/tei:TEI),
                     $resource('tei_id')
                 )
             else (: $resource('request_type') eq 'passage' :)
-                srest:deliverTEI(
+                api:deliverTEI(
                     export:WRKgetTeiPassage($resource('work_id'), $resource('passage')),
                     $resource('work_id') || ':' || $resource('passage')
                 )
         else if ($resource('tei_status') ge 1 and $mode eq 'meta') then
             (: teiHeader of an available dataset requested :)
-            srest:deliverTEI(
+            api:deliverTEI(
                 export:WRKgetTeiHeader($resource('tei_id'), 'metadata', ()),
                 $resource('tei_id') || '_meta'
             )
         else if ($resource('tei_status') = (1, 0)) then
-            srest:error404NotYetAvailable()
+            api:error404NotYetAvailable()
         else if (not($resource('wellformed'))) then
-            srest:error400BadResource()
+            api:error400BadResource()
         else 
-            srest:error404NotFound()
+            api:error404NotFound()
 };
 
 
@@ -194,7 +194,7 @@ declare function textsv1:validateResourceId($rid as xs:string?) as map(*) {
             (: syntactically invalid request - no further validation necessary :)
             $valMap
     
-    let $debug := util:log('warn', '[TEXTSAPI] validation results: ' || serialize($valMap, $srest:jsonOutputParams))
+    let $debug := util:log('warn', '[TEXTSAPI] validation results: ' || serialize($valMap, $api:jsonOutputParams))
     
     return $valMap
 };

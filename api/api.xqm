@@ -3,14 +3,13 @@ xquery version "3.0";
 
 (: ####++++----
 
-    SvSal config and utility module for working with RestXQ: includes RestXQ functions that don't fit into the 
-    more specific REST endpoint modules, and provides general utility functions and config variables 
-    for processing requests through RestXQ.
+    General API functions and variables for utility and delivery, and some RestXQ functions for 
+    redirects (e.g., from "id." URIs to more specific API modules).
 
  ----++++#### :)
 
 
-module namespace srest = "http://www.salamanca.school/xquery/srest";
+module namespace api = "http://www.salamanca.school/xquery/api";
 declare namespace output="http://www.w3.org/2010/xslt-xquery-serialization";
 declare namespace exist = "http://exist.sourceforge.net/NS/exist";
 
@@ -24,26 +23,26 @@ import module namespace config = "http://www.salamanca.school/xquery/config" at 
 (: some of these variables occur in similar form in config.xqm, but need to be "duplicated" here 
  since RestXQ does not get along well with the request module (which is required by config.xqm) :)
 
-declare variable $srest:proto := 'https://';
+declare variable $api:proto := 'https://';
 
-declare variable $srest:jsonOutputParams :=
+declare variable $api:jsonOutputParams :=
     <output:serialization-parameters>
         <output:method>json</output:method>
     </output:serialization-parameters>;
     
-declare variable $srest:teiOutputParams :=
+declare variable $api:teiOutputParams :=
     <output:serialization-parameters>
         <output:method value="xml"/>
         <output:indent value="no"/>
         <output:media-type value="application/tei+xml"/>
     </output:serialization-parameters>;
     
-declare variable $srest:txtOutputParams :=
+declare variable $api:txtOutputParams :=
     <output:serialization-parameters>
         <output:method>text</output:method>
     </output:serialization-parameters>;
     
-declare variable $srest:zipOutputParams :=
+declare variable $api:zipOutputParams :=
     <output:serialization-parameters>
         <output:media-type value="application/zip"/>
         <output:method value="binary"/>
@@ -54,13 +53,13 @@ declare variable $srest:zipOutputParams :=
 
 (: Content Wrappers :)
 
-declare function srest:deliverTEI($content, $name as xs:string?) {
+declare function api:deliverTEI($content, $name as xs:string?) {
     let $filename := if ($name) then $name else $content/@xml:id/string()
     let $filename := translate($filename, ':.', '_-') || '.xml'
     let $contentDisposition := 'attachment; filename="' || $filename || '"'
     return
         <rest:response>
-            {$srest:teiOutputParams}
+            {$api:teiOutputParams}
             <http:response status="200">    
                 <http:header name="Content-Type" value="application/tei+xml; charset=utf-8"/>
                 <http:header name="Content-Disposition" value="{$contentDisposition}"/>
@@ -69,7 +68,7 @@ declare function srest:deliverTEI($content, $name as xs:string?) {
         $content
 };
 
-declare function srest:deliverHTML($content) {
+declare function api:deliverHTML($content) {
         <rest:response>
             <http:response status="200">
                 <output:media-type value="text/html"/>
@@ -79,12 +78,12 @@ declare function srest:deliverHTML($content) {
         $content
 };
 
-declare function srest:deliverZIP($content as xs:base64Binary?, $name as xs:string) {
+declare function api:deliverZIP($content as xs:base64Binary?, $name as xs:string) {
     let $filename := $name || '.zip'
     let $contentDisposition := 'attachment; filename="' || $filename || '"'
     return
         <rest:response>
-            {$srest:zipOutputParams}
+            {$api:zipOutputParams}
             <http:response status="200">
                 <http:header name="Content-Type" value="application/zip"/>
                 <http:header name="Content-Disposition" value="{$contentDisposition}"/>
@@ -96,7 +95,7 @@ declare function srest:deliverZIP($content as xs:base64Binary?, $name as xs:stri
 
 (: Redirects :)
 
-declare function srest:redirect-with-303($absoluteUrl as xs:string) {
+declare function api:redirect-with-303($absoluteUrl as xs:string) {
     <rest:response>
         <http:response status="303">
             <http:header name="Location" value="{$absoluteUrl}"/>
@@ -107,7 +106,7 @@ declare function srest:redirect-with-303($absoluteUrl as xs:string) {
 
 (: Errors :)
 
-declare function srest:error404NotFound() {
+declare function api:error404NotFound() {
     <rest:response>
         <http:response status="404">
             <http:header name="Content-Language" value="en"/>
@@ -121,10 +120,10 @@ declare function srest:error404NotFound() {
                 'message': 'Resource not found.'
             }
         }, 
-        $srest:jsonOutputParams)
+        $api:jsonOutputParams)
 };
 
-declare function srest:error404NotYetAvailable() {
+declare function api:error404NotYetAvailable() {
     <rest:response>
         <http:response status="404">
             <http:header name="Content-Language" value="en"/>
@@ -138,10 +137,10 @@ declare function srest:error404NotYetAvailable() {
                 'message': 'Resource not yet available.'
             }
         }, 
-        $srest:jsonOutputParams)
+        $api:jsonOutputParams)
 };
 
-declare function srest:error400BadResource() {
+declare function api:error400BadResource() {
     <rest:response>
         <http:response status="400">
             <http:header name="Content-Language" value="en"/>
@@ -155,7 +154,7 @@ declare function srest:error400BadResource() {
                 'message': 'Resource identifier syntax is invalid, must be of the form: work_id[:passage_id]'
             }
         }, 
-        $srest:jsonOutputParams)
+        $api:jsonOutputParams)
 };
 
 
@@ -181,10 +180,10 @@ declare
 %rest:query-param("canvas", "{$canvas}", "")
 %rest:header-param("X-Forwarded-Host", "{$host}")
 %output:indent("no")
-function srest:redirectIdTextsDocRequest($rid, $host, $format, $mode, $q, $lang, $viewer, $frag, $canvas) {
-    srest:redirect-with-303($srest:proto || 'api.' || srest:getDomain($host) || '/' || $config:currentApiVersion || 
+function api:redirectIdTextsDocRequest($rid, $host, $format, $mode, $q, $lang, $viewer, $frag, $canvas) {
+    api:redirect-with-303($api:proto || 'api.' || api:getDomain($host) || '/' || $config:currentApiVersion || 
                             '/texts/' || $rid 
-                            || srest:getQueryParams($format, $mode, $q, $lang, $viewer, $frag, $canvas))
+                            || api:getQueryParams($format, $mode, $q, $lang, $viewer, $frag, $canvas))
 };
 
 
@@ -200,9 +199,9 @@ declare
 %rest:query-param("canvas", "{$canvas}", "")
 %rest:header-param("X-Forwarded-Host", "{$host}")
 %output:indent("no")
-function srest:redirectIdTextsDocRequestLegacy($rid, $host, $format, $mode, $q, $lang, $viewer, $frag, $canvas) {
-    srest:redirect-with-303($srest:proto || 'api.' || srest:getDomain($host) || '/' || $config:currentApiVersion || 
-                            '/texts/' || $rid || srest:getQueryParams($format, $mode, $q, $lang, $viewer, $frag, $canvas))
+function api:redirectIdTextsDocRequestLegacy($rid, $host, $format, $mode, $q, $lang, $viewer, $frag, $canvas) {
+    api:redirect-with-303($api:proto || 'api.' || api:getDomain($host) || '/' || $config:currentApiVersion || 
+                            '/texts/' || $rid || api:getQueryParams($format, $mode, $q, $lang, $viewer, $frag, $canvas))
 };
 
 
@@ -213,8 +212,8 @@ declare
 %rest:query-param("lang", "{$lang}", "en")
 %rest:header-param("X-Forwarded-Host", "{$host}")
 %output:indent("no")
-function srest:redirectIdTextsCorpusRequest($rid, $host, $format, $lang) {
-    srest:redirect-with-303($srest:proto || 'api.' || srest:getDomain($host) || '/' || $config:currentApiVersion || 
+function api:redirectIdTextsCorpusRequest($rid, $host, $format, $lang) {
+    api:redirect-with-303($api:proto || 'api.' || api:getDomain($host) || '/' || $config:currentApiVersion || 
                             '/texts')
 };
 
@@ -227,12 +226,12 @@ function srest:redirectIdTextsCorpusRequest($rid, $host, $format, $lang) {
 
 (: UTILITY FUNCTIONS :)
 
-declare function srest:getQueryParams($format as xs:string?, $mode as xs:string?, $q as xs:string?, $lang as xs:string?,
+declare function api:getQueryParams($format as xs:string?, $mode as xs:string?, $q as xs:string?, $lang as xs:string?,
                                       $viewer as xs:string?, $frag as xs:string?, $canvas as xs:string?) {
     () (: TODO :)                                      
 };
 
-declare function srest:getDomain($xForwardedHost as xs:string) as xs:string? {
+declare function api:getDomain($xForwardedHost as xs:string) as xs:string? {
     if (substring-before($xForwardedHost, ".") = 'id') then 
         substring-after($xForwardedHost, ".")
     else 

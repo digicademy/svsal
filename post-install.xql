@@ -31,7 +31,7 @@ declare variable $adminfiles        := ($target || '/admin.html',
 (: TODO add more modules here when necessary :)
 declare variable $restModules := 
     ('xmldb://db/apps/salamanca/api/v1/texts.xqm', 
-     'xmldb://db/apps/salamanca/api/srest.xqm');
+     'xmldb://db/apps/salamanca/api/api.xqm');
 
 
 (: Define files and folders with special permissions :)
