@@ -19,6 +19,7 @@ import module namespace util = "http://exist-db.org/xquery/util";
 import module namespace srest = "http://www.salamanca.school/xquery/srest" at "../srest.xqm";
 import module namespace sutil = "http://www.salamanca.school/xquery/sutil" at "../../modules/sutil.xql";
 import module namespace config = "http://www.salamanca.school/xquery/config" at "../../modules/config.xqm";
+import module namespace export = "http://www.salamanca.school/xquery/export" at "../../modules/export.xql";
 
 
 
@@ -32,10 +33,16 @@ declare
 %rest:path("/v1/texts")
 %rest:query-param("format", "{$format}", "html")
 function textsv1:getCorpus($format) {
-
-  <result>
-    <content>Hello Corpus</content>
-  </result>
+    switch($format)
+        case 'tei' return
+            let $zipPath := $config:corpus-zip-root || '/sal-tei-corpus.zip'
+            return 
+                srest:deliverZIP(
+                    util:binary-doc($zipPath),
+                    'sal-tei-corpus'
+                )
+        default return
+            () (: TODO :)
          
 };
 
@@ -89,14 +96,22 @@ declare %private function textsv1:TEIdeliverDoc($rid as xs:string, $mode as xs:s
     return 
         if ($resource('tei_status') eq 2 and $resource('valid') and not($mode eq 'meta')) then 
             (: full, valid doc/fragment requested :)
-            srest:deliverTEI(
-                util:expand(doc($config:tei-works-root || '/' || $resource('tei_doc') || '.xml')/tei:TEI, 'indent="no"'),
-                $resource('rid')
-            )
+            if ($resource('request_type') eq 'full') then
+                srest:deliverTEI(
+                    util:expand(doc($config:tei-works-root || '/' || $resource('tei_id') || '.xml')/tei:TEI),
+                    $resource('tei_id')
+                )
+            else (: $resource('request_type') eq 'passage' :)
+                srest:deliverTEI(
+                    export:WRKgetTeiPassage($resource('work_id'), $resource('passage')),
+                    $resource('work_id') || ':' || $resource('passage')
+                )
         else if ($resource('tei_status') ge 1 and $mode eq 'meta') then
             (: teiHeader of an available dataset requested :)
-            (: TODO tei_header :)
-            <result>TEI resource not yet fully available, but delivering teiHeader: {$rid}</result>
+            srest:deliverTEI(
+                export:WRKgetTeiHeader($resource('tei_id'), 'metadata', ()),
+                $resource('tei_id') || '_meta'
+            )
         else if ($resource('tei_status') = (1, 0)) then
             srest:error404NotYetAvailable()
         else if (not($resource('wellformed'))) then
@@ -118,17 +133,17 @@ declare function textsv1:validateResourceId($rid as xs:string?) as map(*) {
        while validating the resource more and more deeply (see below), we update the map gradually :)
     let $valMap := map {
         'valid': false(), (: states if resource is valid/available, i.e. if it refers to a (valid passage within a) text that is published :)
+        'request_type': (), (: if the resource is valid, states whether a "full" text or a "passage" was requested. 
+                              Note that volumes count as "full" text in this case, not as "passage". :)
         'work_id': (), (: the id of the work (5-place, without any volume suffix) :)
         'rid_main': (), (: the "main" part of the resource id, before any colon or dot (if there are any). Case is normalized :)
-        'tei_doc': (), (: the id of the TEI dataset for the work/volume, as found in $config:tei-works-root (without ".xml") :)
+        'tei_id': (), (: the id of the TEI dataset for the work/volume, as found in $config:tei-works-root (without ".xml") :)
         'tei_status': -1, (: status of the work: see sutil:WRKvalidateId() :)
         'passage': (), (: the id of the passage :)
         'passage_status': 0, (: the status of the passage: 1 if passage is available, 0 if not :)
         'wellformed': false(), (: states if resource id is syntactically well-formed :)
         'legacy_mode': (), (: legacy resource ids may contain a mode parameter such as "W0004.orig", which may be relevant for HTML/TXT delivery :)
-        'rid': $rid, (: the originally requested resource id :)
-        'request_type': () (: if the resource is valid, states whether a full "text" or a "passage" was requested. 
-                              Note that volumes count as "text" in this case, not as "passage". :)
+        'rid': $rid (: the originally requested resource id :)
     }
     
     (: first, we parse the resource id and determine the main component (before ":" or "."), 
@@ -151,20 +166,16 @@ declare function textsv1:validateResourceId($rid as xs:string?) as map(*) {
         if ($valMap('rid_main')) then
         (: we have a well-formed request, including at least an rid_main (such as "W0034") :)
             let $valMap := map:put($valMap, 'wellformed', true())
-            (: we put work and tei_doc already into the map (like passage above), regardless of whether they are valid: :)
+            (: we put work and tei_id already into the map (like passage above), regardless of whether they are valid: :)
             let $valMap := map:put($valMap, 'work_id', substring($valMap('rid_main'), 1, 5))
             let $passageIsFullVolume := matches(lower-case($valMap('passage')), '^vol\d{1,2}$')
             let $teiId := 
                 if ($passageIsFullVolume) then
-                    format-number(xs:integer(replace($valMap('passage'), '^vol(\d{1,2})$', '$1')), '00')
+                    $valMap('work_id') || '_Vol' || format-number(xs:integer(replace($valMap('passage'), '^vol(\d{1,2})$', '$1')), '00')
                 else $valMap('rid_main')
-            let $valMap := map:put($valMap, 'tei_doc', $teiId)
-            (:
-            (\: if passage refers to full volume, remove the passage - the info is already stored in $valMap('tei_doc') :\)
-            let $valMap := if ($passageIsFullVolume) then map:put($valMap, 'passage', ()) else $valMap
-            :)
+            let $valMap := map:put($valMap, 'tei_id', $teiId)
             (: now comes the actual validation: :)
-            let $valMap := map:put($valMap, 'tei_status', sutil:WRKvalidateId($valMap('tei_doc')))
+            let $valMap := map:put($valMap, 'tei_status', sutil:WRKvalidateId($valMap('tei_id')))
             return
                 if ($valMap('tei_status') eq 2) then
                 (: the work/volume is available - but what about the (potential) passage? :)
@@ -173,11 +184,11 @@ declare function textsv1:validateResourceId($rid as xs:string?) as map(*) {
                         if (doc($config:index-root || '/' || $valMap('work_id') || '_nodeIndex.xml')//sal:citetrail[./text() eq $valMap('passage')]) then
                             let $valMap := map:put($valMap, 'passage_status', 1)
                             let $valMap := map:put($valMap, 'valid', true())
-                            return map:put($valMap, 'request_type', true())
+                            return map:put($valMap, 'request_type', 'passage')
                         else $valMap
                     else
                         let $valMap := map:put($valMap, 'valid', true())
-                        return map:put($valMap, 'request_type', true())
+                        return map:put($valMap, 'request_type', 'full')
                 else $valMap (: also applies to invalid volume numbers :)
         else 
             (: syntactically invalid request - no further validation necessary :)

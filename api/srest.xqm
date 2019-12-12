@@ -33,9 +33,9 @@ declare variable $srest:jsonOutputParams :=
     
 declare variable $srest:teiOutputParams :=
     <output:serialization-parameters>
-        <output:method>xml</output:method>
-        <output:indent>no</output:indent>
-        <output:media-type>application/tei+xml</output:media-type>
+        <output:method value="xml"/>
+        <output:indent value="no"/>
+        <output:media-type value="application/tei+xml"/>
     </output:serialization-parameters>;
     
 declare variable $srest:txtOutputParams :=
@@ -43,15 +43,21 @@ declare variable $srest:txtOutputParams :=
         <output:method>text</output:method>
     </output:serialization-parameters>;
     
+declare variable $srest:zipOutputParams :=
+    <output:serialization-parameters>
+        <output:media-type value="application/zip"/>
+        <output:method value="binary"/>
+    </output:serialization-parameters>;
+
 
 (: REST RESPONSE FUNCTIONS :)
 
 (: Content Wrappers :)
 
 declare function srest:deliverTEI($content, $name as xs:string?) {
-    let $filename := if ($name) then $name || '.xml' else $content/@xml:id/string() || '.xml'
-    let $filename := translate($filename, ':', '_')
-    let $contentDisposition := 'inline; filename="' || $filename || '"'
+    let $filename := if ($name) then $name else $content/@xml:id/string()
+    let $filename := translate($filename, ':.', '_-') || '.xml'
+    let $contentDisposition := 'attachment; filename="' || $filename || '"'
     return
         <rest:response>
             {$srest:teiOutputParams}
@@ -64,12 +70,27 @@ declare function srest:deliverTEI($content, $name as xs:string?) {
 };
 
 declare function srest:deliverHTML($content) {
-    <rest:response>
-        <http:response status="200">
-            <http:header name="Content-Type" value="text/html; charset=utf-8"/>
-        </http:response>
-    </rest:response>,
-    $content
+        <rest:response>
+            <http:response status="200">
+                <output:media-type value="text/html"/>
+                <output:method value="html"/>
+            </http:response>
+        </rest:response>,
+        $content
+};
+
+declare function srest:deliverZIP($content as xs:base64Binary?, $name as xs:string) {
+    let $filename := $name || '.zip'
+    let $contentDisposition := 'attachment; filename="' || $filename || '"'
+    return
+        <rest:response>
+            {$srest:zipOutputParams}
+            <http:response status="200">
+                <http:header name="Content-Type" value="application/zip"/>
+                <http:header name="Content-Disposition" value="{$contentDisposition}"/>
+            </http:response>
+        </rest:response>,
+        $content
 };
 
 
