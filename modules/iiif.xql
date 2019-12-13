@@ -139,7 +139,7 @@ declare function iiif:MiradorWindowObject($node as node(), $model as map (*), $w
         (: dataset exists: :)
             if ($tei/tei:text[@type='work_multivolume']) then
 (:                            let $volumeID      := for $fileName in ($tei/tei:text/tei:group/xi:include/@href)[1] return doc($config:tei-works-root || '/' || $fileName)//tei:TEI/@xml:id/string():)
-                let $volumeID      := for $fileName in ($tei/tei:text/tei:group/xi:include/@href)[1] return doc($config:tei-works-root || '/' || $fileName)//tei:TEI/@xml:id/string()
+                let $volumeID      := for $fileName in ($tei/tei:text/tei:group/xi:include/@href)[1] return doc($config:tei-works-root || '/' || $fileName)/tei:TEI/@xml:id/string()
                 return concat("iiif-out.xql?wid=", $volumeID)
             else if ($tei/tei:text[@type='work_monograph' or @type='work_volume']) then
                 concat("iiif-out.xql?wid=", $wid)
