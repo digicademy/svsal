@@ -25,9 +25,25 @@ import module namespace config = "http://www.salamanca.school/xquery/config" at 
 
 declare variable $api:proto := 'https://';
 
+declare variable $api:servedContentTypes := (
+    'application/tei+xml',
+    'application/xhtml+xml',
+    'application/rdf+xml',
+    'application/json',
+    'application/pdf',
+    'application/xml',
+    'application/zip',
+    'image/jpeg',
+    'image/png',
+    'image/tiff',
+    'text/html',
+    'text/plain',
+    'text/xml'
+    );
+
 declare variable $api:jsonOutputParams :=
     <output:serialization-parameters>
-        <output:method>json</output:method>
+        <output:method value="json"/>
     </output:serialization-parameters>;
     
 declare variable $api:teiOutputParams :=
@@ -39,7 +55,14 @@ declare variable $api:teiOutputParams :=
     
 declare variable $api:txtOutputParams :=
     <output:serialization-parameters>
-        <output:method>text</output:method>
+        <output:method value="text"/>
+        <output:media-type value="text/plain"/>
+    </output:serialization-parameters>;
+    
+declare variable $api:txtBinaryOutputParams :=
+    <output:serialization-parameters>
+        <output:method value="binary"/>
+        <output:media-type value="text/plain"/>
     </output:serialization-parameters>;
     
 declare variable $api:zipOutputParams :=
@@ -62,6 +85,35 @@ declare function api:deliverTEI($content, $name as xs:string?) {
             {$api:teiOutputParams}
             <http:response status="200">    
                 <http:header name="Content-Type" value="application/tei+xml; charset=utf-8"/>
+                <http:header name="Content-Disposition" value="{$contentDisposition}"/>
+            </http:response>
+        </rest:response>,
+        $content
+};
+
+
+declare function api:deliverTXT($content as xs:string?, $name as xs:string) {
+    let $filename := translate($name, ':.', '_-') || '.txt'
+    let $contentDisposition := 'attachment; filename="' || $filename || '"'
+    return
+        <rest:response>
+            {$api:txtOutputParams}
+            <http:response status="200">    
+                <http:header name="Content-Type" value="text/plain; charset=utf-8"/>
+                <http:header name="Content-Disposition" value="{$contentDisposition}"/>
+            </http:response>
+        </rest:response>,
+        $content
+};
+
+declare function api:deliverTXTBinary($content as xs:base64Binary?, $name as xs:string) {
+    let $filename := translate($name, ':.', '_-') || '.txt'
+    let $contentDisposition := 'attachment; filename="' || $filename || '"'
+    return
+        <rest:response>
+            {$api:txtBinaryOutputParams}
+            <http:response status="200">    
+                <http:header name="Content-Type" value="text/plain; charset=utf-8"/>
                 <http:header name="Content-Disposition" value="{$contentDisposition}"/>
             </http:response>
         </rest:response>,
@@ -108,53 +160,50 @@ declare function api:redirect-with-303($absoluteUrl as xs:string) {
 
 declare function api:error404NotFound() {
     <rest:response>
+        {$api:jsonOutputParams}
         <http:response status="404">
             <http:header name="Content-Language" value="en"/>
             <http:header name="Content-Type" value="application/json; charset=utf-8"/>
         </http:response>
     </rest:response>,
-    serialize(
-        map {
-            'error': map {
-                'status': 404,
-                'message': 'Resource not found.'
-            }
-        }, 
-        $api:jsonOutputParams)
+    map {
+        'error': map {
+            'status': 404,
+            'message': 'Resource not found.'
+        }
+    }
 };
 
 declare function api:error404NotYetAvailable() {
     <rest:response>
+        {$api:jsonOutputParams}
         <http:response status="404">
             <http:header name="Content-Language" value="en"/>
             <http:header name="Content-Type" value="application/json; charset=utf-8"/>
         </http:response>
     </rest:response>,
-    serialize(
-        map {
-            'error': map {
-                'status': 404,
-                'message': 'Resource not yet available.'
-            }
-        }, 
-        $api:jsonOutputParams)
+    map {
+        'error': map {
+            'status': 404,
+            'message': 'Resource not yet available.'
+        }
+    }
 };
 
 declare function api:error400BadResource() {
     <rest:response>
+        {$api:jsonOutputParams}
         <http:response status="400">
             <http:header name="Content-Language" value="en"/>
             <http:header name="Content-Type" value="application/json; charset=utf-8"/>
         </http:response>
     </rest:response>,
-    serialize(
-        map {
-            'error': map {
-                'status': 400,
-                'message': 'Resource identifier syntax is invalid, must be of the form: work_id[:passage_id]'
-            }
-        }, 
-        $api:jsonOutputParams)
+    map {
+        'error': map {
+            'status': 400,
+            'message': 'Resource identifier syntax is invalid, must be of the form: work_id[:passage_id]'
+        }
+    }
 };
 
 
@@ -237,4 +286,80 @@ declare function api:getDomain($xForwardedHost as xs:string) as xs:string? {
     else 
         $xForwardedHost
 };
+
+
+
+(: CONTENT NEGOTIATION :)
+
+declare function api:getFormatFromContentTypes($requestedContentTypes as xs:string*, $defaultType as xs:string) {
+    let $contentType := api:negotiateContentType($requestedContentTypes, $api:servedContentTypes, $defaultType)
+    let $debug := util:log('warn', '[API] determined content type: ' || $contentType)
+    return 
+        switch ($contentType)
+            case 'application/tei+xml'
+            case 'application/xml'
+            case 'text/xml'            return 'tei'
+            case 'text/plain'          return 'txt'
+            case 'application/rdf+xml' return 'rdf'
+            case 'image/jpeg'          return 'jpg'
+            case 'application/ld+json' return 'iiif'
+            default                    return 'html'
+};
+
+declare function api:negotiateContentType($requestedContentTypes as xs:string*, 
+                                          $offers as xs:string*, 
+                                          $defaultOffer as xs:string) as xs:string {
+    let $bestOffer      := $defaultOffer
+    let $bestQ          := -1.0
+    let $bestWild       := 3
+    let $returnOffer    := api:negotiateCTSub($requestedContentTypes, $offers, $bestOffer, $bestQ, $bestWild)
+    return $returnOffer
+};
+
+declare %private function api:negotiateCTSub($requestedContentTypes as xs:string*, $offers as xs:string*, $bestOffer as xs:string, $bestQ as xs:double, $bestWild as xs:integer) as xs:string {
+    let $offer := $offers[1]
+    (: let $debug      := if ($config:debug = ("trace", "info")) then console:log("content negotiation recursion. -- Current offer type: " || $offer || ".") else ():)
+    (: let $newOffer   := for $spec in tokenize(replace(request:get-header('Accept'), ' ', ''), ','):)
+    let $newOffer := 
+        for $spec in $requestedContentTypes
+            (:let $debug := if ($config:debug = ("trace", "info")) then console:log("content negotiation recursion. ---- Current accepted type: " || $spec || ".") else ():)
+            let $Q      :=  
+                if (string(number(substring-after($spec, ';q='))) != 'NaN') then
+                    number(substring-after($spec, ';q='))
+                else 1.0 
+            let $value  := normalize-space(tokenize($spec, ';')[1])
+            return
+                if ($Q lt $bestQ) then ()           (: previous match had stronger weight :)
+                else if (starts-with($spec, '*/*')) then                 (: least specific - let $bestWild := 2  :)
+                    if ($bestWild gt 2) then
+                        let $newBestWild   := 2
+                        let $newBestQ      := $Q
+                        let $newBestOffer  := $offer
+                        return ($newBestOffer, $newBestQ, $newBestWild)
+                    else ()
+                else if (ends-with($value, '/*')) then                   (: medium specific - let $bestWild := 1  :)
+                    if (substring-before($offer, '/') = substring($value, 1, string-length($value) - 2) and $bestWild gt 1) then
+                        let $newBestWild   := 1
+                        let $newBestQ      := $Q
+                        let $newBestOffer  := $offer
+                        return ($newBestOffer, $newBestQ, $newBestWild)
+                    else ()
+                else if ($offer = $value and ($Q gt $bestQ or $bestWild gt 0)) then    (: perfectly specific match - let $bestWild := 0 :)
+                    let $newBestWild   := 0
+                    let $newBestQ      := $Q
+                    let $newBestOffer  := $offer
+                    (:let $debug := if ($config:debug = ("trace", "info")) then console:log("content negotiation recursion. ---- NewOffer: " || $newBestOffer || ',' || $newBestQ || ',' || $newBestWild || ".") else ():)
+                    return ($newBestOffer, $newBestQ, $newBestWild)
+                else ()
+    let $returnOffer :=  
+        if (count($offers) gt 1) then
+            if ($newOffer[1]) then
+                api:negotiateCTSub($requestedContentTypes, subsequence($offers, 2), $newOffer[1], $newOffer[2], $newOffer[3])
+            else
+                api:negotiateCTSub($requestedContentTypes, subsequence($offers, 2), $bestOffer, $bestQ, $bestWild)
+        else
+            if ($newOffer[1]) then $newOffer[1] else $bestOffer
+    return $returnOffer
+};
+
 
