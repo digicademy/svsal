@@ -20,6 +20,8 @@ import module namespace api = "http://www.salamanca.school/xquery/api" at "../ap
 import module namespace sutil = "http://www.salamanca.school/xquery/sutil" at "../../modules/sutil.xql";
 import module namespace config = "http://www.salamanca.school/xquery/config" at "../../modules/config.xqm";
 import module namespace export = "http://www.salamanca.school/xquery/export" at "../../modules/export.xql";
+import module namespace net = "http://www.salamanca.school/xquery/net" at "../../modules/net.xql";
+import module namespace txt = "https://www.salamanca.school/factory/works/txt" at "../../factory/works/txt.xqm";
 
 
 
@@ -52,24 +54,64 @@ function textsv1:getCorpus($format) {
 declare 
 %rest:GET
 %rest:path("/v1/texts/{$rid}")
-%rest:query-param("format", "{$format}", "html")
+%rest:query-param("format", "{$format}", "")
 %rest:query-param("mode", "{$mode}", "")
 %rest:query-param("q", "{$q}", "")
 %rest:query-param("lang", "{$lang}", "en")
 %rest:query-param("viewer", "{$viewer}", "")
 %rest:query-param("frag", "{$frag}", "")
 %rest:query-param("canvas", "{$canvas}", "")
+%rest:header-param("Accept", "{$accept}", "text/html")
 %output:indent("no")
-function textsv1:docRequest($rid, $format, $mode, $q, $lang, $viewer, $frag, $canvas) {
-    (: this method accepts all possible query params in principle, but only the suitable ones are passed 
-    to the respective format function - the other ones are simply ignored :)
-    switch($format)
-        case 'tei' return textsv1:TEIdeliverDoc($rid, $mode)
-        default return ()
+function textsv1:docRequest($rid, $format, $mode, $q, $lang, $viewer, $frag, $canvas, $accept) {
+    (: for determining the requested format, the "format" query param has priority over the "Accept" header param: :)
+    let $format := if ($format) then $format else api:getFormatFromContentTypes(tokenize($accept, '[, ]+'), 'text/html')
+    return
+        switch($format)
+            (: although this method principally accepts all possible query params, only the suitable ones are passed 
+               to the respective format's function - the other ones are simply ignored :)
+            case 'tei' return textsv1:TEIdeliverDoc($rid, $mode)
+            case 'txt' return textsv1:TXTdeliverDoc($rid, $mode)
+            default return ()
 };
 
 
-(: Doc, based on "Accept" header (each mimetype has its own restxq function) :)
+(: Doc, based on "Accept" header :)
+
+(: it seems that we can't specify one function per Accept header mime type since RestXQ can't tell those functions apart,
+    so we need to apply a content negotiation to mime type(s) stated in the Accept header :)
+(:declare 
+%rest:GET
+%rest:path("/v1/texts/{$rid}")
+%rest:query-param("mode", "{$mode}", "")
+%rest:query-param("q", "{$q}", "")
+%rest:query-param("lang", "{$lang}", "en")
+%rest:query-param("viewer", "{$viewer}", "")
+%rest:query-param("frag", "{$frag}", "")
+%rest:query-param("canvas", "{$canvas}", "")
+%rest:header-param("Accept", "{$accept}", "")
+%output:indent("no")
+function textsv1:docRequestThroughAcceptHeaderParam($rid, $accept, $mode, $q, $lang, $viewer, $frag, $canvas) {
+    let $requestedContentTypes := tokenize($accept, '[, ]+')
+    let $format := api:getFormatFromContentTypes($requestedContentTypes, 'text/html')
+    return
+        (\: only the suitable query params are passed to the respective format's function - the other ones are simply ignored :\)
+        switch($format)
+            case 'tei' return textsv1:TEIdeliverDoc($rid, $mode)
+            case 'txt' return textsv1:TXTdeliverDoc($rid, $mode)
+            default return ()
+};
+:)
+(:
+declare 
+%rest:GET
+%rest:path("/v1/texts/{$rid}")
+%rest:query-param("mode", "{$mode}", "edit")
+%rest:produces("text/plain")
+%output:indent("no")
+function textsv1:TXTdocRequestThroughAcceptHeader($rid, $mode) {
+    textsv1:TXTdeliverDoc($rid, $mode)
+};
 
 declare 
 %rest:GET
@@ -80,16 +122,18 @@ declare
 %rest:produces("text/xml")
 %output:indent("no")
 function textsv1:TEIdocRequestThroughAcceptHeader($rid, $mode) {
+    let $debug := util:log('warn', 'JJAAALLLLOOOOOO') return
     textsv1:TEIdeliverDoc($rid, $mode)
 };
 
+:)
 
-(: TODO: txt and html: legacy_mode :)
+
+(: TODO: html: legacy_mode :)
 
 
 (: CONTENT DELIVERY FUNCTIONS, based on format type :)
 
-(: Returns the TEI doc/fragment for a *valid* resource (see textsv1:validateResourceId()) :)
 declare %private function textsv1:TEIdeliverDoc($rid as xs:string, $mode as xs:string?) {
     let $resource := textsv1:validateResourceId($rid)
     let $mode := if ($mode) then $mode else if ($resource('legacy_mode')) then $resource('legacy_mode') else ()
@@ -112,6 +156,43 @@ declare %private function textsv1:TEIdeliverDoc($rid as xs:string, $mode as xs:s
                 export:WRKgetTeiHeader($resource('tei_id'), 'metadata', ()),
                 $resource('tei_id') || '_meta'
             )
+        else if ($resource('tei_status') = (1, 0)) then
+            api:error404NotYetAvailable()
+        else if (not($resource('wellformed'))) then
+            api:error400BadResource()
+        else 
+            api:error404NotFound()
+};
+
+declare %private function textsv1:TXTdeliverDoc($rid as xs:string, $mode as xs:string) {
+    let $resource := textsv1:validateResourceId($rid)
+    let $mode := 
+        if (lower-case($mode) = ('orig', 'edit')) then $mode 
+        else if (lower-case($resource('legacy_mode')) = ('orig', 'edit')) then $resource('legacy_mode') 
+        else 'edit'
+    return
+        if ($resource('tei_status') eq 2 and $resource('valid')) then 
+            (: full, valid doc/fragment requested :)
+            let $verboseMode := if ($mode eq 'edit') then 'constituted' else 'diplomatic'
+            return
+                if ($resource('request_type') eq 'full') then
+                    let $txtPath := $config:txt-root || '/' || $resource('work_id') || '/' 
+                                    || $resource('work_id') || '_' || $mode || '.txt'
+                    return
+                        api:deliverTXTBinary(
+                            util:binary-doc($txtPath), 
+                            $resource('work_id') || '_' || $verboseMode
+                        )
+                else (: $resource('request_type') eq 'passage' :)
+                    let $node := sutil:getTeiNodeFromCitetrail($resource('work_id'), $resource('passage'))
+                    return
+                        if ($node) then
+                            api:deliverTXT(
+                                string-join(txt:dispatch($node, $mode)),
+                                $resource('work_id') || ':' || $resource('passage') || '_' || $verboseMode
+                            )
+                        else
+                            api:error404NotFound()
         else if ($resource('tei_status') = (1, 0)) then
             api:error404NotYetAvailable()
         else if (not($resource('wellformed'))) then
