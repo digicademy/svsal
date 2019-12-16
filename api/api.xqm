@@ -363,3 +363,12 @@ declare %private function api:negotiateCTSub($requestedContentTypes as xs:string
 };
 
 
+(: *** Todo:
+   ***  - API landing page / default return values (depending on formats)? - currently simply redirecting to www.s.s
+   ***  - Add 'meta' endpoint with json-ld, (mets/mods) (or extend "texts" endpoint in this regard)
+   ***  - Add iiif endpoints (not really working atm)
+   ***  - Implement collections/lists of resources and their filters (e.g. `/texts?q=lex` resulting in a list of texts) - but which format(s)?
+   ***  - Make JSON-LD the fundamental output format (encapsulate html/xml in a json field) and diverge only when explicitly asked to do so (really?)
+:)
+
+

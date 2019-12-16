@@ -25,13 +25,8 @@ declare option output:indent        "yes";
 declare option output:omit-xml-declaration "no";
 declare option output:encoding      "utf-8";
 
-(: *** Todo (especially in api):
-   ***  - API landing page / default return values (depending on formats)? - currently simply redirecting to www.s.s
-   ***  - Add 'meta' endpoint with json-ld, (mets/mods)
-   ***  - Add iiif endpoints (not really working atm)
-   ***  - Add passage identifiers to filenames on downloads (see deliverTXT, e.g.)
+(: *** Todo:
    ***  - Why are no hashes handled? Some are needed but lost. (http://bla.com/bla/bla.html?bla<#THISHERE!>)
-   ***  - Implement collections/lists of resources and their filters (e.g. `/texts?q=lex` resulting in a list of texts) - but which format(s)?
    ***  - Make JSON-LD the fundamental output format (encapsulate html/xml in a json field) and diverge only when explicitly asked to do so (really?)
    ***  - Content negotiate X-Forwarded-Host={serverdomain} without subdomain
 :)
