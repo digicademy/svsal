@@ -116,12 +116,13 @@ let $debug2 :=  if ($config:debug = "trace") then
                 else ()
 (: TODO: reflect variables defined above... :)
 
-let $errorhandler := if (($config:mode = "staging") or ($config:debug = "trace")) then ()
-                       else
-                            <error-handler>
-                                <forward url="{$exist:controller}/en/error-page.html" method="get"/>
-                                <forward url="{$exist:controller}/modules/view.xql"/>
-                            </error-handler>
+let $errorhandler := 
+    if (($config:instanceMode = "staging") or ($config:debug = "trace")) then ()
+    else
+        <error-handler>
+            <forward url="{$exist:controller}/en/error-page.html" method="get"/>
+            <forward url="{$exist:controller}/modules/view.xql"/>
+        </error-handler>
 
 return
 (:
@@ -214,7 +215,7 @@ return
             let $debug          := if ($config:debug = ("trace", "info")) then console:log("TXT requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
             let $reqResource    := replace(tokenize($exist:path, '/')[last()], '\|', '/')
             let $reqWork        := tokenize($exist:path, ':')[1]
-            let $node           := sutil:findNode($reqResource)
+            let $node           := () (:sutil:getTeiNodeFromCitetrail($reqResource):)
             let $ret            := (util:declare-option("output:method", "text"),
                                     util:declare-option("output:media-type", "text/plain"))
             let $debug2         := if ($config:debug = "trace") then console:log("Serializing options: method:" || util:get-option('output:method') || ', media-type:' || util:get-option('output:media-type') || '.') else ()

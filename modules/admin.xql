@@ -1244,9 +1244,9 @@ declare function admin:createRDF($rid as xs:string) {
             substring-after($rid, "texts/")
         else $rid
     let $start-time := util:system-time()
-    let $xtriplesUrl := 
-        $config:apiserver || '/v1/xtriples/extract.xql?format=rdf&amp;configuration=' 
-        || $config:apiserver || '/v1/xtriples/createConfig.xql?resourceId=' || $rid
+    let $xtriplesUrl :=
+        $config:webserver || ':8443/exist/apps/salamanca/services/lod/extract.xql?format=rdf&amp;configuration='
+        || $config:webserver || ':8443/exist/apps/salamanca/services/lod/createConfig.xql?resourceId=' || $rid
     let $debug := 
         if ($config:debug eq 'trace') then
             util:log("warn", "Requesting " || $xtriplesUrl || ' ...')
