@@ -12,9 +12,9 @@ declare namespace exist             = "http://exist.sourceforge.net/NS/exist";
 declare namespace tei               = "http://www.tei-c.org/ns/1.0";
 declare namespace xi                = "http://www.w3.org/2001/XInclude";
 declare namespace sal               = "http://salamanca.adwmainz.de";
-declare namespace i18n             = 'http://exist-db.org/xquery/i18n';
-import module namespace console     = "http://exist-db.org/xquery/console";
+declare namespace i18n              = 'http://exist-db.org/xquery/i18n';
 import module namespace functx      = "http://www.functx.com";
+import module namespace console     = "http://exist-db.org/xquery/console";
 import module namespace templates   = "http://exist-db.org/xquery/templates";
 import module namespace util        = "http://exist-db.org/xquery/util";
 import module namespace xmldb       = "http://exist-db.org/xquery/xmldb";
@@ -22,13 +22,13 @@ import module namespace app         = "http://www.salamanca.school/xquery/app"  
 import module namespace config      = "http://www.salamanca.school/xquery/config"                 at "config.xqm";
 import module namespace render-app  = "http://www.salamanca.school/xquery/render-app"         at "render-app.xql";
 import module namespace sphinx      = "http://www.salamanca.school/xquery/sphinx"                 at "sphinx.xql";
-import module namespace sutil    = "http://www.salamanca.school/xquery/sutil" at "sutil.xql";
+import module namespace sutil       = "http://www.salamanca.school/xquery/sutil" at "sutil.xql";
 import module namespace stats       = "https://www.salamanca.school/factory/works/stats" at "../factory/works/stats.xqm";
 import module namespace index       = "https://www.salamanca.school/factory/works/index" at "../factory/works/index.xqm";
 import module namespace html        = "https://www.salamanca.school/factory/works/html" at "../factory/works/html.xqm";
 import module namespace txt         = "https://www.salamanca.school/factory/works/txt" at "../factory/works/txt.xqm";
 import module namespace iiif        = "https://www.salamanca.school/factory/works/iiif" at "../factory/works/iiif.xqm";
-import module namespace httpclient = "http://exist-db.org/xquery/httpclient";
+import module namespace httpclient  = "http://exist-db.org/xquery/httpclient";
 declare namespace output            = "http://www.w3.org/2010/xslt-xquery-serialization";
 
 declare option exist:timeout "25000000"; (: ~7 h :)
@@ -570,11 +570,11 @@ declare %templates:wrap function admin:renderWork($workId as xs:string*) as elem
         for $work-raw in $todo
             let $cleanStatus := admin:cleanCollection($work-raw/@xml:id, "html")
             let $work := util:expand($work-raw)
-            let $fragmentationDepth := admin:determineFragmentationDepth($work-raw)
+            let $fragmentationDepth := index:determineFragmentationDepth($work-raw)
             let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Rendering " || string($work-raw/@xml:id) || " at fragmentation level " || $fragmentationDepth || ".") else ()
             let $start-time-a := util:system-time()
         
-            let $target-set := admin:getFragmentNodes($work, $fragmentationDepth)
+            let $target-set := index:getFragmentNodes($work, $fragmentationDepth)
             let $debug := if ($config:debug = ("trace", "info")) then console:log("  " || string(count($target-set)) || " elements to be rendered as fragments...") else ()
             
             (: First, create a ToC html file. :)
@@ -1047,180 +1047,58 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
             </div>
 };
 
-(: 
-~ A rule picking those elements that should become the fragments rendering a work. Requires an expanded(!) TEI work's dataset.
-:)
-declare function admin:getFragmentNodes($work as element(tei:TEI), $fragmentationDepth as xs:integer) as node()* {
-    (for $text in $work//tei:text[@type eq 'work_monograph' 
-                                  or (@type eq 'work_volume' and sutil:WRKisPublished($work/@xml:id || '_' || @xml:id))] return 
-        (
-        (: in front, fragmentation must not go below the child level (child fragments shouldn't be too large here) :)
-        (if ($text/tei:front//tei:*[count(./ancestor-or-self::tei:*) eq $fragmentationDepth]) then
-             $text/tei:front/*
-         else $text/tei:front),
-        (if ($text/tei:body//tei:*[count(./ancestor-or-self::tei:*) eq $fragmentationDepth]) then
-             $text/tei:body//tei:*[count(./ancestor-or-self::tei:*) eq $fragmentationDepth]
-         else $text/tei:body),
-        (if ($text/tei:back//tei:*[count(./ancestor-or-self::tei:*) eq $fragmentationDepth]) then
-             $text/tei:back//tei:*[count(./ancestor-or-self::tei:*) eq $fragmentationDepth]
-         else $text/tei:back)
-        )
-    )
-    (:    $work//tei:text//tei:*[count(./ancestor-or-self::tei:*) eq $fragmentationDepth]:)
-};
-
-declare function admin:determineFragmentationDepth($work as element(tei:TEI)) as xs:integer {
-    if ($work//processing-instruction('svsal')[matches(., 'htmlFragmentationDepth="\d{1,2}"')]) then
-        xs:integer($work//processing-instruction('svsal')[matches(., 'htmlFragmentationDepth="\d{1,2}"')][1]/replace(., 'htmlFragmentationDepth="(\d{1,2})"', '$1'))
-    else $config:fragmentationDepthDefault
-};
-
-(:declare function admin:copyIndexableNode($element as element()) as element(tei:TEI) {
-    ()
-};:)
 
 declare function admin:createNodeIndex($wid as xs:string*) {
 (:    let $debug := if ($config:debug = ("trace", "info")) then util:log("warn", "[ADMIN] Creating node index for " || $wid || ".") else ():)
     let $start-time := util:system-time()
     
     (: define the works to be indexed: :)
-    let $todo := 
+    let $teiRoots := 
         if ($wid = '*') then
             collection($config:tei-works-root)//tei:TEI[.//tei:text[@type = ("work_multivolume", "work_monograph")]]
         else
             collection($config:tei-works-root)//tei:TEI[@xml:id = distinct-values($wid)]
 
-    (: for each requested work, create a individual index :)
-    let $indexes := 
-        for $work-raw in $todo
-            let $work := util:expand($work-raw)
-            let $wid := string($work/@xml:id)
-            let $xincludes := $work-raw//tei:text//xi:include/@href
-            let $fragmentationDepth := admin:determineFragmentationDepth($work-raw)
-            let $debug := if ($config:debug = ("trace", "info")) then console:log("Rendering " || $wid || " at fragmentation level " || $fragmentationDepth || ".") else ()
+    (: for each requested work, create an individual index :)
+    let $indexResults :=
+        for $tei in $teiRoots return
             let $start-time-a := util:system-time()
-        
-            let $target-set := admin:getFragmentNodes($work, $fragmentationDepth)
-            
-            (: First, get all relevant nodes :)
-            let $nodes := 
-                for $text in $work//tei:text[@type = ('work_volume', 'work_monograph')] return 
-                    (: make sure that we only grasp nodes that are within a published volume :)
-                    if (($text/@type eq 'work_volume' and sutil:WRKisPublished($wid || '_' || $text/@xml:id))
-                        or $text/@type eq 'work_monograph') then 
-                        $text/descendant-or-self::*[index:isIndexNode(.)]
-                    else ()
-                        
-            (: Create the fragment id for each node beforehand, so that recursive crumbtrail creation has it readily available :)
-            let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Node indexing: identifying fragment ids ...") else ()
-            let $fragmentIds :=
-                map:merge(
-                    for $node in $nodes
-                        let $n := $node/@xml:id/string()
-                        let $frag := (($node/ancestor-or-self::tei:* | $node//tei:*) intersect $target-set)[1]
-                        let $fragId := index:makeFragmentId(functx:index-of-node($target-set, $frag), $frag/@xml:id)
-                        return map:entry($n, $fragId)
-                )
-            let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Node indexing: fragment ids extracted.") else ()
-                        
-            (: Now, create full-blown node index :)
-            let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Node indexing: creating index file ...") else ()
-            
-            (: node indexing has 2 stages: :)
-            (: 1.) extract nested sal:nodes with rudimentary information :)
-            let $indexTree := 
-                <sal:index>
-                    {index:extractNodeStructure($wid, $work//tei:text[not(ancestor::tei:text)], $xincludes, $fragmentIds)}
-                </sal:index>
-            (: 2.) flatten the index from 1.) and enrich sal:nodes with full-blown citetrails, etc. :)
-            let $index := 
-                <sal:index work="{$wid}" xml:space="preserve">
-                    {index:createIndexNodes($indexTree)(:$indexTree/*:)}
-                </sal:index>
-                
+            let $wid := string($tei/@xml:id)
+            let $indexing := index:makeNodeIndex($tei)
+            let $index := $indexing('index')
+            let $fragmentationDepth := $indexing('fragmentation_depth')
+            let $missed-elements := $indexing('missed_elements')
+            let $unidentified-elements := $indexing('unidentified_elements')
+             
             (: save final index file :)
             let $debug := if ($config:debug = ("trace")) then console:log("Saving index file ...") else ()
             let $indexSaveStatus := admin:saveFile($wid, $wid || "_nodeIndex.xml", $index, "index")
             let $debug := if ($config:debug = ("trace")) then console:log("Node index of "  || $wid || " successfully created.") else ()
-            
-            
-            
-            (: ----------------------------------------------- :)
-            
-            (: #### Basic quality / consistency check #### :)
-            let $resultNodes := $index//sal:node[not(@n eq 'completeWork')]
-            let $testNodes := 
-                if (count($resultNodes) eq 0) then 
-                    error(xs:QName('admin:createNodeIndex'), 'Node indexing did not produce any results.') 
-                else ()
-            (: every ordinary sal:node should have all of the required fields and values: :)
-            let $testAttributes := 
-                if ($testNodes[not(@class/string() and @type/string() and @n/string())]) then 
-                    error(xs:QName('admin:createNodeIndex'), 'Essential attributes are missing in at least one index node (in ' || $wid || ')') 
-                else ()
-            let $testChildren := if ($testNodes[not(sal:title and sal:fragment/text() and sal:citableParent/text() and sal:citetrail/text() and sal:crumbtrail/* and sal:passagetrail/text())]) then error() else ()
-            (: there should be as many distinctive citetrails and crumbtrails as there are ordinary sal:node elements: :)
-            let $testAmbiguousCitetrails := 
-                if (count($resultNodes) ne count(distinct-values($resultNodes/sal:citetrail/text()))) then 
-                    error(xs:QName('admin:createNodeIndex'), 
-                          'Could not produce a unique citetrail for each sal:node (in ' || $wid || '). Problematic nodes: '
-                          || string-join(($resultNodes[sal:citetrail/text() = preceding::sal:citetrail/text()]/@n), '; ')) 
-                else () 
-            (: search these cases using: " //sal:citetrail[./text() = following::sal:citetrail/text()] :)
-            let $testEmptyCitetrails :=
-                if (count($resultNodes/sal:citetrail[not(./text())]) gt 0) then
-                    error(xs:QName('admin:createNodeIndex'), 
-                          'Could not produce a citetrail for one or more sal:node (in' || $wid || '). Problematic nodes: '
-                          || string-join(($resultNodes[not(sal:citetrail/text())]/@n), '; '))
-                else ()
-            (: search for " //sal:citetrail[not(./text())] ":)
-            (: not checking crumbtrails here ATM for not slowing down index creation too much... :)
-            
-            (: check whether all text is being captured through basic index nodes (that is, whether every single passage is citable) :)
-            let $checkBasicNodes := 
-                for $t in $work//tei:text[@type eq 'work_monograph' 
-                                          or (@type eq 'work_volume' and sutil:WRKisPublished($wid || '_' || @xml:id))]
-                                          //text()[normalize-space() ne ''] return
-                    if ($t[not(ancestor::*[index:isBasicNode(.)]) and not(ancestor::tei:figDesc)]) then 
-                        let $debug := util:log('error', 'Encountered text node without ancestor::*[index:isBasicNode(.)], in line ' || $t/preceding::tei:lb[1]/@xml:id/string())
-                        return error(xs:QName('admin:createNodeIndex'), 'Encountered text node without ancestor::*[index:isBasicNode(.)], in line ' || $t/preceding::tei:lb[1]/@xml:id/string()) 
-                    else ()
-            (: if no xml:id is put out, try to search these cases like so:
-                //text//text()[not(normalize-space() eq '')][not(ancestor::*[@xml:id and (self::p or self::signed or self::head or self::titlePage or self::lg or self::item or self::label or self::argument or self::table)])]
-            :)
-            
-            
-            
-            (: ----------------------------------------------- :)
-            
+                
             (: Reporting... :)
-            (: See if there are any leaf elements in our text that are not matched by our rule :)
-            let $missed-elements := $work//(tei:front|tei:body|tei:back)//tei:*[count(./ancestor-or-self::tei:*) < $fragmentationDepth][not(*)]
-            (: See if any of the elements we did get is lacking an xml:id attribute :)
-            let $unidentified-elements := $target-set[not(@xml:id)]
-            (: Keep track of how long this index did take :)
+            
             let $runtime-ms-a := ((util:system-time() - $start-time-a) div xs:dayTimeDuration('PT1S'))  * 1000
             (: render and store the work's plain text :)
             return 
                 <div>
                      <h4>{$wid}</h4>
-                     <p>Fragmentierungstiefe: <code>{$fragmentationDepth}</code></p>
-                     {if (count($missed-elements)) then <p>{count($missed-elements)} nicht erfasste Elemente:<br/>
+                     <p>Fragmentation depth: <code>{$fragmentationDepth}</code></p>
+                     {if (count($missed-elements)) then <p>{count($missed-elements)} missed elements:<br/>
                         {for $e in $missed-elements return <code>{local-name($e) || "(" || string($e/@xml:id) || "); "}</code>}</p>
                       else ()}
-                     {if (count($unidentified-elements)) then <p>{count($unidentified-elements)} erfasste, aber wegen fehlender xml:id nicht verarbeitbare Fragmente:<br/>
+                     {if (count($unidentified-elements)) then <p>{count($unidentified-elements)} gathered, but (due to missing @xml:id) unprocessable elements:<br/>
                         {for $e in $unidentified-elements return <code>{local-name($e)}</code>}</p>
                       else ()}
-                     <p>{count($index//sal:node)} erfasste Elemente {if (count($target-set)) then "der folgenden Typen: " || <br/> else ()}
+                     <p>{count($index//sal:node)} gathered elements {if ($indexing('target_set_count') gt 0) then "of the following types: " || <br/> else ()}
                         <code>{for $t in distinct-values($index//sal:node/@type) return $t || "(" || count($index//sal:node[@type eq $t]) || ")"}</code></p>
-                     <p>Rechenzeit: {      
+                     <p>Computing time: {      
                           if ($runtime-ms-a < (1000 * 60)) then format-number($runtime-ms-a div 1000, "#.##") || " Sek."
                           else if ($runtime-ms-a < (1000 * 60 * 60)) then format-number($runtime-ms-a div (1000 * 60), "#.##") || " Min."
                           else format-number($runtime-ms-a div (1000 * 60 * 60), "#.##") || " Std."
                         }
                      </p>
                </div>
-    let $runtime-ms-raw       := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000 
+    let $runtime-ms-raw := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000 
     let $runtime-ms :=
         if ($runtime-ms-raw < (1000 * 60)) then format-number($runtime-ms-raw div 1000, "#.##") || " Sek."
         else if ($runtime-ms-raw < (1000 * 60 * 60)) then format-number($runtime-ms-raw div (1000 * 60), "#.##") || " Min."
@@ -1230,7 +1108,7 @@ declare function admin:createNodeIndex($wid as xs:string*) {
     return 
         <div>
             <h4>Node Indexing</h4>
-            {$indexes}
+            {$indexResults}
         </div>
     
     
@@ -1245,8 +1123,8 @@ declare function admin:createRDF($rid as xs:string) {
         else $rid
     let $start-time := util:system-time()
     let $xtriplesUrl :=
-        $config:webserver || ':8443/exist/apps/salamanca/services/lod/extract.xql?format=rdf&amp;configuration='
-        || $config:webserver || ':8443/exist/apps/salamanca/services/lod/createConfig.xql?resourceId=' || $rid
+        $config:lodServer || '/extract.xql?format=rdf&amp;configuration='
+        || $config:lodServer || '/createConfig.xql?resourceId=' || $rid
     let $debug := 
         if ($config:debug eq 'trace') then
             util:log("warn", "Requesting " || $xtriplesUrl || ' ...')

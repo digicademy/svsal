@@ -4,6 +4,9 @@ module namespace index            = "https://www.salamanca.school/factory/works/
 declare namespace exist            = "http://exist.sourceforge.net/NS/exist";
 declare namespace tei              = "http://www.tei-c.org/ns/1.0";
 declare namespace sal              = "http://salamanca.adwmainz.de";
+declare namespace xi                = "http://www.w3.org/2001/XInclude";
+
+import module namespace functx      = "http://www.functx.com";
 import module namespace util       = "http://exist-db.org/xquery/util";
 import module namespace console    = "http://exist-db.org/xquery/console";
 import module namespace config     = "http://www.salamanca.school/xquery/config" at "../../modules/config.xqm";
@@ -30,6 +33,99 @@ declare variable $index:crumbtrailConnector := ' » ';
 
 
 (: NODE INDEX functions :)
+
+
+(:
+~ Controller function for creating (and reporting about) node indexes. 
+:)
+declare function index:makeNodeIndex($tei as element(tei:TEI)) as map(*) {
+    let $wid := $tei/@xml:id
+    let $xincludes := $tei//tei:text//xi:include/@href
+    let $work := util:expand($tei)
+    
+    let $fragmentationDepth := index:determineFragmentationDepth($tei)
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("Rendering " || $wid || " at fragmentation level " || $fragmentationDepth || ".") else ()
+    let $target-set := index:getFragmentNodes($work, $fragmentationDepth)
+    
+    (: First, get all relevant nodes :)
+    let $nodes := 
+        for $text in $work//tei:text[@type = ('work_volume', 'work_monograph')] return 
+            (: make sure that we only grasp nodes that are within a published volume :)
+            if (($text/@type eq 'work_volume' and sutil:WRKisPublished($wid || '_' || $text/@xml:id))
+                or $text/@type eq 'work_monograph') then 
+                $text/descendant-or-self::*[index:isIndexNode(.)]
+            else ()
+                
+    (: Create the fragment id for each node beforehand, so that recursive crumbtrail creation has it readily available :)
+    let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Node indexing: identifying fragment ids ...") else ()
+    let $fragmentIds :=
+        map:merge(
+            for $node in $nodes
+                let $n := $node/@xml:id/string()
+                let $frag := (($node/ancestor-or-self::tei:* | $node//tei:*) intersect $target-set)[1]
+                let $fragId := index:makeFragmentId(functx:index-of-node($target-set, $frag), $frag/@xml:id)
+                return map:entry($n, $fragId)
+        )
+    let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Node indexing: fragment ids extracted.") else ()
+                
+    let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Node indexing: creating index file ...") else ()
+    (: node indexing has 2 stages: :)
+    (: 1.) extract nested sal:nodes with rudimentary information :)
+    let $indexTree := 
+        <sal:index>
+            {index:extractNodeStructure($wid, $work//tei:text[not(ancestor::tei:text)], $xincludes, $fragmentIds)}
+        </sal:index>
+    (: 2.) flatten the index from 1.) and enrich sal:nodes with full-blown citetrails, etc. :)
+    let $index := 
+        <sal:index work="{$wid}" xml:space="preserve">
+            {index:createIndexNodes($indexTree)(:$indexTree/*:)}
+        </sal:index>
+        
+    let $check := index:qualityCheck($index, $work, $target-set, $fragmentationDepth)
+        
+    return 
+        map {
+            'index': $index,
+            'missed_elements': $check('missed_elements'),
+            'unidentified_elements': $check('unidentified_elements'),
+            'fragmentation_depth': $fragmentationDepth,
+            'target_set_count': count($target-set)
+        }
+};
+
+
+(:
+~ Determines the fragmentation depth of a work, i.e. the hierarchical level of nodes within a TEI dataset which serve
+~ as root nodes for spltting the dataset into HTML fragments.
+:)
+declare function index:determineFragmentationDepth($work as element(tei:TEI)) as xs:integer {
+    if ($work//processing-instruction('svsal')[matches(., 'htmlFragmentationDepth="\d{1,2}"')]) then
+        xs:integer($work//processing-instruction('svsal')[matches(., 'htmlFragmentationDepth="\d{1,2}"')][1]/replace(., 'htmlFragmentationDepth="(\d{1,2})"', '$1'))
+    else $config:fragmentationDepthDefault
+};
+
+
+(: 
+~ A rule picking those elements that should become the fragments for HTML-rendering a work. Requires an expanded(!) TEI work's dataset.
+:)
+declare function index:getFragmentNodes($work as element(tei:TEI), $fragmentationDepth as xs:integer) as node()* {
+    (for $text in $work//tei:text[@type eq 'work_monograph' 
+                                  or (@type eq 'work_volume' and sutil:WRKisPublished($work/@xml:id || '_' || @xml:id))] return 
+        (
+        (: in front, fragmentation must not go below the child level (child fragments shouldn't be too large here) :)
+        (if ($text/tei:front//tei:*[count(./ancestor-or-self::tei:*) eq $fragmentationDepth]) then
+             $text/tei:front/*
+         else $text/tei:front),
+        (if ($text/tei:body//tei:*[count(./ancestor-or-self::tei:*) eq $fragmentationDepth]) then
+             $text/tei:body//tei:*[count(./ancestor-or-self::tei:*) eq $fragmentationDepth]
+         else $text/tei:body),
+        (if ($text/tei:back//tei:*[count(./ancestor-or-self::tei:*) eq $fragmentationDepth]) then
+             $text/tei:back//tei:*[count(./ancestor-or-self::tei:*) eq $fragmentationDepth]
+         else $text/tei:back)
+        )
+    )
+    (:    $work//tei:text//tei:*[count(./ancestor-or-self::tei:*) eq $fragmentationDepth]:)
+};
 
 
 (:
@@ -105,6 +201,71 @@ declare function index:createIndexNodes($input as element(sal:index)) as element
                 element sal:crumbtrail {$crumbtrail},
                 element sal:passagetrail {$passagetrail}
             }
+};
+
+
+(: Conducts some basic quality checks with regards to consistency, uniqueness of citetrails, etc. within an sal:index :)
+declare function index:qualityCheck($index as element(sal:index), 
+                                    $work as element(tei:TEI), 
+                                    $targetNodes as element()*, 
+                                    $fragmentationDepth as xs:integer) {
+                                    
+    let $wid := $work/@xml:id
+    
+    (: #### Basic quality / consistency check #### :)
+    let $resultNodes := $index//sal:node[not(@n eq 'completeWork')]
+    let $testNodes := 
+        if (count($resultNodes) eq 0) then 
+            error(xs:QName('admin:createNodeIndex'), 'Node indexing did not produce any results.') 
+        else ()
+    (: every ordinary sal:node should have all of the required fields and values: :)
+    let $testAttributes := 
+        if ($testNodes[not(@class/string() and @type/string() and @n/string())]) then 
+            error(xs:QName('admin:createNodeIndex'), 'Essential attributes are missing in at least one index node (in ' || $wid || ')') 
+        else ()
+    let $testChildren := if ($testNodes[not(sal:title and sal:fragment/text() and sal:citableParent/text() and sal:citetrail/text() and sal:crumbtrail/* and sal:passagetrail/text())]) then error() else ()
+    (: there should be as many distinctive citetrails and crumbtrails as there are ordinary sal:node elements: :)
+    let $testAmbiguousCitetrails := 
+        if (count($resultNodes) ne count(distinct-values($resultNodes/sal:citetrail/text()))) then 
+            error(xs:QName('admin:createNodeIndex'), 
+                  'Could not produce a unique citetrail for each sal:node (in ' || $wid || '). Problematic nodes: '
+                  || string-join(($resultNodes[sal:citetrail/text() = preceding::sal:citetrail/text()]/@n), '; ')) 
+        else () 
+    (: search these cases using: " //sal:citetrail[./text() = following::sal:citetrail/text()] :)
+    let $testEmptyCitetrails :=
+        if (count($resultNodes/sal:citetrail[not(./text())]) gt 0) then
+            error(xs:QName('admin:createNodeIndex'), 
+                  'Could not produce a citetrail for one or more sal:node (in' || $wid || '). Problematic nodes: '
+                  || string-join(($resultNodes[not(sal:citetrail/text())]/@n), '; '))
+        else ()
+    (: search for " //sal:citetrail[not(./text())] ":)
+    (: not checking crumbtrails here ATM for not slowing down index creation too much... :)
+    
+    (: check whether all text is being captured through basic index nodes (that is, whether every single passage is citable) :)
+    let $checkBasicNodes := 
+        for $t in $work//tei:text[@type eq 'work_monograph' 
+                                  or (@type eq 'work_volume' and sutil:WRKisPublished($wid || '_' || @xml:id))]
+                                  //text()[normalize-space() ne ''] return
+            if ($t[not(ancestor::*[index:isBasicNode(.)]) and not(ancestor::tei:figDesc)]) then 
+                let $debug := util:log('error', 'Encountered text node without ancestor::*[index:isBasicNode(.)], in line ' || $t/preceding::tei:lb[1]/@xml:id/string())
+                return error(xs:QName('admin:createNodeIndex'), 'Encountered text node without ancestor::*[index:isBasicNode(.)], in line ' || $t/preceding::tei:lb[1]/@xml:id/string()) 
+            else ()
+    (: if no xml:id is put out, try to search these cases like so:
+        //text//text()[not(normalize-space() eq '')][not(ancestor::*[@xml:id and (self::p or self::signed or self::head or self::titlePage or self::lg or self::item or self::label or self::argument or self::table)])]
+    :)
+    
+    (: See if there are any leaf elements in our text that are not matched by our rule :)
+    let $missed-elements := $work//(tei:front|tei:body|tei:back)//tei:*[count(./ancestor-or-self::tei:*) < $fragmentationDepth][not(*)]
+    (: See if any of the elements we did get is lacking an xml:id attribute :)
+    let $unidentified-elements := $targetNodes[not(@xml:id)]
+    (: Keep track of how long this index did take :)
+    
+    return 
+        (: return information that we want to inform about rather than throw hard errors :)
+        map {
+            'missed_elements': $missed-elements,
+            'unidentified_elements': $unidentified-elements
+        }
 };
 
 
