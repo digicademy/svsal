@@ -14,7 +14,7 @@
            ok PersName/PlaceName already have code to cater for intervening pagebreaks
               (end span, create "|" and pagination div, continue by opening a span with the same class)
               ===> Add this for titles, terms and bibls, too
-           ok Cater for multiple values in @ref attributes (in tei:resolveURI function, span classes and app.xql)
+           ok Cater for multiple values in @ref attributes (in tei:resolveURI function, span classes and app.xqm)
            ok Add bibl identifying code (using @sortKey)
 -->
 

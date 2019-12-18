@@ -8,9 +8,9 @@ import module namespace console = "http://exist-db.org/xquery/console";
 import module namespace util    = "http://exist-db.org/xquery/util";
 import module namespace functx  = "http://www.functx.com";
 import module namespace config  = "http://www.salamanca.school/xquery/config" at "../../modules/config.xqm";
-import module namespace net     = "http://www.salamanca.school/xquery/net"    at "../../modules/net.xql";
+import module namespace net     = "http://www.salamanca.school/xquery/net"    at "../../modules/net.xqm";
 import module namespace txt  = "https://www.salamanca.school/factory/works/txt" at "../factory/works/txt.xql";
-import module namespace sutil    = "http://www.salamanca.school/xquery/sutil" at "../../sutil.xql";
+import module namespace sutil    = "http://www.salamanca.school/xquery/sutil" at "../../sutil.xqm";
 
 declare       namespace exist   = "http://exist.sourceforge.net/NS/exist";
 declare       namespace output  = "http://www.w3.org/2010/xslt-xquery-serialization";
@@ -149,7 +149,7 @@ return
         return net:sitemapResponse($net-vars)
 
     (: Pass all requests to admin HTML files through view-admin.xql, which handles HTML templating and is aware of admin credentials/routines :)
-    else if (matches($exist:resource, "(admin.html)|(admin-svn.html)|(render.html)|(renderTheRest.html)|(createLists.html)|(sphinx-admin.xql)")) then
+    else if (matches($exist:resource, "(admin.html)|(admin-svn.html)|(render.html)|(renderTheRest.html)|(createLists.html)|(sphinx-admin.xqm)")) then
         let $debug          := if ($config:debug = ("trace", "info")) then console:log("Admin HTML requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
         (: For now, we don't use net:forward here since we need a nested view/forwarding. :)
         (: return net:forward("/modules/view-admin.xql", $net-vars) :)

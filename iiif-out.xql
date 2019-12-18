@@ -1,6 +1,6 @@
 xquery version "3.1";
 
-import module   namespace   iiif    = "http://www.salamanca.school/xquery/iiif"   at "modules/iiif.xql";
+import module   namespace   iiif    = "http://www.salamanca.school/xquery/iiif"   at "modules/iiif.xqm";
 import module   namespace   console = "http://exist-db.org/xquery/console";
 declare         namespace   output  = "http://www.w3.org/2010/xslt-xquery-serialization";
 declare         namespace   request = "http://exist-db.org/xquery/request";

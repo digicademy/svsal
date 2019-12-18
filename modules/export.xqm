@@ -29,7 +29,7 @@ declare namespace util       = "http://exist-db.org/xquery/util";
 (:import module namespace console    = "http://exist-db.org/xquery/console";:)
 (:import module namespace functx     = "http://www.functx.com";:)
 import module namespace config    = "http://www.salamanca.school/xquery/config"               at "config.xqm";
-import module namespace sutil    = "http://www.salamanca.school/xquery/sutil" at "sutil.xql";
+import module namespace sutil    = "http://www.salamanca.school/xquery/sutil" at "sutil.xqm";
 
 
 (:~

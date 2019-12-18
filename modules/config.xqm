@@ -18,7 +18,7 @@ declare namespace system        = "http://exist-db.org/xquery/system";
 declare namespace xhtml         = "http://www.w3.org/1999/xhtml";
 declare namespace expath        = "http://expath.org/ns/pkg";
 declare namespace tei           = "http://www.tei-c.org/ns/1.0";
-import module namespace i18n    = "http://exist-db.org/xquery/i18n"     at "i18n.xql";
+import module namespace i18n    = "http://exist-db.org/xquery/i18n"     at "i18n.xqm";
 import module namespace console = "http://exist-db.org/xquery/console";
 
 

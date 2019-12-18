@@ -9,8 +9,8 @@ declare namespace i18n             = 'http://exist-db.org/xquery/i18n';
 import module namespace util       = "http://exist-db.org/xquery/util";
 import module namespace console    = "http://exist-db.org/xquery/console";
 import module namespace config     = "http://www.salamanca.school/xquery/config" at "../../modules/config.xqm";
-import module namespace app        = "http://www.salamanca.school/xquery/app"    at "../../modules/app.xql";
-import module namespace sutil   = "http://www.salamanca.school/xquery/sutil" at "../../modules/sutil.xql";
+import module namespace app        = "http://www.salamanca.school/xquery/app"    at "../../modules/app.xqm";
+import module namespace sutil   = "http://www.salamanca.school/xquery/sutil" at "../../modules/sutil.xqm";
 import module namespace index      = "https://www.salamanca.school/factory/works/index"    at "index.xqm";
 import module namespace txt        = "https://www.salamanca.school/factory/works/txt" at "txt.xqm";
 
@@ -614,4 +614,851 @@ declare function html:dispatch($node as node(), $mode as xs:string) {
 
 
 declare function html:abbr($node as element(tei:abbr), $mode) {
+        html:origElem($node, $mode)
+};
+
+
+declare function html:argument($node as element(tei:argument), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            if (index:isBasicNode($node)) then
+                <div class="hauptText">
+                    <div class="argument">
+                        {html:passthru($node, $mode)}
+                    </div>
+                </div>
+            else
+                <div class="argument">
+                    {html:passthru($node, $mode)}
+                </div>
+
+        default return
+            html:passthru($node, $mode)
+};
+
+
+declare function html:bibl($node as element(tei:bibl), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            if ($node/@sortKey) then 
+                <span class="{local-name($node) || ' hi_', html:makeClassableString($node/@sortKey)}">{html:passthru($node, $mode)}</span>
+            else <span>{html:passthru($node, $mode)}</span>
+
+        default return
+            html:passthru($node, $mode)
+};
+
+
+declare function html:byline($node as element(tei:byline), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            <span class="tp-paragraph">
+                {html:passthru($node, $mode)}
+            </span>
+
+        default return
+            html:passthru($node, $mode)
+};
+
+declare function html:cb($node as element(tei:cb), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            if (not($node/@break = 'no')) then
+                ' '
+            else ()
+
+        default return () (: some sophisticated function to insert a pipe and a pagenumber div in the margin :)
+};
+
+declare function html:cell($node as element(tei:cell), $mode) {
+    switch($mode)
+        case 'html' return 
+            if ($node/@role eq 'label') then 
+                <td class="table-label">{html:passthru($node, $mode)}</td>
+            else <td>{html:passthru($node, $mode)}</td>
+
+        default return
+            html:passthru($node, $mode)
+};
+
+
+declare function html:choice($node as element(tei:choice), $mode as xs:string) {
+    (: HTML: Editorial interventions: Don't hide original stuff where we have no modern alternative, otherwise
+      put it in an "orignal" class span which we make invisible by default.
+      Put our own edits in spans of class "edited" and add another class to indicate what type of edit has happened :)
+    html:passthru($node, $mode)
+};
+
+
+
+declare function html:corr($node as element(tei:corr), $mode) {
+    html:editElem($node, $mode)
+};
+
+
+declare function html:del($node as element(tei:del), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            if ($node/tei:supplied) then
+                html:passthru($node, $mode)
+            else error(xs:QName('html:del'), 'Unexpected content in tei:del')
+
+        default return 
+            html:passthru($node, $mode)
+};
+
+
+declare function html:div($node as element(tei:div), $mode as xs:string) {
+    switch($mode)
+        case 'html-title' return
+            if (not($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) and $node/(tei:head|tei:label)) then
+                (: for expanded titles, we need the full version, not just the teaser :)
+                normalize-space(replace(string-join(txt:dispatch(($node/(tei:head|tei:label))[1], 'edit'), ''), '\[.*?\]', ''))
+            else if (index:div($node, 'title')) then replace(index:div($node, 'title'), '"', '')
+            else <i18n:text key="{index:div($node, 'class')}"></i18n:text> (: if everything fails, simply use the label (such as 'Preface') :)
+
+        default return
+            html:passthru($node, $mode)
+};
+
+declare function html:docAuthor($node as element(tei:docAuthor), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            html:name($node, $mode)
+        default return 
+            html:passthru($node, $mode)
+};
+
+
+declare function html:docImprint($node as element(tei:docImprint), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            <span class="tp-paragraph">
+                {html:passthru($node, $mode)}
+            </span>
+
+        default return
+            html:passthru($node, $mode)
+};
+
+declare function html:editElem($node as element(), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            if ($node/parent::tei:choice) then
+                let $origString := string-join(txt:dispatch($node/parent::tei:choice/(tei:abbr|tei:orig|tei:sic), 'orig'), '')
+                return
+                    <span class="messengers edited {local-name($node)}" title="{$origString}">
+                        {string-join(html:passthru($node, $mode), '')}
+                    </span>
+            else html:passthru($node, $mode)
+
+        default return
+            html:passthru($node, $mode)
+};
+
+
+declare function html:expan($node as element(tei:expan), $mode) {
+    html:editElem($node, $mode)
+};
+
+
+declare function html:figure($node as element(tei:figure), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            if ($node/@type eq 'ornament') then
+                <hr class="ornament"/>
+            else ()
+
+        default return ()
+};
+
+
+declare function html:foreign($node as element(tei:foreign), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            <span class="foreign-lang">{html:passthru($node, $mode)}</span>
+
+        default return 
+            html:passthru($node, $mode)
+};
+
+
+declare function html:g($node as element(tei:g), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            let $thisString := 
+                if ($node/text()) then 
+                    xs:string($node/text())
+                else error(xs:QName('html:g'), 'Found tei:g without text content') (: ensure correct character markup :)
+            let $charCode := substring($node/@ref,2)
+            let $char := $node/ancestor::tei:TEI/tei:teiHeader/tei:encodingDesc/tei:charDecl/tei:char[@xml:id eq $charCode]
+            let $test := (: make sure that the char reference is correct :)
+                if (not($char)) then 
+                    error(xs:QName('html:g'), 'g/@ref is invalid, the char code does not exist): ', $charCode)
+                else ()
+            let $precomposedString := 
+                if ($char/tei:mapping[@type='precomposed']/text()) then 
+                    string($char/tei:mapping[@type='precomposed']/text())
+                else ()
+            let $composedString := 
+                if ($char/tei:mapping[@type='composed']/text()) then
+                    string($char/tei:mapping[@type='composed']/text())
+                else ()
+            let $originalGlyph := if ($composedString) then $composedString else $precomposedString
+                (: composed strings are preferable since some precomposed chars are displayed oddly in certain contexts 
+                    (e.g. chare0303 in bold headings) :)
+            return 
+                (: Depending on the context or content of the g element, there are several possible cases: :)
+                (: 1. if g occurs within choice, we can simply take an original character since any expansion should be handled through the choice mechanism :)
+                if ($node/ancestor::tei:choice) then
+                    $originalGlyph
+                (: 2. g occurs outside of choice: :)
+                else
+                    let $test := 
+                        if (string-length($originalGlyph) eq 0) then 
+                            error(xs:QName('html:g'), 'No correct mapping available for char: ', $node/@ref)
+                        else ()
+                    return
+                        (: a) g has been used for resolving abbreviations (in early texts W0004, W0013 and W0015) -> treat it like choice elements :)
+                        if (not($thisString = ($precomposedString, $composedString)) and not($charCode = ('char017f', 'char0292'))) then
+                            (<span class="original glyph unsichtbar" title="{$thisString}">{$originalGlyph}</span>,
+                            <span class="edited glyph" title="{$originalGlyph}">{$thisString}</span>)
+                        (: b) most common case: g simply marks a special character -> pass it through (except for the very frequent "long s" and "long z", 
+                                which are to be normalized :)
+                        else if ($charCode = ('char017f', 'char0292')) then
+                            (: long s and z shall be switchable in constituted mode to their standardized versions, but due to their high frequency 
+                            we refrain from colourful highlighting (.simple-char). In case colour highlighting is desirable, simply remove .simple-char :)
+                            let $standardizedGlyph := string($char/tei:mapping[@type='standardized']/text())
+                            return 
+                                (<span class="original glyph unsichtbar simple-char" title="{$standardizedGlyph}">{$originalGlyph}</span>,
+                                <span class="edited glyph simple-char" title="{$originalGlyph}">{$standardizedGlyph}</span>)
+                        else 
+                            (: all other simple characters :)
+                            html:passthru($node, $mode)
+
+        default return
+            html:passthru($node, $mode)
+};
+
+
+declare function html:gap($node as element(tei:gap), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            if ($node/ancestor::tei:damage) then
+                <span title="?" class="gap"/>
+            else ()
+        default return ()
+};
+
+
+(: FIXME: In the following, the #anchor does not take account of html partitioning of works. Change this to use semantic section id's. :)
+declare function html:head($node as element(tei:head), $mode as xs:string) {
+    switch($mode)
+        case 'html-title' return
+            normalize-space(replace(string-join(txt:dispatch($node, 'edit')), '\[.*?\]', ''))
+
+        case 'html' return
+            (: list[not(@type eq 'dict')]/head are handled in html:list() :)
+            if ($node/parent::tei:list[not(@type eq 'dict')]) then 
+                () 
+            (: within notes: :)
+            else if ($node/parent::tei:lg) then 
+                <h5 class="poem-head">{html:passthru($node, $mode)}</h5>
+            (: usual headings: :)
+            else 
+(:                let $toolbox := html:makeSectionToolbox($node)
+                return:)
+                <h3>
+                    <span class="heading-text">{html:passthru($node, $mode)}</span>
+                </h3>
+
+        default return 
+            html:passthru($node, $mode)
+};
+
+declare function html:hi($node as element(tei:hi), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            let $styles := distinct-values(tokenize($node/@rendition, ' '))
+            (: names of elements that have their own, specific text alignment 
+                (where hi/@rendition alignment is to be omitted) :)
+            let $specificAlignElems := ('head', 'signed', 'titlePage', 'argument') (: TODO: add more element names here when necessary :)
+            let $cssStyles := 
+                for $s in $styles return
+                    if ($s eq '#b') then 'font-weight:bold;'
+                    else if ($s eq '#it') then 'font-style:italic;'
+                    else if ($s eq '#rt') then 'font-style: normal;'
+                    else if ($s eq '#l-indent') then 'display:block;margin-left:4em;'
+                    (: centering and right-alignment apply only in certain contexts :)
+                    else if ($s eq '#r-center'
+                             and not($node/ancestor::*[local-name(.) = $specificAlignElems])
+                             and not($node/ancestor::*[local-name(.) = $html:basicElemNames][1]//text()[not(ancestor::tei:hi[contains(@rendition, '#r-center')])])
+                         ) then
+                             (: workaround for suppressing trailing centerings at the end of paragraphs :)
+                         'display:block;text-align:center;'
+                    else if ($s eq '#right' 
+                             and not($node/ancestor::*[local-name(.) = $specificAlignElems])
+                             and not($node/ancestor::tei:item)) then 
+                        'display:block;text-align: right;'
+                    else if ($s eq '#sc') then 'font-variant:small-caps;'
+                    else if ($s eq '#spc') then 'letter-spacing:2px;'
+                    else if ($s eq '#sub') then 'vertical-align:sub;font-size:.83em;'
+                    else if ($s eq '#sup') then 'vertical-align:super;font-size: .83em;'
+                    else ()
+            let $classnames := if ('#initCaps' = $styles) then 'initialCaps' else ()
+            return
+                element {'span'} {
+                    if (string-join($cssStyles, ' ')) then attribute {'style'} {string-join($cssStyles, ' ')} else (),
+                    if (string-join($classnames, ' ')) then attribute {'class'} {string-join($classnames, ' ')} else (),
+                    html:passthru($node, $mode)
+                }
+
+        default return 
+            html:passthru($node, $mode)
+};
+
+declare function html:imprimatur($node as element(tei:imprimatur), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            <span class="tp-paragraph">
+                {html:passthru($node, $mode)}
+            </span>
+
+        default return
+            html:passthru($node, $mode)
+};
+
+declare function html:item($node as element(tei:item), $mode as xs:string) {
+    switch($mode)
+        case 'html-title' return
+            if (not($node/parent::tei:list/@type='dict' and $node//tei:term[1][@key])
+                and not($node/@n and not(matches($node/@n, '^[0-9\[\]]+$')))
+                and $node/(tei:head|tei:label)) 
+                then normalize-space(replace(string-join(txt:dispatch(($node/(tei:head|tei:label))[1], 'edit'), ''),'\[.*?\]', ''))
+            else replace(index:dispatch($node, 'title'), '"', '')
+
+        case 'html' return
+            (: tei:item should be handled exclusively in html:list :)
+            error()
+
+        default return
+            html:passthru($node, $mode)
+};
+
+
+declare function html:l($node as element(tei:l), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            (html:passthru($node, $mode),<br/>)
+
+        default return html:passthru($node, $mode)
+};
+
+
+declare function html:label($node as element(tei:label), $mode as xs:string) {
+    switch($mode)
+        case 'html-title' return
+            normalize-space(replace(string-join(txt:dispatch($node, 'edit')), '\[.*?\]', ''))
+
+        case 'html' return
+            switch($node/@place)
+                case 'margin' return
+                    html:makeMarginal($node)
+                case 'inline' return
+                    <span class="label-inline">
+                        {html:passthru($node, $mode)}
+                    </span>
+                default return html:passthru($node, $mode)
+
+        default return
+            html:passthru($node, $mode)
+};
+
+
+declare function html:lb($node as element(tei:lb), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            if (not($node/@break = 'no')) then
+                ' '
+            else ()
+
+        default return () 
+};
+
+declare function html:list($node as element(tei:list), $mode as xs:string) {
+    switch($mode)
+        case 'html-title' return
+            if (not($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) and $node/(tei:head|tei:label)) then
+                normalize-space(replace(string-join(txt:dispatch(($node/(tei:head|tei:label))[1], 'edit')), '\[.*?\]', ''))
+            else replace(index:dispatch($node, 'title'), '"', '')
+
+        case 'html' return
+            (: available list types: "dict", "ordered", "simple", "bulleted", "gloss", "index", or "summaries" :)
+            (: In html, lists must contain nothing but <li>s, so we have to move headings (and arguments) before the list 
+               and nest everything else (sub-lists) in <li>s. :)
+            switch(html:determineListType($node))
+                (: tei:item are actually handled here, not in html:item, due to the tight coupling of their layout to tei:list :)
+                case 'ordered' return (: enumerated/ordered list :)
+                    <div id="{$node/@xml:id}">
+                        {for $head in $node/tei:head return <h4>{html:passthru($head, $mode)}</h4>}
+                        {
+                        (: in ordered lists, we outsource non-item elements before items (such as argument, p, ...) to a non-ordered, non-bulleted list :)
+                        if ($node/*[not(self::tei:head or self::tei:item) and not(preceding-sibling::tei:item)]) then
+                            <ul style="list-style: none;">
+                                {
+                                for $child in $node/*[not(self::tei:head or self::tei:item) and not(preceding-sibling::tei:item)] return
+                                    <li>{html:passthru($child, $mode)}</li>
+                                }    
+                            </ul>
+                        else ()
+                        }
+                        <ol>
+                            {for $child in $node/*[self::tei:item or preceding-sibling::tei:item] return 
+                                <li>{html:passthru($child, $mode)}</li>
+                            }
+                        </ol>
+                    </div>
+                case 'simple' return (: make no list in html terms at all :)
+                    <div id="{$node/@xml:id}">
+                        {for $head in $node/tei:head return <h4 class="inlist-head">{html:passthru($head, $mode)}</h4>}
+                        {for $child in $node/*[not(self::tei:head)] return
+                            if ($child//list) then html:passthru($child, $mode)
+                            else if (not($child/self::tei:item)) then (: argument, p, etc. :)
+                                <div>{html:passthru($child, $mode)}</div>
+                            else (' ', <span class="inline-item">{html:passthru($child, $mode)}</span>, ' ')}
+                    </div>
+                case 'index'
+                case 'summaries' return (: unordered list :)
+                    let $content := 
+                        <div class="list-index" id="{$node/@xml:id}">
+                            {for $head in $node/tei:head return <h4 class="list-index-head">{html:passthru($head, $mode)}</h4>}
+                            <ul style="list-style-type:circle;">
+                                {for $child in $node/*[not(self::tei:head)] return 
+                                    if (not($child/self::tei:item)) then (: argument, p, etc. :)
+                                        <li class="list-paragraph">{html:passthru($child, $mode)}</li>
+                                    else
+                                        <li class="list-index-item">{html:passthru($child, $mode)}</li>}
+                            </ul>
+                        </div>
+                    return
+                        (:if (not($node/ancestor::tei:list)) then
+                            <section>{$content}</section>
+                        else :)
+                        $content
+                default return (: e.g., 'bulleted' :)
+                    (: put an unordered list (and captions) in a figure environment (why?) of class @type :)
+                    <div class="list-default" id="{$node/@xml:id}">
+                        {for $head in $node/tei:head return <h4 class="list-default-head">{html:passthru($head, $mode)}</h4>}
+                        <ul style="list-style-type:circle;">
+                             {for $child in $node/*[not(self::tei:head)] return 
+                                  if (not($child/self::tei:item)) then (: argument, p, etc. :)
+                                      <li class="list-paragraph">{html:passthru($child, $mode)}</li>
+                                  else
+                                      <li class="list-default-item">{html:passthru($child, $mode)}</li>}
+                        </ul>
+                    </div>
+
+        default return
+            ($config:nl, html:passthru($node, $mode), $config:nl)
+};
+
+
+declare function html:lg($node as element(tei:lg), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            <span class="poem">{html:passthru($node, $mode)}</span>
+
+        default return
+            html:passthru($node, $mode)
+};
+
+declare function html:milestone($node as element(tei:milestone), $mode as xs:string) {
+    switch($mode)
+        (: TODO: bring i18n labels somehow into html-title... :)
+        case 'html-title' return
+            replace(index:milestone($node, 'title'), '"', '')
+
+        case 'html' return
+            if ($node/@rendition eq '#dagger') then <sup>†</sup> else '*'
+
+        default return () (: also for snippets-orig, snippets-edit :)
+};
+
+declare function html:name($node as element(*), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            let $hiliteName := if ($node/@ref) then 'hi_' || html:makeClassableString((tokenize($node/@ref, ' '))[1]) else ()
+            let $dictLemma := 
+                if ($node[self::tei:term and ancestor::tei:list[@type='dict'] and not(preceding-sibling::tei:term)]) then
+                    'dictLemma'
+                else ()
+            return 
+                (: as long as any link would lead nowhere, omit linking and simply grasp the content: :)
+                <span class="{normalize-space(string-join((local-name($node),$hiliteName,$dictLemma), ' '))}">
+                    {html:passthru($node, $mode)}
+                </span>
+                (: as soon as links have actual targets, execute something like the following: :)
+                (:let $resolvedURI := html:resolveURI($node, @ref)
+                return
+                    if ($node/@ref and substring($resolvedURI,1,5) = ('http:', '/exis')) then
+                        html:transformToLink($node, $resolvedURI)
+                    else 
+                        {html:passthru($node, $mode)}:)
+                (: 
+                <xsl:choose>
+                    <xsl:when test="@ref and substring(sal:resolveURI(current(), @ref)[1],1, 5) = ('http:', '/exis') ">
+                        <xsl:choose>
+                            <xsl:when test="not(./pb)"> <!-\- The entity does not contain a pagebreak intervention - no problem then -\->
+                                <xsl:element name="a">
+                                    <xsl:attribute name="href" select="sal:resolveURI(current(), @ref)"/>
+                                    <xsl:attribute name="target">_blank</xsl:attribute>
+                                    <xsl:apply-templates/>
+                                </xsl:element>
+                            </xsl:when>
+                            <xsl:otherwise>             <!-\- Otherwise, make an anchor for the preceding part, then render the pb, then "continue" the anchor -\->
+                                <xsl:element name="a">
+                                    <xsl:attribute name="href" select="sal:resolveURI(current(), @ref)"/>
+                                    <xsl:attribute name="target">_blank</xsl:attribute>
+                                    <xsl:apply-templates select="./pb/preceding-sibling::node()"/>
+                                </xsl:element>
+                                <xsl:apply-templates select="./pb"/>
+                                <xsl:element name="a">
+                                    <xsl:attribute name="href" select="sal:resolveURI(current(), @ref)"/>
+                                    <xsl:attribute name="target">_blank</xsl:attribute>
+                                    <xsl:apply-templates select="./pb/following-sibling::node()"/>
+                                </xsl:element>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:apply-templates/>
+                    </xsl:otherwise>
+                </xsl:choose>
+                :)
+
+        default return
+            html:passthru($node, $mode)
+};
+
+
+declare function html:note($node as element(tei:note), $mode as xs:string) {
+    switch($mode)
+        case 'html-title' return ()
+
+        case 'html' return
+            html:makeMarginal($node)
+
+        default return
+            html:passthru($node, $mode)
+};
+
+
+declare function html:orgName($node as element(tei:orgName), $mode as xs:string) {
+    html:name($node, $mode)
+};
+
+declare function html:orig($node as element(tei:orig), $mode) {
+    html:origElem($node, $mode)
+};
+
+
+declare function html:origElem($node as element(), $mode as xs:string) {
+    switch($mode)
+        case 'html' return 
+            if ($node/parent::tei:choice) then
+                let $editString := string-join(txt:dispatch($node/parent::tei:choice/(tei:expan|tei:reg|tei:corr), 'edit'), '')
+                return
+                    <span class="original {local-name($node)} unsichtbar" title="{$editString}">
+                        {string-join(html:passthru($node, $mode), '')}
+                    </span>
+            else 
+                html:passthru($node, $mode)
+
+        default return
+            html:passthru($node, $mode)
+};
+
+
+declare function html:p($node as element(tei:p), $mode as xs:string) {
+    switch($mode)
+        case 'html-title' return
+            normalize-space(
+                index:makeTeaserString($node, 'edit')
+            )
+
+        case 'html' return
+            (: special cases :)
+            if ($node/ancestor::tei:note) then
+                <span class="note-paragraph">
+                    {html:passthru($node, $mode)}
+                </span>
+            else if ($node/ancestor::tei:item) then
+                <span class="item-paragraph">
+                    {html:passthru($node, $mode)}
+                </span>
+            else if ($node/ancestor::tei:titlePage) then
+                <span class="tp-paragraph">
+                    {html:passthru($node, $mode)}
+                </span>
+            (: main text: :)
+            else if ($node/ancestor::item[not(ancestor::list/@type = ('dict', 'index'))]) then
+                <p id="{$node/@xml:id}">
+                    {html:passthru($node, $mode)}
+                </p>
+            else
+                html:passthru($node, $mode)
+
+        default return
+            html:passthru($node, $mode)
+};
+
+
+declare function html:passthru($nodes as node()*, $mode as xs:string) as item()* {
+    for $node in $nodes/node() return html:dispatch($node, $mode)
+};
+
+
+declare function html:pb($node as element(tei:pb), $mode as xs:string) {
+    switch($mode)
+        case 'html-title' return
+            normalize-space(
+                (: any pb with @sameAs and @corresp probably won't even get reached, since they typically have note ancestors :)
+                if ($node/@sameAs) then
+                    concat('[pb_sameAs_', $node/@sameAs, ']')
+                else if ($node/@corresp) then
+                    concat('[pb_corresp_', $node/@corresp, ']')
+                else
+                    (: not prepending 'Vol. ' prefix here :)
+                    if (contains($node/@n, 'fol.')) then 
+                        $node/@n
+                    else
+                        'p. ' || $node/@n
+            )
+
+        case 'html' return
+            if (index:isIndexNode($node)) then 
+                let $inlineBreak :=
+                    if ($node[@type eq 'blank']) then (: blank pages - make a typographic line break :)
+                        <br/>
+                    else if ($node[preceding::tei:pb 
+                                   and preceding-sibling::node()[descendant-or-self::text()[not(normalize-space() eq '')]]                                                                                
+                                   and following-sibling::node()[descendant-or-self::text()[not(normalize-space() eq '')]]]) then
+                        (: mark page break by means of '|', but not at the beginning or end of structural sections :)
+                        if ($node/@break eq 'no') then '|' else ' | '
+                    else ()
+                let $link :=
+                    if ($node[@n]) then
+                        let $pageAnchor := 'pageNo_' || (if ($node/@xml:id) then $node/@xml:id/string() else generate-id($node))
+                        let $title := if (contains($node/@n, 'fol.')) then 'View image of ' || $node/@n else 'View image of p. ' || $node/@n
+                        return
+                            <div class="pageNumbers">
+                                <a href="{html:resolveFacsURI($node/@facs)}" data-canvas="{html:resolveCanvasID($node)}"
+                                   data-sal-id="{html:makeCitetrailURI($node)}" id="{$pageAnchor}" title="{$title}"
+                                   class="pageNo messengers">
+                                    <i class="fas fa-book-open facs-icon"/>
+                                    {' '}
+                                        {html:pb($node, 'html-title')}
+                                </a>
+                            </div>
+                    else ()
+                return ($inlineBreak, $link)
+            else ()
+
+        (: pb nodes are good candidates for tracing the speed/performance of document processing, 
+            since they are equally distributed throughout a document :)
+        case 'debug' return
+            util:log('warn', '[RENDER] Processing tei:pb node ' || $node/@xml:id)
+
+        default return () (: some sophisticated function to insert a pipe and a pagenumber div in the margin :)
+};
+
+
+declare function html:persName($node as element(tei:persName), $mode as xs:string) {
+    html:name($node, $mode)
+};
+
+declare function html:placeName($node as element(tei:placeName), $mode as xs:string) {
+    html:name($node, $mode)
+};
+
+(: Same as html:persName() :)
+declare function html:publisher($node as element(tei:publisher), $mode as xs:string) {
+    html:name($node, $mode)
+};
+
+(: Same as html:placeName() :)
+declare function html:pubPlace($node as element(tei:pubPlace), $mode as xs:string) {
+    html:name($node, $mode)
+};
+
+declare function html:quote($node as element(tei:quote), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            (:<span class="quote">
+                {:)html:passthru($node, $mode)(:}
+            </span>:)
+            (: how to deal with longer quotes, spanning several paragraphs or even divs? (possible solution: anchors) :)
+
+        default return
+            ('"', html:passthru($node, $mode), '"')
+};
+
+declare function html:ref($node as element(tei:ref), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            if ($node/@type eq 'note-anchor') then
+                () (: omit note references :)
+            else if ($node/@target) then
+                let $resolvedUri := html:resolveURI($node, $node/@target) (: TODO: verify that this works :)
+                return html:transformToLink($node, $resolvedUri)
+            else html:passthru($node, $mode)
+
+        default return
+            html:passthru($node, $mode)
+};
+
+
+declare function html:reg($node as element(tei:reg), $mode) {
+    html:editElem($node, $mode)
+};
+
+declare function html:row($node as element(tei:row), $mode) {
+    switch($mode)
+        case 'html' return 
+            <tr>{html:passthru($node, $mode)}</tr>
+
+        default return
+            html:passthru($node, $mode)
+};
+
+declare function html:sic($node as element(tei:sic), $mode) {
+    html:origElem($node, $mode)
+};
+
+declare function html:signed($node as element(tei:signed), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            <div class="signed">
+                {html:passthru($node, $mode)}
+            </div>
+
+        default return
+            html:passthru($node, $mode)
+};
+
+
+declare function html:soCalled($node as element(tei:soCalled), $mode as xs:string) {
+    ("'", html:passthru($node, $mode), "'")
+};
+
+declare function html:space($node as element(tei:space), $mode as xs:string) {
+    if ($node/@dim eq 'horizontal' or @rendition eq '#h-gap') then ' ' else ()
+};
+
+
+declare function html:supplied($node as element(tei:supplied), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            (<span class="original unsichtbar" title="{string($node)}">{'[' || string-join(html:passthru($node,$mode)) || ']'}</span>,
+            <span class="edited" title="{concat('[', string($node), ']')}">{html:passthru($node,$mode)}</span>)
+
+        default return
+            html:passthru($node, $mode)
+};
+
+
+declare function html:table($node as element(tei:table), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            <table>{html:passthru($node, $mode)}</table>
+
+        default return html:passthru($node, $mode)
+};
+
+(: FIXME: In the following, work mode functionality has to be added - also paying attention to intervening pagebreak marginal divs :)
+declare function html:term($node as element(tei:term), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            html:name($node, $mode)
+
+        default return
+            html:passthru($node, $mode)
+};
+
+declare function html:text($node as element(tei:text), $mode as xs:string) {
+    switch($mode)
+        case 'html-title' return
+            if ($node/@type eq 'work_volume') then
+                'Vol. ' || $node/@n/string()
+            else ()
+
+        case 'html' return
+            if (html:isCitableWithTeaser($node)) then
+                let $delimiter := 
+                    if ($node/@type eq 'work_volume' and $node/preceding::tei:text[@type eq 'work_volume']) 
+                        then <hr/> 
+                    else ()
+                return ($delimiter, html:passthru($node, $mode))
+            else html:passthru($node, $mode)
+
+        default return
+            html:passthru($node, $mode)
+};
+
+declare function html:textNode($node as node(), $mode as xs:string) {
+    $node
+};
+
+declare function html:title($node as element(tei:title), $mode as xs:string) {
+    html:name($node, $mode)
+};
+
+declare function html:titlePage($node as element(tei:titlePage), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            (: Make toolbox for titlePage at the same point where it is created for all other elements, in html:dispatch :)
+            let $toolbox := html:makeSectionToolbox($node)
+            (: distinguishing first and subsequent titlePage(s) for rendering them differently :)
+            let $class := if ($node[not(preceding-sibling::tei:titlePage)]) then 'titlePage' else 'sec-titlePage'
+            return
+                <div class="{$class}">
+                    {$toolbox}
+                    <div class="titlePage-body">
+                        {html:passthru($node, $mode)}
+                    </div>
+                </div>
+
+        default return
+            html:passthru($node, $mode)
+};
+
+declare function html:titlePart($node as element(tei:titlePart), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            if ($node/@type eq 'main') then
+                <h1>{html:passthru($node, $mode)}</h1>
+            else html:passthru($node, $mode)
+
+        default return 
+            html:passthru($node, $mode)
+};
+
+
+declare function html:unclear($node as element(tei:unclear), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            (: TODO i18n title :)
+            if ($node//text()) then
+                <span title="unclear" class="sal-unclear-text">{html:passthru($node, $mode)}</span>
+            else <span title="unclear" class="sal-unclear"/>
+
+        default return 
+            html:passthru($node, $mode)
+};
+
+(: TODO - Html:
+    * add line- and column breaks in diplomatic view? (problem: infinite scrolling has to comply with the current viewmode as well!)
+    * make bibls, ref span across (page-)breaks (like persName/placeName/... already do)
+    * teasers: break text at word boundaries
+:)
   

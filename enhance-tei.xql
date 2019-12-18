@@ -1,7 +1,7 @@
 xquery version "3.1";
 
 import module   namespace   config      = "http://www.salamanca.school/xquery/config" at "modules/config.xqm";
-import module namespace i18n       = "http://exist-db.org/xquery/i18n"        at "i18n.xql";
+import module namespace i18n       = "http://exist-db.org/xquery/i18n"        at "i18n.xqm";
 import module   namespace   console     = "http://exist-db.org/xquery/console";
 declare         namespace   exist       = "http://exist.sourceforge.net/NS/exist";
 declare         namespace   output      = "http://www.w3.org/2010/xslt-xquery-serialization";

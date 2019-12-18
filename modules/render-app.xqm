@@ -7,7 +7,7 @@ declare namespace tei              = "http://www.tei-c.org/ns/1.0";
 declare namespace sal              = "http://salamanca.adwmainz.de";
 import module namespace request    = "http://exist-db.org/xquery/request";
 import module namespace config     = "http://www.salamanca.school/xquery/config" at "config.xqm";
-import module namespace i18n      = "http://exist-db.org/xquery/i18n"        at "i18n.xql";
+import module namespace i18n      = "http://exist-db.org/xquery/i18n"        at "i18n.xqm";
 
 (:
 ~ A conglomeration of rendering mechanisms for different, not necessarily related parts of the app, such as search help, participants pages, etc.

@@ -20,10 +20,10 @@ import module namespace xmldb       = "http://exist-db.org/xquery/xmldb";
 declare namespace xhtml         = "http://www.w3.org/1999/xhtml";
 declare namespace pack          = "http://expath.org/ns/pkg";
 declare namespace tei           = "http://www.tei-c.org/ns/1.0";
-import module namespace i18n    = "http://exist-db.org/xquery/i18n"     at "i18n.xql";
-import module namespace sutil   = "http://www.salamanca.school/xquery/sutil" at "sutil.xql";
+import module namespace i18n    = "http://exist-db.org/xquery/i18n"     at "i18n.xqm";
+import module namespace sutil   = "http://www.salamanca.school/xquery/sutil" at "sutil.xqm";
 import module namespace config  = "http://www.salamanca.school/xquery/config" at "config.xqm";
-import module namespace net     = "http://www.salamanca.school/xquery/net" at "net.xql";
+import module namespace net     = "http://www.salamanca.school/xquery/net" at "net.xqm";
 import module namespace console = "http://exist-db.org/xquery/console";
 import module namespace functx  = "http://www.functx.com";
 

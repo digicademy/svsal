@@ -23,7 +23,7 @@ $Id: codesharing_config.xql 46 2014-11-02 23:15:40Z martindholmes $
 module namespace cs="http://hcmc.uvic.ca/namespaces/exist/codesharing";
 declare default element namespace "http://www.tei-c.org/ns/1.0";
 declare namespace exist = "http://exist.sourceforge.net/NS/exist"; 
-import module namespace i18n    = "http://exist-db.org/xquery/i18n" at "/db/apps/salamanca/modules/i18n.xql";
+import module namespace i18n    = "http://exist-db.org/xquery/i18n" at "/db/apps/salamanca/modules/i18n.xqm";
 import module namespace config         = "http://www.salamanca.school/xquery/config" at "/db/apps/salamanca/modules/config.xqm";
 
 (: This should be set to application/tei+xml, but that makes Firefox open a fresh tab, which is annoying. :)

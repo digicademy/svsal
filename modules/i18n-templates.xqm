@@ -3,7 +3,7 @@ module namespace intl="http://exist-db.org/xquery/i18n/templates";
 (:~
  : i18n template functions. Integrates the i18n library module. Called from the templating framework.
  :)
-import module namespace i18n        = "http://exist-db.org/xquery/i18n" at "i18n.xql";
+import module namespace i18n        = "http://exist-db.org/xquery/i18n" at "i18n.xqm";
 import module namespace templates   = "http://exist-db.org/xquery/templates";
 import module namespace config      = "http://www.salamanca.school/xquery/config";
 

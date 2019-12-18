@@ -3,7 +3,7 @@ xquery version "3.1";
 (: ####++++----
 
     This query serves as a gateway for the HTML-based admin interface (admin.html), dispatching requests for the 
-    creation of webdata (html, snippets, rdf, etc.) to xquery functions in the admin.xql module.
+    creation of webdata (html, snippets, rdf, etc.) to xquery functions in the admin.xqm module.
     For possible webdata modes/formats, see $output.
 
 ----++++#### :)
@@ -11,7 +11,7 @@ xquery version "3.1";
 declare namespace exist             = "http://exist.sourceforge.net/NS/exist";
 declare namespace request           = "http://exist-db.org/xquery/request";
 declare namespace output            = "http://www.w3.org/2010/xslt-xquery-serialization";
-import module namespace admin       = "http://www.salamanca.school/xquery/admin" at "modules/admin.xql";
+import module namespace admin       = "http://www.salamanca.school/xquery/admin" at "modules/admin.xqm";
 import module namespace config    = "http://www.salamanca.school/xquery/config" at "config.xqm";
 import module namespace util        = "http://exist-db.org/xquery/util";
 
