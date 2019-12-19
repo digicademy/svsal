@@ -12,20 +12,22 @@ import module namespace render     = "http://salamanca/render"  at "modules/rend
 declare variable $target external;
 declare variable $adminGrp          := "svsalAdmin";
 declare variable $data-collection   := concat($target, "/data");
-declare variable $adminfiles        := ($target || '/admin.html',
-                                        $target || '/build.xml',
-                                        $target || '/collection.xconf',
-                                        $target || '/controller.xql',
-                                        $target || '/createLists.html',
-                                        $target || '/expath-pkg.xml',
-                                        $target || '/iiif-admin.xql',
-                                        $target || '/post-install.xql',
-                                        $target || '/pre-install.xql',
-                                        $target || '/reindex.xql',
-                                        $target || '/renderTheRest.html',
-                                        (:$target || '/sphinx-out.html',:)
-                                        (:$target || '/sphinx-out.xql', :)
-                                        $target || '/webdata-admin.xql');
+declare variable $adminfiles := 
+    ($target || '/admin.html',
+     $target || '/build.xml',
+     $target || '/collection.xconf',
+     $target || '/controller.xql',
+     $target || '/createLists.html',
+     $target || '/error-handler.xql',
+     $target || '/expath-pkg.xml',
+     $target || '/iiif-admin.xql',
+     $target || '/post-install.xql',
+     $target || '/pre-install.xql',
+     $target || '/reindex.xql',
+     $target || '/renderTheRest.html',
+     (:$target || '/sphinx-out.html',:)
+     (:$target || '/sphinx-out.xql', :)
+     $target || '/webdata-admin.xql');
 
 
 (: Define files and folders with special permissions :)
