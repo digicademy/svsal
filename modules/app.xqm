@@ -2275,52 +2275,11 @@ declare function app:WRKeditionRecord($node as node(), $model as map(*), $lang a
 declare function app:WRKcitationReference($node as node()?, $model as map(*)?, $lang as xs:string?, $mode as xs:string) as element(span) {
     let $wid := sutil:convertNumericVolumeID($model('currentWorkId'))
     let $fileDesc := $model('currentWorkHeader')/tei:fileDesc
-    let $content := app:HTMLmakeCitationReference($wid, $fileDesc, $mode, ())
+    let $content := sutil:HTMLmakeCitationReference($wid, $fileDesc, $mode, ())
 (:    return i18n:process($content, $lang, $config:i18n-root, 'en'):)
     return $content
 };
 
-(: Modes for generating citation recommendations: 
-    - "record" for generic citations in catalogue records 
-    - "reading-full" for generic citations in reading view; access date has to be appended elsewhere
-    - "reading-passage" for fine-granular citations in reading view, including passagetrail - this yields two <span>s, 
-        between the two of which the acces date has to be inserted (e.g., by means of JS)
-:)
-declare function app:HTMLmakeCitationReference($wid as xs:string, $fileDesc as element(tei:fileDesc), $mode as xs:string, $node as element()?) as element(span)+ {
-    let $author := $fileDesc/tei:titleStmt/tei:author/tei:persName/tei:surname/text()
-    let $title := $fileDesc/tei:titleStmt/tei:title[@type eq 'short']/text()
-    let $digitalYear := substring($fileDesc/tei:publicationStmt/tei:date[@type = ('digitizedEd', 'summaryDigitizedEd')]/@when/string()[1], 1, 4)
-    let $originalYear := 
-        if ($fileDesc/tei:sourceDesc//tei:date[@type eq 'thisEd']) then
-            $fileDesc/tei:sourceDesc//tei:date[@type eq 'thisEd']/@when
-        else $fileDesc/tei:sourceDesc//tei:date[@type eq 'firstEd']/@when
-    (:let $editors :=
-        string-join(for $ed in $fileDesc/tei:seriesStmt/tei:editor/tei:persName 
-                        order by $ed/tei:surname
-                        return app:rotateFormatName($ed), ' &amp; '):)
-    let $citetrail :=
-        if ($mode eq 'reading-passage' and $node) then
-            sutil:getNodetrail($wid, $node, 'citetrail')
-        else ()
-    let $citetrailStr := if ($citetrail) then ':' || $citetrail else ()
-    let $link := $config:idserver || '/texts/' || $wid || $citetrailStr || (if ($mode eq 'reading-passage') then '?format=html' else ())
-    let $passagetrail := 
-        if ($mode eq 'reading-passage' and $node) then
-            let $passage := sutil:getNodetrail($wid, $node, 'passagetrail')
-            return 
-                if ($passage) then <span class="cite-rec-trail">{$passage || ', '}</span> else ()
-        else ()
-    let $body := 
-        <span class="cite-rec-body">{$author || ', ' || $title || ' (' || $digitalYear || ' [' || $originalYear || '])'|| ', '}
-            {$passagetrail}
-            <i18n:text key="inLow">in</i18n:text>{': '}<i18n:text key="editionSeries">The School of Salamanca. A Digital Collection of Sources</i18n:text>
-            {' <'}
-            <a href="{$link}">{$link}</a>
-            {'>'}
-        </span>
-(:   including editors (before link): {', '}<i18n:text key="editedByAbbrLow">ed. by</i18n:text>{' ' || $editors || ' <'}     :)
-    return ($body)
-};
 
 (:~
 Creates a html (div) fragment containing bibliographic information about a print source, 
@@ -2574,33 +2533,6 @@ declare function app:WRKeditionMetadata($node as node(), $model as map(*), $wid 
             'isPublished': $published
         }
 };
-
-(:combined title on work.html in left box:)
-declare %templates:wrap
-    function app:WRKcombined($node as node()?, $model as map(*)?, $wid as xs:string?) {
-        let $path           :=  doc($config:tei-works-root || "/" || sutil:normalizeId($wid) || ".xml")//tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr
-        let $author         :=  string-join($path//tei:author/tei:persName/tei:surname, ', ')
-        let $title          :=  $path//tei:title[@type = 'short']
-        let $thisEd         :=  $path//tei:pubPlace[@role = 'thisEd']
-        let $firstEd        :=  $path//tei:pubPlace[@role = 'firstEd']
-        let $publisher :=  
-            if ($thisEd) then
-                $path//tei:imprint/tei:publisher[@n = 'thisEd']/tei:persName[1]/tei:surname
-            else
-                $path//tei:imprint/tei:publisher[@n = 'firstEd']/tei:persName[1]/tei:surname
-        let $place :=  
-            if ($thisEd) then
-                $thisEd
-            else
-                $firstEd
-        let $year :=  
-            if ($thisEd) then 
-                $path//tei:date[@type = 'thisEd']/@when/string() 
-            else
-                $path//tei:date[@type = 'firstEd']/@when/string()
-        let $pubDetails     :=  $place || '&#32;'||": " || $publisher || ", " || $year
-            return ($author||':  '||$title||'. '||$pubDetails||'.') 
-};  
 
 
 (:jump from work.html to corresponding work_volume in workDetails.html:)(:FIXME:)
@@ -3119,7 +3051,7 @@ declare %templates:default
         </li>
     let $downloadRDF     :=  app:downloadRDF($node, $model, $lang)
     (:let $downloadCorpus  :=  app:downloadCorpusXML($node, $model, $lang):)
-    let $name            :=  app:WRKcombined($node, $model, $wid)
+    let $name            :=  sutil:WRKcombined($node, $model, $wid)
     let $top             :=  'work.html?wid=' || $wid
     let $citeTitle := i18n:process(<i18n:text key="citeThisWork">Cite this work</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en")
     let $copyLink :=

@@ -9,7 +9,6 @@ declare namespace i18n             = 'http://exist-db.org/xquery/i18n';
 import module namespace util       = "http://exist-db.org/xquery/util";
 import module namespace console    = "http://exist-db.org/xquery/console";
 import module namespace config     = "http://www.salamanca.school/xquery/config" at "../../modules/config.xqm";
-import module namespace app        = "http://www.salamanca.school/xquery/app"    at "../../modules/app.xqm";
 import module namespace sutil   = "http://www.salamanca.school/xquery/sutil" at "../../modules/sutil.xqm";
 import module namespace index      = "https://www.salamanca.school/factory/works/index"    at "index.xqm";
 import module namespace txt        = "https://www.salamanca.school/factory/works/txt" at "txt.xqm";
@@ -32,6 +31,127 @@ declare variable $html:titleTruncLimit := 15;
 
 declare variable $html:basicElemNames := ('p', 'head', 'note', 'item', 'cell', 'label', 'signed', 'lg', 'titlePage');
 
+
+(: 
+~ Controller function for creating (and informing about) HTML fragments, pagination lists, and TOCs
+:)
+declare function html:makeHTMLData($tei as element(tei:TEI)) as map(*) {
+    let $work := util:expand($tei)
+    let $fragmentationDepth := index:determineFragmentationDepth($tei)
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Rendering " || string($tei/@xml:id) || " at fragmentation level " || $fragmentationDepth || ".") else ()
+    
+    let $target-set := index:getFragmentNodes($work, $fragmentationDepth)
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] " || string(count($target-set)) || " elements to be rendered as fragments...") else ()
+    
+    let $workId := $work/@xml:id
+    let $text := $work//tei:text[@type='work_volume'] | $work//tei:text[@type = 'work_monograph']
+    let $elements := $work//tei:text[@type = 'work_monograph']/(tei:front | tei:body | tei:back)  
+    let $title := sutil:WRKcombined($work, (), $workId)
+    
+    (: (1) table of contents :)
+    let $toc :=     
+        <div id="tableOfConts">
+            <ul>
+                <li>
+                    <b>{$title}</b>
+                    {
+                    if (not($work//tei:text[@type='work_volume'])) then
+                        <span class="jstree-anchor hideMe pull-right">{html:getPagesFromDiv($text)}</span>
+                    else ()
+                    }
+                    {
+                    if ($work//tei:text[@type='work_volume']) then 
+                        for $a in $work//tei:text where $a[@type='work_volume' and sutil:WRKisPublished($workId || '_' || @xml:id)] return
+                            <ul>
+                                <li>
+                                    <a class="hideMe">
+                                        <b><i18n:text key="volume">Volume</i18n:text>{concat(': ', $a/@n/string())}</b>
+                                        <span class="jstree-anchor hideMe pull-right">{html:getPagesFromDiv($a)}</span>
+                                    </a>
+                                    { html:generateTocFromDiv($a/(tei:front | tei:body | tei:back), $workId)}
+                                </li>
+                            </ul>
+                    else html:generateTocFromDiv($elements, $workId)
+                    }
+                </li>
+            </ul>
+        </div>
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] ToC file created for " || $workId || ".") else ()
+    
+    (: (2) pagination :)
+    let $pagesDe :=  html:makePagination((), (), $workId, 'de')
+    let $pagesEn :=  html:makePagination((), (), $workId, 'en')
+    let $pagesEs :=  html:makePagination((), (), $workId, 'es')
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Pagination created.") else ()
+
+    (: (3) fragments :)
+    
+    (: get "previous" and "next" fragment ids and hand the current fragment over to the renderFragment function :)
+    let $fragments := 
+        for $section at $index in $target-set
+            let $prev   :=  
+                if ($index > 1) then
+                    $target-set[(xs:integer($index) - 1)]
+                else ()
+            let $next   :=  
+                if ($index < count($target-set)) then
+                    $target-set[(xs:integer($index) + 1)]
+                else ()
+            let $prevId :=  
+                if ($prev) then
+                    xs:string($prev/@xml:id)
+                else ()
+            let $nextId := 
+                if ($next) then
+                    xs:string($next/@xml:id)
+                else ()
+            let $result := html:renderFragment($work, xs:string($workId), $section, $index, $fragmentationDepth, $prevId, $nextId, $config:serverdomain)
+(:                let $result := html:createFragment($workId, $section, $index, $prevId, $nextId):)
+            return 
+                map {
+                    'index': $index,
+                    'number': format-number($index, "0000"),
+                    'tei_name': local-name($section),
+                    'tei_id': string($section/@xml:id),
+                    'tei_level': count($section/ancestor-or-self::tei:*),
+                    'prev': $prevId,
+                    'next': $nextId,
+                    'html': $result
+                }
+            
+                
+            
+    
+    (: Reporting :)
+    
+    (: See if there are any leaf elements in our text that are not matched by our rule :)
+    let $missed-elements := $work//(tei:front|tei:body|tei:back)//tei:*[count(./ancestor-or-self::tei:*) < $fragmentationDepth][not(*)]
+    (: See if any of the elements we did get is lacking an xml:id attribute :)
+    let $unidentified-elements := $target-set[not(@xml:id)]
+    
+    return 
+        map {
+            'toc': $toc,
+            'pagination_de': $pagesDe,
+            'pagination_en': $pagesEn,
+            'pagination_es': $pagesEs,
+            'fragments': $fragments,
+            'missed_elements': $missed-elements,
+            'unidentified_elements': $unidentified-elements,
+            'tei_fragment_roots': $target-set
+        }
+};
+
+
+declare function html:renderFragment($work as node(), $wid as xs:string, $target as node(), $targetindex as xs:integer, $fragmentationDepth as xs:integer, $prevId as xs:string?, $nextId as xs:string?, $serverDomain as xs:string?) {
+    let $targetid          := xs:string($target/@xml:id)
+    let $debugOutput   := if ($config:debug = ("trace", "info")) then console:log("  Render Element " || $targetindex || ": " || $targetid || " of " || $wid || "...") else ()
+    let $debugOutput   := if ($config:debug = ("trace")) then console:log("  (prevId=" || $prevId || ", nextId=" || $nextId || ", serverDomain=" || $serverDomain || ")") else ()
+(:    let $html := transform:transform($work, $tei2htmlXslt, $xsl-parameters):)
+    let $fragment := html:createFragment($wid, $target, $targetindex, $prevId, $nextId)
+
+    return $fragment
+};
 
 
 (: HTML UTIL FUNCTIONS :)
@@ -270,7 +390,7 @@ declare function html:makeSectionToolbox($node as element()) as element(div) {
                         <i class="fas fa-feather-alt"/>{' '}<i18n:text key="copyCit"/>
                     </button>
                     <span class="sal-cite-rec" style="display:none">
-                        {app:HTMLmakeCitationReference($wid, $fileDesc, 'reading-passage', $node)}
+                        {sutil:HTMLmakeCitationReference($wid, $fileDesc, 'reading-passage', $node)}
                     </span>
                 </div>
                 <div class="sal-tb-btn dropdown" title="{concat('i18n(txtExp', $i18nSuffix, ')')}">

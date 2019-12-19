@@ -20,6 +20,17 @@ import module namespace sutil    = "http://www.salamanca.school/xquery/sutil" at
    circular dependencies between index.xqm and txt.xqm :)
 
 
+(:
+~ Creates text data as a string for a whole work/volume.
+:)
+declare function txt:makeTXTData($tei as element(tei:TEI), $mode as xs:string) as xs:string? {
+    let $work := util:expand($tei)
+    return
+        string-join(txt:dispatch($work, 'edit'), '')
+};
+
+
+
 (: DUPLICATE of index:isMarginalNode() for avoiding import of index.xqm (due to circular dependencies...) :)
 (:
 ~ Marginal nodes occur within structural or main nodes.

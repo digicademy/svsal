@@ -33,6 +33,17 @@ declare namespace output            = "http://www.w3.org/2010/xslt-xquery-serial
 
 declare option exist:timeout "25000000"; (: ~7 h :)
 
+(:
+~ TODO: 
+~    - HTML rendering and creation of snippets is currently not working for authors and lemmata, although 
+~      the "ancient" infrastructure is still there (see renderTheRest.html and admin:renderAuthorLemma()).
+~      Ideally, this infrastructure would be refactored in the way the creation of work data works: the webdata-admin.xql
+~      forwards requests for the creation of data to the admin.xqm module, which then lets dedicated modules in factory/authors/* 
+~      create the data.
+:)
+
+
+
 (: #### UTIL FUNCTIONS for informing the admin about current status of a webdata resources (node index, HTML, snippets, etc.) :)
 
 declare function admin:needsIndex($targetWorkId as xs:string) as xs:boolean {
@@ -552,11 +563,15 @@ declare %templates:wrap function admin:renderAuthorLemma($node as node(), $model
 };
 
 
+(:
+~ Creates HTML fragments and TXT datasets for works and stores them in the database, also updating
+~ the corpus datasets (TEI and TXT zips) with the respective work's data.
+:)
 declare %templates:wrap function admin:renderWork($workId as xs:string*) as element(div) {
     let $start-time := util:system-time()
     let $wid := if ($workId) then $workId else request:get-parameter('wid', '*')
     
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("Rendering " || $wid || ".") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Rendering " || $wid || ".") else ()
     
     (: define the works to be fragmented: :)
     let $todo := 
@@ -566,140 +581,100 @@ declare %templates:wrap function admin:renderWork($workId as xs:string*) as elem
             collection($config:tei-works-root)//tei:TEI[@xml:id = distinct-values($wid)]
 
     (: for each requested work: create fragments, insert them into the transformation, and produce some diagnostic info :)
-    let $gerendert := 
+    let $createData := 
         for $work-raw in $todo
-            let $cleanStatus := admin:cleanCollection($work-raw/@xml:id, "html")
-            let $work := util:expand($work-raw)
-            let $fragmentationDepth := index:determineFragmentationDepth($work-raw)
-            let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Rendering " || string($work-raw/@xml:id) || " at fragmentation level " || $fragmentationDepth || ".") else ()
+            let $workId := $work-raw/@xml:id
+        
+            let $cleanStatus := admin:cleanCollection($workId, "html")
+            
+            (: (1) HTML :)
+            
             let $start-time-a := util:system-time()
-        
-            let $target-set := index:getFragmentNodes($work, $fragmentationDepth)
-            let $debug := if ($config:debug = ("trace", "info")) then console:log("  " || string(count($target-set)) || " elements to be rendered as fragments...") else ()
-            
-            (: First, create a ToC html file. :)
-            let $workId := $work/@xml:id
-            let $text := $work//tei:text[@type='work_volume'] | $work//tei:text[@type = 'work_monograph']
-            let $elements := $work//tei:text[@type = 'work_monograph']/(tei:front | tei:body | tei:back)  
-            let $title := app:WRKcombined($work, (), $workId)
-            let $store :=     
-                <div id="tableOfConts">
-                    <ul>
-                        <li>
-                            <b>{$title}</b>
-                            {
-                            if (not($work//tei:text[@type='work_volume'])) then
-                                <span class="jstree-anchor hideMe pull-right">{html:getPagesFromDiv($text)}</span>
-                            else ()
-                            }
-                            {
-                            if ($work//tei:text[@type='work_volume']) then 
-                                for $a in $work//tei:text where $a[@type='work_volume' and sutil:WRKisPublished($workId || '_' || @xml:id)] return
-                                    <ul>
-                                        <li>
-                                            <a class="hideMe">
-                                                <b><i18n:text key="volume">Volume</i18n:text>{concat(': ', $a/@n/string())}</b>
-                                                <span class="jstree-anchor hideMe pull-right">{html:getPagesFromDiv($a)}</span>
-                                            </a>
-                                            { html:generateTocFromDiv($a/(tei:front | tei:body | tei:back), $workId)}
-                                        </li>
-                                    </ul>
-                            else html:generateTocFromDiv($elements, $workId)
-                            }
-                        </li>
-                    </ul>
-                </div>
-            let $tocSaveStatus := admin:saveFile($workId, $workId || "_toc.html", $store, "html")
-            let $debug         := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] ToC file created for " || $workId || ".") else ()
-            
-            (:Next, create the Pages html file. :)
-            let $pagesDe        :=  html:makePagination((), (), $workId, 'de')
-            let $pagesEn        :=  html:makePagination((), (), $workId, 'en')
-            let $pagesEs        :=  html:makePagination((), (), $workId, 'es')
-            let $savePages := (
-                admin:saveFile($workId, $workId || "_pages_de.html", $pagesDe, "html"),
-                admin:saveFile($workId, $workId || "_pages_en.html", $pagesEn, "html"),
-                admin:saveFile($workId, $workId || "_pages_es.html", $pagesEs, "html")
-                )
-            let $debug          := if ($config:debug = ("trace", "info")) then console:log("  Pages files created.") else ()
-        
-            (: Next, get "previous" and "next" fragment ids and hand the current fragment over to the renderFragment function :)
-            let $fragments := for $section at $index in $target-set
-                let $prev   :=  
-                    if ($index > 1) then
-                        $target-set[(xs:integer($index) - 1)]
-                    else ()
-                let $next   :=  
-                    if ($index < count($target-set)) then
-                        $target-set[(xs:integer($index) + 1)]
-                    else ()
-                let $prevId :=  
-                    if ($prev) then
-                        xs:string($prev/@xml:id)
-                    else ()
-                let $nextId := 
-                    if ($next) then
-                        xs:string($next/@xml:id)
-                    else ()
-                let $result := admin:renderFragment($work, xs:string($workId), $section, $index, $fragmentationDepth, $prevId, $nextId, $config:serverdomain)
-(:                let $result := html:createFragment($workId, $section, $index, $prevId, $nextId):)
-                return 
-                    <div>
-                        <h3>Fragment {$index}:</h3>
-                        <h3>{format-number($index, "0000")}: &lt;{local-name($section) || " xml:id=&quot;" || string($section/@xml:id) || "&quot;&gt;"} (Level {count($section/ancestor-or-self::tei:*)})</h3>
-                        <div style="margin-left:4em;">{$result}</div>
-                    </div>
-                    
-            
-        (: Reporting (and, possibly, reindexing the database) :)
-            (: See if there are any leaf elements in our text that are not matched by our rule :)
-            let $missed-elements := $work//(tei:front|tei:body|tei:back)//tei:*[count(./ancestor-or-self::tei:*) < $fragmentationDepth][not(*)]
-            (: See if any of the elements we did get is lacking an xml:id attribute :)
-            let $unidentified-elements := $target-set[not(@xml:id)]
+            let $htmlData := html:makeHTMLData($work-raw)
             (: Keep track of how long this work did take :)
             let $runtime-ms-a := ((util:system-time() - $start-time-a) div xs:dayTimeDuration('PT1S'))  * 1000
-            (: render and store the work's plain text :)
+            
+            (: store data :)
+            let $saveToc := admin:saveFile($workId, $workId || "_toc.html", $htmlData('toc'), "html")
+            let $savePages := (
+                admin:saveFile($workId, $workId || "_pages_de.html", $htmlData('pagination_de'), "html"),
+                admin:saveFile($workId, $workId || "_pages_en.html", $htmlData('pagination_en'), "html"),
+                admin:saveFile($workId, $workId || "_pages_es.html", $htmlData('pagination_es'), "html")
+                )
+            let $saveFragments :=
+                for $fragment in $htmlData('fragments') return
+                    let $fileName := $fragment('index') || '_' || $fragment('tei_id') || '.html'
+                    let $storeStatus := if ($fragment('html')) then admin:saveFile($workId, $fileName, $fragment('html'), 'html') else ()
+                    return 
+                        (: generate some HTML output to be shown in report :)
+                        <div>
+                            <h3>Fragment {$fragment('index')}:</h3>
+                            <h3>{$fragment('number')}: &lt;{$fragment('tei_name') || ' xml:id=&quot;' || $fragment('tei_id') 
+                                 || '&quot;&gt;'} (Level {$fragment('tei_level')})</h3>
+                            <div style="margin-left:4em;">
+                                <div style="border:'3px solid black';background-color:'grey';">
+                                    <code>{$wid}/{$fileName}:<br/>
+                                        target xml:id={$fragment('tei_id')} <br/>
+                                        prev xml:id={$fragment('prev')} <br/>
+                                        next xml:id={$fragment('next')} <br/>
+                                    </code>
+                                    {$fragment('html')}
+                                </div>
+                            </div>
+                        </div>
+        
+            (: (2) TXT :)
+            
             let $txt-start-time := util:system-time()
-            let $plainTextEdit := string-join(txt:dispatch($work, 'edit'), '')
-            let $txtEditSaveStatus := admin:saveFile($work/@xml:id, $work/@xml:id || "_edit.txt", $plainTextEdit, "txt")
+            let $plainTextEdit := txt:makeTXTData($work-raw, 'edit')
+            let $txtEditSaveStatus := admin:saveFile($workId, $workId || "_edit.txt", $plainTextEdit, "txt")
             let $debug := if ($config:debug = ("trace", "info")) then console:log("Plain text (edit) file created and stored.") else ()
-            let $plainTextOrig := string-join(txt:dispatch($work, 'orig'), '')
-            let $txtOrigSaveStatus := admin:saveFile($work/@xml:id, $work/@xml:id || "_orig.txt", $plainTextOrig, "txt")
+            let $plainTextOrig := txt:makeTXTData($work-raw, 'orig')
+            let $txtOrigSaveStatus := admin:saveFile($workId, $workId || "_orig.txt", $plainTextOrig, "txt")
             let $debug := if ($config:debug = ("trace", "info")) then console:log("Plain text (orig) file created and stored.") else ()
             let $txt-end-time := ((util:system-time() - $txt-start-time) div xs:dayTimeDuration('PT1S'))
+            
+            (: HTML & TXT Reporting :)
+            
             return 
                 <div>
-                     <p><a href="work.html?wid={$work/@xml:id}">{string($work/@xml:id)}</a>, Fragmentierungstiefe: <code>{$fragmentationDepth}</code></p>
-                     {if (count($missed-elements)) then <p>{count($missed-elements)} nicht erfasste Elemente:<br/>
-                        {for $e in $missed-elements return <code>{local-name($e) || "(" || string($e/@xml:id) || "); "}</code>}</p>
+                     <p><a href='work.html?wid={$workId}'>{string($workId)}</a>, Fragmentation depth: <code>{$htmlData('fragmentation_depth')}</code></p>
+                     {if (count($htmlData('missed_elements'))) then <p>{count($htmlData('missed_elements'))} missed elements:<br/>
+                        {for $e in $htmlData('missed_elements') return <code>{local-name($e) || '(' || string($e/@xml:id) || '); '}</code>}</p>
                       else ()}
-                     {if (count($unidentified-elements)) then <p>{count($unidentified-elements)} erfasste, aber wegen fehlender xml:id nicht verarbeitbare Elemente:<br/>
-                        {for $e in $unidentified-elements return <code>{local-name($e)}</code>}</p>
+                     {if (count($htmlData('unidentified_elements'))) then <p>{count($htmlData('unidentified_elements'))} gathered, but (due to missing @xml:id) unprocessable elements:<br/>
+                        {for $e in $htmlData('unidentified_elements') return <code>{local-name($e)}</code>}</p>
                       else ()}
-                     <p>{count($target-set)} erfasste Elemente {if (count($target-set)) then "der folgenden Typen: " || <br/> else ()}
-                        <code>{distinct-values(for $i in $target-set return local-name($i) || "(" || count($target-set[local-name(.) = local-name($i)]) || ")")}</code></p>
-                     <p>Rechenzeit (HTML): {      
-                          if ($runtime-ms-a < (1000 * 60))      then format-number($runtime-ms-a div 1000, "#.##") || " Sek."
-                          else if ($runtime-ms-a < (1000 * 60 * 60)) then format-number($runtime-ms-a div (1000 * 60), "#.##") || " Min."
-                          else                                            format-number($runtime-ms-a div (1000 * 60 * 60), "#.##") || " Std."
+                     <p>{count($htmlData('tei_fragment_roots'))} gathered elements {if (count($htmlData('tei_fragment_roots'))) then 'of the following types: ' || <br/> else ()}
+                        <code>{distinct-values(for $i in $htmlData('tei_fragment_roots') return local-name($i) || '(' || count($htmlData('tei_fragment_roots')[local-name(.) = local-name($i)]) || ')')}</code></p>
+                     <p>Computing time (HTML): {      
+                          if ($runtime-ms-a < (1000 * 60))      then format-number($runtime-ms-a div 1000, '#.##') || ' sec.'
+                          else if ($runtime-ms-a < (1000 * 60 * 60)) then format-number($runtime-ms-a div (1000 * 60), '#.##') || ' min.'
+                          else                                            format-number($runtime-ms-a div (1000 * 60 * 60), '#.##') || ' h.'
                         }
                      </p>
-                     <p>Rechenzeit (TXT: orig und edit): {$txt-end-time} Sekunden.</p>
-                     {if ($config:debug = "trace") then $fragments else ()}
+                     <p>Computing time (TXT: orig and edit): {$txt-end-time} seconds.</p>
+                     {if ($config:debug = 'trace') then $saveFragments else ()}
                </div>
-    (: now put everything out :)
+    
+    
+    (: (3) UPDATE TEI & TXT CORPORA :)
+    
+    (: (re-)create txt and xml corpus zips :)
+    let $corpus-start-time := util:system-time()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("Corpus packages created and stored.") else ()
+    let $createTeiCorpus := admin:createTeiCorpus(encode-for-uri($workId))
+    let $createTxtCorpus := admin:createTxtCorpus(encode-for-uri($workId))
+    let $corpus-end-time := ((util:system-time() - $corpus-start-time) div xs:dayTimeDuration('PT1S'))
+    
+    
     let $runtime-ms-raw       := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000 
     let $runtime-ms :=
         if ($runtime-ms-raw < (1000 * 60)) then format-number($runtime-ms-raw div 1000, "#.##") || " Sek."
         else if ($runtime-ms-raw < (1000 * 60 * 60)) then format-number($runtime-ms-raw div (1000 * 60), "#.##") || " Min."
         else format-number($runtime-ms-raw div (1000 * 60 * 60), "#.##") || " Std."
-    let $debug := if ($config:debug = ("trace", "info")) then util:log("warn", "[RENDER] Rendered HTML for " || $wid || " in " || $runtime-ms || ".") else ()
-    (: (re-)create txt and xml corpus zips :)
-    let $corpus-start-time := util:system-time()
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("Corpus packages created and stored.") else ()
-    let $createTeiCorpus := admin:createTeiCorpus(encode-for-uri($wid))
-    let $createTxtCorpus := admin:createTxtCorpus(encode-for-uri($wid))
-    let $corpus-end-time := ((util:system-time() - $corpus-start-time) div xs:dayTimeDuration('PT1S'))
+    
+    
     (: make sure that fragments are to be found by reindexing :)
     (:let $index-start-time := util:system-time()
     let $reindex          := if ($config:instanceMode ne "testing") then xmldb:reindex($config:webdata-root) else ()
@@ -707,14 +682,14 @@ declare %templates:wrap function admin:renderWork($workId as xs:string*) as elem
     let $debug := util:log('warn', '[ADMIN] Created HTML for work ' || $wid || ' in ' || $runtime-ms || ' ms.')
     return 
         <div>
-            <h2>HTML Rendering</h2>
-            <p>Zu rendern: {count($todo)} Werk(e); gesamte Rechenzeit:
+            <h2>HTML &amp; TXT Rendering</h2>
+            <p>To render: {count($todo)} work(s); total computing time:
                 {$runtime-ms}
             </p>
-            <p>TEI- und TXT-Corpora erstellt in {$corpus-end-time} Sekunden.</p>
+            <p>Created TEI and TXT corpora in {$corpus-end-time} seconds.</p>
             <!--<p>/db/apps/salamanca/data reindiziert in {$index-end-time} Sekunden.</p>-->
             <hr/>
-            {$gerendert}
+            {$createData}
         </div>
 };
 
@@ -813,39 +788,7 @@ declare function admin:createTxtCorpus($processId as xs:string) {
         </div>
 };
 
-declare function admin:renderFragment ($work as node(), $wid as xs:string, $target as node(), $targetindex as xs:integer, $fragmentationDepth as xs:integer, $prevId as xs:string?, $nextId as xs:string?, $serverDomain as xs:string?) {
-(:    let $tei2htmlXslt      := doc($config:resources-root || '/xsl/render-fragments2.xsl'):)
-    let $targetid          := xs:string($target/@xml:id)
-    (:let $xsl-parameters :=  
-        <parameters>
-            <param name="exist:stop-on-warn"  value="yes" />
-            <param name="exist:stop-on-error" value="yes" />
-            <param name="workId"        value="{$wid}" />
-            <param name="targetId"      value="{$targetid}" />
-            <param name="targetIndex"   value="{$targetindex}" />
-            <param name="prevId"        value="{$prevId}" />
-            <param name="nextId"        value="{$nextId}" />
-            <param name="serverDomain"  value="{$serverDomain}" />
-        </parameters>:)
-    let $debugOutput   := if ($config:debug = ("trace", "info")) then console:log("  Render Element " || $targetindex || ": " || $targetid || " of " || $wid || "...") else ()
-    let $debugOutput   := if ($config:debug = ("trace")) then console:log("  (prevId=" || $prevId || ", nextId=" || $nextId || ", serverDomain=" || $serverDomain || ")") else ()
-(:    let $html := transform:transform($work, $tei2htmlXslt, $xsl-parameters):)
-    let $html := html:createFragment($wid, $target, $targetindex, $prevId, $nextId)
 
-    (: Now for saving the fragment ... :)
-    let $fileName       := format-number($targetindex, "0000") || "_" || $targetid || ".html"
-    let $storeStatus    := if ($html) then admin:saveFile($wid, $fileName, $html, "html") else ()
-
-    return 
-        <div style="border:'3px solid black';background-color:'grey';">
-            <code>{$wid}/{$fileName}:<br/>
-                    target xml:id={$targetid} <br/>
-                    prev xml:id={$prevId} <br/>
-                    next xml:id={$nextId} <br/>
-            </code>
-            {$html}
-        </div> 
-};
 
 (: Generate fragments for sphinx' indexer to grok :)
 declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
