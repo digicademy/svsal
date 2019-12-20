@@ -3410,7 +3410,7 @@ declare function app:errorCode($node as node(), $model as map(*)) as xs:string? 
 declare function app:serverErrorMessage($node as node(), $model as map(*)) as xs:string? {
     let $errorMessage := 
         if (normalize-space(request:get-attribute('javax.servlet.error.message')) ne '') then request:get-attribute('javax.servlet.error.message')
-        else if (normalize-space(templates:error-description($node, $model)) ne '') then templates:error-description($node, $model)
+(:        else if (normalize-space(templates:error-description($node, $model)) ne '') then templates:error-description($node, $model):)
         else if (normalize-space(request:get-attribute('error-message')) ne '') then request:get-attribute('error-message')
         else 'No description found...'
     return
