@@ -43,6 +43,13 @@ function textsv1:getCorpus($format) {
                     util:binary-doc($zipPath),
                     'sal-tei-corpus'
                 )
+        case 'txt' return
+            let $zipPath := $config:corpus-zip-root || '/sal-txt-corpus.zip'
+            return 
+                api:deliverZIP(
+                    util:binary-doc($zipPath),
+                    'sal-txt-corpus'
+                )
         default return
             () (: TODO :)
          
@@ -64,6 +71,9 @@ declare
 %rest:header-param("Accept", "{$accept}", "text/html")
 %output:indent("no")
 function textsv1:docRequest($rid, $format, $mode, $q, $lang, $viewer, $frag, $canvas, $accept) {
+    (: it seems that we can't specify one RestXQ function per Accept header mime type since eXist's RestXQ can't tell those functions 
+    apart (they all have the same degree of specificity), so we need to apply a content negotiation to mime type(s) 
+    stated in the Accept header. The good thing is that this allows for a more complex content negotiation. :)
     (: for determining the requested format, the "format" query param has priority over the "Accept" header param: :)
     let $format := if ($format) then $format else api:getFormatFromContentTypes(tokenize($accept, '[, ]+'), 'text/html')
     return
@@ -76,57 +86,6 @@ function textsv1:docRequest($rid, $format, $mode, $q, $lang, $viewer, $frag, $ca
 };
 
 
-(: Doc, based on "Accept" header :)
-
-(: it seems that we can't specify one function per Accept header mime type since RestXQ can't tell those functions apart,
-    so we need to apply a content negotiation to mime type(s) stated in the Accept header :)
-(:declare 
-%rest:GET
-%rest:path("/v1/texts/{$rid}")
-%rest:query-param("mode", "{$mode}", "")
-%rest:query-param("q", "{$q}", "")
-%rest:query-param("lang", "{$lang}", "en")
-%rest:query-param("viewer", "{$viewer}", "")
-%rest:query-param("frag", "{$frag}", "")
-%rest:query-param("canvas", "{$canvas}", "")
-%rest:header-param("Accept", "{$accept}", "")
-%output:indent("no")
-function textsv1:docRequestThroughAcceptHeaderParam($rid, $accept, $mode, $q, $lang, $viewer, $frag, $canvas) {
-    let $requestedContentTypes := tokenize($accept, '[, ]+')
-    let $format := api:getFormatFromContentTypes($requestedContentTypes, 'text/html')
-    return
-        (\: only the suitable query params are passed to the respective format's function - the other ones are simply ignored :\)
-        switch($format)
-            case 'tei' return textsv1:TEIdeliverDoc($rid, $mode)
-            case 'txt' return textsv1:TXTdeliverDoc($rid, $mode)
-            default return ()
-};
-:)
-(:
-declare 
-%rest:GET
-%rest:path("/v1/texts/{$rid}")
-%rest:query-param("mode", "{$mode}", "edit")
-%rest:produces("text/plain")
-%output:indent("no")
-function textsv1:TXTdocRequestThroughAcceptHeader($rid, $mode) {
-    textsv1:TXTdeliverDoc($rid, $mode)
-};
-
-declare 
-%rest:GET
-%rest:path("/v1/texts/{$rid}")
-%rest:query-param("mode", "{$mode}", "")
-%rest:produces("application/tei+xml")
-%rest:produces("application/xml")
-%rest:produces("text/xml")
-%output:indent("no")
-function textsv1:TEIdocRequestThroughAcceptHeader($rid, $mode) {
-    let $debug := util:log('warn', 'JJAAALLLLOOOOOO') return
-    textsv1:TEIdeliverDoc($rid, $mode)
-};
-
-:)
 
 
 (: TODO: html: legacy_mode :)

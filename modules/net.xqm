@@ -531,7 +531,7 @@ declare function net:sitemapResponse($netVars as map(*)) {
 declare function net:APIdeliverStats($netVars as map(*)) {
     ()
 };
-
+(:
 declare function net:APIdeliverTEI($requestData as map(), $netVars as map()*) {
     if (matches($requestData('tei_id'), '^W\d{4}')) then 
         let $serialization  := 
@@ -550,7 +550,7 @@ declare function net:APIdeliverTEI($requestData as map(), $netVars as map()*) {
             if ($requestData('mode') eq 'meta') then
                 let $debug :=  if ($config:debug = "trace") then console:log("[API] teiHeader export for " || $requestData("tei_id") || ".") else ()
                 return export:WRKgetTeiHeader($requestData('tei_id'), 'metadata', ())
-            else if ($requestData('passage') and not(matches($requestData('passage'), '^vol\d$'))) then (: volumes are handled below :)
+            else if ($requestData('passage') and not(matches($requestData('passage'), '^vol\d$'))) then (\: volumes are handled below :\)
                 let $debug :=  if ($config:debug = "trace") then console:log("[API] teiHeader export for passage " || $requestData("tei_id") || ":" || $requestData('passage') || ".") else ()
                 return export:WRKgetTeiPassage($requestData("work_id"), $requestData("passage"))
             else 
@@ -569,11 +569,12 @@ declare function net:APIdeliverTEI($requestData as map(), $netVars as map()*) {
         return response:stream-binary(util:binary-doc($corpusPath), 'application/zip', 'sal-tei-corpus.zip')
     else net:error(404, $netVars, ())
 };
-
+:)
+(:
 declare function net:APIdeliverTXT($requestData as map(), $netVars as map()*) {
     if (matches($requestData('tei_id'), '^W\d{4}')) then 
         let $mode := if ($requestData('mode')) then $requestData('mode') else 'edit'
-        let $node := () (:sutil:getNodeFromCitetrail...:)
+        let $node := () (\:sutil:getNodeFromCitetrail...:\)
         let $serialize := (util:declare-option("output:method", "text"),
                            util:declare-option("output:media-type", "text/plain"))
         let $debug := 
@@ -590,7 +591,7 @@ declare function net:APIdeliverTXT($requestData as map(), $netVars as map()*) {
         let $response := response:set-header('Content-Disposition', 'attachment; filename="' || $filename || '"')
         return 
             if ($node) then 
-                (: if full work is requested and the text is already available, we fetch it directly without txt:dispatch :)
+                (\: if full work is requested and the text is already available, we fetch it directly without txt:dispatch :\)
                 if ($requestData('passage') eq '' and not(contains($requestData('tei_id'), '_Vol')) and util:binary-doc-available($config:txt-root || '/' || $requestData('work_id') || '/' || $requestData('work_id') || '_' || $mode || '.txt')) then
                     response:stream-binary(util:binary-doc($config:txt-root || '/' || $requestData('work_id') || '/' || $requestData('work_id') || '_' || $mode || '.txt'), 'text/plain')
                 else txt:dispatch($node, $mode)
@@ -602,6 +603,7 @@ declare function net:APIdeliverTXT($requestData as map(), $netVars as map()*) {
         return response:stream-binary(util:binary-doc($corpusPath), 'application/zip', 'sal-txt-corpus.zip')
     else net:error(404, $netVars, 'Resource could not be found.')
 };
+:)
 
 declare function net:APIdeliverRDF($requestData as map(), $netVars as map()*) {
     if (starts-with($requestData('work_id'), 'W0')) then 
