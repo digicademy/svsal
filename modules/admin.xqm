@@ -3,10 +3,10 @@ xquery version "3.0";
 (: ####++++---- 
 
     Admin functions, mostly related to the creation of webdata formats (html, iiif, snippets, etc.).
-    Tightly coupled with modules in factory/works.
+    Tightly coupled with modules in factory/*.
 
  ----++++#### :)
-
+ 
 module namespace admin              = "http://www.salamanca.school/xquery/admin";
 declare namespace exist             = "http://exist.sourceforge.net/NS/exist";
 declare namespace tei               = "http://www.tei-c.org/ns/1.0";
@@ -36,7 +36,7 @@ declare option exist:timeout "25000000"; (: ~7 h :)
 (:
 ~ TODO: 
 ~    - HTML rendering and creation of snippets is currently not working for authors and lemmata, although 
-~      the "ancient" infrastructure is still there (see renderTheRest.html and admin:renderAuthorLemma()).
+~      the "ancient" infrastructure is still there (see renderTheRest.html and admin:renderAuthorLemma(), etc.).
 ~      Ideally, this infrastructure would be refactored in the way the creation of work data works: the webdata-admin.xql
 ~      forwards requests for the creation of data to the admin.xqm module, which then lets dedicated modules in factory/authors/* 
 ~      create the data.
@@ -791,6 +791,8 @@ declare function admin:createTxtCorpus($processId as xs:string) {
 
 
 (: Generate fragments for sphinx' indexer to grok :)
+(: NOTE: the largest part of the snippets creation takes place here, not in factory/*, since it applies to different
+ types of texts (works, working papers) at once :)
 declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
 
     let $start-time := util:system-time()
@@ -827,6 +829,9 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
                 else if (starts-with($work_id, 'A')) then 'author'
                 else if (starts-with($work_id, 'L')) then 'lemma'
                 else ()
+            
+            (: NOTE: the following extraction of information from TEI is supposed to work for works AND working papers, atm.
+               Perhaps it would be better to separate logic for different types of texts in the future (TODO) :)
             let $work_type         := xs:string($work/tei:text/@type)
             let $teiHeader         := $work/tei:teiHeader
             let $work_author_name := sutil:formatName($teiHeader//tei:titleStmt//tei:author//tei:persName)

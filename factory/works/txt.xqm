@@ -3,6 +3,7 @@ xquery version "3.1";
 (: ####++++----  
 
     Dispatch functions for transforming TEI nodes to plain text.
+    Currently used for dynamic/static txt output as well as sphinx snippets for works.
    
    ----++++#### :)
 
