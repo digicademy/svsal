@@ -21,7 +21,7 @@ import module namespace sutil = "http://www.salamanca.school/xquery/sutil" at ".
 import module namespace config = "http://www.salamanca.school/xquery/config" at "../../modules/config.xqm";
 import module namespace export = "http://www.salamanca.school/xquery/export" at "../../modules/export.xqm";
 import module namespace net = "http://www.salamanca.school/xquery/net" at "../../modules/net.xqm";
-import module namespace txt = "https://www.salamanca.school/factory/works/txt" at "../../factory/works/txt.xqm";
+import module namespace txt = "https://www.salamanca.school/factory/works/txt" at "../factory/works/txt.xqm";
 
 
 

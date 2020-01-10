@@ -23,11 +23,11 @@ import module namespace config      = "http://www.salamanca.school/xquery/config
 import module namespace render-app  = "http://www.salamanca.school/xquery/render-app"         at "render-app.xqm";
 import module namespace sphinx      = "http://www.salamanca.school/xquery/sphinx"                 at "sphinx.xqm";
 import module namespace sutil       = "http://www.salamanca.school/xquery/sutil" at "sutil.xqm";
-import module namespace stats       = "https://www.salamanca.school/factory/works/stats" at "../factory/works/stats.xqm";
-import module namespace index       = "https://www.salamanca.school/factory/works/index" at "../factory/works/index.xqm";
-import module namespace html        = "https://www.salamanca.school/factory/works/html" at "../factory/works/html.xqm";
-import module namespace txt         = "https://www.salamanca.school/factory/works/txt" at "../factory/works/txt.xqm";
-import module namespace iiif        = "https://www.salamanca.school/factory/works/iiif" at "../factory/works/iiif.xqm";
+import module namespace stats       = "https://www.salamanca.school/factory/works/stats" at "factory/works/stats.xqm";
+import module namespace index       = "https://www.salamanca.school/factory/works/index" at "factory/works/index.xqm";
+import module namespace html        = "https://www.salamanca.school/factory/works/html" at "factory/works/html.xqm";
+import module namespace txt         = "https://www.salamanca.school/factory/works/txt" at "factory/works/txt.xqm";
+import module namespace iiif        = "https://www.salamanca.school/factory/works/iiif" at "factory/works/iiif.xqm";
 import module namespace httpclient  = "http://exist-db.org/xquery/httpclient";
 declare namespace output            = "http://www.w3.org/2010/xslt-xquery-serialization";
 

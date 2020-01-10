@@ -24,15 +24,13 @@ declare variable $adminfiles        := ($target || '/admin.html',
                                         $target || '/pre-install.xql',
                                         $target || '/reindex.xql',
                                         $target || '/renderTheRest.html',
-                                        (:$target || '/sphinx-out.html',:)
-                                        (:$target || '/sphinx-out.xql', :)
                                         $target || '/webdata-admin.xql');
 
 
 (: TODO add more modules here when necessary :)
 declare variable $restModules := 
-    ('xmldb://db/apps/salamanca/api/v1/texts.xqm', 
-     'xmldb://db/apps/salamanca/api/api.xqm');
+    ('xmldb://db/apps/salamanca/modules/api/v1/texts.xqm', 
+     'xmldb://db/apps/salamanca/modules/api/api.xqm');
 
 
 (: Define files and folders with special permissions :)

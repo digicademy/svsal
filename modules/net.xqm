@@ -18,7 +18,7 @@ import module namespace util        = "http://exist-db.org/xquery/util";
 import module namespace config      = "http://www.salamanca.school/xquery/config"                 at "config.xqm";
 import module namespace export      = "http://www.salamanca.school/xquery/export"                 at "export.xqm";
 import module namespace sutil    = "http://www.salamanca.school/xquery/sutil" at "sutil.xqm";
-import module namespace txt        = "https://www.salamanca.school/factory/works/txt" at "../factory/works/txt.xqm";
+import module namespace txt        = "https://www.salamanca.school/factory/works/txt" at "factory/works/txt.xqm";
 
 declare       namespace exist       = "http://exist.sourceforge.net/NS/exist";
 declare       namespace output      = "http://www.w3.org/2010/xslt-xquery-serialization";

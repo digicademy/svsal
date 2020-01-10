@@ -12,8 +12,8 @@ import module namespace exrest = "http://exquery.org/ns/restxq/exist";
 
 (: TODO add more modules here when necessary :)
 let $restModules := 
-    ('xmldb://db/apps/salamanca/api/v1/texts.xqm', 
-     'xmldb://db/apps/salamanca/api/api.xqm')
+    ('xmldb://db/apps/salamanca/modules/api/v1/texts.xqm', 
+     'xmldb://db/apps/salamanca/modules/api/api.xqm')
 
 return 
     <rest:registry>
