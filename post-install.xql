@@ -1,7 +1,7 @@
 xquery version "3.0";
 
 declare namespace repo      = "http://exist-db.org/xquery/repo";
-declare namespace tei       = "http://www.tei-c.org/ns/1.0";
+(:declare namespace tei       = "http://www.tei-c.org/ns/1.0";:)
 
 import module namespace xmldb      = "http://exist-db.org/xquery/xmldb";
 import module namespace sm         = "http://exist-db.org/xquery/securitymanager";
