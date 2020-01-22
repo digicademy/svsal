@@ -3,7 +3,7 @@ xquery version "3.1";
 
 (: ####++++----
 
-    "Workhorse" module of the app providing large parts of the content-related app logic (such
+    "Workhorse" module of the app, providing large parts of the content-related logic (such
     as functionality for displaying work/author/lemma overviews, catalogue records, working paper records, etc).
 
  ----++++#### :)
@@ -23,7 +23,7 @@ declare namespace util       = "http://exist-db.org/xquery/util";
 declare namespace xhtml      = "http://www.w3.org/1999/xhtml";
 declare namespace xi         = "http://www.w3.org/2001/XInclude";
 
-import module namespace httpclient = "http://exist-db.org/xquery/httpclient";
+import module namespace http = "http://expath.org/ns/http-client";
 import module namespace config    = "http://www.salamanca.school/xquery/config"                at "config.xqm";
 import module namespace render-app    = "http://www.salamanca.school/xquery/render-app"        at "render-app.xqm";
 import module namespace sphinx    = "http://www.salamanca.school/xquery/sphinx"                at "sphinx.xqm";
@@ -66,13 +66,14 @@ declare function app:resolvePersname($persName as element()*) {
         then string($persName/@key)
     else if (contains($persName/@ref, 'cerl:')) then
         let $url := "http://sru.cerl.org/thesaurus?version=1.1&amp;operation=searchRetrieve&amp;query=identifier=" || tokenize(tokenize($persName/@ref, 'cerl:')[2], ' ')[1]
-        let $result := httpclient:get(xs:anyURI($url), true(), ())
+        let $result := http:send-request(<http:request href="{$url}" method="get"/>)
         let $cerl := $result//srw:searchRetrieveResponse/srw:records/srw:record[1]/srw:recordData/*:record/*:info/*:display/string()
-        return if ($cerl) 
-               then $cerl
-               else if ($persName/@key)
-                    then string($persName/@key)
-                    else sutil:formatName($persName)
+        return 
+            if ($cerl) then 
+                $cerl
+            else if ($persName/@key) then 
+                string($persName/@key)
+            else sutil:formatName($persName)
     else sutil:formatName($persName)
 };
 
