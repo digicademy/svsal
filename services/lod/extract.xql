@@ -479,7 +479,7 @@ declare function xtriples:getConfiguration() {
 			else
 				fn:doc("configuration.xml")
 		(: case 3 - full configuration sent with the configuration parameter - form style POST request :)
-		else util:parse($submittedConfiguration)
+		else fn:parse-xml($submittedConfiguration)
 
 	return $setConfiguration
 };
