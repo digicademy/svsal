@@ -28,7 +28,6 @@ import module namespace index       = "https://www.salamanca.school/factory/work
 import module namespace html        = "https://www.salamanca.school/factory/works/html" at "factory/works/html.xqm";
 import module namespace txt         = "https://www.salamanca.school/factory/works/txt" at "factory/works/txt.xqm";
 import module namespace iiif        = "https://www.salamanca.school/factory/works/iiif" at "factory/works/iiif.xqm";
-import module namespace httpclient  = "http://exist-db.org/xquery/httpclient";
 declare namespace output            = "http://www.w3.org/2010/xslt-xquery-serialization";
 
 declare option exist:timeout "25000000"; (: ~7 h :)
