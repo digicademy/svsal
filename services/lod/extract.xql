@@ -9,6 +9,8 @@ xquery version "3.0";
  : @email Torsten.Schrade@adwmainz.de
  : @author Andreas Wagner
  : @email andreas.wagner@em.uni-frankfurt.de
+ : @author David Glueck (adjustments for eXist v5.x)
+ : @email glueck@rg.mpg.de
  : @version 1.3.1 
  : @licence MIT
  :
@@ -40,7 +42,6 @@ import module namespace xconfig  = "http://xtriples.spatialhumanities.de/config"
 (: ### SVSAL modules and namespaces ### :)
 declare namespace exist       = "http://exist.sourceforge.net/NS/exist";
 declare namespace http		  = "http://expath.org/ns/http-client";
-declare namespace httpclient	= "http://exist-db.org/xquery/httpclient";
 declare namespace request	   = "http://exist-db.org/xquery/request";
 declare namespace response	  = "http://exist-db.org/xquery/response";
 declare namespace xmldb		 = "http://exist-db.org/xquery/xmldb";
@@ -98,7 +99,7 @@ declare variable $tmp-collection-path := $xconfig:app-root || '/temp/cache';
  : @param $useCache use cached version or force a reload of the external resource
  : @return node
  :)
-declare function local:grabExternalDoc($uri as xs:string) as node()? {  (: as element(httpclient:response)? :) 
+declare function local:grabExternalDoc($uri as xs:string) as node()? {  (: as element(http:response)? :) 
 	let $lease	  := 
 		try	 { 'P1D' cast as xs:dayTimeDuration }
 		catch * { xs:dayTimeDuration('P1D'),
@@ -126,7 +127,7 @@ declare function local:grabExternalDoc($uri as xs:string) as node()? {  (: as el
 
 	let $response   := local:cache-doc($url, local:http-get#1, xs:anyURI($url), $lease)
 	return 
-        if ($response//httpclient:response/@statusCode eq '200') then
+        if ($response//http:response/@status eq '200') then
             let $debug2 :=  local:log (
 							"extract.xql: local:grabExternalDoc: got a (successfully cached) doc: " ||
 							substring(serialize($response), 1, 400) ||
@@ -134,7 +135,7 @@ declare function local:grabExternalDoc($uri as xs:string) as node()? {  (: as el
 							"trace"
 						  )
 
-            return $response//httpclient:response/httpclient:body/*[1]
+            return $response//http:response/http:body/*[1]
         else ()
 };
 
@@ -198,10 +199,10 @@ declare function local:cache-doc($docURI as xs:string, $callback as function() a
 				else if (count($callback-params) eq 2) then $callback($callback-params[1], $callback-params[2])
 				else										error(xs:QName('sal:error'), 'Too many arguments to function callback')
 
-            let $mime-type  := if      ($content//httpclient:header[@name="Content-Type"]/@value) then
-                                        $content//httpclient:header[@name="Content-Type"]/@value[1]
-                               else if ($content//httpclient:body/@mimetype) then
-                                        $content//httpclient:body/@mimetype[1]
+            let $mime-type  := if      ($content//http:header[@name="Content-Type"]/@value) then
+                                        $content//http:header[@name="Content-Type"]/@value[1]
+                               else if ($content//http:body/@media-type) then (: TODO debug expath :)
+                                        $content//http:body/@media-type[1]
                                else
                                         local:guess-mimeType-from-suffix(functx:substring-after-last($docURI, '.'))[1]
             
@@ -234,9 +235,9 @@ declare function local:cache-doc($docURI as xs:string, $callback as function() a
 (:~
  : Helper function for local:grabExternalDoc()
  :
- : @author Peter Stadler 
+ : @author Peter Stadler
  : @param $url the URL as xs:anyURI
- : @return element wega:externalResource, a wrapper around httpclient:response
+ : @return element wega:externalResource, a wrapper around http:response
  :)
 declare function local:http-get($url as xs:anyURI) as element(xtriples:externalDoc) {
 
@@ -249,9 +250,10 @@ let $debug1 :=  local:log (
 
 (:	let $req		:= <http:request href="{$url}" method="get" timeout="60"><http:header name="Connection" value="close"/></http:request>:)
 (:	let $req		:= <http:request xmlns="http://expath.org/ns/http-client" href="{$url}" method="GET" timeout="60"></http:request>:)
-	let $response   := 
-(:		try	 { http:send-request($req) }:)
-		try	 { httpclient:get($url,true(), <headers/>) }
+	let $req		:= <http:request href="{$url}" method="get" timeout="60"><http:header name="Connection" value="close"/></http:request>
+
+    let $response   := 
+		try	 { http:send-request($req) } (: TODO: debug expath http :)
 		catch * {
 let $debug2 :=  local:log (
 							"extract.xql: local:http-get: error retrieving $url=" ||
@@ -269,7 +271,7 @@ let $debug2 :=  local:log (
 		if($response/httpclient:body[matches(@mimetype,"text/html")]) then wega:changeNamespace($response,'http://www.w3.org/1999/xhtml', 'http://exist-db.org/xquery/httpclient')
 		else $response:)
 (:	let $statusCode := $response[1]/data(@status):)
-	let $statusCode := $response[1]/@statusCode
+	let $statusCode := $response[1]/@status (: TODO expath :)
 
 let $debug2 :=  local:log (
 							"extract.xql: local:http-get: response status=" ||
@@ -286,16 +288,17 @@ let $debug2 :=  local:log (
 						  )
 
 	return
+	   (: TODO expath :)
 		<xtriples:externalDoc date="{current-date()}">
-			<httpclient:response statusCode="{$statusCode}">
-				<httpclient:headers>{
-					for $header in $response[1]/http:header
-					return element httpclient:header {$header/@*}
-				}</httpclient:headers>
-				<httpclient:body mimetype="{$response[1]/httpclient:body/@mimetype}">
-					{$response[1]/httpclient:body/*}
-				</httpclient:body>
-			</httpclient:response>
+			<http:response status="{$statusCode}">
+				{
+					for $header in $response[1]//http:header
+					return element http:header {$header/@*}
+				}
+				<http:body media-type="{$response[1]//http:body/@media-type}">
+					{$response[1]/http:body/*}
+				</http:body>
+			</http:response>
 		</xtriples:externalDoc>
 };
 
@@ -506,7 +509,7 @@ declare function xtriples:getFormat() {
 declare function xtriples:expressionSanityCheck($expression as xs:string) as xs:boolean {
 
 (:  let $pattern := "((fn:.*\(.*\))|(doc*\(.*\))|(collection*\(.*\))|(v:.*\(.*\))|(backups:.*\(.*\))|(compression:.*\(.*\))|(contentextraction:.*\(.*\))|(counter:.*\(.*\))|(cqlparser:.*\(.*\))|(datetime:.*\(.*\))|(examples:.*\(.*\))|(exi:.*\(.*\))|(file:.*\(.*\))|(httpclient:.*\(.*\))|(image:.*\(.*\))|(inspection:.*\(.*\))|(jindi:.*\(.*\))|(kwic:.*\(.*\))|(lucene:.*\(.*\))|(mail:.*\(.*\))|(math:.*\(.*\))|(ngram:.*\(.*\))|(repo:.*\(.*\))|(request:.*\(.*\))|(response:.*\(.*\))|(scheduler:.*\(.*\))|(securitymanager:.*\(.*\))|(sequences:.*\(.*\))|(session:.*\(.*\))|(sort:.*\(.*\))|(sql:.*\(.*\))|(system:.*\(.*\))|(testing:.*\(.*\))|(text:.*\(.*\))|(transform:.*\(.*\))|(util:.*\(.*\))|(validation:.*\(.*\))|(xmldb:.*\(.*\))|(xmldiff:.*\(.*\))|(xqdoc:.*\(.*\))|(xslfo:.*\(.*\))|(config:.*\(.*\))|(docbook:.*\(.*\))|(app:.*\(.*\))|(dash:.*\(.*\))|(service:.*\(.*\))|(login-helper:.*\(.*\))|(packages:.*\(.*\))|(service:.*\(.*\))|(usermanager:.*\(.*\))|(demo:.*\(.*\))|(cex:.*\(.*\))|(ex:.*\(.*\))|(apputil:.*\(.*\))|(site:.*\(.*\))|(pretty:.*\(.*\))|(date:.*\(.*\))|(tei2:.*\(.*\))|(dbutil:.*\(.*\))|(docs:.*\(.*\))|(dq:.*\(.*\))|(review:.*\(.*\))|(epub:.*\(.*\))|(l18n:.*\(.*\))|(intl:.*\(.*\))|(restxq:.*\(.*\))|(tmpl:.*\(.*\))|(templates:.*\(.*\))|(trigger:.*\(.*\))|(jsjson:.*\(.*\))|(xqdoc:.*\(.*\)))":)
-	let $pattern := "((fn:.*\(.*\))|(collection*\(.*\))|(v:.*\(.*\))|(backups:.*\(.*\))|(compression:.*\(.*\))|(contentextraction:.*\(.*\))|(counter:.*\(.*\))|(cqlparser:.*\(.*\))|(datetime:.*\(.*\))|(examples:.*\(.*\))|(exi:.*\(.*\))|(file:.*\(.*\))|(httpclient:.*\(.*\))|(image:.*\(.*\))|(inspection:.*\(.*\))|(jindi:.*\(.*\))|(kwic:.*\(.*\))|(lucene:.*\(.*\))|(mail:.*\(.*\))|(math:.*\(.*\))|(ngram:.*\(.*\))|(repo:.*\(.*\))|(request:.*\(.*\))|(response:.*\(.*\))|(scheduler:.*\(.*\))|(securitymanager:.*\(.*\))|(sequences:.*\(.*\))|(session:.*\(.*\))|(sort:.*\(.*\))|(sql:.*\(.*\))|(system:.*\(.*\))|(testing:.*\(.*\))|(text:.*\(.*\))|(transform:.*\(.*\))|(util:.*\(.*\))|(validation:.*\(.*\))|(xmldb:.*\(.*\))|(xmldiff:.*\(.*\))|(xqdoc:.*\(.*\))|(xslfo:.*\(.*\))|(config:.*\(.*\))|(docbook:.*\(.*\))|(app:.*\(.*\))|(dash:.*\(.*\))|(service:.*\(.*\))|(login-helper:.*\(.*\))|(packages:.*\(.*\))|(service:.*\(.*\))|(usermanager:.*\(.*\))|(demo:.*\(.*\))|(cex:.*\(.*\))|(ex:.*\(.*\))|(apputil:.*\(.*\))|(site:.*\(.*\))|(pretty:.*\(.*\))|(date:.*\(.*\))|(tei2:.*\(.*\))|(dbutil:.*\(.*\))|(docs:.*\(.*\))|(dq:.*\(.*\))|(review:.*\(.*\))|(epub:.*\(.*\))|(l18n:.*\(.*\))|(intl:.*\(.*\))|(restxq:.*\(.*\))|(tmpl:.*\(.*\))|(templates:.*\(.*\))|(trigger:.*\(.*\))|(jsjson:.*\(.*\))|(xqdoc:.*\(.*\)))"
+	let $pattern := "((fn:.*\(.*\))|(collection*\(.*\))|(v:.*\(.*\))|(backups:.*\(.*\))|(compression:.*\(.*\))|(contentextraction:.*\(.*\))|(counter:.*\(.*\))|(cqlparser:.*\(.*\))|(datetime:.*\(.*\))|(examples:.*\(.*\))|(exi:.*\(.*\))|(file:.*\(.*\))|(httpclient:.*\(.*\))|(http:.*\(.*\))|(image:.*\(.*\))|(inspection:.*\(.*\))|(jindi:.*\(.*\))|(kwic:.*\(.*\))|(lucene:.*\(.*\))|(mail:.*\(.*\))|(math:.*\(.*\))|(ngram:.*\(.*\))|(repo:.*\(.*\))|(request:.*\(.*\))|(response:.*\(.*\))|(scheduler:.*\(.*\))|(securitymanager:.*\(.*\))|(sequences:.*\(.*\))|(session:.*\(.*\))|(sort:.*\(.*\))|(sql:.*\(.*\))|(system:.*\(.*\))|(testing:.*\(.*\))|(text:.*\(.*\))|(transform:.*\(.*\))|(util:.*\(.*\))|(validation:.*\(.*\))|(xmldb:.*\(.*\))|(xmldiff:.*\(.*\))|(xqdoc:.*\(.*\))|(xslfo:.*\(.*\))|(config:.*\(.*\))|(docbook:.*\(.*\))|(app:.*\(.*\))|(dash:.*\(.*\))|(service:.*\(.*\))|(login-helper:.*\(.*\))|(packages:.*\(.*\))|(service:.*\(.*\))|(usermanager:.*\(.*\))|(demo:.*\(.*\))|(cex:.*\(.*\))|(ex:.*\(.*\))|(apputil:.*\(.*\))|(site:.*\(.*\))|(pretty:.*\(.*\))|(date:.*\(.*\))|(tei2:.*\(.*\))|(dbutil:.*\(.*\))|(docs:.*\(.*\))|(dq:.*\(.*\))|(review:.*\(.*\))|(epub:.*\(.*\))|(l18n:.*\(.*\))|(intl:.*\(.*\))|(restxq:.*\(.*\))|(tmpl:.*\(.*\))|(templates:.*\(.*\))|(trigger:.*\(.*\))|(jsjson:.*\(.*\))|(xqdoc:.*\(.*\)))"
 	let $check := matches($expression, $pattern)
 
 	return (not($check))
@@ -1052,10 +1055,18 @@ declare function xtriples:getRDF($xtriples as node()*, $vocabularies as node()*)
     let $rdfInternal   := transform:transform($rdfTriples, $rdfstylesheet, ())
 
     (: official RDF format via any23 :)
-    let $headers := <headers><header name="Content-Type" value="application/rdf+xml; charset=UTF-8"/></headers>
+    let $headers := <http:header name="Content-Type" value="application/rdf+xml; charset=UTF-8"/>
+    
+    let $req := (: TODO expath :)
+        <http:request href="{concat($xconfig:any23WebserviceURL, "rdfxml")}" method="post">
+            {$headers}
+            <http:body>
+                {$rdfInternal}
+            </http:body>
+        </http:request>
 
-    let $POST_request := httpclient:post(xs:anyURI(concat($xconfig:any23WebserviceURL, "rdfxml")), $rdfInternal, false(), $headers)
-    let $rdfBad := $POST_request//httpclient:body/*
+    let $POST_request := http:send-request($req)
+    let $rdfBad := $POST_request//http:body/*
 
 	(: clean self-references broken by any23 service :)
     let $parameters    := <parameters>
@@ -1071,9 +1082,17 @@ declare function xtriples:getRDF($xtriples as node()*, $vocabularies as node()*)
 declare function xtriples:getNTRIPLES($rdf as node()*) as item()* {
 
 	(: url encoded ntriples :)
-	let $headers := <headers><header name="Content-Type" value="application/rdf+xml; charset=UTF-8"/></headers>
-	let $POST_request := httpclient:post(xs:anyURI(concat($xconfig:any23WebserviceURL, "nt")), $rdf, false(), $headers)
-	let $ntriples := util:unescape-uri(replace(string($POST_request//httpclient:body), '%00', ''), "UTF-8")
+	let $headers := <http:header name="Content-Type" value="application/rdf+xml; charset=UTF-8"/>
+	let $req := (: TODO expath :)
+        <http:request href="{concat($xconfig:any23WebserviceURL, "nt")}" method="post">
+            {$headers}
+            <http:body>
+                {$rdf}
+            </http:body>
+        </http:request>
+
+    let $POST_request := http:send-request($req)
+	let $ntriples := util:unescape-uri(replace(string($POST_request//http:body), '%00', ''), "UTF-8")
 
 	return replace($ntriples, 'http://any23.org/tmp/', '')
 };
@@ -1082,9 +1101,17 @@ declare function xtriples:getNTRIPLES($rdf as node()*) as item()* {
 declare function xtriples:getTURTLE($rdf as node()*) as item()* {
 
 	(: eXist returns base64Binary turtle :)
-	let $headers := <headers><header name="Content-Type" value="application/rdf+xml; charset=UTF-8"/></headers>
-	let $POST_request := httpclient:post(xs:anyURI(concat($xconfig:any23WebserviceURL, "turtle")), $rdf, false(), $headers)
-	let $turtle := util:binary-to-string(xs:base64Binary($POST_request//httpclient:body), "UTF-8")
+	let $headers := <http:header name="Content-Type" value="application/rdf+xml; charset=UTF-8"/>
+	let $req := (: TODO expath :)
+        <http:request href="{concat($xconfig:any23WebserviceURL, "turtle")}" method="post">
+            {$headers}
+            <http:body>
+                {$rdf}
+            </http:body>
+        </http:request>
+
+    let $POST_request := http:send-request($req)
+	let $turtle := util:binary-to-string(xs:base64Binary($POST_request//http:body), "UTF-8")
 
 	return replace($turtle, 'http://any23.org/tmp/', '')
 };
@@ -1093,9 +1120,17 @@ declare function xtriples:getTURTLE($rdf as node()*) as item()* {
 declare function xtriples:getNQUADS($rdf as node()*) as item()* {
 
 	(: eXist returns base64Binary nquads :)
-	let $headers := <headers><header name="Content-Type" value="application/rdf+xml; charset=UTF-8"/></headers>
-	let $POST_request := httpclient:post(xs:anyURI(concat($xconfig:any23WebserviceURL, "nq")), $rdf, false(), $headers)
-	let $nquads := util:binary-to-string(xs:base64Binary($POST_request//httpclient:body), "UTF-8")
+	let $headers := <http:header name="Content-Type" value="application/rdf+xml; charset=UTF-8"/>
+	let $req := (: TODO expath :)
+        <http:request href="{concat($xconfig:any23WebserviceURL, "nq")}" method="post">
+            {$headers}
+            <http:body>
+                {$rdf}
+            </http:body>
+        </http:request>
+
+    let $POST_request := http:send-request($req)
+	let $nquads := util:binary-to-string(xs:base64Binary($POST_request//http:body), "UTF-8")
 
 	return replace($nquads, 'http://any23.org/tmp/', '')
 };
@@ -1104,9 +1139,17 @@ declare function xtriples:getNQUADS($rdf as node()*) as item()* {
 declare function xtriples:getJSON($rdf as node()*) as item()* {
 
 	(: eXist returns base64Binary json :)
-	let $headers := <headers><header name="Content-Type" value="application/rdf+xml; charset=UTF-8"/></headers>
-	let $POST_request := httpclient:post(xs:anyURI(concat($xconfig:any23WebserviceURL, "json")), $rdf, false(), $headers)
-	let $json := util:binary-to-string(xs:base64Binary($POST_request//httpclient:body), "UTF-8")
+	let $headers := <http:header name="Content-Type" value="application/rdf+xml; charset=UTF-8"/>
+	let $req := (: TODO expath :)
+        <http:request href="{concat($xconfig:any23WebserviceURL, "json")}" method="post">
+            {$headers}
+            <http:body>
+                {$rdf}
+            </http:body>
+        </http:request>
+
+    let $POST_request := http:send-request($req)
+	let $json := util:binary-to-string(xs:base64Binary($POST_request//http:body), "UTF-8")
 
 	return replace($json, 'http://any23.org/tmp/', '')
 };
@@ -1115,9 +1158,17 @@ declare function xtriples:getJSON($rdf as node()*) as item()* {
 declare function xtriples:getTRIX($rdf as node()*) as item()* {
 
 	(: eXist returns base64Binary json :)
-	let $headers := <headers><header name="Content-Type" value="application/rdf+xml; charset=UTF-8"/></headers>
-	let $POST_request := httpclient:post(xs:anyURI(concat($xconfig:any23WebserviceURL, "trix")), $rdf, false(), $headers)
-	let $trix := $POST_request//httpclient:body/*
+	let $headers := <http:header name="Content-Type" value="application/rdf+xml; charset=UTF-8"/>
+	let $req := (: TODO expath :)
+        <http:request href="{concat($xconfig:any23WebserviceURL, "trix")}" method="post">
+            {$headers}
+            <http:body>
+                {$rdf}
+            </http:body>
+        </http:request>
+
+    let $POST_request := http:send-request($req)
+	let $trix := $POST_request//http:body/*
 
 	return replace($trix, 'http://any23.org/tmp/', '')
 };
@@ -1128,15 +1179,30 @@ declare function xtriples:getSVG($rdf as node()*) as item()* {
 	(: svg format with temporary file :)
 	let $filename := concat(util:uuid(), ".xml")
 	let $store := xmldb:store($xconfig:app-root || "/temp/", $filename, $rdf)
-	let $svgHeaders := 
+	(:let $svgHeaders := 
 		<headers>
 			<header name="format" value="RDF/XML"/>
 			<header name="mode" value="svg" />
 			<headers name="rules" value="{$xconfig:redeferWebserviceRulesURL}" />
-		</headers>
+		</headers>:)
+    let $svgHeaders := 
+		(
+			<http:header name="format" value="RDF/XML"/>,
+			<http:header name="mode" value="svg" />,
+			<http:header name="rules" value="{$xconfig:redeferWebserviceRulesURL}" />
+		)
+		
+    let $req := 
+        <http:request href="{concat($xconfig:redeferWebserviceURL, "render?rdf=", 
+                                $xconfig:xtriplesWebserviceURL, "temp/", $filename, 
+                                "&amp;format=RDF/XML&amp;mode=svg&amp;rules=", 
+                                $xconfig:redeferWebserviceRulesURL)}" 
+                      method="get">
+            {$svgHeaders}
+        </http:request>
 	
-	let $GET_request := httpclient:get(xs:anyURI(concat($xconfig:redeferWebserviceURL, "render?rdf=", $xconfig:xtriplesWebserviceURL, "temp/", $filename, "&amp;format=RDF/XML&amp;mode=svg&amp;rules=", $xconfig:redeferWebserviceRulesURL)), false(), $svgHeaders)
-	let $svg := $GET_request//httpclient:body/*
+	let $GET_request := http:send-request($req)
+	let $svg := $GET_request//http:body/*
 	let $delete := xmldb:remove("/db/apps/xtriples/temp/", $filename)
 
 	return $svg
