@@ -314,7 +314,9 @@ declare function admin:cleanCollection ($wid as xs:string, $collection as xs:str
         else if ($collection = "snippets" and not(xmldb:collection-available($collectionName))) then
             xmldb:create-collection($config:snippets-root, $wid)
         else ()
-    let $chmod-collection-status := xmldb:set-collection-permissions($collectionName, 'sal', 'svsal',  util:base-to-integer(0775, 8))
+    let $chown-collection-status := sm:chown(xs:anyURI($collectionName), 'sal')
+    let $chgrp-collection-status := sm:chgrp(xs:anyURI($collectionName), 'svsal')
+    let $chmod-collection-status := sm:chmod(xs:anyURI($collectionName), 'rwxrwxr-x')
     let $remove-status := 
         if (count(xmldb:get-child-resources($collectionName))) then
             for $file in xmldb:get-child-resources($collectionName) return xmldb:remove($collectionName, $file)
@@ -371,7 +373,9 @@ declare function admin:saveFile($wid as xs:string, $fileName as xs:string, $cont
         else if ($collection = "snippets" and not(xmldb:collection-available($collectionName))) then
             xmldb:create-collection($config:snippets-root, $wid)
         else ()
-    let $chmod-collection-status  := xmldb:set-collection-permissions($collectionName, 'sal', 'svsal',  util:base-to-integer(0775, 8))
+    let $chown-collection-status := sm:chown(xs:anyURI($collectionName), 'sal')
+    let $chgrp-collection-status := sm:chgrp(xs:anyURI($collectionName), 'svsal')
+    let $chmod-collection-status := sm:chmod(xs:anyURI($collectionName), 'rwxrwxr-x')
     let $remove-status := 
         if ($content and ($fileName = xmldb:get-child-resources($collectionName))) then
             xmldb:remove($collectionName, $fileName)
