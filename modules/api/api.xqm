@@ -227,12 +227,14 @@ declare
 %rest:query-param("viewer", "{$viewer}", "")
 %rest:query-param("frag", "{$frag}", "")
 %rest:query-param("canvas", "{$canvas}", "")
-%rest:header-param("X-Forwarded-Host", "{$host}")
+%rest:header-param("X-Forwarded-Host", "{$host}", "id.salamanca.school")
 %output:indent("no")
 function api:redirectIdTextsDocRequest($rid, $host, $format, $mode, $q, $lang, $viewer, $frag, $canvas) {
-    api:redirect-with-303($api:proto || 'api.' || api:getDomain($host) || '/' || $config:currentApiVersion || 
-                            '/texts/' || $rid 
-                            || api:getQueryParams($format, $mode, $q, $lang, $viewer, $frag, $canvas))
+    let $params := api:concatDocQueryParams($format, $mode, $q, $lang, $viewer, $frag, $canvas)
+    
+    return
+        api:redirect-with-303($api:proto || 'api.' || api:getDomain($host) || '/' || $config:currentApiVersion || 
+            '/texts/' || $rid || (if ($params) then '?' || $params else ''))
 };
 
 
@@ -246,11 +248,13 @@ declare
 %rest:query-param("viewer", "{$viewer}", "")
 %rest:query-param("frag", "{$frag}", "")
 %rest:query-param("canvas", "{$canvas}", "")
-%rest:header-param("X-Forwarded-Host", "{$host}")
+%rest:header-param("X-Forwarded-Host", "{$host}", "id.salamanca.school")
 %output:indent("no")
 function api:redirectIdTextsDocRequestLegacy($rid, $host, $format, $mode, $q, $lang, $viewer, $frag, $canvas) {
-    api:redirect-with-303($api:proto || 'api.' || api:getDomain($host) || '/' || $config:currentApiVersion || 
-                            '/texts/' || $rid || api:getQueryParams($format, $mode, $q, $lang, $viewer, $frag, $canvas))
+    let $paramStr := api:concatDocQueryParams($format, $mode, $q, $lang, $viewer, $frag, $canvas)
+    return
+        api:redirect-with-303($api:proto || 'api.' || api:getDomain($host) || '/' || $config:currentApiVersion || 
+            '/texts/' || $rid || (if ($paramStr) then '?' || $paramStr else ''))
 };
 
 
@@ -259,11 +263,13 @@ declare
 %rest:path("/texts")
 %rest:query-param("format", "{$format}", "html")
 %rest:query-param("lang", "{$lang}", "en")
-%rest:header-param("X-Forwarded-Host", "{$host}")
+%rest:header-param("X-Forwarded-Host", "{$host}", "id.salamanca.school")
 %output:indent("no")
 function api:redirectIdTextsCorpusRequest($rid, $host, $format, $lang) {
-    api:redirect-with-303($api:proto || 'api.' || api:getDomain($host) || '/' || $config:currentApiVersion || 
-                            '/texts')
+    let $paramStr := api:concatCorpusQueryParams($format, $lang)
+    return
+        api:redirect-with-303($api:proto || 'api.' || api:getDomain($host) || '/' || $config:currentApiVersion || 
+                '/texts' || (if ($paramStr) then '?' || $paramStr else ''))
 };
 
 (: TODO: content type via Accept header :)
@@ -275,10 +281,40 @@ function api:redirectIdTextsCorpusRequest($rid, $host, $format, $lang) {
 
 (: UTILITY FUNCTIONS :)
 
-declare function api:getQueryParams($format as xs:string?, $mode as xs:string?, $q as xs:string?, $lang as xs:string?,
-                                      $viewer as xs:string?, $frag as xs:string?, $canvas as xs:string?) {
-    () (: TODO :)                                      
+declare function api:concatDocQueryParams($format as xs:string?, $mode as xs:string?, $q as xs:string?, $lang as xs:string?,
+                                      $viewer as xs:string?, $frag as xs:string?, $canvas as xs:string?) as xs:string? {
+    let $pairs := map {
+        'format': $format,
+        'mode': $mode,
+        'q': $q,
+        'lang': $lang,
+        'viewer': $viewer,
+        'frag': $frag,
+        'canvas': $canvas
+    }                                  
+    return 
+        string-join(
+            (for $key in map:keys($pairs) return 
+                if (map:get($pairs, $key)) then 
+                    $key || '=' || map:get($pairs, $key) 
+                else ()), 
+        '&amp;')
 };
+
+declare function api:concatCorpusQueryParams($format as xs:string?, $lang as xs:string?) as xs:string? {
+    let $pairs := map {
+        'format': $format,
+        'lang': $lang
+    }                                  
+    return 
+        string-join(
+            (for $key in map:keys($pairs) return 
+                if (map:get($pairs, $key)) then 
+                    $key || '=' || map:get($pairs, $key) 
+                else ()), 
+        '&amp;')                                 
+};
+
 
 declare function api:getDomain($xForwardedHost as xs:string) as xs:string? {
     if (substring-before($xForwardedHost, ".") = 'id') then 
