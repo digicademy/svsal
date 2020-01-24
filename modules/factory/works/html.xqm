@@ -8,10 +8,10 @@ declare namespace sal              = "http://salamanca.adwmainz.de";
 declare namespace i18n             = 'http://exist-db.org/xquery/i18n';
 import module namespace util       = "http://exist-db.org/xquery/util";
 import module namespace console    = "http://exist-db.org/xquery/console";
-import module namespace config     = "http://www.salamanca.school/xquery/config" at "../../config.xqm";
-import module namespace sutil   = "http://www.salamanca.school/xquery/sutil" at "../../sutil.xqm";
-import module namespace index      = "https://www.salamanca.school/factory/works/index"    at "index.xqm";
-import module namespace txt        = "https://www.salamanca.school/factory/works/txt" at "txt.xqm";
+import module namespace config     = "http://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace sutil   = "http://www.salamanca.school/xquery/sutil" at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
+import module namespace index      = "https://www.salamanca.school/factory/works/index"    at "xmldb:exist:///db/apps/salamanca/modules/factory/works/index.xqm";
+import module namespace txt        = "https://www.salamanca.school/factory/works/txt" at "xmldb:exist:///db/apps/salamanca/modules/factory/works/txt.xqm";
 
 
 (: ####++++----  

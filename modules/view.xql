@@ -1,12 +1,12 @@
 xquery version "3.0";
 
-import module namespace app       = "http://www.salamanca.school/xquery/app"                       at "app.xqm";
-import module namespace config    = "http://www.salamanca.school/xquery/config"                    at "config.xqm";
-import module namespace gui    = "http://www.salamanca.school/xquery/gui"                    at "gui.xqm";
-import module namespace i18n      = "http://exist-db.org/xquery/i18n/templates"  at "i18n-templates.xqm";
-import module namespace iiif      = "http://www.salamanca.school/xquery/iiif"                      at "iiif.xqm";
-import module namespace net       = "http://www.salamanca.school/xquery/net"                       at "net.xqm";
-import module namespace sphinx    = "http://www.salamanca.school/xquery/sphinx"                    at "sphinx.xqm";
+import module namespace app       = "http://www.salamanca.school/xquery/app"                       at "xmldb:exist:///db/apps/salamanca/modules/app.xqm";
+import module namespace config    = "http://www.salamanca.school/xquery/config"                    at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace gui    = "http://www.salamanca.school/xquery/gui"                    at "xmldb:exist:///db/apps/salamanca/modules/gui.xqm";
+import module namespace i18n      = "http://exist-db.org/xquery/i18n/templates"  at "xmldb:exist:///db/apps/salamanca/modules/i18n-templates.xqm";
+import module namespace iiif      = "http://www.salamanca.school/xquery/iiif"                      at "xmldb:exist:///db/apps/salamanca/modules/iiif.xqm";
+import module namespace net       = "http://www.salamanca.school/xquery/net"                       at "xmldb:exist:///db/apps/salamanca/modules/net.xqm";
+import module namespace sphinx    = "http://www.salamanca.school/xquery/sphinx"                    at "xmldb:exist:///db/apps/salamanca/modules/sphinx.xqm";
 import module namespace templates = "http://exist-db.org/xquery/templates" ;
 import module namespace request   = "http://exist-db.org/xquery/request";
 import module namespace console   = "http://exist-db.org/xquery/console";

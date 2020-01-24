@@ -16,7 +16,7 @@ declare namespace exist = "http://exist.sourceforge.net/NS/exist";
 import module namespace rest = "http://exquery.org/ns/restxq";
 import module namespace http = "http://expath.org/ns/http-client";
 
-import module namespace config = "http://www.salamanca.school/xquery/config" at "../config.xqm";
+import module namespace config = "http://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
 
 
 (: CONFIG VARIABLES :)

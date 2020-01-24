@@ -2,10 +2,10 @@ xquery version "3.1";
 
 module namespace sutil = "http://www.salamanca.school/xquery/sutil";
 
-import module namespace config = "http://www.salamanca.school/xquery/config" at "config.xqm";
+import module namespace config = "http://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
 import module namespace util       = "http://exist-db.org/xquery/util";
 import module namespace templates = "http://exist-db.org/xquery/templates";
-import module namespace i18n      = "http://exist-db.org/xquery/i18n"        at "i18n.xqm";
+import module namespace i18n      = "http://exist-db.org/xquery/i18n"        at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
 
 declare namespace tei = "http://www.tei-c.org/ns/1.0";
 declare namespace sal = "http://salamanca.adwmainz.de"; 

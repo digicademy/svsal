@@ -14,8 +14,8 @@ declare namespace tei              = "http://www.tei-c.org/ns/1.0";
 declare namespace sal              = "http://salamanca.adwmainz.de";
 import module namespace util       = "http://exist-db.org/xquery/util";
 import module namespace console    = "http://exist-db.org/xquery/console";
-import module namespace config     = "http://www.salamanca.school/xquery/config" at "../../config.xqm";
-import module namespace sutil    = "http://www.salamanca.school/xquery/sutil" at "../../sutil.xqm";
+import module namespace config     = "http://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace sutil    = "http://www.salamanca.school/xquery/sutil" at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
 (:import module namespace index      = "https://www.salamanca.school/factory/works/index"    at "index.xqm";:)
 (: there are some index functions referred to below, but we needed to implement workarounds that do not depend on index.xqm, so as to avoid
    circular dependencies between index.xqm and txt.xqm :)

@@ -16,12 +16,12 @@ declare namespace exist = "http://exist.sourceforge.net/NS/exist";
 import module namespace rest = "http://exquery.org/ns/restxq";
 import module namespace util = "http://exist-db.org/xquery/util";
 
-import module namespace api = "http://www.salamanca.school/xquery/api" at "../api.xqm";
-import module namespace sutil = "http://www.salamanca.school/xquery/sutil" at "../../sutil.xqm";
-import module namespace config = "http://www.salamanca.school/xquery/config" at "../../config.xqm";
-import module namespace export = "http://www.salamanca.school/xquery/export" at "../../export.xqm";
-import module namespace net = "http://www.salamanca.school/xquery/net" at "../../net.xqm";
-import module namespace txt = "https://www.salamanca.school/factory/works/txt" at "../../factory/works/txt.xqm";
+import module namespace api = "http://www.salamanca.school/xquery/api" at "xmldb:exist:///db/apps/salamanca/modules/api/api.xqm";
+import module namespace sutil = "http://www.salamanca.school/xquery/sutil" at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
+import module namespace config = "http://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace export = "http://www.salamanca.school/xquery/export" at "xmldb:exist:///db/apps/salamanca/modules/export.xqm";
+import module namespace net = "http://www.salamanca.school/xquery/net" at "xmldb:exist:///db/apps/salamanca/modules/net.xqm";
+import module namespace txt = "https://www.salamanca.school/factory/works/txt" at "xmldb:exist:///db/apps/salamanca/modules/factory/works/txt.xqm";
 
 
 

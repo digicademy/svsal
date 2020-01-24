@@ -15,10 +15,10 @@ import module namespace request     = "http://exist-db.org/xquery/request";
 import module namespace response    = "http://exist-db.org/xquery/response";
 import module namespace util        = "http://exist-db.org/xquery/util";
 
-import module namespace config      = "http://www.salamanca.school/xquery/config"                 at "config.xqm";
-import module namespace export      = "http://www.salamanca.school/xquery/export"                 at "export.xqm";
-import module namespace sutil    = "http://www.salamanca.school/xquery/sutil" at "sutil.xqm";
-import module namespace txt        = "https://www.salamanca.school/factory/works/txt" at "factory/works/txt.xqm";
+import module namespace config      = "http://www.salamanca.school/xquery/config"                 at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace export      = "http://www.salamanca.school/xquery/export"                 at "xmldb:exist:///db/apps/salamanca/modules/export.xqm";
+import module namespace sutil    = "http://www.salamanca.school/xquery/sutil" at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
+import module namespace txt        = "https://www.salamanca.school/factory/works/txt" at "xmldb:exist:///db/apps/salamanca/modules/factory/works/txt.xqm";
 
 declare       namespace exist       = "http://exist.sourceforge.net/NS/exist";
 declare       namespace output      = "http://www.w3.org/2010/xslt-xquery-serialization";

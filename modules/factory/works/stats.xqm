@@ -8,12 +8,12 @@ declare namespace sal        = "http://salamanca.adwmainz.de";
 declare namespace tei        = "http://www.tei-c.org/ns/1.0";
 declare namespace templates  = "http://exist-db.org/xquery/templates";
 declare namespace util       = "http://exist-db.org/xquery/util";
-import module namespace config    = "http://www.salamanca.school/xquery/config"                at "../../config.xqm";
-import module namespace sphinx    = "http://www.salamanca.school/xquery/sphinx"                at "../../sphinx.xqm";
+import module namespace config    = "http://www.salamanca.school/xquery/config"                at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace sphinx    = "http://www.salamanca.school/xquery/sphinx"                at "xmldb:exist:///db/apps/salamanca/modules/sphinx.xqm";
 import module namespace console   = "http://exist-db.org/xquery/console";
-import module namespace iiif     = "http://www.salamanca.school/xquery/iiif" at "../../iiif.xqm";
-import module namespace nlp    = "https://www.salamanca.school/factory/works/nlp" at "../../nlp.xqm";
-import module namespace sutil = "http://www.salamanca.school/xquery/sutil" at "../../sutil.xqm";
+import module namespace iiif     = "http://www.salamanca.school/xquery/iiif" at "xmldb:exist:///db/apps/salamanca/modules/iiif.xqm";
+import module namespace nlp    = "https://www.salamanca.school/factory/works/nlp" at "xmldb:exist:///db/apps/salamanca/modules/factory/works/nlp.xqm";
+import module namespace sutil = "http://www.salamanca.school/xquery/sutil" at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
 
 
 (: ####++++----
