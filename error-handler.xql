@@ -50,7 +50,7 @@ let $lang := net:lang($existPath)
 let $debug:= console:log('Server-side error handler (error-handler.xql): Request URI: ' || request:get-attribute('javax.servlet.error.request_uri') 
                          || '. Determined exist:path: ' || $existPath || ' ; language: ' || $lang || '. Server-side error message' 
                          || request:get-attribute('javax.servlet.error.message') || '.')
-let $dummyMap := map:new()
+let $dummyMap := map{}
 let $html-in :=
     <html xmlns="http://www.w3.org/1999/xhtml">
         <head xmlns:i18n="http://exist-db.org/xquery/i18n" data-template="i18n:translate" data-template-catalogues="data/i18n">
