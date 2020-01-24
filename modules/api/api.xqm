@@ -12,6 +12,7 @@ xquery version "3.0";
 module namespace api = "http://www.salamanca.school/xquery/api";
 declare namespace output="http://www.w3.org/2010/xslt-xquery-serialization";
 declare namespace exist = "http://exist.sourceforge.net/NS/exist";
+import module namespace util        = "http://exist-db.org/xquery/util";
 
 import module namespace rest = "http://exquery.org/ns/restxq";
 import module namespace http = "http://expath.org/ns/http-client";
@@ -220,7 +221,7 @@ ending up here.)
 declare 
 %rest:GET
 %rest:path("/texts/{$rid}")
-%rest:query-param("format", "{$format}", "html")
+%rest:query-param("format", "{$format}", "")
 %rest:query-param("mode", "{$mode}", "")
 %rest:query-param("q", "{$q}", "")
 %rest:query-param("lang", "{$lang}", "en")
@@ -228,20 +229,21 @@ declare
 %rest:query-param("frag", "{$frag}", "")
 %rest:query-param("canvas", "{$canvas}", "")
 %rest:header-param("X-Forwarded-Host", "{$host}", "id.salamanca.school")
+%rest:header-param("Accept", "{$accept}", "text/html")
 %output:indent("no")
-function api:redirectIdTextsDocRequest($rid, $host, $format, $mode, $q, $lang, $viewer, $frag, $canvas) {
-    let $params := api:concatDocQueryParams($format, $mode, $q, $lang, $viewer, $frag, $canvas)
-    
+function api:redirectIdTextsDocRequest($rid, $host, $accept, $format, $mode, $q, $lang, $viewer, $frag, $canvas) {
+    let $format := if ($format) then $format else api:getFormatFromContentTypes(tokenize($accept, '[, ]+'), 'text/html')
+    let $paramStr := api:concatDocQueryParams($format, $mode, $q, $lang, $viewer, $frag, $canvas)
     return
         api:redirect-with-303($api:proto || 'api.' || api:getDomain($host) || '/' || $config:currentApiVersion || 
-            '/texts/' || $rid || (if ($params) then '?' || $params else ''))
+            '/texts/' || $rid || (if ($paramStr) then '?' || $paramStr else ''))
 };
 
 
 declare 
 %rest:GET
 %rest:path("/works.{$rid}")
-%rest:query-param("format", "{$format}", "html")
+%rest:query-param("format", "{$format}", "")
 %rest:query-param("mode", "{$mode}", "")
 %rest:query-param("q", "{$q}", "")
 %rest:query-param("lang", "{$lang}", "en")
@@ -249,8 +251,10 @@ declare
 %rest:query-param("frag", "{$frag}", "")
 %rest:query-param("canvas", "{$canvas}", "")
 %rest:header-param("X-Forwarded-Host", "{$host}", "id.salamanca.school")
+%rest:header-param("Accept", "{$accept}", "text/html")
 %output:indent("no")
-function api:redirectIdTextsDocRequestLegacy($rid, $host, $format, $mode, $q, $lang, $viewer, $frag, $canvas) {
+function api:redirectIdTextsDocRequestLegacy($rid, $host, $accept, $format, $mode, $q, $lang, $viewer, $frag, $canvas) {
+    let $format := if ($format) then $format else api:getFormatFromContentTypes(tokenize($accept, '[, ]+'), 'text/html')
     let $paramStr := api:concatDocQueryParams($format, $mode, $q, $lang, $viewer, $frag, $canvas)
     return
         api:redirect-with-303($api:proto || 'api.' || api:getDomain($host) || '/' || $config:currentApiVersion || 
@@ -261,19 +265,18 @@ function api:redirectIdTextsDocRequestLegacy($rid, $host, $format, $mode, $q, $l
 declare 
 %rest:GET
 %rest:path("/texts")
-%rest:query-param("format", "{$format}", "html")
+%rest:query-param("format", "{$format}", "")
 %rest:query-param("lang", "{$lang}", "en")
 %rest:header-param("X-Forwarded-Host", "{$host}", "id.salamanca.school")
+%rest:header-param("Accept", "{$accept}", "text/html")
 %output:indent("no")
-function api:redirectIdTextsCorpusRequest($rid, $host, $format, $lang) {
+function api:redirectIdTextsCorpusRequest($rid, $host, $accept, $format, $lang) {
+    let $format := if ($format) then $format else api:getFormatFromContentTypes(tokenize($accept, '[, ]+'), 'text/html')
     let $paramStr := api:concatCorpusQueryParams($format, $lang)
     return
         api:redirect-with-303($api:proto || 'api.' || api:getDomain($host) || '/' || $config:currentApiVersion || 
                 '/texts' || (if ($paramStr) then '?' || $paramStr else ''))
 };
-
-(: TODO: content type via Accept header :)
-
 
 (: TODO add authors and concepts endpoints here when available :)
 

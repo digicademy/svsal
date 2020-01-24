@@ -33,25 +33,28 @@ import module namespace txt = "https://www.salamanca.school/factory/works/txt" a
 declare
 %rest:GET
 %rest:path("/v1/texts")
-%rest:query-param("format", "{$format}", "html")
-function textsv1:getCorpus($format) {
-    switch($format)
-        case 'tei' return
-            let $zipPath := $config:corpus-zip-root || '/sal-tei-corpus.zip'
-            return 
-                api:deliverZIP(
-                    util:binary-doc($zipPath),
-                    'sal-tei-corpus'
-                )
-        case 'txt' return
-            let $zipPath := $config:corpus-zip-root || '/sal-txt-corpus.zip'
-            return 
-                api:deliverZIP(
-                    util:binary-doc($zipPath),
-                    'sal-txt-corpus'
-                )
-        default return
-            () (: TODO :)
+%rest:query-param("format", "{$format}", "")
+%rest:header-param("Accept", "{$accept}", "text/html")
+function textsv1:getCorpus($format, $accept) {
+    let $format := if ($format) then $format else api:getFormatFromContentTypes(tokenize($accept, '[, ]+'), 'text/html')
+    return
+        switch($format)
+            case 'tei' return
+                let $zipPath := $config:corpus-zip-root || '/sal-tei-corpus.zip'
+                return 
+                    api:deliverZIP(
+                        util:binary-doc($zipPath),
+                        'sal-tei-corpus'
+                    )
+            case 'txt' return
+                let $zipPath := $config:corpus-zip-root || '/sal-txt-corpus.zip'
+                return 
+                    api:deliverZIP(
+                        util:binary-doc($zipPath),
+                        'sal-txt-corpus'
+                    )
+            default return
+                () (: TODO :)
          
 };
 
