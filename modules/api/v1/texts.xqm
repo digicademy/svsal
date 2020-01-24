@@ -17,11 +17,11 @@ import module namespace rest = "http://exquery.org/ns/restxq";
 import module namespace util = "http://exist-db.org/xquery/util";
 
 import module namespace api = "http://www.salamanca.school/xquery/api" at "../api.xqm";
-import module namespace sutil = "http://www.salamanca.school/xquery/sutil" at "../../modules/sutil.xqm";
-import module namespace config = "http://www.salamanca.school/xquery/config" at "../../modules/config.xqm";
-import module namespace export = "http://www.salamanca.school/xquery/export" at "../../modules/export.xqm";
-import module namespace net = "http://www.salamanca.school/xquery/net" at "../../modules/net.xqm";
-import module namespace txt = "https://www.salamanca.school/factory/works/txt" at "../factory/works/txt.xqm";
+import module namespace sutil = "http://www.salamanca.school/xquery/sutil" at "../../sutil.xqm";
+import module namespace config = "http://www.salamanca.school/xquery/config" at "../../config.xqm";
+import module namespace export = "http://www.salamanca.school/xquery/export" at "../../export.xqm";
+import module namespace net = "http://www.salamanca.school/xquery/net" at "../../net.xqm";
+import module namespace txt = "https://www.salamanca.school/factory/works/txt" at "../../factory/works/txt.xqm";
 
 
 
