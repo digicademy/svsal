@@ -16,7 +16,9 @@ declare namespace exist = "http://exist.sourceforge.net/NS/exist";
 import module namespace rest = "http://exquery.org/ns/restxq";
 import module namespace util = "http://exist-db.org/xquery/util";
 
-import module namespace api = "http://www.salamanca.school/xquery/api" at "xmldb:exist:///db/apps/salamanca/modules/api/api.xqm";
+import module namespace http = "http://expath.org/ns/http-client";
+
+import module namespace api = "http://www.salamanca.school/xquery/api" at "../api.xqm";
 import module namespace sutil = "http://www.salamanca.school/xquery/sutil" at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
 import module namespace config = "http://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
 import module namespace export = "http://www.salamanca.school/xquery/export" at "xmldb:exist:///db/apps/salamanca/modules/export.xqm";
@@ -34,8 +36,10 @@ declare
 %rest:GET
 %rest:path("/v1/texts")
 %rest:query-param("format", "{$format}", "")
+%rest:query-param("lang", "{$lang}", "")
 %rest:header-param("Accept", "{$accept}", "text/html")
-function textsv1:getCorpus($format, $accept) {
+%rest:header-param("X-Forwarded-Host", "{$host}", "")
+function textsv1:getCorpus($format, $lang, $accept, $host) {
     let $format := if ($format) then $format else api:getFormatFromContentTypes(tokenize($accept, '[, ]+'), 'text/html')
     return
         switch($format)
@@ -54,7 +58,8 @@ function textsv1:getCorpus($format, $accept) {
                         'sal-txt-corpus'
                     )
             default return
-                () (: TODO :)
+                (: redirect to HTML works list :)
+                api:redirect-with-303($api:proto || api:getDomain($host) || '/' || (if ($lang) then $lang || '/' else ()) || 'works.html')
          
 };
 
@@ -72,11 +77,9 @@ declare
 %rest:query-param("frag", "{$frag}", "")
 %rest:query-param("canvas", "{$canvas}", "")
 %rest:header-param("Accept", "{$accept}", "text/html")
+%rest:header-param("X-Forwarded-Host", "{$host}", "")
 %output:indent("no")
-function textsv1:docRequest($rid, $format, $mode, $q, $lang, $viewer, $frag, $canvas, $accept) {
-    (: it seems that we can't specify one RestXQ function per Accept header mime type since eXist's RestXQ can't tell those functions 
-    apart (they all have the same degree of specificity), so we need to apply a content negotiation to mime type(s) 
-    stated in the Accept header. The good thing is that this allows for a more complex content negotiation. :)
+function textsv1:docRequest($rid, $format, $mode, $q, $lang, $viewer, $frag, $canvas, $accept, $host) {
     (: for determining the requested format, the "format" query param has priority over the "Accept" header param: :)
     let $format := if ($format) then $format else api:getFormatFromContentTypes(tokenize($accept, '[, ]+'), 'text/html')
     return
@@ -85,7 +88,8 @@ function textsv1:docRequest($rid, $format, $mode, $q, $lang, $viewer, $frag, $ca
                to the respective format's function - the other ones are simply ignored :)
             case 'tei' return textsv1:TEIdeliverDoc($rid, $mode)
             case 'txt' return textsv1:TXTdeliverDoc($rid, $mode)
-            default return ()
+            default return 
+                textsv1:HTMLdeliverDoc($rid, $mode, $q, $lang, $viewer, $frag, $canvas, $host)
 };
 
 
@@ -100,8 +104,14 @@ declare %private function textsv1:TEIdeliverDoc($rid as xs:string, $mode as xs:s
     let $resource := textsv1:validateResourceId($rid)
     let $mode := if ($mode) then $mode else if ($resource('legacy_mode')) then $resource('legacy_mode') else ()
     return 
-        if ($resource('tei_status') eq 2 and $resource('valid') and not($mode eq 'meta')) then 
-            (: full, valid doc/fragment requested :)
+        if ($resource('tei_status') ge 1 and $mode eq 'meta') then
+            (: teiHeader of an available dataset requested :)
+            api:deliverTEI(
+                export:WRKgetTeiHeader($resource('tei_id'), 'metadata', ()),
+                $resource('tei_id') || '_meta'
+            )
+        else if ($resource('tei_status') eq 2 and $resource('valid')) then 
+            (: valid doc/fragment requested :)
             if ($resource('request_type') eq 'full') then
                 api:deliverTEI(
                     util:expand(doc($config:tei-works-root || '/' || $resource('tei_id') || '.xml')/tei:TEI),
@@ -112,12 +122,6 @@ declare %private function textsv1:TEIdeliverDoc($rid as xs:string, $mode as xs:s
                     export:WRKgetTeiPassage($resource('work_id'), $resource('passage')),
                     $resource('work_id') || ':' || $resource('passage')
                 )
-        else if ($resource('tei_status') ge 1 and $mode eq 'meta') then
-            (: teiHeader of an available dataset requested :)
-            api:deliverTEI(
-                export:WRKgetTeiHeader($resource('tei_id'), 'metadata', ()),
-                $resource('tei_id') || '_meta'
-            )
         else if ($resource('tei_status') = (1, 0)) then
             api:error404NotYetAvailable()
         else if (not($resource('wellformed'))) then
@@ -126,7 +130,7 @@ declare %private function textsv1:TEIdeliverDoc($rid as xs:string, $mode as xs:s
             api:error404NotFound()
 };
 
-declare %private function textsv1:TXTdeliverDoc($rid as xs:string, $mode as xs:string) {
+declare %private function textsv1:TXTdeliverDoc($rid as xs:string, $mode as xs:string?) {
     let $resource := textsv1:validateResourceId($rid)
     let $mode := 
         if (lower-case($mode) = ('orig', 'edit')) then $mode 
@@ -134,7 +138,7 @@ declare %private function textsv1:TXTdeliverDoc($rid as xs:string, $mode as xs:s
         else 'edit'
     return
         if ($resource('tei_status') eq 2 and $resource('valid')) then 
-            (: full, valid doc/fragment requested :)
+            (: valid doc/fragment requested :)
             let $verboseMode := if ($mode eq 'edit') then 'constituted' else 'diplomatic'
             return
                 if ($resource('request_type') eq 'full') then
@@ -164,6 +168,49 @@ declare %private function textsv1:TXTdeliverDoc($rid as xs:string, $mode as xs:s
 };
 
 
+declare %private function textsv1:HTMLdeliverDoc($rid as xs:string, $mode as xs:string?, $q as xs:string?, 
+                                                 $lang as xs:string?, $viewer as xs:string?, $frag as xs:string?, 
+                                                 $canvas as xs:string?, $host as xs:string?) {
+    let $resource := textsv1:validateResourceId($rid)
+    let $mode := if ($mode) then $mode else if ($resource('legacy_mode')) then $resource('legacy_mode') else ()
+    return
+        if ($viewer eq 'all'
+            and $resource('tei_status') = (1, 2) 
+            and (not($resource('passage')) or matches(lower-case($resource('passage')), '^vol\d$'))) then
+            (: special case: full image view of work / volume :)
+            let $viewerUri := $api:proto || 'www.' || api:getDomain($host) || (if ($lang) then '/' || $lang else ()) 
+                || '/viewer.html?wid=' || $resource('tei_id')
+            return
+                api:redirect-with-303($viewerUri)
+        else if ($resource('tei_status') ge 1 and $mode eq 'meta') then
+            (: catalogue record of an available dataset requested :)
+            let $catRecordUri := $api:proto || 'www.' || api:getDomain($host) || (if ($lang) then '/' || $lang else ()) 
+                || '/workDetails.html?wid=' || $resource('tei_id')
+            return
+                api:redirect-with-303($catRecordUri)
+        else if ($resource('tei_status') eq 2 and $resource('valid')) then 
+            (: valid doc/fragment requested :)
+            if ($resource('request_type') eq 'full') then
+                (:full work
+                volume:)
+            
+(:                let $uri := $api:proto || 'www.' || api:getDomain($host) ||:)
+                ()
+            else (: $resource('request_type') eq 'passage' :)
+(:                passage:)
+                ()
+        else if ($resource('tei_status') = (1, 0)) then
+            () 
+(:            api:error404NotYetAvailable():)
+        else if (not($resource('wellformed'))) then
+            ()
+(:            api:error400BadResource():)
+        else 
+            ()
+(:            api:error404NotFound():)
+};
+
+
 (: RESOURCE VALIDATION :)
 
 (:
@@ -178,8 +225,8 @@ declare function textsv1:validateResourceId($rid as xs:string?) as map(*) {
         'valid': false(), (: states if resource is valid/available, i.e. if it refers to a (valid passage within a) text that is published :)
         'request_type': (), (: if the resource is valid, states whether a "full" text or a "passage" was requested. 
                               Note that volumes count as "full" text in this case, not as "passage". :)
-        'work_id': (), (: the id of the work (5-place, without any volume suffix) :)
-        'rid_main': (), (: the "main" part of the resource id, before any colon or dot (if there are any). Case is normalized :)
+        'work_id': (), (: the id of the work (5-place, without volume suffix) :)
+        'rid_main': (), (: the "main" part of the resource id, before any colon or dot. Case is normalized :)
         'tei_id': (), (: the id of the TEI dataset for the work/volume, as found in $config:tei-works-root (without ".xml") :)
         'tei_status': -1, (: status of the work: see sutil:WRKvalidateId() :)
         'passage': (), (: the id of the passage :)
@@ -237,8 +284,11 @@ declare function textsv1:validateResourceId($rid as xs:string?) as map(*) {
             (: syntactically invalid request - no further validation necessary :)
             $valMap
     
-    let $debug := util:log('warn', '[TEXTSAPI] validation results: ' || serialize($valMap, $api:jsonOutputParams))
-    
+    let $debug := 
+        if ($config:debug = ('trace', 'info')) then 
+            util:log('warn', '[TEXTSAPI] validation results: ' || serialize($valMap, $api:jsonOutputParams))
+        else ()
+        
     return $valMap
 };
 

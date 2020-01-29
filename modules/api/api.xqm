@@ -121,6 +121,7 @@ declare function api:deliverTXTBinary($content as xs:base64Binary?, $name as xs:
         $content
 };
 
+(:
 declare function api:deliverHTML($content) {
         <rest:response>
             <http:response status="200">
@@ -130,6 +131,7 @@ declare function api:deliverHTML($content) {
         </rest:response>,
         $content
 };
+:)
 
 declare function api:deliverZIP($content as xs:base64Binary?, $name as xs:string) {
     let $filename := $name || '.zip'
@@ -281,11 +283,25 @@ function api:redirectIdTextsCorpusRequest($rid, $host, $accept, $format, $lang) 
 (: TODO add authors and concepts endpoints here when available :)
 
 
+(: fallback function for unspecified requests :)
+(: the following has proven not to work work since it redirects *any* request, even valid/specified ones :)
+(:
+declare
+%rest:GET
+%rest:produces("application/json")
+%rest:produces("text/html")
+function api:fallback() {
+    (: redirect to OpenAPI docs :)
+    ()
+};
+:)
+(: hence, unspecified requests will land on the HTML 500 server-error page for now... :)
+
 
 (: UTILITY FUNCTIONS :)
 
 declare function api:concatDocQueryParams($format as xs:string?, $mode as xs:string?, $q as xs:string?, $lang as xs:string?,
-                                      $viewer as xs:string?, $frag as xs:string?, $canvas as xs:string?) as xs:string? {
+                                          $viewer as xs:string?, $frag as xs:string?, $canvas as xs:string?) as xs:string? {
     let $pairs := map {
         'format': $format,
         'mode': $mode,
@@ -320,7 +336,7 @@ declare function api:concatCorpusQueryParams($format as xs:string?, $lang as xs:
 
 
 declare function api:getDomain($xForwardedHost as xs:string) as xs:string? {
-    if (substring-before($xForwardedHost, ".") = 'id') then 
+    if (substring-before($xForwardedHost, ".") = ('id', 'api')) then 
         substring-after($xForwardedHost, ".")
     else 
         $xForwardedHost
