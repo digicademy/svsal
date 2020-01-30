@@ -638,7 +638,7 @@ declare function gui:footer($node as node(), $model as map(*), $lang as xs:strin
                     <a href="contact.html"><i class="far fa-envelope"></i>&#32;&#32;<i18n:text key='contact'>Kontakt</i18n:text></a> 
                     | <a  href="legal.html"><i class="fa fa-balance-scale"></i>&#32;&#32;<i18n:text key='legal'>Datenschutz &amp; Impressum</i18n:text></a> 
                     </p>
-                        <p><span style="color:#92A4B1;"></span>&#xA0;&#xA0; <i class="far fa-copyright"></i>&#32;&#32;<span title="{$username}"><i18n:text key="projectName"/> 2015-2019</span>
+                        <p><span style="color:#92A4B1;"></span>&#xA0;&#xA0; <i class="far fa-copyright"></i>&#32;&#32;<span title="{$username}"><i18n:text key="projectName"/> 2015-2020</span>
                     </p>
                 </div>
             </div>
