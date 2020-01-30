@@ -22,7 +22,7 @@ declare option exist:timeout "43200000"; (: 12 h :)
 
 
 let $config := map {
-    $templates:CONFIG_APP_ROOT := $config:app-root
+    $templates:CONFIG_APP_ROOT: $config:app-root
 }
 
 let $lookup := function($functionName as xs:string, $arity as xs:int) {

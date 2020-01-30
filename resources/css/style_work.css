@@ -9,32 +9,38 @@
     src: url('../fonts/cardo/cardo104s-webfont.eot'); /* Embedded font type required by IE 8 */
     font-weight: normal;
     font-style: normal;
+    font-display: swap;
 }
 @font-face {
     font-family:Cardo;
     src: url('../fonts/cardo/cardo104s-webfont.woff'); /* Embedded font type used by other browsers */
     font-weight: normal;
     font-style: normal;
+    font-display: swap;
 }
 @font-face {
     font-family:Cardo;
     src: url('../fonts/cardo/cardob101-webfont.eot');
     font-weight: bold;
+    font-display: swap;
 }
 @font-face {
     font-family:Cardo;
     src: url('../fonts/cardo/cardob101-webfont.woff');
     font-weight: bold;
+    font-display: swap;
 }
 @font-face {
     font-family:Cardo;
     src: url('../fonts/cardo/cardoi99-webfont.eot');
     font-style: italic;
+    font-display: swap;
 }
 @font-face {
     font-family:Cardo;
     src: url('../fonts/cardo/cardoi99-webfont.woff');
     font-style: italic;
+    font-display: swap;
 }
 /* 2. Junicode
       URL: http://junicode.sourceforge.net/
@@ -44,44 +50,52 @@
     src:url("../fonts/junicode/junicode.eot");
     font-weight: normal;
     font-style: normal;
+    font-display: swap;
 }
 @font-face{
     font-family:Junicode;
     src:url("../fonts/junicode/junicode.woff");
     font-weight: normal;
     font-style: normal;
+    font-display: swap;
 }
 @font-face{
     font-family:Junicode;
     src:url("../fonts/junicode/junicode-bold.eot");
     font-weight:bold;
+    font-display: swap;
 }
 @font-face{
     font-family:Junicode;
     src:url("../fonts/junicode/junicode-bold.woff");
     font-weight:bold;
+    font-display: swap;
 }
 @font-face{
     font-family:Junicode;
     src:url("../fonts/junicode/junicode-italic.eot");
     font-style:italic;
+    font-display: swap;
 }
 @font-face{
     font-family:Junicode;
     src:url("../fonts/junicode/junicode-italic.woff");
     font-style:italic;
+    font-display: swap;
 }
 @font-face{
     font-family:Junicode;
     src:url("../fonts/junicode/junicode-bolditalic.eot");
     font-weight:bold;
     font-style:italic;
+    font-display: swap;
 }
 @font-face{
     font-family:Junicode;
     src:url("../fonts/junicode/junicode-bolditalic.woff");
     font-weight:bold;
     font-style:italic;
+    font-display: swap;
 }
 /* 3. Andron (A. Stötzner, Koop. m. MUFI)
       URL: http://www.mufi.info/fonts/#Andron
@@ -89,10 +103,12 @@
 @font-face{
     font-family:Andron;
     src:url("../fonts/andron/andron-scriptor-web.eot");
+    font-display: swap;
 }
 @font-face{
     font-family:Andron;
     src:url("../fonts/andron/andron-scriptor-web.woff");
+    font-display: swap;
 }
 
 

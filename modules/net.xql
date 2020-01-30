@@ -219,6 +219,15 @@ declare function net:redirect-with-404($absolute-path) {  (: 404 :)
     </error-handler>)
 };
 
+(:
+Generates an HTML error response by setting a $statusCode and forwarding to an error page.
+If $errorType is one of: 
+ - 'work-not-yet-available',
+ - 'author-not-yet-available',
+ - 'lemma-not-yet-available',
+ - 'workingpaper-not-yet-available',
+ an appropriate error message shall be displayed (downstream) to the user.
+:)
 declare function net:error($statusCode as xs:integer, $netVars as map(*), $errorType as xs:string?) {
     response:set-status-code($statusCode),
     net:error-page($statusCode, $netVars, $errorType)
@@ -538,12 +547,16 @@ declare function net:sitemapResponse($netVars as map(*)) {
             return $sitemapIndex
 };
 
+declare function net:APIdeliverStats($netVars as map(*)) {
+    ()
+};
+
 declare function net:APIdeliverTEI($requestData as map(), $netVars as map()*) {
     if (matches($requestData('tei_id'), '^W\d{4}')) then 
         let $serialization  := 
             (util:declare-option("output:method", "xml"),
              util:declare-option("output:media-type", "application/tei+xml"),
-             util:declare-option("output:indent", "yes"),
+             util:declare-option("output:indent", "no"),
              util:declare-option("output:expand-xincludes", "yes"))
         let $debug :=   
             if ($config:debug = "trace") then console:log("Serializing options: method:" || util:get-option('output:method') ||
@@ -717,6 +730,26 @@ declare function net:APIdeliverTextsHTML($requestData as map(), $netVars as map(
     else net:error(404, $netVars, '')
 };
 
+
+(:
+Redirects a request for a iiif resource to the respective endpoint of the primary iiif API. ATM works only on the work/volume
+level, but not for a single page or passage-wise (these are redirected to the resource for the whole work/volume).
+:)
+declare function net:APIdeliverIIIF($requestData as map()*, $netVars as map()*) {
+    if ($requestData('work_id') eq '*') then (: forward to HTML works list (really?), regardless of parameters or hashes :)
+        let $langPath := if ($requestData('lang')) then $requestData('lang') || '/' else ()
+        let $pathname     := $config:webserver || '/' || $langPath || 'works.html'
+        return net:redirect-with-303($pathname)
+    else
+        let $iiifUrl := sal-util:getIiifUrl($requestData('tei_id'))
+        let $header := response:set-header('Content-Type', 'application/json')
+        return
+            if ($iiifUrl) then
+                net:redirect-with-303($iiifUrl)
+            else net:error(404, $netVars, ())
+};
+
+
 declare function net:deliverTextsHTML($netVars as map()*) {
     let $wid := sal-util:normalizeId($netVars('paramap')?('wid'))
     let $validation := sal-util:WRKvalidateId($wid)
@@ -767,56 +800,6 @@ declare function net:deliverWorkingPapersHTML($netVars as map()*) {
         else if ($validation eq 0) then net:error(404, $netVars, 'workingpaper-not-yet-available')
         else net:error(404, $netVars, ())
 };
-
-(: TODO::)
-
-declare function net:APIdeliverIIIF($requestData as map()*, $netVars as map()*) {
-(:    let $reqResource    := tokenize(tokenize($path, '/iiif/')[last()], '/')[1]:)
-    let $resource := $requestData('tei_id')
-    
-    let $iiif-paras     := string-join(subsequence(tokenize(tokenize($path, '/iiif/')[last()], '/'), 2), '/')
-    let $work           := tokenize(tokenize($reqResource, ':')[1], '\.')[1]   (: work[.edition]:pass.age :)
-    let $passage        := tokenize($reqResource, ':')[2]
-    let $entityPath     := concat($work, if ($passage) then concat('#', $passage) else ())
-    let $debug2         := if ($config:debug = "trace") then console:log("Load metadata from " || $config:rdf-works-root || '/' || replace($work, 'w0', 'W0') || '.rdf' || " ...") else ()
-    let $metadata       := doc($config:rdf-works-root || '/' || sal-util:normalizeId($work) || '.rdf')
-    let $debug3         := if ($config:debug = "trace") then console:log("Retrieving $metadata//rdf:Description[@rdf:about = '" || replace($reqResource, 'w0', 'W0') || "']/rdfs:seeAlso/@rdf:resource/string()") else ()
-    let $debug4         := if ($config:debug = "trace") then console:log("This gives " || count($metadata//rdf:Description[@rdf:about = replace($reqResource, 'w0', 'W0')]/rdfs:seeAlso/@rdf:resource) || " urls in total.") else ()
-    let $images         := 
-        for $url in $metadata//rdf:Description[@rdf:about = replace($reqResource, 'w0', 'W0')]/rdfs:seeAlso/@rdf:resource/string()
-            where matches($url, "\.(jpg|jpeg|png|tif|tiff)$")
-            return $url
-    let $debug5         := if ($config:debug = "trace") then console:log("Of these, " || count($images) || " are images.") else ()
-    let $image          := $images[1]
-    let $debug5         := if ($config:debug = "trace") then console:log("The target image being " || $image || ".") else ()
-    let $prefix         := "facs." || $config:serverdomain || "/iiif/"
-    let $filename       := tokenize($image, '/')[last()]
-    let $debug          := if ($config:debug = ("trace")) then console:log("filename = " || $filename) else ()
-    let $fullpathname   := 
-        if (matches($filename, '\-[A-Z]\-')) then
-            concat(string-join((replace($work, 'w0', 'W0'), substring(string-join(functx:get-matches($filename, '-[A-Z]-'), ''), 2, 1), functx:substring-before-last($filename, '.')), '%C2%A7'), '/', $iiif-paras)
-        else concat(string-join((replace($work, 'w0', 'W0'), functx:substring-before-last($filename, '.')), '%C2%A7'), '/', $iiif-paras)
-    let $resolvedURI := concat($prefix, $fullpathname)
-    let $debug5 := if ($config:debug = ("trace", "info")) then console:log("redirecting to " || $resolvedURI) else ()
-
-    return net:redirect($resolvedURI, $netVars)
-};
-
-(:
-declare function net:deliverIIIF($requestData as map(), $netVars as map()*) {
-
-    
-    
-(/:    let $iiif-paras     := string-join(subsequence(tokenize(tokenize($path, '/iiif/')[last()], '/'), 2), '/') (\: sth like W0004/manifest or collection/W0013 :\):/)
-    if ($requestData('resource'))
-    
-    let $resolvedURI    := concat($prefix, $fullpathname)
-    let $debug5         := if ($config:debug = ("trace", "info")) then console:log("redirecting to " || $resolvedURI) else ()
-
-    return net:redirect($resolvedURI, $netVars)
-};
-:)
-
 
 
 (:~

@@ -47,6 +47,9 @@ let $output :=
             admin:renderWork($rid),
             admin:sphinx-out($rid, $mode),
             admin:createRDF($rid))
+        case 'stats' return
+            let $create := admin:createStats()
+            return 'Corpus and work statistics successfully created!'
         default return 
             ()
         (: TODO: iiif-admin :)

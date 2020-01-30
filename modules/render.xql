@@ -755,6 +755,23 @@ declare function render:HTMLSectionToolbox($node as element()) as element(div) {
         </div>
 };
 
+declare function render:WRKpreparePagination($node as node()?, $model as map(*)?, $wid as xs:string?, $lang as xs:string?) {
+    let $workId :=  
+        if ($wid) then 
+            if (contains($wid, '_')) then substring-before(sal-util:normalizeId($wid), '_') 
+            else sal-util:normalizeId($wid)
+        else substring-before($model('currentWorkId'), '_')
+    return 
+        <ul id="later" class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">{
+            for $pb in doc($config:index-root || '/' || $workId || '_nodeIndex.xml')//sal:node[@type='pb'][not(starts-with(sal:title, 'sameAs') or starts-with(sal:title, 'corresp'))]
+                let $fragment := $pb/sal:fragment
+                let $url      := $config:idserver || '/texts/' || $workId || ':' || $pb/sal:citetrail/text() 
+                (:'work.html?wid=' || $workId || '&amp;frag=' || $fragment || '#' || concat('pageNo_', $pb/@n):)
+                return 
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="{$url}">{normalize-space($pb/sal:title)}</a></li>
+        }</ul>
+};
+
 
 (: ####++++---- OTHER helper functions ----++++#### :)
 

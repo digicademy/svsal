@@ -43,7 +43,7 @@
     <body id="body">
         <div id="content"/>
         
-        <script type="text/javascript" src="resources/js/mirador/mirador.js"/>
+        <script type="text/javascript" src="resources/js/mirador-2.7.0/mirador.min.js"/>
         
         
         <script type="text/javascript" src="//code.jquery.com/ui/1.11.3/jquery-ui.min.js"/>
@@ -163,11 +163,12 @@
                 windowObjects : <span data-template="iiif:MiradorWindowObject">[{"bla": "bleh"}]</span>
             });
 
-            setTimeout( setZipUrl, 100 );
-// TODO: Binding to events happens in the parent html file (which includes the present file in an iframe).
-// We wait for mirador's full initialization here before calling the binding function.
-// Probably this can happen in more elegant, i.e. event-driven way.
-            setTimeout( window.parent.miradorLoaded, 4000 );
+// Binding to events happens in the parent html file (which includes the present file in an iframe).
+            MyObjects.myMirador.eventEmitter.subscribe('windowAdded', function(){
+                    // console.log("Dispatch mirador.loaded event...");
+                    window.parent.postMessage({ type:'mirador.loaded' },"*");
+                    setTimeout( setZipUrl, 100 );
+                });
         });
     </script>
         
