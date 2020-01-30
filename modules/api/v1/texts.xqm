@@ -15,8 +15,10 @@ declare namespace output="http://www.w3.org/2010/xslt-xquery-serialization";
 declare namespace exist = "http://exist.sourceforge.net/NS/exist";
 import module namespace rest = "http://exquery.org/ns/restxq";
 import module namespace util = "http://exist-db.org/xquery/util";
-
 import module namespace http = "http://expath.org/ns/http-client";
+declare       namespace rdf         = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+declare       namespace rdfs        = "http://www.w3.org/2000/01/rdf-schema#";
+import module namespace console     = "http://exist-db.org/xquery/console";
 
 import module namespace api = "http://www.salamanca.school/xquery/api" at "../api.xqm";
 import module namespace sutil = "http://www.salamanca.school/xquery/sutil" at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
@@ -167,7 +169,7 @@ declare %private function textsv1:TXTdeliverDoc($rid as xs:string, $mode as xs:s
             api:error404NotFound()
 };
 
-
+(: TODO: verify that this is working with current RDF data (and parameter and hashtag forwarding) :)
 declare %private function textsv1:HTMLdeliverDoc($rid as xs:string, $mode as xs:string?, $q as xs:string?, 
                                                  $lang as xs:string?, $viewer as xs:string?, $frag as xs:string?, 
                                                  $canvas as xs:string?, $host as xs:string?) {
@@ -188,26 +190,71 @@ declare %private function textsv1:HTMLdeliverDoc($rid as xs:string, $mode as xs:
                 || '/workDetails.html?wid=' || $resource('tei_id')
             return
                 api:redirect-with-303($catRecordUri)
-        else if ($resource('tei_status') eq 2 and $resource('valid')) then 
-            (: valid doc/fragment requested :)
-            if ($resource('request_type') eq 'full') then
-                (:full work
-                volume:)
-            
-(:                let $uri := $api:proto || 'www.' || api:getDomain($host) ||:)
-                ()
-            else (: $resource('request_type') eq 'passage' :)
-(:                passage:)
-                ()
-        else if ($resource('tei_status') = (1, 0)) then
-            () 
-(:            api:error404NotYetAvailable():)
-        else if (not($resource('wellformed'))) then
-            ()
-(:            api:error400BadResource():)
+        else if ($resource('tei_status') eq 2 and $resource('valid')) then       
+            (: valid resource requested -> redirect to according work view (possibly, based on URLs in RDF data) :)
+            let $resourceUri :=
+                if ($resource('request_type') eq 'full' and not(contains($resource('tei_id'), '_Vol'))) then
+                    (: complete work :)
+                    $api:proto || 'www.' || api:getDomain($host) || '/work.html?wid=' || $resource('work_id')
+                else
+                    (: volume / passage :)
+                    let $passageId :=
+                        if ((contains($resource('tei_id'), '_Vol') and not($resource('passage'))) 
+                            or matches(lower-case($resource('passage')), '^vol\d$')) then
+                            (: volume :) 
+                            'vol' || (if (contains($resource('tei_id'), '_Vol0')) then 
+                                          substring-after($resource('tei_id'), '_Vol0')
+                                      else substring-after($resource('tei_id'), '_Vol'))
+                        else
+                            (: passage :)
+                            $resource('passage')
+                    let $rdfAbout := 'texts/' || $resource('work_id') || ':' || $passageId
+                    return
+                        try {
+                            string(
+                                doc($config:rdf-works-root || '/' || $resource('work_id') || '.rdf')//rdf:Description[lower-case(@rdf:about/string()) eq lower-case($rdfAbout)]/rdfs:seeAlso[@rdf:resource[contains(., ".html")]][1]/@rdf:resource
+                            )
+                            } 
+                        catch err:FORG0006 {
+                            let $debug := util:log('warn', '[API] err:FORG0006: could not resolve path ' || $rdfAbout || ' in RDF for wid=' || $resource('work_id'))
+                            (: fallback: simply redirect to complete work :)
+                            return $api:proto || 'www.' || api:getDomain($host) || (if ($lang) then '/' || $lang else ())
+                                || '/work.html?wid=' || $resource('work_id')
+                        }
+            (: the determined $resourceUri contains 0 or exactly one parameter for the target html fragment,
+               but it may or may not contain a hash value. We have to mix in other parameters (mode, search expression or 
+               viewer state) before the hash. :)
+            let $pathname :=
+                if (contains($resourceUri, '?')) then
+                    substring-before($resourceUri, '?')
+                else if (contains($resourceUri, '#')) then
+                    substring-before($resourceUri, '#')
+                else $resourceUri
+            let $hash := if (contains($resourceUri, '#')) then concat('#', substring-after($resourceUri, '#')) else ()
+            let $uriParams :=
+                if (contains($resourceUri, '?')) then
+                    if (contains(substring-after($resourceUri, '?'), '#')) then
+                        substring-before(substring-after($resourceUri, '?'), '#')
+                    else substring-after($resourceUri, '?')
+                else ()
+            let $requestParams := api:concatDocQueryParams((), $mode, $q, $lang, $viewer, (), ()) (: only relevant params :)
+            let $parameters :=
+                if ($uriParams) then '?' || $uriParams || (if ($requestParams) then '&amp;' || $requestParams else ())
+                else if ($requestParams) then '?' || $requestParams
+                else ()
+            let $log := util:log('warn', '$pathname: "' || $pathname || '" ; $hash: "' || $hash || '" ; ')
+            return api:redirect-with-303($pathname || $parameters || $hash )
+        else if ($resource('tei_status') eq 1) then
+            (: work/volume not yet fully available, but metadata exist -> redirect to work details page (regardless of passage) :)
+            api:redirect-with-303($api:proto || 'www.' || api:getDomain($host) || (if ($lang) then '/' || $lang else ())
+                || '/workDetails.html?wid=' || $resource('tei_id'))
+        else if ($resource('wellformed')) then
+            (: work not (yet) available, but we redirect to work page since this should trigger a respective 404 error :)
+            api:redirect-with-303($api:proto || 'www.' || api:getDomain($host) || (if ($lang) then '/' || $lang else ()) 
+                || '/work.html?wid=' || $resource('work_id'))
         else 
-            ()
-(:            api:error404NotFound():)
+            (: request / resource id not wellformed - deliver according (JSON!) response :)
+            api:error400BadResource()
 };
 
 
