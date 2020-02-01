@@ -66,8 +66,8 @@ declare function app:resolvePersname($persName as element()*) {
         then string($persName/@key)
     else if (contains($persName/@ref, 'cerl:')) then
         let $url := "http://sru.cerl.org/thesaurus?version=1.1&amp;operation=searchRetrieve&amp;query=identifier=" || tokenize(tokenize($persName/@ref, 'cerl:')[2], ' ')[1]
-        let $result := http:send-request(<http:request href="{$url}" method="get"/>)
-        let $cerl := $result//srw:searchRetrieveResponse/srw:records/srw:record[1]/srw:recordData/*:record/*:info/*:display/string()
+        let $resp := <resp>{http:send-request(<http:request href="{$url}" method="get"/>)}</resp>
+        let $cerl := $resp//srw:searchRetrieveResponse/srw:records/srw:record[1]/srw:recordData/*:record/*:info/*:display/string()
         return 
             if ($cerl) then 
                 $cerl
