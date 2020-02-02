@@ -681,7 +681,7 @@ declare function sphinx:excerpts ($documents as node()*, $words as xs:string) as
     let $request    := 
         <http:request method="post">
             <http:header name="Content-Type" value="application/x-www-form-urlencoded"/>
-            <http:body media-type="application/x-www-form-urlencoded" method="text"/>
+            <!--<http:body media-type="application/x-www-form-urlencoded"/> this shouldn't be necessary (?) since we send the body in http:send-request() -->
         </http:request>
     let $resp   := <resp>{http:send-request($request, $endpoint, $tempString)}</resp>
 (:    let $debug :=  if ($config:debug = "trace") then util:log("warn", "[SPHINX] Excerpts response: " || serialize($response)) else ():)
@@ -752,7 +752,8 @@ declare function sphinx:highlight ($document as node(), $words as xs:string*) as
     (: TODO: this probably needs debugging :)
     let $request    := 
         <http:request method="post">
-            <http:body media-type="application/x-www-form-urlencoded"/>
+            <http:header name="Content-Type" value="application/x-www-form-urlencoded"/>
+            <!--<http:body media-type="application/x-www-form-urlencoded"/> this shouldn't be necessary (?) since we send the body in http:send-request() -->
         </http:request>
     let $resp   := <resp>{http:send-request($request, $endpoint, $tempString)}</resp>
     (: eXist logs: "Could not parse http response content as XML (will try html, text or fallback to binary): The markup in the document following the root element must be well-formed." :)

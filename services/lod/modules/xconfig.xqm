@@ -13,13 +13,15 @@ declare namespace templates     = "http://exist-db.org/xquery/templates";
 declare namespace repo          = "http://exist-db.org/xquery/repo";
 declare namespace expath        = "http://expath.org/ns/pkg";
 
+import module namespace config = "http://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+
 (: default service locations
 declare variable $xconfig:xtriplesWebserviceURL := "http://xtriples.spatialhumanities.de/";
 declare variable $xconfig:any23WebserviceURL := "http://any23-vm.apache.org/";
 :)
 
 (: --- SvSal customizations: service locations, debugging level etc. --- :)
-declare variable $xconfig:xtriplesWebserviceURL     := "http://api.salamanca.school/v1/xtriples";
+declare variable $xconfig:xtriplesWebserviceURL     := $config:lodServer;
 declare variable $xconfig:any23WebserviceURL        := "http://localhost:8880/any23/any23/";
 declare variable $xconfig:debug                     := "trace"; (: possible values: trace, info, none :)
 declare variable $xconfig:logfile                   := "xTriples.log";

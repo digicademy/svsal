@@ -49,6 +49,7 @@ declare namespace util		  = "http://exist-db.org/xquery/util";
 declare namespace sm			= "http://exist-db.org/xquery/securitymanager";
 declare namespace transform	 = "http://exist-db.org/xquery/transform";
 declare namespace sal		   = "http://salamanca.adwmainz.de";
+declare namespace rdf = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 (: ### End SVSAL modules and namespaces ### :)
 
 declare namespace xtriples = "http://xtriples.spatialhumanities.de/";
@@ -253,7 +254,7 @@ let $debug1 :=  local:log (
 	let $req		:= <http:request href="{$url}" method="get" timeout="60"><http:header name="Connection" value="close"/></http:request>
 
     let $response   := 
-		try	 { http:send-request($req) } (: TODO: debug expath http :)
+		try	 { http:send-request($req) } 
 		catch * {
 let $debug2 :=  local:log (
 							"extract.xql: local:http-get: error retrieving $url=" ||
@@ -271,7 +272,7 @@ let $debug2 :=  local:log (
 		if($response/httpclient:body[matches(@mimetype,"text/html")]) then wega:changeNamespace($response,'http://www.w3.org/1999/xhtml', 'http://exist-db.org/xquery/httpclient')
 		else $response:)
 (:	let $statusCode := $response[1]/data(@status):)
-	let $statusCode := $response[1]/@status (: TODO expath :)
+	let $statusCode := $response[1]/@status
 
 let $debug2 :=  local:log (
 							"extract.xql: local:http-get: response status=" ||
@@ -1057,17 +1058,14 @@ declare function xtriples:getRDF($xtriples as node()*, $vocabularies as node()*)
     (: official RDF format via any23 :)
     let $headers := <http:header name="Content-Type" value="application/rdf+xml; charset=UTF-8"/>
     
-    let $req := (: TODO expath :)
-        <http:request href="{concat($xconfig:any23WebserviceURL, "rdfxml")}" method="post">
+    let $req :=
+        <http:request method="post">
             {$headers}
-            <http:body>
-                {$rdfInternal}
-            </http:body>
+            <http:body media-type="application/rdf+xml"/>
         </http:request>
-
-    let $POST_request := http:send-request($req)
-    let $rdfBad := $POST_request//http:body/*
-
+    let $url := concat($xconfig:any23WebserviceURL, "rdfxml")
+    let $POST_request := http:send-request($req, $url, $rdfInternal)
+    let $rdfBad := $POST_request/rdf:RDF (:node()[not(self::http:response)]:)
 	(: clean self-references broken by any23 service :)
     let $parameters    := <parameters>
                             <param name="idServer"            value="{$xconfig:idserver}"/>
