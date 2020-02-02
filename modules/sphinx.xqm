@@ -10,7 +10,7 @@ import module namespace config     = "http://www.salamanca.school/xquery/config"
 import module namespace i18n       = "http://exist-db.org/xquery/i18n"        at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
 import module namespace render-app = "http://www.salamanca.school/xquery/render-app"  at "xmldb:exist:///db/apps/salamanca/modules/render-app.xqm";
 import module namespace console    = "http://exist-db.org/xquery/console";
-import module namespace http       = "http://expath.org/ns/http-client";
+import module namespace hc       = "http://expath.org/ns/http-client";
 import module namespace util       = "http://exist-db.org/xquery/util";
 import module namespace validation = "http://exist-db.org/xquery/validation";
 
@@ -127,9 +127,9 @@ function sphinx:search ($context as node()*, $model as map(*), $q as xs:string?,
                 let $debug2 := if ($config:debug = "trace") then console:log("Search Request for " || $q || " in Dict: "  || $searchRequestDictEntries || ".") else ()
                 let $debug3 := if ($config:debug = "trace") then console:log("Search Request for " || $q || " in WPs: "   || $searchRequestWorkingPapers || ".") else ()
 
-                let $topWorks                   := <resp>{http:send-request(<http:request href="{$searchRequestWorks}" method="get"/>)}</resp>
-                let $topDictEntries             := <resp>{http:send-request(<http:request href="{$searchRequestDictEntries}" method="get"/>)}</resp>
-                let $topWorkingPapers           := <resp>{http:send-request(<http:request href="{$searchRequestWorkingPapers}" method="get"/>)}</resp>
+                let $topWorks                   := <resp>{hc:send-request(<hc:request href="{$searchRequestWorks}" method="get"/>)}</resp>
+                let $topDictEntries             := <resp>{hc:send-request(<hc:request href="{$searchRequestDictEntries}" method="get"/>)}</resp>
+                let $topWorkingPapers           := <resp>{hc:send-request(<hc:request href="{$searchRequestWorkingPapers}" method="get"/>)}</resp>
                 let $debug4 :=  
                     if ($config:debug = "trace") then
                         (console:log("Search requests returned " || count($topWorks//item) || "/" || count($topDictEntries//item) || "/" || count($topWorkingPapers//item) || " results:"),
@@ -160,7 +160,7 @@ function sphinx:search ($context as node()*, $model as map(*), $q as xs:string?,
                 let $groupingParameters      := "&amp;groupby=sphinx_work&amp;groupfunc=4"
                 let $pagingParameters        := "&amp;offset=" || $offset || "&amp;limit=" || $limit
                 let $searchRequest           := concat($config:sphinxRESTURL, "/search?q=", "%40%28", $alsoSearchAuthorField, "sphinx_description_edit%2Csphinx_description_orig%29%20", encode-for-uri($q), $addConditionParameters, $modeConditionParameters, $groupingParameters, $pagingParameters)
-                let $resp                    := <resp>{http:send-request(<http:request href="{$searchRequest}" method="get"/>)}</resp>
+                let $resp                    := <resp>{hc:send-request(<hc:request href="{$searchRequest}" method="get"/>)}</resp>
                 return $resp//rss
 
 (: **** Case 2a: Search "corpus-nogroup" **** 
@@ -177,7 +177,7 @@ function sphinx:search ($context as node()*, $model as map(*), $q as xs:string?,
                 let $groupingParameters      := ""
                 let $pagingParameters        := "&amp;offset=" || $offset || "&amp;limit=" || $limit
                 let $searchRequest           := concat($config:sphinxRESTURL, "/search?q=", "%40%28", $alsoSearchAuthorField, "sphinx_description_edit%2Csphinx_description_orig%29%20", encode-for-uri($q), $addConditionParameters, $modeConditionParameters, $groupingParameters, $pagingParameters)
-                let $resp := <resp>{http:send-request(<http:request href="{$searchRequest}" method="get"/>)}</resp>
+                let $resp := <resp>{hc:send-request(<hc:request href="{$searchRequest}" method="get"/>)}</resp>
                 return $resp//rss
 
 (:  **** Case 3: Search "headings" **** 
@@ -196,7 +196,7 @@ function sphinx:search ($context as node()*, $model as map(*), $q as xs:string?,
                 let $groupingParameters      := "&amp;groupby=sphinx_work&amp;groupfunc=4"
                 let $pagingParameters        := "&amp;offset=" || $offset || "&amp;limit=" || $limit
                 let $searchRequest           := concat($config:sphinxRESTURL, "/search?q=", "%40%28", $alsoSearchAuthorField, "sphinx_description_edit%2Csphinx_description_orig%29%20", encode-for-uri($q), $addConditionParameters, $modeConditionParameters, $groupingParameters, $pagingParameters)
-                let $resp := <resp>{http:send-request(<http:request href="{$searchRequest}" method="get"/>)}</resp>
+                let $resp := <resp>{hc:send-request(<hc:request href="{$searchRequest}" method="get"/>)}</resp>
                 return $resp//rss
 (:  **** Case 4: Search "notes" **** 
     **** We do a full corpus search, with the additional condition that "@sphinx_hit_type note", grouping results by work id.
@@ -214,7 +214,7 @@ function sphinx:search ($context as node()*, $model as map(*), $q as xs:string?,
                 let $groupingParameters      := "&amp;groupby=sphinx_work&amp;groupfunc=4"
                 let $pagingParameters        := "&amp;offset=" || $offset || "&amp;limit=" || $limit
                 let $searchRequest           := concat($config:sphinxRESTURL, "/search?q=", "%40%28", $alsoSearchAuthorField, "sphinx_description_edit%2Csphinx_description_orig%29%20", encode-for-uri($q), $addConditionParameters, $modeConditionParameters, $groupingParameters, $pagingParameters)
-                let $resp := <resp>{http:send-request(<http:request href="{$searchRequest}" method="get"/>)}</resp>
+                let $resp := <resp>{hc:send-request(<hc:request href="{$searchRequest}" method="get"/>)}</resp>
                 return $resp//rss
 
 (:  **** Case 5: Search "nonotes" **** 
@@ -233,24 +233,24 @@ function sphinx:search ($context as node()*, $model as map(*), $q as xs:string?,
                 let $groupingParameters      := "&amp;groupby=sphinx_work&amp;groupfunc=4"
                 let $pagingParameters        := "&amp;offset=" || $offset || "&amp;limit=" || $limit
                 let $searchRequest           := concat($config:sphinxRESTURL, "/search?q=", "%40%28", $alsoSearchAuthorField, "sphinx_description_edit%2Csphinx_description_orig%29%20", encode-for-uri($q), $addConditionParameters, $modeConditionParameters, $groupingParameters, $pagingParameters)
-                let $resp := <resp>{http:send-request(<http:request href="{$searchRequest}" method="get"/>)}</resp>
+                let $resp := <resp>{hc:send-request(<hc:request href="{$searchRequest}" method="get"/>)}</resp>
                 return $resp//rss
 
 (:  **** Cases that we don't even have yet **** 
             else if ($field eq 'persons') then
                 let $pagingParameters       := "&amp;offset=" || $offset || "&amp;limit=" || $limit
                 let $searchRequest  := concat($config:sphinxRESTURL, "/search?q=", concat('%40%28sphinx_author%2Csphinx_description_edit%2Csphinx_description_orig%29%20', encode-for-uri($q), '%20%40sphinx_hit_type%20persName%20%40sphinx_work%20%5EW0%2A%20'), $pagingParameters)
-                let $resp := <resp>{http:send-request(<http:request href="{$searchRequest}" method="get"/>)}</resp>
+                let $resp := <resp>{hc:send-request(<hc:request href="{$searchRequest}" method="get"/>)}</resp>
                 return $resp//rss
             else if ($field eq 'places') then
                 let $pagingParameters       := "&amp;offset=" || $offset || "&amp;limit=" || $limit
                 let $searchRequest  := concat($config:sphinxRESTURL, "/search?q=", concat('%40%28sphinx_author%2Csphinx_description_edit%2Csphinx_description_orig%29%20', encode-for-uri($q), '%20%40sphinx_hit_type%20placeName%20%40sphinx_work%20%5EW0%2A%20'), $pagingParameters)
-                let $resp := <resp>{http:send-request(<http:request href="{$searchRequest}" method="get"/>)}</resp>
+                let $resp := <resp>{hc:send-request(<hc:request href="{$searchRequest}" method="get"/>)}</resp>
                 return $resp//rss
             else if ($field eq 'lemmata') then
                 let $pagingParameters       := "&amp;offset=" || $offset || "&amp;limit=" || $limit
                 let $searchRequest  := concat($config:sphinxRESTURL, "/search?q=", concat('%40%28sphinx_author%2Csphinx_description_edit%2Csphinx_description_orig%29%20', encode-for-uri($q), '%20%40sphinx_hit_type%20term%20%40sphinx_work%20%5EW0%2A%20'), $pagingParameters)
-                let $resp := <resp>{http:send-request(<http:request href="{$searchRequest}" method="get"/>)}</resp>
+                let $resp := <resp>{hc:send-request(<hc:request href="{$searchRequest}" method="get"/>)}</resp>
                 return $resp//rss
 :)
 
@@ -269,7 +269,7 @@ function sphinx:search ($context as node()*, $model as map(*), $q as xs:string?,
                 let $groupingParameters      := "&amp;groupby=sphinx_work&amp;groupfunc=4"
                 let $pagingParameters        := "&amp;offset=" || $offset || "&amp;limit=" || $limit
                 let $searchRequest           := concat($config:sphinxRESTURL, "/search?q=", "%40%28", $alsoSearchAuthorField, "sphinx_description_edit%2Csphinx_description_orig%29%20", encode-for-uri($q), $addConditionParameters, $modeConditionParameters, $groupingParameters, $pagingParameters)
-                let $resp := <resp>{http:send-request(<http:request href="{$searchRequest}" method="get"/>)}</resp>
+                let $resp := <resp>{hc:send-request(<hc:request href="{$searchRequest}" method="get"/>)}</resp>
                 return $resp//rss
 
 (:  **** Case 9: Search "entries" (i.e. in dictionary headings) ****
@@ -288,7 +288,7 @@ function sphinx:search ($context as node()*, $model as map(*), $q as xs:string?,
                 let $groupingParameters      := "&amp;groupby=sphinx_work&amp;groupfunc=4"
                 let $pagingParameters        := "&amp;offset=" || $offset || "&amp;limit=" || $limit
                 let $searchRequest           := concat($config:sphinxRESTURL, "/search?q=", "%40%28", $alsoSearchAuthorField, "sphinx_description_edit%2Csphinx_description_orig%29%20", encode-for-uri($q), $addConditionParameters, $modeConditionParameters, $groupingParameters, $pagingParameters)
-                let $resp := <resp>{http:send-request(<http:request href="{$searchRequest}" method="get"/>)}</resp>
+                let $resp := <resp>{hc:send-request(<hc:request href="{$searchRequest}" method="get"/>)}</resp>
                 return $resp//rss
 
 (:  **** Case A: Search "wp" ****
@@ -307,7 +307,7 @@ function sphinx:search ($context as node()*, $model as map(*), $q as xs:string?,
                 let $groupingParameters      := "&amp;groupby=sphinx_work&amp;groupfunc=4"
                 let $pagingParameters        := "&amp;offset=" || $offset || "&amp;limit=" || $limit
                 let $searchRequest           := concat($config:sphinxRESTURL, "/search?q=", "%40%28", $alsoSearchAuthorField, "sphinx_description_edit%2Csphinx_description_orig%29%20", encode-for-uri($q), $addConditionParameters, $modeConditionParameters, $groupingParameters, $pagingParameters)
-                let $resp := <resp>{http:send-request(<http:request href="{$searchRequest}" method="get"/>)}</resp>
+                let $resp := <resp>{hc:send-request(<hc:request href="{$searchRequest}" method="get"/>)}</resp>
                 return $resp//rss
 
             else()
@@ -638,7 +638,7 @@ declare
 declare function sphinx:keywords ($q as xs:string?) as xs:string {
     let $keywordsRequestHeaders := <headers></headers>
     let $keywordsRequest        := concat($config:sphinxRESTURL, "/keywords", "?q=", encode-for-uri($q))
-    let $resp               := <resp>{http:send-request(<http:request href="{$keywordsRequest}" method="get"/>)}</resp>
+    let $resp               := <resp>{hc:send-request(<hc:request href="{$keywordsRequest}" method="get"/>)}</resp>
     return string-join($resp//rss/channel//item/*:tokenized/text(), ' ')
 };
 
@@ -671,37 +671,38 @@ declare function sphinx:excerpts ($documents as node()*, $words as xs:string) as
     let $debug := if ($config:debug = "trace") then util:log("warn", "[SPHINX] Posted edit text snippet docs[1]=" || serialize($documents/description_edit)) else ()
     :)
     (: Querying with EXPath http client proved not to work in eXist 3.4
-        let $request    := <http:request method="post">
-                             <http:header name="Content-Type" value="application/x-www-form-urlencoded"/>
-                             <http:body                  media-type="application/x-www-form-urlencoded" method="text">{$tempString}</http:body>
-                           </http:request>
-        let $response   := http:send-request($request, $endpoint)
+        let $request    := <hc:request method="post">
+                             <hc:header name="Content-Type" value="application/x-www-form-urlencoded"/>
+                             <hc:body                  media-type="application/x-www-form-urlencoded" method="text">{$tempString}</hc:body>
+                           </hc:request>
+        let $response   := hc:send-request($request, $endpoint)
     :)
     (: TODO: this probably needs debugging: :)
     let $request    := 
-        <http:request method="post">
-            <http:header name="Content-Type" value="application/x-www-form-urlencoded"/>
-            <!--<http:body media-type="application/x-www-form-urlencoded"/> this shouldn't be necessary (?) since we send the body in http:send-request() -->
-        </http:request>
-    let $resp   := <resp>{http:send-request($request, $endpoint, $tempString)}</resp>
+        <hc:request method="post">
+            <hc:header name="Content-Type" value="application/x-www-form-urlencoded"/>
+            <hc:body media-type="text/plain"/> 
+        </hc:request>
+    let $resp   := <resp>{hc:send-request($request, $endpoint, $tempString)}</resp>
 (:    let $debug :=  if ($config:debug = "trace") then util:log("warn", "[SPHINX] Excerpts response: " || serialize($response)) else ():)
+    let $log := util:log('warn', '[SPHINX EXCERPTS] POST response: ' || serialize($resp))
     let $rspBody    :=  
-        if ($resp//http:body/@encoding = "Base64Encoded") then 
-            if (validation:jaxp(util:base64-decode($resp/node()[not(self::http:response)]), false())) then
+        if ($resp//hc:body/@encoding = "Base64Encoded") then 
+            if (validation:jaxp(util:base64-decode($resp/node()[not(self::hc:response)]), false())) then
                 (:let $debug := 
                     if ($config:debug = "trace") then 
                         util:log('warn', '[SPHINX] INFO: Received wellformed Base64Encoded HTML from (Open)Sphinxsearch,' || 
                                          ' parsing HTML for output...') else ()
                 return :)
-                parse-xml(util:base64-decode($resp/node()[not(self::http:response)])) 
+                parse-xml(util:base64-decode($resp/node()[not(self::hc:response)])) 
             else ()
-        else $resp/node()[not(self::http:response)]
+        else $resp/node()[not(self::hc:response)]
     
     
     
     (:
     let $debug :=  if ($config:debug = "trace") then util:log("warn", "[SPHINX] $rspBody: " || serialize($rspBody)) else ()
-    let $debug :=  if ($config:debug = "trace" and $response//http:body/@encoding = "Base64Encoded") then util:log("warn", "[SPHINX] body decodes to: " || util:base64-decode($response//http:body)) else ()
+    let $debug :=  if ($config:debug = "trace" and $response//hc:body/@encoding = "Base64Encoded") then util:log("warn", "[SPHINX] body decodes to: " || util:base64-decode($response//hc:body)) else ()
     :)
     return $rspBody//rss 
 };
@@ -726,7 +727,7 @@ declare function sphinx:excerpts ($documents as node()*, $words as xs:string) as
             </div>
             ...
     :)
-declare function sphinx:highlight ($document as node(), $words as xs:string*) as node()* {
+declare function sphinx:highlight($document as node(), $words as xs:string*) as node()* {
     let $endpoint   := concat($config:sphinxRESTURL, "/excerpts")
 
 (:                                '&amp;opts[html_strip_mode]=none',:)
@@ -744,31 +745,31 @@ declare function sphinx:highlight ($document as node(), $words as xs:string*) as
 (:    let $debug := console:log():)
     let $tempString := replace(replace($requestDoc, '%20', '+'), '%3D', '=') (: TODO: do we really need to convert %20 (blank) to '+' here? :)
 (: Querying with EXPath http client proved not to work in eXist 3.4
-    let $request    := <http:request method="post">
-                           <http:body media-type="application/x-www-form-urlencoded">{$requestDoc}</http:body>
-                       </http:request>
-    let $response   := http:send-request($request, $endpoint)
+    let $request    := <hc:request method="post">
+                           <hc:body media-type="application/x-www-form-urlencoded">{$requestDoc}</hc:body>
+                       </hc:request>
+    let $response   := hc:send-request($request, $endpoint)
 :)
     (: TODO: this probably needs debugging :)
     let $request    := 
-        <http:request method="post">
-            <http:header name="Content-Type" value="application/x-www-form-urlencoded"/>
-            <!--<http:body media-type="application/x-www-form-urlencoded"/> this shouldn't be necessary (?) since we send the body in http:send-request() -->
-        </http:request>
-    let $resp   := <resp>{http:send-request($request, $endpoint, $tempString)}</resp>
+        <hc:request method="post">
+            <hc:header name="Content-Type" value="application/x-www-form-urlencoded"/>
+            <hc:body media-type="application/x-www-form-urlencoded"/> 
+        </hc:request>
+    let $resp   := <resp>{hc:send-request($request, $endpoint, $tempString)}</resp>
     (: eXist logs: "Could not parse http response content as XML (will try html, text or fallback to binary): The markup in the document following the root element must be well-formed." :)
     (:let $debug := util:log('warn', '[SPHINX-HIGHLIGHT] request from (open)Sphinxsearch was: &#xA;&#xA;' || $requestDoc || '&#xA;&#xA; Response from (open)Sphinxsearch was: ' 
-        || serialize(if ($response//http:body/@encoding = "Base64Encoded") then util:base64-decode($response) else $response) ):)
+        || serialize(if ($response//hc:body/@encoding = "Base64Encoded") then util:base64-decode($response) else $response) ):)
     
     let $rspBody    := 
-        if ($resp//http:body/@encoding = "Base64Encoded") then 
-            if (validation:jaxp(util:base64-decode($resp/node()[not(self::http:response)]), false())) then
+        if ($resp//hc:body/@encoding = "Base64Encoded") then 
+            if (validation:jaxp(util:base64-decode($resp/node()[not(self::hc:response)]), false())) then
                 (:let $debug := 
                     if ($config:debug = "trace") then 
                         util:log('warn', '[SPHINX] INFO: Received wellformed Base64Encoded HTML from (Open)Sphinxsearch,' || 
                                          ' parsing HTML for output...') else ()
                 return :)
-                    parse-xml(util:base64-decode($resp/node()[not(self::http:response)]))
+                    parse-xml(util:base64-decode($resp/node()[not(self::hc:response)]))
             else 
                 (:let $debug := 
                     if ($config:debug = "trace") then 
@@ -781,9 +782,9 @@ declare function sphinx:highlight ($document as node(), $words as xs:string*) as
                 if ($config:debug = "trace") then 
                     util:log('warn', '[SPHINX] INFO: Received wellformed, non-Base64Encoded HTML from (Open)Sphinxsearch, directing to output...') else ()
             return :)
-                $resp/node()[not(self::http:response)]
+                $resp/node()[not(self::hc:response)]
     (: problem end :)
-(:    let $debug := util:log("warn", "[SPHINX]" || serialize($response//http:body)):)
+(:    let $debug := util:log("warn", "[SPHINX]" || serialize($response//hc:body)):)
 
     return $rspBody//rss
 };
@@ -823,7 +824,7 @@ declare
                 $sortingParameters,
                 $pagingParameters)
 (:    let $debug := util:log('warn', '[SPHINX] sphinx:details $detailsRequest=' || $detailsRequest):)
-    let $resp := <resp>{http:send-request(<http:request href="{$detailsRequest}" method="get"/>)}</resp>
+    let $resp := <resp>{hc:send-request(<hc:request href="{$detailsRequest}" method="get"/>)}</resp>
     let $details:= $resp//rss
     
     let $searchInfo :=  
