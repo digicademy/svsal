@@ -606,7 +606,7 @@ declare %templates:wrap function admin:renderWork($workId as xs:string*) as elem
                 )
             let $saveFragments :=
                 for $fragment in $htmlData('fragments') return
-                    let $fileName := $fragment('index') || '_' || $fragment('tei_id') || '.html'
+                    let $fileName := $fragment('number') || '_' || $fragment('tei_id') || '.html'
                     let $storeStatus := if ($fragment('html')) then admin:saveFile($workId, $fileName, $fragment('html'), 'html') else ()
                     return 
                         (: generate some HTML output to be shown in report :)
