@@ -6,18 +6,22 @@ declare namespace tei              = "http://www.tei-c.org/ns/1.0";
 declare namespace sal              = "http://salamanca.adwmainz.de";
 declare namespace opensearch       = "http://a9.com/-/spec/opensearch/1.1/";
 declare namespace templates        = "http://exist-db.org/xquery/templates";
-import module namespace config     = "http://www.salamanca.school/xquery/config"  at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
-import module namespace i18n       = "http://exist-db.org/xquery/i18n"        at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
-import module namespace render-app = "http://www.salamanca.school/xquery/render-app"  at "xmldb:exist:///db/apps/salamanca/modules/render-app.xqm";
+import module namespace config     = "http://www.salamanca.school/xquery/config"        at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace i18n       = "http://exist-db.org/xquery/i18n"                  at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
+import module namespace render-app = "http://www.salamanca.school/xquery/render-app"    at "xmldb:exist:///db/apps/salamanca/modules/render-app.xqm";
 import module namespace console    = "http://exist-db.org/xquery/console";
 import module namespace hc       = "http://expath.org/ns/http-client";
+import module namespace request    = "http://exist-db.org/xquery/request";
+import module namespace session    = "http://exist-db.org/xquery/session";
 import module namespace util       = "http://exist-db.org/xquery/util";
 import module namespace validation = "http://exist-db.org/xquery/validation";
 
 declare copy-namespaces no-preserve, inherit;
 
+(:
 declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
 declare option    output:method "xml";
+:)
 
 (: REST endpoints for Sphinx based Salamanca index:
 
@@ -95,7 +99,7 @@ declare function sphinx:buildSelect ($node as node(), $model as map(*), $lang as
                 <i18n:text key="workingPapers">Working Papers</i18n:text>: <i18n:text key="WPMetadata">Abstract und Metadaten</i18n:text>
             </option>
         </select>
-    return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
+    return $output
 };
 
 declare %public
@@ -318,7 +322,7 @@ function sphinx:search ($context as node()*, $model as map(*), $q as xs:string?,
 declare 
     %templates:default ("offset", "0")
     %templates:default ("limit", "10")
-    function sphinx:resultsLandingPage ($node as node(), $model as map(*), $q as xs:string?,  $field as xs:string?, 
+function sphinx:resultsLandingPage ($node as node(), $model as map(*), $q as xs:string?,  $field as xs:string?, 
                                         $offset as xs:integer?, $limit as xs:integer?, $sort as xs:integer?, $sortby as xs:string?, 
                                         $lang as xs:string) {
     
@@ -631,7 +635,7 @@ declare
 
     else()
 
-    return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
+    return $output (: i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) :)
 };
 
 
@@ -647,64 +651,41 @@ declare function sphinx:keywords ($q as xs:string?) as xs:string {
 :)
 declare function sphinx:excerpts ($documents as node()*, $words as xs:string) as node()* {
     let $endpoint   := concat($config:sphinxRESTURL, "/excerpts")
-(:    let $debug :=  if ($config:debug = ("info", "trace")) then util:log("warn", "[SPHINX] Excerpts needed for doc[0]: " || substring(normalize-space($documents/description_orig), 0, 150)) else ():)
-    let $normalizedOrig := normalize-space(serialize($documents/description_orig))
-    let $normalizedEdit := normalize-space(serialize($documents/description_edit))
-    (: are parameters and delimiters (&) ecnoded correctly here, or do we need forther replace()ments? :)
-    let $requestDoc := 
-        concat(encode-for-uri('opts[limit]=150'),
-              '&amp;', encode-for-uri('opts[html_strip_mode]=strip'),
-              '&amp;', encode-for-uri('opts[query_mode]=true'),
-              '&amp;', encode-for-uri('opts[around]=7'),
-(:                              '&amp;', encode-for-uri('opts[force_all_words]=true'),:)
-              '&amp;', encode-for-uri('words=' || $words),
-              '&amp;', encode-for-uri(concat('docs[0]=', $normalizedOrig)),
-(:                                           normalize-space($documents/description_orig))),:)
-              '&amp;', encode-for-uri(concat('docs[1]=', $normalizedEdit))
-(:                                           normalize-space($documents/description_edit):)
-           )
-    (:let $tempString := replace(replace(replace($requestDoc, '%20', '+'), '%3D', '='), '%26amp%3B', '&amp;'):) (:  with '+' and '&amp;' being replaced, highlighting isn't working correctly :)
-    let $tempString := (:replace( :) replace($requestDoc, '%3D', '=') (:, '%26amp%3B', '&amp;'):)
-    (:
-    let $debug :=  if ($config:debug = "trace") then util:log("warn", "[SPHINX] Excerpts request body: " || $tempString) else ()
-    let $debug := if ($config:debug = "trace") then util:log("warn", "[SPHINX] Posted orig text snippet docs[0]=" || serialize($documents/description_orig)) else ()
-    let $debug := if ($config:debug = "trace") then util:log("warn", "[SPHINX] Posted edit text snippet docs[1]=" || serialize($documents/description_edit)) else ()
-    :)
-    (: Querying with EXPath http client proved not to work in eXist 3.4
-        let $request    := <hc:request method="post">
-                             <hc:header name="Content-Type" value="application/x-www-form-urlencoded"/>
-                             <hc:body                  media-type="application/x-www-form-urlencoded" method="text">{$tempString}</hc:body>
-                           </hc:request>
-        let $response   := hc:send-request($request, $endpoint)
-    :)
-    (: TODO: this probably needs debugging: :)
-    let $request    := 
-        <hc:request method="post">
-            <hc:header name="Content-Type" value="application/x-www-form-urlencoded"/>
-            <hc:body media-type="text/plain"/> 
+    let $debug := if ($config:debug = ("info", "trace"))    then util:log("warn", "[SPHINX EXCERPTS] Excerpts needed for doc[0]: " || substring(normalize-space($documents/description_orig), 0, 150))    else ()
+    let $normalizedOrig := $documents/description_orig
+        let              $normalizedEdit := $documents/description_edit
+              let $request              := 
+              <hc:request method="post" http-version="1.0"> <hc:multipart              media-type="multipart/form-data" boundary="xyzBouNDarYxyz"> <hc:header              name="content-disposition" value='form-data; name="opts[limit]"'/> <hc:body           media-type="text/plain">150</hc:body>    <hc:header name="content-disposition"    value='form-data; name="opts[html_strip_mode]"'/> <hc:body media-type="text/plain">strip</hc:body> <hc:header name="content-disposition" value='form-data; name="opts[query_mode]"'/> <hc:body media-type="text/plain">true</hc:body>    <hc:header    name="content-disposition"    value='form-data; name="opts[around]"'/>    <hc:body media-type="text/plain">7</hc:body>    <hc:header name="content-disposition"        value='form-data; name="words"'/>
+                <hc:body media-type="text/plain">{$words}</hc:body>
+            <hc:header name="content-disposition" value='form-data; name="docs[0]"'/>
+                <hc:body media-type="text/xml">{$normalizedOrig}</hc:body>
+                <hc:header name="content-disposition" value='form-data; name="docs[1]"'/>
+            <hc:body media-type="text/xml">{$normalizedEdit}</hc:body> 
+        </hc:multipart>
         </hc:request>
-    let $resp   := <resp>{hc:send-request($request, $endpoint, $tempString)}</resp>
-(:    let $debug :=  if ($config:debug = "trace") then util:log("warn", "[SPHINX] Excerpts response: " || serialize($response)) else ():)
-    let $log := util:log('warn', '[SPHINX EXCERPTS] POST response: ' || serialize($resp))
+    let $log        := if ($config:debug = ("info", "trace")) then util:log("warn", "[SPHINX EXCERPTS] POST request element: " || serialize($request)) else ()
+    let $debug      := if ($config:debug = "trace") then console:log("[SPHINX EXCERPTS] POST request element: " || serialize($request)) else ()
+    let $resp   := <resp>{hc:send-request($request, $endpoint)}</resp>
+    let $log := if ($config:debug = ("info", "trace")) then util:log('warn', '[SPHINX EXCERPTS] POST response: ' || serialize($resp)) else ()
+    let $debug    :=  if ($config:debug = "trace") then console:log('[SPHINX EXCERPTS] POST response: '            || serialize($resp)) else ()
+(:  TODO:   check encoding (and other stuff, too?) before parsing and returning $resp//rss.
+            But the following (old) way of checking is wrong: 
     let $rspBody    :=  
         if ($resp//hc:body/@encoding = "Base64Encoded") then 
             if (validation:jaxp(util:base64-decode($resp/node()[not(self::hc:response)]), false())) then
-                (:let $debug := 
+                let $debug := 
                     if ($config:debug = "trace") then 
                         util:log('warn', '[SPHINX] INFO: Received wellformed Base64Encoded HTML from (Open)Sphinxsearch,' || 
                                          ' parsing HTML for output...') else ()
-                return :)
-                parse-xml(util:base64-decode($resp/node()[not(self::hc:response)])) 
+                return
+                    parse-xml(util:base64-decode($resp/node()[not(self::hc:response)])) 
             else ()
         else $resp/node()[not(self::hc:response)]
-    
-    
-    
-    (:
-    let $debug :=  if ($config:debug = "trace") then util:log("warn", "[SPHINX] $rspBody: " || serialize($rspBody)) else ()
-    let $debug :=  if ($config:debug = "trace" and $response//hc:body/@encoding = "Base64Encoded") then util:log("warn", "[SPHINX] body decodes to: " || util:base64-decode($response//hc:body)) else ()
-    :)
-    return $rspBody//rss 
+:)
+                let $rspBody   := $resp//rss
+    let $log   :=  if ($config:debug = ("info", "trace")) then            util:log("warn", "[SPHINX EXCERPTS] $rspBody: " || serialize($rspBody))        else ()
+    let $debug :=  if ($config:debug = "trace")    then    console:log("[SPHINX EXCERPTS] POST response body decodes to: "    ||    (serialize($rspBody))) else ()
+    return $rspBody
 };
 
 (:
@@ -727,66 +708,20 @@ declare function sphinx:excerpts ($documents as node()*, $words as xs:string) as
             </div>
             ...
     :)
-declare function sphinx:highlight($document as node(), $words as xs:string*) as node()* {
+declare function sphinx:highlight($document as node(), $words as xs:string) as node()* {
     let $endpoint   := concat($config:sphinxRESTURL, "/excerpts")
-
-(:                                '&amp;opts[html_strip_mode]=none',:)
-(:                                '&amp;opts[html_strip_mode]=retain',:)
-(:                                '&amp;opts[html_strip_mode]=index',:)
-(:                                '&amp;opts[html_strip_mode]=strip',:)
-
-    let $requestDoc := concat(           encode-for-uri('opts[limit]=0'),
-                                '&amp;', encode-for-uri('opts[html_strip_mode]=retain'),
-                                '&amp;', encode-for-uri('opts[query_mode]=true'),
-                                '&amp;', encode-for-uri(concat('words=', $words)),
-                                '&amp;', encode-for-uri(concat('docs[1]=', serialize($document)))
-                               )
-
-(:    let $debug := console:log():)
-    let $tempString := replace(replace($requestDoc, '%20', '+'), '%3D', '=') (: TODO: do we really need to convert %20 (blank) to '+' here? :)
-(: Querying with EXPath http client proved not to work in eXist 3.4
-    let $request    := <hc:request method="post">
-                           <hc:body media-type="application/x-www-form-urlencoded">{$requestDoc}</hc:body>
-                       </hc:request>
-    let $response   := hc:send-request($request, $endpoint)
-:)
-    (: TODO: this probably needs debugging :)
-    let $request    := 
-        <hc:request method="post">
-            <hc:header name="Content-Type" value="application/x-www-form-urlencoded"/>
-            <hc:body media-type="application/x-www-form-urlencoded"/> 
+    let $request := 
+                                <hc:request method="post"                                http-version="1.0"> <hc:multipart                                media-type="multipart/form-data" boundary="xyzBouNDarYxyz"> <hc:header                                name="content-disposition" value='form-data; name="opts[limit]"'/> <hc:body                               media-type="text/plain">0</hc:body>    <hc:header name="content-disposition" value='form-data; name="opts[html_strip_mode]"'/> <hc:body media-type="text/plain">retain</hc:body> <hc:header name="content-disposition" value='form-data; name="opts[query_mode]"'/> <hc:body    media-type="text/plain">true</hc:body>    <hc:header name="content-disposition"    value='form-data; name="words"'/> <hc:body media-type="text/plain">{$words}</hc:body>
+            <hc:header name="content-disposition" value='form-data; name="docs[0]"'/>
+            <hc:body media-type="text/xml">{$document}</hc:body> 
+        </hc:multipart>
         </hc:request>
-    let $resp   := <resp>{hc:send-request($request, $endpoint, $tempString)}</resp>
-    (: eXist logs: "Could not parse http response content as XML (will try html, text or fallback to binary): The markup in the document following the root element must be well-formed." :)
-    (:let $debug := util:log('warn', '[SPHINX-HIGHLIGHT] request from (open)Sphinxsearch was: &#xA;&#xA;' || $requestDoc || '&#xA;&#xA; Response from (open)Sphinxsearch was: ' 
-        || serialize(if ($response//hc:body/@encoding = "Base64Encoded") then util:base64-decode($response) else $response) ):)
-    
-    let $rspBody    := 
-        if ($resp//hc:body/@encoding = "Base64Encoded") then 
-            if (validation:jaxp(util:base64-decode($resp/node()[not(self::hc:response)]), false())) then
-                (:let $debug := 
-                    if ($config:debug = "trace") then 
-                        util:log('warn', '[SPHINX] INFO: Received wellformed Base64Encoded HTML from (Open)Sphinxsearch,' || 
-                                         ' parsing HTML for output...') else ()
-                return :)
-                    parse-xml(util:base64-decode($resp/node()[not(self::hc:response)]))
-            else 
-                (:let $debug := 
-                    if ($config:debug = "trace") then 
-                        util:log('error', '[SPHINX] ERROR: Received malformed Base64Encoded HTML from (Open)Sphinxsearch,' || 
-                                         ' not trying to produce any output here for not crashing the reading view - text will NOT be highlighted...') else ()
-                return :)
-                    ()
-        else 
-            (:let $debug := 
-                if ($config:debug = "trace") then 
-                    util:log('warn', '[SPHINX] INFO: Received wellformed, non-Base64Encoded HTML from (Open)Sphinxsearch, directing to output...') else ()
-            return :)
-                $resp/node()[not(self::hc:response)]
-    (: problem end :)
-(:    let $debug := util:log("warn", "[SPHINX]" || serialize($response//hc:body)):)
 
-    return $rspBody//rss
+    let $resp   := <resp>{hc:send-request($request, $endpoint)}</resp>
+    let    $rspBody    := $resp//rss
+    let $log    := if ($config:debug = ("info", "trace")) then util:log("warn",            "[SPHINX HIGHLIGHTING] $rspBody: " || serialize($rspBody)) else ()
+                let                    $debug :=  if ($config:debug = ("info", "trace"))            then console:log("[SPHINX HIGHLIGHTING] POST response body decodes to: "                ||                    (serialize($rspBody)))        else ()
+    return $rspBody
 };
 
 (: not available as parameters:
@@ -799,7 +734,7 @@ declare
      %templates:default ("limit", 10)
      %templates:default ("offset", 0)
      %templates:default ("lang", "en")
-    function sphinx:details ($wid as xs:string, $field as xs:string, $q as xs:string, $offset as xs:integer, 
+function sphinx:details ($wid as xs:string, $field as xs:string, $q as xs:string, $offset as xs:integer, 
                              $limit as xs:integer, $lang as xs:string?) {
     let $detailsRequestHeaders  := <headers></headers>
     let $conditionParameters    := "@sphinx_work ^" || $wid
@@ -865,7 +800,7 @@ declare
                     let $hit_id         := $item/hit_id/text()
 (:                    let $crumbtrail     := sphinx:addLangToCrumbtrail(<sal:crumbtrail>{sphinx:addQToCrumbtrail(doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $hit_id]/sal:crumbtrail, $q)}</sal:crumbtrail>, $lang):)
                     let $crumbtrailRaw := doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $hit_id]/sal:crumbtrail
-                    let $crumbtrailI18n := i18n:addLabelsToCrumbtrail($crumbtrailRaw)
+                    let $crumbtrailI18n := i18n:addLabelsToCrumbtrail($crumbtrailRaw) (: this adds <i18n:text> labels, but does no processing :)
                     let $crumbtrail := sphinx:addQToCrumbtrail($crumbtrailI18n, $q)
 (:    VERY old version:    let $bombtrail      := sphinx:addLangToCrumbtrail(                 sphinx:addQToCrumbtrail(doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $hit_id]/sal:crumbtrail/a[last()], $q), $lang):)
 (:                    let $bombtrail      := sphinx:addQToCrumbtrail(doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $hit_id]/sal:crumbtrail/a[last()], $q):)
@@ -873,12 +808,12 @@ declare
 
                     let $snippets :=  
                         <documents>
-                            <description_orig>
+                            <!-- <description_orig> heute geändert -->
                                 {$item/description_orig}
-                            </description_orig>
-                            <description_edit>
+                            <!-- </description_orig> heute geändert -->
+                            <!-- <description_edit> heute geändert -->
                                 {$item/description_edit}
-                            </description_edit>
+                            <!-- </description_edit> heute geändert -->
                         </documents>
                     let $excerpts       := sphinx:excerpts($snippets, $q)
                     let $description_orig    := $excerpts//item[1]/description 
@@ -919,7 +854,7 @@ declare
             </div>
         </div>
 
-    return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
+    return $output (: i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) :)
 };
 
 (: Remove name IDs etc. from search excerpts as displayed in the results overview :)
@@ -969,6 +904,7 @@ declare %private function sphinx:print-sectionsHelp($sections as element()*, $hi
         else
             ()
 };
+
 
 declare function sphinx:loadSnippets($wid as xs:string*) {
     let $todo             := collection($config:tei-root)//tei:TEI[tei:text/@type = ("work_multivolume", "work_monograph", "author_article", "lemma_article", "working_paper")]/@xml:id
@@ -1034,5 +970,3 @@ declare function local:passthruCrumbtrailLang($nodes as node()*, $lang as xs:str
 declare function local:passthruCrumbtrailQ($nodes as node()*, $q as xs:string*) as item()* {
     for $node in $nodes/node() return sphinx:addQToCrumbtrail($node, $q)
 };
-
-
