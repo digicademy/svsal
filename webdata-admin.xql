@@ -31,7 +31,7 @@ let $format := request:get-parameter('format',     '')
 
 let $checkIndex :=
     (: if work rendering (HTML, snippet, RDF) is requested, we need to make sure that there is an index file :)
-    if (starts-with($rid, 'W0') and not($format = ('index', 'iiif')) and $format ne 'all') then
+    if (starts-with($rid, 'W0') and not($format = ('index', 'iiif', 'all'))) then
         if (doc-available($config:index-root || '/' || $rid || '_nodeIndex.xml')) then ()
         else error(xs:QName('webdata-admin.xql'), 'There is no index file.')
     else ()
