@@ -62,7 +62,6 @@ function textsv1:getCorpus($format, $lang, $accept, $host) {
             default return
                 (: redirect to HTML works list :)
                 api:redirect-with-303($api:proto || api:getDomain($host) || '/' || (if ($lang) then $lang || '/' else ()) || 'works.html')
-         
 };
 
 
@@ -90,6 +89,7 @@ function textsv1:docRequest($rid, $format, $mode, $q, $lang, $viewer, $frag, $ca
                to the respective format's function - the other ones are simply ignored :)
             case 'tei' return textsv1:TEIdeliverDoc($rid, $mode)
             case 'txt' return textsv1:TXTdeliverDoc($rid, $mode)
+            case 'rdf' return textsv1:RDFdeliverDoc($rid)
             default return 
                 textsv1:HTMLdeliverDoc($rid, $mode, $q, $lang, $viewer, $frag, $canvas, $host)
 };
@@ -169,7 +169,7 @@ declare %private function textsv1:TXTdeliverDoc($rid as xs:string, $mode as xs:s
             api:error404NotFound()
 };
 
-(: TODO: verify that this is working with current RDF data (and parameter and hashtag forwarding) :)
+
 declare %private function textsv1:HTMLdeliverDoc($rid as xs:string, $mode as xs:string?, $q as xs:string?, 
                                                  $lang as xs:string?, $viewer as xs:string?, $frag as xs:string?, 
                                                  $canvas as xs:string?, $host as xs:string?) {
@@ -255,6 +255,27 @@ declare %private function textsv1:HTMLdeliverDoc($rid as xs:string, $mode as xs:
         else 
             (: request / resource id not wellformed - deliver according (JSON!) response :)
             api:error400BadResource()
+};
+
+declare %private function textsv1:RDFdeliverDoc($rid as xs:string) {
+    let $resource := textsv1:validateResourceId($rid)
+    return
+        if ($resource('tei_status') = (2, 1)) then 
+            if (doc-available($config:rdf-works-root || '/' || $resource('work_id') || '.rdf')) then
+                (: valid doc/fragment requested -> we deliver the complete RDF dataset, regardless of passage :)
+                api:deliverRDF(
+                    doc($config:rdf-works-root || '/' || $resource('work_id') || '.rdf'),
+                    $resource('work_id')
+                )
+            else
+                (: in case rdf hasn't been rendered yet :)
+                api:error404NotYetAvailable()
+        else if ($resource('tei_status') eq 0) then
+            api:error404NotYetAvailable()
+        else if (not($resource('wellformed'))) then
+            api:error400BadResource()
+        else 
+            api:error404NotFound() 
 };
 
 

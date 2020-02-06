@@ -54,6 +54,13 @@ declare variable $api:teiOutputParams :=
         <output:media-type value="application/tei+xml"/>
     </output:serialization-parameters>;
     
+declare variable $api:rdfOutputParams :=
+    <output:serialization-parameters>
+        <output:method value="xml"/>
+        <output:indent value="yes"/>
+        <output:media-type value="application/rdf+xml"/>
+    </output:serialization-parameters>;
+    
 declare variable $api:txtOutputParams :=
     <output:serialization-parameters>
         <output:method value="text"/>
@@ -86,6 +93,20 @@ declare function api:deliverTEI($content, $name as xs:string?) {
             {$api:teiOutputParams}
             <http:response status="200">    
                 <http:header name="Content-Type" value="application/tei+xml; charset=utf-8"/>
+                <http:header name="Content-Disposition" value="{$contentDisposition}"/>
+            </http:response>
+        </rest:response>,
+        $content
+};
+
+declare function api:deliverRDF($content, $name as xs:string) {
+    let $filename := translate($name, ':.', '_-') || '.rdf'
+    let $contentDisposition := 'attachment; filename="' || $filename || '"'
+    return
+        <rest:response>
+            {$api:teiOutputParams}
+            <http:response status="200">    
+                <http:header name="Content-Type" value="application/rdf+xml; charset=utf-8"/>
                 <http:header name="Content-Disposition" value="{$contentDisposition}"/>
             </http:response>
         </rest:response>,

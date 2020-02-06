@@ -604,29 +604,30 @@ declare function net:APIdeliverTXT($requestData as map(), $netVars as map()*) {
     else net:error(404, $netVars, 'Resource could not be found.')
 };
 :)
-
+(:
 declare function net:APIdeliverRDF($requestData as map(), $netVars as map()*) {
     if (starts-with($requestData('work_id'), 'W0')) then 
         if (doc-available($config:rdf-works-root || '/' || $requestData('work_id') || '.rdf')) then
             let $headers1 := response:set-header('Content-Disposition', 'attachment; filename="' || $requestData('work_id') || '.rdf"')
             let $header2 := response:set-header('Content-Type', 'application/rdf+xml')
             return doc($config:rdf-works-root || '/' || $requestData('work_id') || '.rdf')
-        (: TODO: if there only is a teiHeader, we can also render rdf on-the-fly; however, the following returns almost empty RDF :)
-        (:else if (sutil:WRKvalidateId($requestData('work_id')) eq 1) then
+        (\: TODO: if there only is a teiHeader, we can also render rdf on-the-fly; however, the following returns almost empty RDF :\)
+        (\:else if (sutil:WRKvalidateId($requestData('work_id')) eq 1) then
             let $debug := if ($config:debug = ("trace", "info")) then console:log("Generating rdf for " || $requestData('work_id') || " ...") else ()
             let $path := '/services/lod/extract.xql'
             let $parameters := 
                 (<exist:add-parameter name="configuration" value="{$config:apiserver || '/xtriples/createConfig.xql?resourceId=' || $requestData('work_id') || '&amp;format=' || $config:lodFormat}"/>)
             let $headers1 := response:set-header("Content-Disposition", 'attachment; filename="' || $requestData('work_id') || '.rdf"')
             let $header2 := response:set-header('Content-Type', 'application/rdf+xml')
-            return net:forward($path, $netVars, $parameters):)
+            return net:forward($path, $netVars, $parameters):\)
         else if (sutil:WRKvalidateId($requestData('work_id')) ge 0) then net:error(404, $netVars, 'resource-not-yet-available')
-        else net:error(404, $netVars, 'Could not find rdf resource') (: not automatically creating rdf here if not available, since this might slow down the server inacceptably :)
-    else if ($requestData('work_id') eq '*') then (: rdf of all works doesn't exist atm, redirect to HTML work overview - or rather return error? :)
+        else net:error(404, $netVars, 'Could not find rdf resource') (\: not automatically creating rdf here if not available, since this might slow down the server inacceptably :\)
+    else if ($requestData('work_id') eq '*') then (\: rdf of all works doesn't exist atm, redirect to HTML work overview - or rather return error? :\)
         let $debug := console:log("DEBUG MESSAGE")
         return net:redirect-with-307($config:webserver || '/works.html')
     else net:error(404, $netVars, 'Invalid rdf request.')
 };
+:)
 
 declare function net:APIdeliverJPG($requestData as map(), $netVars as map()*) {
     if (starts-with($requestData('work_id'), 'W0')) then 
