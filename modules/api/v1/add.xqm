@@ -18,10 +18,13 @@ import module namespace util = "http://exist-db.org/xquery/util";
 import module namespace http = "http://expath.org/ns/http-client";
 import module namespace console     = "http://exist-db.org/xquery/console";
 
+import module namespace config = "http://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
 import module namespace api = "http://www.salamanca.school/xquery/api" at "../api.xqm";
 
 
 (: RESTXQ FUNCTIONS :)
+
+(: Search :)
 
 (: TODO add more / url path units query params if necessary :)
 declare
@@ -33,3 +36,44 @@ function addv1:search($path1, $path2, $q, $host) {
     api:redirect-with-303($api:proto || 'search.' || api:getDomain($host) || '/' || $trail || '/' || $trail2 || '?q=' || $q)
 };
 
+
+(: Codesharing :)
+
+declare
+%rest:GET
+%rest:path("/v1/codesharing/protocol")
+function addv1:codesharingProtocol() {
+    api:deliverHTML(
+        doc($config:app-root || '/services/codesharing/codesharing_protocol.xhtml')
+    ) 
+};
+
+declare
+%rest:GET
+%rest:query-param("verb", "{$verb}", "")
+%rest:query-param("elementName", "{$elementName}", "")
+%rest:query-param("attributeName", "{$attributeName}", "")
+%rest:query-param("attributeValue", "{$attributeValue}", "")
+%rest:query-param("documentType", "{$documentType}", "")
+%rest:query-param("wrapped", "{$wrapped}", "")
+%rest:query-param("namespace", "{$namespace}", "")
+%rest:path("/v1/codesharing")
+function addv1:codesharing($verb, $elementName, $attributeName, $attributeValue, $documentType, $wrapped, $namespace) {
+    ()
+    (: TODO :)  
+    (:
+    let $paramStr := 
+        string-join(
+            (
+                (if ($verb) then 'verb=' || $verb else ()),
+                (if ($elementName) then 'elementName=' || $elementName else ()),
+                (if ($attributeName) then 'attributeName=' || $attributeName else ()),
+                (if ($attributeValue) then 'attributeValue=' || $attributeValue  else ()),
+                (if ($documentType) then 'documentType=' || $documentType else ()),
+                (if ($wrapped) then 'wrapped=' || $wrapped else ()),
+                (if ($namespace) then 'namespace=' || $namespace else ())
+            ),
+            '&amp;'
+        )
+    :)
+};

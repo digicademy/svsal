@@ -142,7 +142,7 @@ declare function api:deliverTXTBinary($content as xs:base64Binary?, $name as xs:
         $content
 };
 
-(:
+
 declare function api:deliverHTML($content) {
         <rest:response>
             <http:response status="200">
@@ -150,9 +150,9 @@ declare function api:deliverHTML($content) {
                 <output:method value="html"/>
             </http:response>
         </rest:response>,
-        $content
+        $content 
 };
-:)
+
 
 declare function api:deliverZIP($content as xs:base64Binary?, $name as xs:string) {
     let $filename := $name || '.zip'
@@ -442,9 +442,8 @@ declare %private function api:negotiateCTSub($requestedContentTypes as xs:string
 (: *** Todo:
    ***  - API landing page / default return values (depending on formats)? - currently simply redirecting to www.s.s
    ***  - Add 'meta' endpoint with json-ld, (mets/mods) (or extend "texts" endpoint in this regard)
-   ***  - Add iiif endpoints (not really working atm)
    ***  - Implement collections/lists of resources and their filters (e.g. `/texts?q=lex` resulting in a list of texts) - but which format(s)?
-   ***  - Make JSON-LD the fundamental output format (encapsulate html/xml in a json field) and diverge only when explicitly asked to do so (really?)
+   ***  - Make JSON-LD / DTS the fundamental output format (encapsulate html/xml in a json field) and diverge only when explicitly asked to do so (really?)
 :)
 
 
