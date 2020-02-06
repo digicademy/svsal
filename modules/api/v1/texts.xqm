@@ -87,6 +87,7 @@ function textsv1:docRequest($rid, $format, $mode, $q, $lang, $viewer, $frag, $ca
         switch($format)
             (: although this method principally accepts all possible query params, only the suitable ones are passed 
                to the respective format's function - the other ones are simply ignored :)
+            case 'jpg' return textsv1:JPGredirect($rid)
             case 'tei' return textsv1:TEIdeliverDoc($rid, $mode)
             case 'txt' return textsv1:TXTdeliverDoc($rid, $mode)
             case 'rdf' return textsv1:RDFdeliverDoc($rid)
@@ -276,6 +277,32 @@ declare %private function textsv1:RDFdeliverDoc($rid as xs:string) {
             api:error400BadResource()
         else 
             api:error404NotFound() 
+};
+
+declare %private function textsv1:JPGredirect($rid as xs:string) {
+    let $resource := textsv1:validateResourceId($rid)
+    return
+        if ($resource('tei_status') = (2, 1) and $resource('passage_status') eq 1) then (: jpg requests *must* specify a passage id :)
+            if (doc-available($config:rdf-works-root || '/' || $resource('work_id') || '.rdf')) then
+                let $rdfResource := 'texts/' || $resource('work_id') || ':' || $resource('passage')
+                let $jpgUrl :=
+                    doc($config:rdf-works-root || '/' || $resource('work_id') || '.rdf')
+                        /rdf:RDF/rdf:Description[lower-case(@rdf:about) eq lower-case($rdfResource)
+                                                 and contains(rdfs:seeAlso/@rdf:resource, '.jpg')][1]/rdfs:seeAlso/@rdf:resource
+                return
+                    if ($jpgUrl) then
+                        api:redirect-with-303($jpgUrl)
+                    else 
+                        api:error400BadResource()
+            else
+                (: in case rdf hasn't been rendered yet :)
+                api:error404NotYetAvailable()
+        else if ($resource('tei_status') eq 0) then
+            api:error404NotYetAvailable()
+        else if (not($resource('wellformed'))) then
+            api:error400BadResource()
+        else 
+            api:error404NotFound()
 };
 
 
