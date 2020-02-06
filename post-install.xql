@@ -30,6 +30,7 @@ declare variable $adminfiles        := ($target || '/admin.html',
 (: TODO add more modules here when necessary :)
 declare variable $restModules := 
     ('xmldb://db/apps/salamanca/modules/api/v1/texts.xqm', 
+     'xmldb://db/apps/salamanca/modules/api/v1/add.xqm',
      'xmldb://db/apps/salamanca/modules/api/api.xqm');
 
 

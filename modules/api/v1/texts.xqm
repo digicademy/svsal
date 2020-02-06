@@ -24,7 +24,7 @@ import module namespace api = "http://www.salamanca.school/xquery/api" at "../ap
 import module namespace sutil = "http://www.salamanca.school/xquery/sutil" at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
 import module namespace config = "http://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
 import module namespace export = "http://www.salamanca.school/xquery/export" at "xmldb:exist:///db/apps/salamanca/modules/export.xqm";
-import module namespace net = "http://www.salamanca.school/xquery/net" at "xmldb:exist:///db/apps/salamanca/modules/net.xqm";
+(:import module namespace net = "http://www.salamanca.school/xquery/net" at "xmldb:exist:///db/apps/salamanca/modules/net.xqm";:)
 import module namespace txt = "https://www.salamanca.school/factory/works/txt" at "xmldb:exist:///db/apps/salamanca/modules/factory/works/txt.xqm";
 
 

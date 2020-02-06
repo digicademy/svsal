@@ -150,10 +150,10 @@ return
                                 else net:error(404, $netVars, ()) (\: resource(s) not found :\)
                             else:\) net:error(404, $netVars, ()) (\: well-formed, but invalid resource(s) requested :\)
                             :)
-                case "search" return
+                (:case "search" return
                     let $debug         := if ($config:debug = ("trace", "info")) then console:log("Search requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
                     let $absolutePath  := concat($config:searchserver, '/', substring-after($exist:path, '/search/'))
-                    return net:redirect($absolutePath, $netVars)
+                    return net:redirect($absolutePath, $netVars):)
                 case "codesharing" return
                     let $debug         := if ($config:debug = ("trace", "info")) then console:log("Codesharing requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
                     let $parameters    := <exist:add-parameter name="outputType" value="html"/>
