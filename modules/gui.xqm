@@ -32,10 +32,12 @@ import module namespace functx  = "http://www.functx.com";
 (:i18n ============================================:)
 (:language switching Startseite: für Seitentitel im Tabulator, Titel "Die Schule von Salamanca", das Menü und alle Bottons der Startseite:)
 
-(:declare %templates:wrap function config:tabTitle($node as node(), $model as map(*)) as text() {
+(: 
+declare %templates:wrap function config:tabTitle($node as node(), $model as map(*)) as text() {
     let $output := <i18n:text key="tab">Die Schule von Salamanca</i18n:text>
     return 
-        i18n:process($output, "de", "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))};  :)
+        i18n:process($output, "de", "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))};  
+:)
 
 declare function gui:carousel($node as node(), $model as map(*)){
     <div id="carousel" class="carousel slide" data-ride="carousel">
@@ -101,7 +103,8 @@ declare function gui:logo($node as node(), $model as map(*), $lang as xs:string)
             </a>   
         </div>
     return 
-        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
+        $output
+(:        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())):)
 };  
 
 
@@ -187,7 +190,8 @@ declare function gui:header($node as node(), $model as map(*), $lang as xs:strin
             </menu>
         </div>
      return
-           i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) 
+        $output
+(:           i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) :)
 };
 
 (:create main links on landing page:)
@@ -198,7 +202,9 @@ declare %templates:wrap
             <span class="glyphicon glyphicon-file" aria-hidden="true"></span>&#160;<i18n:text key="works">Werke</i18n:text>
         </a>
     return
-        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))};  
+        $output
+(:        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())):)
+};  
 
 declare %templates:wrap
     function gui:langDictionary($node as node(), $model as map(*), $lang as xs:string) as element() {
@@ -207,7 +213,9 @@ declare %templates:wrap
             <span class="glyphicon glyphicon-book" aria-hidden="true"></span>&#160;<i18n:text key="dictionary">Wörterbuch</i18n:text>
         </a>
     return 
-        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))};  
+        $output
+(:        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())):)
+};  
 
 declare %templates:wrap
     function gui:langAuthors($node as node(), $model as map(*), $lang as xs:string) as element()  {
@@ -216,7 +224,9 @@ declare %templates:wrap
             <span class="glyphicon glyphicon-user" aria-hidden="true"></span>&#160;<i18n:text key="authors">Autoren</i18n:text>
         </a>
     return 
-        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))};  
+        $output
+(:        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())):)
+};  
 
 declare %templates:wrap
     function gui:langSearch($node as node(), $model as map(*), $lang as xs:string) as element() {
@@ -225,7 +235,9 @@ declare %templates:wrap
             <span class="glyphicon glyphicon-search" aria-hidden="true"></span>&#160;<i18n:text key="search">Suche</i18n:text>
         </a>
     return 
-        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))};  
+        $output
+(:        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())):)
+};  
         
 declare %templates:wrap
     function gui:langWorkingPapers($node as node(), $model as map(*), $lang as xs:string) as element() {
@@ -233,7 +245,10 @@ declare %templates:wrap
         <a href="workingPapers.html">
             <i class="fas fa-pencil-alt" aria-hidden="true"></i>&#160;<i18n:text key="workingPapers">Working Papers</i18n:text>
         </a>
-    return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))};  
+    return
+        $output
+(:        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())):)
+};  
  
 declare %templates:wrap
     function gui:langPrDesc($node as node(), $model as map(*), $lang as xs:string) as element()  {
@@ -242,7 +257,9 @@ declare %templates:wrap
            <i class="fa fa-university" aria-hidden="true"></i>&#160;<i18n:text key="about">Projekt</i18n:text>
         </a>
     return 
-        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))};
+        $output
+(:        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())):)
+};
         
 declare %templates:wrap
     function gui:langProjectTeam($node as node(), $model as map(*), $lang as xs:string) as element()  {
@@ -251,7 +268,8 @@ declare %templates:wrap
                <i class="fa fa-users" aria-hidden="true"></i>&#160;<i18n:text key="participantsTitle">Project Participants</i18n:text>
             </a>
     return 
-        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))        
+        $output
+(:        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))        :)
 };
 
 declare %templates:wrap
@@ -261,7 +279,9 @@ declare %templates:wrap
            <i class="fa fa-cogs" aria-hidden="true"></i>&#160;<i18n:text key="guidelines">Editionsrichtlinien</i18n:text>
         </a>
     return 
-        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))};
+        $output
+(:        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())):)
+};
 
 
 declare %templates:wrap
@@ -271,7 +291,9 @@ declare %templates:wrap
            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>&#160;<i18n:text key="getInvolved">Beitragen</i18n:text>
         </a>
     return 
-        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))};
+        $output
+(:        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())):)
+};
         
 declare %templates:wrap
     function gui:langLegal($node as node(), $model as map(*), $lang as xs:string) as element()  {
@@ -280,7 +302,9 @@ declare %templates:wrap
            <span class="fa fa-balance-scale" aria-hidden="true"></span>&#160;<i18n:text key="legal">Datenschutz &amp; Impressum</i18n:text>
         </a>
     return 
-        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))};
+        $output
+(:        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())):)
+};
         
 declare %templates:wrap
     function gui:langContact($node as node(), $model as map(*), $lang as xs:string) as element()  {
@@ -289,7 +313,9 @@ declare %templates:wrap
             <i class="far fa-envelope" aria-hidden="true"></i>&#160;<i18n:text key="contact">Kontakt</i18n:text>
         </a>
     return 
-        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))};       
+        $output
+(:        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())):)
+};       
 
 declare %templates:wrap
     function gui:langSourceCode($node as node(), $model as map(*), $lang as xs:string) as element()  {
@@ -298,7 +324,8 @@ declare %templates:wrap
                <i class="glyphicon glyphicon-console" aria-hidden="true"></i>&#160;<i18n:text key="sourceCode">Quellcode</i18n:text>
             </a>
     return 
-        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
+        $output
+(:        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())):)
 };
 
 declare %templates:wrap
@@ -308,7 +335,8 @@ declare %templates:wrap
                <i class="fas fa-th-list" aria-hidden="true"></i>&#160;<i18n:text key="worksListOverview">List of Sources in the Digital Collection</i18n:text>
             </a>
     return 
-        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
+        $output
+(:        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())):)
 };
 
  
@@ -373,8 +401,9 @@ declare %templates:default("language", "en")
             default return
                 <title><i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
         let $debug := if ($config:debug = "trace") then console:log("Meta title: " || $output) else ()
- return
-        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "de")
+    return
+        $output
+(:        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "de"):)
 };   
 
 declare %templates:wrap function gui:participantsTitle($node as node(), $model as map(*), $lang as xs:string?, $id as xs:string?) {
@@ -399,8 +428,9 @@ declare %templates:wrap function gui:participantsTitle($node as node(), $model a
                 else 
                     <i18n:text key="projectTeamConsultants">Project Team and Consultants</i18n:text>
     return 
-        if ($title instance of element(i18n:text)) then i18n:process($title, $lang, $config:i18n-root, 'en')
-        else $title
+        (:if ($title instance of element(i18n:text)) then i18n:process($title, $lang, $config:i18n-root, 'en')
+        else :)
+        $title
 };
 
 declare %templates:default("lang", "en") 
@@ -489,8 +519,9 @@ declare function gui:iiifUrl($node as node(), $model as map(*), $wid as xs:strin
 declare %templates:default("lang", "en") 
     function gui:description($node as node(), $model as map(*), $lang as xs:string) as xs:string {
         let $document   := functx:substring-after-last(request:get-url(), '/')
-        let $id         := for $par in request:get-parameter-names()
-                                return if (matches($par, ".{1,2}id")) then request:get-parameter($par, '') else ()
+        let $id         := 
+            for $par in request:get-parameter-names() return 
+                if (matches($par, ".{1,2}id")) then request:get-parameter($par, '') else ()
         let $template   := 
             switch (substring-before($document, '.html'))
                 case 'author'                   return <i18n:text key="metaAuthor">Biobibliographische Informationen über</i18n:text>
@@ -511,10 +542,12 @@ declare %templates:default("lang", "en")
                 case 'workingPapers'            return <i18n:text key="metaWPs">Überblick über die Working Papers zur Schule von Salamanca, die im Rahmen der vom Projekt veranstalteten Reihe erschienen sind.</i18n:text>
                 case 'participants'             return <i18n:text key="metaParticipants"/>
                 default return ()
-        let $templateLocalized  := i18n:process($template, $lang, "/db/apps/salamanca/data/i18n", "de")
+        (:let $templateLocalized  := i18n:process($template, $lang, "/db/apps/salamanca/data/i18n", "de")
         let $return             := concat($templateLocalized, if (exists($id)) then ' ' || gui:docSubjectname($id) else ())  
         let $debug              := if ($config:debug = "trace") then console:log("Meta description: " || $return) else ()
-        return $return 
+        return $return :)
+        return
+            concat($template, if (exists($id)) then ' ' || gui:docSubjectname($id) else ())
 };
 
 declare %templates:default("lang", "en") 
@@ -600,7 +633,7 @@ declare function gui:footer($node as node(), $model as map(*), $lang as xs:strin
     Vers. {doc('/db/apps/salamanca/expath-pkg.xml')/pack:package/@version/string()}
 :)
     let $username := sm:id()//sm:username
-    let $footer :=
+    let $output :=
         <span>
             <div class="row">
             <!-- the Academy -->
@@ -657,6 +690,8 @@ declare function gui:footer($node as node(), $model as map(*), $lang as xs:strin
                </div>
            </div>
         </span>
-     return i18n:process($footer, $lang, "/db/apps/salamanca/data/i18n", "de")
+     return 
+(:        i18n:process($footer, $lang, "/db/apps/salamanca/data/i18n", "de"):)
+         $output
 };    
 
