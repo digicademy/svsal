@@ -368,10 +368,10 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
 
         let $language       :=
             if ($item/parent::tei:TEI//tei:text/@xml:lang = 'la') then
-                            <i18n:text key="latin">Latein</i18n:text>
-                         else
-                            <i18n:text key="spanish">Spanisch</i18n:text>
-                (:
+                <i18n:text key="latin">Latein</i18n:text>
+             else
+                <i18n:text key="spanish">Spanisch</i18n:text>
+            (:
             i18n:process(if ($item/parent::tei:TEI//tei:text/@xml:lang = 'la') then
                             <i18n:text key="latin">Latein</i18n:text>
                          else
@@ -380,10 +380,10 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
             heute geändert :)
         let $facetAvailability := 
             if ($WIPstatus eq 'yes') then
- <i18n:text key="facsimiles">Facsimiles</i18n:text>
-                         else
- <i18n:text key="fullTextAvailable">Full Text (+ Facsimiles)</i18n:text>
-                 (:
+                <i18n:text key="facsimiles">Facsimiles</i18n:text>
+             else
+                <i18n:text key="fullTextAvailable">Full Text (+ Facsimiles)</i18n:text>
+            (:
             i18n:process(if ($WIPstatus eq 'yes') then <i18n:text key="facsimiles">Facsimiles</i18n:text>
                          else <i18n:text key="fullTextAvailable">Full Text (+ Facsimiles)</i18n:text>,
                  $lang, "/db/apps/salamanca/data/i18n", "en")
@@ -393,7 +393,7 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
         let $volLabel       :=  
             if ($completeWork/@type='work_multivolume') then
                 <span><i18n:text key="volumes">Bände</i18n:text> : {$config:nbsp || $config:nbsp}</span>
-            (: <span>{i18n:process(<i18n:text key="volumes">Bände</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en") || ':' || $config:nbsp || $config:nbsp}</span> heute geändert :)
+                (: <span>{i18n:process(<i18n:text key="volumes">Bände</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en") || ':' || $config:nbsp || $config:nbsp}</span> heute geändert :)
             else ()
         let $volumesString  :=  
             for $volume at $index in util:expand($completeWork)//tei:text[@type="work_volume"]
@@ -457,9 +457,9 @@ let $output :=
                  <li><a href="{('authors.html?sort=death')}" role="button" class="btn btn-link"><i18n:text key="death">Todesdatum</i18n:text></a></li>
             </ul>
         </span>
-            return  
+            return 
                 $output
- (: i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "en") heute geändert :)
+                (: i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "en") heute geändert :)
 };        
 
 declare  %templates:wrap
@@ -527,7 +527,7 @@ declare %private
     function app:AUTorder ($node as node(), $model as map(*), $lang) {
         let $relOrder  :=  $model('currentAuthor')//tei:affiliation/tei:orgName[1]/@key/string()
         return
- <span><i18n:text key="{$relOrder}">{$relOrder}</i18n:text></span>
+            <span><i18n:text key="{$relOrder}">{$relOrder}</i18n:text></span>
             (: <span>{i18n:process(<i18n:text key="{$relOrder}">{$relOrder}</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en")}</span> heute geändert :)
 };
 
@@ -535,7 +535,7 @@ declare %private
     function app:AUTdiscipline ($node as node(), $model as map(*), $lang as xs:string) {
         let $relOrder  :=  $model('currentAuthor')//tei:affiliation/tei:orgName[1]/@key/string()
         return
- <span><i18n:text key="{$relOrder}">{$relOrder}</i18n:text></span>
+            <span><i18n:text key="{$relOrder}">{$relOrder}</i18n:text></span>
             (: <span>{i18n:process(<i18n:text key="{$relOrder}">{$relOrder}</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en")}</span> heute geändert :)
 (:             <span>
                {if     ($relOrder eq 'OP') then <i18n:text key="dominicans">Dominikaner</i18n:text>
@@ -574,8 +574,8 @@ declare %templates:wrap
                 </ul>
             </span>
         return
-  $output
- (: i18n:process($output, "de", "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :) 
+            $output
+            (: i18n:process($output, "de", "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :)                
 }; 
 
 declare  %templates:wrap
@@ -739,8 +739,8 @@ declare %templates:wrap
                 </ul>
             </span>
         return
-  $output
- (: i18n:process($output, "de", "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :) 
+            $output
+            (: i18n:process($output, "de", "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :)                
 };        
 
 declare  %templates:wrap
@@ -998,8 +998,8 @@ declare %templates:wrap
                     </a>.
             </div>
         return
-  $output
- (: i18n:process($output, "de", "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :) 
+            $output
+            (: i18n:process($output, "de", "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :)                
 };
 
 declare %templates:wrap
@@ -1017,8 +1017,8 @@ declare %templates:wrap
             </ul>
         </div>
     return
- $corpusDownloadField
- (: i18n:process($corpusDownloadField, $lang, "/db/apps/salamanca/data/i18n", "en") heute geändert :)
+        $corpusDownloadField
+        (: i18n:process($corpusDownloadField, $lang, "/db/apps/salamanca/data/i18n", "en") heute geändert :)
 };
 
 declare %templates:wrap
@@ -1028,8 +1028,8 @@ declare %templates:wrap
             <p><a href="sources.html"><span class="fas fa-th-list" aria-hidden="true"/>{' '}<i18n:text key="listOfSources">List of all sources</i18n:text></a></p>
         </div>
     return
- $corpusDownloadField
- (: i18n:process($corpusDownloadField, $lang, "/db/apps/salamanca/data/i18n", "en") heute geändert :)
+        $corpusDownloadField
+        (: i18n:process($corpusDownloadField, $lang, "/db/apps/salamanca/data/i18n", "en") heute geändert :)
 };
 
 
@@ -1175,8 +1175,8 @@ declare function app:watermark($node as node(), $model as map(*), $wid as xs:str
                                          $model('currentWorkHeader')//tei:revisionDesc/@status)[1])}          
                             </p>
     return
- $watermark
- (: i18n:process($watermark, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :)
+        $watermark
+        (: i18n:process($watermark, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :)
 };
 
 declare function app:watermark-txtonly($node as node(), $model as map(*), $wid as xs:string?, $lang as xs:string?) {
@@ -1191,7 +1191,7 @@ declare function app:watermark-txtonly($node as node(), $model as map(*), $wid a
                                                            'f_enriched'
                                                           )) then
                             <span><i18n:text key="workInProgress">Work in Progress!</i18n:text></span>
-                        (: <span>{i18n:process(<i18n:text key="workInProgress">Work in Progress!</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))}</span> heute geändert :)
+                            (: <span>{i18n:process(<i18n:text key="workInProgress">Work in Progress!</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))}</span> heute geändert :)
                         else
                             <span>{string(($model('currentAuthor')//tei:revisionDesc/@status |
                                      $model('currentLemma')//tei:revisionDesc/@status  |
@@ -1330,14 +1330,14 @@ return
     if ($targetFragment) then
         <div>
             {$debugOutput}
-            {            $outHTML
- (: i18n:process($outHTML, $lang, $config:i18n-root, "en") heute geändert :)
- }
+            { $outHTML
+                (: i18n:process($outHTML, $lang, $config:i18n-root, "en") heute geändert :)
+            }
         </div>
     else
         (: TODO: redirect to genuine error or resource-not-available page :)
-        $workNotAvailable 
- (: i18n:process($workNotAvailable, $lang, $config:i18n-root, "en") heute geändert :)
+        $workNotAvailable        
+        (: i18n:process($workNotAvailable, $lang, $config:i18n-root, "en") heute geändert :)
     
 };
 
@@ -1749,8 +1749,8 @@ declare %templates:wrap %templates:default("lang", "en")
                         <i18n:text key="download">herunterladen</i18n:text>
                     </a>
     return
- $output
- (: i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :)
+        $output
+        (: i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :)
 };
 
 declare %templates:wrap
@@ -1762,8 +1762,8 @@ declare %templates:wrap %templates:default("lang", "en")
     function app:WPshowSingle ($node as node(), $model as map(*), $lang as xs:string?) {
         let $work := <a href="workingPaper.html?wpid=' {$model('currentWp')/@xml:id/string()}">{$model('currentWp')/@xml:id/string()}</a> 
         return
- $work
- (: i18n:process($work, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :) 
+            $work
+            (: i18n:process($work, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :) 
 };
 
 declare %templates:wrap
@@ -1788,8 +1788,8 @@ declare %templates:wrap %templates:default("lang", "en")
         else if ($language/tei:language/@ident = 'de') then <i18n:text key="german">Deutsch</i18n:text>
         else ()
     return
- $result
- (: i18n:process($result, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :)
+        $result
+        (: i18n:process($result, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :)
 };
 
 declare %templates:wrap %templates:default("lang", "en")
@@ -1925,8 +1925,8 @@ declare %templates:wrap function app:WRKcatRecord($node as node(), $model as map
         </div>
             
     return
- $output
- (: i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :)
+        $output
+        (: i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :)
 };
 
 declare function app:WRKadditionalInfoRecord($node as node(), $model as map(*), $lang as xs:string?) {
@@ -2357,7 +2357,7 @@ declare function app:WRKbibliographicalRecord($node as node(), $model as map(*),
             let $volumeString := 
                 $bibliographical?('volumeTitle') || ' (' || $bibliographical?('volumeNumber') || ' ' 
                  || <i18n:text key="of">of</i18n:text>
- (: || i18n:process(<i18n:text key="of">of</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :)
+                 (: || i18n:process(<i18n:text key="of">of</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :)
                  || ' ' || $bibliographical?('totalVolumesCount') || ')'
             return
                 <tr>
@@ -2495,7 +2495,7 @@ declare function app:WRKprintMetadata($node as node(), $model as map(*), $wid as
                         else if ($l eq 'la') then <i18n:text key="latin">Latin</i18n:text>
                         (: add further languages here, if required :)
                         else ()), ', ')
-    (: string-join((for $l in distinct-values($teiHeader/tei:profileDesc/tei:langUsage/tei:language/@ident) return
+        (: string-join((for $l in distinct-values($teiHeader/tei:profileDesc/tei:langUsage/tei:language/@ident) return
                         if ($l eq 'es') then i18n:process(<i18n:text key="spanish">Spanish</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
                         else if ($l eq 'la') then i18n:process(<i18n:text key="latin">Latin</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
                         (: add further languages here, if required :)
@@ -3058,7 +3058,7 @@ declare function app:tocSourcesList($node as node(), $model as map(*), $lang as 
             doc($config:html-root || '/' || sutil:normalizeId($wid) || '/' || sutil:normalizeId($wid) || '_toc.html')
     return 
         $toc
- (: i18n:process($toc, $lang, $config:i18n-root, 'en') heute geändert :)
+        (: i18n:process($toc, $lang, $config:i18n-root, 'en') heute geändert :)
 };
 
 (:declare function app:downloadTXT($node as node(), $model as map(*), $mode as xs:string, $lang as xs:string) {
@@ -3213,7 +3213,7 @@ declare %templates:default
         
     return
         $output
- (: i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "en") heute geändert :)
+        (: i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "en") heute geändert :)
     
 (:  Further buttons / icons:
 
@@ -3489,8 +3489,8 @@ declare %templates:wrap function app:errorTitle($node as node(), $model as map(*
             <i18n:text key="pageNotFound">This is not the page you were looking for...</i18n:text>
         (:        <p class="error-paragraph"><i18n:text key="bugMessage">In case you found a bug in our website, please let us know at</i18n:text> <a href="mailto:info.salamanca@adwmainz.de">info.salamanca@adwmainz.de</a></p>  :)
     return
- $out
- (: i18n:process($out, $lang, '/db/apps/salamanca/data/i18n', 'en') heute geändert :)
+        $out
+        (: i18n:process($out, $lang, '/db/apps/salamanca/data/i18n', 'en') heute geändert :)
 };
 
 (: tightly coupled to app:errorTitle, see above :)
@@ -3499,8 +3499,8 @@ declare %templates:wrap function app:errorInformation($node as node(), $model as
             or request:get-attribute('error-type') eq 'author-not-yet-available'
             or request:get-attribute('error-type') eq 'lemma-not-yet-available'
             or request:get-attribute('error-type') eq 'resource-not-yet-available')) then
-        <span><i18n:text key="bugMessage">In case you found a bug in our website, please let us know at</i18n:text> <a href="mailto:info.salamanca@adwmainz.de">info.salamanca@adwmainz.de</a></span>
- (: i18n:process(<span><i18n:text key="bugMessage">In case you found a bug in our website, please let us know at</i18n:text>{' '}<a href="mailto:info.salamanca@adwmainz.de">info.salamanca@adwmainz.de</a></span>, $lang, '/db/apps/salamanca/data/i18n', 'en') heute geändert :)
+        <span><i18n:text key="bugMessage">In case you found a bug in our website, please let us know at</i18n:text>{' '}<a href="mailto:info.salamanca@adwmainz.de">info.salamanca@adwmainz.de</a></span>
+        (: i18n:process(<span><i18n:text key="bugMessage">In case you found a bug in our website, please let us know at</i18n:text>{' '}<a href="mailto:info.salamanca@adwmainz.de">info.salamanca@adwmainz.de</a></span>, $lang, '/db/apps/salamanca/data/i18n', 'en') heute geändert :)
     else ()
 };
 
