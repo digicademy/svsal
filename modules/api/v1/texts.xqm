@@ -87,10 +87,11 @@ function textsv1:docRequest($rid, $format, $mode, $q, $lang, $viewer, $frag, $ca
         switch($format)
             (: although this method principally accepts all possible query params, only the suitable ones are passed 
                to the respective format's function - the other ones are simply ignored :)
+            case 'iiif' return textsv1:IIIFredirect($rid, $host)
             case 'jpg' return textsv1:JPGredirect($rid)
+            case 'rdf' return textsv1:RDFdeliverDoc($rid)
             case 'tei' return textsv1:TEIdeliverDoc($rid, $mode)
             case 'txt' return textsv1:TXTdeliverDoc($rid, $mode)
-            case 'rdf' return textsv1:RDFdeliverDoc($rid)
             default return 
                 textsv1:HTMLdeliverDoc($rid, $mode, $q, $lang, $viewer, $frag, $canvas, $host)
 };
@@ -304,6 +305,34 @@ declare %private function textsv1:JPGredirect($rid as xs:string) {
         else 
             api:error404NotFound()
 };
+
+(:
+Redirects requests to iiif resources to respective endpoints in our "native" iiif API. ATM works only on the work/volume
+level, but not for a single pages, or passages; these are redirected to the resource for the whole work/volume.
+:)
+declare %private function textsv1:IIIFredirect($rid as xs:string, $host as xs:string) {
+    let $resource := textsv1:validateResourceId($rid)
+    return
+        if ($resource('tei_status') = (2, 1)) then
+            let $workType := doc($config:tei-works-root || '/' || $resource('tei_id') || '.xml')/tei:TEI/tei:text/@type
+            let $iiifPresentationServer := $api:proto || 'facs.' || api:getDomain($host) || '/iiif/presentation/'
+            let $url :=
+                if ($workType eq 'work_multivolume') then
+                    (: multivolume collection :)
+                    $iiifPresentationServer || 'collection/' || $resource('work_id')
+                else 
+                    (: single-volume manifest :)
+                    $iiifPresentationServer || $resource('tei_id') || '/manifest'
+            return 
+                api:redirect-with-303($url)
+        else if ($resource('tei_status') eq 0) then
+            api:error404NotYetAvailable()
+        else if (not($resource('wellformed'))) then
+            api:error400BadResource()
+        else 
+            api:error404NotFound()
+};
+
 
 
 (: RESOURCE VALIDATION :)

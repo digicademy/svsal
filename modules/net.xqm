@@ -531,6 +531,7 @@ declare function net:sitemapResponse($netVars as map(*)) {
 declare function net:APIdeliverStats($netVars as map(*)) {
     ()
 };
+
 (:
 declare function net:APIdeliverTEI($requestData as map(), $netVars as map()*) {
     if (matches($requestData('tei_id'), '^W\d{4}')) then 
@@ -628,7 +629,7 @@ declare function net:APIdeliverRDF($requestData as map(), $netVars as map()*) {
     else net:error(404, $netVars, 'Invalid rdf request.')
 };
 :)
-
+(:
 declare function net:APIdeliverJPG($requestData as map(), $netVars as map()*) {
     if (starts-with($requestData('work_id'), 'W0')) then 
         let $reqResource := 'texts/' || $requestData('work_id') || ':' || $requestData('passage')
@@ -646,6 +647,7 @@ declare function net:APIdeliverJPG($requestData as map(), $netVars as map()*) {
         let $debug := util:log('warn', '[NET] jpg 3') return
         net:error(404, $netVars, 'Invalid jpg request.')
 };
+:)
 (:
 declare function net:APIdeliverTextsHTML($requestData as map(), $netVars as map()*) {
     (\:if ($requestData('work_id') eq '*') then (\: forward to works list, regardless of parameters or hashes :\)
@@ -716,11 +718,12 @@ declare function net:APIdeliverTextsHTML($requestData as map(), $netVars as map(
 :)
 
 (:
+(\:
 Redirects a request for a iiif resource to the respective endpoint of the primary iiif API. ATM works only on the work/volume
 level, but not for a single page or passage-wise (these are redirected to the resource for the whole work/volume).
-:)
+:\)
 declare function net:APIdeliverIIIF($requestData as map()*, $netVars as map()*) {
-    if ($requestData('work_id') eq '*') then (: forward to HTML works list (really?), regardless of parameters or hashes :)
+    if ($requestData('work_id') eq '*') then (\: forward to HTML works list (really?), regardless of parameters or hashes :\)
         let $langPath := if ($requestData('lang')) then $requestData('lang') || '/' else ()
         let $pathname     := $config:webserver || '/' || $langPath || 'works.html'
         return net:redirect-with-303($pathname)
@@ -732,7 +735,7 @@ declare function net:APIdeliverIIIF($requestData as map()*, $netVars as map()*) 
                 net:redirect-with-303($iiifUrl)
             else net:error(404, $netVars, ())
 };
-
+:)
 
 declare function net:deliverTextsHTML($netVars as map()*) {
     let $wid := sutil:normalizeId($netVars('paramap')?('wid'))
@@ -785,12 +788,12 @@ declare function net:deliverWorkingPapersHTML($netVars as map()*) {
         else net:error(404, $netVars, ())
 };
 
-
-(:~
+(:
+(\:~
 : Workhorse of api.../texts: a basic filter and validator for API request arguments (i.e., URL paths and parameters). 
-~:)
+~:\)
 declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()*) as map()? {
-    (: normalize path (i.e., amount and order of separators) :)
+    (\: normalize path (i.e., amount and order of separators) :\)
     let $normalizedPath := replace(replace(replace(replace(lower-case($path), '^/+', ''), '/+$', ''), ':+$', ''), ':+', ':')
     let $debug := if ($config:debug = ('trace')) then console:log('[API] request at: .../texts/' || $path || '. Normalized path: ' || $normalizedPath) else ()
     return
@@ -799,7 +802,7 @@ declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()
                 let $debug := if ($config:debug = ('trace')) then console:log('[API] invalid resource requested; normalized resource was: ', $normalizedPath) else ()
                 return map:entry('is_well_formed', false())
         else
-            (: (1) get components :)
+            (\: (1) get components :\)
             let $resource :=
                 if ($normalizedPath eq '') then ''
                 else 
@@ -811,23 +814,23 @@ declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()
                         else '-1'
             let $passage := 
                 if (count(tokenize($normalizedPath, ':')) le 1) then ''
-                else (: count(tokenize($normalizedPath, ':')) eq 2 (validated above) :) 
+                else (\: count(tokenize($normalizedPath, ':')) eq 2 (validated above) :\) 
                     if (tokenize($normalizedPath, ':')[2]) then tokenize($normalizedPath, ':')[2]
                     else ''
-            let $teiId := (: the actual TEI document's id (derived from the combination of resource and passage), but only if it exists :)
+            let $teiId := (\: the actual TEI document's id (derived from the combination of resource and passage), but only if it exists :\)
                 if ($resource ne '-1') then 
-                    if ($resource eq '') then '*' (: all tei datasets :)
-                    else if (matches($passage, '^vol\d')) then (: some volume :)
+                    if ($resource eq '') then '*' (\: all tei datasets :\)
+                    else if (matches($passage, '^vol\d')) then (\: some volume :\)
                         let $volStatus := sutil:WRKvalidateId($resource || '_Vol0' || substring($passage,4,1))
                         return
-                            if ($volStatus ge 1) then (: a tei dataset is available :)
+                            if ($volStatus ge 1) then (\: a tei dataset is available :\)
                                 $resource || '_Vol0' || substring($passage,4,1)
-                            else string($volStatus) (: 0 or -1 :)
-                    else $resource (: already checked whether available :)
+                            else string($volStatus) (\: 0 or -1 :\)
+                    else $resource (\: already checked whether available :\)
                 else '-1'
-            (: (2) validate components :)
+            (\: (2) validate components :\)
             let $teiStatus := if (starts-with($teiId, 'W')) then sutil:WRKvalidateId($teiId) else ()
-            let $workId := (: the overarching work's main id, not distinguishing between volumes :)
+            let $workId := (\: the overarching work's main id, not distinguishing between volumes :\)
                 if ($resource != ('0', '-1')) then 
                     if ($teiId eq '*') then '*'
                     else replace($resource, '_Vol\d\d$', '')
@@ -836,8 +839,8 @@ declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()
                 if ($workId = $teiId) then $teiStatus 
                 else if (starts-with($workId, 'W')) then sutil:WRKvalidateId($workId)
                 else ()
-            let $passageStatus := (: 1 = passage valid & existing ; 0 = not existing ; -1 = no dataset found for $wid ; empty = no passage :)
-                (: special case: passage is volume of work not yet published: valid :)
+            let $passageStatus := (\: 1 = passage valid & existing ; 0 = not existing ; -1 = no dataset found for $wid ; empty = no passage :\)
+                (\: special case: passage is volume of work not yet published: valid :\)
                 if (matches(lower-case($passage), '^vol\d$') and $workStatus eq 1 and $teiStatus eq 1) then 1
                 else if ($passage) then
                     if ($teiStatus eq 2 and doc-available($config:index-root || '/' || $workId || '_nodeIndex.xml')) then 
@@ -848,11 +851,11 @@ declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()
                             else 0
                     else -1
                 else 1
-            (: (3) get and filter params :)
+            (\: (3) get and filter params :\)
             let $params :=
-                let $format := $netVars('format') (: or net:format() :)
+                let $format := $netVars('format') (\: or net:format() :\)
                 let $validParams := $config:apiFormats($format)
-                (:  filter out all invalid params and remove duplicates (first value wins) :)
+                (\:  filter out all invalid params and remove duplicates (first value wins) :\)
                 let $params0 := map:merge(for $p in $netVars('params') return if (($p, substring-before($p, '=')) = $validParams) then map:entry(substring-before($p, '='), substring-after($p, '=')) else ())
                 let $mode :=
                     if (tokenize(tokenize($normalizedPath, ':')[1], '\.')[2] = ('orig', 'edit') and 'mode=' || tokenize(tokenize($normalizedPath, ':')[1], '\.')[2] = $validParams) then 
@@ -860,14 +863,14 @@ declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()
                     else if (request:get-parameter('mode', '')[1] and ('mode', 'mode=' || request:get-parameter('mode', '')[1]) = $validParams) then request:get-parameter('mode', '')[1]
                     else ()
                 return map:merge((map:entry('mode', $mode), map:entry('format', $format), $params0))
-            (: (4) general validation and output :)
-            let $requestValidation := (: -1 (meaningless request) has priority over 0 (not (yet) available) :)
+            (\: (4) general validation and output :\)
+            let $requestValidation := (\: -1 (meaningless request) has priority over 0 (not (yet) available) :\)
                 if (($teiStatus, $workStatus, $passageStatus) = -1) then -1
                 else if (($teiStatus, $workStatus, $passageStatus) = 0) then 0
                 else 1
-            let $isWellFormed := (: if a request is clearly malformed, we deliver this info to downstream functions :) 
+            let $isWellFormed := (\: if a request is clearly malformed, we deliver this info to downstream functions :\) 
                 if ($passage and not($resource)) then false()
-                (: add further cases of malformedness here :)
+                (\: add further cases of malformedness here :\)
                 else true()
             let $resourceData := 
                 map {'validation': $requestValidation, 
@@ -882,10 +885,10 @@ declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()
             let $requestData := map:merge(($resourceData, $params))
             let $debug := if ($config:debug = ('trace')) then util:log('warn', '[API] request data: ' || string-join((for $k in map:keys($requestData) return $k || '=' || map:get($requestData, $k)), ' ; ') || '.') else ()
             return $requestData
-            (:  open questions / TODO:
+            (\:  open questions / TODO:
                     - how to deal with illegal params: ignore or error? (currently ignored)
                     - fragments (how to best access/validate them here?)
                     - matrix params?
-            :)
+            :\)
 };
-
+:)

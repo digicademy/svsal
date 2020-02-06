@@ -129,13 +129,13 @@ return
         let $debug := if ($config:debug = ("trace")) then console:log("[API] This translates to API version " || $pathComponents[2] || ", endpoint " || $pathComponents[3] || ".") else ()
         return if ($pathComponents[3] = $config:apiEndpoints($pathComponents[2])) then  (: Check if we support the requested endpoint/version :)
             switch($pathComponents[3])
-                case "texts" return
+                (:case "texts" return
                     let $path := substring-after($exist:path, '/texts/')
                     let $textsRequest := net:APIparseTextsRequest($path, $netVars) 
                     return
                         if (not($textsRequest('is_well_formed'))) then net:error(400, $netVars, ())
                         else 
-                            (:if ($textsRequest('validation') eq 1) then (\: fully valid request :\)
+                            (\:if ($textsRequest('validation') eq 1) then (\: fully valid request :\)
                                 switch ($textsRequest('format')) 
 (\:                                    case 'html' return net:APIdeliverTextsHTML($textsRequest, $netVars):\)
                                     case 'rdf'  return net:APIdeliverRDF($textsRequest, $netVars)
@@ -148,7 +148,8 @@ return
                             else if ($textsRequest('validation') eq 0) then (\: one or more resource(s) not yet available :\)
                                 if ($textsRequest('format') eq 'html') then net:APIdeliverTextsHTML($textsRequest, $netVars)
                                 else net:error(404, $netVars, ()) (\: resource(s) not found :\)
-                            else:) net:error(404, $netVars, ()) (: well-formed, but invalid resource(s) requested :)
+                            else:\) net:error(404, $netVars, ()) (\: well-formed, but invalid resource(s) requested :\)
+                            :)
                 case "search" return
                     let $debug         := if ($config:debug = ("trace", "info")) then console:log("Search requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
                     let $absolutePath  := concat($config:searchserver, '/', substring-after($exist:path, '/search/'))
