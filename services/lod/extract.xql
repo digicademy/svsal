@@ -1056,20 +1056,19 @@ declare function xtriples:getRDF($xtriples as node()*, $vocabularies as node()*)
     let $rdfInternal   := transform:transform($rdfTriples, $rdfstylesheet, ())
 
     (: official RDF format via any23 :)
-    let $headers := <http:header name="Content-Type" value="application/rdf+xml; charset=UTF-8"/>
-    
     let $req :=
         <http:request method="post">
-            {$headers}
+            <http:header name="Content-Type" value="application/rdf+xml; charset=UTF-8"/>
             <http:body media-type="application/rdf+xml"/>
         </http:request>
     let $url := concat($xconfig:any23WebserviceURL, "rdfxml")
     let $POST_request := http:send-request($req, $url, $rdfInternal)
     let $rdfBad := $POST_request/rdf:RDF (:node()[not(self::http:response)]:)
 	(: clean self-references broken by any23 service :)
-    let $parameters    := <parameters>
-                            <param name="idServer"            value="{$xconfig:idserver}"/>
-                          </parameters>
+    let $parameters    := 
+        <parameters>
+            <param name="idServer" value="{$xconfig:idserver}"/>
+        </parameters>
 	let $rdfstylesheet2 := doc("rdf-cleanSelfReferences.xsl")
 	let $rdf := transform:transform($rdfBad, $rdfstylesheet2, $parameters)
 
@@ -1080,18 +1079,15 @@ declare function xtriples:getRDF($xtriples as node()*, $vocabularies as node()*)
 declare function xtriples:getNTRIPLES($rdf as node()*) as item()* {
 
 	(: url encoded ntriples :)
-	let $headers := <http:header name="Content-Type" value="application/rdf+xml; charset=UTF-8"/>
-	let $req := (: TODO expath :)
-        <http:request href="{concat($xconfig:any23WebserviceURL, "nt")}" method="post">
-            {$headers}
-            <http:body>
-                {$rdf}
-            </http:body>
+	let $req :=
+        <http:request method="post">
+            <http:header name="Content-Type" value="application/rdf+xml; charset=UTF-8"/>
+            <http:body media-type="application/rdf+xml"/>
         </http:request>
-
-    let $POST_request := http:send-request($req)
-	let $ntriples := util:unescape-uri(replace(string($POST_request//http:body), '%00', ''), "UTF-8")
-
+    let $url := concat($xconfig:any23WebserviceURL, "nt")
+    let $POST_request := http:send-request($req, $url, $rdf) (: TODO: testing :)
+	let $ntriples := util:unescape-uri(replace(string($POST_request[2]), '%00', ''), "UTF-8")
+	
 	return replace($ntriples, 'http://any23.org/tmp/', '')
 };
 
@@ -1099,17 +1095,15 @@ declare function xtriples:getNTRIPLES($rdf as node()*) as item()* {
 declare function xtriples:getTURTLE($rdf as node()*) as item()* {
 
 	(: eXist returns base64Binary turtle :)
-	let $headers := <http:header name="Content-Type" value="application/rdf+xml; charset=UTF-8"/>
-	let $req := (: TODO expath :)
-        <http:request href="{concat($xconfig:any23WebserviceURL, "turtle")}" method="post">
-            {$headers}
-            <http:body>
-                {$rdf}
-            </http:body>
+	let $req :=
+        <http:request method="post">
+            <http:header name="Content-Type" value="application/rdf+xml; charset=UTF-8"/>
+            <http:body media-type="application/rdf+xml"/>
         </http:request>
+    let $url := concat($xconfig:any23WebserviceURL, "turtle")
 
-    let $POST_request := http:send-request($req)
-	let $turtle := util:binary-to-string(xs:base64Binary($POST_request//http:body), "UTF-8")
+    let $POST_request := http:send-request($req, $url, $rdf) (: TODO: testing :)
+	let $turtle := util:binary-to-string(xs:base64Binary($POST_request[2]), "UTF-8")
 
 	return replace($turtle, 'http://any23.org/tmp/', '')
 };
@@ -1118,17 +1112,15 @@ declare function xtriples:getTURTLE($rdf as node()*) as item()* {
 declare function xtriples:getNQUADS($rdf as node()*) as item()* {
 
 	(: eXist returns base64Binary nquads :)
-	let $headers := <http:header name="Content-Type" value="application/rdf+xml; charset=UTF-8"/>
-	let $req := (: TODO expath :)
-        <http:request href="{concat($xconfig:any23WebserviceURL, "nq")}" method="post">
-            {$headers}
-            <http:body>
-                {$rdf}
-            </http:body>
+	let $req := 
+        <http:request method="post">
+            <http:header name="Content-Type" value="application/rdf+xml; charset=UTF-8"/>
+            <http:body/>
         </http:request>
+    let $url := concat($xconfig:any23WebserviceURL, "nq")
 
-    let $POST_request := http:send-request($req)
-	let $nquads := util:binary-to-string(xs:base64Binary($POST_request//http:body), "UTF-8")
+    let $POST_request := http:send-request($req, $url, $rdf) (: TODO: testing :)
+	let $nquads := util:binary-to-string(xs:base64Binary($POST_request[2]), "UTF-8")
 
 	return replace($nquads, 'http://any23.org/tmp/', '')
 };
@@ -1137,17 +1129,15 @@ declare function xtriples:getNQUADS($rdf as node()*) as item()* {
 declare function xtriples:getJSON($rdf as node()*) as item()* {
 
 	(: eXist returns base64Binary json :)
-	let $headers := <http:header name="Content-Type" value="application/rdf+xml; charset=UTF-8"/>
-	let $req := (: TODO expath :)
-        <http:request href="{concat($xconfig:any23WebserviceURL, "json")}" method="post">
-            {$headers}
-            <http:body>
-                {$rdf}
-            </http:body>
+	let $req :=
+        <http:request method="post">
+            <http:header name="Content-Type" value="application/rdf+xml; charset=UTF-8"/>
+            <http:body/>
         </http:request>
+    let $url := concat($xconfig:any23WebserviceURL, "json")
 
-    let $POST_request := http:send-request($req)
-	let $json := util:binary-to-string(xs:base64Binary($POST_request//http:body), "UTF-8")
+    let $POST_request := http:send-request($req, $url, $rdf) (: TODO: testing :)
+	let $json := util:binary-to-string(xs:base64Binary($POST_request[2]), "UTF-8")
 
 	return replace($json, 'http://any23.org/tmp/', '')
 };
@@ -1156,17 +1146,15 @@ declare function xtriples:getJSON($rdf as node()*) as item()* {
 declare function xtriples:getTRIX($rdf as node()*) as item()* {
 
 	(: eXist returns base64Binary json :)
-	let $headers := <http:header name="Content-Type" value="application/rdf+xml; charset=UTF-8"/>
-	let $req := (: TODO expath :)
-        <http:request href="{concat($xconfig:any23WebserviceURL, "trix")}" method="post">
-            {$headers}
-            <http:body>
-                {$rdf}
-            </http:body>
+	let $req := 
+        <http:request method="post">
+            <http:header name="Content-Type" value="application/rdf+xml; charset=UTF-8"/>
+            <http:body/>
         </http:request>
+    let $url := concat($xconfig:any23WebserviceURL, "trix")
 
-    let $POST_request := http:send-request($req)
-	let $trix := $POST_request//http:body/*
+    let $POST_request := http:send-request($req, $url, $rdf) (: TODO: testing :)
+	let $trix := $POST_request[2]
 
 	return replace($trix, 'http://any23.org/tmp/', '')
 };
@@ -1199,8 +1187,8 @@ declare function xtriples:getSVG($rdf as node()*) as item()* {
             {$svgHeaders}
         </http:request>
 	
-	let $GET_request := http:send-request($req)
-	let $svg := $GET_request//http:body/*
+	let $GET_request := http:send-request($req) (: TODO: testing :)
+	let $svg := subsequence($GET_request, 2)
 	let $delete := xmldb:remove("/db/apps/xtriples/temp/", $filename)
 
 	return $svg
