@@ -1250,8 +1250,8 @@ declare function app:displaySingleWork($node as node(),
             if (exists($lang)) then 'lang=' || $lang else ()
             ), 
         '&amp;')
-
-    (: add urlParameters with viewing mode, search term etc. to internal hyperlinks :)
+(:
+    (\: add urlParameters with viewing mode, search term etc. to internal hyperlinks :\)
     let $xslSheet:= 
         <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
             <xsl:output omit-xml-declaration="yes" indent="yes"/>
@@ -1292,15 +1292,18 @@ declare function app:displaySingleWork($node as node(),
                 </xsl:attribute>
             </xsl:template>
         </xsl:stylesheet>
-        
+:)
+(:    
     let $parameters := 
         <parameters>
             <param name="exist:stop-on-warn"  value="yes"/>
             <param name="exist:stop-on-error" value="yes"/>
             <param name="urlParameters"       value="{$urlParameters}"/>
         </parameters>
+:)    
+(:    let $parametrizedDoc := transform:transform($originalDoc, $xslSheet, $parameters):)
     
-    let $parametrizedDoc := transform:transform($originalDoc, $xslSheet, $parameters)
+    let $parametrizedDoc := local:insertQueryParams($originalDoc, $urlParameters)
 
     (: If we have an active query string, highlight the original html fragment accordingly :)
     let $outHTML := 
@@ -1340,6 +1343,52 @@ return
         (: i18n:process($workNotAvailable, $lang, $config:i18n-root, "en") heute geändert :)
     
 };
+
+        
+(:
+~ Recursively inserts concatenated query parameters into non-http links of an HTML fragment.
+:)
+declare %private function local:insertQueryParams($input as node(), $params) {
+    for $node in $input return 
+        typeswitch($node)
+            case element(a) return
+                element {name($node)} {
+                    for $att in $node/@* return
+                        local:attrInsertQueryParams($att, $params)
+                    ,
+                    for $child in $node
+                       return local:insertQueryParams($child/node(), $params)
+                }
+            case element() return
+                element {name($node)} {
+                    for $att in $node/@*
+                       return
+                          attribute {name($att)} {$att}
+                    ,
+                    for $child in $node
+                       return local:insertQueryParams($child/node(), $params)
+                }
+            default return $node
+};
+
+declare %private function local:attrInsertQueryParams($attr as attribute(), $params as xs:string) {
+    typeswitch($attr)
+        case attribute(href) return
+            if (not(contains($attr, 'http'))) then
+                let $openingChar := if (contains($attr, '?')) then '&amp;' else '?'
+                let $value := 
+                    if (starts-with($attr, '#')) then 
+                        $attr/string() 
+                    else if (contains($attr, '#')) then
+                        replace($attr, '#', concat($openingChar, $params, '#'))
+                    else 
+                        concat(., $openingChar, $params)
+                return attribute {name($attr)} {$value}
+            else $attr
+        default return
+            $attr
+};
+
 
 declare function app:searchResultsNav($node as node(), $model as map(*), $q as xs:string?, $lang as xs:string?) {
     let $nav := if ($q) then
