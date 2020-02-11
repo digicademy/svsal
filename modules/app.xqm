@@ -1303,7 +1303,7 @@ declare function app:displaySingleWork($node as node(),
 :)    
 (:    let $parametrizedDoc := transform:transform($originalDoc, $xslSheet, $parameters):)
     
-    let $parametrizedDoc := local:insertQueryParams($originalDoc, $urlParameters)
+    let $parametrizedDoc := local:insertParams($originalDoc/*, $urlParameters)
 
     (: If we have an active query string, highlight the original html fragment accordingly :)
     let $outHTML := 
@@ -1348,43 +1348,42 @@ return
 (:
 ~ Recursively inserts concatenated query parameters into non-http links of an HTML fragment.
 :)
-declare %private function local:insertQueryParams($input as node(), $params) {
-    for $node in $input return 
-        typeswitch($node)
-            case element(a) return
-                element {name($node)} {
-                    for $att in $node/@* return
-                        local:attrInsertQueryParams($att, $params)
-                    ,
-                    for $child in $node
-                       return local:insertQueryParams($child/node(), $params)
-                }
-            case element() return
-                element {name($node)} {
-                    for $att in $node/@*
-                       return
-                          attribute {name($att)} {$att}
-                    ,
-                    for $child in $node
-                       return local:insertQueryParams($child/node(), $params)
-                }
-            default return $node
+declare %private function local:insertParams($node as node(), $params as xs:string?) {
+    typeswitch($node)
+        case element(a) return
+            element {name($node)} {
+                for $att in $node/@* return
+                    local:attrInsertParams($att, $params)
+                ,
+                for $child in $node/node() return 
+                    local:insertParams($child, $params)
+            }
+        case element() return
+            element {name($node)} {
+                for $att in $node/@*
+                   return
+                      attribute {name($att)} {$att}
+                ,
+                for $child in $node/node()
+                   return local:insertParams($child, $params)
+            }
+        default return $node
 };
-
-declare %private function local:attrInsertQueryParams($attr as attribute(), $params as xs:string) {
+declare %private function local:attrInsertParams($attr as attribute(), $params as xs:string?) {
     typeswitch($attr)
         case attribute(href) return
             if (not(contains($attr, 'http'))) then
                 let $openingChar := if (contains($attr, '?')) then '&amp;' else '?'
                 let $value := 
                     if (starts-with($attr, '#')) then 
-                        $attr/string() 
+                        $attr/string()
                     else if (contains($attr, '#')) then
                         replace($attr, '#', concat($openingChar, $params, '#'))
                     else 
-                        concat(., $openingChar, $params)
+                        concat($attr, $openingChar, $params)
                 return attribute {name($attr)} {$value}
-            else $attr
+            else 
+                $attr
         default return
             $attr
 };
@@ -3066,10 +3065,11 @@ declare function app:tocSourcesList($node as node(), $model as map(*), $lang as 
         else()
 };
  
- declare function app:WRKtoc ($node as node(), $model as map(*), $wid as xs:string, $q as xs:string?, $lang as xs:string?) {
+declare function app:WRKtoc($node as node(), $model as map(*), $wid as xs:string, $q as xs:string?, $lang as xs:string?) {
     let $toc :=
         if ($q) then
             let $tocDoc := doc($config:html-root || '/' || sutil:normalizeId($wid) || '/' || sutil:normalizeId($wid) || '_toc.html')
+            (:
             let $xslSheet       := 
                 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
                     <xsl:output omit-xml-declaration="yes" indent="yes"/>
@@ -3102,13 +3102,58 @@ declare function app:tocSourcesList($node as node(), $model as map(*), $lang as 
                     <param name="q" value="{$q}"/>
                 </parameters>
             return 
-                transform:transform($tocDoc, $xslSheet, $parameters) (: i18n:process(transform:transform($tocDoc, $xslSheet, $parameters), $lang, $config:i18n-root, 'en') heute geändert :)
+                transform:transform($tocDoc, $xslSheet, $parameters) (\: i18n:process(transform:transform($tocDoc, $xslSheet, $parameters), $lang, $config:i18n-root, 'en') heute geändert :\)
+            :)
+            return 
+                local:copyInsertSearchParam($tocDoc/*, $q)
          else
             doc($config:html-root || '/' || sutil:normalizeId($wid) || '/' || sutil:normalizeId($wid) || '_toc.html')
     return 
         $toc
         (: i18n:process($toc, $lang, $config:i18n-root, 'en') heute geändert :)
 };
+
+
+(:
+~ Recursively inserts a "q" query parameter into a/href values of an HTML fragment.
+:)
+
+declare %private function local:copyInsertSearchParam($node as node(), $q as xs:string) {
+    typeswitch($node)
+        case element(a) return
+            element {name($node)} {
+                for $att in $node/@* return
+                    local:attrInsertSearchParam($att, $q)
+                ,
+                for $child in $node/node()
+                   return local:copyInsertSearchParam($child, $q)
+            }
+        case element() return
+            element {name($node)} {
+                for $att in $node/@*
+                   return
+                      attribute {name($att)} {$att}
+                ,
+                for $child in $node/node()
+                   return local:copyInsertSearchParam($child, $q)
+            }
+        default return $node
+};
+declare %private function local:attrInsertSearchParam($attr as attribute(), $q as xs:string) {
+    typeswitch($attr)
+        case attribute(href) return
+            let $value := 
+                if (starts-with($attr, '#')) then 
+                    $attr/string()
+                else if (contains($attr, '#')) then
+                    replace($attr, '#', concat('&amp;q=', $q, '#'))
+                else 
+                    concat($attr, '&amp;q=', $q)
+            return attribute {name($attr)} {$value}
+        default return
+            $attr
+};
+
 
 (:declare function app:downloadTXT($node as node(), $model as map(*), $mode as xs:string, $lang as xs:string) {
     let $wid := request:get-parameter('wid', '')
@@ -3344,39 +3389,45 @@ declare %templates:default
 declare function app:loadWRKpagination ($node as node(), $model as map (*), $wid as xs:string, $lang as xs:string, $q as xs:string?) {
     let $pagesFile  :=  doc($config:html-root || '/' || sutil:normalizeId($wid) || '/' || sutil:normalizeId($wid) || '_pages_' || $lang || '.html')
 (:    let $dbg := console:log(substring(serialize($pagesFile),1,300)):)
-    let $xslSheet   := <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-                            <xsl:output omit-xml-declaration="yes" indent="yes"/>
-                            <xsl:param name="q"/>
-                            <xsl:template match="node()|@*" priority="2">
-                                <xsl:copy>
-                                    <xsl:apply-templates select="node()|@*"/>
-                                </xsl:copy>
-                            </xsl:template>
-                            <xsl:template match="a/@href" priority="80">
-                                <xsl:attribute name="href">
-                                    <xsl:choose>
-                                        <xsl:when test="starts-with(., '#')">
-                                            <xsl:value-of select="."/>
-                                        </xsl:when>
-                                        <xsl:when test="contains(., '#')">
-                                            <xsl:value-of select="replace(., '#', concat('&amp;q=', $q, '#'))"/>
-                                        </xsl:when>                                                            
-                                        <xsl:otherwise>
-                                            <xsl:value-of select="concat(., '&amp;q=', $q)"/>
-                                        </xsl:otherwise>
-                                    </xsl:choose>
-                                </xsl:attribute>
-                            </xsl:template>
-                        </xsl:stylesheet>
-    let $parameters :=  <parameters>
-                            <param name="exist:stop-on-warn" value="yes"/>
-                            <param name="exist:stop-on-error" value="yes"/>
-                            <param name="q" value="{$q}"/>
-                        </parameters>
-    return if ($q) then
-                transform:transform($pagesFile, $xslSheet, $parameters)
-            else
-                $pagesFile
+    (:
+    let $xslSheet   := 
+        <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+            <xsl:output omit-xml-declaration="yes" indent="yes"/>
+            <xsl:param name="q"/>
+            <xsl:template match="node()|@*" priority="2">
+                <xsl:copy>
+                    <xsl:apply-templates select="node()|@*"/>
+                </xsl:copy>
+            </xsl:template>
+            <xsl:template match="a/@href" priority="80">
+                <xsl:attribute name="href">
+                    <xsl:choose>
+                        <xsl:when test="starts-with(., '#')">
+                            <xsl:value-of select="."/>
+                        </xsl:when>
+                        <xsl:when test="contains(., '#')">
+                            <xsl:value-of select="replace(., '#', concat('&amp;q=', $q, '#'))"/>
+                        </xsl:when>                                                            
+                        <xsl:otherwise>
+                            <xsl:value-of select="concat(., '&amp;q=', $q)"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:attribute>
+            </xsl:template>
+        </xsl:stylesheet>
+    let $parameters :=  
+        <parameters>
+            <param name="exist:stop-on-warn" value="yes"/>
+            <param name="exist:stop-on-error" value="yes"/>
+            <param name="q" value="{$q}"/>
+        </parameters>
+    :)
+    return 
+        if ($q) then
+(:            transform:transform($pagesFile, $xslSheet, $parameters):)
+            local:copyInsertSearchParam($pagesFile/*, $q)
+        else
+            $pagesFile
 };
 
 (: Old variants of the pagination loading function that differentiate too much between $q present/absent
