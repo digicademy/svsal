@@ -10,7 +10,7 @@ import module namespace config     = "http://www.salamanca.school/xquery/config"
 import module namespace i18n       = "http://exist-db.org/xquery/i18n"                  at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
 import module namespace render-app = "http://www.salamanca.school/xquery/render-app"    at "xmldb:exist:///db/apps/salamanca/modules/render-app.xqm";
 import module namespace console    = "http://exist-db.org/xquery/console";
-import module namespace hc       = "http://expath.org/ns/http-client";
+import module namespace hc         = "http://expath.org/ns/http-client";
 import module namespace request    = "http://exist-db.org/xquery/request";
 import module namespace session    = "http://exist-db.org/xquery/session";
 import module namespace util       = "http://exist-db.org/xquery/util";
@@ -650,24 +650,34 @@ declare function sphinx:keywords ($q as xs:string?) as xs:string {
 ~ Requests highlighted snippet excerpts (to be shown in the search result landing page) from Sphinx.
 :)
 declare function sphinx:excerpts ($documents as node()*, $words as xs:string) as node()* {
-    let $endpoint   := concat($config:sphinxRESTURL, "/excerpts")
-    let $debug := if ($config:debug = ("info", "trace"))    then util:log("warn", "[SPHINX EXCERPTS] Excerpts needed for doc[0]: " || substring(normalize-space($documents/description_orig), 0, 150))    else ()
+    let $endpoint       := concat($config:sphinxRESTURL, "/excerpts")
+(:    let $debug          := if ($config:debug = ("info", "trace")) then util:log("warn", "[SPHINX EXCERPTS] Excerpts needed for doc[0]: " || substring(normalize-space($documents/description_orig), 0, 150)) else ():)
     let $normalizedOrig := $documents/description_orig
-        let              $normalizedEdit := $documents/description_edit
-              let $request              := 
-              <hc:request method="post" http-version="1.0"> <hc:multipart              media-type="multipart/form-data" boundary="xyzBouNDarYxyz"> <hc:header              name="content-disposition" value='form-data; name="opts[limit]"'/> <hc:body           media-type="text/plain">150</hc:body>    <hc:header name="content-disposition"    value='form-data; name="opts[html_strip_mode]"'/> <hc:body media-type="text/plain">strip</hc:body> <hc:header name="content-disposition" value='form-data; name="opts[query_mode]"'/> <hc:body media-type="text/plain">true</hc:body>    <hc:header    name="content-disposition"    value='form-data; name="opts[around]"'/>    <hc:body media-type="text/plain">7</hc:body>    <hc:header name="content-disposition"        value='form-data; name="words"'/>
+    let $normalizedEdit := $documents/description_edit
+    let $request    := 
+        <hc:request method="post" http-version="1.0">
+            <hc:multipart media-type="multipart/form-data" boundary="xyzBouNDarYxyz">
+                <hc:header name="content-disposition" value='form-data; name="opts[limit]"'/>
+                <hc:body media-type="text/plain">150</hc:body>
+                <hc:header name="content-disposition" value='form-data; name="opts[html_strip_mode]"'/>
+                <hc:body media-type="text/plain">strip</hc:body>
+                <hc:header name="content-disposition" value='form-data; name="opts[query_mode]"'/>
+                <hc:body media-type="text/plain">true</hc:body>
+                <hc:header name="content-disposition" value='form-data; name="opts[around]"'/>
+                <hc:body media-type="text/plain">7</hc:body>
+                <hc:header name="content-disposition" value='form-data; name="words"'/>
                 <hc:body media-type="text/plain">{$words}</hc:body>
-            <hc:header name="content-disposition" value='form-data; name="docs[0]"'/>
+                <hc:header name="content-disposition" value='form-data; name="docs[0]"'/>
                 <hc:body media-type="text/xml">{$normalizedOrig}</hc:body>
                 <hc:header name="content-disposition" value='form-data; name="docs[1]"'/>
-            <hc:body media-type="text/xml">{$normalizedEdit}</hc:body> 
-        </hc:multipart>
+                <hc:body media-type="text/xml">{$normalizedEdit}</hc:body>
+            </hc:multipart>
         </hc:request>
-    let $log        := if ($config:debug = ("info", "trace")) then util:log("warn", "[SPHINX EXCERPTS] POST request element: " || serialize($request)) else ()
+(:    let $log        := if ($config:debug = ("info", "trace")) then util:log("warn", "[SPHINX EXCERPTS] POST request element: " || serialize($request)) else ():)
     let $debug      := if ($config:debug = "trace") then console:log("[SPHINX EXCERPTS] POST request element: " || serialize($request)) else ()
-    let $resp   := <resp>{hc:send-request($request, $endpoint)}</resp>
-    let $log := if ($config:debug = ("info", "trace")) then util:log('warn', '[SPHINX EXCERPTS] POST response: ' || serialize($resp)) else ()
-    let $debug    :=  if ($config:debug = "trace") then console:log('[SPHINX EXCERPTS] POST response: '            || serialize($resp)) else ()
+    let $resp       := <resp>{hc:send-request($request, $endpoint)}</resp>
+(:    let $log        := if ($config:debug = ("info", "trace")) then util:log('warn', '[SPHINX EXCERPTS] POST response: ' || serialize($resp)) else ():)
+    let $debug      := if ($config:debug = "trace") then console:log('[SPHINX EXCERPTS] POST response: ' || serialize($resp)) else ()
 (:  TODO:   check encoding (and other stuff, too?) before parsing and returning $resp//rss.
             But the following (old) way of checking is wrong: 
     let $rspBody    :=  
@@ -682,9 +692,9 @@ declare function sphinx:excerpts ($documents as node()*, $words as xs:string) as
             else ()
         else $resp/node()[not(self::hc:response)]
 :)
-                let $rspBody   := $resp//rss
-    let $log   :=  if ($config:debug = ("info", "trace")) then            util:log("warn", "[SPHINX EXCERPTS] $rspBody: " || serialize($rspBody))        else ()
-    let $debug :=  if ($config:debug = "trace")    then    console:log("[SPHINX EXCERPTS] POST response body decodes to: "    ||    (serialize($rspBody))) else ()
+    let $rspBody   := $resp//rss
+(:    let $log   :=  if ($config:debug = ("info", "trace")) then util:log("warn", "[SPHINX EXCERPTS] $rspBody: " || serialize($rspBody)) else ():)
+    let $debug :=  if ($config:debug = "trace") then console:log("[SPHINX EXCERPTS] POST response body decodes to: " || (serialize($rspBody))) else ()
     return $rspBody
 };
 
@@ -710,17 +720,26 @@ declare function sphinx:excerpts ($documents as node()*, $words as xs:string) as
     :)
 declare function sphinx:highlight($document as node(), $words as xs:string) as node()* {
     let $endpoint   := concat($config:sphinxRESTURL, "/excerpts")
-    let $request := 
-                                <hc:request method="post"                                http-version="1.0"> <hc:multipart                                media-type="multipart/form-data" boundary="xyzBouNDarYxyz"> <hc:header                                name="content-disposition" value='form-data; name="opts[limit]"'/> <hc:body                               media-type="text/plain">0</hc:body>    <hc:header name="content-disposition" value='form-data; name="opts[html_strip_mode]"'/> <hc:body media-type="text/plain">retain</hc:body> <hc:header name="content-disposition" value='form-data; name="opts[query_mode]"'/> <hc:body    media-type="text/plain">true</hc:body>    <hc:header name="content-disposition"    value='form-data; name="words"'/> <hc:body media-type="text/plain">{$words}</hc:body>
-            <hc:header name="content-disposition" value='form-data; name="docs[0]"'/>
-            <hc:body media-type="text/xml">{$document}</hc:body> 
-        </hc:multipart>
+    let $request    := 
+        <hc:request method="post" http-version="1.0">
+            <hc:multipart media-type="multipart/form-data" boundary="xyzBouNDarYxyz">
+                <hc:header name="content-disposition" value='form-data; name="opts[limit]"'/>
+                <hc:body media-type="text/plain">0</hc:body>
+                <hc:header name="content-disposition" value='form-data; name="opts[html_strip_mode]"'/>
+                <hc:body media-type="text/plain">retain</hc:body>
+                <hc:header name="content-disposition" value='form-data; name="opts[query_mode]"'/>
+                <hc:body media-type="text/plain">true</hc:body>
+                <hc:header name="content-disposition" value='form-data; name="words"'/>
+                <hc:body media-type="text/plain">{$words}</hc:body>
+                <hc:header name="content-disposition" value='form-data; name="docs[0]"'/>
+                <hc:body media-type="text/xml">{$document}</hc:body>
+            </hc:multipart>
         </hc:request>
 
     let $resp   := <resp>{hc:send-request($request, $endpoint)}</resp>
-    let    $rspBody    := $resp//rss
-    let $log    := if ($config:debug = ("info", "trace")) then util:log("warn",            "[SPHINX HIGHLIGHTING] $rspBody: " || serialize($rspBody)) else ()
-                let                    $debug :=  if ($config:debug = ("info", "trace"))            then console:log("[SPHINX HIGHLIGHTING] POST response body decodes to: "                ||                    (serialize($rspBody)))        else ()
+    let $rspBody   := $resp//rss
+(:    let $log   :=  if ($config:debug = ("info", "trace")) then util:log("warn", "[SPHINX HIGHLIGHTING] $rspBody: " || serialize($rspBody)) else ():)
+(:    let $debug :=  if ($config:debug = ("info", "trace")) then console:log("[SPHINX HIGHLIGHTING] POST response body decodes to: " || (serialize($rspBody))) else ():)
     return $rspBody
 };
 
