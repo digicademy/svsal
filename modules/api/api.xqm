@@ -192,6 +192,7 @@ declare function api:error404NotFound() {
     </rest:response>,
     map {
         'error': map {
+            'title': 'The School of Salamanca: API',
             'status': 404,
             'message': 'Resource not found.'
         }
@@ -208,6 +209,7 @@ declare function api:error404NotYetAvailable() {
     </rest:response>,
     map {
         'error': map {
+            'title': 'The School of Salamanca: API',
             'status': 404,
             'message': 'Resource not yet available.'
         }
@@ -224,8 +226,9 @@ declare function api:error400BadResource() {
     </rest:response>,
     map {
         'error': map {
+            'title': 'The School of Salamanca: API',
             'status': 400,
-            'message': 'Resource identifier syntax is invalid, must be of the form: work_id[:passage_id]'
+            'message': 'Bad request: URL path is invalid.'
         }
     }
 };
@@ -254,7 +257,7 @@ declare
 %rest:header-param("X-Forwarded-Host", "{$host}", "id.salamanca.school")
 %rest:header-param("Accept", "{$accept}", "text/html")
 %output:indent("no")
-function api:redirectIdTextsDocRequest($rid, $host, $accept, $format, $mode, $q, $lang, $viewer, $frag, $canvas) {
+function api:redirectTextsResource1($rid, $host, $accept, $format, $mode, $q, $lang, $viewer, $frag, $canvas) {
     let $format := if ($format) then $format else api:getFormatFromContentTypes(tokenize($accept, '[, ]+'), 'text/html')
     let $paramStr := api:concatDocQueryParams($format, $mode, $q, $lang, $viewer, $frag, $canvas)
     return
@@ -276,7 +279,7 @@ declare
 %rest:header-param("X-Forwarded-Host", "{$host}", "id.salamanca.school")
 %rest:header-param("Accept", "{$accept}", "text/html")
 %output:indent("no")
-function api:redirectIdTextsDocRequestLegacy($rid, $host, $accept, $format, $mode, $q, $lang, $viewer, $frag, $canvas) {
+function api:redirectTextsResourceLegacy1($rid, $host, $accept, $format, $mode, $q, $lang, $viewer, $frag, $canvas) {
     let $format := if ($format) then $format else api:getFormatFromContentTypes(tokenize($accept, '[, ]+'), 'text/html')
     let $paramStr := api:concatDocQueryParams($format, $mode, $q, $lang, $viewer, $frag, $canvas)
     return
@@ -293,7 +296,7 @@ declare
 %rest:header-param("X-Forwarded-Host", "{$host}", "id.salamanca.school")
 %rest:header-param("Accept", "{$accept}", "text/html")
 %output:indent("no")
-function api:redirectIdTextsCorpusRequest($rid, $host, $accept, $format, $lang) {
+function api:redirectTexts1($rid, $host, $accept, $format, $lang) {
     let $format := if ($format) then $format else api:getFormatFromContentTypes(tokenize($accept, '[, ]+'), 'text/html')
     let $paramStr := api:concatCorpusQueryParams($format, $lang)
     return
@@ -304,19 +307,15 @@ function api:redirectIdTextsCorpusRequest($rid, $host, $accept, $format, $lang) 
 (: TODO add authors and concepts endpoints here when available :)
 
 
-(: fallback function for unspecified requests :)
-(: the following has proven not to work work since it redirects *any* request, even valid/specified ones :)
-(:
+(: Default handlers for unspecified, under-specified, and (some) malformed requests :)
+
 declare
 %rest:GET
-%rest:produces("application/json")
-%rest:produces("text/html")
-function api:fallback() {
-    (: redirect to OpenAPI docs :)
-    ()
+function api:defaultHandler() {
+    api:error400BadResource()
 };
-:)
-(: hence, unspecified requests will land on the HTML 500 server-error page for now... :)
+
+
 
 
 (: UTILITY FUNCTIONS :)

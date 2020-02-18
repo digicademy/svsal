@@ -41,7 +41,7 @@ declare
 %rest:query-param("lang", "{$lang}", "")
 %rest:header-param("Accept", "{$accept}", "text/html")
 %rest:header-param("X-Forwarded-Host", "{$host}", "")
-function textsv1:getCorpus($format, $lang, $accept, $host) {
+function textsv1:texts1($format, $lang, $accept, $host) {
     let $format := if ($format) then $format else api:getFormatFromContentTypes(tokenize($accept, '[, ]+'), 'text/html')
     return
         switch($format)
@@ -80,7 +80,7 @@ declare
 %rest:header-param("Accept", "{$accept}", "text/html")
 %rest:header-param("X-Forwarded-Host", "{$host}", "")
 %output:indent("no")
-function textsv1:docRequest($rid, $format, $mode, $q, $lang, $viewer, $frag, $canvas, $accept, $host) {
+function textsv1:textsResource1($rid, $format, $mode, $q, $lang, $viewer, $frag, $canvas, $accept, $host) {
     (: for determining the requested format, the "format" query param has priority over the "Accept" header param: :)
     let $format := if ($format) then $format else api:getFormatFromContentTypes(tokenize($accept, '[, ]+'), 'text/html')
     return
