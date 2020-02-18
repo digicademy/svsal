@@ -73,6 +73,12 @@ declare variable $api:txtBinaryOutputParams :=
         <output:media-type value="text/plain"/>
     </output:serialization-parameters>;
     
+declare variable $api:turtleBinaryOutputParams :=
+    <output:serialization-parameters>
+        <output:method value="binary"/>
+        <output:media-type value="text/turtle"/>
+    </output:serialization-parameters>;
+    
 declare variable $api:zipOutputParams :=
     <output:serialization-parameters>
         <output:media-type value="application/zip"/>
@@ -136,6 +142,19 @@ declare function api:deliverTXTBinary($content as xs:base64Binary?, $name as xs:
             {$api:txtBinaryOutputParams}
             <http:response status="200">    
                 <http:header name="Content-Type" value="text/plain; charset=utf-8"/>
+                <http:header name="Content-Disposition" value="{$contentDisposition}"/>
+            </http:response>
+        </rest:response>,
+        $content
+};
+
+declare function api:deliverTurtleBinary($content as xs:base64Binary?, $filename as xs:string) {
+    let $contentDisposition := 'attachment; filename="' || $filename || '"'
+    return
+        <rest:response>
+            {$api:turtleBinaryOutputParams}
+            <http:response status="200">    
+                <http:header name="Content-Type" value="text/turtle; charset=utf-8"/>
                 <http:header name="Content-Disposition" value="{$contentDisposition}"/>
             </http:response>
         </rest:response>,

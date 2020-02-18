@@ -59,7 +59,9 @@ declare
 %rest:query-param("namespace", "{$namespace}", "")
 %rest:path("/v1/codesharing")
 function addv1:codesharing($verb, $elementName, $attributeName, $attributeValue, $documentType, $wrapped, $namespace) {
-    ()
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+    	<redirect url="https://salamanca.school/index.html"/>
+    </dispatch>
     (: TODO :)  
     (:
     let $paramStr := 
@@ -76,4 +78,28 @@ function addv1:codesharing($verb, $elementName, $attributeName, $attributeValue,
             '&amp;'
         )
     :)
+}; 
+
+
+declare 
+%rest:GET
+%rest:path("/v1/void.ttl")
+function addv1:voidttl1() {
+    api:deliverTurtleBinary(
+        util:binary-doc($config:app-root || '/void.ttl'),
+        'void.ttl'
+    )
 };
+
+declare 
+%rest:GET
+%rest:path("/void.ttl")
+function addv1:voidttl2() {
+    api:deliverTurtleBinary(
+        util:binary-doc($config:app-root || '/void.ttl'),
+        'void.ttl'
+    )
+};
+
+
+
