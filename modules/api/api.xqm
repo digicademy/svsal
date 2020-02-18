@@ -252,6 +252,23 @@ declare function api:error400BadResource() {
     }
 };
 
+declare function api:error400MethodNotSupported($method as xs:string?) {
+    <rest:response>
+        {$api:jsonOutputParams}
+        <http:response status="400">
+            <http:header name="Content-Language" value="en"/>
+            <http:header name="Content-Type" value="application/json; charset=utf-8"/>
+        </http:response>
+    </rest:response>,
+    map {
+        'error': map {
+            'title': 'The School of Salamanca: API',
+            'status': 400,
+            'message': 'Bad request: Method ' || (if ($method) then upper-case($method) || ' ' else ()) || 'not supported.'
+        }
+    }
+};
+
 
 
 (: RESTXQ FUNCTIONS for redirecting requests with "id." URLs to current API endpoints. :)
@@ -326,14 +343,45 @@ function api:redirectTexts1($rid, $host, $accept, $format, $lang) {
 (: TODO add authors and concepts endpoints here when available :)
 
 
-(: Default handlers for unspecified, under-specified, and (some) malformed requests :)
+(: Default handlers for underspecified, and (some) malformed requests :)
 
 declare
 %rest:GET
-function api:defaultHandler() {
+function api:defaultGet() {
     api:error400BadResource()
 };
 
+(: Currently unsupported methods: :)
+declare
+%rest:DELETE
+function api:defaultDelete() {
+    api:error400MethodNotSupported('delete')
+};
+declare
+%rest:HEAD
+function api:defaultHead() {
+    api:error400MethodNotSupported('head')
+};
+declare
+%rest:OPTIONS
+function api:defaultOptions() {
+    api:error400MethodNotSupported('options')
+};
+declare
+%rest:POST
+function api:defaultPost() {
+    api:error400MethodNotSupported('post')
+};
+declare
+%rest:PUT
+function api:defaultPut() {
+    api:error400MethodNotSupported('put')
+};
+declare
+%rest:DELETE
+function api:defaultDelete() {
+    api:error400MethodNotSupported('delete')
+};
 
 
 
