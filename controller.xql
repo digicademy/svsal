@@ -129,27 +129,7 @@ return
         let $debug := if ($config:debug = ("trace")) then console:log("[API] This translates to API version " || $pathComponents[2] || ", endpoint " || $pathComponents[3] || ".") else ()
         return if ($pathComponents[3] = $config:apiEndpoints($pathComponents[2])) then  (: Check if we support the requested endpoint/version :)
             switch($pathComponents[3])
-                (:case "texts" return
-                    let $path := substring-after($exist:path, '/texts/')
-                    let $textsRequest := net:APIparseTextsRequest($path, $netVars) 
-                    return
-                        if (not($textsRequest('is_well_formed'))) then net:error(400, $netVars, ())
-                        else 
-                            (\:if ($textsRequest('validation') eq 1) then (\: fully valid request :\)
-                                switch ($textsRequest('format')) 
-(\:                                    case 'html' return net:APIdeliverTextsHTML($textsRequest, $netVars):\)
-                                    case 'rdf'  return net:APIdeliverRDF($textsRequest, $netVars)
-(\:                                    case 'tei'  return net:APIdeliverTEI($textsRequest,$netVars):\)
-(\:                                    case 'txt'  return net:APIdeliverTXT($textsRequest,$netVars):\)
-                                    case 'jpg'  return net:APIdeliverJPG($textsRequest, $netVars)
-                                    case 'iiif' return net:APIdeliverIIIF($textsRequest, $netVars) 
-                                    (\: TODO: case 'application/ld+json': deliver iiif ? :\)
-                                    default return net:APIdeliverJPG($textsRequest, $netVars)
-                            else if ($textsRequest('validation') eq 0) then (\: one or more resource(s) not yet available :\)
-                                if ($textsRequest('format') eq 'html') then net:APIdeliverTextsHTML($textsRequest, $netVars)
-                                else net:error(404, $netVars, ()) (\: resource(s) not found :\)
-                            else:\) net:error(404, $netVars, ()) (\: well-formed, but invalid resource(s) requested :\)
-                            :)
+                (: already (partially) as RestXQ functions available: :)
                 (:case "search" return
                     let $debug         := if ($config:debug = ("trace", "info")) then console:log("Search requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
                     let $absolutePath  := concat($config:searchserver, '/', substring-after($exist:path, '/search/'))
@@ -169,9 +149,6 @@ return
                             let $debug := if ($config:debug = ("trace", "info")) then console:log("Forward to: /services/lod/" || tokenize($exist:path, "/")[last()]  || ".") else ()
                             return net:forward('/services/lod/' || tokenize($exist:path, "/")[last()], $netVars)
                         else net:error(404, $netVars, ())
-                case "stats" return
-                    let $debug         := if ($config:debug = ("trace", "info")) then console:log("Stats requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-                    return net:APIdeliverStats($netVars)
                 default return net:error(404, $netVars, ())
             else if ($pathComponents[3]) then net:error(404, $netVars, ()) (: or 400, 405? :)
             else net:redirect-with-303($config:webserver)
