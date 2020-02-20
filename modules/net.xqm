@@ -1,15 +1,24 @@
 xquery version "3.1";
 
-module namespace net                = "http://salamanca/net";
+
+(: ####++++----
+
+    General functions and variables for serving responses to web requests.
+
+ ----++++#### :)
+
+
+module namespace net                = "http://www.salamanca.school/xquery/net";
 import module namespace console     = "http://exist-db.org/xquery/console";
 import module namespace functx      = "http://www.functx.com";
 import module namespace request     = "http://exist-db.org/xquery/request";
 import module namespace response    = "http://exist-db.org/xquery/response";
 import module namespace util        = "http://exist-db.org/xquery/util";
-import module namespace config      = "http://salamanca/config"                 at "config.xqm";
-import module namespace export      = "http://salamanca/export"                 at "export.xql";
-import module namespace render      = "http://salamanca/render"                 at "render.xql";
-import module namespace sal-util    = "http://salamanca/sal-util" at "sal-util.xql";
+
+import module namespace config      = "http://www.salamanca.school/xquery/config"                 at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace export      = "http://www.salamanca.school/xquery/export"                 at "xmldb:exist:///db/apps/salamanca/modules/export.xqm";
+import module namespace sutil    = "http://www.salamanca.school/xquery/sutil" at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
+import module namespace txt        = "https://www.salamanca.school/factory/works/txt" at "xmldb:exist:///db/apps/salamanca/modules/factory/works/txt.xqm";
 
 declare       namespace exist       = "http://exist.sourceforge.net/NS/exist";
 declare       namespace output      = "http://www.w3.org/2010/xslt-xquery-serialization";
@@ -47,35 +56,27 @@ declare variable $net:errorhandler :=
             <forward url="{$config:app-root}/modules/view.xql"/>
         </error-handler>;
 
-(:declare function net:findNode($ctsId as xs:string?) {
-    let $reqResource  := tokenize($ctsId, '/')[last()]
-    let $reqWork      := tokenize(tokenize($reqResource, ':')[1], '\.')[1]   (\: work:pass.age :\)
-    let $reqPassage   := tokenize($reqResource, ':')[2]
-    let $nodeId       := if ($reqPassage) then
-                            let $nodeIndex := doc($config:index-root || '/' || replace($reqWork, 'w0', 'W0') || '_nodeIndex.xml')
-                            return $nodeIndex//sal:node[sal:citetrail eq $reqPassage][1]/@n[1]
-                         else
-                            "completeWork" 
-    let $work         := util:expand(doc($config:tei-works-root || '/' || replace($reqWork, 'w0', 'W0') || '.xml')//tei:TEI)
-    let $node         := $work//tei:*[@xml:id eq $nodeId]
-    let $debug        := if ($config:debug = "trace") then console:log('findNode returns ' || count($node) || ' node(s): ' || $work/@xml:id || '//*[@xml:id=' || $nodeId || '] (cts/id was "' || $ctsId || '").') else ()
-    return $node
-};:)
 
-declare function net:findNode($requestData as map()) {
-    let $nodeId :=    
-        if ($requestData('passage') ne ('')) then
-            let $nodeIndex := doc($config:index-root || '/' || $requestData('work_id') || '_nodeIndex.xml')
-            let $id := $nodeIndex//sal:node[sal:citetrail eq $requestData('passage')][1]/@n[1]
-            return if ($id) then $id else 'completeWork'
-        else 'completeWork' (: if no specific node has been found, return (or if work hasn't been rendered yet), return complete text :)
-    return
-        let $work := util:expand(doc($config:tei-works-root || '/' || $requestData('work_id') || '.xml')/tei:TEI)
-        let $node := $work//tei:*[@xml:id eq $nodeId]
-        let $debug := if ($config:debug = "trace") then console:log('findNode: found ' || count($node) || ' node(s): ' || $work/@xml:id || '//*[@xml:id=' 
-                                                                    || $nodeId || '] (cts/id was "' || $requestData('mainResource') || ':' || $requestData('passage') || '").') else ()
-        return $node
+(: Todo: Clean lang parameters when they arrive. It's there but I'm not sure it's working... :)
+declare function net:inject-requestParameter($injectParameter as xs:string*, $injectValue as xs:string*) as xs:string* {
+    if (not($injectParameter)) then
+        for $p in request:get-parameter-names() return
+            if (not($p = "lang" and request:get-parameter($p, ()) = ('', 'de', 'en', 'es'))) then
+                $p || "=" || request:get-parameter($p, ())
+            else ()
+    else
+        let $preliminaryList := for $p in request:get-parameter-names() return
+                                    if ($p = $injectParameter and not($injectParameter = 'lang')) then
+                                        $injectParameter || "=" || $injectValue
+                                    else if (not($p = "lang" and request:get-parameter($p, ()) = ('', 'de', 'en', 'es'))) then
+                                        $p || "=" || request:get-parameter($p, ())
+                                    else ()
+        return if (not($injectParameter || "=" || $injectValue = $preliminaryList)) then
+                    (if (not($injectParameter = 'lang')) then $injectParameter || "=" || $injectValue else (), $preliminaryList)
+               else
+                    $preliminaryList
 };
+
 
 (: Set language for the connection ... :)
 declare function net:lang($existPath as xs:string) as xs:string {
@@ -167,27 +168,6 @@ declare function net:format() as xs:string {
             default                    return 'html'
 };
 
-(: Todo: Clean lang parameters when they arrive. It's there but I'm not sure it's working... :)
-declare function net:inject-requestParameter($injectParameter as xs:string*, $injectValue as xs:string*) as xs:string* {
-    if (not($injectParameter)) then
-        for $p in request:get-parameter-names() return
-            if (not($p = "lang" and request:get-parameter($p, ()) = ('', 'de', 'en', 'es'))) then
-                $p || "=" || request:get-parameter($p, ())
-            else ()
-    else
-        let $preliminaryList := for $p in request:get-parameter-names() return
-                                    if ($p = $injectParameter and not($injectParameter = 'lang')) then
-                                        $injectParameter || "=" || $injectValue
-                                    else if (not($p = "lang" and request:get-parameter($p, ()) = ('', 'de', 'en', 'es'))) then
-                                        $p || "=" || request:get-parameter($p, ())
-                                    else ()
-        return if (not($injectParameter || "=" || $injectValue = $preliminaryList)) then
-                    (if (not($injectParameter = 'lang')) then $injectParameter || "=" || $injectValue else (), $preliminaryList)
-               else
-                    $preliminaryList
-};
-
-
 
 (: Diverse redirection/forwarding functions ... :)
 (:  Approach based on Joe Wicentowski's suggestion of handling redirection in separate queries
@@ -261,6 +241,7 @@ declare function net:error-page($statusCode as xs:integer, $netVars as map(*), $
         </error-handler>
     :)
 };
+
 
 declare function net:redirect-with-400($absolute-path) {  (: 400 :)
     (response:set-status-code(400), 
@@ -547,212 +528,10 @@ declare function net:sitemapResponse($netVars as map(*)) {
             return $sitemapIndex
 };
 
-declare function net:APIdeliverStats($netVars as map(*)) {
-    ()
-};
-
-declare function net:APIdeliverTEI($requestData as map(), $netVars as map()*) {
-    if (matches($requestData('tei_id'), '^W\d{4}')) then 
-        let $serialization  := 
-            (util:declare-option("output:method", "xml"),
-             util:declare-option("output:media-type", "application/tei+xml"),
-             util:declare-option("output:indent", "no"),
-             util:declare-option("output:expand-xincludes", "yes"))
-        let $debug :=   
-            if ($config:debug = "trace") then console:log("Serializing options: method:" || util:get-option('output:method') ||
-                ', media-type:' || util:get-option('output:media-type') ||
-                ', indent:'     || util:get-option('output:indent') ||
-                ', expand-xi:'  || util:get-option('output:expand-xincludes') ||
-                '.') 
-            else ()
-        let $doc := 
-            if ($requestData('mode') eq 'meta') then
-                let $debug :=  if ($config:debug = "trace") then console:log("[API] teiHeader export for " || $requestData("tei_id") || ".") else ()
-                return export:WRKgetTeiHeader($requestData('tei_id'), 'metadata', ())
-            else if ($requestData('passage') and not(matches($requestData('passage'), '^vol\d$'))) then (: volumes are handled below :)
-                let $debug :=  if ($config:debug = "trace") then console:log("[API] teiHeader export for passage " || $requestData("tei_id") || ":" || $requestData('passage') || ".") else ()
-                return export:WRKgetTeiPassage($requestData("work_id"), $requestData("passage"))
-            else 
-                let $debug :=  if ($config:debug = "trace") then console:log("[API] TEI doc export for " || $requestData('tei_id') || ".") else ()
-                return util:expand(doc($config:tei-works-root || '/' || $requestData('tei_id') || '.xml')/tei:TEI)
-        let $filename := 
-            if ($requestData('mode') eq 'meta') then $requestData('tei_id') || '_teiHeader.xml'
-            else if ($requestData('passage')) then $requestData('work_id') || '_' || $requestData('passage') || '_tei.xml'
-            else $requestData('tei_id') || '_tei.xml'
-        let $response := response:set-header("Content-Disposition", 'attachment; filename="' || $filename || '"')
-        return $doc
-    else if ($requestData('tei_id') eq '*' and util:binary-doc-available($config:corpus-zip-root || '/sal-tei-corpus.zip')) then
-        let $debug      := if ($config:debug = "trace") then console:log("[API] TEI corpus export.") else ()
-        let $corpusPath := $config:corpus-zip-root || '/sal-tei-corpus.zip'
-        let $response   := response:set-header("Content-Disposition", 'attachment; filename="sal-tei-corpus.zip"')
-        return response:stream-binary(util:binary-doc($corpusPath), 'application/zip', 'sal-tei-corpus.zip')
-    else net:error(404, $netVars, ())
-};
-
-declare function net:APIdeliverTXT($requestData as map(), $netVars as map()*) {
-    if (matches($requestData('tei_id'), '^W\d{4}')) then 
-        let $mode := if ($requestData('mode')) then $requestData('mode') else 'edit'
-        let $node := net:findNode($requestData)
-        let $serialize := (util:declare-option("output:method", "text"),
-                           util:declare-option("output:media-type", "text/plain"))
-        let $debug := 
-            if ($config:debug = "trace") then 
-                console:log("[API] Serializing options: method:" || util:get-option('output:method') ||
-                            ', media-type:' || util:get-option('output:media-type') ||
-                            '.') 
-            else ()
-        let $verboseMode := if ($mode eq 'edit') then 'constituted' else 'diplomatic' 
-        let $filename := 
-            (if (not(starts-with($requestData('passage'), 'vol'))) then $requestData('tei_id') else $requestData('work_id'))
-             || (if ($requestData('passage')) then '_' || $requestData('passage') else ()) 
-             || '_' || $verboseMode || '.txt'
-        let $response := response:set-header('Content-Disposition', 'attachment; filename="' || $filename || '"')
-        return 
-            if ($node) then 
-                (: if full work is requested and the text is already available, we fetch it directly without render:dispatch :)
-                if ($requestData('passage') eq '' and not(contains($requestData('tei_id'), '_Vol')) and util:binary-doc-available($config:txt-root || '/' || $requestData('work_id') || '/' || $requestData('work_id') || '_' || $mode || '.txt')) then
-                    response:stream-binary(util:binary-doc($config:txt-root || '/' || $requestData('work_id') || '/' || $requestData('work_id') || '_' || $mode || '.txt'), 'text/plain')
-                else render:dispatch($node, $mode)
-            else net:error(404, $netVars, 'Resource could not be found.')
-    else if ($requestData('tei_id') eq '*' and util:binary-doc-available($config:corpus-zip-root || '/sal-txt-corpus.zip')) then
-        let $debug      := if ($config:debug = "trace") then console:log("[API] TXT corpus export.") else ()
-        let $corpusPath := $config:corpus-zip-root || '/sal-txt-corpus.zip'
-        let $response   := response:set-header("Content-Disposition", 'attachment; filename="sal-txt-corpus.zip"')
-        return response:stream-binary(util:binary-doc($corpusPath), 'application/zip', 'sal-txt-corpus.zip')
-    else net:error(404, $netVars, 'Resource could not be found.')
-};
-
-declare function net:APIdeliverRDF($requestData as map(), $netVars as map()*) {
-    if (starts-with($requestData('work_id'), 'W0')) then 
-        if (doc-available($config:rdf-works-root || '/' || $requestData('work_id') || '.rdf')) then
-            let $headers1 := response:set-header('Content-Disposition', 'attachment; filename="' || $requestData('work_id') || '.rdf"')
-            let $header2 := response:set-header('Content-Type', 'application/rdf+xml')
-            return doc($config:rdf-works-root || '/' || $requestData('work_id') || '.rdf')
-        (: TODO: if there only is a teiHeader, we can also render rdf on-the-fly; however, the following returns almost empty RDF :)
-        (:else if (sal-util:WRKvalidateId($requestData('work_id')) eq 1) then
-            let $debug := if ($config:debug = ("trace", "info")) then console:log("Generating rdf for " || $requestData('work_id') || " ...") else ()
-            let $path := '/services/lod/extract.xql'
-            let $parameters := 
-                (<exist:add-parameter name="configuration" value="{$config:apiserver || '/xtriples/createConfig.xql?resourceId=' || $requestData('work_id') || '&amp;format=' || $config:lodFormat}"/>)
-            let $headers1 := response:set-header("Content-Disposition", 'attachment; filename="' || $requestData('work_id') || '.rdf"')
-            let $header2 := response:set-header('Content-Type', 'application/rdf+xml')
-            return net:forward($path, $netVars, $parameters):)
-        else if (sal-util:WRKvalidateId($requestData('work_id')) ge 0) then net:error(404, $netVars, 'resource-not-yet-available')
-        else net:error(404, $netVars, 'Could not find rdf resource') (: not automatically creating rdf here if not available, since this might slow down the server inacceptably :)
-    else if ($requestData('work_id') eq '*') then (: rdf of all works doesn't exist atm, redirect to HTML work overview - or rather return error? :)
-        let $debug := console:log("DEBUG MESSAGE")
-        return net:redirect-with-307($config:webserver || '/works.html')
-    else net:error(404, $netVars, 'Invalid rdf request.')
-};
-
-declare function net:APIdeliverJPG($requestData as map(), $netVars as map()*) {
-    if (starts-with($requestData('work_id'), 'W0')) then 
-        let $reqResource := 'texts/' || $requestData('work_id') || ':' || $requestData('passage')
-        let $resolvedPath := 
-            doc($config:rdf-works-root || '/' || $requestData('work_id') || '.rdf')
-                /rdf:RDF/rdf:Description[lower-case(@rdf:about) eq lower-case($reqResource)
-                                         and contains(rdfs:seeAlso/@rdf:resource, '.jpg')][1]/rdfs:seeAlso/@rdf:resource
-        return 
-            if ($resolvedPath) then
-                net:redirect-with-303($resolvedPath)
-            else 
-                net:error(404, $netVars, 'Could not find jpg resource.')
-    
-    else 
-        let $debug := util:log('warn', '[NET] jpg 3') return
-        net:error(404, $netVars, 'Invalid jpg request.')
-};
-
-declare function net:APIdeliverTextsHTML($requestData as map(), $netVars as map()*) {
-    if ($requestData('work_id') eq '*') then (: forward to works list, regardless of parameters or hashes :)
-        let $langPath := if ($requestData('lang')) then $requestData('lang') || '/' else ()
-        let $pathname     := $config:webserver || '/' || $langPath || 'works.html'
-        let $debug       := if ($config:debug = ("trace", "info")) then console:log("[API] request for all works (HTML), redirecting to " || $pathname || " ...") else ()
-        return net:redirect-with-303($pathname)
-    else if ($requestData('work_status') = (1,2) 
-             (: no passage, or passage is volume (of published work, passage_status=1, or unpublished work, Passage_status=-1) :)
-             and (not($requestData('passage')) or (matches($requestData('passage'), '^vol\d$') and $requestData('passage_status') eq 1))
-             and $requestData('viewer') eq 'all') then
-        let $viewerUri := $config:webserver || '/viewer.html?wid=' || $requestData('tei_id')
-        return net:redirect-with-303($viewerUri)
-    else if ($requestData('work_status') eq 2 and $requestData('passage_status') = (1)) then (: full text available and passage not invalid :)
-        if (matches($requestData('work_id'), '^W\d{4}$')) then
-            let $debug := if ($config:debug = ("trace")) then console:log("Load metadata from " || $config:rdf-works-root || '/' || $requestData('work_id') || '.rdf' || " ...") else ()
-            let $metadata := doc($config:rdf-works-root || '/' || $requestData('work_id') || '.rdf')
-            let $resourcePath := (: with legacy resource ids, we need to append a "vol" passage :)
-                if (contains($requestData('tei_id'), '_Vol') and not($requestData('passage'))) then 
-                    $requestData('work_id') || ':vol' || substring($requestData('tei_id'), string-length($requestData('tei_id')))
-                else $requestData('work_id') || (if ($requestData('passage')) then ':' || $requestData('passage') else ())
-            let $debug := if ($config:debug = ("trace")) then console:log("Retrieving $metadata//rdf:Description[@rdf:about eq 'texts/" || $resourcePath || "']/rdfs:seeAlso[@rdf:resource[contains(., '.html')]][1]/@rdf:resource") else ()
-            let $resolvedPath := 
-                if ($requestData('mode') eq 'meta') then
-                    $config:webserver || '/workDetails.html?wid=' || $requestData('tei_id')
-                else if ($requestData('frag') and not($requestData('passage'))) then 
-                    (: prov. solution for frag params: if there only is a fragment id for a work, simply redirect to the fragment - if we have a passage, ignore it :)
-                    $config:webserver || '/work.html?wid=' || $requestData('work_id') || '&amp;frag=' || replace($requestData('frag'), 'w0', 'W0')
-                else
-                    try {
-                        string($metadata//rdf:Description[lower-case(@rdf:about/string()) eq lower-case('texts/' || $resourcePath)]/rdfs:seeAlso[@rdf:resource[contains(., ".html")]][1]/@rdf:resource)
-                        } 
-                    catch err:FORG0006 {
-                        let $debug := console:log('[API] err:FORG0006: could not resolve path ' || $resourcePath || ' in RDF for wid=' || $requestData('work_id'))
-                        return $config:webserver || '/work.html?wid=' || $resourcePath
-                    }
-            let $debug := if ($config:debug = ("trace")) then console:log("Found path: " || $resolvedPath || " ...") else ()
-            (: The pathname that has been saved contains 0 or exactly one parameter for the target html fragment,
-               but it may or may not contain a hash value. We have to mix in other parameters (mode, search expression or viewer state) before the hash. :)
-            let $pathname := (: get everything before params or hash :)
-                if (contains($resolvedPath, '?')) then
-                    substring-before($resolvedPath, '?')
-                else if (contains($resolvedPath, '#')) then
-                    substring-before($resolvedPath, '#')
-                else $resolvedPath
-            let $hash := if (contains($resolvedPath, '#')) then concat('#', substring-after($resolvedPath, '#')) else ()
-            let $fragParam :=
-                if (contains($resolvedPath, '?')) then
-                    if (contains(substring-after($resolvedPath, '?'), '#')) then
-                        substring-before(substring-after($resolvedPath, '?'), '#')
-                    else substring-after($resolvedPath, '?')
-                else ()
-            (: TODO: cut original frag param out :)
-            let $updParams := (: cut redundant format=html and illegal (?) frag params out :)
-                if ($requestData('mode') eq 'orig' and not($netVars('paramap')?('mode') eq 'orig')) then 
-                    array:append([$netVars('params')[not(. eq 'format=html' or starts-with(., 'frag'))]], 'mode=orig') 
-                else [$netVars('params')[not(. eq 'format=html' or starts-with(., 'frag'))]]
-            let $parameters := concat(if ($fragParam or $updParams) then "?" else (), string-join(($fragParam, string-join($updParams?*, "&amp;")), "&amp;"))
-            let $debug := if ($config:debug = ("trace", "info")) then console:log("Redirecting to " || $pathname || $parameters || $hash || " ...") else ()
-            return net:redirect-with-303($pathname || $parameters || $hash )
-        else
-            let $debug := if ($config:debug = ("trace", "info")) then console:log("Html is acceptable, but bad input. Redirect (404) to error webpage ...") else ()
-            return net:error(404, $netVars, ())
-    else if ($requestData('work_status') eq 1) then net:redirect-with-303($config:webserver || '/workDetails.html?wid=' || $requestData('tei_id')) (: only work details available :)
-    else if ($requestData('work_status') eq 0) then net:error(404, $netVars, 'work-not-yet-available') (: work id is valid, but there are no data :)
-    else net:error(404, $netVars, '')
-};
-
-
-(:
-Redirects a request for a iiif resource to the respective endpoint of the primary iiif API. ATM works only on the work/volume
-level, but not for a single page or passage-wise (these are redirected to the resource for the whole work/volume).
-:)
-declare function net:APIdeliverIIIF($requestData as map()*, $netVars as map()*) {
-    if ($requestData('work_id') eq '*') then (: forward to HTML works list (really?), regardless of parameters or hashes :)
-        let $langPath := if ($requestData('lang')) then $requestData('lang') || '/' else ()
-        let $pathname     := $config:webserver || '/' || $langPath || 'works.html'
-        return net:redirect-with-303($pathname)
-    else
-        let $iiifUrl := sal-util:getIiifUrl($requestData('tei_id'))
-        let $header := response:set-header('Content-Type', 'application/json')
-        return
-            if ($iiifUrl) then
-                net:redirect-with-303($iiifUrl)
-            else net:error(404, $netVars, ())
-};
-
 
 declare function net:deliverTextsHTML($netVars as map()*) {
-    let $wid := sal-util:normalizeId($netVars('paramap')?('wid'))
-    let $validation := sal-util:WRKvalidateId($wid)
+    let $wid := sutil:normalizeId($netVars('paramap')?('wid'))
+    let $validation := sutil:WRKvalidateId($wid)
 (:    let $debug := if ($config:debug = "trace") then util:log("warn", "HTML request for work :" || $wid || " ; " || "validation result: " || string($validation)) else ():)
     return
         if ($validation eq 2) then (: full text available :)
@@ -766,8 +545,8 @@ declare function net:deliverTextsHTML($netVars as map()*) {
 };
 
 declare function net:deliverWorkDetailsHTML($netVars as map(*)) {
-    let $wid := sal-util:normalizeId($netVars('paramap')?('wid'))
-    let $validation := sal-util:WRKvalidateId($wid)
+    let $wid := sutil:normalizeId($netVars('paramap')?('wid'))
+    let $validation := sutil:WRKvalidateId($wid)
     return
         switch($validation)
             case 2
@@ -777,7 +556,7 @@ declare function net:deliverWorkDetailsHTML($netVars as map(*)) {
 };
 
 declare function net:deliverAuthorsHTML($netVars as map()*) {
-    let $validation := sal-util:AUTvalidateId($netVars('paramap')?('aid'))
+    let $validation := sutil:AUTvalidateId($netVars('paramap')?('aid'))
     let $debug := util:log('warn', 'Author id validation: ' || string($validation) || ' ; aid=' || $netVars('paramap')?('aid'))
     return
         if ($validation eq 1) then () (: TODO author article is available :)
@@ -786,7 +565,7 @@ declare function net:deliverAuthorsHTML($netVars as map()*) {
 };
 
 declare function net:deliverConceptsHTML($netVars as map()*) {
-    let $validation := sal-util:LEMvalidateId($netVars('paramap')?('lid'))
+    let $validation := sutil:LEMvalidateId($netVars('paramap')?('lid'))
     return
         if ($validation eq 1) then () (: TODO dict. entry is available :)
         else if ($validation eq 0) then net:error(404, $netVars, 'lemma-not-yet-available')
@@ -794,114 +573,9 @@ declare function net:deliverConceptsHTML($netVars as map()*) {
 };
 
 declare function net:deliverWorkingPapersHTML($netVars as map()*) {
-    let $validation := sal-util:WPvalidateId($netVars('paramap')?('wpid'))
+    let $validation := sutil:WPvalidateId($netVars('paramap')?('wpid'))
     return
         if ($validation eq 1) then net:forward-to-html(substring($netVars('path'), 4), $netVars)
         else if ($validation eq 0) then net:error(404, $netVars, 'workingpaper-not-yet-available')
         else net:error(404, $netVars, ())
 };
-
-
-(:~
-: Workhorse of api.../texts: a basic filter and validator for API request arguments (i.e., URL paths and parameters). 
-~:)
-declare function net:APIparseTextsRequest($path as xs:string?, $netVars as map()*) as map()? {
-    (: normalize path (i.e., amount and order of separators) :)
-    let $normalizedPath := replace(replace(replace(replace(lower-case($path), '^/+', ''), '/+$', ''), ':+$', ''), ':+', ':')
-    let $debug := if ($config:debug = ('trace')) then console:log('[API] request at: .../texts/' || $path || '. Normalized path: ' || $normalizedPath) else ()
-    return
-        if (count(tokenize($normalizedPath, '/')) gt 1 or count(tokenize($normalizedPath, ':')) gt 2)
-            then 
-                let $debug := if ($config:debug = ('trace')) then console:log('[API] invalid resource requested; normalized resource was: ', $normalizedPath) else ()
-                return map:entry('is_well_formed', false())
-        else
-            (: (1) get components :)
-            let $resource :=
-                if ($normalizedPath eq '') then ''
-                else 
-                    let $resourceToken := tokenize(tokenize($normalizedPath, ':')[1], '\.')[1]
-                    return
-                        if (not($resourceToken)) then ''
-                        else if (matches($resourceToken, '^w\d{4}(_vol\d{2})?$')) then 
-                            translate($resourceToken, 'wv', 'WV')
-                        else '-1'
-            let $passage := 
-                if (count(tokenize($normalizedPath, ':')) le 1) then ''
-                else (: count(tokenize($normalizedPath, ':')) eq 2 (validated above) :) 
-                    if (tokenize($normalizedPath, ':')[2]) then tokenize($normalizedPath, ':')[2]
-                    else ''
-            let $teiId := (: the actual TEI document's id (derived from the combination of resource and passage), but only if it exists :)
-                if ($resource ne '-1') then 
-                    if ($resource eq '') then '*' (: all tei datasets :)
-                    else if (matches($passage, '^vol\d')) then (: some volume :)
-                        let $volStatus := sal-util:WRKvalidateId($resource || '_Vol0' || substring($passage,4,1))
-                        return
-                            if ($volStatus ge 1) then (: a tei dataset is available :)
-                                $resource || '_Vol0' || substring($passage,4,1)
-                            else string($volStatus) (: 0 or -1 :)
-                    else $resource (: already checked whether available :)
-                else '-1'
-            (: (2) validate components :)
-            let $teiStatus := if (starts-with($teiId, 'W')) then sal-util:WRKvalidateId($teiId) else ()
-            let $workId := (: the overarching work's main id, not distinguishing between volumes :)
-                if ($resource != ('0', '-1')) then 
-                    if ($teiId eq '*') then '*'
-                    else replace($resource, '_Vol\d\d$', '')
-                else '0'
-            let $workStatus := 
-                if ($workId = $teiId) then $teiStatus 
-                else if (starts-with($workId, 'W')) then sal-util:WRKvalidateId($workId)
-                else ()
-            let $passageStatus := (: 1 = passage valid & existing ; 0 = not existing ; -1 = no dataset found for $wid ; empty = no passage :)
-                (: special case: passage is volume of work not yet published: valid :)
-                if (matches(lower-case($passage), '^vol\d$') and $workStatus eq 1 and $teiStatus eq 1) then 1
-                else if ($passage) then
-                    if ($teiStatus eq 2 and doc-available($config:index-root || '/' || $workId || '_nodeIndex.xml')) then 
-                        let $nodeIndex := doc($config:index-root || '/' || $workId || '_nodeIndex.xml')
-                        let $debug := if ($config:debug = ('trace')) then console:log('[API] checking node index for ' || $nodeIndex//@work[1]) else ()
-                        return 
-                            if ($nodeIndex//sal:citetrail[lower-case(./text()) eq $passage]) then 1
-                            else 0
-                    else -1
-                else 1
-            (: (3) get and filter params :)
-            let $params :=
-                let $format := $netVars('format') (: or net:format() :)
-                let $validParams := $config:apiFormats($format)
-                (:  filter out all invalid params and remove duplicates (first value wins) :)
-                let $params0 := map:merge(for $p in $netVars('params') return if (($p, substring-before($p, '=')) = $validParams) then map:entry(substring-before($p, '='), substring-after($p, '=')) else ())
-                let $mode :=
-                    if (tokenize(tokenize($normalizedPath, ':')[1], '\.')[2] = ('orig', 'edit') and 'mode=' || tokenize(tokenize($normalizedPath, ':')[1], '\.')[2] = $validParams) then 
-                        tokenize(tokenize($normalizedPath, ':')[1], '\.')[2]
-                    else if (request:get-parameter('mode', '')[1] and ('mode', 'mode=' || request:get-parameter('mode', '')[1]) = $validParams) then request:get-parameter('mode', '')[1]
-                    else ()
-                return map:merge((map:entry('mode', $mode), map:entry('format', $format), $params0))
-            (: (4) general validation and output :)
-            let $requestValidation := (: -1 (meaningless request) has priority over 0 (not (yet) available) :)
-                if (($teiStatus, $workStatus, $passageStatus) = -1) then -1
-                else if (($teiStatus, $workStatus, $passageStatus) = 0) then 0
-                else 1
-            let $isWellFormed := (: if a request is clearly malformed, we deliver this info to downstream functions :) 
-                if ($passage and not($resource)) then false()
-                (: add further cases of malformedness here :)
-                else true()
-            let $resourceData := 
-                map {'validation': $requestValidation, 
-                     'is_well_formed': $isWellFormed,
-                     'resource': $resource,
-                     'tei_id': $teiId,
-                     'work_id': $workId,
-                     'passage': $passage,
-                     'tei_status': $teiStatus,
-                     'work_status': $workStatus,
-                     'passage_status': $passageStatus}
-            let $requestData := map:merge(($resourceData, $params))
-            let $debug := if ($config:debug = ('trace')) then util:log('warn', '[API] request data: ' || string-join((for $k in map:keys($requestData) return $k || '=' || map:get($requestData, $k)), ' ; ') || '.') else ()
-            return $requestData
-            (:  open questions / TODO:
-                    - how to deal with illegal params: ignore or error? (currently ignored)
-                    - fragments (how to best access/validate them here?)
-                    - matrix params?
-            :)
-};
-

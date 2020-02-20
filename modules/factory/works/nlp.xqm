@@ -1,11 +1,18 @@
 xquery version "3.1";
 
-module namespace nlp       = "http://salamanca/nlp";
+module namespace nlp       = "https://www.salamanca.school/factory/works/nlp";
 declare namespace exist      = "http://exist.sourceforge.net/NS/exist";
 declare namespace sal        = "http://salamanca.adwmainz.de";
 declare namespace tei        = "http://www.tei-c.org/ns/1.0";
 declare namespace util       = "http://exist-db.org/xquery/util";
 import module namespace console   = "http://exist-db.org/xquery/console";
+
+(: ####++++----
+
+Functions for extracting data (such as token streams) from TEI work datasets 
+for statistical and/or NLP analysis.
+
+----++++#### :)
 
 
 (:

@@ -7,9 +7,10 @@ import module namespace xmldb   = "http://exist-db.org/xquery/xmldb";
 import module namespace console = "http://exist-db.org/xquery/console";
 import module namespace util    = "http://exist-db.org/xquery/util";
 import module namespace functx  = "http://www.functx.com";
-import module namespace config  = "http://salamanca/config" at "modules/xconfig.xqm";
-import module namespace net     = "http://salamanca/net"    at "modules/net.xql";
-import module namespace render  = "http://salamanca/render" at "modules/render.xql";
+import module namespace config  = "http://www.salamanca.school/xquery/config" at "../../modules/config.xqm";
+import module namespace net     = "http://www.salamanca.school/xquery/net"    at "../../modules/net.xqm";
+import module namespace txt  = "https://www.salamanca.school/factory/works/txt" at "modules/factory/works/txt.xql";
+import module namespace sutil    = "http://www.salamanca.school/xquery/sutil" at "../../sutil.xqm";
 
 declare       namespace exist   = "http://exist.sourceforge.net/NS/exist";
 declare       namespace output  = "http://www.w3.org/2010/xslt-xquery-serialization";
@@ -115,12 +116,13 @@ let $debug2 :=  if ($config:debug = "trace") then
                 else ()
 (: TODO: reflect variables defined above... :)
 
-let $errorhandler := if (($config:mode = "staging") or ($config:debug = "trace")) then ()
-                       else
-                            <error-handler>
-                                <forward url="{$exist:controller}/en/error-page.html" method="get"/>
-                                <forward url="{$exist:controller}/modules/view.xql"/>
-                            </error-handler>
+let $errorhandler := 
+    if (($config:instanceMode = "staging") or ($config:debug = "trace")) then ()
+    else
+        <error-handler>
+            <forward url="{$exist:controller}/en/error-page.html" method="get"/>
+            <forward url="{$exist:controller}/modules/view.xql"/>
+        </error-handler>
 
 return
 (:
@@ -147,7 +149,7 @@ return
         return net:sitemapResponse($net-vars)
 
     (: Pass all requests to admin HTML files through view-admin.xql, which handles HTML templating and is aware of admin credentials/routines :)
-    else if (matches($exist:resource, "(admin.html)|(admin-svn.html)|(render.html)|(renderTheRest.html)|(createLists.html)|(sphinx-admin.xql)")) then
+    else if (matches($exist:resource, "(admin.html)|(admin-svn.html)|(render.html)|(renderTheRest.html)|(createLists.html)|(sphinx-admin.xqm)")) then
         let $debug          := if ($config:debug = ("trace", "info")) then console:log("Admin HTML requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
         (: For now, we don't use net:forward here since we need a nested view/forwarding. :)
         (: return net:forward("/modules/view-admin.xql", $net-vars) :)
@@ -213,14 +215,14 @@ return
             let $debug          := if ($config:debug = ("trace", "info")) then console:log("TXT requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
             let $reqResource    := replace(tokenize($exist:path, '/')[last()], '\|', '/')
             let $reqWork        := tokenize($exist:path, ':')[1]
-            let $node           := net:findNode($reqResource)
+            let $node           := () (:sutil:getTeiNodeFromCitetrail($reqResource):)
             let $ret            := (util:declare-option("output:method", "text"),
                                     util:declare-option("output:media-type", "text/plain"))
             let $debug2         := if ($config:debug = "trace") then console:log("Serializing options: method:" || util:get-option('output:method') || ', media-type:' || util:get-option('output:media-type') || '.') else ()
             return  if (contains($reqWork, '.orig')) then
-                        render:dispatch($node, 'orig')
+                        txt:dispatch($node, 'orig')
                     else
-                        render:dispatch($node, 'edit')
+                        txt:dispatch($node, 'edit')
 
 
 (: --- 5. tei requested (application/tei+xml) --- :)

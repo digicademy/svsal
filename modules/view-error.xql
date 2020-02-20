@@ -2,15 +2,13 @@ xquery version "3.0" encoding "UTF-8";
 
 declare namespace xhtml="http://www.w3.org/1999/xhtml";
 
-import module namespace app       = "http://salamanca/app"                       at "app.xql";
-import module namespace config    = "http://salamanca/config"                    at "config.xqm";
-import module namespace i18n      = "http://exist-db.org/xquery/i18n/templates"  at "i18n-templates.xql";
-import module namespace iiif      = "http://salamanca/iiif"                      at "iiif.xql";
-import module namespace render    = "http://salamanca/render"                    at "render.xql";
-import module namespace net       = "http://salamanca/net"                       at "net.xql";
-import module namespace sphinx    = "http://salamanca/sphinx"                    at "sphinx.xql";
-(:import module namespace stats     = "http://salamanca/stats"                     at "stats.xql";:)
-(:import module namespace functx    = "http://www.functx.com"                      at "/db/system/repo/functx-1.0/functx/functx.xql";:)
+import module namespace app       = "http://www.salamanca.school/xquery/app"                       at "xmldb:exist:///db/apps/salamanca/modules/app.xqm";
+import module namespace config    = "http://www.salamanca.school/xquery/config"                    at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace gui    = "http://www.salamanca.school/xquery/gui"                    at "xmldb:exist:///db/apps/salamanca/modules/gui.xqm";
+import module namespace i18n      = "http://exist-db.org/xquery/i18n/templates"  at "xmldb:exist:///db/apps/salamanca/modules/i18n-templates.xqm";
+import module namespace iiif      = "http://www.salamanca.school/xquery/iiif"                      at "xmldb:exist:///db/apps/salamanca/modules/iiif.xqm";
+import module namespace net       = "http://www.salamanca.school/xquery/net"                       at "xmldb:exist:///db/apps/salamanca/modules/net.xqm";
+import module namespace sphinx    = "http://www.salamanca.school/xquery/sphinx"                    at "xmldb:exist:///db/apps/salamanca/modules/sphinx.xqm";
 import module namespace templates = "http://exist-db.org/xquery/templates" ;
 import module namespace request   = "http://exist-db.org/xquery/request";
 import module namespace console   = "http://exist-db.org/xquery/console";

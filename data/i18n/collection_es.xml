@@ -443,10 +443,12 @@
     <msg key="tei-ms-section">Section</msg>
     <msg key="tei-front">Parte preliminar</msg>
     <msg key="tei-back">Apéndice</msg>
+    <msg key="tei-argument">Resumen</msg>
     <msg key="tei-p">Párrafo</msg>
     <msg key="tei-signed">Firma</msg>
     <msg key="tei-head">Título</msg>
     <msg key="tei-label">Etiqueta</msg>
+    <msg key="tei-table">Tabla</msg>
     <msg key="tei-titlePage">Portada</msg>
     <msg key="tei-note">Nota</msg>
     <msg key="tei-list">Lista</msg>

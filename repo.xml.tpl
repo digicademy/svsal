@@ -4,7 +4,7 @@
     <author>Ingo Caesar</author>
     <author>David Glück</author>
     <author>Andreas Wagner</author>
-    <website>https://www.salamanca.school/</website>
+    <website>https://www.salamanca.school</website>
     <status>beta</status>
     <license>MIT</license>
     <copyright>true</copyright>

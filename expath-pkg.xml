@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<package xmlns="http://expath.org/ns/pkg" name="http://salamanca.school" abbrev="svsal" version="1.5.0" spec="1.0">
+<package xmlns="http://expath.org/ns/pkg" name="https://www.salamanca.school" abbrev="svsal" version="1.6.0-RC" spec="1.0">
     <title>The School of Salamanca. Web Application</title>
-    <dependency package="http://exist-db.org/apps/shared"/>
-    <dependency package="http://www.functx.com"/>
+    <!-- these packages should be automatically installed with eXist 5+ -->
+    <!--<dependency package="http://exist-db.org/apps/shared"/>-->
+    <!--<dependency package="http://www.functx.com"/>-->
 </package>
