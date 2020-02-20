@@ -120,7 +120,7 @@ return
         let $debug := if ($config:debug = ("trace", "info")) then console:log("[API] request at: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
         (: We have the following API areas, accessible by path component:
             a. /v1/search       (Forwards to opensphinxsearch.)
-            c. /v1/xtriples     (Extract rdf from xml with xtriples.  See https://api.{$config:serverdomain}/v1/xtriples/xtriples.html    or http://xtriples.spatialhumanities.de/index.html)
+            c. /v1/xtriples     
         :)
         let $netVars :=  map:put($netVars, 'format', net:format())
         let $pathComponents := tokenize(lower-case($exist:path), "/")  (: Since $exist:path starts with a slash, $pathComponents[1] is an empty string :)
@@ -128,17 +128,10 @@ return
         return if ($pathComponents[3] = $config:apiEndpoints($pathComponents[2])) then  (: Check if we support the requested endpoint/version :)
             switch($pathComponents[3])
                 (: already (partially) as RestXQ functions available: :)
-                (:case "search" return
+                case "search" return
                     let $debug         := if ($config:debug = ("trace", "info")) then console:log("Search requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
                     let $absolutePath  := concat($config:searchserver, '/', substring-after($exist:path, '/search/'))
-                    return net:redirect($absolutePath, $netVars):)
-                case "xtriples" return
-                    let $debug         := if ($config:debug = ("trace", "info")) then console:log("XTriples requested: " || $net:forwardedForServername || $exist:path || $parameterString || " ...") else ()
-                    return
-                        if (tokenize($pathComponents[last()], '\?')[1] = ("extract.xql", "createconfig.xql", "xtriples.html", "changelog.html", "documentation.html", "examples.html")) then
-                            let $debug := if ($config:debug = ("trace", "info")) then console:log("Forward to: /services/lod/" || tokenize($exist:path, "/")[last()]  || ".") else ()
-                            return net:forward('/services/lod/' || tokenize($exist:path, "/")[last()], $netVars)
-                        else net:error(404, $netVars, ())
+                    return net:redirect($absolutePath, $netVars)
                 default return net:error(404, $netVars, ())
             else if ($pathComponents[3]) then net:error(404, $netVars, ()) (: or 400, 405? :)
             else net:redirect-with-303($config:webserver)
@@ -191,6 +184,26 @@ return
 
 
     (: *** The rest is html and defaults and miscellaneous stuff... :)
+    
+    (: Request for the codesharing, xtriples, or search service :)
+    else if (starts-with($exist:path, "/codesharing/")) then
+(:        let $debug := if ($config:debug = ("trace", "info")) then console:log("Codesharing requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ():)
+        let $parameters := <exist:add-parameter name="outputType" value="html"/>
+        return
+            if (lower-case($exist:resource) eq 'codesharing_protocol.xhtml') then
+                net:forward('/services/codesharing/codesharing_protocol.xhtml', $netVars) (: Protocol description html file. :)
+            else
+                net:forward('/services/codesharing/codesharing.xql', $netVars, $parameters) (: Main service HTML page.  :)
+    else if (starts-with($exist:path, "/xtriples/")) then
+        (: Extract rdf from xml with xtriples.  See https://api.{$config:serverdomain}/v1/xtriples/xtriples.html    or http://xtriples.spatialhumanities.de/index.html) :)
+        (:let $debug         := if ($config:debug = ("trace", "info")) then console:log("XTriples requested: " || $net:forwardedForServername || $exist:path || $parameterString || " ...") else ()
+        return:)
+            if ($exist:resource = ("extract.xql", "createConfig.xql", "xtriples.html", "changelog.html", "documentation.html", "examples.html")) then
+                let $debug := if ($config:debug = ("trace", "info")) then console:log("Forward to: /services/lod/" || $exist:resource  || ".") else ()
+                return net:forward('/services/lod/' || $exist:resource, $netVars)
+            else net:error(404, $netVars, ())
+    
+
     (: If the request is for an xql file, strip/bypass language selection logic :)
     else if (ends-with($exist:resource, ".xql")) then
         let $finalPath1     := replace($exist:path, '/de/', '/')
@@ -217,15 +230,6 @@ return
                 let $debug          := if ($config:debug = ("trace", "info")) then console:log("File download requested: " || $net:forwardedForServername || $exist:path || $parameterString || ", redirecting to " || $finalPath || '?' || string-join($netVars('params'), '&amp;') || ".") else ()
                 return net:forward($finalPath, $netVars)
 
-    (: Request for the codesharing service :)
-    else if (starts-with($exist:path, "/codesharing/")) then
-(:        let $debug := if ($config:debug = ("trace", "info")) then console:log("Codesharing requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ():)
-        let $parameters := <exist:add-parameter name="outputType" value="html"/>
-        return
-            if (lower-case($exist:resource) eq 'codesharing_protocol.xhtml') then
-                net:forward('/services/codesharing/codesharing_protocol.xhtml', $netVars) (: Protocol description html file. :)
-            else
-                net:forward('/services/codesharing/codesharing.xql', $netVars, $parameters) (: Main service HTML page.  :)
 
     (: HTML files should have a path component - we parse that and put view.xql in control :)
     else if (ends-with($exist:resource, ".html") and substring($exist:path, 1, 4) = ("/de/", "/en/", "/es/")) then

@@ -20,7 +20,6 @@ import module namespace console     = "http://exist-db.org/xquery/console";
 
 import module namespace config = "http://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
 import module namespace api = "http://www.salamanca.school/xquery/api" at "../api.xqm";
-import module namespace codesharing = "http://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
 
 (: RESTXQ FUNCTIONS :)
 
@@ -80,6 +79,51 @@ function addv1:codesharing($verb, $elementName, $attributeName, $attributeValue,
         api:redirect-with-303($url)
 }; 
 
+
+(: XTriples :)
+
+declare 
+%rest:GET
+%rest:path("/v1/xtriples/{$resource}.html")
+function addv1:xtriplesDocs($resource, $format, $resourceId, $configuration, $host) {
+    switch(lower-case($resource))
+        case ('xtriples')
+        case ('changelog')
+        case ('examples') 
+        case ('documentation') return
+            api:deliverHTML(
+                doc($config:app-root || '/services/lod/' || lower-case($resource) || '.html')
+            )
+        default return
+            api:error404NotFound()
+};
+
+declare 
+%rest:GET
+%rest:path("/v1/xtriples/{$resource}.xql")
+%rest:query-param("format", "{$format}", "")
+%rest:query-param("resourceId", "{$resourceId}", "")
+%rest:query-param("configuration", "{$configuration}", "")
+%rest:header-param("X-Forwarded-Host", "{$host}", "")
+function addv1:xtriplesTransform($resource, $format, $resourceId, $configuration, $host) {
+    switch(lower-case($resource))
+        case ('extract') return
+            if ($format and $configuration) then
+                let $url := $api:proto || 'www.' || api:getDomain($host) || '/xtriples/extract.xql' 
+                    || '?format=' || $format || '&amp;configuration=' || $configuration
+                return
+                    api:redirect-with-303($url)
+            else api:error400BadResource()
+        case ('createconfig') return
+            if ($resourceId) then
+                let $url := $api:proto || 'www.' || api:getDomain($host) || '/xtriples/createConfig.xql' 
+                    || '?resourceId=' || $resourceId
+                return
+                    api:redirect-with-303($url)
+            else api:error400BadResource()
+        default return
+            api:error404NotFound()
+};
 
 (: VoID ttl :)
 

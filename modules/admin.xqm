@@ -1074,8 +1074,8 @@ declare function admin:createRDF($rid as xs:string) {
         else $rid
     let $start-time := util:system-time()
     let $xtriplesUrl :=
-        $config:lodServer || '/extract.xql?format=rdf&amp;configuration='
-        || $config:lodServer || '/createConfig.xql?resourceId=' || $rid
+        $config:webserver || '/xtriples/extract.xql?format=rdf&amp;configuration='
+        || $config:webserver || '/xtriples/createConfig.xql?resourceId=' || $rid
     let $debug := 
         if ($config:debug eq 'trace') then
             util:log("warn", "Requesting " || $xtriplesUrl || ' ...')

@@ -81,7 +81,7 @@ declare variable $config:resolveserver  := $config:proto || "://"        || $con
 declare variable $config:idserver       := $config:proto || "://id."     || $config:serverdomain;
 declare variable $config:softwareserver := $config:proto || "://files."  || $config:serverdomain;
 
-declare variable $config:lodServer := $config:webserver || ':8443/exist/apps/salamanca/services/lod';
+declare variable $config:lodServer := $config:apiserver || '/v1/xtriples';
 
 (: iiif-specific variables :)
 declare variable $config:iiifImageServer := $config:imageserver || "/iiif/image/";
