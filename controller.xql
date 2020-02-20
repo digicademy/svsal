@@ -119,9 +119,7 @@ return
     else if (request:get-header('X-Forwarded-Host') = "api." || $config:serverdomain) then
         let $debug := if ($config:debug = ("trace", "info")) then console:log("[API] request at: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
         (: We have the following API areas, accessible by path component:
-            1. /v1/texts
             a. /v1/search       (Forwards to opensphinxsearch.)
-            b. /v1/codesharing  (To expose TEI tag usage.             See https://api.{$config:serverdomain}/codesharing/codesharing.html or https://mapoflondon.uvic.ca/BLOG10.htm) 
             c. /v1/xtriples     (Extract rdf from xml with xtriples.  See https://api.{$config:serverdomain}/v1/xtriples/xtriples.html    or http://xtriples.spatialhumanities.de/index.html)
         :)
         let $netVars :=  map:put($netVars, 'format', net:format())
@@ -134,14 +132,6 @@ return
                     let $debug         := if ($config:debug = ("trace", "info")) then console:log("Search requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
                     let $absolutePath  := concat($config:searchserver, '/', substring-after($exist:path, '/search/'))
                     return net:redirect($absolutePath, $netVars):)
-                case "codesharing" return
-                    let $debug         := if ($config:debug = ("trace", "info")) then console:log("Codesharing requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-                    let $parameters    := <exist:add-parameter name="outputType" value="html"/>
-                    return
-                        if ($pathComponents[last()] = 'codesharing_protocol.xhtml') then
-                            net:forward('/services/codesharing/codesharing_protocol.xhtml', $netVars)      (: Protocol description html file. :)
-                        else
-                            net:forward('/services/codesharing/codesharing.xql', $netVars, $parameters)    (: Main service HTML page.  :)
                 case "xtriples" return
                     let $debug         := if ($config:debug = ("trace", "info")) then console:log("XTriples requested: " || $net:forwardedForServername || $exist:path || $parameterString || " ...") else ()
                     return
@@ -226,6 +216,16 @@ return
                 let $finalPath     := "/resources/files" || $prelimPath
                 let $debug          := if ($config:debug = ("trace", "info")) then console:log("File download requested: " || $net:forwardedForServername || $exist:path || $parameterString || ", redirecting to " || $finalPath || '?' || string-join($netVars('params'), '&amp;') || ".") else ()
                 return net:forward($finalPath, $netVars)
+
+    (: Request for the codesharing service :)
+    else if (starts-with($exist:path, "/codesharing/")) then
+(:        let $debug := if ($config:debug = ("trace", "info")) then console:log("Codesharing requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ():)
+        let $parameters := <exist:add-parameter name="outputType" value="html"/>
+        return
+            if (lower-case($exist:resource) eq 'codesharing_protocol.xhtml') then
+                net:forward('/services/codesharing/codesharing_protocol.xhtml', $netVars) (: Protocol description html file. :)
+            else
+                net:forward('/services/codesharing/codesharing.xql', $netVars, $parameters) (: Main service HTML page.  :)
 
     (: HTML files should have a path component - we parse that and put view.xql in control :)
     else if (ends-with($exist:resource, ".html") and substring($exist:path, 1, 4) = ("/de/", "/en/", "/es/")) then

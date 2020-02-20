@@ -20,7 +20,7 @@ import module namespace console     = "http://exist-db.org/xquery/console";
 
 import module namespace config = "http://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
 import module namespace api = "http://www.salamanca.school/xquery/api" at "../api.xqm";
-
+import module namespace codesharing = "http://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
 
 (: RESTXQ FUNCTIONS :)
 
@@ -43,6 +43,7 @@ declare
 %rest:GET
 %rest:path("/v1/codesharing/protocol")
 function addv1:codesharingProtocol() {
+    (: directly forwards to codesharing_protocol.xhtml :)
     api:deliverHTML(
         doc($config:app-root || '/services/codesharing/codesharing_protocol.xhtml')
     ) 
@@ -50,6 +51,7 @@ function addv1:codesharingProtocol() {
 
 declare
 %rest:GET
+%rest:path("/v1/codesharing")
 %rest:query-param("verb", "{$verb}", "")
 %rest:query-param("elementName", "{$elementName}", "")
 %rest:query-param("attributeName", "{$attributeName}", "")
@@ -57,13 +59,9 @@ declare
 %rest:query-param("documentType", "{$documentType}", "")
 %rest:query-param("wrapped", "{$wrapped}", "")
 %rest:query-param("namespace", "{$namespace}", "")
-%rest:path("/v1/codesharing")
-function addv1:codesharing($verb, $elementName, $attributeName, $attributeValue, $documentType, $wrapped, $namespace) {
-    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-    	<redirect url="https://salamanca.school/index.html"/>
-    </dispatch>
-    (: TODO :)  
-    (:
+%rest:header-param("X-Forwarded-Host", "{$host}", "")
+function addv1:codesharing($verb, $elementName, $attributeName, $attributeValue, $documentType, $wrapped, $namespace, $host) {
+    (: redirect to codesharing service :)
     let $paramStr := 
         string-join(
             (
@@ -77,9 +75,13 @@ function addv1:codesharing($verb, $elementName, $attributeName, $attributeValue,
             ),
             '&amp;'
         )
-    :)
+    let $url := $api:proto || 'www.' || api:getDomain($host) || '/codesharing/' || (if ($paramStr) then '?' || $paramStr else ())
+    return
+        api:redirect-with-303($url)
 }; 
 
+
+(: VoID ttl :)
 
 declare 
 %rest:GET
