@@ -115,28 +115,6 @@ return
         return net:redirect($absolutePath, $netVars)
 
 
-    (: *** API (X-Forwarded-Host='api.{serverdomain}') *** :)
-    else if (request:get-header('X-Forwarded-Host') = "api." || $config:serverdomain) then
-        let $debug := if ($config:debug = ("trace", "info")) then console:log("[API] request at: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-        (: We have the following API areas, accessible by path component:
-            a. /v1/search       (Forwards to opensphinxsearch.)
-            c. /v1/xtriples     
-        :)
-        let $netVars :=  map:put($netVars, 'format', net:format())
-        let $pathComponents := tokenize(lower-case($exist:path), "/")  (: Since $exist:path starts with a slash, $pathComponents[1] is an empty string :)
-        let $debug := if ($config:debug = ("trace")) then console:log("[API] This translates to API version " || $pathComponents[2] || ", endpoint " || $pathComponents[3] || ".") else ()
-        return if ($pathComponents[3] = $config:apiEndpoints($pathComponents[2])) then  (: Check if we support the requested endpoint/version :)
-            switch($pathComponents[3])
-                (: already (partially) as RestXQ functions available: :)
-                case "search" return
-                    let $debug         := if ($config:debug = ("trace", "info")) then console:log("Search requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
-                    let $absolutePath  := concat($config:searchserver, '/', substring-after($exist:path, '/search/'))
-                    return net:redirect($absolutePath, $netVars)
-                default return net:error(404, $netVars, ())
-            else if ($pathComponents[3]) then net:error(404, $netVars, ()) (: or 400, 405? :)
-            else net:redirect-with-303($config:webserver)
-
-
     (: *** Entity resolver (X-Forwarded-Host = 'id.{$config:serverdomain}') *** :)
     else if (request:get-header('X-Forwarded-Host') = "id." || $config:serverdomain) then
         let $debug1 := if ($config:debug = ("trace", "info")) then console:log("Id requested: " || $net:forwardedForServername || $exist:path || $parameterString || ". (" || net:negotiateContentType($net:servedContentTypes, '') || ')') else ()
@@ -186,6 +164,9 @@ return
     (: *** The rest is html and defaults and miscellaneous stuff... :)
     
     (: Request for the codesharing, xtriples, or search service :)
+    (: some of these functionalities are also covered by the RestXQ API,
+       but they remain here for backwards compatibility; also, the API needs 
+       endpoints here to redirect codesharing and xtriples xql transformations to :)
     else if (starts-with($exist:path, "/codesharing/")) then
 (:        let $debug := if ($config:debug = ("trace", "info")) then console:log("Codesharing requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ():)
         let $parameters := <exist:add-parameter name="outputType" value="html"/>
@@ -202,7 +183,11 @@ return
                 let $debug := if ($config:debug = ("trace", "info")) then console:log("Forward to: /services/lod/" || $exist:resource  || ".") else ()
                 return net:forward('/services/lod/' || $exist:resource, $netVars)
             else net:error(404, $netVars, ())
-    
+    else if (starts-with($exist:path, "/search/")) then
+(:        let $debug         := if ($config:debug = ("trace", "info")) then console:log("Search requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ():)
+        let $absolutePath  := concat($config:searchserver, '/', substring-after($exist:path, '/search/'))
+        return net:redirect($absolutePath, $netVars)
+
 
     (: If the request is for an xql file, strip/bypass language selection logic :)
     else if (ends-with($exist:resource, ".xql")) then
