@@ -457,4 +457,17 @@
     <msg key="tei-text-work_volume">Volumen</msg>
     <msg key="tei-generic">Pasaje</msg>
     
+    <!-- stats -->
+    <msg key="editFacsLow">páginas imprimidas editadas</msg>
+    <msg key="editFacsUp">Páginas imprimidas editadas</msg>
+    <msg key="digiFacsLow">facsímiles digitalizadas</msg>
+    <msg key="digiFacsUp">Facsímiles digitalizadas</msg>
+    <msg key="charsUp">Caracteres</msg> <!-- TODO -->
+    <msg key="tokensLow">tokens</msg>
+    <msg key="tokensUp">Tokens</msg>
+    <msg key="wordsLow">palabras</msg>
+    <msg key="wordsUp">Palabras</msg>
+    <msg key="wordFormsLow">formas de palabra</msg>
+    <msg key="wordFormsUp">Formas de palabra</msg>
+    
 </catalogue>

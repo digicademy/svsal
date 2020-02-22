@@ -287,4 +287,17 @@
   <msg key="tei-text-work_volume">Band</msg>
   <msg key="tei-generic">Abschnitt</msg>
   
+  <!-- stats -->
+  <msg key="editFacsLow">digital edierte Druckseiten</msg>
+  <msg key="editFacsUp">Digital edierte Druckseiten</msg>
+  <msg key="digiFacsLow">digitalisierte Faksimiles</msg>
+  <msg key="digiFacsUp">Digitalisierte Faksimiles</msg>
+  <msg key="charsUp">Zeichen</msg>
+  <msg key="tokensLow">Tokens</msg>
+  <msg key="tokensUp">Tokens</msg>
+  <msg key="wordsLow">Wörter</msg>
+  <msg key="wordsUp">Wörter</msg>
+  <msg key="wordFormsLow">Wortformen</msg>
+  <msg key="wordFormsUp">Wortformen</msg>
+  
 </catalogue>

@@ -309,4 +309,32 @@ declare function i18n:addLabelsToCrumbtrail($crumbtrail as element(sal:crumbtrai
     else ()
 };
 
+(:
+~ Converts a number to a string, which in the case of a large number (1,000,000+) is abbreviated in the respective language (e.g. 1,300,000 -> '1.3 million').
+:)
+declare function i18n:largeIntToString($int as xs:integer, $lang as xs:string?) as xs:string {
+    let $str := string($int)
+    let $separator := if ($lang = ('de', 'es')) then ',' else '.'
+    let $million := if ($lang eq 'de') then 'Mio.' else if ($lang eq 'es') then 'millones' else 'million'
+    let $billion := if ($lang eq 'de') then 'Mrd.' else if ($lang eq 'es') then 'billones' else 'billion'
+    return
+        switch(string-length($str))
+            (: thousands :)
+            case 4
+            case 5
+            case 6 return 
+                if ($lang eq 'en') then 
+                    substring($str,1,string-length($str)-3) || ',' || substring($str,string-length($str)-2,3) 
+                else $str
+            (: millions :)
+            case 7
+            case 8 
+            case 9 return substring($str,1,string-length($str)-6) || $separator || substring($str,string-length($str)-5,1) || ' ' || $million
+            (: billions :)
+            case 10
+            case 11
+            case 12 return substring($str,1,string-length($str)-9) || $separator || substring($str,string-length($str)-8,1) || ' ' || $billion
+            default return $str
+};
+
 

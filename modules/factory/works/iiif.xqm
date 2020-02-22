@@ -384,7 +384,10 @@ declare function iiif:getI18nLabels($labelKey as xs:string?) as array(*) {
 (: converts a tei:pb/@facs value (given that it has the form "facs:Wxxxx(-x)-xxxx") into an image id understandable by the Digilib server,
     such as "W0013!A!W0013-A-0009". Changes in the Digilib settings, for instance with the delimiters, might make changes in this function necessary :)
 declare function iiif:teiFacs2IiifImageId($facs as xs:string?) as xs:string {
-    let $debug := if (not(matches($facs, 'facs:W\d{4}(-[A-z])?-\d{4}'))) then error() else ()
+    let $debug := 
+        if (not(matches($facs, 'facs:W\d{4}(-[A-z])?-\d{4}'))) then 
+            error(xs:QName('iiif:teiFacs2IiifImageId'), '@facs value "' || $facs || ' could not be parsed as ^facs:W\d{4}(-[A-z])?-\d{4}$') 
+        else ()
     let $facsWork := substring-before(substring-after($facs, "facs:"), "-")
     let $facsVol := if (contains(substring-after($facs, "-"), "-")) then substring-before(substring-after($facs, "-"),"-") else ()
     let $facsImgId := substring($facs, string-length($facs) - 3, 4)

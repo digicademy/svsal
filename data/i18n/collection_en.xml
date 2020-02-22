@@ -450,6 +450,17 @@
   <msg key="tei-text-work_volume">Volume</msg>
   <msg key="tei-generic">Passage</msg>
   
-  
+  <!-- stats -->
+  <msg key="editFacsLow">digitally edited print pages</msg>
+  <msg key="editFacsUp">Digitally Edited Print Pages</msg>
+  <msg key="digiFacsLow">digitized facsimiles</msg>
+  <msg key="digiFacsUp">Digitized Facsimiles</msg>
+  <msg key="charsUp">Characters</msg>
+  <msg key="tokensLow">tokens</msg>
+  <msg key="tokensUp">Tokens</msg>
+  <msg key="wordsLow">words</msg>
+  <msg key="wordsUp">Words</msg>
+  <msg key="wordFormsLow">word forms</msg>
+  <msg key="wordFormsUp">Word Forms</msg>
   
 </catalogue>

@@ -1032,6 +1032,29 @@ declare %templates:wrap
         (: i18n:process($corpusDownloadField, $lang, "/db/apps/salamanca/data/i18n", "en") heute geändert :)
 };
 
+declare %templates:wrap function app:corpusStatsTeaser ($node as node(), $model as map(*), $lang as xs:string?) as element(div) {
+    if (util:binary-doc-available($config:stats-root || '/corpus-stats.json')) then
+        let $stats := json-doc($config:stats-root || '/corpus-stats.json')
+        let $digiFacs := i18n:largeIntToString(xs:integer($stats('facs_count')?('all')), $lang)
+        let $editFacs := i18n:largeIntToString(xs:integer($stats('facs_count')?('full_text')), $lang)
+        let $tokens := i18n:largeIntToString(xs:integer($stats('tokens_count')), $lang)
+        let $wordforms := i18n:largeIntToString(xs:integer($stats('wordforms_count')), $lang)
+        let $out :=
+            <div>
+                <ul>
+                    <li>{$digiFacs || ' '}<i18n:text key="digiFacsLow"/></li>
+                    <li>{$editFacs || ' '}<i18n:text key="editFacsLow"/></li>
+                    <li>{$tokens || ' '}<i18n:text key="tokensLow"/></li>
+                    <li>{$wordforms || ' '}<i18n:text key="wordFormsLow"/></li>
+                </ul>
+                <a href="stats.html"><i class="glyphicon glyphicon-stats"></i>{' '}<i18n:text key="addStats">More statistics</i18n:text></a>
+            </div>
+        return
+            $out
+(:        return i18n:process($out, $lang, "/db/apps/salamanca/data/i18n", "en"):)
+    else ()
+};
+
 
 (: ====================== End  List functions ========================== :)
 
