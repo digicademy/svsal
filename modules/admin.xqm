@@ -1147,9 +1147,9 @@ declare function admin:createStats() {
         if ($runtime-ms < (1000 * 60)) then format-number($runtime-ms div 1000, "#.##") || " Sek."
         else if ($runtime-ms < (1000 * 60 * 60))  then format-number($runtime-ms div (1000 * 60), "#.##") || " Min."
         else format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
-    let $log  := if ($config:debug eq 'trace') then util:log('warn', '[ADMIN] Extracted stats in ' || $runtimeString) else ()
+    let $log  := util:log('warn', '[ADMIN] Extracted corpus and works stats in ' || $runtimeString)
     
-    return ($corpusStats, $processSingleWorks)
+    return $corpusStats
 };
 
 (:

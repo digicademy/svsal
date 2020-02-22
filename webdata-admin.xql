@@ -52,15 +52,15 @@ let $output :=
             admin:createIIIF($rid)
         case 'txt-corpus' return
             admin:createTxtCorpus('admin')
-        case 'all' return
+        case 'all' return 
+            (: all formats (except iiif) for a single work :)
             (admin:createNodeIndex($rid),
             admin:renderWork($rid),
             admin:sphinx-out($rid, $mode),
             admin:createRDF($rid))
             (: omitting iiif here :)
         case 'stats' return
-            let $create := admin:createStats()
-            return 'Corpus and work statistics successfully created!'
+            admin:createStats()
         default return 
             ()
 
@@ -75,6 +75,11 @@ let $debug :=
         util:log('warn', '[WEBDATA-ADMIN] Rendered format "' || $format || '" for resource "' || $rid || '" in ' || $runtimeString || '.') 
     else ()
 
+let $title := 
+    if (not($rid)) then 
+        'Webdata Output for Format "' || $format || '"'
+    else 'Webdata Output for Resource(s): "' || $rid || '"; Format: "' || $format || '"'
+
 return 
     <html>
         <head>
@@ -84,7 +89,7 @@ return
                      .sal-toolbox-body {display:none !important;}'}</style>
         </head>
         <body>
-            <h1>Webdata Output for Resource(s): {$rid}, Format: {$format}</h1>
+            <h1>{$title}</h1>
             {$output}
         </body>
     </html>
