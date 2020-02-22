@@ -49,7 +49,6 @@ declare function iiif:mkMultiVolumeCollection($workId as xs:string, $tei as node
     let $label := normalize-space($tei//tei:titleStmt/tei:author) || ": " ||
         normalize-space($tei//tei:titleStmt/tei:title[@type="main"]/text()) || " [multi-volume collection]"
     let $viewingHint := "multi-part"
-    let $description := "Coming soon..." (: TODO, depends on available description in TEI metadata :)
     let $license         := "" (: TODO: which license for image data? https://creativecommons.org/licenses/by/4.0/ :)
     let $attribution     := "Presented by the project 'The School of Salamanca. A Digital Collection of Sources and a Dictionary of its Juridical-Political Language.' (http://salamanca.adwmainz.de)"
 
@@ -74,7 +73,6 @@ declare function iiif:mkMultiVolumeCollection($workId as xs:string, $tei as node
         "label": $label,
         "metadata": $metadata,
         "viewingHint": $viewingHint,
-        "description": $description,
         "attribution": $attribution,
         "license": $license,
         "members": $manifests
@@ -94,7 +92,6 @@ declare function iiif:mkSingleVolumeManifest($volumeId as xs:string, $teiDoc as 
     (: Bibliographical metadata section :)
     let $metadata := iiif:mkMetadata($tei)
 
-    let $description := "Coming soon..." (: TODO, depends on available description in TEI metadata :)
     (: the thumbnail works only if we have a titlePage with a pb in or before it: :)
     let $thumbnailId := iiif:getThumbnailId($tei)
     let $thumbnailServiceId := concat($config:iiifImageServer, $thumbnailId)
@@ -140,7 +137,6 @@ declare function iiif:mkSingleVolumeManifest($volumeId as xs:string, $teiDoc as 
         "@type": "sc:Manifest",
         "label": $label,
         "metadata": $metadata,
-        "description": $description,
         "thumbnail": $thumbnail,
         "viewingDirection": $viewingDirection,
         "viewingHint": $viewingHint,
