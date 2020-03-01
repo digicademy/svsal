@@ -396,6 +396,7 @@
   <msg key="researchInterests">Research Interests</msg>
   <msg key="selectedPublications">Publications (Selection)</msg>
   <msg key="toOverview">Overview of project participants</msg>
+  <msg key="participantsContrib">Contribution to the Digital Collection of Sources</msg>
   
   <!-- general language abbreviations, conjunctions, phrases, etc. -->
   <msg key="inLow">in</msg>

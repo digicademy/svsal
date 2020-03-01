@@ -404,6 +404,7 @@
     <msg key="researchInterests">Intereses investigativos </msg>
     <msg key="selectedPublications">Publicaciones (selección)</msg>
     <msg key="toOverview">Resumen del equipo del proyecto y de sus consultantes</msg>
+    <msg key="participantsContrib">Contribución a la Colección Digital de Fuentes</msg>
   
     <!-- general language abbreviations, conjunctions, phrases, etc. -->
     <msg key="inLow">en</msg>

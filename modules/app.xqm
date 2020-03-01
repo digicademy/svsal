@@ -3627,6 +3627,9 @@ declare %templates:wrap function app:errorInformation($node as node(), $model as
     else ()
 };
 
+
+(: Participants :)
+
 declare %templates:wrap function app:participantsBody($node as node(), $model as map(*), $lang as xs:string?, $id as xs:string?) {
     let $id := if ($id) then lower-case($id) else if (request:get-parameter('id', '')) then lower-case(request:get-parameter('id', '')) else ()
     let $tei := doc($config:tei-meta-root || '/projectteam.xml')/tei:TEI
@@ -3706,9 +3709,50 @@ declare %private
 declare %private 
     function app:makeParticipantEntry($person as element(tei:person), $lang as xs:string, $mode as xs:string, $index as xs:integer?) as element(div) {
     let $backLink := 
-        <a href="{$config:webserver || '/' || $lang || '/participants.html'}" style="font-size:1.5em;">
+        <a href="{$config:webserver || '/' || $lang || '/participants.html'}" style="font-size:1.5em;padding-bottom:1em;">
             <i class="fas fa-arrow-left"></i>{' '}<i18n:text key="toOverview"/>
         </a>
+    (: make list of works edited by the team member :)
+    let $scholarlyContrib := 
+        for $tei in collection($config:tei-works-root)/tei:TEI[matches(@xml:id, '^W\d{4}$')
+            and sutil:WRKisPublished(@xml:id)
+            and ./tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:editor[@xml:id eq $person/@xml:id 
+                and (contains(@role, 'scholarly'))]] return
+            <a href="workDetails.html?wid={$tei/@xml:id}">{
+            app:rotateFormatName($tei/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:author/tei:persName) || ': ' ||
+            $tei/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title[@type = 'short']/string()
+            }</a>
+    let $technicalContrib := 
+        for $tei in collection($config:tei-works-root)/tei:TEI[matches(@xml:id, '^W\d{4}$')
+            and sutil:WRKisPublished(@xml:id)
+            and ./tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:editor[@xml:id eq $person/@xml:id 
+                and (contains(@role, 'technical'))]] return
+            <a href="workDetails.html?wid={$tei/@xml:id}">{
+            app:rotateFormatName($tei/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:author/tei:persName) || ': ' ||
+            $tei/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title[@type = 'short']/string()
+            }</a>
+    
+    let $contributions :=
+        if ($scholarlyContrib or $technicalContrib) then
+            <div>
+                <h4><i18n:text key="participantsContrib"/></h4>
+                {if ($scholarlyContrib) then 
+                    <div>
+                    <h5><i18n:text key="scholEditors"/>:</h5>
+                    <ul>{
+                        for $c in $scholarlyContrib return <li>{$c}</li>
+                    }</ul></div>
+                else ()}
+                {if ($technicalContrib) then 
+                    <div>
+                    <h5><i18n:text key="techEditors"/>:</h5>
+                    <ul>{
+                        for $c in $technicalContrib return <li>{$c}</li>
+                    }</ul></div>
+                else ()}
+            </div>
+        else ()
+    
     let $content :=
         <div>
             <img src="resources/img/participants/{$person/@xml:id}.jpg" style="width:300px;padding:2em;float:right;"/>
@@ -3718,6 +3762,7 @@ declare %private
             </div>
             {for $e in $person/tei:persName/following-sibling::*[not(@xml:lang) or @xml:lang eq $lang] return 
                  render-app:dispatch($e, 'participants', $lang)}
+            {$contributions}
             <br/>{$backLink}<br/>
         </div>
     return $content

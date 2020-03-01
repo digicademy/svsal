@@ -234,6 +234,7 @@
   <msg key="researchInterests">Forschungsinteressen</msg>
   <msg key="selectedPublications">Publikationen (Auswahl)</msg>
   <msg key="toOverview">Zur Übersicht über die Projektbeteiligten</msg>
+  <msg key="participantsContrib">Mitarbeit bei der Digitalen Quellensammlung</msg>
   
   <!-- general language abbreviations, conjunctions, phrases, etc. -->
   <msg key="inLow">in</msg>
