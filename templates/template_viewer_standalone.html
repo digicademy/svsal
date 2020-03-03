@@ -107,12 +107,12 @@
                     "fullScreenViewer": true,
                     "userButtons": [
                         {
-                            "label": '<i18n:text key="worksList"/>',
+                            "label": '<i18n:text key="readingView"/>',
                             "iconClass": "fa fa-file",
                             "attributes": {
                                 "id": "works",
                                 "aria-hidden": "true",
-                                "href": "works.html"
+                                "href": "work.html?wid=" + $wid
                             }
                         },
                         {
@@ -132,6 +132,15 @@
                                 "aria-hidden": "true",
                                 "href": "#no-op",
                                 "download": "true"
+                            }
+                        },
+                        {
+                            "label": '<i18n:text key="worksList"/>',
+                            "iconClass": "fa fa-list",
+                            "attributes": {
+                                "id": "works",
+                                "aria-hidden": "true",
+                                "href": "works.html"
                             }
                         },
                         {
