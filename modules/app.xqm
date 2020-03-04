@@ -1370,7 +1370,7 @@ return
 (:
 ~ Recursively inserts concatenated query parameters into non-http links of an HTML fragment.
 :)
-declare %private function local:insertParams($node as node(), $params as xs:string?) {
+declare %private function local:insertParams($node as node()?, $params as xs:string?) {
     typeswitch($node)
         case element(a) return
             element {name($node)} {
@@ -3140,7 +3140,7 @@ declare function app:WRKtoc($node as node(), $model as map(*), $wid as xs:string
 ~ Recursively inserts a "q" query parameter into a/href values of an HTML fragment.
 :)
 
-declare %private function local:copyInsertSearchParam($node as node(), $q as xs:string) {
+declare %private function local:copyInsertSearchParam($node as node()?, $q as xs:string) {
     typeswitch($node)
         case element(a) return
             element {name($node)} {

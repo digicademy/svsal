@@ -718,7 +718,7 @@ declare function sphinx:excerpts ($documents as node()*, $words as xs:string) as
             </div>
             ...
     :)
-declare function sphinx:highlight($document as node(), $words as xs:string) as node()* {
+declare function sphinx:highlight($document as node()?, $words as xs:string) as node()* {
     let $endpoint   := concat($config:sphinxRESTURL, "/excerpts")
     let $request    := 
         <hc:request method="post" http-version="1.0">
