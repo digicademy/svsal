@@ -1032,7 +1032,7 @@ declare %templates:wrap
         (: i18n:process($corpusDownloadField, $lang, "/db/apps/salamanca/data/i18n", "en") heute geändert :)
 };
 
-declare %templates:wrap function app:corpusStatsTeaser ($node as node(), $model as map(*), $lang as xs:string?) as element(div) {
+declare %templates:wrap function app:corpusStatsTeaser ($node as node(), $model as map(*), $lang as xs:string?) as element(div)? {
     if (util:binary-doc-available($config:stats-root || '/corpus-stats.json')) then
         let $stats := json-doc($config:stats-root || '/corpus-stats.json')
         let $digiFacs := i18n:largeIntToString(xs:integer($stats('facs_count')?('all')), $lang)
@@ -1051,7 +1051,6 @@ declare %templates:wrap function app:corpusStatsTeaser ($node as node(), $model 
             </div>
         return
             $out
-(:        return i18n:process($out, $lang, "/db/apps/salamanca/data/i18n", "en"):)
     else ()
 };
 
