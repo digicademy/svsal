@@ -145,7 +145,7 @@ declare variable $config:databaseEntries     := ('authors',
    (almost) all div labels are used for making TOC labels:)
 declare variable $config:citationLabels :=
     map {
-        (: div/@label and milestone/@unit: :)
+        (: div/@type and milestone/@unit (make sure that these labels are different from the element names defined below!): :)
         'additional': map {'full': 'addendum', 'abbr': 'add.', 'isCiteRef': true()},
         'administrative': map {'full': 'administratio', 'abbr': 'admin.'},
         'article': map {'full': 'articulus', 'abbr': 'art.', 'isCiteRef': true()},
@@ -157,9 +157,10 @@ declare variable $config:citationLabels :=
         'contents': map {'full': 'tabula', 'abbr': 'tab.', 'isCiteRef': true()},
         'corrigenda': map {'full': 'corrigenda', 'abbr': 'corr.', 'isCiteRef': true()},
         'dedication': map {'full': 'dedicatio', 'abbr': 'dedic.', 'isCiteRef': true()},
+        'dict': map {'full': 'index verborum', 'abbr': 'ind.', 'isCiteRef': true()},
         'disputation': map {'full': 'disputatio', 'abbr': 'disp.', 'isCiteRef': true()},
         'doubt': map {'full': 'dubium', 'abbr': 'dub.', 'isCiteRef': true()},
-        'entry': (), (: 'lemma'? :)
+        'entry': map {'full': 'item', 'abbr': 'item', 'isCiteRef': true()},
         'foreword': map {'full': 'prooemium', 'abbr': 'pr.', 'isCiteRef': true()},
         'gloss': map {'full': 'glossa', 'abbr': 'gl.', 'isCiteRef': true()},
         'index': map {'full': 'index', 'abbr': 'ind.', 'isCiteRef': true()},
@@ -178,7 +179,7 @@ declare variable $config:citationLabels :=
         'title': map {'full': 'titulus', 'abbr': 'tit.', 'isCiteRef': true()},
         'unknown': (),
         'work_part': (),
-        (: element names: :)
+        (: element names (must be different from the div/milestone types/units defined above): :)
         'back': map {'full': 'appendix', 'abbr': 'append.', 'isCiteRef': true()},
         'front': map {'full': 'front', 'abbr': 'front.'},
         'titlePage': map {'full': 'titulus', 'abbr': 'tit.'},
