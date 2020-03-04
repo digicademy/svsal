@@ -145,7 +145,7 @@ declare %private function textsv1:TXTdeliverDoc($rid as xs:string, $mode as xs:s
             (: valid doc/fragment requested :)
             let $verboseMode := if ($mode eq 'edit') then 'constituted' else 'diplomatic'
             return
-                if ($resource('request_type') eq 'full') then
+                if ($resource('request_type') eq 'full' and not(matches(lower-case($resource('passage')), '^vol\d$'))) then
                     let $txtPath := $config:txt-root || '/' || $resource('work_id') || '/' 
                                     || $resource('work_id') || '_' || $mode || '.txt'
                     return
