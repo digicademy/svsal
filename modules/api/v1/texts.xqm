@@ -149,10 +149,13 @@ declare %private function textsv1:TXTdeliverDoc($rid as xs:string, $mode as xs:s
                     let $txtPath := $config:txt-root || '/' || $resource('work_id') || '/' 
                                     || $resource('work_id') || '_' || $mode || '.txt'
                     return
-                        api:deliverTXTBinary(
-                            util:binary-doc($txtPath), 
-                            $resource('work_id') || '_' || $verboseMode
-                        )
+                        if (util:binary-doc-available($txtPath)) then
+                            api:deliverTXTBinary(
+                                util:binary-doc($txtPath), 
+                                $resource('work_id') || '_' || $verboseMode
+                            )
+                        else
+                            api:error404NotYetAvailable()
                 else (: $resource('request_type') eq 'passage' :)
                     let $node := sutil:getTeiNodeFromCitetrail($resource('work_id'), $resource('passage'))
                     return
