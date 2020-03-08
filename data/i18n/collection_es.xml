@@ -404,6 +404,7 @@
     <msg key="researchInterests">Intereses investigativos </msg>
     <msg key="selectedPublications">Publicaciones (selección)</msg>
     <msg key="toOverview">Resumen del equipo del proyecto y de sus consultantes</msg>
+    <msg key="participantsContrib">Contribución a la Colección Digital de Fuentes</msg>
   
     <!-- general language abbreviations, conjunctions, phrases, etc. -->
     <msg key="inLow">en</msg>
@@ -443,10 +444,12 @@
     <msg key="tei-ms-section">Section</msg>
     <msg key="tei-front">Parte preliminar</msg>
     <msg key="tei-back">Apéndice</msg>
+    <msg key="tei-argument">Resumen</msg>
     <msg key="tei-p">Párrafo</msg>
     <msg key="tei-signed">Firma</msg>
     <msg key="tei-head">Título</msg>
     <msg key="tei-label">Etiqueta</msg>
+    <msg key="tei-table">Tabla</msg>
     <msg key="tei-titlePage">Portada</msg>
     <msg key="tei-note">Nota</msg>
     <msg key="tei-list">Lista</msg>
@@ -454,5 +457,18 @@
     <msg key="tei-lg">Poema</msg>
     <msg key="tei-text-work_volume">Volumen</msg>
     <msg key="tei-generic">Pasaje</msg>
+    
+    <!-- stats -->
+    <msg key="editFacsLow">páginas imprimidas editadas</msg>
+    <msg key="editFacsUp">Páginas imprimidas editadas</msg>
+    <msg key="digiFacsLow">facsímiles digitalizadas</msg>
+    <msg key="digiFacsUp">Facsímiles digitalizadas</msg>
+    <msg key="charsUp">Caracteres</msg> <!-- TODO -->
+    <msg key="tokensLow">tokens</msg>
+    <msg key="tokensUp">Tokens</msg>
+    <msg key="wordsLow">palabras</msg>
+    <msg key="wordsUp">Palabras</msg>
+    <msg key="wordFormsLow">formas de palabra</msg>
+    <msg key="wordFormsUp">Formas de palabra</msg>
     
 </catalogue>

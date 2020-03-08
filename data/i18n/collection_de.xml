@@ -234,6 +234,7 @@
   <msg key="researchInterests">Forschungsinteressen</msg>
   <msg key="selectedPublications">Publikationen (Auswahl)</msg>
   <msg key="toOverview">Zur Übersicht über die Projektbeteiligten</msg>
+  <msg key="participantsContrib">Mitarbeit bei der Digitalen Quellensammlung</msg>
   
   <!-- general language abbreviations, conjunctions, phrases, etc. -->
   <msg key="inLow">in</msg>
@@ -273,10 +274,12 @@
   <msg key="tei-ms-section">Abschnitt</msg>
   <msg key="tei-front">Titelei</msg>
   <msg key="tei-back"/>
+  <msg key="tei-argument">Zusammenfassung</msg>
   <msg key="tei-p">Absatz</msg>
   <msg key="tei-signed">Signatur</msg>
   <msg key="tei-head">Titel</msg>
   <msg key="tei-label">Titel</msg>
+  <msg key="tei-table">Tabelle</msg>
   <msg key="tei-titlePage">Titelseite</msg>
   <msg key="tei-note">Marginalnote</msg>
   <msg key="tei-list">Liste</msg>
@@ -284,5 +287,18 @@
   <msg key="tei-lg">Gedicht</msg>
   <msg key="tei-text-work_volume">Band</msg>
   <msg key="tei-generic">Abschnitt</msg>
+  
+  <!-- stats -->
+  <msg key="editFacsLow">digital edierte Druckseiten</msg>
+  <msg key="editFacsUp">Digital edierte Druckseiten</msg>
+  <msg key="digiFacsLow">digitalisierte Faksimiles</msg>
+  <msg key="digiFacsUp">Digitalisierte Faksimiles</msg>
+  <msg key="charsUp">Zeichen</msg>
+  <msg key="tokensLow">Tokens</msg>
+  <msg key="tokensUp">Tokens</msg>
+  <msg key="wordsLow">Wörter</msg>
+  <msg key="wordsUp">Wörter</msg>
+  <msg key="wordFormsLow">Wortformen</msg>
+  <msg key="wordFormsUp">Wortformen</msg>
   
 </catalogue>

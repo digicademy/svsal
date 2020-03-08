@@ -1,4 +1,5 @@
 User-agent: *
+Crawl-delay: 20
 Allow: /*.html
 Allow: /services
 Disallow: /admin.html
@@ -7,5 +8,8 @@ Disallow: /render.html
 Disallow: /renderTheRest.html
 Disallow: /sphinx-out.html
 Disallow: /stats.html
+Disallow: /search.html
+Disallow: /*?*q=
+Disallow: /*:*
 
 Sitemap: https://www.salamanca.school/sitemap_index.xml

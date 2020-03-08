@@ -12,14 +12,14 @@ import module namespace templates="http://exist-db.org/xquery/templates" ;
  : templating.
  :)
 import module namespace xconfig = "http://xtriples.spatialhumanities.de/config" at "xconfig.xqm"; 
-(: import module namespace config      = "http://salamanca/config" at "../../../modules/config.xqm"; :)
-import module namespace app = "http://xtriples.spatialhumanities.de/templates" at "app.xql";
+(: import module namespace config      = "http://www.salamanca.school/xquery/config" at "../../../modules/config.xqm"; :)
+import module namespace app = "http://xtriples.spatialhumanities.de/templates" at "app.xqm";
 
 declare option exist:serialize "method=html5 media-type=text/html enforce-xhtml=yes";
 
 let $config := map {
-    $templates:CONFIG_APP_ROOT := $xconfig:app-root,
-    $templates:CONFIG_STOP_ON_ERROR := true()
+    $templates:CONFIG_APP_ROOT : $xconfig:app-root,
+    $templates:CONFIG_STOP_ON_ERROR : true()
 }
 (:
  : We have to provide a lookup function to templates:apply to help it

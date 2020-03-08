@@ -1,6 +1,6 @@
 xquery version "3.0";
 
-import module   namespace   config  = "http://salamanca/config"   at "modules/config.xqm";
+import module   namespace   config  = "http://www.salamanca.school/xquery/config"   at "modules/config.xqm";
 declare         namespace   exist   = "http://exist.sourceforge.net/NS/exist";
 declare         namespace   util    = "http://exist-db.org/xquery/util";
 declare         namespace   xmldb   = "http://exist-db.org/xquery/xmldb";

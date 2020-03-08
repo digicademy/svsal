@@ -1,7 +1,7 @@
 xquery version "3.1";
 
-import module   namespace   config      = "http://salamanca/config" at "modules/config.xqm";
-import module namespace i18n       = "http://exist-db.org/xquery/i18n"        at "i18n.xql";
+import module   namespace   config      = "http://www.salamanca.school/xquery/config" at "modules/config.xqm";
+import module namespace i18n       = "http://exist-db.org/xquery/i18n"        at "i18n.xqm";
 import module   namespace   console     = "http://exist-db.org/xquery/console";
 declare         namespace   exist       = "http://exist.sourceforge.net/NS/exist";
 declare         namespace   output      = "http://www.w3.org/2010/xslt-xquery-serialization";
@@ -28,6 +28,17 @@ declare function local:copy($input as item()*, $salNodes as map()?) as item()* {
                     (: remove frequent, but irrelevant elements :)
                     if (local-name($node) = $omittableElemTypes) then 
                         for $child in $node return local:copy($child/node(), $salNodes)
+                    else if ($node/self::tei:text and $node/@xml:id eq 'completeWork') then
+                        (: since the text root itself might not be in the index, we must handle it here especially :)
+                        element {'itei:' || local-name($node)} {
+                            (
+                            (: give tei:text fragments rudimentary information about their context, so that rdf extraction doesn't need to access respective teiHeaders especially :)
+                            attribute in {$node/ancestor::tei:TEI/@xml:id},
+                            $node/@*
+                            ),
+                            for $child in $node
+                                return local:copy($child/node(), $salNodes)
+                        }
                     else 
                         element {'itei:' || local-name($node)} {
                           (: copy all the attributes :)
@@ -47,7 +58,9 @@ declare function local:copy($input as item()*, $salNodes as map()?) as item()* {
                                           attribute citetrail {$sn/sal:citetrail},
                                           $att,
                                           (: give tei:text fragments rudimentary information about their context, so that rdf extraction doesn't need to access respective teiHeaders especially :)
-                                          if (local-name($node) eq 'text') then attribute in {$node/ancestor::tei:TEI/@xml:id} else ()
+                                          if ($node/self::tei:text[@type eq "work_volume"]) then 
+                                            attribute in {$node/ancestor::tei:TEI/@xml:id}
+                                          else ()
                                       )
                                   else
                                       attribute {name($att)} {$att}
