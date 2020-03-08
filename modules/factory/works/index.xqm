@@ -354,6 +354,11 @@ declare function index:makeMarginalCitetrail($node as element()) as xs:string {
 
 (: BOOLEAN FUNCTIONS for defining different classes of nodes :)
 
+(: 
+!!! IMPORTANT: before changing any of these functions, make sure to have read and understood
+the section on node indexing in the docs/technical.md documentation file.
+:)
+
 (:
 ~ Determines which nodes serve for "passagetrail" production.
 :)
@@ -516,8 +521,9 @@ declare function index:isStructuralNode($node as node()) as xs:boolean {
 
 
 (:
-~ Basic nodes represent *all* elements at the bottom of the tree, i.e. all mixed-content elements 
-    that, in total, comprise all text nodes. To be used for Sphinx snippets, for checking consistency etc.
+~ Basic nodes represent *all* container nodes at the bottom of the index tree, i.e. mixed-content elements 
+    that comprise all text nodes in a sequential, non-overlapping manner. 
+    To be used for Sphinx snippets, for checking consistency etc.
 :)
 declare function index:isBasicNode($node as node()) as xs:boolean {
     boolean(
