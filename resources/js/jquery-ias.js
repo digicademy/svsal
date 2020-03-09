@@ -446,6 +446,6 @@ IASTriggerExtension.prototype.prev = function () {
     this.enabled = ! 1, this.ias.pause(), this.$triggerPrev &&(this.$triggerPrev.remove(), this.$triggerPrev = null), this.ias.prev()
 },
 IASTriggerExtension.prototype.defaults = {
-    text: "Load more items", html: '<div class="ias-trigger ias-trigger-next" style="text-align: center; cursor: pointer;"><a>{text}</a></div>', textPrev: "Load previous items", htmlPrev: '<div class="ias-trigger ias-trigger-prev" style="text-align: center; cursor: pointer;"><a>{text}</a></div>', offset: 0
+    text: "Load more items", html: '<div class="ias-trigger ias-trigger-next" style="text-align: center; cursor: pointer;"><a>{text}</a></div>', textPrev: "Load previous items", htmlPrev: '<div class="ias-trigger ias-trigger-prev" style="text-align: center; cursor: pointer;"><p>&nbsp;</p><a>{text}</a></div>', offset: 0
 },
 IASTriggerExtension.prototype.priority = 1e3;
