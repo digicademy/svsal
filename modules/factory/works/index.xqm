@@ -5,7 +5,8 @@ declare namespace exist            = "http://exist.sourceforge.net/NS/exist";
 declare namespace tei              = "http://www.tei-c.org/ns/1.0";
 declare namespace sal              = "http://salamanca.adwmainz.de";
 declare namespace xi                = "http://www.w3.org/2001/XInclude";
-
+declare namespace admin              = "http://www.salamanca.school/xquery/admin";
+ 
 import module namespace functx      = "http://www.functx.com";
 import module namespace util       = "http://exist-db.org/xquery/util";
 import module namespace console    = "http://exist-db.org/xquery/console";
