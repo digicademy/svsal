@@ -1,11 +1,16 @@
-<div xmlns:i18n="http://exist-db.org/xquery/i18n" data-template="templates:surround" data-template-with="templates/template_basic.html" data-template-at="content">
+<div xmlns:i18n="http://exist-db.org/xquery/i18n" data-template="templates:surround" data-template-with="templates/template_stats.html" data-template-at="content">
     <div class="container" data-template="i18n:translate" data-template-catalogues="data/i18n">
         <div class="page-header">
             <h1>
                 <i18n:text key="stats">Statistiken</i18n:text>
             </h1>
         </div>
-        <div class="row" data-template="stats:loadListOfLemmata">
+        <div id="solorzanos-maze"></div>
+        
+        <script type="text/javascript" src="resources/js/solorzanos-maze-base.js"/>
+        <script type="text/javascript" src="resources/js/solorzanos-maze-main.js"/>
+        <script type="text/javascript" src="resources/js/solorzanos-maze-runtime.js"/>
+        <!--<div class="row" data-template="stats:loadListOfLemmata">
             <h2 class="featurette-heading">Frequenzen und Kookurrenzen der Lemmata</h2>
             <div class="row">
                 <p>
@@ -16,6 +21,6 @@
                     </tr>
                 </table>
             </div>
-        </div>
+        </div>-->
     </div>
 </div>
