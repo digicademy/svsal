@@ -1,4 +1,4 @@
-xquery version "3.0";
+xquery version "3.1";
 
 
 (: ####++++----
@@ -185,6 +185,16 @@ declare function api:deliverZIP($content as xs:base64Binary?, $name as xs:string
             </http:response>
         </rest:response>,
         $content
+};
+
+declare function api:deliverJson($content as map()) {
+    <rest:response>
+        {$api:jsonOutputParams}
+        <http:response status="200">
+            <http:header name="Content-Type" value="application/json; charset=utf-8"/>
+        </http:response>
+    </rest:response>,
+    $content
 };
 
 

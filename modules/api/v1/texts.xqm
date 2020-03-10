@@ -1,4 +1,4 @@
-xquery version "3.0" encoding "UTF-8";
+xquery version "3.1" encoding "UTF-8";
 
 (: ####++++----
 
@@ -59,6 +59,15 @@ function textsv1:texts1($format, $lang, $accept, $host) {
                         util:binary-doc($zipPath),
                         'sal-txt-corpus'
                     )
+            case 'stats' return
+                let $statsPath := $config:stats-root || '/corpus-stats.json'
+                return
+                    if (util:binary-doc-available($statsPath)) then
+                        api:deliverJson(
+                            json-doc($statsPath)
+                        )
+                    else
+                        api:error404NotYetAvailable()
             default return
                 (: redirect to HTML works list :)
                 api:redirect-with-303($api:proto || api:getDomain($host) || '/' || (if ($lang) then $lang || '/' else ()) || 'works.html')
@@ -92,6 +101,7 @@ function textsv1:textsResource1($rid, $format, $mode, $q, $lang, $viewer, $frag,
             case 'rdf' return textsv1:RDFdeliverDoc($rid)
             case 'tei' return textsv1:TEIdeliverDoc($rid, $mode)
             case 'txt' return textsv1:TXTdeliverDoc($rid, $mode)
+            case 'stats' return textsv1:STATSdeliverDoc($rid)
             default return 
                 textsv1:HTMLdeliverDoc($rid, $mode, $q, $lang, $viewer, $frag, $canvas, $host)
 };
@@ -276,6 +286,24 @@ declare %private function textsv1:RDFdeliverDoc($rid as xs:string) {
                 (: in case rdf hasn't been rendered yet :)
                 api:error404NotYetAvailable()
         else if ($resource('tei_status') eq 0) then
+            api:error404NotYetAvailable()
+        else if (not($resource('wellformed'))) then
+            api:error400BadResource()
+        else 
+            api:error404NotFound() 
+};
+
+declare %private function textsv1:STATSdeliverDoc($rid as xs:string) {
+    let $resource := textsv1:validateResourceId($rid)
+    return
+        if ($resource('tei_status') eq 2 
+            and $resource('valid')
+            and util:binary-doc-available($config:stats-root || '/' || $resource('work_id') || '-stats.json')) 
+        then
+            api:deliverJson(
+                json-doc($config:stats-root || '/' || $resource('work_id') || '-stats.json')
+            )
+        else if ($resource('tei_status') = (0,1)) then
             api:error404NotYetAvailable()
         else if (not($resource('wellformed'))) then
             api:error400BadResource()
