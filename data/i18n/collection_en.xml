@@ -452,6 +452,7 @@
   <msg key="tei-generic">Passage</msg>
   
   <!-- stats -->
+  <msg key="stats">Statistics</msg>
   <msg key="editFacsLow">digitally edited print pages</msg>
   <msg key="editFacsUp">Digitally Edited Print Pages</msg>
   <msg key="digiFacsLow">digitized facsimiles</msg>
@@ -463,5 +464,9 @@
   <msg key="wordsUp">Words</msg>
   <msg key="wordFormsLow">word forms</msg>
   <msg key="wordFormsUp">Word Forms</msg>
+  
+  <!-- other -->
+  <msg key="featureNYA">We're sorry, but this feature is not yet available...</msg>
+  <msg key="gameBridge">How about a little game to bridge the waiting time?</msg>
   
 </catalogue>

@@ -1,12 +1,35 @@
 <div xmlns:i18n="http://exist-db.org/xquery/i18n" data-template="templates:surround" data-template-with="templates/template_stats.html" data-template-at="content">
     <div class="container" data-template="i18n:translate" data-template-catalogues="data/i18n">
         <div class="page-header">
-            <h1>
-                <i18n:text key="stats">Statistiken</i18n:text>
-            </h1>
+            <h2 style="margin-top: 3%" class="hidden-md hidden-sm hidden-xs">
+                <span class="text-muted">
+                    <span class="glyphicon glyphicon-stats" aria-hidden="true"/>
+                    <i18n:text key="stats">Statistics</i18n:text>
+                </span>
+                
+            </h2>
+            <h2 style="margin-top: 2%" class="hidden-lg hidden-sm hidden-xs">
+                <span class="text-muted">
+                    <span class="glyphicon glyphicon-stats" aria-hidden="true"/>
+                    <i18n:text key="stats">Statistics</i18n:text>
+                </span>
+                
+            </h2>
+            <h2 class="hidden-lg hidden-md">
+                <span class="text-muted">
+                    <span class="glyphicon glyphicon-stats" aria-hidden="true"/>
+                    <i18n:text key="stats">Statistics</i18n:text>
+                </span>
+            </h2>
         </div>
-        <div id="solorzanos-maze"></div>
         
+        <div>
+            <h3><i18n:text key="featureNYA">We're sorry, but this feature is not yet available...</i18n:text></h3>
+            <br/>
+            <h4><i18n:text key="gameBridge">How about a little game to bridge the waiting time?</i18n:text></h4>
+        </div>
+        
+        <div id="solorzanos-maze"/>
         <script type="text/javascript" src="resources/js/solorzanos-maze-base.js"/>
         <script type="text/javascript" src="resources/js/solorzanos-maze-main.js"/>
         <script type="text/javascript" src="resources/js/solorzanos-maze-runtime.js"/>

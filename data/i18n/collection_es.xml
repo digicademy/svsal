@@ -459,6 +459,7 @@
     <msg key="tei-generic">Pasaje</msg>
     
     <!-- stats -->
+    <msg key="stats">Estadísticas</msg>
     <msg key="editFacsLow">páginas imprimidas editadas</msg>
     <msg key="editFacsUp">Páginas imprimidas editadas</msg>
     <msg key="digiFacsLow">facsímiles digitalizadas</msg>
@@ -470,5 +471,9 @@
     <msg key="wordsUp">Palabras</msg>
     <msg key="wordFormsLow">formas de palabra</msg>
     <msg key="wordFormsUp">Formas de palabra</msg>
+    
+    <!-- other -->
+    <msg key="featureNYA">Disculpe, pero esta función aún no está disponible...</msg>
+    <msg key="gameBridge">¿Qué tal un jueguito para acortar el tiempo de espera?</msg>
     
 </catalogue>

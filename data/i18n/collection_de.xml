@@ -289,6 +289,7 @@
   <msg key="tei-generic">Abschnitt</msg>
   
   <!-- stats -->
+  <msg key="stats">Statistiken</msg>
   <msg key="editFacsLow">digital edierte Druckseiten</msg>
   <msg key="editFacsUp">Digital edierte Druckseiten</msg>
   <msg key="digiFacsLow">digitalisierte Faksimiles</msg>
@@ -300,5 +301,9 @@
   <msg key="wordsUp">Wörter</msg>
   <msg key="wordFormsLow">Wortformen</msg>
   <msg key="wordFormsUp">Wortformen</msg>
+  
+  <!-- other -->
+  <msg key="featureNYA">Diese Funktionalität ist leider noch nicht verfügbar...</msg>
+  <msg key="gameBridge">Wie wäre es mit einem kleinen Spiel, um die Wartezeit zu überbrücken?</msg>
   
 </catalogue>
