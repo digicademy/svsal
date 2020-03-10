@@ -52,7 +52,7 @@ declare function stats:makeCorpusStats() as map(*) {
         for $id in $publishedWorkIds return 
             if (fn:unparsed-text-available($config:txt-root || '/' || $id || '/' || $id || '_edit.txt')) then
                 fn:unparsed-text($config:txt-root || '/' || $id || '/' || $id || '_edit.txt')
-            else error('No (edit) txt available for published work ' || $id)
+            else error(xs:QName('stats:makeCorpusStats()'), 'No (edit) txt available for published work ' || $id)
 (:    let $debug := util:log('warn', '[STATS] sending ' || count($txtAll) || ' texts to nlp:tokenize()'):)
     let $charsAllCount := string-length(replace(string-join($txtAll, ''), '\s', ''))
     let $tokensAllCount := count(nlp:tokenize($txtAll, 'all'))
@@ -101,7 +101,7 @@ declare function stats:makeCorpusStats() as map(*) {
                     if ($iiif('@type') eq 'sc:Manifest') then
                         array:size(array:get($iiif('sequences'), 1)?('canvases'))
                     else error()
-                else error('No iiif resource available for work ' || $id)
+                else error(xs:QName('stats:makeCorpusStats'), 'No iiif resource available for work ' || $id)
     let $totalFacsCount := $fullTextFacsCount + sum($otherFacs)
     let $out :=
         map {
@@ -155,7 +155,7 @@ declare function stats:makeWorkStats($wid as xs:string) as map(*) {
     let $txt := 
         if (fn:unparsed-text-available($config:txt-root || '/' || $wid || '/' || $wid || '_edit.txt')) then
             fn:unparsed-text($config:txt-root || '/' || $wid || '/' || $wid || '_edit.txt')
-        else error('[STATS] No (edit) txt available for published work ' || $wid)
+        else error(xs:QName('stats:makeWorkStats'), 'No (edit) txt available for published work ' || $wid)
 
     let $charsCount := string-length(replace(string-join($txt, ''), '\s', ''))
     let $tokensCount := count(nlp:tokenize($txt, 'all'))
