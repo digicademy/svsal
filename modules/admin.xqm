@@ -1082,7 +1082,7 @@ declare function admin:createRDF($rid as xs:string) {
         else ()
     let $rdf := 
         (: if this throws an "XML Parsing Error: no root element found", this might be due to the any23 service not being available
-         - check it via "curl -X POST http://localhost:8880/any23/any23/rdfxml", for example:)
+         - check it via "curl -X GET http://localhost:8880/any23/any23/rdfxml/http://data.gov", for example:)
         doc($xtriplesUrl) 
     let $runtime-ms := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000
     let $runtimeString := 
