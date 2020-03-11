@@ -1047,8 +1047,9 @@ declare %templates:wrap function app:corpusStatsTeaser ($node as node(), $model 
                     <li>{$tokens || ' '}<i18n:text key="tokensLow"/></li>
                     <li>{$wordforms || ' '}<i18n:text key="wordFormsLow"/></li>
                 </ul>
-                <a href="stats.html"><i class="glyphicon glyphicon-stats"></i>{' '}<i18n:text key="addStats">More statistics</i18n:text></a>
+                
             </div>
+            (:    <a href="stats.html"><i class="glyphicon glyphicon-stats"></i>{' '}<i18n:text key="addStats">More statistics</i18n:text></a>    :)
         return
             $out
     else ()
