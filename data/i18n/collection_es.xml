@@ -471,6 +471,7 @@
     <msg key="wordsUp">Palabras</msg>
     <msg key="wordFormsLow">formas de palabra</msg>
     <msg key="wordFormsUp">Formas de palabra</msg>
+    <msg key="aboutCorpus">Información sobre el corpus</msg>
     
     <!-- other -->
     <msg key="featureNYA">Disculpe, pero esta función aún no está disponible...</msg>

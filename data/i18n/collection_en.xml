@@ -464,6 +464,7 @@
   <msg key="wordsUp">Words</msg>
   <msg key="wordFormsLow">word forms</msg>
   <msg key="wordFormsUp">Word Forms</msg>
+  <msg key="aboutCorpus">About the Corpus</msg>
   
   <!-- other -->
   <msg key="featureNYA">We're sorry, but this feature is not yet available...</msg>

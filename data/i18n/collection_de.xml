@@ -301,6 +301,7 @@
   <msg key="wordsUp">Wörter</msg>
   <msg key="wordFormsLow">Wortformen</msg>
   <msg key="wordFormsUp">Wortformen</msg>
+  <msg key="aboutCorpus">Über das Corpus</msg>
   
   <!-- other -->
   <msg key="featureNYA">Diese Funktionalität ist leider noch nicht verfügbar...</msg>
