@@ -405,6 +405,8 @@
   
   
   <!-- div, milestone, element types for node index derivatives -->
+  <msg key="tei-div-dict">Index</msg>
+  <msg key="tei-div-lemma">Lemma</msg>
   <msg key="tei-div-additional">Addendum</msg>
   <msg key="tei-div-administrative">Administrative</msg>
   <msg key="tei-div-article">Article</msg>

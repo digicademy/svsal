@@ -412,6 +412,8 @@
     <msg key="copy">Copiar</msg>
     
     <!-- div, milestone, element types for node index derivatives -->
+    <msg key="tei-div-dict">Índice</msg>
+    <msg key="tei-div-lemma">Lema</msg>
     <msg key="tei-div-additional">Adenda</msg>
     <msg key="tei-div-administrative">Administrativo</msg>
     <msg key="tei-div-article">Artículo</msg>
