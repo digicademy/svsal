@@ -2613,10 +2613,10 @@ declare function app:WRKeditionMetadata($node as node(), $model as map(*), $wid 
     let $titleMain := $teiHeader/tei:fileDesc/tei:titleStmt/tei:title[@type eq 'main']/text()
     let $titleShort := $teiHeader/tei:fileDesc/tei:titleStmt/tei:title[@type eq 'short']/text()
     let $author := app:rotateFormatName($teiHeader/tei:fileDesc/tei:titleStmt/tei:author/tei:persName)
-    let $language := 
-        if ($teiHeader/tei:profileDesc//tei:language[@n eq 'main']/@ident eq 'la') then <i18n:text key="latin">Latein</i18n:text>
-        else if ($teiHeader/tei:profileDesc//tei:language[@n eq 'main']/@ident eq 'es') then <i18n:text key="spanish">Spanisch</i18n:text>
-        else ()
+    let $languages := <span>
+        { if ('la' = $teiHeader/tei:profileDesc//tei:language[@n eq 'main']/@ident) then <i18n:text key="latin">Latein</i18n:text> else () }
+        { if ('es' = $teiHeader/tei:profileDesc//tei:language[@n eq 'main']/@ident) then <i18n:text key="spanish">Spanisch</i18n:text> else () }
+        </span>
     let $isPublished := app:WRKisPublished($node, $model, $workId)
     let $pubDate := 
         if ($isPublished) then
@@ -2645,7 +2645,7 @@ declare function app:WRKeditionMetadata($node as node(), $model as map(*), $wid 
             'titleMain': $titleMain,
             'titleShort': $titleShort,
             'author': $author,
-            'language': $language,
+            'language': string-join($languages/span, ", "),
             'publicationDate': $pubDate,
             'scholEditors': $scholarlyEditors,
             'techEditors': $technicalEditors,
