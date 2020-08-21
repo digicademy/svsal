@@ -145,8 +145,8 @@ declare function html:makeHTMLData($tei as element(tei:TEI)) as map(*) {
 
 declare function html:renderFragment($work as node(), $wid as xs:string, $target as node(), $targetindex as xs:integer, $fragmentationDepth as xs:integer, $prevId as xs:string?, $nextId as xs:string?, $serverDomain as xs:string?) {
     let $targetid          := xs:string($target/@xml:id)
-    let $debugOutput   := if ($config:debug = ("trace", "info")) then console:log("  Render Element " || $targetindex || ": " || $targetid || " of " || $wid || "...") else ()
-    let $debugOutput   := if ($config:debug = ("trace")) then console:log("  (prevId=" || $prevId || ", nextId=" || $nextId || ", serverDomain=" || $serverDomain || ")") else ()
+    let $debugOutput   := if ($config:debug = ("trace", "info")) then console:log("[HTML]   Render Element " || $targetindex || ": " || $targetid || " of " || $wid || "...") else ()
+    let $debugOutput   := if ($config:debug = ("trace")) then console:log("[HTML]   (prevId=" || $prevId || ", nextId=" || $nextId || ", serverDomain=" || $serverDomain || ")") else ()
 (:    let $html := transform:transform($work, $tei2htmlXslt, $xsl-parameters):)
     let $fragment := html:createFragment($wid, $target, $targetindex, $prevId, $nextId)
 
@@ -910,11 +910,15 @@ declare function html:g($node as element(tei:g), $mode as xs:string) {
                 if ($node/text()) then 
                     xs:string($node/text())
                 else error(xs:QName('html:g'), 'Found tei:g without text content') (: ensure correct character markup :)
-            let $charCode := substring($node/@ref,2)
+            let $charCode := (: make sure there is something to parse :)
+                if (substring($node/@ref,2)) then
+            substring($node/@ref,2)
+                else
+                    error(xs:QName('html:g'), "g/@ref is invalid, there is no code. g's parent: ", serialize($node/parent::*))
             let $char := $node/ancestor::tei:TEI/tei:teiHeader/tei:encodingDesc/tei:charDecl/tei:char[@xml:id eq $charCode]
             let $test := (: make sure that the char reference is correct :)
                 if (not($char)) then 
-                    error(xs:QName('html:g'), 'g/@ref is invalid, the char code does not exist): ', $charCode)
+                    error(xs:QName('html:g'), concat('g/@ref is invalid, the char code does not exist: ', $charCode))
                 else ()
             let $precomposedString := 
                 if ($char/tei:mapping[@type='precomposed']/text()) then 
@@ -1186,7 +1190,7 @@ declare function html:list($node as element(tei:list), $mode as xs:string) {
 declare function html:lg($node as element(tei:lg), $mode as xs:string) {
     switch($mode)
         case 'html' return
-            <span class="poem">{html:passthru($node, $mode)}</span>
+            <div class="poem">{html:passthru($node, $mode)}</div>
 
         default return
             html:passthru($node, $mode)
