@@ -91,9 +91,12 @@ declare variable $config:iiifPresentationServer := $config:imageserver || "/iiif
 declare variable $config:svnserver := "";
 
 (: the digilib image service :)
-declare variable $config:digilibServerScaler := "https://c104-131.cloud.gwdg.de:8443/digilib/Scaler/IIIF/svsal!";
+(:declare variable $config:digilibServerScaler := "https://c104-131.cloud.gwdg.de:8443/digilib/Scaler/IIIF/svsal!";:)
+declare variable $config:digilibServerScaler := "https://c099-013.cloud.gwdg.de:8443/digilib/Scaler/IIIF/svsal!";
+(:declare variable $config:digilibServerScaler := "https://facs.salamanca.school/iiif/image/";:)
 (: the digilib manifest service :)
-declare variable $config:digilibServerManifester := "https://c104-131.cloud.gwdg.de:8443/digilib/Manifester/IIIF/svsal!";
+(:declare variable $config:digilibServerManifester := "https://c104-131.cloud.gwdg.de:8443/digilib/Manifester/IIIF/svsal!";:)
+declare variable $config:digilibServerManifester := "https://c099-013.cloud.gwdg.de:8443/digilib/Manifester/IIIF/svsal!";
 
 declare variable $config:urnresolver    := 'http://nbn-resolving.de/urn/resolver.pl?';
 
@@ -153,6 +156,7 @@ declare variable $config:citationLabels :=
         'chapter': map {'full': 'capitulum', 'abbr': 'cap.', 'isCiteRef': true()},
         'colophon': map {'full': 'colophon', 'abbr': 'coloph.', 'isCiteRef': true()},
         'commentary': map {'full': 'commentarius', 'abbr': 'comment.', 'isCiteRef': true()},
+        'conclusion': map {'full': 'conclusio', 'abbr': 'concl.', 'isCiteRef': true()},
         'contained_work': (),
         'contents': map {'full': 'tabula', 'abbr': 'tab.', 'isCiteRef': true()},
         'corrigenda': map {'full': 'corrigenda', 'abbr': 'corr.', 'isCiteRef': true()},
