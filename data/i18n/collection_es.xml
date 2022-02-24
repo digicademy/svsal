@@ -15,7 +15,7 @@
     <msg key="works">Obras</msg>
     <msg key="workingPapers">Working Papers</msg>
     <msg key="project">Proyecto</msg>
-    <msg key="news">Novedades</msg>
+    <msg key="news">Blog</msg>
     <msg key="description">Sobre...</msg>
     <msg key="staff">Personas</msg>
     <msg key="guidelines">Directrices de Edición</msg>
@@ -234,7 +234,7 @@
     
     
     <msg key="authorsNotice">Los artículos biográficos sobre los autores de la colección de fuentes del proyecto 
-        "La Escuela de Salamanca" se publicarán sucesivamente (a partir del 2020) en esta página.</msg>
+        "La Escuela de Salamanca" se publicarán sucesivamente (a partir del 2022) en esta página.</msg>
     
     
     <!--search-->
@@ -365,7 +365,7 @@
     
     <!-- dictionary -->
     <msg key="dictUnderConstruction">El Diccionario de la lengua jurídica-política de la Escuela de Salamanca será publicado aquí: aprox. 200 entradas con lemas en latín y español, tomados directamente de las fuentes.
-        Las entradas serán publicadas de manera sucesiva, previsiblemente comenzando en el año 2020.</msg>
+        Las entradas serán publicadas de manera sucesiva, previsiblemente comenzando en el año 2022.</msg>
     
     <!-- general language -->
     <msg key="of">de</msg>

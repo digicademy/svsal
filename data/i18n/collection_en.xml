@@ -15,7 +15,7 @@
   <msg key="works">Works</msg>
   <msg key="workingPapers">Working Papers</msg>
   <msg key="project">Project</msg>
-  <msg key="news">News</msg>
+  <msg key="news">Blog</msg>
   <msg key="description">About</msg>
   <msg key="staff">Staff</msg>
   <msg key="guidelines">Edition Guidelines</msg>
@@ -281,7 +281,7 @@
   
   <msg key="authorsNotice">
     Biographic articles on authors from the collection of sources of the project "The School of Salamanca" 
-    will be successively published on this page (presumably starting in 2020).</msg>
+    will be successively published on this page (presumably starting in 2022).</msg>
   
   <!--work-->
   <msg key="text">Text</msg>
@@ -356,7 +356,7 @@
   
   <!-- dictionary -->
   <msg key="dictUnderConstruction">The Dictionary of the School of Salamanca’s juridical-political language is going to be found here: approx. 200 entries with Latin and Spanish lemmata, taken directly from the sources.
-    The entries will be published successively, beginning in 2020.</msg>
+    The entries will be published successively, beginning in 2022.</msg>
   
   
   <!-- general language -->

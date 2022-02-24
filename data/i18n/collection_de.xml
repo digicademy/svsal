@@ -6,6 +6,7 @@
   <msg key="guidelines">Editionsrichtlinien</msg>
   <msg key="works">Werke</msg>
   <msg key="contact">Kontakt</msg>
+  <msg key="news">Blog</msg>
   
   <!-- project.html -->
   <msg key="teamDesc">Profile der Mitarbeitenden; Kooperationen und Fachbeirat.</msg>
@@ -43,7 +44,7 @@
   
   <msg key="authorsNotice">Biographische Artikel zu den Autoren der Quellensammlung des Projekts 
     "Die Schule von Salamanca" werden (voraussichtlich ab 
-    2020) sukzessive auf dieser Seite veröffentlicht.</msg>
+    2022) sukzessive auf dieser Seite veröffentlicht.</msg>
   
   <!-- work -->
   <msg key="text">Text</msg>
@@ -180,7 +181,7 @@
   
   <!-- dictionary -->
   <msg key="dictUnderConstruction">Hier entsteht das Wörterbuch der juristisch-politischen Sprache der Schule von Salamanca: ca. 200 Artikel mit lateinischen und spanischen Lemmata, den Quellen selbst entnommen. 
-    Die Artikel werden voraussichtlich ab 2020 sukzessive veröffentlicht.</msg>
+    Die Artikel werden voraussichtlich ab 2022 sukzessive veröffentlicht.</msg>
   
   <!-- project.html -->
   <msg key="guidelinesDecl">Beschreibung der Editionsprinzipien und der Textkodierung.</msg>
