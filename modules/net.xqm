@@ -11,6 +11,7 @@ xquery version "3.1";
 module namespace net                = "http://www.salamanca.school/xquery/net";
 import module namespace console     = "http://exist-db.org/xquery/console";
 import module namespace functx      = "http://www.functx.com";
+import module namespace hc          = "http://expath.org/ns/http-client";
 import module namespace request     = "http://exist-db.org/xquery/request";
 import module namespace response    = "http://exist-db.org/xquery/response";
 import module namespace util        = "http://exist-db.org/xquery/util";
@@ -428,6 +429,50 @@ declare function local:negotiateCTSub($offers as xs:string*, $bestOffer as xs:st
             if ($newOffer[1]) then $newOffer[1] else $bestOffer
     return $returnOffer
 };
+
+
+
+(: Interact with caddy server :)
+declare function net:getRoutingTable() {
+    fn:json-doc($config:caddyRoutes)
+};
+
+declare function net:deleteRoutingTable() as xs:boolean {
+    let $request    := <hc:request method="delete" http-version="1.0"></hc:request>
+    let $resp       := hc:send-request($request, $config:caddyRoutes)
+    let $debug      := if ($resp/@status ne "200") then console:log("[ADMIN] WARNING proplematic caddy response (when trying to delete routing table): " || fn:serialize($resp) ) else ()
+    return if ($resp/@status eq "200") then true() else false()
+};
+
+declare function net:postRoutingTable($routes as array(*)) as xs:boolean {
+    if (array:size($routes) = 0) then
+        true()
+    else
+        let $request    := 
+            <hc:request method="post" http-version="1.0">
+                <hc:body method="text" media-type="application/json"></hc:body>
+            </hc:request>
+    
+        let $resp       := hc:send-request($request, $config:caddyRoutes || "/...", fn:serialize($routes, map{"method":"json", "indent": true(), "encoding":"utf-8"}))
+        let $debug      := if ($resp/@status ne "200") then console:log("[ADMIN] WARNING proplematic caddy response (when trying to post to routing table): " || fn:serialize($resp, map{"method": "text"}) ) else ()
+        return if ($resp/@status eq "200") then true() else false()
+};
+
+declare function net:cleanRoutingTable($wid as xs:string) as xs:boolean {
+    let $routingTable   := net:getRoutingTable()
+    let $cleanedRT      := array:filter($routingTable, function ($i) { substring($i?input, 0, 13) ne "/texts/" || $wid })
+    let $deleteStatus   := net:deleteRoutingTable()
+    return if (array:size($cleanedRT) > 0) then net:postRoutingTable($cleanedRT) else true()
+};
+
+declare function net:isInRoutingTable($src as xs:string, $dest as item()) as xs:boolean {
+    let $routingTable := net:getRoutingTable()
+    return if (count($routingTable) > 0 and array:size($routingTable) > 0) then
+        array:size(array:filter($routingTable, function($m) {$m?input eq $src } )) > 0
+    else
+        false()
+};
+
 
 
 (: Sitemap stuff ... :)

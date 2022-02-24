@@ -67,6 +67,7 @@ let $parameterString    :=
 
 
 (: Print request context for debugging :)
+(:
 let $debug :=  
     if ($config:debug = "trace") then
         console:log("Request at '" || request:get-header('X-Forwarded-Host') || "' for " || request:get-effective-uri() || "&#x0d; " ||
@@ -77,7 +78,7 @@ let $debug :=
                     "$lang: " || $lang || "."
                    )
     else ()
-
+:)
 
 (: Here comes the actual routing ... :)
 return
@@ -267,7 +268,7 @@ return
 
     (: Relative path requests from sub-collections are redirected there :)
     else if (contains($exist:path, "/resources/")) then
-        let $debug := if ($config:debug = "trace") then console:log("Resource requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
+        let $debug := () (: if ($config:debug = "trace") then console:log("Resource requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ():)
 (:        let $debug := if ($config:debug = "trace") then util:log("warn", "Favicon requested: " || $net:forwardedForServername || $exist:path || ".") else ():)
         return 
             if (contains(lower-case($exist:resource), "favicon")) then

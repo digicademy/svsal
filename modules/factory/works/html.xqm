@@ -1,28 +1,34 @@
 xquery version "3.1";
 
-module namespace html              = "https://www.salamanca.school/factory/works/html";
-declare namespace exist            = "http://exist.sourceforge.net/NS/exist";
-declare namespace output           = "http://www.w3.org/2010/xslt-xquery-serialization";
-declare namespace tei              = "http://www.tei-c.org/ns/1.0";
-declare namespace sal              = "http://salamanca.adwmainz.de";
-declare namespace i18n             = 'http://exist-db.org/xquery/i18n';
-import module namespace util       = "http://exist-db.org/xquery/util";
-import module namespace console    = "http://exist-db.org/xquery/console";
-import module namespace config     = "http://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
-import module namespace sutil   = "http://www.salamanca.school/xquery/sutil" at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
-import module namespace index      = "https://www.salamanca.school/factory/works/index"    at "xmldb:exist:///db/apps/salamanca/modules/factory/works/index.xqm";
-import module namespace txt        = "https://www.salamanca.school/factory/works/txt" at "xmldb:exist:///db/apps/salamanca/modules/factory/works/txt.xqm";
-
-
 (: ####++++----  
 
     Utility functions for transforming TEI nodes to html.
    
    ----++++#### :)
 
+module namespace html              = "https://www.salamanca.school/factory/works/html";
+
+declare namespace tei              = "http://www.tei-c.org/ns/1.0";
+declare namespace sal              = "http://salamanca.adwmainz.de";
+
+declare namespace exist            = "http://exist.sourceforge.net/NS/exist";
+declare namespace output           = "http://www.w3.org/2010/xslt-xquery-serialization";
+declare namespace util             = "http://exist-db.org/xquery/util";
+
+import module namespace console    = "http://exist-db.org/xquery/console";
+import module namespace i18n       = "http://exist-db.org/xquery/i18n";
+
+import module namespace config     = "http://www.salamanca.school/xquery/config"        at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace sutil      = "http://www.salamanca.school/xquery/sutil"         at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
+import module namespace index      = "https://www.salamanca.school/factory/works/index" at "xmldb:exist:///db/apps/salamanca/modules/factory/works/index.xqm";
+import module namespace txt        = "https://www.salamanca.school/factory/works/txt"   at "xmldb:exist:///db/apps/salamanca/modules/factory/works/txt.xqm";
+
 
 
 (: SETTINGS :)
+
+declare option exist:timeout "166400000"; (: in miliseconds, 25.000.000 ~ 7h, 43.000.000 ~ 12h :)
+declare option exist:output-size-limit "5000000"; (: max number of nodes in memory :)
 
 (: the max. amount of characters to be shown in a note teaser :)
 declare variable $html:noteTruncLimit := 33;
@@ -31,24 +37,142 @@ declare variable $html:titleTruncLimit := 15;
 
 declare variable $html:basicElemNames := ('p', 'head', 'note', 'item', 'cell', 'label', 'signed', 'lg', 'titlePage');
 
+declare variable $html:defaultLang := collection($config:i18n-root)/*:catalogue[@xml:lang="de"];
+
+(: sometimes, we want to i18n-look up simple strings, but exist's i18n functions need nodes as input arguments, so we wrap our strings here :)
+declare function local:i18nNodify($s as xs:string) {
+    <msg key="{$s}">{$s}</msg>
+};
+
+
 
 (: 
 ~ Controller function for creating (and informing about) HTML fragments, pagination lists, and TOCs
 :)
 declare function html:makeHTMLData($tei as element(tei:TEI)) as map(*) {
+    html:makeHTMLData($tei, $html:defaultLang)
+};
+
+declare function html:makeHTMLData($tei as element(tei:TEI), $lang as node()*) as map(*) {
     let $work := util:expand($tei)
     let $fragmentationDepth := index:determineFragmentationDepth($tei)
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Rendering " || string($tei/@xml:id) || " at fragmentation level " || $fragmentationDepth || ".") else ()
-    
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Rendering " || string($tei/@xml:id) || " (" || xs:string($html:defaultLang/@xml:lang) || ") at fragmentation level " || $fragmentationDepth || " ...") else ()
+
     let $target-set := index:getFragmentNodes($work, $fragmentationDepth)
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] " || string(count($target-set)) || " elements to be rendered as fragments...") else ()
-    
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] " || string(count($target-set)) || " elements to be rendered as fragments ...") else ()
+
     let $workId := $work/@xml:id
     let $text := $work//tei:text[@type='work_volume'] | $work//tei:text[@type = 'work_monograph']
     let $elements := $work//tei:text[@type = 'work_monograph']/(tei:front | tei:body | tei:back)  
     let $title := sutil:WRKcombined($work, (), $workId)
-    
+
     (: (1) table of contents :)
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Creating ToC file for " || $workId || " ...") else ()
+    let $toc :=     
+        <div id="tableOfConts">
+            <ul>
+                <li>
+                    <b>{$title}</b>
+                    {
+                    if (not($work//tei:text[@type='work_volume'])) then
+                        <span class="jstree-anchor hideMe pull-right">{html:getPagesFromDiv($text)}</span>
+                    else ()
+                    }
+                    {
+                    if ($work//tei:text[@type='work_volume']) then 
+                        for $a in $work//tei:text where $a[@type='work_volume' and sutil:WRKisPublished($workId || '_' || @xml:id)] return
+                            <ul>
+                                <li>
+                                    <a class="hideMe">
+                                        <b>{concat(i18n:getLocalizedText(local:i18nNodify('volume'), $lang), ': ', $a/@n/string())}</b>
+                                        <span class="jstree-anchor hideMe pull-right">{html:getPagesFromDiv($a)}</span>
+                                    </a>
+                                    { html:generateTocFromDiv($a/(tei:front | tei:body | tei:back), $workId, $lang)}
+                                </li>
+                            </ul>
+                    else html:generateTocFromDiv($elements, $workId, $lang)
+                    }
+                </li>
+            </ul>
+        </div>
+    
+    (: (2) pagination :)
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Creating pagination ...") else ()
+    let $pages :=  html:makePagination((), (), $workId)
+
+    (: (3) fragments :)
+    (: TODO: Mysteriously, if you look at top or a similar tool, the following seems to run mainly on one processor core only... :)
+    (: get "previous" and "next" fragment ids and hand the current fragment over to the renderFragment function :)
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Rendering fragments ...") else ()
+    let $fragments := 
+        for $section at $index in $target-set
+            let $debug :=   if ($config:debug = ("trace", "info") and ($index mod 50 eq 0)) then
+                                console:log("[HTML] HTML rendering: processing fragment no. " || string($index)  || " ...")
+                            else ()
+            let $prev   :=  
+                if ($index > 1) then
+                    $target-set[(xs:integer($index) - 1)]
+                else ()
+            let $next   :=  
+                if ($index < count($target-set)) then
+                    $target-set[(xs:integer($index) + 1)]
+                else ()
+            let $prevId :=  
+                if ($prev) then
+                    xs:string($prev/@xml:id)
+                else ()
+            let $nextId := 
+                if ($next) then
+                    xs:string($next/@xml:id)
+                else ()
+            let $result := html:renderFragment($work, xs:string($workId), $section, $index, $fragmentationDepth, $prevId, $nextId, $config:serverdomain)
+            return 
+                map {
+                    'index': $index,
+                    'number': format-number($index, "00000"),
+                    'tei_name': local-name($section),
+                    'tei_id': string($section/@xml:id),
+                    'tei_level': count($section/ancestor-or-self::tei:*),
+                    'prev': $prevId,
+                    'next': $nextId,
+                    'html': $result
+                }
+            
+    (: Reporting :)
+    
+    (: See if there are any leaf elements in our text that are not matched by our rule :)
+    let $missed-elements := $work//(tei:front|tei:body|tei:back)//tei:*[count(./ancestor-or-self::tei:*) < $fragmentationDepth][not(*)]
+    (: See if any of the elements we did get is lacking an xml:id attribute :)
+    let $unidentified-elements := $target-set[not(@xml:id)]
+
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Done.") else ()
+    
+    return 
+        map {
+            'toc': $toc,
+            'pagination': $pages,
+            'fragments': $fragments,
+            'missed_elements': $missed-elements,
+            'unidentified_elements': $unidentified-elements,
+            'tei_fragment_roots': $target-set
+        }
+};
+
+declare function html:makeHTMLDataOld($tei as element(tei:TEI)) as map(*) {
+    let $work := util:expand($tei)
+    let $fragmentationDepth := index:determineFragmentationDepth($tei)
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Rendering " || string($tei/@xml:id) || " at fragmentation level " || $fragmentationDepth || " ...") else ()
+
+    let $target-set := index:getFragmentNodes($work, $fragmentationDepth)
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] " || string(count($target-set)) || " elements to be rendered as fragments ...") else ()
+
+    let $workId := $work/@xml:id
+    let $text := $work//tei:text[@type='work_volume'] | $work//tei:text[@type = 'work_monograph']
+    let $elements := $work//tei:text[@type = 'work_monograph']/(tei:front | tei:body | tei:back)  
+    let $title := sutil:WRKcombined($work, (), $workId)
+
+    (: (1) table of contents :)
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Creating ToC file for " || $workId || " ...") else ()
     let $toc :=     
         <div id="tableOfConts">
             <ul>
@@ -76,19 +200,22 @@ declare function html:makeHTMLData($tei as element(tei:TEI)) as map(*) {
                 </li>
             </ul>
         </div>
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] ToC file created for " || $workId || ".") else ()
     
     (: (2) pagination :)
-    let $pagesDe :=  html:makePagination((), (), $workId, 'de')
-    let $pagesEn :=  html:makePagination((), (), $workId, 'en')
-    let $pagesEs :=  html:makePagination((), (), $workId, 'es')
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Pagination created.") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Creating pagination ...") else ()
+    let $pagesDe :=  html:makePagination((), (), $workId)
+    let $pagesEn :=  html:makePagination((), (), $workId)
+    let $pagesEs :=  html:makePagination((), (), $workId)
 
     (: (3) fragments :)
-    
+    (: TODO: Mysteriously, if you look at top or a similar tool, the following seems to run mainly on one processor core only... :)
     (: get "previous" and "next" fragment ids and hand the current fragment over to the renderFragment function :)
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Rendering fragments ...") else ()
     let $fragments := 
         for $section at $index in $target-set
+            let $debug :=   if ($config:debug = ("trace", "info") and ($index mod 50 eq 0)) then
+                                console:log("[HTML] HTML rendering: processing fragment no. " || string($index)  || " ...")
+                            else ()
             let $prev   :=  
                 if ($index > 1) then
                     $target-set[(xs:integer($index) - 1)]
@@ -105,12 +232,11 @@ declare function html:makeHTMLData($tei as element(tei:TEI)) as map(*) {
                 if ($next) then
                     xs:string($next/@xml:id)
                 else ()
-            let $result := html:renderFragment($work, xs:string($workId), $section, $index, $fragmentationDepth, $prevId, $nextId, $config:serverdomain)
-(:                let $result := html:createFragment($workId, $section, $index, $prevId, $nextId):)
+            let $result := html:renderFragmentOld($work, xs:string($workId), $section, $index, $fragmentationDepth, $prevId, $nextId, $config:serverdomain)
             return 
                 map {
                     'index': $index,
-                    'number': format-number($index, "0000"),
+                    'number': format-number($index, "00000"),
                     'tei_name': local-name($section),
                     'tei_id': string($section/@xml:id),
                     'tei_level': count($section/ancestor-or-self::tei:*),
@@ -119,15 +245,14 @@ declare function html:makeHTMLData($tei as element(tei:TEI)) as map(*) {
                     'html': $result
                 }
             
-                
-            
-    
     (: Reporting :)
     
     (: See if there are any leaf elements in our text that are not matched by our rule :)
     let $missed-elements := $work//(tei:front|tei:body|tei:back)//tei:*[count(./ancestor-or-self::tei:*) < $fragmentationDepth][not(*)]
     (: See if any of the elements we did get is lacking an xml:id attribute :)
     let $unidentified-elements := $target-set[not(@xml:id)]
+
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Done.") else ()
     
     return 
         map {
@@ -142,14 +267,19 @@ declare function html:makeHTMLData($tei as element(tei:TEI)) as map(*) {
         }
 };
 
+declare function html:renderFragmentOld($work as node(), $wid as xs:string, $target as node(), $targetindex as xs:integer, $fragmentationDepth as xs:integer, $prevId as xs:string?, $nextId as xs:string?, $serverDomain as xs:string?) {
+    let $targetid := xs:string($target/@xml:id)
+    let $fragment := html:createFragmentOld($wid, $target, $targetindex, $prevId, $nextId)
+    return $fragment
+};
 
 declare function html:renderFragment($work as node(), $wid as xs:string, $target as node(), $targetindex as xs:integer, $fragmentationDepth as xs:integer, $prevId as xs:string?, $nextId as xs:string?, $serverDomain as xs:string?) {
-    let $targetid          := xs:string($target/@xml:id)
-    let $debugOutput   := if ($config:debug = ("trace", "info")) then console:log("[HTML]   Render Element " || $targetindex || ": " || $targetid || " of " || $wid || "...") else ()
-    let $debugOutput   := if ($config:debug = ("trace")) then console:log("[HTML]   (prevId=" || $prevId || ", nextId=" || $nextId || ", serverDomain=" || $serverDomain || ")") else ()
-(:    let $html := transform:transform($work, $tei2htmlXslt, $xsl-parameters):)
-    let $fragment := html:createFragment($wid, $target, $targetindex, $prevId, $nextId)
+    html:renderFragment($work, $wid, $target, $targetindex, $fragmentationDepth, $prevId, $nextId, $serverDomain, $html:defaultLang)
+};
 
+declare function html:renderFragment($work as node(), $wid as xs:string, $target as node(), $targetindex as xs:integer, $fragmentationDepth as xs:integer, $prevId as xs:string?, $nextId as xs:string?, $serverDomain as xs:string?, $lang as node()*) {
+    let $targetid := xs:string($target/@xml:id)
+    let $fragment := html:createFragment($wid, $target, $targetindex, $prevId, $nextId)
     return $fragment
 };
 
@@ -173,35 +303,40 @@ declare function html:isCitableWithTeaser($node as node()) as xs:boolean {
 };
 
 
-declare function html:preparePagination($work as element(tei:TEI), $lang as xs:string?, $fragmentIds as map()?) as element(ul) {
-    let $workId := $work/@xml:id
-    return 
-        <ul id="later" class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">{
-            for $pb in $work//tei:text//tei:pb[index:isIndexNode(.) and not(@sameAs or @corresp)] return
-                let $fragment := $fragmentIds($pb/@xml:id/string()) (:$pb/sal:fragment:)
-                let $url      := 'work.html?wid=' || $workId || '&amp;frag=' || $fragment || '#' || concat('pageNo_', $pb/@n)
-                return 
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="{$url}">{normalize-space($pb/sal:title)}</a></li>
-        }</ul>
-};
-
+(:
+    declare function html:preparePagination($work as element(tei:TEI), $fragmentIds as map(*)) as element(ul) {
+        let $workId := $work/@xml:id
+        return 
+            <ul id="later" class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">{
+                for $pb in $work//tei:text//tei:pb[index:isIndexNode(.) and not(@sameAs or @corresp)] return
+                    let $fragment := $fragmentIds($pb/@xml:id/string()) (:$pb/sal:fragment:)
+                    let $url      := 'work.html?wid=' || $workId || '&amp;frag=' || $fragment || '#' || concat('pageNo_', $pb/@n)
+                    return 
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="{$url}">{normalize-space($pb/@title/string())}</a></li>
+            }</ul>
+    };
+:)
 
 (:
 ~ Recursively creates a TOC list (of lists...) for a sequence of nodes.
 :)
 declare function html:generateTocFromDiv($nodes as element()*, $wid as xs:string) as element(ul)* {
+    html:generateTocFromDiv($nodes, $wid, $html:defaultLang)
+};
+
+declare function html:generateTocFromDiv($nodes as element()*, $wid as xs:string, $lang as node()*) as element(ul)* {
     for $node in $nodes/(tei:div[@type="work_part"]/tei:div[index:isIndexNode(.)]
                          |tei:div[not(@type="work_part")][index:isIndexNode(.)]
                          |*/tei:milestone[@unit ne 'other'][index:isIndexNode(.)]) return
-        let $fragTrail := sutil:getNodetrail($wid, $node, 'citetrail')        
-        let $fragId := $config:idserver || '/texts/' || $wid || ':' || $fragTrail || '?format=html'
+        let $citeID := sutil:getNodetrail($wid, $node, 'citeID')        
+        let $fragId := $config:idserver || '/texts/' || $wid || ':' || $citeID || '?format=html'
         let $section := $node/@xml:id/string()
         let $i18nKey := 
             if (index:dispatch($node, 'class')) then index:dispatch($node, 'class')
             else 'tei-generic'
-        let $label := ('[', <i18n:text key="{$i18nKey}"/>, ']')
+        let $label := concat('[', i18n:getLocalizedText(local:i18nNodify($i18nKey), $lang), ']')
         let $titleString := index:dispatch($node, 'title')
-        let $titleAtt := '[i18n(' || $i18nKey || ')] ' || $titleString
+        let $titleAtt := '[' || i18n:getLocalizedText(local:i18nNodify($i18nKey), $lang) || '] ' || $titleString
 (:        let $titleElems := html:makeTOCTitle($node):)
         (: title="{$title}" :)
         return 
@@ -211,12 +346,16 @@ declare function html:generateTocFromDiv($nodes as element()*, $wid as xs:string
                         {($label, ' ', $titleString)}
                         <span class="jstree-anchor hideMe pull-right">{html:getPagesFromDiv($node)}</span>
                     </a>
-                    {html:generateTocFromDiv($node, $wid)}
+                    {html:generateTocFromDiv($node, $wid, $lang)}
                 </li>
             </ul>
 };
 
 declare function html:makeTOCTitle($node as node()) as item()* {
+    html:makeTOCTitle($node, $html:defaultLang)
+};
+
+declare function html:makeTOCTitle($node as node(), $lang as node()*) as item()* {
     let $i18nKey := 
         (: every div or milestone type with a citation label should have an entry in i18n files: :)
         if ($node/self::tei:div) then
@@ -226,7 +365,7 @@ declare function html:makeTOCTitle($node as node()) as item()* {
             if ($config:citationLabels($node/@unit/string())?('full')) then 'tei-ms-' || $node/@unit
             else 'tei-generic'
         else ()
-    let $divLabel := ('[', <i18n:text key="{$i18nKey}"/>, ']')
+    let $divLabel := concat('[', i18n:getLocalizedText(local:i18nNodify($i18nKey), $lang), ']')
     let $titleString := index:dispatch($node, 'title')
     return
         ($divLabel, ' ', $titleString)
@@ -234,9 +373,13 @@ declare function html:makeTOCTitle($node as node()) as item()* {
 
 declare function html:getPagesFromDiv($div) {
     let $firstpage :=   
-        if ($div[@type='work_volume'] | $div[@type = 'work_monograph']) then ($div//tei:pb[not(@sameAs or @corresp)])[1]/@n/string() 
-        else ($div/preceding::tei:pb[not(@sameAs or @corresp)])[last()]/@n/string()
-    let $lastpage := if ($div//tei:pb[not(@sameAs or @corresp)]) then ($div//tei:pb[not(@sameAs or @corresp)])[last()]/@n/string() else ()
+        if ($div[@type='work_volume'] | $div[@type = 'work_monograph']) then
+            ($div//tei:pb[not(@sameAs or @corresp)])[1]/@n/string() 
+        else
+            ($div/preceding::tei:pb[not(@sameAs or @corresp)])[last()]/@n/string()
+    let $lastpage := if ($div//tei:pb[not(@sameAs or @corresp)]) then
+                        ($div//tei:pb[not(@sameAs or @corresp)])[last()]/@n/string()
+                     else ()
     return
         if ($firstpage ne '' or $lastpage ne '') then 
             concat(' ', string-join(($firstpage, $lastpage), ' - '))
@@ -250,6 +393,10 @@ declare function html:getPagesFromDiv($div) {
 :)
 (: TODO: currently, this merely creates a "Vol. X" teaser at the beginning of volumes - this means that fragmentation depth cannot go below (front|body|back)/* ! :)
 declare function html:makeAncestorTeasers($fragmentRoot as element()) {
+    html:makeAncestorTeasers($fragmentRoot, $html:defaultLang)
+};
+
+declare function html:makeAncestorTeasers($fragmentRoot as element(), $lang as node()*) {
     (: determine whether fragment is first structural element of volume :)
     if ($fragmentRoot[ancestor-or-self::tei:text[@type eq 'work_volume'] 
                       and not(preceding::*[self::tei:div or self::tei:titlePage] 
@@ -258,7 +405,7 @@ declare function html:makeAncestorTeasers($fragmentRoot as element()) {
             if ($fragmentRoot/ancestor-or-self::tei:text[@type='work_volume']/preceding::tei:text[@type='work_volume']) then 
                 <hr/> 
             else ()
-        let $sumTitle := html:makeSummaryTitle($fragmentRoot/ancestor-or-self::tei:text[@type eq 'work_volume'])
+        let $sumTitle := html:makeSummaryTitle($fragmentRoot/ancestor-or-self::tei:text[@type eq 'work_volume'], $lang)
         return ($delimiter, $sumTitle)
     else ()        
     
@@ -288,15 +435,19 @@ declare function html:makeAncestorTeasers($fragmentRoot as element()) {
 ~ Creates a section title, which appears to the left of the main area.
 :)
 declare function html:makeSummaryTitle($node as element()) as element(div) {
-    let $toolbox := html:makeSectionToolbox($node)
+    html:makeSummaryTitle($node, $html:defaultLang)
+};
+
+declare function html:makeSummaryTitle($node as element(), $lang as node()*) as element(div) {
+    let $toolbox := html:makeSectionToolbox($node, $lang)
     let $fullTitle := 
         <span class="section-title-text">{
-            if ($node/self::tei:text[@type='work_volume']) then <b>{html:dispatch($node, 'html-title')}</b>
-            else html:dispatch($node, 'html-title')
+            if ($node/self::tei:text[@type='work_volume']) then <b>{html:dispatch($node, 'html-title', $lang)}</b>
+            else html:dispatch($node, 'html-title', $lang)
         }</span>
     (: make anchors according to the amount of structural ancestors so that JS knows what to highlight: :)
     let $levels := count($node/ancestor::*[index:isStructuralNode(.)])
-    let $levelAnchors := for $l in (1 to $levels) return <a style="display:none;" class="div-l-{$l}"/>
+    let $levelAnchors := for $l in (1 to $levels) return <a style="display:none;" class="div-l-{$l}"></a>
     return
         <div class="section-title container" id="{$node/@xml:id}">
             {$toolbox}
@@ -330,7 +481,10 @@ declare function html:makeMarginal($node as element()) as element(div) {
             <span class="note-paragraph">{html:passthru($node, 'html')}</span>
     (: determine string-length of complete note text, so as to see whether note needs to be truncated: :)
     let $noteLength := 
+        string-length((if ($label) then $node/@n || ' ' else ()) || normalize-space(string-join(txt:dispatch($node, 'edit'), '')))
+(: replaced the following with the above for performance reasons on 2021-04-28 ...
         string-length((if ($label) then $node/@n || ' ' else ()) || normalize-space(replace(string-join(txt:dispatch($node, 'edit'), ''), '\[.*?\]', '')))
+:)
     let $toolbox := html:makeSectionToolbox($node)
     return
         <div class="marginal container" id="{$node/@xml:id}">
@@ -359,6 +513,10 @@ declare function html:makeMarginal($node as element()) as element(div) {
 ~ it refers to for JS (highlighting etc.) to work correctly. 
 :)
 declare function html:makeSectionToolbox($node as element()) as element(div) {
+    html:makeSectionToolbox($node, $html:defaultLang)
+};
+
+declare function html:makeSectionToolbox($node as element(), $lang as node()*) as element(div) {
     let $id := $node/@xml:id/string()
     let $wid := $node/ancestor::tei:TEI/@xml:id
     let $fileDesc := $node/ancestor::tei:TEI/tei:teiHeader/tei:fileDesc
@@ -372,51 +530,51 @@ declare function html:makeSectionToolbox($node as element()) as element(div) {
         if ($class eq 'sal-toolbox-title' or $node/self::tei:titlePage) then 'Sect' 
         else if ($class eq 'sal-toolbox') then 'Para' 
         else 'Note'
-    let $citetrailBaseUrl := html:makeCitetrailURI($node)
+    let $citeIDBaseUrl := html:makeCiteIDURI($node)
     return
         <div class="{$class}">
             <a id="{$id}" href="#" data-rel="popover" class="sal-tb-a"><!-- href="{('#' || $id)}" -->
-                <i class="fas fa-hand-point-right messengers" title="{concat('i18n(openToolbox', $i18nSuffix, ')')}"/>
+                <span class="fas fa-hand-point-right messengers" title="{i18n:getLocalizedText(local:i18nNodify(concat('openToolbox', $i18nSuffix)), $lang)}"></span>
             </a>
             <div class="sal-toolbox-body">
-                <div class="sal-tb-btn" title="{concat('i18n(link', $i18nSuffix, ')')}">
+                <div class="sal-tb-btn" title="{i18n:getLocalizedText(local:i18nNodify(concat('link', $i18nSuffix)), $lang)}">
                     <button onclick="copyLink(this); return false;" class="messengers">
-                        <i class="fas fa-link"/>{' '}<i18n:text key="copyLink"/>
+                        <span class="fas fa-link"></span>{' '}{i18n:getLocalizedText(local:i18nNodify('copyLink'), $lang)}
                     </button>
-                    <span class="cite-link" style="display:none;">{$citetrailBaseUrl || '?format=html'}</span>
+                    <span class="cite-link" style="display:none;">{$citeIDBaseUrl || '?format=html'}</span>
                 </div>
-                <div class="sal-tb-btn" title="{concat('i18n(cite', $i18nSuffix, ')')}">
+                <div class="sal-tb-btn" title="{i18n:getLocalizedText(local:i18nNodify(concat('cite', $i18nSuffix)), $lang)}">
                     <button onclick="copyCitRef(this); return false;" class="messengers">
-                        <i class="fas fa-feather-alt"/>{' '}<i18n:text key="copyCit"/>
+                        <span class="fas fa-feather-alt"></span>{' '}{i18n:getLocalizedText(local:i18nNodify('copyCit'), $lang)}
                     </button>
                     <span class="sal-cite-rec" style="display:none">
                         {sutil:HTMLmakeCitationReference($wid, $fileDesc, 'reading-passage', $node)}
                     </span>
                 </div>
-                <div class="sal-tb-btn dropdown" title="{concat('i18n(txtExp', $i18nSuffix, ')')}">
+                <div class="sal-tb-btn dropdown" title="{i18n:getLocalizedText(local:i18nNodify(concat('txtExp', $i18nSuffix)), $lang)}">
                     <button class="dropdown-toggle messengers" data-toggle="dropdown">
-                        <i class="fas fa-align-left" title="i18n(txtExpPass)"/>{' '}<i18n:text key="txtExpShort"/>
+                        <span class="fas fa-align-left" title="{i18n:getLocalizedText(local:i18nNodify('txtExpPass'), $lang)}"></span>{' '}{i18n:getLocalizedText(local:i18nNodify('txtExpShort'), $lang)}
                     </button>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="{$citetrailBaseUrl || '?format=txt&amp;mode=edit'}"><i class="messengers fas fa-align-left" title="i18n(downloadTXTEdit)"/>{' '}<i18n:text key="constitutedLower">constituted</i18n:text></a></li>
-                        <li><a href="{$citetrailBaseUrl || '?format=txt&amp;mode=orig'}"><i class="messengers fas fa-align-left" title="i18n(downloadTXTOrig)"/>{' '}<i18n:text key="diplomaticLower">diplomatic</i18n:text></a></li>
+                        <li><a href="{$citeIDBaseUrl || '?format=txt&amp;mode=edit'}"><span class="messengers fas fa-align-left" title="{i18n:getLocalizedText(local:i18nNodify('downloadTXTEdit'), $lang)}"></span>{' '}{i18n:getLocalizedText(local:i18nNodify('constitutedLower'), $lang)}</a></li>
+                        <li><a href="{$citeIDBaseUrl || '?format=txt&amp;mode=orig'}"><span class="messengers fas fa-align-left" title="{i18n:getLocalizedText(local:i18nNodify('downloadTXTOrig'), $lang)}"></span>{' '}{i18n:getLocalizedText(local:i18nNodify('diplomaticLower'), $lang)}</a></li>
                     </ul>
                 </div>
-                <div class="sal-tb-btn" title="{concat('i18n(teiExp', $i18nSuffix, ')')}">
-                    <button class="messengers" onclick="window.location.href = '{$citetrailBaseUrl || '?format=tei'}'">
-                        <i class="fas fa-file-code" />{' '}<i18n:text key="teiExpShort"/>
+                <div class="sal-tb-btn" title="{i18n:getLocalizedText(local:i18nNodify(concat('teiExp', $i18nSuffix)), $lang)}">
+                    <button class="messengers" onclick="window.location.href = '{$citeIDBaseUrl || '?format=tei'}'">
+                        <span class="fas fa-file-code"></span>{' '}{i18n:getLocalizedText(local:i18nNodify('teiExpShort'), $lang)}
                     </button>
                 </div>
                 <div class="sal-tb-btn" style="display:none;">
                     <a class="updateHiliteBox" href="#"> 
-                        <i class="glyphicon glyphicon-refresh"/>
+                        <span class="glyphicon glyphicon-refresh"></span>
                     </a>
                 </div>
             </div>
         </div>
 };
 
-declare function html:makePagination($node as node()?, $model as map(*)?, $wid as xs:string?, $lang as xs:string?) {
+declare function html:makePagination($node as node()?, $model as map(*)?, $wid as xs:string?) {
     let $workId :=  
         if ($wid) then 
             if (contains($wid, '_')) then substring-before(sutil:normalizeId($wid), '_') 
@@ -424,12 +582,12 @@ declare function html:makePagination($node as node()?, $model as map(*)?, $wid a
         else substring-before($model('currentWorkId'), '_')
     return 
         <ul id="later" class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">{
-            for $pb in doc($config:index-root || '/' || $workId || '_nodeIndex.xml')//sal:node[@type='pb'][not(starts-with(sal:title, 'sameAs') or starts-with(sal:title, 'corresp'))]
-                let $fragment := $pb/sal:fragment
-                let $url      := $config:idserver || '/texts/' || $workId || ':' || $pb/sal:citetrail/text() 
+            for $pb in doc($config:index-root || '/' || $workId || '_nodeIndex.xml')//sal:node[@type='pb'][not(starts-with(@title, 'sameAs') or starts-with(@title, 'corresp'))]
+                let $fragment := $pb/@fragment
+                let $url      := $config:idserver || '/texts/' || $workId || ':' || $pb/@citeID/string() 
                 (:'work.html?wid=' || $workId || '&amp;frag=' || $fragment || '#' || concat('pageNo_', $pb/@n):)
                 return 
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="{$url}">{normalize-space($pb/sal:title)}</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="{$url}">{normalize-space($pb/@title/string())}</a></li>
         }</ul>
 };
 
@@ -439,14 +597,17 @@ declare function html:makeClassableString($str as xs:string) as xs:string? {
 };
 
 
-declare function html:createFragment($workId as xs:string, $fragmentRoot as element(), $fragmentIndex as xs:integer, $prevId as xs:string?, $nextId as xs:string?) as element(div) {
+declare function html:createFragmentOld($workId as xs:string, $fragmentRoot as element(), $fragmentIndex as xs:integer, $prevId as xs:string?, $nextId as xs:string?) as element(div) {
     (: SvSalPage: main area (id/class page in order to identify page-able content :)
     <div class="row" xml:space="preserve">
         <div class="col-md-12">
             <div id="SvSalPages">
                 <div class="SvSalPage">                
                     {
-                    if ($fragmentRoot[not(preceding-sibling::*) and not((ancestor::body|ancestor::back) and preceding::front/*)]) then
+                    if ($fragmentRoot[not(preceding-sibling::*) and
+                                      not((ancestor::tei:body|ancestor::tei:back) and
+                                           preceding::tei:front/*)
+                                     ]) then
                         html:makeAncestorTeasers($fragmentRoot)
                     else ()    
                     }
@@ -454,14 +615,41 @@ declare function html:createFragment($workId as xs:string, $fragmentRoot as elem
                 </div>
             </div>
         </div>
-        {html:createPaginationLinks($workId, $fragmentIndex, $prevId, $nextId) (: finally, add pagination links :)}
+        {html:createPaginationLinksOld($workId, $fragmentIndex, $prevId, $nextId) (: finally, add pagination links :)}
     </div>
     (: the rest (to the right, in col-md-12) is filled by _spans_ of class marginal, possessing
          a negative right margin (this happens in eXist's work.html template) :)
 };
 
+declare function html:createFragment($workId as xs:string, $fragmentRoot as element(), $fragmentIndex as xs:integer, $prevId as xs:string?, $nextId as xs:string?) {
+    html:createFragment($workId, $fragmentRoot, $fragmentIndex, $prevId, $nextId, $html:defaultLang)  
+};
 
-declare function html:createPaginationLinks($workId as xs:string, $fragmentIndex as xs:integer, $prevId as xs:string?, $nextId as xs:string?) {
+declare function html:createFragment($workId as xs:string, $fragmentRoot as element(), $fragmentIndex as xs:integer, $prevId as xs:string?, $nextId as xs:string?, $lang as node()*) {
+    concat(
+        '{{$content := `', codepoints-to-string(10), serialize(
+            <div class="iasItem">                
+                {
+                if ($fragmentRoot[not(preceding-sibling::*) and
+                                  not((ancestor::tei:body|ancestor::tei:back) and
+                                       preceding::tei:front/*)
+                                 ]) then
+                    html:makeAncestorTeasers($fragmentRoot)
+                else ()    
+                }
+                {html:dispatch($fragmentRoot, 'html', $lang)}
+            </div>, map{"method":"html", "indent": true(), "encoding":"utf-8"}), codepoints-to-string(10),
+        '`}}',
+        codepoints-to-string(10), codepoints-to-string(10),
+        html:createPaginationLinks($workId, $fragmentIndex, $prevId, $nextId),
+        codepoints-to-string(10), codepoints-to-string(10),
+        '{{include "../../../resources/templates/template_work.html" $work_info }}',
+        codepoints-to-string(10)
+    )
+};
+    
+
+declare function html:createPaginationLinksOld($workId as xs:string, $fragmentIndex as xs:integer, $prevId as xs:string?, $nextId as xs:string?) {
     let $prevLink :=
         if ($prevId) then
             let $link := 'work.html?wid=' || $workId || '&amp;frag=' || index:makeFragmentId($fragmentIndex - 1, $prevId)
@@ -479,6 +667,30 @@ declare function html:createPaginationLinks($workId as xs:string, $fragmentIndex
         <div id="SvSalPagination">
             {($prevLink, $top, $nextLink)}
         </div>
+};
+
+declare function html:createPaginationLinks($workId as xs:string, $fragmentIndex as xs:integer, $prevId as xs:string?, $nextId as xs:string?) {
+    let $sourceDesc := collection($config:tei-works-root)//tei:TEI[@xml:id = $workId][.//tei:text[@type = ("work_multivolume", "work_monograph")]]//tei:sourceDesc
+    let $authorname := string-join($sourceDesc//tei:author//tei:surname, '/')
+    let $title      := $sourceDesc//tei:title[@type='short']
+    let $place      := if ($sourceDesc//tei:imprint/tei:pubPlace[@role = 'thisEd']) then $sourceDesc//tei:imprint/tei:pubPlace[@role = 'thisEd'] 
+                       else $sourceDesc//tei:imprint/tei:pubPlace[1]
+    let $printer    := string-join($sourceDesc//tei:publisher//tei:surname, '/')
+    let $year       := if ($sourceDesc//tei:imprint/tei:date[@type = 'thisEd']) then $sourceDesc//tei:imprint/tei:date[@type = 'thisEd']
+                       else $sourceDesc//tei:imprint/tei:date[1]
+    return
+    concat(
+        '{{$work_info := dict ',
+        '"id" "',      $workId,     '" ',
+        '"author" "',  $authorname, '" ',
+        '"title" "',   $title,      '" ',
+        '"place" "',   $place,      '" ',
+        '"printer" "', $printer,    '" ',
+        '"year" "',    $year,       '" ',
+        if ($prevId) then concat('"prev" "', format-number($fragmentIndex - 1, "00000"), '_', $prevId, '.html" ') else (),
+        if ($nextId) then concat('"next" "', format-number($fragmentIndex + 1, "00000"), '_', $nextId, '.html" ') else (),
+        '"content" $content}}'
+    )
 };
 
 (:
@@ -551,13 +763,14 @@ declare function html:transformToLink($node as element(), $uri as xs:string) {
 
 
 (:
-~ For a node, make a full-blown URI including the citetrail of the node
+~ For a node, make a full-blown URI including the citeID of the node
 :)
-declare function html:makeCitetrailURI($node as element()) as xs:string? {
-    let $citetrail := sutil:getNodetrail($node/ancestor::tei:TEI/@xml:id, $node, 'citetrail')
+declare function html:makeCiteIDURI($node as element()) as xs:string? {
+    let $debug := if (not($node/@xml:id)) then console:log("[HTML] Problem: intend to html:makeCiteIDURI of a " || local-name($node) || " node without xml:id. After line " || $node/preceding::tei:lb[1]/@xml:id/string() || "." ) else ()
     let $workId := $node/ancestor::tei:TEI/@xml:id
+    let $citeID := sutil:getNodetrail($workId, $node, 'citeID')
     return
-        if ($citetrail) then $config:idserver || '/texts/' || $workId || ':' || $citetrail
+        if ($citeID) then $config:idserver || '/texts/' || $workId || ':' || $citeID
         else ()
 };
 
@@ -568,12 +781,13 @@ declare function html:resolveURI($node as element(), $targets as xs:string) {
     let $target := (tokenize($targets, ' '))[1]
     let $prefixDef := $currentWork//tei:prefixDef
     let $workScheme := '(work:(W[A-z0-9.:_\-]+))?#(.*)'
+    let $lemmaScheme := 'lemma:(L[0-9]+)'
     let $facsScheme := 'facs:((W[0-9]+)[A-z0-9.:#_\-]+)'
     let $genericScheme := '(\S+):([A-z0-9.:#_\-]+)'
     return
         if (starts-with($target, '#') and $currentWork//*[@xml:id eq substring($target, 2)]) then
             (: target is some node within the current work :)
-            html:makeCitetrailURI($currentWork//*[@xml:id eq substring($target, 2)])
+            html:makeCiteIDURI($currentWork//*[@xml:id eq substring($target, 2)])
         else if (matches($target, $workScheme)) then
             (: target is something like "work:W...#..." :)
             let $targetWorkId :=
@@ -582,7 +796,9 @@ declare function html:resolveURI($node as element(), $targets as xs:string) {
                 else $currentWork/@xml:id/string() (: Target is just a link to a fragment anchor, so targetWorkId = currentWork :)
             let $anchorId := replace($target, $workScheme, '$3')
             return 
-                if ($anchorId) then html:makeCitetrailURI($node) else ()
+                if ($anchorId) then html:makeCiteIDURI($node) else ()
+        else if (matches($target, $lemmaScheme)) then (: Target is a Salamanca Lemma :)
+            concat('lemma.html?lid=', substring($target, 7))
         else if (matches($target, $facsScheme)) then (: Target is a facs string :)
             (: Target does not contain "#", or is not a "work:..." url: :)
             let $targetWorkId :=
@@ -591,7 +807,7 @@ declare function html:resolveURI($node as element(), $targets as xs:string) {
                 else $currentWork/@xml:id/string()
             let $anchorId := replace($target, $facsScheme, '$1') (: extract facs string :)
             return
-                html:makeCitetrailURI($node)
+                html:makeCiteIDURI($node)
         else if (matches($target, $genericScheme)) then 
             (: Use the general replacement mechanism as defined by the prefixDef in works-general.xml: :)
             let $prefix := replace($target, $genericScheme, '$1')
@@ -617,6 +833,10 @@ declare function html:resolveURI($node as element(), $targets as xs:string) {
 ~ @param $mode : the mode for which the function shall generate results
 :)
 declare function html:dispatch($node as node(), $mode as xs:string) {
+    html:dispatch($node, $mode, $html:defaultLang)
+};
+
+declare function html:dispatch($node as node(), $mode as xs:string, $lang as node()*) {
     let $rendering :=
         typeswitch($node)
         (: Try to sort the following nodes based (approx.) on frequency of occurences, so fewer checks are needed. :)
@@ -694,12 +914,13 @@ declare function html:dispatch($node as node(), $mode as xs:string) {
             case comment()                  return ()
             case processing-instruction()   return ()
     
-            default return html:passthru($node, $mode)
+            default return html:passthru($node, $mode, $lang)
     (: for fine-grained debugging: :)
-    (:let $debug := 
+    (: let $debug := 
         if (index:isIndexNode($node)) then 
             util:log('warn', '[RENDER] Processing node tei:' || local-name($node) || ', with @xml:id=' || $node/@xml:id) 
-        else ():)
+        else ()
+    :)
     return
         if ($mode eq 'html') then
             if (html:isCitableWithTeaser($node)) then
@@ -717,7 +938,7 @@ declare function html:dispatch($node as node(), $mode as xs:string) {
                     (: for these elements, $toolboxes are created right in their html: function if required :)
                     $rendering
                 else 
-                    let $toolbox := html:makeSectionToolbox($node)
+                    let $toolbox := html:makeSectionToolbox($node, $lang)
                     return
                         <div class="hauptText">
                             {$toolbox}
@@ -732,11 +953,60 @@ declare function html:dispatch($node as node(), $mode as xs:string) {
 
 (: ELEMENT FUNCTIONS :)
 
+declare function html:passthru($nodes as node()*, $mode as xs:string) as item()* {
+    html:passthru($nodes, $mode, $html:defaultLang)
+};
+
+declare function html:passthru($nodes as node()*, $mode as xs:string, $lang as node()*) as item()* {
+    for $node in $nodes/node() return html:dispatch($node, $mode, $lang)
+};
+
+(: FIXME: In the following, the #anchor does not take account of html partitioning of works. Change this to use semantic section id's. :)
+declare function html:head($node as element(tei:head), $mode as xs:string) {
+    switch($mode)
+        case 'html-title' return
+            normalize-space(string-join(txt:dispatch($node, 'edit'), ''))
+(: replaced the following with the above for performance reasons on 2021-04-28 ...
+            normalize-space(replace(string-join(txt:dispatch($node, 'edit')), '\[.*?\]', ''))
+:)
+        case 'html' return
+            (: list[not(@type eq 'dict')]/head are handled in html:list() :)
+            if ($node/parent::tei:list[not(@type eq 'dict')]) then 
+                () 
+            (: within notes: :)
+            else if ($node/parent::tei:lg) then 
+                <h5 class="poem-head">{html:passthru($node, $mode)}</h5>
+            (: usual headings: :)
+            else 
+(:                let $toolbox := html:makeSectionToolbox($node)
+                return:)
+                <h3>
+                    <span class="heading-text">{html:passthru($node, $mode)}</span>
+                </h3>
+
+        default return 
+            html:passthru($node, $mode)
+};
+
+(: FIXME: In the following, work mode functionality has to be added - also paying attention to intervening pagebreak marginal divs :)
+declare function html:term($node as element(tei:term), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            html:name($node, $mode)
+
+        default return
+            html:passthru($node, $mode)
+};
+
+(: TODO - Html:
+    * add line- and column breaks in diplomatic view? (problem: infinite scrolling has to comply with the current viewmode as well!)
+    * make bibls, ref span across (page-)breaks (like persName/placeName/... already do)
+    * teasers: break text at word boundaries
+:)
 
 declare function html:abbr($node as element(tei:abbr), $mode) {
         html:origElem($node, $mode)
 };
-
 
 declare function html:argument($node as element(tei:argument), $mode as xs:string) {
     switch($mode)
@@ -756,7 +1026,6 @@ declare function html:argument($node as element(tei:argument), $mode as xs:strin
             html:passthru($node, $mode)
 };
 
-
 declare function html:bibl($node as element(tei:bibl), $mode as xs:string) {
     switch($mode)
         case 'html' return
@@ -767,7 +1036,6 @@ declare function html:bibl($node as element(tei:bibl), $mode as xs:string) {
         default return
             html:passthru($node, $mode)
 };
-
 
 declare function html:byline($node as element(tei:byline), $mode as xs:string) {
     switch($mode)
@@ -801,7 +1069,6 @@ declare function html:cell($node as element(tei:cell), $mode) {
             html:passthru($node, $mode)
 };
 
-
 declare function html:choice($node as element(tei:choice), $mode as xs:string) {
     (: HTML: Editorial interventions: Don't hide original stuff where we have no modern alternative, otherwise
       put it in an "orignal" class span which we make invisible by default.
@@ -809,12 +1076,9 @@ declare function html:choice($node as element(tei:choice), $mode as xs:string) {
     html:passthru($node, $mode)
 };
 
-
-
 declare function html:corr($node as element(tei:corr), $mode) {
     html:editElem($node, $mode)
 };
-
 
 declare function html:del($node as element(tei:del), $mode as xs:string) {
     switch($mode)
@@ -827,15 +1091,21 @@ declare function html:del($node as element(tei:del), $mode as xs:string) {
             html:passthru($node, $mode)
 };
 
-
 declare function html:div($node as element(tei:div), $mode as xs:string) {
+    html:div($node, $mode, $html:defaultLang)
+};
+
+declare function html:div($node as element(tei:div), $mode as xs:string, $lang as node()*) {
     switch($mode)
         case 'html-title' return
             if (not($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) and $node/(tei:head|tei:label)) then
                 (: for expanded titles, we need the full version, not just the teaser :)
+                normalize-space(string-join(txt:dispatch(($node/(tei:head|tei:label))[1], 'edit'), ''))
+(: replaced the following with the above for performance reasons on 2021-04-28 ...
                 normalize-space(replace(string-join(txt:dispatch(($node/(tei:head|tei:label))[1], 'edit'), ''), '\[.*?\]', ''))
+:)
             else if (index:div($node, 'title')) then replace(index:div($node, 'title'), '"', '')
-            else <i18n:text key="{index:div($node, 'class')}"></i18n:text> (: if everything fails, simply use the label (such as 'Preface') :)
+            else i18n:getLocalizedText(local:i18nNodify(index:div($node, 'class')), $lang) (: if everything fails, simply use the label (such as 'Preface') :)
 
         default return
             html:passthru($node, $mode)
@@ -848,7 +1118,6 @@ declare function html:docAuthor($node as element(tei:docAuthor), $mode as xs:str
         default return 
             html:passthru($node, $mode)
 };
-
 
 declare function html:docImprint($node as element(tei:docImprint), $mode as xs:string) {
     switch($mode)
@@ -865,7 +1134,10 @@ declare function html:editElem($node as element(), $mode as xs:string) {
     switch($mode)
         case 'html' return
             if ($node/parent::tei:choice) then
+                let $origString := normalize-space(string-join(txt:dispatch($node/parent::tei:choice/(tei:abbr|tei:orig|tei:sic), 'orig'), ''))
+(: replaced the following with the above for performance reasons on 2021-04-28 ...
                 let $origString := string-join(txt:dispatch($node/parent::tei:choice/(tei:abbr|tei:orig|tei:sic), 'orig'), '')
+:)
                 return
                     <span class="messengers edited {local-name($node)}" title="{$origString}">
                         {string-join(html:passthru($node, $mode), '')}
@@ -876,11 +1148,9 @@ declare function html:editElem($node as element(), $mode as xs:string) {
             html:passthru($node, $mode)
 };
 
-
 declare function html:expan($node as element(tei:expan), $mode) {
     html:editElem($node, $mode)
 };
-
 
 declare function html:figure($node as element(tei:figure), $mode as xs:string) {
     switch($mode)
@@ -892,7 +1162,6 @@ declare function html:figure($node as element(tei:figure), $mode as xs:string) {
         default return ()
 };
 
-
 declare function html:foreign($node as element(tei:foreign), $mode as xs:string) {
     switch($mode)
         case 'html' return
@@ -902,7 +1171,6 @@ declare function html:foreign($node as element(tei:foreign), $mode as xs:string)
             html:passthru($node, $mode)
 };
 
-
 declare function html:g($node as element(tei:g), $mode as xs:string) {
     switch($mode)
         case 'html' return
@@ -910,25 +1178,24 @@ declare function html:g($node as element(tei:g), $mode as xs:string) {
                 if ($node/text()) then 
                     xs:string($node/text())
                 else error(xs:QName('html:g'), 'Found tei:g without text content') (: ensure correct character markup :)
-            let $charCode := (: make sure there is something to parse :)
-                if (substring($node/@ref,2)) then
-            substring($node/@ref,2)
-                else
-                    error(xs:QName('html:g'), "g/@ref is invalid, there is no code. g's parent: ", serialize($node/parent::*))
-            let $char := $node/ancestor::tei:TEI/tei:teiHeader/tei:encodingDesc/tei:charDecl/tei:char[@xml:id eq $charCode]
-            let $test := (: make sure that the char reference is correct :)
+            let $charCode  := lower-case(substring($node/@ref, 2))                             (: substring to remove leading '#' :)
+(:            let $char := $node/ancestor::tei:TEI//tei:charDecl/tei:char[@xml:id eq $charCode]:)
+            let $char := $config:tei-specialchars/tei:char[lower-case(@xml:id) eq $charCode]
+            let $test :=                                                       (: make sure that the char reference is correct :)
                 if (not($char)) then 
-                    error(xs:QName('html:g'), concat('g/@ref is invalid, the char code does not exist: ', $charCode))
+                    error(xs:QName('html:g'), 'g/@ref is invalid, the char code "' || $charCode || '" does not exist in specialChars.')
                 else ()
+            let $mapping := $char/tei:mapping[@type = ('composed', 'precomposed')]
             let $precomposedString := 
                 if ($char/tei:mapping[@type='precomposed']/text()) then 
-                    string($char/tei:mapping[@type='precomposed']/text())
+                    $char/tei:mapping[@type='precomposed']/text()
                 else ()
-            let $composedString := 
+(:            let $composedString := 
                 if ($char/tei:mapping[@type='composed']/text()) then
-                    string($char/tei:mapping[@type='composed']/text())
+                    $char/tei:mapping[@type='composed']/text()
                 else ()
-            let $originalGlyph := if ($composedString) then $composedString else $precomposedString
+            let $originalGlyph := if ($composedString) then $composedString else $precomposedString:)
+            let $originalGlyph := string($mapping[1])
                 (: composed strings are preferable since some precomposed chars are displayed oddly in certain contexts 
                     (e.g. chare0303 in bold headings) :)
             return 
@@ -944,7 +1211,8 @@ declare function html:g($node as element(tei:g), $mode as xs:string) {
                         else ()
                     return
                         (: a) g has been used for resolving abbreviations (in early texts W0004, W0013 and W0015) -> treat it like choice elements :)
-                        if (not($thisString = ($precomposedString, $composedString)) and not($charCode = ('char017f', 'char0292'))) then
+(:                        if (not($thisString = ($precomposedString, $composedString)) and not($charCode = ('char017f', 'char0292'))) then:)
+                        if (not($thisString = $mapping) and not($charCode = ('char017f', 'char0292'))) then
                             (<span class="original glyph unsichtbar" title="{$thisString}">{$originalGlyph}</span>,
                             <span class="edited glyph" title="{$originalGlyph}">{$thisString}</span>)
                         (: b) most common case: g simply marks a special character -> pass it through (except for the very frequent "long s" and "long z", 
@@ -964,7 +1232,6 @@ declare function html:g($node as element(tei:g), $mode as xs:string) {
             html:passthru($node, $mode)
 };
 
-
 declare function html:gap($node as element(tei:gap), $mode as xs:string) {
     switch($mode)
         case 'html' return
@@ -972,32 +1239,6 @@ declare function html:gap($node as element(tei:gap), $mode as xs:string) {
                 <span title="?" class="gap"/>
             else ()
         default return ()
-};
-
-
-(: FIXME: In the following, the #anchor does not take account of html partitioning of works. Change this to use semantic section id's. :)
-declare function html:head($node as element(tei:head), $mode as xs:string) {
-    switch($mode)
-        case 'html-title' return
-            normalize-space(replace(string-join(txt:dispatch($node, 'edit')), '\[.*?\]', ''))
-
-        case 'html' return
-            (: list[not(@type eq 'dict')]/head are handled in html:list() :)
-            if ($node/parent::tei:list[not(@type eq 'dict')]) then 
-                () 
-            (: within notes: :)
-            else if ($node/parent::tei:lg) then 
-                <h5 class="poem-head">{html:passthru($node, $mode)}</h5>
-            (: usual headings: :)
-            else 
-(:                let $toolbox := html:makeSectionToolbox($node)
-                return:)
-                <h3>
-                    <span class="heading-text">{html:passthru($node, $mode)}</span>
-                </h3>
-
-        default return 
-            html:passthru($node, $mode)
 };
 
 declare function html:hi($node as element(tei:hi), $mode as xs:string) {
@@ -1058,7 +1299,10 @@ declare function html:item($node as element(tei:item), $mode as xs:string) {
             if (not($node/parent::tei:list/@type='dict' and $node//tei:term[1][@key])
                 and not($node/@n and not(matches($node/@n, '^[0-9\[\]]+$')))
                 and $node/(tei:head|tei:label)) 
+                then normalize-space(string-join(txt:dispatch(($node/(tei:head|tei:label))[1], 'edit'), ''))
+(: replaced the following with the above for performance reasons on 2021-04-28 ...
                 then normalize-space(replace(string-join(txt:dispatch(($node/(tei:head|tei:label))[1], 'edit'), ''),'\[.*?\]', ''))
+:)
             else replace(index:dispatch($node, 'title'), '"', '')
 
         case 'html' return
@@ -1069,7 +1313,6 @@ declare function html:item($node as element(tei:item), $mode as xs:string) {
             html:passthru($node, $mode)
 };
 
-
 declare function html:l($node as element(tei:l), $mode as xs:string) {
     switch($mode)
         case 'html' return
@@ -1078,12 +1321,13 @@ declare function html:l($node as element(tei:l), $mode as xs:string) {
         default return html:passthru($node, $mode)
 };
 
-
 declare function html:label($node as element(tei:label), $mode as xs:string) {
     switch($mode)
         case 'html-title' return
+            normalize-space(string-join(txt:dispatch($node, 'edit'), ''))
+(: replaced the following with the above for performance reasons on 2021-04-28 ...
             normalize-space(replace(string-join(txt:dispatch($node, 'edit')), '\[.*?\]', ''))
-
+:)
         case 'html' return
             switch($node/@place)
                 case 'margin' return
@@ -1098,14 +1342,12 @@ declare function html:label($node as element(tei:label), $mode as xs:string) {
             html:passthru($node, $mode)
 };
 
-
 declare function html:lb($node as element(tei:lb), $mode as xs:string) {
     switch($mode)
         case 'html' return
             if (not($node/@break = 'no')) then
                 ' '
             else ()
-
         default return () 
 };
 
@@ -1113,7 +1355,10 @@ declare function html:list($node as element(tei:list), $mode as xs:string) {
     switch($mode)
         case 'html-title' return
             if (not($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) and $node/(tei:head|tei:label)) then
+                normalize-space(string-join(txt:dispatch(($node/(tei:head|tei:label))[1], 'edit'), ''))
+(: replaced the following with the above for performance reasons on 2021-04-28 ...
                 normalize-space(replace(string-join(txt:dispatch(($node/(tei:head|tei:label))[1], 'edit')), '\[.*?\]', ''))
+:)
             else replace(index:dispatch($node, 'title'), '"', '')
 
         case 'html' return
@@ -1186,11 +1431,10 @@ declare function html:list($node as element(tei:list), $mode as xs:string) {
             ($config:nl, html:passthru($node, $mode), $config:nl)
 };
 
-
 declare function html:lg($node as element(tei:lg), $mode as xs:string) {
     switch($mode)
         case 'html' return
-            <div class="poem">{html:passthru($node, $mode)}</div>
+            <span class="poem">{html:passthru($node, $mode)}</span>
 
         default return
             html:passthru($node, $mode)
@@ -1218,16 +1462,18 @@ declare function html:name($node as element(*), $mode as xs:string) {
                 else ()
             return 
                 (: as long as any link would lead nowhere, omit linking and simply grasp the content: :)
+                (:
                 <span class="{normalize-space(string-join((local-name($node),$hiliteName,$dictLemma), ' '))}">
                     {html:passthru($node, $mode)}
                 </span>
+                :)
                 (: as soon as links have actual targets, execute something like the following: :)
-                (:let $resolvedURI := html:resolveURI($node, @ref)
+                let $resolvedURI := html:resolveURI($node, $node/@ref)
                 return
-                    if ($node/@ref and substring($resolvedURI,1,5) = ('http:', '/exis')) then
+                    if ($resolvedURI) then
                         html:transformToLink($node, $resolvedURI)
                     else 
-                        {html:passthru($node, $mode)}:)
+                        html:passthru($node, $mode)
                 (: 
                 <xsl:choose>
                     <xsl:when test="@ref and substring(sal:resolveURI(current(), @ref)[1],1, 5) = ('http:', '/exis') ">
@@ -1264,7 +1510,6 @@ declare function html:name($node as element(*), $mode as xs:string) {
             html:passthru($node, $mode)
 };
 
-
 declare function html:note($node as element(tei:note), $mode as xs:string) {
     switch($mode)
         case 'html-title' return ()
@@ -1276,7 +1521,6 @@ declare function html:note($node as element(tei:note), $mode as xs:string) {
             html:passthru($node, $mode)
 };
 
-
 declare function html:orgName($node as element(tei:orgName), $mode as xs:string) {
     html:name($node, $mode)
 };
@@ -1285,12 +1529,11 @@ declare function html:orig($node as element(tei:orig), $mode) {
     html:origElem($node, $mode)
 };
 
-
 declare function html:origElem($node as element(), $mode as xs:string) {
     switch($mode)
         case 'html' return 
             if ($node/parent::tei:choice) then
-                let $editString := string-join(txt:dispatch($node/parent::tei:choice/(tei:expan|tei:reg|tei:corr), 'edit'), '')
+                let $editString := normalize-space(string-join(txt:dispatch($node/parent::tei:choice/(tei:expan|tei:reg|tei:corr), 'edit'), ''))
                 return
                     <span class="original {local-name($node)} unsichtbar" title="{$editString}">
                         {string-join(html:passthru($node, $mode), '')}
@@ -1301,7 +1544,6 @@ declare function html:origElem($node as element(), $mode as xs:string) {
         default return
             html:passthru($node, $mode)
 };
-
 
 declare function html:p($node as element(tei:p), $mode as xs:string) {
     switch($mode)
@@ -1335,12 +1577,6 @@ declare function html:p($node as element(tei:p), $mode as xs:string) {
         default return
             html:passthru($node, $mode)
 };
-
-
-declare function html:passthru($nodes as node()*, $mode as xs:string) as item()* {
-    for $node in $nodes/node() return html:dispatch($node, $mode)
-};
-
 
 declare function html:pb($node as element(tei:pb), $mode as xs:string) {
     switch($mode)
@@ -1377,9 +1613,9 @@ declare function html:pb($node as element(tei:pb), $mode as xs:string) {
                         return
                             <div class="pageNumbers">
                                 <a href="{html:resolveFacsURI($node/@facs)}" data-canvas="{html:resolveCanvasID($node)}"
-                                   data-sal-id="{html:makeCitetrailURI($node)}" id="{$pageAnchor}" title="{$title}"
+                                   data-sal-id="{html:makeCiteIDURI($node)}" id="{$pageAnchor}" title="{$title}"
                                    class="pageNo messengers">
-                                    <i class="fas fa-book-open facs-icon"/>
+                                    <span class="fas fa-book-open facs-icon"></span>
                                     {' '}
                                         {html:pb($node, 'html-title')}
                                 </a>
@@ -1395,7 +1631,6 @@ declare function html:pb($node as element(tei:pb), $mode as xs:string) {
 
         default return () (: some sophisticated function to insert a pipe and a pagenumber div in the margin :)
 };
-
 
 declare function html:persName($node as element(tei:persName), $mode as xs:string) {
     html:name($node, $mode)
@@ -1441,7 +1676,6 @@ declare function html:ref($node as element(tei:ref), $mode as xs:string) {
             html:passthru($node, $mode)
 };
 
-
 declare function html:reg($node as element(tei:reg), $mode) {
     html:editElem($node, $mode)
 };
@@ -1470,7 +1704,6 @@ declare function html:signed($node as element(tei:signed), $mode as xs:string) {
             html:passthru($node, $mode)
 };
 
-
 declare function html:soCalled($node as element(tei:soCalled), $mode as xs:string) {
     ("'", html:passthru($node, $mode), "'")
 };
@@ -1478,7 +1711,6 @@ declare function html:soCalled($node as element(tei:soCalled), $mode as xs:strin
 declare function html:space($node as element(tei:space), $mode as xs:string) {
     if ($node/@dim eq 'horizontal' or @rendition eq '#h-gap') then ' ' else ()
 };
-
 
 declare function html:supplied($node as element(tei:supplied), $mode as xs:string) {
     switch($mode)
@@ -1490,23 +1722,12 @@ declare function html:supplied($node as element(tei:supplied), $mode as xs:strin
             html:passthru($node, $mode)
 };
 
-
 declare function html:table($node as element(tei:table), $mode as xs:string) {
     switch($mode)
         case 'html' return
             <table>{html:passthru($node, $mode)}</table>
 
         default return html:passthru($node, $mode)
-};
-
-(: FIXME: In the following, work mode functionality has to be added - also paying attention to intervening pagebreak marginal divs :)
-declare function html:term($node as element(tei:term), $mode as xs:string) {
-    switch($mode)
-        case 'html' return
-            html:name($node, $mode)
-
-        default return
-            html:passthru($node, $mode)
 };
 
 declare function html:text($node as element(tei:text), $mode as xs:string) {
@@ -1567,7 +1788,6 @@ declare function html:titlePart($node as element(tei:titlePart), $mode as xs:str
             html:passthru($node, $mode)
 };
 
-
 declare function html:unclear($node as element(tei:unclear), $mode as xs:string) {
     switch($mode)
         case 'html' return
@@ -1579,10 +1799,3 @@ declare function html:unclear($node as element(tei:unclear), $mode as xs:string)
         default return 
             html:passthru($node, $mode)
 };
-
-(: TODO - Html:
-    * add line- and column breaks in diplomatic view? (problem: infinite scrolling has to comply with the current viewmode as well!)
-    * make bibls, ref span across (page-)breaks (like persName/placeName/... already do)
-    * teasers: break text at word boundaries
-:)
-  

@@ -43,6 +43,8 @@ declare variable $sphinx:schema  :=
         <sphinx:attr  name="sphinx_year"            type="string" />
         <sphinx:attr  name="sphinx_hit_type"        type="string" />
         <sphinx:attr  name="sphinx_hit_id"          type="string" />
+        <sphinx:attr  name="sphinx_hit_label"       type="string" />
+        <sphinx:attr  name="sphinx_hit_crumbtrail"  type="string" />
         <sphinx:attr  name="sphinx_hit_language"    type="string" />
         <sphinx:attr  name="sphinx_html_path"       type="string" />
         <sphinx:attr  name="sphinx_fragment_path"   type="string" />

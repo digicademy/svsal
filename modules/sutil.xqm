@@ -1,21 +1,26 @@
 xquery version "3.1";
 
+(: ####++++----
+
+    Module for util functions that are of a general nature and used by multiple other modules.
+    Bundling such functions here shall prevent interdependencies between larger and more specific modules.
+
+    ----++++#### :)
+
 module namespace sutil = "http://www.salamanca.school/xquery/sutil";
 
+declare namespace tei          = "http://www.tei-c.org/ns/1.0";
+declare namespace sal          = "http://salamanca.adwmainz.de"; 
+
+declare namespace templates    = "http://exist-db.org/xquery/templates";
+declare namespace util         = "http://exist-db.org/xquery/util";
+
+import module namespace console = "http://exist-db.org/xquery/console";
+
 import module namespace config = "http://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
-import module namespace util       = "http://exist-db.org/xquery/util";
-import module namespace templates = "http://exist-db.org/xquery/templates";
-import module namespace i18n      = "http://exist-db.org/xquery/i18n"        at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
+import module namespace i18n   = "http://exist-db.org/xquery/i18n"           at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
 
-declare namespace tei = "http://www.tei-c.org/ns/1.0";
-declare namespace sal = "http://salamanca.adwmainz.de"; 
- 
-(:
-
-Module for util functions that are of a general nature and used by multiple other modules.
-Bundling such functions here shall prevent interdependencies between larger and more specific modules.
-
-:)
+declare option exist:timeout "166400000"; (: in miliseconds, 25.000.000 ~ 7h, 43.000.000 ~ 12h :)
 
 
 (:
@@ -47,6 +52,15 @@ declare function sutil:copy($node as element()) as node() {
 
 (: Normalizes work, author, lemma, news, and working paper ids (and returns everything else as-is :)
 declare function sutil:normalizeId($id as xs:string?) as xs:string? {
+    if (contains($id, '_vol') or        contains($id, '_VOL')) then
+ translate($id, 'wvLO', 'WVlo')
+        else if (string-length($id) eq 5 and substring($id, 1, 1) = ('w', 'l', 'a', 'n')) then (: work, lemma, author, news :)
+        upper-case($id)
+        else if (matches($id, '^[wW][pP]\d{4}$')) then upper-case($id)                              (: working papers :)
+        else $id
+};
+(: replaced the following with the above for performance reasons on 2021-04-28 ...
+declare function sutil:normalizeId($id as xs:string?) as xs:string? {
     if ($id) then
         if      (matches($id, '^[wW]\d{4}(_[vV][oO][lL]\d{2})?$')) then translate($id, 'wvLO', 'WVlo')
         else if (matches($id, '^[lLaAnN]\d{4}$')) then upper-case($id) (: lemma, author, news :)
@@ -54,7 +68,7 @@ declare function sutil:normalizeId($id as xs:string?) as xs:string? {
         else $id
     else ()
 };
-
+:)
 
 (: validate work/author/... IDs :)
 
@@ -74,16 +88,19 @@ declare function sutil:AUTvalidateId($aid as xs:string?) as xs:integer {
 
 declare function sutil:LEMexists($lid as xs:string?) as xs:boolean {
     (: TODO when we have a list of lemma ids :)
-    (:if ($lid) then boolean(doc(.../...) eq $lid])
-    else :)
-    false()
+    let $result :=
+    if ($lid = ("L0998")) then
+            doc-available($config:tei-lemmata-root || '/' || $lid || '.xml')
+        else
+            false()
+    return $result
 };
 
 (: 1 = valid & available; 0 = valid, but not yet available; -1 = not valid :)
 declare function sutil:LEMvalidateId($lid as xs:string?) as xs:integer {
     if ($lid and matches($lid, '^[lL]\d{4}$')) then
         (: TODO: additional conditions when lemmata/entries are available - currently this will always resolve to -1 :)
-        if (sutil:LEMexists(sutil:normalizeId($lid))) then 0
+        if (sutil:LEMexists(sutil:normalizeId($lid))) then 1
         else -1
     else -1    
 };
@@ -99,13 +116,18 @@ declare function sutil:WPisPublished($wpid as xs:string?) as xs:boolean {
 };
 
 declare function sutil:WRKexists($wid as xs:string?) as xs:boolean {
-    if ($wid) then boolean(doc($config:tei-meta-root || '/' || 'sources-list.xml')/tei:TEI/tei:text//tei:bibl[lower-case(substring-after(@corresp, 'work:')) eq lower-case($wid)])
+    if ($wid) then boolean(doc($config:tei-meta-root || '/' || 'sources-list.xml')/tei:TEI/tei:text//tei:bibl/@corresp[lower-case(substring-after(., 'work:')) eq lower-case($wid)])
     else false()
 };
 
 (: 2 = valid, full data available; 1 = valid, but only metadata available; 0 = valid, but not yet available; -1 = not valid :)
 declare function sutil:WRKvalidateId($wid as xs:string?) as xs:integer {
+(:    let $debug := if ($config:debug = ("info", "trace")) then console:log("sutil:WRKvalidateId for work " || $wid || ".") else ()
+    return :)
+    if ($wid) then
+(: replaced the following with the above for performance reasons on 2021-04-28 ...
     if ($wid and matches($wid, '^[wW]\d{4}(_Vol\d{2})?$')) then
+:)
         if (sutil:WRKisPublished($wid)) then 2
         else if (doc-available($config:tei-works-root || '/' || sutil:normalizeId($wid) || '.xml')) then 1
         else if (sutil:WRKexists($wid)) then 0
@@ -118,7 +140,7 @@ declare function sutil:WRKisPublished($wid as xs:string) as xs:boolean {
     let $status :=  if (doc-available($config:tei-works-root || '/' || $workId || '.xml')) then 
                         doc($config:tei-works-root || '/' || $workId || '.xml')/tei:TEI/tei:teiHeader/tei:revisionDesc/@status/string()
                     else 'no_status'
-    let $publishedStatus := ('g_enriched_approved', 'h_revised', 'i_revised_approved', 'z_final')
+    let $publishedStatus := ('g_enriched_approved', 'h_revised', 'h_temporarily_suspended', 'i_revised_approved', 'z_final')
     return $status = $publishedStatus
 };
 
@@ -178,15 +200,19 @@ declare function sutil:getNodeIndexValue($wid as xs:string, $node as element()) 
 };
 
 declare function sutil:getFragmentID($targetWorkId as xs:string, $targetNodeId as xs:string) as xs:string? {
-    doc($config:index-root || '/' || $targetWorkId || '_nodeIndex.xml')//sal:node[@n = $targetNodeId][1]/sal:fragment/text()
+    doc($config:index-root || '/' || $targetWorkId || '_nodeIndex.xml')//sal:node[@n = $targetNodeId][1]/@fragment/string()
 };
 
 declare function sutil:getNodetrail($wid as xs:string, $node as element(), $mode as xs:string) {
-    let $debug := 
-        if ($mode = ('citetrail', 'crumbtrail', 'passagetrail')) then () 
-        else () (:util:log('error', '[sutil] calling render:getNodetrail with unknown mode: ' || $mode):)
-    return
-        doc($config:index-root || '/' || $wid || '_nodeIndex.xml')/sal:index/sal:node[@n eq $node/@xml:id]/*[local-name() eq $mode]/node()
+    switch ($mode) 
+        case "citeID"
+            return doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $node/@xml:id]/@citeID/string()
+        case "crumbtrail"
+            return doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $node/@xml:id]/sal:crumbtrail
+        case "label"
+            return doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $node/@xml:id]/@label/string()
+        default
+            return () (: util:log('error', '[sutil] calling sutil:getNodetrail with unknown mode: ' || $mode) :)
 };
 
 (:
@@ -260,21 +286,31 @@ declare %templates:wrap
 
 
 (:
-~ For a $citetrail and a $workId, fetches the matching node from the respective TEI dataset.
+~ For a $citeID and a $workId, fetches the matching node from the respective TEI dataset.
 :)
-declare function sutil:getTeiNodeFromCitetrail($workId as xs:string, $citetrail as xs:string?) as element()? {
+declare function sutil:getTeiNodeFromCiteID($workId as xs:string, $citeID as xs:string?) as element()? {
     let $nodeId :=    
-        if ($citetrail) then
-            let $nodeIndex := doc($config:index-root || '/' || sutil:normalizeId($workId) || '_nodeIndex.xml')
-            let $id := $nodeIndex//sal:node[sal:citetrail eq $citetrail][1]/@n[1]
-            return $id 
-        else 'completeWork'
+        if ($citeID) then
+            doc($config:index-root || '/' || sutil:normalizeId($workId) || '_nodeIndex.xml')//sal:node[@citeID eq $citeID][1]/@n[1]/string()
+            else
+        'completeWork'
     return
-        let $work := util:expand(doc($config:tei-works-root || '/' || sutil:normalizeId($workId) || '.xml')/tei:TEI)
-        let $node := $work//tei:*[@xml:id eq $nodeId]
-        return $node
+        util:expand(doc($config:tei-works-root || '/' || sutil:normalizeId($workId) || '.xml')/tei:TEI)//tei:*[@xml:id eq $nodeId]
 };
 
+(:
+~ For exporting, fetch the matching node from the respective TEI dataset (don't expand XIncludes).
+:)
+declare function        sutil:extractTeiNodeFromCiteID($workId as xs:string, $citeID as xs:string?) as element()? {
+    let $nodeId := 
+        if ($citeID) then
+            doc($config:index-root || '/' || sutil:normalizeId($workId) || '_nodeIndex.xml')//sal:node[@citeID eq $citeID][1]/@n[1]/string()
+        else
+            'completeWork'
+    return
+(:      doc($config:tei-works-root || '/' || sutil:normalizeId($workId) || '.xml')//tei:*[@xml:id eq $nodeId] :)
+ doc($config:tei-works-root || '/' || sutil:normalizeId($workId) || '.xml')/id($nodeId)
+};
 
 (: Modes for generating citation recommendations: 
     - "record" for generic citations in catalogue records 
@@ -294,21 +330,21 @@ declare function sutil:HTMLmakeCitationReference($wid as xs:string, $fileDesc as
         string-join(for $ed in $fileDesc/tei:seriesStmt/tei:editor/tei:persName 
                         order by $ed/tei:surname
                         return app:rotateFormatName($ed), ' &amp; '):)
-    let $citetrail :=
+    let $citeID :=
         if ($mode eq 'reading-passage' and $node) then
-            sutil:getNodetrail($wid, $node, 'citetrail')
+            sutil:getNodetrail($wid, $node, 'citeID')
         else ()
-    let $citetrailStr := if ($citetrail) then ':' || $citetrail else ()
-    let $link := $config:idserver || '/texts/' || $wid || $citetrailStr || (if ($mode eq 'reading-passage') then '?format=html' else ())
-    let $passagetrail := 
+    let $citeIDStr := if ($citeID) then ':' || $citeID else ()
+    let $link := $config:idserver || '/texts/' || $wid || $citeIDStr || (if ($mode eq 'reading-passage') then '?format=html' else ())
+    let $label := 
         if ($mode eq 'reading-passage' and $node) then
-            let $passage := sutil:getNodetrail($wid, $node, 'passagetrail')
+            let $passage := sutil:getNodetrail($wid, $node, 'label')
             return 
                 if ($passage) then <span class="cite-rec-trail">{$passage || ', '}</span> else ()
         else ()
     let $body := 
         <span class="cite-rec-body">{$author || ', ' || $title || ' (' || $digitalYear || ' [' || $originalYear || '])'|| ', '}
-            {$passagetrail}
+            {$label}
             <i18n:text key="inLow">in</i18n:text>{': '}<i18n:text key="editionSeries">The School of Salamanca. A Digital Collection of Sources</i18n:text>
             {' <'}
             <a href="{$link}">{$link}</a>
@@ -317,6 +353,3 @@ declare function sutil:HTMLmakeCitationReference($wid as xs:string, $fileDesc as
 (:   including editors (before link): {', '}<i18n:text key="editedByAbbrLow">ed. by</i18n:text>{' ' || $editors || ' <'}     :)
     return ($body)
 };
-
-
-
