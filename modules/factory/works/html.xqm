@@ -1,6 +1,6 @@
 xquery version "3.1";
 
-(: ####++++----  
+(: ####++++----
 
     Utility functions for transforming TEI nodes to html.
    
@@ -16,9 +16,9 @@ declare namespace output           = "http://www.w3.org/2010/xslt-xquery-seriali
 declare namespace util             = "http://exist-db.org/xquery/util";
 
 import module namespace console    = "http://exist-db.org/xquery/console";
-import module namespace i18n       = "http://exist-db.org/xquery/i18n";
 
 import module namespace config     = "http://www.salamanca.school/xquery/config"        at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace i18n       = "http://exist-db.org/xquery/i18n"                  at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
 import module namespace sutil      = "http://www.salamanca.school/xquery/sutil"         at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
 import module namespace index      = "https://www.salamanca.school/factory/works/index" at "xmldb:exist:///db/apps/salamanca/modules/factory/works/index.xqm";
 import module namespace txt        = "https://www.salamanca.school/factory/works/txt"   at "xmldb:exist:///db/apps/salamanca/modules/factory/works/txt.xqm";

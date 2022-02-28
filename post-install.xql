@@ -1,11 +1,10 @@
 xquery version "3.0";
 
-declare namespace repo      = "http://exist-db.org/xquery/repo";
-(:declare namespace tei       = "http://www.tei-c.org/ns/1.0";:)
+declare namespace repo          = "http://exist-db.org/xquery/repo";
 
-import module namespace xmldb      = "http://exist-db.org/xquery/xmldb";
-import module namespace sm         = "http://exist-db.org/xquery/securitymanager";
-import module namespace exrest = "http://exquery.org/ns/restxq/exist";
+import module namespace xmldb   = "http://exist-db.org/xquery/xmldb";
+import module namespace sm      = "http://exist-db.org/xquery/securitymanager";
+import module namespace exrest  = "http://exquery.org/ns/restxq/exist";
 
 (: The following external variables are set by the repo:deploy function :)
 (: the target collection into which the app is deployed :)
@@ -26,13 +25,11 @@ declare variable $adminfiles        := ($target || '/admin.html',
                                         $target || '/renderTheRest.html',
                                         $target || '/webdata-admin.xql');
 
-
 (: TODO add more modules here when necessary :)
 declare variable $restModules := 
-    ('xmldb://db/apps/salamanca/modules/api/v1/texts.xqm', 
-     'xmldb://db/apps/salamanca/modules/api/v1/add.xqm',
-     'xmldb://db/apps/salamanca/modules/api/api.xqm');
-
+    ('xmldb:exist:///db/apps/salamanca/modules/api/v1/texts.xqm', 
+     'xmldb:exist:///db/apps/salamanca/modules/api/v1/add.xqm',
+     'xmldb:exist:///db/apps/salamanca/modules/api/api.xqm');
 
 (: Define files and folders with special permissions :)
 let $chmod  := 
@@ -55,14 +52,6 @@ let $registerRest :=
         (exrest:deregister-module(xs:anyURI($rm)),
          exrest:register-module(xs:anyURI($rm)))
 
-(:let $chmod-cache := sm:chmod($target || 'services/lod/temp/cache', "rwxrwxrwx"):)
-
 (: Run index :)
 let $index-app-status := xmldb:reindex($data-collection)
 return $index-app-status
-
-(: Render all works :)
-(:
-for $work in collection($data-collection)//tei:TEI[.//tei:text[@type = ("work_multivolume", "work_monograph")]]
-    let $success := render:renderWork(node(), map{}, $work/@xml:id)
-:)

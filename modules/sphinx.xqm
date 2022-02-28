@@ -1,20 +1,24 @@
 xquery version "3.0";
 
 module namespace sphinx            = "http://www.salamanca.school/xquery/sphinx";
+
 declare namespace sphinxNS         = "http://sphinxsearch.com";
 declare namespace tei              = "http://www.tei-c.org/ns/1.0";
 declare namespace sal              = "http://salamanca.adwmainz.de";
 declare namespace opensearch       = "http://a9.com/-/spec/opensearch/1.1/";
-declare namespace templates        = "http://exist-db.org/xquery/templates";
-import module namespace config     = "http://www.salamanca.school/xquery/config"        at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
-import module namespace i18n       = "http://exist-db.org/xquery/i18n"                  at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
-import module namespace render-app = "http://www.salamanca.school/xquery/render-app"    at "xmldb:exist:///db/apps/salamanca/modules/render-app.xqm";
+
 import module namespace console    = "http://exist-db.org/xquery/console";
 import module namespace hc         = "http://expath.org/ns/http-client";
 import module namespace request    = "http://exist-db.org/xquery/request";
 import module namespace session    = "http://exist-db.org/xquery/session";
+import module namespace templates  = "http://exist-db.org/xquery/html-templating";
+import module namespace lib        = "http://exist-db.org/xquery/html-templating/lib";
 import module namespace util       = "http://exist-db.org/xquery/util";
 import module namespace validation = "http://exist-db.org/xquery/validation";
+
+import module namespace config     = "http://www.salamanca.school/xquery/config"        at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace i18n       = "http://exist-db.org/xquery/i18n"                  at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
+import module namespace render-app = "http://www.salamanca.school/xquery/render-app"    at "xmldb:exist:///db/apps/salamanca/modules/render-app.xqm";
 
 declare copy-namespaces no-preserve, inherit;
 
@@ -653,7 +657,7 @@ declare function sphinx:keywords ($q as xs:string?) as xs:string {
 :)
 declare function sphinx:excerpts ($documents as node()*, $words as xs:string) as node()* {
     let $endpoint       := concat($config:sphinxRESTURL, "/excerpts")
-(:    let $debug          := if ($config:debug = ("info", "trace")) then util:log("warn", "[SPHINX EXCERPTS] Excerpts needed for doc[0]: " || substring(normalize-space($documents/description_orig), 0, 150)) else ():)
+(:    let $debug          := if ($config:debug = ("info", "trace")) then util:log("warn", "[SPHINX EXCERPTS] Excerpts needed for doc[0]: " || substring(normalize-space($documents/description_orig), 1, 150)) else ():)
     let $normalizedOrig := $documents/description_orig
     let $normalizedEdit := $documents/description_edit
     let $normalizedWords := normalize-space(tokenize($words, "@")[1])
@@ -851,7 +855,7 @@ function sphinx:details ($wid as xs:string, $field as xs:string, $q as xs:string
                             $description_orig
                         else if (string-length($item/description_edit) gt $config:snippetLength) then 
 (:                            let $debug := util:log('warn', $wid || ' : ' || '3') return:)
-                            substring($item/description_edit, 0, $config:snippetLength) || '...'
+                            substring($item/description_edit, 1, $config:snippetLength) || '...'
                         else 
 (:                            let $debug := util:log('warn', $wid || ' : ' || '4') return:)
                             $item/description_edit/text()

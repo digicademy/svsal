@@ -8,16 +8,19 @@
         
         <div>
             <p>            
-                Link to <a target="_new" href="https://stats.adwmainz.net/index.php?module=CoreHome&amp;action=index&amp;idSite=20&amp;period=day&amp;date=yesterday&amp;ignoreSalt=eb2d7603c7b3f98ce81efb011e901d4c#?module=Dashboard&amp;action=embeddedIndex&amp;idSite=20&amp;period=day&amp;date=yesterday&amp;ignoreSalt=eb2d7603c7b3f98ce81efb011e901d4c&amp;idDashboard=1">Piwik page</a>.<br/>
-                <a href="reindex.xql" target="_new">Reindex</a> eXist-db.
+                Link to <a href="https://stats.adwmainz.net/index.php?module=CoreHome&amp;action=index&amp;idSite=20&amp;period=day&amp;date=yesterday&amp;ignoreSalt=eb2d7603c7b3f98ce81efb011e901d4c#?module=Dashboard&amp;action=embeddedIndex&amp;idSite=20&amp;period=day&amp;date=yesterday&amp;ignoreSalt=eb2d7603c7b3f98ce81efb011e901d4c&amp;idDashboard=1">Piwik page</a>.<br/>
+                <a href="reindex.xql">Reindex</a> eXist-db.
             </p>
-            <!--        <p><a href="admin-svn.html">SVN Functions</a>.</p> -->
         </div>
         
         <div class="row" data-template="admin:loadListOfWorks" data-template-sort="wid">
             <h2>Works</h2>
             <p>
                 <span data-template="app:workCount">0</span> works found.
+            </p>
+            <p>
+                <a href="createLists.html" role="button" class="btn btn-primary">Write/overwrite list of works and save!</a>
+                <!-- here we can add a button to collect and post all routing information to caddy <a href="createLists.html" role="button" class="btn btn-primary">Write/overwrite list of works and save!</a> -->
             </p>
             <table class="table table-hover">
                 <tr>
@@ -27,6 +30,7 @@
                     <th>Sphinx Fragments</th>
                     <th>RDF Triples</th>
                     <th>IIIF Resource</th>
+                    <th>Routing Information</th>
                 </tr>
                 <tr data-template="templates:each" data-template-from="listOfWorks" data-template-to="currentWork">
                     <td data-template="admin:workString">boing</td>
@@ -35,10 +39,8 @@
                     <td data-template="admin:needsSphinxSnippetsString">boing</td>
                     <td data-template="admin:needsRDFString">boing</td>
                     <td data-template="admin:needsIIIFResourceString">boing</td>
+                    <td data-template="admin:postRoutingString">boing</td>
                 </tr>
-                <br/>
-                <a href="createLists.html" role="button" class="btn btn-primary">Write/overwrite list of works and save!</a>
-                <br/>
             </table>
             <p>
                 <span data-template="admin:needsTeiCorpusZip">boing</span>

@@ -1,27 +1,29 @@
 xquery version "3.1";
 
-import module namespace request = "http://exist-db.org/xquery/request";
-import module namespace session = "http://exist-db.org/xquery/session";
-import module namespace xmldb   = "http://exist-db.org/xquery/xmldb";
-import module namespace console = "http://exist-db.org/xquery/console";
-import module namespace util    = "http://exist-db.org/xquery/util";
-import module namespace functx  = "http://www.functx.com";
-import module namespace config  = "http://www.salamanca.school/xquery/config"     at "modules/config.xqm";
-import module namespace net     = "http://www.salamanca.school/xquery/net"        at "modules/net.xqm";
-import module namespace app     = "http://www.salamanca.school/xquery/app"        at "modules/app.xqm";
-import module namespace iiif    = "http://www.salamanca.school/xquery/iiif"       at "modules/iiif.xqm";
-import module namespace i18n      = "http://exist-db.org/xquery/i18n"        at "i18n.xqm";
-import module namespace gui    = "http://www.salamanca.school/xquery/gui"                    at "modules/gui.xqm";
-
 declare       namespace exist   = "http://exist.sourceforge.net/NS/exist";
 declare       namespace output  = "http://www.w3.org/2010/xslt-xquery-serialization";
 declare       namespace rdf     = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 declare       namespace rdfs    = "http://www.w3.org/2000/01/rdf-schema#";
-declare       namespace tei     = "http://www.tei-c.org/ns/1.0";
 declare       namespace sal     = "http://salamanca.adwmainz.de";
+declare       namespace tei     = "http://www.tei-c.org/ns/1.0";
+
+import module namespace console = "http://exist-db.org/xquery/console";
+import module namespace functx  = "http://www.functx.com";
+import module namespace request = "http://exist-db.org/xquery/request";
+import module namespace session = "http://exist-db.org/xquery/session";
+import module namespace util    = "http://exist-db.org/xquery/util";
+import module namespace xmldb   = "http://exist-db.org/xquery/xmldb";
+
+import module namespace app     = "http://www.salamanca.school/xquery/app"        at "xmldb:exist:///db/apps/salamanca/modules/app.xqm";
+import module namespace config  = "http://www.salamanca.school/xquery/config"     at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace iiif    = "http://www.salamanca.school/xquery/iiif"       at "xmldb:exist:///db/apps/salamanca/modules/iiif.xqm";
+import module namespace i18n    = "http://exist-db.org/xquery/i18n"               at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
+import module namespace gui     = "http://www.salamanca.school/xquery/gui"        at "xmldb:exist:///db/apps/salamanca/modules/gui.xqm";
+import module namespace net     = "http://www.salamanca.school/xquery/net"        at "xmldb:exist:///db/apps/salamanca/modules/net.xqm";
 
 
-declare option output:method "html5";
+declare option output:method "html";
+declare option output:html-version "5";
 declare option output:media-type "text/html";
 
 declare function local:resolve($node as node()) as node()? {
@@ -37,6 +39,7 @@ declare function local:resolve($node as node()) as node()? {
         default return 
             $node
 };
+
 declare function local:resolve-attr($node as node()) as node()? {
         if(starts-with($node, 'resources/')) then 
             attribute { node-name($node) } {

@@ -20,8 +20,7 @@ declare namespace util          = "http://exist-db.org/xquery/util";
 declare namespace xhtml         = "http://www.w3.org/1999/xhtml";
 
 import module namespace console = "http://exist-db.org/xquery/console";
-
-import module namespace i18n    = "http://exist-db.org/xquery/i18n" at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm"; 
+import module namespace i18n    = "http://exist-db.org/xquery/i18n"               at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
 
 
 (: ==================================================================================== :)

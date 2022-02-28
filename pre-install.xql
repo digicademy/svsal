@@ -6,7 +6,7 @@ xquery version "1.0";
 
 import module namespace xmldb =   "http://exist-db.org/xquery/xmldb";
 import module namespace sm    =   "http://exist-db.org/xquery/securitymanager";
-import module namespace util  = "http://exist-db.org/xquery/util";
+import module namespace util  =   "http://exist-db.org/xquery/util";
 
 (: The following external variables are set by the repo:deploy function :)
 

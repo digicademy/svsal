@@ -1,6 +1,6 @@
 xquery version "3.0";
-(: 
-Copyright Martin Holmes. 
+(:
+Copyright Martin Holmes.
 Dual-licensed under CC-by and BSD2 licences 
 $Date: 2014-11-02 15:15:40 -0800 (Sun, 02 Nov 2014) $
 $Id: codesharing_config.xql 46 2014-11-02 23:15:40Z martindholmes $
@@ -21,10 +21,13 @@ $Id: codesharing_config.xql 46 2014-11-02 23:15:40Z martindholmes $
 :)
 
 module namespace cs="http://hcmc.uvic.ca/namespaces/exist/codesharing";
+
 declare default element namespace "http://www.tei-c.org/ns/1.0";
-declare namespace exist = "http://exist.sourceforge.net/NS/exist"; 
-import module namespace i18n    = "http://exist-db.org/xquery/i18n" at "/db/apps/salamanca/modules/i18n.xqm";
-import module namespace config         = "http://www.salamanca.school/xquery/config" at "/db/apps/salamanca/modules/config.xqm";
+
+declare namespace exist = "http://exist.sourceforge.net/NS/exist";
+
+import module namespace config  = "http://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace i18n    = "http://exist-db.org/xquery/i18n"           at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
 
 (: This should be set to application/tei+xml, but that makes Firefox open a fresh tab, which is annoying. :)
 declare option exist:serialize "method=xml media-type=application/xml encoding=utf-8 indent=yes";

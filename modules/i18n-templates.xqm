@@ -3,9 +3,9 @@ module namespace intl="http://exist-db.org/xquery/i18n/templates";
 (:~
  : i18n template functions. Integrates the i18n library module. Called from the templating framework.
  :)
-import module namespace i18n        = "http://exist-db.org/xquery/i18n" at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
-import module namespace templates   = "http://exist-db.org/xquery/templates";
-import module namespace config      = "http://www.salamanca.school/xquery/config";
+import module namespace templates   = "http://exist-db.org/xquery/html-templating";
+import module namespace config      = "http://www.salamanca.school/xquery/config"   at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace i18n        = "http://exist-db.org/xquery/i18n"             at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
 
 (:~
  : Template function: calls i18n:process on the child nodes of $node.

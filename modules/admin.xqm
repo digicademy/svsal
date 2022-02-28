@@ -1,6 +1,6 @@
 xquery version "3.1";
 
-(: ####++++---- 
+(: ####++++----
 
     Admin functions, mostly related to the creation of webdata formats (html, iiif, snippets, etc.).
     Tightly coupled with modules in factory/*.
@@ -16,22 +16,23 @@ declare namespace array             = "http://www.w3.org/2005/xpath-functions/ar
 declare namespace compression       = "http://exist-db.org/xquery/compression";
 declare namespace exist             = "http://exist.sourceforge.net/NS/exist";
 declare namespace file              = "http://exist-db.org/xquery/file";
-declare namespace i18n              = 'http://exist-db.org/xquery/i18n';
 declare namespace map               = "http://www.w3.org/2005/xpath-functions/map";
 declare namespace output            = "http://www.w3.org/2010/xslt-xquery-serialization";
 declare namespace request           = "http://exist-db.org/xquery/request";
 declare namespace sm                = "http://exist-db.org/xquery/securitymanager";
-declare namespace templates         = "http://exist-db.org/xquery/templates";
 declare namespace util              = "http://exist-db.org/xquery/util";
 declare namespace xi                = "http://www.w3.org/2001/XInclude";
 declare namespace xmldb             = "http://exist-db.org/xquery/xmldb";
 
 import module namespace bin         = "http://expath.org/ns/binary";
-import module namespace functx      = "http://www.functx.com";
 import module namespace console     = "http://exist-db.org/xquery/console";
+import module namespace functx      = "http://www.functx.com";
+import module namespace templates   = "http://exist-db.org/xquery/html-templating";
+import module namespace lib         = "http://exist-db.org/xquery/html-templating/lib";
 
 import module namespace app         = "http://www.salamanca.school/xquery/app"           at "xmldb:exist:///db/apps/salamanca/modules/app.xqm";
 import module namespace config      = "http://www.salamanca.school/xquery/config"        at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace i18n        = "http://exist-db.org/xquery/i18n"                  at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
 import module namespace net         = "http://www.salamanca.school/xquery/net"           at "xmldb:exist:///db/apps/salamanca/modules/net.xqm";
 import module namespace render-app  = "http://www.salamanca.school/xquery/render-app"    at "xmldb:exist:///db/apps/salamanca/modules/render-app.xqm";
 import module namespace sphinx      = "http://www.salamanca.school/xquery/sphinx"        at "xmldb:exist:///db/apps/salamanca/modules/sphinx.xqm";
@@ -319,6 +320,11 @@ declare function admin:needsIIIFResourceString($node as node(), $model as map(*)
                 <td title="{concat('IIIF resource created on: ', string(xmldb:last-modified($config:iiif-root, $currentWorkId || '.json')), ', Source from: ', string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml')), '.')}">Creating IIIF resource unnecessary. <small><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=iiif">Create IIIF resource anyway!</a></small></td>
 };
 
+declare function admin:postRoutingString($node as node(), $model as map(*)) {
+    let $currentWorkId := $model('currentWork')?('wid')
+    return <td title="index from: {string(xmldb:last-modified($config:index-root, $currentWorkId || '_nodeIndex.xml'))}"><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=routing"><b>Create/post routing information NOW!</b></a></td>
+};
+
 
 (: #### DATABASE UTIL FUNCTIONS #### :)
 
@@ -467,9 +473,9 @@ declare function admin:saveTextFile($wid as xs:string, $fileName as xs:string, $
 declare function admin:exportXMLFile($filename as xs:string, $content as item(), $collection as xs:string?) {
     let $fsRoot := "/exist-data/export/"
     let $collectionname := 
-             if ($collection eq "data")      then $fsRoot || "/"
-        else if ($collection eq "html")      then $fsRoot || "/"
-        else                                      $fsRoot || "/trash/"
+             if ($collection eq "data")      then $fsRoot
+        else if ($collection eq "html")      then $fsRoot
+        else                                      $fsRoot || "trash/"
     let $method :=
           if ($collection eq "html") then "html"
         else                              "xml"
@@ -489,7 +495,7 @@ declare function admin:exportXMLFile($filename as xs:string, $content as item(),
     let $user := string(sm:id()//sm:real/sm:username)
     let $umask := sm:set-umask($user, 2)
     let $store-status := file:serialize($content, $pathname, map{"method":$method, "indent": true(), "encoding":"utf-8"})
-    return $store-status
+    return if ($store-status) then $pathname else ()
 };
 
 declare function admin:exportXMLFile($wid as xs:string, $filename as xs:string, $content as item(), $collection as xs:string?) {
@@ -499,7 +505,7 @@ declare function admin:exportXMLFile($wid as xs:string, $filename as xs:string, 
         else if ($collection eq "snippets")  then $fsRoot || $wid || "/snippets/"
         else if ($collection eq "index")     then $fsRoot || $wid || "/"
         else if ($collection eq "rdf")       then $fsRoot || $wid || "/"
-        else                                      $fsRoot || "/trash/"
+        else                                      $fsRoot || "trash/"
     let $method :=
           if ($collection eq "html") then "html"
         else                              "xml"
@@ -519,14 +525,14 @@ declare function admin:exportXMLFile($wid as xs:string, $filename as xs:string, 
     let $user := string(sm:id()//sm:real/sm:username)
     let $umask := sm:set-umask($user, 2)
     let $store-status := file:serialize($content, $pathname, map{"method":$method, "indent": true(), "encoding":"utf-8"})
-    return $store-status
+    return  if ($store-status) then $pathname else ()
 };
 
 declare function admin:exportBinaryFile($filename as xs:string, $content as xs:string, $collection as xs:string?) {
     let $fsRoot := "/exist-data/export/"
     let $collectionname := 
-             if ($collection eq "data")      then $fsRoot || "/"
-        else                                      $fsRoot || "/trash/"
+             if ($collection eq "data")      then $fsRoot
+        else                                      $fsRoot || "trash/"
     let $collectionStatus :=
         if (not(file:exists($collectionname))) then
             file:mkdirs($collectionname)
@@ -542,7 +548,7 @@ declare function admin:exportBinaryFile($filename as xs:string, $content as xs:s
     let $user := string(sm:id()//sm:real/sm:username)
     let $umask := sm:set-umask($user, 2)
     let $store-status := file:serialize-binary(bin:encode-string($content), $pathname)    (: eXist-db also has util:base64-encode(xs:string) :)
-    return $store-status
+    return  if ($store-status) then $pathname else ()
 };
 
 declare function admin:exportBinaryFile($wid as xs:string, $filename as xs:string, $content as xs:string, $collection as xs:string?) {
@@ -551,7 +557,7 @@ declare function admin:exportBinaryFile($wid as xs:string, $filename as xs:strin
              if ($collection eq "html")      then $fsRoot || $wid || "/html/"
         else if ($collection eq "txt")       then $fsRoot || $wid || "/text/"
         else if ($collection eq "pdf")       then $fsRoot || $wid || "/"
-        else                                      $fsRoot || "/trash/"
+        else                                      $fsRoot || "trash/"
     let $collectionStatus :=
         if (not(file:exists($collectionname))) then
             file:mkdirs($collectionname)
@@ -567,16 +573,16 @@ declare function admin:exportBinaryFile($wid as xs:string, $filename as xs:strin
     let $user := string(sm:id()//sm:real/sm:username)
     let $umask := sm:set-umask($user, 2)
     let $store-status := file:serialize-binary(bin:encode-string($content), $pathname)    (: eXist-db also has util:base64-encode(xs:string) :)
-    return $store-status
+    return  if ($store-status) then $pathname else ()
 };
 
 declare function admin:exportJSONFile($filename as xs:string, $content as item()*, $collection as xs:string?) {
     let $fsRoot := "/exist-data/export/"
     let $collectionname := 
-             if ($collection eq "wrklist")   then $fsRoot
+             if ($collection eq "workslist") then $fsRoot
         else if ($collection eq "stats")     then $fsRoot
-        else if ($collection eq "data")      then $fsRoot || "/data/"
-        else                                      $fsRoot || "/trash/"
+        else if ($collection eq "data")      then $fsRoot || "data/"
+        else                                      $fsRoot || "trash/"
     let $collectionStatus :=
         if (not(file:exists($collectionname))) then
             file:mkdirs($collectionname)
@@ -592,7 +598,7 @@ declare function admin:exportJSONFile($filename as xs:string, $content as item()
     let $user := string(sm:id()//sm:real/sm:username)
     let $umask := sm:set-umask($user, 2)
     let $store-status := file:serialize-binary(bin:encode-string(fn:serialize($content, map{"method":"json", "indent": true(), "encoding":"utf-8"})), $pathname)
-    return $store-status
+    return if ($store-status) then $pathname else ()
 };
 
 declare function admin:exportJSONFile($wid as xs:string, $filename as xs:string, $content as item()*, $collection as xs:string?) {
@@ -601,7 +607,7 @@ declare function admin:exportJSONFile($wid as xs:string, $filename as xs:string,
              if ($collection eq "iiif")      then $fsRoot || $wid || "/"
         else if ($collection eq "stats")     then $fsRoot || $wid || "/"
         else if ($collection eq "routing")   then $fsRoot || $wid || "/"
-        else                                      $fsRoot || "/trash/"
+        else                                      $fsRoot || "trash/"
     let $collectionStatus :=
         if (not(file:exists($collectionname))) then
             file:mkdirs($collectionname)
@@ -617,7 +623,7 @@ declare function admin:exportJSONFile($wid as xs:string, $filename as xs:string,
     let $user := string(sm:id()//sm:real/sm:username)
     let $umask := sm:set-umask($user, 2)
     let $store-status := file:serialize-binary(bin:encode-string(fn:serialize($content, map{"method":"json", "indent": true(), "encoding":"utf-8"})), $pathname)
-    return $store-status
+    return  if ($store-status) then $pathname else ()
 };
 
 declare function admin:exportFileWRK ($node as node(), $model as map (*), $lang as xs:string?) {
@@ -628,12 +634,12 @@ declare function admin:exportFileWRK ($node as node(), $model as map (*), $lang 
     let $contentDe          := app:WRKfinalFacets($node, $model, 'de')
     let $contentEn          := app:WRKfinalFacets($node, $model, 'en')
     let $contentEs          := app:WRKfinalFacets($node, $model, 'es')
-    let $store :=  (admin:exportJSONFile($fileNameDe, $contentDe, 'wrklist'),
-                    admin:exportJSONFile($fileNameDe, $contentDe, 'wrklist'),
-                    admin:exportJSONFile($fileNameDe, $contentDe, 'wrklist'))
+    let $store :=  (admin:exportJSONFile($fileNameDe, $contentDe, 'workslist'),
+                    admin:exportJSONFile($fileNameEn, $contentEn, 'workslist'),
+                    admin:exportJSONFile($fileNameEs, $contentEs, 'workslist'))
     return
         <span>
-            <p><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> List of works exported!</p>
+            <p><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> List of works exported to filesystem ({serialize($store)})!</p>
             <br/><br/>
             <a href="works.html" class="btn btn-info" role="button"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Open works.html</a>
         </span>   
@@ -653,7 +659,7 @@ declare function admin:saveFileWRK ($node as node(), $model as map (*), $lang as
                                  xmldb:store($config:data-root, $fileNameEs, $contentEs))
     return
         <span>
-            <p><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> List of works saved!</p>
+            <p><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> List of works saved to exist-db ({serialize($store)})!</p>
             <br/><br/>
             <a href="works.html" class="btn btn-info" role="button"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Open works.html</a>
         </span>   
@@ -692,7 +698,7 @@ declare function admin:exportFileWRKnoJs ($node as node(), $model as map (*), $l
          admin:exportXMLFile($fileNameDePl, $contentDePl, "html"), admin:exportXMLFile($fileNameEnPl, $contentEnPl, "html"), admin:exportXMLFile($fileNameEsPl, $contentEsPl, "html")
         )
     return      
-        <p><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Noscript-files exported!</p>
+        <p><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Noscript-files exported to filesystem ({serialize($store)})!</p>
 };
 
 declare function admin:saveFileWRKnoJs ($node as node(), $model as map (*), $lang as xs:string?) {
@@ -731,7 +737,7 @@ declare function admin:saveFileWRKnoJs ($node as node(), $model as map (*), $lan
          xmldb:store($config:data-root, $fileNameDeYe, $contentDeYe), xmldb:store($config:data-root, $fileNameEnYe, $contentEnYe), xmldb:store($config:data-root, $fileNameEsYe, $contentEsYe),
          xmldb:store($config:data-root, $fileNameDePl, $contentDePl), xmldb:store($config:data-root, $fileNameEnPl, $contentEnPl), xmldb:store($config:data-root, $fileNameEsPl, $contentEsPl))
     return      
-        <p><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Noscript-files saved!</p>
+        <p><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Noscript-files saved to eXist-db ({serialize($store)})!</p>
 
 };
 
@@ -995,7 +1001,7 @@ declare function admin:createTeiCorpus($processId as xs:string) {
         else ()
     let $save   := xmldb:store-as-binary($config:corpus-zip-root , 'sal-tei-corpus.zip', $zip)
     let $export := admin:exportBinaryFile('sal-tei-corpus.zip', $zip, 'data')
-    let $debug  := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] TEI corpus zip done.") else ()
+    let $debug  := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] TEI corpus zip done (" || serialize($save) || "/" || serialize($export) || ").") else ()
     return
         <div>
             <h2>TEI Corpus</h2>
@@ -1003,7 +1009,7 @@ declare function admin:createTeiCorpus($processId as xs:string) {
                 <p>
                     Created tei corpus zip file
                     {if ($save) then concat(" and saved it at ", $save) else ()}
-                    {if ($export) then concat(" and exported it to the filesystem", "") else ()}
+                    {if ($export) then concat(" and exported it to the filesystem at ", $export) else ()}
                     .
                 </p>    
                 { if (not($save)) then <p style="color:red">TEI Corpus zip file could not be saved!</p> else () }
@@ -1054,8 +1060,8 @@ declare function admin:createTxtCorpus($processId as xs:string) {
             xmldb:remove($filepath)
         else ()
     let $save   := xmldb:store-as-binary($config:corpus-zip-root , 'sal-txt-corpus.zip', $zip)
-    let $export := admin:exportBinaryFile('sal-tei-corpus.zip', $zip, 'data')
-    let $debug  := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] TXT corpus zip done.") else ()
+    let $export := admin:exportBinaryFile('sal-txt-corpus.zip', $zip, 'data')
+    let $debug  := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] TXT corpus zip done (" || serialize($save) || "/" || serialize($export) || ").") else ()
     return
         <div>
             <h2>TXT Corpus</h2>
@@ -1063,7 +1069,7 @@ declare function admin:createTxtCorpus($processId as xs:string) {
                 <p>
                     Created txt corpus zip file
                     {if ($save) then concat(" and saved it at ", $save) else ()}
-                    {if ($export) then concat(" and exported it to the filesystem", "") else ()}
+                    {if ($export) then concat(" and exported it to the filesystem at ", $export) else ()}
                     .
                 </p>    
                 { if (not($save)) then <p style="color:red">TXT Corpus zip file could not be saved!</p> else () }
@@ -1287,6 +1293,9 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
             </div>
 };
 
+(:
+~ Creates nodes index for works
+:)
 declare function admin:createNodeIndex($wid as xs:string*) {
     let $debug := if ($config:debug = ("trace", "info")) then
         let $d := console:log("[ADMIN] Creating node index for " || $wid || ".")
@@ -1314,46 +1323,14 @@ declare function admin:createNodeIndex($wid as xs:string*) {
             let $missed-elements := $indexing('missed_elements')
             let $unidentified-elements := $indexing('unidentified_elements')
 
-            (: export routing information :)
-            let $routingTable := array{fn:for-each($index//sal:node, function($k) {admin:buildRoutingInfo($wid, $k)} )}
-            let $debug2 := console:log("[ADMIN] Routing: Exporting routing file with " || array:size($routingTable) || " entries...")
-            let $routingExportStatus := admin:exportJSONFile($wid, $wid || "_routes.json", $routingTable, "routing")
-            let $debug := if ($routingExportStatus) then
-                                console:log("[ADMIN] Routing: Routing file successfully saved.")
-                            else
-                                console:log("[ADMIN] Routing: There has been a problem saving routing file to filesystem.")
-
-            (: post routing table to caddy :)
-            let $postStatus := if (string-length($config:caddyAPI) > 0 and array:size($routingTable) > 0) then
-                                    let $testmap := $routingTable?1
-                                    let $src     := $testmap?input
-                                    let $dest    := $testmap?outputs
-                                    return if (not(net:isInRoutingTable($src, $dest))) then
-                                        let $debug  := console:log("[ADMIN] Routing: Posting routing information to '" || $config:caddyRoutes || "/...' ...")
-                                        let $upload := net:postRoutingTable($routingTable)
-                                        return if (net:isInRoutingTable($src, $dest)) then
-                                            true()
-                                        else
-                                            let $debug := console:log('[ADMIN] Routing: Problem with routing information: { ' || $src || ' → ' || fn:serialize($dest) || ' } not found in live routing table.')
-                                            return false()
-                                    else
-                                        let $debug  := console:log("[ADMIN] Routing: At least one key of the routing information is already in caddy's configuration, need to clean live routing table first...")
-                                        let $cleanStatus := net:cleanRoutingTable($wid)
-                                        return if ($cleanStatus) then net:postRoutingTable($routingTable) else false()
-                                 else
-                                    false()
-            let $routingStats := if ($postStatus) then array:size(net:getRoutingTable()) else 0
-            let $debug := if ($postStatus) then console:log("[ADMIN] Routing: Routing information successfully saved/posted, live routing table now contains " || $routingStats || " entries.") else ()
-
-
             (: save final index file :)
             let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Saving index file ...") else ()
-            let $indexExportStatus := admin:exportXMLFile($wid, $wid || "_nodeIndex.xml", $index, "index")
             let $indexSaveStatus   := admin:saveFile($wid, $wid || "_nodeIndex.xml", $index, "index")
-            let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Node index of "  || $wid || " successfully created.") else ()
-                
+            let $indexExportStatus := admin:exportXMLFile($wid, $wid || "_nodeIndex.xml", $index, "index")
+            let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Node index of "  || $wid || " successfully created and saved/exported (to " || $indexSaveStatus || "; " || $indexExportStatus || ").") else ()
+            let $debug := if ($config:debug = ("info")) then console:log("[ADMIN] Node index of "  || $wid || " successfully created.") else ()
+
             (: Reporting... :)
-            
             let $runtime-ms-a := ((util:system-time() - $start-time-a) div xs:dayTimeDuration('PT1S'))  * 1000
             (: render and store the work's plain text :)
             return 
@@ -1389,14 +1366,74 @@ declare function admin:createNodeIndex($wid as xs:string*) {
         </div>
 };
 
-declare function admin:buildRoutingInfo($wid as xs:string, $item as element(sal:node)) {
+(:
+~ Creates routing information; saves, exports and posts them to caddy.
+:)
+declare function admin:createRoutes() {
+    for $i in collection($config:index-root)//sal:index
+    return admin:createRoutes($i/@work/string())
+};
+
+declare function admin:createRoutes($wid as xs:string) {
+    let $start-time := util:system-time()
+    let $index                  := doc($config:index-root || "/" || $wid || "_nodeIndex.xml")/sal:index
+    let $routingNodes           := array{fn:for-each($index//sal:node, function($k) {admin:buildRoutingInfoNode($wid, $k)} )}
+    let $routingWork            := admin:buildRoutingInfoWork($wid, $index)
+    let $routingTable           := array:join( ( $routingWork, $routingNodes ) )
+
+    let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Routing: Joint routing table: " || substring(serialize($routingTable, map{"method":"json", "indent": false(), "encoding":"utf-8"}), 1, 500) || " ...") else ()
+
+    (: export routing table to filesystem :)
+    let $debug := console:log("[ADMIN] Routing: Exporting routing file with " || array:size($routingTable) || " entries...")
+    let $routingExportStatus    := admin:exportJSONFile($wid, $wid || "_routes.json", $routingTable, "routing")
+    let $debug := if ($routingExportStatus) then
+                        console:log("[ADMIN] Routing: Routing table successfully exported to " || $routingExportStatus || ".")
+                    else
+                        console:log("[ADMIN] Routing: There has been a problem saving routing table to " || $routingExportStatus || ".")
+
+    (: post routing table to caddy :)
+    let $entriesBefore          := let $rt := net:getRoutingTable()
+                                   return
+                                        if (count($rt) > 0) then array:size($rt)
+                                        else 0
+    let $addedEntries           := if (string-length($config:caddyAPI) > 0 and array:size($routingTable) > 0) then
+                                        let $debug := console:log("[ADMIN] Routing: live routing table contains " || $entriesBefore || " entries, now posting " || array:size($routingTable) || " additional ones...")
+                                        return net:postRoutingTable($routingTable)
+                                    else
+                                        let $debug := console:log("[ADMIN] Routing: WARNING!! - No nodes routing info to post ($config:caddyAPI = " || $config:caddyAPI || ", array:size($routingTable) = " || array:size($routingTable) || ").")
+                                        return 0
+    let $entriesAfter           := array:size(net:getRoutingTable())
+    let $debug :=   if ($addedEntries > 0 and $entriesBefore + $addedEntries = $entriesAfter) then
+                        console:log("[ADMIN] Routing: Routing table successfully posted, live routing table now contains " || $entriesBefore || "+" || $addedEntries || "=" || $entriesAfter || " entries.")
+                    else if ($addedEntries > 0) then 
+                        console:log("[ADMIN] Routing: WARNING! Routing table posted, but something seems to be wrong with the numbers: " || $entriesBefore || " $entriesBefore + " || $addedEntries || " $addedEntries != " || $entriesAfter || " $entriesAfter. Maybe relevant entries had been in the routing table before and had to be deleted?")
+                    else
+                        console:log("[ADMIN] Routing: WARNING!! - No entries posted. Live routing table contains " || $entriesAfter || " .")
+    let $runtime-ms := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000
+    let $runtimeString := 
+        if ($runtime-ms < (1000 * 60)) then format-number($runtime-ms div 1000, "#.##") || " Sek."
+        else if ($runtime-ms < (1000 * 60 * 60))  then format-number($runtime-ms div (1000 * 60), "#.##") || " Min."
+        else format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
+
+    return
+        <div>
+            <h2>Routing information</h2>
+            <p>Added {$addedEntries} routing entries for {$wid}, exported to {$routingExportStatus},<br/>
+               and posted to caddy server ({$entriesBefore} + {$addedEntries} = {$entriesAfter} routing entries now).</p>
+            <p>It all took {$runtimeString}.</p>
+        </div>
+};
+
+declare function admin:buildRoutingInfoNode($wid as xs:string, $item as element(sal:node)) {
     let $value := map { "input" : concat("/texts/", $wid, ":", $item/@citeID/string()), "outputs" : array { ( $item/@crumb/string(), 'yes' ) } }
 (:    let $debug := console:log("[ADMIN] routing entry: " || serialize($value, map{"method":"json"}) || "."):)
     return $value
 };
 
-declare function admin:buildRoutingInfo($wid as xs:string) {
-    let $value := array { ( map { "input" : concat("/texts/", $wid ),                "outputs" : array { ( concat( $wid, '/html/', collection($config:index-root || '/' || $wid)//sal:node[0]/@fragment/string()), 'yes' ) } }
+declare function admin:buildRoutingInfoWork($wid as xs:string, $index as element(sal:index)) {
+    let $firstCrumb := $index//sal:node[1]/@crumb/string()
+    let $value := array { ( map { "input" : concat("/texts/", $wid ),                "outputs" : array { ( $firstCrumb, 'yes' ) } }
+                          , map { "input" : concat("/texts/", $wid, "?format=html"), "outputs" : array { ( $firstCrumb, 'yes' ) } }
                           , map { "input" : concat("/texts/", $wid, "?format=iiif"), "outputs" : array { ( concat( $wid, "/", $wid, ".json"), 'yes' ) } }
                           , map { "input" : concat("/texts/", $wid, "?format=rdf"),  "outputs" : array { ( concat( $wid, "/", $wid, ".rdf"),  'yes' ) } }
                           , map { "input" : concat("/texts/", $wid, "?format=pdf"),  "outputs" : array { ( concat( $wid, "/", $wid, ".pdf"),  'yes' ) } }

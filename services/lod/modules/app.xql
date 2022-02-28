@@ -2,7 +2,7 @@ xquery version "3.0";
 
 module namespace app = "http://xtriples.spatialhumanities.de/templates";
 
-import module namespace templates = "http://exist-db.org/xquery/templates" ;
+import module namespace templates = "http://exist-db.org/xquery/html-templating" ;
 (:import module namespace config      = "http://www.salamanca.school/xquery/config" at "../../../modules/config.xqm";:)
 import module namespace xconfig = "http://xtriples.spatialhumanities.de/config" at "xconfig.xqm"; 
 import module namespace functx = "http://www.functx.com";

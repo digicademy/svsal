@@ -14,19 +14,20 @@ module namespace gui            = "http://www.salamanca.school/xquery/gui";
 declare namespace tei           = "http://www.tei-c.org/ns/1.0";
 
 declare namespace exist         = "http://exist.sourceforge.net/NS/exist";
-(: declare namespace pack          = "http://expath.org/ns/pkg"; :)
 declare namespace request       = "http://exist-db.org/xquery/request";
 declare namespace sm            = "http://exist-db.org/xquery/securitymanager";
-declare namespace templates     = "http://exist-db.org/xquery/templates";
 declare namespace xmldb         = "http://exist-db.org/xquery/xmldb";
 
-import module namespace console = "http://exist-db.org/xquery/console";
-import module namespace functx  = "http://www.functx.com";
+import module namespace console     = "http://exist-db.org/xquery/console";
+import module namespace functx      = "http://www.functx.com";
+import module namespace templates   = "http://exist-db.org/xquery/html-templating";
+import module namespace lib         = "http://exist-db.org/xquery/html-templating/lib";
 
-import module namespace i18n    = "http://exist-db.org/xquery/i18n"           at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
-import module namespace sutil   = "http://www.salamanca.school/xquery/sutil"  at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
-import module namespace config  = "http://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
-import module namespace net     = "http://www.salamanca.school/xquery/net"    at "xmldb:exist:///db/apps/salamanca/modules/net.xqm";
+import module namespace config  = "http://www.salamanca.school/xquery/config"     at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace i18n    = "http://exist-db.org/xquery/i18n"               at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
+import module namespace net     = "http://www.salamanca.school/xquery/net"        at "xmldb:exist:///db/apps/salamanca/modules/net.xqm";
+import module namespace sutil   = "http://www.salamanca.school/xquery/sutil"      at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
+
 
 (: 
     NOTE: many of the functions below can also be found in eXist's config module

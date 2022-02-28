@@ -1,9 +1,4 @@
-module namespace i18n = 'http://exist-db.org/xquery/i18n';
-
-declare namespace request="http://exist-db.org/xquery/request"; 
-
-declare namespace sal              = "http://salamanca.adwmainz.de";
-(:import module namespace util       = "http://exist-db.org/xquery/util";:)
+xquery version "3.1";
 
 (:~
     : I18N Internationalization Module:
@@ -16,6 +11,12 @@ declare namespace sal              = "http://salamanca.adwmainz.de";
     : @author David Glück
     : @author Andreas Wagner
 :)
+
+module namespace i18n      = "http://exist-db.org/xquery/i18n";
+
+declare namespace sal      = "http://salamanca.adwmainz.de";
+declare namespace request  = "http://exist-db.org/xquery/request"; 
+declare namespace map      = "http://www.w3.org/2005/xpath-functions/map";
 
 (:~
  : Start processing the provided content using the modules defined by $modules. $modules should
@@ -32,7 +33,7 @@ declare namespace sal              = "http://salamanca.adwmainz.de";
 :)
 declare function i18n:apply($content as node()+, $modules as element(modules), $model as item()*) {   
     let $null := (
-        request:set-attribute("$i18n:modules", $modules)
+        request:set-attribute('$i18n:modules', $modules)
     )
     for $root in $content              
         return            
@@ -67,17 +68,18 @@ declare function i18n:process($node as node(), $selectedCatalogue as node()) {
             for $child in $node/node() return i18n:process($child, $selectedCatalogue)     
                         
         case element(i18n:translate) return 
-            let $text := i18n:process($node/i18n:text,$selectedCatalogue) 
+            let $text := i18n:process($node/i18n:text, $selectedCatalogue) 
             return 
-                i18n:translate($node, $text,$selectedCatalogue)                           
+                i18n:translate($node, $text, $selectedCatalogue)                           
 
         case element(i18n:text) return            
-            i18n:getLocalizedText($node,$selectedCatalogue)                        
+            i18n:getLocalizedText($node, $selectedCatalogue)                        
 
         case element() return                 
             element { node-name($node) } {
-                    i18n:translateAttributes($node,$selectedCatalogue), 
-                    for $child in $node/node() return i18n:process($child,$selectedCatalogue)
+                    i18n:translateAttributes($node, $selectedCatalogue), 
+(:                    for $attribute in $node/@* return $attribute,:)
+                    for $child in $node/node() return i18n:process($child, $selectedCatalogue)
             }
                     
         default return 
@@ -113,19 +115,19 @@ declare function i18n:translateAttributes($node as node(), $selectedCatalogue as
 :)
 declare function i18n:translateAttribute($attribute as attribute(), $node as node(),$selectedCatalogue as node()){
 (:    if(matches($attribute, 'i18n(.*?)')) then   -- replace this with contains() for performance reasons. matches() uses regex, contains() does not :)
-    if(contains($attribute, 'i18n(')) then
-        let $match := replace($attribute, '^.*?(i18n\(.*?\)).*?$', '$1') (: takes only the first i18n() function call :)
+    if (contains($attribute, 'i18n(')) then
+        let $match := replace($attribute, '^.*(i18n\([^)]*\)).*$', '$1') (: takes only the first i18n() function call :)
         let $key := 
-            if(contains($match, ",")) then
+            if (contains($match, ",")) then
                 substring-before(substring-after($match,"i18n("),",")
             else 
                 substring-before(substring-after($match,"i18n("),")")
         let $i18nValue :=   
-            if(exists($selectedCatalogue//msg[@key eq $key])) then 
+            if (exists($selectedCatalogue//msg[@key eq $key])) then 
                 $selectedCatalogue//msg[@key eq $key]/text() 
             else 
                 substring-before(substring-after(substring-after($match,"i18n("),","),")")
-        let $processed := replace($attribute, 'i18n\(.*?\)', $i18nValue)
+        let $processed := replace($attribute, 'i18n\([^)]*\)', $i18nValue)
         return 
             attribute {name($attribute)} {$processed}
     else 
@@ -151,7 +153,7 @@ declare function i18n:getLocalizedText($textNode as node(), $selectedCatalogue a
  : @param $node i18n:translate node eclosing i18n:text and parameters to substitute  
  : @param $text the processed(!) content of i18n:text    
 :)
-declare function i18n:translate($node as node(),$text as xs:string,$selectedCatalogue as node()) {  
+declare function i18n:translate($node as node(),$text as xs:string, $selectedCatalogue as node()) {  
     if(contains($text,'{')) then 
         (: text contains parameters to substitute :)
         let $params := $node//i18n:param
@@ -336,5 +338,3 @@ declare function i18n:largeIntToString($int as xs:integer, $lang as xs:string?) 
             case 12 return substring($str,1,string-length($str)-9) || $separator || substring($str,string-length($str)-8,1) || ' ' || $billion
             default return $str
 };
-
-

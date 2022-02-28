@@ -6,15 +6,15 @@ xquery version "3.1";
 
 ----++++#### :)
 
-declare namespace exist             = "http://exist.sourceforge.net/NS/exist";
-import module namespace util        = "http://exist-db.org/xquery/util";
+declare namespace exist        = "http://exist.sourceforge.net/NS/exist";
+import module namespace util   = "http://exist-db.org/xquery/util";
 import module namespace exrest = "http://exquery.org/ns/restxq/exist";
 
 (: TODO add more modules here when necessary :)
 let $restModules := 
-    ('xmldb://db/apps/salamanca/modules/api/v1/texts.xqm',
-     'xmldb://db/apps/salamanca/modules/api/v1/add.xqm',
-     'xmldb://db/apps/salamanca/modules/api/api.xqm')
+    ('xmldb:exist:///db/apps/salamanca/modules/api/v1/texts.xqm',
+     'xmldb:exist:///db/apps/salamanca/modules/api/v1/add.xqm',
+     'xmldb:exist:///db/apps/salamanca/modules/api/api.xqm')
 
 return 
     <rest:registry>

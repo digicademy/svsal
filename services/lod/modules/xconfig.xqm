@@ -6,12 +6,14 @@ xquery version "3.0";
  :)
 module namespace xconfig = "http://xtriples.spatialhumanities.de/config";
 
-import module namespace console = "http://exist-db.org/xquery/console";
 declare namespace request       = "http://exist-db.org/xquery/request";
 declare namespace system        = "http://exist-db.org/xquery/system";
-declare namespace templates     = "http://exist-db.org/xquery/templates";
 declare namespace repo          = "http://exist-db.org/xquery/repo";
 declare namespace expath        = "http://expath.org/ns/pkg";
+
+import module namespace console     = "http://exist-db.org/xquery/console";
+import module namespace templates   = "http://exist-db.org/xquery/html-templating";
+import module namespace lib         = "http://exist-db.org/xquery/html-templating/lib";
 
 import module namespace config = "http://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
 

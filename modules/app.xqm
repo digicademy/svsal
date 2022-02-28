@@ -10,6 +10,7 @@ xquery version "3.1";
 
 
 module namespace app         = "http://www.salamanca.school/xquery/app";
+
 declare namespace exist      = "http://exist.sourceforge.net/NS/exist";
 declare namespace opensearch = "http://a9.com/-/spec/opensearch/1.1/";
 declare namespace output     = "http://www.w3.org/2010/xslt-xquery-serialization";
@@ -23,17 +24,19 @@ declare namespace util       = "http://exist-db.org/xquery/util";
 declare namespace xhtml      = "http://www.w3.org/1999/xhtml";
 declare namespace xi         = "http://www.w3.org/2001/XInclude";
 
-import module namespace http = "http://expath.org/ns/http-client";
-import module namespace config    = "http://www.salamanca.school/xquery/config"                at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
-import module namespace render-app    = "http://www.salamanca.school/xquery/render-app"        at "xmldb:exist:///db/apps/salamanca/modules/render-app.xqm";
-import module namespace sphinx    = "http://www.salamanca.school/xquery/sphinx"                at "xmldb:exist:///db/apps/salamanca/modules/sphinx.xqm";
-import module namespace console   = "http://exist-db.org/xquery/console";
-import module namespace functx    = "http://www.functx.com";
-import module namespace i18n      = "http://exist-db.org/xquery/i18n"        at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
-import module namespace request   = "http://exist-db.org/xquery/request";
-import module namespace templates = "http://exist-db.org/xquery/templates";
-import module namespace iiif      = "http://www.salamanca.school/xquery/iiif"                  at "xmldb:exist:///db/apps/salamanca/modules/iiif.xqm";
-import module namespace sutil    = "http://www.salamanca.school/xquery/sutil" at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
+import module namespace console     = "http://exist-db.org/xquery/console";
+import module namespace functx      = "http://www.functx.com";
+import module namespace http        = "http://expath.org/ns/http-client";
+import module namespace request     = "http://exist-db.org/xquery/request";
+import module namespace templates   = "http://exist-db.org/xquery/html-templating";
+import module namespace lib         = "http://exist-db.org/xquery/html-templating/lib";
+
+import module namespace config      = "http://www.salamanca.school/xquery/config"           at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace i18n        = "http://exist-db.org/xquery/i18n"                     at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
+import module namespace render-app  = "http://www.salamanca.school/xquery/render-app"       at "xmldb:exist:///db/apps/salamanca/modules/render-app.xqm";
+import module namespace sphinx      = "http://www.salamanca.school/xquery/sphinx"           at "xmldb:exist:///db/apps/salamanca/modules/sphinx.xqm";
+import module namespace iiif        = "http://www.salamanca.school/xquery/iiif"             at "xmldb:exist:///db/apps/salamanca/modules/iiif.xqm";
+import module namespace sutil       = "http://www.salamanca.school/xquery/sutil"            at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
 
 (: declare option output:method            "html5";     :)
 (: declare option output:media-type        "text/html"; :)
