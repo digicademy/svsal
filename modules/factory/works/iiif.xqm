@@ -27,6 +27,7 @@ a single volume within a multi-volume work) or a collection resource (for a mult
 @param $wid: the ID of the work or volume which the manifest is requested for
 @return:     the iiif manifest/collection :)
 declare function iiif:createResource($targetWorkId as xs:string) as map(*) {
+    let $debug := console:log("[iiif] Create iiif resource for " || $targetWorkId || "...")
     let $tei  := doc($config:tei-works-root || '/' || sutil:normalizeId($targetWorkId) || '.xml')//tei:TEI
     let $iiifResource :=
         if ($tei) then
@@ -40,6 +41,7 @@ declare function iiif:createResource($targetWorkId as xs:string) as map(*) {
             else ()
         else ()
         (: no TEI dataset available -> do nothing :)
+    let $debug := console:log("[iiif] Done.")
     return $iiifResource
 };
 
@@ -171,7 +173,7 @@ declare function iiif:mkSequence($volumeId as xs:string, $tei as node(), $thumbn
             (: no full text available: get canvases from automatically generated digilib manifest and transform them: :)
             let $digilib-mf-uri  := $config:digilibServerManifester || iiif:getIiifVolumeId($volumeId)
             let $options         := map { "liberal": true(), "duplicates": "use-last" }
-            let $digilib-manifest     := json-doc($digilib-mf-uri, $options)
+            let $digilib-manifest  := json-doc($digilib-mf-uri, $options)
             let $digilib-sequence1 := array:get(map:get($digilib-manifest, "sequences"), 1) (: assumes that there is only one – the default – sequence in the digilib manifest :)
             let $digilib-canvases := map:get($digilib-sequence1, "canvases")
             let $digilib-canvases-seq := for $i in (1 to array:size($digilib-canvases)) return array:get($digilib-canvases, $i)
@@ -216,11 +218,12 @@ declare function iiif:mkCanvasFromTeiFacs($volumeId as xs:string, $facs as xs:st
     let $label := "p. " || string($index)
 
     let $digilibImageId := $config:iiifImageServer || iiif:teiFacs2IiifImageId($facs)
+    let $digilibImageJsonId := $digilibImageId || "/info.json"
     (: get image height and width from the digilib server (i.e. from each image json file): :)
     let $options := map { "liberal": true(), "duplicates": "use-last" }
     
-    let $debug := if ($config:debug = ('trace', 'info')) then console:log('Getting image resource from digilib server: ' || $digilibImageId) else ()
-    let $digilibImageResource := json-doc($digilibImageId, $options)
+    let $debug := if ($config:debug = ('trace')) then console:log('Getting image resource from digilib server: ' || $digilibImageId) else ()
+    let $digilibImageResource := json-doc($digilibImageJsonId, $options)
     
     let $imageHeight := map:get($digilibImageResource, "height")
     let $imageWidth := map:get($digilibImageResource, "width")
@@ -382,7 +385,7 @@ declare function iiif:getI18nLabels($labelKey as xs:string?) as array(*) {
 declare function iiif:teiFacs2IiifImageId($facs as xs:string?) as xs:string {
     let $debug := 
         if (not(matches($facs, 'facs:W\d{4}(-[A-z])?-\d{4}'))) then 
-            error(xs:QName('iiif:teiFacs2IiifImageId'), '@facs value "' || $facs || ' could not be parsed as ^facs:W\d{4}(-[A-z])?-\d{4}$') 
+            error(xs:QName('iiif:teiFacs2IiifImageId'), '@facs value "' || $facs || '" could not be parsed as ^facs:W\d{4}(-[A-z])?-\d{4}$') 
         else ()
     let $facsWork := substring-before(substring-after($facs, "facs:"), "-")
     let $facsVol := if (contains(substring-after($facs, "-"), "-")) then substring-before(substring-after($facs, "-"),"-") else ()
