@@ -314,7 +314,7 @@ declare function app:switchAvailability ($node as node(), $model as map (*), $la
 };
 
 declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang as xs:string?) as array(*) {
-    let $debug := if ($config:debug = ("trace")) then console:log("[APP] Building finalFacets (No Js) for " || $lang || "...") else ()
+    let $debug := if ($config:debug = ("trace")) then console:log("[APP] Building finalFacets (Js) for " || $lang || "...") else ()
     let $output :=
         for $item in (collection($config:tei-works-root)//tei:teiHeader[parent::tei:TEI//tei:text/@type = ("work_monograph", "work_multivolume")])
             let $wid            :=  xs:string($item/parent::tei:TEI/@xml:id)
@@ -357,8 +357,8 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
                 else if ($placeFirstChar = ('M','N','O','P','Q','R')) then 'M - R'
                 else                                                       'S - Z'
             let $date           :=  
-                if ($item//tei:date[@type = 'thisEd']) then $item//tei:date[@type = 'thisEd'][1]/@when
-                else $item//tei:date[@type = 'firstEd'][1]/@when
+                if ($item//tei:date[@type = 'thisEd']) then xs:integer($item//tei:date[@type = 'thisEd'][1]/@when)
+                else xs:integer($item//tei:date[@type = 'firstEd'][1]/@when)
             let $datefacet      :=       
                      if ($date < 1501) then '1501-1550'
                 else if ($date < 1551) then '1501-1550'
@@ -409,8 +409,7 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
                                                                 concat("vol", $index, "Cont") : $volContent
                                                               }
                                                 )
-            return map:merge( ($volumesMaps,
-                               map  {  "title" :               $title,
+            return map:merge( ( map {  "title" :               $title,
                                        "status" :              $status,
                                        "WIPstatus" :           $WIPstatus,
                                        "monoMultiUrl" :        $wrkLink,
@@ -420,16 +419,17 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
                                        "facsAttrib" :          $FacsInfo,
                                        "printer" :             $printer,
                                        "name" :                $name,
-                                       "sortName" :            $sortName,      (: default sorting :)
-                                       "nameFacet" :           $nameFacet,     (: facet I :)
+                                       "sortName" :            $sortName,
+                                       "nameFacet" :           $nameFacet,
                                        "date" :                $date,  
-                                       "chronology" :          $datefacet,     (: facet II :)
-                                       "textLanguage" :        $language,      (: facet III :)
+                                       "chronology" :          $datefacet,
+                                       "textLanguage" :        $language,
                                        "printingPlace" :       $printingPlace,
-                                       "facetPlace" :          $facetPlace,    (: facet IV :)
+                                       "facetPlace" :          $facetPlace,
                                        "facetAvailability" :   $facetAvailability,
                                        "volLabel" :            $volLabel
-                                    }
+                                    },
+                                $volumesMaps
                               ) )
 
 (:            let $output :=

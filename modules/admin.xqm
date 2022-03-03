@@ -632,15 +632,11 @@ declare function admin:exportJSONFile($wid as xs:string, $filename as xs:string,
 
 declare function admin:buildFacets ($node as node(), $model as map (*), $lang as xs:string?) {
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Building finalFacets (Js)...") else ()
-    let $facets := map { "de" : app:WRKfinalFacets($node, $model, 'de'),
-                         "en" : app:WRKfinalFacets($node, $model, 'en'),
-                         "es" : app:WRKfinalFacets($node, $model, 'es')
-                       }
     let $result := for $l in ("de", "en", "es")
                     let $content      := app:WRKfinalFacets($node, $model, $l)
                     let $filename     := 'works_' || $l || '.json'
                     let $debug        := console:log("[ADMIN] Saving (Js) " || $l || " facets file in the database...")
-                    let $storeStatus  := admin:saveTextFile("dummy", $filename, $content, "workslist")
+                    let $storeStatus  := admin:saveTextFile("dummy", $filename, fn:serialize($content, map{"method":"json", "indent": true(), "encoding":"utf-8"}), "workslist")
                     let $debug        := console:log("[ADMIN] Exporting (Js) " || $l || " facets json file...")
                     let $exportStatus := admin:exportJSONFile($filename, $content, 'workslist')
                     return <div>Saved {$l} works list to {$storeStatus} and exported it to {$exportStatus}.</div>
@@ -667,16 +663,20 @@ declare function admin:buildFacetsNoJs ($node as node(), $model as map (*), $lan
                                               "es" : app:WRKcreateListPlace($node, $model, 'es')
                                             }
                        }
-    let $result := map:for-each($facets, function ($k, $v) {
-                        map:for-each($v, function ($l, $c) {
+    let $result := for $l in ("de", "en", "es")
+                        let $facets := map {    "surname"   : app:WRKcreateListSurname($node, $model, $l),
+                                                "title"     : app:WRKcreateListTitle($node, $model, $l),
+                                                "year"      : app:WRKcreateListYear($node, $model, $l),
+                                                "place"     : app:WRKcreateListPlace($node, $model, $l)
+                                           }
+                        return map:for-each($facets, function ($k, $v) {
                              let $filename     := 'worksNoJs_' || $l || '_' || $k || '.html'
                              let $debug        := console:log("[ADMIN] Saving (NoJs) " || $l || "_" || $k || " facets file in the database...")
-                             let $storeStatus  := xmldb:store($config:data-root, $filename, <sal>{$c}</sal>)
+                             let $storeStatus  := admin:saveTextFile("dummy", $filename, fn:serialize($v, map{"method":"json", "indent": true(), "encoding":"utf-8"}), "workslist")
                              let $debug        := console:log("[ADMIN] Exporting (NoJs) " || $l || "_" || $k || " facets json file...")
-                             let $exportStatus := admin:exportXMLFile($filename, $c, 'workslist')
+                             let $exportStatus := admin:exportJSONFile($filename, fn:serialize($v, map{"method":"json", "indent": true(), "encoding":"utf-8"}), "workslist")
                              return <div>Saved {$l}_{$k} works list to {$storeStatus} and exported it to {$exportStatus}.</div>
                           })
-                   })
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] finalFacets (No Js) done!") else ()
     return $result
 };
