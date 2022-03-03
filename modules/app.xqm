@@ -313,126 +313,152 @@ declare function app:switchAvailability ($node as node(), $model as map (*), $la
             $output (: i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :)
 };
 
-declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang as xs:string?) {
-    for $item in (collection($config:tei-works-root)//tei:teiHeader[parent::tei:TEI//tei:text/@type = ("work_monograph", "work_multivolume")])
-        let $wid            :=  xs:string($item/parent::tei:TEI/@xml:id)
-        let $title          :=  $item/tei:fileDesc/tei:titleStmt/tei:title[@type = 'short']
-        let $status         :=  xs:string($item/ancestor-or-self::tei:TEI//tei:revisionDesc/@status)
-        let $WIPstatus      :=  
-            if ($item/ancestor-or-self::tei:TEI//tei:revisionDesc/@status =
-                                     ( 'a_raw',
-                                       'b_cleared',
-                                       'c_hyph_proposed',
-                                       'd_hyph_approved',
-                                       'e_emended_unenriched',
-                                       'f_enriched'
-                                     )) then "yes"
-            else "no"
-        let $wrkLink        :=  $config:idserver || '/texts/' || $wid
+declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang as xs:string?) as array(*) {
+    let $debug := if ($config:debug = ("trace")) then console:log("[APP] Building finalFacets (No Js) for " || $lang || "...") else ()
+    let $output :=
+        for $item in (collection($config:tei-works-root)//tei:teiHeader[parent::tei:TEI//tei:text/@type = ("work_monograph", "work_multivolume")])
+            let $wid            :=  xs:string($item/parent::tei:TEI/@xml:id)
+            let $title          :=  $item/tei:fileDesc/tei:titleStmt/tei:title[@type = 'short']
+            let $status         :=  xs:string($item/ancestor-or-self::tei:TEI//tei:revisionDesc/@status)
+            let $WIPstatus      :=  
+                if ($item/ancestor-or-self::tei:TEI//tei:revisionDesc/@status =
+                                         ( 'a_raw',
+                                           'b_cleared',
+                                           'c_hyph_proposed',
+                                           'd_hyph_approved',
+                                           'e_emended_unenriched',
+                                           'f_enriched'
+                                         )) then "yes"
+                else "no"
+            let $wrkLink        :=  $config:idserver || '/texts/' || $wid
+    
+            let $name           :=  sutil:formatName($item/tei:fileDesc/tei:titleStmt/tei:author/tei:persName)
+            let $sortName       :=  lower-case($item/tei:fileDesc/tei:titleStmt/tei:author/tei:persName/tei:surname) (:lower-casing for equal sorting:)
+            let $firstChar      :=  upper-case(substring($item/tei:fileDesc/tei:titleStmt/tei:author//tei:surname, 1, 1))
+            let $nameFacet      :=       
+                     if ($firstChar = ('A','B','C','D','E','F')) then 'A - F'
+                else if ($firstChar = ('G','H','I','J','K','L')) then 'G - L'
+                else if ($firstChar = ('M','N','O','P','Q','R')) then 'M - R'
+                else                                                  'S - Z'
+    
+            let $workDetails    :=  'workDetails.html?wid=' ||  $wid
+            let $DetailsInfo    :=  i18n:process(<i18n:text key="details">Katalogeintrag</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en")
+    
+            let $workImages     :=  'viewer_standalone.html?wid=' ||  $wid
+            let $FacsInfo       :=  i18n:process(<i18n:text key="facsimiles">Bildansicht</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en")
+    
+            let $printingPlace  :=  
+                if ($item//tei:pubPlace[@role = 'thisEd']) then $item//tei:pubPlace[@role = 'thisEd'] 
+                else $item//tei:pubPlace[@role = 'firstEd']
+            let $placeFirstChar :=  substring($printingPlace/@key, 1, 1)
+            let $facetPlace     :=       
+                     if ($placeFirstChar = ('A','B','C','D','E','F')) then 'A - F'
+                else if ($placeFirstChar = ('G','H','I','J','K','L')) then 'G - L'
+                else if ($placeFirstChar = ('M','N','O','P','Q','R')) then 'M - R'
+                else                                                       'S - Z'
+            let $date           :=  
+                if ($item//tei:date[@type = 'thisEd']) then $item//tei:date[@type = 'thisEd'][1]/@when
+                else $item//tei:date[@type = 'firstEd'][1]/@when
+            let $datefacet      :=       
+                     if ($date < 1501) then '1501-1550'
+                else if ($date < 1551) then '1501-1550'
+                else if ($date < 1601) then '1551-1600'
+                else if ($date < 1651) then '1601-1650'
+                else if ($date < 1701) then '1651-1700'
+                else                        '??' 
+            let $printer    := 
+                if ($item//tei:sourceDesc//tei:publisher[@n="thisEd"]) then 
+                     ': ' || $item//tei:sourceDesc//tei:publisher[@n="thisEd"][1]/tei:persName[1]/tei:surname
+                else ': ' || $item//tei:sourceDesc//tei:publisher[@n="firstEd"][1]/tei:persName[1]/tei:surname
+    
+            let $language       :=
+                i18n:process(if ($item/parent::tei:TEI//tei:text/@xml:lang = 'la') then <i18n:text key="latin">Latein</i18n:text>
+                                                                                   else <i18n:text key="spanish">Spanisch</i18n:text>
+                            , $lang, "/db/apps/salamanca/data/i18n", "en")
+            let $facetAvailability :=
+                i18n:process(if ($WIPstatus eq 'yes') then <i18n:text key="facsimiles">Facsimiles</i18n:text>
+                                                      else <i18n:text key="fullTextAvailable">Full Text (+ Facsimiles)</i18n:text>
+                            , $lang, "/db/apps/salamanca/data/i18n", "en")
+            let $completeWork   :=  $item/parent::tei:TEI//tei:text[@xml:id="completeWork"]
+            let $volIcon        :=  if ($completeWork/@type='work_multivolume') then 'icon-text' else ()
+            let $volLabel       :=  
+                if ($completeWork/@type='work_multivolume') then
+                    <span>{i18n:process(<i18n:text key="volumes">Bände</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en") || ':' || $config:nbsp || $config:nbsp}</span> 
+                else ()
+            let $volumesString  :=  
+                for $volume at $index in util:expand($completeWork)//tei:text[@type="work_volume"]
+                    let $volId      := xs:string($volume/@xml:id)
+                    let $volIdShort := $volume/@n
+                    let $volFrag    := sutil:getFragmentID($wid, $volId)
+                    let $volLink    := 
+                        if (sutil:WRKisPublished($wid || '_' || $volId)) then $config:idserver || '/texts/' || $wid || ":" || $volId
+                        (: existence of link serves as indicator for single volumes' publication status (whether published or not) in works list :)
+                        else ()
+                    let $volContent := $volIdShort||'&#xA0;&#xA0;'
+                    return '"vol' || $index || '":' || '"' || $volLink || '","vol' || $index || 'Cont":'|| '"' ||$volContent ||'",'
+            let $volumesMaps  :=  map:merge ( for $volume at $index in util:expand($completeWork)//tei:text[@type="work_volume"]
+                                                  let $volId      := xs:string($volume/@xml:id)
+                                                  let $volIdShort := $volume/@n
+                                                  let $volFrag    := sutil:getFragmentID($wid, $volId)
+                                                  let $volLink    := 
+                                                      if (sutil:WRKisPublished($wid || '_' || $volId)) then $config:idserver || '/texts/' || $wid || ":" || $volId
+                                                      (: existence of link serves as indicator for single volumes' publication status (whether published or not) in works list :)
+                                                      else ()
+                                                  let $volContent := $volIdShort||'&#xA0;&#xA0;'
+                                                  return map  { concat("vol", $index) : $volLink,
+                                                                concat("vol", $index, "Cont") : $volContent
+                                                              }
+                                                )
+            return map:merge( ($volumesMaps,
+                               map  {  "title" :               $title,
+                                       "status" :              $status,
+                                       "WIPstatus" :           $WIPstatus,
+                                       "monoMultiUrl" :        $wrkLink,
+                                       "workDetails" :         $workDetails,
+                                       "titAttrib" :           $DetailsInfo,
+                                       "workImages" :          $workImages,
+                                       "facsAttrib" :          $FacsInfo,
+                                       "printer" :             $printer,
+                                       "name" :                $name,
+                                       "sortName" :            $sortName,      (: default sorting :)
+                                       "nameFacet" :           $nameFacet,     (: facet I :)
+                                       "date" :                $date,  
+                                       "chronology" :          $datefacet,     (: facet II :)
+                                       "textLanguage" :        $language,      (: facet III :)
+                                       "printingPlace" :       $printingPlace,
+                                       "facetPlace" :          $facetPlace,    (: facet IV :)
+                                       "facetAvailability" :   $facetAvailability,
+                                       "volLabel" :            $volLabel
+                                    }
+                              ) )
 
-        let $name           :=  sutil:formatName($item/tei:fileDesc/tei:titleStmt/tei:author/tei:persName)
-        let $sortName       :=  lower-case($item/tei:fileDesc/tei:titleStmt/tei:author/tei:persName/tei:surname) (:lower-casing for equal sorting:)
-        let $firstChar      :=  upper-case(substring($item/tei:fileDesc/tei:titleStmt/tei:author//tei:surname, 1, 1))
-        let $nameFacet      :=       
-                 if ($firstChar = ('A','B','C','D','E','F')) then 'A - F'
-            else if ($firstChar = ('G','H','I','J','K','L')) then 'G - L'
-            else if ($firstChar = ('M','N','O','P','Q','R')) then 'M - R'
-            else                                                  'S - Z'
-
-        let $workDetails    :=  'workDetails.html?wid=' ||  $wid
-        let $DetailsInfo    :=  <i18n:text key="details">Katalogeintrag</i18n:text> (: i18n:process(<i18n:text key="details">Katalogeintrag</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en") heute geändert :)
-
-        let $workImages     :=  'viewer_standalone.html?wid=' ||  $wid
-        let $FacsInfo       :=  <i18n:text key="facsimiles">Bildansicht</i18n:text> (: i18n:process(<i18n:text key="facsimiles">Bildansicht</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en") heute geändert :)
-
-        let $printingPlace  :=  
-            if ($item//tei:pubPlace[@role = 'thisEd']) then $item//tei:pubPlace[@role = 'thisEd'] 
-            else $item//tei:pubPlace[@role = 'firstEd']
-        let $placeFirstChar :=  substring($printingPlace/@key, 1, 1)
-        let $facetPlace     :=       
-                 if ($placeFirstChar = ('A','B','C','D','E','F')) then 'A - F'
-            else if ($placeFirstChar = ('G','H','I','J','K','L')) then 'G - L'
-            else if ($placeFirstChar = ('M','N','O','P','Q','R')) then 'M - R'
-            else                                                       'S - Z'
-        let $date           :=  
-            if ($item//tei:date[@type = 'thisEd']) then $item//tei:date[@type = 'thisEd'][1]/@when
-            else $item//tei:date[@type = 'firstEd'][1]/@when
-        let $datefacet      :=       
-                 if ($date < 1501) then '1501-1550'
-            else if ($date < 1551) then '1501-1550'
-            else if ($date < 1601) then '1551-1600'
-            else if ($date < 1651) then '1601-1650'
-            else if ($date < 1701) then '1651-1700'
-            else                        '??' 
-        let $printer    := 
-            if ($item//tei:sourceDesc//tei:publisher[@n="thisEd"]) then 
-                 ': ' || $item//tei:sourceDesc//tei:publisher[@n="thisEd"][1]/tei:persName[1]/tei:surname
-            else ': ' || $item//tei:sourceDesc//tei:publisher[@n="firstEd"][1]/tei:persName[1]/tei:surname
-
-        let $language       :=
-            (: if ($item/parent::tei:TEI//tei:text/@xml:lang = 'la') then
-                <i18n:text key="latin">Latein</i18n:text>
-             else
-                <i18n:text key="spanish">Spanisch</i18n:text>
-            :)
-            i18n:process(if ($item/parent::tei:TEI//tei:text/@xml:lang = 'la') then <i18n:text key="latin">Latein</i18n:text>
-                                                                               else <i18n:text key="spanish">Spanisch</i18n:text>
-                        , $lang, "/db/apps/salamanca/data/i18n", "en")
-        let $facetAvailability :=
-            (: if ($WIPstatus eq 'yes') then
-                <i18n:text key="facsimiles">Facsimiles</i18n:text>
-             else
-                <i18n:text key="fullTextAvailable">Full Text (+ Facsimiles)</i18n:text>
-            :)
-            i18n:process(if ($WIPstatus eq 'yes') then <i18n:text key="facsimiles">Facsimiles</i18n:text>
-                                                  else <i18n:text key="fullTextAvailable">Full Text (+ Facsimiles)</i18n:text>
-                        , $lang, "/db/apps/salamanca/data/i18n", "en")
-        let $completeWork   :=  $item/parent::tei:TEI//tei:text[@xml:id="completeWork"]
-        let $volIcon        :=  if ($completeWork/@type='work_multivolume') then 'icon-text' else ()
-        let $volLabel       :=  
-            if ($completeWork/@type='work_multivolume') then
-                (: <span><i18n:text key="volumes">Bände</i18n:text> : {$config:nbsp || $config:nbsp}</span>:)
-                <span>{i18n:process(<i18n:text key="volumes">Bände</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en") || ':' || $config:nbsp || $config:nbsp}</span> 
-            else ()
-        let $volumesString  :=  
-            for $volume at $index in util:expand($completeWork)//tei:text[@type="work_volume"]
-                let $volId      := xs:string($volume/@xml:id)
-                let $volIdShort := $volume/@n
-                let $volFrag    := sutil:getFragmentID($wid, $volId)
-                let $volLink    := 
-                    if (sutil:WRKisPublished($wid || '_' || $volId)) then $config:idserver || '/texts/' || $wid || ":" || $volId
-                    (: existence of link serves as indicator for single volumes' publication status (whether published or not) in works list :)
-                    else ()
-                let $volContent := $volIdShort||'&#xA0;&#xA0;'
-                return '"vol' || $index || '":' || '"' || $volLink || '","vol' || $index || 'Cont":'|| '"' ||$volContent ||'",'
-
-        let $output :=
-               '&#123;'
-            || '"title":'         || '"' || $title          || '",'
-            || '"status":'        || '"' || $status         || '",'
-            || '"WIPstatus":'     || '"' || $WIPstatus      || '",'
-            || '"monoMultiUrl":'  || '"' || $wrkLink        || '",'
-            || '"workDetails":'   || '"' || $workDetails    || '",'
-            || '"titAttrib":'     || '"' || $DetailsInfo    || '",'
-            || '"workImages":'    || '"' || $workImages     || '",'
-            || '"facsAttrib":'    || '"' || $FacsInfo       || '",'
-            || '"printer":'       || '"' || $printer        || '",'
-            || '"name":'          || '"' || $name           || '",'
-            || '"sortName":'      || '"' || $sortName       || '",'     (:default sorting:)
-            || '"nameFacet":'     || '"' || $nameFacet      || '",'     (:facet I:)
-            || '"date":'          || '"' || $date           || '",'  
-            || '"chronology":'    || '"' || $datefacet      || '",'     (:facet II:)
-            || '"textLanguage":'  || '"' || $language       || '",'     (:facet III:)
-            || '"printingPlace":' || '"' || $printingPlace  || '",'
-            || '"facetPlace":'    || '"' || $facetPlace     || '",'     (:facet IV:)
-            || '"facetAvailability":' || '"' || $facetAvailability || '",'
-(:                              ||'"sourceUrlAll":'   || '"' || $wid            || '",' :)
-            || '"volLabel":'      || '"' || $volLabel       || '",'
-            || string-join($volumesString, '')
-            || '&#125;' || ','
-
-(:        let $dbg := console:log($output) :)
-        return $output
+(:            let $output :=
+                   '&#123;'
+                || '"title":'         || '"' || $title          || '",'
+                || '"status":'        || '"' || $status         || '",'
+                || '"WIPstatus":'     || '"' || $WIPstatus      || '",'
+                || '"monoMultiUrl":'  || '"' || $wrkLink        || '",'
+                || '"workDetails":'   || '"' || $workDetails    || '",'
+                || '"titAttrib":'     || '"' || $DetailsInfo    || '",'
+                || '"workImages":'    || '"' || $workImages     || '",'
+                || '"facsAttrib":'    || '"' || $FacsInfo       || '",'
+                || '"printer":'       || '"' || $printer        || '",'
+                || '"name":'          || '"' || $name           || '",'
+                || '"sortName":'      || '"' || $sortName       || '",'     (\:default sorting:\)
+                || '"nameFacet":'     || '"' || $nameFacet      || '",'     (\:facet I:\)
+                || '"date":'          || '"' || $date           || '",'  
+                || '"chronology":'    || '"' || $datefacet      || '",'     (\:facet II:\)
+                || '"textLanguage":'  || '"' || $language       || '",'     (\:facet III:\)
+                || '"printingPlace":' || '"' || $printingPlace  || '",'
+                || '"facetPlace":'    || '"' || $facetPlace     || '",'     (\:facet IV:\)
+                || '"facetAvailability":' || '"' || $facetAvailability || '",'
+    (\:                              ||'"sourceUrlAll":'   || '"' || $wid            || '",' :\)
+                || '"volLabel":'      || '"' || $volLabel       || '",'
+                || string-join($volumesString, '')
+                || '&#125;' || ','
+:)    
+    let $dbg := if ($config:debug = ("trace")) then console:log("[APP] app:WRKfinalFacets about to return: " || serialize(array { $output }, map{"method":"text"})) else ()
+    return array { $output }
 };
 
 declare function app:loadWRKfacets ($node as node(), $model as map (*), $lang as xs:string?) {
@@ -762,7 +788,8 @@ declare function app:WRKsingleVolumeString($wid as xs:string, $volume as element
 };
 
 declare %templates:wrap function app:WRKcreateListSurname($node as node(), $model as map(*), $lang as xs:string?) {
-    let $items :=  
+    let $debug := if ($config:debug = ("trace")) then console:log("[APP] Building surname-sorted finalFacets (No Js) for " || $lang || "...") else ()
+    return  
         for $item in (collection($config:tei-works-root)//tei:TEI)//tei:text[@type = ('work_monograph', 'work_multivolume')]
             let $root       :=  $item/ancestor::tei:TEI
             let $id         :=  (session:encode-url( xs:anyURI( $config:idserver || '/texts/' || $root/@xml:id ) ))
@@ -811,108 +838,110 @@ declare %templates:wrap function app:WRKcreateListSurname($node as node(), $mode
                            </div>
                         </div>  
                     </div>
-            return $items
 };
 
 declare %templates:wrap function app:WRKcreateListTitle($node as node(), $model as map(*), $lang as xs:string?) {
-    let $items      :=  for $item in (collection($config:tei-works-root)//tei:TEI)//tei:text[@type = ('work_monograph', 'work_multivolume')]
-                            let $root       :=  $item/ancestor::tei:TEI
-                            let $id         :=  (session:encode-url( xs:anyURI( $config:idserver || '/texts/' || $root/@xml:id ) ))
-                            let $details    :=  (session:encode-url( xs:anyURI( 'workDetails.html?wid=' ||  $root/@xml:id ) ))
-                            let $title      :=  $root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'short']/string()
-                            let $author     :=  app:rotateFormatName($root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName)
-                            order by $root/tei:teiHeader//tei:sourceDesc//tei:monogr/tei:title[@type = 'short'] ascending
-                                return
-                                    <div class="col-md-6"> 
-                                        <div class="panel panel-default">
-                                            <div class="panel-body">
-                                                <a class="lead" href="{$id}"><span class="glyphicon glyphicon-file"></span>&#xA0;{$title}</a>
-                                                <br/>  
-                                                <span class="lead">{$author}</span>
-                                                <br/>
-                                                {
-                                                let $thisEd         :=      $root//tei:teiHeader//tei:sourceDesc//tei:pubPlace[@role = 'thisEd']
-                                                let $firstEd        :=      $root//tei:teiHeader//tei:sourceDesc//tei:pubPlace[@role = 'firstEd']
-                                                let $publisher      :=      if ($thisEd) then $root//tei:teiHeader//tei:imprint/tei:publisher[@n = 'thisEd']/tei:persName[1]/tei:surname 
-                                                                            else $root//tei:imprint/tei:publisher[@n = 'firstEd']/tei:persName[1]/tei:surname
-                                                let $place          :=      if ($thisEd) then $thisEd else $firstEd
-                                                let $year           :=      if ($thisEd) then $root//tei:teiHeader//tei:date[@type = 'thisEd']/@when/string() 
-                                                                            else $root//tei:teiHeader//tei:date[@type = 'firstEd']/@when/string()
-                                                let $vol            :=      if ($root/tei:teiHeader//tei:monogr//tei:title[@type = 'volume']) 
-                                                                            then concat(', ', $model('currentWorkHeader')//tei:monogr//tei:title[@type = 'volume']) 
-                                                                            else ()                         
-                                                let $pubDetails     :=      $place || '&#32;'||": " || $publisher || ", " || $year || $vol
-                                                return $pubDetails
-                                                }
-                                                <br/>  
-                                                {
-                                                let $wid    := string($root/@xml:id)
-                                                for $a in (doc($config:tei-works-root || "/" || $wid || ".xml")/tei:TEI//tei:text[@type="work_multivolume"])
-                                                     let $completeWork   :=  $a[@xml:id="completeWork"]
-                                                     let $volumesString  :=  
-                                                        for $volume in util:expand($completeWork)//tei:text[@type="work_volume"] return
-                                                            app:WRKsingleVolumeString($wid, $volume)
-                                                     return  $volumesString
-                                               }
-                                                <br/> 
-                                               <a  href="{$details}"  title="bibliographical details about this book"> <span class="icon-info2 pull-right" style="font-size: 1.3em;"> </span></a>
-                                           </div>
-                                        </div>  
-                                    </div>
-                            return $items
+    let $debug := if ($config:debug = ("trace")) then console:log("[APP] Building title-sorted finalFacets (No Js) for " || $lang || "...") else ()
+    return
+        for $item in (collection($config:tei-works-root)//tei:TEI)//tei:text[@type = ('work_monograph', 'work_multivolume')]
+            let $root       :=  $item/ancestor::tei:TEI
+            let $id         :=  (session:encode-url( xs:anyURI( $config:idserver || '/texts/' || $root/@xml:id ) ))
+            let $details    :=  (session:encode-url( xs:anyURI( 'workDetails.html?wid=' ||  $root/@xml:id ) ))
+            let $title      :=  $root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'short']/string()
+            let $author     :=  app:rotateFormatName($root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName)
+            order by $root/tei:teiHeader//tei:sourceDesc//tei:monogr/tei:title[@type = 'short'] ascending
+                return
+                    <div class="col-md-6"> 
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <a class="lead" href="{$id}"><span class="glyphicon glyphicon-file"></span>&#xA0;{$title}</a>
+                                <br/>  
+                                <span class="lead">{$author}</span>
+                                <br/>
+                                {
+                                let $thisEd         :=      $root//tei:teiHeader//tei:sourceDesc//tei:pubPlace[@role = 'thisEd']
+                                let $firstEd        :=      $root//tei:teiHeader//tei:sourceDesc//tei:pubPlace[@role = 'firstEd']
+                                let $publisher      :=      if ($thisEd) then $root//tei:teiHeader//tei:imprint/tei:publisher[@n = 'thisEd']/tei:persName[1]/tei:surname 
+                                                            else $root//tei:imprint/tei:publisher[@n = 'firstEd']/tei:persName[1]/tei:surname
+                                let $place          :=      if ($thisEd) then $thisEd else $firstEd
+                                let $year           :=      if ($thisEd) then $root//tei:teiHeader//tei:date[@type = 'thisEd']/@when/string() 
+                                                            else $root//tei:teiHeader//tei:date[@type = 'firstEd']/@when/string()
+                                let $vol            :=      if ($root/tei:teiHeader//tei:monogr//tei:title[@type = 'volume']) 
+                                                            then concat(', ', $model('currentWorkHeader')//tei:monogr//tei:title[@type = 'volume']) 
+                                                            else ()                         
+                                let $pubDetails     :=      $place || '&#32;'||": " || $publisher || ", " || $year || $vol
+                                return $pubDetails
+                                }
+                                <br/>  
+                                {
+                                let $wid    := string($root/@xml:id)
+                                for $a in (doc($config:tei-works-root || "/" || $wid || ".xml")/tei:TEI//tei:text[@type="work_multivolume"])
+                                     let $completeWork   :=  $a[@xml:id="completeWork"]
+                                     let $volumesString  :=  
+                                        for $volume in util:expand($completeWork)//tei:text[@type="work_volume"] return
+                                            app:WRKsingleVolumeString($wid, $volume)
+                                     return  $volumesString
+                               }
+                                <br/> 
+                               <a  href="{$details}"  title="bibliographical details about this book"> <span class="icon-info2 pull-right" style="font-size: 1.3em;"> </span></a>
+                           </div>
+                        </div>  
+                    </div>
 };
 
 declare %templates:wrap function app:WRKcreateListYear($node as node(), $model as map(*), $lang as xs:string?) {
-    let $items      :=  for $item in (collection($config:tei-works-root)//tei:TEI)//tei:text[@type = ('work_monograph', 'work_multivolume')]
-                            let $root       :=  $item/ancestor::tei:TEI
-                            let $id         :=  (session:encode-url( xs:anyURI( $config:idserver || '/texts/' || $root/@xml:id ) ))
-                            let $details    :=  (session:encode-url( xs:anyURI( 'workDetails.html?wid=' ||  $root/@xml:id ) ))
-                            let $title      :=  $root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'short']/string()
-                            let $author     :=  app:rotateFormatName($root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName)
-                            order by $root/tei:teiHeader//tei:sourceDesc//tei:date[@type = 'firstEd']/@when ascending
-                                return
-                                    <div class="col-md-6"> 
-                                        <div class="panel panel-default">
-                                            <div class="panel-body">
-                                                <a class="lead" href="{$id}"><span class="glyphicon glyphicon-file"></span>&#xA0;{$title}</a>
-                                                <br/>  
-                                                <span class="lead">{$author}</span>
-                                                <br/>
-                                                {
-                                                let $thisEd         :=      $root//tei:teiHeader//tei:sourceDesc//tei:pubPlace[@role = 'thisEd']
-                                                let $firstEd        :=      $root//tei:teiHeader//tei:sourceDesc//tei:pubPlace[@role = 'firstEd']
-                                                let $publisher      :=      if ($thisEd) then $root//tei:teiHeader//tei:imprint/tei:publisher[@n = 'thisEd']/tei:persName[1]/tei:surname 
-                                                                            else $root//tei:teiHeader//tei:imprint/tei:publisher[@n = 'firstEd']/tei:persName[1]/tei:surname
-                                                let $place          :=      if ($thisEd) then $thisEd else $firstEd
-                                                let $year           :=      if ($thisEd) 
-                                                                            then $root//tei:teiHeader//tei:date[@type = 'thisEd']/@when/string() 
-                                                                            else $root//tei:teiHeader//tei:date[@type = 'firstEd']/@when/string()
-                                                let $vol            :=      if ($root/tei:teiHeader//tei:monogr//tei:title[@type = 'volume']) 
-                                                                            then concat(', ', $model('currentWorkHeader')//tei:monogr//tei:title[@type = 'volume']) 
-                                                                            else ()                         
-                                                let $pubDetails     :=      $place || '&#32;'||": " || $publisher || ", " || $year || $vol
-                                                return $pubDetails
-                                                }
-                                                <br/>  
-                                                {
-                                                let $wid    := string($root/@xml:id)
-                                                for $a in (doc($config:tei-works-root || "/" || $wid || ".xml")/tei:TEI//tei:text[@type="work_multivolume"])
-                                                     let $completeWork   :=  $a[@xml:id="completeWork"]
-                                                     let $volumesString  :=  
-                                                        for $volume in util:expand($completeWork)//tei:text[@type="work_volume"] return
-                                                            app:WRKsingleVolumeString($wid, $volume)
-                                                     return  $volumesString
-                                               }
-                                                <br/> 
-                                               <a  href="{$details}"  title="bibliographical details about this book"> <span class="icon-info2 pull-right" style="font-size: 1.3em;"> </span></a>
-                                           </div>
-                                        </div>  
-                                    </div>
-                            return $items
+    let $debug := if ($config:debug = ("trace")) then console:log("[APP] Building year-sorted finalFacets (No Js) for " || $lang || "...") else ()
+    return
+        for $item in (collection($config:tei-works-root)//tei:TEI)//tei:text[@type = ('work_monograph', 'work_multivolume')]
+            let $root       :=  $item/ancestor::tei:TEI
+            let $id         :=  (session:encode-url( xs:anyURI( $config:idserver || '/texts/' || $root/@xml:id ) ))
+            let $details    :=  (session:encode-url( xs:anyURI( 'workDetails.html?wid=' ||  $root/@xml:id ) ))
+            let $title      :=  $root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'short']/string()
+            let $author     :=  app:rotateFormatName($root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName)
+            order by $root/tei:teiHeader//tei:sourceDesc//tei:date[@type = 'firstEd']/@when ascending
+                return
+                    <div class="col-md-6"> 
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <a class="lead" href="{$id}"><span class="glyphicon glyphicon-file"></span>&#xA0;{$title}</a>
+                                <br/>  
+                                <span class="lead">{$author}</span>
+                                <br/>
+                                {
+                                let $thisEd         :=      $root//tei:teiHeader//tei:sourceDesc//tei:pubPlace[@role = 'thisEd']
+                                let $firstEd        :=      $root//tei:teiHeader//tei:sourceDesc//tei:pubPlace[@role = 'firstEd']
+                                let $publisher      :=      if ($thisEd) then $root//tei:teiHeader//tei:imprint/tei:publisher[@n = 'thisEd']/tei:persName[1]/tei:surname 
+                                                            else $root//tei:teiHeader//tei:imprint/tei:publisher[@n = 'firstEd']/tei:persName[1]/tei:surname
+                                let $place          :=      if ($thisEd) then $thisEd else $firstEd
+                                let $year           :=      if ($thisEd) 
+                                                            then $root//tei:teiHeader//tei:date[@type = 'thisEd']/@when/string() 
+                                                            else $root//tei:teiHeader//tei:date[@type = 'firstEd']/@when/string()
+                                let $vol            :=      if ($root/tei:teiHeader//tei:monogr//tei:title[@type = 'volume']) 
+                                                            then concat(', ', $model('currentWorkHeader')//tei:monogr//tei:title[@type = 'volume']) 
+                                                            else ()                         
+                                let $pubDetails     :=      $place || '&#32;'||": " || $publisher || ", " || $year || $vol
+                                return $pubDetails
+                                }
+                                <br/>  
+                                {
+                                let $wid    := string($root/@xml:id)
+                                for $a in (doc($config:tei-works-root || "/" || $wid || ".xml")/tei:TEI//tei:text[@type="work_multivolume"])
+                                     let $completeWork   :=  $a[@xml:id="completeWork"]
+                                     let $volumesString  :=  
+                                        for $volume in util:expand($completeWork)//tei:text[@type="work_volume"] return
+                                            app:WRKsingleVolumeString($wid, $volume)
+                                     return  $volumesString
+                               }
+                                <br/> 
+                               <a  href="{$details}"  title="bibliographical details about this book"> <span class="icon-info2 pull-right" style="font-size: 1.3em;"> </span></a>
+                           </div>
+                        </div>  
+                    </div>
 };
 
 declare %templates:wrap function app:WRKcreateListPlace($node as node(), $model as map(*), $lang as xs:string?) {
-    let $items :=  
+    let $debug := if ($config:debug = ("trace")) then console:log("[APP] Building place-sorted finalFacets (No Js) for " || $lang || "...") else ()
+    return  
         for $item in (collection($config:tei-works-root)//tei:TEI)//tei:text[@type = ('work_monograph', 'work_multivolume')]
             let $root       :=  $item/ancestor::tei:TEI
             let $id         :=  (session:encode-url( xs:anyURI( $config:idserver || '/texts/' || $root/@xml:id ) ))
@@ -960,7 +989,6 @@ declare %templates:wrap function app:WRKcreateListPlace($node as node(), $model 
                            </div>
                         </div>  
                     </div>
-    return $items
 };
 
 declare function app:loadWRKsnoJs ($node as node(), $model as map (*), $lang as xs:string?, $sort as xs:string?) {

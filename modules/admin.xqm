@@ -368,31 +368,31 @@ declare function admin:cleanCollection ($wid as xs:string, $collection as xs:str
 
 declare function admin:saveFile($wid as xs:string, $fileName as xs:string, $content as item(), $collection as xs:string?) {
     let $collectionName :=
-             if ($collection eq "html")     then $config:html-root     || "/" || $wid
-        else if ($collection eq "txt")      then $config:txt-root      || "/" || $wid
-        else if ($collection eq "snippets") then $config:snippets-root || "/" || $wid
-        else if ($collection eq "index")    then $config:index-root    || "/"
-        else if ($collection eq "iiif")     then $config:iiif-root     || "/"
-        else if ($collection eq "data")     then $config:data-root     || "/"
-        else if ($collection eq "stats")    then $config:stats-root    || "/"
+             if ($collection eq "html")         then $config:html-root     || "/" || $wid
+        else if ($collection eq "txt")          then $config:txt-root      || "/" || $wid
+        else if ($collection eq "snippets")     then $config:snippets-root || "/" || $wid
+        else if ($collection eq "index")        then $config:index-root    || "/"
+        else if ($collection eq "iiif")         then $config:iiif-root     || "/"
+        else if ($collection eq "data")         then $config:data-root     || "/"
+        else if ($collection eq "stats")        then $config:stats-root    || "/"
         else if ($collection eq "rdf" and starts-with(upper-case($wid), "W0")) then $config:rdf-works-root   || "/"
         else if ($collection eq "rdf" and starts-with(upper-case($wid), "A0")) then $config:rdf-authors-root || "/"
         else if ($collection eq "rdf" and starts-with(upper-case($wid), "L0")) then $config:rdf-lemmata-root || "/"
         else $config:data-root || "/trash/"
     let $create-parent-status :=
-             if ($collection eq "html"     and not(xmldb:collection-available($config:html-root)))     then
+             if ($collection eq "html"      and not(xmldb:collection-available($config:html-root)))     then
             xmldb:create-collection($config:webdata-root, "html")
-        else if ($collection eq "txt"      and not(xmldb:collection-available($config:txt-root)))      then
+        else if ($collection eq "txt"       and not(xmldb:collection-available($config:txt-root)))      then
             xmldb:create-collection($config:webdata-root, "txt")
-        else if ($collection eq "snippets" and not(xmldb:collection-available($config:snippets-root))) then
+        else if ($collection eq "snippets"  and not(xmldb:collection-available($config:snippets-root))) then
             xmldb:create-collection($config:webdata-root, "snippets")
-        else if ($collection eq "index"    and not(xmldb:collection-available($config:index-root)))    then
+        else if ($collection eq "index"     and not(xmldb:collection-available($config:index-root)))    then
             xmldb:create-collection($config:webdata-root, "index")
-        else if ($collection eq "iiif"     and not(xmldb:collection-available($config:iiif-root)))     then
+        else if ($collection eq "iiif"      and not(xmldb:collection-available($config:iiif-root)))     then
             xmldb:create-collection($config:webdata-root, "iiif")
-        else if ($collection eq "rdf"      and not(xmldb:collection-available($config:rdf-root)))      then
+        else if ($collection eq "rdf"       and not(xmldb:collection-available($config:rdf-root)))      then
             xmldb:create-collection($config:webdata-root, "rdf")
-        else if ($collection eq"stats"    and not(xmldb:collection-available($config:stats-root)))    then
+        else if ($collection eq"stats"      and not(xmldb:collection-available($config:stats-root)))    then
             xmldb:create-collection($config:webdata-root, "stats")
         (: TODO: rdf subroots (works/authors)? but these should already ship with the svsal-webdata package :)
         else ()
@@ -408,11 +408,11 @@ declare function admin:saveFile($wid as xs:string, $fileName as xs:string, $cont
     let $chgrp-collection-status := sm:chgrp(xs:anyURI($collectionName), 'svsal')
     let $chmod-collection-status := sm:chmod(xs:anyURI($collectionName), 'rwxrwxr-x')
     let $remove-status :=
-        if ($content and ($fileName = xmldb:get-child-resources($collectionName))) then
+        if (exists($content) and ($fileName = xmldb:get-child-resources($collectionName))) then
             xmldb:remove($collectionName, $fileName)
         else ()
     let $store-status :=
-        if ($content) then
+        if (exists($content)) then
             xmldb:store($collectionName, $fileName, $content)
         else ()
     return $store-status
@@ -423,6 +423,7 @@ declare function admin:saveTextFile($wid as xs:string, $fileName as xs:string, $
              if ($collection eq "html")     then $config:html-root     || "/" || $wid
         else if ($collection eq "txt")      then $config:txt-root      || "/" || $wid
         else if ($collection eq "snippets") then $config:snippets-root || "/" || $wid
+        else if ($collection eq "workslist")    then $config:html-root     || "/"
         else if ($collection eq "index")    then $config:index-root    || "/"
         else if ($collection eq "iiif")     then $config:iiif-root     || "/"
         else if ($collection eq "data")     then $config:data-root     || "/"
@@ -432,19 +433,21 @@ declare function admin:saveTextFile($wid as xs:string, $fileName as xs:string, $
         else if ($collection eq "rdf" and starts-with(upper-case($wid), 'L0')) then $config:rdf-lemmata-root || "/"
         else $config:data-root || "/trash/"
     let $create-parent-status     :=      
-             if ($collection eq "html"     and not(xmldb:collection-available($config:html-root)))     then
+             if ($collection eq "html"      and not(xmldb:collection-available($config:html-root)))     then
             xmldb:create-collection($config:webdata-root, "html")
-        else if ($collection eq "txt"      and not(xmldb:collection-available($config:txt-root)))      then
+        else if ($collection eq "workslist" and not(xmldb:collection-available($config:html-root)))     then
+            xmldb:create-collection($config:webdata-root, "html")
+        else if ($collection eq "txt"       and not(xmldb:collection-available($config:txt-root)))      then
             xmldb:create-collection($config:webdata-root, "txt")
-        else if ($collection eq "snippets" and not(xmldb:collection-available($config:snippets-root))) then
+        else if ($collection eq "snippets"  and not(xmldb:collection-available($config:snippets-root))) then
             xmldb:create-collection($config:webdata-root, "snippets")
-        else if ($collection eq "index"    and not(xmldb:collection-available($config:index-root)))    then
+        else if ($collection eq "index"     and not(xmldb:collection-available($config:index-root)))    then
             xmldb:create-collection($config:webdata-root, "index")
-        else if ($collection eq "iiif"     and not(xmldb:collection-available($config:iiif-root)))     then
+        else if ($collection eq "iiif"      and not(xmldb:collection-available($config:iiif-root)))     then
             xmldb:create-collection($config:webdata-root, "iiif")
-        else if ($collection eq "rdf"      and not(xmldb:collection-available($config:rdf-root)))      then
+        else if ($collection eq "rdf"       and not(xmldb:collection-available($config:rdf-root)))      then
             xmldb:create-collection($config:webdata-root, "rdf")
-        else if ($collection eq "stats"    and not(xmldb:collection-available($config:stats-root)))    then
+        else if ($collection eq "stats"     and not(xmldb:collection-available($config:stats-root)))    then
             xmldb:create-collection($config:webdata-root, "stats")
         (: TODO: rdf subroots (works/authors)? but these should already ship with the svsal-webdata package :)
         else ()
@@ -503,12 +506,13 @@ declare function admin:exportXMLFile($wid as xs:string, $filename as xs:string, 
     let $collectionname := 
              if ($collection eq "html")      then $fsRoot || $wid || "/html/"
         else if ($collection eq "snippets")  then $fsRoot || $wid || "/snippets/"
+        else if ($collection eq "workslist") then $fsRoot || $wid || "/"
         else if ($collection eq "index")     then $fsRoot || $wid || "/"
         else if ($collection eq "rdf")       then $fsRoot || $wid || "/"
         else                                      $fsRoot || "trash/"
     let $method :=
-          if ($collection eq "html") then "html"
-        else                              "xml"
+          if ($collection = ("html", "workslist")) then "html"
+        else                                            "xml"
 
     let $collectionStatus :=
         if (not(file:exists($collectionname))) then
@@ -626,14 +630,65 @@ declare function admin:exportJSONFile($wid as xs:string, $filename as xs:string,
     return  if ($store-status) then $pathname else ()
 };
 
+declare function admin:buildFacets ($node as node(), $model as map (*), $lang as xs:string?) {
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Building finalFacets (Js)...") else ()
+    let $facets := map { "de" : app:WRKfinalFacets($node, $model, 'de'),
+                         "en" : app:WRKfinalFacets($node, $model, 'en'),
+                         "es" : app:WRKfinalFacets($node, $model, 'es')
+                       }
+    let $result := for $l in ("de", "en", "es")
+                    let $content      := app:WRKfinalFacets($node, $model, $l)
+                    let $filename     := 'works_' || $l || '.json'
+                    let $debug        := console:log("[ADMIN] Saving (Js) " || $l || " facets file in the database...")
+                    let $storeStatus  := admin:saveTextFile("dummy", $filename, $content, "workslist")
+                    let $debug        := console:log("[ADMIN] Exporting (Js) " || $l || " facets json file...")
+                    let $exportStatus := admin:exportJSONFile($filename, $content, 'workslist')
+                    return <div>Saved {$l} works list to {$storeStatus} and exported it to {$exportStatus}.</div>
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] finalFacets (Js) done!") else ()
+    return $result
+};
+
+declare function admin:buildFacetsNoJs ($node as node(), $model as map (*), $lang as xs:string?) {
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Building finalFacets (No Js)...") else ()
+    let $facets := map { "surname" :    map { "de" : app:WRKcreateListSurname($node, $model, 'de'),
+                                              "en" : app:WRKcreateListSurname($node, $model, 'en'),
+                                              "es" : app:WRKcreateListSurname($node, $model, 'es')
+                                            },
+                         "title" :      map { "de" : app:WRKcreateListTitle($node, $model, 'de'),
+                                              "en" : app:WRKcreateListTitle($node, $model, 'en'),
+                                              "es" : app:WRKcreateListTitle($node, $model, 'es')
+                                            },
+                         "year" :       map { "de" : app:WRKcreateListYear($node, $model, 'de'),
+                                              "en" : app:WRKcreateListYear($node, $model, 'en'),
+                                              "es" : app:WRKcreateListYear($node, $model, 'es')
+                                            },
+                         "place" :      map { "de" : app:WRKcreateListPlace($node, $model, 'de'),
+                                              "en" : app:WRKcreateListPlace($node, $model, 'en'),
+                                              "es" : app:WRKcreateListPlace($node, $model, 'es')
+                                            }
+                       }
+    let $result := map:for-each($facets, function ($k, $v) {
+                        map:for-each($v, function ($l, $c) {
+                             let $filename     := 'worksNoJs_' || $l || '_' || $k || '.html'
+                             let $debug        := console:log("[ADMIN] Saving (NoJs) " || $l || "_" || $k || " facets file in the database...")
+                             let $storeStatus  := xmldb:store($config:data-root, $filename, <sal>{$c}</sal>)
+                             let $debug        := console:log("[ADMIN] Exporting (NoJs) " || $l || "_" || $k || " facets json file...")
+                             let $exportStatus := admin:exportXMLFile($filename, $c, 'workslist')
+                             return <div>Saved {$l}_{$k} works list to {$storeStatus} and exported it to {$exportStatus}.</div>
+                          })
+                   })
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] finalFacets (No Js) done!") else ()
+    return $result
+};
+
 declare function admin:exportFileWRK ($node as node(), $model as map (*), $lang as xs:string?) {
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Exporting finalFacets (Js)...") else ()
     let $fileNameDe         :=  'works_de.json'
     let $fileNameEn         :=  'works_en.json'
     let $fileNameEs         :=  'works_es.json'
-    let $contentDe          := app:WRKfinalFacets($node, $model, 'de')
-    let $contentEn          := app:WRKfinalFacets($node, $model, 'en')
-    let $contentEs          := app:WRKfinalFacets($node, $model, 'es')
+    let $contentDe          := fn:parse-json("[" || string-join(app:WRKfinalFacets($node, $model, 'de'), ", ") || "]") (: app:WRKfinalFacets returns a sequence of strings, one per work in the collection :)
+    let $contentEn          := fn:parse-json("[" || string-join(app:WRKfinalFacets($node, $model, 'en'), ", ") || "]")
+    let $contentEs          := fn:parse-json("[" || string-join(app:WRKfinalFacets($node, $model, 'es'), ", ") || "]")
     let $store :=  (admin:exportJSONFile($fileNameDe, $contentDe, 'workslist'),
                     admin:exportJSONFile($fileNameEn, $contentEn, 'workslist'),
                     admin:exportJSONFile($fileNameEs, $contentEs, 'workslist'))
@@ -1490,19 +1545,15 @@ declare function admin:createIIIF($wid as xs:string) {
         if ($config:debug eq 'trace') then
             util:log("warn", "Creation of IIIF resource requested, work id: " || $wid || ".")
         else ()
-    let $resource := 
-        serialize(iiif:createResource($wid), 
-            <output:serialization-parameters>
-                <output:method>json</output:method>
-            </output:serialization-parameters>)
+    let $resource := iiif:createResource($wid)
     let $runtime-ms := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000
     let $runtimeString := 
         if ($runtime-ms < (1000 * 60)) then format-number($runtime-ms div 1000, "#.##") || " Sek."
         else if ($runtime-ms < (1000 * 60 * 60))  then format-number($runtime-ms div (1000 * 60), "#.##") || " Min."
         else format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
     let $log    := util:log('warn', 'Extracted IIIF for ' || $wid || ' in ' || $runtimeString)
-    let $store  := if ($resource) then xmldb:store($config:iiif-root, $wid || '.json', $resource) else ()
-    let $export := if ($resource) then admin:exportJSONFile($wid, $wid || '.json', $resource, 'iiif') else ()
+    let $store  := if ($resource instance of map(*) and map:size($resource) > 0) then admin:saveTextFile($wid, $wid || '.json', fn:serialize($resource, map{"method":"json", "indent": true(), "encoding":"utf-8"}), 'iiif') else ()
+    let $export := if ($resource instance of map(*) and map:size($resource) > 0) then admin:exportJSONFile($wid, $wid || '.json', $resource, 'iiif') else ()
     return $resource
 };
 

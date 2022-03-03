@@ -50,10 +50,14 @@ let $output :=
             admin:createTeiCorpus('admin')
         case 'iiif' return
             admin:createIIIF($rid)
-        case 'routing' return
-            admin:createRoutes($rid)
         case 'txt-corpus' return
             admin:createTxtCorpus('admin')
+        case 'routing' return
+            switch($rid)
+                case 'all' return
+                    admin:createRoutes()
+                default return
+                    admin:createRoutes($rid)
         case 'all' return 
             (: all formats (except iiif) for a single work :)
             (admin:createNodeIndex($rid),
@@ -74,7 +78,7 @@ let $runtimeString :=
 
 let $debug := 
     if ($format) then 
-        util:log('warn', '[WEBDATA-ADMIN] Rendered format "' || $format || '" for resource "' || $rid || '" in ' || $runtimeString || '.') 
+        util:log('warn', '[WEBDATA-ADMIN] Rendered "' || $format || '" for resource "' || $rid || '" in ' || $runtimeString || '.') 
     else ()
 
 let $title := 
