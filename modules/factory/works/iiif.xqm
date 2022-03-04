@@ -48,7 +48,7 @@ declare function iiif:createResource($targetWorkId as xs:string) as map(*) {
 declare function iiif:mkMultiVolumeCollection($workId as xs:string, $tei as node()) as map(*) {
 (:    let $debug := if ($config:debug = "trace") then console:log("[iiif] iiif:mkMultiVolumeCollection running (" || $workId || " requested) ...") else ():)
     let $id := $config:iiifPresentationServer || "collection/" || $workId
-    let $label := normalize-space($tei//tei:titleStmt/tei:author) || ": " ||
+    let $label := string-join(for $a in $tei//tei:titleStmt/tei:author return normalize-space($a), "/") || ": " ||
         normalize-space($tei//tei:titleStmt/tei:title[@type="main"]/text()) || " [multi-volume collection]"
     let $viewingHint := "multi-part"
     let $license         := "" (: TODO: which license for image data? https://creativecommons.org/licenses/by/4.0/ :)
@@ -332,7 +332,7 @@ declare function iiif:mkMetadata($tei as node()) as array(*) {
 
     let $metadata := array {
         map {"label": iiif:getI18nLabels("title"), "value": normalize-space($tei//tei:titleStmt/tei:title[@type="main"]/text())},
-        map {"label": iiif:getI18nLabels("author"), "value": normalize-space($tei//tei:titleStmt/tei:author)},
+        map {"label": iiif:getI18nLabels("author"), "value": string-join(for $a in $tei//tei:titleStmt/tei:author return normalize-space($a), "/")},
         map {"label": iiif:getI18nLabels("date-added"), "value": ""},
         map {"label": iiif:getI18nLabels("language"), "value": $lang},
         map {"label": iiif:getI18nLabels("publish-place"), "value": $pubPlace},
