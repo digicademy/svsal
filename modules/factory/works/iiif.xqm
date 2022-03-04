@@ -399,7 +399,7 @@ declare function iiif:teiFacs2IiifImageId($facs as xs:string?) as xs:string {
     If a work has been separated into several files with identifiers ending on underscore + lowercased letter, then this id will be returned. :)
 declare function iiif:getIiifVolumeId($volumeId as xs:string) as xs:string {
     let $volumeMap := map {
-        "Vol01": "A","Vol02": "B","Vol03": "C","Vol04": "D","Vol05": "E","Vol06": "F","Vol07": "G","Vol08": "H","Vol09": "I","Vol10": "J"
+        "Vol01": "A","Vol02": "B","Vol03": "C","Vol04": "D","Vol05": "E","Vol06": "F","Vol07": "G","Vol08": "H","Vol09": "I","Vol10": "J","Vol11": "K","Vol12": "L","Vol13": "M","Vol14": "N","Vol15": "O"
     }
     let $iiifVolumeId :=
         if (matches($volumeId, "^W[0-9]{4}$")) then $volumeId
