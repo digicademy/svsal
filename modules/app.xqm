@@ -1,6 +1,5 @@
 xquery version "3.1";
 
-
 (: ####++++----
 
     "Workhorse" module of the app, providing large parts of the content-related logic (such
@@ -8,37 +7,35 @@ xquery version "3.1";
 
  ----++++#### :)
 
-
 module namespace app         = "http://www.salamanca.school/xquery/app";
+
+declare namespace tei        = "http://www.tei-c.org/ns/1.0";
+declare namespace sal        = "http://salamanca.adwmainz.de";
+
 declare namespace exist      = "http://exist.sourceforge.net/NS/exist";
+declare namespace http       = "http://expath.org/ns/http-client";
 declare namespace opensearch = "http://a9.com/-/spec/opensearch/1.1/";
 declare namespace output     = "http://www.w3.org/2010/xslt-xquery-serialization";
 declare namespace rdf        = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
-declare namespace sal        = "http://salamanca.adwmainz.de";
+declare namespace request    = "http://exist-db.org/xquery/request";
 declare namespace session    = "http://exist-db.org/xquery/session";
 declare namespace srw        = "http://www.loc.gov/zing/srw/";
-declare namespace tei        = "http://www.tei-c.org/ns/1.0";
+declare namespace templates  = "http://exist-db.org/xquery/templates";
 declare namespace transform  = "http://exist-db.org/xquery/transform";
 declare namespace util       = "http://exist-db.org/xquery/util";
 declare namespace xhtml      = "http://www.w3.org/1999/xhtml";
 declare namespace xi         = "http://www.w3.org/2001/XInclude";
+declare namespace xmldb      = "http://exist-db.org/xquery/xmldb";
 
-import module namespace http = "http://expath.org/ns/http-client";
-import module namespace config    = "http://www.salamanca.school/xquery/config"                at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
-import module namespace render-app    = "http://www.salamanca.school/xquery/render-app"        at "xmldb:exist:///db/apps/salamanca/modules/render-app.xqm";
-import module namespace sphinx    = "http://www.salamanca.school/xquery/sphinx"                at "xmldb:exist:///db/apps/salamanca/modules/sphinx.xqm";
-import module namespace console   = "http://exist-db.org/xquery/console";
-import module namespace functx    = "http://www.functx.com";
-import module namespace i18n      = "http://exist-db.org/xquery/i18n"        at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
-import module namespace request   = "http://exist-db.org/xquery/request";
-import module namespace templates = "http://exist-db.org/xquery/templates";
-import module namespace iiif      = "http://www.salamanca.school/xquery/iiif"                  at "xmldb:exist:///db/apps/salamanca/modules/iiif.xqm";
-import module namespace sutil    = "http://www.salamanca.school/xquery/sutil" at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
+import module namespace console    = "http://exist-db.org/xquery/console";
+import module namespace functx     = "http://www.functx.com";
 
-(: declare option output:method            "html5";     :)
-(: declare option output:media-type        "text/html"; :)
-(: declare option output:expand-xincludes  "yes";       :)
-(: declare option output:highlight-matches "both";      :)
+import module namespace config     = "http://www.salamanca.school/xquery/config"     at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace render-app = "http://www.salamanca.school/xquery/render-app" at "xmldb:exist:///db/apps/salamanca/modules/render-app.xqm";
+import module namespace sphinx     = "http://www.salamanca.school/xquery/sphinx"     at "xmldb:exist:///db/apps/salamanca/modules/sphinx.xqm";
+import module namespace i18n       = "http://exist-db.org/xquery/i18n"               at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
+import module namespace iiif       = "http://www.salamanca.school/xquery/iiif"       at "xmldb:exist:///db/apps/salamanca/modules/iiif.xqm";
+import module namespace sutil      = "http://www.salamanca.school/xquery/sutil"      at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
 
 (: ============ Helper functions ================= 
  :
@@ -47,7 +44,6 @@ import module namespace sutil    = "http://www.salamanca.school/xquery/sutil" at
  : - dummy test function
  :)
  
-
 (: Concatenates name(s): forename surname:)
 declare function app:rotateFormatName($persName as element()*) as xs:string? {
     let $return-string := for $pers in $persName
@@ -77,20 +73,6 @@ declare function app:resolvePersname($persName as element()*) {
     else sutil:formatName($persName)
 };
 
-(: inactive: :)
-(:declare function app:resolveURI($string as xs:string*) {
-    let $tei2htmlXslt   := doc($config:app-root || '/resources/xsl/extract_elements.xsl')
-    for $id in $string
-        let $doc := <div><a xml:id="{$id}" ref="#{id}">dummy</a></div>
-        let $xsl-parameters :=  <parameters>
-                        <param name="targetNode" value="{$id}" />
-                        <param name="targetWork" value="" />
-                        <param name="mode"       value="url" />
-                    </parameters>
-                    return xs:string(transform:transform($doc, $tei2htmlXslt, $xsl-parameters))
-};:)
-
-
 declare function app:workCount($node as node(), $model as map (*), $lang as xs:string?) {
     count($model("listOfWorks"))
 };
@@ -107,29 +89,8 @@ declare function app:workCount($node as node(), $model as map (*), $lang as xs:s
  : then: for simple output (without js): authors, lemmata, working papers, works (in alphabetical order)
  :)
 
-(: Authors with js facets:)
-(:
-declare function app:switchOrder ($node as node(), $model as map (*), $lang as xs:string?) {
-let $output := <i18n:text key="order">Orden</i18n:text>
-    return
-        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "en")
-};
-declare function app:switchDeath ($node as node(), $model as map (*), $lang as xs:string?) {
-let $output := <i18n:text key="death">Todesdatum</i18n:text>
-    return 
-        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "en")
-};
-declare function app:switchDiscipline ($node as node(), $model as map (*), $lang as xs:string?) {
-let $output := <i18n:text key="discipline">Disziplinenzugehörigkeit</i18n:text>
-    return 
-        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "en")
-};
-declare function app:switchPlace ($node as node(), $model as map (*), $lang as xs:string?) {
-let $output := <i18n:text key="place">Wirkort</i18n:text>
-    return 
-        i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "en")
-};
-:)
+(: ==== AUTHORS-SECTION (with js) ==== :)
+
 declare function app:AUTfinalFacets ($node as node(), $model as map (*), $lang as xs:string?) {
     for $item in collection($config:tei-authors-root)//tei:TEI[.//tei:text/@type eq "author_article"]//tei:listPerson/tei:person[1]
         let $aid            :=  xs:string($item/ancestor::tei:TEI/@xml:id)
@@ -158,7 +119,7 @@ declare function app:AUTfinalFacets ($node as node(), $model as map (*), $lang a
                                 else if ($death eq "?")  then '?'
                                 else ()
         let $orders         :=  for $a in distinct-values($item/tei:affiliation//tei:orgName/@key)
-                                    return <i18n:text key="{$a}">{$a}</i18n:text> (: i18n:process(<i18n:text key="{$a}">{$a}</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en") heute geändert :)
+                                    return <i18n:text key="{$a}">{$a}</i18n:text>
         let $ordersString   :=  string-join($orders, ", ")
         let $orderFacet     :=  '"' || string-join($orders, '","') || '"'
 (:
@@ -189,7 +150,7 @@ declare function app:AUTfinalFacets ($node as node(), $model as map (*), $lang a
         let $orderFacet     :=  ($orderA || $orderB || $orderC || $orderD)
 :)
         let $disciplines    :=  for $a in distinct-values($item/tei:education/@key)
-                                    return <i18n:text key="{$a}">{$a}</i18n:text> (: i18n:process(<i18n:text key="{$a}">{$a}</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en") heute geändert :)
+                                    return <i18n:text key="{$a}">{$a}</i18n:text>
         let $disciplinesString := string-join($disciplines, ", ")
         let $disciplineFacet :=  '"' || string-join($disciplines, '","') || '"'
 (:
@@ -204,7 +165,7 @@ declare function app:AUTfinalFacets ($node as node(), $model as map (*), $lang a
                                     if ($a eq 'theologian') then'"'||<i18n:text key="theologian">Theologe</i18n:text>||'",' else()    
         let $occuFacet      :=  ($orderPhil||$orderTheol)
 :) 
-        let $places         :=  for $b in distinct-values(for $a in ($item//tei:placeName) order by string($a/@key) collation "?lang=es" return
+        let $places         :=  for $b in distinct-values(for $a in ($item//tei:placeName) order by string($a/@key) collation "http://www.w3.org/2013/collation/UCA" return (: "http://exist-db.org/collation?lang=es" return :)
                                     let $placeName := if ($a/@key) then string($a/@key) else $a/text() 
                                     return (: if ($a//(ancestor::tei:occupation | ancestor::tei:affiliation | ancestor::tei:education )/@from) then
                                              $placeName || ': ' || substring-before($a//(ancestor::tei:occupation | ancestor::tei:affiliation | ancestor::tei:education )/@from, '-') || '-' || substring-before($a//(ancestor::tei:occupation | ancestor::tei:affiliation | ancestor::tei:education )/@to, '-')
@@ -237,14 +198,7 @@ declare function app:AUTfinalFacets ($node as node(), $model as map (*), $lang a
         return $output
 };
 
-
 (: ==== LEMMATA-SECTION (with js) ==== :)
-(: not in use :)
-(:declare function app:switchName ($node as node(), $model as map (*), $lang as xs:string?) {
-let $output := <i18n:text key="lemmata">Lemma</i18n:text>
-    return 
-        i18n:process($output, "de", "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
-};:)
 
 declare function app:LEMfinalFacets ($node as node(), $model as map (*), $lang as xs:string?) {
     for $item in (collection($config:tei-lemmata-root)//tei:TEI[.//tei:text/@type eq "lemma_article"])
@@ -277,37 +231,37 @@ declare function app:LEMfinalFacets ($node as node(), $model as map (*), $lang a
                 || '&#125;' || ','
 };
 
-
 (: ==== WORKS-SECTION (with js) ====  :)
+
 declare function app:switchYear ($node as node(), $model as map (*), $lang as xs:string?) {
     let $output := <i18n:text key="year">Jahr</i18n:text>
         return 
-            $output (: i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :)
+            $output
 };
 declare function app:switchPrintingPlace ($node as node(), $model as map (*), $lang as xs:string?) {
     let $output := <i18n:text key="printingPlace">Druckort</i18n:text>
         return 
-            $output (: i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :)
+            $output
 };
 declare function app:switchLanguage ($node as node(), $model as map (*), $lang as xs:string?) {
     let $output := <i18n:text key="lang">Sprache</i18n:text>
         return 
-            $output (: i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :)
+            $output
 };
 declare function app:switchAuthor($node as node(), $model as map (*), $lang as xs:string?) {
     let $output := <i18n:text key="author">Autor</i18n:text>
         return 
-            $output (: i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :)
+            $output
 };
 declare function app:switchTitle($node as node(), $model as map (*), $lang as xs:string?) {
     let $output := <i18n:text key="title">Titel</i18n:text>
         return 
-            $output (: i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :)
+            $output
 };
 declare function app:switchAvailability ($node as node(), $model as map (*), $lang as xs:string?) {
     let $output := <i18n:text key="availability">Availability</i18n:text>
         return 
-            $output (: i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :)
+            $output
 };
 
 declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang as xs:string?) {
@@ -315,6 +269,9 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
         let $wid            :=  xs:string($item/parent::tei:TEI/@xml:id)
         let $title          :=  $item/tei:fileDesc/tei:titleStmt/tei:title[@type = 'short']
         let $status         :=  xs:string($item/ancestor-or-self::tei:TEI//tei:revisionDesc/@status)
+        let $disclaimer     :=  if ($item/ancestor-or-self::tei:TEI//tei:revisionDesc/@status eq "h_temporarily_suspended") then
+                                    $item/ancestor-or-self::tei:TEI//tei:revisionDesc//tei:change[@status eq "h_temporarily_suspended"][1]/replace(., '&#x0a;', ' ')
+                                else ()
         let $WIPstatus      :=  
             if ($item/ancestor-or-self::tei:TEI//tei:revisionDesc/@status =
                                      ( 'a_raw',
@@ -327,9 +284,9 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
             else "no"
         let $wrkLink        :=  'work.html?wid=' || $wid
 
-        let $name           :=  sutil:formatName($item/tei:fileDesc/tei:titleStmt/tei:author/tei:persName)
-        let $sortName       :=  lower-case($item/tei:fileDesc/tei:titleStmt/tei:author/tei:persName/tei:surname) (:lower-casing for equal sorting:)
-        let $firstChar      :=  upper-case(substring($item/tei:fileDesc/tei:titleStmt/tei:author//tei:surname, 1, 1))
+        let $name           :=  string-join(for $a in $item/tei:fileDesc/tei:titleStmt/tei:author/tei:persName return sutil:formatName($a), " &amp; ")
+        let $sortName       :=  string-join(for $a in $item/tei:fileDesc/tei:titleStmt/tei:author/tei:persName/tei:surname return lower-case($a), " &amp; ") (:lower-casing for equal sorting:)
+        let $firstChar      :=  upper-case(substring($item/tei:fileDesc/tei:titleStmt/tei:author[1]//tei:surname, 1, 1))
         let $nameFacet      :=       
                  if ($firstChar = ('A','B','C','D','E','F')) then 'A - F'
             else if ($firstChar = ('G','H','I','J','K','L')) then 'G - L'
@@ -337,10 +294,10 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
             else                                                  'S - Z'
 
         let $workDetails    :=  'workDetails.html?wid=' ||  $wid
-        let $DetailsInfo    :=  <i18n:text key="details">Katalogeintrag</i18n:text> (: i18n:process(<i18n:text key="details">Katalogeintrag</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en") heute geändert :)
+        let $DetailsInfo    :=  <i18n:text key="details">Katalogeintrag</i18n:text>
 
         let $workImages     :=  'viewer_standalone.html?wid=' ||  $wid
-        let $FacsInfo       :=  <i18n:text key="facsimiles">Bildansicht</i18n:text> (: i18n:process(<i18n:text key="facsimiles">Bildansicht</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en") heute geändert :)
+        let $FacsInfo       :=  <i18n:text key="facsimiles">Bildansicht</i18n:text>
 
         let $printingPlace  :=  
             if ($item//tei:pubPlace[@role = 'thisEd']) then $item//tei:pubPlace[@role = 'thisEd'] 
@@ -371,29 +328,18 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
                 <i18n:text key="latin">Latein</i18n:text>
              else
                 <i18n:text key="spanish">Spanisch</i18n:text>
-            (:
-            i18n:process(if ($item/parent::tei:TEI//tei:text/@xml:lang = 'la') then
-                            <i18n:text key="latin">Latein</i18n:text>
-                         else
-                            <i18n:text key="spanish">Spanisch</i18n:text>
-                , $lang, "/db/apps/salamanca/data/i18n", "en")
-            heute geändert :)
+
         let $facetAvailability := 
             if ($WIPstatus eq 'yes') then
                 <i18n:text key="facsimiles">Facsimiles</i18n:text>
              else
                 <i18n:text key="fullTextAvailable">Full Text (+ Facsimiles)</i18n:text>
-            (:
-            i18n:process(if ($WIPstatus eq 'yes') then <i18n:text key="facsimiles">Facsimiles</i18n:text>
-                         else <i18n:text key="fullTextAvailable">Full Text (+ Facsimiles)</i18n:text>,
-                 $lang, "/db/apps/salamanca/data/i18n", "en")
-            heute geändert :)
+
         let $completeWork   :=  $item/parent::tei:TEI//tei:text[@xml:id="completeWork"]
         let $volIcon        :=  if ($completeWork/@type='work_multivolume') then 'icon-text' else ()
         let $volLabel       :=  
             if ($completeWork/@type='work_multivolume') then
                 <span><i18n:text key="volumes">Bände</i18n:text> : {$config:nbsp || $config:nbsp}</span>
-                (: <span>{i18n:process(<i18n:text key="volumes">Bände</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en") || ':' || $config:nbsp || $config:nbsp}</span> heute geändert :)
             else ()
         let $volumesString  :=  
             for $volume at $index in util:expand($completeWork)//tei:text[@type="work_volume"]
@@ -410,6 +356,7 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
         let $output :=
                '&#123;'
             || '"title":'         || '"' || $title          || '",'
+            || '"disclaimer":'    || '"' || $disclaimer     || '",'
             || '"status":'        || '"' || $status         || '",'
             || '"WIPstatus":'     || '"' || $WIPstatus      || '",'
             || '"monoMultiUrl":'  || '"' || $wrkLink        || '",'
@@ -445,8 +392,8 @@ declare function app:loadWRKfacets ($node as node(), $model as map (*), $lang as
     doc($config:data-root || "/" || 'works_es.xml')/sal/text()
 };
 
-
 (:  ==== AUTHORS-LIST (no js) ====  :)
+
 declare %templates:wrap  
     function app:sortAUT ($node as node(), $model as map(*), $lang as xs:string?)  {
 let $output := 
@@ -459,7 +406,6 @@ let $output :=
         </span>
             return 
                 $output
-                (: i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "en") heute geändert :)
 };        
 
 declare  %templates:wrap
@@ -528,7 +474,6 @@ declare %private
         let $relOrder  :=  $model('currentAuthor')//tei:affiliation/tei:orgName[1]/@key/string()
         return
             <span><i18n:text key="{$relOrder}">{$relOrder}</i18n:text></span>
-            (: <span>{i18n:process(<i18n:text key="{$relOrder}">{$relOrder}</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en")}</span> heute geändert :)
 };
 
 declare %private
@@ -536,7 +481,6 @@ declare %private
         let $relOrder  :=  $model('currentAuthor')//tei:affiliation/tei:orgName[1]/@key/string()
         return
             <span><i18n:text key="{$relOrder}">{$relOrder}</i18n:text></span>
-            (: <span>{i18n:process(<i18n:text key="{$relOrder}">{$relOrder}</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en")}</span> heute geändert :)
 (:             <span>
                {if     ($relOrder eq 'OP') then <i18n:text key="dominicans">Dominikaner</i18n:text>
                else if ($relOrder eq 'SJ')  then <i18n:text key="jesuits">Jesuit</i18n:text>
@@ -546,7 +490,6 @@ declare %private
             </span>
 :)
 };
-
 
 declare %templates:wrap
     function app:AUTmakeList($node as node(), $model as map(*), $lang as xs:string) {
@@ -564,6 +507,7 @@ declare %templates:wrap
 
 
 (:  ==== LEMMATA-LIST (no js) ====  :)
+
 declare %templates:wrap  
     function app:sortLEM ($node as node(), $model as map(*), $lang as xs:string?)  {
         let $output := 
@@ -575,7 +519,6 @@ declare %templates:wrap
             </span>
         return
             $output
-            (: i18n:process($output, "de", "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :)                
 }; 
 
 declare  %templates:wrap
@@ -629,9 +572,8 @@ declare  %templates:wrap
 };
 
 
-(:  
-        ==== WORKING-PAPERS-LIST (no js) ====
-:)
+(:  ==== WORKING-PAPERS-LIST (no js) ====  :)
+
 declare %templates:wrap
         function app:loadListOfWps($node as node(), $model as map(*)) as map(*) {
             let $result := for $item in collection($config:tei-workingpapers-root)/tei:TEI[.//tei:text/@type eq "working_paper"]
@@ -640,17 +582,17 @@ declare %templates:wrap
             return map { 'listOfWps': $result }
 };
 
-(:  
-        ==== WORKS-LIST (no js) ====
-:)
+(:  ==== WORKS-LIST (no js) ====  :)
+
 (:works with noscript. NOTE: this function is ONLY USED ON THE ADMIN PAGE:)
+
 declare %templates:wrap %templates:default("sort", "surname")
         function app:loadListOfWorks($node as node(), $model as map(*), $sort as xs:string) as map(*) {
             let $coll := (collection($config:tei-works-root)//tei:TEI[.//tei:text/@type = ("work_monograph", "work_multivolume")]/tei:teiHeader)
             let $result := 
                 for $item in $coll
                     let $wid := $item/parent::tei:TEI/@xml:id/string()
-                    let $author := sutil:formatName($item//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName)
+                    let $author := string-join(for $a in $item//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName return sutil:formatName($a), " &amp; ")
                     let $titleShort := $item//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'short']/string()
                     order by $wid ascending
                     return 
@@ -661,43 +603,13 @@ declare %templates:wrap %templates:default("sort", "surname")
 };
 
 
-(: Deprecated 
-    (creates a huge tree overhead - if necessary, adjust it towards more fine-grained collection access (e.g., picking only teiHeaders from collection...)) :)
-(:works with noscript. NOTE: this function is ONLY USED ON THE ADMIN PAGE:)
-(:declare %templates:wrap %templates:default("sort", "surname")
-        function app:loadListOfWorksBak($node as node(), $model as map(*), $sort as xs:string) as map(*) {
-            let $coll := (collection($config:tei-works-root)//tei:TEI[.//tei:text/@type = ("work_monograph", "work_multivolume")])
-            let $result := 
-                            if ($sort eq 'surname') then 
-                                for $item in $coll
-                                    order by $item//tei:sourceDesc//tei:author[1]//tei:surname ascending
-                                    return $item
-                             else if ($sort eq 'title') then 
-                                 for $item in $coll
-                                    order by $item//tei:sourceDesc//tei:monogr/tei:title[@type = 'short'] ascending
-                                    return $item
-                            else if ($sort eq 'year') then    
-                                 for $item in $coll
-                                    order by $item//tei:sourceDesc//tei:date[@type = 'firstEd']/@when ascending
-                                    return $item
-                            else if ($sort eq 'place') then    
-                                for $item in $coll
-                                    order by $item//tei:sourceDesc//tei:pubPlace[@role = 'firstEd'] ascending
-                                    return $item
-                             else
-                                for $item in $coll
-                                    order by $item/@xml:id ascending
-                                    return $item
-            return map { 'listOfWorks': $result }     
-};:)
-
-
 declare %templates:wrap 
     function app:WRKauthor($node as node(), $model as map(*)) {
-         <span>{sutil:formatName($model('currentWorkHeader')//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName)}</span>
+         <span>{string-join(for $a in $model('currentWorkHeader')//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName return sutil:formatName($a), " &amp; ")}</span>
 };
 
-declare %templates:wrap %private function app:WRKpublication($node as node(), $model as map(*)) {
+declare %templates:wrap %private
+    function app:WRKpublication($node as node(), $model as map(*)) {
         let $thisEd         :=      $model('currentWorkHeader')//tei:pubPlace[@role = 'thisEd']
         let $firstEd        :=      $model('currentWorkHeader')//tei:pubPlace[@role = 'firstEd']
         let $publisher      :=      if ($thisEd) then $model('currentWorkHeader')//tei:imprint/tei:publisher[@n = 'thisEd']/tei:persName[1]/tei:surname else $model('currentWorkHeader')//tei:imprint/tei:publisher[@n = 'firstEd']/tei:persName[1]/tei:surname
@@ -712,21 +624,6 @@ declare %templates:wrap %private function app:WRKpublication($node as node(), $m
         return $pubDetails
 };
 
-(: deprecated? :)
-(:declare %templates:wrap %private
-    function app:WRKlinks($node as node(), $model as map (*), $lang as xs:string?) {
-        for $item in util:expand($model('currentWork'))//tei:text[@type="work_multivolume"]
-        let $wid            :=  xs:string($item/ancestor::tei:TEI/@xml:id)
-        let $completeWork   :=  $item[@xml:id="completeWork"]
-        let $volumesString  :=  for $volume(\: at $index:\) in util:expand($completeWork)//tei:text[@type="work_volume"]
-            let $volId      := xs:string($volume/@xml:id)
-            let $volFrag    := sutil:getFragmentID($wid, $volId)
-            let $volLink    :=  'work.html?wid=' || $wid || "&amp;frag=" || $volFrag || "#" || $volId
-            let $volContent := $volId || '&#32;&#32;'
-            return  	<a href="{$volLink}">{$volId||'&#32;'}</a>
-        return $volumesString
-};:)
-        
 declare %templates:wrap  
     function app:sortWRK ($node as node(), $model as map(*), $lang as xs:string?)  {
         let $output := 
@@ -740,7 +637,6 @@ declare %templates:wrap
             </span>
         return
             $output
-            (: i18n:process($output, "de", "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :)                
 };        
 
 declare  %templates:wrap
@@ -749,7 +645,8 @@ declare  %templates:wrap
         return <span>{count($items)}</span>
 };
 
-declare function app:WRKsingleVolumeString($wid as xs:string, $volume as element(tei:text)) {
+declare
+    function app:WRKsingleVolumeString($wid as xs:string, $volume as element(tei:text)) {
     let $volId      := xs:string($volume/@xml:id)
     let $volFrag    := sutil:getFragmentID($wid, $volId)
     let $volLink    :=  
@@ -762,15 +659,16 @@ declare function app:WRKsingleVolumeString($wid as xs:string, $volume as element
         else <span>{$volId||'&#32;'}</span>
 };
 
-declare %templates:wrap function app:WRKcreateListSurname($node as node(), $model as map(*), $lang as xs:string?) {
+declare %templates:wrap
+    function app:WRKcreateListSurname($node as node(), $model as map(*), $lang as xs:string?) {
     let $items :=  
         for $item in (collection($config:tei-works-root)//tei:TEI)//tei:text[@type = ('work_monograph', 'work_multivolume')]
             let $root       :=  $item/ancestor::tei:TEI
             let $id         :=  (session:encode-url( xs:anyURI( 'work.html?wid=' ||  $root/@xml:id ) ))
             let $details    :=  (session:encode-url( xs:anyURI( 'workDetails.html?wid=' ||  $root/@xml:id ) ))
             let $title      :=  $root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'short']/string()
-            let $author     :=  app:rotateFormatName($root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName)
-            order by $root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName/tei:surname ascending
+            let $author     :=  string-join(for $a in $root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName return app:rotateFormatName($a), " &amp; ")
+            order by $root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author[1]/tei:persName/tei:surname ascending
                 return
                     <div class="col-md-6"> 
                         <div class="panel panel-default">
@@ -815,7 +713,6 @@ declare %templates:wrap function app:WRKcreateListSurname($node as node(), $mode
             return $items
 };
 
-
 declare %templates:wrap
     function app:WRKcreateListTitle($node as node(), $model as map(*), $lang as xs:string?) {
         let $items      :=  for $item in (collection($config:tei-works-root)//tei:TEI)//tei:text[@type = ('work_monograph', 'work_multivolume')]
@@ -823,7 +720,7 @@ declare %templates:wrap
                                 let $id         :=  (session:encode-url( xs:anyURI( 'work.html?wid=' ||  $root/@xml:id ) ))
                                 let $details    :=  (session:encode-url( xs:anyURI( 'workDetails.html?wid=' ||  $root/@xml:id ) ))
                                 let $title      :=  $root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'short']/string()
-                                let $author     :=  app:rotateFormatName($root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName)
+                                let $author     :=  string-join(for $a in $root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName return app:rotateFormatName($a), " &amp; ")
                                 order by $root/tei:teiHeader//tei:sourceDesc//tei:monogr/tei:title[@type = 'short'] ascending
                                     return
                                         <div class="col-md-6"> 
@@ -872,7 +769,7 @@ declare %templates:wrap
                                 let $id         :=  (session:encode-url( xs:anyURI( 'work.html?wid=' ||  $root/@xml:id ) ))
                                 let $details    :=  (session:encode-url( xs:anyURI( 'workDetails.html?wid=' ||  $root/@xml:id ) ))
                                 let $title      :=  $root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'short']/string()
-                                let $author     :=  app:rotateFormatName($root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName)
+                                let $author     :=  string-join(for $a in $root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName return app:rotateFormatName($a), " &amp; ")
                                 order by $root/tei:teiHeader//tei:sourceDesc//tei:date[@type = 'firstEd']/@when ascending
                                     return
                                         <div class="col-md-6"> 
@@ -915,14 +812,15 @@ declare %templates:wrap
                                 return $items
 };
 
-declare %templates:wrap function app:WRKcreateListPlace($node as node(), $model as map(*), $lang as xs:string?) {
+declare %templates:wrap
+    function app:WRKcreateListPlace($node as node(), $model as map(*), $lang as xs:string?) {
     let $items :=  
         for $item in (collection($config:tei-works-root)//tei:TEI)//tei:text[@type = ('work_monograph', 'work_multivolume')]
             let $root       :=  $item/ancestor::tei:TEI
             let $id         :=  (session:encode-url( xs:anyURI( 'work.html?wid=' ||  $root/@xml:id ) ))
             let $details    :=  (session:encode-url( xs:anyURI( 'workDetails.html?wid=' ||  $root/@xml:id ) ))
             let $title      :=  $root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'short']/string()
-            let $author     :=  app:rotateFormatName($root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName)
+            let $author     :=  string-join(for $a in $root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName return app:rotateFormatName($a), " &amp; ")
             let $order      :=  if ($root/tei:teiHeader//tei:sourceDesc//tei:pubPlace[@role = 'thisEd']) then $root/tei:teiHeader//tei:sourceDesc//tei:pubPlace[@role = 'thisEd']
                                 else $root/tei:teiHeader//tei:sourceDesc//tei:pubPlace[@role = 'firstEd'] 
             order by $order ascending
@@ -967,7 +865,8 @@ declare %templates:wrap function app:WRKcreateListPlace($node as node(), $model 
     return $items
 };
 
-declare function app:loadWRKsnoJs ($node as node(), $model as map (*), $lang as xs:string?, $sort as xs:string?) {
+declare
+    function app:loadWRKsnoJs ($node as node(), $model as map (*), $lang as xs:string?, $sort as xs:string?) {
          if ($sort = 'surname' and $lang ='de') then doc($config:data-root || "/" || 'worksNoJs_de_surname.xml')/sal
     else if ($sort = 'title'   and $lang ='de') then doc($config:data-root || "/" || 'worksNoJs_de_title.xml')/sal
     else if ($sort = 'year'    and $lang ='de') then doc($config:data-root || "/" || 'worksNoJs_de_year.xml')/sal
@@ -999,7 +898,6 @@ declare %templates:wrap
             </div>
         return
             $output
-            (: i18n:process($output, "de", "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :)                
 };
 
 declare %templates:wrap
@@ -1018,7 +916,6 @@ declare %templates:wrap
         </div>
     return
         $corpusDownloadField
-        (: i18n:process($corpusDownloadField, $lang, "/db/apps/salamanca/data/i18n", "en") heute geändert :)
 };
 
 declare %templates:wrap
@@ -1029,15 +926,15 @@ declare %templates:wrap
         </div>
     return
         $corpusDownloadField
-        (: i18n:process($corpusDownloadField, $lang, "/db/apps/salamanca/data/i18n", "en") heute geändert :)
 };
 
-declare %templates:wrap function app:corpusStatsTeaser ($node as node(), $model as map(*), $lang as xs:string?) as element(div)? {
+declare %templates:wrap
+    function app:corpusStatsTeaser ($node as node(), $model as map(*), $lang as xs:string?) as element(div)? {
     if (util:binary-doc-available($config:stats-root || '/corpus-stats.json')) then
-        let $stats := json-doc($config:stats-root || '/corpus-stats.json')
-        let $digiFacs := i18n:largeIntToString(xs:integer($stats('facs_count')?('all')), $lang)
-        let $editFacs := i18n:largeIntToString(xs:integer($stats('facs_count')?('full_text')), $lang)
-        let $tokens := i18n:largeIntToString(xs:integer($stats('tokens_count')), $lang)
+        let $stats     := json-doc($config:stats-root || '/corpus-stats.json')
+        let $digiFacs  := i18n:largeIntToString(xs:integer($stats('facs_count')?('all')), $lang)
+        let $editFacs  := i18n:largeIntToString(xs:integer($stats('facs_count')?('full_text')), $lang)
+        let $tokens    := i18n:largeIntToString(xs:integer($stats('tokens_count')), $lang)
         let $wordforms := i18n:largeIntToString(xs:integer($stats('wordforms_count')), $lang)
         let $out :=
             <div>
@@ -1063,6 +960,7 @@ declare %templates:wrap function app:corpusStatsTeaser ($node as node(), $model 
 (: =========== Load single author, lemma, working paper, work (in alphabetical order) ============= :)
 
 (: ====Author==== :)
+
 declare %templates:default("field", "all")
     function app:loadSingleAuthor($node as node(), $model as map(*), $aid as xs:string?){
     let $context  := if ($aid) then
@@ -1103,6 +1001,7 @@ declare %templates:wrap
 };
 
 (: ====Lemma==== :)
+
 declare %templates:default("field", "all")
     function app:loadSingleLemma($node as node(), $model as map(*), $lid as xs:string?) {
     let $context  := if ($lid) then
@@ -1121,7 +1020,8 @@ declare %templates:default("field", "all")
 };
 
 (: TODO: adjust path once LEM HTML is available :)
-declare %templates:wrap function app:LEMloadEntryHtml($node as node(), $model as map(*), $lid as xs:string?){
+declare %templates:wrap
+    function app:LEMloadEntryHtml($node as node(), $model as map(*), $lid as xs:string?){
     doc($config:data-root || "/" || sutil:normalizeId($lid)||'.html')/span
 };
 
@@ -1155,8 +1055,8 @@ declare %public
             </div>
 };
 
-
 (: ====Working paper==== :)
+
 declare %templates:default
     function app:loadSingleWp($node as node(), $model as map(*), $wpid as xs:string?){
     let $context  := if ($wpid) then
@@ -1177,7 +1077,8 @@ declare %templates:default
 
 (: ====Work==== :)
 
-declare function app:watermark($node as node(), $model as map(*), $wid as xs:string?, $lang as xs:string?) {
+declare
+    function app:watermark($node as node(), $model as map(*), $wid as xs:string?, $lang as xs:string?) {
     let $watermark :=   if (($model('currentAuthor')//tei:revisionDesc/@status |
                              $model('currentLemma')//tei:revisionDesc/@status  |
                              doc($config:tei-works-root || "/" || sutil:normalizeId($wid) || ".xml")/tei:TEI//tei:revisionDesc/@status)[1]
@@ -1199,10 +1100,10 @@ declare function app:watermark($node as node(), $model as map(*), $wid as xs:str
                             </p>
     return
         $watermark
-        (: i18n:process($watermark, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :)
 };
 
-declare function app:watermark-txtonly($node as node(), $model as map(*), $wid as xs:string?, $lang as xs:string?) {
+declare
+    function app:watermark-txtonly($node as node(), $model as map(*), $wid as xs:string?, $lang as xs:string?) {
     let $watermark :=   if (($model('currentAuthor')//tei:revisionDesc/@status |
                              $model('currentLemma')//tei:revisionDesc/@status  |
                              doc($config:tei-works-root || "/" || sutil:normalizeId($wid) || ".xml")/tei:TEI//tei:revisionDesc/@status)[1] 
@@ -1214,23 +1115,15 @@ declare function app:watermark-txtonly($node as node(), $model as map(*), $wid a
                                                            'f_enriched'
                                                           )) then
                             <span><i18n:text key="workInProgress">Work in Progress!</i18n:text></span>
-                            (: <span>{i18n:process(<i18n:text key="workInProgress">Work in Progress!</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))}</span> heute geändert :)
                         else
                             <span>{string(($model('currentAuthor')//tei:revisionDesc/@status |
                                      $model('currentLemma')//tei:revisionDesc/@status  |
                                      $model('currentWorkHeader')//tei:revisionDesc/@status)[1])}</span>
     return $watermark
 };
-(: deprecated :)
-(:declare %templates:wrap function app:loadSingleWork($node as node(), $model as map(*), $wid as xs:string?) {
-    let $context  :=   if (doc($config:tei-works-root || "/" || sutil:normalizeId($wid) || ".xml")/tei:TEI//tei:text[@type="work_multivolume"]) then
-                            util:expand(doc($config:tei-works-root || "/" || sutil:normalizeId($wid) || ".xml")/tei:TEI)
-                     else
-                            doc($config:tei-works-root || "/" || sutil:normalizeId($wid) || ".xml")/tei:TEI
-    return  map {"currentWork": $context}
-};:)
 
-declare %templates:wrap function app:loadWorkMetadata($node as node(), $model as map(*), $wid as xs:string?) {
+declare %templates:wrap
+    function app:loadWorkMetadata($node as node(), $model as map(*), $wid as xs:string?) {
     let $normId := sutil:normalizeId($wid)
     let $workPath := $config:tei-works-root || "/" || $normId || ".xml"
     let $header := util:expand(doc($workPath)/tei:TEI/tei:teiHeader)
@@ -1243,7 +1136,10 @@ declare %templates:wrap function app:loadWorkMetadata($node as node(), $model as
              'currentWorkType': $type}
 };
 
-declare function app:displaySingleWork($node as node(), 
+
+(: -- Display a single Work - this is the core function for loading the reading view -- :)
+declare
+    function app:displaySingleWork($node as node(), 
                                         $model as map(*),
                                         $wid as xs:string?,
                                         $frag as xs:string?,
@@ -1259,74 +1155,30 @@ declare function app:displaySingleWork($node as node(),
             if ($frag || ".html" = xmldb:get-child-resources($htmlPath)) then
                 $frag || ".html"
             else
-                functx:sort(xmldb:get-child-resources($htmlPath))[1]
-        else ()
+                let $debug := if ($config:debug = ('trace')) then console:log('No fragment html file found ($wid=' || $wid || ', $frag=' || $frag || '). Fallback to first fragment...') else ()
+                return functx:sort(xmldb:get-child-resources($htmlPath))[1]
+        else
+            error(xs:QName('app:displaySingleWork'), 'Error: HTML Collection ' || $htmlPath || ' not available.')
 
-    let $originalDoc := doc($htmlPath || "/" || $targetFragment)
+    let $originalHTMLDoc := 
+        if (doc-available($htmlPath || "/" || $targetFragment)) then
+            doc($htmlPath || "/" || $targetFragment)
+        else
+            error(xs:QName('app:displaySingleWork'), 'Error: HTML Fragment ' || $htmlPath || "/" || $targetFragment || ' not available.')
 
-    (: Fill in all parameters (except frag) in pagination links :)
+    (: If we have url parameters, fill them all (except frag) in document's links :)
     let $urlParameters := 
         string-join((
-            if (exists($q)) then 'q=' || $q else (),
-            if (exists($mode)) then 'mode=' || $mode else (),
+            if (exists($q))      then 'q=' || $q else (),
+            if (exists($mode))   then 'mode=' || $mode else (),
             if (exists($viewer)) then 'viewer=' || $viewer else (),
-            if (exists($lang)) then 'lang=' || $lang else ()
+            if (exists($lang))   then 'lang=' || $lang else ()
             ), 
         '&amp;')
-(:
-    (\: add urlParameters with viewing mode, search term etc. to internal hyperlinks :\)
-    let $xslSheet:= 
-        <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-            <xsl:output omit-xml-declaration="yes" indent="yes"/>
-            <xsl:param name="urlParameters"/>
-
-            <!-- Default: Copy everything -->
-            <xsl:template match="node()|@*" priority="2">
-                <xsl:copy>
-                    <xsl:apply-templates select="node()|@*"/>
-                </xsl:copy>
-            </xsl:template>
-
-            <!-- Change href parameters on-site -->
-            <xsl:template match="a/@href[not(contains(., 'http'))]" priority="80">
-                <xsl:variable name="openingChar">
-                    <xsl:choose>
-                        <xsl:when test="contains(., '?')">
-                            <xsl:text>&amp;</xsl:text>
-                        </xsl:when>                                                            
-                        <xsl:otherwise>
-                            <xsl:text>?</xsl:text>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </xsl:variable>
-
-                <xsl:attribute name="href">
-                    <xsl:choose>
-                        <xsl:when test="starts-with(., '#')">
-                            <xsl:value-of select="."/>
-                        </xsl:when>
-                        <xsl:when test="contains(., '#')">
-                            <xsl:value-of select="replace(., '#', concat($openingChar, $urlParameters, '#'))"/>
-                        </xsl:when>                                                            
-                        <xsl:otherwise>
-                            <xsl:value-of select="concat(., $openingChar, $urlParameters)"/>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </xsl:attribute>
-            </xsl:template>
-        </xsl:stylesheet>
-:)
-(:    
-    let $parameters := 
-        <parameters>
-            <param name="exist:stop-on-warn"  value="yes"/>
-            <param name="exist:stop-on-error" value="yes"/>
-            <param name="urlParameters"       value="{$urlParameters}"/>
-        </parameters>
-:)    
-(:    let $parametrizedDoc := transform:transform($originalDoc, $xslSheet, $parameters):)
-    
-    let $parametrizedDoc := local:insertParams($originalDoc/*, $urlParameters)
+    let $parametrizedDoc := if ($urlParameters) then
+                                app:insertParams($originalHTMLDoc, $urlParameters)
+                            else
+                                $originalHTMLDoc
 
     (: If we have an active query string, highlight the original html fragment accordingly :)
     let $outHTML := 
@@ -1350,66 +1202,149 @@ declare function app:displaySingleWork($node as node(),
                 doc($config:html-root || "/" || $workId || "/" || $targetFragment): {substring(serialize(doc($config:html-root || "/" || $workId || "/" || $targetFragment)), 1, 300)}
             </p>
         else ()
-    let $workNotAvailable := <h2><span class="glyphicon glyphicon-file"></span> <i18n:text key="workNotYetAvailable">This work is not yet available.</i18n:text></h2>
 
 return
     if ($targetFragment) then
         <div>
-            {$debugOutput}
-            { $outHTML
-                (: i18n:process($outHTML, $lang, $config:i18n-root, "en") heute geändert :)
-            }
+            { $debugOutput }
+            { $outHTML }
         </div>
     else
         (: TODO: redirect to genuine error or resource-not-available page :)
-        $workNotAvailable        
-        (: i18n:process($workNotAvailable, $lang, $config:i18n-root, "en") heute geändert :)
-    
+        <h2><span class="glyphicon glyphicon-file"></span> <i18n:text key="workNotYetAvailable">This work is not yet available.</i18n:text></h2>
 };
 
         
 (:
-~ Recursively inserts concatenated query parameters into non-http links of an HTML fragment.
+~ Recursively inserts concatenated query parameters into non-http <a> links of an HTML fragment.
+~ (we assume that http links leave the current document and don't need q, mode, viewer or lang params.)
 :)
-declare %private function local:insertParams($node as node()?, $params as xs:string?) {
+declare %private
+    function app:insertParams($node as node(), $params as xs:string?) {
     typeswitch($node)
         case element(a) return
             element {name($node)} {
-                for $att in $node/@* return
-                    local:attrInsertParams($att, $params)
+                for $attr in $node/@* return
+(:                  app:attrInsertParams($attr, $params)  try this without 2nd function in order not to lose context/index info :)
+
+                    typeswitch($attr)
+                        case attribute(href) return
+                            if (starts-with($attr, 'http')) then                (: remote file (we assume), so no need to add params :) 
+                                $attr
+                            else
+                                let $openingChar := if (contains($attr, '?')) then '&amp;' else '?'
+                                let $value := 
+                                    if (starts-with($attr, '#')) then           (: local to the current file/fragment, no need to add params :) 
+                                        $attr
+                                    else if (contains($attr, '#')) then         (: another fragment, with anchor :)
+                                        replace($attr, '#', concat($openingChar, $params, '#'))
+                                    else 
+                                        concat($attr, $openingChar, $params)    (: another fragment, no anchor :)
+                                return attribute {name($attr)} {$value}
+                        default return
+                            $attr
+
                 ,
                 for $child in $node/node() return 
-                    local:insertParams($child, $params)
+                    app:insertParams($child, $params)
             }
         case element() return
             element {name($node)} {
-                for $att in $node/@*
-                   return
-                      attribute {name($att)} {$att}
+                for $attr in $node/@* return
+                      attribute {name($attr)} {$attr}
                 ,
                 for $child in $node/node()
-                   return local:insertParams($child, $params)
+                   return app:insertParams($child, $params)
             }
         default return $node
 };
-declare %private function local:attrInsertParams($attr as attribute(), $params as xs:string?) {
+declare %private
+    function app:attrInsertParams($attr as attribute(), $params as xs:string?) {
     typeswitch($attr)
         case attribute(href) return
-            if (not(contains($attr, 'http'))) then
+            if (starts-with($attr, 'http')) then                (: remote file (we assume), so no need to add params :) 
+                $attr
+            else
                 let $openingChar := if (contains($attr, '?')) then '&amp;' else '?'
                 let $value := 
-                    if (starts-with($attr, '#')) then 
-                        $attr/string()
-                    else if (contains($attr, '#')) then
+                    if (starts-with($attr, '#')) then           (: local to the current file/fragment, no need to add params :) 
+                        $attr
+                    else if (contains($attr, '#')) then         (: another fragment, with anchor :)
                         replace($attr, '#', concat($openingChar, $params, '#'))
                     else 
-                        concat($attr, $openingChar, $params)
+                        concat($attr, $openingChar, $params)    (: another fragment, no anchor :)
                 return attribute {name($attr)} {$value}
-            else 
-                $attr
         default return
             $attr
 };
+
+(:
+~ Recursively inserts a "q" query parameter into a/href values of an HTML fragment.
+:)
+
+declare %private function app:copyInsertSearchParam($node as node()?, $q as xs:string) {
+    typeswitch($node)
+        case element(a) return
+            element {name($node)} {
+                for $attr in $node/@* return
+(:                    app:attrInsertSearchParam($attr, $q)  try this without 2nd function in order not to lose context/index info :)
+
+                    typeswitch($attr)
+                        case attribute(href) return
+                            let $value := 
+                                if (starts-with($attr, '#')) then 
+                                    $attr
+                                else if (contains($attr, '#')) then
+                                    if (contains($attr, '?')) then
+                                        replace($attr, '#', concat('&amp;q=', $q, '#'))
+                                    else
+                                        replace($attr, '#', concat('?q=', $q, '#'))
+                                else 
+                                    if (contains($attr, '?')) then
+                                        concat($attr, '&amp;q=', $q)
+                                    else
+                                        concat($attr, '?q=', $q)
+                            return attribute {name($attr)} {$value}
+                        default return
+                            $attr
+
+
+                ,
+                for $child in $node/node()
+                   return app:copyInsertSearchParam($child, $q)
+            }
+        case element() return
+            element {name($node)} {
+                for $attr in $node/@*
+                   return
+                      attribute {name($attr)} {$attr}
+                ,
+                for $child in $node/node()
+                   return app:copyInsertSearchParam($child, $q)
+            }
+        default return $node
+};
+declare %private function app:attrInsertSearchParam($attr as attribute(), $q as xs:string) {
+    typeswitch($attr)
+        case attribute(href) return
+            let $value := 
+                if (starts-with($attr, '#')) then
+                    $attr
+                else if (contains($attr, '#')) then
+                    if (contains($attr, '?')) then
+                        replace($attr, '#', concat('&amp;q=', $q, '#'))
+                    else
+                        replace($attr, '#', concat('?q=', $q, '#'))
+                else 
+                    if (contains($attr, '?')) then
+                        concat($attr, '&amp;q=', $q)
+                    else
+                        concat($attr, '?q=', $q)
+            return attribute {name($attr)} {$value}
+        default return
+            $attr
+};
+
 
 
 declare function app:searchResultsNav($node as node(), $model as map(*), $q as xs:string?, $lang as xs:string?) {
@@ -1443,13 +1378,13 @@ declare
 declare %templates:wrap
     function app:AUTworks($node as node(), $model as map(*), $lang as xs:string) {
         let $autId := $model('currentAuthor')/@xml:id/string()
-        let $works := for $hit in collection($config:tei-works-root)//tei:TEI[contains(.//tei:titleStmt/tei:author/tei:persName/@ref, $autId)][tei:text/@type = ("work_monograph", "work_multivolume")]
-            let $getAutString   := $hit//tei:titleStmt/tei:author/tei:persName/@ref/string()
+        let $works := for $hit in collection($config:tei-works-root)//tei:TEI[some $a in .//tei:titleStmt/tei:author/tei:persName/@ref/string() satisfies contains($a, $autId)][tei:text/@type = ("work_monograph", "work_multivolume")]
+            let $getAutString   := string-join($hit//tei:titleStmt/tei:author/tei:persName/@ref/string(), " &amp; ")
             let $workTitle      := $hit//tei:sourceDesc//tei:monogr/tei:title[@type eq 'short']/text()
             let $firstEd        := $hit//tei:sourceDesc//tei:date[@type = 'firstEd']
             let $thisEd         := $hit//tei:sourceDesc//tei:date[@type = 'thisEd']
             let $ed             := if ($thisEd) then $thisEd else $firstEd
-            let $ref            := session:encode-url(xs:anyURI('work.html?wid=' || $hit/@xml:id/string()))
+            let $ref            := session:encode-url(xs:anyURI('work.html?wid=' || $hit/@xml:id))
             order by $workTitle ascending
             return 
                     <p><a href="{$ref}"><span class="glyphicon glyphicon-file" aria-hidden="true"/>&#xA0;{$workTitle||'&#160;'}({$ed})</a></p>
@@ -1486,19 +1421,19 @@ declare function app:AUTsummary($node as node()) as item()* {
                     </a><i18n:text key="overview">Lebensdaten</i18n:text>
                 </h3>
                 <p class="autText"><!-/-<i class="fa fa-birthday-cake"></i>-/->*&#xA0;
-                    {local:placeNames($node), ': '||$node/tei:date[1]}
+                    {app:placeNames($node), ': '||$node/tei:date[1]}
                 </p>
 -->
-                *&#xA0;{local:placeNames($node) || ': ' || $node/tei:date[1]}
+                *&#xA0;{app:placeNames($node) || ': ' || $node/tei:date[1]}
             </span>
         case element(tei:death) return 
             <span>
 <!--
              <p class="autText"><!-/-<i class="fa fa-plus"></i>-/->†&#xA0;
-                    {local:placeNames($node), ': '||$node/tei:date[1]}
+                    {app:placeNames($node), ': '||$node/tei:date[1]}
             </p>
 -->
-                †&#xA0;{local:placeNames($node) || ': '||$node/tei:date[1]}
+                †&#xA0;{app:placeNames($node) || ': '||$node/tei:date[1]}
             </span>
         case element(tei:head) return if ($node/@xml:id='overview') then () else 
             <span>
@@ -1625,7 +1560,7 @@ declare function local:passthru($nodes as node()*) as item()* {
 
 
 (:funx used in author.html and lemma.html:)
-declare function local:placeNames($node as node()) {
+declare function app:placeNames($node as node()) {
 
     let $placesHTML :=  for $place in $node//tei:placeName
                             let $getGetId   := substring($place/@ref,7,7)
@@ -1751,7 +1686,7 @@ declare %templates:wrap
 
 declare %templates:wrap
     function app:WPauthor ($node as node(), $model as map(*)) {
-        app:rotateFormatName($model('currentWp')/tei:teiHeader//tei:biblStruct/tei:monogr/tei:author/tei:persName)
+        string-join(for $a in $model('currentWp')/tei:teiHeader//tei:biblStruct/tei:monogr/tei:author/tei:persName return app:rotateFormatName($a), " &amp; ")
 };
 
 declare %templates:wrap
@@ -1761,7 +1696,7 @@ declare %templates:wrap
 
 declare %templates:wrap %templates:default("lang", "en")
     function app:WPvol  ($node as node(), $model as map(*), $lang as xs:string?) {
-       let $link := 'workingPaper.html?wpid=' || $model('currentWp')/@xml:id/string()
+       let $link := 'workingPaper.html?wpid=' || $model('currentWp')/@xml:id
        let $vol := $model('currentWp')//tei:titleStmt/tei:title[@type='short']/string()
        return <h4><a  href="{$link}">{$vol}</a></h4>
 };
@@ -1773,9 +1708,9 @@ declare %templates:wrap
 
 declare %templates:wrap %templates:default("lang", "en")
     function app:WPimg ($node as node(), $model as map(*), $lang as xs:string?) {
-    let $link := 'workingPaper.html?wpid=' || $model('currentWp')/@xml:id/string()
+    let $link := 'workingPaper.html?wpid=' || $model('currentWp')/@xml:id
     let $img  := if ($model('currentWp')//tei:graphic/@url) then
-                       <img style="border: 0.5px solid #E7E7E7; width:90%; height: auto;" src="{$model('currentWp')//tei:graphic/@url/string()}"/>
+                       <img style="border: 0.5px solid #E7E7E7; width:90%; height: auto;" src="{$model('currentWp')//tei:graphic/@url}"/>
                  else ()
     return
        <a href="{$link}">{$img}</a>
@@ -1821,7 +1756,6 @@ declare %templates:wrap %templates:default("lang", "en")
                     </a>
     return
         $output
-        (: i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :)
 };
 
 declare %templates:wrap
@@ -1831,10 +1765,9 @@ declare %templates:wrap
 
 declare %templates:wrap %templates:default("lang", "en")
     function app:WPshowSingle ($node as node(), $model as map(*), $lang as xs:string?) {
-        let $work := <a href="workingPaper.html?wpid=' {$model('currentWp')/@xml:id/string()}">{$model('currentWp')/@xml:id/string()}</a> 
+        let $work := <a href="workingPaper.html?wpid=' {$model('currentWp')/@xml:id}">{$model('currentWp')/@xml:id}</a> 
         return
             $work
-            (: i18n:process($work, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :) 
 };
 
 declare %templates:wrap
@@ -1860,7 +1793,6 @@ declare %templates:wrap %templates:default("lang", "en")
         else ()
     return
         $result
-        (: i18n:process($result, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :)
 };
 
 declare %templates:wrap %templates:default("lang", "en")
@@ -1876,7 +1808,6 @@ declare %templates:wrap %templates:default("lang", "en")
         let $more := <i18n:text key="more">Mehr</i18n:text>
         return 
             <a href="editorialWorkingPapers.html?">&#32;&#32;{$more}&#160;<i class="fa fa-share"></i></a>
-            (: <a href="editorialWorkingPapers.html?">&#32;&#32;{i18n:process($more, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))}&#160;<i class="fa fa-share"></i></a> heute geändert :)
 };
 
 
@@ -1892,7 +1823,7 @@ declare %templates:wrap
             if ($teiType eq 'work_multivolume') then <i18n:text key="multivolume">Mehrbandwerk</i18n:text> 
             else if ($teiType eq 'work_volume') then <i18n:text key="workvolume">Einzelband</i18n:text>
             else ()
-        let $translate := $type (: i18n:process($type, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :)
+        let $translate := $type
         return 
             if ($type) then
                 ' ('|| $translate ||') '
@@ -1933,7 +1864,7 @@ Creates the heading for a catalogue entry: author name: work/volume title
 ~:)
 declare %templates:wrap 
     function app:WRKcatRecordTitle($node as node(), $model as map(*), $lang as xs:string?) {
-    let $authorName := app:rotateFormatName($model('currentWorkHeader')/tei:fileDesc/tei:titleStmt/tei:author/tei:persName)
+    let $authorName := string-join(for $a in $model('currentWorkHeader')/tei:fileDesc/tei:titleStmt/tei:author/tei:persName return app:rotateFormatName($a), " &amp; ")
     let $title := app:WRKeditionTitleShort($node, $model)
     let $workType := app:WRKtype($node, $model, $lang)
     return (
@@ -1957,7 +1888,7 @@ declare %templates:wrap function app:WRKcatRecord($node as node(), $model as map
     let $workType := $model('currentWorkType')
     let $volumeIds :=   
         if ($workType eq 'work_multivolume') then 
-            for $item in $model('currentWorkHeader')/tei:fileDesc/tei:notesStmt/tei:relatedItem[@type eq 'work_volume'] return substring-after($item/@target/string(), 'work:')
+            for $item in $model('currentWorkHeader')/tei:fileDesc/tei:notesStmt/tei:relatedItem[@type eq 'work_volume'] return substring-after($item/@target, 'work:')
         else ()
     let $multivolInfo := 
         if ($workType eq 'work_volume') then
@@ -1997,7 +1928,6 @@ declare %templates:wrap function app:WRKcatRecord($node as node(), $model as map
             
     return
         $output
-        (: i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :)
 };
 
 declare function app:WRKadditionalInfoRecord($node as node(), $model as map(*), $lang as xs:string?) {
@@ -2097,7 +2027,7 @@ declare function app:WRKcatRecordTeaser($node as node(), $model as map(*), $wid 
         else if (doc-available($config:tei-works-root || '/' || $wid || '.xml')) then 
             doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI/tei:teiHeader
         else ()
-    let $log := if ($config:debug = ('trace', 'info')) then console:log('Creating cat record teaser for work/volume:' || $wid) else ()
+    let $log := if ($config:debug = ('trace')) then console:log('Creating cat record teaser for work/volume:' || $wid) else ()
     let $teaserText :=
         if ($teiHeader) then
             let $digital := app:WRKeditionMetadata($node, $model, sutil:normalizeId($wid))
@@ -2187,7 +2117,7 @@ declare function app:WRKisPublished($node as node(), $model as map(*), $wid as x
         else if (doc-available($config:tei-works-root || '/' || $workId || '.xml')) then 
             doc($config:tei-works-root || '/' || $workId || '.xml')/tei:TEI/tei:teiHeader/tei:revisionDesc/@status/string()
         else 'no_status'
-    let $publishedStatus := ('g_enriched_approved', 'h_revised', 'i_revised_approved', 'z_final')
+    let $publishedStatus := ('g_enriched_approved', 'h_revised', 'h_temporarily_suspended', 'i_revised_approved', 'z_final')
     return $status = $publishedStatus
 };
 
@@ -2392,7 +2322,6 @@ declare function app:WRKcitationReference($node as node()?, $model as map(*)?, $
     let $wid := sutil:convertNumericVolumeID($model('currentWorkId'))
     let $fileDesc := $model('currentWorkHeader')/tei:fileDesc
     let $content := sutil:HTMLmakeCitationReference($wid, $fileDesc, $mode, ())
-(:    return i18n:process($content, $lang, $config:i18n-root, 'en'):)
     return $content
 };
 
@@ -2428,7 +2357,6 @@ declare function app:WRKbibliographicalRecord($node as node(), $model as map(*),
             let $volumeString := 
                 $bibliographical?('volumeTitle') || ' (' || $bibliographical?('volumeNumber') || ' ' 
                  || <i18n:text key="of">of</i18n:text>
-                 (: || i18n:process(<i18n:text key="of">of</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :)
                  || ' ' || $bibliographical?('totalVolumesCount') || ')'
             return
                 <tr>
@@ -2445,7 +2373,7 @@ declare function app:WRKbibliographicalRecord($node as node(), $model as map(*),
         else ()
     let $origin :=    
         if ($workType = ('work_monograph', 'work_volume')) then 
-            let $extLink := <i18n:text key="externalWindow">externer Link</i18n:text> (: i18n:process(<i18n:text key="externalWindow">externer Link</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :)
+            let $extLink := <i18n:text key="externalWindow">externer Link</i18n:text>
             return
                 (<tr>
                     <td class="{$col1-width}" style="line-height: 1.2"><i18n:text key="ownerPrimaryEd">Library</i18n:text>:</td>
@@ -2536,7 +2464,7 @@ declare function app:WRKprintMetadata($node as node(), $model as map(*), $wid as
         if ($sourceDesc//tei:pubPlace[@role eq 'thisEd']) then $sourceDesc//tei:pubPlace[@role eq 'thisEd']/@key/string()
         else $sourceDesc//tei:pubPlace[@role eq 'firstEd']/@key/string()
     let $volumeNumber := if ($type eq 'work_volume') then $sourceDesc//tei:series/tei:biblScope/@n/string() else ()
-    let $volumeTitle := if ($type eq 'work_volume') then $sourceDesc//tei:monogr/tei:title[@type ='volume']/text() else ()
+    let $volumeTitle := if ($type eq 'work_volume') then $sourceDesc//tei:monogr/tei:title[@type ='volume']/string() else ()
     let $totalVolumes := 
         if ($type eq 'work_volume') then 
             string(count(doc($config:tei-works-root || '/' || substring-before($workId, '_Vol') || '.xml')/tei:TEI/tei:teiHeader//tei:notesStmt/tei:relatedItem[@type eq 'work_volume']))
@@ -2557,20 +2485,19 @@ declare function app:WRKprintMetadata($node as node(), $model as map(*), $wid as
         if ($sourceDesc//tei:msDesc[@type eq 'main']) then $sourceDesc//tei:msDesc[@type eq 'main']//tei:repository/text() 
         else $sourceDesc//tei:msDesc[1]//tei:repository/text()
     let $catLink  := 
-        if ($sourceDesc//tei:msDesc[@type eq 'main']) then i18n:negotiateNodes($sourceDesc//tei:msDesc[@type eq 'main']//tei:idno[@type eq 'catlink'], $lang)/text()
-        else i18n:negotiateNodes($sourceDesc//tei:msDesc[1]//tei:idno[@type eq 'catlink'], $lang)/text()
-    let $extent := if ($type eq 'work_multivolume') then () else i18n:negotiateNodes($sourceDesc/tei:biblStruct/tei:monogr/tei:extent, $lang)/text()
+        if ($sourceDesc//tei:msDesc[@type eq 'main']) then
+            i18n:negotiateNodes($sourceDesc//tei:msDesc[@type eq 'main']//tei:idno[@type eq 'catlink'], $lang)/text()
+        else
+            i18n:negotiateNodes($sourceDesc//tei:msDesc[1]//tei:idno[@type eq 'catlink'], $lang)/text()
+    let $extent :=  if ($type eq 'work_multivolume') then ()
+                    else
+                        i18n:negotiateNodes($sourceDesc/tei:biblStruct/tei:monogr/tei:extent, $lang)/text()
     let $languages := 
         string-join((for $l in distinct-values($teiHeader/tei:profileDesc/tei:langUsage/tei:language/@ident) return
                         if ($l eq 'es') then <i18n:text key="spanish">Spanish</i18n:text>
                         else if ($l eq 'la') then <i18n:text key="latin">Latin</i18n:text>
                         (: add further languages here, if required :)
                         else ()), ', ')
-        (: string-join((for $l in distinct-values($teiHeader/tei:profileDesc/tei:langUsage/tei:language/@ident) return
-                        if ($l eq 'es') then i18n:process(<i18n:text key="spanish">Spanish</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
-                        else if ($l eq 'la') then i18n:process(<i18n:text key="latin">Latin</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
-                        (: add further languages here, if required :)
-                        else ()), ', ') heute geändert :)
     let $status := $teiHeader//tei:revisionDesc/@status/string()
     return 
         map {
@@ -2609,18 +2536,18 @@ declare function app:WRKeditionMetadata($node as node(), $model as map(*), $wid 
         if ($wid and sutil:normalizeId($wid) ne $model('currentWorkId')) then
             doc($config:tei-works-root || '/' || sutil:normalizeId($wid) || '.xml')/tei:TEI/tei:text/@type/string()
         else $model('currentWorkType')
-    let $status := $teiHeader/tei:revisionDesc/@status/string()
-    let $titleMain := $teiHeader/tei:fileDesc/tei:titleStmt/tei:title[@type eq 'main']/text()
-    let $titleShort := $teiHeader/tei:fileDesc/tei:titleStmt/tei:title[@type eq 'short']/text()
-    let $author := app:rotateFormatName($teiHeader/tei:fileDesc/tei:titleStmt/tei:author/tei:persName)
-    let $languages := <span>
-        { if ('la' = $teiHeader/tei:profileDesc//tei:language[@n eq 'main']/@ident) then <i18n:text key="latin">Latein</i18n:text> else () }
-        { if ('es' = $teiHeader/tei:profileDesc//tei:language[@n eq 'main']/@ident) then <i18n:text key="spanish">Spanisch</i18n:text> else () }
-        </span>
+    let $status := $teiHeader/tei:revisionDesc[1]/@status/string()
+    let $titleMain := $teiHeader/tei:fileDesc/tei:titleStmt/tei:title[@type eq 'main'][1]/text()
+    let $titleShort := $teiHeader/tei:fileDesc/tei:titleStmt/tei:title[@type eq 'short'][1]/text()
+    let $author := string-join(for $a in $teiHeader/tei:fileDesc/tei:titleStmt/tei:author/tei:persName return app:rotateFormatName($a), " &amp; ")
+    let $language := 
+        if ($teiHeader/tei:profileDesc//tei:language[@n eq 'main'][1]/@ident eq 'la') then <i18n:text key="latin">Latein</i18n:text>
+        else if ($teiHeader/tei:profileDesc//tei:language[@n eq 'main'][1]/@ident eq 'es') then <i18n:text key="spanish">Spanisch</i18n:text>
+        else ()
     let $isPublished := app:WRKisPublished($node, $model, $workId)
     let $pubDate := 
         if ($isPublished) then
-            $teiHeader/tei:fileDesc/tei:editionStmt/tei:edition/tei:date/@when/string()
+            $teiHeader/tei:fileDesc/tei:editionStmt/tei:edition/tei:date[1]/@when/string()
         else ()
     let $scholarlyEditors := 
         if ($isPublished) then
@@ -2632,7 +2559,7 @@ declare function app:WRKeditionMetadata($node as node(), $model as map(*), $wid 
             string-join(for $ed in $teiHeader/tei:fileDesc/tei:titleStmt/tei:editor[contains(@role, '#technical')]/tei:persName
                              return app:rotateFormatName($ed), '; ')
         else ()
-    let $currentVolume := $teiHeader/tei:fileDesc/tei:seriesStmt/tei:biblScope/@n/string()
+    let $currentVolume := $teiHeader/tei:fileDesc/tei:seriesStmt/tei:biblScope[1]/@n/string()
     let $seriesEditors := string-join(for $ed in $teiHeader/tei:fileDesc/tei:seriesStmt/tei:editor/tei:persName 
                                                      order by $ed/tei:surname
                                                      return app:rotateFormatName($ed), '; ')
@@ -2645,7 +2572,7 @@ declare function app:WRKeditionMetadata($node as node(), $model as map(*), $wid 
             'titleMain': $titleMain,
             'titleShort': $titleShort,
             'author': $author,
-            'language': string-join($languages/span, ", "),
+            'language': $language,
             'publicationDate': $pubDate,
             'scholEditors': $scholarlyEditors,
             'techEditors': $technicalEditors,
@@ -2659,13 +2586,7 @@ declare function app:WRKeditionMetadata($node as node(), $model as map(*), $wid 
 
 (:jump from work.html to corresponding work_volume in workDetails.html:)(:FIXME:)
 declare function app:WRKdetailsCurrent($node as node(), $model as map(*), $lang as xs:string?) {
-       (: let $multiRoot := replace($model('currentWork')/@xml:id, '(W\d{4})(_Vol\d{2})', '$1')
-        return if ($model("currentWork")//tei:text[@type='work_volume']) then <a class="btn btn-info" href="{session:encode-url(xs:anyURI('workDetails.html?wid=' || $multiRoot))||'#'||$model('currentWork')/tei:text/@xml:id}"><span class="glyphicon glyphicon-file"></span>{'&#32;' ||i18n:process(<i18n:text key="details">Details</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) 
-        ||'&#32;'||i18n:process(<i18n:text key="volume">Band</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))        || '&#32;' ||$model("currentWork")//tei:text[@type='work_volume']/@n/string()}</a>
-        else:) 
-        let $output :=
-        <a class="btn btn-link" href="workDetails.html?wid={request:get-parameter('wid', '')}"><i class="fas fa-file-alt"></i>&#32; <i18n:text key="details">Katalogeintrag</i18n:text></a>
-        return $output (: i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", 'en') heute geändert :)
+    <a class="btn btn-link" href="workDetails.html?wid={request:get-parameter('wid', '')}"><i class="fas fa-file-alt"></i>&#32; <i18n:text key="details">Katalogeintrag</i18n:text></a>
 };
 
 (: ================= End Retrieve single pieces of information ======== :)
@@ -2883,7 +2804,7 @@ declare function app:sourcesList($node as node(), $model as map(*), $lang as xs:
                 </section>
             else ()}
         </div>
-    return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
+    return $output
 };:)
 
 (: deprecated :)
@@ -2977,7 +2898,7 @@ declare function app:sourcesList($node as node(), $model as map(*), $lang as xs:
                 </ul>
             </section>
         </div>
-    return i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))
+    return $output
 };:)
 
 
@@ -3125,63 +3046,20 @@ declare function app:WRKtoc($node as node(), $model as map(*), $wid as xs:string
                     <param name="q" value="{$q}"/>
                 </parameters>
             return 
-                transform:transform($tocDoc, $xslSheet, $parameters) (\: i18n:process(transform:transform($tocDoc, $xslSheet, $parameters), $lang, $config:i18n-root, 'en') heute geändert :\)
+                transform:transform($tocDoc, $xslSheet, $parameters)
             :)
             return 
-                local:copyInsertSearchParam($tocDoc/*, $q)
+                app:copyInsertSearchParam($tocDoc/*, $q)
          else
             doc($config:html-root || '/' || sutil:normalizeId($wid) || '/' || sutil:normalizeId($wid) || '_toc.html')
     return 
         $toc
-        (: i18n:process($toc, $lang, $config:i18n-root, 'en') heute geändert :)
 };
-
-
-(:
-~ Recursively inserts a "q" query parameter into a/href values of an HTML fragment.
-:)
-
-declare %private function local:copyInsertSearchParam($node as node()?, $q as xs:string) {
-    typeswitch($node)
-        case element(a) return
-            element {name($node)} {
-                for $att in $node/@* return
-                    local:attrInsertSearchParam($att, $q)
-                ,
-                for $child in $node/node()
-                   return local:copyInsertSearchParam($child, $q)
-            }
-        case element() return
-            element {name($node)} {
-                for $att in $node/@*
-                   return
-                      attribute {name($att)} {$att}
-                ,
-                for $child in $node/node()
-                   return local:copyInsertSearchParam($child, $q)
-            }
-        default return $node
-};
-declare %private function local:attrInsertSearchParam($attr as attribute(), $q as xs:string) {
-    typeswitch($attr)
-        case attribute(href) return
-            let $value := 
-                if (starts-with($attr, '#')) then 
-                    $attr/string()
-                else if (contains($attr, '#')) then
-                    replace($attr, '#', concat('&amp;q=', $q, '#'))
-                else 
-                    concat($attr, '&amp;q=', $q)
-            return attribute {name($attr)} {$value}
-        default return
-            $attr
-};
-
 
 (:declare function app:downloadTXT($node as node(), $model as map(*), $mode as xs:string, $lang as xs:string) {
     let $wid := request:get-parameter('wid', '')
-    let $hoverTitleEdit := i18n:process(<i18n:text key="downloadTXTEdit">Download as plaintext (constituted variant)</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
-    let $hoverTitleOrig := i18n:process(<i18n:text key="downloadTXTOrig">Download as plaintext (diplomatic variant)</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
+    let $hoverTitleEdit := <i18n:text key="downloadTXTEdit">Download as plaintext (constituted variant)</i18n:text>
+    let $hoverTitleOrig := <i18n:text key="downloadTXTOrig">Download as plaintext (diplomatic variant)</i18n:text>
     
     let $download := 
         if ($wid and ($mode eq 'edit')) then 
@@ -3189,7 +3067,7 @@ declare %private function local:attrInsertSearchParam($attr as attribute(), $q a
         else if ($wid and ($mode eq 'orig')) then 
             <li><a title="{$hoverTitleOrig}" href="{$config:idserver || '/texts/' || $wid ||'?format=txt&amp;mode=orig'}"><span class="fas fa-align-left" aria-hidden="true"/>&#xA0;TXT (<i18n:text key="diplomaticLower">diplomatic</i18n:text>)</a></li>
         else()
-    return i18n:process($download, $lang, '/db/apps/salamanca/data/i18n', 'en')
+    return $download
 };:)
 
 
@@ -3199,7 +3077,7 @@ declare %private function local:attrInsertSearchParam($attr as attribute(), $q a
 declare %templates:default
     function app:guiWRK($node as node(), $model as map(*), $lang as xs:string, $wid as xs:string*, $q as xs:string?) as element() {    
     let $idUri := $config:idserver || '/texts/' || $wid
-    let $downloadXML     :=  app:downloadXML($node, $model, $lang)
+    let $downloadXML := app:downloadXML($node, $model, $lang)
     let $downloadTXT :=
         <li class="dropdown-submenu">
             <a title="i18n(txtExp)" href="#">
@@ -3222,7 +3100,7 @@ declare %templates:default
     (:let $downloadCorpus  :=  app:downloadCorpusXML($node, $model, $lang):)
     let $name            :=  sutil:WRKcombined($node, $model, $wid)
     let $top             :=  'work.html?wid=' || $wid
-    let $citeTitle := <i18n:text key="citeThisWork">Cite this work</i18n:text> (: i18n:process(<i18n:text key="citeThisWork">Cite this work</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en") heute geändert :)
+    let $citeTitle := <i18n:text key="citeThisWork">Cite this work</i18n:text>
     let $copyLink :=
         <li>
             <a href="#" onclick="copyLink(this); return false;" title="i18n(linkWork)">
@@ -3330,7 +3208,6 @@ declare %templates:default
         
     return
         $output
-        (: i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "en") heute geändert :)
     
 (:  Further buttons / icons:
 
@@ -3404,7 +3281,7 @@ declare %templates:default
                     </div>
                 </div>
             </div>
-        return  i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", "de")   
+        return $output
 };:)
                 
 (: ==== Paginator Function ===== :)
@@ -3448,7 +3325,7 @@ declare function app:loadWRKpagination ($node as node(), $model as map (*), $wid
     return 
         if ($q) then
 (:            transform:transform($pagesFile, $xslSheet, $parameters):)
-            local:copyInsertSearchParam($pagesFile/*, $q)
+            app:copyInsertSearchParam($pagesFile/*, $q)
         else
             $pagesFile
 };
@@ -3488,7 +3365,7 @@ declare %templates:wrap
 declare %private 
     function app:downloadXML($node as node(), $model as map(*), $lang as xs:string) {
     let $wid := request:get-parameter('wid', '')
-    let $hoverTitle := <i18n:text key="downloadXML">Download TEI/XML source file</i18n:text> (: i18n:process(<i18n:text key="downloadXML">Download TEI/XML source file</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en') heute geändert :)
+    let $hoverTitle := <i18n:text key="downloadXML">Download TEI/XML source file</i18n:text>
     let $download := 
         if ($wid) then 
             <li>
@@ -3502,16 +3379,11 @@ declare %private
     return $download
 };
 
-(:declare function app:downloadCorpusXML($node as node(), $model as map(*), $lang as xs:string) {
-    let $hoverTitle := i18n:process(<i18n:text key="downloadCorpus">Download corpus of XML sources</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en')
-    let $download   := <li><a title="{$hoverTitle}" href="{$config:idserver ||'/texts?format=tei'}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"/> ZIP (XML Corpus)</a></li>
-    return $download
-};:)
 
 declare %private 
     function app:downloadRDF($node as node(), $model as map(*), $lang as xs:string) {
     let $wid      :=  request:get-parameter('wid', '')
-    let $hoverTitle := <i18n:text key="downloadRDF">Download RDF/XML data for this work</i18n:text> (: i18n:process(<i18n:text key="downloadRDF">Download RDF/XML data for this work</i18n:text>, $lang, '/db/apps/salamanca/data/i18n', 'en') heute geändert :)
+    let $hoverTitle := <i18n:text key="downloadRDF">Download RDF/XML data for this work</i18n:text>
     let $download := 
         if ($wid) then <li><a title="{$hoverTitle}" href="{$config:idserver || '/texts/' || $wid || '?format=rdf'}"><i class="fas fa-code-branch" aria-hidden="true"/>&#xA0;RDF (XML)</a></li>
         (:else if ($model('currentLemma'))  then <li><a title="{$hoverTitle}" href="{$config:dataserver || '/lemmata.' || $model('currentLemma')/@xml:id}.rdf">RDF/XML</a></li>
@@ -3546,7 +3418,7 @@ declare %private
 (: legal declarations :)
 
 declare function app:legalDisclaimer ($node as node(), $model as map(*), $lang as xs:string?) {
-    let $disclaimerText := <i18n:text key="legalDisclaimer"/> (: i18n:process(<i18n:text key="legalDisclaimer"/>, $lang, '/db/apps/salamanca/data/i18n', 'en') heute geändert :)
+    let $disclaimerText := <i18n:text key="legalDisclaimer"/>
     return if ($disclaimerText) then 
         <div style="margin-bottom:1em;border:1px solid gray;border-radius:5px;padding:0.5em;">
             <span>{$disclaimerText}</span>
@@ -3613,7 +3485,6 @@ declare %templates:wrap function app:errorTitle($node as node(), $model as map(*
         (:        <p class="error-paragraph"><i18n:text key="bugMessage">In case you found a bug in our website, please let us know at</i18n:text> <a href="mailto:info.salamanca@adwmainz.de">info.salamanca@adwmainz.de</a></p>  :)
     return
         $out
-        (: i18n:process($out, $lang, '/db/apps/salamanca/data/i18n', 'en') heute geändert :)
 };
 
 (: tightly coupled to app:errorTitle, see above :)
@@ -3623,7 +3494,6 @@ declare %templates:wrap function app:errorInformation($node as node(), $model as
             or request:get-attribute('error-type') eq 'lemma-not-yet-available'
             or request:get-attribute('error-type') eq 'resource-not-yet-available')) then
         <span><i18n:text key="bugMessage">In case you found a bug in our website, please let us know at</i18n:text>{' '}<a href="mailto:info.salamanca@adwmainz.de">info.salamanca@adwmainz.de</a></span>
-        (: i18n:process(<span><i18n:text key="bugMessage">In case you found a bug in our website, please let us know at</i18n:text>{' '}<a href="mailto:info.salamanca@adwmainz.de">info.salamanca@adwmainz.de</a></span>, $lang, '/db/apps/salamanca/data/i18n', 'en') heute geändert :)
     else ()
 };
 
@@ -3681,7 +3551,7 @@ declare %templates:wrap function app:participantsBody($node as node(), $model as
             </div>
     return 
         <div>
-            {$body (: i18n:process($body, $lang, $config:i18n-root, 'en') heute geändert :)}
+            {$body}
         </div>
         
 };
@@ -3714,21 +3584,35 @@ declare %private
         </a>
     (: make list of works edited by the team member :)
     let $scholarlyContrib := 
+        for $tei in collection($config:tei-works-root)/tei:TEI[tei:teiHeader//tei:editor
+                                                                    [@xml:id eq $person/@xml:id]
+                                                                    [contains(@role, 'scholarly')]
+                                                               ]
+                                                              [sutil:WRKisPublished(@xml:id)] return
+(: replaced the following with the above for performance reasons on 2021-04-28 ...
         for $tei in collection($config:tei-works-root)/tei:TEI[matches(@xml:id, '^W\d{4}$')
             and sutil:WRKisPublished(@xml:id)
             and ./tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:editor[@xml:id eq $person/@xml:id 
                 and (contains(@role, 'scholarly'))]] return
+:)
             <a href="workDetails.html?wid={$tei/@xml:id}">{
-            app:rotateFormatName($tei/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:author/tei:persName) || ': ' ||
+            string-join(for $a in $tei/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:author/tei:persName return app:rotateFormatName($a), " &amp; ") || ': ' ||
             $tei/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title[@type = 'short']/string()
             }</a>
     let $technicalContrib := 
+        for $tei in collection($config:tei-works-root)/tei:TEI[tei:teiHeader//tei:editor
+                                                                    [@xml:id eq $person/@xml:id]
+                                                                    [contains(@role, 'technical')]
+                                                               ]
+                                                              [sutil:WRKisPublished(@xml:id)] return
+(: replaced the following with the above for performance reasons on 2021-04-28 ...
         for $tei in collection($config:tei-works-root)/tei:TEI[matches(@xml:id, '^W\d{4}$')
             and sutil:WRKisPublished(@xml:id)
             and ./tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:editor[@xml:id eq $person/@xml:id 
                 and (contains(@role, 'technical'))]] return
+:)
             <a href="workDetails.html?wid={$tei/@xml:id}">{
-            app:rotateFormatName($tei/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:author/tei:persName) || ': ' ||
+            string-join(for $a in $tei/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:author/tei:persName return app:rotateFormatName($a), " &amp; ") || ': ' ||
             $tei/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title[@type = 'short']/string()
             }</a>
     
@@ -3767,6 +3651,7 @@ declare %private
         </div>
     return $content
 };
+
 declare function app:makeCooperatorEntry($person as element(tei:person), $lang as xs:string, $index as xs:integer?) as element(div) {
     let $content :=
         <div>
