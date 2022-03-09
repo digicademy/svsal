@@ -8,17 +8,21 @@ xquery version "3.1";
  ----++++#### :)
 
 module namespace iiif     = "https://www.salamanca.school/factory/works/iiif";
+
+declare namespace array   = "http://www.w3.org/2005/xpath-functions/array";
 declare namespace exist   = "http://exist.sourceforge.net/NS/exist";
+declare namespace map     = "http://www.w3.org/2005/xpath-functions/map";
 declare namespace output  = "http://www.w3.org/2010/xslt-xquery-serialization";
 declare namespace sal     = "http://salamanca.adwmainz.de";
 declare namespace tei     = "http://www.tei-c.org/ns/1.0";
 declare namespace xi      = "http://www.w3.org/2001/XInclude";
 
-import module namespace config    = "http://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
-import module namespace app = "http://www.salamanca.school/xquery/app" at "xmldb:exist:///db/apps/salamanca/modules/app.xqm";
-import module namespace console    = "http://exist-db.org/xquery/console";
-import module namespace util       = "http://exist-db.org/xquery/util";
-import module namespace sutil    = "http://www.salamanca.school/xquery/sutil" at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
+import module namespace console     = "http://exist-db.org/xquery/console";
+import module namespace util        = "http://exist-db.org/xquery/util";
+
+import module namespace config      = "http://www.salamanca.school/xquery/config"   at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace app         = "http://www.salamanca.school/xquery/app"      at "xmldb:exist:///db/apps/salamanca/modules/app.xqm";
+import module namespace sutil       = "http://www.salamanca.school/xquery/sutil"    at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
 
 
 
@@ -48,7 +52,7 @@ declare function iiif:createResource($targetWorkId as xs:string) as map(*) {
 declare function iiif:mkMultiVolumeCollection($workId as xs:string, $tei as node()) as map(*) {
     let $debug := if ($config:debug = "trace") then console:log("iiif:mkMultiVolumeCollection running (" || $workId || " requested) ...") else ()
     let $id := $config:iiifPresentationServer || "collection/" || $workId
-    let $label := normalize-space($tei//tei:titleStmt/tei:author) || ": " ||
+    let $label := string-join(for $a in $tei//tei:titleStmt/tei:author return normalize-space($a), "/") || ": " ||
         normalize-space($tei//tei:titleStmt/tei:title[@type="main"]/text()) || " [multi-volume collection]"
     let $viewingHint := "multi-part"
     let $license         := "" (: TODO: which license for image data? https://creativecommons.org/licenses/by/4.0/ :)
@@ -333,7 +337,7 @@ declare function iiif:mkMetadata($tei as node()) as array(*) {
 
     let $metadata := array {
         map {"label": iiif:getI18nLabels("title"), "value": normalize-space($tei//tei:titleStmt/tei:title[@type="main"]/text())},
-        map {"label": iiif:getI18nLabels("author"), "value": normalize-space($tei//tei:titleStmt/tei:author)},
+        map {"label": iiif:getI18nLabels("author"), "value": string-join(for $a in $tei//tei:titleStmt/tei:author return normalize-space($a), "/")},
         map {"label": iiif:getI18nLabels("date-added"), "value": ""},
         map {"label": iiif:getI18nLabels("language"), "value": $lang},
         map {"label": iiif:getI18nLabels("publish-place"), "value": $pubPlace},
@@ -400,7 +404,7 @@ declare function iiif:teiFacs2IiifImageId($facs as xs:string?) as xs:string {
     If a work has been separated into several files with identifiers ending on underscore + lowercased letter, then this id will be returned. :)
 declare function iiif:getIiifVolumeId($volumeId as xs:string) as xs:string {
     let $volumeMap := map {
-        "Vol01": "A","Vol02": "B","Vol03": "C","Vol04": "D","Vol05": "E","Vol06": "F","Vol07": "G","Vol08": "H","Vol09": "I","Vol10": "J"
+        "Vol01": "A","Vol02": "B","Vol03": "C","Vol04": "D","Vol05": "E","Vol06": "F","Vol07": "G","Vol08": "H","Vol09": "I","Vol10": "J","Vol11": "K","Vol12": "L","Vol13": "M","Vol14": "N","Vol15": "O"
     }
     let $iiifVolumeId :=
         if (matches($volumeId, "^W[0-9]{4}$")) then $volumeId
