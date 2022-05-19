@@ -317,9 +317,9 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
     let $debug := if ($config:debug = ("trace")) then console:log("[APP] Building finalFacets (Js) for " || $lang || "...") else ()
     let $output :=
         for $item in (collection($config:tei-works-root)//tei:teiHeader[parent::tei:TEI//tei:text/@type = ("work_monograph", "work_multivolume")])
-            let $wid            :=  xs:string($item/parent::tei:TEI/@xml:id)
-            let $title          :=  xs:string($item/tei:fileDesc/tei:titleStmt/tei:title[@type = 'short'])
-            let $status         :=  xs:string($item/ancestor-or-self::tei:TEI//tei:revisionDesc/@status)
+            let $wid            :=  $item/parent::tei:TEI/@xml:id
+            let $title          :=  $item/tei:fileDesc/tei:titleStmt/tei:title[@type = 'short']
+            let $status         :=  $item/ancestor-or-self::tei:TEI//tei:revisionDesc/@status
             let $WIPstatus      :=  
                 if ($item/ancestor-or-self::tei:TEI//tei:revisionDesc/@status =
                                          ( 'a_raw',
@@ -348,8 +348,8 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
             let $FacsInfo       :=  i18n:process(<i18n:text key="facsimiles">Bildansicht</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en")
     
             let $printingPlace  :=  
-                if ($item//tei:pubPlace[@role = 'thisEd']) then xs:string($item//tei:pubPlace[@role = 'thisEd'])
-                else xs:string($item//tei:pubPlace[@role = 'firstEd'])
+                if ($item//tei:pubPlace[@role = 'thisEd']) then $item//tei:pubPlace[@role = 'thisEd']
+                else $item//tei:pubPlace[@role = 'firstEd']
             let $placeFirstChar :=  substring($printingPlace/@key, 1, 1)
             let $facetPlace     :=       
                      if ($placeFirstChar = ('A','B','C','D','E','F')) then 'A - F'
@@ -409,22 +409,22 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
                                                                 concat("vol", $index, "Cont") : $volContent
                                                               }
                                                 )
-            return map:merge( ( map {  "title" :               $title,
-                                       "status" :              $status,
+            return map:merge( ( map {  "title" :               xs:string($title),
+                                       "status" :              xs:string($status),
                                        "WIPstatus" :           $WIPstatus,
                                        "monoMultiUrl" :        $wrkLink,
                                        "workDetails" :         $workDetails,
                                        "titAttrib" :           $DetailsInfo,
                                        "workImages" :          $workImages,
                                        "facsAttrib" :          $FacsInfo,
-                                       "printer" :             $printer,
+                                       "printer" :             xs:string($printer),
                                        "name" :                $name,
                                        "sortName" :            $sortName,
                                        "nameFacet" :           $nameFacet,
                                        "date" :                $date,  
                                        "chronology" :          $datefacet,
                                        "textLanguage" :        $language,
-                                       "printingPlace" :       $printingPlace,
+                                       "printingPlace" :       xs:string($printingPlace),
                                        "facetPlace" :          $facetPlace,
                                        "facetAvailability" :   $facetAvailability,
                                        "volLabel" :            $volLabel
