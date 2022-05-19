@@ -318,7 +318,7 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
     let $output :=
         for $item in (collection($config:tei-works-root)//tei:teiHeader[parent::tei:TEI//tei:text/@type = ("work_monograph", "work_multivolume")])
             let $wid            :=  xs:string($item/parent::tei:TEI/@xml:id)
-            let $title          :=  $item/tei:fileDesc/tei:titleStmt/tei:title[@type = 'short']
+            let $title          :=  xs:string($item/tei:fileDesc/tei:titleStmt/tei:title[@type = 'short'])
             let $status         :=  xs:string($item/ancestor-or-self::tei:TEI//tei:revisionDesc/@status)
             let $WIPstatus      :=  
                 if ($item/ancestor-or-self::tei:TEI//tei:revisionDesc/@status =
@@ -348,8 +348,8 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
             let $FacsInfo       :=  i18n:process(<i18n:text key="facsimiles">Bildansicht</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en")
     
             let $printingPlace  :=  
-                if ($item//tei:pubPlace[@role = 'thisEd']) then $item//tei:pubPlace[@role = 'thisEd'] 
-                else $item//tei:pubPlace[@role = 'firstEd']
+                if ($item//tei:pubPlace[@role = 'thisEd']) then xs:string($item//tei:pubPlace[@role = 'thisEd'])
+                else xs:string($item//tei:pubPlace[@role = 'firstEd'])
             let $placeFirstChar :=  substring($printingPlace/@key, 1, 1)
             let $facetPlace     :=       
                      if ($placeFirstChar = ('A','B','C','D','E','F')) then 'A - F'

@@ -647,7 +647,7 @@ declare function render-app:persName($node as element(tei:persName), $mode as xs
         case 'participants' return
             render-app:passthru($node, $mode, $lang)
         default return
-            render-app:name($mode, $node, $lang)
+            render-app:name($node, $mode, $lang)
 };
 
 declare function render-app:placeName($node as element(tei:placeName), $mode as xs:string, $lang as xs:string?) {
@@ -655,7 +655,7 @@ declare function render-app:placeName($node as element(tei:placeName), $mode as 
         case 'participants' return
             render-app:passthru($node, $mode, $lang)
         default return
-            render-app:name($mode, $node, $lang)
+            render-app:name($node, $mode, $lang)
 };
 
 declare function render-app:orgName($node as element(tei:orgName), $mode as xs:string, $lang as xs:string?) {
@@ -663,7 +663,7 @@ declare function render-app:orgName($node as element(tei:orgName), $mode as xs:s
         case 'participants' return
             render-app:passthru($node, $mode, $lang)
         default return
-            render-app:name($mode, $node, $lang)
+            render-app:name($node, $mode, $lang)
 };
 
 declare function render-app:title($node as element(tei:title), $mode as xs:string, $lang as xs:string?) {
