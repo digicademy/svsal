@@ -199,7 +199,7 @@ declare function index:extractNodeStructure($wid as xs:string,
                 let $dbg := if ($node/self::tei:pb and functx:is-a-number($node/@n)) then
                                 let $pag := number($node/@n)
                                 return if ($pag mod 100 eq 0 and $config:debug = "trace") then
-                                          let $log := util:log('warn', '[INDEX] Processing tei:pb node ' || $node/@n)
+                                          let $log := util:log('info', '[INDEX] Processing tei:pb node ' || $node/@n)
                                           return console:log('[INDEX] Processing tei:pb ' || $node/@n || ' ...')
                                        else ()
                             else ()
@@ -1172,7 +1172,7 @@ declare function index:pb($node as element(tei:pb), $mode as xs:string) {
         (: pb nodes are good candidates for tracing the speed/performance of document processing, 
             since they are equally distributed throughout a document :)
         case 'debug' return
-            util:log('warn', '[INDEX] Processing tei:pb node ' || $node/@xml:id)
+            util:log('info', '[INDEX] Processing tei:pb node ' || $node/@xml:id)
         
         default return ()
 };

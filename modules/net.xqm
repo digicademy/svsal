@@ -646,7 +646,7 @@ declare function net:sitemapResponse($netVars as map(*)) {
 declare function net:deliverTextsHTML($netVars as map()*) {
     let $wid := sutil:normalizeId($netVars('paramap')?('wid'))
     let $validation := sutil:WRKvalidateId($wid)
-(:    let $debug := if ($config:debug = "trace") then util:log("warn", "HTML request for work :" || $wid || " ; " || "validation result: " || string($validation)) else ():)
+(:    let $debug := if ($config:debug = "trace") then util:log("info", "HTML request for work :" || $wid || " ; " || "validation result: " || string($validation)) else ():)
     return
         if ($validation eq 2) then (: full text available :)
             net:forward-to-html(substring($netVars('path'), 4), $netVars)
@@ -671,7 +671,7 @@ declare function net:deliverWorkDetailsHTML($netVars as map(*)) {
 
 declare function net:deliverAuthorsHTML($netVars as map()*) {
     let $validation := sutil:AUTvalidateId($netVars('paramap')?('aid'))
-    let $debug := util:log('warn', 'Author id validation: ' || string($validation) || ' ; aid=' || $netVars('paramap')?('aid'))
+    let $debug := util:log('info', 'Author id validation: ' || string($validation) || ' ; aid=' || $netVars('paramap')?('aid'))
     return
         if ($validation eq 1) then () (: TODO author article is available :)
         else if ($validation eq 0) then net:error(404, $netVars, 'author-not-yet-available')

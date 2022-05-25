@@ -561,9 +561,10 @@ declare function html:makeSectionToolbox($node as element(), $lang as node()*) a
                     </ul>
                 </div>
                 <div class="sal-tb-btn" title="{i18n:getLocalizedText(local:i18nNodify(concat('teiExp', $i18nSuffix)), $lang)}">
+                    <a href="{$citeIDBaseUrl || '?format=tei'}"><span class="messengers fas fa-align-left" title="{i18n:getLocalizedText(local:i18nNodify('downloadXML'), $lang)}"></span>{' '}{i18n:getLocalizedText(local:i18nNodify('teiExpShort'), $lang)}</a><!--
                     <button class="messengers" onclick="window.location.href = '{$citeIDBaseUrl || '?format=tei'}'">
                         <span class="fas fa-file-code"></span>{' '}{i18n:getLocalizedText(local:i18nNodify('teiExpShort'), $lang)}
-                    </button>
+                    </button>-->
                 </div>
                 <div class="sal-tb-btn" style="display:none;">
                     <a class="updateHiliteBox" href="#"> 
@@ -918,7 +919,7 @@ declare function html:dispatch($node as node(), $mode as xs:string, $lang as nod
     (: for fine-grained debugging: :)
     (: let $debug := 
         if (index:isIndexNode($node)) then 
-            util:log('warn', '[RENDER] Processing node tei:' || local-name($node) || ', with @xml:id=' || $node/@xml:id) 
+            util:log('info', '[RENDER] Processing node tei:' || local-name($node) || ', with @xml:id=' || $node/@xml:id) 
         else ()
     :)
     return
@@ -1627,7 +1628,7 @@ declare function html:pb($node as element(tei:pb), $mode as xs:string) {
         (: pb nodes are good candidates for tracing the speed/performance of document processing, 
             since they are equally distributed throughout a document :)
         case 'debug' return
-            util:log('warn', '[RENDER] Processing tei:pb node ' || $node/@xml:id)
+            util:log('info', '[RENDER] Processing tei:pb node ' || $node/@xml:id)
 
         default return () (: some sophisticated function to insert a pipe and a pagenumber div in the margin :)
 };

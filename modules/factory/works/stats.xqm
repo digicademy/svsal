@@ -57,11 +57,11 @@ declare function stats:makeCorpusStats() as map(*) {
             if (fn:unparsed-text-available($config:txt-root || '/' || $id || '/' || $id || '_edit.txt')) then
                 fn:unparsed-text($config:txt-root || '/' || $id || '/' || $id || '_edit.txt')
             else error(xs:QName('stats:makeCorpusStats()'), 'No (edit) txt available for published work ' || $id)
-(:    let $debug := util:log('warn', '[STATS] sending ' || count($txtAll) || ' texts to nlp:tokenize()'):)
+(:    let $debug := util:log('info', '[STATS] sending ' || count($txtAll) || ' texts to nlp:tokenize()'):)
     let $charsAllCount := string-length(replace(string-join($txtAll, ''), '\s', ''))
     let $tokensAllCount := count(nlp:tokenize($txtAll, 'all'))
     let $wordsAll := nlp:tokenize($txtAll, 'words')
-(:    let $debug := util:log('warn', '[STATS] $wordsAll[1:20] is: ' || string-join(subsequence($wordsAll,1,20), ', ')):)
+(:    let $debug := util:log('info', '[STATS] $wordsAll[1:20] is: ' || string-join(subsequence($wordsAll,1,20), ', ')):)
     let $wordformsAllCount := count(distinct-values($wordsAll))  
     
     (: not counting tokens etc. per language, since this slows down this function quite a bit... :)
@@ -69,7 +69,7 @@ declare function stats:makeCorpusStats() as map(*) {
     (:let $txtEs := 
         for $text in collection($config:tei-works-root)//tei:text[@type = ('work_monograph', 'work_volume') 
                                                                   and sutil:WRKisPublished(./parent::tei:TEI/@xml:id)] return
-                let $debug := util:log('warn', 'Processing text nodes for ' || $text/parent::tei:TEI/@xml:id || ' in lang=es') return
+                let $debug := util:log('info', 'Processing text nodes for ' || $text/parent::tei:TEI/@xml:id || ' in lang=es') return
                 string-join($text//text()[ancestor::*[@xml:lang][1]/@xml:lang eq 'es'], '')
     let $wordsEs := nlp:tokenize($txtEs, 'words')
     let $typesEsCount := count(distinct-values($wordsEs)):)
@@ -77,7 +77,7 @@ declare function stats:makeCorpusStats() as map(*) {
     (:let $txtLa := 
         for $text in collection($config:tei-works-root)//tei:text[@type = ('work_monograph', 'work_volume') 
                                                                   and sutil:WRKisPublished(./parent::tei:TEI/@xml:id)] return
-                let $debug := util:log('warn', 'Processing text nodes for ' || $text/parent::tei:TEI/@xml:id || ' in lang=la') return
+                let $debug := util:log('info', 'Processing text nodes for ' || $text/parent::tei:TEI/@xml:id || ' in lang=la') return
                 string-join($text//text()[ancestor::*[@xml:lang]/@xml:lang eq 'la'], '')
     let $wordsLa := nlp:tokenize($txtLa, 'words')
     let $typesLaCount := count(distinct-values($wordsLa)):)
@@ -124,7 +124,7 @@ declare function stats:makeCorpusStats() as map(*) {
                 xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
           <output:method value="json"/>
         </output:serialization-parameters>
-    let $debug := util:log('warn', 'Finalized statistics: ' || serialize($out, $debugParams)):)
+    let $debug := util:log('info', 'Finalized statistics: ' || serialize($out, $debugParams)):)
 
     return $out
     (: TODO: basic description of how wf/tokens are counted (and possible pitfalls like abbreviations...) :)
@@ -164,7 +164,7 @@ declare function stats:makeWorkStats($wid as xs:string) as map(*) {
     let $charsCount := string-length(replace(string-join($txt, ''), '\s', ''))
     let $tokensCount := count(nlp:tokenize($txt, 'all'))
     let $words := nlp:tokenize($txt, 'words')
-(:    let $debug := util:log('warn', '[STATS] $wordsAll[1:20] is: ' || string-join(subsequence($wordsAll,1,20), ', ')):)
+(:    let $debug := util:log('info', '[STATS] $wordsAll[1:20] is: ' || string-join(subsequence($wordsAll,1,20), ', ')):)
     let $wordformsCount := count(distinct-values($words))
     
     (: NORMALIZATIONS :)
@@ -195,7 +195,7 @@ declare function stats:makeWorkStats($wid as xs:string) as map(*) {
                 xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
           <output:method value="json"/>
         </output:serialization-parameters>
-    let $debug := util:log('warn', 'Finalized statistics: ' || serialize($out, $debugParams)):)
+    let $debug := util:log('info', 'Finalized statistics: ' || serialize($out, $debugParams)):)
 
     return $out
 };

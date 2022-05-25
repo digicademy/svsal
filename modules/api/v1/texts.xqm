@@ -6,26 +6,26 @@ xquery version "3.1" encoding "UTF-8";
 
  ----++++#### :)
 
-module namespace textsv1 = "http://api.salamanca.school/v1/texts";
+module namespace textsv1  = "http://api.salamanca.school/v1/texts";
 
-declare namespace sal = "http://salamanca.adwmainz.de";
+declare namespace exist   = "http://exist.sourceforge.net/NS/exist";
+declare namespace output  ="http://www.w3.org/2010/xslt-xquery-serialization";
+declare namespace rdf     = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+declare namespace rdfs    = "http://www.w3.org/2000/01/rdf-schema#";
+declare namespace sal     = "http://salamanca.adwmainz.de";
 declare namespace tei     = "http://www.tei-c.org/ns/1.0";
 
-declare namespace output="http://www.w3.org/2010/xslt-xquery-serialization";
-declare namespace exist = "http://exist.sourceforge.net/NS/exist";
-import module namespace rest = "http://exquery.org/ns/restxq";
-import module namespace util = "http://exist-db.org/xquery/util";
-import module namespace http = "http://expath.org/ns/http-client";
-declare       namespace rdf         = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
-declare       namespace rdfs        = "http://www.w3.org/2000/01/rdf-schema#";
-import module namespace console     = "http://exist-db.org/xquery/console";
+import module namespace console  = "http://exist-db.org/xquery/console";
+import module namespace http     = "http://expath.org/ns/http-client";
+import module namespace rest     = "http://exquery.org/ns/restxq";
+import module namespace util     = "http://exist-db.org/xquery/util";
 
-import module namespace api = "http://www.salamanca.school/xquery/api" at "../api.xqm";
-import module namespace sutil = "http://www.salamanca.school/xquery/sutil" at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
+import module namespace api    = "http://www.salamanca.school/xquery/api" at "../api.xqm";
+import module namespace sutil  = "http://www.salamanca.school/xquery/sutil" at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
 import module namespace config = "http://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
 import module namespace export = "http://www.salamanca.school/xquery/export" at "xmldb:exist:///db/apps/salamanca/modules/export.xqm";
-(:import module namespace net = "http://www.salamanca.school/xquery/net" at "xmldb:exist:///db/apps/salamanca/modules/net.xqm";:)
-import module namespace txt = "https://www.salamanca.school/factory/works/txt" at "xmldb:exist:///db/apps/salamanca/modules/factory/works/txt.xqm";
+(:import module namespace net  = "http://www.salamanca.school/xquery/net" at "xmldb:exist:///db/apps/salamanca/modules/net.xqm";:)
+import module namespace txt    = "https://www.salamanca.school/factory/works/txt" at "xmldb:exist:///db/apps/salamanca/modules/factory/works/txt.xqm";
 
 
 
@@ -36,7 +36,7 @@ import module namespace txt = "https://www.salamanca.school/factory/works/txt" a
 
 declare
 %rest:GET
-%rest:path("/v1/texts")
+%rest:path("v1/texts")
 %rest:query-param("format", "{$format}", "")
 %rest:query-param("lang", "{$lang}", "")
 %rest:header-param("Accept", "{$accept}", "text/html")
@@ -78,7 +78,7 @@ function textsv1:texts1($format, $lang, $accept, $host) {
 
 declare 
 %rest:GET
-%rest:path("/v1/texts/{$rid}")
+%rest:path("v1/texts/{$rid}")
 %rest:query-param("format", "{$format}", "")
 %rest:query-param("mode", "{$mode}", "")
 %rest:query-param("q", "{$q}", "")
@@ -90,6 +90,7 @@ declare
 %rest:header-param("X-Forwarded-Host", "{$host}", "")
 %output:indent("no")
 function textsv1:textsResource1($rid, $format, $mode, $q, $lang, $viewer, $frag, $canvas, $accept, $host) {
+    let $debug1 := if ($config:debug = ("trace", "info")) then console:log("texts.xqm (api v1) requested: " || $rid || " (format: " || $format || ", mode: " || $mode || ")") else ()
     (: for determining the requested format, the "format" query param has priority over the "Accept" header param: :)
     let $format := if ($format) then $format else api:getFormatFromContentTypes(tokenize($accept, '[, ]+'), 'text/html')
     return
@@ -139,7 +140,7 @@ declare %private function textsv1:TEIdeliverDoc($rid as xs:string, $mode as xs:s
         else if ($resource('tei_status') = (1, 0)) then
             api:error404NotYetAvailable()
         else if (not($resource('wellformed'))) then
-            api:error400BadResource()
+            api:error400BadResource($rid)
         else 
             api:error404NotFound()
 };
@@ -167,7 +168,7 @@ declare %private function textsv1:TXTdeliverDoc($rid as xs:string, $mode as xs:s
                         else
                             api:error404NotYetAvailable()
                 else (: $resource('request_type') eq 'passage' :)
-                    let $node := sutil:getTeiNodeFromCitetrail($resource('work_id'), $resource('passage'))
+                    let $node := sutil:getTeiNodeFromCiteID($resource('work_id'), $resource('passage'))
                     return
                         if ($node) then
                             api:deliverTXT(
@@ -179,11 +180,10 @@ declare %private function textsv1:TXTdeliverDoc($rid as xs:string, $mode as xs:s
         else if ($resource('tei_status') = (1, 0)) then
             api:error404NotYetAvailable()
         else if (not($resource('wellformed'))) then
-            api:error400BadResource()
+            api:error400BadResource($rid)
         else 
             api:error404NotFound()
 };
-
 
 declare %private function textsv1:HTMLdeliverDoc($rid as xs:string, $mode as xs:string?, $q as xs:string?, 
                                                  $lang as xs:string?, $viewer as xs:string?, $frag as xs:string?, 
@@ -257,7 +257,7 @@ declare %private function textsv1:HTMLdeliverDoc($rid as xs:string, $mode as xs:
                 if ($uriParams) then '?' || $uriParams || (if ($requestParams) then '&amp;' || $requestParams else ())
                 else if ($requestParams) then '?' || $requestParams
                 else ()
-            let $log := util:log('warn', '$pathname: "' || $pathname || '" ; $hash: "' || $hash || '" ; ')
+            let $log := util:log('info', '$pathname: "' || $pathname || '" ; $hash: "' || $hash || '" ; ')
             return api:redirect-with-303($pathname || $parameters || $hash )
         else if ($resource('tei_status') eq 1) then
             (: work/volume not yet fully available, but metadata exist -> redirect to work details page (regardless of passage) :)
@@ -269,7 +269,7 @@ declare %private function textsv1:HTMLdeliverDoc($rid as xs:string, $mode as xs:
                 || '/work.html?wid=' || $resource('work_id'))
         else 
             (: request / resource id not wellformed - deliver according (JSON!) response :)
-            api:error400BadResource()
+            api:error400BadResource($rid)
 };
 
 declare %private function textsv1:RDFdeliverDoc($rid as xs:string) {
@@ -288,7 +288,7 @@ declare %private function textsv1:RDFdeliverDoc($rid as xs:string) {
         else if ($resource('tei_status') eq 0) then
             api:error404NotYetAvailable()
         else if (not($resource('wellformed'))) then
-            api:error400BadResource()
+            api:error400BadResource($rid)
         else 
             api:error404NotFound() 
 };
@@ -306,7 +306,7 @@ declare %private function textsv1:STATSdeliverDoc($rid as xs:string) {
         else if ($resource('tei_status') = (0,1)) then
             api:error404NotYetAvailable()
         else if (not($resource('wellformed'))) then
-            api:error400BadResource()
+            api:error400BadResource($rid)
         else 
             api:error404NotFound() 
 };
@@ -325,14 +325,14 @@ declare %private function textsv1:JPGredirect($rid as xs:string) {
                     if ($jpgUrl) then
                         api:redirect-with-303($jpgUrl)
                     else 
-                        api:error400BadResource()
+                        api:error400BadResource($rid)
             else
                 (: in case rdf hasn't been rendered yet :)
                 api:error404NotYetAvailable()
         else if ($resource('tei_status') eq 0) then
             api:error404NotYetAvailable()
         else if (not($resource('wellformed'))) then
-            api:error400BadResource()
+            api:error400BadResource($rid)
         else 
             api:error404NotFound()
 };
@@ -359,7 +359,7 @@ declare %private function textsv1:IIIFredirect($rid as xs:string, $host as xs:st
         else if ($resource('tei_status') eq 0) then
             api:error404NotYetAvailable()
         else if (not($resource('wellformed'))) then
-            api:error400BadResource()
+            api:error400BadResource($rid)
         else 
             api:error404NotFound()
 };
@@ -426,7 +426,7 @@ declare function textsv1:validateResourceId($rid as xs:string?) as map(*) {
                 (: the work/volume is available - but what about the (potential) passage? :)
                     if ($valMap('passage') and not(matches(lower-case($valMap('passage')), '^vol\d{1,2}$'))) then
                         (: (passages that refer to mere volumes have already been treated above) :)
-                        if (doc($config:index-root || '/' || $valMap('work_id') || '_nodeIndex.xml')//sal:citetrail[./text() eq $valMap('passage')]) then
+                        if (doc($config:index-root || '/' || $valMap('work_id') || '_nodeIndex.xml')//sal:node[@citeID eq $valMap('passage')]) then
                             let $valMap := map:put($valMap, 'passage_status', 1)
                             let $valMap := map:put($valMap, 'valid', true())
                             return map:put($valMap, 'request_type', 'passage')
@@ -441,7 +441,7 @@ declare function textsv1:validateResourceId($rid as xs:string?) as map(*) {
     
     let $debug := 
         if ($config:debug = ('trace', 'info')) then 
-            util:log('warn', '[TEXTSAPI] validation results: ' || serialize($valMap, $api:jsonOutputParams))
+            util:log('info', '[TEXTSAPI] validation results: ' || serialize($valMap, $api:jsonOutputParams))
         else ()
         
     return $valMap

@@ -657,7 +657,7 @@ declare function sphinx:keywords ($q as xs:string?) as xs:string {
 :)
 declare function sphinx:excerpts ($documents as node()*, $words as xs:string) as node()* {
     let $endpoint       := concat($config:sphinxRESTURL, "/excerpts")
-(:    let $debug          := if ($config:debug = ("info", "trace")) then util:log("warn", "[SPHINX EXCERPTS] Excerpts needed for doc[0]: " || substring(normalize-space($documents/description_orig), 1, 150)) else ():)
+(:    let $debug          := if ($config:debug = ("info", "trace")) then util:log("info", "[SPHINX EXCERPTS] Excerpts needed for doc[0]: " || substring(normalize-space($documents/description_orig), 1, 150)) else ():)
     let $normalizedOrig := $documents/description_orig
     let $normalizedEdit := $documents/description_edit
     let $normalizedWords := normalize-space(tokenize($words, "@")[1])
@@ -680,11 +680,11 @@ declare function sphinx:excerpts ($documents as node()*, $words as xs:string) as
                 <hc:body media-type="text/xml" method="xml" indent="no" omit-xml-declaration="yes">{$normalizedEdit}</hc:body>
             </hc:multipart>
         </hc:request>
-(:    let $log        := if ($config:debug = ("info", "trace")) then util:log("warn", "[SPHINX EXCERPTS] POST request element: " || serialize($request)) else ():)
+(:    let $log        := if ($config:debug = ("info", "trace")) then util:log("info", "[SPHINX EXCERPTS] POST request element: " || serialize($request)) else ():)
     let $debug      := if ($config:debug = "trace") then console:log("[SPHINX EXCERPTS] POST request element: " || serialize($request)) else ()
     let $temp      := hc:send-request($request, $endpoint)
     let $resp := <resp>{$temp}</resp>
-(:    let $log        := if ($config:debug = ("info", "trace")) then util:log('warn', '[SPHINX EXCERPTS] POST response: ' || serialize($resp)) else ():)
+(:    let $log        := if ($config:debug = ("info", "trace")) then util:log('info', '[SPHINX EXCERPTS] POST response: ' || serialize($resp)) else ():)
 (:    let $debug      := if ($config:debug = "trace") then console:log('[SPHINX EXCERPTS] POST response: ' || serialize($temp)) else ():)
 (:  TODO:   check encoding (and other stuff, too?) before parsing and returning $resp//rss.
             But the following (old) way of checking is wrong: 
@@ -693,7 +693,7 @@ declare function sphinx:excerpts ($documents as node()*, $words as xs:string) as
             if (validation:jaxp(util:base64-decode($resp/node()[not(self::hc:response)]), false())) then
                 let $debug := 
                     if ($config:debug = "trace") then 
-                        util:log('warn', '[SPHINX] INFO: Received wellformed Base64Encoded HTML from (Open)Sphinxsearch,' || 
+                        util:log('info', '[SPHINX] INFO: Received wellformed Base64Encoded HTML from (Open)Sphinxsearch,' || 
                                          ' parsing HTML for output...') else ()
                 return
                     parse-xml(util:base64-decode($resp/node()[not(self::hc:response)])) 
@@ -701,7 +701,7 @@ declare function sphinx:excerpts ($documents as node()*, $words as xs:string) as
         else $resp/node()[not(self::hc:response)]
 :)
     let $rspBody   := $resp//rss
-(:    let $log   :=  if ($config:debug = ("info", "trace")) then util:log("warn", "[SPHINX EXCERPTS] $rspBody: " || serialize($rspBody)) else ():)
+(:    let $log   :=  if ($config:debug = ("info", "trace")) then util:log("info", "[SPHINX EXCERPTS] $rspBody: " || serialize($rspBody)) else ():)
     let $debug :=  if ($config:debug = "trace") then console:log("[SPHINX EXCERPTS] POST response body decodes to: " || (serialize($rspBody))) else ()
     return $rspBody
 };
@@ -746,7 +746,7 @@ declare function sphinx:highlight($document as node()?, $words as xs:string) as 
 
     let $resp   := <resp>{hc:send-request($request, $endpoint)}</resp>
     let $rspBody   := $resp//rss
-(:    let $log   :=  if ($config:debug = ("info", "trace")) then util:log("warn", "[SPHINX HIGHLIGHTING] $rspBody: " || serialize($rspBody)) else ():)
+(:    let $log   :=  if ($config:debug = ("info", "trace")) then util:log("info", "[SPHINX HIGHLIGHTING] $rspBody: " || serialize($rspBody)) else ():)
 (:    let $debug :=  if ($config:debug = ("info", "trace")) then console:log("[SPHINX HIGHLIGHTING] POST response body decodes to: " || (serialize($rspBody))) else ():)
     return $rspBody
 };
@@ -785,7 +785,7 @@ function sphinx:details ($wid as xs:string, $field as xs:string, $q as xs:string
                                 "sphinx_description_edit,sphinx_description_orig) " || $q || $addConditionParameters),
                 $sortingParameters,
                 $pagingParameters)
-(:    let $debug := util:log('warn', '[SPHINX] sphinx:details $detailsRequest=' || $detailsRequest):)
+(:    let $debug := util:log('info', '[SPHINX] sphinx:details $detailsRequest=' || $detailsRequest):)
     let $resp := <resp>{hc:send-request(<hc:request href="{$detailsRequest}" method="get"/>)}</resp>
     let $details:= $resp//rss
     
@@ -848,16 +848,12 @@ function sphinx:details ($wid as xs:string, $field as xs:string, $q as xs:string
                     let $resultTextRaw :=
                         (: if there is a <span class="hi" id="..."> within the description, terms have been highlighted by sphinx:excerpts(): :)
                         if ($description_edit//span) then 
-(:                            let $debug := util:log('warn', $wid || ' : ' || '1') return:)
                             $description_edit
                         else if ($description_orig//span) then 
-(:                            let $debug := util:log('warn', $wid || ' : ' || '2') return:)
                             $description_orig
                         else if (string-length($item/description_edit) gt $config:snippetLength) then 
-(:                            let $debug := util:log('warn', $wid || ' : ' || '3') return:)
                             substring($item/description_edit, 1, $config:snippetLength) || '...'
                         else 
-(:                            let $debug := util:log('warn', $wid || ' : ' || '4') return:)
                             $item/description_edit/text()
                     let $resultText := replace($resultTextRaw, '\[.*?\]', '') (: do not show name IDs etc. in search results (although they *are* searchable) :)
                     let $statusInfo := $bombtrail/i18n:text/@key/string()

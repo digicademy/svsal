@@ -303,7 +303,7 @@ declare function sutil:getTeiNodeFromCiteID($workId as xs:string, $citeID as xs:
 (:
 ~ For exporting, fetch the matching node from the respective TEI dataset (don't expand XIncludes).
 :)
-declare function        sutil:extractTeiNodeFromCiteID($workId as xs:string, $citeID as xs:string?) as element()? {
+declare function sutil:extractTeiNodeFromCiteID($workId as xs:string, $citeID as xs:string?) as element()? {
     let $nodeId := 
         if ($citeID) then
             doc($config:index-root || '/' || sutil:normalizeId($workId) || '_nodeIndex.xml')//sal:node[@citeID eq $citeID][1]/@n[1]/string()

@@ -474,7 +474,7 @@ declare function admin:saveTextFile($wid as xs:string, $fileName as xs:string, $
 };
 
 declare function admin:exportXMLFile($filename as xs:string, $content as item(), $collection as xs:string?) {
-    let $fsRoot := "/exist-data/export/"
+    let $fsRoot := $config:export-folder
     let $collectionname := 
              if ($collection eq "data")      then $fsRoot
         else if ($collection eq "html")      then $fsRoot
@@ -496,13 +496,13 @@ declare function admin:exportXMLFile($filename as xs:string, $content as item(),
             file:delete($pathname)
         else true()
     let $user := string(sm:id()//sm:real/sm:username)
-    let $umask := sm:set-umask($user, 2)
+    (: let $umask := sm:set-umask($user, 2) :)
     let $store-status := file:serialize($content, $pathname, map{"method":$method, "indent": true(), "encoding":"utf-8"})
     return if ($store-status) then $pathname else ()
 };
 
 declare function admin:exportXMLFile($wid as xs:string, $filename as xs:string, $content as item(), $collection as xs:string?) {
-    let $fsRoot := "/exist-data/export/"
+    let $fsRoot := $config:export-folder
     let $collectionname := 
              if ($collection eq "html")      then $fsRoot || $wid || "/html/"
         else if ($collection eq "snippets")  then $fsRoot || $wid || "/snippets/"
@@ -527,14 +527,14 @@ declare function admin:exportXMLFile($wid as xs:string, $filename as xs:string, 
             file:delete($pathname)
         else true()
     let $user := string(sm:id()//sm:real/sm:username)
-    let $umask := sm:set-umask($user, 2)
+    (: let $umask := sm:set-umask($user, 2) :)
     let $store-status := file:serialize($content, $pathname, map{"method":$method, "indent": true(), "encoding":"utf-8"})
     return  if ($store-status) then $pathname else ()
 };
 
 declare function admin:exportBinaryFile($filename as xs:string, $content as xs:string, $collection as xs:string?) {
-    let $fsRoot := "/exist-data/export/"
-    let $collectionname := 
+    let $fsRoot := $config:export-folder
+    let $collectionname :=
              if ($collection eq "data")      then $fsRoot
         else                                      $fsRoot || "trash/"
     let $collectionStatus :=
@@ -550,13 +550,13 @@ declare function admin:exportBinaryFile($filename as xs:string, $content as xs:s
             file:delete($pathname)
         else true()
     let $user := string(sm:id()//sm:real/sm:username)
-    let $umask := sm:set-umask($user, 2)
+    (: let $umask := sm:set-umask($user, 2) :)
     let $store-status := file:serialize-binary(bin:encode-string($content), $pathname)    (: eXist-db also has util:base64-encode(xs:string) :)
     return  if ($store-status) then $pathname else ()
 };
 
 declare function admin:exportBinaryFile($wid as xs:string, $filename as xs:string, $content as xs:string, $collection as xs:string?) {
-    let $fsRoot := "/exist-data/export/"
+    let $fsRoot := $config:export-folder
     let $collectionname := 
              if ($collection eq "html")      then $fsRoot || $wid || "/html/"
         else if ($collection eq "txt")       then $fsRoot || $wid || "/text/"
@@ -575,13 +575,13 @@ declare function admin:exportBinaryFile($wid as xs:string, $filename as xs:strin
             file:delete($pathname)
         else true()
     let $user := string(sm:id()//sm:real/sm:username)
-    let $umask := sm:set-umask($user, 2)
+    (: let $umask := sm:set-umask($user, 2) :)
     let $store-status := file:serialize-binary(bin:encode-string($content), $pathname)    (: eXist-db also has util:base64-encode(xs:string) :)
     return  if ($store-status) then $pathname else ()
 };
 
 declare function admin:exportJSONFile($filename as xs:string, $content as item()*, $collection as xs:string?) {
-    let $fsRoot := "/exist-data/export/"
+    let $fsRoot := $config:export-folder
     let $collectionname := 
              if ($collection eq "workslist") then $fsRoot
         else if ($collection eq "stats")     then $fsRoot
@@ -600,13 +600,13 @@ declare function admin:exportJSONFile($filename as xs:string, $content as item()
             file:delete($pathname)
         else true()
     let $user := string(sm:id()//sm:real/sm:username)
-    let $umask := sm:set-umask($user, 2)
+    (: let $umask := sm:set-umask($user, 2) :)
     let $store-status := file:serialize-binary(bin:encode-string(fn:serialize($content, map{"method":"json", "indent": true(), "encoding":"utf-8"})), $pathname)
     return if ($store-status) then $pathname else ()
 };
 
 declare function admin:exportJSONFile($wid as xs:string, $filename as xs:string, $content as item()*, $collection as xs:string?) {
-    let $fsRoot := "/exist-data/export/"
+    let $fsRoot := $config:export-folder
     let $collectionname := 
              if ($collection eq "iiif")      then $fsRoot || $wid || "/"
         else if ($collection eq "stats")     then $fsRoot || $wid || "/"
@@ -625,7 +625,7 @@ declare function admin:exportJSONFile($wid as xs:string, $filename as xs:string,
             file:delete($pathname)
         else true()
     let $user := string(sm:id()//sm:real/sm:username)
-    let $umask := sm:set-umask($user, 2)
+    (: let $umask := sm:set-umask($user, 2) :)
     let $store-status := file:serialize-binary(bin:encode-string(fn:serialize($content, map{"method":"json", "indent": true(), "encoding":"utf-8"})), $pathname)
     return  if ($store-status) then $pathname else ()
 };
@@ -1010,7 +1010,7 @@ declare %templates:wrap function admin:renderWork($workId as xs:string*) as elem
     
     
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Done rendering HTML and TXT for " || $wid || ".") else ()
-    let $debug := util:log('warn', '[ADMIN] Created HTML for work ' || $wid || ' in ' || $runtime-ms || ' ms.')
+    let $debug := util:log('info', '[ADMIN] Created HTML for work ' || $wid || ' in ' || $runtime-ms || ' ms.')
     return 
         <div>
             <h2>HTML &amp; TXT Rendering</h2>
@@ -1354,7 +1354,7 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
 declare function admin:createNodeIndex($wid as xs:string*) {
     let $debug := if ($config:debug = ("trace", "info")) then
         let $d := console:log("[ADMIN] Creating node index for " || $wid || ".")
-        return util:log("warn", "[ADMIN] Creating node index for " || $wid || ".")
+        return util:log("info", "[ADMIN] Creating node index for " || $wid || ".")
  else
  ()
 
@@ -1412,7 +1412,7 @@ declare function admin:createNodeIndex($wid as xs:string*) {
         if ($runtime-ms-raw < (1000 * 60)) then format-number($runtime-ms-raw div 1000, "#.##") || " Sek."
         else if ($runtime-ms-raw < (1000 * 60 * 60)) then format-number($runtime-ms-raw div (1000 * 60), "#.##") || " Min."
         else format-number($runtime-ms-raw div (1000 * 60 * 60), "#.##") || " Std."
-    let $debug := if ($config:debug = ("trace", "info")) then util:log("warn", "[ADMIN] Finished node indexing for " || $wid || " in " || $runtime-ms || ".") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then util:log("info", "[ADMIN] Finished node indexing for " || $wid || " in " || $runtime-ms || ".") else ()
     
     return 
         <div>
@@ -1487,13 +1487,7 @@ declare function admin:buildRoutingInfoNode($wid as xs:string, $item as element(
 
 declare function admin:buildRoutingInfoWork($wid as xs:string, $index as element(sal:index)) {
     let $firstCrumb := $index//sal:node[1]/@crumb/string()
-    let $value := array { ( map { "input" : concat("/texts/", $wid ),                "outputs" : array { ( $firstCrumb, 'yes' ) } }
-                          , map { "input" : concat("/texts/", $wid, "?format=html"), "outputs" : array { ( $firstCrumb, 'yes' ) } }
-                          , map { "input" : concat("/texts/", $wid, "?format=iiif"), "outputs" : array { ( concat( $wid, "/", $wid, ".json"), 'yes' ) } }
-                          , map { "input" : concat("/texts/", $wid, "?format=rdf"),  "outputs" : array { ( concat( $wid, "/", $wid, ".rdf"),  'yes' ) } }
-                          , map { "input" : concat("/texts/", $wid, "?format=pdf"),  "outputs" : array { ( concat( $wid, "/", $wid, ".pdf"),  'yes' ) } }
-                          )
-                        }
+    let $value := array { ( map { "input" : concat("/texts/", $wid ), "outputs" : array { ( $firstCrumb, 'yes' ) } } ) }
 (:    let $debug := console:log("[ADMIN] routing entry: " || serialize($value, map{"method":"json"}) || "."):)
     return $value
 };
@@ -1513,7 +1507,7 @@ declare function admin:createRDF($rid as xs:string) {
     let $debug := 
         if ($config:debug eq 'trace') then
             let $d := console:log("[Admin] Requesting " || $xtriplesUrl || " ...")
-            return util:log("warn", "Requesting " || $xtriplesUrl || ' ...')
+            return util:log("info", "Requesting " || $xtriplesUrl || ' ...')
         else ()
     let $rdf := 
         (: if this throws an "XML Parsing Error: no root element found", this might be due to the any23 service not being available
@@ -1524,7 +1518,7 @@ declare function admin:createRDF($rid as xs:string) {
         if ($runtime-ms < (1000 * 60)) then format-number($runtime-ms div 1000, "#.##") || " Sek."
         else if ($runtime-ms < (1000 * 60 * 60))  then format-number($runtime-ms div (1000 * 60), "#.##") || " Min."
         else format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
-    let $log  := util:log('warn', 'Extracted RDF for ' || $rid || ' in ' || $runtimeString)
+    let $log  := util:log('info', 'Extracted RDF for ' || $rid || ' in ' || $runtimeString)
     let $export := admin:exportXMLFile($rid, $rid || '.rdf', $rdf, 'rdf')
     let $save   := admin:saveFile($rid, $rid || '.rdf', $rdf, 'rdf')
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Done rendering RDF for " || $rid || ".") else ()
@@ -1543,7 +1537,7 @@ declare function admin:createIIIF($wid as xs:string) {
     let $start-time := util:system-time()
     let $debug := 
         if ($config:debug eq 'trace') then
-            util:log("warn", "Creation of IIIF resource requested, work id: " || $wid || ".")
+            util:log("info", "Creation of IIIF resource requested, work id: " || $wid || ".")
         else ()
     let $resource := iiif:createResource($wid)
     let $runtime-ms := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000
@@ -1551,16 +1545,15 @@ declare function admin:createIIIF($wid as xs:string) {
         if ($runtime-ms < (1000 * 60)) then format-number($runtime-ms div 1000, "#.##") || " Sek."
         else if ($runtime-ms < (1000 * 60 * 60))  then format-number($runtime-ms div (1000 * 60), "#.##") || " Min."
         else format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
-    let $log    := util:log('warn', 'Extracted IIIF for ' || $wid || ' in ' || $runtimeString)
+    let $log    := util:log('info', 'Extracted IIIF for ' || $wid || ' in ' || $runtimeString)
     let $store  := if ($resource instance of map(*) and map:size($resource) > 0) then admin:saveTextFile($wid, $wid || '.json', fn:serialize($resource, map{"method":"json", "indent": true(), "encoding":"utf-8"}), 'iiif') else ()
     let $export := if ($resource instance of map(*) and map:size($resource) > 0) then admin:exportJSONFile($wid, $wid || '.json', $resource, 'iiif') else ()
     return $resource
 };
 
 declare function admin:createStats() {
-    let $log  := if ($config:debug eq 'trace') then util:log('warn', '[ADMIN] Starting to extract stats...') else ()
+    let $log  := if ($config:debug eq 'trace') then util:log('info', '[ADMIN] Starting to extract stats...') else ()
     let $start-time := util:system-time()
-(:    let $stats := stats:makeCorpusStats():)
     let $params := 
         <output:serialization-parameters xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
             <output:method value="json"/>
@@ -1572,7 +1565,7 @@ declare function admin:createStats() {
     (: single work stats:)
     let $processSingleWorks :=
         for $wid in sutil:getPublishedWorkIds() return
-            let $log := if ($config:debug eq 'trace') then util:log('warn', '[ADMIN] Creating single work stats for ' || $wid) else ()
+            let $log := if ($config:debug eq 'trace') then util:log('info', '[ADMIN] Creating single work stats for ' || $wid) else ()
             let $workStats := stats:makeWorkStats($wid)
             let $saveSingle   := admin:saveFile('dummy', $wid || '-stats.json', serialize($workStats, $params), 'stats')
             let $exportSingle := admin:exportJSONFile($wid, $wid || '-stats.json', $workStats, 'stats')
@@ -1582,7 +1575,7 @@ declare function admin:createStats() {
         if ($runtime-ms < (1000 * 60)) then format-number($runtime-ms div 1000, "#.##") || " Sek."
         else if ($runtime-ms < (1000 * 60 * 60))  then format-number($runtime-ms div (1000 * 60), "#.##") || " Min."
         else format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
-    let $log  := util:log('warn', '[ADMIN] Extracted corpus and works stats in ' || $runtimeString)
+    let $log  := util:log('info', '[ADMIN] Extracted corpus and works stats in ' || $runtimeString)
 
     return $corpusStats
 };

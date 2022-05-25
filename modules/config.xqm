@@ -34,7 +34,8 @@ declare variable $config:defaultTestserver := 'test.salamanca.school';
 (: Configure Servers :)
 declare variable $config:proto          := "https"; (: if (request:get-header('X-Forwarded-Proto') = "https") then "https" else request:get-scheme(); :)
 declare variable $config:subdomains     := ("www", "blog", "facs", "search", "api", "id", "files");
-declare variable $config:serverdomain := 
+declare variable $config:serverdomain   := "test.salamanca.school";
+(:
     if (substring-before(request:get-header('X-Forwarded-Host'), ".") = $config:subdomains)
         then substring-after(request:get-header('X-Forwarded-Host'), ".")
     else if(request:get-header('X-Forwarded-Host'))
@@ -42,22 +43,23 @@ declare variable $config:serverdomain :=
     else if(substring-before(request:get-server-name(), ".") = $config:subdomains)
         then substring-after(request:get-server-name(), ".")
     else
-        let $fallbackDomain := $config:defaultTestserver (: request:get-server-name() :)
-        (: let $alert := if ($config:debug = "trace") then console:log("Warning! Dynamic $config:serverdomain is uncertain, using servername " || $fallbackDomain || ".") else () :)
+        let $fallbackDomain := $config:defaultTestserver (/: request:get-server-name() :/)
+        (/: let $alert := if ($config:debug = "trace") then console:log("Warning! Dynamic $config:serverdomain is uncertain, using servername " || $fallbackDomain || ".") else () :/)
         return $fallbackDomain
     ;
- 
+:)
+
 (: API :)
 
 declare variable $config:currentApiVersion := 'v1';
 
-declare variable $config:apiEndpoints   := 
-    map  {
+declare variable $config:apiEndpoints :=
+    map {
         "v1": ("texts", "search", "codesharing", "xtriples")
     };
 (: valid API parameters and values, aligned with the respective 'format' parameter's values; if there is no explicite value 
     stated for a parameter (such as 'q'), the parameter may have any string value (sanitization happens elsewhere) :)
-declare variable $config:apiFormats := 
+declare variable $config:apiFormats :=
     map {
         'html': ('mode=edit', 'mode=orig', 'mode=meta', 'q', 'lang=de', 'lang=en', 'lang=es', 'viewer', 'frag'),
         'iiif': ('canvas'),
@@ -114,6 +116,7 @@ declare variable $config:repository-uri := xs:anyURI($config:svnserver || '/04-3
 declare variable $config:lodFormat      := "rdf";
 declare variable $config:defaultLang    := "en";            (: en, es, or de :)
 declare variable $config:stats-limit    := 15;              (: How many lemmata are evaluated on the stats page? :)
+declare variable $config:export-folder  := "/exist/data/export/";
 
 (: Configure special character entities :)
 declare variable $config:nl             := "&#x0A;";     (: Newline #x0a (NL), #x0d (LF), #2029 paragraph separator :)
@@ -178,7 +181,7 @@ declare variable $config:citationLabels :=
         'preface': map {'full': 'praefatio', 'abbr': 'praef.', 'isCiteRef': true()},
         'privileges': map {'full': 'privilegium', 'abbr': 'priv.', 'isCiteRef': true()},
         'question': map {'full': 'quaestio', 'abbr': 'q.', 'isCiteRef': true()},
-        'section': map {'full': 'sectio', 'abbr': 'sect.'},
+        'section': map {'full': 'sectio', 'abbr': 'sect.', 'isCiteRef': true()},
         'segment': map {'full': 'sectio', 'abbr': 'sect.', 'isCiteRef': true()}, 
         'source': map {'full': 'sectio', 'abbr': 'sect.'},
         'title': map {'full': 'titulus', 'abbr': 'tit.', 'isCiteRef': true()},

@@ -67,7 +67,7 @@ let $parameterString    :=
 
 
 (: Print request context for debugging :)
-(:
+
 let $debug :=  
     if ($config:debug = "trace") then
         console:log("Request at '" || request:get-header('X-Forwarded-Host') || "' for " || request:get-effective-uri() || "&#x0d; " ||
@@ -78,7 +78,7 @@ let $debug :=
                     "$lang: " || $lang || "."
                    )
     else ()
-:)
+
 
 (: Here comes the actual routing ... :)
 return
@@ -96,7 +96,7 @@ return
         let $debug          := if ($config:debug = ("trace", "info")) then console:log("VoID.ttl requested: " || $net:forwardedForServername || $exist:path || ".") else ()
         return net:forward("void.ttl", $netVars)
     else if ($exist:resource = "favicon.ico") then
-        (:let $debug := if ($config:debug = "trace") then util:log("warn", "Favicon requested: " || $net:forwardedForServername || $exist:path || ".") else ()
+        (:let $debug := if ($config:debug = "trace") then util:log("info", "Favicon requested: " || $net:forwardedForServername || $exist:path || ".") else ()
         return :)
         if ($config:instanceMode = "testing") then
             net:forward("/resources/favicons/" || replace($exist:resource, "favicon", "favicon_red"), $netVars)
@@ -117,12 +117,12 @@ return
 
 
     (: *** Entity resolver (X-Forwarded-Host = 'id.{$config:serverdomain}') *** :)
-    else if (request:get-header('X-Forwarded-Host') = "id." || $config:serverdomain) then
+    else if (request:get-header('X-Forwarded-Host') = "id." || $config:serverdomain or substring($exist:path, 1, 7) = "/texts/") then
         let $debug1 := if ($config:debug = ("trace", "info")) then console:log("Id requested: " || $net:forwardedForServername || $exist:path || $parameterString || ". (" || net:negotiateContentType($net:servedContentTypes, '') || ')') else ()
-        let $debug1 := if ($config:debug = ("trace")) then console:log("Redirect (303) to '" || $config:apiserver || "/v1" || $exist:path || $parameterString || "'.") else ()
+        let $debug1 := if ($config:debug = ("trace")) then console:log("Redirect (303) to '" || $config:apiserver || "/v1" || translate($exist:path, "_", ":") || $parameterString || "'.") else ()
         return 
             if (matches($exist:path, '(/texts|/concepts/|/authors)')) then 
-                net:redirect-with-303($config:apiserver || "/v1" || $exist:path || $parameterString)
+                net:redirect-with-303($config:apiserver || "/v1" || translate($exist:path, "_", ":") || $parameterString)
             else if (matches($exist:path, '/works\.')) then 
                 net:redirect-with-303($config:apiserver || "/v1" || replace($exist:path, '/works\.', '/texts/') || $parameterString)
             else net:error(404, $netVars, ())
@@ -269,7 +269,7 @@ return
     (: Relative path requests from sub-collections are redirected there :)
     else if (contains($exist:path, "/resources/")) then
         let $debug := () (: if ($config:debug = "trace") then console:log("Resource requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ():)
-(:        let $debug := if ($config:debug = "trace") then util:log("warn", "Favicon requested: " || $net:forwardedForServername || $exist:path || ".") else ():)
+(:        let $debug := if ($config:debug = "trace") then util:log("info", "Favicon requested: " || $net:forwardedForServername || $exist:path || ".") else ():)
         return 
             if (contains(lower-case($exist:resource), "favicon")) then
                 if ($config:instanceMode = "testing") then

@@ -26,7 +26,7 @@ declare function nlp:tokenize($text as xs:string*, $mode as xs:string?) as xs:st
     let $technicalChars := '([\{\}]|\[.*?\])' (: filter out '{'/'}' at the beginning/ending og marg. notes, and [.*?] altogether (LOD ids) :)
     
     let $preproc := replace(string-join($text, ' '), $technicalChars, '')
-(:    let $debug := util:log('warn', '[NLP] in mode ' || $mode || ', $preproc starts with: ' || substring($preproc, 1, 200)):)
+(:    let $debug := util:log('info', '[NLP] in mode ' || $mode || ', $preproc starts with: ' || substring($preproc, 1, 200)):)
     
     let $normalized := 
         if ($mode eq 'all') then 
@@ -34,7 +34,7 @@ declare function nlp:tokenize($text as xs:string*, $mode as xs:string?) as xs:st
         else if ($mode eq 'words') then
             replace($preproc, $punctuation, ' ') (: remove punctuation altogether :)
         else replace($preproc, $punctuation, ' $1 ') (: 'all' :)
-(:    let $debug := util:log('warn', '[NLP] in mode ' || $mode || ', $normalized starts with: ' || substring($normalized, 1, 200)):)
+(:    let $debug := util:log('info', '[NLP] in mode ' || $mode || ', $normalized starts with: ' || substring($normalized, 1, 200)):)
     
     let $tokenized := tokenize($normalized, '\s+')
     

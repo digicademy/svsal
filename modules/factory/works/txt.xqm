@@ -501,7 +501,7 @@ declare function txt:pb($node as element(tei:pb), $mode as xs:string) as xs:stri
         (: pb nodes are good candidates for tracing the speed/performance of document processing, 
             since they are equally distributed throughout a document :)
         case 'debug' return
-            let $debug := util:log('warn', '[RENDER] Processing tei:pb node ' || $node/@xml:id)
+            let $debug := util:log('info', '[RENDER] Processing tei:pb node ' || $node/@xml:id)
             return ''
         
         default return error()

@@ -10,12 +10,14 @@ xquery version "3.1";
 
 
 module namespace api = "http://www.salamanca.school/xquery/api";
+
 declare namespace output="http://www.w3.org/2010/xslt-xquery-serialization";
 declare namespace exist = "http://exist.sourceforge.net/NS/exist";
-import module namespace util        = "http://exist-db.org/xquery/util";
 
-import module namespace rest = "http://exquery.org/ns/restxq";
-import module namespace http = "http://expath.org/ns/http-client";
+import module namespace console     = "http://exist-db.org/xquery/console";
+import module namespace http        = "http://expath.org/ns/http-client";
+import module namespace util        = "http://exist-db.org/xquery/util";
+import module namespace rest        = "http://exquery.org/ns/restxq";
 
 import module namespace config = "http://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
 
@@ -91,9 +93,11 @@ declare variable $api:zipOutputParams :=
 (: Content Wrappers :)
 
 declare function api:deliverTEI($content, $name as xs:string?) {
-    let $filename := if ($name) then $name else $content/@xml:id/string()
+(:  let $filename := if ($name) then $name else $content/@xml:id/string()
     let $filename := translate($filename, ':.', '_-') || '.xml'
     let $contentDisposition := 'attachment; filename="' || $filename || '"'
+:)
+    let $contentDisposition := 'inline'
     return
         <rest:response>
             {$api:teiOutputParams}
@@ -106,8 +110,10 @@ declare function api:deliverTEI($content, $name as xs:string?) {
 };
 
 declare function api:deliverRDF($content, $name as xs:string) {
-    let $filename := translate($name, ':.', '_-') || '.rdf'
+(:  let $filename := translate($name, ':.', '_-') || '.rdf'
     let $contentDisposition := 'attachment; filename="' || $filename || '"'
+:)
+    let $contentDisposition := 'inline'
     return
         <rest:response>
             {$api:teiOutputParams}
@@ -119,10 +125,11 @@ declare function api:deliverRDF($content, $name as xs:string) {
         $content
 };
 
-
 declare function api:deliverTXT($content as xs:string?, $name as xs:string) {
-    let $filename := translate($name, ':.', '_-') || '.txt'
+(:  let $filename := translate($name, ':.', '_-') || '.txt'
     let $contentDisposition := 'attachment; filename="' || $filename || '"'
+:)
+    let $contentDisposition := 'inline'
     return
         <rest:response>
             {$api:txtOutputParams}
@@ -161,7 +168,6 @@ declare function api:deliverTurtleBinary($content as xs:base64Binary?, $filename
         $content
 };
 
-
 declare function api:deliverHTML($content) {
         <rest:response>
             <http:response status="200">
@@ -171,7 +177,6 @@ declare function api:deliverHTML($content) {
         </rest:response>,
         $content 
 };
-
 
 declare function api:deliverZIP($content as xs:base64Binary?, $name as xs:string) {
     let $filename := $name || '.zip'
@@ -245,7 +250,7 @@ declare function api:error404NotYetAvailable() {
     }
 };
 
-declare function api:error400BadResource() {
+declare function api:error400BadResource($uri as xs:string*) {
     <rest:response>
         {$api:jsonOutputParams}
         <http:response status="400">
@@ -257,15 +262,16 @@ declare function api:error400BadResource() {
         'error': map {
             'title': 'The School of Salamanca: API',
             'status': 400,
-            'message': 'Bad request: URL path is invalid.'
+            'message': 'Bad request: Something has been wrong with the request.',
+            'resource': string-join($uri, '; ')
         }
     }
 };
 
-declare function api:error400MethodNotSupported($method as xs:string?) {
+declare function api:error405MethodNotSupported($method as xs:string?) {
     <rest:response>
         {$api:jsonOutputParams}
-        <http:response status="400">
+        <http:response status="405">
             <http:header name="Content-Language" value="en"/>
             <http:header name="Content-Type" value="application/json; charset=utf-8"/>
         </http:response>
@@ -273,12 +279,11 @@ declare function api:error400MethodNotSupported($method as xs:string?) {
     map {
         'error': map {
             'title': 'The School of Salamanca: API',
-            'status': 400,
+            'status': 405,
             'message': 'Bad request: Method ' || (if ($method) then upper-case($method) || ' ' else ()) || 'not supported.'
         }
     }
 };
-
 
 
 (: RESTXQ FUNCTIONS for redirecting requests with "id." URLs to current API endpoints. :)
@@ -292,7 +297,7 @@ ending up here.)
 
 declare 
 %rest:GET
-%rest:path("/texts/{$rid}")
+%rest:path("texts/{$rid}")
 %rest:query-param("format", "{$format}", "")
 %rest:query-param("mode", "{$mode}", "")
 %rest:query-param("q", "{$q}", "")
@@ -306,6 +311,7 @@ declare
 function api:redirectTextsResource1($rid, $host, $accept, $format, $mode, $q, $lang, $viewer, $frag, $canvas) {
     let $format := if ($format) then $format else api:getFormatFromContentTypes(tokenize($accept, '[, ]+'), 'text/html')
     let $paramStr := api:concatDocQueryParams($format, $mode, $q, $lang, $viewer, $frag, $canvas)
+    let $debug1 := if ($config:debug = ("trace", "info")) then console:log("api.xqm (unversioned api) requested: " || $host || ", " || $rid || ".") else ()
     return
         api:redirect-with-303($api:proto || 'api.' || api:getDomain($host) || '/' || $config:currentApiVersion || 
             '/texts/' || $rid || (if ($paramStr) then '?' || $paramStr else ''))
@@ -314,7 +320,7 @@ function api:redirectTextsResource1($rid, $host, $accept, $format, $mode, $q, $l
 
 declare 
 %rest:GET
-%rest:path("/works.{$rid}")
+%rest:path("works.{$rid}")
 %rest:query-param("format", "{$format}", "")
 %rest:query-param("mode", "{$mode}", "")
 %rest:query-param("q", "{$q}", "")
@@ -336,7 +342,7 @@ function api:redirectTextsResourceLegacy1($rid, $host, $accept, $format, $mode, 
 
 declare 
 %rest:GET
-%rest:path("/texts")
+%rest:path("texts")
 %rest:query-param("format", "{$format}", "")
 %rest:query-param("lang", "{$lang}", "en")
 %rest:header-param("X-Forwarded-Host", "{$host}", "id.salamanca.school")
@@ -358,41 +364,39 @@ function api:redirectTexts1($rid, $host, $accept, $format, $lang) {
 declare
 %rest:GET
 function api:defaultGet() {
-    api:error400BadResource()
+    api:error400BadResource((rest:base-uri(), rest:uri()))
 };
 
 (: Currently unsupported methods: :)
 declare
 %rest:DELETE
 function api:defaultDelete() {
-    api:error400MethodNotSupported('delete')
+    api:error405MethodNotSupported('delete')
 };
+
 declare
 %rest:HEAD
 function api:defaultHead() {
-    api:error400MethodNotSupported('head')
+    api:error405MethodNotSupported('head')
 };
+
 declare
 %rest:OPTIONS
 function api:defaultOptions() {
-    api:error400MethodNotSupported('options')
+    api:error405MethodNotSupported('options')
 };
+
 declare
 %rest:POST
 function api:defaultPost() {
-    api:error400MethodNotSupported('post')
+    api:error405MethodNotSupported('post')
 };
+
 declare
 %rest:PUT
 function api:defaultPut() {
-    api:error400MethodNotSupported('put')
+    api:error405MethodNotSupported('put')
 };
-declare
-%rest:DELETE
-function api:defaultDelete() {
-    api:error400MethodNotSupported('delete')
-};
-
 
 
 (: UTILITY FUNCTIONS :)
@@ -445,7 +449,7 @@ declare function api:getDomain($xForwardedHost as xs:string) as xs:string? {
 
 declare function api:getFormatFromContentTypes($requestedContentTypes as xs:string*, $defaultType as xs:string) {
     let $contentType := api:negotiateContentType($requestedContentTypes, $api:servedContentTypes, $defaultType)
-    let $debug := util:log('warn', '[API] determined content type: ' || $contentType)
+    let $debug := util:log('info', '[API] determined content type: ' || $contentType)
     return 
         switch ($contentType)
             case 'application/tei+xml'
@@ -521,5 +525,3 @@ declare %private function api:negotiateCTSub($requestedContentTypes as xs:string
    ***  - Implement collections/lists of resources and their filters (e.g. `/texts?q=lex` resulting in a list of texts) - but which format(s)?
    ***  - Make JSON-LD / DTS the fundamental output format (encapsulate html/xml in a json field) and diverge only when explicitly asked to do so (really?)
 :)
-
-

@@ -66,7 +66,7 @@ let $output :=
             admin:createRDF($rid))
             (: omitting iiif here :)
         case 'stats' return
-            admin:createStats()
+            <pre>{fn:serialize(admin:createStats(), map{"method":"json", "indent": true(), "encoding":"utf-8"})}</pre>
         default return 
             ()
 
@@ -78,7 +78,7 @@ let $runtimeString :=
 
 let $debug := 
     if ($format) then 
-        util:log('warn', '[WEBDATA-ADMIN] Rendered "' || $format || '" for resource "' || $rid || '" in ' || $runtimeString || '.') 
+        util:log('info', '[WEBDATA-ADMIN] Rendered "' || $format || '" for resource "' || $rid || '" in ' || $runtimeString || '.') 
     else ()
 
 let $title := 
