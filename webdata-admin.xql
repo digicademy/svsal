@@ -15,7 +15,8 @@ import module namespace admin       = "http://www.salamanca.school/xquery/admin"
 import module namespace config      = "http://www.salamanca.school/xquery/config" at "config.xqm";
 import module namespace util        = "http://exist-db.org/xquery/util";
 
-declare option exist:timeout "166400000";
+declare option exist:timeout "166400000"; (: in miliseconds, 25.000.000 ~ 7h, 43.000.000 ~ 12h :)
+declare option exist:output-size-limit "5000000"; (: max number of nodes in memory :)
 
 declare option output:media-type "text/html";
 declare option output:method "xhtml";

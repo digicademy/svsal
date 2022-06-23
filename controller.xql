@@ -67,7 +67,7 @@ let $parameterString    :=
 
 
 (: Print request context for debugging :)
-
+(: 
 let $debug :=  
     if ($config:debug = "trace") then
         console:log("Request at '" || request:get-header('X-Forwarded-Host') || "' for " || request:get-effective-uri() || "&#x0d; " ||
@@ -78,7 +78,7 @@ let $debug :=
                     "$lang: " || $lang || "."
                    )
     else ()
-
+:)
 
 (: Here comes the actual routing ... :)
 return
@@ -96,7 +96,7 @@ return
         let $debug          := if ($config:debug = ("trace", "info")) then console:log("VoID.ttl requested: " || $net:forwardedForServername || $exist:path || ".") else ()
         return net:forward("void.ttl", $netVars)
     else if ($exist:resource = "favicon.ico") then
-        (:let $debug := if ($config:debug = "trace") then util:log("info", "Favicon requested: " || $net:forwardedForServername || $exist:path || ".") else ()
+        (:let $debug := if ($config:debug = "trace") then util:log("warn", "Favicon requested: " || $net:forwardedForServername || $exist:path || ".") else ()
         return :)
         if ($config:instanceMode = "testing") then
             net:forward("/resources/favicons/" || replace($exist:resource, "favicon", "favicon_red"), $netVars)
@@ -269,7 +269,7 @@ return
     (: Relative path requests from sub-collections are redirected there :)
     else if (contains($exist:path, "/resources/")) then
         let $debug := () (: if ($config:debug = "trace") then console:log("Resource requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ():)
-(:        let $debug := if ($config:debug = "trace") then util:log("info", "Favicon requested: " || $net:forwardedForServername || $exist:path || ".") else ():)
+(:        let $debug := if ($config:debug = "trace") then util:log("warn", "Favicon requested: " || $net:forwardedForServername || $exist:path || ".") else ():)
         return 
             if (contains(lower-case($exist:resource), "favicon")) then
                 if ($config:instanceMode = "testing") then

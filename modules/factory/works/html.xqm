@@ -40,7 +40,7 @@ declare variable $html:basicElemNames := ('p', 'head', 'note', 'item', 'cell', '
 declare variable $html:defaultLang := collection($config:i18n-root)/*:catalogue[@xml:lang="de"];
 
 (: sometimes, we want to i18n-look up simple strings, but exist's i18n functions need nodes as input arguments, so we wrap our strings here :)
-declare function local:i18nNodify($s as xs:string) {
+declare function html:i18nNodify($s as xs:string) {
     <msg key="{$s}">{$s}</msg>
 };
 
@@ -84,7 +84,7 @@ declare function html:makeHTMLData($tei as element(tei:TEI), $lang as node()*) a
                             <ul>
                                 <li>
                                     <a class="hideMe">
-                                        <b>{concat(i18n:getLocalizedText(local:i18nNodify('volume'), $lang), ': ', $a/@n/string())}</b>
+                                        <b>{concat(i18n:getLocalizedText(html:i18nNodify('volume'), $lang), ': ', $a/@n/string())}</b>
                                         <span class="jstree-anchor hideMe pull-right">{html:getPagesFromDiv($a)}</span>
                                     </a>
                                     { html:generateTocFromDiv($a/(tei:front | tei:body | tei:back), $workId, $lang)}
@@ -334,9 +334,9 @@ declare function html:generateTocFromDiv($nodes as element()*, $wid as xs:string
         let $i18nKey := 
             if (index:dispatch($node, 'class')) then index:dispatch($node, 'class')
             else 'tei-generic'
-        let $label := concat('[', i18n:getLocalizedText(local:i18nNodify($i18nKey), $lang), ']')
+        let $label := concat('[', i18n:getLocalizedText(html:i18nNodify($i18nKey), $lang), ']')
         let $titleString := index:dispatch($node, 'title')
-        let $titleAtt := '[' || i18n:getLocalizedText(local:i18nNodify($i18nKey), $lang) || '] ' || $titleString
+        let $titleAtt := '[' || i18n:getLocalizedText(html:i18nNodify($i18nKey), $lang) || '] ' || $titleString
 (:        let $titleElems := html:makeTOCTitle($node):)
         (: title="{$title}" :)
         return 
@@ -365,7 +365,7 @@ declare function html:makeTOCTitle($node as node(), $lang as node()*) as item()*
             if ($config:citationLabels($node/@unit/string())?('full')) then 'tei-ms-' || $node/@unit
             else 'tei-generic'
         else ()
-    let $divLabel := concat('[', i18n:getLocalizedText(local:i18nNodify($i18nKey), $lang), ']')
+    let $divLabel := concat('[', i18n:getLocalizedText(html:i18nNodify($i18nKey), $lang), ']')
     let $titleString := index:dispatch($node, 'title')
     return
         ($divLabel, ' ', $titleString)
@@ -373,17 +373,20 @@ declare function html:makeTOCTitle($node as node(), $lang as node()*) as item()*
 
 declare function html:getPagesFromDiv($div) {
     let $firstpage :=   
+        $div/descendant::text()[string-length(normalize-space(.)) gt 0][1]/preceding::tei:pb[not(@sameAs or @corresp)][1]/@n/string()
+(:
         if ($div[@type='work_volume'] | $div[@type = 'work_monograph']) then
             ($div//tei:pb[not(@sameAs or @corresp)])[1]/@n/string() 
         else
             ($div/preceding::tei:pb[not(@sameAs or @corresp)])[last()]/@n/string()
+:)
     let $lastpage := if ($div//tei:pb[not(@sameAs or @corresp)]) then
                         ($div//tei:pb[not(@sameAs or @corresp)])[last()]/@n/string()
                      else ()
     return
-        if ($firstpage ne '' or $lastpage ne '') then 
+        if ($lastpage ne '') then 
             concat(' ', string-join(($firstpage, $lastpage), ' - '))
-        else ()
+        else $firstpage
 };
 
 
@@ -534,36 +537,36 @@ declare function html:makeSectionToolbox($node as element(), $lang as node()*) a
     return
         <div class="{$class}">
             <a id="{$id}" href="#" data-rel="popover" class="sal-tb-a"><!-- href="{('#' || $id)}" -->
-                <span class="fas fa-hand-point-right messengers" title="{i18n:getLocalizedText(local:i18nNodify(concat('openToolbox', $i18nSuffix)), $lang)}"></span>
+                <span class="fas fa-hand-point-right messengers" title="{i18n:getLocalizedText(html:i18nNodify(concat('openToolbox', $i18nSuffix)), $lang)}"></span>
             </a>
             <div class="sal-toolbox-body">
-                <div class="sal-tb-btn" title="{i18n:getLocalizedText(local:i18nNodify(concat('link', $i18nSuffix)), $lang)}">
+                <div class="sal-tb-btn" title="{i18n:getLocalizedText(html:i18nNodify(concat('link', $i18nSuffix)), $lang)}">
                     <button onclick="copyLink(this); return false;" class="messengers">
-                        <span class="fas fa-link"></span>{' '}{i18n:getLocalizedText(local:i18nNodify('copyLink'), $lang)}
+                        <span class="fas fa-link"></span>{' '}{i18n:getLocalizedText(html:i18nNodify('copyLink'), $lang)}
                     </button>
                     <span class="cite-link" style="display:none;">{$citeIDBaseUrl || '?format=html'}</span>
                 </div>
-                <div class="sal-tb-btn" title="{i18n:getLocalizedText(local:i18nNodify(concat('cite', $i18nSuffix)), $lang)}">
+                <div class="sal-tb-btn" title="{i18n:getLocalizedText(html:i18nNodify(concat('cite', $i18nSuffix)), $lang)}">
                     <button onclick="copyCitRef(this); return false;" class="messengers">
-                        <span class="fas fa-feather-alt"></span>{' '}{i18n:getLocalizedText(local:i18nNodify('copyCit'), $lang)}
+                        <span class="fas fa-feather-alt"></span>{' '}{i18n:getLocalizedText(html:i18nNodify('copyCit'), $lang)}
                     </button>
                     <span class="sal-cite-rec" style="display:none">
                         {sutil:HTMLmakeCitationReference($wid, $fileDesc, 'reading-passage', $node)}
                     </span>
                 </div>
-                <div class="sal-tb-btn dropdown" title="{i18n:getLocalizedText(local:i18nNodify(concat('txtExp', $i18nSuffix)), $lang)}">
+                <div class="sal-tb-btn dropdown" title="{i18n:getLocalizedText(html:i18nNodify(concat('txtExp', $i18nSuffix)), $lang)}">
                     <button class="dropdown-toggle messengers" data-toggle="dropdown">
-                        <span class="fas fa-align-left" title="{i18n:getLocalizedText(local:i18nNodify('txtExpPass'), $lang)}"></span>{' '}{i18n:getLocalizedText(local:i18nNodify('txtExpShort'), $lang)}
+                        <span class="fas fa-align-left" title="{i18n:getLocalizedText(html:i18nNodify('txtExpPass'), $lang)}"></span>{' '}{i18n:getLocalizedText(html:i18nNodify('txtExpShort'), $lang)}
                     </button>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="{$citeIDBaseUrl || '?format=txt&amp;mode=edit'}"><span class="messengers fas fa-align-left" title="{i18n:getLocalizedText(local:i18nNodify('downloadTXTEdit'), $lang)}"></span>{' '}{i18n:getLocalizedText(local:i18nNodify('constitutedLower'), $lang)}</a></li>
-                        <li><a href="{$citeIDBaseUrl || '?format=txt&amp;mode=orig'}"><span class="messengers fas fa-align-left" title="{i18n:getLocalizedText(local:i18nNodify('downloadTXTOrig'), $lang)}"></span>{' '}{i18n:getLocalizedText(local:i18nNodify('diplomaticLower'), $lang)}</a></li>
+                        <li><a href="{$citeIDBaseUrl || '?format=txt&amp;mode=edit'}"><span class="messengers fas fa-align-left" title="{i18n:getLocalizedText(html:i18nNodify('downloadTXTEdit'), $lang)}"></span>{' '}{i18n:getLocalizedText(html:i18nNodify('constitutedLower'), $lang)}</a></li>
+                        <li><a href="{$citeIDBaseUrl || '?format=txt&amp;mode=orig'}"><span class="messengers fas fa-align-left" title="{i18n:getLocalizedText(html:i18nNodify('downloadTXTOrig'), $lang)}"></span>{' '}{i18n:getLocalizedText(html:i18nNodify('diplomaticLower'), $lang)}</a></li>
                     </ul>
                 </div>
-                <div class="sal-tb-btn" title="{i18n:getLocalizedText(local:i18nNodify(concat('teiExp', $i18nSuffix)), $lang)}">
-                    <a href="{$citeIDBaseUrl || '?format=tei'}"><span class="messengers fas fa-align-left" title="{i18n:getLocalizedText(local:i18nNodify('downloadXML'), $lang)}"></span>{' '}{i18n:getLocalizedText(local:i18nNodify('teiExpShort'), $lang)}</a><!--
+                <div class="sal-tb-btn" title="{i18n:getLocalizedText(html:i18nNodify(concat('teiExp', $i18nSuffix)), $lang)}">
+                    <a href="{$citeIDBaseUrl || '?format=tei'}"><span class="messengers fas fa-align-left" title="{i18n:getLocalizedText(html:i18nNodify('downloadXML'), $lang)}"></span>{' '}{i18n:getLocalizedText(html:i18nNodify('teiExpShort'), $lang)}</a><!--
                     <button class="messengers" onclick="window.location.href = '{$citeIDBaseUrl || '?format=tei'}'">
-                        <span class="fas fa-file-code"></span>{' '}{i18n:getLocalizedText(local:i18nNodify('teiExpShort'), $lang)}
+                        <span class="fas fa-file-code"></span>{' '}{i18n:getLocalizedText(html:i18nNodify('teiExpShort'), $lang)}
                     </button>-->
                 </div>
                 <div class="sal-tb-btn" style="display:none;">
@@ -919,7 +922,7 @@ declare function html:dispatch($node as node(), $mode as xs:string, $lang as nod
     (: for fine-grained debugging: :)
     (: let $debug := 
         if (index:isIndexNode($node)) then 
-            util:log('info', '[RENDER] Processing node tei:' || local-name($node) || ', with @xml:id=' || $node/@xml:id) 
+            util:log('warn', '[RENDER] Processing node tei:' || local-name($node) || ', with @xml:id=' || $node/@xml:id) 
         else ()
     :)
     return
@@ -1106,7 +1109,7 @@ declare function html:div($node as element(tei:div), $mode as xs:string, $lang a
                 normalize-space(replace(string-join(txt:dispatch(($node/(tei:head|tei:label))[1], 'edit'), ''), '\[.*?\]', ''))
 :)
             else if (index:div($node, 'title')) then replace(index:div($node, 'title'), '"', '')
-            else i18n:getLocalizedText(local:i18nNodify(index:div($node, 'class')), $lang) (: if everything fails, simply use the label (such as 'Preface') :)
+            else i18n:getLocalizedText(html:i18nNodify(index:div($node, 'class')), $lang) (: if everything fails, simply use the label (such as 'Preface') :)
 
         default return
             html:passthru($node, $mode)
@@ -1469,7 +1472,7 @@ declare function html:name($node as element(*), $mode as xs:string) {
                 </span>
                 :)
                 (: as soon as links have actual targets, execute something like the following: :)
-                let $resolvedURI := html:resolveURI($node, $node/@ref)
+                let $resolvedURI := if ($node/@ref) then html:resolveURI($node, $node/@ref) else ()
                 return
                     if ($resolvedURI) then
                         html:transformToLink($node, $resolvedURI)
@@ -1628,7 +1631,7 @@ declare function html:pb($node as element(tei:pb), $mode as xs:string) {
         (: pb nodes are good candidates for tracing the speed/performance of document processing, 
             since they are equally distributed throughout a document :)
         case 'debug' return
-            util:log('info', '[RENDER] Processing tei:pb node ' || $node/@xml:id)
+            util:log('warn', '[RENDER] Processing tei:pb node ' || $node/@xml:id)
 
         default return () (: some sophisticated function to insert a pipe and a pagenumber div in the margin :)
 };

@@ -43,7 +43,6 @@ import module namespace html        = "https://www.salamanca.school/factory/work
 import module namespace txt         = "https://www.salamanca.school/factory/works/txt"   at "xmldb:exist:///db/apps/salamanca/modules/factory/works/txt.xqm";
 import module namespace iiif        = "https://www.salamanca.school/factory/works/iiif"  at "xmldb:exist:///db/apps/salamanca/modules/factory/works/iiif.xqm";
 
-(: declare option exist:timeout "43000000"; (/: in miliseconds, 25.000.000 ~ 7h, 43.000.000 ~ 12h :)
 declare option exist:timeout "166400000"; (: in miliseconds, 25.000.000 ~ 7h, 43.000.000 ~ 12h :)
 declare option exist:output-size-limit "5000000"; (: max number of nodes in memory :)
 
@@ -1355,8 +1354,8 @@ declare function admin:createNodeIndex($wid as xs:string*) {
     let $debug := if ($config:debug = ("trace", "info")) then
         let $d := console:log("[ADMIN] Creating node index for " || $wid || ".")
         return util:log("info", "[ADMIN] Creating node index for " || $wid || ".")
- else
- ()
+    else
+        ()
 
     let $start-time := util:system-time()
     

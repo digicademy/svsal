@@ -12,6 +12,7 @@ xquery version "3.1";
 module namespace app         = "http://www.salamanca.school/xquery/app";
 
 declare namespace exist      = "http://exist.sourceforge.net/NS/exist";
+declare namespace map        = "http://www.w3.org/2005/xpath-functions/map";
 declare namespace opensearch = "http://a9.com/-/spec/opensearch/1.1/";
 declare namespace output     = "http://www.w3.org/2010/xslt-xquery-serialization";
 declare namespace rdf        = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
@@ -23,6 +24,7 @@ declare namespace transform  = "http://exist-db.org/xquery/transform";
 declare namespace util       = "http://exist-db.org/xquery/util";
 declare namespace xhtml      = "http://www.w3.org/1999/xhtml";
 declare namespace xi         = "http://www.w3.org/2001/XInclude";
+declare namespace xmldb      = "http://exist-db.org/xquery/xmldb";
 
 import module namespace console     = "http://exist-db.org/xquery/console";
 import module namespace functx      = "http://www.functx.com";
@@ -56,7 +58,7 @@ declare function app:rotateFormatName($persName as element()*) as xs:string? {
     let $return-string := for $pers in $persName
                                 return
                                         if ($pers/tei:surname and $pers/tei:forename) then
-                                            normalize-space(concat($pers/tei:forename, ' ', $pers/tei:nameLink, ' ', $pers/tei:surname, if ($pers/tei:addName) then ($config:nbsp || '<' || $pers/tei:addName || '>') else ()))
+                                            normalize-space(concat(string-join($pers/tei:forename, ' '), ' ', string-join($pers/tei:nameLink, ' '), ' ', string-join($pers/tei:surname, ' '), if ($pers/tei:addName) then ($config:nbsp || '<' || string-join($pers/tei:addName, ' ') || '>') else ()))
                                         else if ($pers) then
                                             normalize-space(xs:string($pers))
                                         else 
@@ -332,9 +334,9 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
                 else "no"
             let $wrkLink        :=  $config:idserver || '/texts/' || $wid
     
-            let $name           :=  sutil:formatName($item/tei:fileDesc/tei:titleStmt/tei:author/tei:persName)
-            let $sortName       :=  lower-case($item/tei:fileDesc/tei:titleStmt/tei:author/tei:persName/tei:surname) (:lower-casing for equal sorting:)
-            let $firstChar      :=  upper-case(substring($item/tei:fileDesc/tei:titleStmt/tei:author//tei:surname, 1, 1))
+            let $name           :=  sutil:formatName($item//tei:titleStmt/tei:author[1]/tei:persName)
+            let $sortName       :=  lower-case($item//tei:titleStmt/tei:author[1]//tei:surname[1]) (:lower-casing for equal sorting:)
+            let $firstChar      :=  upper-case(substring($item//tei:titleStmt/tei:author[1]//tei:surname[1], 1, 1))
             let $nameFacet      :=       
                      if ($firstChar = ('A','B','C','D','E','F')) then 'A - F'
                 else if ($firstChar = ('G','H','I','J','K','L')) then 'G - L'
@@ -1277,6 +1279,7 @@ declare function app:displaySingleWork($node as node(),
                                         $lang as xs:string?) {
     let $workId     := if ($wid) then sutil:normalizeId($wid) else $model('currentWorkId')
     let $htmlPath   := $config:html-root || "/" || $workId
+    let $qChecked   := if ($q = ('*', '%2A', '%2a', '&amp;ast;', '&amp;#x2a;', '&amp;#42;', 'lt', 'gt', 'amp')) then () else $q
 
     let $targetFragment := 
         if (xmldb:collection-available($htmlPath)) then
@@ -1291,7 +1294,7 @@ declare function app:displaySingleWork($node as node(),
     (: Fill in all parameters (except frag) in pagination links :)
     let $urlParameters := 
         string-join((
-            if (exists($q)) then 'q=' || $q else (),
+            if (exists($qChecked)) then 'q=' || $qChecked else (),
             if (exists($mode)) then 'mode=' || $mode else (),
             if (exists($viewer)) then 'viewer=' || $viewer else (),
             if (exists($lang)) then 'lang=' || $lang else ()
@@ -1350,12 +1353,12 @@ declare function app:displaySingleWork($node as node(),
 :)    
 (:    let $parametrizedDoc := transform:transform($originalDoc, $xslSheet, $parameters):)
     
-    let $parametrizedDoc := local:insertParams($originalDoc/*, $urlParameters)
+    let $parametrizedDoc := app:insertParams($originalDoc/*, $urlParameters)
 
     (: If we have an active query string, highlight the original html fragment accordingly :)
     let $outHTML := 
-        if ($q) then 
-            let $highlighted := sphinx:highlight($parametrizedDoc, $q)//item[1]/description
+        if ($qChecked) then 
+            let $highlighted := sphinx:highlight($parametrizedDoc, $qChecked)//item[1]/description
             return 
                 if ($highlighted) then $highlighted else $parametrizedDoc
         else
@@ -1395,15 +1398,15 @@ return
 (:
 ~ Recursively inserts concatenated query parameters into non-http links of an HTML fragment.
 :)
-declare %private function local:insertParams($node as node()?, $params as xs:string?) {
+declare %private function app:insertParams($node as node()?, $params as xs:string?) {
     typeswitch($node)
         case element(a) return
             element {name($node)} {
                 for $att in $node/@* return
-                    local:attrInsertParams($att, $params)
+                    app:attrInsertParams($att, $params)
                 ,
                 for $child in $node/node() return 
-                    local:insertParams($child, $params)
+                    app:insertParams($child, $params)
             }
         case element() return
             element {name($node)} {
@@ -1412,11 +1415,11 @@ declare %private function local:insertParams($node as node()?, $params as xs:str
                       attribute {name($att)} {$att}
                 ,
                 for $child in $node/node()
-                   return local:insertParams($child, $params)
+                   return app:insertParams($child, $params)
             }
         default return $node
 };
-declare %private function local:attrInsertParams($attr as attribute(), $params as xs:string?) {
+declare %private function app:attrInsertParams($attr as attribute(), $params as xs:string?) {
     typeswitch($attr)
         case attribute(href) return
             if (not(contains($attr, 'http'))) then
@@ -1510,19 +1513,19 @@ declare function app:AUTsummary($node as node()) as item()* {
                     </a><i18n:text key="overview">Lebensdaten</i18n:text>
                 </h3>
                 <p class="autText"><!-/-<i class="fa fa-birthday-cake"></i>-/->*&#xA0;
-                    {local:placeNames($node), ': '||$node/tei:date[1]}
+                    {app:placeNames($node), ': '||$node/tei:date[1]}
                 </p>
 -->
-                *&#xA0;{local:placeNames($node) || ': ' || $node/tei:date[1]}
+                *&#xA0;{app:placeNames($node) || ': ' || $node/tei:date[1]}
             </span>
         case element(tei:death) return 
             <span>
 <!--
              <p class="autText"><!-/-<i class="fa fa-plus"></i>-/->†&#xA0;
-                    {local:placeNames($node), ': '||$node/tei:date[1]}
+                    {app:placeNames($node), ': '||$node/tei:date[1]}
             </p>
 -->
-                †&#xA0;{local:placeNames($node) || ': '||$node/tei:date[1]}
+                †&#xA0;{app:placeNames($node) || ': '||$node/tei:date[1]}
             </span>
         case element(tei:head) return if ($node/@xml:id='overview') then () else 
             <span>
@@ -1649,7 +1652,7 @@ declare function local:passthru($nodes as node()*) as item()* {
 
 
 (:funx used in author.html and lemma.html:)
-declare function local:placeNames($node as node()) {
+declare function app:placeNames($node as node()) {
 
     let $placesHTML :=  for $place in $node//tei:placeName
                             let $getGetId   := substring($place/@ref,7,7)
@@ -3152,7 +3155,7 @@ declare function app:WRKtoc($node as node(), $model as map(*), $wid as xs:string
                 transform:transform($tocDoc, $xslSheet, $parameters) (\: i18n:process(transform:transform($tocDoc, $xslSheet, $parameters), $lang, $config:i18n-root, 'en') heute geändert :\)
             :)
             return 
-                local:copyInsertSearchParam($tocDoc/*, $q)
+                app:copyInsertSearchParam($tocDoc/*, $q)
          else
             doc($config:html-root || '/' || sutil:normalizeId($wid) || '/' || sutil:normalizeId($wid) || '_toc.html')
     return 
@@ -3165,15 +3168,15 @@ declare function app:WRKtoc($node as node(), $model as map(*), $wid as xs:string
 ~ Recursively inserts a "q" query parameter into a/href values of an HTML fragment.
 :)
 
-declare %private function local:copyInsertSearchParam($node as node()?, $q as xs:string) {
+declare %private function app:copyInsertSearchParam($node as node()?, $q as xs:string) {
     typeswitch($node)
         case element(a) return
             element {name($node)} {
                 for $att in $node/@* return
-                    local:attrInsertSearchParam($att, $q)
+                    app:attrInsertSearchParam($att, $q)
                 ,
                 for $child in $node/node()
-                   return local:copyInsertSearchParam($child, $q)
+                   return app:copyInsertSearchParam($child, $q)
             }
         case element() return
             element {name($node)} {
@@ -3182,11 +3185,11 @@ declare %private function local:copyInsertSearchParam($node as node()?, $q as xs
                       attribute {name($att)} {$att}
                 ,
                 for $child in $node/node()
-                   return local:copyInsertSearchParam($child, $q)
+                   return app:copyInsertSearchParam($child, $q)
             }
         default return $node
 };
-declare %private function local:attrInsertSearchParam($attr as attribute(), $q as xs:string) {
+declare %private function app:attrInsertSearchParam($attr as attribute(), $q as xs:string) {
     typeswitch($attr)
         case attribute(href) return
             let $value := 
@@ -3472,7 +3475,7 @@ declare function app:loadWRKpagination ($node as node(), $model as map (*), $wid
     return 
         if ($q) then
 (:            transform:transform($pagesFile, $xslSheet, $parameters):)
-            local:copyInsertSearchParam($pagesFile/*, $q)
+            app:copyInsertSearchParam($pagesFile/*, $q)
         else
             $pagesFile
 };
@@ -3803,4 +3806,3 @@ declare function app:makeCooperatorEntry($person as element(tei:person), $lang a
         </div>
     return $content
 };
-

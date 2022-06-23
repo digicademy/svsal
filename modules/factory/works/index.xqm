@@ -35,7 +35,6 @@ declare variable $index:labelConnector := ' ';
 declare variable $index:crumbtrailConnector := ' » ';
 
 
-
 (: NODE INDEX functions :)
 
 
@@ -191,7 +190,7 @@ declare function index:getFragmentNodes($work as element(tei:TEI), $fragmentatio
 declare function index:extractNodeStructure($wid as xs:string,
                                             $input as node()*,
                                             $xincludes as attribute()*,
-                                            $fragmentIds as map()?) as element(sal:node)* {
+                                            $fragmentIds as map(*)?) as element(sal:node)* {
     for $node in $input return
         typeswitch($node)
             case element() return
@@ -643,7 +642,7 @@ declare function index:makeUrl($targetWorkId as xs:string, $targetNode as node()
 ~  @param mode: must be one of 'orig', 'edit' (default)
 :)
 declare function index:makeTeaserString($node as element(), $mode as xs:string?) as xs:string {
-    let $thisMode := if ($mode = ('orig', 'edit')) then $mode else 'edit'
+    let $thisMode := if ($mode = ('orig', 'edit')) then $mode else 'orig'
     let $string := normalize-space(string-join(txt:dispatch($node, $thisMode), ''))
 (: replaced the following with the above for performance reasons on 2021-04-28 ...
     let $string := normalize-space(replace(replace(string-join(txt:dispatch($node, $thisMode), ''), '\[.*?\]', ''), '\{.*?\}', ''))
@@ -758,16 +757,16 @@ declare function index:div($node as element(tei:div), $mode as xs:string) {
                 if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
                     '"' || string($node/@n) || '"'
                 else if ($node/(tei:head|tei:label)) then
-                    index:makeTeaserString(($node/(tei:head|tei:label))[1], 'edit')
+                    index:makeTeaserString(($node/(tei:head|tei:label))[1], 'orig')
                 (: purely numeric section titles: :)
                 else if ($node/@n and (matches($node/@n, '^[0-9\[\]]+$')) and ($node/@type)) then
                     string($node/@n)
                 (: otherwise, try to derive a title from potential references to the current node :)
                 else if ($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)]) then
-                    index:makeTeaserString($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)][1], 'edit')
+                    index:makeTeaserString($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)][1], 'orig')
                 (: if there is a list/head and nothing else works, we may use that :)
                 else if ($node/tei:list/(tei:head|tei:label)) then
-                    index:makeTeaserString(($node/tei:list/(tei:head|tei:label))[1], 'edit')
+                    index:makeTeaserString(($node/tei:list/(tei:head|tei:label))[1], 'orig')
                 else ()
             )
             
@@ -843,7 +842,7 @@ declare function index:head($node as element(tei:head), $mode as xs:string) {
     switch($mode)
         case 'title' return
             normalize-space(
-                index:makeTeaserString($node, 'edit')
+                index:makeTeaserString($node, 'orig')
             )
         
         case 'class' return
@@ -877,13 +876,13 @@ declare function index:item($node as element(tei:item), $mode as xs:string) {
                 else if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
                     '"' || string($node/@n) || '"'
                 else if ($node/(tei:head|tei:label)) then
-                    index:makeTeaserString(($node/(tei:head|tei:label))[1], 'edit')
+                    index:makeTeaserString(($node/(tei:head|tei:label))[1], 'orig')
                 (: purely numeric section titles: :)
                 else if ($node/@n and (matches($node/@n, '^[0-9\[\]]+$'))) then
                     $node/@n/string()
                 (: otherwise, try to derive a title from potential references to the current node :)
                 else if ($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)]) then
-                    index:makeTeaserString($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)][1], 'edit')
+                    index:makeTeaserString($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)][1], 'orig')
                 else ()
             )
         
@@ -919,7 +918,7 @@ declare function index:label($node as element(tei:label), $mode as xs:string) {
     switch($mode)
         case 'title' return
             normalize-space(
-                index:makeTeaserString($node, 'edit')
+                index:makeTeaserString($node, 'orig')
             )
           
         case 'class' return
@@ -942,13 +941,13 @@ declare function index:list($node as element(tei:list), $mode as xs:string) {
                 if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
                     '"' || string($node/@n) || '"'
                 else if ($node/(tei:head|tei:label)) then
-                    index:makeTeaserString(($node/(tei:head|tei:label))[1], 'edit')
+                    index:makeTeaserString(($node/(tei:head|tei:label))[1], 'orig')
                 (: purely numeric section titles: :)
                 else if ($node/@n and (matches($node/@n, '^[0-9\[\]]+$')) and ($node/@type)) then
                     $node/@n/string()
                 (: otherwise, try to derive a title from potential references to the current node :)
                 else if ($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)]) then
-                    index:makeTeaserString($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)][1], 'edit')
+                    index:makeTeaserString($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)][1], 'orig')
                 else ()
             )
         
@@ -982,7 +981,7 @@ declare function index:lg($node as element(tei:lg), $mode as xs:string) {
     switch($mode)
         case 'title' return
             normalize-space(
-                index:makeTeaserString($node, 'edit')
+                index:makeTeaserString($node, 'orig')
             )
             
         case 'class' return
@@ -1012,7 +1011,7 @@ declare function index:milestone($node as element(tei:milestone), $mode as xs:st
                     $node/@n/string()
                 (: otherwise, try to derive a title from potential references to the current node :)
                 else if ($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)]) then
-                    index:makeTeaserString($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)][1], 'edit')
+                    index:makeTeaserString($node/ancestor::tei:TEI//tei:ref[@target = concat('#', $node/@xml:id)][1], 'orig')
                 else ()
             )
             
@@ -1104,7 +1103,7 @@ declare function index:note($node as element(tei:note), $mode as xs:string) {
 declare function index:p($node as element(tei:p), $mode as xs:string) {
     switch($mode)
         case 'title' return
-            index:makeTeaserString($node, 'edit')
+            index:makeTeaserString($node, 'orig')
         
         case 'class' return
             'tei-' || local-name($node)
@@ -1181,7 +1180,7 @@ declare function index:signed($node as element(tei:signed), $mode as xs:string) 
     switch($mode)
         case 'title' return
             normalize-space(
-                index:makeTeaserString($node, 'edit')
+                index:makeTeaserString($node, 'orig')
             )
         
         case 'class' return
@@ -1200,7 +1199,7 @@ declare function index:table($node as element(tei:table), $mode as xs:string) {
         case 'title' return
             if ($node/tei:head) then
                 normalize-space(
-                    index:makeTeaserString($node/tei:head, 'edit')
+                    index:makeTeaserString($node/tei:head, 'orig')
                 )
             else ()
             
@@ -1286,7 +1285,7 @@ declare function index:titlePart($node as element(tei:titlePart), $mode as xs:st
     switch($mode)
         case 'title' return
             normalize-space(
-                index:makeTeaserString($node, 'edit')
+                index:makeTeaserString($node, 'orig')
             )
             
         case 'class' return
@@ -1299,4 +1298,3 @@ declare function index:titlePart($node as element(tei:titlePart), $mode as xs:st
         default return 
             ()
 };
-

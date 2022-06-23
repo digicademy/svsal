@@ -206,6 +206,8 @@ declare function sutil:getFragmentID($targetWorkId as xs:string, $targetNodeId a
 };
 
 declare function sutil:getNodetrail($wid as xs:string, $node as element(), $mode as xs:string) {
+    (: let $debug := console:log("sutil:getNodetrail(" || $wid || ", " || serialize($node) || ", " || $mode || ")")
+    return :)
     switch ($mode) 
         case "citeID"
             return doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $node/@xml:id]/@citeID/string()
