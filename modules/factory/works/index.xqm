@@ -487,7 +487,10 @@ declare function index:isNamedCiteIDNode($node as element()) as xs:boolean {
                       self::tei:back or 
                       self::tei:front]) or (: TODO: include div here? :)
         (index:isMainNode($node) 
-            and $node[self::tei:head or 
+            and $node[
+(: removed on 2022-07-13 when removing div[ancestor::tei:front || ancestor::tei:back] from structuralNodes:
+                      self::tei:head or
+:)
                       self::tei:titlePage]) or
         (index:isListNode($node) 
             and $node[self::tei:list[@type = ('dict', 'index')] or
@@ -590,7 +593,7 @@ declare function index:isStructuralNode($node as node()) as xs:boolean {
     boolean(
         $node/@xml:id and
         (
-            $node/self::tei:div[@type ne "work_part"] or (: TODO: comment out for div label experiment :)
+            $node/self::tei:div[@type ne "work_part"][not(./(ancestor::tei:front || ancestor::tei:back))] or
             $node/self::tei:back or
             $node/self::tei:front or
             $node/self::tei:text[@type eq 'work_volume']
