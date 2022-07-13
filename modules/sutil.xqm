@@ -72,6 +72,18 @@ declare function sutil:normalizeId($id as xs:string?) as xs:string? {
 };
 :)
 
+(:
+~ Strips combining diacritics for normalization purposes.
+  Copied from Joe Wicentowski's gist: https://gist.github.com/joewiz/af04074c28e0ae2a1b92
+:)
+declare function sutil:strip-diacritics($string as xs:string) as xs:string {
+    let $normalized := normalize-unicode($string, 'NFD')
+    let $stripped := replace($normalized, '\p{IsCombiningDiacriticalMarks}', '')
+    return
+        $stripped
+};
+
+
 (: validate work/author/... IDs :)
 
 declare function sutil:AUTexists($aid as xs:string?) as xs:boolean {
