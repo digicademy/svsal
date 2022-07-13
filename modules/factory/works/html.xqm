@@ -103,7 +103,7 @@ declare function html:makeHTMLData($tei as element(tei:TEI), $lang as node()*) a
     (: (3) fragments :)
     (: TODO: Mysteriously, if you look at top or a similar tool, the following seems to run mainly on one processor core only... :)
     (: get "previous" and "next" fragment ids and hand the current fragment over to the renderFragment function :)
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Rendering fragments ...") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Rendering fragments (new method) ...") else ()
     let $fragments := 
         for $section at $index in $target-set
             let $debug :=   if ($config:debug = ("trace", "info") and ($index mod 50 eq 0)) then
@@ -210,7 +210,7 @@ declare function html:makeHTMLDataOld($tei as element(tei:TEI)) as map(*) {
     (: (3) fragments :)
     (: TODO: Mysteriously, if you look at top or a similar tool, the following seems to run mainly on one processor core only... :)
     (: get "previous" and "next" fragment ids and hand the current fragment over to the renderFragment function :)
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Rendering fragments ...") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Rendering fragments (old method) ...") else ()
     let $fragments := 
         for $section at $index in $target-set
             let $debug :=   if ($config:debug = ("trace", "info") and ($index mod 50 eq 0)) then

@@ -206,17 +206,26 @@ declare function sutil:getFragmentID($targetWorkId as xs:string, $targetNodeId a
 };
 
 declare function sutil:getNodetrail($wid as xs:string, $node as element(), $mode as xs:string) {
-    (: let $debug := console:log("sutil:getNodetrail(" || $wid || ", " || serialize($node) || ", " || $mode || ")")
-    return :)
-    switch ($mode) 
-        case "citeID"
-            return doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $node/@xml:id]/@citeID/string()
-        case "crumbtrail"
-            return doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $node/@xml:id]/sal:crumbtrail
-        case "label"
-            return doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $node/@xml:id]/@label/string()
-        default
-            return () (: util:log('error', '[sutil] calling sutil:getNodetrail with unknown mode: ' || $mode) :)
+(:
+    let $debug := console:log("sutil:getNodetrail(" || $wid || ", " || serialize($node) || ", " || $mode || ")")
+    return
+:)
+    if (doc-available($config:index-root || '/' || $wid || '_nodeIndex.xml')) then
+        let $idx := doc($config:index-root || '/' || $wid || '_nodeIndex.xml')
+        return if ($idx//sal:node[@n eq $node/@xml:id]) then
+            switch ($mode)
+                case "citeID"
+                    return doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $node/@xml:id]/@citeID/string()
+                case "crumbtrail"
+                    return doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $node/@xml:id]/sal:crumbtrail
+                case "label"
+                    return doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $node/@xml:id]/@label/string()
+                default
+                    return util:log('error', '[sutil] calling sutil:getNodetrail with unknown mode: ' || $mode)
+        else
+            util:log('error', '[sutil] calling sutil:getNodetrail(' || $wid || ', ' || $mode || ') but found no indexed node for node: ' || serialize($node))
+    else
+        util:log('error', '[sutil] calling sutil:getNodetrail(' || $wid || ', ' || $mode || ') but no index file available.')
 };
 
 (:

@@ -195,18 +195,13 @@ declare function index:extractNodeStructure($wid as xs:string,
         typeswitch($node)
             case element() return
                 let $children := $node/*
-                let $dbg := if ($node/self::tei:pb and functx:is-a-number($node/@n)) then
-                                let $pag := number($node/@n)
-                                return if ($pag mod 100 eq 0 and $config:debug = "trace") then
-                                          let $log := util:log('info', '[INDEX] Processing tei:pb node ' || $node/@n)
-                                          return console:log('[INDEX] Processing tei:pb ' || $node/@n || ' ...')
-                                       else ()
+                let $dbg := if ($node/self::tei:pb and count($node/preceding::tei:pb) mod 100 eq 0 and $config:debug = "trace") then
+                                  let $log := util:log('info', '[INDEX] Processing tei:pb node ' || $node/@n)
+                                  return console:log('[INDEX] Processing tei:pb ' || $node/@n || ' ...')
                             else ()
                 return
                 (: index:isIndexNode($node) has already been called in admin:createIndex, so we can use that run here: :)
                 if ($node/@xml:id and $fragmentIds($node/@xml:id/string())) then
-                    let $debug := if ($config:debug = ("trace") and $node/self::tei:pb) then index:pb($node, 'debug') else ()
-(:                    let $debug := if ($config:debug = ("trace")) then console:log("processing node: " || local-name($node) || ", xlmd:id " || $node/@xml:id/string() || ".") else ():)
                     let $subtype := 
                         if ($node[self::tei:milestone]/@n) then (: TODO: where is this used? :)
                             string($node/@n)
@@ -252,7 +247,12 @@ declare function index:extractNodeStructure($wid as xs:string,
 ~ while enriching those nodes with final citeID, crumbtrail, etc.
 :)
 declare function index:createIndexNodes($wid as xs:string, $input as element(sal:index)) as element(sal:node)* {
-    for $node in $input//sal:node return
+    let $numberOfNodes := count($input//sal:node)
+    return
+    for $node at $pos in $input//sal:node return
+        let $debug := if ($pos mod 500 eq 0 and $config:debug = "trace") then console:log('[INDEX] Processing sal:node ' || $pos || ' of ' || $numberOfNodes || '.') else ()
+        let $log := if ($pos mod 500 eq 0 and $config:debug = "trace") then util:log('info', '[INDEX] Processing sal:node ' || $pos || ' of ' || $numberOfNodes || '.') else ()
+
         let $citeID     := index:constructCiteID($node)
         let $label      := index:constructLabel($node)
         let $crumbtrail := index:constructCrumbtrail($wid, $citeID, $node)
@@ -279,37 +279,49 @@ declare function index:qualityCheck($index as element(sal:index),
                                     $fragmentationDepth as xs:integer) {
                                     
     let $wid := $work/@xml:id
+    let $resultNodes := $index//sal:node[not(@n eq 'completeWork')]
+    let $debug := if ($config:debug = "trace") then console:log('[INDEX] QC: check ' || count($resultNodes) || ' nodes in index for ' || $wid || '.') else ()
     
     (: #### Basic quality / consistency check #### :)
-    let $resultNodes := $index//sal:node[not(@n eq 'completeWork')]
     let $testNodes := 
         if (count($resultNodes) eq 0) then 
             error(xs:QName('admin:createNodeIndex'), 'Node indexing did not produce any results.') 
-        else ()
+        else $resultNodes
+
     (: every ordinary sal:node should have all of the required fields and values: :)
+    let $debug := if ($config:debug = "trace") then console:log('[INDEX] QC: check @class/@type/@n attributes...') else ()
     let $testAttributes := 
         if ($testNodes[not(@class/string() and @type/string() and @n/string())]) then 
             error(xs:QName('admin:createNodeIndex'), 'Essential attributes are missing in at least one index node (in ' || $wid || ')') 
         else ()
-    let $testChildren := if ($testNodes[not(@title and @fragment and @citableParent and @citeID and @label and sal:crumbtrail/*)]) then error() else ()
-    (: there should be as many distinctive citeID and crumbtrails as there are ordinary sal:node elements: :)
-    let $testAmbiguousCiteID := 
-        if (count($resultNodes) ne count(distinct-values($resultNodes/@citeID/string()))) then 
-            error(xs:QName('admin:createNodeIndex'), 
-                  'Could not produce a unique citeID for each sal:node (in ' || $wid || '). Problematic nodes: '
-                  || string-join(($resultNodes[@citeID/string() = preceding::sal:node/@citeID/string()]/@n), '; ')) 
-        else () 
-    (: search these cases using: " //sal:node/@citeID[./string() = following::sal:node/@citeID/string()] :)
+    let $debug := if ($config:debug = "trace") then console:log('[INDEX] QC: check @title/@fragment/@citableParent/@label attributes and sal:crumbtrail children...') else ()
+    let $testChildren := if ($testNodes[not(@title and @fragment and @citableParent and @label and sal:crumbtrail/*)]) then error() else ()
+
+    let $debug := if ($config:debug = "trace") then console:log('[INDEX] QC: check empty @citeID attributes...') else ()
     let $testEmptyCiteID :=
         if (count($resultNodes/@citeID[not(./string())]) gt 0) then
             error(xs:QName('admin:createNodeIndex'), 
                   'Could not produce a citeID for one or more sal:node (in' || $wid || '). Problematic nodes: '
-                  || string-join(($resultNodes[not(@citeID/string())]/@n), '; '))
+                  || string-join((for $x in $resultNodes[not(@citeID/string())] return $x/@n/string() || '(' || $x/@type/string() || ')'), '; '))
         else ()
-    (: search for " //@citeID[not(./string())] ":)
+
+    (: there should be as many distinctive citeID and crumbtrails as there are ordinary sal:node elements: :)
+    let $debug := if ($config:debug = "trace") then console:log('[INDEX] QC: Make sure @citeIDs are unique (compare number of nodes to number of distinct @citeID values)...') else ()
+    let $testAmbiguousCiteID := 
+        if (count($resultNodes) ne count(distinct-values($resultNodes/@citeID/string()))) then 
+            error(xs:QName('admin:createNodeIndex'), 
+                  'Could not produce a unique citeID for each sal:node (in ' || $wid || '). Problematic nodes: '
+                  || string-join(
+                        (for $x in $resultNodes[@citeID = preceding::sal:node/@citeID]
+                         return concat($x/@n || '(citeID ' || $x/@citeID|| ')', '<->', string-join($resultNodes[following::sal:node/@citeID = $x/@citeID]/@n || '(citeID ' || $x/@citeID|| ')', '~')))
+                        , ' || '
+                    ))
+        else ()
+
     (: not checking crumbtrails here ATM for not slowing down index creation too much... :)
     
     (: check whether all text is being captured through basic index nodes (that is, whether every single passage is citable) :)
+    let $debug := if ($config:debug = "trace") then console:log('[INDEX] QC: Check whether every single passage is citable...') else ()
     let $checkBasicNodes := 
         for $t in $work//tei:text[@type eq 'work_monograph' 
                                   or (@type eq 'work_volume' and sutil:WRKisPublished($wid || '_' || @xml:id))]
@@ -321,7 +333,7 @@ declare function index:qualityCheck($index as element(sal:index),
     (: if no xml:id is put out, try to search these cases like so:
         //text//text()[not(normalize-space() eq '')][not(ancestor::*[@xml:id and (self::p or self::signed or self::head or self::titlePage or self::lg or self::item or self::label or self::argument or self::table)])]
     :)
-    
+
     (: See if there are any leaf elements in our text that are not matched by our rule :)
     let $missed-elements := $work//(tei:front|tei:body|tei:back)//tei:*[count(./ancestor-or-self::tei:*) < $fragmentationDepth][not(*)]
     (: See if any of the elements we did get is lacking an xml:id attribute :)
@@ -1171,7 +1183,8 @@ declare function index:pb($node as element(tei:pb), $mode as xs:string) {
         (: pb nodes are good candidates for tracing the speed/performance of document processing, 
             since they are equally distributed throughout a document :)
         case 'debug' return
-            util:log('info', '[INDEX] Processing tei:pb node ' || $node/@xml:id)
+            let $debug := console:log('[INDEX] Processing tei:pb node ' || $node/@xml:id)
+            return util:log('info', '[INDEX] Processing tei:pb node ' || $node/@xml:id)
         
         default return ()
 };
