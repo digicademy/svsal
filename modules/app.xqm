@@ -97,7 +97,7 @@ declare function app:AUTfinalFacets ($node as node(), $model as map (*), $lang a
         let $authorUrl      :=  'author.html?aid=' || $aid
         let $status         :=  xs:string($item/ancestor-or-self::tei:TEI//tei:revisionDesc/@status)
         let $name           :=  sutil:formatName($item/tei:persName[1])
-        let $sortName       :=  $item//tei:persName[1]/tei:surname
+        let $sortName       :=  sutil:strip-diacritics($item//tei:persName[1]/tei:surname)
         let $firstChar      :=  substring($sortName, 1, 1)
         let $nameFacet      :=       if ($firstChar = ('A','B','C','D','E','F')) then 'A - F'
                                 else if ($firstChar = ('G','H','I','J','K','L')) then 'G - L'
@@ -285,7 +285,7 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
         let $wrkLink        :=  'work.html?wid=' || $wid
 
         let $name           :=  string-join(for $a in $item/tei:fileDesc/tei:titleStmt/tei:author/tei:persName return sutil:formatName($a), " &amp; ")
-        let $sortName       :=  string-join(for $a in $item/tei:fileDesc/tei:titleStmt/tei:author/tei:persName/tei:surname return lower-case($a), " &amp; ") (:lower-casing for equal sorting:)
+        let $sortName       :=  string-join(for $a in $item/tei:fileDesc/tei:titleStmt/tei:author/tei:persName/tei:surname return sutil:strip-diacritics(lower-case($a)), " &amp; ") (:lower-casing for equal sorting:)
         let $firstChar      :=  upper-case(substring($item/tei:fileDesc/tei:titleStmt/tei:author[1]//tei:surname, 1, 1))
         let $nameFacet      :=       
                  if ($firstChar = ('A','B','C','D','E','F')) then 'A - F'
