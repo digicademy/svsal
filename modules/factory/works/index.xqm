@@ -485,7 +485,8 @@ declare function index:isNamedCiteIDNode($node as element()) as xs:boolean {
         (index:isStructuralNode($node) 
             and $node[self::tei:text[@type eq 'work_volume'] or 
                       self::tei:back or 
-                      self::tei:front]) or (: TODO: include div here? :)
+                      self::tei:front or
+                      self::tei:argument]) or (: TODO: include div here? :)
         (index:isMainNode($node) 
             and $node[
 (: removed on 2022-07-13 when removing div[ancestor::tei:front || ancestor::tei:back] from structuralNodes:
@@ -594,6 +595,7 @@ declare function index:isStructuralNode($node as node()) as xs:boolean {
         $node/@xml:id and
         (
             $node/self::tei:div[@type ne "work_part"][not(./(ancestor::tei:front || ancestor::tei:back))] or
+            $node/self::tei:argument[not(ancestor::tei:list)] or
             $node/self::tei:back or
             $node/self::tei:front or
             $node/self::tei:text[@type eq 'work_volume']
@@ -734,8 +736,22 @@ declare function index:dispatch($node as node(), $mode as xs:string) {
 
 declare function index:argument($node as element(tei:argument), $mode as xs:string) {
     switch($mode)
+        case 'title' return
+            normalize-space(
+                if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
+                    '"' || string($node/@n) || '"'
+                else if ($node/(tei:head|tei:label)) then
+                    index:makeTeaserString(($node/(tei:head|tei:label))[1], 'orig')
+                else
+                    $config:citationLabels(local-name($node))?('abbr')
+            )
         case 'class' return 
             'tei-' || local-name($node)
+        case 'citeID' return
+            let $abbr := $config:citationLabels(local-name($node))?('abbr')
+            return lower-case(if (contains($abbr, '.')) then substring-before($config:citationLabels(local-name($node))?('abbr'), '.') else $abbr)
+        case 'label' return
+                lower-case($config:citationLabels(local-name($node))?('abbr')) (: TODO: upper-casing with first element of label ? :)
         default return
             ()
 };

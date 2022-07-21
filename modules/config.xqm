@@ -188,6 +188,7 @@ declare variable $config:citationLabels :=
         'unknown': (),
         'work_part': (),
         (: element names (must be different from the div/milestone types/units defined above): :)
+        'argument': map {'full': 'argumentum', 'abbr': 'argum.', 'isCiteRef': true()},
         'back': map {'full': 'appendix', 'abbr': 'append.', 'isCiteRef': true()},
         'front': map {'full': 'front', 'abbr': 'front.'},
         'titlePage': map {'full': 'titulus', 'abbr': 'tit.'},

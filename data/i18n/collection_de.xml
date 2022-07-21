@@ -252,7 +252,7 @@
   <msg key="tei-div-chapter">Kapitel</msg>
   <msg key="tei-div-colophon">Kolophon</msg>
   <msg key="tei-div-source">Quelle</msg>
-  <msg key="tei-div-commentary">Quellenkommentar</msg>
+  <msg key="tei-div-commentary">Kommentar</msg>
   <msg key="tei-div-contents">Inhaltsverzeichnis</msg>
   <msg key="tei-div-corrigenda">Korrigenda</msg>
   <msg key="tei-div-dedication">Widmung</msg>

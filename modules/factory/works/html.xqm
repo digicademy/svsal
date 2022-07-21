@@ -327,7 +327,8 @@ declare function html:generateTocFromDiv($nodes as element()*, $wid as xs:string
 declare function html:generateTocFromDiv($nodes as element()*, $wid as xs:string, $lang as node()*) as element(ul)* {
     for $node in $nodes/(tei:div[@type="work_part"]/tei:div[index:isIndexNode(.)]
                          |tei:div[not(@type="work_part")][index:isIndexNode(.)]
-                         |*/tei:milestone[@unit ne 'other'][index:isIndexNode(.)]) return
+                         |*/tei:milestone[@unit ne 'other'][index:isIndexNode(.)]
+                         |tei:argument[index:isIndexNode(.)]) return
         let $citeID := sutil:getNodetrail($wid, $node, 'citeID')        
         let $fragId := $config:idserver || '/texts/' || $wid || ':' || $citeID || '?format=html'
         let $section := $node/@xml:id/string()
