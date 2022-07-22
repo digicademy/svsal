@@ -183,7 +183,7 @@ declare variable $config:citationLabels :=
         'question': map {'full': 'quaestio', 'abbr': 'q.', 'isCiteRef': true()},
         'section': map {'full': 'sectio', 'abbr': 'sect.', 'isCiteRef': true()},
         'segment': map {'full': 'sectio', 'abbr': 'sect.', 'isCiteRef': true()}, 
-        'source': map {'full': 'sectio', 'abbr': 'sect.'},
+        'source': map {'full': 'fontes', 'abbr': 'fon.', 'isCiteRef': true()},
         'title': map {'full': 'titulus', 'abbr': 'tit.', 'isCiteRef': true()},
         'unknown': (),
         'work_part': (),
