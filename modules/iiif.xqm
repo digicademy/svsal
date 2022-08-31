@@ -101,7 +101,8 @@ In the case of single volume works, return:
                 let $collectionURI := "iiif-out.xql?wid=" || $wid
                 let $volumeIDs     := for $fileName in $tei/tei:text/tei:group/xi:include/@href return doc($config:tei-works-root || '/' || $fileName)//tei:TEI/@xml:id/string()
                 let $manifests     := for $id in $volumeIDs return map { "manifestUri" : concat("iiif-out.xql?wid=", $id), "location" :    "MPIeR iiif Service"}
-                let $data-out      := (map {"collectionUri" : $collectionURI }, for $mf in $manifests return $mf)
+(:                let $data-out      := (map {"collectionUri" : $collectionURI }, for $mf in $manifests return $mf):)
+                let $data-out      := (for $mf in $manifests return $mf)
                 return $data-out
             else if ($tei/tei:text[@type='work_monograph' or @type='work_volume']) then
                 (: single volume :)
