@@ -146,7 +146,7 @@ declare function index:determineFragmentationDepth($work as element(tei:TEI)) as
 ~   (two non-structural nodes of the desired level may have the same ancestor)
 ~ - (Obsolete: In front and back, fragmentation must not go below the child level, since we don't expect child fragments be too large here.)
 :)
-declare function index:getFragmentNodes($work as element(tei:TEI), $fragmentationDepth as xs:integer) as node()* {
+declare function index:getFragmentNodesOld($work as element(tei:TEI), $fragmentationDepth as xs:integer) as node()* {
     functx:distinct-nodes(
         for $text in $work//tei:text[@type eq 'work_monograph' 
                                       or (@type eq 'work_volume' and sutil:WRKisPublished($work/@xml:id || '_' || @xml:id))] return 
@@ -176,6 +176,11 @@ declare function index:getFragmentNodes($work as element(tei:TEI), $fragmentatio
             )
 :)
     )
+};
+
+
+declare function index:getFragmentNodes($work as element(tei:TEI), $fragmentationDepth as xs:integer) as node()* {
+    $work/descendant-or-self::tei:*[index:isPotentialFragmentNode(.)][index:isBestDepth(., $fragmentationDepth)]
 };
 
 
@@ -317,7 +322,7 @@ declare function index:qualityCheck($index as element(sal:index),
                         , ' || '
                     ))
         else ()
-
+    (: search for " //@citeID[not(./string())] ":)
     (: not checking crumbtrails here ATM for not slowing down index creation too much... :)
     
     (: check whether all text is being captured through basic index nodes (that is, whether every single passage is citable) :)
@@ -435,7 +440,7 @@ declare function index:makeMarginalCiteID($node as element()) as xs:string {
 
 (: 
 !!! IMPORTANT: before changing any of these functions, make sure to have read and understood
-the section on node indexing in the docs/technical.md documentation file.
+    the section on node indexing in the docs/technical.md documentation file.
 :)
 
 (:
@@ -488,10 +493,7 @@ declare function index:isNamedCiteIDNode($node as element()) as xs:boolean {
                       self::tei:front or
                       self::tei:argument]) or (: TODO: include div here? :)
         (index:isMainNode($node) 
-            and $node[
-(: removed on 2022-07-13 when removing div[ancestor::tei:front || ancestor::tei:back] from structuralNodes:
-                      self::tei:head or
-:)
+            and $node[self::tei:head or 
                       self::tei:titlePage]) or
         (index:isListNode($node) 
             and $node[self::tei:list[@type = ('dict', 'index')] or
@@ -563,7 +565,6 @@ declare function index:isMainNode($node as node()) as xs:boolean {
             $node/self::tei:titlePage or
             $node/self::tei:lg or
             $node/self::tei:label[@place ne 'margin'] or
-            $node/self::tei:argument[not(ancestor::tei:list)] or
             $node/self::tei:table
         ) and 
         not($node/ancestor::*[index:isMainNode(.) or index:isMarginalNode(.) or self::tei:list])
@@ -589,12 +590,13 @@ declare function index:isListNode($node as node()) as xs:boolean {
 
 (:
 ~ Structural nodes are high-level nodes containing any of the other types of nodes (main, marginal, anchor nodes).
+Line 584: [not(./(ancestor::tei:front || ancestor::tei:back))] added to resolve a HTML problem (#6459: <front> displayed twice)
 :)
 declare function index:isStructuralNode($node as node()) as xs:boolean {
     boolean(
         $node/@xml:id and
         (
-            $node/self::tei:div[@type ne "work_part"][not(./(ancestor::tei:front || ancestor::tei:back))] or
+            $node/self::tei:div[@type ne "work_part"] or (: TODO: comment out for div label experiment :)
             $node/self::tei:argument[not(ancestor::tei:list)] or
             $node/self::tei:back or
             $node/self::tei:front or
@@ -603,6 +605,18 @@ declare function index:isStructuralNode($node as node()) as xs:boolean {
     )
 };
 
+declare function index:isPotentialFragmentNode($node as node()) as xs:boolean {
+    boolean($node/self::tei:front |
+            $node/self::tei:back |
+            $node/self::tei:div[not($node/ancestor::tei:front | $node/ancestor::tei:back)] |
+            $node/self::tei:argument[not($node/ancestor::tei:list)] |
+            $node/self::tei:text[@type = ('work_monograph', 'work_volume')]
+            )
+};
+
+declare function index:isBestDepth($node as node(), $fragmentationDepth as xs:integer) as xs:boolean {
+    boolean(not($node/descendant::tei:*[index:isPotentialFragmentNode(.)][count(./ancestor-or-self::tei:*) le $fragmentationDepth]))    
+};
 
 (:
 ~ Basic nodes represent *all* container nodes at the bottom of the index tree, i.e. mixed-content elements 
@@ -619,6 +633,7 @@ declare function index:isBasicNode($node as node()) as xs:boolean {
         (: (this is quite a complicated XPath, but I don't know how to simplify it without breaking things...) :)
     )
 };
+
 
 
 declare function index:getNodeCategory($node as element()) as xs:string {
@@ -659,7 +674,9 @@ declare function index:makeUrl($targetWorkId as xs:string, $targetNode as node()
 ~  @param mode: must be one of 'orig', 'edit' (default)
 :)
 declare function index:makeTeaserString($node as element(), $mode as xs:string?) as xs:string {
-    let $thisMode := if ($mode = ('orig', 'edit')) then $mode else 'orig'
+(:  replaced the following to solve the empty lables problem in iiif manifests 
+    let $thisMode := if ($mode = ('orig', 'edit')) then $mode else 'edit' :)
+    let $thisMode := if ($mode = 'edit') then $mode else 'orig'
     let $string := normalize-space(string-join(txt:dispatch($node, $thisMode), ''))
 (: replaced the following with the above for performance reasons on 2021-04-28 ...
     let $string := normalize-space(replace(replace(string-join(txt:dispatch($node, $thisMode), ''), '\[.*?\]', ''), '\{.*?\}', ''))
@@ -730,9 +747,7 @@ declare function index:dispatch($node as node(), $mode as xs:string) {
         default return ()
 };
 
-
 (: ####++++ Element functions (ordered alphabetically) ++++#### :)
-
 
 declare function index:argument($node as element(tei:argument), $mode as xs:string) {
     switch($mode)
@@ -756,7 +771,6 @@ declare function index:argument($node as element(tei:argument), $mode as xs:stri
             ()
 };
 
-
 declare function index:back($node as element(tei:back), $mode as xs:string) {
     switch($mode)
         case 'title' return
@@ -771,7 +785,6 @@ declare function index:back($node as element(tei:back), $mode as xs:string) {
             ()
 };
 
-
 declare function index:body($node as element(tei:body), $mode as xs:string) {
     switch($mode)
         case 'class' return
@@ -779,7 +792,6 @@ declare function index:body($node as element(tei:body), $mode as xs:string) {
         default return
             ()
 };
-
 
 declare function index:div($node as element(tei:div), $mode as xs:string) {
     switch($mode)
@@ -848,7 +860,6 @@ declare function index:div($node as element(tei:div), $mode as xs:string) {
             ()
 };
 
-
 declare function index:front($node as element(tei:front), $mode as xs:string) {
     switch ($mode)
         case 'title' return
@@ -866,7 +877,6 @@ declare function index:front($node as element(tei:front), $mode as xs:string) {
         default return
             ()
 };
-
 
 (: FIXME: In the following, the #anchor does not take account of html partitioning of works. Change this to use semantic section id's. :)
 declare function index:head($node as element(tei:head), $mode as xs:string) {
@@ -944,7 +954,6 @@ declare function index:item($node as element(tei:item), $mode as xs:string) {
             ()
 };
 
-
 declare function index:label($node as element(tei:label), $mode as xs:string) {
     switch($mode)
         case 'title' return
@@ -963,7 +972,6 @@ declare function index:label($node as element(tei:label), $mode as xs:string) {
         default return
             ()
 };
-
 
 declare function index:list($node as element(tei:list), $mode as xs:string) {
     switch($mode)
@@ -1006,7 +1014,6 @@ declare function index:list($node as element(tei:list), $mode as xs:string) {
         default return
             ()
 };
-
 
 declare function index:lg($node as element(tei:lg), $mode as xs:string) {
     switch($mode)
@@ -1086,7 +1093,6 @@ declare function index:milestone($node as element(tei:milestone), $mode as xs:st
         default return () (: also for snippets-orig, snippets-edit :)
 };
 
-
 declare function index:note($node as element(tei:note), $mode as xs:string) {
     switch($mode)
         case 'title' return
@@ -1116,6 +1122,7 @@ declare function index:note($node as element(tei:note), $mode as xs:string) {
         case 'label' return
             if (index:isLabelNode($node)) then
                 (: label parents of note are div, not p :)
+                let $debug := console:log("index:note/label for note: " || $node/@xml:id/string())
                 let $currentSection := sutil:copy($node/ancestor::*[not(self::tei:p)][index:isLabelNode(.)][1])
                 let $currentNode := $currentSection//tei:note[@xml:id eq $node/@xml:id]
                 let $prefix := $config:citationLabels(local-name($node))?('abbr')
@@ -1129,7 +1136,6 @@ declare function index:note($node as element(tei:note), $mode as xs:string) {
         default return
             ()
 };
-
 
 declare function index:p($node as element(tei:p), $mode as xs:string) {
     switch($mode)
@@ -1154,11 +1160,9 @@ declare function index:p($node as element(tei:p), $mode as xs:string) {
             ()
 };
 
-
 (:declare function index:passthru($nodes as node()*, $mode as xs:string) as item()* {
     for $node in $nodes/node() return index:dispatch($node, $mode)
 };:)
-
 
 declare function index:pb($node as element(tei:pb), $mode as xs:string) {
     switch($mode)
@@ -1225,7 +1229,6 @@ declare function index:signed($node as element(tei:signed), $mode as xs:string) 
             ()
 };
 
-
 declare function index:table($node as element(tei:table), $mode as xs:string) {
     switch($mode)
         case 'title' return
@@ -1244,7 +1247,6 @@ declare function index:table($node as element(tei:table), $mode as xs:string) {
         default return
             ()
 };
-
 
 declare function index:text($node as element(tei:text), $mode as xs:string) {
     switch($mode)
@@ -1280,7 +1282,6 @@ declare function index:text($node as element(tei:text), $mode as xs:string) {
         default return
             ()
 };
-
 
 declare function index:titlePage($node as element(tei:titlePage), $mode as xs:string) {
     switch($mode)
