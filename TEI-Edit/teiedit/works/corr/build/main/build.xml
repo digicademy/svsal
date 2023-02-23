@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="corrListMain" default="finalize">
+    
+    <!-- ==================================================== -->
+    
+    <!-- TODO: adjust global parameters here: -->
+    
+    <!-- 1.) a) work/volume ID ("Wxxxx" or "Wxxxx_Volyy") -->
+    <property name="work.id" value="W0033"/>
+    
+    <!-- 1.) b) concrete file ID, e.g. "Wxxxx_009" or "Wxxxx_Vol01_009" (without ".xml" suffix!) -->
+    <property name="file.id" value="W0033_024"/>
+    
+    <!-- 2.) language ("es" or "la") -->
+    <property name="lang" value="la"/>
+    
+    <!-- 3.) choose which source folder should be used for getting the work and for storing the result lists:
+            - teiedit ... build folder of the respective work (usually used *before* the correction phase): 
+                "../../../build/${work.id}"
+            - corr-edit folder (usually used when corrections have been done, but lists are required for cross-checking): 
+                "../../../../../corr-edit/{editor-id}"  (replace {editor-id} by respective id, e.g. "JLE")
+            ==> please keep in mind to set the file.id property accordingly (see above) -->
+    <property name="source.dir" value="../../../build/${work.id}"/>
+    
+    <!-- 4.) determine wordforms to be included in the manually editable words-not-found_sorted list, 
+                depending on whether they contain special characters or not; must be one of: 'special-chars-only', 'no-special-chars', 'all' (default) -->
+    <property name="editText" value="special-chars-only"/>
+    
+    
+    <!-- ==================================================== -->
+    
+    <property name="xql.processor" value="../../../../lib/xsltproc/Saxon-HE-9.8.0-12.jar"/>
+    <property name="xql.class" value="net.sf.saxon.Query"/>
+    <property name="xql.dir" value="../../xql/"/>
+    <property name="xql.main.mod" value="../../xql/corrList_1_main.xql"/>
+    <property name="work.dir" value="${source.dir}/xml/"/>
+    <property name="work.path" value="${work.dir}${file.id}.xml"/>
+    <property name="out.dir" value="${source.dir}/corrlist/"/>
+    <property name="log.dir" value="${out.dir}log/"/>
+    <!--<property name="edit.dir" value="${out.dir}edit/"/>-->
+    <property name="corr.log.file" value="${log.dir}${work.id}_corr.log"/>
+    <property name="corr.all.file" value="${out.dir}${work.id}-${lang}_all-wordforms.html"/>
+    
+    <property name="memory" value="-Xmx3000m"/>
+    
+    <target name="initialize">
+        <mkdir dir="${out.dir}"/>
+        <mkdir dir="${log.dir}"/>
+        <copy file="${work.path}" tofile="${work.dir}/${work.id}_corr.xml"/>
+    </target>
+    
+    <target name="corr-all" depends="initialize">
+        <record name="${corr.log.file}" action="start" loglevel="verbose"/>
+        <java classname="${xql.class}" fork="true" failonerror="true"> <!-- output="${corr.log.file}" --> 
+            <classpath path="${xql.processor}"/>
+            <jvmarg value="${memory}"/>
+            <arg value="-q:${xql.main.mod}"/>
+            <arg line="-s:${work.path}"/>
+            <arg value="-o:${corr.all.file}"/>
+            <arg value="-traceout:#err"/>
+            <arg value="-t"/>
+            <arg value="language=${lang}"/>
+        </java>
+        <record name="${corr.log.file}" action="stop"/>
+    </target>
+    
+    <target name="corr-ok" depends="corr-all"> <!-- depends="corr-all" -->
+        <record name="${corr.log.file}" action="start" loglevel="verbose"/>
+        <java classname="${xql.class}" fork="true" failonerror="true">
+            <classpath path="${xql.processor}"/>
+            <jvmarg value="${memory}"/>
+            <arg value="-q:${xql.dir}corrList_2_ok.xql"/>
+            <arg line="-s:${corr.all.file}"/>
+            <arg value="-o:${out.dir}${work.id}-${lang}_wordforms-ok.html"/>
+            <arg value="-traceout:#err"/>
+            <arg value="-t"/>
+        </java>
+        <record name="${corr.log.file}" action="stop"/>
+    </target>
+    
+    <target name="corr-words-not-found" depends="corr-all"> <!-- depends="corr-all" -->
+        <record name="${corr.log.file}" action="start" loglevel="verbose"/>
+        <java classname="${xql.class}" fork="true" failonerror="true">
+            <classpath path="${xql.processor}"/>
+            <jvmarg value="${memory}"/>
+            <arg value="-q:${xql.dir}corrList_2_words-not-found.xql"/>
+            <arg line="-s:${corr.all.file}"/>
+            <arg value="-o:${out.dir}${work.id}-${lang}_wordforms-not-in-dict.html"/>
+            <arg value="-traceout:#err"/>
+            <arg value="-t"/>
+        </java>
+        <record name="${corr.log.file}" action="stop"/>
+    </target>
+    
+    <!-- for list-based dictionary enrichment: store list in special format in "edit" directory, to be edited -->
+    <target name="corr-words-not-found-sorted"> <!-- depends="corr-all" -->
+        <record name="${corr.log.file}" action="start" loglevel="verbose"/>
+        <java classname="${xql.class}" fork="true" failonerror="true">
+            <classpath path="${xql.processor}"/>
+            <jvmarg value="${memory}"/>
+            <arg value="-q:${xql.dir}corrList_2_words-not-found_sorted.xql"/>
+            <arg line="-s:${corr.all.file}"/>
+            <arg value="-o:${out.dir}${work.id}-${lang}_wordforms-not-in-dict_sorted.html"/>
+            <arg value="-traceout:#err"/>
+            <arg value="-t"/>
+            <arg value="editText=${editText}"/>
+        </java>
+        <record name="${corr.log.file}" action="stop"/>
+    </target>
+    
+    <target name="corr-comp-hyph" depends="corr-all"> <!-- depends="corr-all" -->
+        <record name="${corr.log.file}" action="start" loglevel="verbose"/>
+        <java classname="${xql.class}" fork="true" failonerror="true">
+            <classpath path="${xql.processor}"/>
+            <jvmarg value="${memory}"/>
+            <arg value="-q:${xql.dir}corrList_2_comp-hyph-dict.xql"/>
+            <arg line="-s:${corr.all.file}"/>
+            <arg value="-o:${out.dir}${work.id}-${lang}_supposed-hyphenations-from-dict.html"/>
+            <arg value="-traceout:#err"/>
+            <arg value="-t"/>
+        </java>
+        <record name="${corr.log.file}" action="stop"/>
+    </target>
+    
+    <target name="corr-comp-hyph-intext" depends="corr-all"> <!-- depends="corr-all" -->
+        <record name="${corr.log.file}" action="start" loglevel="verbose"/>
+        <java classname="${xql.class}" fork="true" failonerror="true">
+            <classpath path="${xql.processor}"/>
+            <jvmarg value="${memory}"/>
+            <arg value="-q:${xql.dir}corrList_2_comp-hyph-text.xql"/>
+            <arg line="-s:${corr.all.file}"/>
+            <arg value="-o:${out.dir}${work.id}-${lang}_supposed-hyphenations-from-text.html"/>
+            <arg value="-traceout:#err"/>
+            <arg value="-t"/>
+        </java>
+        <record name="${corr.log.file}" action="stop"/>
+    </target>
+    
+    <target name="corr-comp-hyph-nohyph" depends="corr-all"> <!-- depends="corr-all" -->
+        <record name="${corr.log.file}" action="start" loglevel="verbose"/>
+        <java classname="${xql.class}" fork="true" failonerror="true">
+            <classpath path="${xql.processor}"/>
+            <jvmarg value="${memory}"/>
+            <arg value="-q:${xql.dir}corrList_2_comp-hyph-nohyph.xql"/>
+            <arg line="-s:${corr.all.file}"/>
+            <arg value="-o:${out.dir}${work.id}-${lang}_unclear-hyphenations_in-dict.html"/>
+            <arg value="-traceout:#err"/>
+            <arg value="-t"/>
+        </java>
+        <record name="${corr.log.file}" action="stop"/>
+    </target>
+    
+    <target name="corr-comp-not-found" depends="corr-all"> <!-- depends="corr-all" -->
+        <record name="${corr.log.file}" action="start" loglevel="verbose"/>
+        <java classname="${xql.class}" fork="true" failonerror="true">
+            <classpath path="${xql.processor}"/>
+            <jvmarg value="${memory}"/>
+            <arg value="-q:${xql.dir}corrList_2_comp-not-found.xql"/>
+            <arg line="-s:${corr.all.file}"/>
+            <arg value="-o:${out.dir}${work.id}-${lang}_unclear-hyphenations_not-in-dict.html"/>
+            <arg value="-traceout:#err"/>
+            <arg value="-t"/>
+        </java>
+        <record name="${corr.log.file}" action="stop"/>
+    </target>
+    
+    <target name="finalize" depends="corr-ok,corr-comp-hyph,corr-comp-hyph-intext,corr-words-not-found,corr-comp-hyph-nohyph,corr-comp-not-found,corr-words-not-found-sorted"/>
+    
+<!--    <target name="finalize" depends="corr-words-not-found-sorted"/>-->
+      
+    <!-- TODO:
+        - how to log (fn:trace())?
+    -->
+    
+    <!-- NOTES:
+    - call a single program (for debugging) by means of: "java -Xmx3000m -cp L:[path\to\]teiedit\lib\xsltproc\Saxon-HE-9.8.0-12.jar net.sf.saxon.Query -q:[query.xql] -o:[result.xml] -traceout:[logfile.log]" -->
+    
+</project>

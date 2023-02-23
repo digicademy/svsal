@@ -1,0 +1,7 @@
+29.04.2020
+Grepect W0033
+
+Länge des Texts: 442457 Zeichen
+Anzahl der reinen Textzeichen: 309746
+Anzahl der Zeichen der Tags: 132711
+Anteil der Tag-Zeichen am Gesamttext: 0.2999410112169092

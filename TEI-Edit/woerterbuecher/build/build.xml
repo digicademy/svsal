@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="enrichSvSalDict" default="build-dict">
+    
+    <!-- ==================================================== -->
+    
+    <!-- TODO: adjust global parameters here: -->
+    
+    <!-- language ("es" or "la") -->
+    <property name="lang" value="es"/>
+    
+    <!-- ==================================================== -->
+  
+    <property name="xql.processor" value="../../teiedit/lib/xsltproc/Saxon-HE-9.8.0-12.jar"/>
+    <property name="xql.class" value="net.sf.saxon.Query"/>
+    <property name="xql.dir" value="xql/"/>
+    <property name="xql.main.mod" value="${xql.dir}buildDictFromCorrLists.xql"/>
+    <property name="out.dict" value="dict/svsal-wordforms-es.txt"/>
+    <property name="log.file" value="log/buildDict.log"/>
+    
+    <property name="memory" value="-Xmx2500m"/>
+    
+    <target name="build-dict">
+        <record name="${log.file}" action="start" loglevel="verbose"/>
+        <java classname="${xql.class}" fork="true" failonerror="true">
+            <classpath path="${xql.processor}"/>
+            <jvmarg value="${memory}"/>
+            <arg value="-q:${xql.main.mod}"/>
+            <!--<arg line="-s:${work.path}"/>-->
+            <arg value="-o:${out.dict}"/>
+            <arg value="-traceout:#err"/>
+            <arg value="-t"/>
+            <arg value="lang=${lang}"/>
+        </java>
+        <record name="${log.file}" action="stop"/>
+    </target>
+    
+</project>

@@ -1,0 +1,24 @@
+     [java] Executing 'C:\Program Files\Java\jdk-9.0.1\bin\java.exe' with arguments:
+'-Xmx2500m'
+'-classpath'
+'L:\SVN\04-39\trunk\teiedit\lib\xsltproc\Saxon-HE-9.8.0-12.jar'
+'net.sf.saxon.Query'
+'-q:xql/buildDictFromCorrLists.xql'
+'-o:dict/svsal-wordforms-es.txt'
+'-traceout:#err'
+'-t'
+'lang=es'
+
+The ' characters around the executable and arguments are
+not part of the command.
+     [java] Saxon-HE 9.8.0.12J from Saxonica
+     [java] Java version 9.0.1
+     [java] Analyzing query from xql/buildDictFromCorrLists.xql
+     [java] Analysis time: 375.625502 milliseconds
+     [java] URIResolver.resolve href="../es/html/W0007_words-not-found_sorted.html" base="file:/L:/SVN/04-39/trunk/woerterbuecher/build/xql/buildDictFromCorrLists.xql"
+     [java] Using parser com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl$JAXPSAXParser
+     [java] Building tree for file:/L:/SVN/04-39/trunk/woerterbuecher/build/es/html/W0007_words-not-found_sorted.html using class net.sf.saxon.tree.tiny.TinyBuilder
+     [java] Tree built in 172.941469ms
+     [java] Tree size: 159849 nodes, 276870 characters, 72623 attributes
+     [java] Execution time: 49.335743s (49335.743298ms)
+     [java] Memory used: 437098368

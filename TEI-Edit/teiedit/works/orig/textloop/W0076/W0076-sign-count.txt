@@ -1,0 +1,6 @@
+W0076 delivered by Textloop on 24.05.21
+
+Länge des Texts: 315218 Zeichen
+Anzahl der reinen Textzeichen: 220206
+Anzahl der Zeichen der Tags: 95012
+Anteil der Tag-Zeichen am Gesamttext: 0.30141679726411563
