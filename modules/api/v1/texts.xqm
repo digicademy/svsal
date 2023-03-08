@@ -20,12 +20,12 @@ import module namespace http     = "http://expath.org/ns/http-client";
 import module namespace rest     = "http://exquery.org/ns/restxq";
 import module namespace util     = "http://exist-db.org/xquery/util";
 
-import module namespace api    = "http://www.salamanca.school/xquery/api" at "../api.xqm";
-import module namespace sutil  = "http://www.salamanca.school/xquery/sutil" at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
-import module namespace config = "http://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
-import module namespace export = "http://www.salamanca.school/xquery/export" at "xmldb:exist:///db/apps/salamanca/modules/export.xqm";
-(:import module namespace net  = "http://www.salamanca.school/xquery/net" at "xmldb:exist:///db/apps/salamanca/modules/net.xqm";:)
-import module namespace txt    = "https://www.salamanca.school/factory/works/txt" at "xmldb:exist:///db/apps/salamanca/modules/factory/works/txt.xqm";
+import module namespace api    = "http://www.salamanca.school/xquery/api"        at "../api.xqm";
+import module namespace sutil  = "http://www.salamanca.school/xquery/sutil"      at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
+import module namespace config = "http://www.salamanca.school/xquery/config"     at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace export = "http://www.salamanca.school/xquery/export"     at "xmldb:exist:///db/apps/salamanca/modules/export.xqm";
+(:import module namespace net  = "http://www.salamanca.school/xquery/net"        at "xmldb:exist:///db/apps/salamanca/modules/net.xqm";:)
+import module namespace txt    = "http://www.salamanca.school/factory/works/txt" at "xmldb:exist:///db/apps/salamanca/modules/factory/works/txt.xqm";
 
 
 

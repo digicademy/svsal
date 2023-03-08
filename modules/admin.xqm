@@ -37,11 +37,11 @@ import module namespace net         = "http://www.salamanca.school/xquery/net"  
 import module namespace render-app  = "http://www.salamanca.school/xquery/render-app"    at "xmldb:exist:///db/apps/salamanca/modules/render-app.xqm";
 import module namespace sphinx      = "http://www.salamanca.school/xquery/sphinx"        at "xmldb:exist:///db/apps/salamanca/modules/sphinx.xqm";
 import module namespace sutil       = "http://www.salamanca.school/xquery/sutil"         at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
-import module namespace stats       = "https://www.salamanca.school/factory/works/stats" at "xmldb:exist:///db/apps/salamanca/modules/factory/works/stats.xqm";
-import module namespace index       = "https://www.salamanca.school/factory/works/index" at "xmldb:exist:///db/apps/salamanca/modules/factory/works/index.xqm";
-import module namespace html        = "https://www.salamanca.school/factory/works/html"  at "xmldb:exist:///db/apps/salamanca/modules/factory/works/html.xqm";
-import module namespace txt         = "https://www.salamanca.school/factory/works/txt"   at "xmldb:exist:///db/apps/salamanca/modules/factory/works/txt.xqm";
-import module namespace iiif        = "https://www.salamanca.school/factory/works/iiif"  at "xmldb:exist:///db/apps/salamanca/modules/factory/works/iiif.xqm";
+import module namespace stats       = "http://www.salamanca.school/factory/works/stats"  at "xmldb:exist:///db/apps/salamanca/modules/factory/works/stats.xqm";
+import module namespace index       = "http://www.salamanca.school/factory/works/index"  at "xmldb:exist:///db/apps/salamanca/modules/factory/works/index.xqm";
+import module namespace html        = "http://www.salamanca.school/factory/works/html"   at "xmldb:exist:///db/apps/salamanca/modules/factory/works/html.xqm";
+import module namespace txt         = "http://www.salamanca.school/factory/works/txt"    at "xmldb:exist:///db/apps/salamanca/modules/factory/works/txt.xqm";
+import module namespace iiif        = "http://www.salamanca.school/factory/works/iiif"   at "xmldb:exist:///db/apps/salamanca/modules/factory/works/iiif.xqm";
 
 declare option exist:timeout "166400000"; (: in miliseconds, 25.000.000 ~ 7h, 43.000.000 ~ 12h :)
 declare option exist:output-size-limit "5000000"; (: max number of nodes in memory :)

@@ -7,7 +7,7 @@ import module namespace config      = "http://www.salamanca.school/xquery/config
 declare       namespace exist       = "http://exist.sourceforge.net/NS/exist";
 declare       namespace sal         = "http://salamanca.adwmainz.de";
 declare       namespace tei         = "http://www.tei-c.org/ns/1.0";
-declare       namespace itei        = "https://www.salamanca.school/indexed-tei";
+declare       namespace itei        = "http://www.salamanca.school/indexed-tei";
 declare       namespace util        = "http://exist-db.org/xquery/util";
 declare       namespace xi          = "http://www.w3.org/2001/XInclude";
 

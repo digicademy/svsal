@@ -20,7 +20,7 @@ import module namespace util        = "http://exist-db.org/xquery/util";
 import module namespace config      = "http://www.salamanca.school/xquery/config"           at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
 import module namespace export      = "http://www.salamanca.school/xquery/export"           at "xmldb:exist:///db/apps/salamanca/modules/export.xqm";
 import module namespace sutil       = "http://www.salamanca.school/xquery/sutil"            at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
-import module namespace txt         = "https://www.salamanca.school/factory/works/txt"      at "xmldb:exist:///db/apps/salamanca/modules/factory/works/txt.xqm";
+import module namespace txt         = "http://www.salamanca.school/factory/works/txt"       at "xmldb:exist:///db/apps/salamanca/modules/factory/works/txt.xqm";
 
 declare       namespace array       = "http://www.w3.org/2005/xpath-functions/array";
 declare       namespace err         = "http://www.w3.org/2005/xqt-errors";

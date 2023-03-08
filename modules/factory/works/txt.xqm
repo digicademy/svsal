@@ -7,7 +7,7 @@ xquery version "3.1";
    
    ----++++#### :)
 
-module namespace txt               = "https://www.salamanca.school/factory/works/txt";
+module namespace txt               = "http://www.salamanca.school/factory/works/txt";
 
 declare namespace tei              = "http://www.tei-c.org/ns/1.0";
 declare namespace sal              = "http://salamanca.adwmainz.de";

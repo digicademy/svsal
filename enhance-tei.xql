@@ -5,7 +5,7 @@ declare         namespace   output      = "http://www.w3.org/2010/xslt-xquery-se
 declare         namespace   request     = "http://exist-db.org/xquery/request";
 declare         namespace   sal         = "http://salamanca.adwmainz.de";
 declare         namespace   tei         = "http://www.tei-c.org/ns/1.0";
-declare         namespace   itei        = "https://www.salamanca.school/indexed-tei";
+declare         namespace   itei        = "http://www.salamanca.school/indexed-tei";
 declare         namespace   util        = "http://exist-db.org/xquery/util";
 
 import module   namespace   console     = "http://exist-db.org/xquery/console";

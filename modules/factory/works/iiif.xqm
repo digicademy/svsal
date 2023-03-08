@@ -7,7 +7,7 @@ xquery version "3.1";
 
  ----++++#### :)
 
-module namespace iiif     = "https://www.salamanca.school/factory/works/iiif";
+module namespace iiif     = "http://www.salamanca.school/factory/works/iiif";
 
 declare namespace array   = "http://www.w3.org/2005/xpath-functions/array";
 declare namespace exist   = "http://exist.sourceforge.net/NS/exist";
@@ -17,12 +17,12 @@ declare namespace sal     = "http://salamanca.adwmainz.de";
 declare namespace tei     = "http://www.tei-c.org/ns/1.0";
 declare namespace xi      = "http://www.w3.org/2001/XInclude";
 
-import module namespace console    = "http://exist-db.org/xquery/console";
-import module namespace util       = "http://exist-db.org/xquery/util";
+import module namespace console = "http://exist-db.org/xquery/console";
+import module namespace util    = "http://exist-db.org/xquery/util";
 
-import module namespace config    = "http://www.salamanca.school/xquery/config"     at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
-import module namespace app = "http://www.salamanca.school/xquery/app"              at "xmldb:exist:///db/apps/salamanca/modules/app.xqm";
-import module namespace sutil    = "http://www.salamanca.school/xquery/sutil"       at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
+import module namespace config  = "http://www.salamanca.school/xquery/config"  at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace app     = "http://www.salamanca.school/xquery/app"     at "xmldb:exist:///db/apps/salamanca/modules/app.xqm";
+import module namespace sutil   = "http://www.salamanca.school/xquery/sutil"   at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
 
 
 

@@ -2,15 +2,15 @@
     <configuration>
         <vocabularies>
             <!-- Input vocabularies -->
-            <vocabulary prefix="tei" uri="http://www.tei-c.org/ns/1.0"/>
-            <vocabulary prefix="xi" uri="http://www.w3.org/2001/XInclude"/>
-            <vocabulary prefix="sal" uri="http://salamanca.adwmainz.de"/>    
-            <vocabulary prefix="itei" uri="https://www.salamanca.school/indexed-tei"/>
+            <vocabulary prefix="tei"  uri="http://www.tei-c.org/ns/1.0"/>
+            <vocabulary prefix="xi"   uri="http://www.w3.org/2001/XInclude"/>
+            <vocabulary prefix="sal"  uri="http://salamanca.adwmainz.de"/>    
+            <vocabulary prefix="itei" uri="http://www.salamanca.school/indexed-tei"/>
 
             <!-- Output vocabularies -->
-            <vocabulary prefix="rdf" uri="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+            <vocabulary prefix="rdf"  uri="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
             <vocabulary prefix="rdfs" uri="http://www.w3.org/2000/01/rdf-schema#"/>
-            <vocabulary prefix="owl" uri="http://www.w3.org/2002/07/owl#"/>        
+            <vocabulary prefix="owl"  uri="http://www.w3.org/2002/07/owl#"/>        
 
             <vocabulary prefix="void" uri="http://rdfs.org/ns/void#"/>
             <vocabulary prefix="iiif" uri="http://iiif.io/api/presentation/2.1/"/>
@@ -19,7 +19,7 @@
             <vocabulary prefix="fabio" uri="http://purl.org/spar/fabio/"/>           
             <vocabulary prefix="cito" uri="http://purl.org/spar/cito/"/>            
             <vocabulary prefix="doco" uri="http://purl.org/spar/doco/"/>            
-            <vocabulary prefix="po" uri="http://www.essepuntato.it/2008/12/pattern#"/> 
+            <vocabulary prefix="po"   uri="http://www.essepuntato.it/2008/12/pattern#"/> 
 <!--            <vocabulary prefix="c40" uri="http://purl.org/spar/c4o"/>              -->
 <!--            <vocabulary prefix="deo" uri="http://purl.org/spar/deo"/>              -->
 <!--            <vocabulary prefix="co" uri="http://purl.org/co/"/>                    -->
