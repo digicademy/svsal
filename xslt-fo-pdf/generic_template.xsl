@@ -314,7 +314,7 @@
 			</xsl:if>
 		</fo:root>
 	</xsl:template>
-	<!--TEMPLATES MATCH  -->
+	<!--TEMPLATES MATCHES  -->
 	<xsl:template match="tei:sourceDesc">
 		<fo:block text-align="center" font-size="20pt" font-style="normal" font-weight="normal" space-before="5mm">
 			<xsl:apply-templates select="//tei:sourceDesc//tei:author"/>
@@ -322,7 +322,7 @@
 		<fo:block text-align="center" font-size="20pt" font-style="normal" font-weight="normal">
 			<xsl:apply-templates select="//tei:sourceDesc//tei:pubPlace"/>
 			<fo:inline padding-left="2mm">
-				<xsl:apply-templates select="//tei:sourceDesc//tei:date"/>
+				<xsl:apply-templates select="//tei:sourceDesc//tei:date[@type = 'firstEd']"/>
 			</fo:inline>
 		</fo:block>
 		<fo:block text-align="center" font-size="20pt" font-style="normal" font-weight="normal">
@@ -382,7 +382,7 @@
 		</fo:block>
 	</xsl:template>	
 	
-	<!--TEMPLATES MATCH FOR DIFFERENT TYPES OF <TEI:P>   -->
+	<!--TEMPLATES MATCHING DIFFERENT TYPES OF <TEI:P>   -->
 	<!-- General template is "match="tei:p"", for <p>  inside of <argument> and <note> separate templates are defined -->
 	<xsl:template match="tei:p">
 		<fo:block id="{./@xml:id}" text-align="justify" font-size="12pt" text-indent="0em">
@@ -499,6 +499,16 @@
 			<xsl:apply-templates/>
 		</fo:block>
 	</xsl:template>
+	<xsl:template match="tei:l">
+		<fo:block font-style="italic" text-align="center">
+			<xsl:apply-templates/>
+		</fo:block>
+	</xsl:template>
+	<xsl:template match="tei:space">
+		<fo:inline>
+			<xsl:text xml:space="preserve"> </xsl:text>
+		</fo:inline>
+	</xsl:template>
 	<xsl:template match="tei:pb[@n and not(@sameAs)]">
 		<xsl:variable name="pb_id" select="@xml:id"/>
 		<fo:inline font-style="normal" id="{$pb_id}">
@@ -550,6 +560,13 @@
 			<xsl:apply-templates/>
 		</fo:inline>
 	</xsl:template>
+	<!-- 
+	<xsl:template match="tei:hi[@rendition eq '#sc']">
+		<fo:inline>
+			<xsl:value-of select="upper-case(./text())"/>
+		</fo:inline>
+	</xsl:template>
+-->
 	<!-- Major div-elements, referenced from <xsl:for-each select="./tei:div"> and <xsl:apply-templates select="."/>-->
 	<xsl:template match="tei:div">
 		<xsl:variable name="div_id" select="@xml:id"/>
@@ -557,11 +574,24 @@
 			<xsl:apply-templates/>
 		</fo:block>
 	</xsl:template>
+
+
 	<xsl:template match="tei:head">
-		<fo:block text-align="justify" font-size="16pt" font-weight="bold" space-before="20pt" text-indent="0em" keep-with-next="always">
-			<xsl:apply-templates/>
-		</fo:block>
-	</xsl:template>
+	<xsl:choose>
+	<xsl:when test="(ancestor::tei:titlePart)">
+						<fo:block text-align="center" font-size="30pt" font-weight="bold" space-before="10mm">
+							<xsl:apply-templates/>
+						</fo:block>
+	</xsl:when>
+	<xsl:otherwise>
+	<fo:block text-align="justify" font-size="16pt" font-weight="bold" space-before="20pt" text-indent="0em" keep-with-next="always">
+	<xsl:apply-templates/>
+	</fo:block>
+	</xsl:otherwise>
+	</xsl:choose>
+	</xsl:template>	
+
+
 	<xsl:template match="tei:item">
 		<fo:block id="{@xml:id}" text-align="justify" start-indent="16pt" space-before="0.2cm" space-after="0.2cm">
 			<xsl:apply-templates/>
@@ -772,12 +802,18 @@
 		<image xml:id='W0002' citation="Azpilcueta, Manual de Confessores y Penitentes (2019 [1556])"><source>https://facs.salamanca.school/W0002/W0002-0004.jpg</source></image>
 		<image xml:id='W0003' citation="Báñez, De Iure et Iustitia Decisiones (2019 [1594])"><source>https://facs.salamanca.school/W0003/W0003-0004.jpg</source></image>  
 		<image xml:id='W0004' citation="Castillo, Tratado de Cuentas (2018 [1522])"><source>https://facs.salamanca.school/W0004/W0004-0005.jpg</source></image>
+		<image xml:id='W0005_Vol02' citation="_X_X_"><source>https://facs.salamanca.school/W0005/B/W0005-B-0001.jpg</source></image>
 		<image xml:id='W0006_Vol01' citation="Covarrubias y Leyva, Opera Omnia, Vol. 1 (2021 [1573])"><source>https://facs.salamanca.school/W0006/A/W0006-A-0004.jpg</source></image>
 		<image xml:id='W0006_Vol02' citation="Covarrubias y Leyva, Opera Omnia, Vol. 2 (2021 [1573])"><source>https://facs.salamanca.school/W0006/B/W0006-B-0001.jpg</source></image>
 		<image xml:id='W0006_Vol03' citation="Covarrubias y Leyva, Opera Omnia, Vol. 3 (2021 [1571])"><source>https://facs.salamanca.school/W0006/C/W0006-C-0001.jpg</source></image>        
 		<image xml:id='W0007' citation="Mercado, Tratos y Contratos (2019 [1569])"><source>https://facs.salamanca.school/W0007/W0007-0007.jpg</source></image>
-		<image xml:id='W0010' citation="Solórzano Pereira, Politica Indiana (2019 [1648])"><source>https://facs.salamanca.school/W0010/W0010-0001.jpg</source></image>
+		<image xml:id='W0008_Vol01' citation="_X_X_"><source>https://facs.salamanca.school/W0008/A/W0008-A-0003.jpg</source></image>	
+		<image xml:id='W0008_Vol02' citation="_X_X_"><source>https://facs.salamanca.school/W0008/B/W0008-B-0004.jpg</source></image>
+		<image xml:id='W0008_Vol03' citation="_X_X_"><source>https://facs.salamanca.school/W0008/C/W0008-C-0004.jpg</source></image>
+		<image xml:id='W0008_Vol05' citation="_X_X_"><source>https://facs.salamanca.school/W0008/E/W0008-E-0004.jpg</source></image>	
+    	<image xml:id='W0010' citation="Solórzano Pereira, Politica Indiana (2019 [1648])"><source>https://facs.salamanca.school/W0010/W0010-0001.jpg</source></image>
 		<image xml:id='W0011' citation="Soto, De Iustitia et Iure (2020 [1553])"><source>https://facs.salamanca.school/W0011/W0011-0001.jpg</source></image>
+		<image xml:id='W0012' citation="_X_X_"><source>https://facs.salamanca.school/W0012/W0012-0000.jpg</source></image>
 		<image xml:id='W0013_Vol01' citation="Vitoria, Relectiones Theologicae XII, Vol. 1 (2018 [1557])"><source>https://facs.salamanca.school/W0013/A/W0013-A-0004.jpg</source></image>
 		<image xml:id='W0013_Vol02' citation="Vitoria, Relectiones Theologicae XII, Vol. 2 (2018 [1557])"><source>https://facs.salamanca.school/W0013/B/W0013-B-0492.jpg</source></image>
 		<image xml:id='W0014' citation="Vitoria, Summa Sacramentorum (2018 [1561])"><source>https://facs.salamanca.school/W0014/W0014-0006.jpg</source></image>
@@ -789,17 +825,30 @@
 		<image xml:id='W0034' citation="Las Casas, Treinta Proposiciones (2018 [1552])"><source>https://facs.salamanca.school/W0034/W0034-0001.jpg</source></image>
 		<image xml:id='W0037_Vol01' citation="Castillo Sotomayor, Opera Omnia, Vol. 1 (2022 [1658])"><source>https://facs.salamanca.school/W0037/A/W0037-A-0000.jpg</source></image>   
 		<image xml:id='W0037_Vol02' citation="Castillo Sotomayor, Opera Omnia, Vol. 2 (2022 [1658])"><source>https://facs.salamanca.school/W0037/B/W0037-B-0001.jpg</source></image>     
+		<image xml:id='W0037_Vol03' citation="Castillo Sotomayor, Opera Omnia, Vol. 3 (2022 [1658])"><source>https://facs.salamanca.school/W0037/C/W0037-C-0001.jpg</source></image>     
+		<image xml:id='W0037_Vol04' citation="_X_X_"><source>https://facs.salamanca.school/W0037/D/W0037-D-0001.jpg</source></image>     
+		<image xml:id='W0037_Vol05' citation="_X_X_"><source>https://facs.salamanca.school/W0037/E/W0037-E-0001.jpg</source></image> 
+		<image xml:id='W0039' citation="_X_X_"><source>https://facs.salamanca.school/W0039/W0039-0002.jpg</source></image> 
 		<image xml:id='W0041' citation="Díaz de Luco, Practica criminalis canonica (2021 [1554])"><source>https://facs.salamanca.school/W0041/W0041-0001.jpg</source></image>
-		<image xml:id='W0043_Vol02' citation="Name, Titel, Datum "><source>https://facs.salamanca.school/W0043/B/W0043-B-0001.jpg</source></image>
+		<image xml:id='W0043_Vol01' citation="_X_X_"><source>https://facs.salamanca.school/W0043/A/W0043-A-0005.jpg</source></image>
+		<image xml:id='W0043_Vol02' citation="_X_X_"><source>https://facs.salamanca.school/W0043/B/W0043-B-0001.jpg</source></image>
+		<image xml:id='W0043_Vol03' citation="_X_X_"><source>https://facs.salamanca.school/W0043/C/W0043-C-0003.jpg</source></image>
+		<image xml:id='W0043_Vol04' citation="_X_X_"><source>https://facs.salamanca.school/W0043/D/W0043-D-0001.jpg</source></image>
 		<image xml:id='W0046'  citation="Freitas, De Iusto Imperio Lusitanorum Asiatico (2020 [1625])"><source>https://facs.salamanca.school/W0046/W0046-0005.jpg</source></image>
 		<image xml:id='W0061'  citation="León Pinelo, Confirmaciones Reales de Encomiendas (2021 [1630])"><source>https://facs.salamanca.school/W0061/W0061-0005.jpg</source></image>
+		<image xml:id='W0073'  citation="_X_X_"><source>https://facs.salamanca.school/W0073/W0073-0002.jpg</source></image>
+        <image xml:id='W0074' citation="_X_X_"><source>https://facs.salamanca.school/W0074/W0074-0007.jpg</source></image>
+		<image xml:id='W0076'  citation="XXX"><source>https://facs.salamanca.school/W0076/W0076-0004.jpg</source></image>
 		<image xml:id='W0078'  citation="Nebrija, Lexicon Iuris Civilis (2020 [1537])"><source>https://facs.salamanca.school/W0078/W0078-0005.jpg</source></image>
 		<image xml:id='W0083'  citation="Pedraza, Summa de casos de consciencia (2021 [1568])"><source>https://facs.salamanca.school/W0083/W0083-0002.jpg</source></image>
+		<image xml:id='W0089' citation="_X_X_"><source>https://facs.salamanca.school/W0089/W0089-0002.jpg</source></image>
+		<image xml:id='W0092' citation="_X_X_"><source>https://facs.salamanca.school/W0092/W0092-0005.jpg</source></image>
 		<image xml:id='W0095'  citation="Sepúlveda, Apologia pro libro de iustis belli causis (2020 [1550])"><source>https://facs.salamanca.school/W0095/W0095-0001.jpg</source></image>
 		<image xml:id='W0096_Vol01'  citation="Solórzano Pereira, De Indiarum Iure, sive de Iusta Indiarum Occidentalium Inquisitione, Acquisitione, et Retentiones Tribus Libris Comprehensum. 2 vols. (2021 [1629])"><source>https://facs.salamanca.school/W0096/A/W0096-A-0007.jpg</source></image>
 		<image xml:id='W0103' citation="Vacca, Expositiones locorum obscuriorum et Paratitulorum in Pandectas. (2020 [1554])"><source>https://facs.salamanca.school/W0103/W0103-0001.jpg</source></image>
 		<image xml:id='W0106' citation="Menchaca, Controversiarum Libri Tres. (2022 [1572])"><source>https://facs.salamanca.school/W0106/W0106-0005.jpg</source></image>
 		<image xml:id='W0113' citation="Villalón, Provechoso tratado de cambios y contrataciones de mercaderes y reprovación de usura (2021 [1541])"><source>https://facs.salamanca.school/W0113/W0113-0005.jpg</source></image>  
+		<image xml:id='W0114' citation="_X_X_"><source>https://facs.salamanca.school/W0114/W0114-0005.jpg</source></image>
 		</images>
 	</img:images>
 </xsl:stylesheet>
