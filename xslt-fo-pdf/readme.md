@@ -168,7 +168,7 @@ defining identical gutter and fore-edge margins.
 
 ------------------------------------------------------------------------
 
-###### 5.1.1. Page masters
+#### 5.1.1. Page masters
 
 There are four page masters:
 
@@ -234,7 +234,7 @@ it only has page margins of 1 cm on each side:
 
 ------------------------------------------------------------------------
 
-###### 5.1.2. Page sequence masters
+#### 5.1.2. Page sequence masters
 
 Page sequence masters bundle together page masters for odd
 (*body_matter_odd*) and even (*body_matter_even*) pages.
