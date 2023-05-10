@@ -337,26 +337,17 @@ where each `<fo:div>` element constitutes two rows:
 
 The cell dimensions are provided by the upper row:
 
-<pre>
-
-<fo:flow flow-name="xsl-region-body">  
-<fo:block>  
-<fo:table>  
-<fo:table-body>  
-<xsl:apply-templates select="//tei:front"/>…
-
-<xsl:template match="tei:front | tei:body | tei:back">  
-<xsl:call-template name="process_div"/>  
-</xsl:template>  
-<xsl:template name="process_div">  
-<xsl:for-each select="./tei:div">  
-<xsl:variable name="div_id" select="@xml:id"/>
-
-<!--     <fo:table-row border-style="solid" border-width="0.1mm">-->
-
-<fo:table-row >…
-
-</pre>
+    <fo:flow flow-name="xsl-region-body">
+        <fo:block>
+            <fo:table>
+                <fo:table-body>
+                    <xsl:apply-templates select="//tei:front"/>...
+    <xsl:template match="tei:front | tei:body | tei:back">
+        <xsl:call-template name="process_div"/>
+    <xsl:template name="process_div">
+        <xsl:for-each select="./tei:div">
+            <xsl:variable name="div_id" select="@xml:id"/>
+            <fo:table-row border-style="solid" border-width="0.1mm">
 
 Originally the table design was intended to render the marginal notes:
 the main text was placed in the left column, marginal notes in the right
