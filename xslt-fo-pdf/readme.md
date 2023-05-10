@@ -1,4 +1,4 @@
-# XSL-FO Template description (generic_template.xsl)
+# XSL-FO Template description
 
 ## 1. General info
 
