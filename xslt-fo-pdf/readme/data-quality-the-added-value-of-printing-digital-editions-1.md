@@ -18,7 +18,7 @@ Currently 36 works have completed the production cycle which includes HTML expor
 
 ![Table
 
-Description automatically generated](../.gitbook/assets/0.jpeg)Salamanca’s production workflow consists of a number of sequential steps, which are familiar to those creating scholarly digital editions\[9]. It bears similarities to the “waterfall” method of the software development, where each phase must be completed before the next one can begin (Petersen, Wohlin, and Baca 2009):
+Description automatically generated](./.gitbook/assets/0.jpeg)Salamanca’s production workflow consists of a number of sequential steps, which are familiar to those creating scholarly digital editions\[9]. It bears similarities to the “waterfall” method of the software development, where each phase must be completed before the next one can begin (Petersen, Wohlin, and Baca 2009):
 
 Figure . The School of Salamanca's “waterfall” production workflow
 
@@ -42,7 +42,7 @@ The first component is the so-called “Half title“ (German _Schmutztitel_), c
 
 ![Text
 
-Description automatically generated](../.gitbook/assets/1.jpeg)
+Description automatically generated](./.gitbook/assets/1.jpeg)
 
 Figure . Half title and frontispiece
 
@@ -50,7 +50,7 @@ These are followed by the title page of the digital edition and the edition noti
 
 ![Text
 
-Description automatically generated](../.gitbook/assets/2.jpeg)
+Description automatically generated](./.gitbook/assets/2.jpeg)
 
 Figure . Title page of the digital edition and edition notice.
 
@@ -58,7 +58,7 @@ After that the book contents per se are delivered. First comes the title page of
 
 ![Graphical user interface, application, Word
 
-Description automatically generated](../.gitbook/assets/3.jpeg)
+Description automatically generated](./.gitbook/assets/3.jpeg)
 
 Figure . Title page of the original
 
@@ -66,7 +66,7 @@ The introduction section renders the \<div> elements of \<front> and is followed
 
 ![Graphical user interface, text, application, Word
 
-Description automatically generated](../.gitbook/assets/4.jpeg)
+Description automatically generated](./.gitbook/assets/4.jpeg)
 
 Figure . Introduction and main sections (\<div>/\<front> and \<body>).
 
@@ -74,7 +74,7 @@ The eighth section shows the contents of \<back>.
 
 ![Text
 
-Description automatically generated](../.gitbook/assets/5.jpeg)
+Description automatically generated](./.gitbook/assets/5.jpeg)
 
 Figure . Concluding section (\<back>)
 
@@ -82,7 +82,7 @@ If the original contains marginal notes, they are published in the final section
 
 ![Graphical user interface, text, application, table
 
-Description automatically generated with medium confidence](../.gitbook/assets/6.jpeg)
+Description automatically generated with medium confidence](./.gitbook/assets/6.jpeg)
 
 Figure . Marginal notes rendered as end notes.
 
@@ -92,7 +92,7 @@ The canons of Western book page design place the center of the text area above t
 
 ![A picture containing histogram
 
-Description automatically generated](../.gitbook/assets/7.png)
+Description automatically generated](./.gitbook/assets/7.png)
 
 Figure . Salamanca's print edition page layout.
 
@@ -118,7 +118,7 @@ Among the errors related to the consistency of the encoding two cases can be sin
 
 ![Diagram
 
-Description automatically generated](../.gitbook/assets/8.jpeg)
+Description automatically generated](./.gitbook/assets/8.jpeg)
 
 Figure A wrong position of an element induced by a prescriptive template.
 
@@ -126,7 +126,7 @@ Figure A wrong position of an element induced by a prescriptive template.
 
 ![Text
 
-Description automatically generated](../.gitbook/assets/9.jpeg)
+Description automatically generated](./.gitbook/assets/9.jpeg)
 
 Figure Inconsistent encoding of semantically identical text parts
 
@@ -134,7 +134,7 @@ PDF delivers a constituted version of Salamanca TEI, meaning that selected speci
 
 ![Text
 
-Description automatically generated with medium confidence](../.gitbook/assets/10.jpeg)
+Description automatically generated with medium confidence](./.gitbook/assets/10.jpeg)
 
 Figure An error signaling that the difference in font size is not encoded in XML.
 
@@ -144,19 +144,19 @@ A particular case of interaction between the internal dimension of XML encoding 
 
 ![A picture containing text, newspaper
 
-Description automatically generated](../.gitbook/assets/11.jpeg)
+Description automatically generated](./.gitbook/assets/11.jpeg)
 
 Figure Marginal notes with alphabetical anchors.
 
 Sometimes anchor is missing in the main text, and note is located next to the line it refers to. In XML this corresponds to the position before the \<lb> element. The number of marginal notes in one document can be up to 8,000.
 
-![](../.gitbook/assets/12.jpeg)
+![](./.gitbook/assets/12.jpeg)
 
 Figure Encoding of a non-anchored marginal note in XML.
 
 A substantial difficulty in displaying non-anchored marginal notes in print is conditioned by the fact that in the original they float alongside the main text. Their position is marked in XML by line beginning (\<lb>), which does not correspond to the line beginning in PDF output. Apache FO processor has insufficient support for floats, and the formatters which interpret them, such as Antenna house or RenderX, are proprietary. Considering this, we decided to unify the representation of anchored and unanchored notes – they all get a numerical mark and an anchor in the main text in PDF. In addition, we place all the notes as endnotes in a separate section, creating cross-references between them and anchors.
 
-![](../.gitbook/assets/13.jpeg)
+![](./.gitbook/assets/13.jpeg)
 
 Figure Rendering of marginal notes as endnotes in PDF.
 
@@ -164,15 +164,15 @@ Milestones mark sections of text not represented by structural elements. They ar
 
 ![Text, letter
 
-Description automatically generated](../.gitbook/assets/14.jpeg)
+Description automatically generated](./.gitbook/assets/14.jpeg)
 
 Figure Milestones in text and the items in the summary they are linked to.
 
 PDF export highlighted a particular aspect of encoding non-anchored marginal notes and milestones, situated at line end containing a word break. In the print output the anchor appeared in the middle of the word.
 
-![](../.gitbook/assets/15.jpeg)
+![](./.gitbook/assets/15.jpeg)
 
-![](../.gitbook/assets/16.jpeg)
+![](./.gitbook/assets/16.jpeg)
 
 Figure Marginal note or milestone appearing at word break in the original.
 
@@ -182,13 +182,13 @@ This bug has two dimensions – an internal convention chosen to encode non-anch
 
 PDF export delivers handy templates for copy-editing and proofreading. It can be used for checking the cross-references, which missed the attention of XML schemata. In an example below the item in the “Summary” is lacking cross-reference, because the milestone it refers to has a wrong number. This is a collateral bug of another improvement, which has taken place after the Schematron check:
 
-![](../.gitbook/assets/17.jpeg)
+![](./.gitbook/assets/17.jpeg)
 
 Figure Missing cross-reference.
 
 A missing cross-reference may occur when linking is made to an external document, not included in the current publication. The actual design of a reference is another semantic feature which can be tested – namely, which part of the string should serve as an anchor? In the example below two different conventions were chosen for referencing the section of the book from its summary.
 
-![](../.gitbook/assets/18.jpeg)
+![](./.gitbook/assets/18.jpeg)
 
 Figure Inconsistent cross-referencing from the section title.
 
@@ -196,13 +196,13 @@ Figure Inconsistent cross-referencing from the section title.
 
 At Salamanca the steps of the production pipeline are executed sequentially, in a waterfall model, where the output of each stage is validated by the respective schemata. The PDF generation was initially intended as of the export methods of the TEI data, located at the very end of the product development. As soon as it was implemented, we realized that this type of data visualization can be used as a diagnostic method to expose semantic and structural discrepancies in the source data. We therefore moved PDF export up the workflow, implementing it after three last steps of TEI production:
 
-![](../.gitbook/assets/19.jpeg)
+![](./.gitbook/assets/19.jpeg)
 
 Figure PDF export in the production workflow.
 
 This application of PDF print bears similarity to the so-called Agile development method. In Agile the software product is built in small progressive chunks, and each of the development cycles includes feature clarification, design, coding, and testing. It is conducted by cross-functional teams of people who house a range of expertise including programming, testing, analysis, database administration, user experience and infrastructure (Black 2017: 7) .
 
-![](../.gitbook/assets/20.jpeg)
+![](./.gitbook/assets/20.jpeg)
 
 Figure Waterfall vs. Agile development methods. Source: https://www.researchgate.net/publication/320775359\_Applied\_Visual\_Metaphors\_in\_Organizational\_Management/figures?lo=1
 
