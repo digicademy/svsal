@@ -38,10 +38,11 @@ import module namespace render-app  = "http://www.salamanca.school/xquery/render
 import module namespace sphinx      = "http://www.salamanca.school/xquery/sphinx"        at "xmldb:exist:///db/apps/salamanca/modules/sphinx.xqm";
 import module namespace sutil       = "http://www.salamanca.school/xquery/sutil"         at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
 import module namespace stats       = "http://www.salamanca.school/factory/works/stats"  at "xmldb:exist:///db/apps/salamanca/modules/factory/works/stats.xqm";
-import module namespace index       = "http://www.salamanca.school/factory/works/index"  at "xmldb:exist:///db/apps/salamanca/modules/factory/works/index.xqm";
-import module namespace html        = "http://www.salamanca.school/factory/works/html"   at "xmldb:exist:///db/apps/salamanca/modules/factory/works/html.xqm";
-import module namespace txt         = "http://www.salamanca.school/factory/works/txt"    at "xmldb:exist:///db/apps/salamanca/modules/factory/works/txt.xqm";
-import module namespace iiif        = "http://www.salamanca.school/factory/works/iiif"   at "xmldb:exist:///db/apps/salamanca/modules/factory/works/iiif.xqm";
+import module namespace index       = "https://www.salamanca.school/factory/works/index"  at "xmldb:exist:///db/apps/salamanca/modules/factory/works/index.xqm";
+import module namespace crumb       = "https://www.salamanca.school/factory/works/crumb"  at "xmldb:exist:///db/apps/salamanca/modules/factory/works/crumb.xqm";
+import module namespace html        = "https://www.salamanca.school/factory/works/html"   at "xmldb:exist:///db/apps/salamanca/modules/factory/works/html.xqm";
+import module namespace txt         = "https://www.salamanca.school/factory/works/txt"    at "xmldb:exist:///db/apps/salamanca/modules/factory/works/txt.xqm";
+import module namespace iiif        = "https://www.salamanca.school/factory/works/iiif"   at "xmldb:exist:///db/apps/salamanca/modules/factory/works/iiif.xqm";
 
 declare option exist:timeout "166400000"; (: in miliseconds, 25.000.000 ~ 7h, 43.000.000 ~ 12h :)
 declare option exist:output-size-limit "5000000"; (: max number of nodes in memory :)
@@ -82,6 +83,70 @@ declare function admin:workCount($node as node(), $model as map (*), $lang as xs
 
 (: #### UTIL FUNCTIONS for informing the admin about current status of a webdata resources (node index, HTML, snippets, etc.) :)
 
+
+declare function admin:needsPdf($targetWorkId as xs:string) as xs:boolean {
+    let $workModTime := xmldb:last-modified($config:tei-works-root, $targetWorkId || '.xml')
+    return
+        if ($targetWorkId || ".pdf" = xmldb:get-child-resources($config:pdf-root)) then
+            let $renderModTime := xmldb:last-modified($config:pdf-root, $targetWorkId || ".pdf")
+            return
+                if ($renderModTime lt $workModTime) then
+                    true()
+                else
+                    false()
+        else
+            true()
+};
+
+declare function admin:needsPdfDatei($node as node(), $model as map(*)) {
+    let $currentWorkId := $model('currentWork')?('wid')
+let $currentDoc := doc($config:tei-works-root|| "/" ||$currentWorkId ||".xml")
+
+  
+  let $isMultiWorkVolume as  node() :=$currentDoc//tei:TEI//tei:text
+
+let $target_1 := $currentDoc//tei:relatedItem/@target
+let $target_2 := for $target in $target_1 return substring-after($target, "work:") 
+
+
+    return 
+       
+          if ($isMultiWorkVolume/@type="work_multivolume")
+                           then
+<td> 
+               {            for $target in $target_2 
+                              return
+          
+                          if (admin:needsPdf($target)) then 
+      
+                     <a title="Source from: {string(xmldb:last-modified($config:tei-works-root, $target || '.xml'))}{if (xmldb:get-child-resources($config:pdf-root) = $target || ".pdf") then concat(', rendered on: ', xmldb:last-modified($config:pdf-root, $target || ".pdf")) else ()}"><b> Create PDF for <a href="webdata-admin.xql?rid={$target}&amp;format=pdf_create">{$target}!</a><br/></b></a>
+ 
+                         else if(not(admin:needsPdf($target)))  then  <i title="Source from: {string(xmldb:last-modified($config:tei-works-root, $target || '.xml'))}, rendered on: {xmldb:last-modified($config:pdf-root, $target || ".pdf")}">PDF for {$target} created.<small><a href="webdata-admin.xql?rid={$target}&amp;format=pdf_create">Create PDF anyway!</a></small> <br/> </i>
+   else() }
+</td>
+      else if (not($isMultiWorkVolume/@type="work_multivolume")) then
+
+
+                                 if  (admin:needsPdf($currentWorkId)) then
+
+            <td title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}{if (xmldb:get-child-resources($config:pdf-root) = $currentWorkId || ".pdf") then concat(', rendered on: ', xmldb:last-modified($config:pdf-root, $currentWorkId || ".pdf")) else ()}">
+<a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=pdf_create"><b>Create PDF NOW!</b></a>
+<br/> or
+<br/>
+<form enctype="multipart/form-data" method="post" action="webdata-admin.xql?rid={$currentWorkId}&amp;format=pdf_upload">
+<p>Upload PDF File</p>
+<input type="file"  name="FileUpload"/>
+<input type="submit"/>
+</form>
+<br/>
+</td>
+        else 
+            <td title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}, rendered on: {xmldb:last-modified($config:pdf-root, $currentWorkId || ".pdf")}">The PDF was already uploaded or created. <small><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=pdf_create">Create PDF anyway!</a></small></td>
+
+else<td>error !</td>
+
+};
+
 declare function admin:needsIndex($targetWorkId as xs:string) as xs:boolean {
     let $workModTime := xmldb:last-modified($config:tei-works-root, $targetWorkId || '.xml')
     return
@@ -99,6 +164,38 @@ declare function admin:needsIndexString($node as node(), $model as map(*)) {
             <td title="{if (xmldb:get-child-resources($config:index-root) = $currentWorkId || "_nodeIndex.xml") then concat('Index created on: ', xmldb:last-modified($config:index-root, $currentWorkId || "_nodeIndex.xml"), ", ") else ()}source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}"><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=index"><b>Create Node Index NOW!</b></a></td>
         else
             <td title="Index created on: {xmldb:last-modified($config:index-root, $currentWorkId || "_nodeIndex.xml")}, source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}">Node indexing unnecessary. <small><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=index">Create Node Index anyway!</a></small></td>
+};
+
+declare function admin:needsCrumb($targetWorkId as xs:string) as xs:boolean {
+    let $workModTime := xmldb:last-modified($config:tei-works-root, $targetWorkId || '.xml')
+    return
+        if ($targetWorkId || "_crumbtrails.xml" = xmldb:get-child-resources($config:crumb-root)) then
+            let $renderModTime := xmldb:last-modified($config:crumb-root, $targetWorkId || "_crumbtrails.xml")
+            return
+                if ($renderModTime lt $workModTime) then
+                    true()
+                else
+                    false()
+        else
+            true()
+};
+
+declare function admin:needsCrumbtrails($node as node(), $model as map(*)) {
+    let $currentWorkId := $model('currentWork')?('wid')
+    return
+        if (admin:needsCrumb($currentWorkId)) then 
+            <td
+                title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}{
+                        if (xmldb:get-child-resources($config:crumb-root) = $currentWorkId || "_crumbtrails.xml") then
+                            concat(', rendered on: ', xmldb:last-modified($config:crumb-root, $currentWorkId || "_crumbtrails.xml"))
+                        else
+                            ()
+                  }"><a
+                    href="webdata-admin.xql?rid={$currentWorkId}&amp;format=crumbtrails"><b>Create Crumbtrails NOW!</b></a></td>
+            
+        else
+            <td
+                title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}, rendered on: {xmldb:last-modified($config:crumb-root, $currentWorkId || "_crumbtrails.xml")}">Creating Crumbtrails unecessary. <small><a  href="webdata-admin.xql?rid={$currentWorkId}&amp;format=crumbtrails">Create it anyway!</a></small></td>
 };
 
 declare function admin:needsTeiCorpusZip($node as node(), $model as map(*)) {
@@ -371,6 +468,7 @@ declare function admin:saveFile($wid as xs:string, $fileName as xs:string, $cont
         else if ($collection eq "txt")          then $config:txt-root      || "/" || $wid
         else if ($collection eq "snippets")     then $config:snippets-root || "/" || $wid
         else if ($collection eq "index")        then $config:index-root    || "/"
+       else if($collection eq "crumbtrails") then $config:crumb-root || "/"
         else if ($collection eq "iiif")         then $config:iiif-root     || "/"
         else if ($collection eq "data")         then $config:data-root     || "/"
         else if ($collection eq "stats")        then $config:stats-root    || "/"
@@ -1418,6 +1516,106 @@ declare function admin:createNodeIndex($wid as xs:string*) {
             <h4>Node Indexing</h4>
             {$indexResults}
         </div>
+};
+
+declare function admin:createCrumbtrails($wid as xs:string){
+
+   let $debug := if ($config:debug = ("trace", "info")) then
+        let $d := console:log("[ADMIN] Creating Crumbtrails  for " || $wid || ".")
+        return util:log("warn", "[ADMIN] Creating Crumbtrails for " || $wid || ".")
+    else
+        ()
+
+    let $start-time := util:system-time()
+
+ (: define the works to be indexed: :)
+    let $teiRoots := 
+        if ($wid = '*') then
+            collection($config:tei-works-root)//tei:TEI[.//tei:text[@type = ("work_multivolume", "work_monograph")]]
+        else
+            collection($config:tei-works-root)//tei:TEI[@xml:id = distinct-values($wid)]
+
+
+ (: for each requested work, create an individual crumbtrails :)
+    let $crumbResults :=
+
+        for $tei in $teiRoots return
+            let $start-time-a := util:system-time()
+            let $wid := string($tei/@xml:id)
+            let $crumbing := crumb:createCrumbNode($tei)
+            let $crumb := $crumbing('crumbtrails')
+            let $fragmentationDepth := $crumbing('fragmentation_depth')
+            let $missed-elements := $crumbing('missed_elements')
+            let $unidentified-elements := $crumbing('unidentified_elements')
+
+            let $indexing := index:makeNodeIndex($tei)
+            let $index := $indexing('index')
+    (:used here to compare and add a level of quality check :)
+             
+            (: save final crumb file :)
+            let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Saving Crumbtrails ...") else ()
+            let $crumbSaveStatus := admin:saveFile($wid, $wid || "_crumbtrails.xml", $crumb, "crumbtrails")
+            let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Crumbtrails of "  || $wid || " successfully created.") else ()
+
+    
+
+                
+            (: Reporting... :)
+            
+            let $runtime-ms-a := ((util:system-time() - $start-time-a) div xs:dayTimeDuration('PT1S'))  * 1000
+            (: render and store the work's plain text :)
+            return 
+                <div>
+                     <h4>{$wid}</h4>
+                     <p>Fragmentation depth: <code>{$fragmentationDepth}</code></p>
+                     {if (count($missed-elements)) then <p>{count($missed-elements)} missed elements:<br/>
+                        {for $e in $missed-elements return <code>{local-name($e) || "(" || string($e/@xml:id) || "); "}</code>}</p>
+                      else ()}
+                     {if (count($unidentified-elements)) then <p>{count($unidentified-elements)} gathered, but (due to missing @xml:id) unprocessable elements:<br/>
+                        {for $e in $unidentified-elements return <code>{local-name($e)}</code>}</p>
+                      else ()}
+                     <p>{count($crumb//sal:nodecrumb)} gathered crumbtrails elements {if ($crumbing('target_set_count') gt 0) then "of the following types: " || <br/> else ()}
+                        <code>{for $t in distinct-values($crumb//sal:nodecrumb/@type/string()) return $t || "(" || count($crumb//sal:nodecrumb[@type eq $t]) || ")"}</code></p>
+                     <p> {
+  
+        let $types_crumb:= map:merge(for $t in distinct-values($crumb//sal:nodecrumb/@type/string()) return map:entry($t, 
+        $crumb//sal:nodecrumb[@type eq $t]/@xml:id/string()))
+        
+        let $types_index :=  map:merge(for $t in distinct-values($index//sal:node/@type/string()) return map:entry($t, 
+       $index//sal:node[@type eq $t]/@n/string()))
+(: Creating two maps : one for the crumb IDs, the other for the index IDs.  :)
+
+return if (deep-equal($types_crumb, $types_index)) then "The crumb and the index are consistents."  (: comparing here the maps without loop :)
+       else 
+      
+            "The crumb and the index are NOT consistents: please check again the missing nodes!"
+     
+        }
+
+</p>
+
+ <p>Computing time: {      
+                          if ($runtime-ms-a < (1000 * 60)) then format-number($runtime-ms-a div 1000, "#.##") || " Sek."
+                          else if ($runtime-ms-a < (1000 * 60 * 60)) then format-number($runtime-ms-a div (1000 * 60), "#.##") || " Min."
+                          else format-number($runtime-ms-a div (1000 * 60 * 60), "#.##") || " Std."
+                        }
+                     </p>
+               </div>
+
+(:Time counting :)
+    let $runtime-ms-raw := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000 
+    let $runtime-ms :=
+        if ($runtime-ms-raw < (1000 * 60)) then format-number($runtime-ms-raw div 1000, "#.##") || " Sek."
+        else if ($runtime-ms-raw < (1000 * 60 * 60)) then format-number($runtime-ms-raw div (1000 * 60), "#.##") || " Min."
+        else format-number($runtime-ms-raw div (1000 * 60 * 60), "#.##") || " Std."
+    let $debug := if ($config:debug = ("trace", "info")) then util:log("warn", "[ADMIN] Finished node crumbing for " || $wid || " in " || $runtime-ms || ".") else ()
+    
+    return 
+        <div>
+            <h4>Node Crumbtrails</h4>
+            {$crumbResults}
+        </div>
+
 };
 
 (:
