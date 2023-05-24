@@ -215,7 +215,7 @@
             <statement n="209"> <!-- rdfs seeAlso -->
                 <subject type="uri" prepend="texts/WXXXX:">/($currentResource/itei:front/@citetrail/string())</subject>
                 <predicate prefix="rdfs">seeAlso</predicate>
-                <object type="uri" prepend="http://www.salamanca.school/">/($currentResource/itei:front/@web/string())</object>
+                <object type="uri" prepend="https://www.salamanca.school/">/($currentResource/itei:front/@web/string())</object>
 			</statement>
             
             <!-- Backmatter -->
@@ -257,7 +257,7 @@
             <statement n="215"> <!-- rdfs seeAlso -->
                 <subject type="uri" prepend="texts/WXXXX:">/($currentResource/itei:back/@citetrail/string())</subject>
                 <predicate prefix="rdfs">seeAlso</predicate>
-                <object type="uri" prepend="http://www.salamanca.school/">/($currentResource/itei:back/@web/string())</object>
+                <object type="uri" prepend="https://www.salamanca.school/">/($currentResource/itei:back/@web/string())</object>
 			</statement>
  
             <!-- div -->
