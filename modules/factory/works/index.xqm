@@ -1122,7 +1122,7 @@ declare function index:note($node as element(tei:note), $mode as xs:string) {
         case 'label' return
             if (index:isLabelNode($node)) then
                 (: label parents of note are div, not p :)
-                let $debug := console:log("index:note/label for note: " || $node/@xml:id/string())
+(:                let $debug := console:log("index:note/label for note: " || $node/@xml:id/string()):)
                 let $currentSection := sutil:copy($node/ancestor::*[not(self::tei:p)][index:isLabelNode(.)][1])
                 let $currentNode := $currentSection//tei:note[@xml:id eq $node/@xml:id]
                 let $prefix := $config:citationLabels(local-name($node))?('abbr')
