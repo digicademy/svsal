@@ -7,7 +7,7 @@ xquery version "3.1";
 
     ----++++#### :)
  
-module namespace admin              = "http://www.salamanca.school/xquery/admin";
+module namespace admin              = "https://www.salamanca.school/xquery/admin";
 
 declare namespace tei               = "http://www.tei-c.org/ns/1.0";
 declare namespace sal               = "http://salamanca.adwmainz.de";
@@ -30,14 +30,14 @@ import module namespace functx      = "http://www.functx.com";
 import module namespace templates   = "http://exist-db.org/xquery/html-templating";
 import module namespace lib         = "http://exist-db.org/xquery/html-templating/lib";
 
-import module namespace app         = "http://www.salamanca.school/xquery/app"           at "xmldb:exist:///db/apps/salamanca/modules/app.xqm";
-import module namespace config      = "http://www.salamanca.school/xquery/config"        at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace app         = "https://www.salamanca.school/xquery/app"           at "xmldb:exist:///db/apps/salamanca/modules/app.xqm";
+import module namespace config      = "https://www.salamanca.school/xquery/config"        at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
 import module namespace i18n        = "http://exist-db.org/xquery/i18n"                  at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
-import module namespace net         = "http://www.salamanca.school/xquery/net"           at "xmldb:exist:///db/apps/salamanca/modules/net.xqm";
-import module namespace render-app  = "http://www.salamanca.school/xquery/render-app"    at "xmldb:exist:///db/apps/salamanca/modules/render-app.xqm";
-import module namespace sphinx      = "http://www.salamanca.school/xquery/sphinx"        at "xmldb:exist:///db/apps/salamanca/modules/sphinx.xqm";
-import module namespace sutil       = "http://www.salamanca.school/xquery/sutil"         at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
-import module namespace stats       = "http://www.salamanca.school/factory/works/stats"  at "xmldb:exist:///db/apps/salamanca/modules/factory/works/stats.xqm";
+import module namespace net         = "https://www.salamanca.school/xquery/net"           at "xmldb:exist:///db/apps/salamanca/modules/net.xqm";
+import module namespace render-app  = "https://www.salamanca.school/xquery/render-app"    at "xmldb:exist:///db/apps/salamanca/modules/render-app.xqm";
+import module namespace sphinx      = "https://www.salamanca.school/xquery/sphinx"        at "xmldb:exist:///db/apps/salamanca/modules/sphinx.xqm";
+import module namespace sutil       = "https://www.salamanca.school/xquery/sutil"         at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
+import module namespace stats       = "https://www.salamanca.school/factory/works/stats"  at "xmldb:exist:///db/apps/salamanca/modules/factory/works/stats.xqm";
 import module namespace index       = "https://www.salamanca.school/factory/works/index"  at "xmldb:exist:///db/apps/salamanca/modules/factory/works/index.xqm";
 import module namespace crumb       = "https://www.salamanca.school/factory/works/crumb"  at "xmldb:exist:///db/apps/salamanca/modules/factory/works/crumb.xqm";
 import module namespace html        = "https://www.salamanca.school/factory/works/html"   at "xmldb:exist:///db/apps/salamanca/modules/factory/works/html.xqm";
@@ -1551,17 +1551,14 @@ declare function admin:createCrumbtrails($wid as xs:string){
             let $indexing := index:makeNodeIndex($tei)
             let $index := $indexing('index')
     (:used here to compare and add a level of quality check :)
-             
+
             (: save final crumb file :)
             let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Saving Crumbtrails ...") else ()
             let $crumbSaveStatus := admin:saveFile($wid, $wid || "_crumbtrails.xml", $crumb, "crumbtrails")
-            let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Crumbtrails of "  || $wid || " successfully created.") else ()
+            let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Crumbtrails of "  || $wid || " successfully created.") else ()
 
-    
 
-                
             (: Reporting... :)
-            
             let $runtime-ms-a := ((util:system-time() - $start-time-a) div xs:dayTimeDuration('PT1S'))  * 1000
             (: render and store the work's plain text :)
             return 
@@ -1585,10 +1582,10 @@ declare function admin:createCrumbtrails($wid as xs:string){
        $index//sal:node[@type eq $t]/@n/string()))
 (: Creating two maps : one for the crumb IDs, the other for the index IDs.  :)
 
-return if (deep-equal($types_crumb, $types_index)) then "The crumb and the index are consistents."  (: comparing here the maps without loop :)
+return if (deep-equal($types_crumb, $types_index)) then "The crumb and the index are consistent."  (: comparing here the maps without loop :)
        else 
       
-            "The crumb and the index are NOT consistents: please check again the missing nodes!"
+            "The crumb and the index are NOT consistent: please check again the missing nodes!"
      
         }
 
@@ -1629,8 +1626,9 @@ declare function admin:createRoutes() {
 declare function admin:createRoutes($wid as xs:string) {
     let $start-time := util:system-time()
     let $index                  := doc($config:index-root || "/" || $wid || "_nodeIndex.xml")/sal:index
-    let $routingNodes           := array{fn:for-each($index//sal:node, function($k) {admin:buildRoutingInfoNode($wid, $k)} )}
-    let $routingWork            := admin:buildRoutingInfoWork($wid, $index)
+    let $crumbtrails            := doc($config:crumb-root || "/" || $wid || "_crumbtrails.xml")/sal:crumb
+    let $routingNodes           := array{fn:for-each($index//sal:node, function($k) {admin:buildRoutingInfoNode($wid, $k, $crumbtrails)} )}
+    let $routingWork            := admin:buildRoutingInfoWork($wid, $crumbtrails)
     let $routingTable           := array:join( ( $routingWork, $routingNodes ) )
 
     let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Routing: Joint routing table: " || substring(serialize($routingTable, map{"method":"json", "indent": false(), "encoding":"utf-8"}), 1, 500) || " ...") else ()
@@ -1676,14 +1674,15 @@ declare function admin:createRoutes($wid as xs:string) {
         </div>
 };
 
-declare function admin:buildRoutingInfoNode($wid as xs:string, $item as element(sal:node)) {
-    let $value := map { "input" : concat("/texts/", $wid, ":", $item/@citeID/string()), "outputs" : array { ( $item/@crumb/string(), 'yes' ) } }
+declare function admin:buildRoutingInfoNode($wid as xs:string, $item as element(sal:node), $crumbtrails as element(sal:crumb)) {
+    let $crumb := $crumbtrails//sal:nodecrumb[@xml:id eq $item/@n]//a[last()]/@href/string()
+    let $value := map { "input" : concat("/texts/", $wid, ":", $item/@citeID/string()), "outputs" : array { ( $crumb, 'yes' ) } }
 (:    let $debug := console:log("[ADMIN] routing entry: " || serialize($value, map{"method":"json"}) || "."):)
     return $value
 };
 
-declare function admin:buildRoutingInfoWork($wid as xs:string, $index as element(sal:index)) {
-    let $firstCrumb := $index//sal:node[1]/@crumb/string()
+declare function admin:buildRoutingInfoWork($wid as xs:string, $crumbtrails as element(sal:crumb)) {
+    let $firstCrumb  := ($crumbtrails//a[1])[1]/@href/string()
     let $value := array { ( map { "input" : concat("/texts/", $wid ), "outputs" : array { ( $firstCrumb, 'yes' ) } } ) }
 (:    let $debug := console:log("[ADMIN] routing entry: " || serialize($value, map{"method":"json"}) || "."):)
     return $value

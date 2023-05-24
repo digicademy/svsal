@@ -9,7 +9,7 @@ xquery version "3.1";
  ----++++#### :)
 
 
-module namespace app         = "http://www.salamanca.school/xquery/app";
+module namespace app         = "https://www.salamanca.school/xquery/app";
 
 declare namespace exist      = "http://exist.sourceforge.net/NS/exist";
 declare namespace map        = "http://www.w3.org/2005/xpath-functions/map";
@@ -33,12 +33,12 @@ import module namespace request     = "http://exist-db.org/xquery/request";
 import module namespace templates   = "http://exist-db.org/xquery/html-templating";
 import module namespace lib         = "http://exist-db.org/xquery/html-templating/lib";
 
-import module namespace config      = "http://www.salamanca.school/xquery/config"           at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
-import module namespace i18n        = "http://exist-db.org/xquery/i18n"                     at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
-import module namespace render-app  = "http://www.salamanca.school/xquery/render-app"       at "xmldb:exist:///db/apps/salamanca/modules/render-app.xqm";
-import module namespace sphinx      = "http://www.salamanca.school/xquery/sphinx"           at "xmldb:exist:///db/apps/salamanca/modules/sphinx.xqm";
-import module namespace iiif        = "http://www.salamanca.school/xquery/iiif"             at "xmldb:exist:///db/apps/salamanca/modules/iiif.xqm";
-import module namespace sutil       = "http://www.salamanca.school/xquery/sutil"            at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
+import module namespace config      = "https://www.salamanca.school/xquery/config"           at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace i18n        = "http://exist-db.org/xquery/i18n"                      at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
+import module namespace render-app  = "https://www.salamanca.school/xquery/render-app"       at "xmldb:exist:///db/apps/salamanca/modules/render-app.xqm";
+import module namespace sphinx      = "https://www.salamanca.school/xquery/sphinx"           at "xmldb:exist:///db/apps/salamanca/modules/sphinx.xqm";
+import module namespace iiif        = "https://www.salamanca.school/xquery/iiif"             at "xmldb:exist:///db/apps/salamanca/modules/iiif.xqm";
+import module namespace sutil       = "https://www.salamanca.school/xquery/sutil"            at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
 
 (: declare option output:method            "html5";     :)
 (: declare option output:media-type        "text/html"; :)
@@ -54,7 +54,7 @@ import module namespace sutil       = "http://www.salamanca.school/xquery/sutil"
  
 
 (: Concatenates name(s): forename surname:)
-declare function app:rotateFormatName($persName as element()*) as xs:string? {
+declare function app:rotateFormatName($persName as element(tei:persName)*) as xs:string? {
     let $return-string := for $pers in $persName
                                 return
                                         if ($pers/tei:surname and $pers/tei:forename) then
@@ -394,7 +394,7 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
                     let $volIdShort := $volume/@n
                     let $volFrag    := sutil:getFragmentID($wid, $volId)
                     let $volLink    := 
-                        if (sutil:WRKisPublished($wid || '_' || $volId)) then $config:idserver || '/texts/' || $wid || ":" || $volId
+                        if (sutil:WRKisPublished($wid || '_' || $volId)) then $config:idserver || '/texts/' || $wid || ":vol" || $volIdShort
                         (: existence of link serves as indicator for single volumes' publication status (whether published or not) in works list :)
                         else ()
                     let $volContent := $volIdShort||'&#xA0;&#xA0;'
@@ -799,7 +799,7 @@ declare %templates:wrap function app:WRKcreateListSurname($node as node(), $mode
             let $details    :=  (session:encode-url( xs:anyURI( 'workDetails.html?wid=' ||  $root/@xml:id ) ))
             let $title      :=  $root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'short']/string()
             let $author     :=  app:rotateFormatName($root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName)
-            order by $root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName/tei:surname ascending
+            order by $root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author[1]/tei:persName/tei:surname[1] ascending
                 return
                     <div class="col-md-6"> 
                         <div class="panel panel-default">
