@@ -29,10 +29,12 @@ let $start-time := util:system-time()
 let $mode   := request:get-parameter('mode',    'html') (: for Sphinx, but actually used? :)
 let $rid    := request:get-parameter('rid',     '')
 let $format := request:get-parameter('format',     '')
+(: let$model := map{} :)
 
 let $checkIndex :=
     (: if work rendering (HTML, snippet, RDF) is requested, we need to make sure that there is an index file :)
-    if (starts-with($rid, 'W0') and not($format = ('index', 'iiif', 'all'))) then
+    if (starts-with($rid, 'W0') and not($format = ('index', 'iiif', 'crumbtrails', 'pdf_upload','pdf_create',  'all'))) then
+
         if (doc-available($config:index-root || '/' || $rid || '_nodeIndex.xml')) then ()
         else error(xs:QName('webdata-admin.xql'), 'There is no index file.')
     else ()
@@ -41,6 +43,12 @@ let $output :=
     switch($format)
         case 'index' return 
             admin:createNodeIndex($rid)
+ (:case 'pdf_upload' return
+             upload:uploadPdf($rid)  
+    case 'pdf_create' return
+             admin:createPdf($rid)  :)
+    case 'crumbtrails' return
+        admin:createCrumbtrails($rid) 
         case 'html' return
             admin:renderWork($rid)
         case 'snippets' return 
