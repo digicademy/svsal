@@ -5,6 +5,8 @@ xquery version "3.1";
     Functions for extracting node indices (sal:index) from TEI works; also includes functionality for making 
     citeIDs, labels, and crumbtrails.
    
+January 2023: All the crumbtrails parts are commented, because we created a separate files (crumb.xqm). 
+   
    ----++++#### :)
 
 module namespace index    = "http://www.salamanca.school/factory/works/index";
@@ -32,7 +34,7 @@ declare option exist:output-size-limit "5000000"; (: max number of nodes in memo
 
 declare variable $index:citeIDConnector := '.';
 declare variable $index:labelConnector := ' ';
-declare variable $index:crumbtrailConnector := ' » ';
+(: declare variable $index:crumbtrailConnector := ' » '; :)
 
 
 (: NODE INDEX functions :)
@@ -51,6 +53,7 @@ declare variable $index:crumbtrailConnector := ' » ';
 declare function index:makeNodeIndex($tei as element(tei:TEI)) as map(*) {
     let $wid := $tei/@xml:id
     let $fragmentationDepth := index:determineFragmentationDepth($tei)
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[INDEX] Indexing " || $wid || " at fragmentation level " || $fragmentationDepth || ".") else ()
 
     let $xincludes := $tei//tei:text//xi:include/@href
     let $work := util:expand($tei)
@@ -231,7 +234,7 @@ declare function index:extractNodeStructure($wid as xs:string,
                             attribute isNamedCit        {$isNamedCiteIDNode},
                             element sal:title           {$title},
                             element sal:fragment        {$fragmentIds($node/@xml:id/string())},
-                            element sal:crumb           {$crumb},
+                            (:  element sal:crumb           {$crumb}, :)
                             if (index:isLabelNode($node)) then 
                                 element sal:passage     {index:dispatch($node, 'label')}
                             else (),
@@ -260,7 +263,7 @@ declare function index:createIndexNodes($wid as xs:string, $input as element(sal
 
         let $citeID     := index:constructCiteID($node)
         let $label      := index:constructLabel($node)
-        let $crumbtrail := index:constructCrumbtrail($wid, $citeID, $node)
+        (: let $crumbtrail := index:constructCrumbtrail($wid, $citeID, $node) :)
         return
             element sal:node {
                 attribute n {$node/@xml:id/string()},
@@ -268,11 +271,11 @@ declare function index:createIndexNodes($wid as xs:string, $input as element(sal
                 $node/@* except ($node/@category, $node/@isBasicNode, $node/@isNamedCit, $node/@isPassage, $node/@xml:id),
                 attribute title {$node/sal:title/string()},
                 attribute fragment {$node/sal:fragment/string()},
-                attribute crumb {$wid || "/html/" || substring-after($node/sal:crumb//@href, "frag=")},
+                (: attribute crumb {$wid || "/html/" || substring-after($node/sal:crumb//@href, "frag=")}, :)
                 attribute citableParent {$node/sal:citableParent/string()},
                 attribute citeID {$citeID},
-                attribute label {$label},
-                element sal:crumbtrail {$crumbtrail}
+                attribute label {$label} (:,
+                element sal:crumbtrail {$crumbtrail} :)
             }
 };
 
@@ -300,7 +303,7 @@ declare function index:qualityCheck($index as element(sal:index),
             error(xs:QName('admin:createNodeIndex'), 'Essential attributes are missing in at least one index node (in ' || $wid || ')') 
         else ()
     let $debug := if ($config:debug = "trace") then console:log('[INDEX] QC: check @title/@fragment/@citableParent/@label attributes and sal:crumbtrail children...') else ()
-    let $testChildren := if ($testNodes[not(@title and @fragment and @citableParent and @label and sal:crumbtrail/*)]) then error() else ()
+    let $testChildren := if ($testNodes[not(@title and @fragment and @citableParent and @citeID and @label (:and sal:crumbtrail/* :))]) then error() else ()
 
     let $debug := if ($config:debug = "trace") then console:log('[INDEX] QC: check empty @citeID attributes...') else ()
     let $testEmptyCiteID :=
@@ -369,7 +372,7 @@ declare function index:constructCiteID($node as element(sal:node)) as xs:string 
         if ($prefix and $this) then $prefix || $index:citeIDConnector || $this else $this
 };
 
-declare function index:constructCrumbtrail($wid as xs:string, $citeID as xs:string, $node as element(sal:node)) as item()+ {
+(:declare function index:constructCrumbtrail($wid as xs:string, $citeID as xs:string, $node as element(sal:node)) as item()+ {
     let $prefix := 
         if ($node/sal:citableParent/text() and $node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()]) then
             index:constructCrumbtrail($wid, index:constructCiteID($node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()]), $node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()])
@@ -377,7 +380,7 @@ declare function index:constructCrumbtrail($wid as xs:string, $citeID as xs:stri
     let $this := if ($citeID) then <a href="{$config:idserver || '/texts/' || $wid || ':' || $citeID}">{$node/sal:title/text()}</a> else $node/sal:crumb/*
     return
         if ($prefix and $this) then ($prefix, $index:crumbtrailConnector, $this) else $this
-};
+}; :)
 
 declare function index:constructLabel($node as element(sal:node)) as xs:string? {
     let $prefix := 
@@ -400,6 +403,7 @@ declare function index:makeCrumb($wid as xs:string, $node as node(), $fragmentId
         else 
             <a href="{index:makeUrl($wid, $node, $fragmentIds)}">{index:dispatch($node, 'title')}</a>
 };
+
 
 (: Gets the citable crumbtrail/citeID (not label!) parent :)
 declare function index:getCitableParent($node as node()) as node()? {
@@ -675,13 +679,8 @@ declare function index:makeUrl($targetWorkId as xs:string, $targetNode as node()
 ~  @param mode: must be one of 'orig', 'edit' (default)
 :)
 declare function index:makeTeaserString($node as element(), $mode as xs:string?) as xs:string {
-(:  replaced the following to solve the empty lables problem in iiif manifests 
-    let $thisMode := if ($mode = ('orig', 'edit')) then $mode else 'edit' :)
     let $thisMode := if ($mode = 'edit') then $mode else 'orig'
     let $string := normalize-space(string-join(txt:dispatch($node, $thisMode), ''))
-(: replaced the following with the above for performance reasons on 2021-04-28 ...
-    let $string := normalize-space(replace(replace(string-join(txt:dispatch($node, $thisMode), ''), '\[.*?\]', ''), '\{.*?\}', ''))
-:)
     return 
         if (string-length($string) gt $config:chars_summary) then
             concat('&#34;', normalize-space(substring($string, 1, $config:chars_summary)), '…', '&#34;')
