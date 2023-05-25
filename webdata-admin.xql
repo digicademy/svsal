@@ -11,8 +11,8 @@ xquery version "3.1";
 declare namespace exist             = "http://exist.sourceforge.net/NS/exist";
 declare namespace request           = "http://exist-db.org/xquery/request";
 declare namespace output            = "http://www.w3.org/2010/xslt-xquery-serialization";
-import module namespace admin       = "http://www.salamanca.school/xquery/admin" at "modules/admin.xqm";
-import module namespace config      = "http://www.salamanca.school/xquery/config" at "config.xqm";
+import module namespace admin       = "https://www.salamanca.school/xquery/admin" at "modules/admin.xqm";
+import module namespace config      = "https://www.salamanca.school/xquery/config" at "config.xqm";
 import module namespace util        = "http://exist-db.org/xquery/util";
 
 declare option exist:timeout "166400000"; (: in miliseconds, 25.000.000 ~ 7h, 43.000.000 ~ 12h :)
@@ -47,8 +47,8 @@ let $output :=
              upload:uploadPdf($rid)  
     case 'pdf_create' return
              admin:createPdf($rid)  :)
-    case 'crumbtrails' return
-        admin:createCrumbtrails($rid) 
+        case 'crumbtrails' return
+            admin:createCrumbtrails($rid) 
         case 'html' return
             admin:renderWork($rid)
         case 'snippets' return 
