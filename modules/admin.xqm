@@ -135,7 +135,7 @@ let $target_2 := for $target in $target_1 return substring-after($target, "work:
 <form enctype="multipart/form-data" method="post" action="webdata-admin.xql?rid={$currentWorkId}&amp;format=pdf_upload">
 <p>Upload PDF File</p>
 <input type="file"  name="FileUpload"/>
-<input type="submit"/>
+<input type="submit">Submit your PDF</input>
 </form>
 <br/>
 </td>
@@ -505,6 +505,7 @@ declare function admin:saveFile($workId as xs:string, $fileName as xs:string, $c
              if ($collection eq "html")         then $config:html-root     || "/" || $wid
         else if ($collection eq "txt")          then $config:txt-root      || "/" || $wid
         else if ($collection eq "snippets")     then $config:snippets-root || "/" || $wid
+        else if ($collection eq "pdf")          then $config:pdf-root      || "/"
         else if ($collection eq "index")        then $config:index-root    || "/"
         else if ($collection eq "crumbtrails")  then $config:crumb-root    || "/"
         else if ($collection eq "iiif")         then $config:iiif-root     || "/"
@@ -525,6 +526,8 @@ declare function admin:saveFile($workId as xs:string, $fileName as xs:string, $c
             xmldb:create-collection($config:webdata-root, "index")
         else if ($collection eq "iiif"      and not(xmldb:collection-available($config:iiif-root)))     then
             xmldb:create-collection($config:webdata-root, "iiif")
+        else if ($collection eq "pdf"       and not(xmldb:collection-available($config:pdf-root)))      then
+            xmldb:create-collection($config:webdata-root, "pdf")
         else if ($collection eq "rdf"       and not(xmldb:collection-available($config:rdf-root)))      then
             xmldb:create-collection($config:webdata-root, "rdf")
         else if ($collection eq"stats"      and not(xmldb:collection-available($config:stats-root)))    then
@@ -1565,6 +1568,60 @@ declare function admin:createNodeIndex($wid as xs:string*) {
             {$indexResults}
         </div>
 };
+
+declare function admin:uploadPdf($rid as xs:string) {
+    let $PdfInput := request:get-uploaded-file-name('FileUpload')
+    let $content  := request:get-uploaded-file-data('FileUpload')
+    return
+        if ($rid eq substring-before($PdfInput, ".pdf")) then
+            <div>            
+                {xmldb:store($config:pdf-root, $PdfInput, $content) }
+                <p>Pdf successfully uploaded.</p>    <!-- here strangely replaced by "false", even if it is indeed uploaded. -->
+                <hr/>
+            </div>
+        else if (fn:empty( request:get-uploaded-file-data('FileUpload'))) then (:no used here, as there is already a bugMessage iin the file  304ab2dcd6db8af278089eb4d27c6b980f3ec6554bcac5d1a29f5009a22723b9 in eXist-db/data/blob :)
+            <results>
+                <message>There is not input PDF file. Please upload the PDF before submitting it.</message>
+            </results>
+        else
+            <results>
+                <message>The PDF {$PdfInput} of the work {$rid} could not be uploaded. The file does not correspond to the work. Did you try to upload the PDF for the work {$rid} ?</message>
+            </results>
+};
+
+declare function admin:createPdf($rid as xs:string){
+    let $pdf-start-time           := util:system-time()
+    let $doctotransform as node() := doc($config:tei-works-root || '/'|| $rid || '.xml')//tei:TEI
+    let $doctransformed2          := transform:transform($doctotransform, "xmldb:exist:///db/apps/salamanca/modules/factory/works/pdf/generic_template.xsl", ())
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Transforming " || $rid || "into XSL-FO.") else ()
+    (:let $storexslfo := xmldb:store($config:xsl-fo-root ,$rid || '_xsl-fo.xml', $doctransformed2) :)
+
+    (:let $xsl-fo-document as document-node() := doc($config:xsl-fo-root || '/'|| $rid || '_xsl-fo.xml') :)
+    let $media-type as xs:string  := 'application/pdf'
+    let $renderedxslfo            :=xslfo:render($doctransformed2, $media-type, ())
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Transforming " || $rid || "from XSL-FO to PDF.") else ()                         
+
+    let $savePdfFile :=xmldb:store($config:pdf-root, $rid || '.pdf', $renderedxslfo)
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Storing" || $rid || "in PDF format.") else ()   
+    let $exportPdfFile :=admin:exportBinaryFile($rid, $rid || '.pdf', $renderedxslfo, 'pdf')
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Storing" || $rid || "in PDF format.") else ()   
+
+    let $pdf-end-time := util:system-time() 
+    let $runtime-pdf := ((util:system-time() - $pdf-start-time) div xs:dayTimeDuration('PT1S'))  * 1000
+    return
+        if ($doctransformed2)   (:(doc-available($config:xsl-fo-root || '/'|| $rid || '_xsl-fo.xml')) :)   then
+            <div>
+                {$savePdfFile} 
+                <p> The transformation from XML to PDF was successfull and the file is stored in the pdf collection.
+                    Duration: {if ($runtime-pdf < (1000 * 60)) then format-number($runtime-pdf div 1000, "#.##") || " Sec."
+                               else if ($runtime-pdf < (1000 * 60 * 60)) then format-number($runtime-pdf div (1000 * 60), "#.##") || " Min."
+                               else format-number($runtime-pdf div (1000 * 60 * 60), "#.##") || " Hrs."
+                              }
+                </p>
+            </div>
+        else ()
+};
+
 
 declare function admin:createCrumbtrails($wid as xs:string){
    let $debug := if ($config:debug = ("trace", "info")) then

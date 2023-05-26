@@ -7,7 +7,7 @@ xquery version "3.1";
 
  ----++++#### :)
 
-module namespace config         = "http://www.salamanca.school/xquery/config";
+module namespace config         = "https://www.salamanca.school/xquery/config";
 
 declare namespace tei           = "http://www.tei-c.org/ns/1.0";
 
@@ -76,6 +76,7 @@ declare variable $config:blogserver     := $config:proto || "://blog."   || $con
 declare variable $config:searchserver   := $config:proto || "://search." || $config:serverdomain;
 (: declare variable $config:imageserver    := $config:proto || "://facs."   || $config:serverdomain;:)
 declare variable $config:imageserver    := "https://facs.salamanca.school";
+(:declare variable $config:imageserver    := "https://www.test.salamanca.school";:)
 declare variable $config:dataserver     := $config:proto || "://data."   || $config:serverdomain;
 declare variable $config:teiserver      := $config:proto || "://tei."    || $config:serverdomain;
 declare variable $config:resolveserver  := $config:proto || "://"        || $config:serverdomain;
@@ -250,8 +251,8 @@ declare variable $config:webdata-root :=
 declare variable $config:stats-root             := concat($config:webdata-root, "/stats");
 declare variable $config:html-root              := concat($config:webdata-root, "/html");
 declare variable $config:index-root             := concat($config:webdata-root, "/index");
-declare variable $config:crumb-root             :=concat($config:webdata-root, "/crumbtrails");
-declare variable $config:pdf-root               :=concat($config:webdata-root, "/pdf");
+declare variable $config:crumb-root             := concat($config:webdata-root, "/crumbtrails");
+declare variable $config:pdf-root               := concat($config:webdata-root, "/pdf");
 declare variable $config:txt-root               := concat($config:webdata-root, "/txt");
 declare variable $config:snippets-root          := concat($config:webdata-root, "/snippets");
 declare variable $config:iiif-root              := concat($config:webdata-root, "/iiif");
