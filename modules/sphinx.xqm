@@ -1,6 +1,6 @@
 xquery version "3.0";
 
-module namespace sphinx            = "http://www.salamanca.school/xquery/sphinx";
+module namespace sphinx            = "https://www.salamanca.school/xquery/sphinx";
 
 declare namespace sphinxNS         = "http://sphinxsearch.com";
 declare namespace tei              = "http://www.tei-c.org/ns/1.0";
@@ -16,9 +16,9 @@ import module namespace lib        = "http://exist-db.org/xquery/html-templating
 import module namespace util       = "http://exist-db.org/xquery/util";
 import module namespace validation = "http://exist-db.org/xquery/validation";
 
-import module namespace config     = "http://www.salamanca.school/xquery/config"        at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace config     = "https://www.salamanca.school/xquery/config"        at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
 import module namespace i18n       = "http://exist-db.org/xquery/i18n"                  at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
-import module namespace render-app = "http://www.salamanca.school/xquery/render-app"    at "xmldb:exist:///db/apps/salamanca/modules/render-app.xqm";
+import module namespace render-app = "https://www.salamanca.school/xquery/render-app"    at "xmldb:exist:///db/apps/salamanca/modules/render-app.xqm";
 
 declare copy-namespaces no-preserve, inherit;
 
@@ -826,7 +826,7 @@ function sphinx:details ($wid as xs:string, $field as xs:string, $q as xs:string
                 for $item at $detailindex in $details//item
                     let $hit_id         := $item/hit_id/text()
 (:                    let $crumbtrail     := sphinx:addLangToCrumbtrail(<sal:crumbtrail>{sphinx:addQToCrumbtrail(doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $hit_id]/sal:crumbtrail, $q)}</sal:crumbtrail>, $lang):)
-                    let $crumbtrailRaw := doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $hit_id]/sal:crumbtrail
+                  let $crumbtrailRaw := doc($config:crumb-root || '/' || $wid || '_crumbtrails.xml')//sal:nodecrumb[@n eq $hit_id]/sal:crumbtrail
                     let $crumbtrailI18n := i18n:addLabelsToCrumbtrail($crumbtrailRaw) (: this adds <i18n:text> labels, but does no processing :)
                     let $crumbtrail := sphinx:addQToCrumbtrail($crumbtrailI18n, $q)
 (:    VERY old version:    let $bombtrail      := sphinx:addLangToCrumbtrail(                 sphinx:addQToCrumbtrail(doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $hit_id]/sal:crumbtrail/a[last()], $q), $lang):)

@@ -44,11 +44,14 @@ let $output :=
     switch($format)
         case 'index' return 
             admin:createNodeIndex($rid)
-(:      case 'pdf_upload' return
+
+      case 'pdf_upload' return
              upload:uploadPdf($rid)  
-        case 'pdf_create' return
-             admin:createPdf($rid) 
-:)
+      (:  case 'pdf_create' return
+             admin:createPdf($rid)  :)
+
+
+
         case 'crumbtrails' return
             admin:createCrumbtrails($rid) 
         case 'html' return
