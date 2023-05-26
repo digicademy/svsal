@@ -5,13 +5,15 @@ xquery version "3.1";
     Functions for extracting node indices (sal:index) from TEI works; also includes functionality for making 
     citeIDs, labels, and crumbtrails.
    
+January 2023: All the crumbtrails parts are commented, because we created a separate files (crumb.xqm). 
+   
    ----++++#### :)
 
-module namespace index    = "http://www.salamanca.school/factory/works/index";
+module namespace index    = "https://www.salamanca.school/factory/works/index";
 
 declare namespace tei     = "http://www.tei-c.org/ns/1.0";
 declare namespace sal     = "http://salamanca.adwmainz.de";
-declare namespace admin   = "http://www.salamanca.school/xquery/admin";
+declare namespace admin   = "https://www.salamanca.school/xquery/admin";
 
 declare namespace exist   = "http://exist.sourceforge.net/NS/exist";
 declare namespace map     = "http://www.w3.org/2005/xpath-functions/map";
@@ -21,9 +23,9 @@ declare namespace xi      = "http://www.w3.org/2001/XInclude";
 import module namespace console = "http://exist-db.org/xquery/console";
 import module namespace functx  = "http://www.functx.com";
 
-import module namespace config = "http://www.salamanca.school/xquery/config"      at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
-import module namespace sutil  = "http://www.salamanca.school/xquery/sutil"       at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
-import module namespace txt    = "http://www.salamanca.school/factory/works/txt"  at "xmldb:exist:///db/apps/salamanca/modules/factory/works/txt.xqm";
+import module namespace config = "https://www.salamanca.school/xquery/config"      at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace sutil  = "https://www.salamanca.school/xquery/sutil"       at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
+import module namespace txt    = "https://www.salamanca.school/factory/works/txt"  at "xmldb:exist:///db/apps/salamanca/modules/factory/works/txt.xqm";
 
 (: SETTINGS :)
 
@@ -32,7 +34,7 @@ declare option exist:output-size-limit "5000000"; (: max number of nodes in memo
 
 declare variable $index:citeIDConnector := '.';
 declare variable $index:labelConnector := ' ';
-declare variable $index:crumbtrailConnector := ' » ';
+(: declare variable $index:crumbtrailConnector := ' » '; :)
 
 
 (: NODE INDEX functions :)
@@ -51,6 +53,7 @@ declare variable $index:crumbtrailConnector := ' » ';
 declare function index:makeNodeIndex($tei as element(tei:TEI)) as map(*) {
     let $wid := $tei/@xml:id
     let $fragmentationDepth := index:determineFragmentationDepth($tei)
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[INDEX] Indexing " || $wid || " at fragmentation level " || $fragmentationDepth || ".") else ()
 
     let $xincludes := $tei//tei:text//xi:include/@href
     let $work := util:expand($tei)
@@ -231,7 +234,7 @@ declare function index:extractNodeStructure($wid as xs:string,
                             attribute isNamedCit        {$isNamedCiteIDNode},
                             element sal:title           {$title},
                             element sal:fragment        {$fragmentIds($node/@xml:id/string())},
-                            element sal:crumb           {$crumb},
+                            (:  element sal:crumb           {$crumb}, :)
                             if (index:isLabelNode($node)) then 
                                 element sal:passage     {index:dispatch($node, 'label')}
                             else (),
@@ -260,7 +263,7 @@ declare function index:createIndexNodes($wid as xs:string, $input as element(sal
 
         let $citeID     := index:constructCiteID($node)
         let $label      := index:constructLabel($node)
-        let $crumbtrail := index:constructCrumbtrail($wid, $citeID, $node)
+        (: let $crumbtrail := index:constructCrumbtrail($wid, $citeID, $node) :)
         return
             element sal:node {
                 attribute n {$node/@xml:id/string()},
@@ -268,11 +271,11 @@ declare function index:createIndexNodes($wid as xs:string, $input as element(sal
                 $node/@* except ($node/@category, $node/@isBasicNode, $node/@isNamedCit, $node/@isPassage, $node/@xml:id),
                 attribute title {$node/sal:title/string()},
                 attribute fragment {$node/sal:fragment/string()},
-                attribute crumb {$wid || "/html/" || substring-after($node/sal:crumb//@href, "frag=")},
+                (: attribute crumb {$wid || "/html/" || substring-after($node/sal:crumb//@href, "frag=")}, :)
                 attribute citableParent {$node/sal:citableParent/string()},
                 attribute citeID {$citeID},
-                attribute label {$label},
-                element sal:crumbtrail {$crumbtrail}
+                attribute label {$label} (:,
+                element sal:crumbtrail {$crumbtrail} :)
             }
 };
 
@@ -300,7 +303,7 @@ declare function index:qualityCheck($index as element(sal:index),
             error(xs:QName('admin:createNodeIndex'), 'Essential attributes are missing in at least one index node (in ' || $wid || ')') 
         else ()
     let $debug := if ($config:debug = "trace") then console:log('[INDEX] QC: check @title/@fragment/@citableParent/@label attributes and sal:crumbtrail children...') else ()
-    let $testChildren := if ($testNodes[not(@title and @fragment and @citableParent and @label and sal:crumbtrail/*)]) then error() else ()
+    let $testChildren := if ($testNodes[not(@title and @fragment and @citableParent and @citeID and @label (:and sal:crumbtrail/* :))]) then error() else ()
 
     let $debug := if ($config:debug = "trace") then console:log('[INDEX] QC: check empty @citeID attributes...') else ()
     let $testEmptyCiteID :=
@@ -369,7 +372,7 @@ declare function index:constructCiteID($node as element(sal:node)) as xs:string 
         if ($prefix and $this) then $prefix || $index:citeIDConnector || $this else $this
 };
 
-declare function index:constructCrumbtrail($wid as xs:string, $citeID as xs:string, $node as element(sal:node)) as item()+ {
+(:declare function index:constructCrumbtrail($wid as xs:string, $citeID as xs:string, $node as element(sal:node)) as item()+ {
     let $prefix := 
         if ($node/sal:citableParent/text() and $node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()]) then
             index:constructCrumbtrail($wid, index:constructCiteID($node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()]), $node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()])
@@ -377,7 +380,7 @@ declare function index:constructCrumbtrail($wid as xs:string, $citeID as xs:stri
     let $this := if ($citeID) then <a href="{$config:idserver || '/texts/' || $wid || ':' || $citeID}">{$node/sal:title/text()}</a> else $node/sal:crumb/*
     return
         if ($prefix and $this) then ($prefix, $index:crumbtrailConnector, $this) else $this
-};
+}; :)
 
 declare function index:constructLabel($node as element(sal:node)) as xs:string? {
     let $prefix := 
@@ -400,6 +403,7 @@ declare function index:makeCrumb($wid as xs:string, $node as node(), $fragmentId
         else 
             <a href="{index:makeUrl($wid, $node, $fragmentIds)}">{index:dispatch($node, 'title')}</a>
 };
+
 
 (: Gets the citable crumbtrail/citeID (not label!) parent :)
 declare function index:getCitableParent($node as node()) as node()? {
@@ -648,16 +652,16 @@ declare function index:getNodeCategory($node as element()) as xs:string {
 };
 
 
-declare function index:makeUrl($targetWorkId as xs:string, $targetNode as node(), $fragmentIds as map(*)) {
+declare function index:makeUrl($wid as xs:string, $targetNode as node(), $fragmentIds as map(*)) {
     let $targetNodeId := $targetNode/@xml:id/string()
     let $viewerPage   :=      
-        if (substring($targetWorkId, 1, 2) eq 'W0') then
+        if (substring($wid, 1, 2) eq 'W0') then
             'work.html?wid='
-        else if (substring($targetWorkId, 1, 2) eq 'L0') then
+        else if (substring($wid, 1, 2) eq 'L0') then
             'lemma.html?lid='
-        else if (substring($targetWorkId, 1, 2) eq 'A0') then
+        else if (substring($wid, 1, 2) eq 'A0') then
             'author.html?aid='
-        else if (substring($targetWorkId, 1, 2) eq 'WP') then
+        else if (substring($wid, 1, 2) eq 'WP') then
             'workingPaper.html?wpid='
         else
             'index.html?wid='
@@ -666,7 +670,12 @@ declare function index:makeUrl($targetWorkId as xs:string, $targetNode as node()
             concat('pageNo_', $targetNodeId)
         else $targetNodeId
     let $frag := $fragmentIds($targetNodeId)
-    return concat($viewerPage, $targetWorkId, (if ($frag) then concat('&amp;frag=', $frag) else ()), '#', $targetNodeHTMLAnchor)
+(: Edit 2023-05-25 Andreas Wagner:
+   In the new infrastructure URLs are no longer like "work.html?wid=W0013&amp;frag=ae-fa-fwef-134#Vol01" ...
+   This is how it was before:
+      return concat($viewerPage, $targetWorkId, (if ($frag) then concat('&amp;frag=', $frag) else ()), '#', $targetNodeHTMLAnchor)
+:)
+    return concat($wid, "/html/", $frag, '.html#', $targetNodeHTMLAnchor)
 };
 
 
@@ -675,13 +684,8 @@ declare function index:makeUrl($targetWorkId as xs:string, $targetNode as node()
 ~  @param mode: must be one of 'orig', 'edit' (default)
 :)
 declare function index:makeTeaserString($node as element(), $mode as xs:string?) as xs:string {
-(:  replaced the following to solve the empty lables problem in iiif manifests 
-    let $thisMode := if ($mode = ('orig', 'edit')) then $mode else 'edit' :)
     let $thisMode := if ($mode = 'edit') then $mode else 'orig'
     let $string := normalize-space(string-join(txt:dispatch($node, $thisMode), ''))
-(: replaced the following with the above for performance reasons on 2021-04-28 ...
-    let $string := normalize-space(replace(replace(string-join(txt:dispatch($node, $thisMode), ''), '\[.*?\]', ''), '\{.*?\}', ''))
-:)
     return 
         if (string-length($string) gt $config:chars_summary) then
             concat('&#34;', normalize-space(substring($string, 1, $config:chars_summary)), '…', '&#34;')
@@ -1123,7 +1127,7 @@ declare function index:note($node as element(tei:note), $mode as xs:string) {
         case 'label' return
             if (index:isLabelNode($node)) then
                 (: label parents of note are div, not p :)
-                let $debug := console:log("index:note/label for note: " || $node/@xml:id/string())
+                (: let $debug := console:log("index:note/label for note: " || $node/@xml:id/string()) :)
                 let $currentSection := sutil:copy($node/ancestor::*[not(self::tei:p)][index:isLabelNode(.)][1])
                 let $currentNode := $currentSection//tei:note[@xml:id eq $node/@xml:id]
                 let $prefix := $config:citationLabels(local-name($node))?('abbr')

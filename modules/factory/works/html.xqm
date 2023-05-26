@@ -6,7 +6,7 @@ xquery version "3.1";
    
    ----++++#### :)
 
-module namespace html              = "http://www.salamanca.school/factory/works/html";
+module namespace html              = "https://www.salamanca.school/factory/works/html";
 
 declare namespace tei              = "http://www.tei-c.org/ns/1.0";
 declare namespace sal              = "http://salamanca.adwmainz.de";
@@ -17,11 +17,11 @@ declare namespace util             = "http://exist-db.org/xquery/util";
 
 import module namespace console    = "http://exist-db.org/xquery/console";
 
-import module namespace config     = "http://www.salamanca.school/xquery/config"        at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace config     = "https://www.salamanca.school/xquery/config"        at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
 import module namespace i18n       = "http://exist-db.org/xquery/i18n"                  at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
-import module namespace sutil      = "http://www.salamanca.school/xquery/sutil"         at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
-import module namespace index      = "http://www.salamanca.school/factory/works/index"  at "xmldb:exist:///db/apps/salamanca/modules/factory/works/index.xqm";
-import module namespace txt        = "http://www.salamanca.school/factory/works/txt"    at "xmldb:exist:///db/apps/salamanca/modules/factory/works/txt.xqm";
+import module namespace sutil      = "https://www.salamanca.school/xquery/sutil"         at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
+import module namespace index      = "https://www.salamanca.school/factory/works/index" at "xmldb:exist:///db/apps/salamanca/modules/factory/works/index.xqm";
+import module namespace txt        = "https://www.salamanca.school/factory/works/txt"   at "xmldb:exist:///db/apps/salamanca/modules/factory/works/txt.xqm";
 
 
 
@@ -83,10 +83,7 @@ declare function html:makeHTMLData($tei as element(tei:TEI), $lang as node()*) a
                         for $a in $work//tei:text where $a[@type='work_volume' and sutil:WRKisPublished($workId || '_' || @xml:id)] return
                             <ul>
                                 <li>
-                                    <a class="hideMe">
-                                        <b>{concat(i18n:getLocalizedText(html:i18nNodify('volume'), $lang), ': ', $a/@n/string())}</b>
-                                        <span class="jstree-anchor hideMe pull-right">{html:getPagesFromDiv($a)}</span>
-                                    </a>
+                                    { html:generateTocFromText($a, $workId, $lang) }
                                     { html:generateTocFromDiv($a/(tei:front | tei:body | tei:back), $workId, $lang)}
                                 </li>
                             </ul>
@@ -324,13 +321,18 @@ declare function html:generateTocFromDiv($nodes as element()*, $wid as xs:string
     html:generateTocFromDiv($nodes, $wid, $html:defaultLang)
 };
 
+declare function html:generateTocFromText($node as element(tei:text), $wid as xs:string) as element(ul)* {
+    html:generateTocFromText($node, $wid, $html:defaultLang)
+};
+
 declare function html:generateTocFromDiv($nodes as element()*, $wid as xs:string, $lang as node()*) as element(ul)* {
-    for $node in $nodes/(tei:div[@type="work_part"]/tei:div[index:isIndexNode(.)]
+    for $node in $nodes/( tei:div[@type="work_part"]/tei:div[index:isIndexNode(.)]
                          |tei:div[not(@type="work_part")][index:isIndexNode(.)]
                          |*/tei:milestone[@unit ne 'other'][index:isIndexNode(.)]
-                         |tei:argument[index:isIndexNode(.)]) return
-        let $citeID := sutil:getNodetrail($wid, $node, 'citeID')        
-        let $fragId := $config:idserver || '/texts/' || $wid || ':' || $citeID || '?format=html'
+                         |tei:argument[index:isIndexNode(.)]
+                        ) return
+        let $citeID  := sutil:getNodetrail($wid, $node, 'citeID')        
+        let $fragId  := $config:idserver || '/texts/' || $wid || ':' || $citeID || '?format=html'
         let $section := $node/@xml:id/string()
         let $i18nKey := 
             if (index:dispatch($node, 'class')) then index:dispatch($node, 'class')
@@ -350,6 +352,21 @@ declare function html:generateTocFromDiv($nodes as element()*, $wid as xs:string
                     {html:generateTocFromDiv($node, $wid, $lang)}
                 </li>
             </ul>
+};
+
+declare function html:generateTocFromText($node as element(tei:text), $wid as xs:string, $lang as node()*) as element(ul)* {
+    let $citeID  := sutil:getNodetrail($wid, $node, 'citeID')        
+    let $fragId  := $config:idserver || '/texts/' || $wid || ':' || $citeID || '?format=html'
+    let $i18nKey := 
+        if (index:dispatch($node, 'class')) then index:dispatch($node, 'class')
+        else 'tei-generic'
+    let $titleString := index:dispatch($node, 'title')
+    let $titleAtt := '[' || i18n:getLocalizedText(html:i18nNodify($i18nKey), $lang) || '] ' || $titleString
+    return
+        <a class="hideMe" href="{$fragId}" title="{$titleAtt}">
+            <b>{concat(i18n:getLocalizedText(html:i18nNodify('volume'), $lang), ': ', $node/@n/string())}</b>
+            <span class="jstree-anchor hideMe pull-right">{html:getPagesFromDiv($node)}</span>
+        </a>
 };
 
 declare function html:makeTOCTitle($node as node()) as item()* {

@@ -139,8 +139,8 @@
             <statement n="13" repeat="{/count($currentResource//sal:node[@subtype eq 'work_volume'])}">
                 <subject type="uri" prepend="texts/{/@work}:">//sal:node[@subtype eq 'work_volume'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdfs">seeAlso</predicate>
-<!--                <object type="uri" prepend="http://www.salamanca.school/">/(.//sal:node[@subtype eq 'work_volume'][$repeatIndex]/sal:crumbtrail/a/@href)[last()]</object>-->
-                <object type="uri" prepend="http://www.salamanca.school/">//sal:node[@subtype eq 'work_volume'][$repeatIndex]/sal:crumbtrail/a/@href[last()]</object>
+<!--                <object type="uri" prepend="https://www.salamanca.school/">/(.//sal:node[@subtype eq 'work_volume'][$repeatIndex]/sal:crumbtrail/a/@href)[last()]</object>-->
+                <object type="uri" prepend="https://www.salamanca.school/">//sal:node[@subtype eq 'work_volume'][$repeatIndex]/sal:crumbtrail/a/@href[last()]</object>
 			 </statement>
 
     <!-- Frontmatter -->        
@@ -184,13 +184,13 @@
                 <condition>/boolean($currentResource//sal:node[@subtype eq "work_volume"]/@subtype)</condition>
                 <subject type="uri" prepend="texts/{/@work}:">//sal:node[@type eq 'front'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdfs">seeAlso</predicate>
-                <object type="uri" prepend="http://www.salamanca.school/">//sal:node[@type eq 'front'][$repeatIndex]/sal:crumbtrail/a[last()]/@href</object>
+                <object type="uri" prepend="https://www.salamanca.school/">//sal:node[@type eq 'front'][$repeatIndex]/sal:crumbtrail/a[last()]/@href</object>
 			 </statement>
             <statement n="21"><!-- monograph -->
                 <condition>/boolean($currentResource//sal:node[@subtype eq "work_monograph"]/@subtype)</condition>
                 <subject type="uri" prepend="texts/{/@work}:">frontmatter</subject>
                 <predicate prefix="rdfs">seeAlso</predicate>
-                <object type="uri" prepend="http://www.salamanca.school/">//sal:node[@type eq 'front'][1]/sal:crumbtrail/a[last()]/@href</object>
+                <object type="uri" prepend="https://www.salamanca.school/">//sal:node[@type eq 'front'][1]/sal:crumbtrail/a[last()]/@href</object>
 			 </statement>
 
     <!-- Backmatter -->
@@ -236,13 +236,13 @@
                 <condition>/boolean(.//sal:node[@subtype eq "work_volume"]/@subtype)</condition>
                 <subject type="uri" prepend="texts/{/@work}:">//sal:node[@type eq 'back'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdfs">seeAlso</predicate>
-                <object type="uri" prepend="http://www.salamanca.school/">//sal:node[@type eq 'back'][$repeatIndex]/sal:crumbtrail/a[last()]/@href</object>
+                <object type="uri" prepend="https://www.salamanca.school/">//sal:node[@type eq 'back'][$repeatIndex]/sal:crumbtrail/a[last()]/@href</object>
 			 </statement>
             <statement n="29"><!-- monograph -->
                 <condition>/boolean(.//sal:node[@subtype eq "work_monograph"]/@subtype)</condition>
                 <subject type="uri" prepend="texts/{/@work}:">backmatter</subject>
                 <predicate prefix="rdfs">seeAlso</predicate>
-                <object type="uri" prepend="http://www.salamanca.school/">//sal:node[@type eq 'completeWork']/sal:crumbtrail/a[last()]/@href</object>
+                <object type="uri" prepend="https://www.salamanca.school/">//sal:node[@type eq 'completeWork']/sal:crumbtrail/a[last()]/@href</object>
 			 </statement>
         
     <!-- Other section levels: div, p, milestones, lists, items, notes -->
@@ -264,7 +264,7 @@
             <statement n="33" repeat="{/min((10020, count($currentResource//sal:node[@type eq 'div'])))}">
                 <subject type="uri" prepend="texts/{/@work}:">//sal:node[@type eq 'div'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdfs">seeAlso</predicate>
-                <object type="uri" prepend="http://www.salamanca.school/">/($currentResource//sal:node[@type eq 'div'][$repeatIndex]/sal:crumbtrail/a/@href)[last()]</object>
+                <object type="uri" prepend="https://www.salamanca.school/">/($currentResource//sal:node[@type eq 'div'][$repeatIndex]/sal:crumbtrail/a/@href)[last()]</object>
 			 </statement>
 
             <statement n="34" repeat="{/min((10020, count($currentResource//sal:node[@type eq 'p'])))}">
@@ -286,7 +286,7 @@
             <statement n="37" repeat="{/min((10020, count($currentResource//sal:node[@type eq 'p'])))}">
                 <subject type="uri" prepend="texts/{/@work}:">//sal:node[@type eq 'p'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdfs">seeAlso</predicate>
-                <object type="uri" prepend="http://www.salamanca.school/">/($currentResource//sal:node[@type eq 'p'][$repeatIndex]/sal:crumbtrail/a/@href)[last()]</object>
+                <object type="uri" prepend="https://www.salamanca.school/">/($currentResource//sal:node[@type eq 'p'][$repeatIndex]/sal:crumbtrail/a/@href)[last()]</object>
 			 </statement>
 
             <statement n="38" repeat="{/min((10020, count($currentResource//sal:node[@type eq 'milestone'])))}">
@@ -307,7 +307,7 @@
             <statement n="41" repeat="{/min((10020, count($currentResource//sal:node[@type eq 'milestone'])))}">
                 <subject type="uri" prepend="texts/{/@work}:">//sal:node[@type eq 'milestone'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdfs">seeAlso</predicate>
-                <object type="uri" prepend="http://www.salamanca.school/">/($currentResource//sal:node[@type eq 'milestone'][$repeatIndex]/sal:crumbtrail/a/@href)[last()]</object>
+                <object type="uri" prepend="https://www.salamanca.school/">/($currentResource//sal:node[@type eq 'milestone'][$repeatIndex]/sal:crumbtrail/a/@href)[last()]</object>
 			 </statement>
 
             <statement n="42" repeat="{/min((10010, count($currentResource//sal:node[@type eq 'list'])))}">
@@ -328,7 +328,7 @@
             <statement n="45" repeat="{/min((10010, count($currentResource//sal:node[@type eq 'list'])))}">
                 <subject type="uri" prepend="texts/{/@work}:">//sal:node[@type eq 'list'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdfs">seeAlso</predicate>
-                <object type="uri" prepend="http://www.salamanca.school/">/($currentResource//sal:node[@type eq 'list'][$repeatIndex]/sal:crumbtrail/a/@href)[last()]</object>
+                <object type="uri" prepend="https://www.salamanca.school/">/($currentResource//sal:node[@type eq 'list'][$repeatIndex]/sal:crumbtrail/a/@href)[last()]</object>
 			 </statement>
 
 <!--
@@ -350,7 +350,7 @@
             <statement n="49" repeat="{/min((10050, count($currentResource//sal:node[@type eq 'item'])))}">
                 <subject type="uri" prepend="texts/{/@work}:">//sal:node[@type eq 'item'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdfs">seeAlso</predicate>
-                <object type="uri" prepend="http://www.salamanca.school/">/($currentResource//sal:node[@type eq 'item'][$repeatIndex]/sal:crumbtrail/a/@href)[last()]</object>
+                <object type="uri" prepend="https://www.salamanca.school/">/($currentResource//sal:node[@type eq 'item'][$repeatIndex]/sal:crumbtrail/a/@href)[last()]</object>
 			 </statement>
 -->
 
@@ -372,7 +372,7 @@
             <statement n="53" repeat="{/min((10050, count($currentResource//sal:node[@type eq 'note'])))}">
                 <subject type="uri" prepend="texts/{/@work}:">//sal:node[@type eq 'note'][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdfs">seeAlso</predicate>
-                <object type="uri" prepend="http://www.salamanca.school/">/($currentResource//sal:node[@type eq 'note'][$repeatIndex]/sal:crumbtrail/a/@href)[last()]</object>
+                <object type="uri" prepend="https://www.salamanca.school/">/($currentResource//sal:node[@type eq 'note'][$repeatIndex]/sal:crumbtrail/a/@href)[last()]</object>
 			 </statement>
 
 
@@ -404,7 +404,7 @@
             <statement n="58" repeat="{/min((10050, count($currentResource//sal:node[@type eq 'pb'][not(@subtype='sameAs')])))}">
                 <subject type="uri" prepend="texts/{/@work}:">//sal:node[@type eq 'pb'][not(@subtype eq 'sameAs')][$repeatIndex]/sal:citetrail/text()</subject>
                 <predicate prefix="rdfs">seeAlso</predicate>
-                <object type="uri" prepend="http://www.salamanca.school/">/($currentResource//sal:node[@type eq 'pb'][not(@subtype eq 'sameAs')][$repeatIndex]/sal:crumbtrail/a/@href)[last()]</object>
+                <object type="uri" prepend="https://www.salamanca.school/">/($currentResource//sal:node[@type eq 'pb'][not(@subtype eq 'sameAs')][$repeatIndex]/sal:crumbtrail/a/@href)[last()]</object>
 			 </statement>
             
             
