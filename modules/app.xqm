@@ -343,8 +343,12 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
                 else if ($firstChar = ('G','H','I','J','K','L')) then 'G - L'
                 else if ($firstChar = ('M','N','O','P','Q','R')) then 'M - R'
                 else                                                  'S - Z'
-    
+(: Change 2023-05-25 Andreas Wagner
+   With the new infrastructure, the catalogue view is at URLs like:
+       https://id.test.salamanca.school/texts/W0095?mode=details
             let $workDetails    :=  'workDetails.html?wid=' ||  $wid
+:)
+            let $workDetails    :=  $config:idserver || '/texts/' || $wid || '?mode=details'
             let $DetailsInfo    :=  i18n:process(<i18n:text key="details">Katalogeintrag</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en")
     
             let $workImages     :=  'viewer_standalone.html?wid=' ||  $wid
@@ -404,7 +408,7 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
                                                   let $volIdShort := $volume/@n
                                                   let $volFrag    := sutil:getFragmentID($wid, $volId)
                                                   let $volLink    := 
-                                                      if (sutil:WRKisPublished($wid || '_' || $volId)) then $config:idserver || '/texts/' || $wid || ":" || $volId
+                                                      if (sutil:WRKisPublished($wid || '_' || $volId)) then $config:idserver || '/texts/' || $wid || ":vol" || $volIdShort
                                                       (: existence of link serves as indicator for single volumes' publication status (whether published or not) in works list :)
                                                       else ()
                                                   let $volContent := $volIdShort||'&#xA0;&#xA0;'
@@ -796,7 +800,7 @@ declare %templates:wrap function app:WRKcreateListSurname($node as node(), $mode
         for $item in (collection($config:tei-works-root)//tei:TEI)//tei:text[@type = ('work_monograph', 'work_multivolume')]
             let $root       :=  $item/ancestor::tei:TEI
             let $id         :=  (session:encode-url( xs:anyURI( $config:idserver || '/texts/' || $root/@xml:id ) ))
-            let $details    :=  (session:encode-url( xs:anyURI( 'workDetails.html?wid=' ||  $root/@xml:id ) ))
+            let $details    :=  (session:encode-url( xs:anyURI( $config:idserver || '/texts/' || $root/@xml:id || '?mode=details') ))
             let $title      :=  $root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'short']/string()
             let $author     :=  app:rotateFormatName($root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName)
             order by $root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author[1]/tei:persName/tei:surname[1] ascending
@@ -849,7 +853,7 @@ declare %templates:wrap function app:WRKcreateListTitle($node as node(), $model 
         for $item in (collection($config:tei-works-root)//tei:TEI)//tei:text[@type = ('work_monograph', 'work_multivolume')]
             let $root       :=  $item/ancestor::tei:TEI
             let $id         :=  (session:encode-url( xs:anyURI( $config:idserver || '/texts/' || $root/@xml:id ) ))
-            let $details    :=  (session:encode-url( xs:anyURI( 'workDetails.html?wid=' ||  $root/@xml:id ) ))
+            let $details    :=  (session:encode-url( xs:anyURI( $config:idserver || '/texts/' || $root/@xml:id || '?mode=details') ))
             let $title      :=  $root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'short']/string()
             let $author     :=  app:rotateFormatName($root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName)
             order by $root/tei:teiHeader//tei:sourceDesc//tei:monogr/tei:title[@type = 'short'] ascending
@@ -898,7 +902,7 @@ declare %templates:wrap function app:WRKcreateListYear($node as node(), $model a
         for $item in (collection($config:tei-works-root)//tei:TEI)//tei:text[@type = ('work_monograph', 'work_multivolume')]
             let $root       :=  $item/ancestor::tei:TEI
             let $id         :=  (session:encode-url( xs:anyURI( $config:idserver || '/texts/' || $root/@xml:id ) ))
-            let $details    :=  (session:encode-url( xs:anyURI( 'workDetails.html?wid=' ||  $root/@xml:id ) ))
+            let $details    :=  (session:encode-url( xs:anyURI( $config:idserver || '/texts/' || $root/@xml:id || '?mode=details') ))
             let $title      :=  $root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'short']/string()
             let $author     :=  app:rotateFormatName($root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName)
             order by $root/tei:teiHeader//tei:sourceDesc//tei:date[@type = 'firstEd']/@when ascending
@@ -948,7 +952,7 @@ declare %templates:wrap function app:WRKcreateListPlace($node as node(), $model 
         for $item in (collection($config:tei-works-root)//tei:TEI)//tei:text[@type = ('work_monograph', 'work_multivolume')]
             let $root       :=  $item/ancestor::tei:TEI
             let $id         :=  (session:encode-url( xs:anyURI( $config:idserver || '/texts/' || $root/@xml:id ) ))
-            let $details    :=  (session:encode-url( xs:anyURI( 'workDetails.html?wid=' ||  $root/@xml:id ) ))
+            let $details    :=  (session:encode-url( xs:anyURI( $config:idserver || '/texts/' || $root/@xml:id || '?mode=details') ))
             let $title      :=  $root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:title[@type = 'short']/string()
             let $author     :=  app:rotateFormatName($root/tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr/tei:author/tei:persName)
             let $order      :=  if ($root/tei:teiHeader//tei:sourceDesc//tei:pubPlace[@role = 'thisEd']) then $root/tei:teiHeader//tei:sourceDesc//tei:pubPlace[@role = 'thisEd']
@@ -1973,6 +1977,7 @@ declare %templates:wrap
 };
 
  
+(: TODO: Check if an alternative to workDetails.html is needed in the following function: :)
 (:~ 
 Creates a (HTML) catalogue record for a work/volume.
 @param node: template node
@@ -2136,7 +2141,7 @@ declare function app:WRKcatRecordTeaser($node as node(), $model as map(*), $wid 
                 if ($digital?('isPublished')) then
                     i18n:convertDate($digital?('publicationDate'), $lang, 'verbose')
                 else ()
-            let $recordLink := 'workDetails.html?wid=' || $wid
+            let $recordLink := $config:idserver || '/texts/' || $wid || '?mode=details'
             let $imagesLink := 'viewer_standalone.html?wid=' || $wid
             let $col1-width := 'col-md-2'
             let $col2-width := 'col-md-10'
@@ -2692,7 +2697,7 @@ declare function app:WRKdetailsCurrent($node as node(), $model as map(*), $lang 
         ||'&#32;'||i18n:process(<i18n:text key="volume">Band</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))        || '&#32;' ||$model("currentWork")//tei:text[@type='work_volume']/@n/string()}</a>
         else:) 
         let $output :=
-        <a class="btn btn-link" href="workDetails.html?wid={request:get-parameter('wid', '')}"><i class="fas fa-file-alt"></i>&#32; <i18n:text key="details">Katalogeintrag</i18n:text></a>
+        <a class="btn btn-link" href="{$config:idserver || '/texts/' || request:get-parameter('wid', '') || '?mode=details'}"><i class="fas fa-file-alt"></i>&#32; <i18n:text key="details">Katalogeintrag</i18n:text></a>
         return $output (: i18n:process($output, $lang, "/db/apps/salamanca/data/i18n", 'en') heute geändert :)
 };
 
@@ -3746,7 +3751,7 @@ declare %private
             and sutil:WRKisPublished(@xml:id)
             and ./tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:editor[@xml:id eq $person/@xml:id 
                 and (contains(@role, 'scholarly'))]] return
-            <a href="workDetails.html?wid={$tei/@xml:id}">{
+            <a href="{$config:idserver || '/texts/' || $tei/@xml:id || '?mode=details'}">{
             app:rotateFormatName($tei/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:author/tei:persName) || ': ' ||
             $tei/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title[@type = 'short']/string()
             }</a>
@@ -3755,7 +3760,7 @@ declare %private
             and sutil:WRKisPublished(@xml:id)
             and ./tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:editor[@xml:id eq $person/@xml:id 
                 and (contains(@role, 'technical'))]] return
-            <a href="workDetails.html?wid={$tei/@xml:id}">{
+            <a href="{$config:idserver || '/texts/' || $tei/@xml:id || '?mode=details'}">{
             app:rotateFormatName($tei/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:author/tei:persName) || ': ' ||
             $tei/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title[@type = 'short']/string()
             }</a>

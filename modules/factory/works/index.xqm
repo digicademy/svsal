@@ -9,11 +9,11 @@ January 2023: All the crumbtrails parts are commented, because we created a sepa
    
    ----++++#### :)
 
-module namespace index    = "http://www.salamanca.school/factory/works/index";
+module namespace index    = "https://www.salamanca.school/factory/works/index";
 
 declare namespace tei     = "http://www.tei-c.org/ns/1.0";
 declare namespace sal     = "http://salamanca.adwmainz.de";
-declare namespace admin   = "http://www.salamanca.school/xquery/admin";
+declare namespace admin   = "https://www.salamanca.school/xquery/admin";
 
 declare namespace exist   = "http://exist.sourceforge.net/NS/exist";
 declare namespace map     = "http://www.w3.org/2005/xpath-functions/map";
@@ -23,9 +23,9 @@ declare namespace xi      = "http://www.w3.org/2001/XInclude";
 import module namespace console = "http://exist-db.org/xquery/console";
 import module namespace functx  = "http://www.functx.com";
 
-import module namespace config = "http://www.salamanca.school/xquery/config"      at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
-import module namespace sutil  = "http://www.salamanca.school/xquery/sutil"       at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
-import module namespace txt    = "http://www.salamanca.school/factory/works/txt"  at "xmldb:exist:///db/apps/salamanca/modules/factory/works/txt.xqm";
+import module namespace config = "https://www.salamanca.school/xquery/config"      at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace sutil  = "https://www.salamanca.school/xquery/sutil"       at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
+import module namespace txt    = "https://www.salamanca.school/factory/works/txt"  at "xmldb:exist:///db/apps/salamanca/modules/factory/works/txt.xqm";
 
 (: SETTINGS :)
 
@@ -652,16 +652,16 @@ declare function index:getNodeCategory($node as element()) as xs:string {
 };
 
 
-declare function index:makeUrl($targetWorkId as xs:string, $targetNode as node(), $fragmentIds as map(*)) {
+declare function index:makeUrl($wid as xs:string, $targetNode as node(), $fragmentIds as map(*)) {
     let $targetNodeId := $targetNode/@xml:id/string()
     let $viewerPage   :=      
-        if (substring($targetWorkId, 1, 2) eq 'W0') then
+        if (substring($wid, 1, 2) eq 'W0') then
             'work.html?wid='
-        else if (substring($targetWorkId, 1, 2) eq 'L0') then
+        else if (substring($wid, 1, 2) eq 'L0') then
             'lemma.html?lid='
-        else if (substring($targetWorkId, 1, 2) eq 'A0') then
+        else if (substring($wid, 1, 2) eq 'A0') then
             'author.html?aid='
-        else if (substring($targetWorkId, 1, 2) eq 'WP') then
+        else if (substring($wid, 1, 2) eq 'WP') then
             'workingPaper.html?wpid='
         else
             'index.html?wid='
@@ -670,7 +670,12 @@ declare function index:makeUrl($targetWorkId as xs:string, $targetNode as node()
             concat('pageNo_', $targetNodeId)
         else $targetNodeId
     let $frag := $fragmentIds($targetNodeId)
-    return concat($viewerPage, $targetWorkId, (if ($frag) then concat('&amp;frag=', $frag) else ()), '#', $targetNodeHTMLAnchor)
+(: Edit 2023-05-25 Andreas Wagner:
+   In the new infrastructure URLs are no longer like "work.html?wid=W0013&amp;frag=ae-fa-fwef-134#Vol01" ...
+   This is how it was before:
+      return concat($viewerPage, $targetWorkId, (if ($frag) then concat('&amp;frag=', $frag) else ()), '#', $targetNodeHTMLAnchor)
+:)
+    return concat($wid, "/html/", $frag, '.html#', $targetNodeHTMLAnchor)
 };
 
 
@@ -1122,7 +1127,7 @@ declare function index:note($node as element(tei:note), $mode as xs:string) {
         case 'label' return
             if (index:isLabelNode($node)) then
                 (: label parents of note are div, not p :)
-(:                let $debug := console:log("index:note/label for note: " || $node/@xml:id/string()):)
+                (: let $debug := console:log("index:note/label for note: " || $node/@xml:id/string()) :)
                 let $currentSection := sutil:copy($node/ancestor::*[not(self::tei:p)][index:isLabelNode(.)][1])
                 let $currentNode := $currentSection//tei:note[@xml:id eq $node/@xml:id]
                 let $prefix := $config:citationLabels(local-name($node))?('abbr')

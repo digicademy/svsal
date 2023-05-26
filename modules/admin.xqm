@@ -32,7 +32,7 @@ import module namespace lib         = "http://exist-db.org/xquery/html-templatin
 
 import module namespace app         = "https://www.salamanca.school/xquery/app"           at "xmldb:exist:///db/apps/salamanca/modules/app.xqm";
 import module namespace config      = "https://www.salamanca.school/xquery/config"        at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
-import module namespace i18n        = "http://exist-db.org/xquery/i18n"                  at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
+import module namespace i18n        = "http://exist-db.org/xquery/i18n"                   at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
 import module namespace net         = "https://www.salamanca.school/xquery/net"           at "xmldb:exist:///db/apps/salamanca/modules/net.xqm";
 import module namespace render-app  = "https://www.salamanca.school/xquery/render-app"    at "xmldb:exist:///db/apps/salamanca/modules/render-app.xqm";
 import module namespace sphinx      = "https://www.salamanca.school/xquery/sphinx"        at "xmldb:exist:///db/apps/salamanca/modules/sphinx.xqm";
@@ -82,7 +82,6 @@ declare function admin:workCount($node as node(), $model as map (*), $lang as xs
 };
 
 (: #### UTIL FUNCTIONS for informing the admin about current status of a webdata resources (node index, HTML, snippets, etc.) :)
-
 
 declare function admin:needsPdf($targetWorkId as xs:string) as xs:boolean {
     let $workModTime := xmldb:last-modified($config:tei-works-root, $targetWorkId || '.xml')
@@ -195,7 +194,7 @@ declare function admin:needsCrumbtrails($node as node(), $model as map(*)) {
             
         else
             <td
-                title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}, rendered on: {xmldb:last-modified($config:crumb-root, $currentWorkId || "_crumbtrails.xml")}">Creating Crumbtrails unecessary. <small><a  href="webdata-admin.xql?rid={$currentWorkId}&amp;format=crumbtrails">Create it anyway!</a></small></td>
+                title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}, rendered on: {xmldb:last-modified($config:crumb-root, $currentWorkId || "_crumbtrails.xml")}">Creating Crumbtrails unnecessary. <small><a  href="webdata-admin.xql?rid={$currentWorkId}&amp;format=crumbtrails">Create it anyway!</a></small></td>
 };
 
 declare function admin:needsTeiCorpusZip($node as node(), $model as map(*)) {
@@ -311,6 +310,44 @@ declare function admin:needsHTMLString($node as node(), $model as map(*)) {
             <td title="{if (xmldb:collection-available($config:html-root || "/" || $currentWorkId) and not(empty(collection($config:html-root || "/" || $currentWorkId)))) then concat('HTML created on: ', max(for $d in collection($config:html-root || "/" || $currentWorkId) return xmldb:last-modified($config:html-root || "/" || $currentWorkId, util:document-name($d))), ", ") else ()}source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}"><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=html"><b>Render HTML (&amp; TXT) NOW!</b></a></td>
         else
             <td title="HTML created on {max(for $d in collection($config:html-root || "/" || $currentWorkId) return xmldb:last-modified($config:html-root || "/" || $currentWorkId, util:document-name($d)))}, source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}">Rendering unnecessary. <small><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=html">Render HTML (&amp; TXT) anyway!</a></small></td>
+};
+
+declare function admin:needsDetails($targetWorkId as xs:string) as xs:boolean {
+    let $targetSubcollection := 
+        for $subcollection in $config:tei-sub-roots return 
+            if (doc-available(concat($subcollection, '/', $targetWorkId, '.xml'))) then $subcollection
+            else ()
+    let $workModTime := xmldb:last-modified($targetSubcollection, $targetWorkId || '.xml')
+    return
+        if (substring($targetWorkId,1,2) eq "W0") then
+            if (xmldb:collection-available($config:html-root || '/' || $targetWorkId) and
+                $targetWorkId || "_details.html" = xmldb:get-child-resources($config:html-root || '/' || $targetWorkId)
+               ) then
+                let $indexModTime := xmldb:last-modified($config:index-root, $targetWorkId || "_nodeIndex.xml")
+                let $htmlModTime := xmldb:last-modified($config:html-root || '/' || $targetWorkId, $targetWorkId || "_details.html")
+                return if ($htmlModTime lt $workModTime or $htmlModTime lt $indexModTime) then true() else false()
+            else
+                true()
+        else if (substring($targetWorkId,1,2) = ("A0", "L0", "WP")) then
+            (: TODO: in the future, this should point to the directory where author/lemma/... HTML will be stored... :)
+            if (not(xmldb:collection-available($config:data-root))) then
+                true()
+            else if ($targetWorkId || ".html" = xmldb:get-child-resources($config:html-root || '/' || $targetWorkId)) then
+                let $renderModTime := xmldb:last-modified($config:data-root, $targetWorkId || ".html")
+                return if ($renderModTime lt $workModTime) then true() else false()
+            else true()
+        else true()
+};
+
+declare function admin:needsDetailsString($node as node(), $model as map(*)) {
+    let $currentWorkId         := $model('currentWork')?('wid')
+    let $detailFileCollection  := concat($config:html-root,  '/', $currentWorkId)
+    let $detailFilePath        := concat($detailFileCollection, '/', $currentWorkId, '_details.html')
+    return
+        if (admin:needsDetails($currentWorkId)) then
+            <td title="{if (xmldb:collection-available($detailFileCollection) and doc-available($detailFilePath)) then concat('Details created on: ', string(xmldb:last-modified($detailFileCollection, $currentWorkId || '_details.html')), ", ") else ()}source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}"><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=details"><b>Render Details NOW!</b></a></td>
+        else
+            <td title="HTML created on {string(xmldb:last-modified($detailFileCollection, $currentWorkId || '_details.html'))}, source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}">Rendering unnecessary. <small><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=details">Render Details anyway!</a></small></td>
 };
 
 declare function admin:workString($node as node(), $model as map(*), $lang as xs:string?) {
@@ -462,13 +499,14 @@ declare function admin:cleanCollection ($wid as xs:string, $collection as xs:str
     return $remove-status
 };
 
-declare function admin:saveFile($wid as xs:string, $fileName as xs:string, $content as item(), $collection as xs:string?) {
+declare function admin:saveFile($workId as xs:string, $fileName as xs:string, $content as item(), $collection as xs:string?) {
+    let $wid := tokenize($workId, "_")[1]
     let $collectionName :=
              if ($collection eq "html")         then $config:html-root     || "/" || $wid
         else if ($collection eq "txt")          then $config:txt-root      || "/" || $wid
         else if ($collection eq "snippets")     then $config:snippets-root || "/" || $wid
         else if ($collection eq "index")        then $config:index-root    || "/"
-       else if($collection eq "crumbtrails") then $config:crumb-root || "/"
+        else if ($collection eq "crumbtrails")  then $config:crumb-root    || "/"
         else if ($collection eq "iiif")         then $config:iiif-root     || "/"
         else if ($collection eq "data")         then $config:data-root     || "/"
         else if ($collection eq "stats")        then $config:stats-root    || "/"
@@ -515,22 +553,26 @@ declare function admin:saveFile($wid as xs:string, $fileName as xs:string, $cont
     return $store-status
 };
 
-declare function admin:saveTextFile($wid as xs:string, $fileName as xs:string, $content as xs:string, $collection as xs:string?) {
+declare function admin:saveTextFile($workId as xs:string, $fileName as xs:string, $content as xs:string, $collection as xs:string?) {
+    let $wid := tokenize($workId, "_")[1]
     let $collectionName := 
-             if ($collection eq "html")     then $config:html-root     || "/" || $wid
-        else if ($collection eq "txt")      then $config:txt-root      || "/" || $wid
-        else if ($collection eq "snippets") then $config:snippets-root || "/" || $wid
-        else if ($collection eq "workslist")    then $config:html-root     || "/"
-        else if ($collection eq "index")    then $config:index-root    || "/"
-        else if ($collection eq "iiif")     then $config:iiif-root     || "/"
-        else if ($collection eq "data")     then $config:data-root     || "/"
-        else if ($collection eq "stats")    then $config:stats-root    || "/"
+             if ($collection eq "html")      then $config:html-root     || "/" || $wid
+        else if ($collection eq "details")   then $config:html-root     || "/" || $wid
+        else if ($collection eq "txt")       then $config:txt-root      || "/" || $wid
+        else if ($collection eq "snippets")  then $config:snippets-root || "/" || $wid
+        else if ($collection eq "workslist") then $config:html-root     || "/"
+        else if ($collection eq "index")     then $config:index-root    || "/"
+        else if ($collection eq "iiif")      then $config:iiif-root     || "/"
+        else if ($collection eq "data")      then $config:data-root     || "/"
+        else if ($collection eq "stats")     then $config:stats-root    || "/"
         else if ($collection eq "rdf" and starts-with(upper-case($wid), 'W0')) then $config:rdf-works-root || "/"
         else if ($collection eq "rdf" and starts-with(upper-case($wid), 'A0')) then $config:rdf-authors-root || "/"
         else if ($collection eq "rdf" and starts-with(upper-case($wid), 'L0')) then $config:rdf-lemmata-root || "/"
         else $config:data-root || "/trash/"
     let $create-parent-status     :=      
              if ($collection eq "html"      and not(xmldb:collection-available($config:html-root)))     then
+            xmldb:create-collection($config:webdata-root, "html")
+        else if ($collection eq "details"   and not(xmldb:collection-available($config:html-root)))     then
             xmldb:create-collection($config:webdata-root, "html")
         else if ($collection eq "workslist" and not(xmldb:collection-available($config:html-root)))     then
             xmldb:create-collection($config:webdata-root, "html")
@@ -550,6 +592,8 @@ declare function admin:saveTextFile($wid as xs:string, $fileName as xs:string, $
         else ()
     let $create-collection-status :=      
              if ($collection eq "html"     and not(xmldb:collection-available($collectionName))) then
+            xmldb:create-collection($config:html-root, $wid)
+        else if ($collection eq "details"  and not(xmldb:collection-available($collectionName))) then
             xmldb:create-collection($config:html-root, $wid)
         else if ($collection eq "txt"      and not(xmldb:collection-available($collectionName))) then
             xmldb:create-collection($config:txt-root, $wid)
@@ -601,12 +645,13 @@ declare function admin:exportXMLFile($filename as xs:string, $content as item(),
 declare function admin:exportXMLFile($wid as xs:string, $filename as xs:string, $content as item(), $collection as xs:string?) {
     let $fsRoot := $config:export-folder
     let $collectionname := 
-             if ($collection eq "html")      then $fsRoot || $wid || "/html/"
-        else if ($collection eq "snippets")  then $fsRoot || $wid || "/snippets/"
-        else if ($collection eq "workslist") then $fsRoot || $wid || "/"
-        else if ($collection eq "index")     then $fsRoot || $wid || "/"
-        else if ($collection eq "rdf")       then $fsRoot || $wid || "/"
-        else                                      $fsRoot || "trash/"
+             if ($collection eq "html")        then $fsRoot || $wid || "/html/"
+        else if ($collection eq "snippets")    then $fsRoot || $wid || "/snippets/"
+        else if ($collection eq "workslist")   then $fsRoot || $wid || "/"
+        else if ($collection eq "index")       then $fsRoot || $wid || "/"
+        else if ($collection eq "crumbtrails") then $fsRoot || $wid || "/"
+        else if ($collection eq "rdf")         then $fsRoot || $wid || "/"
+        else                                        $fsRoot || "trash/"
     let $method :=
           if ($collection = ("html", "workslist")) then "html"
         else                                            "xml"
@@ -652,10 +697,12 @@ declare function admin:exportBinaryFile($filename as xs:string, $content as xs:s
     return  if ($store-status) then $pathname else ()
 };
 
-declare function admin:exportBinaryFile($wid as xs:string, $filename as xs:string, $content as xs:string, $collection as xs:string?) {
+declare function admin:exportBinaryFile($workId as xs:string, $filename as xs:string, $content as xs:string, $collection as xs:string?) {
+    let $wid := tokenize($workId, "_")[1]
     let $fsRoot := $config:export-folder
     let $collectionname := 
              if ($collection eq "html")      then $fsRoot || $wid || "/html/"
+        else if ($collection eq "details")   then $fsRoot || $wid || "/html/"
         else if ($collection eq "txt")       then $fsRoot || $wid || "/text/"
         else if ($collection eq "pdf")       then $fsRoot || $wid || "/"
         else                                      $fsRoot || "trash/"
@@ -728,7 +775,7 @@ declare function admin:exportJSONFile($wid as xs:string, $filename as xs:string,
 };
 
 declare function admin:buildFacets ($node as node(), $model as map (*), $lang as xs:string?) {
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Building finalFacets (Js)...") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Building facets for list view (version with Javascript)...") else ()
     let $result := for $l in ("de", "en", "es")
                     let $content      := app:WRKfinalFacets($node, $model, $l)
                     let $filename     := 'works_' || $l || '.json'
@@ -742,7 +789,7 @@ declare function admin:buildFacets ($node as node(), $model as map (*), $lang as
 };
 
 declare function admin:buildFacetsNoJs ($node as node(), $model as map (*), $lang as xs:string?) {
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Building finalFacets (No Js)...") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Building facets for list view (versions without Javascript)...") else ()
     let $facets := map { "surname" :    map { "de" : app:WRKcreateListSurname($node, $model, 'de'),
                                               "en" : app:WRKcreateListSurname($node, $model, 'en'),
                                               "es" : app:WRKcreateListSurname($node, $model, 'es')
@@ -1324,9 +1371,10 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
                     $config:webserver || "/workingPaper.html?wpid=" || $work_id
                 else
                     "#No fragment discoverable!"
-            let $nodeIndex         := doc("/db/apps/salamanca-webdata/index/" || $work_id || "_nodeIndex.xml")
+            let $nodeIndex         := doc($config:index-root || "/" || $work_id || "_nodeIndex.xml")
+            let $nodeCrumbtrails   := doc($config:crumb-root || "/" || $work_id || "_crumbtrails.xml")
             let $hit_label         := string($nodeIndex//sal:node[@n eq $hit_id]/@label)
-            let $hit_crumbtrail    := xmldb:encode(fn:serialize($nodeIndex//sal:node[@n eq $hit_id]/sal:crumbtrail/node(), map{"method":"xhtml", "escape-uri-attributes":false(), "omit-xml-declaration":true() }))
+            let $hit_crumbtrail    := xmldb:encode(fn:serialize($nodeCrumbtrails//sal:nodecrumb[@xml:id eq $hit_id]/sal:crumbtrail/node(), map{"method":"xhtml", "escape-uri-attributes":false(), "omit-xml-declaration":true() }))
 
             (: Here we define the to-be-indexed content! :)
             let $hit_content_orig := 
@@ -1519,48 +1567,41 @@ declare function admin:createNodeIndex($wid as xs:string*) {
 };
 
 declare function admin:createCrumbtrails($wid as xs:string){
-
    let $debug := if ($config:debug = ("trace", "info")) then
         let $d := console:log("[ADMIN] Creating Crumbtrails  for " || $wid || ".")
         return util:log("warn", "[ADMIN] Creating Crumbtrails for " || $wid || ".")
-    else
-        ()
+    else ()
 
     let $start-time := util:system-time()
 
- (: define the works to be indexed: :)
-    let $teiRoots := 
-        if ($wid = '*') then
-            collection($config:tei-works-root)//tei:TEI[.//tei:text[@type = ("work_multivolume", "work_monograph")]]
-        else
-            collection($config:tei-works-root)//tei:TEI[@xml:id = distinct-values($wid)]
+    (: define the works to be indexed: :)
+    let $teiRoots :=  if ($wid = '*') then
+                          collection($config:tei-works-root)//tei:TEI[.//tei:text[@type = ("work_multivolume", "work_monograph")]]
+                      else
+                          collection($config:tei-works-root)//tei:TEI[@xml:id = distinct-values($wid)]
 
-
- (: for each requested work, create an individual crumbtrails :)
+    (: for each requested work, create an individual crumbtrails :)
     let $crumbResults :=
-
         for $tei in $teiRoots return
-            let $start-time-a := util:system-time()
-            let $wid := string($tei/@xml:id)
-            let $crumbing := crumb:createCrumbNode($tei)
-            let $crumb := $crumbing('crumbtrails')
-            let $fragmentationDepth := $crumbing('fragmentation_depth')
-            let $missed-elements := $crumbing('missed_elements')
+            let $start-time-a          := util:system-time()
+            let $wid                   := string($tei/@xml:id)
+            let $crumbing              := crumb:createCrumbNode($tei)
+            let $crumb                 := $crumbing('crumbtrails')
+            let $fragmentationDepth    := $crumbing('fragmentation_depth')
+            let $missed-elements       := $crumbing('missed_elements')
             let $unidentified-elements := $crumbing('unidentified_elements')
-
-            let $indexing := index:makeNodeIndex($tei)
-            let $index := $indexing('index')
-    (:used here to compare and add a level of quality check :)
 
             (: save final crumb file :)
             let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Saving Crumbtrails ...") else ()
             let $crumbSaveStatus := admin:saveFile($wid, $wid || "_crumbtrails.xml", $crumb, "crumbtrails")
-            let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Crumbtrails of "  || $wid || " successfully created.") else ()
+            let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Crumbtrails of "  || $wid || " successfully saved.") else ()
 
+            let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Exporting Crumbtrails ...") else ()
+            let $crumbExportStatus := admin:exportXMLFile($wid, $wid || "_crumbtrails.xml", $crumb, "crumbtrails")
+            let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Crumbtrails of "  || $wid || " successfully exported.") else ()
 
             (: Reporting... :)
             let $runtime-ms-a := ((util:system-time() - $start-time-a) div xs:dayTimeDuration('PT1S'))  * 1000
-            (: render and store the work's plain text :)
             return 
                 <div>
                      <h4>{$wid}</h4>
@@ -1572,34 +1613,33 @@ declare function admin:createCrumbtrails($wid as xs:string){
                         {for $e in $unidentified-elements return <code>{local-name($e)}</code>}</p>
                       else ()}
                      <p>{count($crumb//sal:nodecrumb)} gathered crumbtrails elements {if ($crumbing('target_set_count') gt 0) then "of the following types: " || <br/> else ()}
-                        <code>{for $t in distinct-values($crumb//sal:nodecrumb/@type/string()) return $t || "(" || count($crumb//sal:nodecrumb[@type eq $t]) || ")"}</code></p>
-                     <p> {
-  
-        let $types_crumb:= map:merge(for $t in distinct-values($crumb//sal:nodecrumb/@type/string()) return map:entry($t, 
-        $crumb//sal:nodecrumb[@type eq $t]/@xml:id/string()))
-        
-        let $types_index :=  map:merge(for $t in distinct-values($index//sal:node/@type/string()) return map:entry($t, 
-       $index//sal:node[@type eq $t]/@n/string()))
-(: Creating two maps : one for the crumb IDs, the other for the index IDs.  :)
+                        <code>{for $t in distinct-values($crumb//sal:nodecrumb/@type/string()) return $t || "(" || count($crumb//sal:nodecrumb[@type eq $t]) || ")"}</code>
+                     </p>
+                     <p>{
+                        (: If we have an index file, we can do a quick quality check :)
+                        if (doc-available($config:index-root || "/" || $wid || "_nodeIndex.xml")) then 
+                            let $index        := doc($config:index-root || "/" || $wid || "_nodeIndex.xml")/sal:index
+                            let $types_index  := map:merge(for $t in distinct-values($index//sal:node/@type/string()) return
+                                                                map:entry($t, $index//sal:node[@type eq $t]/@n/string()))
+                            let $types_crumb  := map:merge(for $t in distinct-values($crumb//sal:nodecrumb/@type/string()) return
+                                                        map:entry($t, $crumb//sal:nodecrumb[@type eq $t]/@xml:id/string()))
+                            return if (deep-equal($types_crumb, $types_index)) then
+                                "The crumb and the index are consistent."  (: comparing here the maps without loop :)
+                            else
+                                "The crumb and the index are NOT consistent: please check again the missing nodes!"
+                        else
+                            "We don't have an index file for this work yet, so cannot do a quality check. " ||
+                            "Better have an up-to-date index file before creating crumbtrails..."
+                     }</p>
 
-return if (deep-equal($types_crumb, $types_index)) then "The crumb and the index are consistent."  (: comparing here the maps without loop :)
-       else 
-      
-            "The crumb and the index are NOT consistent: please check again the missing nodes!"
-     
-        }
-
-</p>
-
- <p>Computing time: {      
+                     <p>Computing time: {      
                           if ($runtime-ms-a < (1000 * 60)) then format-number($runtime-ms-a div 1000, "#.##") || " Sek."
                           else if ($runtime-ms-a < (1000 * 60 * 60)) then format-number($runtime-ms-a div (1000 * 60), "#.##") || " Min."
                           else format-number($runtime-ms-a div (1000 * 60 * 60), "#.##") || " Std."
-                        }
-                     </p>
+                     }</p>
                </div>
 
-(:Time counting :)
+    (: Time counting :)
     let $runtime-ms-raw := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000 
     let $runtime-ms :=
         if ($runtime-ms-raw < (1000 * 60)) then format-number($runtime-ms-raw div 1000, "#.##") || " Sek."
@@ -1747,6 +1787,136 @@ declare function admin:createIIIF($wid as xs:string) {
     return $resource
 };
 
+declare function admin:StripLBs($input as xs:string) {
+    normalize-space(replace($input, '&#10;', ' '))
+};
+
+(: 
+~ Creates and stores work details for catalog page(s).
+:)
+declare function admin:createDetails($wid as xs:string) {
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Rendering Details for " || $wid || ".") else ()
+    let $start-time := util:system-time()
+    let $todo := 
+        if ($wid = '*') then
+            collection($config:tei-root)//tei:TEI[.//tei:text[@type = ("work_multivolume", "work_monograph", "work_volume")]]
+        else
+            collection($config:tei-root)//tei:TEI[@xml:id = distinct-values($wid)]
+    let $expanded :=  for $work-raw in $todo return util:expand($work-raw)
+
+    let $process_loop := for $work in $expanded
+
+        let $id        := $work/@xml:id/string()
+        let $teiHeader := $work//tei:teiHeader
+        
+        (: we don't have iiif manifests for volumes, only for multivols and monographs :)
+        let $iiif_file := if ($work//tei:text[@type = ("work_multivolume", "work_monograph")]) then
+                              $config:iiif-root || '/' || $id || '.json'
+                          else
+                              let $mulivol_id := $teiHeader//tei:notesStmt/tei:relatedItem[@type eq 'work_multivolume']/@target/tokenize(., ':')[2]
+                              return $config:iiif-root || '/' || $mulivol_id || '.json'
+        let $iiif      := json-doc($iiif_file)
+
+        let $volume_names := for $v in $teiHeader//tei:notesStmt/tei:relatedItem[@type eq 'work_volume'] return $v/@target/tokenize(., ':')[2]
+        let $debug := if (count($volume_names)>0) then console:log('[Details] $volume_names: ' || string-join($volume_names, ', ')) else ()
+        let $volumes := for $f in $volume_names return if (doc-available($config:tei-root || '/works/' || $f || '.xml')) then map:entry($f, doc($config:tei-root || '/works/' || $f || '.xml')) else ()
+        let $volumes := map:merge($volumes)
+        (: let $debug := console:log('$volumes: ' || serialize($volumes, map {"method":"json", "media-type":"application/json"})) :)
+
+        let $volumes_list := for $key in map:keys($volumes) order by $key
+                                let $vol_thumbnail := array:filter($iiif?members, function($m) {contains(map:get($m, '@id'), $key) })(1)?thumbnail
+                                (: let $debug := console:log('$vol_thumbnail: ' || serialize($vol_thumbnail, map {"method":"json", "media-type":"application/json"})) :)
+                                (: let $debug := console:log('$iiif-vol?thumbnail?@id: ' || serialize(map:get($vol_thumbnail, '@id'), map {"method":"json", "media-type":"application/json"})) :)
+                                let $teiHeader := map:get($volumes, $key)//tei:teiHeader
+                                return map {
+                                "key" : $key,
+                                "id" : $key,
+                                "uri" : $config:idserver || '/texts/' || $teiHeader//tei:notesStmt/tei:relatedItem[@type eq 'work_multivolume']/@target/tokenize(., ':')[2] || ':vol' || map:get($volumes, $key)//tei:text/@n/string(),
+                                "series_num" :              $teiHeader//tei:seriesStmt/tei:biblScope[@unit eq 'volume']/@n/string(),
+                                "parent_work" :             $teiHeader//tei:notesStmt/tei:relatedItem[@type eq 'work_multivolume']/@target/tokenize(., ':')[2],
+                                "num" :                     map:get($volumes, $key)//tei:text/@n/string(),
+                                "author_short" :            string-join($teiHeader//tei:titleStmt/tei:author/tei:persName/tei:surname, '/'),
+                                "author_full" :             admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:author/tei:persName/string(), '/')),
+                                "title_short" :             $teiHeader//tei:titleStmt/tei:title[@type eq 'short']/string(),
+                                "title_full" :              admin:StripLBs($teiHeader//tei:titleStmt/tei:title[@type eq 'main']/string()),
+                                "place" :                   string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:pubPlace return $p/string() || ' (' || $p/@role/string() || ')', ', '),
+                                "printer_short" :           string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:publisher return $p//tei:surname/string() || ' (' || $p/@n/string() || ')', ', '),
+                                "printer_full" :            admin:StripLBs(string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:publisher return $p//string() || ' (' || $p/@n/string() || ')', ', ')),
+                                "year" :                    $teiHeader//tei:sourceDesc//tei:imprint/tei:date[@type eq 'firstEd']/@when/string(),
+                                "src_publication_period" :  $teiHeader//tei:sourceDesc//tei:imprint/tei:date[@type eq 'summaryFirstEd']/string(),
+                                "language" :                string-join($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n eq 'main']/string(), ', ') ||
+                                            (if ($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n ne 'main']) then
+                                                ' (' || string-join(teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n ne 'main']/string(), ', ') || ')'
+                                            else ()),
+                                "thumbnail" :               map:get($vol_thumbnail, '@id'),
+                                "schol_ed" :                admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#scholarly')]/string(), ' / ')),
+                                "tech_ed" :                 admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#technical')]/string(), ' / ')),
+                                "el_publication_date" :     $teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when/string()[1],
+                                "status" :                  $teiHeader/tei:revisionDesc/@status/string()
+                            }
+
+        let $vol_strings := for $v in $volumes_list return '$' || string(map:get($v, 'key')) || ' := dict ' ||
+                                        string-join(for $k in map:keys($v) return '"' || $k || '" "' || string(map:get($v, $k)) || '"', ' ')
+
+        let $work_info := map {
+            "id" : $id,
+            "uri" : $config:idserver || '/texts/' || $id,
+            "series_num" :              $teiHeader//tei:seriesStmt/tei:biblScope[@unit eq 'volume']/@n/string(),
+            "author_short" :            string-join($teiHeader//tei:titleStmt/tei:author/tei:persName/tei:surname, '/'),
+            "author_full" :             admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:author/tei:persName/string(), '/')),
+            "title_short" :             $teiHeader//tei:titleStmt/tei:title[@type eq 'short']/string(),
+            "title_full" :              admin:StripLBs($teiHeader//tei:titleStmt/tei:title[@type eq 'main']/string()),
+            "place" :                   string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:pubPlace return $p/string() || ' (' || $p/@role/string() || ')', ', '),
+            "printer_short" :           string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:publisher return string-join($p//tei:surname, ' &amp; ') || ' (' || $p/@n/string() || ')', ', '),
+            "printer_full" :            admin:StripLBs(string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:publisher return string-join($p, ' &amp; ') || ' (' || $p/@n/string() || ')', ', ')),
+            "year" :                    $teiHeader//tei:sourceDesc//tei:imprint/tei:date[@type eq 'firstEd']/@when/string(),
+            "src_publication_period" :  $teiHeader//tei:sourceDesc//tei:imprint/tei:date[@type eq 'summaryFirstEd']/string(),
+            "language" :                string-join($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n eq 'main']/string(), ', ') ||
+                                            (if ($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n ne 'main']) then
+                                                ' (' || string-join($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n ne 'main']/string(), ', ') || ')'
+                                            else ()),
+            "thumbnail" :               if ("thumbnail" = map:keys($iiif)) then
+                                            map:get($iiif?thumbnail, '@id')
+                                        else if ("members" = map:keys($iiif) and "thumbnail" = map:keys($iiif?members(1))) then
+                                            map:get($iiif?members(1)?thumbnail, '@id')
+                                        else (),
+            "schol_ed" :                admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#scholarly')]/string(), ' / ')),
+            "tech_ed" :                 admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#technical')]/string(), ' / ')),
+            "el_publication_date" :     $teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when/string()[1],
+            "status" :                  $teiHeader/tei:revisionDesc/@status/string(),
+            "number_of_volumes" :       count(map:keys($volumes)),
+            "volumes":                  $volumes_list
+        }
+
+        let $debug := if ($config:debug = "trace") then console:log($work_info) else ()
+
+        let $vol_keys := for $v in $volumes_list return concat('$', map:get($v, 'key')) 
+        let $volumes_string := '{{ $Volumes := dict "number" ' || xs:string(map:get($work_info, 'number_of_volumes')) ||
+                                                    ' "volumes" (list ' || string-join($vol_keys, ' ') || ') }}'
+        let $work_string := '{{ $work_info := dict ' || string-join(for $key in map:keys($work_info) return if ($key ne 'volumes') then '"' || $key || '" "' || string(map:get($work_info, $key)) || '"' else (), ' ') ||
+                            (if (count(map:keys($volumes))>0) then ' "volumes" $Volumes' else ()) ||
+                            ' }}'
+        let $include_string := '{{ include "../../../resources/templates/template_details.html" $work_info }}'
+
+        let $work_result := concat(if (count($vol_strings) > 0) then '{{ ' || string-join($vol_strings, ' }}&#10;{{ ') || ' }}&#10;' || $volumes_string || '&#10;&#10;' else (), $work_string, '&#10;&#10;', $include_string, '&#10;')
+
+        let $save   := admin:saveTextFile($id, $id || '_details.html', $work_result, 'details')
+        let $export := admin:exportBinaryFile($id, $id || '_details.html', $work_result, 'details')
+
+        let $debug := if ($config:debug = ("info", "trace")) then console:log("[Details] Going into recursion for volume details...") else ()
+        let $recursion := for $v in map:keys($volumes)
+                            let $debug := console:log("[Details] Rendering details for volume " || $v || "...")
+                            return admin:createDetails($v)
+        return ($id, $save, $export)
+    let $debug := if ($config:debug = "bla") then console:log("[ADMIN] Done rendering Details.")
+                  else if ($config:debug = ("info", "trace")) then console:log("[ADMIN] Done rendering Details. (Saved/exported to " || string-join(for $v in $process_loop return string-join($v, ','), '; ') || ").")
+                  else ()
+    return $process_loop
+};
+
+(: 
+~ Creates and stores statistics.
+:)
 declare function admin:createStats() {
     let $log  := if ($config:debug eq 'trace') then util:log('info', '[ADMIN] Starting to extract stats...') else ()
     let $start-time := util:system-time()
