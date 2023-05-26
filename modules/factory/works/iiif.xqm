@@ -7,7 +7,7 @@ xquery version "3.1";
 
  ----++++#### :)
 
-module namespace iiif     = "http://www.salamanca.school/factory/works/iiif";
+module namespace iiif     = "https://www.salamanca.school/factory/works/iiif";
 
 declare namespace array   = "http://www.w3.org/2005/xpath-functions/array";
 declare namespace exist   = "http://exist.sourceforge.net/NS/exist";
@@ -17,13 +17,13 @@ declare namespace sal     = "http://salamanca.adwmainz.de";
 declare namespace tei     = "http://www.tei-c.org/ns/1.0";
 declare namespace xi      = "http://www.w3.org/2001/XInclude";
 
-import module namespace console = "http://exist-db.org/xquery/console";
-import module namespace util    = "http://exist-db.org/xquery/util";
+import module namespace console   = "http://exist-db.org/xquery/console";
+import module namespace util      = "http://exist-db.org/xquery/util";
 
-import module namespace config  = "http://www.salamanca.school/xquery/config"  at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
-import module namespace app     = "http://www.salamanca.school/xquery/app"     at "xmldb:exist:///db/apps/salamanca/modules/app.xqm";
-import module namespace sutil   = "http://www.salamanca.school/xquery/sutil"   at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
-
+import module namespace config    = "https://www.salamanca.school/xquery/config"       at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace app       = "https://www.salamanca.school/xquery/app"          at "xmldb:exist:///db/apps/salamanca/modules/app.xqm";
+import module namespace sutil     = "https://www.salamanca.school/xquery/sutil"        at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
+import module namespace index     = "https://www.salamanca.school/factory/works/index" at "xmldb:exist:///db/apps/salamanca/modules/factory/works/index.xqm";
 
 
 (: Creates a new iiif resource, either a manifest (for a single-volume work or 
@@ -36,10 +36,10 @@ declare function iiif:createResource($targetWorkId as xs:string) as map(*) {
     let $iiifResource :=
         if ($tei) then
         (: dataset exists: :)
-            if ($tei/tei:text[@type='work_multivolume']) then
+            if ($tei/tei:text[@type = 'work_multivolume']) then
                 (: work has several volumes :)
                 iiif:mkMultiVolumeCollection($targetWorkId, $tei)
-            else if ($tei/tei:text[@type='work_monograph' or @type='work_volume']) then
+            else if ($tei/tei:text[@type = 'work_monograph' or @type = 'work_volume']) then
                 (: single volume :)
                 iiif:mkSingleVolumeManifest($targetWorkId, $tei, ())
             else ()
@@ -50,50 +50,51 @@ declare function iiif:createResource($targetWorkId as xs:string) as map(*) {
 };
 
 declare function iiif:mkMultiVolumeCollection($workId as xs:string, $tei as node()) as map(*) {
-(:    let $debug := if ($config:debug = "trace") then console:log("[iiif] iiif:mkMultiVolumeCollection running (" || $workId || " requested) ...") else ():)
-    let $id := $config:iiifPresentationServer || "collection/" || $workId
-    let $label := string-join(for $a in $tei//tei:titleStmt/tei:author return normalize-space($a), "/") || ": " ||
-        normalize-space($tei//tei:titleStmt/tei:title[@type="main"]/text()) || " [multi-volume collection]"
-    let $viewingHint := "multi-part"
-    let $license         := "" (: TODO: which license for image data? https://creativecommons.org/licenses/by/4.0/ :)
+    let $debug           := if ($config:debug = ("info", "trace")) then console:log("[iiif] iiif:mkMultiVolumeCollection running (" || $workId || " requested) ...") else ()
+(:    let $id              := $config:iiifPresentationServer || "collection/" || $workId:)
+    let $id              := "https://www.test.salamanca.school/data/" || $workId || "/" || $workId || ".json"
+    let $label           := string-join(for $a in $tei//tei:titleStmt/tei:author return normalize-space($a), "/") || ": " ||
+                            normalize-space($tei//tei:titleStmt/tei:title[@type = "main"]/text()) || " [multi-volume collection]"
+    let $metadata        := iiif:mkMetadata($tei)
+    let $description     := "Facsimiles for " || $label                          (: TODO: create a better description? :)
+    let $license         := "https://creativecommons.org/licenses/by/4.0/"       (: TODO: which license for image data? :)
+    let $viewingHint     := "multi-part"
     let $attribution     := "Presented by the project 'The School of Salamanca. A Digital Collection of Sources and a Dictionary of its Juridical-Political Language.' (http://salamanca.adwmainz.de)"
 
     (: get manifests for each volume :)
     let $volumeFileNames := for $fileName in $tei/tei:text/tei:group/xi:include/@href return $fileName
-    let $debug := if ($config:debug = "trace") then console:log("[iiif] Get manifests for " || string-join($volumeFileNames, ', ') || "...") else ()
+    let $volumeNodes     := for $fileName in $volumeFileNames return doc($config:tei-works-root || '/' || $fileName)//tei:TEI
 
-    let $volumeNodes := for $fileName in $volumeFileNames return doc($config:tei-works-root || '/' || $fileName)//tei:TEI
-    let $debug := if ($config:debug = "trace") then console:log("[iiif] (These correspond to the following Work-Ids: " || string-join($volumeNodes/@xml:id/string(), ', ') || ").") else ()
-
+    let $debug           := if ($config:debug = ("info", "trace")) then console:log("[iiif] Recursion: Create singleVolume manifests for: " || string-join($volumeNodes/@xml:id/string(), ', ') || ".") else ()
     let $volumeManifests := for $teiNode in $volumeNodes return iiif:mkSingleVolumeManifest($teiNode/@xml:id, $teiNode, $id)
-    let $manifests := array {for $manifest in $volumeManifests return $manifest}
+    let $manifests       := array { $volumeManifests }
 
-    (: Bibliographical metadata section :)
-    let $metadata := iiif:mkMetadata($tei)
-
-    (: the "manifests" property (below) is likely to be deprecated in v3.0 and should probably be changed to "members" then :)
+    (: the "manifests" property (below) is deprecated in v3.0, it is present as a fallback only :)
     let $collection-out := map {
-        "@context": "http://iiif.io/api/presentation/2/context.json",
-        "@id": $id,
-        "@type": "sc:Collection",
-        "label": $label,
-        "metadata": $metadata,
-        "viewingHint": $viewingHint,
-        "attribution": $attribution,
-        "license": $license,
-        "members": $manifests
-    }
+                               "@context":    "http://iiif.io/api/presentation/2/context.json",
+                               "@id":         $id,
+                               "@type":       "sc:Collection",
+                               "label":       $label,
+                               "metadata":    $metadata,
+                               "description": $description,
+                               "viewingHint": $viewingHint,
+                               "attribution": $attribution,
+                               "license":     $license,
+                               "members":     $manifests,
+                               "manifests":   $manifests
+                           }
+    let $debug           := if ($config:debug = "trace") then console:log($collection-out) else ()
     return $collection-out
 };
 
 (: includes single-volume works as well as single volumes as part of multi-volume works:)
 (: volumeId: xml:id of TEI node of single TEI file, e.g. "W0004" or "W0013_Vol01" :)
 declare function iiif:mkSingleVolumeManifest($volumeId as xs:string, $teiDoc as node(), $collectionId as xs:string?) {
-(:    let $debug := if ($config:debug = "trace") then console:log("[iiif] iiif:mkSingleVolumeManifest running (" || $volumeId || " requested) ...") else ():)
+    let $debug := if ($config:debug = "trace") then console:log("[iiif] iiif:mkSingleVolumeManifest running (" || $volumeId || " requested) ...") else ()
     let $tei := util:expand($teiDoc)
     (: File metadata section :)
     let $id := $config:iiifPresentationServer || $volumeId || "/manifest"
-    let $label := normalize-space($tei/tei:teiHeader//tei:titleStmt/tei:title[@type="main"]/text())
+    let $label := normalize-space($tei/tei:teiHeader//tei:titleStmt/tei:title[@type = "main"]/text())
 
     (: Bibliographical metadata section :)
     let $metadata := iiif:mkMetadata($tei)
@@ -112,7 +113,8 @@ declare function iiif:mkSingleVolumeManifest($volumeId as xs:string, $teiDoc as 
 
     (: Sequences, including all the canvases and images for the volume :)
     (: currently, there is but one sequence (the default sequence/order of pages for the volume) :)
-    let $sequences := array { iiif:mkSequence($volumeId, $tei, concat($config:iiifImageServer, $thumbnailId, "/full/full/0/default.jpg")) } 
+    let $sequences := array { iiif:mkSequence($volumeId, $tei, concat($config:iiifImageServer, $thumbnailId, "/full/full/0/default.jpg")) }
+    let $structures := iiif:mkStructures($tei)
 
     (: Presentation information :)
     let $viewingDirection := "left-to-right"
@@ -150,7 +152,8 @@ declare function iiif:mkSingleVolumeManifest($volumeId as xs:string, $teiDoc as 
         "attribution": $attribution,
         "seeAlso": $seeAlso,
         "rendering": $rendering,
-        "sequences": $sequences
+        "sequences": $sequences,
+        "structures": $structures
     }
     let $manifest-out2 := if ($collectionId) then map:put($manifest-out, "within", $collectionId) else $manifest-out
     return $manifest-out2
@@ -163,7 +166,7 @@ declare function iiif:mkSingleVolumeManifest($volumeId as xs:string, $teiDoc as 
     @tei The TEI node of the volume.
     @thumbnailUrl The complete URL of the thumbnail, as also stated in the "thumbnail" field's "@id" attribute :)
 declare function iiif:mkSequence($volumeId as xs:string, $tei as node(), $thumbnailUrl as xs:string) {
-(:    let $debug := if ($config:debug = "trace") then console:log("[iiif] iiif:mkSequence running...") else ():)
+    let $debug := if ($config:debug = "trace") then console:log("[iiif] iiif:mkSequence running...") else ()
     let $id := $config:iiifPresentationServer || $volumeId || "/sequence/normal"
 
     let $canvases :=
@@ -174,13 +177,13 @@ declare function iiif:mkSequence($volumeId as xs:string, $tei as node(), $thumbn
             return $canvases-out
         else
             (: no full text available: get canvases from automatically generated digilib manifest and transform them: :)
-            let $digilib-mf-uri  := $config:digilibServerManifester || iiif:getIiifVolumeId($volumeId)
-            let $options         := map { "liberal": true(), "duplicates": "use-last" }
+            let $digilib-mf-uri    := $config:digilibServerManifester || iiif:getIiifVolumeId($volumeId)
+            let $options           := map { "liberal": true(), "duplicates": "use-last" }
             let $digilib-manifest  := json-doc($digilib-mf-uri, $options)
             let $digilib-sequence1 := array:get(map:get($digilib-manifest, "sequences"), 1) (: assumes that there is only one – the default – sequence in the digilib manifest :)
-            let $digilib-canvases := map:get($digilib-sequence1, "canvases")
+            let $digilib-canvases  := map:get($digilib-sequence1, "canvases")
             let $digilib-canvases-seq := for $i in (1 to array:size($digilib-canvases)) return array:get($digilib-canvases, $i)
-            let $startPageNo := 1
+            let $startPageNo  := 1
             let $canvases-seq := for $canvas at $n in $digilib-canvases-seq return iiif:transformDigilibCanvas($volumeId, $canvas, $n)
 
             let $canvases-out := array {for $canvas in $canvases-seq return $canvas}
@@ -193,12 +196,11 @@ declare function iiif:mkSequence($volumeId as xs:string, $tei as node(), $thumbn
     (: The startCanvas is identifiable by its containing (within "resource"/"@id") 
         the URL of the title page (=thumbnail). The following assumes that this URL can be found somewhere 
         within the first 30 canvases:)
-    let $getStartCanvas := 
+    let $getStartCanvas :=
         for $i in (1 to 15)  (: assuming that no work has less than 15 images AND that the thumbnail occurs within the first 15 images :)
             let $canvasImage := map:get($canvases($i), "images")(1)
             let $imageResourceId := map:get(map:get($canvasImage, "resource"), "@id")
-            let $return := if ($imageResourceId eq $thumbnailUrl) 
-                            then  map:get($canvases($i), "@id") else ()
+            let $return := if ($imageResourceId eq $thumbnailUrl) then  map:get($canvases($i), "@id") else ()
             return $return
     let $startCanvas := if (count($getStartCanvas) eq 1) then $getStartCanvas else $startPageNo
 
@@ -215,8 +217,70 @@ declare function iiif:mkSequence($volumeId as xs:string, $tei as node(), $thumbn
     return $sequences-out
 };
 
-declare function iiif:mkCanvasFromTeiFacs($volumeId as xs:string, $facs as xs:string, $index as xs:integer) {
+declare function iiif:mkStructures($tei) {
+        let $work := util:expand($tei)
+        let $workId := $work/@xml:id
+        let $title := sutil:WRKcombined($work, (), $workId)
+        let $structures-static :=  array {
+        map {
+            "@id": "https://example.org/range/root",
+            "@type": "sc:Range",
+            "label": "This range is not shown",
+            "viewingHint": "top",
+            "ranges": array {concat("https://", $tei/tei:text/@xml:id)}            
+        }, 
+         map {
+            "@id": concat("https://", $tei/tei:text/@xml:id),
+            "@type": "sc:Range",
+            "label": $title,
+            "ranges": array {
+                for $div in $tei/tei:text/*/tei:div/@xml:id return concat("https://", $div) }                
+        }       
+ }
+     let $structures-dynamic :=
+        let $structures-seq := for $div at $n in $tei/tei:text/*/tei:div 
+		return iiif:mkStructuresFromTeiDivs($div, $tei)
+        let $structures-out := array {
+            for $structure in $structures-seq
+            return
+                $structure
+        }
+        return
+            $structures-out
 
+    return array:join(($structures-static, $structures-dynamic))
+};
+
+declare function iiif:mkStructuresFromTeiDivs($div, $tei) {
+    let $div-id := $div/@xml:id
+    let $facs_in_text := for $facs at $n in $tei/tei:text//tei:pb[not(@sameAs or @corresp)]/@facs
+    return
+        (substring-after(iiif:teiFacs2IiifImageId($facs), "-"))
+    (: getting all <pb> in <div>; the first <pb> in the sequence should be the one preceding the first text of the <div>:)        
+    let $facs_in_div := for $facs at $n in $tei/id($div-id)/(.//tei:pb[not(@sameAs or @corresp)]/@facs | ./descendant::text()[string-length(normalize-space(.)) gt 0][1]/preceding::tei:pb[not(@sameAs or @corresp)][1]/@facs)
+    return
+        (substring-after(iiif:teiFacs2IiifImageId($facs), "-"))
+ (:     
+    let $debug := console:log("Div " || $div-id || " $facs_in_div: " || string-join($facs_in_div, ", ") || ".")
+    let $debug := console:log("Div " || $div-id || " erster Text: " || $tei/id($div-id)/descendant::text()[string-length(normalize-space(.)) gt 0][1])
+    let $debug := console:log("Div " || $div-id || " letztes vorangegangenes pb: " || serialize($tei/id($div-id)/descendant::text()[string-length(normalize-space(.)) gt 0][1]/preceding::tei:pb[not(@sameAs or @corresp)][1]))
+ :)   
+    let $titleString := index:dispatch($div, 'title')
+    let $labelString := index:dispatch($div, 'label')  
+    let $canvas-out := map {
+        "@id": concat("https://", $div/@xml:id),
+        "@type": "sc:Range",
+        "label": concat('[',$labelString,'] ', $titleString),
+        "canvases": array {
+        for $i in $facs_in_div
+            return    $config:iiifPresentationServer  || $tei/@xml:id || "/canvas/p" || index-of($facs_in_text,$i)  
+        }
+}
+    return
+        $canvas-out
+};
+
+declare function iiif:mkCanvasFromTeiFacs($volumeId as xs:string, $facs as xs:string, $index as xs:integer) {
     let $id := $config:iiifPresentationServer || $volumeId || "/canvas/p" || string($index)
     let $label := "p. " || string($index)
 
@@ -323,28 +387,28 @@ declare function iiif:transformDigilibCanvas($volumeId as xs:string, $canvas as 
     @returns An "metadata" array according to the IIIF presentation specifications
     :)
 declare function iiif:mkMetadata($tei as node()) as array(*) {
-    let $monogr := $tei/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct/tei:monogr
-    let $pubPlace := if ($monogr/tei:imprint/tei:pubPlace[@role='thisEd']) then normalize-space($monogr/tei:imprint/tei:pubPlace[@role='thisEd']/@key)
-                     else if ($monogr/tei:imprint/tei:pubPlace[@role='firstEd']) then normalize-space($monogr/tei:imprint/tei:pubPlace[@role='firstEd']/@key)
-                     else ()
-    let $publishers :=    if ($monogr/tei:imprint/tei:publisher[@n='thisEd']) then app:rotateFormatName($monogr/tei:imprint/tei:publisher[@n='thisEd']/tei:persName)
-                                else app:rotateFormatName($monogr/tei:imprint/tei:publisher[@n='firstEd']/tei:persName)        
-    let $pubDate := if ($monogr/tei:imprint/tei:date[@type='thisEd']) then string($monogr/tei:imprint/tei:date[@type='thisEd']/@when)
-                    else if ($monogr/tei:imprint/tei:date[@type='firstEd']) then string($monogr/tei:imprint/tei:date[@type='firstEd']/@when)
-                    else ()
-    let $lang := string($tei/tei:text/@xml:lang)
+    let $monogr     := $tei/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct/tei:monogr
+    let $pubPlace   := if ($monogr/tei:imprint/tei:pubPlace[@role = 'thisEd']) then normalize-space($monogr/tei:imprint/tei:pubPlace[@role = 'thisEd']/@key)
+                       else if ($monogr/tei:imprint/tei:pubPlace[@role = 'firstEd']) then normalize-space($monogr/tei:imprint/tei:pubPlace[@role = 'firstEd']/@key)
+                       else ()
+    let $publishers := if ($monogr/tei:imprint/tei:publisher[@n = 'thisEd']) then app:rotateFormatName($monogr/tei:imprint/tei:publisher[@n = 'thisEd']/tei:persName)
+                       else app:rotateFormatName($monogr/tei:imprint/tei:publisher[@n = 'firstEd']/tei:persName)
+    let $pubDate    := if ($monogr/tei:imprint/tei:date[@type = 'thisEd']) then string($monogr/tei:imprint/tei:date[@type = 'thisEd']/@when)
+                       else if ($monogr/tei:imprint/tei:date[@type = 'firstEd']) then string($monogr/tei:imprint/tei:date[@type = 'firstEd']/@when)
+                       else ()
+    let $lang       := string($tei/tei:text/@xml:lang)
 
     let $metadata := array {
-        map {"label": iiif:getI18nLabels("title"), "value": normalize-space($tei//tei:titleStmt/tei:title[@type="main"]/text())},
+        map {"label": iiif:getI18nLabels("title"), "value": normalize-space($tei//tei:titleStmt/tei:title[@type = "main"]/text())},
         map {"label": iiif:getI18nLabels("author"), "value": string-join(for $a in $tei//tei:titleStmt/tei:author return normalize-space($a), "/")},
         map {"label": iiif:getI18nLabels("date-added"), "value": ""},
         map {"label": iiif:getI18nLabels("language"), "value": $lang},
         map {"label": iiif:getI18nLabels("publish-place"), "value": $pubPlace},
         map {"label": iiif:getI18nLabels("publish-date"), "value": $pubDate},
         map {"label": iiif:getI18nLabels("publishers"), "value": $publishers},
-        map {"label": iiif:getI18nLabels("full-title"), "value": normalize-space($tei//tei:sourceDesc/tei:biblStruct//tei:monogr/tei:title[@type='main'])}
+        map {"label": iiif:getI18nLabels("full-title"), "value": normalize-space($tei//tei:sourceDesc/tei:biblStruct//tei:monogr/tei:title[@type = 'main'])}
     }
-(:   further potential metadata fields:
+    (:   further potential metadata fields:
         map {"label": "Topic", "value": ""},
         map {"label": "About", "value": ""}  :)
     return $metadata
@@ -352,8 +416,8 @@ declare function iiif:mkMetadata($tei as node()) as array(*) {
 
 declare function iiif:getThumbnailId($tei as node()) as xs:string {
     let $expandedTei := util:expand($tei)
-    let $thumbnailFacs := 
-        if ($expandedTei/tei:text/tei:front//tei:titlePage[1]//tei:pb[1]) then 
+    let $thumbnailFacs :=
+        if ($expandedTei/tei:text/tei:front//tei:titlePage[1]//tei:pb[1]) then
             $expandedTei/tei:text/tei:front//tei:titlePage[1]//tei:pb[1]/@facs
         else $expandedTei/tei:text/tei:front//tei:titlePage[1]/preceding-sibling::tei:pb[1]/@facs
     return iiif:teiFacs2IiifImageId($thumbnailFacs[1])
@@ -372,26 +436,25 @@ declare function iiif:getI18nLabels($labelKey as xs:string?) as array(*) {
                          "publishers": map {"en": "Publishers", "de": "Verleger", "es": "Editores"},
                          "full-title": map {"en": "Full Title", "de": "Gesamter Titel", "es": "Título Completo"},
                          "publisher": map {"en": "Publisher", "de": "Verleger", "es": "Editor"}
-                         }
-    let $currentLabel := if (map:contains($labels, $labelKey) ) then 
-                        array {
-                            map { "@value": map:get(map:get($labels, $labelKey), "en"), "@language": "en" },
-                            map { "@value": map:get(map:get($labels, $labelKey), "es"), "@language": "es" },
-                            map { "@value": map:get(map:get($labels, $labelKey), "de"), "@language": "de" } 
-                        }
-                        else ()
+                       }
+    let $currentLabel := if (map:contains($labels, $labelKey)) then
+                             array { map {"@value": map:get(map:get($labels, $labelKey), "en"), "@language": "en"},
+                                     map {"@value": map:get(map:get($labels, $labelKey), "es"), "@language": "es"},
+                                     map {"@value": map:get(map:get($labels, $labelKey), "de"), "@language": "de"}
+                                   }
+                         else ()
     return $currentLabel
 };
 
 (: converts a tei:pb/@facs value (given that it has the form "facs:Wxxxx(-x)-xxxx") into an image id understandable by the Digilib server,
     such as "W0013!A!W0013-A-0009". Changes in the Digilib settings, for instance with the delimiters, might make changes in this function necessary :)
 declare function iiif:teiFacs2IiifImageId($facs as xs:string?) as xs:string {
-    let $debug := 
-        if (not(matches($facs, 'facs:W\d{4}(-[A-z])?-\d{4}'))) then 
-            error(xs:QName('iiif:teiFacs2IiifImageId'), '@facs value "' || $facs || '" could not be parsed as ^facs:W\d{4}(-[A-z])?-\d{4}$') 
+    let $debug :=
+        if (not(matches($facs, 'facs:W\d{4}(-[A-z])?-\d{4}'))) then
+            error(xs:QName('iiif:teiFacs2IiifImageId'), '@facs value "' || $facs || '" could not be parsed as ^facs:W\d{4}(-[A-z])?-\d{4}$')
         else ()
     let $facsWork := substring-before(substring-after($facs, "facs:"), "-")
-    let $facsVol := if (contains(substring-after($facs, "-"), "-")) then substring-before(substring-after($facs, "-"),"-") else ()
+    let $facsVol := if (contains(substring-after($facs, "-"), "-")) then substring-before(substring-after($facs, "-"), "-") else ()
     let $facsImgId := substring($facs, string-length($facs) - 3, 4)
     let $iiifImageId := if ($facsVol)
         then concat($facsWork, "!", $facsVol, "!", $facsWork, "-", $facsVol, "-", $facsImgId)
@@ -403,12 +466,18 @@ declare function iiif:teiFacs2IiifImageId($facs as xs:string?) as xs:string {
     If a work has been separated into several files with identifiers ending on underscore + lowercased letter, then this id will be returned. :)
 declare function iiif:getIiifVolumeId($volumeId as xs:string) as xs:string {
     let $volumeMap := map {
-        "Vol01": "A","Vol02": "B","Vol03": "C","Vol04": "D","Vol05": "E","Vol06": "F","Vol07": "G","Vol08": "H","Vol09": "I","Vol10": "J","Vol11": "K","Vol12": "L","Vol13": "M","Vol14": "N","Vol15": "O"
+        "Vol01": "A", "Vol02": "B", "Vol03": "C", "Vol04": "D",
+        "Vol05": "E", "Vol06": "F", "Vol07": "G", "Vol08": "H",
+        "Vol09": "I", "Vol10": "J", "Vol11": "K", "Vol12": "L",
+        "Vol13": "M", "Vol14": "N", "Vol15": "O", "Vol16": "P",
+        "Vol17": "Q", "Vol18": "R", "Vol19": "S", "Vol20": "T",
+        "Vol21": "U", "Vol22": "V", "Vol23": "W", "Vol24": "X",
+        "Vol25": "Y", "Vol26": "Z"
     }
     let $iiifVolumeId :=
         if (matches($volumeId, "^W[0-9]{4}$")) then $volumeId
         else if (matches($volumeId, "^W[0-9]{4}_Vol[0-9]{2}$")) then concat(substring-before($volumeId, "_"), "!", map:get($volumeMap, substring-after($volumeId, "_")))
-        else if (matches ($volumeId, "^W[0-9]{4}_[a-z]+$")) then substring-before($volumeId, "_")
+        else if (matches($volumeId, "^W[0-9]{4}_[a-z]+$")) then substring-before($volumeId, "_")
         else ()
     return $iiifVolumeId
 };
