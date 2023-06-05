@@ -2,7 +2,7 @@ xquery version "3.0";
 
 declare namespace request           = "http://exist-db.org/xquery/request";
 declare namespace output            = "http://www.w3.org/2010/xslt-xquery-serialization";
-import module namespace sphinx      = "http://www.salamanca.school/xquery/sphinx"          at "modules/sphinx.xqm";
+import module namespace sphinx      = "https://www.salamanca.school/xquery/sphinx"          at "modules/sphinx.xqm";
 
 declare option output:media-type "text/html";
 declare option output:method "xhtml";

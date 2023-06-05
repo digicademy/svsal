@@ -15,7 +15,7 @@ import module namespace console     = "http://exist-db.org/xquery/console";
 import module namespace templates   = "http://exist-db.org/xquery/html-templating";
 import module namespace lib         = "http://exist-db.org/xquery/html-templating/lib";
 
-import module namespace config = "http://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace config = "https://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
 
 (: default service locations
 declare variable $xconfig:xtriplesWebserviceURL := "http://xtriples.spatialhumanities.de/";

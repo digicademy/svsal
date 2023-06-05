@@ -1,6 +1,6 @@
 xquery version "3.1";
 
-module namespace nlp         = "http://www.salamanca.school/factory/works/nlp";
+module namespace nlp         = "https://www.salamanca.school/factory/works/nlp";
 
 declare namespace exist      = "http://exist.sourceforge.net/NS/exist";
 declare namespace sal        = "http://salamanca.adwmainz.de";

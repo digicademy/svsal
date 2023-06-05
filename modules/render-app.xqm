@@ -1,6 +1,6 @@
 xquery version "3.1";
 
-module namespace render-app        = "http://www.salamanca.school/xquery/render-app";
+module namespace render-app        = "https://www.salamanca.school/xquery/render-app";
 
 declare namespace exist            = "http://exist.sourceforge.net/NS/exist";
 declare namespace output           = "http://www.w3.org/2010/xslt-xquery-serialization";
@@ -9,7 +9,7 @@ declare namespace sal              = "http://salamanca.adwmainz.de";
 
 import module namespace request    = "http://exist-db.org/xquery/request";
 
-import module namespace config     = "http://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace config     = "https://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
 import module namespace i18n       = "http://exist-db.org/xquery/i18n"           at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
 
 (:

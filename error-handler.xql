@@ -14,12 +14,12 @@ import module namespace session = "http://exist-db.org/xquery/session";
 import module namespace util    = "http://exist-db.org/xquery/util";
 import module namespace xmldb   = "http://exist-db.org/xquery/xmldb";
 
-import module namespace app     = "http://www.salamanca.school/xquery/app"        at "xmldb:exist:///db/apps/salamanca/modules/app.xqm";
-import module namespace config  = "http://www.salamanca.school/xquery/config"     at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
-import module namespace iiif    = "http://www.salamanca.school/xquery/iiif"       at "xmldb:exist:///db/apps/salamanca/modules/iiif.xqm";
+import module namespace app     = "https://www.salamanca.school/xquery/app"        at "xmldb:exist:///db/apps/salamanca/modules/app.xqm";
+import module namespace config  = "https://www.salamanca.school/xquery/config"     at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace iiif    = "https://www.salamanca.school/xquery/iiif"       at "xmldb:exist:///db/apps/salamanca/modules/iiif.xqm";
 import module namespace i18n    = "http://exist-db.org/xquery/i18n"               at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
-import module namespace gui     = "http://www.salamanca.school/xquery/gui"        at "xmldb:exist:///db/apps/salamanca/modules/gui.xqm";
-import module namespace net     = "http://www.salamanca.school/xquery/net"        at "xmldb:exist:///db/apps/salamanca/modules/net.xqm";
+import module namespace gui     = "https://www.salamanca.school/xquery/gui"        at "xmldb:exist:///db/apps/salamanca/modules/gui.xqm";
+import module namespace net     = "https://www.salamanca.school/xquery/net"        at "xmldb:exist:///db/apps/salamanca/modules/net.xqm";
 
 
 declare option output:method "html";

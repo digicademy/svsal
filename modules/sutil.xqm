@@ -7,7 +7,7 @@ xquery version "3.1";
 
     ----++++#### :)
 
-module namespace sutil = "http://www.salamanca.school/xquery/sutil";
+module namespace sutil = "https://www.salamanca.school/xquery/sutil";
 
 declare namespace tei           = "http://www.tei-c.org/ns/1.0";
 declare namespace sal           = "http://salamanca.adwmainz.de";
@@ -19,7 +19,7 @@ import module namespace console     = "http://exist-db.org/xquery/console";
 import module namespace templates   = "http://exist-db.org/xquery/html-templating";
 import module namespace lib         = "http://exist-db.org/xquery/html-templating/lib";
 
-import module namespace config  = "http://www.salamanca.school/xquery/config"    at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace config  = "https://www.salamanca.school/xquery/config"    at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
 import module namespace i18n    = "http://exist-db.org/xquery/i18n"              at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
 
 declare option exist:timeout "166400000"; (: in miliseconds, 25.000.000 ~ 7h, 43.000.000 ~ 12h :)

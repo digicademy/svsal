@@ -6,7 +6,7 @@ xquery version "3.1" encoding "UTF-8";
 
  ----++++#### :)
 
-module namespace textsv1  = "http://api.salamanca.school/v1/texts";
+module namespace textsv1  = "https://api.salamanca.school/v1/texts";
 
 declare namespace exist   = "http://exist.sourceforge.net/NS/exist";
 declare namespace output  ="http://www.w3.org/2010/xslt-xquery-serialization";
@@ -20,12 +20,12 @@ import module namespace http     = "http://expath.org/ns/http-client";
 import module namespace rest     = "http://exquery.org/ns/restxq";
 import module namespace util     = "http://exist-db.org/xquery/util";
 
-import module namespace api    = "http://www.salamanca.school/xquery/api"        at "../api.xqm";
-import module namespace sutil  = "http://www.salamanca.school/xquery/sutil"      at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
-import module namespace config = "http://www.salamanca.school/xquery/config"     at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
-import module namespace export = "http://www.salamanca.school/xquery/export"     at "xmldb:exist:///db/apps/salamanca/modules/export.xqm";
-(:import module namespace net  = "http://www.salamanca.school/xquery/net"        at "xmldb:exist:///db/apps/salamanca/modules/net.xqm";:)
-import module namespace txt    = "http://www.salamanca.school/factory/works/txt" at "xmldb:exist:///db/apps/salamanca/modules/factory/works/txt.xqm";
+import module namespace api    = "https://www.salamanca.school/xquery/api"        at "../api.xqm";
+import module namespace sutil  = "https://www.salamanca.school/xquery/sutil"      at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
+import module namespace config = "https://www.salamanca.school/xquery/config"     at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace export = "https://www.salamanca.school/xquery/export"     at "xmldb:exist:///db/apps/salamanca/modules/export.xqm";
+(:import module namespace net  = "https://www.salamanca.school/xquery/net"        at "xmldb:exist:///db/apps/salamanca/modules/net.xqm";:)
+import module namespace txt    = "https://www.salamanca.school/factory/works/txt" at "xmldb:exist:///db/apps/salamanca/modules/factory/works/txt.xqm";
 
 
 

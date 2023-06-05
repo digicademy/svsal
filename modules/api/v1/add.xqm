@@ -6,7 +6,7 @@ xquery version "3.0" encoding "UTF-8";
 
  ----++++#### :)
 
-module namespace addv1 = "http://api.salamanca.school/v1/texts";
+module namespace addv1 = "https://api.salamanca.school/v1/texts";
 
 declare namespace sal = "http://salamanca.adwmainz.de";
 declare namespace tei     = "http://www.tei-c.org/ns/1.0";
@@ -18,8 +18,8 @@ import module namespace util = "http://exist-db.org/xquery/util";
 import module namespace http = "http://expath.org/ns/http-client";
 import module namespace console     = "http://exist-db.org/xquery/console";
 
-import module namespace config = "http://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
-import module namespace api = "http://www.salamanca.school/xquery/api" at "../api.xqm";
+import module namespace config = "https://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace api = "https://www.salamanca.school/xquery/api" at "../api.xqm";
 
 (: RESTXQ FUNCTIONS :)
 

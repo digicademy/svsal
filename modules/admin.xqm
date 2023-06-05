@@ -1725,8 +1725,10 @@ declare function admin:createRoutes($wid as xs:string) {
     let $index                  := doc($config:index-root || "/" || $wid || "_nodeIndex.xml")/sal:index
     let $crumbtrails            := doc($config:crumb-root || "/" || $wid || "_crumbtrails.xml")/sal:crumb
     let $routingNodes           := array{fn:for-each($index//sal:node, function($k) {admin:buildRoutingInfoNode($wid, $k, $crumbtrails)} )}
+    let $routingVolumeDetails   := array{fn:for-each($index//sal:node[@subtype = "work_volume"], function($k) {admin:buildRoutingInfoVolumeDetails($wid, $k)} )}
     let $routingWork            := admin:buildRoutingInfoWork($wid, $crumbtrails)
-    let $routingTable           := array:join( ( $routingWork, $routingNodes ) )
+    let $routingWorkDetails     := admin:buildRoutingInfoWorkDetails($wid)
+    let $routingTable           := array:join( ( $routingWork, $routingNodes, $routingVolumeDetails, $routingWorkDetails ) )
 
     let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Routing: Joint routing table: " || substring(serialize($routingTable, map{"method":"json", "indent": false(), "encoding":"utf-8"}), 1, 500) || " ...") else ()
 
@@ -1773,16 +1775,42 @@ declare function admin:createRoutes($wid as xs:string) {
 
 declare function admin:buildRoutingInfoNode($wid as xs:string, $item as element(sal:node), $crumbtrails as element(sal:crumb)) {
     let $crumb := $crumbtrails//sal:nodecrumb[@xml:id eq $item/@n]//a[last()]/@href/string()
-    let $value := map { "input" : concat("/texts/", $wid, ":", $item/@citeID/string()), "outputs" : array { ( $crumb, 'yes' ) } }
+    let $value := map {
+                    "input" :   concat("/texts/", $wid, ":", $item/@citeID/string()),
+                    "outputs" : array { ( $crumb, 'yes' ) }
+                  }
 (:    let $debug := console:log("[ADMIN] routing entry: " || serialize($value, map{"method":"json"}) || "."):)
     return $value
 };
 
 declare function admin:buildRoutingInfoWork($wid as xs:string, $crumbtrails as element(sal:crumb)) {
     let $firstCrumb  := ($crumbtrails//a[1])[1]/@href/string()
-    let $value := array { ( map { "input" : concat("/texts/", $wid ), "outputs" : array { ( $firstCrumb, 'yes' ) } } ) }
+    let $value := array {
+                            ( map {
+                                    "input" :   concat("/texts/", $wid ),
+                                    "outputs" : array { ( $firstCrumb, 'yes' ) }
+                                  }
+                            )
+                        }
 (:    let $debug := console:log("[ADMIN] routing entry: " || serialize($value, map{"method":"json"}) || "."):)
     return $value
+};
+
+declare function admin:buildRoutingInfoWorkDetails($wid as xs:string) {
+    array {
+        ( map {
+              "input" :   concat("/texts/", $wid, '_details' ),
+              "outputs" : array { ( concat($wid, '/html/', $wid, '_details.html'), 'yes' ) }
+            }
+        )
+    }
+};
+
+declare function admin:buildRoutingInfoVolumeDetails($wid as xs:string, $item as element(sal:node)) {
+    map {
+        "input" :   concat("/texts/", $wid, ':', $item/@citeID, '_details' ),
+        "outputs" : array { ( concat($wid, '/html/', $wid, '_', $item/@n, '_details.html'), 'yes' ) }
+    }
 };
 
 declare function admin:createRDF($rid as xs:string) {
@@ -1864,20 +1892,25 @@ declare function admin:createDetails($wid as xs:string) {
     let $process_loop := for $work in $expanded
 
         let $id        := $work/@xml:id/string()
-        let $teiHeader := $work//tei:teiHeader
-        
-        (: we don't have iiif manifests for volumes, only for multivols and monographs :)
-        let $iiif_file := if ($work//tei:text[@type = ("work_multivolume", "work_monograph")]) then
-                              $config:iiif-root || '/' || $id || '.json'
+        let $public_id := if ($work//tei:text[@type = ("work_multivolume", "work_monograph")]) then
+                              $id
                           else
-                              let $mulivol_id := $teiHeader//tei:notesStmt/tei:relatedItem[@type eq 'work_multivolume']/@target/tokenize(., ':')[2]
-                              return $config:iiif-root || '/' || $mulivol_id || '.json'
-        let $iiif      := json-doc($iiif_file)
+                              tokenize($id, '_')[1] || ':vol' || $work//tei:text[@type = "work_volume"]/@n/string()
 
-        let $volume_names := for $v in $teiHeader//tei:notesStmt/tei:relatedItem[@type eq 'work_volume'] return $v/@target/tokenize(., ':')[2]
-        let $debug := if (count($volume_names)>0) then console:log('[Details] $volume_names: ' || string-join($volume_names, ', ')) else ()
-        let $volumes := for $f in $volume_names return if (doc-available($config:tei-root || '/works/' || $f || '.xml')) then map:entry($f, doc($config:tei-root || '/works/' || $f || '.xml')) else ()
-        let $volumes := map:merge($volumes)
+        let $teiHeader := $work//tei:teiHeader
+
+        (: we don't have iiif manifests for volumes, only for multivols and monographs :)
+        let $iiif_file      := if ($work//tei:text[@type = ("work_multivolume", "work_monograph")]) then
+                                  $config:iiif-root || '/' || $id || '.json'
+                               else
+                                  let $mulivol_id := $teiHeader//tei:notesStmt/tei:relatedItem[@type eq 'work_multivolume']/@target/tokenize(., ':')[2]
+                                  return $config:iiif-root || '/' || $mulivol_id || '.json'
+        let $iiif           := json-doc($iiif_file)
+
+        let $volume_names   := for $v in $teiHeader//tei:notesStmt/tei:relatedItem[@type eq 'work_volume'] return $v/@target/tokenize(., ':')[2]
+        let $debug          := if (count($volume_names)>0) then console:log('[Details] $volume_names: ' || string-join($volume_names, ', ')) else ()
+        let $volumes        := for $f in $volume_names return if (doc-available($config:tei-root || '/works/' || $f || '.xml')) then map:entry($f, doc($config:tei-root || '/works/' || $f || '.xml')) else ()
+        let $volumes        := map:merge($volumes)
         (: let $debug := console:log('$volumes: ' || serialize($volumes, map {"method":"json", "media-type":"application/json"})) :)
 
         let $volumes_list := for $key in map:keys($volumes) order by $key
@@ -1886,9 +1919,9 @@ declare function admin:createDetails($wid as xs:string) {
                                 (: let $debug := console:log('$iiif-vol?thumbnail?@id: ' || serialize(map:get($vol_thumbnail, '@id'), map {"method":"json", "media-type":"application/json"})) :)
                                 let $teiHeader := map:get($volumes, $key)//tei:teiHeader
                                 return map {
-                                "key" : $key,
-                                "id" : $key,
-                                "uri" : $config:idserver || '/texts/' || $teiHeader//tei:notesStmt/tei:relatedItem[@type eq 'work_multivolume']/@target/tokenize(., ':')[2] || ':vol' || map:get($volumes, $key)//tei:text/@n/string(),
+                                "key" :                     $key,
+                                "id" :                      tokenize($key, '_')[1] || ':vol' || map:get($volumes, $key)//tei:text/@n/string(),
+                                "uri" :                     $config:idserver || '/texts/' || $teiHeader//tei:notesStmt/tei:relatedItem[@type eq 'work_multivolume']/@target/tokenize(., ':')[2] || ':vol' || map:get($volumes, $key)//tei:text/@n/string(),
                                 "series_num" :              $teiHeader//tei:seriesStmt/tei:biblScope[@unit eq 'volume']/@n/string(),
                                 "parent_work" :             $teiHeader//tei:notesStmt/tei:relatedItem[@type eq 'work_multivolume']/@target/tokenize(., ':')[2],
                                 "num" :                     map:get($volumes, $key)//tei:text/@n/string(),
@@ -1903,7 +1936,7 @@ declare function admin:createDetails($wid as xs:string) {
                                 "src_publication_period" :  $teiHeader//tei:sourceDesc//tei:imprint/tei:date[@type eq 'summaryFirstEd']/string(),
                                 "language" :                string-join($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n eq 'main']/string(), ', ') ||
                                             (if ($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n ne 'main']) then
-                                                ' (' || string-join(teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n ne 'main']/string(), ', ') || ')'
+                                                ' (' || string-join($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n ne 'main']/string(), ', ') || ')'
                                             else ()),
                                 "thumbnail" :               map:get($vol_thumbnail, '@id'),
                                 "schol_ed" :                admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#scholarly')]/string(), ' / ')),
@@ -1912,12 +1945,12 @@ declare function admin:createDetails($wid as xs:string) {
                                 "status" :                  $teiHeader/tei:revisionDesc/@status/string()
                             }
 
-        let $vol_strings := for $v in $volumes_list return '$' || string(map:get($v, 'key')) || ' := dict ' ||
+        let $vol_strings    := for $v in $volumes_list return '$' || string(map:get($v, 'key')) || ' := dict ' ||
                                         string-join(for $k in map:keys($v) return '"' || $k || '" "' || string(map:get($v, $k)) || '"', ' ')
 
-        let $work_info := map {
-            "id" : $id,
-            "uri" : $config:idserver || '/texts/' || $id,
+        let $work_info      := map {
+            "id" :                      $public_id,
+            "uri" :                     $config:idserver || '/texts/' || $public_id,
             "series_num" :              $teiHeader//tei:seriesStmt/tei:biblScope[@unit eq 'volume']/@n/string(),
             "author_short" :            string-join($teiHeader//tei:titleStmt/tei:author/tei:persName/tei:surname, '/'),
             "author_full" :             admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:author/tei:persName/string(), '/')),

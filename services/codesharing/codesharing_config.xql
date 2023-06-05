@@ -26,7 +26,7 @@ declare default element namespace "http://www.tei-c.org/ns/1.0";
 
 declare namespace exist = "http://exist.sourceforge.net/NS/exist";
 
-import module namespace config  = "http://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace config  = "https://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
 import module namespace i18n    = "http://exist-db.org/xquery/i18n"           at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
 
 (: This should be set to application/tei+xml, but that makes Firefox open a fresh tab, which is annoying. :)

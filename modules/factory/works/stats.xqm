@@ -1,6 +1,6 @@
 xquery version "3.1";
 
-module namespace stats       = "http://www.salamanca.school/factory/works/stats";
+module namespace stats       = "https://www.salamanca.school/factory/works/stats";
 
 declare namespace exist      = "http://exist.sourceforge.net/NS/exist";
 declare namespace opensearch = "http://a9.com/-/spec/opensearch/1.1/";
@@ -13,11 +13,11 @@ import module namespace console     = "http://exist-db.org/xquery/console";
 import module namespace templates   = "http://exist-db.org/xquery/html-templating";
 import module namespace lib         = "http://exist-db.org/xquery/html-templating/lib";
 
-import module namespace config      = "http://www.salamanca.school/xquery/config"           at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
-import module namespace sphinx      = "http://www.salamanca.school/xquery/sphinx"           at "xmldb:exist:///db/apps/salamanca/modules/sphinx.xqm";
-import module namespace iiif        = "http://www.salamanca.school/xquery/iiif"             at "xmldb:exist:///db/apps/salamanca/modules/iiif.xqm";
-import module namespace nlp         = "http://www.salamanca.school/factory/works/nlp"       at "xmldb:exist:///db/apps/salamanca/modules/factory/works/nlp.xqm";
-import module namespace sutil       = "http://www.salamanca.school/xquery/sutil"            at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
+import module namespace config      = "https://www.salamanca.school/xquery/config"           at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace sphinx      = "https://www.salamanca.school/xquery/sphinx"           at "xmldb:exist:///db/apps/salamanca/modules/sphinx.xqm";
+import module namespace iiif        = "https://www.salamanca.school/xquery/iiif"             at "xmldb:exist:///db/apps/salamanca/modules/iiif.xqm";
+import module namespace nlp         = "https://www.salamanca.school/factory/works/nlp"       at "xmldb:exist:///db/apps/salamanca/modules/factory/works/nlp.xqm";
+import module namespace sutil       = "https://www.salamanca.school/xquery/sutil"            at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
 
 
 (: ####++++----

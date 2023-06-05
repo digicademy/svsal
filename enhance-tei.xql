@@ -5,12 +5,12 @@ declare         namespace   output      = "http://www.w3.org/2010/xslt-xquery-se
 declare         namespace   request     = "http://exist-db.org/xquery/request";
 declare         namespace   sal         = "http://salamanca.adwmainz.de";
 declare         namespace   tei         = "http://www.tei-c.org/ns/1.0";
-declare         namespace   itei        = "http://www.salamanca.school/indexed-tei";
+declare         namespace   itei        = "https://www.salamanca.school/indexed-tei";
 declare         namespace   util        = "http://exist-db.org/xquery/util";
 
 import module   namespace   console     = "http://exist-db.org/xquery/console";
 
-import module   namespace   config      = "http://www.salamanca.school/xquery/config"   at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module   namespace   config      = "https://www.salamanca.school/xquery/config"   at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
 import module   namespace   i18n        = "http://exist-db.org/xquery/i18n"             at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
 
 (: Reduces a TEI doc to pure structural information and indexes structural nodes according to sal:node index, thus enhancing the TEI for RDF extraction. :)

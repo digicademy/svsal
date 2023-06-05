@@ -8,7 +8,7 @@ xquery version "3.1";
  ----++++#### :)
 
 
-module namespace net                = "http://www.salamanca.school/xquery/net";
+module namespace net                = "https://www.salamanca.school/xquery/net";
 import module namespace bin         = "http://expath.org/ns/binary";
 import module namespace console     = "http://exist-db.org/xquery/console";
 import module namespace functx      = "http://www.functx.com";
@@ -17,10 +17,10 @@ import module namespace request     = "http://exist-db.org/xquery/request";
 import module namespace response    = "http://exist-db.org/xquery/response";
 import module namespace util        = "http://exist-db.org/xquery/util";
 
-import module namespace config      = "http://www.salamanca.school/xquery/config"           at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
-import module namespace export      = "http://www.salamanca.school/xquery/export"           at "xmldb:exist:///db/apps/salamanca/modules/export.xqm";
-import module namespace sutil       = "http://www.salamanca.school/xquery/sutil"            at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
-import module namespace txt         = "http://www.salamanca.school/factory/works/txt"       at "xmldb:exist:///db/apps/salamanca/modules/factory/works/txt.xqm";
+import module namespace config      = "https://www.salamanca.school/xquery/config"           at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace export      = "https://www.salamanca.school/xquery/export"           at "xmldb:exist:///db/apps/salamanca/modules/export.xqm";
+import module namespace sutil       = "https://www.salamanca.school/xquery/sutil"            at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
+import module namespace txt         = "https://www.salamanca.school/factory/works/txt"       at "xmldb:exist:///db/apps/salamanca/modules/factory/works/txt.xqm";
 
 declare       namespace array       = "http://www.w3.org/2005/xpath-functions/array";
 declare       namespace err         = "http://www.w3.org/2005/xqt-errors";
