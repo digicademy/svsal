@@ -256,6 +256,7 @@ declare variable $config:pdf-root               := concat($config:webdata-root, 
 declare variable $config:txt-root               := concat($config:webdata-root, "/txt");
 declare variable $config:snippets-root          := concat($config:webdata-root, "/snippets");
 declare variable $config:iiif-root              := concat($config:webdata-root, "/iiif");
+declare variable $config:routes-root            := concat($config:webdata-root, "/routes");
 declare variable $config:corpus-zip-root        := concat($config:webdata-root, '/corpus-zip');
 declare variable $config:rdf-root               := concat($config:webdata-root, "/rdf");
 declare variable $config:rdf-works-root         := concat($config:rdf-root, '/works');

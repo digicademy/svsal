@@ -453,9 +453,22 @@ declare function admin:needsIIIFResourceString($node as node(), $model as map(*)
                 <td title="{concat('IIIF resource created on: ', string(xmldb:last-modified($config:iiif-root, $currentWorkId || '.json')), ', Source from: ', string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml')), '.')}">Creating IIIF resource unnecessary. <small><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=iiif">Create IIIF resource anyway!</a></small></td>
 };
 
-declare function admin:postRoutingString($node as node(), $model as map(*)) {
+declare function admin:needsRoutingResource($targetWorkId as xs:string) as xs:boolean {
+    let $targetWorkModTime := xmldb:last-modified($config:tei-works-root, $targetWorkId || '.xml')
+
+    return if (util:binary-doc-available($config:routes-root || '/' || $targetWorkId || '-routes.json')) then
+                let $resourceModTime := xmldb:last-modified($config:routes-root, $targetWorkId || '-routes.json')
+                return if ($resourceModTime lt $targetWorkModTime) then true() else false()
+        else
+            true()
+};
+
+declare function admin:needsRoutingString($node as node(), $model as map(*)) {
     let $currentWorkId := $model('currentWork')?('wid')
-    return <td title="index from: {string(xmldb:last-modified($config:index-root, $currentWorkId || '_nodeIndex.xml'))}"><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=routing"><b>Create/post routing information NOW!</b></a></td>
+    return if (admin:needsRoutingResource($currentWorkId)) then
+                <td title="index from: {string(xmldb:last-modified($config:index-root, $currentWorkId || '_nodeIndex.xml'))}"><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=routing"><b>Create/post routing information NOW!</b></a></td>
+           else
+                <td title="{concat('Routing resource created on: ', string(xmldb:last-modified($config:routes-root, $currentWorkId || '-routes.json')), ', Source from: ', string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml')), '.')}">Creating Routing resource unnecessary. <small><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=routing">Create Routing resource anyway!</a></small></td>
 };
 
 
@@ -566,6 +579,7 @@ declare function admin:saveTextFile($workId as xs:string, $fileName as xs:string
         else if ($collection eq "workslist") then $config:html-root     || "/"
         else if ($collection eq "index")     then $config:index-root    || "/"
         else if ($collection eq "iiif")      then $config:iiif-root     || "/"
+        else if ($collection eq "routes")    then $config:routes-root   || "/"
         else if ($collection eq "data")      then $config:data-root     || "/"
         else if ($collection eq "stats")     then $config:stats-root    || "/"
         else if ($collection eq "rdf" and starts-with(upper-case($wid), 'W0')) then $config:rdf-works-root || "/"
@@ -587,6 +601,8 @@ declare function admin:saveTextFile($workId as xs:string, $fileName as xs:string
             xmldb:create-collection($config:webdata-root, "index")
         else if ($collection eq "iiif"      and not(xmldb:collection-available($config:iiif-root)))     then
             xmldb:create-collection($config:webdata-root, "iiif")
+        else if ($collection eq "routes"    and not(xmldb:collection-available($config:routes-root)))   then
+            xmldb:create-collection($config:webdata-root, "routes")
         else if ($collection eq "rdf"       and not(xmldb:collection-available($config:rdf-root)))      then
             xmldb:create-collection($config:webdata-root, "rdf")
         else if ($collection eq "stats"     and not(xmldb:collection-available($config:stats-root)))    then
@@ -1722,8 +1738,8 @@ declare function admin:createRoutes() {
 
 declare function admin:createRoutes($wid as xs:string) {
     let $start-time := util:system-time()
-    let $index                  := doc($config:index-root || "/" || $wid || "_nodeIndex.xml")/sal:index
-    let $crumbtrails            := doc($config:crumb-root || "/" || $wid || "_crumbtrails.xml")/sal:crumb
+    let $index                  := if (doc-available($config:index-root || "/" || $wid || "_nodeIndex.xml")) then doc($config:index-root || "/" || $wid || "_nodeIndex.xml")/sal:index else ()
+    let $crumbtrails            := if (doc-available($config:crumb-root || "/" || $wid || "_crumbtrails.xml")) then doc($config:crumb-root || "/" || $wid || "_crumbtrails.xml")/sal:crumb else ()
     let $routingNodes           := array{fn:for-each($index//sal:node, function($k) {admin:buildRoutingInfoNode($wid, $k, $crumbtrails)} )}
     let $routingVolumeDetails   := array{fn:for-each($index//sal:node[@subtype = "work_volume"], function($k) {admin:buildRoutingInfoVolumeDetails($wid, $k)} )}
     let $routingWork            := admin:buildRoutingInfoWork($wid, $crumbtrails)
@@ -1731,6 +1747,8 @@ declare function admin:createRoutes($wid as xs:string) {
     let $routingTable           := array:join( ( $routingWork, $routingNodes, $routingVolumeDetails, $routingWorkDetails ) )
 
     let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Routing: Joint routing table: " || substring(serialize($routingTable, map{"method":"json", "indent": false(), "encoding":"utf-8"}), 1, 500) || " ...") else ()
+
+    let $routingSaveStatus  := if ($routingTable instance of map(*) and map:size($routingTable) > 0) then admin:saveTextFile($wid, $wid || '_routes.json', fn:serialize($routingTable, map{"method":"json", "indent": true(), "encoding":"utf-8"}), 'routes') else ()
 
     (: export routing table to filesystem :)
     let $debug := console:log("[ADMIN] Routing: Exporting routing file with " || array:size($routingTable) || " entries...")
@@ -1783,8 +1801,8 @@ declare function admin:buildRoutingInfoNode($wid as xs:string, $item as element(
     return $value
 };
 
-declare function admin:buildRoutingInfoWork($wid as xs:string, $crumbtrails as element(sal:crumb)) {
-    let $firstCrumb  := ($crumbtrails//a[1])[1]/@href/string()
+declare function admin:buildRoutingInfoWork($wid as xs:string, $crumbtrails as element(sal:crumb)*) {
+    let $firstCrumb  := if (($crumbtrails//a[1])[1]/@href) then ($crumbtrails//a[1])[1]/@href/string() else ""
     let $value := array {
                             ( map {
                                     "input" :   concat("/texts/", $wid ),
@@ -1930,7 +1948,7 @@ declare function admin:createDetails($wid as xs:string) {
                                 "title_short" :             $teiHeader//tei:titleStmt/tei:title[@type eq 'short']/string(),
                                 "title_full" :              admin:StripLBs($teiHeader//tei:titleStmt/tei:title[@type eq 'main']/string()),
                                 "place" :                   string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:pubPlace return $p/string() || ' (' || $p/@role/string() || ')', ', '),
-                                "printer_short" :           string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:publisher return $p//tei:surname/string() || ' (' || $p/@n/string() || ')', ', '),
+                                "printer_short" :           string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:publisher return ($p//tei:surname)[1]/string() || ' (' || $p/@n/string() || ')', ', '),
                                 "printer_full" :            admin:StripLBs(string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:publisher return $p//string() || ' (' || $p/@n/string() || ')', ', ')),
                                 "year" :                    $teiHeader//tei:sourceDesc//tei:imprint/tei:date[@type eq 'firstEd']/@when/string(),
                                 "src_publication_period" :  $teiHeader//tei:sourceDesc//tei:imprint/tei:date[@type eq 'summaryFirstEd']/string(),
