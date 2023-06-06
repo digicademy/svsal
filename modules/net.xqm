@@ -462,7 +462,7 @@ declare function net:deleteRoutingTable() as xs:boolean {
 };
 
 declare function net:isInRoutingTable($src as xs:string) as xs:boolean {
-    let $wid := tokenize(tokenize($src, ":")[1], "/")[last()]
+    let $wid := tokenize(tokenize(tokenize($src, ":")[1], '_')[1], "/")[last()]
     let $routingTable := net:getRoutingTable()
     let $dbg := if ($config:debug = ('trace')) then console:log("[NET] Check if $wid " || $wid || " (from $src " || $src || ") is in routing table...") else ()
     return if ($routingTable instance of array(*) and array:size($routingTable) > 0) then
@@ -483,11 +483,11 @@ declare function net:postRoutingTable($routes as array(*)) as xs:integer {
         0
     else
         let $debug   := if ($config:debug = ('trace')) then console:log("[NET] Make sure relevant entries are not present in routing table already...") else ()
-        let $testmap := $routes?1
+        let $testmap := array:reverse($routes)?1   (: in case of facsimile-only works, the first input is an empty string, so we take the last input for testing :)
         let $src     := $testmap?input
         let $dest    := $testmap?outputs
         return if (not(net:isInRoutingTable($src))) then
-            let $debug  := console:log("[NET] Routing: Posting routing information to '" || $config:caddyRoutes || "/...' ...")
+            let $debug  := if ($config:debug = 'trace') then console:log("[NET] Routing: Posting " || array:size($routes) || " routes to '" || $config:caddyRoutes || "/...' ...") else ()
             let $request    := 
                 <hc:request method="post" http-version="1.0">
                     <hc:body method="text" media-type="application/json"></hc:body>
@@ -517,14 +517,15 @@ declare function net:postRoutingTable($routes as array(*)) as xs:integer {
                     return if (net:isInRoutingTable($src)) then
                         array:size($routes)
                     else
-                        let $debug := console:log('[NET] Routing: WARNING! Problem with nodes routing information: { "input": ' || $src || ' } not found in live routing table after posting.')
+                        let $debug := console:log('[NET] Routing: WARNING! Problem with nodes routing information: { "input": "' || $src || '" } not found in live routing table after posting.')
                         return -1
 
         else
-            let $wid := tokenize(tokenize($src, ":")[1], "/")[last()]
+            let $wid := tokenize(tokenize(tokenize($src, ":")[1], "_")[1], "/")[last()]
             let $debug  := if ($config:debug = ('trace')) then console:log("[NET] Routing: At least one key of the routing information is already in caddy's configuration, need to clean live routing table for " || $wid || " first...") else ()
             let $cleanStatus := net:cleanRoutingTable($wid)
             return if ($cleanStatus ge 0) then
+                let $wait := util:wait(5000)
                 let $debug := if ($config:debug = ('trace')) then console:log("[NET] Routing: Retry...") else ()
                 return net:postRoutingTable($routes)
             else

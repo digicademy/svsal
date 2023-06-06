@@ -455,9 +455,8 @@ declare function admin:needsIIIFResourceString($node as node(), $model as map(*)
 
 declare function admin:needsRoutingResource($targetWorkId as xs:string) as xs:boolean {
     let $targetWorkModTime := xmldb:last-modified($config:tei-works-root, $targetWorkId || '.xml')
-
-    return if (util:binary-doc-available($config:routes-root || '/' || $targetWorkId || '-routes.json')) then
-                let $resourceModTime := xmldb:last-modified($config:routes-root, $targetWorkId || '-routes.json')
+    return if (util:binary-doc-available($config:routes-root || '/' || $targetWorkId || '_routes.json')) then
+                let $resourceModTime := xmldb:last-modified($config:routes-root, $targetWorkId || '_routes.json')
                 return if ($resourceModTime lt $targetWorkModTime) then true() else false()
         else
             true()
@@ -466,7 +465,7 @@ declare function admin:needsRoutingResource($targetWorkId as xs:string) as xs:bo
 declare function admin:needsRoutingString($node as node(), $model as map(*)) {
     let $currentWorkId := $model('currentWork')?('wid')
     return if (admin:needsRoutingResource($currentWorkId)) then
-                <td title="index from: {string(xmldb:last-modified($config:index-root, $currentWorkId || '_nodeIndex.xml'))}"><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=routing"><b>Create/post routing information NOW!</b></a></td>
+                <td title="source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}"><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=routing"><b>Create Routing table NOW!</b></a></td>
            else
                 <td title="{concat('Routing resource created on: ', string(xmldb:last-modified($config:routes-root, $currentWorkId || '-routes.json')), ', Source from: ', string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml')), '.')}">Creating Routing resource unnecessary. <small><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=routing">Create Routing resource anyway!</a></small></td>
 };
@@ -1732,23 +1731,32 @@ declare function admin:createCrumbtrails($wid as xs:string){
 ~ Creates routing information; saves, exports and posts them to caddy.
 :)
 declare function admin:createRoutes() {
-    for $i in collection($config:index-root)//sal:index
-    return admin:createRoutes($i/@work/string())
+    for $i in collection($config:tei-works-root)//tei:TEI[descendant::tei:text/@type = ('work_multivolume', 'monograph')]
+    return admin:createRoutes($i/@xml:id/string())
 };
 
 declare function admin:createRoutes($wid as xs:string) {
     let $start-time := util:system-time()
+    let $debug := console:log("[ADMIN] Routing: Creating routing ...")
     let $index                  := if (doc-available($config:index-root || "/" || $wid || "_nodeIndex.xml")) then doc($config:index-root || "/" || $wid || "_nodeIndex.xml")/sal:index else ()
     let $crumbtrails            := if (doc-available($config:crumb-root || "/" || $wid || "_crumbtrails.xml")) then doc($config:crumb-root || "/" || $wid || "_crumbtrails.xml")/sal:crumb else ()
-    let $routingNodes           := array{fn:for-each($index//sal:node, function($k) {admin:buildRoutingInfoNode($wid, $k, $crumbtrails)} )}
-    let $routingVolumeDetails   := array{fn:for-each($index//sal:node[@subtype = "work_volume"], function($k) {admin:buildRoutingInfoVolumeDetails($wid, $k)} )}
     let $routingWork            := admin:buildRoutingInfoWork($wid, $crumbtrails)
-    let $routingWorkDetails     := admin:buildRoutingInfoWorkDetails($wid)
+    let $routingNodes           := array{fn:for-each($index//sal:node, function($k) {admin:buildRoutingInfoNode($wid, $k, $crumbtrails)} )}
+    let $routingVolumeDetails   :=  if ($index) then
+                                        array{fn:for-each($index//sal:node[@subtype = "work_volume"], function($k) {admin:buildRoutingInfoDetails($k/@n/string())} )}
+                                    else
+                                        let $volumes := doc($config:tei-works-root || '/' || $wid || '.xml')//xi:include[contains(@href, '_Vol')]/@href/string()
+                                        return array{fn:for-each($volumes, function($k) {admin:buildRoutingInfoDetails(tokenize($k, '\.')[1])} )}
+    let $routingWorkDetails     := array{ admin:buildRoutingInfoDetails($wid) }
     let $routingTable           := array:join( ( $routingWork, $routingNodes, $routingVolumeDetails, $routingWorkDetails ) )
 
     let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Routing: Joint routing table: " || substring(serialize($routingTable, map{"method":"json", "indent": false(), "encoding":"utf-8"}), 1, 500) || " ...") else ()
 
-    let $routingSaveStatus  := if ($routingTable instance of map(*) and map:size($routingTable) > 0) then admin:saveTextFile($wid, $wid || '_routes.json', fn:serialize($routingTable, map{"method":"json", "indent": true(), "encoding":"utf-8"}), 'routes') else ()
+    (: save routing table in database :)
+    let $routingSaveStatus  :=  if ($routingTable instance of array(*) and array:size($routingTable) > 0) then
+                                    admin:saveTextFile($wid, $wid || '_routes.json', fn:serialize($routingTable, map{"method":"json", "indent": true(), "encoding":"utf-8"}), 'routes')
+                                else ()
+    let $debug := if ($config:debug = ("info", "trace")) then console:log("[ADMIN] Routing: Table saved as " || $routingSaveStatus || ".") else ()
 
     (: export routing table to filesystem :)
     let $debug := console:log("[ADMIN] Routing: Exporting routing file with " || array:size($routingTable) || " entries...")
@@ -1769,13 +1777,15 @@ declare function admin:createRoutes($wid as xs:string) {
                                     else
                                         let $debug := console:log("[ADMIN] Routing: WARNING!! - No nodes routing info to post ($config:caddyAPI = " || $config:caddyAPI || ", array:size($routingTable) = " || array:size($routingTable) || ").")
                                         return 0
-    let $entriesAfter           := array:size(net:getRoutingTable())
+    let $routingTableAfter      := net:getRoutingTable()
+    let $debug := if ($config:debug = ('trace')) then console:log("[ADMIN] Routing: Routing table: " || serialize($routingTableAfter)) else ()
+    let $entriesAfter           := array:size($routingTableAfter)
     let $debug :=   if ($addedEntries > 0 and $entriesBefore + $addedEntries = $entriesAfter) then
-                        console:log("[ADMIN] Routing: Routing table successfully posted, live routing table now contains " || $entriesBefore || "+" || $addedEntries || "=" || $entriesAfter || " entries.")
+                        console:log("[ADMIN] Routing done: Routing table successfully posted, live routing table now contains " || $entriesBefore || "+" || $addedEntries || "=" || $entriesAfter || " entries.")
                     else if ($addedEntries > 0) then 
-                        console:log("[ADMIN] Routing: WARNING! Routing table posted, but something seems to be wrong with the numbers: " || $entriesBefore || " $entriesBefore + " || $addedEntries || " $addedEntries != " || $entriesAfter || " $entriesAfter. Maybe relevant entries had been in the routing table before and had to be deleted?")
+                        console:log("[ADMIN] Routing done: WARNING! Routing table posted, but something seems to be wrong with the numbers: " || $entriesBefore || " $entriesBefore + " || $addedEntries || " $addedEntries != " || $entriesAfter || " $entriesAfter. Maybe relevant entries had been in the routing table before and had to be deleted?")
                     else
-                        console:log("[ADMIN] Routing: WARNING!! - No entries posted. Live routing table contains " || $entriesAfter || " .")
+                        console:log("[ADMIN] Routing done: WARNING!! - No entries posted. Live routing table contains " || $entriesAfter || " .")
     let $runtime-ms := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000
     let $runtimeString := 
         if ($runtime-ms < (1000 * 60)) then format-number($runtime-ms div 1000, "#.##") || " Sek."
@@ -1814,21 +1824,17 @@ declare function admin:buildRoutingInfoWork($wid as xs:string, $crumbtrails as e
     return $value
 };
 
-declare function admin:buildRoutingInfoWorkDetails($wid as xs:string) {
-    array {
-        ( map {
-              "input" :   concat("/texts/", $wid, '_details' ),
-              "outputs" : array { ( concat($wid, '/html/', $wid, '_details.html'), 'yes' ) }
-            }
-        )
-    }
-};
-
-declare function admin:buildRoutingInfoVolumeDetails($wid as xs:string, $item as element(sal:node)) {
-    map {
-        "input" :   concat("/texts/", $wid, ':', $item/@citeID, '_details' ),
-        "outputs" : array { ( concat($wid, '/html/', $wid, '_', $item/@n, '_details.html'), 'yes' ) }
-    }
+declare function admin:buildRoutingInfoDetails($id) {
+    let $inputID := if (contains($id, 'ol')) then
+                        tokenize($id, '_')[1] || ':vol' || xs:string(number(substring(tokenize($id, '_')[2], 4)))
+                    else
+                        $id
+    let $debug := if ($config:debug = "trace") then console:log('$id: ' || $id || ', $inputID: ' || $inputID || '.') else ()
+    return
+        map {
+              "input" :   concat("/texts/", $inputID, '_details' ),
+              "outputs" : array { ( concat(tokenize($id, '_')[1], '/html/', $id, '_details.html'), 'yes' ) }
+        }
 };
 
 declare function admin:createRDF($rid as xs:string) {
