@@ -311,7 +311,7 @@ declare
 function api:redirectTextsResource1($rid, $host, $accept, $format, $mode, $q, $lang, $viewer, $frag, $canvas) {
     let $format := if ($format) then $format else api:getFormatFromContentTypes(tokenize($accept, '[, ]+'), 'text/html')
     let $paramStr := api:concatDocQueryParams($format, $mode, $q, $lang, $viewer, $frag, $canvas)
-    let $debug1 := if ($config:debug = ("trace", "info")) then console:log("api.xqm (unversioned api) requested: " || $host || ", " || $rid || ".") else ()
+    let $debug1 := if ($config:debug = ("trace")) then console:log("api.xqm (unversioned api) requested: " || $host || ", " || $rid || ".") else ()
     return
         api:redirect-with-303($api:proto || 'api.' || api:getDomain($host) || '/' || $config:currentApiVersion || 
             '/texts/' || $rid || (if ($paramStr) then '?' || $paramStr else ''))
