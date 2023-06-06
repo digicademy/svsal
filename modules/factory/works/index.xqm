@@ -83,10 +83,10 @@ declare function index:makeNodeIndex($tei as element(tei:TEI)) as map(*) {
                                 else ()
                 let $n := $node/@xml:id/string()
 (:              let $frag := (($node/ancestor-or-self::tei:* | $node//tei:*) intersect $target-set)[1]:)
-                let $frag := (($node/ancestor-or-self::* | $node//tei:*[not(preceding-sibling::*)] )intersect $target-set)[1]
+                let $frag := (($node/ancestor-or-self::* | $node//tei:*[not(preceding-sibling::*)]) intersect $target-set)[1]
                 let $err  := if ((count($frag/@xml:id) eq 0) or ($frag/@xml:id eq "")) then
                     let $debug := if ($config:debug = ("trace", "info")) then
-                                     console:log("[INDEX] Node indexing: Could not find $frag for $node " || $n || ". Aborting.")
+                                     console:log("[INDEX] Node indexing: Could not find $frag for $node " || $n || ". Target set was: [" || string-join(fn:for-each($target-set, function ($k) {concat($k/local-name(), ':', $k/@xml:id)}), ', ') || "]. Aborting.")
                                  else ()
                     return error(QName('http://salamanca.school/err', 'FragmentationProblem'),
                                  'Could not find $frag for ' || $n || '.')
@@ -183,7 +183,8 @@ declare function index:getFragmentNodesOld($work as element(tei:TEI), $fragmenta
 
 
 declare function index:getFragmentNodes($work as element(tei:TEI), $fragmentationDepth as xs:integer) as node()* {
-    $work/descendant-or-self::tei:*[index:isPotentialFragmentNode(.)][index:isBestDepth(., $fragmentationDepth)]
+    (: we collect all suitable nodes (divs, front, back, text) that are not too high in the hierarchy :)
+    $work//tei:*[index:isPotentialFragmentNode(.)][index:isBestDepth(., $fragmentationDepth)]
 };
 
 
@@ -614,13 +615,18 @@ declare function index:isPotentialFragmentNode($node as node()) as xs:boolean {
     boolean($node/self::tei:front |
             $node/self::tei:back |
             $node/self::tei:div[not($node/ancestor::tei:front | $node/ancestor::tei:back)] |
-            $node/self::tei:argument[not($node/ancestor::tei:list)] |
+            (: $node/self::tei:argument[not($node/ancestor::tei:list)] | :)
             $node/self::tei:text[@type = ('work_monograph', 'work_volume')]
             )
 };
 
 declare function index:isBestDepth($node as node(), $fragmentationDepth as xs:integer) as xs:boolean {
-    boolean(not($node/descendant::tei:*[index:isPotentialFragmentNode(.)][count(./ancestor-or-self::tei:*) le $fragmentationDepth]))    
+    (: If the node is at a good depth (less than or equal to the fragmentation depth) and
+       does not have a descendant that is at a good depth, too (deeper but still less than or equal than the fragmentation depth),
+       then the present node is good to serve as html container :)
+    boolean(count($node/ancestor::tei:*) le $fragmentationDepth and
+            not($node/descendant::tei:*[index:isPotentialFragmentNode(.)][count(./ancestor::tei:*) le $fragmentationDepth])
+           )
 };
 
 (:

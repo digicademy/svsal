@@ -107,7 +107,8 @@ declare variable $config:urnresolver             := 'http://nbn-resolving.de/urn
 
 (: Configure html rendering :)
 declare variable $config:chars_summary             := 60;  (: When marginal notes, section headings etc. have to be shortened, at which point? :)
-declare variable $config:fragmentationDepthDefault := 4;   (: At which level should xml to html fragmentation occur by default? :)
+declare variable $config:fragmentationDepthDefault := 3;   (: At which level should xml to html fragmentation occur by default?
+                                                                  As of 20230606, 3 should be right below front/body/back (5 for multivolume works). :)
 
 (: Configure Search variables :)
 declare variable $config:sphinxRESTURL          := $config:searchserver || "/lemmatized";    (: The search server running an opensearch interface :)
