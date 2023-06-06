@@ -204,7 +204,7 @@ declare function index:extractNodeStructure($wid as xs:string,
         typeswitch($node)
             case element() return
                 let $children := $node/*
-                let $dbg := if ($node/self::tei:pb and count($node/preceding::tei:pb) mod 100 eq 0 and $config:debug = "trace") then
+                let $dbg := if ($node/self::tei:pb and count($node/preceding::tei:pb) mod 250 eq 0 and $config:debug = ("info", "trace")) then
                                   let $log := util:log('info', '[INDEX] Processing tei:pb node ' || $node/@n)
                                   return console:log('[INDEX] Processing tei:pb ' || $node/@n || ' ...')
                             else ()
@@ -217,10 +217,8 @@ declare function index:extractNodeStructure($wid as xs:string,
                         else if ($node/@type) then
                             string($node/@type)
                         else ()
-                    let $isNamedCiteIDNode := if (index:isNamedCiteIDNode($node)) then 'true' else 'false'
                     let $title  := index:dispatch($node, 'title')
                     let $class  := index:dispatch($node, 'class')
-(:                    let $citeID := if (index:isIndexNode($node)) then index:dispatch($node, 'citeID') else ():)
                     let $crumb  := index:makeCrumb($wid, $node, $fragmentIds)
                     let $parent := index:getCitableParent($node)
                     return
@@ -232,20 +230,19 @@ declare function index:extractNodeStructure($wid as xs:string,
                                 attribute xinc          {$xincludes}
                             else (), 
                             attribute class             {$class},
-                            attribute isNamedCit        {$isNamedCiteIDNode},
-                            element sal:title           {$title},
-                            element sal:fragment        {$fragmentIds($node/@xml:id/string())},
-                            (:  element sal:crumb           {$crumb}, :)
-                            if (index:isLabelNode($node)) then 
-                                element sal:passage     {index:dispatch($node, 'label')}
-                            else (),
-                            element sal:citableParent   {$parent/@xml:id/string()},
-                            (: if the node is a named citeID node, we include its citeID part here already 
-                               - unnamed citeID can be done much faster in phase 2 :)
-                            if ($isNamedCiteIDNode eq 'true') then 
-                                element sal:cit {index:dispatch($node, 'citeID')} 
-                            else (),
-                            element sal:children        {index:extractNodeStructure($wid, $node/node(), $xincludes, $fragmentIds)}
+                            attribute isNamedCit        {index:isNamedCiteIDNode($node)},
+                                element sal:title           {$title},
+                                element sal:fragment        {$fragmentIds($node/@xml:id/string())},
+                                element sal:citableParent   {$parent/@xml:id/string()},
+                                element sal:children        {index:extractNodeStructure($wid, $node/node(), $xincludes, $fragmentIds)},
+                                if (index:isLabelNode($node)) then
+                                    element sal:passage     {index:dispatch($node, 'label')}
+                                else (),
+                                (: if the node is a named citeID node, we include its citeID part here already 
+                                   - unnamed citeID can be done much faster in phase 2 :)
+                                if (index:isNamedCiteIDNode($node)) then 
+                                    element sal:cit         {index:dispatch($node, 'citeID')} 
+                                else ()
                         }
                 else index:extractNodeStructure($wid, $children, $xincludes, $fragmentIds)
             default return ()
@@ -259,24 +256,21 @@ declare function index:createIndexNodes($wid as xs:string, $input as element(sal
     let $numberOfNodes := count($input//sal:node)
     return
     for $node at $pos in $input//sal:node return
-        let $debug := if ($pos mod 500 eq 0 and $config:debug = "trace") then console:log('[INDEX] Processing sal:node ' || $pos || ' of ' || $numberOfNodes || '.') else ()
-        let $log := if ($pos mod 500 eq 0 and $config:debug = "trace") then util:log('info', '[INDEX] Processing sal:node ' || $pos || ' of ' || $numberOfNodes || '.') else ()
+        let $debug := if ($pos mod 500 eq 0 and $config:debug = ("info", "trace")) then console:log('[INDEX] Processing sal:node ' || $pos || ' of ' || $numberOfNodes || '.') else ()
+        let $log   := if ($pos mod 500 eq 0 and $config:debug = ("info", "trace")) then util:log('info', '[INDEX] Processing sal:node ' || $pos || ' of ' || $numberOfNodes || '.') else ()
 
         let $citeID     := index:constructCiteID($node)
         let $label      := index:constructLabel($node)
-        (: let $crumbtrail := index:constructCrumbtrail($wid, $citeID, $node) :)
         return
             element sal:node {
-                attribute n {$node/@xml:id/string()},
+                attribute n        {$node/@xml:id/string()},
                 (: copy some attributes from the previous node :)
                 $node/@* except ($node/@category, $node/@isBasicNode, $node/@isNamedCit, $node/@isPassage, $node/@xml:id),
-                attribute title {$node/sal:title/string()},
-                attribute fragment {$node/sal:fragment/string()},
-                (: attribute crumb {$wid || "/html/" || substring-after($node/sal:crumb//@href, "frag=")}, :)
+                attribute title         {$node/sal:title/string()},
+                attribute fragment      {$node/sal:fragment/string()},
                 attribute citableParent {$node/sal:citableParent/string()},
-                attribute citeID {$citeID},
-                attribute label {$label} (:,
-                element sal:crumbtrail {$crumbtrail} :)
+                attribute citeID        {$citeID},
+                attribute label         {$label}
             }
 };
 
@@ -362,13 +356,15 @@ declare function index:qualityCheck($index as element(sal:index),
 
 declare function index:constructCiteID($node as element(sal:node)) as xs:string {
     let $prefix := 
-        if ($node/sal:citableParent/text() and $node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()]) then
+(:        if ($node/sal:citableParent/text() and $node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()]) then:)
+        if ($node/sal:citableParent/text()) then
             index:constructCiteID($node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()])
         else ()
     let $this := 
-        if ($node/sal:cit) then $node/sal:cit/text() 
-        (: if sal:cit doesn't already exist, we are dealing with a numeric/unnamed citeID node and create the citeID part here: :)
-        else string(count($node/preceding-sibling::sal:node[@isNamedCit eq 'false']) + 1)
+        if ($node/sal:cit) then
+            $node/sal:cit/text()
+        else (: if sal:cit doesn't already exist, we are dealing with a numeric/unnamed citeID node and create the citeID part here: :)
+            string(count($node/preceding-sibling::sal:node[@isNamedCit eq 'false']) + 1)
     return
         if ($prefix and $this) then $prefix || $index:citeIDConnector || $this else $this
 };

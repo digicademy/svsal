@@ -107,8 +107,7 @@ declare variable $config:urnresolver             := 'http://nbn-resolving.de/urn
 
 (: Configure html rendering :)
 declare variable $config:chars_summary             := 60;  (: When marginal notes, section headings etc. have to be shortened, at which point? :)
-declare variable $config:fragmentationDepthDefault := 3;   (: At which level should xml to html fragmentation occur by default?
-                                                                  As of 20230606, 3 should be right below front/body/back (5 for multivolume works). :)
+declare variable $config:fragmentationDepthDefault := 3;   (: At which level should xml to html fragmentation occur by default? 3 should be right below front/body/back as of 20230606. :)
 
 (: Configure Search variables :)
 declare variable $config:sphinxRESTURL          := $config:searchserver || "/lemmatized";    (: The search server running an opensearch interface :)
@@ -192,6 +191,7 @@ declare variable $config:citationLabels :=
         'unknown': (),
         'work_part': (),
         (: element names (must be different from the div/milestone types/units defined above): :)
+        'argument': map { 'full': 'argumentum', 'abbr': 'arg.', 'isCiteRef': true()},
         'back': map {'full': 'appendix', 'abbr': 'append.', 'isCiteRef': true()},
         'front': map {'full': 'front', 'abbr': 'front.'},
         'titlePage': map {'full': 'titulus', 'abbr': 'tit.'},

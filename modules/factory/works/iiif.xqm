@@ -25,6 +25,10 @@ import module namespace app       = "https://www.salamanca.school/xquery/app"   
 import module namespace sutil     = "https://www.salamanca.school/xquery/sutil"        at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
 import module namespace index     = "https://www.salamanca.school/factory/works/index" at "xmldb:exist:///db/apps/salamanca/modules/factory/works/index.xqm";
 
+(: SETTINGS :)
+
+declare option exist:timeout "166400000"; (: in miliseconds, 25.000.000 ~ 7h, 43.000.000 ~ 12h :)
+declare option exist:output-size-limit "5000000"; (: max number of nodes in memory :)
 
 (: Creates a new iiif resource, either a manifest (for a single-volume work or 
 a single volume within a multi-volume work) or a collection resource (for a multi-volume work).
