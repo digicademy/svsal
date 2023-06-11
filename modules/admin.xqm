@@ -1743,7 +1743,7 @@ declare function admin:createRoutes($wid as xs:string) {
     let $routingWork            := admin:buildRoutingInfoWork($wid, $crumbtrails)
     let $routingNodes           := array{fn:for-each($index//sal:node, function($k) {admin:buildRoutingInfoNode($wid, $k, $crumbtrails)} )}
     let $routingVolumeDetails   :=  if ($index) then
-                                        array{fn:for-each($index//sal:node[@subtype = "work_volume"], function($k) {admin:buildRoutingInfoDetails($k/@n/string())} )}
+                                        array{fn:for-each($index//sal:node[@subtype = "work_volume"], function($k) {admin:buildRoutingInfoDetails($wid || '_' || $k/@n)} )}
                                     else
                                         let $volumes := doc($config:tei-works-root || '/' || $wid || '.xml')//xi:include[contains(@href, '_Vol')]/@href/string()
                                         return array{fn:for-each($volumes, function($k) {admin:buildRoutingInfoDetails(tokenize($k, '\.')[1])} )}
