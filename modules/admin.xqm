@@ -1779,7 +1779,7 @@ declare function admin:createRoutes($wid as xs:string) {
                                         return 0
     let $routingTableAfter      := net:getRoutingTable()
     let $debug := if ($config:debug = ('trace')) then console:log("[ADMIN] Routing: Routing table: " || serialize($routingTableAfter)) else ()
-    let $entriesAfter           := array:size($routingTableAfter)
+    let $entriesAfter           := if ($routingTableAfter instance of array(xs:string)) then array:size($routingTableAfter) else 0
     let $debug :=   if ($addedEntries > 0 and $entriesBefore + $addedEntries = $entriesAfter) then
                         console:log("[ADMIN] Routing done: Routing table successfully posted, live routing table now contains " || $entriesBefore || "+" || $addedEntries || "=" || $entriesAfter || " entries.")
                     else if ($addedEntries > 0) then 
@@ -1938,7 +1938,12 @@ declare function admin:createDetails($wid as xs:string) {
         (: let $debug := console:log('$volumes: ' || serialize($volumes, map {"method":"json", "media-type":"application/json"})) :)
 
         let $volumes_list := for $key in map:keys($volumes) order by $key
-                                let $vol_thumbnail := array:filter($iiif?members, function($m) {contains(map:get($m, '@id'), $key) })(1)?thumbnail
+                                let $filtered_array := array:filter($iiif?members, function($m) {contains(map:get($m, '@id'), $key) })
+                                let $vol_thumbnail  := if (array:size($filtered_array) gt 0) then
+                                                          $filtered_array(1)?thumbnail
+                                                       else
+                                                          let $debug := console:log("[Details] No iiif information for " || $wid || "/" || $key || " found.")
+                                                          return ()
                                 (: let $debug := console:log('$vol_thumbnail: ' || serialize($vol_thumbnail, map {"method":"json", "media-type":"application/json"})) :)
                                 (: let $debug := console:log('$iiif-vol?thumbnail?@id: ' || serialize(map:get($vol_thumbnail, '@id'), map {"method":"json", "media-type":"application/json"})) :)
                                 let $teiHeader := map:get($volumes, $key)//tei:teiHeader
@@ -1962,7 +1967,7 @@ declare function admin:createDetails($wid as xs:string) {
                                             (if ($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n ne 'main']) then
                                                 ' (' || string-join($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n ne 'main']/string(), ', ') || ')'
                                             else ()),
-                                "thumbnail" :               map:get($vol_thumbnail, '@id'),
+                                "thumbnail" :               if (array:size($filtered_array) gt 0) then map:get($vol_thumbnail, '@id') else (),
                                 "schol_ed" :                admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#scholarly')]/string(), ' / ')),
                                 "tech_ed" :                 admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#technical')]/string(), ' / ')),
                                 "el_publication_date" :     $teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when/string()[1],
