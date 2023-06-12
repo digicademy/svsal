@@ -283,7 +283,7 @@ declare function index:qualityCheck($index as element(sal:index),
                                     
     let $wid := $work/@xml:id
     let $resultNodes := $index//sal:node[not(@n eq 'completeWork')]
-    let $debug := if ($config:debug = "trace") then console:log('[INDEX] QC: check ' || count($resultNodes) || ' nodes in index for ' || $wid || '.') else ()
+    let $debug := if ($config:debug = ("info", "trace")) then console:log('[INDEX] QC: check ' || count($resultNodes) || ' nodes in index for ' || $wid || '.') else ()
     
     (: #### Basic quality / consistency check #### :)
     let $testNodes := 
@@ -312,13 +312,25 @@ declare function index:qualityCheck($index as element(sal:index),
     let $debug := if ($config:debug = "trace") then console:log('[INDEX] QC: Make sure @citeIDs are unique (compare number of nodes to number of distinct @citeID values)...') else ()
     let $testAmbiguousCiteID := 
         if (count($resultNodes) ne count(distinct-values($resultNodes/@citeID/string()))) then 
-            error(xs:QName('admin:createNodeIndex'), 
+            let $debug := console:log('[INDEX]: ERROR: Could not produce a unique citeID for each sal:node (in ' || $wid || '). Problematic nodes: '
+                  || string-join(
+                        (for $x in $resultNodes[@citeID = preceding::sal:node/@citeID]
+                         return concat($x/@n || ' (citeID ' || $x/@citeID || ') <-> ',
+                                       string-join(for $y in $resultNodes[following::sal:node/@citeID = $x/@citeID] return concat($y/@n, ' (citeID ', $y/@citeID, ')'), ' ~ ')
+                                       )
+                        ), ' || '
+                    )
+                )
+            return error(xs:QName('admin:createNodeIndex'), 
                   'Could not produce a unique citeID for each sal:node (in ' || $wid || '). Problematic nodes: '
                   || string-join(
                         (for $x in $resultNodes[@citeID = preceding::sal:node/@citeID]
-                         return concat($x/@n || '(citeID ' || $x/@citeID|| ')', '<->', string-join($resultNodes[following::sal:node/@citeID = $x/@citeID]/@n || '(citeID ' || $x/@citeID|| ')', '~')))
-                        , ' || '
-                    ))
+                         return concat($x/@n || ' (citeID ' || $x/@citeID || ') <-> ',
+                                       string-join(for $y in $resultNodes[following::sal:node/@citeID = $x/@citeID] return concat($y/@n, ' (citeID ', $y/@citeID, ')'), ' ~ ')
+                                       )
+                        ), ' || '
+                    )
+                )
         else ()
     (: search for " //@citeID[not(./string())] ":)
     (: not checking crumbtrails here ATM for not slowing down index creation too much... :)
@@ -771,7 +783,16 @@ declare function index:argument($node as element(tei:argument), $mode as xs:stri
             'tei-' || local-name($node)
         case 'citeID' return
             let $abbr := $config:citationLabels(local-name($node))?('abbr')
-            return lower-case(if (contains($abbr, '.')) then substring-before($config:citationLabels(local-name($node))?('abbr'), '.') else $abbr)
+            let $prefix :=
+                if ($abbr) then 
+                    lower-case(if (contains($abbr, '.')) then substring-before($abbr, '.') else $abbr)
+                else 'arg'
+            let $position :=   (: If we have several siblings that happen to have the same abbreviation, provide a position count :)
+                if (count($node/parent::*[index:isIndexNode(.)]/tei:*[$abbr = $config:citationLabels(local-name(.))?('abbr') or (@type and $abbr eq $config:citationLabels(@type)?('abbr'))]) gt 1) then
+                          string(count($node/preceding-sibling::tei:*[$abbr = $config:citationLabels(local-name(.))?('abbr') or (@type and $abbr eq $config:citationLabels(@type)?('abbr'))]) + 1)
+                else ()
+            return $prefix || $position
+
         case 'label' return
                 lower-case($config:citationLabels(local-name($node))?('abbr')) (: TODO: upper-casing with first element of label ? :)
         default return
