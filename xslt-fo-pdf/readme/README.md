@@ -1,22 +1,23 @@
-# XSL-FO Template description
+# XSL-FO Template
 
 ## 1. General info
 
 ```
 Repository location: https://github.com/digicademy/svsal/tree/master/xslt-fo-pdf
 Contents: 
-    ./Fonts: fonts for Greek, Hebrew and Arab characters
-    ./PDF_Output: PDF output files
-    "WORK.xml": released XML files taken from "Salamanca SVN/svsal-tei/works"
-    "specialchars.xml" and "works-general.xml": copies of the files located at http://files.salamanca.school/works-general.xml and http://files.salamanca.school/specialchars.xml             
-    XSL template: "generic_template.xsl" 
+    * Released XML files.
+    * Metadata and special characters files ("specialchars.xml" and "works-general.xml").
+    * XSL template (generic_template.xsl).
+    * ./Fonts: fonts for Greek, Hebrew and Arab characters.
+    * ./PDF_Output: PDF output files.
+    * ./Readme: Readme folder containing this file and an article. 
 ```
 
-“Generic\_template.xsl” is an XSL stylesheet containing processing instructions for the Saxon engine (used by Oxygen XML Editor), which transforms a source XML file to a XML-FO format. This file is picked up by the Apache FO processor (freely available and also integrated in Oxygen) and converted to PDF:
+`Generic_template.xsl` is an XSL stylesheet containing processing instructions for the Saxon engine (used by Oxygen XML Editor), which transforms a source XML file to a XML-FO format. This file is picked up by the Apache FO processor (freely available and also integrated in Oxygen) and converted to PDF:
 
 * Source XML >>> Saxon transformer >>> XML-FO >>> Apache FOP >>> PDF Output
 
-“Generic\_template.xsl” is tailored to Salamanca TEI XML and is based on the encoding conventions outlined in the [edition guidelines](https://www.salamanca.school/en/guidelines.html). PDF creation is integrated in Salamanca’s QA and is used as quality control tool, checking the consistency of XML encoding across different works and volumes. The results of these tests are documented on a separate [wiki-page](https://projekte.adwmainz.net/projects/04-39/wiki/PDF-Ausgabe).
+`Generic_template.xsl` is tailored to Salamanca TEI XML and is based on the encoding conventions outlined in the [edition guidelines](https://www.salamanca.school/en/guidelines.html). PDF creation is integrated in Salamanca’s QA and is used as quality control tool, checking the consistency of XML encoding across different works and volumes. The results of these tests are documented on a separate [wiki-page](https://projekte.adwmainz.net/projects/04-39/wiki/PDF-Ausgabe).
 
 The following article provides a detailed description of the XSL stylesheet’s constitutive elements:
 
@@ -359,9 +360,9 @@ Line and page breaks in the original do not correspond to line and page breaks i
 
 Page break is always followed by a line break, and carries attributes @`n=...` @`facs="facs:..."`, referring to the page number and a corresponding facsimile. The former is rendered in PDF and inserted in the text flow in squared brackets. In addition `<pb>` may also have attributes @`rendition="#hyphen/#noHyphen"` and @`break="yes/no"`, in which case the former should not be encoded in `<lb>`:
 
-\> Hyphens occurring at the end of lines are not retained in the text, but encoded by means of an attribute `rendition="#hyphen"` within the respective `lb` element. In the event of several immediately consecutive breaks (e.g., `pb` + `cb` + `lb`) this attribute is only set within the first such break (element). (https://www.salamanca.school/en/guidelines.html#hyphenation)
+> Hyphens occurring at the end of lines are not retained in the text, but encoded by means of an attribute `rendition="#hyphen"` within the respective `lb` element. In the event of several immediately consecutive breaks (e.g., `pb` + `cb` + `lb`) this attribute is only set within the first such break (element). — https://www.salamanca.school/en/guidelines.html#hyphenation
 
-Another attribute `<pb` sameAs>@ signals that page break occurs in the marginal note and should be ignored. Considering the fact that white space treatment is taken over by `<lb>`, `<pb>` considers only one case @`break="no"`, in which case we insert a hyphen:
+Another attribute `<pb @sameAs>` signals that page break occurs in the marginal note and should be ignored. Considering the fact that white space treatment is taken over by `<lb>`, we interprete `<pb> @break="no"` only, inserting a hyphen:
 
 |                                                                |                                                                                                                                |                                |
 | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------ |
@@ -392,14 +393,14 @@ Another attribute `<pb` sameAs>@ signals that page break occurs in the marginal 
 
 Marginal notes in the original edition usually contain two elements:
 
-* The note proper on the page margin, encoded in XML with `<note>` element: `<note place="margin" n="d" anchored="true" xml:lang="la" xml:id="W0002-00-0019-nm-03ec">`
-* An anchor in text, marking the passage to which the note is related, encoded in XML with `<ref>` element, e.g. `<ref type="note-anchor" n="d" target="#W0002-00-0019-nm-03ec">`. Anchors can be represented by Latin numbers, letters or other characters. Sometimes anchor is missing and note is “floating” next to the paragraph it refers to.
+* Note proper on the page margin, encoded in XML with `<note>` element: `<note place="margin" n="d" anchored="true" xml:lang="la" xml:id="W0002-00-0019-nm-03ec">`
+* Anchor in text, marking the passage to which the note is related, encoded in XML with `<ref>` element, e.g. `<ref type="note-anchor" n="d" target="#W0002-00-0019-nm-03ec">`. Anchors can be represented by Latin numbers, letters or other characters. Sometimes anchor is missing and note is “floating” next to the paragraph it refers to.
 
 Due to the fact that Apache FOP does not support “float” function, which would allow the alignment between the text passage and the note on the margin, we render all marginal notes as end notes. In addition, we eliminate the distinction between anchored and non-anchored notes - all anchors are sequentially enumerated with Arab numbers.
 
-`<xsl:template match="//tei:note">` is responsible for setting the anchor in text, while `<xsl:template match="//tei:text" mode="make-endnotes">...<xsl:for-each select=".//tei:note">` is rendering the endnotes. To guarantee the cross-referencing between the anchor and the note, both elements are assigned an id and a link. The id of the anchor is `# + xml:id` of the note, while note-id is just the @`xml:id`.
+`<xsl:template match="//tei:note">` is responsible for setting the anchor in text, while `<xsl:template match="//tei:text" mode="make-endnotes">...<xsl:for-each select=".//tei:note">` is rendering the endnotes. To guarantee the cross-referencing between the anchor and the note, both elements are assigned an id and a link. The id of the anchor is `# + @xml:id` of the note, while note-id is just the `@xml:id`.
 
-While `<ref>` constituting a part of a marginal note is not interpreted, `<ref>s` which are parts of lists (table of contents etc.) are rendered and get a link, referencing the element in text they are related to:
+While `<ref>s` constituting a part of a marginal note is not interpreted, `<ref>s` which are parts of lists (table of contents etc.) are rendered and get a link, referencing the element in text they are related to:
 
 ```
 <xsl:template match="//tei:list//tei:ref[@target]">
