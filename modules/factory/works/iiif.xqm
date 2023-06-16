@@ -55,8 +55,8 @@ declare function iiif:createResource($targetWorkId as xs:string) as map(*) {
 
 declare function iiif:mkMultiVolumeCollection($workId as xs:string, $tei as node()) as map(*) {
     let $debug           := if ($config:debug = ("info", "trace")) then console:log("[iiif] iiif:mkMultiVolumeCollection running (" || $workId || " requested) ...") else ()
-(:    let $id              := $config:iiifPresentationServer || "collection/" || $workId:)
-    let $id              := "https://www.test.salamanca.school/data/" || $workId || "/" || $workId || ".json"
+    let $id              := $config:iiifPresentationServer || "collection/" || $workId
+    (:  let $id              := "https://www.test.salamanca.school/data/" || $workId || "/" || $workId || ".json" :)
     let $label           := string-join(for $a in $tei//tei:titleStmt/tei:author return normalize-space($a), "/") || ": " ||
                             normalize-space($tei//tei:titleStmt/tei:title[@type = "main"]/text()) || " [multi-volume collection]"
     let $metadata        := iiif:mkMetadata($tei)

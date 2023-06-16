@@ -98,7 +98,7 @@ return
     else if ($exist:resource = "favicon.ico") then
         (:let $debug := if ($config:debug = "trace") then util:log("warn", "Favicon requested: " || $net:forwardedForServername || $exist:path || ".") else ()
         return :)
-        if ($config:instanceMode = "testing") then
+        if ($config:instanceMode = ("testing", "fakeprod")) then
             net:forward("/resources/favicons/" || replace($exist:resource, "favicon", "favicon_red"), $netVars)
         else
             net:forward("/resources/favicons/" || $exist:resource, $netVars)
@@ -272,7 +272,7 @@ return
 (:        let $debug := if ($config:debug = "trace") then util:log("warn", "Favicon requested: " || $net:forwardedForServername || $exist:path || ".") else ():)
         return 
             if (contains(lower-case($exist:resource), "favicon")) then
-                if ($config:instanceMode = "testing") then
+                if ($config:instanceMode = ("testing", "fakeprod")) then
                     net:forward("/resources/favicons/" || replace($exist:resource, "favicon", "favicon_red"), $netVars)
                 else
                     net:forward("/resources/favicons/" || $exist:resource, $netVars)
