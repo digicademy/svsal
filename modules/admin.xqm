@@ -742,6 +742,30 @@ declare function admin:exportBinaryFile($workId as xs:string, $filename as xs:st
     return  if ($store-status) then $pathname else ()
 };
 
+declare function admin:exportBinaryStream($workId as xs:string, $filename as xs:string, $content as xs:string, $collection as xs:string?) {
+    let $wid := tokenize($workId, "_")[1]
+    let $fsRoot := $config:export-folder
+    let $collectionname := 
+             if ($collection eq "pdf")       then $fsRoot || $wid || "/"
+        else                                      $fsRoot || "trash/"
+    let $collectionStatus :=
+        if (not(file:exists($collectionname))) then
+            file:mkdirs($collectionname)
+        else if (file:is-writeable($collectionname) and file:is-directory($collectionname)) then
+            true()
+        else
+            error("http://salamanca.school/error/NoWritableFolder", "Error: " || $collectionname || " is not a writable folder in filesystem.") 
+    let $pathname := $collectionname || $filename
+    let $remove-status := 
+        if ($content and file:exists($pathname)) then
+            file:delete($pathname)
+        else true()
+    let $user := string(sm:id()//sm:real/sm:username)
+    (: let $umask := sm:set-umask($user, 2) :)
+    let $store-status := file:serialize-binary($content, $pathname)    (: eXist-db also has util:base64-encode(xs:string) :)
+    return  if ($store-status) then $pathname else ()
+};
+
 declare function admin:exportJSONFile($filename as xs:string, $content as item()*, $collection as xs:string?) {
     let $fsRoot := $config:export-folder
     let $collectionname := 
@@ -1607,26 +1631,27 @@ declare function admin:uploadPdf($rid as xs:string) {
 declare function admin:createPdf($rid as xs:string){
     let $pdf-start-time           := util:system-time()
     let $doctotransform as node() := doc($config:tei-works-root || '/'|| $rid || '.xml')//tei:TEI
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Creating pdf from " || $rid || " ...") else ()
+    let $debug := if ($config:debug = "trace") then console:log("[PDF-" || $rid ||"] Transforming into XSL-FO...") else ()
     let $doctransformed2          := transform:transform($doctotransform, "xmldb:exist:///db/apps/salamanca/modules/factory/works/pdf/generic_template.xsl", ())
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Transforming " || $rid || "into XSL-FO.") else ()
     (:let $storexslfo := xmldb:store($config:xsl-fo-root ,$rid || '_xsl-fo.xml', $doctransformed2) :)
 
     (:let $xsl-fo-document as document-node() := doc($config:xsl-fo-root || '/'|| $rid || '_xsl-fo.xml') :)
+    let $debug := if ($config:debug = "trace") then console:log("[PDF-" || $rid ||"] Transforming from XSL-FO to PDF...") else ()                         
     let $media-type as xs:string  := 'application/pdf'
-    let $renderedxslfo            :=xslfo:render($doctransformed2, $media-type, ())
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Transforming " || $rid || "from XSL-FO to PDF.") else ()                         
+    let $renderedxslfo            := xslfo:render($doctransformed2, $media-type, ())
 
-    let $savePdfFile :=xmldb:store($config:pdf-root, $rid || '.pdf', $renderedxslfo)
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Storing" || $rid || "in PDF format.") else ()   
-    let $exportPdfFile :=admin:exportBinaryFile($rid, $rid || '.pdf', $renderedxslfo, 'pdf')
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Storing" || $rid || "in PDF format.") else ()   
+    let $savedPdfFile             := xmldb:store($config:pdf-root, $rid || '.pdf', $renderedxslfo)
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Stored pdf from " || $rid || " at " || $savedPdfFile || ".") else ()   
+    let $exportedPdfFile          := admin:exportBinaryStream($rid, $rid || '.pdf', $renderedxslfo, 'pdf')
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Exported pdf from " || $rid || " to " || $exportedPdfFile || ".") else ()   
 
     let $pdf-end-time := util:system-time() 
     let $runtime-pdf := ((util:system-time() - $pdf-start-time) div xs:dayTimeDuration('PT1S'))  * 1000
     return
         if ($doctransformed2)   (:(doc-available($config:xsl-fo-root || '/'|| $rid || '_xsl-fo.xml')) :)   then
             <div>
-                {$savePdfFile} 
+                {$savedPdfFile} 
                 <p> The transformation from XML to PDF was successfull and the file is stored in the pdf collection.
                     Duration: {if ($runtime-pdf < (1000 * 60)) then format-number($runtime-pdf div 1000, "#.##") || " Sec."
                                else if ($runtime-pdf < (1000 * 60 * 60)) then format-number($runtime-pdf div (1000 * 60), "#.##") || " Min."
