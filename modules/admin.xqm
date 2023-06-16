@@ -1820,8 +1820,8 @@ declare function admin:createRoutes($wid as xs:string) {
     return
         <div>
             <h2>Routing information</h2>
-            <p>Added {$addedEntries} routing entries for {$wid}, exported to {$routingExportStatus},<br/>
-               and posted to caddy server ({$entriesBefore} + {$addedEntries} = {$entriesAfter} routing entries now).</p>
+            <p>Added {array:size($routingTable)} routing entries for {$wid}, exported to {$routingExportStatus}.<br/>
+               Posted to caddy server: $entriesBefore} + {$addedEntries} = {$entriesAfter} routing entries now.</p>
             <p>It all took {$runtimeString}.</p>
         </div>
 };
