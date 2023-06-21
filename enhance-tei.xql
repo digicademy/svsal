@@ -53,7 +53,8 @@ declare function local:copy($input as item()*, $salNodes as map()?) as item()* {
                                           i18n:process(<i18n:text key="{$sn/@class/string()}"/>,'en','/db/apps/salamanca/data/i18n','en') || ' ' || $sn/sal:title/text()
                                       return (
                                           attribute title {$title},
-                                          if ($sn/sal:crumbtrail/a[last()]/@href) then attribute web {$sn/sal:crumbtrail/a[last()]/@href} else (),
+(:                                        if ($sn/sal:crumbtrail/a[last()]/@href) then attribute web {$sn/sal:crumbtrail/a[last()]/@href} else (), :)
+                                          attribute web {'work.html?wid=' || substring($sn/@n, 0, 6) || '&amp;frag=' || string($sn/@fragment) || '#' || string($sn/@n)}, (: work.html?wid=W0030&amp;frag=00001_W0030-00-0001-fm-03e8#W0030-00-0003-he-03ea :)
                                           attribute citableParent {$pn/sal:citetrail},
                                           attribute citetrail {$sn/sal:citetrail},
                                           $att,
