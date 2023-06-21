@@ -43,7 +43,7 @@ declare function iiif:fetchResource($wid as xs:string) as map(*)? {
         (: get multi-volume collection or single-volume manifest :)
         if ($workType = ('work_multivolume', 'work_monograph')) then
             if (util:binary-doc-available($config:iiif-root || '/' || $workId || '.json')) then 
-                let $debug := console:log('Fetching iiif manifest for ' || $workId || ' from the DB.')
+                let $debug := if ($config:debug = "trace") then console:log('Fetching iiif manifest for ' || $workId || ' from the DB...') else ()
                 return json-doc($config:iiif-root || '/' || $workId || '.json')
             else
                 ()
@@ -56,9 +56,12 @@ declare function iiif:fetchResource($wid as xs:string) as map(*)? {
             let $volume := 
                 (: if the resource for the collection is available in the DB, get the manifest from within the collection :)
                 if (util:binary-doc-available($config:iiif-root || '/' || $collectionId || '.json')) then
-                    let $debug := console:log('Fetching iiif manifest for ' || $workId || ' from collection for ' || $collectionId || ' from the DB.')
+                    let $debug := if ($config:debug = "trace") then console:log('Fetching iiif manifest for ' || $workId || ' from collection for ' || $collectionId || ' from the DB...') else ()
                     let $collection := json-doc($config:iiif-root || '/' || $collectionId || '.json')
-                    let $manifest := array:get(array:filter(map:get($collection, 'members'), function($a) {contains(map:get($a, '@id'), $workId)}), 1)
+                    let $manifest := if (array:size(array:filter(map:get($collection, 'members'), function($a) {contains(map:get($a, '@id'), $workId)})) ge 1) then
+                                        array:get(array:filter(map:get($collection, 'members'), function($a) {contains(map:get($a, '@id'), $workId)}), 1)
+                                     else
+                                        ()
                     return $manifest
                 else 
                     ()
