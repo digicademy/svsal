@@ -31,6 +31,7 @@ declare function stats:makeCorpusStats() as map(*) {
     (: LEMMATA :)
     (: TODO: are queries syntactically correct, e.g. "ius gentium"? :)
     (: search for single work like so: "ley @sphinx_work ^W0002":)
+    let $debug := if ($config:debug = ("info", "trace")) then console:log('[STATS] Creating corpus lemma stats...') else ()
     let $lemmataList := doc($config:data-root || '/lemmata-97.xml')//sal:lemma[@type eq 'term']
     let $mfLemmata :=
         for $l in $lemmataList 
@@ -49,11 +50,12 @@ declare function stats:makeCorpusStats() as map(*) {
     
     (: TOKENS / CHARS / WORDFORMS / TYPES :)
     (: generic, lang=all :)
+    let $debug := if ($config:debug = ("info", "trace")) then console:log('[STATS] Creating corpus character and token stats...') else ()
     let $publishedWorkIds := 
                 collection($config:tei-works-root)//tei:TEI[./tei:text[@type = ('work_monograph', 'work_multivolume')] 
                                                     and sutil:WRKisPublished(./@xml:id)]/@xml:id/string()
     let $txtAll := 
-        for $id in $publishedWorkIds return 
+        for $id in $publishedWorkIds order by $id return 
             if (fn:unparsed-text-available($config:txt-root || '/' || $id || '/' || $id || '_edit.txt')) then
                 fn:unparsed-text($config:txt-root || '/' || $id || '/' || $id || '_edit.txt')
             else error(xs:QName('stats:makeCorpusStats()'), 'No (edit) txt available for published work ' || $id)
@@ -86,11 +88,13 @@ declare function stats:makeCorpusStats() as map(*) {
         collection($config:tei-works-root)//tei:text[@type = ('work_monograph', 'work_volume') 
                                                      and sutil:WRKisPublished(./parent::tei:TEI/@xml:id)]
     (: NORMALIZATIONS :)
+    let $debug := if ($config:debug = ("info", "trace")) then console:log('[STATS] Creating corpus expan/corr stats...') else ()
     let $resolvedAbbrCount := count($textCollection//tei:expan)
     let $resolvedSicCount := count($textCollection//tei:corr)
     let $resolvedHyphenationsCount := count($textCollection//(tei:pb|tei:cb|tei:lb)[@rendition eq '#noHyphen'])
 
     (: FACSIMILES :)
+    let $debug := if ($config:debug = ("info", "trace")) then console:log('[STATS] Creating corpus facsimile stats...') else ()
     (: count full-text digitized images based on TEI//pb :)
     let $fullTextFacsCount := count($textCollection//tei:pb[not(@sameAs or @corresp)])
     (: count other images based on iiif resources :)
@@ -98,15 +102,23 @@ declare function stats:makeCorpusStats() as map(*) {
         collection($config:tei-works-root)//tei:TEI[./tei:text[@type = ('work_monograph', 'work_volume')] 
                                                     and not(sutil:WRKisPublished(@xml:id))]/@xml:id/string()
     let $otherFacs :=
-        for $id in $unpublishedWorkIds return (: $unpublishedWorkIds can only comprise manifests, not collections :)
+        for $id in $unpublishedWorkIds order by $id return (: $unpublishedWorkIds can only comprise manifests, not collections :)
             let $iiif := iiif:fetchResource($id)
             return
                 if (count($iiif) gt 0) then 
                     if ($iiif('@type') eq 'sc:Manifest') then
                         array:size(array:get($iiif('sequences'), 1)?('canvases'))
-                    else error()
-                else error(xs:QName('stats:makeCorpusStats'), 'No iiif resource available for work ' || $id)
+                    else
+                        let $debug := console:log('[Stats] Invalid iiif manifest for work ' || $id || '.')
+                        return 0
+                        (: error() :)
+                else
+                    let $debug := console:log('[Stats] No iiif resource available for work ' || $id || '.')
+                    (: error(xs:QName('stats:makeCorpusStats'), 'No iiif resource available for work ' || $id) :)
+                    return 0
     let $totalFacsCount := $fullTextFacsCount + sum($otherFacs)
+
+
     let $out :=
         map {
             'id': 'corpus',
@@ -118,6 +130,9 @@ declare function stats:makeCorpusStats() as map(*) {
             'mf_lemmata': $mfLemmata,
             'facs_count': map {'full_text': $fullTextFacsCount, 'all': $totalFacsCount}
         }
+    let $debug := if ($config:debug = "info") then console:log('[STATS] Corpus stats done.') else ()
+    let $debug := if ($config:debug = "trace") then console:log('[STATS] Corpus stats done: ') else ()
+    let $debug := if ($config:debug = "trace") then console:log($out) else ()
 
     (:let $debugParams := 
         <output:serialization-parameters 
@@ -131,8 +146,10 @@ declare function stats:makeCorpusStats() as map(*) {
 };
 
 declare function stats:makeWorkStats($wid as xs:string) as map(*) {
+    let $debug := if ($config:debug = ("info", "trace")) then console:log('[STATS] Creating stats for ' || $wid || '...') else ()
     (: LEMMATA :)
     (: search for single work like so: "ley @sphinx_work ^W0002":)
+    let $debug := if ($config:debug = ("info", "trace")) then console:log('[STATS] Creating Lemma stats for ' || $wid || '...') else ()
     let $lemmataList := doc($config:data-root || '/lemmata-97.xml')//sal:lemma[@type eq 'term']
     let $mfLemmata :=
         for $l in $lemmataList 
@@ -148,6 +165,7 @@ declare function stats:makeWorkStats($wid as xs:string) as map(*) {
     
     (: TOKENS / CHARS / WORDFORMS / TYPES :)
     (: generic, lang=all :)
+    let $debug := if ($config:debug = ("info", "trace")) then console:log('[STATS] Creating character and token stats for ' || $wid || '...') else ()
     let $tei := doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI
     let $workType := $tei/tei:text/@type/string()
     let $text :=
@@ -168,12 +186,14 @@ declare function stats:makeWorkStats($wid as xs:string) as map(*) {
     let $wordformsCount := count(distinct-values($words))
     
     (: NORMALIZATIONS :)
+    let $debug := if ($config:debug = ("info", "trace")) then console:log('[STATS] Creating expan/corr stats for ' || $wid || '...') else ()
     let $resolvedAbbrCount := count($text//tei:expan)
     let $resolvedSicCount := count($text//tei:corr)
     let $resolvedHyphenationsCount := count($text//(tei:pb|tei:cb|tei:lb)[@rendition eq '#noHyphen'])
 
     (: FACSIMILES :)
     (: count full-text digitized images based on TEI//pb :)
+    let $debug := if ($config:debug = ("info", "trace")) then console:log('[STATS] Creating facsimile stats for ' || $wid || '...') else ()
     let $fullTextFacsCount := count($text//tei:pb[not(@sameAs or @corresp)])
     
     let $lang := $tei/tei:teiHeader/tei:profileDesc//tei:language[@n eq 'main']/@ident/string()
@@ -196,6 +216,10 @@ declare function stats:makeWorkStats($wid as xs:string) as map(*) {
           <output:method value="json"/>
         </output:serialization-parameters>
     let $debug := util:log('info', 'Finalized statistics: ' || serialize($out, $debugParams)):)
+
+    let $debug := if ($config:debug = "info") then console:log('[STATS] Stats for ' || $wid || ' done.') else ()
+    let $debug := if ($config:debug = "trace") then console:log('[STATS] Stats for ' || $wid || ' done: ') else ()
+    let $debug := if ($config:debug = "trace") then console:log($out) else ()
 
     return $out
 };

@@ -230,15 +230,15 @@ declare function admin:needsTxtCorpusZip($node as node(), $model as map(*)) {
 declare function admin:needsStats($node as node(), $model as map(*)) {
     let $worksModTime := max(for $work in xmldb:get-child-resources($config:tei-works-root) return xmldb:last-modified($config:tei-works-root, $work))    
     let $needsStats := 
-        if (util:binary-doc-available($config:stats-root || '/stats.json')) then
-            let $resourceModTime := xmldb:last-modified($config:stats-root, 'stats.json')
+        if (util:binary-doc-available($config:stats-root || '/corpus-stats.json')) then
+            let $resourceModTime := xmldb:last-modified($config:stats-root, 'corpus-stats.json')
             return $resourceModTime lt $worksModTime
         else true()
     return 
         if ($needsStats) then
             <td title="Most current source from: {string($worksModTime)}"><a href="webdata-admin.xql?format=stats"><b>Create corpus stats NOW!</b></a></td>
         else
-            <td title="{concat('Stats created on: ', string(xmldb:last-modified($config:stats-root, 'stats.json')), ', most current source from: ', string($worksModTime), '.')}">Creating corpus stats unnecessary. <small><a href="webdata-admin.xql?format=stats">Create corpus stats anyway!</a></small></td>
+            <td title="{concat('Stats created on: ', string(xmldb:last-modified($config:stats-root, 'corpus-stats.json')), ', most current source from: ', string($worksModTime), '.')}">Creating corpus stats unnecessary. <small><a href="webdata-admin.xql?format=stats">Create corpus stats anyway!</a></small></td>
 };
 
 declare function admin:authorString($node as node(), $model as map(*), $lang as xs:string?) {
@@ -2062,7 +2062,8 @@ declare function admin:createDetails($wid as xs:string) {
 ~ Creates and stores statistics.
 :)
 declare function admin:createStats() {
-    let $log  := if ($config:debug eq 'trace') then util:log('info', '[ADMIN] Starting to extract stats...') else ()
+    let $log  := if ($config:debug = ('info', 'trace')) then util:log('info', '[ADMIN] Starting to extract stats...') else ()
+    let $debug := console:log('[ADMIN] Starting to extract stats...')
     let $start-time := util:system-time()
     let $params := 
         <output:serialization-parameters xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
@@ -2072,20 +2073,25 @@ declare function admin:createStats() {
     let $corpusStats := stats:makeCorpusStats()
     let $save        := admin:saveFile('dummy', 'corpus-stats.json', serialize($corpusStats, $params), 'stats')
     let $export      := admin:exportJSONFile('corpus-stats.json', $corpusStats, 'stats')
+    let $debug := console:log('[ADMIN] Done creating corpus stats. Saved and exported to ' || $save || ' and ' || $export || '.')
+    let $log := if ($config:debug = ('info', 'trace')) then util:log('info', '[ADMIN] Done creating corpus stats. Saved and exported to ' || $save || ' and ' || $export || '.') else ()
+
     (: single work stats:)
+    let $debug := console:log('[ADMIN] Creating with single work stats...')
     let $processSingleWorks :=
-        for $wid in sutil:getPublishedWorkIds() return
-            let $log := if ($config:debug eq 'trace') then util:log('info', '[ADMIN] Creating single work stats for ' || $wid) else ()
+        for $wid in sutil:getPublishedWorkIds() order by $wid return
+            let $log := if ($config:debug = 'trace') then util:log('info', '[ADMIN] Creating single work stats for ' || $wid || '...') else ()
             let $workStats := stats:makeWorkStats($wid)
             let $saveSingle   := admin:saveFile('dummy', $wid || '-stats.json', serialize($workStats, $params), 'stats')
             let $exportSingle := admin:exportJSONFile($wid, $wid || '-stats.json', $workStats, 'stats')
+            let $log := if ($config:debug = 'trace') then util:log('info', '[ADMIN] Done creating single work stats for ' || $wid || '. Saved and exported to ' || $saveSingle || ' and ' || $exportSingle || '.') else ()
             return $workStats
     let $runtime-ms := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000
     let $runtimeString :=
         if ($runtime-ms < (1000 * 60)) then format-number($runtime-ms div 1000, "#.##") || " Sek."
         else if ($runtime-ms < (1000 * 60 * 60))  then format-number($runtime-ms div (1000 * 60), "#.##") || " Min."
         else format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
-    let $log  := util:log('info', '[ADMIN] Extracted corpus and works stats in ' || $runtimeString)
-
+    let $log  := util:log('info', '[ADMIN] Extracted corpus and works stats in ' || $runtimeString || '.')
+    let $debug := console:log('Extracted corpus and works stats in ' || $runtimeString || '.')
     return $corpusStats
 };
