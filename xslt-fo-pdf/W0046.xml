@@ -43,40 +43,40 @@
                     </persName>
                 </editor>
             </titleStmt>
-            
+
             <editionStmt>
             <edition n="1.0.0" xml:id="W0046-version1" xml:lang="en">
                 Complete digitized edition, <date type="digitizedEd" when="2020-11-13">2020-11-13</date>.
             </edition>
         </editionStmt>
-            
-        <publicationStmt xml:id="publicationStmt">
-            <xi:include href="../meta/works-general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:fileDesc/tei:publicationStmt/*)">
-            	<xi:fallback><publisher><ref target="https://www.salamanca.school" xml:lang="en">For information about the digital edition, please 
-            				refer to our website.</ref></publisher>
-            	</xi:fallback>
-            </xi:include>
-            <date type="digitizedEd" when="2020-11-13">2020-11-13</date>
-            <idno>
-                <idno xml:id="urlid">https://id.salamanca.school/texts/W0046</idno>
-                <idno xml:id="urltei">https://id.salamanca.school/texts/W0046?format=tei</idno>
-                <idno xml:id="urlhtml">https://id.salamanca.school/texts/W0046?format=html</idno>
-                <idno xml:id="urlrdf">https://id.salamanca.school/texts/W0046?format=rdf</idno>
-                <idno xml:id="urliiif">https://id.salamanca.school/texts/W0046?format=iiif</idno>
-                <idno xml:id="urltxtorig">https://id.salamanca.school/texts/W0046?format=txt&amp;mode=orig</idno>
-                <idno xml:id="urltxtedit">https://id.salamanca.school/texts/W0046?format=txt&amp;mode=edit</idno>
-            </idno>
-        </publicationStmt>
 
-        <seriesStmt>
-            <xi:include href="../meta/works-general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:fileDesc/tei:seriesStmt/*)">
-                <xi:fallback>
-                   <title xml:lang="en"><ref target="https://www.salamanca.school" xml:lang="en">The School of Salamanca. A Digital Collection of Sources</ref></title>
-                </xi:fallback>
-            </xi:include>
-            <biblScope unit="volume" n="19"/>
-        </seriesStmt>
-            
+            <publicationStmt xml:id="publicationStmt">
+                <xi:include href="../meta/works-general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:fileDesc/tei:publicationStmt/*)">
+                	<xi:fallback><publisher><ref target="https://www.salamanca.school" xml:lang="en">For information about the digital edition, please 
+                				refer to our website.</ref></publisher>
+                	</xi:fallback>
+                </xi:include>
+                <date type="digitizedEd" when="2020-11-13">2020-11-13</date>
+                <idno>
+                    <idno xml:id="urlid">https://id.salamanca.school/texts/W0046</idno>
+                    <idno xml:id="urltei">https://id.salamanca.school/texts/W0046?format=tei</idno>
+                    <idno xml:id="urlhtml">https://id.salamanca.school/texts/W0046?format=html</idno>
+                    <idno xml:id="urlrdf">https://id.salamanca.school/texts/W0046?format=rdf</idno>
+                    <idno xml:id="urliiif">https://id.salamanca.school/texts/W0046?format=iiif</idno>
+                    <idno xml:id="urltxtorig">https://id.salamanca.school/texts/W0046?format=txt&amp;mode=orig</idno>
+                    <idno xml:id="urltxtedit">https://id.salamanca.school/texts/W0046?format=txt&amp;mode=edit</idno>
+                </idno>
+            </publicationStmt>
+
+            <seriesStmt>
+                <xi:include href="../meta/works-general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:fileDesc/tei:seriesStmt/*)">
+                    <xi:fallback>
+                       <title xml:lang="en"><ref target="https://www.salamanca.school" xml:lang="en">The School of Salamanca. A Digital Collection of Sources</ref></title>
+                    </xi:fallback>
+                </xi:include>
+                <biblScope unit="volume" n="19"/>
+            </seriesStmt>
+
             <sourceDesc>
                 <biblStruct>
                     <monogr>
@@ -139,7 +139,7 @@
                 </msDesc>
             </sourceDesc>
         </fileDesc>
-        
+
         <profileDesc>
            <langUsage>
               <language ident="la" n="main" xml:lang="en">Latin</language>
@@ -232,8 +232,10 @@
 <lb xml:id="W0046-00-0005-lb-0012"/>Valli<g ref="#char017f">ſ</g>oleti: Ex Officina Hieronymi Morillo, Alm<g ref="#char00e6">æ</g> Vniuer<g ref="#char017f">ſ</g>ita<lb rendition="#hyphen" break="no" xml:id="W0046-00-0005-lb-0013"/>tis Typographi. Anno M. DC. XXV.</docImprint>
 <pb n="fol. [i]v" type="blank" facs="facs:W0046-0006" xml:id="W0046-00-0006-pb-03e9"/>
 </titlePage>
-<div type="administrative" xml:id="W0046-00-0007-d1-03e8"><head xml:id="W0046-00-0007-he-03e8"><figure place="inline" type="ornament"/><pb n="fol. [ii]r" facs="facs:W0046-0007" xml:id="W0046-00-0007-pb-03ea"/><lb xml:id="W0046-00-0007-lb-0001"/><hi rendition="#sc"><hi rendition="#spc"><foreign xml:lang="es">El Rey.</foreign></hi></hi></head>
-<p xml:id="W0046-00-0007-pa-03ea"><foreign xml:lang="es">
+<div type="administrative" xml:id="W0046-00-0007-d1-03e8"><head xml:id="W0046-00-0007-he-03e8"><figure place="inline" type="ornament"/><pb n="fol. [ii]r" facs="facs:W0046-0007" xml:id="W0046-00-0007-pb-03ea"/>
+<lb xml:id="W0046-00-0007-lb-0001"/><hi rendition="#sc"><hi rendition="#spc"><foreign xml:lang="es">El Rey.</foreign></hi></hi></head>
+<p xml:id="W0046-00-0007-pa-03ea">
+<foreign xml:lang="es">
 <lb xml:id="W0046-00-0007-lb-0002"/><hi rendition="#initCaps">P</hi>Or <choice xml:id="W0046-00-0007-ce-03e8"><abbr>qu<g ref="#chara0303">ã</g>to</abbr><expan resp="#CB" cert="high">quanto</expan></choice> por parte de vos el Doct. Fr. Serafin de Frey<lb break="no" rendition="#noHyphen" xml:id="W0046-00-0007-lb-0003"/>tas Cathedratico de Vi<g ref="#char017f">ſ</g>peras de Canones de la vni<lb break="no" rendition="#noHyphen" xml:id="W0046-00-0007-lb-0004"/>uer<g ref="#char017f">ſ</g>idad de Valladolid, de la Orden de nue<g ref="#char017f">ſ</g>tra Se<lb rendition="#hyphen" break="no" xml:id="W0046-00-0007-lb-0005"/><g ref="#charn0303">ñ</g>ora de la Merced redempcion de cautiuos, nos fue
 <lb xml:id="W0046-00-0007-lb-0006"/>fecha relacion, auiades compue<g ref="#char017f">ſ</g>to vn libro inti<lb rendition="#hyphen" break="no" xml:id="W0046-00-0007-lb-0007"/>tulado, de iu<g ref="#char017f">ſ</g>to Imperio Lu<g ref="#char017f">ſ</g>itanorum A<g ref="#char017f">ſ</g>iatico,
 <lb xml:id="W0046-00-0007-lb-0008"/>el qual era muy, y prouecho<g ref="#char017f">ſ</g>o, y nos pedi<g ref="#char017f">ſ</g>tes, y <g ref="#char017f">ſ</g>u<lb rendition="#hyphen" break="no" xml:id="W0046-00-0007-lb-0009"/>plica<g ref="#char017f">ſ</g>tes, os manda<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>emos dar licencia, y facultad pa<lb break="no" rendition="#noHyphen" xml:id="W0046-00-0007-lb-0010"/>ra imprimir lo por el tiempo que fue<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>em os <g ref="#char017f">ſ</g>eruido,
@@ -266,7 +268,9 @@
 <lb xml:id="W0046-00-0008-lb-0017"/>guarden, y cumplan e<g ref="#char017f">ſ</g>ta nue<g ref="#char017f">ſ</g>tra cedula, y contra ella no vayan, ni pa<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>en, ni
 <lb xml:id="W0046-00-0008-lb-0018"/>con<g ref="#char017f">ſ</g>ientan yr, ni pa<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>ar en manera alguna, <g ref="#char017f">ſ</g>o pena de la nue<g ref="#char017f">ſ</g>tra merced, y de
 <lb xml:id="W0046-00-0008-lb-0019"/>diez mil marauedis para la nue<g ref="#char017f">ſ</g>tra Camara. Dada en <g ref="#char017f">ſ</g>an Loren<g ref="#charc0327">ç</g>o a veynte
-<lb xml:id="W0046-00-0008-lb-0020"/>y ocho dias del mes de Otubre de mil <g ref="#char017f">ſ</g>ey<g ref="#char017f">ſ</g>cientos y veynte y quatro a<g ref="#charn0303">ñ</g>os.</foreign></p>
+<lb xml:id="W0046-00-0008-lb-0020"/>y ocho dias del mes de Otubre de mil <g ref="#char017f">ſ</g>ey<g ref="#char017f">ſ</g>cientos y veynte y quatro a<g ref="#charn0303">ñ</g>os.
+</foreign>
+</p>
 <p xml:id="W0046-00-0008-pa-03eb">
 <lb xml:id="W0046-00-0008-lb-0021"/><hi rendition="#r-center #spc"><foreign xml:lang="es">YO EL REY.</foreign></hi></p>
 <p xml:id="W0046-00-0008-pa-03ec">
@@ -466,7 +470,8 @@
 <item xml:id="W0046-00-0019-it-03f4">
 <lb xml:id="W0046-00-0019-lb-0024"/><hi rendition="#it">Cap. 13. Batauis ius commercij Indicani, qu<g ref="#chara0300">à</g> pace, qu<g ref="#chara0300">à</g> inducijs, qu<g ref="#chara0300">à</g>
 <lb xml:id="W0046-00-0019-lb-0025"/>bello retinenaum.</hi></item>
-</list></div>
+</list>
+</div>
 <div type="contents" n="2" xml:id="W0046-00-0020-d1-03f2"><head xml:id="W0046-00-0020-he-03ef"><pb n="fol. [viii]v" facs="facs:W0046-0020" xml:id="W0046-00-0020-pb-03f7"/><lb xml:id="W0046-00-0020-lb-0001"/><hi rendition="#spc">CAPITA DIS PVTATIONIS</hi>
 <lb xml:id="W0046-00-0020-lb-0002"/>Seraphini, de iu<g ref="#char017f">ſ</g>to Imperio Lu<g ref="#char017f">ſ</g>ita<lb rendition="#hyphen" break="no" xml:id="W0046-00-0020-lb-0003"/>norum A<g ref="#char017f">ſ</g>iatico.</head>
 <list type="contents" xml:id="W0046-00-0020-li-03e9">
@@ -509,9 +514,12 @@
 <lb xml:id="W0046-00-0020-lb-0030"/><ref target="#W0046-00-0374-d1-0403"><hi rendition="#it">Cap. 17. De Lu<g ref="#char017f">ſ</g>itanorum lucro ex Indico commercio.</hi></ref></item>
 <item xml:id="W0046-00-0020-it-0406">
 <lb xml:id="W0046-00-0020-lb-0031"/><ref target="#W0046-00-0380-d1-0404"><hi rendition="#it">Cap. 18. De Lu<g ref="#char017f">ſ</g>itanorum religione in India Orientali.</hi></ref></item>
-</list></div></front>
+</list>
+</div>
+</front>
 <body xml:id="W0046-00-0021-tb-03e8">
-<div type="chapter" n="1" xml:id="W0046-00-0021-d1-03f3"><head xml:id="W0046-00-0021-he-03f0">
+<div type="chapter" n="1" xml:id="W0046-00-0021-d1-03f3">
+<head xml:id="W0046-00-0021-he-03f0">
 <pb n="fol. 1r" facs="facs:W0046-0021" xml:id="W0046-00-0021-pb-03f8"/>
 <figure place="inline" type="ornament"/>
 <lb xml:id="W0046-00-0021-lb-0001"/>DE IVSTO IMPE<lb break="no" rendition="#noHyphen" xml:id="W0046-00-0021-lb-0002"/><hi rendition="#sc">rio Lvsitanorvm
@@ -585,7 +593,8 @@
 <lb xml:id="W0046-00-0023-lb-0005"/><hi rendition="#r-center"><hi rendition="#spc">AN IVRE GENTIVM QVIBVS</hi><lb rendition="#hyphen" break="no" xml:id="W0046-00-0023-lb-0006"/>uis ad quo<g ref="#char017f">ſ</g>uis libera <g ref="#char017f">ſ</g>it nauigatio?
 <lb xml:id="W0046-00-0023-lb-0007"/><hi rendition="#spc"><hi rendition="#it">CAP. I.</hi></hi></hi></p>
 <p xml:id="W0046-00-0023-pa-0400">
-<lb xml:id="W0046-00-0023-lb-0008"/><hi rendition="#spc"><hi rendition="#sc"><hi rendition="#initCaps">I</hi>Nter</hi></hi> Lu<g ref="#char017f">ſ</g>itani<g ref="#char00e6">æ</g> Reges, qui pro<g ref="#char017f">ſ</g><milestone n="1" unit="section" xml:id="W0046-00-0023-mi-03e8"/><lb rendition="#hyphen" break="no" xml:id="W0046-00-0023-lb-0009"/>peris euentibus rem, <g ref="#char0026">&amp;</g> <g ref="#char017f">ſ</g>uam, <g ref="#char0026">&amp;</g>
+<lb xml:id="W0046-00-0023-lb-0008"/><hi rendition="#spc"><hi rendition="#sc"><hi rendition="#initCaps">I</hi>Nter</hi></hi> Lu<g ref="#char017f">ſ</g>itani<g ref="#char00e6">æ</g> Reges, qui pro<g ref="#char017f">ſ</g><milestone n="1" unit="section" xml:id="W0046-00-0023-mi-03e8"/><lb rendition="#hyphen" break="no"
+    xml:id="W0046-00-0023-lb-0009"/>peris euentibus rem, <g ref="#char0026">&amp;</g> <g ref="#char017f">ſ</g>uam, <g ref="#char0026">&amp;</g>
 <lb xml:id="W0046-00-0023-lb-0010"/>Chri<g ref="#char017f">ſ</g>tianam auxere, pr<g ref="#char00e6">æ</g>cipua ce<lb rendition="#hyphen" break="no" xml:id="W0046-00-0023-lb-0011"/>lebritate enituit Ioannes, eo no<lb rendition="#hyphen" break="no" xml:id="W0046-00-0023-lb-0012"/>mine primus, qui tran<g ref="#char017f">ſ</g>mi<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>o in A<lb rendition="#hyphen" break="no" xml:id="W0046-00-0023-lb-0013"/>fricam exercitu Septam vrbem opulenti<g ref="#char017f">ſ</g>simam,
 <lb xml:id="W0046-00-0023-lb-0014"/><g ref="#char0026">&amp;</g> Hi<g ref="#char017f">ſ</g>pani<g ref="#char00e6">æ</g> terrorem, <g ref="#chara0300">à</g> Mauris in<g ref="#char017f">ſ</g>igni victoria
 <lb xml:id="W0046-00-0023-lb-0015"/>expugnauit; is <g ref="#chare0300">è</g> Philippa Alenca<g ref="#char017f">ſ</g>tria Eduardi VI.

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="https://files.salamanca.school/SvSal_txt.rng"
+    type="application/xml"
+    schematypens="http://relaxng.org/ns/structure/1.0"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="W0037">
+<?svsal htmlFragmentationDepth="5" ?>
+
+    <teiHeader>
+        <fileDesc>
+
+            <titleStmt>
+                <title type="short" level="s">Opera omnia, sive quotidianarum controversiarum iuris</title>
+                <title type="main" level="s">Ioannis del Castillo Sotomayor opera omnia, sive quotidianarum controversiarum iuris</title>
+                <author>
+                    <persName ref="author:A0021 gnd:100972144 viaf:7742296 cerl:cnp01132965" key="Castillo Sotomayor, Juan de">
+                        <forename>Juan</forename>
+                        <nameLink>de</nameLink>
+                        <surname>Castillo Sotomayor</surname>
+                    </persName>
+                </author>
+                <editor xml:id="CB" role="#scholarly">
+                    <persName ref="gnd:138962987">
+                        <surname>Birr</surname>, <forename>Christiane</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="JLE" role="#scholarly">
+                    <persName ref="orcid:0000-0002-9256-8490">
+                        <surname>Egío García</surname>, <forename>José Luis</forename>
+                    </persName>
+                </editor>
+                
+                <editor xml:id="CR" role="#technical">
+                    <persName ref="orcid:0000-0001-5095-1793">
+                        <surname>Rico Carmona</surname>, <forename>Cindy</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="DG" role="#technical">
+                    <persName ref="orcid:0000-0002-0273-3844">
+                        <surname>Glück</surname>, <forename>David</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="MT" role="#additional">
+                    <persName ref="orcid:0000-0002-1488-6477">
+                        <surname>Thönes</surname>, <forename>Martin</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="AW" role="#technical">
+                    <persName ref="orcid:0000-0003-1835-1653 gnd:108835820">
+                        <surname>Wagner</surname>, <forename>Andreas</forename>
+                    </persName>
+                </editor>
+                
+            </titleStmt>
+            
+            <editionStmt>
+               <edition n="unpublished"/>
+            </editionStmt>
+
+            <publicationStmt xml:id="publicationStmt">
+            	<xi:include href="../meta/works-general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:fileDesc/tei:publicationStmt/*)">
+            		<xi:fallback><publisher><ref target="https://www.salamanca.school" xml:lang="en">For information about the digital edition, please 
+            					refer to our website.</ref></publisher>
+            		</xi:fallback>
+            	</xi:include>
+            	<date type="digitizedEd" n="unpublished"/>
+            	<idno/>
+            </publicationStmt>
+            
+            <seriesStmt>
+                <xi:include href="../meta/works-general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:fileDesc/tei:seriesStmt/*)">
+                    <xi:fallback>
+                       <title xml:lang="en"><ref target="https://www.salamanca.school" xml:lang="en">The School of Salamanca. A Digital Collection of Sources</ref></title>
+                    </xi:fallback>
+                </xi:include>
+                <biblScope unit="volume" n="unpublished"/>
+            </seriesStmt>
+            
+            <notesStmt>
+                <relatedItem type="work_volume" n="1" target="work:W0037_Vol01"/>
+                <relatedItem type="work_volume" n="2" target="work:W0037_Vol02"/>
+                <relatedItem type="work_volume" n="3" target="work:W0037_Vol03"/>
+                <relatedItem type="work_volume" n="4" target="work:W0037_Vol04"/>
+                <relatedItem type="work_volume" n="5" target="work:W0037_Vol05"/>
+            </notesStmt>
+
+            <sourceDesc>
+                <biblStruct>
+                    <monogr>
+                        <author>
+                            <persName ref="author:A0021 gnd:100972144 viaf:7742296 cerl:cnp01132965" key="Castillo Sotomayor, Juan de">
+                                <forename>Juan</forename>
+                                <nameLink>de</nameLink>
+                                <surname>Castillo Sotomayor</surname>
+                            </persName>
+                        </author>
+                        <title type="short" level="s">Opera omnia, sive quotidianarum controversiarum iuris</title>
+                        <title type="main" level="s">Ioannis del Castillo Sotomayor opera omnia, sive quotidianarum controversiarum iuris</title>
+                        <imprint>
+                            <pubPlace role="firstEd" ref="getty:7008772" key="Lyon">Lugduni</pubPlace>
+                            <date type="firstEd" when="1658">1658</date>
+                            <date type="summaryFirstEd" when="1658" from="1658" to="1658">1.1658 - 5.1658</date>
+                            <publisher n="firstEd">
+                                <persName ref="cerl:cni00071345 gnd:1037560329 viaf:39429535" key="Anisson, Laurent">
+                                    <forename>Laurent</forename>
+                                    <surname>Anisson</surname>
+                                </persName>
+                                <persName ref="cerl:cni00071443 gnd:1037593340 viaf:29469987" key="Devenet, Jean-Baptiste">
+                                    <forename>Jean-Baptiste</forename>
+                                    <surname>Devenet</surname>
+                                </persName>
+                            </publisher>
+                        </imprint>
+                    </monogr>
+                </biblStruct>
+            </sourceDesc>
+        </fileDesc>
+        
+        <profileDesc>
+           <langUsage>
+              <language ident="la" n="main" xml:lang="en">Latin</language>
+           </langUsage>
+        </profileDesc>
+
+        <encodingDesc>
+            <xi:include href="../meta/works-general.xml" xpointer="projectDesc">
+                <xi:fallback><projectDesc><p xml:id="meta-pa-0004"><ref target="https://www.salamanca.school" xml:lang="en">For information about the project, please 
+                               refer to our website.</ref></p></projectDesc>
+                </xi:fallback>
+            </xi:include>
+            <editorialDecl>
+                <xi:include href="../meta/works-general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:encodingDesc/tei:editorialDecl/tei:p)">
+                    <xi:fallback><p xml:id="meta-pa-0005"><ref target="https://www.salamanca.school" xml:lang="en">For information about the digital edition, please 
+                                refer to our website.</ref></p>
+                    </xi:fallback>
+                </xi:include>
+            </editorialDecl>
+            <xi:include href="../meta/works-general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:encodingDesc/tei:editorialDecl/following-sibling::*)">
+                <xi:fallback/>
+            </xi:include>
+            <xi:include href="../meta/specialchars.xml" xpointer="charDecl">
+                <xi:fallback><charDecl><char xml:lang="en"><note xml:id="meta-no-0001">The definition of 
+                     non-standard characters could not be embedded, but it is available on the 
+                     <ref target="https://files.salamanca.school/specialchars.xml">project website</ref>.</note></char></charDecl>
+                </xi:fallback>
+            </xi:include>
+            <appInfo>
+                <application ident="auto-markup" version="1" xml:id="auto">
+                    <desc>Automatically generated markup.</desc>
+                </application>
+            </appInfo>
+        </encodingDesc>
+
+        <revisionDesc status="a_raw">
+            <listChange ordered="true">
+                <change who="#CR" when="2020-05-14" status="a_raw" xml:lang="en">Set teiHeader.</change>
+                <!--<change who="#XX" when="YYYY" status="a_raw" xml:lang="en">Identification of basic bibliographic data.</change>-->
+            </listChange>
+        </revisionDesc>
+    </teiHeader>
+    <text xml:lang="la" type="work_multivolume" xml:id="completeWork">
+        <group>
+            <xi:include href="W0037_Vol01.xml" xpointer="Vol01">
+                <xi:fallback>
+                    <p xml:id="p_d1e343" xml:lang="de">Band 1 konnte nicht eingebunden
+                        werden.</p>
+                </xi:fallback>
+            </xi:include>
+            <xi:include href="W0037_Vol02.xml" xpointer="Vol02">
+                <xi:fallback>
+                    <p xml:id="p_d1e352" xml:lang="de">Band 2 konnte nicht eingebunden
+                        werden.</p>
+                </xi:fallback>
+            </xi:include>
+            <xi:include href="W0037_Vol03.xml" xpointer="Vol03">
+                <xi:fallback>
+                    <p xml:id="p_d1e361" xml:lang="de">Band 3 konnte nicht eingebunden
+                        werden.</p>
+                </xi:fallback>
+            </xi:include>
+            <xi:include href="W0037_Vol04.xml" xpointer="Vol04">
+                <xi:fallback>
+                    <p xml:id="p_d1e370" xml:lang="de">Band 4 konnte nicht eingebunden
+                        werden.</p>
+                </xi:fallback>
+            </xi:include>
+            <xi:include href="W0037_Vol05.xml" xpointer="Vol05">
+                <xi:fallback>
+                    <p xml:id="p_d1e379" xml:lang="de">Band 5 konnte nicht eingebunden
+                        werden.</p>
+                </xi:fallback>
+            </xi:include>            
+        </group>
+    </text>
+</TEI>

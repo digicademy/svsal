@@ -1,0 +1,177 @@
+<?xml-model href="https://files.salamanca.school/SvSal_txt.rng"
+    type="application/xml"
+    schematypens="http://relaxng.org/ns/structure/1.0"?><TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="W0066_Vol02">
+    <teiHeader>
+        <fileDesc>
+
+            <titleStmt>
+                <title type="short" level="m">De Iustitia et Iure, Vol. 2</title>
+                <title type="main" level="m">R.P. Ioannis De Lvgo Hispalensis Societatis Iesv, Disputationum De Iustitia &amp; Ivre, Tomvs Secvndvs</title>
+                <title type="volume" level="m" n="2">Tomvs Secvndvs</title>
+                <author>
+                    <persName ref="author:A0051 gnd:130254193 cerl:cnp01382907">
+                        <forename>Juan</forename>
+                        <surname>de Lugo y Quiroga</surname>
+                    </persName>
+                </author>
+                <editor xml:id="DG" role="#technical">
+                    <persName>
+                        <surname>Glück</surname>, <forename>David</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="MT" role="#additional">
+                    <persName ref="orcid:0000-0002-1488-6477" full="yes">
+                        <surname full="yes">Thönes</surname>, <forename full="yes">Martin</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="AW" role="#technical">
+                    <persName ref="gnd:108835820">
+                        <surname>Wagner</surname>, <forename>Andreas</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="CR" role="#technical">
+                    <persName ref="orcid:0000-0001-5095-1793" full="yes">
+                        <surname full="yes">Rico Carmona</surname>, <forename full="yes">Cindy</forename>
+                    </persName>
+                </editor>
+            </titleStmt>
+
+            <editionStmt>
+               <edition n="unpublished"/>
+            </editionStmt>
+
+            <publicationStmt xml:id="publicationStmt">
+            	<xi:include href="../meta/works-general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:fileDesc/tei:publicationStmt/*)">
+            		<xi:fallback><publisher><ref target="https://www.salamanca.school" xml:lang="en">For information about the digital edition, please 
+            					refer to our website.</ref></publisher>
+            		</xi:fallback>
+            	</xi:include>
+            	<date type="digitizedEd" n="unpublished"/>
+            	<idno/>
+            </publicationStmt>
+
+            <seriesStmt>
+                <xi:include href="../meta/works-general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:fileDesc/tei:seriesStmt/*)">
+                    <xi:fallback>
+                       <title xml:lang="en"><ref target="https://www.salamanca.school" xml:lang="en">The School of Salamanca. A Digital Collection of Sources</ref></title>
+                    </xi:fallback>
+                </xi:include>
+                <biblScope unit="volume" n="unpublished"/>
+            </seriesStmt>
+            
+            <notesStmt>
+                <relatedItem type="work_multivolume" target="work:W0"/>
+            </notesStmt>
+
+            <sourceDesc>
+                <biblStruct>
+                    <monogr>
+                        <author>
+                            <persName ref="author:A0051 gnd:130254193 cerl:cnp01382907">
+                                <forename>Juan</forename>
+                                <surname>de Lugo y Quiroga</surname>
+                            </persName>
+                        </author>
+                        <title type="short" level="m">De Iustitia et Iure, Vol. 2</title>
+                        <title type="main" level="m">R.P. Ioannis De Lvgo Hispalensis Societatis Iesv, Disputationum De Iustitia &amp; Ivre, Tomvs Secvndvs</title>
+                        <title type="volume" level="m" n="2">Tomvs Secvndvs</title>
+                        <imprint>
+                            <pubPlace role="firstEd" ref="getty:7008772" key="Lyon">Lugduni</pubPlace>
+                            <date type="firstEd" when="1642">1642</date>
+                            <publisher n="firstEd">
+                                <persName ref="cerl:cni00047020" key="Prost, Pierre">
+                                    <forename>Petrus</forename>
+                                    <surname>Prost</surname>
+                                </persName>
+                            </publisher>
+                        </imprint>
+                        <extent xml:lang="de">16 ungezählte Seiten, 685 Seiten, 33 ungezählte Seiten</extent>
+                        <extent xml:lang="en">[16] l., 685 p., [33] p.</extent>
+                        <extent xml:lang="es">[16] h., 685 p., [33] p.</extent>
+                    </monogr>
+                    <series>
+                        <title type="main" level="s" ref="work:W0066">R.P. Ioannis De Lvgo Hispalensis Societatis Iesv In Romano Collegio S. Theologiæ Professoris 
+                            Disputationum, De Ivstitia Et Ivre</title>
+                        <biblScope unit="volume" n="2" xml:lang="la">Tomvs Secvndvs</biblScope>
+                    </series>
+                </biblStruct>
+                <msDesc>
+                    <msIdentifier>
+                        <repository ref="gnd:5036103-X" xml:lang="de">Staatsbibliothek zu Berlin - Preußischer Kulturbesitz</repository>
+                        <idno type="catlink" xml:lang="de">http://stabikat.de/DB=1/XMLPRS=N/PPN?PPN=778511952</idno>
+                    </msIdentifier>
+                    <physDesc>
+                        <typeDesc>
+                            <typeNote n="antiqua" xml:lang="en">Antiqua typeface</typeNote>
+                        </typeDesc>
+                    </physDesc>
+                </msDesc>
+            </sourceDesc>
+        </fileDesc>
+        
+        <profileDesc>
+           <langUsage>
+              <language ident="la" n="main" xml:lang="en">Latin</language>
+           </langUsage>
+        </profileDesc>
+
+        <encodingDesc>
+            <xi:include href="../meta/works-general.xml" xpointer="projectDesc">
+                <xi:fallback><projectDesc><p xml:id="meta-pa-0004"><ref target="https://www.salamanca.school" xml:lang="en">For information about the project, please 
+                               refer to our website.</ref></p></projectDesc>
+                </xi:fallback>
+            </xi:include>
+            <editorialDecl>
+                <xi:include href="../meta/works-general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:encodingDesc/tei:editorialDecl/tei:p)">
+                    <xi:fallback><p xml:id="meta-pa-0005"><ref target="https://www.salamanca.school" xml:lang="en">For information about the digital edition, please 
+                                refer to our website.</ref></p>
+                    </xi:fallback>
+                </xi:include>
+                <normalization>
+                   <p xml:id="meta-pa-0006" xml:lang="en">The "long s" character (<q>ſ</q>) was normalized, 
+                      i.e. resolved to <q>s</q>.</p>
+                </normalization>
+            </editorialDecl>
+            <xi:include href="../meta/works-general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:encodingDesc/tei:editorialDecl/following-sibling::*)">
+                <xi:fallback/>
+            </xi:include>
+            <xi:include href="../meta/specialchars.xml" xpointer="charDecl">
+                <xi:fallback><charDecl><char xml:lang="en"><note xml:id="meta-no-0001">The definition of 
+                     non-standard characters could not be embedded, but it is available on the 
+                     <ref target="https://files.salamanca.school/specialchars.xml">project website</ref>.</note></char></charDecl>
+                </xi:fallback>
+            </xi:include>
+			<appInfo>
+                <application ident="auto-markup" version="1" xml:id="auto">
+                    <desc>Automatically generated markup.</desc>
+                </application>
+            </appInfo>
+        </encodingDesc>
+
+        <revisionDesc status="a_raw">
+            <listChange>
+                <change who="#CR" when="2020-09-07" status="a_raw">teiHeader update.</change>
+                <change who="#DG #MT" when="2018-12-10" status="a_raw" xml:lang="en">Revised metadata (titles, extent) according to RDA guidelines</change>
+                <change who="#DG" when="2018-09-27" status="a_raw" xml:lang="en">Revision of teiHeader.</change>
+                <change who="#AW" when="2018-04-23" status="a_raw">Metadatensatz angelegt</change>
+            </listChange>
+        </revisionDesc>
+    </teiHeader>
+
+
+    <text type="work_volume" n="2" xml:lang="la" xml:id="Vol02">
+        <front xml:id="frontmatter_V2">
+            <titlePage xml:id="titleVol02">
+                <titlePart xml:id="titlePart_V2">
+<pb facs="facs:W0066-B-0004" n="titlePage" xml:id="facs_W0066-B-0004"/>
+                    Titlepage
+                </titlePart>
+            </titlePage>
+        </front>
+        <body>
+            <div type="foreword" xml:id="forewordVol02">
+                <head xml:id="head_bvvbedrthce">Content is forthcoming!</head>
+            </div>
+        </body>
+    </text>
+</TEI>

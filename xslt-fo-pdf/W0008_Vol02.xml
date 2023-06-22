@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="https://files.salamanca.school/SvSal_txt.rng"
+    type="application/xml"
+    schematypens="http://relaxng.org/ns/structure/1.0"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="W0008_Vol02">
+    <teiHeader>
+        <fileDesc>
+            
+            <titleStmt>
+                <title type="short" level="m">De Iustitia et Iure, Vol. 2</title>
+                <title type="main" level="m">De Ivstitia Tomvs Secvndvs De Contractibvs</title>
+                <title type="volume" level="m" n="2">Tomvs Secvndvs</title>
+                <author>
+                    <persName ref="author:A0061 gnd:118734555 cerl:cnp01237409" key=" Molina, Luis de">
+                        <forename>Luis</forename>
+                        <nameLink>de</nameLink>
+                        <surname>Molina</surname>
+                    </persName>
+                </author>
+                <editor xml:id="CB" role="#scholarly">
+                    <persName ref="gnd:138962987">
+                        <surname>Birr</surname>, <forename>Christiane</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="CR" role="#technical">
+                    <persName ref="orcid:0000-0001-5095-1793">
+                        <surname>Rico Carmona</surname>, <forename>Cindy</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="DG" role="#technical">
+                    <persName ref="orcid:0000-0002-0273-3844">
+                        <surname>Glück</surname>, <forename>David</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="IC" role="#technical">
+                    <persName ref="gnd:1022577581">
+                        <surname>Caesar</surname>, <forename>Ingo</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="JLE" role="#scholarly">
+                    <persName ref="orcid:0000-0002-9256-8490">
+                        <surname>Egío García</surname>, <forename>José Luis</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="MT" role="#additional">
+                    <persName ref="orcid:0000-0002-1488-6477" full="yes">
+                        <surname full="yes">Thönes</surname>, <forename full="yes">Martin</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="PDS" role="#scholarly">
+                    <persName ref="orcid:0000-0001-6255-6141">
+                        <surname>da Silva Santos</surname>, <forename>Pedro</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="AW" role="#technical">
+                    <persName ref="gnd:108835820">
+                        <surname>Wagner</surname>, <forename>Andreas</forename>
+                    </persName>
+                </editor>
+            </titleStmt>
+            
+            <editionStmt>
+               <edition n="unpublished"/>
+            </editionStmt>
+            
+            <publicationStmt xml:id="publicationStmt">
+            	<xi:include href="../meta/works-general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:fileDesc/tei:publicationStmt/*)">
+            		<xi:fallback><publisher><ref target="https://www.salamanca.school" xml:lang="en">For information about the digital edition, please 
+            					refer to our website.</ref></publisher>
+            		</xi:fallback>
+            	</xi:include>
+            	<date type="digitizedEd" n="unpublished"/>
+            	<idno/>
+            </publicationStmt>
+            
+            <seriesStmt>
+                <xi:include href="../meta/works-general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:fileDesc/tei:seriesStmt/*)">
+                    <xi:fallback>
+                       <title xml:lang="en"><ref target="https://www.salamanca.school" xml:lang="en">The School of Salamanca. A Digital Collection of Sources</ref></title>
+                    </xi:fallback>
+                </xi:include>
+                <biblScope unit="volume" n="unpublished"/>
+            </seriesStmt>
+            
+            <notesStmt>
+                <relatedItem type="work_multivolume" target="work:W0008"/>
+            </notesStmt>
+ 
+            <sourceDesc>
+                <biblStruct>
+                    <monogr>
+                        <author>
+                            <persName ref="author:A0061 gnd:118734555 cerl:cnp01237409" key="Molina, Luis de">
+                                <forename>Luis</forename>
+                                <nameLink>de</nameLink>
+                                <surname>Molina</surname>
+                            </persName>
+                        </author>
+                        <title type="short" level="m">De Iustitia et Iure, Vol. 2</title>
+                        <title type="main" level="m">De Ivstitia Tomvs Secvndvs De Contractibvs</title>
+                        <title type="volume" level="m" n="2">Tomvs Secvndvs</title>
+                        <imprint>
+                            <pubPlace role="firstEd" ref="getty:7338606" key="Cuenca">Conchae</pubPlace>
+                            <date type="firstEd" when="1597">1597</date>
+                            <publisher n="firstEd">
+                                <persName key="Masselin, Juan"><!--no authority data available-->
+                                    <forename>Ioannis</forename>
+                                    <surname>Masselini</surname>
+                                </persName>
+                            </publisher>
+                        </imprint>
+                        <extent xml:lang="de">[8] S., 2144 Sp., [147] S. ; 2°</extent>
+                        <extent xml:lang="en">[8] p., 2144 col., [147] p. ; 2°</extent>
+                        <extent xml:lang="es">[8] p., 2144 col., [147] p. ; 2°</extent>
+                    </monogr>
+                    <series>
+                        <title type="main" level="s" ref="work:W0008">De Iustitia et Iure</title>
+                        <biblScope unit="volume" n="2" xml:lang="la">Tomvs Secvndvs</biblScope>
+                    </series>
+                </biblStruct>
+                <msDesc>
+                    <msIdentifier>
+                        <repository ref="gnd:4313400-2" xml:lang="es">Bibliotecas de la Universidad de Salamanca</repository>
+                        <idno type="catlink" xml:lang="es">https://brumario.usal.es/permalink/34BUC_USAL/1r2qv74/alma991000494519705773</idno>
+                    </msIdentifier>
+                    <physDesc>
+                        <typeDesc>
+                            <typeNote n="antiqua" xml:lang="en">Antiqua typeface</typeNote>
+                        </typeDesc>
+                    </physDesc>
+                </msDesc>
+            </sourceDesc>
+        </fileDesc>
+        
+        <profileDesc>
+           <langUsage>
+              <language ident="la" n="main" xml:lang="en">Latin</language>
+           </langUsage>
+        </profileDesc>
+        
+        <encodingDesc>
+            <xi:include href="../meta/works-general.xml" xpointer="projectDesc">
+                <xi:fallback><projectDesc><p xml:id="meta-pa-0004"><ref target="https://www.salamanca.school" xml:lang="en">For information about the project, please 
+                               refer to our website.</ref></p></projectDesc>
+                </xi:fallback>
+            </xi:include>
+            <editorialDecl>
+                <xi:include href="../meta/works-general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:encodingDesc/tei:editorialDecl/tei:p)">
+                    <xi:fallback><p xml:id="meta-pa-0005"><ref target="https://www.salamanca.school" xml:lang="en">For information about the digital edition, please 
+                                refer to our website.</ref></p>
+                    </xi:fallback>
+                </xi:include>
+                <normalization>
+                   <p xml:id="meta-pa-0006" xml:lang="en">The "long s" character (<q>ſ</q>) was normalized, 
+                      i.e. resolved to <q>s</q>.</p>
+                </normalization>
+            </editorialDecl>
+            <xi:include href="../meta/works-general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:encodingDesc/tei:editorialDecl/following-sibling::*)">
+                <xi:fallback/>
+            </xi:include>
+            <xi:include href="../meta/specialchars.xml" xpointer="charDecl">
+                <xi:fallback><charDecl><char xml:lang="en"><note xml:id="meta-no-0001">The definition of 
+                     non-standard characters could not be embedded, but it is available on the 
+                     <ref target="https://files.salamanca.school/specialchars.xml">project website</ref>.</note></char></charDecl>
+                </xi:fallback>
+            </xi:include>
+			<appInfo>
+                <application ident="auto-markup" version="1" xml:id="auto">
+                    <desc>Automatically generated markup.</desc>
+                </application>
+            </appInfo>
+        </encodingDesc>
+        
+        <revisionDesc status="a_raw">
+            <change who="#CR" when="2021-06-17" status="a_raw" xml:lang="en">teiHeader update.</change>
+            <change who="#CR" when="2020-10-27" status="a_raw" xml:lang="en">teiHeader update.</change>
+            <change who="#DG #MT" when="2018-12-10" status="a_raw" xml:lang="en">Revised metadata (titles, extent) according to RDA guidelines</change>
+            <change who="#DG" when="2018-09-27" status="a_raw" xml:lang="en">Revision of teiHeader and status reset.</change>
+            <change who="#IC" when="2014-11-27" status="a_raw">revision of teiHeader</change>
+            <change who="#AW" when="2014-10-16" status="a_raw">Reihenfolge der Editoren korrigiert und ref-key f. Drucker u. Druckort eingetragen.</change>
+            <change who="#IC" when="2014-10-10" status="a_raw">
+                <list>
+                    <item xml:id="item_fdvce4w">pubPlace@role="firstEd" (Eingabe des Erscheinungsortes nach Vorlageform) und date@type="firstEd", wenn wir die Erstausgabe haben</item>
+                    <item xml:id="item_vww4rgv">publisher/persName nach RAK WB §§ 145: Nur Nachname im Nominativ</item>
+                    <item xml:id="item_2qwa43y">ref@type="institution" und ref@type="catLink" im Schema ergänzen</item>
+                </list>
+            </change>
+        </revisionDesc>
+    </teiHeader>
+
+    <text type="work_volume" n="2" xml:lang="la" xml:id="Vol02">
+        <front xml:id="frontmatter_V2">
+            <titlePage xml:id="titleVol02">
+                <pb facs="facs:W0008-B-0004" n="1" xml:id="facs_W0008-B-0004"/>
+                <titlePart xml:id="titlePart_V2">
+                    Titlepage
+                </titlePart>
+            </titlePage>
+        </front>
+        <body>
+            <div type="foreword" xml:id="forewordVol02">
+                <head xml:id="head_stellvertreter_v2">Content is forthcoming!</head>
+            </div>
+        </body>
+    </text>
+</TEI>

@@ -1,7 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng"
-            type="application/xml"
-            schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml version="1.0" encoding="UTF-8"?><?xml-model href="https://files.salamanca.school/SvSal_txt.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
 
 <TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="W0034">
 <?svsal htmlFragmentationDepth="4" ?><!-- 4 (default) is right below front/body/back -->
@@ -161,6 +158,7 @@
         
         <revisionDesc status="g_enriched_approved">
             <listChange ordered="true">
+                <change who="#CR" when="2021-09-29" status="g_enriched_approved" xml:id="W0034_change_014" xml:lang="en">SvSal Schema was missing in prolog. It was updated.</change>
                 <change who="#CR #auto" when="2020-09-22" status="g_enriched_approved" xml:id="W0034_change_013" xml:lang="en">teiHeader update. Permalink at Salamanca University updated.</change>
                 <change who="#CR #auto" when="2019-10-25" status="g_enriched_approved" xml:id="W0034_change_012" xml:lang="en">teiHeader update. Rearranged editor(s) sequece and @role #additional.</change>
                 <change who="#DG #CR #auto" when="2019-08-08" status="g_enriched_approved" xml:id="W0034_change_011" xml:lang="en">Revised teiHeader, update @role in editor.</change>

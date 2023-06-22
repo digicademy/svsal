@@ -98,6 +98,48 @@
                 <p xml:id="p_cq2d73" xml:lang="es">Nativamente digital, creado el <date when="2013-08-13">13 de agosto 2013</date> a las 12:42.</p>
              
 </sourceDesc>
+<<<<<<< Updated upstream:xslt-fo-pdf/works-general.xml
+=======
+ <facsimile>
+  <graphic xml:id='W0001_Vol01' source="Avendaño, Thesaurus Indicus, Vol. 1 (2019 [1668])"><image>pics/title_0001-A.jpg</image></graphic>
+  <graphic xml:id='W0001_Vol02' source="Avendaño, Thesaurus Indicus, Vol. 2 (2019 [1668])"><image>pics/title_0001-B.jpg</image></graphic>
+  <graphic xml:id='W0001_Vol03' source="Avendaño, Thesaurus Indicus, Vol. 3 (2020 [1675])"><image>pics/title_0001-C.jpg</image></graphic>
+  <graphic xml:id='W0001_Vol04' source="Avendaño, Thesaurus Indicus, Vol. 4 (2020 [1675])"><image>pics/title_0001-D.jpg</image></graphic>
+  <graphic xml:id='W0001_Vol05' source="Avendaño, Thesaurus Indicus, Vol. 5 (2020 [1675])"><image>pics/title_0001-E.jpg</image></graphic>
+  <graphic xml:id='W0001_Vol06' source="Avendaño, Thesaurus Indicus, Vol. 6 (2021 [1686])"><image>pics/title_0001-F.jpg</image></graphic>
+  <graphic xml:id='W0002' source="Azpilcueta, Manual de Confessores y Penitentes (2019 [1556])"><image>pics/title_0002.jpg</image></graphic>
+  <graphic xml:id='W0003' source="Báñez, De Iure et Iustitia Decisiones (2019 [1594])"><image>pics/title_0003.jpg</image></graphic>  
+  <graphic xml:id='W0004' source="Castillo, Tratado de Cuentas (2018 [1522])"><image>pics/title_0004.jpg</image></graphic>
+  <graphic xml:id='W0006_Vol01' source="Covarrubias y Leyva, Opera Omnia, Vol. 1 (2021 [1573])"><image>pics/title_0006-A.jpg</image></graphic>
+  <graphic xml:id='W0006_Vol02' source="Covarrubias y Leyva, Opera Omnia, Vol. 2 (2021 [1573])"><image>pics/title_0006-B.jpg</image></graphic>
+  <graphic xml:id='W0007' source="Mercado, Tratos y Contratos (2019 [1569])"><image>pics/title_0007.jpg</image></graphic>
+  <graphic xml:id='W0010' source="Solórzano Pereira, Politica Indiana (2019 [1648])"><image>pics/title_0010.jpg</image></graphic>
+  <graphic xml:id='W0011' source="Soto, De Iustitia et Iure (2020 [1553])"><image>pics/title_0011.jpg</image></graphic>
+  <graphic xml:id='W0013_Vol01' source="Vitoria, Relectiones Theologicae XII, Vol. 1 (2018 [1557])"><image>pics/title_0013-A.jpg</image></graphic>
+  <graphic xml:id='W0013_Vol02' source="Vitoria, Relectiones Theologicae XII, Vol. 2 (2018 [1557])"><image>pics/title_0013-B.jpg</image></graphic>
+  <graphic xml:id='W0014' source="Vitoria, Summa Sacramentorum (2018 [1561])"><image>pics/title_0014.jpg</image></graphic>
+  <graphic xml:id='W0015' source="Vitoria, Confessionario (2018 [1562])"><image>pics/title_0015.jpg</image></graphic>
+  <graphic xml:id='W0017' source="Albornoz, Arte de los contractos (2020 [1573])"><image>pics/title_0017.jpg</image></graphic>
+  <graphic xml:id='W0018' source="Alcalá, Tractado de los préstamos (2021 [1543])"><image>pics/title_0018.jpg</image></graphic>
+  <graphic xml:id='W0030' source="Cano, Relectio de Poenitentia (2019 [1558])"><image>pics/title_0030.jpg</image></graphic>
+  <graphic xml:id='W0033' source="Carrasco del Saz, Tractatus de casibus curiae. (2020 [1630])"><image>pics/title_0033.jpg</image></graphic>
+  <graphic xml:id='W0034' source="Las Casas, Treinta Proposiciones (2018 [1552])"><image>pics/title_0034.jpg</image></graphic>
+  <graphic xml:id='W0041' source="Díaz de Luco, Practica criminalis canonica (2021 [1554])"><image>pics/title_0041.jpg</image></graphic>
+  <graphic xml:id='W0046'  source="Freitas, De Iusto Imperio Lusitanorum Asiatico (2020 [1625])"><image>pics/title_0046.jpg</image></graphic>
+  <graphic xml:id='W0061'  source="León Pinelo, Confirmaciones Reales de Encomiendas (2021 [1630])"><image>pics/title_0061.jpg</image></graphic>
+  <graphic xml:id='W0078'  source="Nebrija, Lexicon Iuris Civilis (2020 [1537])"><image>pics/title_0078.jpg</image></graphic>
+  <graphic xml:id='W0083'  source="Pedraza, Summa de casos de consciencia (2021 [1568])"><image>pics/title_0083.jpg</image></graphic>
+  <graphic xml:id='W0095'  source="Sepúlveda, Apologia pro libro de iustis belli causis (2020 [1550])"><image>pics/title_0095.jpg</image></graphic>
+  <graphic xml:id='W0096_Vol01'  source="Solórzano Pereira, De Indiarum Iure, sive de Iusta Indiarum Occidentalium Inquisitione, Acquisitione, et Retentiones Tribus Libris Comprehensum. 2 vols. (2021 [1629])"><image>pics/title_0096-A.jpg</image></graphic>
+  <graphic xml:id='W0103' source="Vacca, Expositiones locorum obscuriorum et Paratitulorum in Pandectas. (2020 [1554])"><image>pics/title_0103.jpg</image></graphic>
+  <graphic xml:id='W0106' source="Fernando Vázquez de Menchaca, Controversiarum Libri Tres (2022 [1572])"><image>pics/title_0106.jpg</image></graphic>
+  <graphic xml:id='W0113' source="Villalón, Provechoso tratado de cambios y contrataciones de mercaderes y reprovación de usura (2021 [1541])"><image>pics/title_0113.jpg</image></graphic>
+     
+Tractado de los préstamos.
+
+ </facsimile>
+
+>>>>>>> Stashed changes:xslt-fo-pdf/_works-general.xml
 
         </fileDesc>
         

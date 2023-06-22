@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-model href="https://files.salamanca.school/SvSal_txt.rng"
+                    type="application/xml"
+                    schematypens="http://relaxng.org/ns/structure/1.0"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="W0096_Vol02">
+
+  <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title type="short" level="m">De Indiarum Iure, Vol. 2</title>
+                <title type="main" level="m">D. Philip. IV. Hisp. Etind. Regiopt. Max Ioannes De Solorzano Pereira I.V.D. Ex Primarijs olim Academiae Salmanticensis Antecessoribus. Postea Limensis Praetorij in Peruano Regno Novi Orbis Senator: Deinde vero supremo Indiarum Consilio Regij Fisci Patronus et nunc Consiliarius.</title>
+                <title type="volume" level="m" n="2">Tomum Alterum</title>
+                <author>
+                    <persName ref="author:A0082 gnd:118837389 cerl:cnp01341312" key="Solórzano Pereira, Juan de" full="yes">
+                        <forename full="yes">Juan</forename>
+                        <nameLink>de</nameLink>
+                        <surname full="yes">Solórzano Pereira</surname>
+                    </persName>
+                </author>
+                <editor xml:id="PDS" role="#scholarly">
+                    <persName ref="orcid:0000-0001-6255-6141">
+                        <surname>da Silva Santos</surname>, <forename>Pedro</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="CR" role="#technical">
+                    <persName ref="orcid:0000-0001-5095-1793" full="yes">
+                        <surname full="yes">Rico Carmona</surname>, <forename full="yes">Cindy</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="DG" role="#technical">
+                    <persName ref="orcid:0000-0002-0273-3844" full="yes">
+                        <surname full="yes">Glück</surname>, <forename full="yes">David</forename>
+                    </persName>
+                </editor>
+                
+            </titleStmt>
+            <publicationStmt xml:id="publicationStmt">
+            	<xi:include href="../meta/W_Head_general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:fileDesc/tei:publicationStmt/*)">
+            		<xi:fallback><publisher><ref target="https://www.salamanca.school" xml:lang="en">For information about the digital edition, please 
+            					refer to our website.</ref></publisher>
+            		</xi:fallback>
+            	</xi:include>
+            	<date type="digitizedEd" n="unpublished"/>
+            	<idno/>
+            </publicationStmt>
+            <seriesStmt>
+                <xi:include href="../meta/W_Head_general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:fileDesc/tei:seriesStmt/*)">
+                    <xi:fallback>
+                       <title xml:lang="en"><ref target="https://www.salamanca.school" xml:lang="en">The School of Salamanca. A Digital Collection of Sources</ref></title>
+                    </xi:fallback>
+                </xi:include>
+                <biblScope unit="volume" n="unpublished"/>
+            </seriesStmt>
+            
+            <sourceDesc>
+                <biblStruct>
+                    <monogr>
+                        <author>
+                            <persName ref="author:A0082 gnd:118837389 cerl:cnp01341312" key="Solórzano Pereira, Juan de" full="yes">
+                                <forename full="yes">Juan</forename>
+                                <nameLink>de</nameLink>
+                                <surname full="yes">Solórzano Pereira</surname>
+                            </persName>
+                        </author>
+                        <title type="short" level="m">De Indiarum Iure, Vol. 2</title>
+                        <title type="main" level="m">D. Philip. IV. Hisp. Etind. Regiopt. Max Ioannes De Solorzano Pereira I.V.D. Ex Primarijs olim Academiae Salmanticensis Antecessoribus. Postea Limensis Praetorij in Peruano Regno Novi Orbis Senator: Deinde vero supremo Indiarum Consilio Regij Fisci Patronus et nunc Consiliarius.</title>
+                        <title type="volume" level="m" n="2">Tomum Alterum</title>
+                        <imprint>
+                            <pubPlace role="firstEd" ref="getty:7010413" key="Madrid">Matriti</pubPlace>
+                            <date type="firstEd" when="1639">1639</date>
+                            <publisher n="firstEd">
+                                <persName ref="cerl:cni00025919" key="Martinez, Francisco" full="yes">
+                                    <forename full="yes">Francisco</forename>
+                                    <surname full="yes">Martinez</surname>
+                                </persName>
+                            </publisher>
+                        </imprint>
+                        <extent xml:lang="de">57 ungezählte Seiten, 1076 Seiten, 133 ungezählte Seiten</extent>
+                        <extent xml:lang="en">[57], 1076, [133] p.</extent>
+                        <extent xml:lang="es">[57], 1076, [133] p.</extent>
+                    </monogr>
+                </biblStruct>
+                <msDesc>
+                    <msIdentifier>
+                        <repository ref="gnd:4313400-2" xml:lang="es">Bibliotecas de la Universidad de Salamanca</repository>
+                        <idno type="catlink" xml:lang="es">http://brumario.usal.es/record=b1465315#.W_QWA-hKhaQ</idno>
+                    </msIdentifier>
+                    <physDesc>
+                        <typeDesc>
+                            <typeNote n="antiqua" xml:lang="en">Antiqua typeface</typeNote>
+                        </typeDesc>
+                    </physDesc>
+                </msDesc>
+            </sourceDesc>
+        </fileDesc>
+        <profileDesc>
+           <langUsage>
+              <language ident="la" n="main" xml:lang="en">Latin</language>
+              <language ident="es" n="administrative" xml:lang="en">Español</language>
+           </langUsage>
+        </profileDesc>
+      
+        <encodingDesc>
+            <xi:include href="../meta/W_Head_general.xml" xpointer="projectDesc">
+                <xi:fallback><projectDesc><p xml:id="meta-pa-0004"><ref target="https://www.salamanca.school" xml:lang="en">For information about the project, please 
+                               refer to our website.</ref></p></projectDesc>
+                </xi:fallback>
+            </xi:include>
+            <editorialDecl>
+                <xi:include href="../meta/W_Head_general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:encodingDesc/tei:editorialDecl/tei:p)">
+                    <xi:fallback><p xml:id="meta-pa-0005"><ref target="https://www.salamanca.school" xml:lang="en">For information about the digital edition, please 
+                                refer to our website.</ref></p>
+                    </xi:fallback>
+                </xi:include>
+            </editorialDecl>
+            <xi:include href="../meta/W_Head_general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:encodingDesc/tei:editorialDecl/following-sibling::*)">
+                <xi:fallback/>
+            </xi:include>
+            <xi:include href="../meta/Sonderzeichen.xml" xpointer="charDecl">
+                <xi:fallback><charDecl><char xml:lang="en"><note xml:id="meta-no-0001">The definition of 
+                     non-standard characters could not be embedded, but it is available on the 
+                     <ref target="https://files.salamanca.school/Sonderzeichen.xml">project website</ref>.</note></char></charDecl>
+                </xi:fallback>
+            </xi:include>
+			<appInfo>
+                <application ident="auto-markup" version="1" xml:id="auto">
+                    <desc>Automatically generated markup.</desc>
+                </application>
+            </appInfo>
+        </encodingDesc>
+      <revisionDesc status="a_raw">
+            <listChange ordered="true">
+                <change who="#CR" when="2022-01-20" status="a_raw" xml:lang="en">teiHeader update. Added extent.</change>
+                <change who="#CR" when="2020-01-13" status="a_raw" xml:lang="en">Set teiHeader.</change>
+                <change who="#DG #CR #auto" when="2019-11-06" status="a_raw" xml:id="W0096_Vol02_change_016" xml:lang="en">Tag unmarked breaks (la).</change>
+                <change who="#DG #CR #auto" when="2019-12-16" status="a_raw" xml:id="W0096_Vol02_change_015" xml:lang="en">Automatically expanded abbreviations (es-main).</change>
+                <change who="#DG #CR #auto" when="2019-12-16" status="a_raw" xml:id="W0096_Vol02_change_012" xml:lang="en">Automatically expanded abbreviations (la-main).</change>
+                <change who="#DG #CR #auto" when="2019-02-05" status="a_raw" xml:id="W0096_Vol02_change_011" xml:lang="en">Generated @xml:id.</change>
+                <change who="#DG #CR #auto" when="2019-02-05" status="a_raw" xml:id="W0096_Vol02_change_010" xml:lang="en">Numbered lines.</change>
+                <change who="#DG #CR #auto" when="2018-12-12" status="a_raw" xml:lang="en" xml:id="W0096_Vol02_change_008">Tagged special characters.</change>
+                <change who="#DG #CR #auto" when="2018-11-12" status="a_raw" xml:id="W0096_Vol02_change_006" xml:lang="en">Annotate Hyphenation</change>
+                <change who="#CR" when="2018-12-12" status="a_raw" xml:id="W0096_Vol02-00-change-0009">Chapter titles were rearranged before summaries to adapt the text to TEI.</change>
+                <change who="#CR #auto" when="2018-12-11" status="a_raw" xml:lang="en" xml:id="W0096_Vol02-00-change-0005">Transformation from Tite to TEI.</change>
+                <change who="#DG #CR #auto" when="2018-12-10" status="a_raw" xml:id="W0096_Vol02-00-change-0003">Added references between milestones and summaries.</change>
+                <change who="#DG #CR #auto" when="2018-12-10" status="a_raw" xml:id="W0096_Vol02-00-change-0004">Added @xml:id, @unit to milestone and @n to div2.</change>
+                <change who="#CR" when="2018-12-10" status="a_raw" xml:id="W0096_Vol02-00-change-0002">Table of contents references with chapters.</change>
+                <change who="#CR" when="2018-12-05" status="a_raw" xml:id="W0096_Vol02-00-change-0001">Structural annotation.</change>
+                <change who="#CB" status="a_raw" xml:lang="en">Identification of basic bibliographic data.</change>
+            </listChange>
+        </revisionDesc>
+    </teiHeader>
+  <text type="work_volume" n="2" xml:lang="la" xml:id="Vol02">
+    <front xml:id="frontmatter_V2">
+        <pb facs="facs:W0096-B-0000" xml:id="facs_W0096-B-0000" n="0000" type="blank" />
+        <titlePage xml:id="titleW0096">
+            <titlePart xml:id="titlePart" type="main">
+                <pb facs="facs:W0096-B-0007" xml:id="facs_W0096-B-0007" n="0007"/>
+            </titlePart>
+        </titlePage>
+    </front>
+    <body>
+        <div type="foreword" xml:id="W0096V2Content">
+            <head xml:id="head_stellvertreter">Content is forthcoming!</head>
+        </div>
+    </body>
+  </text>
+</TEI>

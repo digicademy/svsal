@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="https://files.salamanca.school/SvSal_txt.rng"
+            type="application/xml"
+            schematypens="http://relaxng.org/ns/structure/1.0"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="W0037_Vol05">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title type="short" level="s">Opera omnia, sive quotidianarum controversiarum iuris</title>
+                <title type="main" level="s">D. Ioannis Del Castillo Sotomayor I.C. Nobilissimi; Olim Complvtensis Academiæ Antecessoris Primarii; Postmodùm in Gallæciano, Hispalensi, &amp; Granatensi Auditoriis, Regiísque Curiis, successiuè Senatoris Amplissimi; Demum in Supremo Dominicæ Rei, siue Patrimonij Regij Senatu Consiliarij præstantissimi; Opera Omnia, Sive Qvotidianarvm Controversiarvm Ivris Tomi Octo</title>
+                <title type="volume" level="m" n="5">Liber Qvintvs In Dvas Partes, Totidemqve Volvmina Divisvs, Priori Hvic Parti</title>                
+                <author>
+                    <persName ref="author:A0021 gnd:100972144 viaf:7742296 cerl:cnp01132965" key="Castillo Sotomayor, Juan de">
+                        <forename>Juan</forename>
+                        <nameLink>de</nameLink>
+                        <surname>Castillo Sotomayor</surname>
+                    </persName>
+                </author>
+                <editor xml:id="CB" role="#scholarly #technical">
+                    <persName ref="gnd:138962987">
+                        <surname>Birr</surname>, <forename>Christiane</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="JLE" role="#scholarly">
+                    <persName ref="orcid:0000-0002-9256-8490">
+                        <surname>Egío García</surname>, <forename>José Luis</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="PDS" role="#scholarly">
+                    <persName ref="orcid:0000-0001-6255-6141">
+                        <surname>da Silva Santos</surname>, <forename>Pedro</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="DG" role="#technical">
+                    <persName ref="orcid:0000-0002-0273-3844">
+                        <surname>Glück</surname>, <forename>David</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="CR" role="#technical">
+                    <persName ref="orcid:0000-0001-5095-1793">
+                        <surname>Rico Carmona</surname>, <forename>Cindy</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="MT" role="#additional">
+                    <persName ref="orcid:0000-0002-1488-6477">
+                        <surname>Thönes</surname>, <forename>Martin</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="AW" role="#technical">
+                    <persName ref="orcid:0000-0003-1835-1653 gnd:108835820">
+                        <surname>Wagner</surname>, <forename>Andreas</forename>
+                    </persName>
+                </editor>
+                
+            </titleStmt>
+
+            <editionStmt>
+               <edition n="unpublished"/>
+            </editionStmt>
+            
+            <publicationStmt xml:id="publicationStmt">
+            	<xi:include href="../meta/works-general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:fileDesc/tei:publicationStmt/*)">
+            		<xi:fallback><publisher><ref target="https://www.salamanca.school" xml:lang="en">For information about the digital edition, please 
+            					refer to our website.</ref></publisher>
+            		</xi:fallback>
+            	</xi:include>
+            	<date type="digitizedEd" n="unpublished"/>
+            	<idno/>
+            </publicationStmt>
+
+            <seriesStmt>
+                <xi:include href="../meta/works-general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:fileDesc/tei:seriesStmt/*)">
+                    <xi:fallback>
+                       <title xml:lang="en"><ref target="https://www.salamanca.school" xml:lang="en">The School of Salamanca. A Digital Collection of Sources</ref></title>
+                    </xi:fallback>
+                </xi:include>
+                <biblScope unit="volume" n="unpublished"/>
+            </seriesStmt>
+            
+            <notesStmt>
+                <relatedItem type="work_multivolume" target="work:W0037"/>
+            </notesStmt>
+            
+            <sourceDesc>
+                <biblStruct>
+                    <monogr>
+                        <author>
+                            <persName ref="author:A0021 gnd:100972144 viaf:7742296 cerl:cnp01132965" key="Castillo Sotomayor, Juan de">
+                                <forename>Juan</forename>
+                                <nameLink>de</nameLink>
+                                <surname>Castillo Sotomayor</surname>
+                            </persName>
+                        </author>
+                        <title type="short" level="s">Opera omnia, sive quotidianarum controversiarum iuris</title>
+                        <title type="main" level="s">D. Ioannis Del Castillo Sotomayor I.C. Nobilissimi; Olim Complvtensis Academiæ Antecessoris Primarii; Postmodùm in Gallæciano, Hispalensi, &amp; Granatensi Auditoriis, Regiísque Curiis, successiuè Senatoris Amplissimi; Demum in Supremo Dominicæ Rei, siue Patrimonij Regij Senatu Consiliarij præstantissimi; Opera Omnia, Sive Qvotidianarvm Controversiarvm Ivris Tomi Octo</title>
+                        <title type="volume" level="m" n="5">Liber Qvintvs In Dvas Partes, Totidemqve Volvmina Divisvs, Priori Hvic Parti</title>
+                        <imprint>
+                            <pubPlace role="firstEd" ref="getty:7008772" key="Lyon">Lugduni</pubPlace>
+                            <date type="firstEd" when="1658">1658</date>
+                            <publisher n="firstEd">
+                                <persName ref="cerl:cni00071345 gnd:1037560329 viaf:39429535" key="Anisson, Laurent">
+                                    <forename>Laurent</forename>
+                                    <surname>Anisson</surname>
+                                </persName>
+                                <persName ref="cerl:cni00071443 gnd:1037593340 viaf:29469987" key="Devenet, Jean-Baptiste">
+                                    <forename>Jean-Baptiste</forename>
+                                    <surname>Devenet</surname>
+                                </persName>
+                            </publisher>
+                        </imprint>
+                        <extent xml:lang="de">23 ungezählte Seiten, 856 Seiten, 56 ungezählte Seiten</extent>
+                        <extent xml:lang="en">[23] p, 856, [56] p.</extent>
+                        <extent xml:lang="es">[23] p, 856, [56] p.</extent>
+                    </monogr>
+                </biblStruct>
+                <msDesc>
+                    <msIdentifier>
+                        <repository ref="gnd:2019144-3" xml:lang="de">Max-Planck-Institut für Europäische Rechtsgeschichte &lt;Frankfurt, Main&gt;</repository>
+                        <!--OPAC MPI Signatur: Sp 13 g 11 F [5]-->
+                        <idno type="catlink" xml:lang="de"></idno>
+                    </msIdentifier>
+                    <physDesc>
+                        <typeDesc>
+                            <typeNote n="antiqua" xml:lang="en">Antiqua typeface</typeNote>
+                        </typeDesc>
+                    </physDesc>
+                </msDesc>
+            </sourceDesc>
+        </fileDesc>
+        
+        <profileDesc>
+           <langUsage>
+              <language ident="la" n="main" xml:lang="en">Latin</language>
+           </langUsage>
+        </profileDesc>
+        
+        <encodingDesc>
+            <xi:include href="../meta/works-general.xml" xpointer="projectDesc">
+                <xi:fallback><projectDesc><p xml:id="meta-pa-0004"><ref target="https://www.salamanca.school" xml:lang="en">For information about the project, please 
+                               refer to our website.</ref></p></projectDesc>
+                </xi:fallback>
+            </xi:include>
+            <editorialDecl>
+                <xi:include href="../meta/works-general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:encodingDesc/tei:editorialDecl/tei:p)">
+                    <xi:fallback><p xml:id="meta-pa-0005"><ref target="https://www.salamanca.school" xml:lang="en">For information about the digital edition, please 
+                                refer to our website.</ref></p>
+                    </xi:fallback>
+                </xi:include>
+            </editorialDecl>
+            <xi:include href="../meta/works-general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:encodingDesc/tei:editorialDecl/following-sibling::*)">
+                <xi:fallback/>
+            </xi:include>
+            <xi:include href="../meta/specialchars.xml" xpointer="charDecl">
+                <xi:fallback><charDecl><char xml:lang="en"><note xml:id="meta-no-0001">The definition of 
+                     non-standard characters could not be embedded, but it is available on the 
+                     <ref target="https://files.salamanca.school/specialchars.xml">project website</ref>.</note></char></charDecl>
+                </xi:fallback>
+            </xi:include>
+			<appInfo>
+                <application ident="auto-markup" version="1" xml:id="auto">
+                    <desc>Automatically generated markup.</desc>
+                </application>
+            </appInfo>
+        </encodingDesc>
+        
+        <revisionDesc status="a_raw">
+            <listChange ordered="true">
+                <change who="#CR" when="2020-12-22" status="a_raw" xml:lang="en">teiHeader update.</change>
+                <change who="#CR" when="2020-06-08" status="a_raw" xml:lang="en">Set teiHeader.</change>
+            </listChange>
+        </revisionDesc>
+    </teiHeader>
+    <text type="work_volume" n="5" xml:lang="la" xml:id="Vol05">
+        <front xml:id="frontmatter">
+            <pb facs="facs:W0037-E-0000" xml:id="facs_W0037-E-0000" n="0000" type="blank" />
+            <titlePage xml:id="titleW0037_Vol05">
+                <pb facs="facs:W0037-E-0001" n="titlePage" xml:id="facs_W0037-E-0001"/>
+                <titlePart xml:id="titlePart">
+                    Titlepage
+                </titlePart>
+            </titlePage>
+        </front>
+        <body>
+            <div type="foreword" xml:id="W0037_Vol05Content">
+                <head xml:id="head_stellvertreter">Content is forthcoming!</head>
+            </div>
+        </body>
+    </text>
+</TEI>

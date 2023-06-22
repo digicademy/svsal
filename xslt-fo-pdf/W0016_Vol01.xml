@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-model href="https://files.salamanca.school/SvSal_txt.rng"
+                    type="application/xml"
+                    schematypens="http://relaxng.org/ns/structure/1.0"?>
+<TEI  xmlns="http://www.tei-c.org/ns/1.0" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:tei="http://www.tei-c.org/ns/1.0" xml:id="W0016_Vol01">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title type="short" level="m">De Natvra Novi Orbis</title>
+                <title type="main" level="m">De Natvra Novi Orbis</title>
+                <title type="volume" n="1">[Tomus Primus]</title>
+                <author>
+                    <persName ref="author:A0001 cerl:cnp01433548 viaf:2465365  gnd:12116117X" key="Acosta, José de">
+                        <forename>José</forename>
+                        <nameLink>de</nameLink>
+                        <surname>Acosta</surname>
+                    </persName>
+                </author>
+                <editor xml:id="CB" role="#scholarly">
+                    <persName ref="gnd:138962987">
+                        <surname>Birr</surname>, <forename>Christiane</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="DG" role="#technical">
+                    <persName ref="orcid:0000-0002-0273-3844">
+                        <surname>Glück</surname>, <forename>David</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="CR" role="#technical">
+                    <persName ref="orcid:0000-0001-5095-1793" full="yes">
+                        <surname full="yes">Rico Carmona</surname>, <forename full="yes">Cindy</forename>
+                    </persName>
+                </editor>
+                
+            </titleStmt>
+
+            <editionStmt>
+               <edition n="unpublished"/>
+            </editionStmt>
+            
+            <publicationStmt xml:id="publicationStmt">
+            	<xi:include href="../meta/works-general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:fileDesc/tei:publicationStmt/*)">
+            		<xi:fallback><publisher><ref target="https://www.salamanca.school" xml:lang="en">For information about the digital edition, please 
+            					refer to our website.</ref></publisher>
+            		</xi:fallback>
+            	</xi:include>
+            	<date type="digitizedEd" n="unpublished"/>
+            	<idno/>
+            </publicationStmt>
+
+            <seriesStmt>
+                <xi:include href="../meta/works-general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:fileDesc/tei:seriesStmt/*)">
+                    <xi:fallback>
+                       <title xml:lang="en"><ref target="https://www.salamanca.school" xml:lang="en">The School of Salamanca. A Digital Collection of Sources</ref></title>
+                    </xi:fallback>
+                </xi:include>
+                <biblScope unit="volume" n="unpublished"/>
+            </seriesStmt>
+            <notesStmt>
+                <relatedItem type="work_multivolume" target="work:W0016"/>
+            </notesStmt>
+            <sourceDesc>
+                <biblStruct>
+                    <monogr>
+                        <author>
+                            <persName ref="author:A0001 cerl:cnp01433548 viaf:2465365  gnd:12116117X" key="Acosta, José de">
+                                <forename>José</forename>
+                                <nameLink>de</nameLink>
+                                <surname>Acosta</surname>
+                            </persName>
+                        </author>
+                        <title type="short" level="m">De Natvra Novi Orbis</title>
+                        <title type="main" level="m">De Natvra Novi Orbis</title>
+                        <title type="volume" n="1">[Tomus Primus]</title>
+                        <imprint>
+                            <pubPlace role="firstEd" ref="getty:7002835" key="place">Salamanticae</pubPlace>
+                            <date type="firstEd" when="1589">1589</date>
+                            <publisher n="firstEd">
+                                <persName ref="cerl:cni00036335" key="Foquel, Guillelmum">
+                                    <forename>Guillelmum</forename>
+                                    <surname>Foquel</surname>
+                                </persName>
+                            </publisher>
+                        </imprint>
+                        <extent xml:lang="de">110 Seiten</extent>
+                        <extent xml:lang="en">110, l.</extent>
+                        <extent xml:lang="es">110, h.</extent>
+                    </monogr>
+                </biblStruct>
+                <msDesc>
+                    <msIdentifier>
+                        <repository ref="gnd:004059190" xml:lang="es">Universidad de Salamanca</repository>
+                        <idno type="catlink" xml:lang="es">https://gredos.usal.es/handle/10366/136856</idno>
+                    </msIdentifier>
+                    <physDesc>
+                        <typeDesc>
+                            <typeNote n="antiqua" xml:lang="en">Antiqua typeface</typeNote>
+                        </typeDesc>
+                    </physDesc>
+                </msDesc>
+            </sourceDesc>
+        </fileDesc>
+        
+        <profileDesc>
+           <langUsage>
+              <language ident="la" n="main" xml:lang="en">Latin</language>
+           </langUsage>
+        </profileDesc>
+        
+        <encodingDesc>
+            <xi:include href="../meta/works-general.xml" xpointer="projectDesc">
+                <xi:fallback><projectDesc><p xml:id="meta-pa-0004"><ref target="https://www.salamanca.school" xml:lang="en">For information about the project, please 
+                               refer to our website.</ref></p></projectDesc>
+                </xi:fallback>
+            </xi:include>
+            <editorialDecl>
+                <xi:include href="../meta/works-general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:encodingDesc/tei:editorialDecl/tei:p)">
+                    <xi:fallback><p xml:id="meta-pa-0005"><ref target="https://www.salamanca.school" xml:lang="en">For information about the digital edition, please 
+                                refer to our website.</ref></p>
+                    </xi:fallback>
+                </xi:include>
+            </editorialDecl>
+            <xi:include href="../meta/works-general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:encodingDesc/tei:editorialDecl/following-sibling::*)">
+                <xi:fallback/>
+            </xi:include>
+            <xi:include href="../meta/specialchars.xml" xpointer="charDecl">
+                <xi:fallback><charDecl><char xml:lang="en"><note xml:id="meta-no-0001">The definition of 
+                     non-standard characters could not be embedded, but it is available on the 
+                     <ref target="https://files.salamanca.school/specialchars.xml">project website</ref>.</note></char></charDecl>
+                </xi:fallback>
+            </xi:include>
+			<appInfo>
+                <application ident="auto-markup" version="1" xml:id="auto">
+                    <desc>Automatically generated markup.</desc>
+                </application>
+            </appInfo>
+        </encodingDesc>
+        
+        <revisionDesc status="a_raw">
+            <listChange ordered="true">
+                <change who="#CR" when="2021-06-17" status="a_raw" xml:lang="en">teiHeader update. Added title/@type="volume".</change>
+                <change who="#CR" when="2020-01-14" status="a_raw" xml:lang="en">Set teiHeader.</change>
+                <change who="#CB" when="2014" status="a_raw" xml:lang="en">Identification of basic bibliographic data.</change>
+            </listChange>
+        </revisionDesc>
+    </teiHeader>
+    <text type="work_volume" xml:lang="la" n="1" xml:id="Vol01">
+        <front xml:id="frontmatter">
+            <titlePage xml:id="titleW0016">
+                <titlePart xml:id="titlePart" type="main">
+                    <pb facs="facs:W0016-A-0002" xml:id="W0016-A-0002"/>
+                </titlePart>
+            </titlePage>
+        </front>
+        <body>
+            <div type="foreword" xml:id="W0016_body">
+                <head xml:id="head_stellvertreter">Content is forthcoming!</head>
+            </div>
+        </body>
+    </text>
+</TEI>
