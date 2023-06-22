@@ -142,8 +142,9 @@
             </appInfo>
         </encodingDesc>
         
-        <revisionDesc status="g_enriched_approved">
+        <revisionDesc status="h_revised">
             <listChange ordered="true">
+                <change who="#CR" when="2022-01-27" status="h_revised" xml:id="W0041_change_024" xml:lang="en">Deleted hi[@rendition='#r-center'] in large paragraphs.</change>
                 <change who="#DG #CR #auto" when="2021-09-29" status="g_enriched_approved" xml:id="W0041_change_023" xml:lang="en">Generated @xml:id after corrections.</change>
                 <change who="#DG #CR #auto" when="2021-09-29" status="g_enriched_approved" xml:id="W0041_change_022" xml:lang="en">Numbered lines after corrections.</change>
                 <change who="#DG #CR #auto" when="2021-09-28" status="g_enriched_approved" xml:lang="en" xml:id="W0041_change_021">teiHeader update after corrections.</change>
@@ -248,7 +249,7 @@
 <div type="preface" xml:id="W0041-00-0005-d1-03ea">
 <head xml:id="W0041-00-0005-he-03ea"><figure place="inline" type="ornament"/><pb n="5" facs="facs:W0041-0005" xml:id="W0041-00-0005-pb-03ec"/><lb xml:id="W0041-00-0005-lb-0001"/><hi rendition="#it">PROOEMIUM.</hi></head>
 <p xml:id="W0041-00-0005-pa-03ec">
-<lb xml:id="W0041-00-0005-lb-0002"/><hi rendition="#r-center"><hi rendition="#initCaps">S</hi><hi rendition="#sc">icvti</hi> dignum <g ref="#char017f">ſ</g>acr<g ref="#char00e6">æ</g> <g ref="#char017f">ſ</g>criptu<lb rendition="#hyphen" break="no" xml:id="W0041-00-0005-lb-0003"/>r<g ref="#char00e6">æ</g> con<g ref="#char017f">ſ</g>onum fuit, legibus huma<lb rendition="#hyphen" break="no" xml:id="W0041-00-0005-lb-0004"/>nis eximere eos, qui in <g ref="#char017f">ſ</g>ortem do<lb rendition="#hyphen" break="no" xml:id="W0041-00-0005-lb-0005"/>mini vocari meruerunt (quos cle<lb rendition="#hyphen" break="no" xml:id="W0041-00-0005-lb-0006"/>ricos appellamus) nec pati <choice resp="#auto" xml:id="W0041-00-0005-ce-03fa"><abbr>ear<g ref="#charu0303">ũ</g></abbr><expan resp="#CR #auto">earum</expan></choice> <g ref="#char017f">ſ</g>e<lb rendition="#hyphen" break="no" xml:id="W0041-00-0005-lb-0007"/>ueritate puniri, <g ref="#char017f">ſ</g>i quando eos labi
+<lb xml:id="W0041-00-0005-lb-0002"/><hi rendition="#initCaps">S</hi><hi rendition="#sc">icvti</hi> dignum <g ref="#char017f">ſ</g>acr<g ref="#char00e6">æ</g> <g ref="#char017f">ſ</g>criptu<lb rendition="#hyphen" break="no" xml:id="W0041-00-0005-lb-0003"/>r<g ref="#char00e6">æ</g> con<g ref="#char017f">ſ</g>onum fuit, legibus huma<lb rendition="#hyphen" break="no" xml:id="W0041-00-0005-lb-0004"/>nis eximere eos, qui in <g ref="#char017f">ſ</g>ortem do<lb rendition="#hyphen" break="no" xml:id="W0041-00-0005-lb-0005"/>mini vocari meruerunt (quos cle<lb rendition="#hyphen" break="no" xml:id="W0041-00-0005-lb-0006"/>ricos appellamus) nec pati <choice resp="#auto" xml:id="W0041-00-0005-ce-03fa"><abbr>ear<g ref="#charu0303">ũ</g></abbr><expan resp="#CR #auto">earum</expan></choice> <g ref="#char017f">ſ</g>e<lb rendition="#hyphen" break="no" xml:id="W0041-00-0005-lb-0007"/>ueritate puniri, <g ref="#char017f">ſ</g>i quando eos labi
 <lb xml:id="W0041-00-0005-lb-0008"/>fecerit humana fragilitas (qu<g ref="#char00e6">æ</g> cuiu<g ref="#char017f">ſ</g>uis ordinis <g ref="#char017f">ſ</g>u<lb rendition="#hyphen" break="no" xml:id="W0041-00-0005-lb-0009"/><g ref="#char017f">ſ</g>cepti, <g ref="#char017f">ſ</g>eu profe<g ref="#char017f">ſ</g>sionis amplexat<g ref="#char00e6">æ</g> regulis, <choice xml:id="W0041-00-0005-ce-03fb"><abbr>nu<g ref="#char017f">ſ</g>qu<g ref="#chara0303">ã</g></abbr><expan resp="#CB" cert="high">nusquam</expan></choice>
 <lb xml:id="W0041-00-0005-lb-0010"/><g ref="#char017f">ſ</g>ic pote<g ref="#char017f">ſ</g>t <g ref="#char017f">ſ</g>ubiugari, quin <choice xml:id="W0041-00-0005-ce-03fc"><abbr>aliqu<g ref="#chara0303">ã</g>do</abbr><expan resp="#CB" cert="high">aliquando</expan></choice> re<g ref="#char017f">ſ</g>iliat) <g ref="#char017f">ſ</g>ic <choice xml:id="W0041-00-0005-ce-03fd"><abbr>eti<g ref="#chara0303">ã</g></abbr><expan resp="#CB" cert="high">etiam</expan></choice>
 <lb xml:id="W0041-00-0005-lb-0011"/>nece<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>arium fuit (ne clerici tali immunitate in<g ref="#char017f">ſ</g>o<lb rendition="#hyphen" break="no" xml:id="W0041-00-0005-lb-0012"/>lentes effecti effrenat<g ref="#chare0300">è</g> viuerent) <g ref="#char017f">ſ</g>anctionibus <g ref="#char017f">ſ</g>acris
@@ -298,12 +299,12 @@
 <lb xml:id="W0041-00-0008-lb-0012"/>aliquando, in magnam Chri<g ref="#char017f">ſ</g>tianorum perni<lb rendition="#hyphen" break="no" xml:id="W0041-00-0008-lb-0013"/>ciem, clericos <g ref="#char017f">ſ</g>celeratiores e<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>e laicis:
 <lb xml:id="W0041-00-0008-lb-0014"/>c<g ref="#charu0300">ù</g>m <g ref="#char0026">&amp;</g> diuus ille Hieronymus di<lb rendition="#hyphen" break="no" xml:id="W0041-00-0008-lb-0015"/>xerit, Qu<g ref="#charo0300">ò</g>d vehementer de<lb rendition="#hyphen" break="no" xml:id="W0041-00-0008-lb-0016"/><g ref="#char017f">ſ</g>truit Eccle<g ref="#char017f">ſ</g>iam Dei,
 <lb xml:id="W0041-00-0008-lb-0017"/>laicos melio<lb rendition="#hyphen" break="no" xml:id="W0041-00-0008-lb-0018"/>res e<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>e
-<lb xml:id="W0041-00-0008-lb-0019"/>qu<g ref="#chara0300">à</g>m clericos.</hi><figure place="inline" type="ornament"/></p></div>
+<lb xml:id="W0041-00-0008-lb-0019"/>qu<g ref="#chara0300">à</g>m clericos.<figure place="inline" type="ornament"/></p></div>
 <div type="preface" xml:id="W0041-00-0009-d1-03eb"><head xml:id="W0041-00-0009-he-03eb"><figure place="inline" type="ornament"/><pb n="9" facs="facs:W0041-0009" xml:id="W0041-00-0009-pb-03f0"/><lb xml:id="W0041-00-0009-lb-0001"/>AVTOR OPERIS
 <lb xml:id="W0041-00-0009-lb-0002"/>LECTORI
 <lb xml:id="W0041-00-0009-lb-0003"/>S. P. D.</head>
 <p xml:id="W0041-00-0009-pa-03ed">
-<lb xml:id="W0041-00-0009-lb-0004"/><hi rendition="#r-center"><hi rendition="#initCaps">N</hi>On me pr<g ref="#char00e6">æ</g>terit, candidi<g ref="#char017f">ſ</g><lb rendition="#hyphen" break="no" xml:id="W0041-00-0009-lb-0005"/><g ref="#char017f">ſ</g>ime Lector, tibi ad calcem
+<lb xml:id="W0041-00-0009-lb-0004"/><hi rendition="#initCaps">N</hi>On me pr<g ref="#char00e6">æ</g>terit, candidi<g ref="#char017f">ſ</g><lb rendition="#hyphen" break="no" xml:id="W0041-00-0009-lb-0005"/><g ref="#char017f">ſ</g>ime Lector, tibi ad calcem
 <lb xml:id="W0041-00-0009-lb-0006"/>nostri operis peruenienti
 <lb xml:id="W0041-00-0009-lb-0007"/>contigi<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>e id quod alicuius
 <lb xml:id="W0041-00-0009-lb-0008"/>oppidi pulchros <g ref="#char0026">&amp;</g> excel<g ref="#char017f">ſ</g>os
@@ -335,13 +336,13 @@
 <lb xml:id="W0041-00-0012-lb-0005"/>perpertu<g ref="#charo0300">ò</g> iudicandas exponere, nulla ali<g ref="#char00e6">æ</g>
 <lb xml:id="W0041-00-0012-lb-0006"/>ob id mercede recepta, ni<g ref="#char017f">ſ</g>i vt aliqua
 <lb xml:id="W0041-00-0012-lb-0007"/>pars temporis (de quo ratio red<lb rendition="#hyphen" break="no" xml:id="W0041-00-0012-lb-0008"/>denda e<g ref="#char017f">ſ</g>t) proficien<lb rendition="#hyphen" break="no" xml:id="W0041-00-0012-lb-0009"/>d<g ref="#char00e6">æ</g> reipublic<g ref="#char00e6">æ</g> in<lb rendition="#hyphen" break="no" xml:id="W0041-00-0012-lb-0010"/><g ref="#char017f">ſ</g>umeretur.
-<lb xml:id="W0041-00-0012-lb-0011"/>Vale.</hi><figure place="inline" type="ornament"/></p></div></front>
+<lb xml:id="W0041-00-0012-lb-0011"/>Vale.<figure place="inline" type="ornament"/></p></div></front>
 <body xml:id="W0041-00-0013-tb-03e8"><div type="book" xml:id="W0041-00-0013-d1-03ec">
 <div type="chapter" n="1" xml:id="W0041-00-0013-d2-0518"><head xml:id="W0041-00-0013-he-03ec"><figure place="inline" type="ornament"/><pb n="13" facs="facs:W0041-0013" xml:id="W0041-00-0013-pb-03f4"/><lb xml:id="W0041-00-0013-lb-0001"/><hi rendition="#it">Denunciatio.</hi></head>
 <head xml:id="W0041-00-0013-he-03ed">
 <lb xml:id="W0041-00-0013-lb-0002"/><hi rendition="#sc">Capvt i</hi>.</head>
 <p xml:id="W0041-00-0013-pa-03ee">
-<lb xml:id="W0041-00-0013-lb-0003"/><hi rendition="#r-center"><hi rendition="#initCaps">C</hi><hi rendition="#sc">oram</hi> vobis Domino N. Offi<lb rendition="#hyphen" break="no" xml:id="W0041-00-0013-lb-0004"/>ciali ac Vicario generali, ego N.
+<lb xml:id="W0041-00-0013-lb-0003"/><hi rendition="#initCaps">C</hi><hi rendition="#sc">oram</hi> vobis Domino N. Offi<lb rendition="#hyphen" break="no" xml:id="W0041-00-0013-lb-0004"/>ciali ac Vicario generali, ego N.
 <lb xml:id="W0041-00-0013-lb-0005"/>Presbyter promotor <g ref="#char017f">ſ</g>eu fi<g ref="#char017f">ſ</g>calis
 <lb xml:id="W0041-00-0013-lb-0006"/>curi<g ref="#char00e6">æ</g> ve<g ref="#char017f">ſ</g>tr<g ref="#char00e6">æ</g>, denuncio qu<g ref="#charo0300">ò</g>d
 <lb xml:id="W0041-00-0013-lb-0007"/>Coluberius <g ref="#char0026">&amp;</g> Serpelion di<g ref="#char0153">œ</g>ce<g ref="#char017f">ſ</g>is
@@ -399,7 +400,7 @@
 <lb xml:id="W0041-00-0016-lb-0024"/>eos p<g ref="#char0153">œ</g>nis damnari condignis. Pro qui<lb rendition="#hyphen" break="no" xml:id="W0041-00-0016-lb-0025"/>bus omnibus ac in nece<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>ariis eorum,
 <lb xml:id="W0041-00-0016-lb-0026"/>ve<g ref="#char017f">ſ</g>trum imploro officium,
 <lb xml:id="W0041-00-0016-lb-0027"/>ac expen<g ref="#char017f">ſ</g>as pro<lb rendition="#hyphen" break="no" xml:id="W0041-00-0016-lb-0028"/>te<g ref="#char017f">ſ</g>tor <g ref="#char0026">&amp;</g>
-<lb xml:id="W0041-00-0016-lb-0029"/>peto.</hi></p></div>
+<lb xml:id="W0041-00-0016-lb-0029"/>peto.</p></div>
 <div type="chapter" n="2" xml:id="W0041-00-0017-d2-0519"><head xml:id="W0041-00-0017-he-03ee"><pb n="17" facs="facs:W0041-0017" xml:id="W0041-00-0017-pb-03f8"/><lb xml:id="W0041-00-0017-lb-0001"/><hi rendition="#it">Coram vobis domino N.</hi></head>
 <head xml:id="W0041-00-0017-he-03ef">
 <lb xml:id="W0041-00-0017-lb-0002"/><hi rendition="#sc">Capvt ii</hi>.</head>
@@ -1375,19 +1376,19 @@
 <head xml:id="W0041-00-0067-he-0429">
 <lb xml:id="W0041-00-0067-lb-0017"/><hi rendition="#sc">Capvt xxxi</hi>.</head>
 <p xml:id="W0041-00-0067-pa-040c">
-<lb xml:id="W0041-00-0067-lb-0018"/><hi rendition="#r-center"><hi rendition="#initCaps">P</hi><hi rendition="#sc">oena</hi> <g ref="#char017f">ſ</g>ic celebrantis e<g ref="#char017f">ſ</g>t, qu<g ref="#charo0300">ò</g>d depo<lb rendition="#hyphen" break="no" xml:id="W0041-00-0067-lb-0019"/>natur ab officio <g ref="#char0026">&amp;</g> bene<g ref="#char017f">ſ</g>icio, vt in cap.
+<lb xml:id="W0041-00-0067-lb-0018"/><hi rendition="#initCaps">P</hi><hi rendition="#sc">oena</hi> <g ref="#char017f">ſ</g>ic celebrantis e<g ref="#char017f">ſ</g>t, qu<g ref="#charo0300">ò</g>d depo<lb rendition="#hyphen" break="no" xml:id="W0041-00-0067-lb-0019"/>natur ab officio <g ref="#char0026">&amp;</g> bene<g ref="#char017f">ſ</g>icio, vt in cap.
 <lb xml:id="W0041-00-0067-lb-0020"/>fin. de celebr. mi<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>a. vbi Abb. dicit qu<g ref="#charo0300">ò</g>d
 <lb xml:id="W0041-00-0067-lb-0021"/>doctores non exprimunt, an debeant
 <lb xml:id="W0041-00-0067-lb-0022"/>concurrere omnia <g ref="#char017f">ſ</g>upr<g ref="#chara0300">à</g> dicta ad hoc vt presbyter
 <lb xml:id="W0041-00-0067-lb-0023"/>deponatur, <g ref="#char0026">&amp;</g> qu<g ref="#charo0300">ò</g>d credit ip<g ref="#char017f">ſ</g>e procedendum
 <lb xml:id="W0041-00-0067-lb-0024"/><g ref="#char017f">ſ</g>ecund<g ref="#charu0300">ù</g>m qualitatem loci, <g ref="#char0026">&amp;</g> contem<lb rendition="#hyphen" break="no" xml:id="W0041-00-0067-lb-0025"/>ptum presbyteri confiderandum
-<lb xml:id="W0041-00-0067-lb-0026"/>an habuerit illud in con<lb rendition="#hyphen" break="no" xml:id="W0041-00-0067-lb-0027"/><g ref="#char017f">ſ</g>uetudine.</hi></p>
+<lb xml:id="W0041-00-0067-lb-0026"/>an habuerit illud in con<lb rendition="#hyphen" break="no" xml:id="W0041-00-0067-lb-0027"/><g ref="#char017f">ſ</g>uetudine.</p>
 <figure place="inline" type="ornament"/></div>
 <div type="chapter" n="32" xml:id="W0041-00-0068-d2-0537"><head xml:id="W0041-00-0068-he-042a"><pb n="68" facs="facs:W0041-0068" xml:id="W0041-00-0068-pb-042c"/><lb xml:id="W0041-00-0068-lb-0001"/><hi rendition="#it">Et <g ref="#char017f">ſ</g>uper altari non con<g ref="#char017f">ſ</g>ecrato.</hi></head>
 <head xml:id="W0041-00-0068-he-042b">
 <lb xml:id="W0041-00-0068-lb-0002"/><hi rendition="#sc">Capvt xxxii</hi>.</head>
 <p xml:id="W0041-00-0068-pa-040d">
-<lb xml:id="W0041-00-0068-lb-0003"/><hi rendition="#r-center"><hi rendition="#initCaps">P</hi><hi rendition="#sc">ie</hi> quidem ab Eccle<g ref="#char017f">ſ</g>ia con<g ref="#char017f">ſ</g>titutum e<g ref="#char017f">ſ</g>t,
+<lb xml:id="W0041-00-0068-lb-0003"/><hi rendition="#initCaps">P</hi><hi rendition="#sc">ie</hi> quidem ab Eccle<g ref="#char017f">ſ</g>ia con<g ref="#char017f">ſ</g>titutum e<g ref="#char017f">ſ</g>t,
 <lb xml:id="W0041-00-0068-lb-0004"/>qu<g ref="#charo0300">ò</g>d Euchari<g ref="#char017f">ſ</g>ti<g ref="#char00e6">æ</g> <choice xml:id="W0041-00-0068-ce-04cf"><abbr><g ref="#char017f">ſ</g>acram<g ref="#chare0303">ẽ</g>tum</abbr><expan resp="#CB" cert="high">sacramentum</expan></choice> non ni<g ref="#char017f">ſ</g>i
 <lb xml:id="W0041-00-0068-lb-0005"/><g ref="#char017f">ſ</g>uper con<g ref="#char017f">ſ</g>ecratum altare celebraretur,
 <lb xml:id="W0041-00-0068-lb-0006"/>non autem contrafacienti <g ref="#char017f">ſ</g>acerdoti p<g ref="#char0153">œ</g><lb break="no" rendition="#noHyphen" xml:id="W0041-00-0068-lb-0007"/>na de<g ref="#char017f">ſ</g>cripta reperitur: vnde Card. in d. c. fin. de ce<lb rendition="#hyphen" break="no" xml:id="W0041-00-0068-lb-0008"/>lebra. mi<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>a. merit<g ref="#charo0300">ò</g> qu<g ref="#char00e6">æ</g><g ref="#char017f">ſ</g>tionem mouet. Si quis cele<lb rendition="#hyphen" break="no" xml:id="W0041-00-0068-lb-0009"/>brat <g ref="#char017f">ſ</g>uper altari non con<g ref="#char017f">ſ</g>ecrato, qua p<g ref="#char0153">œ</g>na <g ref="#char017f">ſ</g>it pu<lb rendition="#hyphen" break="no" xml:id="W0041-00-0068-lb-0010"/>niendus? <g ref="#char0026">&amp;</g> dicit qu<g ref="#charo0300">ò</g>d <g ref="#char017f">ſ</g>i ex malitia, vel nimia de<g ref="#char017f">ſ</g>i<lb rendition="#hyphen" break="no" xml:id="W0041-00-0068-lb-0011"/>pientia, punitur p<g ref="#char0153">œ</g>na illius text. quam in c. pr<g ref="#char00e6">æ</g>ce<lb rendition="#hyphen" break="no" xml:id="W0041-00-0068-lb-0012"/>denti de<g ref="#char017f">ſ</g>crip<g ref="#char017f">ſ</g>imus, <g ref="#char0026">&amp;</g> hoc propter identitatem ra<lb rendition="#hyphen" break="no" xml:id="W0041-00-0068-lb-0013"/>tionis, <g ref="#char0026">&amp;</g> vlterius procedendo dicit, qu<g ref="#charo0300">ò</g>d idem vi<lb rendition="#hyphen" break="no" xml:id="W0041-00-0068-lb-0014"/>detur in omnibus aliis exce<g ref="#char017f">ſ</g>sibus commi<g ref="#char017f">ſ</g>sis circa
@@ -1399,7 +1400,7 @@
 <lb xml:id="W0041-00-0068-lb-0022"/>erigat, ni<g ref="#char017f">ſ</g>i quod ab Epi<g ref="#char017f">ſ</g>copo loci fuerit <g ref="#char017f">ſ</g>anctifica<lb rendition="#hyphen" break="no" xml:id="W0041-00-0068-lb-0023"/>tum vel permi<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>um: <g ref="#char0026">&amp;</g> <g ref="#char017f">ſ</g>i clericus contrarium
 <lb xml:id="W0041-00-0068-lb-0024"/>fecerit, degradetur: quod ego intellige<lb rendition="#hyphen" break="no" xml:id="W0041-00-0068-lb-0025"/>rem, quando clericus erigeret il<lb rendition="#hyphen" break="no" xml:id="W0041-00-0068-lb-0026"/>lud tanqu<g ref="#chara0300">à</g>m con<g ref="#char017f">ſ</g>ecratum,
 <lb xml:id="W0041-00-0068-lb-0027"/><g ref="#char0026">&amp;</g> vt in eo celebraretur
-<lb xml:id="W0041-00-0068-lb-0028"/><g ref="#char017f">ſ</g>ine aliqua ara <choice xml:id="W0041-00-0068-ce-04d1"><abbr>c<g ref="#charo0303">õ</g><lb rendition="#hyphen" break="no" xml:id="W0041-00-0068-lb-0029"/><g ref="#char017f">ſ</g>ecrata</abbr><expan resp="#CB" cert="high">conse<lb rendition="#noHyphen" break="no" sameAs="#W0041-00-0068-lb-0029" xml:id="W0041-00-0068-lb-sbd5"/>crata</expan></choice>.</hi></p>
+<lb xml:id="W0041-00-0068-lb-0028"/><g ref="#char017f">ſ</g>ine aliqua ara <choice xml:id="W0041-00-0068-ce-04d1"><abbr>c<g ref="#charo0303">õ</g><lb rendition="#hyphen" break="no" xml:id="W0041-00-0068-lb-0029"/><g ref="#char017f">ſ</g>ecrata</abbr><expan resp="#CB" cert="high">conse<lb rendition="#noHyphen" break="no" sameAs="#W0041-00-0068-lb-0029" xml:id="W0041-00-0068-lb-sbd5"/>crata</expan></choice>.</p>
 <figure place="inline" type="ornament"/></div>
 <div type="chapter" n="33" xml:id="W0041-00-0069-d2-0538"><head xml:id="W0041-00-0069-he-042c"><pb n="69" facs="facs:W0041-0069" xml:id="W0041-00-0069-pb-042d"/><lb xml:id="W0041-00-0069-lb-0001"/><hi rendition="#it">Sine orario <g ref="#char017f">ſ</g>eu <g ref="#char017f">ſ</g>tola, <g ref="#char0026">&amp;</g> alijs vesti<lb rendition="#hyphen" break="no" xml:id="W0041-00-0069-lb-0002"/>bus <g ref="#char017f">ſ</g>acris.</hi></head>
 <head xml:id="W0041-00-0069-he-042d">
@@ -2993,7 +2994,7 @@
 <head xml:id="W0041-00-0151-he-047f">
 <lb xml:id="W0041-00-0151-lb-0003"/><hi rendition="#sc">Capvt lxxiiii</hi>.</head>
 <p xml:id="W0041-00-0151-pa-0437">
-<lb xml:id="W0041-00-0151-lb-0004"/><hi rendition="#r-center"><hi rendition="#initCaps">C</hi>Alixtus papa interdixít contractum ma<lb rendition="#hyphen" break="no" xml:id="W0041-00-0151-lb-0005"/>trimonij presbyteris, diaconibus, <g ref="#char0026">&amp;</g>
+<lb xml:id="W0041-00-0151-lb-0004"/><hi rendition="#initCaps">C</hi>Alixtus papa interdixít contractum ma<lb rendition="#hyphen" break="no" xml:id="W0041-00-0151-lb-0005"/>trimonij presbyteris, diaconibus, <g ref="#char0026">&amp;</g>
 <lb xml:id="W0041-00-0151-lb-0006"/><g ref="#char017f">ſ</g>ubdiaconibus, <g ref="#char0026">&amp;</g> ab illis contracta de<lb rendition="#hyphen" break="no" xml:id="W0041-00-0151-lb-0007"/>bere di<g ref="#char017f">ſ</g>iungi, <g ref="#char0026">&amp;</g> ad p<g ref="#char0153">œ</g>nitentiam redigi,
 <lb xml:id="W0041-00-0151-lb-0008"/>iuxta <g ref="#char017f">ſ</g>acrorum Canonum diffinitionem pr<g ref="#char00e6">æ</g>cepit,
 <lb xml:id="W0041-00-0151-lb-0009"/>vt habetur in capitu. presbyteris. xxvij. di<g ref="#char017f">ſ</g>tinc. hinc
@@ -3110,7 +3111,7 @@
 <lb xml:id="W0041-00-0156-lb-0019"/>Rot<g ref="#char00e6">æ</g> procedit in terminis in quibus loquitur, vi<lb rendition="#hyphen" break="no" xml:id="W0041-00-0156-lb-0020"/>delicet qu<g ref="#charo0300">ò</g>d tunc demum clericus perdit benefi<lb rendition="#hyphen" break="no" xml:id="W0041-00-0156-lb-0021"/>cium, quando minor cum qua contrahit peruene<lb rendition="#hyphen" break="no" xml:id="W0041-00-0156-lb-0022"/>rit ad pubertatem, vel qu<g ref="#charo0300">ò</g>d intelligatur de impu<lb rendition="#hyphen" break="no" xml:id="W0041-00-0156-lb-0023"/>bere proxima pubertati: quem etiam vide in <g ref="#char017f">ſ</g>e<lb rendition="#hyphen" break="no" xml:id="W0041-00-0156-lb-0024"/>quenti folio, ver<g ref="#char017f">ſ</g>icu. po<g ref="#char017f">ſ</g>set tamen. vbi dicit, qu<g ref="#charo0300">ò</g>d
 <lb xml:id="W0041-00-0156-lb-0025"/>clericus contrahens de facto cum minore non
 <lb xml:id="W0041-00-0156-lb-0026"/>proxima pubertati, <g ref="#char017f">ſ</g>iue cum furio<g ref="#char017f">ſ</g>a, aut
-<lb xml:id="W0041-00-0156-lb-0027"/>con<g ref="#char017f">ſ</g>anguinea perdit beneficium me<lb rendition="#hyphen" break="no" xml:id="W0041-00-0156-lb-0028"/>ro iure, neque illud pote<g ref="#char017f">ſ</g>t re<lb rendition="#hyphen" break="no" xml:id="W0041-00-0156-lb-0029"/>tinere ab<g ref="#char017f">ſ</g>que di<g ref="#char017f">ſ</g>pen<g ref="#char017f">ſ</g>a<lb rendition="#hyphen" break="no" xml:id="W0041-00-0156-lb-0030"/>tione, <g ref="#char017f">ſ</g>altem Epi<lb rendition="#hyphen" break="no" xml:id="W0041-00-0156-lb-0031"/><g ref="#char017f">ſ</g>copi.}</hi><figure place="inline" type="ornament"/></p></div>
+<lb xml:id="W0041-00-0156-lb-0027"/>con<g ref="#char017f">ſ</g>anguinea perdit beneficium me<lb rendition="#hyphen" break="no" xml:id="W0041-00-0156-lb-0028"/>ro iure, neque illud pote<g ref="#char017f">ſ</g>t re<lb rendition="#hyphen" break="no" xml:id="W0041-00-0156-lb-0029"/>tinere ab<g ref="#char017f">ſ</g>que di<g ref="#char017f">ſ</g>pen<g ref="#char017f">ſ</g>a<lb rendition="#hyphen" break="no" xml:id="W0041-00-0156-lb-0030"/>tione, <g ref="#char017f">ſ</g>altem Epi<lb rendition="#hyphen" break="no" xml:id="W0041-00-0156-lb-0031"/><g ref="#char017f">ſ</g>copi.}<figure place="inline" type="ornament"/></p></div>
 <div type="chapter" n="75" xml:id="W0041-00-0157-d2-0562"><head xml:id="W0041-00-0157-he-0480"><pb n="157" facs="facs:W0041-0157" xml:id="W0041-00-0157-pb-0487"/><lb xml:id="W0041-00-0157-lb-0001"/><hi rendition="#it">Monialibus.</hi></head>
 <head xml:id="W0041-00-0157-he-0481">
 <lb xml:id="W0041-00-0157-lb-0002"/><hi rendition="#sc">Capvt lxxv</hi>.</head>
@@ -3588,7 +3589,7 @@
 <head xml:id="W0041-00-0182-he-0493">
 <lb xml:id="W0041-00-0182-lb-0018"/><hi rendition="#sc">Capvt lxxxiiii</hi>.</head>
 <p xml:id="W0041-00-0182-pa-0441">
-<lb xml:id="W0041-00-0182-lb-0019"/><hi rendition="#r-center"><hi rendition="#initCaps">F</hi><hi rendition="#sc">vrtvm</hi> e<g ref="#char017f">ſ</g>t de maioribus <g ref="#char0026">&amp;</g> grauiori<lb rendition="#hyphen" break="no" xml:id="W0041-00-0182-lb-0020"/>bus criminibus, vt not. Abb. in c. C<g ref="#charu0300">ù</g>m
+<lb xml:id="W0041-00-0182-lb-0019"/><hi rendition="#initCaps">F</hi><hi rendition="#sc">vrtvm</hi> e<g ref="#char017f">ſ</g>t de maioribus <g ref="#char0026">&amp;</g> grauiori<lb rendition="#hyphen" break="no" xml:id="W0041-00-0182-lb-0020"/>bus criminibus, vt not. Abb. in c. C<g ref="#charu0300">ù</g>m
 <lb xml:id="W0041-00-0182-lb-0021"/>contingat. col. vj. de for. compet. allegat
 <lb xml:id="W0041-00-0182-lb-0022"/>text. in c. C<g ref="#charu0300">ù</g>m non ab homine. de iudi.
 <lb xml:id="W0041-00-0182-lb-0023"/><g ref="#char0026">&amp;</g> in §. Nunc autem. xxvj. di<g ref="#char017f">ſ</g>tin. Et ideo clericus in
@@ -3677,7 +3678,7 @@
 <lb xml:id="W0041-00-0186-lb-0024"/>corrigendos. in colum. iij. licet ip<g ref="#char017f">ſ</g>i non <choice resp="#auto" xml:id="W0041-00-0186-ce-098f"><abbr><g ref="#char017f">ſ</g>crib<g ref="#chara0303">ã</g>t</abbr><expan resp="#CR #auto"><g ref="#char017f">ſ</g>cribant</expan></choice> hoc
 <lb xml:id="W0041-00-0186-lb-0025"/>in clericis. Sed ego credo eandem <g ref="#char017f">ſ</g>ententiam
 <lb xml:id="W0041-00-0186-lb-0026"/>e<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>e <choice resp="#auto" xml:id="W0041-00-0186-ce-0990"><abbr>tenend<g ref="#chara0303">ã</g></abbr><expan resp="#CR #auto">tenendam</expan></choice> in eis. {Vide pr<g ref="#chare0328">ę</g>tere<g ref="#chara0300">à</g> in ma<lb rendition="#hyphen" break="no" xml:id="W0041-00-0186-lb-0027"/>teria huius cap. Paul. de Ca<g ref="#char017f">ſ</g>t. in Auct.
-<lb xml:id="W0041-00-0186-lb-0028"/>Sed nouo iure. C. De <g ref="#char017f">ſ</g>eruis fu<lb rendition="#hyphen" break="no" xml:id="W0041-00-0186-lb-0029"/>gitiuis, in fine, vbi <g ref="#char017f">ſ</g>cri<lb rendition="#hyphen" break="no" xml:id="W0041-00-0186-lb-0030"/>bit quatuor <g ref="#char017f">ſ</g>pe<lb rendition="#hyphen" break="no" xml:id="W0041-00-0186-lb-0031"/>cies furum.}</hi></p></div>
+<lb xml:id="W0041-00-0186-lb-0028"/>Sed nouo iure. C. De <g ref="#char017f">ſ</g>eruis fu<lb rendition="#hyphen" break="no" xml:id="W0041-00-0186-lb-0029"/>gitiuis, in fine, vbi <g ref="#char017f">ſ</g>cri<lb rendition="#hyphen" break="no" xml:id="W0041-00-0186-lb-0030"/>bit quatuor <g ref="#char017f">ſ</g>pe<lb rendition="#hyphen" break="no" xml:id="W0041-00-0186-lb-0031"/>cies furum.}</p></div>
 <div type="chapter" n="85" xml:id="W0041-00-0187-d2-056c"><head xml:id="W0041-00-0187-he-0494"><pb n="187" facs="facs:W0041-0187" xml:id="W0041-00-0187-pb-04a5"/><lb xml:id="W0041-00-0187-lb-0001"/><hi rendition="#it">Simoniaci.</hi></head>
 <head xml:id="W0041-00-0187-he-0495">
 <lb xml:id="W0041-00-0187-lb-0002"/><hi rendition="#sc">Capvt lxxxv</hi>.</head>
@@ -6740,7 +6741,7 @@
 <head xml:id="W0041-00-0345-he-050b">
 <lb xml:id="W0041-00-0345-lb-0016"/><hi rendition="#sc">Capvt cxliiii</hi>.</head>
 <p xml:id="W0041-00-0345-pa-047d">
-<lb xml:id="W0041-00-0345-lb-0017"/><hi rendition="#r-center"><hi rendition="#initCaps">Q</hi>V<g ref="#chara0300">à</g>muis epi<g ref="#char017f">ſ</g>coporum reditus pro <g ref="#char017f">ſ</g>ub<lb rendition="#hyphen" break="no" xml:id="W0041-00-0345-lb-0018"/><g ref="#char017f">ſ</g>tentandis oneribus eccle<g ref="#char017f">ſ</g>i<g ref="#char00e6">æ</g> <g ref="#char017f">ſ</g>u<g ref="#char00e6">æ</g> a<g ref="#char017f">ſ</g>signa<lb rendition="#hyphen" break="no" xml:id="W0041-00-0345-lb-0019"/>ti cen<g ref="#char017f">ſ</g>eantur, inter qu<g ref="#char00e6">æ</g> non <choice resp="#auto" xml:id="W0041-00-0345-ce-1196"><abbr>minim<g ref="#charu0303">ũ</g></abbr><expan resp="#CR #auto">minimum</expan></choice> re<lb rendition="#hyphen" break="no" xml:id="W0041-00-0345-lb-0020"/>putandum e<g ref="#char017f">ſ</g>t, vt di<g ref="#char0153">œ</g>ce<g ref="#char017f">ſ</g>im <g ref="#char017f">ſ</g>uam malis
+<lb xml:id="W0041-00-0345-lb-0017"/><hi rendition="#initCaps">Q</hi>V<g ref="#chara0300">à</g>muis epi<g ref="#char017f">ſ</g>coporum reditus pro <g ref="#char017f">ſ</g>ub<lb rendition="#hyphen" break="no" xml:id="W0041-00-0345-lb-0018"/><g ref="#char017f">ſ</g>tentandis oneribus eccle<g ref="#char017f">ſ</g>i<g ref="#char00e6">æ</g> <g ref="#char017f">ſ</g>u<g ref="#char00e6">æ</g> a<g ref="#char017f">ſ</g>signa<lb rendition="#hyphen" break="no" xml:id="W0041-00-0345-lb-0019"/>ti cen<g ref="#char017f">ſ</g>eantur, inter qu<g ref="#char00e6">æ</g> non <choice resp="#auto" xml:id="W0041-00-0345-ce-1196"><abbr>minim<g ref="#charu0303">ũ</g></abbr><expan resp="#CR #auto">minimum</expan></choice> re<lb rendition="#hyphen" break="no" xml:id="W0041-00-0345-lb-0020"/>putandum e<g ref="#char017f">ſ</g>t, vt di<g ref="#char0153">œ</g>ce<g ref="#char017f">ſ</g>im <g ref="#char017f">ſ</g>uam malis
 <lb xml:id="W0041-00-0345-lb-0021"/>purgent hominibus, <g ref="#char0026">&amp;</g> clericos facinoro<g ref="#char017f">ſ</g>os emen<lb rendition="#hyphen" break="no" xml:id="W0041-00-0345-lb-0022"/>dent: non tamen iniu<g ref="#char017f">ſ</g>tum reputo qu<g ref="#charo0300">ò</g>d damnatus
 <lb xml:id="W0041-00-0345-lb-0023"/>reus, <g ref="#char017f">ſ</g>i bona habeat, expen<g ref="#char017f">ſ</g>as <g ref="#char017f">ſ</g>oluat promotori <g ref="#char017f">ſ</g>eu
 <lb xml:id="W0041-00-0345-lb-0024"/>fi<g ref="#char017f">ſ</g>cali, vt vulgus appellat. C<g ref="#charu0300">ù</g>m <choice resp="#auto" xml:id="W0041-00-0345-ce-1197"><abbr>eti<g ref="#chara0303">ã</g></abbr><expan resp="#CR #auto">etiam</expan></choice> in criminalibus
@@ -6774,7 +6775,7 @@
 <lb xml:id="W0041-00-0347-lb-0011"/>quando accu<g ref="#char017f">ſ</g>auit nulla infamia, vel indiciis pr<g ref="#char00e6">æ</g>ce<lb rendition="#hyphen" break="no" xml:id="W0041-00-0347-lb-0012"/>dentibus, dicitur iniu<g ref="#char017f">ſ</g>t<g ref="#chare0300">è</g> accu<g ref="#char017f">ſ</g>a<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>e, <g ref="#char0026">&amp;</g> merit<g ref="#charo0300">ò</g> quidem
 <lb xml:id="W0041-00-0347-lb-0013"/>in expen<g ref="#char017f">ſ</g>is damnandus e<g ref="#char017f">ſ</g>t tunc. Nam qui po<g ref="#char017f">ſ</g>i<lb rendition="#hyphen" break="no" xml:id="W0041-00-0347-lb-0014"/>tus e<g ref="#char017f">ſ</g>t vt <g ref="#char017f">ſ</g>ua diligentia <g ref="#char017f">ſ</g>celeratos cleri<lb rendition="#hyphen" break="no" xml:id="W0041-00-0347-lb-0015"/>cos in<g ref="#char017f">ſ</g>equatur (vt boni manife<g ref="#char017f">ſ</g>ti
 <lb xml:id="W0041-00-0347-lb-0016"/>fiant <g ref="#char0026">&amp;</g> ab aliis di<g ref="#char017f">ſ</g>cernantur)
-<lb xml:id="W0041-00-0347-lb-0017"/>non debet in<g ref="#char017f">ſ</g>ontes <g ref="#char0026">&amp;</g> bo<lb break="no" rendition="#noHyphen" xml:id="W0041-00-0347-lb-0018"/>nos clericos infama<lb rendition="#hyphen" break="no" xml:id="W0041-00-0347-lb-0019"/>re neque ve<lb rendition="#hyphen" break="no" xml:id="W0041-00-0347-lb-0020"/>xare.</hi></p></div></div></body>
+<lb xml:id="W0041-00-0347-lb-0017"/>non debet in<g ref="#char017f">ſ</g>ontes <g ref="#char0026">&amp;</g> bo<lb break="no" rendition="#noHyphen" xml:id="W0041-00-0347-lb-0018"/>nos clericos infama<lb rendition="#hyphen" break="no" xml:id="W0041-00-0347-lb-0019"/>re neque ve<lb rendition="#hyphen" break="no" xml:id="W0041-00-0347-lb-0020"/>xare.</p></div></div></body>
 <back xml:id="W0041-00-0347-bm-03e8">
 <div type="epilogue" xml:id="W0041-00-0347-d1-047d">
 <p xml:id="W0041-00-0347-pa-047e"><lb xml:id="W0041-00-0347-lb-0021"/><hi rendition="#r-center">LAVS DEO.</hi></p>

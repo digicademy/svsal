@@ -39,7 +39,7 @@
 
             <editionStmt>
                 <edition n="1.0.0" xml:id="W0018-version1" xml:lang="en">
-                    Complete digitized edition, <date type="digitizedEd" when="2021-10-01">2021-10-01</date>.
+                    Complete digitized edition, <date type="digitizedEd" when="2022-01-27">2022-01-27</date>.
                 </edition>
             </editionStmt>
             
@@ -49,7 +49,7 @@
                 				refer to our website.</ref></publisher>
                 	</xi:fallback>
                 </xi:include>
-                <date type="digitizedEd" when="2021-10-01">2021-10-01</date>
+                <date type="digitizedEd" when="2022-01-27">2022-01-27</date>
                 <idno>
                     <idno xml:id="urlid">https://id.salamanca.school/texts/W0018</idno>
                     <idno xml:id="urltei">https://id.salamanca.school/texts/W0018?format=tei</idno>
@@ -152,7 +152,7 @@
                 <change who="#DG #CR #auto" when="2021-10-11" status="g_enriched_approved" xml:id="W0018_change_024" xml:lang="en">Generated @xml:id after corrections.</change>
                 <change who="#DG #CR #auto" when="2021-10-11" status="g_enriched_approved" xml:id="W0018_change_023" xml:lang="en">Numbered lines after corrections.</change>
                 <change who="#CR #auto" when="2021-10-11" status="g_enriched_approved" xml:id="W0018_change_022" xml:lang="en">Transformed note(s) with only digits into milestone(s).</change>
-                <change who="#CR #auto" when="2021-10-01" status="g_enriched_approved" xml:lang="en" xml:id="W0018_change_021">teiHeader update for publication.</change>
+                <change who="#CR #auto" when="2022-01-27" status="g_enriched_approved" xml:lang="en" xml:id="W0018_change_021">teiHeader update for publication.</change>
                 <change who="#DG #CR #auto" when="2021-10-01" status="g_enriched_approved" xml:lang="en" xml:id="W0018_change_020">Tagged special characters after corrections.</change>
                 <change who="#DG #CR #auto" when="2021-10-01" status="g_enriched_approved" xml:id="W0018_change_019" xml:lang="en">Correct choice/(pb|cb|lb) pairings.</change>
                 <change who="#DG #CR #auto" when="2021-10-01" status="g_enriched_approved" xml:id="W0018_change_018" xml:lang="en">Fixed order of break attributes (@rendition and @break) and removed whitespace before non-breaking elements.</change>

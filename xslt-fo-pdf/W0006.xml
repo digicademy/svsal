@@ -1,0 +1,219 @@
+<?xml-model href="https://files.salamanca.school/SvSal_txt.rng"
+    type="application/xml"
+    schematypens="http://relaxng.org/ns/structure/1.0"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="W0006">
+<?svsal htmlFragmentationDepth="7" ?><!-- 6 is right below front/body/back of each individual volume -->
+<!-- one more than before - testing -->
+
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title type="short" level="s">Opera Omnia</title>
+                <title type="main" level="s">Dn. Didaci Covarrvviae a Leyva Toletani, Archiepiscopi S. Dominici Designati, et Ivreconsvlti Celeberrimi, 
+                    Opera Omnia Quae Hactenvs Extant, Tribvs Tomis distincta</title>
+                <author>
+                    <persName ref="author:A0026 gnd:118837478 cerl:cnp01329697" key="Covarrubias y Leyva, Diego de">
+                        <forename>Diego</forename>
+                        <nameLink>de</nameLink>
+                        <surname>Covarrubias y Leyva</surname>
+                    </persName>
+                </author>
+                <editor xml:id="CB" role="#scholarly #technical">
+                    <persName ref="gnd:138962987">
+                        <surname>Birr</surname>, <forename>Christiane</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="CR" role="#technical">
+                    <persName ref="orcid:0000-0001-5095-1793">
+                        <surname>Rico Carmona</surname>, <forename>Cindy</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="AW" role="#technical">
+                    <persName ref="gnd:108835820">
+                        <surname>Wagner</surname>, <forename>Andreas</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="DG" role="#technical">
+                    <persName ref="orcid:0000-0002-0273-3844">
+                        <surname>Glück</surname>, <forename>David</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="IC" role="#technical">
+                    <persName ref="gnd:1022577581">
+                        <surname>Caesar</surname>, <forename>Ingo</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="MT" role="#technical">
+                    <persName ref="orcid:0000-0002-1488-6477">
+                        <surname>Thönes</surname>, <forename>Martin</forename>
+                    </persName>
+                </editor>
+            </titleStmt>
+
+            <editionStmt>
+               <edition n="1.0.0" xml:id="W0006-v1.0.0" xml:lang="en">
+                   Complete digitized edition, <date type="digitizedEd" when="2021-09-13">2021-09-13</date>.
+               </edition>
+            </editionStmt>
+
+            <publicationStmt xml:id="publicationStmt">
+            	<xi:include href="../meta/works-general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:fileDesc/tei:publicationStmt/*)">
+            		<xi:fallback>
+                        <publisher>
+                            <ref target="https://www.salamanca.school" xml:lang="en">For information about the digital edition, please 
+            					refer to our website.</ref>
+                        </publisher>
+            		</xi:fallback>
+            	</xi:include>
+                <date type="digitizedEd" when="2021-09-13">2021-09-13</date>
+                <idno>
+                    <idno xml:id="urlid">https://id.salamanca.school/texts/W0006</idno>
+                    <idno xml:id="urltei">https://id.salamanca.school/texts/W0006?format=tei</idno>
+                    <idno xml:id="urlhtml">https://id.salamanca.school/texts/W0006?format=html</idno>
+                    <idno xml:id="urlrdf">https://id.salamanca.school/texts/W0006?format=rdf</idno>
+                    <idno xml:id="urliiif">https://id.salamanca.school/texts/W0006?format=iiif</idno>
+                    <idno xml:id="urltxtorig">https://id.salamanca.school/texts/W0006?format=txt&amp;mode=orig</idno>
+                    <idno xml:id="urltxtedit">https://id.salamanca.school/texts/W0006?format=txt&amp;mode=edit</idno>
+                </idno>
+            </publicationStmt>
+            
+            <seriesStmt>
+                <xi:include href="../meta/works-general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:fileDesc/tei:seriesStmt/*)">
+                    <xi:fallback>
+                       <title xml:lang="en">
+                            <ref target="https://www.salamanca.school" xml:lang="en">The School of Salamanca. A Digital Collection of Sources</ref>
+                        </title>
+                    </xi:fallback>
+                </xi:include>
+                <biblScope unit="volume" n="20">Volume 20</biblScope>
+            </seriesStmt>
+            
+            <notesStmt>
+                <relatedItem type="work_volume" n="1" target="work:W0006_Vol01"/>
+                <relatedItem type="work_volume" n="2" target="work:W0006_Vol02"/>
+                <relatedItem type="work_volume" n="3" target="work:W0006_Vol03"/>
+            </notesStmt>
+            
+            <sourceDesc>
+                <biblStruct>
+                    <monogr>
+                        <author>
+                            <persName ref="author:A0026 gnd:118837478 cerl:cnp01329697" key="Covarrubias y Leyva, Diego de">
+                                <forename>Diego</forename>
+                                <nameLink>de</nameLink>
+                                <surname>Covarrubias y Leyva</surname>
+                            </persName>
+                        </author>
+                        <title type="short" level="s" ref="work:W0006">Opera Omnia</title>
+                        <title type="main" level="s">Dn. Didaci Covarrvviae a Leyva Toletani, Archiepiscopi S. Dominici Designati, et Ivreconsvlti Celeberrimi, 
+                            Opera Omnia Quae Hactenvs Extant, Tribvs Tomis distincta</title>
+                        <imprint>
+                            <pubPlace role="firstEd" ref="getty:7193538" key="Frankfurt">Francofurti</pubPlace>
+                            <date type="firstEd" when="1571">1571</date>
+                            <date type="summaryFirstEd" when="1571">1.1573 - 3.1571</date>
+                            <publisher n="firstEd">
+                                <persName ref="gnd:118683527 cerl:cni00024730" key="Feyerabend, Sigmund">
+                                    <forename>Sigmund</forename>
+                                    <surname>Feierabend</surname>
+                                </persName>
+                            </publisher>
+                        </imprint>
+                    </monogr>
+                </biblStruct>
+            </sourceDesc>
+        </fileDesc>
+        
+        <profileDesc>
+           <langUsage>
+              <language ident="la" n="main" xml:lang="en">Latin</language>
+           </langUsage>
+        </profileDesc>
+        
+        <encodingDesc>
+            <xi:include href="../meta/works-general.xml" xpointer="projectDesc">
+                <xi:fallback>
+                    <projectDesc>
+                        <p xml:id="meta-pa-0004">
+                            <ref target="https://www.salamanca.school" xml:lang="en">For information about the project, please 
+                               refer to our website.</ref>
+                        </p>
+                    </projectDesc>
+                </xi:fallback>
+            </xi:include>
+            <editorialDecl>
+                <xi:include href="../meta/works-general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:encodingDesc/tei:editorialDecl/tei:p)">
+                    <xi:fallback>
+                        <p xml:id="meta-pa-0005">
+                            <ref target="https://www.salamanca.school" xml:lang="en">For information about the digital edition, please 
+                                refer to our website.</ref>
+                        </p>
+                    </xi:fallback>
+                </xi:include>
+                <normalization>
+                   <p xml:id="meta-pa-0006" xml:lang="en">The "long s" character (<q>ſ</q>) was normalized, 
+                      i.e. resolved to <q>s</q>.</p>
+                </normalization>
+            </editorialDecl>
+            <xi:include href="../meta/works-general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:encodingDesc/tei:editorialDecl/following-sibling::*)">
+                <xi:fallback/>
+            </xi:include>
+            <xi:include href="../meta/specialchars.xml" xpointer="charDecl">
+                <xi:fallback>
+                    <charDecl>
+                        <char xml:lang="en">
+                            <note xml:id="meta-no-0001">The definition of 
+                     non-standard characters could not be embedded, but it is available on the 
+                     <ref target="https://files.salamanca.school/specialchars.xml">project website</ref>.</note>
+                        </char>
+                    </charDecl>
+                </xi:fallback>
+            </xi:include>
+			<appInfo>
+                <application ident="auto-markup" version="1" xml:id="auto">
+                    <desc>Automatically generated markup.</desc>
+                </application>
+            </appInfo>
+        </encodingDesc>
+        
+        <revisionDesc status="g_enriched_approved">
+            <listChange>
+                <change who="#AW" when="2021-09-13" status="g_enriched_approved" xml:lang="en" xml:id="W0006_change-00X">teiHeader update.</change>
+                <change who="#DG #MT" when="2018-12-10" status="g_enriched_approved" xml:lang="en">Revised metadata (titles, extent) according to RDA guidelines</change>
+                <change who="#DG" when="2018-09-26" status="a_raw" xml:lang="en">Revision of teiHeader and status reset.</change>
+                <change who="#AW" when="2015-08-25" status="a_raw" xml:lang="en">reset status</change>
+                <change who="#IC" when="2014-11-27" status="a_raw" xml:lang="en">revision of teiHeader</change>
+                <change who="#AW" when="2014-10-16" status="a_raw" xml:lang="de">Reihenfolge der Editoren korrigiert und ref-key f. Drucker und Druckort eingetragen.</change>
+                <change who="#IC" when="2014-10-10" status="a_raw" xml:lang="de">
+                    <list>
+                        <item xml:id="item_asjlh3">pubPlace@role="firstEd" (Eingabe des Erscheinungsortes nach Vorlageform) und date@type="firstEd", wenn wir die Erstausgabe haben</item>
+                        <item xml:id="item_lawefv3">publisher/persName nach RAK WB §§ 145: Nur Nachname im Nominativ</item>
+                        <item xml:id="item_awfw344">ref@type="institution" und ref@type="catLink" im Schema ergänzen</item>
+                    </list>
+                </change>
+                <change who="#IC" when="2014-10-01" status="a_raw" xml:lang="de">Bibliographische Angaben geprüft pubPlace @type="modernized" hinzugefügt</change>
+                <change who="#IC" when="2014-09-25" status="a_raw" xml:lang="de">Header angelegt</change>
+                <change who="#CB" when="2012" status="a_raw" xml:lang="en">Identification of basic bibliographic data.</change>
+            </listChange>
+        </revisionDesc>
+    </teiHeader>
+
+    <text xml:lang="la" type="work_multivolume" xml:id="completeWork">
+        <group>
+            <xi:include href="W0006_Vol01.xml" xpointer="Vol01">
+                <xi:fallback>
+                    <p xml:lang="de">Band 1 konnte nicht eingebunden werden.</p>
+                </xi:fallback>
+            </xi:include>
+            <xi:include href="W0006_Vol02.xml" xpointer="Vol02">
+                <xi:fallback>
+                    <p xml:lang="de">Band 2 konnte nicht eingebunden werden.</p>
+                </xi:fallback>
+            </xi:include>
+            <xi:include href="W0006_Vol03.xml" xpointer="Vol03">
+                <xi:fallback>
+                    <p xml:lang="de">Band 3 konnte nicht eingebunden werden.</p>
+                </xi:fallback>
+            </xi:include>
+        </group>
+    </text>       
+</TEI>

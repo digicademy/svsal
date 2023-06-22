@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 <?xml version="1.0" encoding="UTF-8"?><?xml-model href="https://files.salamanca.school/SvSal_txt.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="W0076">
     <teiHeader>
@@ -55,6 +56,69 @@
                     <idno xml:id="urltxtorig">https://id.salamanca.school/texts/W0076?format=txt&amp;mode=orig</idno>
                     <idno xml:id="urltxtedit">https://id.salamanca.school/texts/W0076?format=txt&amp;mode=edit</idno>
                 </idno>
+=======
+<?xml version="1.0" encoding="UTF-8"?><?xml-model href="https://files.salamanca.school/SvSal_txt.rng"
+                    type="application/xml"
+                    schematypens="http://relaxng.org/ns/structure/1.0"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:tei="http://www.tei-c.org/ns/1.0" xml:id="W0076">
+    <teiHeader xmlns:t="http://www.tei-c.org/ns/tite/1.0" xmlns:tite="http://www.tei-c.org/ns/tite/1.0" xmlns:sal="http://salamanca.adwmainz.de">
+        <fileDesc>
+            <titleStmt>
+                <title type="short" level="m">Reglas ciertas y precisamente necessarias para juezes y ministros de iusticia de las Indias, y para sus confesores</title>
+                <title type="main" level="m">Reglas ciertas, y precisamente necessarias para iuezes, y ministros de iusticia de las Indias, y para sus confessores</title>
+                <author>
+                    <persName ref="author:A0063 cerl:cnp00140754 viaf:54496756  gnd:100584756" key="Moreno, Jerónimo">
+                        <forename>Jerónimo</forename>
+                        <surname>Moreno</surname>
+                    </persName>
+                </author>
+                
+                <editor xml:id="CB" role="#scholarly #technical">
+                    <persName ref="gnd:138962987">
+                        <surname>Birr</surname>, <forename>Christiane</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="JLE" role="#scholarly">
+                    <persName ref="orcid:0000-0002-9256-8490">
+                        <surname>Egío García</surname>, <forename>José Luis</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="DG" role="#technical">
+                    <persName ref="orcid:0000-0002-0273-3844">
+                        <surname>Glück</surname>, <forename>David</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="CR" role="#technical">
+                    <persName ref="orcid:0000-0001-5095-1793">
+                        <surname>Rico Carmona</surname>, <forename>Cindy</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="MT" role="#additional">
+                    <persName ref="orcid:0000-0002-1488-6477">
+                        <surname>Thönes</surname>, <forename>Martin</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="AW" role="#technical">
+                    <persName ref="orcid:0000-0003-1835-1653 gnd:108835820">
+                        <surname>Wagner</surname>, <forename>Andreas</forename>
+                    </persName>
+                </editor>
+                
+            </titleStmt>
+
+            <editionStmt>
+               <edition n="unpublished"/>
+            </editionStmt>
+            
+            <publicationStmt xml:id="publicationStmt">
+            	<xi:include href="../meta/works-general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:fileDesc/tei:publicationStmt/*)">
+            		<xi:fallback><publisher><ref target="https://www.salamanca.school" xml:lang="en">For information about the digital edition, please 
+            					refer to our website.</ref></publisher>
+            		</xi:fallback>
+            	</xi:include>
+            	<date type="digitizedEd" n="unpublished"/>
+            	<idno/>
+>>>>>>> Stashed changes
             </publicationStmt>
 
             <seriesStmt>
@@ -63,13 +127,18 @@
                        <title xml:lang="en"><ref target="https://www.salamanca.school" xml:lang="en">The School of Salamanca. A Digital Collection of Sources</ref></title>
                     </xi:fallback>
                 </xi:include>
+<<<<<<< Updated upstream
                 <biblScope unit="volume" n="28"/>
+=======
+                <biblScope unit="volume" n="unpublished"/>
+>>>>>>> Stashed changes
             </seriesStmt>
             
             <sourceDesc>
                 <biblStruct>
                     <monogr>
                         <author>
+<<<<<<< Updated upstream
                             <persName ref="author:A0063 cerl:cnp00140754 viaf:54496756  gnd:100584756" key="Moreno, Gerónymo" full="yes">
                                 <forename full="yes">Gerónymo</forename>
                                 <surname full="yes">Moreno</surname>
@@ -77,13 +146,28 @@
                         </author>
                         <title type="short" level="m">Reglas Ciertas, Y Precisamente Necessarias Para Ivezes, Y Ministros De Ivsticia de las Indias, y para sus Confessores</title>
                         <title type="main" level="m">Reglas Ciertas, Y Precisamente Necessarias Para Ivezes, Y Ministros De Ivsticia de las Indias, y para sus Confessores</title>
+=======
+                            <persName ref="author:A0063 cerl:cnp00140754 viaf:54496756  gnd:100584756" key="Moreno, Jerónimo">
+                                <forename>Jerónimo</forename>
+                                <surname>Moreno</surname>
+                            </persName>
+                        </author>
+                        <title type="short" level="m">Reglas ciertas y precisamente necessarias para juezes y ministros de iusticia de las Indias, y para sus confesores</title>
+                        <title type="main" level="m">Reglas ciertas, y precisamente necessarias para iuezes, y ministros de iusticia de las Indias, y para sus confessores</title>
+>>>>>>> Stashed changes
                         <imprint>
                             <pubPlace role="firstEd" ref="getty:7005560" key="Mexico">Mexico</pubPlace>
                             <date type="firstEd" when="1637">1637</date>
                             <publisher n="firstEd">
+<<<<<<< Updated upstream
                                 <persName ref=" cerl:cni00076174 viaf:304943188 gnd:1037509609" key="Salbago, Francisco" full="yes">
                                     <forename full="yes">Francisco</forename>
                                     <surname full="yes">Salbago</surname>
+=======
+                                <persName ref=" cerl:cni00076174 viaf:304943188 gnd:1037509609" key="Salbago, Francisco">
+                                    <forename>Francisco</forename>
+                                    <surname>Salbago</surname>
+>>>>>>> Stashed changes
                                 </persName>
                             </publisher>
                         </imprint>
@@ -92,10 +176,17 @@
                         <extent xml:lang="es">[16], 59 h.</extent>
                     </monogr>
                 </biblStruct>
+<<<<<<< Updated upstream
                 <msDesc status="draft">
                     <msIdentifier>
                         <repository ref="gnd:10193139-6" xml:lang="en">Linga-Bibliothek der Freien und Hansestadt Hamburg</repository>
                         <idno type="catlink" xml:lang="en">https://kataloge.uni-hamburg.de/DB=1.23/XMLPRS=N/PPN?PPN=577250124</idno>
+=======
+                <msDesc>
+                    <msIdentifier>
+                        <repository ref="gnd:10193139-6" xml:lang="en">Linga-Bibliothek der Freien und Hansestadt Hamburg</repository>
+                        <idno type="catlink" xml:lang="en">https://resolver.sub.uni-hamburg.de/kitodo/PPN6865975191</idno>
+>>>>>>> Stashed changes
                     </msIdentifier>
                     <physDesc>
                         <typeDesc>
@@ -141,6 +232,7 @@
             </appInfo>
         </encodingDesc>
         
+<<<<<<< Updated upstream
         <revisionDesc status="g_enriched_approved">
             <listChange ordered="true">
                 <change who="#DG #CR #auto" when="2022-11-10" status="g_enriched_approved" xml:id="W0018_change_025" xml:lang="en">Generated @xml:id after corrections.</change>
@@ -4554,4 +4646,29 @@
 </div>
 </body>
 </text>
+=======
+        <revisionDesc status="a_raw">
+            <listChange ordered="true">
+                <change who="#CR" when="2020-03-26" status="a_raw" xml:lang="en">Set teiHeader.</change>
+                <change who="#AW" when="2020-03-14" status="a_raw" xml:lang="en">Identification of basic bibliographic data.</change>
+            </listChange>
+        </revisionDesc>
+    </teiHeader>
+    <text type="work_monograph" xml:lang="es" xml:id="completeWork">
+        <front xml:id="frontmatter">
+            <pb facs="facs:W0076-0000" xml:id="facs_W0076-0000" n="0000" type="blank" />
+            <titlePage xml:id="titleW00xx">
+                <pb facs="facs:W0076-0001" n="titlePage" xml:id="facs_W0076-0001"/>
+                <titlePart xml:id="titlePart">
+                    Titlepage
+                </titlePart>
+            </titlePage>
+        </front>
+        <body>
+            <div type="foreword" xml:id="W0076Content">
+                <head xml:id="head_stellvertreter">Content is forthcoming!</head>
+            </div>
+        </body>
+    </text>
+>>>>>>> Stashed changes
 </TEI>
