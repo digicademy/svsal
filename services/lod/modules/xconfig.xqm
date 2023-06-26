@@ -25,14 +25,17 @@ declare variable $xconfig:any23WebserviceURL := "http://any23-vm.apache.org/";
 (: --- SvSal customizations: service locations, debugging level etc. --- :)
 declare variable $xconfig:xtriplesWebserviceURL     := $config:lodServer;
 declare variable $xconfig:any23WebserviceURL        := "http://localhost:8880/any23/any23/";
-declare variable $xconfig:debug                     := "trace"; (: possible values: trace, info, none :)
+declare variable $xconfig:debug                     := "info"; (: possible values: trace, info, none :)
 declare variable $xconfig:logfile                   := "xTriples.log";
 
 (: Configure Servers :)
 declare variable $xconfig:proto          := if (request:get-header('X-Forwarded-Proto') = "https") then "https" else request:get-scheme();
 declare variable $xconfig:subdomains     := ("www", "blog", "facs", "search", "data", "api", "tei", "id", "files", "ldf", "software");
+
 declare variable $xconfig:serverdomain := 
-    if (substring-before(request:get-header('X-Forwarded-Host'), ".") = $xconfig:subdomains)
+    if ($config:instanceMode = "fakeprod") then
+        $config:defaultProdserver
+    else if (substring-before(request:get-header('X-Forwarded-Host'), ".") = $xconfig:subdomains)
         then substring-after(request:get-header('X-Forwarded-Host'), ".")
     else if(request:get-header('X-Forwarded-Host'))
         then request:get-header('X-Forwarded-Host')

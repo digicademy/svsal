@@ -15,7 +15,7 @@ declare option exist:timeout "43200000"; (: 12 h :)
 
 let $resourceId    := request:get-parameter('resourceId', '')
 let $idServer      := $config:idserver
-let $apiServer      := $config:apiserver
+let $apiServer     := $config:apiserver
 let $webServer     := $config:webserver
 let $imageServer   := $config:imageserver
 
@@ -77,7 +77,7 @@ let $rawConfiguration   :=
             <parameters>
                 <param name="exist:stop-on-warn"  value="yes"/>
                 <param name="exist:stop-on-error" value="yes"/>
-                <param name="resourceId"            value="{$resourceId}"/>
+                <param name="resourceId"          value="{$resourceId}"/>
                 <param name="idServer"            value="{$idServer}"/>
                 <param name="apiServer"           value="{$apiServer}"/>
                 <param name="webServer"           value="{$webServer}"/>
@@ -120,7 +120,7 @@ let $collection :=
             <resource uri="{{//tei:listPerson}}"/>
         </collection>
     else if (starts-with($resourceId, "works.")) then
-        <collection uri="{$config:webserver}/enhance-tei.xql?wid={substring-after($resourceId, "works.")}">
+        <collection uri="https://c100-101.cloud.gwdg.de/exist/apps/salamanca/enhance-tei.xql?wid={substring-after($resourceId, "works.")}">
             {$workMetadata}
             <!--<resource uri="{{//(*:front|*:body|*:back)}}"/>-->
             <resource uri="{{//itei:text[not(descendant::itei:text)]}}"/>
@@ -130,7 +130,8 @@ let $collection :=
             <resource uri="{{//tei:listPerson}}"/>
         </collection>
     else if (starts-with($resourceId, 'W0')) then
-        <collection uri="{$config:webserver}/enhance-tei.xql?wid={$resourceId}">
+        (: <collection uri="{$config:webserver}/enhance-tei.xql?wid={$resourceId}"> :)
+        <collection uri="https://c100-101.cloud.gwdg.de/exist/apps/salamanca/enhance-tei.xql?wid={$resourceId}">
             {$workMetadata}
             <!--<resource uri="{{//(*:front|*:body|*:back)}}"/>-->
             <resource uri="{{//itei:text[not(descendant::itei:text)]}}"/>

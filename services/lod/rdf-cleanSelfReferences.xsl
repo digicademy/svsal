@@ -1,6 +1,8 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="2.0">
+
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
     <xsl:param name="idServer"/> 
+
     <xsl:template match="/rdf:RDF">
         <xsl:element name="rdf:RDF">
             <xsl:for-each select="@*">
@@ -28,4 +30,5 @@
             <xsl:value-of select="substring(., 22)"/>
         </xsl:attribute>
     </xsl:template>
+
 </xsl:stylesheet>

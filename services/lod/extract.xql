@@ -606,13 +606,28 @@ declare function xtriples:expressionBasedAttributeResolver($currentResource as n
 (: evaluates expressions in curly braces within a document string and retrieves the document :)
 declare function xtriples:expressionBasedResourceResolver($collection as node()*, $resource as node()*) as item()* {
 
-	let $collectionContent := if (fn:doc-available($collection/@uri)) then fn:doc($collection/@uri) else ""
+	let $collectionContent := if (fn:doc-available($collection/@uri)) then
+	                                let $doc := fn:doc($collection/@uri)/element()
+                                    let $debug := local:log("extract.xql: loaded doc(" || $collection/@uri || "), a " ||
+                                                            $doc/local-name() || " with " || count($doc/element()) || " children.",
+                                							 "trace")
+                                	return $doc
+	                          else
+                                    let $debug := local:log("extract.xql: doc(" || $collection/@uri || ") not available.",
+                                							 "info")
+        							 return ""
 
 	let $resourcesURI          := string($resource/@uri)
 	let $resourcesExpression   := concat('$collectionContent', substring-after(substring-before($resourcesURI, "}"), "{"))
 	let $resourcesNodes        := if (xtriples:expressionSanityCheck($resourcesExpression) = true()) then 
-		try { util:eval($resourcesExpression) } catch * { $err:description } 
-		else $resourcesExpression
+                                      let $debug := local:log("extract.xql: evaluating resources expression " || $resourcesExpression || " ...", "trace")
+		                              return
+		                                  try { util:eval($resourcesExpression) } catch * { $err:description } 
+		                          else
+                                      let $debug := local:log("extract.xql: resources expression " || $resourcesExpression || " did not pass the sanitization.", "info")
+		                              return $resourcesExpression
+
+    let $debug := local:log("extract.xql: " || count($resourcesNodes) || " resources nodes.", "trace")
 
 	let $resources := 
 		for $resource at $index in $resourcesNodes
@@ -1201,9 +1216,9 @@ declare function xtriples:getSVG($rdf as node()*) as item()* {
 
 
 (: set basic vars :)
-let $collections := $setConfiguration/xtriples/collection
+let $collections   := $setConfiguration/xtriples/collection
 let $configuration := $setConfiguration/xtriples/configuration
-let $vocabularies := $configuration/vocabularies
+let $vocabularies  := $configuration/vocabularies
 
 (: dynamic namespace declaration for all configured vocabularies :)
 let $namespaces := 
@@ -1215,14 +1230,19 @@ let $namespaces :=
 (: extract triples from collections :)
 let $extraction := 
 
-	for $collection in $collections
+	for $collection at $collectionIndex in $collections
 
 		let $maxResources :=
 			if ($collection/@max > 0) then
 				$collection/@max
 			else 0
 
+	    let $debug := local:log("extract.xql: processing collection " ||
+	                            $collectionIndex || " of " || count($collections) || " (uri:" || $collection/@uri || ").",
+    							 "info")
+
 		let $resources := xtriples:getResources($collection)
+	    let $debug := local:log("extract.xql: " || count($resources) || " resource(s) found.", "trace")
 
 		let $triples :=
 			for $resource at $resourceIndex in $resources
@@ -1231,13 +1251,22 @@ let $extraction :=
 						$resource
 					else <resource>{$resource}</resource>
 			return
-				if ($maxResources > 0 and $resourceIndex <= $maxResources) 
-				then
-					<statements>{xtriples:extractTriples($currentResource, $resourceIndex, $configuration)}</statements>
-				else if ($maxResources = 0)
-				then
-					<statements>{xtriples:extractTriples($currentResource, $resourceIndex, $configuration)}</statements>
-				else ""
+				if ($maxResources > 0 and $resourceIndex <= $maxResources) then
+				    let $debug := local:log("extract.xql: extracting triples from resource " ||
+				                            $resourceIndex || " " || $resource/@uri/string() || 
+				                            " with children " || string-join(for $x in $resource/element() return $x/local-name(.), ', ') || ".",
+                							 "trace")
+				    return
+					    <statements>{xtriples:extractTriples($currentResource, $resourceIndex, $configuration)}</statements>
+				else if ($maxResources = 0) then
+				    let $debug := local:log("extract.xql: extracting triples from resource " ||
+				                            $resourceIndex || " " || $resource/@uri/string() || 
+				                            " with children " || string-join(for $x in $resource/element() return $x/local-name(.), ', ') || ".",
+                							 "trace")
+				    return
+					    <statements>{xtriples:extractTriples($currentResource, $resourceIndex, $configuration)}</statements>
+				else
+				    ""
 
 	return <result>{(functx:copy-attributes(<collection>{$resources}</collection>, $collection),<triples>{$triples}</triples>)}</result>
 
@@ -1253,79 +1282,81 @@ let $xtriples :=
 
 (: transform and return result :)
 return (
-	if ($setFormat = "xtriples") then
-		$xtriples
-	else if ($setFormat = "rdftriples") then
-
-       let $debug1 :=  local:log (
-							"extract.xql: output in " || $setFormat  || ".",
-							"trace"
-						  )
-		return xtriples:getRDFTriples($xtriples, $vocabularies)
-	else if ($setFormat = "ntriples") then (
-
-       let $debug2 :=  local:log (
-							"extract.xql: output in " || $setFormat  || ".",
-							"trace"
-						  )
-
-		return    response:set-header("Content-Type", "application/n-triples; charset=UTF-8"),
-		          response:stream(xtriples:getNTRIPLES(xtriples:getRDF($xtriples, $vocabularies)), "method=text")
-		)
-	else if ($setFormat = "turtle") then (
-
-       let $debug3 :=  local:log (
-							"extract.xql: output in " || $setFormat  || ".",
-							"trace"
-						  )
-
-		return    response:set-header("Content-Type", "text/turtle; charset=UTF-8"),
-		          response:stream(xtriples:getTURTLE(xtriples:getRDF($xtriples, $vocabularies)), "method=text")
-		)
-	else if ($setFormat = "nquads") then (
-
-       let $debug4 :=  local:log (
-							"extract.xql: output in " || $setFormat  || ".",
-							"trace"
-						  )
-
-		return    response:set-header("Content-Type", "application/n-quads; charset=UTF-8"),
-                 response:stream(xtriples:getNQUADS(xtriples:getRDF($xtriples, $vocabularies)), "method=text")
-		)
-	else if ($setFormat = "json") then (
-
-       let $debug5 :=  local:log (
-							"extract.xql: output in " || $setFormat  || ".",
-							"trace"
-						  )
-
-		return    response:set-header("Content-Type", "application/json; charset=UTF-8"),
-		          response:stream(xtriples:getJSON(xtriples:getRDF($xtriples, $vocabularies)), "method=text")
-		)
-	else if ($setFormat = "trix") then (
-
-       let $debug6 :=  local:log (
-							"extract.xql: output in " || $setFormat  || ".",
-							"trace"
-						  )
-
-		return    response:set-header("Content-Type", "application/trix; charset=UTF-8"),
-		          xtriples:getTRIX(xtriples:getRDF($xtriples, $vocabularies))
-		)
-	else if ($setFormat = "svg") then
-		(: response:set-header("Content-Type", "image/svg+xml; charset=UTF-8"), :)
-
-       let $debug7 :=  local:log (
-							"extract.xql: output in " || $setFormat  || ".",
-							"trace"
-						  )
-
-		return    xtriples:getSVG(xtriples:getRDF($xtriples, $vocabularies))
-	else 
-       let $debug8 :=  local:log (
-							"extract.xql: output in " || $setFormat  || ".",
-							"trace"
-						  )
-
-		return    xtriples:getRDF($xtriples, $vocabularies)
+    let $debug := local:log("extract.xql: extracting rdf done. " || count($xtriples//statement) || " statements found. Now transforming and returning results...", "info")
+    return
+    	if ($setFormat = "xtriples") then
+    		$xtriples
+    	else if ($setFormat = "rdftriples") then
+    
+           let $debug1 :=  local:log (
+    							"extract.xql: output in " || $setFormat  || ".",
+    							"trace"
+    						  )
+    		return xtriples:getRDFTriples($xtriples, $vocabularies)
+    	else if ($setFormat = "ntriples") then (
+    
+           let $debug2 :=  local:log (
+    							"extract.xql: output in " || $setFormat  || ".",
+    							"trace"
+    						  )
+    
+    		return    response:set-header("Content-Type", "application/n-triples; charset=UTF-8"),
+    		          response:stream(xtriples:getNTRIPLES(xtriples:getRDF($xtriples, $vocabularies)), "method=text")
+    		)
+    	else if ($setFormat = "turtle") then (
+    
+           let $debug3 :=  local:log (
+    							"extract.xql: output in " || $setFormat  || ".",
+    							"trace"
+    						  )
+    
+    		return    response:set-header("Content-Type", "text/turtle; charset=UTF-8"),
+    		          response:stream(xtriples:getTURTLE(xtriples:getRDF($xtriples, $vocabularies)), "method=text")
+    		)
+    	else if ($setFormat = "nquads") then (
+    
+           let $debug4 :=  local:log (
+    							"extract.xql: output in " || $setFormat  || ".",
+    							"trace"
+    						  )
+    
+    		return    response:set-header("Content-Type", "application/n-quads; charset=UTF-8"),
+                     response:stream(xtriples:getNQUADS(xtriples:getRDF($xtriples, $vocabularies)), "method=text")
+    		)
+    	else if ($setFormat = "json") then (
+    
+           let $debug5 :=  local:log (
+    							"extract.xql: output in " || $setFormat  || ".",
+    							"trace"
+    						  )
+    
+    		return    response:set-header("Content-Type", "application/json; charset=UTF-8"),
+    		          response:stream(xtriples:getJSON(xtriples:getRDF($xtriples, $vocabularies)), "method=text")
+    		)
+    	else if ($setFormat = "trix") then (
+    
+           let $debug6 :=  local:log (
+    							"extract.xql: output in " || $setFormat  || ".",
+    							"trace"
+    						  )
+    
+    		return    response:set-header("Content-Type", "application/trix; charset=UTF-8"),
+    		          xtriples:getTRIX(xtriples:getRDF($xtriples, $vocabularies))
+    		)
+    	else if ($setFormat = "svg") then
+    		(: response:set-header("Content-Type", "image/svg+xml; charset=UTF-8"), :)
+    
+           let $debug7 :=  local:log (
+    							"extract.xql: output in " || $setFormat  || ".",
+    							"trace"
+    						  )
+    
+    		return    xtriples:getSVG(xtriples:getRDF($xtriples, $vocabularies))
+    	else 
+           let $debug8 :=  local:log (
+    							"extract.xql: output in " || $setFormat  || ".",
+    							"trace"
+    						  )
+    
+    		return    xtriples:getRDF($xtriples, $vocabularies)
 )

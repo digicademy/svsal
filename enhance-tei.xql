@@ -11,7 +11,7 @@ declare         namespace   util        = "http://exist-db.org/xquery/util";
 import module   namespace   console     = "http://exist-db.org/xquery/console";
 
 import module   namespace   config      = "https://www.salamanca.school/xquery/config"   at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
-import module   namespace   i18n        = "http://exist-db.org/xquery/i18n"             at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
+import module   namespace   i18n        = "http://exist-db.org/xquery/i18n"              at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
 
 (: Reduces a TEI doc to pure structural information and indexes structural nodes according to sal:node index, thus enhancing the TEI for RDF extraction. :)
 
@@ -32,7 +32,7 @@ declare function local:copy($input as item()*, $salNodes as map()?) as item()* {
                         for $child in $node return local:copy($child/node(), $salNodes)
                     else if ($node/self::tei:text and $node/@xml:id eq 'completeWork') then
                         (: since the text root itself might not be in the index, we must handle it here especially :)
-                        element {'itei:' || local-name($node)} {
+                        element { fn:QName('https://www.salamanca.school/indexed-tei', 'itei:' || local-name($node)) } {
                             (
                             (: give tei:text fragments rudimentary information about their context, so that rdf extraction doesn't need to access respective teiHeaders especially :)
                             attribute in {$node/ancestor::tei:TEI/@xml:id},
@@ -42,7 +42,7 @@ declare function local:copy($input as item()*, $salNodes as map()?) as item()* {
                                 return local:copy($child/node(), $salNodes)
                         }
                     else 
-                        element {'itei:' || local-name($node)} {
+                        element { fn:QName('https://www.salamanca.school/indexed-tei', 'itei:' || local-name($node)) } {
                           (: copy all the attributes :)
                           for $att in $node/@*[not(name(.) = $omittableAttrTypes)]
                               return
@@ -52,11 +52,12 @@ declare function local:copy($input as item()*, $salNodes as map()?) as item()* {
                                       let $pn := if ($sn/@citableParent/string() ne "") then map:get($salNodes,$sn/@citableParent/string()) else ()
                                       (: add (only English) label to title (also German and Spanish?) :)
                                       let $title := 
-                                          i18n:process(<i18n:text key="{$sn/@class/string()}"/>,'en','/db/apps/salamanca/data/i18n','en') || ' ' || $sn/sal:title/text()
+                                          (: i18n:process(<i18n:text key="{$sn/@class/string()}"/>,'en','/db/apps/salamanca/data/i18n','en') || ' ' || $sn/sal:title/text() :)
+                                          string-join(($config:citationLabels(if (string-length($node/@unit) gt 0) then $node/@unit else if (string-length($sn/@subtype) gt 0) then $sn/@subtype else $sn/@type)?full, if (string-length($sn/@title) gt 0) then $sn/@title else if (string-length($sn/@n) gt 0) then $sn/@n else ()), " ")
                                       return (
                                           attribute title {$title},
 (:                                          if ($sn/sal:crumbtrail/a[last()]/@href) then attribute web {$sn/sal:crumbtrail/a[last()]/@href} else (),:)
-                                          attribute web {'work.html?wid=' || substring($sn/@n, 0, 6) || '&amp;frag=' || string($sn/@fragment) || '#' || string($sn/@n)}, (: work.html?wid=W0030&amp;frag=00001_W0030-00-0001-fm-03e8#W0030-00-0003-he-03ea :)
+                                          attribute web {'https://www.salamanca.school/data/' || substring($sn/@n, 0, 6) || '/html/' || string($sn/@fragment) || '.html#' || string($sn/@n) }, (: work.html?wid=W0030&amp;frag=00001_W0030-00-0001-fm-03e8#W0030-00-0003-he-03ea :)
                                           if ($pn) then attribute citableParent {$pn/@citeID/string()} else (),
                                           attribute citeID {$sn/@citeID/string()},
                                           $att,
@@ -72,7 +73,7 @@ declare function local:copy($input as item()*, $salNodes as map()?) as item()* {
                           for $child in $node
                              return local:copy($child/node(), $salNodes)
                         }
-            case processing-instruction() return $node
+            (: case processing-instruction() return $node :)
             (: remove text nodes and comments :)
             default return ()
 };
