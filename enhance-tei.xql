@@ -49,16 +49,16 @@ declare function local:copy($input as item()*, $salNodes as map()?) as item()* {
                                   (: if we are dealing with an xml:id attribute, and this also occurs in the _nodeIndex file, pull in more attributes from there :)
                                   if (name($att) = "xml:id" and map:get($salNodes,$att)) then (: equivalent to render:isIndexNode() :)
                                       let $sn := map:get($salNodes,$att)
-                                      let $pn := map:get($salNodes,$sn/sal:citableParent/string())
+                                      let $pn := if ($sn/@citableParent/string() ne "") then map:get($salNodes,$sn/@citableParent/string()) else ()
                                       (: add (only English) label to title (also German and Spanish?) :)
                                       let $title := 
                                           i18n:process(<i18n:text key="{$sn/@class/string()}"/>,'en','/db/apps/salamanca/data/i18n','en') || ' ' || $sn/sal:title/text()
                                       return (
                                           attribute title {$title},
-(:                                        if ($sn/sal:crumbtrail/a[last()]/@href) then attribute web {$sn/sal:crumbtrail/a[last()]/@href} else (),:)
+(:                                          if ($sn/sal:crumbtrail/a[last()]/@href) then attribute web {$sn/sal:crumbtrail/a[last()]/@href} else (),:)
                                           attribute web {'work.html?wid=' || substring($sn/@n, 0, 6) || '&amp;frag=' || string($sn/@fragment) || '#' || string($sn/@n)}, (: work.html?wid=W0030&amp;frag=00001_W0030-00-0001-fm-03e8#W0030-00-0003-he-03ea :)
-                                          attribute citableParent {$pn/sal:citetrail},
-                                          attribute citetrail {$sn/sal:citetrail},
+                                          if ($pn) then attribute citableParent {$pn/@citeID/string()} else (),
+                                          attribute citeID {$sn/@citeID/string()},
                                           $att,
                                           (: give tei:text fragments rudimentary information about their context, so that rdf extraction doesn't need to access respective teiHeaders especially :)
                                           if ($node/self::tei:text[@type eq "work_volume"]) then 
@@ -82,7 +82,7 @@ let $debug      := if ($config:debug = ("trace", "info")) then console:log("tei 
 
 let $origTEI    := util:expand(doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI)
 let $salNodesF  := doc($config:index-root || '/' || $wid || '_nodeIndex.xml')/sal:index
-let $salNodesM := map:merge(for $n in $salNodesF/sal:node return map:entry($n/@n/string(), $n))
+let $salNodesM  := map:merge(for $n in $salNodesF/sal:node return map:entry($n/@n/string(), $n))
 
 let $output     := local:copy($origTEI, $salNodesM)
 
