@@ -973,7 +973,7 @@
 				citation="Castillo Sotomayor, Opera omnia, sive quotidianarum controversiarum iuris, Vol. 4 (2023 [1658])">
 				<source>https://facs.salamanca.school/W0037/D/W0037-D-0001.jpg</source>
 			</image>
-			<image xml:id="W0037_Vol05" citation="_X_X_">
+			<image xml:id="W0037_Vol05" citation="Castillo Sotomayor, Opera omnia, sive quotidianarum controversiarum iuris, Vol. 5 (2023 [1658])">
 				<source>https://facs.salamanca.school/W0037/E/W0037-E-0001.jpg</source>
 			</image>
 			<image xml:id="W0039" citation="_X_X_">
@@ -1001,6 +1001,9 @@
 			<image xml:id="W0043_Vol06" citation="_X_X_">
 				<source>https://facs.salamanca.school/W0043/F/W0043-F-0001.jpg</source>
 			</image>
+			<image xml:id="W0043_Vol07" citation="_X_X_">
+				<source>https://facs.salamanca.school/W0043/G/W0043-G-0003.jpg</source>
+			</image>			
 			<image xml:id="W0046"
 				citation="Freitas, De Iusto Imperio Lusitanorum Asiatico (2020 [1625])">
 				<source>https://facs.salamanca.school/W0046/W0046-0005.jpg</source>
