@@ -606,6 +606,11 @@
 			<xsl:apply-templates/>
 		</fo:inline>
 	</xsl:template>
+    <xsl:template match="//tei:argument//tei:list[@type eq 'summaries']">
+		<fo:block id="{./@xml:id}" text-align="justify" font-size="12pt" text-indent="0em">
+			<xsl:apply-templates/>
+		</fo:block>
+	</xsl:template>
 	<xsl:template match="//tei:note//tei:p">
 		<fo:inline font-size="12pt" font-weight="normal" text-align="justify">
 			<xsl:text xml:space="preserve"/>
@@ -1047,6 +1052,10 @@
 			</image>
 			<image xml:id="W0106" citation="Menchaca, Controversiarum Libri Tres. (2022 [1572])">
 				<source>https://facs.salamanca.school/W0106/W0106-0005.jpg</source>
+			</image>
+            <image xml:id="W0111"
+				citation="Villalón, >Antinomia iuris regni Hispaniarum ac ciuilis, in qua practica forensium causarum versatur, ac Aerarium commune opinionum communium iuxta ordinem alphabeti. (2023 [1569])">
+				<source>https://facs.salamanca.school/W0111/W0111-0002.jpg</source>
 			</image>
 			<image xml:id="W0113"
 				citation="Villalón, Provechoso tratado de cambios y contrataciones de mercaderes y reprovación de usura (2021 [1541])">
