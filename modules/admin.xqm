@@ -1862,6 +1862,9 @@ declare function admin:buildRoutingInfoDetails($id) {
         }
 };
 
+(:
+~ Creates RDF information.
+:)
 declare function admin:createRDF($rid as xs:string) {
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Rendering RDF for " || $rid || ".") else ()
     let $rid :=  
@@ -1871,11 +1874,14 @@ declare function admin:createRDF($rid as xs:string) {
             substring-after($rid, "texts/")
         else $rid
     let $start-time := util:system-time()
-    let $xtriplesUrl :=
+    (:  let $xtriplesUrl :=
         $config:webserver || '/xtriples/extract.xql?format=rdf&amp;configuration='
-        || $config:webserver || '/xtriples/createConfig.xql?resourceId=' || $rid
+        || $config:webserver || '/xtriples/createConfig.xql?resourceId=' || $rid :)
+    let $xtriplesUrl :=
+           'https://c100-101.cloud.gwdg.de/exist/apps/salamanca/services/lod/extract.xql?format=rdf&amp;configuration='
+        || 'https://c100-101.cloud.gwdg.de/exist/apps/salamanca/services/lod/createConfig.xql?resourceId=' || $rid
     let $debug := 
-        if ($config:debug eq 'trace') then
+        if ($config:debug = ("info", "trace")) then
             let $d := console:log("[Admin] Requesting " || $xtriplesUrl || " ...")
             return util:log("info", "Requesting " || $xtriplesUrl || ' ...')
         else ()
@@ -1888,10 +1894,10 @@ declare function admin:createRDF($rid as xs:string) {
         if ($runtime-ms < (1000 * 60)) then format-number($runtime-ms div 1000, "#.##") || " Sek."
         else if ($runtime-ms < (1000 * 60 * 60))  then format-number($runtime-ms div (1000 * 60), "#.##") || " Min."
         else format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
-    let $log  := util:log('info', 'Extracted RDF for ' || $rid || ' in ' || $runtimeString)
+    let $log    := util:log('info', 'Extracted RDF for ' || $rid || ' in ' || $runtimeString)
     let $export := admin:exportXMLFile($rid, $rid || '.rdf', $rdf, 'rdf')
     let $save   := admin:saveFile($rid, $rid || '.rdf', $rdf, 'rdf')
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Done rendering RDF for " || $rid || ".") else ()
+    let $debug  := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Done rendering RDF for " || $rid || ".") else ()
     return 
         <div>
             <h2>RDF Extraction</h2>
