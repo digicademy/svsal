@@ -1422,15 +1422,15 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
             let $hit_content_orig := 
                 if ($hit_id) then
                     if ($nodeType eq 'work') then
-                        string-join(txt:dispatch($hit, 'snippets-orig'), '')
-                    else string-join(render-app:dispatch($hit, 'snippets-orig', ()), '')
+                        normalize-space(string-join(txt:dispatch($hit, 'snippets-orig'), ''))
+                    else normalize-space(string-join(render-app:dispatch($hit, 'snippets-orig', ()), ''))
                 else
                     'There is no xml:id in the ' || $hit_type || ' hit!'
             let $hit_content_edit := 
                 if ($hit_id) then
                     if ($nodeType eq 'work') then
-                        string-join(txt:dispatch($hit, 'snippets-edit'), '')
-                    else string-join(render-app:dispatch($hit, 'snippets-edit', ()), '')
+                        normalize-space(string-join(txt:dispatch($hit, 'snippets-edit'), ''))
+                    else normalize-space(string-join(render-app:dispatch($hit, 'snippets-edit', ()), ''))
                 else
                     'There is no xml:id in the ' || $hit_type || ' hit!'
             
