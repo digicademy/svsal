@@ -356,7 +356,7 @@ declare function admin:workString($node as node(), $model as map(*), $lang as xs
     let $titleShort := $model('currentWork')?('titleShort')
     return 
         <td>
-            <a href="{$config:webserver}/en/work.html?wid={$currentWorkId}">{$currentWorkId}: {$author} - {$titleShort}</a>
+            <a href="{$config:idserver}/texts/{$currentWorkId}">{$currentWorkId}: {$author} - {$titleShort}</a>
             <br/>
             <a style="font-weight:bold;" href="{$config:webserver}/webdata-admin.xql?rid={$currentWorkId}&amp;format=all">Create EVERYTHING except IIIF and RDF (safest option)</a>
         </td>
@@ -1158,7 +1158,7 @@ declare %templates:wrap function admin:renderWork($workId as xs:string*) as elem
             
             return 
                 <div>
-                     <p><a href='work.html?wid={$workId}'>{string($workId)}</a>, Fragmentation depth: <code>{$htmlData('fragmentation_depth')}</code></p>
+                     <p><a href='{$config:idserver}/texts/{$workId}'>{string($workId)}</a>, Fragmentation depth: <code>{$htmlData('fragmentation_depth')}</code></p>
                      {if (count($htmlData('missed_elements'))) then <p>{count($htmlData('missed_elements'))} missed elements:<br/>
                         {for $e in $htmlData('missed_elements') return <code>{local-name($e) || '(' || string($e/@xml:id) || '); '}</code>}</p>
                       else ()}
