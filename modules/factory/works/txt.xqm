@@ -176,7 +176,7 @@ declare function txt:death($node as element(tei:death), $mode as xs:string) {
     txt:passthru($node, $mode)
 };
 
-declare function        txt:div($node as element(tei:div), $mode as xs:string) {
+declare function txt:div($node as element(tei:div), $mode as xs:string) {
     let $content := replace(
  translate(
         normalize-space(string-join(txt:passthruWithParaMarkers($node, $mode),    "")),
@@ -284,7 +284,8 @@ declare function txt:g($node as element(tei:g), $mode as xs:string) {
                     error(xs:QName('txt:g'), 'Found tei:g without text content')
 
         case 'edit' 
-        case 'snippets-edit' return
+        case 'snippets-edit'
+        case 'nonotes' return
             if ($charCode = ('char017f', 'char0292')) then
                 if ($node/text() = ($char/tei:mapping[@type eq 'composed']/text(),
                                     $char/tei:mapping[@type eq 'precomposed']/text()
@@ -300,7 +301,11 @@ declare function txt:g($node as element(tei:g), $mode as xs:string) {
             else
                 error(xs:QName('txt:g'), 'Found tei:g without text content')
 
-        default return error(xs:QName('txt:g'), 'Found tei:g without valid mode parameter')
+        default return
+            if ($node/text()) then
+                $node/text()
+            else
+                error(xs:QName('txt:g'), 'Found tei:g without valid mode parameter AND without text content.')
 };
 
 declare function txt:gap($node as element(tei:gap), $mode as xs:string) {
@@ -336,7 +341,7 @@ declare function txt:item($node as element(tei:item), $mode as xs:string) {
 };
 
 declare function txt:l($node as element(tei:l), $mode as xs:string) {
-    (txt:passthru($node, $mode), $config:nl)
+    concat(txt:passthru($node, $mode), $config:nl)
 };
 
 declare function txt:label($node as element(tei:label), $mode as xs:string) {
@@ -358,20 +363,20 @@ declare function txt:lb($node as element(tei:lb), $mode as xs:string) as xs:stri
 };
 
 declare function txt:lg($node as element(tei:lg), $mode as xs:string) {
-    ($config:nl, txt:passthru($node, $mode), $config:nl)
+    concat($config:nl, txt:passthru($node, $mode), $config:nl)
 };
 
 declare function txt:list($node as element(tei:list), $mode as xs:string) {
     switch($mode)
         case 'orig' return
-            ($config:nl, txt:passthru($node, $mode), $config:nl)
+            concat($config:nl, txt:passthru($node, $mode), $config:nl)
         
         case 'edit' return
             if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
-                (concat($config:nl, '# ', string($node/@n), $config:nl), txt:passthru($node, $mode), $config:nl)
+                concat(concat($config:nl, '# ', string($node/@n), $config:nl), txt:passthru($node, $mode), $config:nl)
                 (: or this?:   <xsl:value-of select="key('targeting-refs', concat('#',@xml:id))[1]"/> :)
             else
-                ($config:nl, txt:passthru($node, $mode), $config:nl)
+                concat($config:nl, txt:passthru($node, $mode), $config:nl)
         
         default return
             txt:passthru($node, $mode)
@@ -402,7 +407,7 @@ declare function txt:name($node as element(*), $mode as xs:string) {
         
         case 'edit' return
             if ($node/(@key|@ref)) then
-                (txt:passthru($node, $mode), ' [', string-join(($node/@key, $node/@ref), '/'), ']')
+                concat(txt:passthru($node, $mode), ' [', string-join(($node/@key, $node/@ref), '/'), ']')
             else
                 txt:passthru($node, $mode)
         
@@ -416,6 +421,8 @@ declare function txt:note($node as element(tei:note), $mode as xs:string) {
         case 'edit' return
             ('{ ', txt:passthru($node, $mode), ' }') 
         
+        case 'nonotes' return ()
+
         default return
             txt:passthru($node, $mode)
 };
@@ -440,7 +447,8 @@ declare function txt:origElem($node as element(), $mode as xs:string) {
             txt:passthru($node, $mode)
         
         case 'edit'
-        case 'snippets-edit' return
+        case 'snippets-edit'
+        case 'nonotes' return
             if (not($node/(preceding-sibling::tei:expan|preceding-sibling::tei:reg|preceding-sibling::tei:corr|following-sibling::tei:expan|following-sibling::tei:reg|following-sibling::tei:corr))) then
                 txt:passthru($node, $mode)
             else ()
@@ -455,28 +463,19 @@ declare function txt:p($node as element(tei:p), $mode as xs:string) {
             if ($node/parent::tei:note) then
                 normalize-space(string-join(txt:passthru($node, $mode)))
             else
-                (normalize-space(string-join(txt:passthru($node, $mode))), $config:nl)
+                concat(normalize-space(string-join(txt:passthru($node, $mode))), $config:nl)
 
         case 'snippets-orig'
         case 'snippets-edit' return
             normalize-space(string-join(txt:passthru($node, $mode)))
 
         default
-            return error()
+            return normalize-space(string-join(txt:passthru($node, $mode)))
 };
 
 declare function txt:passthru($nodes as node()*, $mode as xs:string) {
     for $n in $nodes/node() return
         txt:dispatch($n, $mode)
-
-(: 
-    for $n in $nodes/node() return
-        if ($mode = ('snippets-orig', 'snippets-edit') and $n[@place eq 'margin']) then
-            (/: basic separator for main and marginal nodes in snippet creation :/)
-            ()
-        else
-            txt:dispatch($n, $mode)
-:)
 };
 
 declare function txt:passthruWithParaMarkers($nodes as node()*, $mode as xs:string) {
@@ -487,13 +486,10 @@ declare function txt:passthruWithParaMarkers($nodes as node()*, $mode as xs:stri
 declare function txt:pb($node as element(tei:pb), $mode as xs:string) as xs:string {
     switch($mode)
         case 'orig'
-        case 'edit' return
-            if (not($node/@break = 'no')) then
-                ' '
-            else ''
-        
+        case 'edit'
         case 'snippets-orig'
-        case 'snippets-edit' return
+        case 'snippets-edit'
+        case 'nonotes' return
             if (not($node/@break = 'no')) then
                 ' '
             else ''
@@ -504,7 +500,7 @@ declare function txt:pb($node as element(tei:pb), $mode as xs:string) as xs:stri
             let $debug := util:log('info', '[RENDER] Processing tei:pb node ' || $node/@xml:id)
             return ''
         
-        default return error()
+        default return ' '
 };
 
 declare function txt:persName($node as element(tei:persName), $mode as xs:string) {
@@ -586,7 +582,8 @@ declare function txt:quote($node as element(tei:quote), $mode as xs:string) {
         case 'snippets-orig' return
             txt:passthru($node, $mode)
          
-        default return error()
+        default return
+            txt:passthru($node, $mode)
 };
 
 declare function txt:reg($node as element(tei:reg), $mode) {
@@ -594,7 +591,7 @@ declare function txt:reg($node as element(tei:reg), $mode) {
 };
 
 declare function txt:row($node as element(tei:row), $mode) {
-    (txt:passthru($node, $mode), '&#xA;')
+    concat(txt:passthru($node, $mode), '&#xA;')
 };
 
 declare function txt:sic($node as element(tei:sic), $mode) {
@@ -614,10 +611,10 @@ declare function txt:signed($node as element(tei:signed), $mode as xs:string) {
 
 declare function txt:soCalled($node as element(tei:soCalled), $mode as xs:string) {
     if ($mode=("orig", "edit")) then
-        ("'", txt:passthru($node, $mode), "'")
+        concat("'", txt:passthru($node, $mode), "'")
     else if ($mode = ('snippets-edit', 'snippets-orig')) then
         txt:passthru($node, $mode)
-    else error()
+    else txt:passthru($node, $mode)
 };
 
 declare function txt:space($node as element(tei:space), $mode as xs:string) {
@@ -633,7 +630,7 @@ declare function txt:term($node as element(tei:term), $mode as xs:string) {
         
         case 'edit' return
             if ($node/@key) then
-                (txt:passthru($node, $mode), ' [', string($node/@key), ']')
+                concat(txt:passthru($node, $mode), ' [', string($node/@key), ']')
             else
                 txt:passthru($node, $mode)
         
@@ -643,15 +640,17 @@ declare function txt:term($node as element(tei:term), $mode as xs:string) {
             else
                 txt:passthru($node, $mode)
         
-        default return error()
+        default return
+            txt:passthru($node, $mode)
 };
 
 declare function txt:text($node as element(tei:text), $mode as xs:string) {
     switch($mode)
         case 'edit' return
             if ($node/@type eq 'work_volume') then (: make title :)
-                ($config:nl, '[Vol. ' || $node/@n || ']', $config:nl, txt:passthru($node, $mode))
-            else txt:passthru($node, $mode)
+                concat($config:nl, '[Vol. ' || $node/@n || ']', $config:nl, txt:passthru($node, $mode))
+            else
+                txt:passthru($node, $mode)
         
         default return
             txt:passthru($node, $mode)
@@ -659,26 +658,6 @@ declare function txt:text($node as element(tei:text), $mode as xs:string) {
 
 declare function txt:textNode($node as text(), $mode as xs:string) {
     $node
-(: replaced the following with the above for performance reasons on 2021-04-28 ...
-    switch($mode)
-        case "orig"
-        case "edit" return
-            let $leadingSpace   := if (matches($node, '^\s+')) then ' ' else ()
-            let $trailingSpace  := if (matches($node, '\s+$')) then ' ' else ()
-            return ($leadingSpace, 
-                      normalize-space(replace($node, '&#x0a;', ' ')),
-                      $trailingSpace)
-
-        case 'snippets-orig' 
-        case 'snippets-edit' return 
-            let $leadingSpace   := if (matches($node, '^\s+')) then ' ' else ()
-            let $trailingSpace  := if (matches($node, '\s+$')) then ' ' else ()
-            return ($leadingSpace, 
-                          normalize-space(replace($node, '&#x0a;', ' ')),
-                          $trailingSpace)
-        
-        default return $node
-:)
 };
 
 declare function txt:title($node as element(tei:title), $mode as xs:string) {
