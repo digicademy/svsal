@@ -776,15 +776,14 @@
                     <mapping type="composed">ṗ</mapping>
                     <mapping type="standardized">p</mapping>
                 </char>
-                
-                <char xml:id="charq0301">
-                    <desc>LATIN SMALL LETTER Q WITH ACUTE ACCENT</desc>
-                    <mapping type="composed">q́</mapping>
-                    <mapping type="standardized">q</mapping>
-                </char>
                 <char xml:id="charq0300">
                     <desc>LATIN SMALL LETTER Q WITH GRAVE ACCENT</desc>
                     <mapping type="composed">q̀</mapping>
+                    <mapping type="standardized">q</mapping>
+                </char>
+                <char xml:id="charq0301">
+                    <desc>LATIN SMALL LETTER Q WITH ACUTE ACCENT</desc>
+                    <mapping type="composed">q́</mapping>
                     <mapping type="standardized">q</mapping>
                 </char>
                 <char xml:id="charq0303">
@@ -807,7 +806,11 @@
                     <mapping type="composed">q̄</mapping>
                     <mapping type="standardized">q</mapping>
                 </char>
-                
+                <char xml:id="charq0307">
+                    <desc>LATIN SMALL LETTER Q WITH DOT ABOVE</desc>
+                    <mapping type="composed">q̇</mapping>
+                    <mapping type="standardized">q</mapping>
+                </char>
                 <char xml:id="charq0308">
                     <desc>LATIN SMALL LETTER Q WITH TWO DOTS ABOVE</desc>
                     <mapping type="composed">q̈</mapping>
