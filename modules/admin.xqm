@@ -1978,38 +1978,54 @@ declare function admin:createDetails($wid as xs:string) {
                                 (: let $debug := console:log('$vol_thumbnail: ' || serialize($vol_thumbnail, map {"method":"json", "media-type":"application/json"})) :)
                                 (: let $debug := console:log('$iiif-vol?thumbnail?@id: ' || serialize(map:get($vol_thumbnail, '@id'), map {"method":"json", "media-type":"application/json"})) :)
                                 let $teiHeader := map:get($volumes, $key)//tei:teiHeader
+                                let $isFirstEd := not($teiHeader//tei:sourceDesc//tei:imprint/(tei:date[@type eq "thisEd"] | tei:pubPlace[@role eq "thisEd"] | tei:publisher[@n eq "thisEd"]))
                                 return map {
-                                "key" :                     $key,
-                                "id" :                      tokenize($key, '_')[1] || ':vol' || map:get($volumes, $key)//tei:text/@n/string(),
-                                "uri" :                     $config:idserver || '/texts/' || $teiHeader//tei:notesStmt/tei:relatedItem[@type eq 'work_multivolume']/@target/tokenize(., ':')[2] || ':vol' || map:get($volumes, $key)//tei:text/@n/string(),
-                                "series_num" :              $teiHeader//tei:seriesStmt/tei:biblScope[@unit eq 'volume']/@n/string(),
-                                "parent_work" :             $teiHeader//tei:notesStmt/tei:relatedItem[@type eq 'work_multivolume']/@target/tokenize(., ':')[2],
-                                "num" :                     map:get($volumes, $key)//tei:text/@n/string(),
-                                "author_short" :            string-join($teiHeader//tei:titleStmt/tei:author/tei:persName/tei:surname, '/'),
-                                "author_full" :             admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:author/tei:persName/string(), '/')),
-                                "title_short" :             $teiHeader//tei:titleStmt/tei:title[@type eq 'short']/string(),
-                                "title_full" :              admin:StripLBs($teiHeader//tei:titleStmt/tei:title[@type eq 'main']/string()),
-                                "place" :                   string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:pubPlace return $p/string() || ' (' || $p/@role/string() || ')', ', '),
-                                "printer_short" :           string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:publisher return ($p//tei:surname)[1]/string() || ' (' || $p/@n/string() || ')', ', '),
-                                "printer_full" :            admin:StripLBs(string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:publisher return $p//string() || ' (' || $p/@n/string() || ')', ', ')),
-                                "year" :                    $teiHeader//tei:sourceDesc//tei:imprint/tei:date[@type eq 'firstEd']/@when/string(),
-                                "src_publication_period" :  $teiHeader//tei:sourceDesc//tei:imprint/tei:date[@type eq 'summaryFirstEd']/string(),
-                                "language" :                string-join($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n eq 'main']/string(), ', ') ||
-                                            (if ($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n ne 'main']) then
-                                                ' (' || string-join($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n ne 'main']/string(), ', ') || ')'
-                                            else ()),
-                                "thumbnail" :               if (array:size($filtered_array) gt 0) then map:get($vol_thumbnail, '@id') else (),
-                                "schol_ed" :                admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#scholarly')]/string(), ' / ')),
-                                "tech_ed" :                 admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#technical')]/string(), ' / ')),
-                                "el_publication_date" :     $teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when/string()[1],
-                                "hold_library" :            $teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:idno/string(),
-                                "hold_idno" :               $teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:repository/string(),
-                                "status" :                  $teiHeader/tei:revisionDesc/@status/string()
-                            }
+                                    "key" :                     $key,
+                                    "id" :                      tokenize($key, '_')[1] || ':vol' || map:get($volumes, $key)//tei:text/@n/string(),
+                                    "uri" :                     $config:idserver || '/texts/' ||
+                                                                    $teiHeader//tei:notesStmt/tei:relatedItem[@type eq 'work_multivolume']/@target/tokenize(., ':')[2] ||
+                                                                    ':vol' || map:get($volumes, $key)//tei:text/@n/string(),
+                                    "series_num" :              $teiHeader//tei:seriesStmt/tei:biblScope[@unit eq 'volume']/@n/string(),
+                                    "parent_work" :             $teiHeader//tei:notesStmt/tei:relatedItem[@type eq 'work_multivolume']/@target/tokenize(., ':')[2],
+                                    "num" :                     map:get($volumes, $key)//tei:text/@n/string(),
+                                    "author_short" :            string-join($teiHeader//tei:titleStmt/tei:author/tei:persName/tei:surname, '/'),
+                                    "author_full" :             admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:author/tei:persName/string(), '/')),
+                                    "title_short" :             $teiHeader//tei:titleStmt/tei:title[@type eq 'short']/string(),
+                                    "title_full" :              admin:StripLBs($teiHeader//tei:titleStmt/tei:title[@type eq 'main']/string()),
+                                    "place" :                   if (not($isFirstEd)) then
+                                                                    string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:pubPlace[@role eq "thisEd"] return $p/string(), ', ')
+                                                                else
+                                                                    string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:pubPlace return $p/string(), ', '),
+                                    "printer_short" :           if (not($isFirstEd)) then
+                                                                    string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:publisher[@n eq "thisEd"] return ($p//tei:surname)[1]/string(), ', ')
+                                                                else
+                                                                    string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:publisher return ($p//tei:surname)[1]/string(), ', '),
+                                    "printer_full" :            if (not($isFirstEd)) then
+                                                                    admin:StripLBs(string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:publisher[@n eq "thisEd"] return $p//string(), ', '))
+                                                                else
+                                                                    admin:StripLBs(string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:publisher return $p//string(), ', ')),
+                                    "year" :                    if (not($isFirstEd)) then
+                                                                    $teiHeader//tei:sourceDesc//tei:imprint/tei:date[@type eq 'thisEd']/@when/string()
+                                                                else
+                                                                    $teiHeader//tei:sourceDesc//tei:imprint/tei:date/@when/string(),
+                                    "src_publication_period" :  $teiHeader//tei:sourceDesc//tei:imprint/tei:date[@type eq 'summaryFirstEd']/string(),
+                                    "language" :                string-join($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n eq 'main']/string(), ', ') ||
+                                                (if ($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n ne 'main']) then
+                                                    ' (' || string-join($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n ne 'main']/string(), ', ') || ')'
+                                                else ()),
+                                    "thumbnail" :               if (array:size($filtered_array) gt 0) then map:get($vol_thumbnail, '@id') else (),
+                                    "schol_ed" :                admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#scholarly')]/string(), ' / ')),
+                                    "tech_ed" :                 admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#technical')]/string(), ' / ')),
+                                    "el_publication_date" :     $teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when/string()[1],
+                                    "hold_library" :            $teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:repository/string(),
+                                    "hold_idno" :               $teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:idno/string(),
+                                    "status" :                  $teiHeader/tei:revisionDesc/@status/string()
+                                }
 
         let $vol_strings    := for $v in $volumes_list return '$' || string(map:get($v, 'key')) || ' := dict ' ||
                                         string-join(for $k in map:keys($v) return '"' || $k || '" "' || string(map:get($v, $k)) || '"', ' ')
 
+        let $isFirstEd      := not($teiHeader//tei:sourceDesc//tei:imprint/(tei:date[@type eq "thisEd"] | tei:pubPlace[@role eq "thisEd"] | tei:publisher[@n eq "thisEd"]))
         let $work_info      := map {
             "id" :                      $public_id,
             "uri" :                     $config:idserver || '/texts/' || $public_id,
@@ -2018,10 +2034,22 @@ declare function admin:createDetails($wid as xs:string) {
             "author_full" :             admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:author/tei:persName/string(), '/')),
             "title_short" :             $teiHeader//tei:titleStmt/tei:title[@type eq 'short']/string(),
             "title_full" :              admin:StripLBs($teiHeader//tei:titleStmt/tei:title[@type eq 'main']/string()),
-            "place" :                   string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:pubPlace return $p/string() || ' (' || $p/@role/string() || ')', ', '),
-            "printer_short" :           string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:publisher return string-join($p//tei:surname, ' &amp; ') || ' (' || $p/@n/string() || ')', ', '),
-            "printer_full" :            admin:StripLBs(string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:publisher return string-join($p, ' &amp; ') || ' (' || $p/@n/string() || ')', ', ')),
-            "year" :                    $teiHeader//tei:sourceDesc//tei:imprint/tei:date[@type eq 'firstEd']/@when/string(),
+            "place" :                   if (not($isFirstEd)) then
+                                            string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:pubPlace[@role eq "thisEd"] return $p/string(), ', ')
+                                        else
+                                            string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:pubPlace return $p/string(), ', '),
+            "printer_short" :           if (not($isFirstEd)) then
+                                            string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:publisher[@n eq "thisEd"] return string-join($p//tei:surname, ' &amp; '), ', ')
+                                        else
+                                            string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:publisher return string-join($p//tei:surname, ' &amp; '), ', '),
+            "printer_full" :            if (not($isFirstEd)) then
+                                            admin:StripLBs(string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:publisher[@n eq "thisEd"] return string-join($p, ' &amp; '), ', '))
+                                        else
+                                            admin:StripLBs(string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:publisher return string-join($p, ' &amp; '), ', ')),
+            "year" :                    if (not($isFirstEd)) then
+                                            $teiHeader//tei:sourceDesc//tei:imprint/tei:date[@type eq 'thisEd']/@when/string()
+                                        else
+                                            $teiHeader//tei:sourceDesc//tei:imprint/tei:date[not(@type = 'summaryFirstEd')]/@when/string(),
             "src_publication_period" :  $teiHeader//tei:sourceDesc//tei:imprint/tei:date[@type eq 'summaryFirstEd']/string(),
             "language" :                string-join($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n eq 'main']/string(), ', ') ||
                                             (if ($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n ne 'main']) then
@@ -2035,8 +2063,8 @@ declare function admin:createDetails($wid as xs:string) {
             "schol_ed" :                admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#scholarly')]/string(), ' / ')),
             "tech_ed" :                 admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#technical')]/string(), ' / ')),
             "el_publication_date" :     $teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when/string()[1],
-            "hold_library" :            $teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:idno/string(),
-            "hold_idno" :               $teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:repository/string(),
+            "hold_library" :            $teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:repository/string(),
+            "hold_idno" :               $teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:idno/string(),
             "status" :                  $teiHeader/tei:revisionDesc/@status/string(),
             "number_of_volumes" :       count(map:keys($volumes)),
             "volumes":                  $volumes_list
@@ -2047,7 +2075,11 @@ declare function admin:createDetails($wid as xs:string) {
         let $vol_keys := for $v in $volumes_list return concat('$', map:get($v, 'key')) 
         let $volumes_string := '{{ $Volumes := dict "number" ' || xs:string(map:get($work_info, 'number_of_volumes')) ||
                                                     ' "volumes" (list ' || string-join($vol_keys, ' ') || ') }}'
-        let $work_string := '{{ $work_info := dict ' || string-join(for $key in map:keys($work_info) return if ($key ne 'volumes') then '"' || $key || '" "' || string(map:get($work_info, $key)) || '"' else (), ' ') ||
+        let $work_string := '{{ $work_info := dict ' ||
+                                string-join(for $key in map:keys($work_info) return
+                                                if ($key ne 'volumes') then
+                                                    '"' || $key || '" "' || string-join(map:get($work_info, $key), " ") || '"'
+                                                else (), ' ') ||
                             (if (count(map:keys($volumes))>0) then ' "volumes" $Volumes' else ()) ||
                             ' }}'
         let $include_string := '{{ include "../../../resources/templates/template_details.html" $work_info }}'
