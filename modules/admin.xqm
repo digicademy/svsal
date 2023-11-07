@@ -2002,6 +2002,8 @@ declare function admin:createDetails($wid as xs:string) {
                                 "schol_ed" :                admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#scholarly')]/string(), ' / ')),
                                 "tech_ed" :                 admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#technical')]/string(), ' / ')),
                                 "el_publication_date" :     $teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when/string()[1],
+                                "hold_library" :            $teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:idno/string(),
+                                "hold_idno" :               $teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:repository/string(),
                                 "status" :                  $teiHeader/tei:revisionDesc/@status/string()
                             }
 
@@ -2033,6 +2035,8 @@ declare function admin:createDetails($wid as xs:string) {
             "schol_ed" :                admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#scholarly')]/string(), ' / ')),
             "tech_ed" :                 admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#technical')]/string(), ' / ')),
             "el_publication_date" :     $teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when/string()[1],
+            "hold_library" :            $teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:idno/string(),
+            "hold_idno" :               $teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:repository/string(),
             "status" :                  $teiHeader/tei:revisionDesc/@status/string(),
             "number_of_volumes" :       count(map:keys($volumes)),
             "volumes":                  $volumes_list
