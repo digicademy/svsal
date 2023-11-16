@@ -65,7 +65,7 @@ declare function txt:isMarginalNode($node as node()) as xs:boolean {
 ~ @param $node : the node to be dispatched
 ~ @param $mode : the mode for which the function shall generate results
 :)
-declare function txt:dispatch($node as node(), $mode as xs:string) {
+declare function txt:dispatch($node as node(), $mode as xs:string) as xs:string* {
     typeswitch($node)
         case text()                     return txt:textNode($node, $mode)
         case element(tei:g)             return txt:g($node, $mode)
@@ -266,6 +266,10 @@ declare function txt:g($node as element(tei:g), $mode as xs:string) {
 
     let $charCode   := substring($node/@ref, 2)                       (: substring to remove leading '#' :)
     let $char       := $config:tei-specialchars/id($charCode)
+(:
+    let $debug := console:log("g-processing node in " || $node/ancestor-or-self::*[@xml:id][1]/string(@xml:id) || ". $charCode is '" || $charCode || "' and $char is '" || serialize($char) || "' ...")
+    let $debug := console:log("for $m in $char/tei:mapping where $m/@type = 'standardized' return $m/text() is '" || (for $m in $char/tei:mapping where $m/@type = 'standardized' return $m/text())[1] || "' ...")
+:)
 
 (: replaced the following with the above for performance reasons on 2021-04-28 ...
     let $char       := $config:tei-specialchars/tei:char[lower-case(@xml:id) eq $charCode]
@@ -274,38 +278,32 @@ declare function txt:g($node as element(tei:g), $mode as xs:string) {
     switch($mode)
         case 'orig'
         case 'snippets-orig' return
-            let $mapping := $char/tei:mapping[@type = ('precomposed', 'composed', 'standardized')]
+            let $mapping := for $m in $char/tei:mapping where $m/@type = ('precomposed', 'composed', 'standardized') return $m/text()
             return
                 if ($mapping) then
                     string($mapping[1])
                 else if ($node/text()) then
                     $node/text()
                 else
-                    error(xs:QName('txt:g'), 'Found tei:g without text content')
+                    string('')
+(:                  error(xs:QName('txt:g'), 'Found tei:g without text content'):)
 
         case 'edit' 
         case 'snippets-edit'
         case 'nonotes' return
-            if ($charCode = ('char017f', 'char0292')) then
-                if ($node/text() = ($char/tei:mapping[@type eq 'composed']/text(),
-                                    $char/tei:mapping[@type eq 'precomposed']/text()
-                                   )
-                   ) then
-                        $char/tei:mapping[@type eq 'standardized']/text()
-                else if ($node/text()) then
-                    $node/text()
-                else
-                    error(xs:QName('txt:g'), 'Found tei:g without text content')
+            if (for $m in $char/tei:mapping where $m/@type = 'standardized' return $m/text()) then
+                (for $m in $char/tei:mapping where $m/@type = 'standardized' return $m/text())[1]
             else if ($node/text()) then
-                $node/text()
+                string($node)
             else
-                error(xs:QName('txt:g'), 'Found tei:g without text content')
-
+                string('')
+(:              return error(xs:QName('txt:g'), 'Found tei:g without either standardized mapping or text content'):)
         default return
             if ($node/text()) then
                 $node/text()
             else
-                error(xs:QName('txt:g'), 'Found tei:g without valid mode parameter AND without text content.')
+                string('')
+(:              error(xs:QName('txt:g'), 'Found tei:g without valid mode parameter AND without text content.'):)
 };
 
 declare function txt:gap($node as element(tei:gap), $mode as xs:string) {
@@ -341,7 +339,7 @@ declare function txt:item($node as element(tei:item), $mode as xs:string) {
 };
 
 declare function txt:l($node as element(tei:l), $mode as xs:string) {
-    concat(txt:passthru($node, $mode), $config:nl)
+    concat(string-join(txt:passthru($node, $mode), ''), $config:nl)
 };
 
 declare function txt:label($node as element(tei:label), $mode as xs:string) {
@@ -359,24 +357,24 @@ declare function txt:label($node as element(tei:label), $mode as xs:string) {
 declare function txt:lb($node as element(tei:lb), $mode as xs:string) as xs:string {
     if (not($node/@break eq 'no')) then
                 ' '
-            else ''
+    else ''
 };
 
 declare function txt:lg($node as element(tei:lg), $mode as xs:string) {
-    concat($config:nl, txt:passthru($node, $mode), $config:nl)
+    concat($config:nl, string-join(txt:passthru($node, $mode), ''), $config:nl)
 };
 
 declare function txt:list($node as element(tei:list), $mode as xs:string) {
     switch($mode)
         case 'orig' return
-            concat($config:nl, txt:passthru($node, $mode), $config:nl)
+            concat($config:nl, string-join(txt:passthru($node, $mode), ''), $config:nl)
         
         case 'edit' return
             if ($node/@n and not(matches($node/@n, '^[0-9\[\]]+$'))) then
-                concat(concat($config:nl, '# ', string($node/@n), $config:nl), txt:passthru($node, $mode), $config:nl)
+                concat(concat($config:nl, '# ', string($node/@n), $config:nl), string-join(txt:passthru($node, $mode), ''), $config:nl)
                 (: or this?:   <xsl:value-of select="key('targeting-refs', concat('#',@xml:id))[1]"/> :)
             else
-                concat($config:nl, txt:passthru($node, $mode), $config:nl)
+                concat($config:nl, string-join(txt:passthru($node, $mode), ''), $config:nl)
         
         default return
             txt:passthru($node, $mode)
@@ -407,7 +405,7 @@ declare function txt:name($node as element(*), $mode as xs:string) {
         
         case 'edit' return
             if ($node/(@key|@ref)) then
-                concat(txt:passthru($node, $mode), ' [', string-join(($node/@key, $node/@ref), '/'), ']')
+                concat(string-join(txt:passthru($node, $mode), ''), ' [', string-join(($node/@key, $node/@ref), '/'), ']')
             else
                 txt:passthru($node, $mode)
         
@@ -461,16 +459,11 @@ declare function txt:p($node as element(tei:p), $mode as xs:string) {
         case 'orig'
         case 'edit' return
             if ($node/parent::tei:note) then
-                normalize-space(string-join(txt:passthru($node, $mode)))
+                normalize-space(string-join(txt:passthru($node, $mode), ''))
             else
-                concat(normalize-space(string-join(txt:passthru($node, $mode))), $config:nl)
-
-        case 'snippets-orig'
-        case 'snippets-edit' return
-            normalize-space(string-join(txt:passthru($node, $mode)))
-
+                concat(normalize-space(string-join(txt:passthru($node, $mode), '')), $config:nl)
         default
-            return normalize-space(string-join(txt:passthru($node, $mode)))
+            return normalize-space(string-join(txt:passthru($node, $mode), ''))
 };
 
 declare function txt:passthru($nodes as node()*, $mode as xs:string) {
@@ -591,7 +584,7 @@ declare function txt:reg($node as element(tei:reg), $mode) {
 };
 
 declare function txt:row($node as element(tei:row), $mode) {
-    concat(txt:passthru($node, $mode), '&#xA;')
+    concat(string-join(txt:passthru($node, $mode), ''), '&#xA;')
 };
 
 declare function txt:sic($node as element(tei:sic), $mode) {
@@ -611,7 +604,7 @@ declare function txt:signed($node as element(tei:signed), $mode as xs:string) {
 
 declare function txt:soCalled($node as element(tei:soCalled), $mode as xs:string) {
     if ($mode=("orig", "edit")) then
-        concat("'", txt:passthru($node, $mode), "'")
+        concat("'", string-join(txt:passthru($node, $mode), ''), "'")
     else if ($mode = ('snippets-edit', 'snippets-orig')) then
         txt:passthru($node, $mode)
     else txt:passthru($node, $mode)
@@ -630,7 +623,7 @@ declare function txt:term($node as element(tei:term), $mode as xs:string) {
         
         case 'edit' return
             if ($node/@key) then
-                concat(txt:passthru($node, $mode), ' [', string($node/@key), ']')
+                concat(string-join(txt:passthru($node, $mode), ''), ' [', string($node/@key), ']')
             else
                 txt:passthru($node, $mode)
         
@@ -648,7 +641,7 @@ declare function txt:text($node as element(tei:text), $mode as xs:string) {
     switch($mode)
         case 'edit' return
             if ($node/@type eq 'work_volume') then (: make title :)
-                concat($config:nl, '[Vol. ' || $node/@n || ']', $config:nl, txt:passthru($node, $mode))
+                concat($config:nl, '[Vol. ' || $node/@n || ']', $config:nl, string-join(txt:passthru($node, $mode), ''))
             else
                 txt:passthru($node, $mode)
         
