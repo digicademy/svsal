@@ -13,14 +13,16 @@
             </p>
         </div>
         
-        <div class="row" data-template="admin:loadListOfWorks" data-template-sort="wid">
+        <div class="row" data-template="admin:loadListOfWorks">
             <h2>Works</h2>
             <p>
                 <span data-template="app:workCount">0</span> works found.
             </p>
             <p>
-                <a href="createLists.html" role="button" class="btn btn-primary">Write/overwrite list of works and save!</a>
-                <!-- here we can add a button to collect and post all routing information to caddy <a href="createLists.html" role="button" class="btn btn-primary">Write/overwrite list of works and save!</a> -->
+                <a href="create-lists.html" role="button" class="btn btn-primary">Write/overwrite list of works and save!</a>
+                <!-- TODO: (?) <a href="postRoutes.xql" role="button" class="btn btn-primary">Write all routes to Caddy</a>
+                            for now, it suffices to do it individually and with the shell scripts "/etc/caddy/{buildroutes.sh,postroutes.sh}" on the server
+                 -->
             </p>
             <table class="table table-hover">
                 <tr>
@@ -43,22 +45,23 @@
                     <td data-template="admin:needsPdfDatei">boing</td>
                     <td data-template="admin:needsHTMLString">boing</td>
                     <td data-template="admin:needsDetailsString">boing</td>
-                    <td data-template="admin:needsSphinxSnippetsString">boing</td>
+                    <td data-template="admin:needsSnippetsString">boing</td>
                     <td data-template="admin:needsRDFString">boing</td>
                     <td data-template="admin:needsRoutingString">boing</td>
                 </tr>
             </table>
             <p>
-                <span data-template="admin:needsTeiCorpusZip">boing</span>
+                <span data-template="admin:needsTeiCorpusZipString">boing</span>
             </p>
             <p>
-                <span data-template="admin:needsTxtCorpusZip">boing</span>
+                <span data-template="admin:needsTxtCorpusZipString">boing</span>
             </p>
             <p>
-                <span data-template="admin:needsStats">boing</span>
+                <span data-template="admin:needsStatsString">boing</span>
             </p>
         </div>
         
+<!-- Authors
         <div class="row" data-template="app:loadListOfAuthors">
             <h2>Authors</h2>
             <table class="table table-hover">
@@ -72,15 +75,15 @@
                     <tr data-template="templates:each" data-template-from="listOfAuthors" data-template-to="currentAuthor">
                         <td data-template="admin:authorString">boing</td>
                         <td data-template="admin:authorMakeHTML">boing</td>
-                        <td data-template="admin:needsSphinxSnippetsString">boing</td>
+                        <td data-template="admin:needsSnippetsString">boing</td>
                         <td data-template="admin:needsRDFString">boing</td>
                     </tr>
                 </tbody>
             </table>
-            
         </div>
-        
-        <div class="row" data-template="app:loadDictionary">
+-->
+
+        <div class="row" data-template="admin:loadListOfLemmata">
             <h2>Lemmata</h2>
             <table class="table table-hover">
                 <tbody>
@@ -88,33 +91,37 @@
                         <th>Lemma-ID</th>
                         <th>HTML</th>
                         <th>Sphinx Fragmente</th>
+                        <th>Routing</th>
                     </tr>
                     <tr data-template="templates:each" data-template-from="listOfLemmata" data-template-to="currentLemma">
                         <td data-template="admin:lemmaString">boing</td>
-                        <td data-template="admin:lemmaMakeHTML">boing</td>
-                        <td data-template="admin:needsSphinxSnippetsString">boing</td>
+                        <td data-template="admin:needsHTMLString">boing</td>
+                        <td data-template="admin:needsSnippetsString">boing</td>
+                        <td data-template="admin:needsRoutingString">boing</td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        
-        <div class="row" data-template="app:loadListOfWps">
+
+        <div class="row" data-template="admin:loadListOfWorkingpapers">
             <h2>Working Papers</h2>
             <table class="table table-hover">
                 <tbody>
                     <tr>
                         <th>WP-ID</th>
-                        <!--                    <th>HTML</th> -->
+                        <th>Details</th>
                         <th>Sphinx Fragmente</th>
+                        <th>Routing</th>
                     </tr>
-                    <tr data-template="templates:each" data-template-from="listOfWps" data-template-to="currentWp">
+                    <tr data-template="templates:each" data-template-from="listOfWorkingpapers" data-template-to="currentWP">
                         <td data-template="admin:WPString">boing</td>
-                        <!--                    <td data-template="admin:lemmaMakeHTML">boing</td>  -->
-                        <td data-template="admin:needsSphinxSnippetsString">boing</td>
+                        <td data-template="admin:needsDetailsString">boing</td>
+                        <td data-template="admin:needsSnippetsString">boing</td>
+                        <td data-template="admin:needsRoutingString">boing</td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        
+
     </div>
 </div>

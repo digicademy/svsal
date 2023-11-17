@@ -346,12 +346,12 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
 (: Change 2023-05-25 Andreas Wagner
    With the new infrastructure, the catalogue view is at URLs like:
        https://id.test.salamanca.school/texts/W0095?mode=details
-            let $workDetails    :=  'workDetails.html?wid=' ||  $wid
+            let $workDetails    :=  'workdetails.html?wid=' ||  $wid
 :)
             let $workDetails    :=  $config:idserver || '/texts/' || $wid || '?mode=details'
             let $DetailsInfo    :=  i18n:process(<i18n:text key="details">Katalogeintrag</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en")
     
-            let $workImages     :=  'viewer_standalone.html?wid=' ||  $wid
+            let $workImages     :=  'viewer-standalone.html?wid=' ||  $wid
             let $FacsInfo       :=  i18n:process(<i18n:text key="facsimiles">Bildansicht</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en")
     
             let $printingPlace  :=  
@@ -420,7 +420,7 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
                                        "status" :              xs:string($status),
                                        "WIPstatus" :           $WIPstatus,
                                        "monoMultiUrl" :        $wrkLink,
-                                       "workDetails" :         $workDetails,
+                                       "workdetails" :         $workDetails,
                                        "titAttrib" :           $DetailsInfo,
                                        "workImages" :          $workImages,
                                        "facsAttrib" :          $FacsInfo,
@@ -445,7 +445,7 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
                 || '"status":'        || '"' || $status         || '",'
                 || '"WIPstatus":'     || '"' || $WIPstatus      || '",'
                 || '"monoMultiUrl":'  || '"' || $wrkLink        || '",'
-                || '"workDetails":'   || '"' || $workDetails    || '",'
+                || '"workdetails":'   || '"' || $workDetails    || '",'
                 || '"titAttrib":'     || '"' || $DetailsInfo    || '",'
                 || '"workImages":'    || '"' || $workImages     || '",'
                 || '"facsAttrib":'    || '"' || $FacsInfo       || '",'
@@ -629,7 +629,7 @@ declare  %templates:wrap
                     order by $item//tei:titleStmt/tei:author[1]/tei:persName/tei:surname ascending
                     return $item
                 else() 
-            return map { 'listOfLemmata':$result }
+            return map { 'listOfLemmata': $result }
 };
 
 declare %private
@@ -1793,7 +1793,7 @@ declare %templates:wrap
 
 declare %templates:wrap %templates:default("lang", "en")
     function app:WPvol  ($node as node(), $model as map(*), $lang as xs:string?) {
-       let $link := 'workingPaper.html?wpid=' || $model('currentWp')/@xml:id/string()
+       let $link := 'workingpaper.html?wpid=' || $model('currentWp')/@xml:id/string()
        let $vol := $model('currentWp')//tei:titleStmt/tei:title[@type='short']/string()
        return <h4><a  href="{$link}">{$vol}</a></h4>
 };
@@ -1805,7 +1805,7 @@ declare %templates:wrap
 
 declare %templates:wrap %templates:default("lang", "en")
     function app:WPimg ($node as node(), $model as map(*), $lang as xs:string?) {
-    let $link := 'workingPaper.html?wpid=' || $model('currentWp')/@xml:id/string()
+    let $link := 'workingpaper.html?wpid=' || $model('currentWp')/@xml:id/string()
     let $img  := if ($model('currentWp')//tei:graphic/@url) then
                        <img style="border: 0.5px solid #E7E7E7; width:90%; height: auto;" src="{$model('currentWp')//tei:graphic/@url/string()}"/>
                  else ()
@@ -1863,7 +1863,7 @@ declare %templates:wrap
 
 declare %templates:wrap %templates:default("lang", "en")
     function app:WPshowSingle ($node as node(), $model as map(*), $lang as xs:string?) {
-        let $work := <a href="workingPaper.html?wpid=' {$model('currentWp')/@xml:id/string()}">{$model('currentWp')/@xml:id/string()}</a> 
+        let $work := <a href="workingpaper.html?wpid=' {$model('currentWp')/@xml:id/string()}">{$model('currentWp')/@xml:id/string()}</a> 
         return
             $work
             (: i18n:process($work, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) heute geändert :) 
@@ -1897,7 +1897,7 @@ declare %templates:wrap %templates:default("lang", "en")
 
 declare %templates:wrap %templates:default("lang", "en")
     function app:WPgoBack ($node as node(), $model as map(*), $lang as xs:string?) {
-        let $link       := 'workingPapers.html'
+        let $link       := 'workingpapers.html'
         let $icon       := <i class="fa fa-reply"></i>
         let  $translate := <i18n:text key="back">zurück</i18n:text>
         return <a title="{$translate}" href="{$link}">{$icon}&#xA0;&#xA0;</a>
@@ -1907,12 +1907,12 @@ declare %templates:wrap %templates:default("lang", "en")
     function app:WpEditiorial ($node as node(), $model as map(*), $lang as xs:string?) {
         let $more := <i18n:text key="more">Mehr</i18n:text>
         return 
-            <a href="editorialWorkingPapers.html?">&#32;&#32;{$more}&#160;<i class="fa fa-share"></i></a>
-            (: <a href="editorialWorkingPapers.html?">&#32;&#32;{i18n:process($more, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))}&#160;<i class="fa fa-share"></i></a> heute geändert :)
+            <a href="editorial-workingpapers.html?">&#32;&#32;{$more}&#160;<i class="fa fa-share"></i></a>
+            (: <a href="editorial-workingpapers.html?">&#32;&#32;{i18n:process($more, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))}&#160;<i class="fa fa-share"></i></a> heute geändert :)
 };
 
 
-(:-------------------- funx for page workDetails.html ---------------------:)       
+(:-------------------- funx for page workdetails.html ---------------------:)       
 
 (:~
 Returns the type of the current work/volume in parenthesis
@@ -1977,7 +1977,7 @@ declare %templates:wrap
 };
 
  
-(: TODO: Check if an alternative to workDetails.html is needed in the following function: :)
+(: TODO: Check if an alternative to workdetails.html is needed in the following function: :)
 (:~ 
 Creates a (HTML) catalogue record for a work/volume.
 @param node: template node
@@ -1995,7 +1995,7 @@ declare %templates:wrap function app:WRKcatRecord($node as node(), $model as map
     let $multivolInfo := 
         if ($workType eq 'work_volume') then
             <div class="col-md-8" style="padding-bottom:0.8em;">
-                <span style="font-size:1.2em;font-style:italic;"><a href="{$config:webserver || '/' || $lang || '/workDetails.html?wid=' || substring($model('currentWorkId'),1,5)}">
+                <span style="font-size:1.2em;font-style:italic;"><a href="{$config:webserver || '/' || $lang || '/workdetails.html?wid=' || substring($model('currentWorkId'),1,5)}">
                     <i class="fas fa-info-circle"></i>{' '}<i18n:text key="partOfMultivol">Part of a multivolume work</i18n:text>
                 </a></span>
             </div>
@@ -2039,7 +2039,7 @@ declare function app:WRKadditionalInfoRecord($node as node(), $model as map(*), 
     let $normId := sutil:convertNumericVolumeID($workId)
     let $status := $model('currentWorkHeader')/tei:revisionDesc/@status/string()
 
-    let $mirador := 'viewer_standalone.html?wid=' || $workId
+    let $mirador := 'viewer-standalone.html?wid=' || $workId
     let $scanCount := 0
     let $isPublished := app:WRKisPublished($node, $model, $workId)
     (: ({$scanCount || ' '}<i18n:text key="scans">Scans</i18n:text>) :)
@@ -2142,7 +2142,7 @@ declare function app:WRKcatRecordTeaser($node as node(), $model as map(*), $wid 
                     i18n:convertDate($digital?('publicationDate'), $lang, 'verbose')
                 else ()
             let $recordLink := $config:idserver || '/texts/' || $wid || '?mode=details'
-            let $imagesLink := 'viewer_standalone.html?wid=' || $wid
+            let $imagesLink := 'viewer-standalone.html?wid=' || $wid
             let $col1-width := 'col-md-2'
             let $col2-width := 'col-md-10'
             let $publication := 
@@ -2690,10 +2690,10 @@ declare function app:WRKeditionMetadata($node as node(), $model as map(*), $wid 
 };
 
 
-(:jump from work.html to corresponding work_volume in workDetails.html:)(:FIXME:)
+(:jump from work.html to corresponding work_volume in workdetails.html:)(:FIXME:)
 declare function app:WRKdetailsCurrent($node as node(), $model as map(*), $lang as xs:string?) {
        (: let $multiRoot := replace($model('currentWork')/@xml:id, '(W\d{4})(_Vol\d{2})', '$1')
-        return if ($model("currentWork")//tei:text[@type='work_volume']) then <a class="btn btn-info" href="{session:encode-url(xs:anyURI('workDetails.html?wid=' || $multiRoot))||'#'||$model('currentWork')/tei:text/@xml:id}"><span class="glyphicon glyphicon-file"></span>{'&#32;' ||i18n:process(<i18n:text key="details">Details</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) 
+        return if ($model("currentWork")//tei:text[@type='work_volume']) then <a class="btn btn-info" href="{session:encode-url(xs:anyURI('workdetails.html?wid=' || $multiRoot))||'#'||$model('currentWork')/tei:text/@xml:id}"><span class="glyphicon glyphicon-file"></span>{'&#32;' ||i18n:process(<i18n:text key="details">Details</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri())) 
         ||'&#32;'||i18n:process(<i18n:text key="volume">Band</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))        || '&#32;' ||$model("currentWork")//tei:text[@type='work_volume']/@n/string()}</a>
         else:) 
         let $output :=
