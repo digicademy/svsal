@@ -149,7 +149,7 @@ return
         return net:sitemapResponse($net-vars)
 
     (: Pass all requests to admin HTML files through view-admin.xql, which handles HTML templating and is aware of admin credentials/routines :)
-    else if (matches($exist:resource, "(admin.html)|(admin-svn.html)|(render.html)|(renderTheRest.html)|(createLists.html)|(sphinx-admin.xqm)")) then
+    else if (matches($exist:resource, "(admin.html)|(admin-svn.html)|(render.html)|(render-the-rest.html)|(create-lists.html)|(sphinx-admin.xqm)")) then
         let $debug          := if ($config:debug = ("trace", "info")) then console:log("Admin HTML requested: " || $net:forwardedForServername || $exist:path || $parameterString || ".") else ()
         (: For now, we don't use net:forward here since we need a nested view/forwarding. :)
         (: return net:forward("/modules/view-admin.xql", $net-vars) :)

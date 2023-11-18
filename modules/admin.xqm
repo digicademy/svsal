@@ -328,6 +328,11 @@ declare function admin:authorMakeHTML($node as node(), $model as map(*)) {
             <td title="source from: {string(xmldb:last-modified($config:tei-authors-root, $currentAuthorId || '.xml'))}, Rendered on: {xmldb:last-modified($config:temp, $currentAuthorId || '.html')}">Rendering unnecessary. <small><a href="render-the-rest.html?aid={$currentAuthorId}">Render anyway!</a></small></td>
 };
 
+declare function admin:lemmaString($node as node(), $model as map(*), $lang as xs:string?) {
+    let $currentLemmaId  := string($model('currentLemma')/@xml:id)
+    return <td><a href="lemma.html?lid={$currentLemmaId}">{$currentLemmaId} - {app:LEMtitle($node, $model)}</a></td>
+};
+
 declare function admin:lemmaMakeHTML($node as node(), $model as map(*)) {
     let $currentLemmaId := string($model('currentLemma')/@xml:id)
     return 
@@ -337,7 +342,12 @@ declare function admin:lemmaMakeHTML($node as node(), $model as map(*)) {
             <td title="source from: {string(xmldb:last-modified($config:tei-lemmata-root, $currentLemmaId || '.xml'))}, Rendered on: {xmldb:last-modified($config:temp, $currentLemmaId || ".html")}">Rendering unnecessary. <small><a href="render-the-rest.html?lid={$currentLemmaId}">Render anyway!</a></small></td>
 };
            
-declare function admin:needsHTML($targetResourceId as xs:string) as xs:boolean {
+declare function admin:WPString($node as node(), $model as map(*), $lang as xs:string?) {
+    let $currentWPId  := string($model('currentWp')/@xml:id)
+    return <td><a href="workingpaper.html?wpid={$currentWPId}">{$currentWPId} - {app:WPtitle($node, $model)}</a></td>
+};
+
+declare function admin:needsHTML($targetWorkId as xs:string) as xs:boolean {
     let $targetSubcollection := 
         for $subcollection in $config:tei-sub-roots return 
             if (doc-available(concat($subcollection, '/', $targetResourceId, '.xml'))) then $subcollection

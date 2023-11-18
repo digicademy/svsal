@@ -50,7 +50,7 @@ declare %templates:default("language", "en")
             case '/authors.html' return
                 <title><i18n:text key="authors">Autoren</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
             case '/work.html'
-            case '/workDetails.html' return
+            case '/workdetails.html' return
                 <title>
                     {string-join(doc($config:tei-works-root || "/" || sutil:normalizeId($wid) || ".xml")//tei:sourceDesc//tei:author/tei:persName/tei:surname, ', ') || ': ' ||
                      doc($config:tei-works-root || "/" || sutil:normalizeId($wid) || ".xml")//tei:sourceDesc//tei:monogr/tei:title[@type = 'short']/string()} -
@@ -61,13 +61,13 @@ declare %templates:default("language", "en")
                 <title>{$model("currentLemma")//tei:titleStmt//tei:title[@type = 'short']/string()} - <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
             case '/dictionary.html' return
                 <title><i18n:text key="dictionary">Wörterbuch</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
-            case '/workingPaper.html' return
+            case '/workingpaper.html' return
                 <title>Working Paper: {$model("currentWp")//tei:titleStmt/tei:title[@type = 'short']/string()} - <i18n:text key='titleHeader'>Die Schule von Salamanca</i18n:text></title>
             case '/project.html' return
                 <title><i18n:text key="project">Projekt</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
-            case '/workingPapers.html' return
+            case '/workingpapers.html' return
                 <title><i18n:text key="workingPapers">Working Papers</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
-            case '/editorialWorkingPapers.html' return
+            case '/editorial-workingpapers.html' return
                 <title><i18n:text key="WpAbout">Über die WP Reihe</i18n:text> - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
             case '/search.html' return
                 <title>{if ($q) then $q else <i18n:text key="search">Suche</i18n:text>} - <i18n:text key="titleHeader">Die Schule von Salamanca</i18n:text></title>
@@ -135,20 +135,20 @@ declare %templates:default("lang", "en")
             switch (substring-before($document, '.html'))
                 case 'author'                   return <i18n:text key="metaAuthor">Biobibliographische Informationen über</i18n:text>
                 case 'lemma'                    return <i18n:text key="metaLemma">Sachartikel zu</i18n:text>
-                case 'workingPaper'             return <i18n:text key="metaWP">SvSal Working Paper</i18n:text>
+                case 'workingpaper'             return <i18n:text key="metaWP">SvSal Working Paper</i18n:text>
                 case 'work'                     return <i18n:text key="metaWork">Leseansicht von</i18n:text>
-                case 'workDetails'              return <i18n:text key="metaWorkDetails">Bibliographische Daten zu</i18n:text>
+                case 'workdetails'              return <i18n:text key="metaWorkDetails">Bibliographische Daten zu</i18n:text>
                 case 'index'                    return <i18n:text key="metaIndex">Eine Sammlung digitaler Quellen und ein Wörterbuch der juridisch-politischen Diskurse von iberischen Theologen, Juristen und Philosophen der Frühen Neuzeit.</i18n:text>
                 case 'search'                   return <i18n:text key="metaSearch">Suche in Texten der Salmanticenser Autoren, in Wörterbuch- und biographischen Artikeln sowie in Working Papers über die Schule von Salamanca.</i18n:text>
                 case 'contact'                  return <i18n:text key="metaContact">Möglichkeiten, das Projekt "Die Schule von Salamanca" zu kontaktieren und über Neuigkeiten auf dem Laufenden zu bleiben.</i18n:text>
-                case 'editorialWorkingPapers'   return <i18n:text key="metaEditorial">Richtlinien und Vorgaben für die Einreichung von Vorschlägen für die Working Paper Reihe des Projekts "Die Schule von Salamanca".</i18n:text>
+                case 'editorial-workingpapers'  return <i18n:text key="metaEditorial">Richtlinien und Vorgaben für die Einreichung von Vorschlägen für die Working Paper Reihe des Projekts "Die Schule von Salamanca".</i18n:text>
                 case 'guidelines'               return <i18n:text key="metaGuidelines">Editionsrichtlinien der Erstellung der digitalen Quellenedition des Projekts "Die Schule von Salamanca".</i18n:text>
                 case 'project'                  return <i18n:text key="metaProject">Allgemeine Informationen über das Projekt "Die Schule von Salamanca. Eine digitale Quellenedition und ein Wörterbuch ihrer juridisch-politischen Sprache".</i18n:text>
                 case 'news'                     return <i18n:text key="metaNews">Neuigkeiten, Ankündigungen und kurze Blog-Texte des Projekts "Die Schule von Salamanca" über Theorie, Methodologie, Technik und Weiteres.</i18n:text>
                 case 'works'                    return <i18n:text key="metaWorks">Überblick über die Quellen, die im Rahmen der digitalen Quellenedition in Text und Bild verfügbar sind. Filter- und Sortierbar.</i18n:text>
                 case 'authors'                  return <i18n:text key="metaAuthors">Überblick über die Autoren, deren Texte in der Quellenedition und die weiterhin durch biographische Artikel beschrieben sind.</i18n:text>
                 case 'dictionary'               return <i18n:text key="metaDictionary">Überblick über die im Projekt erarbeiteten Sachartikel des Wörterbuchs der juridisch-politischen Sprache der Schule von Salamanca</i18n:text>
-                case 'workingPapers'            return <i18n:text key="metaWPs">Überblick über die Working Papers zur Schule von Salamanca, die im Rahmen der vom Projekt veranstalteten Reihe erschienen sind.</i18n:text>
+                case 'workingpapers'            return <i18n:text key="metaWPs">Überblick über die Working Papers zur Schule von Salamanca, die im Rahmen der vom Projekt veranstalteten Reihe erschienen sind.</i18n:text>
                 case 'participants'             return <i18n:text key="metaParticipants"/>
                 default return ()
         return
@@ -194,9 +194,9 @@ declare %templates:default("lang", "en")
                  "project.html",
                  "contact.html",
                  "guidelines.html",
-                 "editorialWorkingPapers.html",
+                 "editorial-workingpapers.html",
                  "projektbeteiligte.html",
-                 "workingPapers.html",
+                 "workingpapers.html",
                  "search.html"
                 )) then
                     concat($config:webserver, '/', $lang, '/', request:get-attribute('$exist:resource'))
@@ -210,8 +210,8 @@ declare %templates:default("lang", "en")
                            concat($config:webserver, '/', $lang, '/work.html?',         string-join(net:inject-requestParameter('',''), '&amp;'))
                         case '/lemma.html' return
                            concat($config:webserver, '/', $lang, '/lemma.html?',        string-join(net:inject-requestParameter('',''), '&amp;'))
-                        case '/workingPaper.html' return
-                           concat($config:webserver, '/', $lang, '/workingPaper.html?', string-join(net:inject-requestParameter('',''), '&amp;'))
+                        case '/workingpaper.html' return
+                           concat($config:webserver, '/', $lang, '/workingpaper.html?', string-join(net:inject-requestParameter('',''), '&amp;'))
                         case '/participants.html' return
                            concat($config:webserver, '/', $lang, '/participants.html?',        string-join(net:inject-requestParameter('',''), '&amp;'))
                         default return
@@ -243,11 +243,11 @@ declare
                                                              "project.html",
                                                              "contact.html",
                                                              "guidelines.html",
-                                                             "editorialWorkingPapers.html",
+                                                             "editorial-workingpapers.html",
                                                              "projektbeteiligte.html",
-                                                             "workingPapers.html",
+                                                             "workingpapers.html",
                                                              "search.html",
-                                                             "workingPaper.html"
+                                                             "workingpaper.html"
                                                             )) then
                 ()
          else if (ends-with(request:get-uri(), "/author.html")) then
@@ -380,7 +380,7 @@ declare
                     <i18n:text key="project">Projekt</i18n:text></a></li>
                 <li class="{if ( (contains(request:get-url(), 'work.')) or
                                  (contains(request:get-url(), 'works.')) or
-                                 (contains(request:get-url(), 'workDetails.'))  ) then 'active' else ()}">
+                                 (contains(request:get-url(), 'workdetails.'))  ) then 'active' else ()}">
                     <a href="{$config:webserver || '/' || $lang || '/works.html'}">
                     <span class="glyphicon glyphicon-file" aria-hidden="true"></span>&#160;
                     <i18n:text key="works">Werke</i18n:text></a></li> 
@@ -395,9 +395,9 @@ declare
                     <a href="{$config:webserver || '/' || $lang || '/authors.html'}">
                     <span class="glyphicon glyphicon-user" aria-hidden="true"></span>&#160;
                     <i18n:text key="authors">Autoren</i18n:text></a></li>
-                <li class="{if ( (contains(request:get-url(), 'workingPaper.')) or
-                                 (contains(request:get-url(), 'workingPapers.'))) then 'active' else ()}">
-                    <a href="{$config:webserver || '/' || $lang || '/workingPapers.html'}">
+                <li class="{if ( (contains(request:get-url(), 'workingpaper.')) or
+                                 (contains(request:get-url(), 'workingpapers.'))) then 'active' else ()}">
+                    <a href="{$config:webserver || '/' || $lang || '/workingpapers.html'}">
                     <i class="fas fa-pencil-alt" aria-hidden="true"></i>&#160;
                     <i18n:text key="workingPapers">Working Papers</i18n:text></a></li>
                 <li class="{if ( (contains(request:get-url(), 'search.'))       ) then 'active' else ()}">
@@ -598,7 +598,7 @@ declare %templates:wrap
 declare %templates:wrap
     function gui:langWorkingPapers($node as node(), $model as map(*), $lang as xs:string) as element() {
     let $output := 
-        <a href="workingPapers.html">
+        <a href="workingpapers.html">
             <i class="fas fa-pencil-alt" aria-hidden="true"></i>&#160;<i18n:text key="workingPapers">Working Papers</i18n:text>
         </a>
     return
@@ -638,7 +638,7 @@ declare %templates:wrap
 declare %templates:wrap
     function gui:langWPcreation($node as node(), $model as map(*), $lang as xs:string) as element()  {
     let $output := 
-        <a href="editorialWorkingPapers.html">
+        <a href="editorial-workingpapers.html">
            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>&#160;<i18n:text key="getInvolved">Beitragen</i18n:text>
         </a>
     return 

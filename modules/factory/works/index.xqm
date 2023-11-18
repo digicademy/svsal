@@ -676,7 +676,7 @@ declare function index:makeUrl($wid as xs:string, $targetNode as node(), $fragme
         else if (substring($wid, 1, 2) eq 'A0') then
             'author.html?aid='
         else if (substring($wid, 1, 2) eq 'WP') then
-            'workingPaper.html?wpid='
+            'workingpaper.html?wpid='
         else
             'index.html?wid='
     let $targetNodeHTMLAnchor :=    

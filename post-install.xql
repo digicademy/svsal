@@ -16,13 +16,13 @@ declare variable $adminfiles        := ($target || '/admin.html',
                                         $target || '/build.xml',
                                         $target || '/collection.xconf',
                                         $target || '/controller.xql',
-                                        $target || '/createLists.html',
+                                        $target || '/create-lists.html',
                                         $target || '/error-handler.xql',
                                         $target || '/expath-pkg.xml',
                                         $target || '/post-install.xql',
                                         $target || '/pre-install.xql',
                                         $target || '/reindex.xql',
-                                        $target || '/renderTheRest.html',
+                                        $target || '/render-the-rest.html',
                                         $target || '/webdata-admin.xql');
 
 (: TODO add more modules here when necessary :)

@@ -202,7 +202,7 @@ declare %private function textsv1:HTMLdeliverDoc($rid as xs:string, $mode as xs:
         else if ($resource('tei_status') ge 1 and $mode eq 'meta') then
             (: catalogue record of an available dataset requested :)
             let $catRecordUri := $api:proto || 'www.' || api:getDomain($host) || (if ($lang) then '/' || $lang else ()) 
-                || '/workDetails.html?wid=' || $resource('tei_id')
+                || '/workdetails.html?wid=' || $resource('tei_id')
             return
                 api:redirect-with-303($catRecordUri)
         else if ($resource('tei_status') eq 2 and $resource('valid')) then       
@@ -262,7 +262,7 @@ declare %private function textsv1:HTMLdeliverDoc($rid as xs:string, $mode as xs:
         else if ($resource('tei_status') eq 1) then
             (: work/volume not yet fully available, but metadata exist -> redirect to work details page (regardless of passage) :)
             api:redirect-with-303($api:proto || 'www.' || api:getDomain($host) || (if ($lang) then '/' || $lang else ())
-                || '/workDetails.html?wid=' || $resource('tei_id'))
+                || '/workdetails.html?wid=' || $resource('tei_id'))
         else if ($resource('wellformed')) then
             (: work not (yet) available, but we redirect to work page since this should trigger a respective 404 error :)
             api:redirect-with-303($api:proto || 'www.' || api:getDomain($host) || (if ($lang) then '/' || $lang else ()) 

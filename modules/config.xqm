@@ -137,20 +137,20 @@ declare variable $config:languages           := ('en', 'de', 'es');
 declare variable $config:standardEntries     := ('index',
                                                 'search',
                                                 'contact',
-                                                'editorialWorkingPapers',
+                                                'editorial-workingpapers',
                                                 'guidelines',
                                                 'project',
                                                 'news',
                                                 'works',
                                                 'authors',
                                                 'dictionary',
-                                                'workingPapers'
+                                                'workingpapers'
                                                 );
 declare variable $config:databaseEntries     := ('authors',
                                                 'works',
-                                                'workDetails',
+                                                'workdetails',
                                                 'lemmata',
-                                                'workingPapers',
+                                                'workingpapers',
                                                 'news'
                                                 );
 

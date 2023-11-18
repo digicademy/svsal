@@ -552,9 +552,9 @@ declare function local:getDbDocumentIds($collections as xs:string*) as xs:string
                             case 'authors'          return 'author_article'
                             case 'lemmata'          return 'lemma_article'
 (:                            case 'news'             return local:blogEntries():)
-                            case 'workingPapers'    return 'working_paper'
+                            case 'workingpapers'    return 'working_paper'
                             case 'works'            return ("work_multivolume", "work_monograph")
-                            case 'workDetails'      return ("work_multivolume", "work_monograph")
+                            case 'workdetails'      return ("work_multivolume", "work_monograph")
                             default return ()
         return for $document in collection($config:tei-root)//tei:TEI[tei:text/@type = $collType]
                     return $document/@xml:id
@@ -566,9 +566,9 @@ declare function local:getDbWebpageRel($documentIds as xs:string*) as xs:string*
         let $viewports := switch (collection($config:tei-root)/tei:TEI[@xml:id=$documentId]/tei:text[1]/@type)
                             case 'author_article'   return 'author.html?aid='
                             case 'lemma_article'    return 'lemma.html?lid='
-                            case 'working_paper'    return 'workingPaper.html?wpid='
-                            case 'work_monograph'   return ('work.html?wid=', 'workDetails.html?wid=')
-                            case 'work_multivolume' return ('work.html?wid=', 'workDetails.html?wid=')
+                            case 'working_paper'    return 'workingpaper.html?wpid='
+                            case 'work_monograph'   return ('work.html?wid=', 'workdetails.html?wid=')
+                            case 'work_multivolume' return ('work.html?wid=', 'workdetails.html?wid=')
                             default return ()
         for $viewport in $viewports
             return concat($viewport, $documentId)
@@ -652,7 +652,7 @@ declare function net:deliverTextsHTML($netVars as map()*) {
         if ($validation eq 2) then (: full text available :)
             net:forward-to-html(substring($netVars('path'), 4), $netVars)
         else if ($validation eq 1) then 
-            net:redirect-with-303($config:webserver || '/workDetails.html?wid=' || $wid) (: only work details available :)
+            net:redirect-with-303($config:webserver || '/workdetails.html?wid=' || $wid) (: only work details available :)
         else if ($validation eq 0) then 
             net:error(404, $netVars, 'work-not-yet-available') (: work id is valid, but there are no data :)
         else 
