@@ -175,53 +175,52 @@ declare function admin:needsPdf($targetWorkId as xs:string) as xs:boolean {
             true()
 };
 
-declare function admin:needsPdfDatei($node as node(), $model as map(*)) {
-    let $currentWorkId := $model('currentWork')?('wid')
-let $currentDoc := doc($config:tei-works-root|| "/" ||$currentWorkId ||".xml")
+declare function admin:needsPdfString($node as node(), $model as map(*)) {
+    let $currentResourceId := max((string($model('currentWork')?('wid')), string($model('currentLemma')?('lid')), string($model('currentWP')?('wpid'))))
+    let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
+                                    if (doc-available(concat($subcollection, '/', $currentResourceId, '.xml'))) then $subcollection
+                                    else ()
+    let $readyForPDF := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))//tei:TEI[@xml:id eq $currentResourceId]/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then
+                                true()
+                             else false()
 
-  
-  let $isMultiWorkVolume as  node() :=$currentDoc//tei:TEI//tei:text
-
-let $target_1 := $currentDoc//tei:relatedItem/@target
-let $target_2 := for $target in $target_1 return substring-after($target, "work:") 
-
+    let $currentDoc := doc($targetSubcollection || "/" || $currentResourceId ||".xml")
+    let $isMultiWorkVolume as node() := $currentDoc//tei:TEI//tei:text
+    let $target_1 := $currentDoc//tei:relatedItem/@target
+    let $target_2 := for $target in $target_1 return substring-after($target, "work:") 
 
     return 
-       
-          if ($isMultiWorkVolume/@type="work_multivolume")
-                           then
-<td> 
-               {            for $target in $target_2 
-                              return
-          
-                          if (admin:needsPdf($target)) then 
-      
-                     <a title="Source from: {string(xmldb:last-modified($config:tei-works-root, $target || '.xml'))}{if (xmldb:get-child-resources($config:pdf-root) = $target || ".pdf") then concat(', rendered on: ', xmldb:last-modified($config:pdf-root, $target || ".pdf")) else ()}"><b> Create PDF for <a href="webdata-admin.xql?rid={$target}&amp;format=pdf_create">{$target}!</a><br/></b></a>
- 
-                         else if(not(admin:needsPdf($target)))  then  <i title="Source from: {string(xmldb:last-modified($config:tei-works-root, $target || '.xml'))}, rendered on: {xmldb:last-modified($config:pdf-root, $target || ".pdf")}">PDF for {$target} created.<small><a href="webdata-admin.xql?rid={$target}&amp;format=pdf_create">Create PDF anyway!</a></small> <br/> </i>
-   else() }
-</td>
-      else if (not($isMultiWorkVolume/@type="work_multivolume")) then
-
-
-                                 if  (admin:needsPdf($currentWorkId)) then
-
-            <td title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}{if (xmldb:get-child-resources($config:pdf-root) = $currentWorkId || ".pdf") then concat(', rendered on: ', xmldb:last-modified($config:pdf-root, $currentWorkId || ".pdf")) else ()}">
-<a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=pdf_create"><b>Create PDF NOW!</b></a>
-<br/> or
-<br/>
-<form enctype="multipart/form-data" method="post" action="webdata-admin.xql?rid={$currentWorkId}&amp;format=pdf_upload">
-<p>Upload PDF File</p>
-<input type="file"  name="FileUpload"/>
-<input type="submit">Submit your PDF</input>
-</form>
-<br/>
-</td>
-        else 
-            <td title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}, rendered on: {xmldb:last-modified($config:pdf-root, $currentWorkId || ".pdf")}">The PDF was already uploaded or created. <small><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=pdf_create">Create PDF anyway!</a></small></td>
-
-else<td>error !</td>
-
+          if (not($readyForPDF)) then
+            <td>Not ready yet</td>
+          else if ($isMultiWorkVolume/@type="work_multivolume") then
+            <td> 
+                {for $target in $target_2 
+                  return
+                    if (admin:needsPdf($target)) then 
+                        <a title="Source from: {string(xmldb:last-modified($targetSubcollection, $target || '.xml'))}{if (xmldb:get-child-resources($config:pdf-root) = $target || ".pdf") then concat(', rendered on: ', xmldb:last-modified($config:pdf-root, $target || ".pdf")) else ()}"><b> Create PDF for <a href="webdata-admin.xql?rid={$target}&amp;format=pdf_create">{$target}!</a><br/></b></a>
+                    else if(not(admin:needsPdf($target))) then
+                        <i title="Source from: {string(xmldb:last-modified($targetSubcollection, $target || '.xml'))}, rendered on: {xmldb:last-modified($config:pdf-root, $target || ".pdf")}">PDF for {$target} created.<small><a href="webdata-admin.xql?rid={$target}&amp;format=pdf_create">Create PDF anyway!</a></small> <br/> </i>
+                    else ()
+                }
+            </td>
+          else
+            if (admin:needsPdf($currentResourceId)) then
+                <td title="Source from: {string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml'))}{if (xmldb:get-child-resources($config:pdf-root) = $currentResourceId || ".pdf") then concat(', rendered on: ', xmldb:last-modified($config:pdf-root, $currentResourceId || ".pdf")) else ()}">
+                    <a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=pdf_create"><b>Create PDF NOW!</b></a>
+                    <br/> or
+                    <br/>
+                    <form enctype="multipart/form-data" method="post" action="webdata-admin.xql?rid={$currentResourceId}&amp;format=pdf_upload">
+                      <p>Upload PDF File</p>
+                      <input type="file"  name="FileUpload"/>
+                      <input type="submit">Submit your PDF</input>
+                    </form>
+                    <br/>
+                </td>
+            else 
+                <td title="Source from: {string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml'))}, rendered on: {xmldb:last-modified($config:pdf-root, $currentResourceId || ".pdf")}">
+                    The PDF was already uploaded or created.
+                    <small><a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=pdf_create">Create PDF anyway!</a></small>
+                </td>
 };
 
 declare function admin:needsIndex($targetWorkId as xs:string) as xs:boolean {
@@ -236,14 +235,22 @@ declare function admin:needsIndex($targetWorkId as xs:string) as xs:boolean {
 
 declare function admin:needsIndexString($node as node(), $model as map(*)) {
     let $currentWorkId := $model('currentWork')?('wid')
+    let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
+                                    if (doc-available(concat($subcollection, '/', $currentWorkId, '.xml'))) then $subcollection
+                                    else ()
+    let $readyForIndexing := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentWorkId, '.xml'))//tei:TEI[@xml:id eq $currentWorkId]/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then
+                            true()
+                         else false()
     return 
-        if (admin:needsIndex($currentWorkId)) then
+        if (not($readyForIndexing)) then
+            <td>Not ready yet</td>
+        else if (admin:needsIndex($currentWorkId)) then
             <td title="{if (xmldb:get-child-resources($config:index-root) = $currentWorkId || "_nodeIndex.xml") then concat('Index created on: ', xmldb:last-modified($config:index-root, $currentWorkId || "_nodeIndex.xml"), ", ") else ()}source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}"><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=index"><b>Create Node Index NOW!</b></a></td>
         else
             <td title="Index created on: {xmldb:last-modified($config:index-root, $currentWorkId || "_nodeIndex.xml")}, source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}">Node indexing unnecessary. <small><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=index">Create Node Index anyway!</a></small></td>
 };
 
-declare function admin:needsCrumb($targetWorkId as xs:string) as xs:boolean {
+declare function admin:needsCrumbtrail($targetWorkId as xs:string) as xs:boolean {
     let $workModTime := xmldb:last-modified($config:tei-works-root, $targetWorkId || '.xml')
     return
         if ($targetWorkId || "_crumbtrails.xml" = xmldb:get-child-resources($config:crumb-root)) then
@@ -257,10 +264,18 @@ declare function admin:needsCrumb($targetWorkId as xs:string) as xs:boolean {
             true()
 };
 
-declare function admin:needsCrumbtrails($node as node(), $model as map(*)) {
+declare function admin:needsCrumbtrailString($node as node(), $model as map(*)) {
     let $currentWorkId := $model('currentWork')?('wid')
+    let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
+                                    if (doc-available(concat($subcollection, '/', $currentWorkId, '.xml'))) then $subcollection
+                                    else ()
+    let $readyForCrumbtrail := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentWorkId, '.xml'))//tei:TEI[@xml:id eq $currentWorkId]/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then
+                            true()
+                         else false()
     return
-        if (admin:needsCrumb($currentWorkId)) then 
+        if (not($readyForCrumbtrail)) then
+            <td>Not ready yet</td>
+        else if (admin:needsCrumbtrail($currentWorkId)) then 
             <td
                 title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}{
                         if (xmldb:get-child-resources($config:crumb-root) = $currentWorkId || "_crumbtrails.xml") then
@@ -328,11 +343,6 @@ declare function admin:authorMakeHTML($node as node(), $model as map(*)) {
             <td title="source from: {string(xmldb:last-modified($config:tei-authors-root, $currentAuthorId || '.xml'))}, Rendered on: {xmldb:last-modified($config:temp, $currentAuthorId || '.html')}">Rendering unnecessary. <small><a href="render-the-rest.html?aid={$currentAuthorId}">Render anyway!</a></small></td>
 };
 
-declare function admin:lemmaString($node as node(), $model as map(*), $lang as xs:string?) {
-    let $currentLemmaId  := string($model('currentLemma')/@xml:id)
-    return <td><a href="lemma.html?lid={$currentLemmaId}">{$currentLemmaId} - {app:LEMtitle($node, $model)}</a></td>
-};
-
 declare function admin:lemmaMakeHTML($node as node(), $model as map(*)) {
     let $currentLemmaId := string($model('currentLemma')/@xml:id)
     return 
@@ -342,12 +352,7 @@ declare function admin:lemmaMakeHTML($node as node(), $model as map(*)) {
             <td title="source from: {string(xmldb:last-modified($config:tei-lemmata-root, $currentLemmaId || '.xml'))}, Rendered on: {xmldb:last-modified($config:temp, $currentLemmaId || ".html")}">Rendering unnecessary. <small><a href="render-the-rest.html?lid={$currentLemmaId}">Render anyway!</a></small></td>
 };
            
-declare function admin:WPString($node as node(), $model as map(*), $lang as xs:string?) {
-    let $currentWPId  := string($model('currentWp')/@xml:id)
-    return <td><a href="workingpaper.html?wpid={$currentWPId}">{$currentWPId} - {app:WPtitle($node, $model)}</a></td>
-};
-
-declare function admin:needsHTML($targetWorkId as xs:string) as xs:boolean {
+declare function admin:needsHTML($targetResourceId as xs:string) as xs:boolean {
     let $targetSubcollection := 
         for $subcollection in $config:tei-sub-roots return 
             if (doc-available(concat($subcollection, '/', $targetResourceId, '.xml'))) then $subcollection
@@ -382,8 +387,13 @@ declare function admin:needsHTMLString($node as node(), $model as map(*)) {
     let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
                                     if (doc-available(concat($subcollection, '/', $currentResourceId, '.xml'))) then $subcollection
                                     else ()
-    return 
-        if (admin:needsHTML($currentResourceId)) then
+    let $readyForHtml := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))//tei:TEI[@xml:id eq $currentResourceId]/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then
+                            true()
+                         else false()
+    return
+        if (not($readyForHtml)) then
+            <td>Not ready yet</td>
+        else if (admin:needsHTML($currentResourceId)) then
             <td title="{if (xmldb:collection-available($config:html-root || "/" || $currentResourceId) and count(xmldb:get-child-resources($config:html-root || '/' || $currentResourceId)) gt 0) then concat('HTML created on: ', xmldb:last-modified($config:html-root || '/' || $currentResourceId, xmldb:get-child-resources($config:html-root || '/' || $currentResourceId)[1]), ', ') else ()}source from: {string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml'))}"><a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=html"><b>Render HTML (&amp; TXT) NOW!</b></a></td>
         else
             <td title="HTML created on {xmldb:last-modified($config:html-root || '/' || $currentResourceId, xmldb:get-child-resources($config:html-root || '/' || $currentResourceId)[1])}, source from: {string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml'))}">Rendering unnecessary. <small><a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=html">Render HTML (&amp; TXT) anyway!</a></small></td>
@@ -459,7 +469,14 @@ declare function admin:needsSnippetsString($node as node(), $model as map(*)) {
     let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
                                     if (doc-available(concat($subcollection, '/', $currentResourceId, '.xml'))) then $subcollection
                                     else ()
-    return if (admin:needsSnippets($currentResourceId)) then
+    let $readyForSnippets := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))//tei:TEI[@xml:id eq $currentResourceId]/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then
+                                true()
+                             else false()
+
+    return
+            if (not($readyForSnippets)) then
+                <td>Not ready yet</td>
+            else if (admin:needsSnippets($currentResourceId)) then
                 <td title="{concat(if (xmldb:collection-available($config:snippets-root || '/' || $currentResourceId) and count(xmldb:get-child-resources($config:snippets-root || '/' || $currentResourceId)) gt 0) then concat('Snippets created on: ', xmldb:last-modified($config:snippets-root || '/' || $currentResourceId, xmldb:get-child-resources($config:snippets-root || '/' || $currentResourceId)[1]), ', ') else (), 'Source from: ', string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml')), '.')}"><a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=snippets"><b>Create snippets NOW!</b></a></td>
             else
                 <td title="{concat('Snippets created on: ', xmldb:last-modified($config:snippets-root || '/' || $currentResourceId, xmldb:get-child-resources($config:snippets-root || '/' || $currentResourceId)[1]), ', Source from: ', string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml')), '.')}">Creating snippets unnecessary. <small><a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=snippets">Create snippets anyway!</a></small></td>
@@ -490,21 +507,27 @@ declare function admin:needsRDF($targetWorkId as xs:string) as xs:boolean {
 };
 
 declare function admin:needsRDFString($node as node(), $model as map(*)) {
-    let $currentWorkId := max((string($model('currentWork')?('wid')), string($model('currentAuthor')/@xml:id), string($model('currentLemma')/@xml:id), string($model('currentWp')/@xml:id)))
+    let $currentResourceId := max((string($model('currentWork')?('wid')), string($model('currentAuthor')/@xml:id), string($model('currentLemma')/@xml:id), string($model('currentWp')/@xml:id)))
     let $targetSubcollection := 
         for $subcollection in $config:tei-sub-roots return 
-            if (doc-available(concat($subcollection, '/', $currentWorkId, '.xml'))) then $subcollection
+            if (doc-available(concat($subcollection, '/', $currentResourceId, '.xml'))) then $subcollection
             else ()
     let $rdfSubcollection := 
-        if (starts-with(upper-case($currentWorkId), 'W')) then $config:rdf-works-root
-        else if (starts-with(upper-case($currentWorkId), 'A')) then $config:rdf-authors-root
-        else if (starts-with(upper-case($currentWorkId), 'L')) then $config:rdf-lemmata-root
+        if (starts-with(upper-case($currentResourceId), 'W')) then $config:rdf-works-root
+        else if (starts-with(upper-case($currentResourceId), 'A')) then $config:rdf-authors-root
+        else if (starts-with(upper-case($currentResourceId), 'L')) then $config:rdf-lemmata-root
         else ()
+    let $readyForRDF :=  if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))//tei:TEI[@xml:id eq $currentResourceId]/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then
+                            true()
+                         else false()
+
     return 
-        if (admin:needsRDF($currentWorkId)) then
-            <td title="{concat(if (doc-available($rdfSubcollection || '/' || $currentWorkId || '.rdf')) then concat('RDF created on: ', string(xmldb:last-modified($rdfSubcollection, $currentWorkId || '.rdf')), ', ') else (), 'Source from: ', string(xmldb:last-modified($targetSubcollection, $currentWorkId || '.xml')), '.')}"><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=rdf"><b>Create RDF NOW!</b></a></td>
+        if (not($readyForRDF)) then
+            <td>Not ready yet</td>
+        else if (admin:needsRDF($currentResourceId)) then
+            <td title="{concat(if (doc-available($rdfSubcollection || '/' || $currentResourceId || '.rdf')) then concat('RDF created on: ', string(xmldb:last-modified($rdfSubcollection, $currentResourceId || '.rdf')), ', ') else (), 'Source from: ', string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml')), '.')}"><a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=rdf"><b>Create RDF NOW!</b></a></td>
         else
-            <td title="{concat('RDF created on: ', string(xmldb:last-modified($rdfSubcollection, $currentWorkId || '.rdf')), ', Source from: ', string(xmldb:last-modified($targetSubcollection, $currentWorkId || '.xml')), '.')}">Creating RDF unnecessary. <small><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=rdf">Create RDF anyway!</a></small></td>
+            <td title="{concat('RDF created on: ', string(xmldb:last-modified($rdfSubcollection, $currentResourceId || '.rdf')), ', Source from: ', string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml')), '.')}">Creating RDF unnecessary. <small><a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=rdf">Create RDF anyway!</a></small></td>
 };
 
 declare function admin:needsIIIFResource($targetWorkId as xs:string) as xs:boolean {
@@ -2010,35 +2033,42 @@ declare function admin:StripLBs($input as xs:string) {
 };
 
 (: 
-~ Creates and stores work details for catalog page(s).
+~ Creates and stores overview page for catalog page(s) or for working paper view.
 :)
-declare function admin:createDetails($wid as xs:string) {
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Rendering Details for " || $wid || ".") else ()
+declare function admin:createDetails($currentResourceId as xs:string) {
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Rendering Details for " || $currentResourceId || ".") else ()
     let $start-time := util:system-time()
+
+    let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
+                                    if (doc-available(concat($subcollection, '/', $currentResourceId, '.xml'))) then $subcollection
+                                    else ()
+
+    let $wid := $currentResourceId
     let $todo := 
         if ($wid = '*') then
-            collection($config:tei-root)//tei:TEI[.//tei:text[@type = ("work_multivolume", "work_monograph", "work_volume")]]
+            collection($config:tei-root)//tei:TEI[.//tei:text[@type = ("work_multivolume", "work_monograph", "work_volume", "lemma_article", "working_paper")]]
         else
-            collection($config:tei-root)//tei:TEI[@xml:id = distinct-values($wid)]
-    let $expanded :=  for $work-raw in $todo return util:expand($work-raw)
+            collection($targetSubcollection)//tei:TEI[@xml:id = distinct-values($wid)]
+    let $expanded :=  for $resource-raw in $todo return util:expand($resource-raw)
 
-    let $process_loop := for $work in $expanded
+    let $process_loop := for $resource in $expanded
 
-        let $id        := $work/@xml:id/string()
-        let $public_id := if ($work//tei:text[@type = ("work_multivolume", "work_monograph")]) then
+        let $id        := $resource/@xml:id/string()
+        let $public_id := if ($resource//tei:text[@type = ("work_multivolume", "work_monograph", "lemma_article", "working_paper")]) then
                               $id
                           else
-                              tokenize($id, '_')[1] || ':vol' || $work//tei:text[@type = "work_volume"]/@n/string()
-
-        let $teiHeader := $work//tei:teiHeader
+                              tokenize($id, '_')[1] || ':vol' || $resource//tei:text[@type = "work_volume"]/@n/string()
+        let $text_type := $resource//tei:text/@type/string()
+        let $teiHeader := $resource//tei:teiHeader
 
         (: we don't have iiif manifests for volumes, only for multivols and monographs :)
-        let $iiif_file      := if ($work//tei:text[@type = ("work_multivolume", "work_monograph")]) then
+        let $iiif_file      := if ($text_type = ("work_multivolume", "work_monograph")) then
                                   $config:iiif-root || '/' || $id || '.json'
-                               else
+                               else if ($text_type = "work_volume") then
                                   let $mulivol_id := $teiHeader//tei:notesStmt/tei:relatedItem[@type eq 'work_multivolume']/@target/tokenize(., ':')[2]
                                   return $config:iiif-root || '/' || $mulivol_id || '.json'
-        let $iiif           := json-doc($iiif_file)
+                               else ()
+        let $iiif           := if ($iiif_file) then json-doc($iiif_file) else ()
 
         let $volume_names   := for $v in $teiHeader//tei:notesStmt/tei:relatedItem[@type eq 'work_volume'] return $v/@target/tokenize(., ':')[2]
         let $debug          := if (count($volume_names)>0) then console:log('[Details] $volume_names: ' || string-join($volume_names, ', ')) else ()
@@ -2047,7 +2077,7 @@ declare function admin:createDetails($wid as xs:string) {
         (: let $debug := console:log('$volumes: ' || serialize($volumes, map {"method":"json", "media-type":"application/json"})) :)
 
         let $volumes_list := for $key in map:keys($volumes) order by $key
-                                let $filtered_array := array:filter($iiif?members, function($m) {contains(map:get($m, '@id'), $key) })
+                                let $filtered_array := if ($iiif) then array:filter($iiif?members, function($m) {contains(map:get($m, '@id'), $key) }) else ()
                                 let $vol_thumbnail  := if (array:size($filtered_array) gt 0) then
                                                           $filtered_array(1)?thumbnail
                                                        else
@@ -2112,6 +2142,8 @@ declare function admin:createDetails($wid as xs:string) {
             "author_full" :             admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:author/tei:persName/string(), '/')),
             "title_short" :             $teiHeader//tei:titleStmt/tei:title[@type eq 'short']/string(),
             "title_full" :              admin:StripLBs($teiHeader//tei:titleStmt/tei:title[@type eq 'main']/string()),
+            "abstract" :                normalize-space($teiHeader/tei:profileDesc/tei:abstract/string()),
+            "keywords" :                string-join(for $kw in $teiHeader/tei:profileDesc//tei:keywords return normalize-space($kw), ', '),
             "place" :                   if (not($isFirstEd)) then
                                             string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:pubPlace[@role eq "thisEd"] return $p/string(), ', ')
                                         else
@@ -2126,16 +2158,19 @@ declare function admin:createDetails($wid as xs:string) {
                                             admin:StripLBs(string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:publisher return string-join($p, ' &amp; '), ', ')),
             "year" :                    if (not($isFirstEd)) then
                                             $teiHeader//tei:sourceDesc//tei:imprint/tei:date[@type eq 'thisEd']/@when/string()
-                                        else
-                                            $teiHeader//tei:sourceDesc//tei:imprint/tei:date[not(@type = 'summaryFirstEd')]/@when/string(),
+                                        else if ($teiHeader//tei:sourceDesc//tei:imprint/tei:date) then
+                                            $teiHeader//tei:sourceDesc//tei:imprint/tei:date[not(@type = 'summaryFirstEd')]/@when/string()
+                                        else if ($teiHeader//tei:publicationStmt/tei:date) then
+                                            $teiHeader//tei:publicationStmt/tei:date/@when/string()
+                                        else (),
             "src_publication_period" :  $teiHeader//tei:sourceDesc//tei:imprint/tei:date[@type eq 'summaryFirstEd']/string(),
             "language" :                string-join($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n eq 'main']/string(), ', ') ||
                                             (if ($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n ne 'main']) then
                                                 ' (' || string-join($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n ne 'main']/string(), ', ') || ')'
                                             else ()),
-            "thumbnail" :               if ("thumbnail" = map:keys($iiif)) then
+            "thumbnail" :               if ($iiif and "thumbnail" = map:keys($iiif)) then
                                             map:get($iiif?thumbnail, '@id')
-                                        else if ("members" = map:keys($iiif) and "thumbnail" = map:keys($iiif?members(1))) then
+                                        else if ($iiif and "members" = map:keys($iiif) and "thumbnail" = map:keys($iiif?members(1))) then
                                             map:get($iiif?members(1)?thumbnail, '@id')
                                         else (),
             "schol_ed" :                admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#scholarly')]/string(), ' / ')),
@@ -2143,6 +2178,9 @@ declare function admin:createDetails($wid as xs:string) {
             "el_publication_date" :     $teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when/string()[1],
             "hold_library" :            $teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:repository/string(),
             "hold_idno" :               $teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:idno/string(),
+            "urn" :                     $teiHeader//tei:sourceDesc//tei:ref[@type eq 'url'][starts-with(./text(), 'urn:')]/string(),
+            "pdfurl" :                  $teiHeader//tei:sourceDesc//tei:ref[@type eq 'url'][ends-with(./text(), '.pdf')]/string(),
+            "image_filename" :          tokenize($resource//tei:text//tei:titlePage//tei:graphic/@url[ends-with(., '.png')], '/')[last()],
             "status" :                  $teiHeader/tei:revisionDesc/@status/string(),
             "number_of_volumes" :       count(map:keys($volumes)),
             "volumes":                  $volumes_list
@@ -2153,16 +2191,38 @@ declare function admin:createDetails($wid as xs:string) {
         let $vol_keys := for $v in $volumes_list return concat('$', map:get($v, 'key')) 
         let $volumes_string := '{{ $Volumes := dict "number" ' || xs:string(map:get($work_info, 'number_of_volumes')) ||
                                                     ' "volumes" (list ' || string-join($vol_keys, ' ') || ') }}'
-        let $work_string := '{{ $work_info := dict ' ||
-                                string-join(for $key in map:keys($work_info) return
-                                                if ($key ne 'volumes') then
-                                                    '"' || $key || '" "' || string-join(map:get($work_info, $key), " ") || '"'
-                                                else (), ' ') ||
-                            (if (count(map:keys($volumes))>0) then ' "volumes" $Volumes' else ()) ||
-                            ' }}'
-        let $include_string := '{{ include "../../../resources/templates/template_details.html" $work_info }}'
+        let $work_string := if ($text_type eq "working_paper") then
+                                    '{{ $map := dict "id" "' || $public_id ||
+                                                    '" "title" "' || $work_info?title_full ||
+                                                    '" "author" "' || $work_info?author_full ||
+                                                    '" "abstract" "' || $work_info?abstract ||
+                                                    '" "keywords" "' || $work_info?keywords ||
+                                                    '" "language" "' || $work_info?language ||
+                                                    '" "year" "' || $work_info?year ||
+                                                    '" "serialnumber" "' || $work_info?title_short ||
+                                                    '" "urn" "' || $work_info?urn ||
+                                                    '" "pdfurl" "' || $work_info?pdfurl ||
+                                                    '" "image_filename" "' || $work_info?image_filename ||
+                                    '" }}'
+                            else
+                                    '{{ $work_info := dict ' ||
+                                        string-join(for $key in map:keys($work_info) return
+                                                        if ($key ne 'volumes') then
+                                                            '"' || $key || '" "' || string-join(map:get($work_info, $key), " ") || '"'
+                                                        else (), ' ') ||
+                                        (if (count(map:keys($volumes)) gt 0) then ' "volumes" $Volumes' else ()) ||
+                                    ' }}'
+        let $include_string := if ($text_type eq "working_paper") then
+                                    '{{- include "/resources/templates/template-workingpaper.html" $map }}'
+                               else
+                                    '{{- include "../../../resources/templates/template_details.html" $work_info }}'
 
-        let $work_result := concat(if (count($vol_strings) > 0) then '{{ ' || string-join($vol_strings, ' }}&#10;{{ ') || ' }}&#10;' || $volumes_string || '&#10;&#10;' else (), $work_string, '&#10;&#10;', $include_string, '&#10;')
+        let $work_result := concat(
+                                if (count($vol_strings) gt 0) then
+                                    '{{ ' || string-join($vol_strings, ' }}&#10;{{ ') || ' }}&#10;' || $volumes_string || '&#10;&#10;'
+                                else (),
+                                $work_string, '&#10;&#10;', $include_string, '&#10;'
+                            )
 
         let $save   := admin:saveTextFile($id, $id || '_details.html', $work_result, 'details')
         let $export := admin:exportBinaryFile($id, $id || '_details.html', $work_result, 'details')
