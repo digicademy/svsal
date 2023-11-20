@@ -1863,17 +1863,19 @@ declare function admin:createRoutes() {
 
 declare function admin:createRoutes($wid as xs:string) {
     let $start-time := util:system-time()
-    let $debug := console:log("[ADMIN] Routing: Creating routing ...")
+    let $debug := console:log("[ADMIN] Routing: Creating routing for " || $wid || " ...")
     let $index                  := if (doc-available($config:index-root || "/" || $wid || "_nodeIndex.xml")) then doc($config:index-root || "/" || $wid || "_nodeIndex.xml")/sal:index else ()
     let $crumbtrails            := if (doc-available($config:crumb-root || "/" || $wid || "_crumbtrails.xml")) then doc($config:crumb-root || "/" || $wid || "_crumbtrails.xml")/sal:crumb else ()
     let $routingWork            := admin:buildRoutingInfoWork($wid, $crumbtrails)
-    let $routingNodes           := array{fn:for-each($index//sal:node, function($k) {admin:buildRoutingInfoNode($wid, $k, $crumbtrails)} )}
-    let $routingVolumeDetails   :=  if ($index) then
+    let $routingWorkDetails     := array{ admin:buildRoutingInfoDetails($wid) }
+    let $routingNodes           := if ($index) then
+                                        array{fn:for-each($index//sal:node, function($k) {admin:buildRoutingInfoNode($wid, $k, $crumbtrails)} )}
+                                   else ()
+    let $routingVolumeDetails   := if ($index) then
                                         array{fn:for-each($index//sal:node[@subtype = "work_volume"], function($k) {admin:buildRoutingInfoDetails($wid || '_' || $k/@n)} )}
-                                    else
+                                   else
                                         let $volumes := doc($config:tei-works-root || '/' || $wid || '.xml')//xi:include[contains(@href, '_Vol')]/@href/string()
                                         return array{fn:for-each($volumes, function($k) {admin:buildRoutingInfoDetails(tokenize($k, '\.')[1])} )}
-    let $routingWorkDetails     := array{ admin:buildRoutingInfoDetails($wid) }
     let $routingTable           := array:join( ( $routingWork, $routingNodes, $routingVolumeDetails, $routingWorkDetails ) )
 
     let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Routing: Joint routing table: " || substring(serialize($routingTable, map{"method":"json", "indent": false(), "encoding":"utf-8"}), 1, 500) || " ...") else ()
@@ -1886,7 +1888,7 @@ declare function admin:createRoutes($wid as xs:string) {
 
     (: export routing table to filesystem :)
     let $debug := console:log("[ADMIN] Routing: Exporting routing file with " || array:size($routingTable) || " entries...")
-    let $routingExportStatus    := admin:exportJSONFile($wid, $wid || "_routes.json", $routingTable, "routing")
+    let $routingExportStatus := admin:exportJSONFile($wid, $wid || "_routes.json", $routingTable, "routing")
     let $debug := if ($routingExportStatus) then
                         console:log("[ADMIN] Routing: Routing table successfully exported to " || $routingExportStatus || ".")
                     else
@@ -1937,11 +1939,22 @@ declare function admin:buildRoutingInfoNode($wid as xs:string, $item as element(
     return $value
 };
 
-declare function admin:buildRoutingInfoWork($wid as xs:string, $crumbtrails as element(sal:crumb)*) {
-    let $firstCrumb  := if (($crumbtrails//a[1])[1]/@href) then ($crumbtrails//a[1])[1]/@href/string() else ""
+declare function admin:buildRoutingInfoWork($resourceId as xs:string, $crumbtrails as element(sal:crumb)*) {
+    let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
+                                    if (doc-available(concat($subcollection, '/', $resourceId, '.xml'))) then $subcollection
+                                    else ()
+    let $text_type :=      if (starts-with($resourceId, "L0")) then "lemmata"
+                      else if (starts-with($resourceId, "WP0")) then "workingpapers"
+                      else "texts"
+    let $firstCrumb  := if (($crumbtrails//a[1])[1]/@href) then
+                            ($crumbtrails//a[1])[1]/@href/string()
+                        else if ($text_type eq 'workingpapers') then
+                            tokenize($resourceId, '_')[1] || '/html/' || $resourceId || '_details.html'
+                        else
+                            tokenize($resourceId, '_')[1] || '/html/' || $resourceId || '.html'
     let $value := array {
                             ( map {
-                                    "input" :   concat("/texts/", $wid ),
+                                    "input" :   "/" || $text_type || "/" || $resourceId,
                                     "outputs" : array { ( $firstCrumb, 'yes' ) }
                                   }
                             )
@@ -1951,14 +1964,16 @@ declare function admin:buildRoutingInfoWork($wid as xs:string, $crumbtrails as e
 };
 
 declare function admin:buildRoutingInfoDetails($id) {
-    let $inputID := if (contains($id, 'ol')) then
-                        tokenize($id, '_')[1] || ':vol' || xs:string(number(substring(tokenize($id, '_')[2], 4)))
-                    else
-                        $id
-    let $debug := if ($config:debug = "trace") then console:log('$id: ' || $id || ', $inputID: ' || $inputID || '.') else ()
+    let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
+                                    if (doc-available(concat($subcollection, '/', $id, '.xml'))) then $subcollection
+                                    else ()
+    let $text_type :=      if (starts-with($id, "L0")) then "lemmata"
+                      else if (starts-with($id, "WP0")) then "workingpapers"
+                      else "texts"
+    let $debug := if ($config:debug = "trace") then console:log('$id: ' || $id || ' (type ' || $text_type || ').') else ()
     return
         map {
-              "input" :   concat("/texts/", $inputID, '_details' ),
+              "input" :   "/" || $text_type || "/" || $id || '?mode=details',
               "outputs" : array { ( concat(tokenize($id, '_')[1], '/html/', $id, '_details.html'), 'yes' ) }
         }
 };
@@ -2143,7 +2158,7 @@ declare function admin:createDetails($currentResourceId as xs:string) {
             "title_short" :             $teiHeader//tei:titleStmt/tei:title[@type eq 'short']/string(),
             "title_full" :              admin:StripLBs($teiHeader//tei:titleStmt/tei:title[@type eq 'main']/string()),
             "abstract" :                normalize-space($teiHeader/tei:profileDesc/tei:abstract/string()),
-            "keywords" :                string-join(for $kw in $teiHeader/tei:profileDesc//tei:keywords return normalize-space($kw), ', '),
+            "keywords" :                string-join(for $kw in $teiHeader/tei:profileDesc//tei:keywords/tei:term return normalize-space($kw), '; '),
             "place" :                   if (not($isFirstEd)) then
                                             string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:pubPlace[@role eq "thisEd"] return $p/string(), ', ')
                                         else
@@ -2164,10 +2179,14 @@ declare function admin:createDetails($currentResourceId as xs:string) {
                                             $teiHeader//tei:publicationStmt/tei:date/@when/string()
                                         else (),
             "src_publication_period" :  $teiHeader//tei:sourceDesc//tei:imprint/tei:date[@type eq 'summaryFirstEd']/string(),
-            "language" :                string-join($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n eq 'main']/string(), ', ') ||
-                                            (if ($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n ne 'main']) then
-                                                ' (' || string-join($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n ne 'main']/string(), ', ') || ')'
-                                            else ()),
+            "language" :                if ($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n eq 'main']) then 
+                                            string-join($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n eq 'main']/string(), ', ') ||
+                                                (if ($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n ne 'main']) then
+                                                    ' (' || string-join($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n ne 'main']/string(), ', ') || ')'
+                                                 else ()
+                                            )
+                                         else
+                                            string-join($teiHeader/tei:profileDesc/tei:langUsage/tei:language/string(), ', '),
             "thumbnail" :               if ($iiif and "thumbnail" = map:keys($iiif)) then
                                             map:get($iiif?thumbnail, '@id')
                                         else if ($iiif and "members" = map:keys($iiif) and "thumbnail" = map:keys($iiif?members(1))) then
