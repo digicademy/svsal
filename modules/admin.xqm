@@ -2083,7 +2083,7 @@ declare function admin:createDetails($currentResourceId as xs:string) {
                                   let $mulivol_id := $teiHeader//tei:notesStmt/tei:relatedItem[@type eq 'work_multivolume']/@target/tokenize(., ':')[2]
                                   return $config:iiif-root || '/' || $mulivol_id || '.json'
                                else ()
-        let $iiif           := if ($iiif_file) then json-doc($iiif_file) else ()
+        let $iiif           := if ($iiif_file) then json-doc($iiif_file) else map{}
 
         let $volume_names   := for $v in $teiHeader//tei:notesStmt/tei:relatedItem[@type eq 'work_volume'] return $v/@target/tokenize(., ':')[2]
         let $debug          := if (count($volume_names)>0) then console:log('[Details] $volume_names: ' || string-join($volume_names, ', ')) else ()
@@ -2092,7 +2092,7 @@ declare function admin:createDetails($currentResourceId as xs:string) {
         (: let $debug := console:log('$volumes: ' || serialize($volumes, map {"method":"json", "media-type":"application/json"})) :)
 
         let $volumes_list := for $key in map:keys($volumes) order by $key
-                                let $filtered_array := if ($iiif) then array:filter($iiif?members, function($m) {contains(map:get($m, '@id'), $key) }) else ()
+                                let $filtered_array := if (count(map:keys($iiif)) gt 0) then array:filter($iiif?members, function($m) {contains(map:get($m, '@id'), $key) }) else ()
                                 let $vol_thumbnail  := if (array:size($filtered_array) gt 0) then
                                                           $filtered_array(1)?thumbnail
                                                        else
@@ -2133,9 +2133,9 @@ declare function admin:createDetails($currentResourceId as xs:string) {
                                                                     $teiHeader//tei:sourceDesc//tei:imprint/tei:date/@when/string(),
                                     "src_publication_period" :  $teiHeader//tei:sourceDesc//tei:imprint/tei:date[@type eq 'summaryFirstEd']/string(),
                                     "language" :                string-join($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n eq 'main']/string(), ', ') ||
-                                                (if ($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n ne 'main']) then
-                                                    ' (' || string-join($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n ne 'main']/string(), ', ') || ')'
-                                                else ()),
+                                                                (if ($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n ne 'main']) then
+                                                                    ' (' || string-join($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n ne 'main']/string(), ', ') || ')'
+                                                                else ()),
                                     "thumbnail" :               if (array:size($filtered_array) gt 0) then map:get($vol_thumbnail, '@id') else (),
                                     "schol_ed" :                admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#scholarly')]/string(), ' / ')),
                                     "tech_ed" :                 admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#technical')]/string(), ' / ')),
@@ -2187,9 +2187,9 @@ declare function admin:createDetails($currentResourceId as xs:string) {
                                             )
                                          else
                                             string-join($teiHeader/tei:profileDesc/tei:langUsage/tei:language/string(), ', '),
-            "thumbnail" :               if ($iiif and "thumbnail" = map:keys($iiif)) then
+            "thumbnail" :               if (count(map:keys($iiif)) gt 0 and "thumbnail" = map:keys($iiif)) then
                                             map:get($iiif?thumbnail, '@id')
-                                        else if ($iiif and "members" = map:keys($iiif) and "thumbnail" = map:keys($iiif?members(1))) then
+                                        else if (count(map:keys($iiif)) gt 0 and "members" = map:keys($iiif) and "thumbnail" = map:keys($iiif?members(1))) then
                                             map:get($iiif?members(1)?thumbnail, '@id')
                                         else (),
             "schol_ed" :                admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#scholarly')]/string(), ' / ')),
@@ -2210,7 +2210,7 @@ declare function admin:createDetails($currentResourceId as xs:string) {
         let $vol_keys := for $v in $volumes_list return concat('$', map:get($v, 'key')) 
         let $volumes_string := '{{ $Volumes := dict "number" ' || xs:string(map:get($work_info, 'number_of_volumes')) ||
                                                     ' "volumes" (list ' || string-join($vol_keys, ' ') || ') }}'
-        let $work_string := if ($text_type eq "working_paper") then
+        let $work_string := if ("working_paper" = $text_type) then
                                     '{{ $map := dict "id" "' || $public_id ||
                                                     '" "title" "' || $work_info?title_full ||
                                                     '" "author" "' || $work_info?author_full ||
@@ -2231,7 +2231,7 @@ declare function admin:createDetails($currentResourceId as xs:string) {
                                                         else (), ' ') ||
                                         (if (count(map:keys($volumes)) gt 0) then ' "volumes" $Volumes' else ()) ||
                                     ' }}'
-        let $include_string := if ($text_type eq "working_paper") then
+        let $include_string := if ("working_paper" = $text_type) then
                                     '{{- include "/resources/templates/template-workingpaper.html" $map }}'
                                else
                                     '{{- include "../../../resources/templates/template_details.html" $work_info }}'
