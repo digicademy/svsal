@@ -234,7 +234,7 @@ return
                     switch ($resource) (: cases need to be lower-cased :)
                         case "admin.html"
                         case "corpus-admin.html"
-                        case "createlists.html"
+                        case "create-lists.html"
                         case "iiif-admin.html"
                         case "rendertherest.html"
                         case "render.html"
