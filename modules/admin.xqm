@@ -2107,15 +2107,6 @@ declare function admin:createDetails($currentResourceId as xs:string) {
         let $text_type := $resource//tei:text/@type/string()
         let $teiHeader := $resource//tei:teiHeader
 
-        (: we don't have iiif manifests for volumes, only for multivols and monographs :)
-        let $iiif_file      := if ($text_type = ("work_multivolume", "work_monograph")) then
-                                  $config:iiif-root || '/' || $id || '.json'
-                               else if ($text_type = "work_volume") then
-                                  let $mulivol_id := $teiHeader//tei:notesStmt/tei:relatedItem[@type eq 'work_multivolume']/@target/tokenize(., ':')[2]
-                                  return $config:iiif-root || '/' || $mulivol_id || '.json'
-                               else ()
-        let $iiif           := if ($iiif_file) then json-doc($iiif_file) else map{}
-
         let $volume_names   := for $v in $teiHeader//tei:notesStmt/tei:relatedItem[@type eq 'work_volume'] return $v/@target/tokenize(., ':')[2]
         let $debug          := if (count($volume_names)>0) then console:log('[Details] $volume_names: ' || string-join($volume_names, ', ')) else ()
         let $volumes        := for $f in $volume_names return if (doc-available($config:tei-root || '/works/' || $f || '.xml')) then map:entry($f, doc($config:tei-root || '/works/' || $f || '.xml')) else ()
@@ -2123,12 +2114,13 @@ declare function admin:createDetails($currentResourceId as xs:string) {
         (: let $debug := console:log('$volumes: ' || serialize($volumes, map {"method":"json", "media-type":"application/json"})) :)
 
         let $volumes_list := for $key in map:keys($volumes) order by $key
-                                let $filtered_array := if (count(map:keys($iiif)) gt 0) then array:filter($iiif?members, function($m) {contains(map:get($m, '@id'), $key) }) else ()
-                                let $vol_thumbnail  := if (array:size($filtered_array) gt 0) then
-                                                          $filtered_array(1)?thumbnail
-                                                       else
-                                                          let $debug := console:log("[Details] No iiif information for " || $wid || "/" || $key || " found.")
-                                                          return ()
+                                let $iiif_file      := $config:iiif-root || '/' || $key || '.json'
+                                let $iiif           := if (util:binary-doc-available($iiif_file)) then json-doc($iiif_file) else map{}
+                                let $vol_thumbnail  := if (count(map:keys($iiif)) gt 0 and "thumbnail" = map:keys($iiif)) then
+                                                            $iiif?thumbnail
+                                                        else
+                                                            let $debug := console:log("[Details] No iiif information for " || $wid || "/" || $key || " found.")
+                                                            return ()
                                 (: let $debug := console:log('$vol_thumbnail: ' || serialize($vol_thumbnail, map {"method":"json", "media-type":"application/json"})) :)
                                 (: let $debug := console:log('$iiif-vol?thumbnail?@id: ' || serialize(map:get($vol_thumbnail, '@id'), map {"method":"json", "media-type":"application/json"})) :)
                                 let $teiHeader := map:get($volumes, $key)//tei:teiHeader
@@ -2167,7 +2159,7 @@ declare function admin:createDetails($currentResourceId as xs:string) {
                                                                 (if ($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n ne 'main']) then
                                                                     ' (' || string-join($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n ne 'main']/string(), ', ') || ')'
                                                                 else ()),
-                                    "thumbnail" :               if (array:size($filtered_array) gt 0) then map:get($vol_thumbnail, '@id') else (),
+                                    "thumbnail" :               map:get($vol_thumbnail, '@id'),
                                     "schol_ed" :                admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#scholarly')]/string(), ' / ')),
                                     "tech_ed" :                 admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#technical')]/string(), ' / ')),
                                     "el_publication_date" :     if ($teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when) then
@@ -2181,6 +2173,17 @@ declare function admin:createDetails($currentResourceId as xs:string) {
 
         let $vol_strings    := for $v in $volumes_list return '$' || string(map:get($v, 'key')) || ' := dict ' ||
                                         string-join(for $k in map:keys($v) return '"' || $k || '" "' || string(map:get($v, $k)) || '"', ' ')
+
+        let $iiif_file      := $config:iiif-root || '/' || $id || '.json'
+        let $iiif           := if (util:binary-doc-available($iiif_file)) then json-doc($iiif_file) else map{}
+        let $thumbnail_id   := if (count(map:keys($iiif)) gt 0 and "thumbnail" = map:keys($iiif)) then
+                                    map:get($iiif?thumbnail, '@id') 
+                               else if (count($volumes_list) gt 0) then
+                                    let $debug := console:log("[Details] No iiif information for " || $wid || " found, looking in volumes...")
+                                    return (for $v at $pos in $volumes_list return $v?thumbnail)[1]
+                               else
+                                    let $debug := console:log("[Details] No iiif information for " || $wid || " found.")
+                                    return ()
 
         let $isFirstEd      := not($teiHeader//tei:sourceDesc//tei:imprint/(tei:date[@type eq "thisEd"] | tei:pubPlace[@role eq "thisEd"] | tei:publisher[@n eq "thisEd"]))
         let $work_info      := map {
@@ -2221,11 +2224,7 @@ declare function admin:createDetails($currentResourceId as xs:string) {
                                             )
                                          else
                                             string-join($teiHeader/tei:profileDesc/tei:langUsage/tei:language/string(), ', '),
-            "thumbnail" :               if (count(map:keys($iiif)) gt 0 and "thumbnail" = map:keys($iiif)) then
-                                            map:get($iiif?thumbnail, '@id')
-                                        else if (count(map:keys($iiif)) gt 0 and "members" = map:keys($iiif) and "thumbnail" = map:keys($iiif?members(1))) then
-                                            map:get($iiif?members(1)?thumbnail, '@id')
-                                        else (),
+            "thumbnail" :               $thumbnail_id,
             "schol_ed" :                admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#scholarly')]/string(), ' / ')),
             "tech_ed" :                 admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#technical')]/string(), ' / ')),
             "el_publication_date" :     if ($teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when) then
