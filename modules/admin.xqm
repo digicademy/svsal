@@ -1981,8 +1981,14 @@ declare function admin:buildRoutingInfoDetails($id) {
                       else "texts"
     let $debug := if ($config:debug = "trace") then console:log('$id: ' || $id || ' (type ' || $text_type || ').') else ()
     return
+        (: During routing, we have a replacement that moves an eventual 
+           'mode=details' parameter out of the url query parameters
+           and into the path (as a '_details' suffix).
+           So the actual id ←→ html routing has to operate on a
+           'id.salamanca.school/*/*_details' input value. 
+        :)
         map {
-              "input" :   "/" || $text_type || "/" || $id || '?mode=details',
+              "input" :   "/" || $text_type || "/" || $id || '_details',
               "outputs" : array { ( concat(tokenize($id, '_')[1], '/html/', $id, '_details.html'), 'yes' ) }
         }
 };
