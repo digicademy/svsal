@@ -1527,7 +1527,7 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
             let $nodeCrumbtrails   := doc($config:crumb-root || "/" || $work_id || "_crumbtrails.xml")
             let $hit_label         := string($nodeIndex//sal:node[@n eq $hit_id]/@label)
             let $hit_crumbtrail    := xmldb:encode(fn:serialize($nodeCrumbtrails//sal:nodecrumb[@xml:id eq $hit_id]/sal:crumbtrail/node(), map{"method":"xhtml", "escape-uri-attributes":false(), "omit-xml-declaration":true() }))
-
+            let $hit_crumbtrail_url := sutil:getNodetrail($work_id, $hit, 'citeID') 
             (: Here we define the to-be-indexed content! :)
             let $hit_content_orig := 
                 if ($hit_id) then
@@ -2149,17 +2149,17 @@ declare function admin:createDetails($currentResourceId as xs:string) {
                                                                 else
                                                                     string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:pubPlace return $p/string(), ', '),
                                     "printer_short" :           if (not($isFirstEd)) then
-                                                                    string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:publisher[@n eq "thisEd"] return ($p//tei:surname)[1]/string(), ', ')
+                                                                    string-join($teiHeader//tei:sourceDesc//tei:imprint/tei:publisher[@n eq "thisEd"]/tei:persName/tei:surname, '/')
                                                                 else
-                                                                    string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:publisher return ($p//tei:surname)[1]/string(), ', '),
+                                                                    string-join($teiHeader//tei:sourceDesc//tei:imprint/tei:publisher/tei:persName/tei:surname, '/'),
                                     "printer_full" :            if (not($isFirstEd)) then
-                                                                    admin:StripLBs(string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:publisher[@n eq "thisEd"] return $p//string(), ', '))
+                                                                    admin:StripLBs(string-join($teiHeader//tei:sourceDesc//tei:imprint/tei:publisher[@n eq "thisEd"]/tei:persName/string(), '/'))
                                                                 else
-                                                                    admin:StripLBs(string-join(for $p in $teiHeader//tei:sourceDesc//tei:imprint/tei:publisher return $p//string(), ', ')),
+                                                                    admin:StripLBs(string-join($teiHeader//tei:sourceDesc//tei:imprint/tei:publisher/tei:persName/string(), '/')),
                                     "year" :                    if (not($isFirstEd)) then
                                                                     $teiHeader//tei:sourceDesc//tei:imprint/tei:date[@type eq 'thisEd']/@when/string()
                                                                 else
-                                                                    $teiHeader//tei:sourceDesc//tei:imprint/tei:date/@when/string(),
+                                                                    $teiHeader//tei:sourceDesc//tei:imprint/tei:date[@type ne 'summaryFirstEd']/@when/string(),
                                     "src_publication_period" :  $teiHeader//tei:sourceDesc//tei:imprint/tei:date[@type eq 'summaryFirstEd']/string(),
                                     "language" :                string-join($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n eq 'main']/string(), ', ') ||
                                                                 (if ($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n ne 'main']) then
@@ -2173,12 +2173,17 @@ declare function admin:createDetails($currentResourceId as xs:string) {
                                                                 else
                                                                     'in prep.',
                                     "hold_library" :            $teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:repository/string(),
-                                    "hold_idno" :               $teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:idno/string(),
+                                    "hold_idno" :               string-join($teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:idno/string(), ' '),
                                     "status" :                  $teiHeader/tei:revisionDesc/@status/string()
                                 }
 
+        let $dbg := for $v in $volumes_list return
+                        if (count(map:get($v, 'key')) gt 1) then
+                            console:log("[ADMIN] Problem! More than one key value in a volume_string key: " || string-join(map:get($v, 'key'), ', '))
+                        else ()
+                                            
         let $vol_strings    := for $v in $volumes_list return '$' || string(map:get($v, 'key')) || ' := dict ' ||
-                                        string-join(for $k in map:keys($v) return '"' || $k || '" "' || string(map:get($v, $k)) || '"', ' ')
+                                        string-join(for $k in map:keys($v) return '"' || $k || '" "' || string-join(map:get($v, $k), ', ') || '"', ' ')
 
         let $iiif_file      := $config:iiif-root || '/' || $id || '.json'
         let $iiif           := if (util:binary-doc-available($iiif_file)) then json-doc($iiif_file) else map{}
