@@ -43,8 +43,12 @@ declare function iiif:createResource($targetWorkId as xs:string) as map(*) {
             if ($tei/tei:text[@type = 'work_multivolume']) then
                 (: work has several volumes :)
                 iiif:mkMultiVolumeCollection($targetWorkId, $tei)
-            else if ($tei/tei:text[@type = 'work_monograph' or @type = 'work_volume']) then
-                (: single volume :)
+            else if ($tei/tei:text[@type = 'work_volume']) then
+                (: single volume of a multi-volume work :)
+                let $collectionId := $tei//tei:notesStmt/tei:relatedItem[@type = "work_multivolume"]/tokenize(@target, ':')[last()]
+                return iiif:mkSingleVolumeManifest($targetWorkId, $tei, $collectionId)
+            else if ($tei/tei:text[@type = 'work_monograph']) then
+                (: monograph :)
                 iiif:mkSingleVolumeManifest($targetWorkId, $tei, ())
             else ()
         else ()
@@ -55,39 +59,41 @@ declare function iiif:createResource($targetWorkId as xs:string) as map(*) {
 
 declare function iiif:mkMultiVolumeCollection($workId as xs:string, $tei as node()) as map(*) {
     let $debug           := if ($config:debug = ("info", "trace")) then console:log("[iiif] iiif:mkMultiVolumeCollection running (" || $workId || " requested) ...") else ()
-    let $id              := $config:iiifPresentationServer || "collection/" || $workId
-    (:  let $id              := "https://www.test.salamanca.school/data/" || $workId || "/" || $workId || ".json" :)
-    let $label           := string-join(for $a in $tei//tei:titleStmt/tei:author return normalize-space($a), "/") || ": " ||
-                            normalize-space($tei//tei:titleStmt/tei:title[@type = "main"]/text()) || " [multi-volume collection]"
+    let $id              := $config:iiifPresentationServer || $workId
+    let $basiclabel      := string-join(for $a in $tei//tei:titleStmt/tei:author//tei:surname return normalize-space($a), "/") || ": " ||
+                            normalize-space($tei//tei:titleStmt/tei:title[@type = "short"]/text())
+    let $multivollabel   := $basiclabel || " [multi-volume collection]"
     let $metadata        := iiif:mkMetadata($tei)
-    let $description     := "Facsimiles for " || $label                          (: TODO: create a better description? :)
-    let $license         := "https://creativecommons.org/licenses/by/4.0/"       (: TODO: which license for image data? :)
+    let $description     := "Facsimiles for " || $multivollabel                  (: TODO: create a better description? :)
+    let $license         := "http://creativecommons.org/licenses/by/4.0/"        (: TODO: which license for image data? :)
     let $viewingHint     := "multi-part"
-    let $attribution     := "Presented by the project 'The School of Salamanca. A Digital Collection of Sources and a Dictionary of its Juridical-Political Language.' (http://salamanca.adwmainz.de)"
+    let $attribution     := "Presented by the project 'The School of Salamanca. A Digital Collection of Sources and a Dictionary of its Juridical-Political Language.' (https://salamanca.school/)"
 
     (: get manifests for each volume :)
-    let $volumeFileNames := for $fileName in $tei/tei:text/tei:group/xi:include/@href return $fileName
-    let $volumeNodes     := for $fileName in $volumeFileNames return doc($config:tei-works-root || '/' || $fileName)//tei:TEI
-
-    let $debug           := if ($config:debug = ("info", "trace")) then console:log("[iiif] Recursion: Create singleVolume manifests for: " || string-join($volumeNodes/@xml:id/string(), ', ') || ".") else ()
-    let $volumeManifests := for $teiNode in $volumeNodes return iiif:mkSingleVolumeManifest($teiNode/@xml:id, $teiNode, $id)
-    let $manifests       := array { $volumeManifests }
+    let $volumes         := for $t in util:expand($tei)//tei:text[@type = "work_volume"]
+                                order by xs:int($t/@n) ascending
+                                return
+                                    map {
+                                            "@id": $config:iiifPresentationServer || $workId || '_' || $t/@xml:id,
+                                            "@type": "sc:Manifest",
+                                            "label": $basiclabel || " [volume " || $t/@n || "]"
+                                        }
 
     (: the "manifests" property (below) is deprecated in v3.0, it is present as a fallback only :)
     let $collection-out := map {
                                "@context":    "http://iiif.io/api/presentation/2/context.json",
                                "@id":         $id,
                                "@type":       "sc:Collection",
-                               "label":       $label,
+                               "label":       $multivollabel,
                                "metadata":    $metadata,
                                "description": $description,
                                "viewingHint": $viewingHint,
                                "attribution": $attribution,
                                "license":     $license,
-                               "members":     $manifests,
-                               "manifests":   $manifests
+                               "members":     $volumes,
+                               "manifests":   $volumes
                            }
-    let $debug           := if ($config:debug = "trace") then console:log($collection-out) else ()
+(:    let $debug           := if ($config:debug = "trace") then console:log($collection-out) else ():)
     return $collection-out
 };
 
@@ -97,8 +103,9 @@ declare function iiif:mkSingleVolumeManifest($volumeId as xs:string, $teiDoc as 
     let $debug := if ($config:debug = "trace") then console:log("[iiif] iiif:mkSingleVolumeManifest running (" || $volumeId || " requested) ...") else ()
     let $tei := util:expand($teiDoc)
     (: File metadata section :)
-    let $id := $config:iiifPresentationServer || $volumeId || "/manifest"
-    let $label := normalize-space($tei/tei:teiHeader//tei:titleStmt/tei:title[@type = "main"]/text())
+    let $id := $config:iiifPresentationServer || $volumeId
+    let $label := string-join(for $a in $tei//tei:titleStmt/tei:author//tei:surname return normalize-space($a), "/") || ": " ||
+                    normalize-space($tei//tei:titleStmt/tei:title[@type = "short"]/text())
 
     (: Bibliographical metadata section :)
     let $metadata := iiif:mkMetadata($tei)
@@ -111,7 +118,7 @@ declare function iiif:mkSingleVolumeManifest($volumeId as xs:string, $teiDoc as 
         "service": map {
             "@context": "http://iiif.io/api/image/2/context.json",
             "@id": $thumbnailServiceId,
-            "profile": "http://iiif.io/api/image/2/level1.json"
+            "profile": "http://iiif.io/api/image/2/level2.json"
         }
     }
 
@@ -126,7 +133,7 @@ declare function iiif:mkSingleVolumeManifest($volumeId as xs:string, $teiDoc as 
 
     (: Rights information :)
     let $license         := "" (: TODO: which license for image data? https://creativecommons.org/licenses/by/4.0/ :)
-    let $attribution     := "Presented by the project 'The School of Salamanca. A Digital Collection of Sources and a Dictionary of its Juridical-Political Language.' (http://salamanca.adwmainz.de)"
+    let $attribution     := "Presented by the project 'The School of Salamanca. A Digital Collection of Sources and a Dictionary of its Juridical-Political Language.' (https://salamanca.school/)"
 
     (: Links to other data/formats :)
     let $seeAlso := array {
@@ -159,7 +166,7 @@ declare function iiif:mkSingleVolumeManifest($volumeId as xs:string, $teiDoc as 
         "sequences": $sequences,
         "structures": $structures
     }
-    let $manifest-out2 := if ($collectionId) then map:put($manifest-out, "within", $collectionId) else $manifest-out
+    let $manifest-out2 := if ($collectionId) then map:put($manifest-out, "within", $config:iiifPresentationServer || $collectionId) else $manifest-out
     return $manifest-out2
     (: do we need a (SvSal-)logo on the manifest level, to be shown in Mirador for example? :)
 

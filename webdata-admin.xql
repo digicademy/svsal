@@ -61,7 +61,7 @@ let $output :=
         case 'tei-corpus' return
             admin:createTeiCorpus('admin')
         case 'iiif' return
-            fn:serialize(admin:createIIIF($rid), map{"method":"json", "indent": true(), "encoding":"utf-8"})
+            admin:createIIIF($rid)
         case 'txt-corpus' return
             admin:createTxtCorpus('admin')
         case 'routing' return

@@ -895,9 +895,9 @@ declare function admin:exportJSONFile($filename as xs:string, $content as item()
 declare function admin:exportJSONFile($wid as xs:string, $filename as xs:string, $content as item()*, $collection as xs:string?) {
     let $fsRoot := $config:export-folder
     let $collectionname := 
-             if ($collection eq "iiif")      then $fsRoot || $wid || "/"
-        else if ($collection eq "stats")     then $fsRoot || $wid || "/"
-        else if ($collection eq "routing")   then $fsRoot || $wid || "/"
+             if ($collection eq "iiif")      then $fsRoot || tokenize($wid, '_')[1] || "/"
+        else if ($collection eq "stats")     then $fsRoot || tokenize($wid, '_')[1] || "/"
+        else if ($collection eq "routing")   then $fsRoot || tokenize($wid, '_')[1] || "/"
         else                                      $fsRoot || "trash/"
     let $collectionStatus :=
         if (not(file:exists($collectionname))) then
@@ -966,6 +966,14 @@ declare function admin:buildFacetsNoJs ($node as node(), $model as map (*), $lan
                           })
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] finalFacets (No Js) done!") else ()
     return $result
+};
+
+declare function admin:buildDictList ($node as node(), $model as map (*)) {
+    <div><p>The function admin:buildDictList() remains to be written...</p></div>
+};
+
+declare function admin:buildDictListNoJs ($node as node(), $model as map (*)) {
+    <div><p>The function admin:buildDictList() remains to be written...</p></div>
 };
 
 declare function admin:exportFileWRK ($node as node(), $model as map (*), $lang as xs:string?) {
@@ -1498,9 +1506,10 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
                 if ($hit_fragment) then
                     xs:int(substring($hit_fragment, 1, 4))
                 else ()
-            let $hit_path := 
+            
+            let $hit_path :=  (: modify here to have the relative path :) 
                 if ($hit_fragment) then
-                    $config:webserver || "/html/" || $work_id || "/" || $hit_fragment || ".html"
+                    $config:webserver || "/data/" || $work_id || "/html/" || $hit_fragment || ".html"
                 else
                     "#No fragment discoverable!"
             let $hit_url :=      
@@ -2026,21 +2035,43 @@ declare function admin:createRDF($rid as xs:string) {
 ~ Creates and stores a IIIF manifest/collection for work $wid.
 :)
 declare function admin:createIIIF($wid as xs:string) {
-    let $start-time := util:system-time()
+    let $target-work := util:expand(collection($config:tei-root)//tei:TEI[@xml:id = $wid])
+
+    let $todo := if ($target-work/tei:text/@type = "work_multivolume") then
+            distinct-values(($wid, for $vol in $target-work//tei:text[@type = "work_volume"] return $wid || "_" || $vol/@xml:id/string()))
+        else
+            $wid
+
     let $debug := 
-        if ($config:debug eq 'trace') then
-            util:log("info", "Creation of IIIF resource requested, work id: " || $wid || ".")
+        if ($config:debug = ('info', 'trace')) then
+            let $dbg := console:log("[ADMIN] iiif: Creation of IIIF resources requested, work id(s): " || string-join($todo, ', ') || ".")
+            return util:log("info", "Creation of IIIF resources requested, work id(s): " || string-join($todo, ', ') || ".")
         else ()
-    let $resource := iiif:createResource($wid)
-    let $runtime-ms := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000
-    let $runtimeString := 
-        if ($runtime-ms < (1000 * 60)) then format-number($runtime-ms div 1000, "#.##") || " Sek."
-        else if ($runtime-ms < (1000 * 60 * 60))  then format-number($runtime-ms div (1000 * 60), "#.##") || " Min."
-        else format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
-    let $log    := util:log('info', 'Extracted IIIF for ' || $wid || ' in ' || $runtimeString)
-    let $store  := if ($resource instance of map(*) and map:size($resource) > 0) then admin:saveTextFile($wid, $wid || '.json', fn:serialize($resource, map{"method":"json", "indent": true(), "encoding":"utf-8"}), 'iiif') else ()
-    let $export := if ($resource instance of map(*) and map:size($resource) > 0) then admin:exportJSONFile($wid, $wid || '.json', $resource, 'iiif') else ()
-    return $resource
+
+    let $reports :=
+        for $r in $todo
+            let $start-time := util:system-time()
+    
+            let $resource := iiif:createResource($r)
+        
+            let $runtime-ms := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000
+            let $runtimeString := 
+                if ($runtime-ms < (1000 * 60)) then format-number($runtime-ms div 1000, "#.##") || " Sek."
+                else if ($runtime-ms < (1000 * 60 * 60))  then format-number($runtime-ms div (1000 * 60), "#.##") || " Min."
+                else format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
+            let $timing := 'Extracted IIIF for ' || $r || ' in ' || $runtimeString
+            let $log    := util:log('info', $timing)
+        
+            let $store  := if ($resource instance of map(*) and map:size($resource) > 0) then admin:saveTextFile($r, $r || '.json', fn:serialize($resource, map{"method":"json", "indent": true(), "encoding":"utf-8"}), 'iiif') else ()
+            let $export := if ($resource instance of map(*) and map:size($resource) > 0) then admin:exportJSONFile($r, $r || '.json', $resource, 'iiif') else ()
+        
+            return 
+                <p>
+                    {$timing}<br/>
+                    iiif Manifest stored in {$store}.<br/>
+                    iiif Manifest exported to {$export}.
+                </p>
+    return <div>{$reports}</div> 
 };
 
 declare function admin:StripLBs($input as xs:string) {
@@ -2139,7 +2170,10 @@ declare function admin:createDetails($currentResourceId as xs:string) {
                                     "thumbnail" :               if (array:size($filtered_array) gt 0) then map:get($vol_thumbnail, '@id') else (),
                                     "schol_ed" :                admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#scholarly')]/string(), ' / ')),
                                     "tech_ed" :                 admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#technical')]/string(), ' / ')),
-                                    "el_publication_date" :     $teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when/string()[1],
+                                    "el_publication_date" :     if ($teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when) then
+                                                                    $teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when/string()[1]
+                                                                else
+                                                                    'in prep.',
                                     "hold_library" :            $teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:repository/string(),
                                     "hold_idno" :               $teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:idno/string(),
                                     "status" :                  $teiHeader/tei:revisionDesc/@status/string()
@@ -2194,8 +2228,14 @@ declare function admin:createDetails($currentResourceId as xs:string) {
                                         else (),
             "schol_ed" :                admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#scholarly')]/string(), ' / ')),
             "tech_ed" :                 admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#technical')]/string(), ' / ')),
-            "el_publication_date" :     $teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when/string()[1],
-            "hold_library" :            $teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:repository/string(),
+            "el_publication_date" :     if ($teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when) then
+                                            $teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when/string()[1]
+                                        else
+                                            'in prep.',
+            "hold_library" :            if (count($volumes_list) gt 0 and not($teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:repository)) then
+                                            'check individual volumes'
+                                        else
+                                            $teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:repository/string(),
             "hold_idno" :               $teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:idno/string(),
             "urn" :                     $teiHeader//tei:sourceDesc//tei:ref[@type eq 'url'][starts-with(./text(), 'urn:')]/string(),
             "pdfurl" :                  $teiHeader//tei:sourceDesc//tei:ref[@type eq 'url'][ends-with(./text(), '.pdf')]/string(),
@@ -2234,7 +2274,7 @@ declare function admin:createDetails($currentResourceId as xs:string) {
         let $include_string := if ("working_paper" = $text_type) then
                                     '{{- include "/resources/templates/template-workingpaper.html" $map }}'
                                else
-                                    '{{- include "../../../resources/templates/template_details.html" $work_info }}'
+                                    '{{- include "../../../resources/templates/template-details.html" $work_info }}'
 
         let $work_result := concat(
                                 if (count($vol_strings) gt 0) then

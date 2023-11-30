@@ -665,7 +665,7 @@ declare function html:createFragment($workId as xs:string, $fragmentRoot as elem
         codepoints-to-string(10), codepoints-to-string(10),
         html:createPaginationLinks($workId, $fragmentIndex, $prevId, $nextId),
         codepoints-to-string(10), codepoints-to-string(10),
-        '{{include "../../../resources/templates/template_work.html" $work_info }}',
+        '{{include "../../../resources/templates/template-work.html" $work_info }}',
         codepoints-to-string(10)
     )
 };
