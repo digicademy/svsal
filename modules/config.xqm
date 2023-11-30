@@ -27,17 +27,17 @@ import module namespace i18n    = "http://exist-db.org/xquery/i18n"     at "i18n
 (: ==================================================================================== :)
 (: OOOooo... Configurable Section for the School of Salamanca Web-Application ...oooOOO :)
 
-declare variable $config:debug        := "info"; (: possible values: trace, info, none :)
-declare variable $config:instanceMode := "fakeprod"; (: possible values: testing, staging, production, fakeprod :)
+declare variable $config:debug        := "trace"; (: possible values: trace, info, none :)
+declare variable $config:instanceMode := "prod"; (: possible values: testing, staging, production, fakeprod :)
 declare variable $config:contactEMail := "info.salamanca@adwmainz.de";
 declare variable $config:defaultProdserver := 'salamanca.school';
-declare variable $config:defaultTestserver := 'test.salamanca.school';
+declare variable $config:defaultTestserver := 'salamanca.school';
 
 (: Configure Servers :)
 declare variable $config:proto          := "https"; (: if (request:get-header('X-Forwarded-Proto') = "https") then "https" else request:get-scheme(); :)
 declare variable $config:subdomains     := ("www", "blog", "facs", "search", "data", "api", "tei", "id", "files", "ldf", "software");
 declare variable $config:serverdomain := 
-    if ($config:instanceMode = "fakeprod") then
+    if ($config:instanceMode = ("production", "fakeprod")) then
         let $debug := if ($config:debug = "trace") then console:log("Forcing $config:serverdomain to be " || $config:defaultProdserver || ".") else ()
         return $config:defaultProdserver
     else if (substring-before(request:get-header('X-Forwarded-Host'), ".") = $config:subdomains)
