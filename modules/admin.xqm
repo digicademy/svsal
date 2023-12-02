@@ -1526,8 +1526,20 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
             let $nodeIndex         := doc($config:index-root || "/" || $work_id || "_nodeIndex.xml")
             let $nodeCrumbtrails   := doc($config:crumb-root || "/" || $work_id || "_crumbtrails.xml")
             let $hit_label         := string($nodeIndex//sal:node[@n eq $hit_id]/@label)
-            let $hit_crumbtrail    := xmldb:encode(fn:serialize($nodeCrumbtrails//sal:nodecrumb[@xml:id eq $hit_id]/sal:crumbtrail/node(), map{"method":"xhtml", "escape-uri-attributes":false(), "omit-xml-declaration":true() }))
-            let $hit_crumbtrail_url := sutil:getNodetrail($work_id, $hit, 'citeID') 
+            let $hit_crumbtrail    := fn:serialize($nodeCrumbtrails//sal:nodecrumb[@xml:id eq $hit_id]/sal:crumbtrail/node()[last()](:  , map{"method":"xhtml", "escape-uri-attributes":false(), "omit-xml-declaration":true() } :))
+            let $before_crumbtrail :=  if (substring-before($hit_crumbtrail, '">')) then (substring-before($hit_crumbtrail, '">')) else ((substring-before($hit_crumbtrail, '"/>')))
+            let $substringed_crumbtrail := substring-after($before_crumbtrail, "#")
+
+let $nodetrail := sutil:getNodetrailString($wid, $substringed_crumbtrail, 'citeID')
+
+let $relativeLink := concat($config:idserver, "/texts/", $wid, ":", $nodetrail)
+
+let $replaced_hit_crumbtrail := fn:replace($hit_crumbtrail, substring-after($before_crumbtrail, 'href="'), $relativeLink)
+
+               let $encoded_crumbtrail :=  xmldb:encode($replaced_hit_crumbtrail)
+             (:   let $hit_crumbtrail_node_id := $nodeIndex//sal:node[@n eq $hit_crumbtrail_id] :)
+             (:  let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] This is hit_crumbtrail_decoded: " ||decode-uri(hit_crumbtrail) || ".") else () :)
+        (:  :   let $hit_crumbtrail_url :=decode :)
             (: Here we define the to-be-indexed content! :)
             let $hit_content_orig := 
                 if ($hit_id) then
@@ -1558,7 +1570,7 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
                             (<sphinx_year>{$work_year}</sphinx_year>)
                         </h3>
                         <h4>Label: {$hit_label}</h4>
-                        <div>Crumbtrail: {$hit_crumbtrail}</div>
+                        <div>Crumbtrail: {$replaced_hit_crumbtrail}</div>
                         <h4>Hit
                             language: &quot;<sphinx_hit_language>{$hit_language}</sphinx_hit_language>&quot;,
                             node type: &lt;<sphinx_hit_type>{$hit_type}</sphinx_hit_type>&gt;,
@@ -1591,7 +1603,7 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
                     <sphinx_hit_type>{$hit_type}</sphinx_hit_type>
                     <sphinx_hit_id>{$hit_id}</sphinx_hit_id>
                     <sphinx_hit_label>{$hit_label}</sphinx_hit_label>
-                    <sphinx_hit_crumbtrail>{$hit_crumbtrail}</sphinx_hit_crumbtrail>
+                    <sphinx_hit_crumbtrail>{$encoded_crumbtrail}</sphinx_hit_crumbtrail>
                     <sphinx_description_orig>{$hit_content_orig}</sphinx_description_orig>
                     <sphinx_description_edit>{$hit_content_edit}</sphinx_description_edit>
                     <sphinx_html_path>{$hit_path}</sphinx_html_path>
@@ -1881,10 +1893,10 @@ declare function admin:createRoutes($wid as xs:string) {
                                         array{fn:for-each($index//sal:node, function($k) {admin:buildRoutingInfoNode($wid, $k, $crumbtrails)} )}
                                    else ()
     let $routingVolumeDetails   := if ($index) then
-                                        array{fn:for-each($index//sal:node[@subtype = "work_volume"], function($k) {admin:buildRoutingInfoDetails($wid || '_' || $k/@n)} )}
+                                        array{fn:for-each($index//sal:node[@subtype = "work_volume"], function($k) {admin:buildRoutingInfoDetails($wid || ':' || $k/@citeID)} )}
                                    else
-                                        let $volumes := doc($config:tei-works-root || '/' || $wid || '.xml')//xi:include[contains(@href, '_Vol')]/@href/string()
-                                        return array{fn:for-each($volumes, function($k) {admin:buildRoutingInfoDetails(tokenize($k, '\.')[1])} )}
+                                        let $volumes := doc($config:tei-works-root || '/' || $wid || '.xml')//xi:include[contains(@href, '_Vol')]/@href/string()/replace(., 'Vol', 'vol')
+                                        return array{fn:for-each($volumes, function($k) {admin:buildRoutingInfoDetails($wid || ':' || xs:int(tokenize($k, 'Vol')[2]))} )}
     let $routingTable           := array:join( ( $routingWork, $routingNodes, $routingVolumeDetails, $routingWorkDetails ) )
 
     let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Routing: Joint routing table: " || substring(serialize($routingTable, map{"method":"json", "indent": false(), "encoding":"utf-8"}), 1, 500) || " ...") else ()
@@ -1939,7 +1951,7 @@ declare function admin:createRoutes($wid as xs:string) {
 };
 
 declare function admin:buildRoutingInfoNode($wid as xs:string, $item as element(sal:node), $crumbtrails as element(sal:crumb)) {
-    let $crumb := $crumbtrails//sal:nodecrumb[@xml:id eq $item/@n]//a[last()]/@href/string()
+    let $crumb := substring-after($crumbtrails//sal:nodecrumb[@xml:id eq $item/@n]//a[last()]/@href/string(), "/data/")
     let $value := map {
                     "input" :   concat("/texts/", $wid, ":", $item/@citeID/string()),
                     "outputs" : array { ( $crumb, 'yes' ) }
@@ -1956,7 +1968,7 @@ declare function admin:buildRoutingInfoWork($resourceId as xs:string, $crumbtrai
                       else if (starts-with($resourceId, "WP0")) then "workingpapers"
                       else "texts"
     let $firstCrumb  := if (($crumbtrails//a[1])[1]/@href) then
-                            ($crumbtrails//a[1])[1]/@href/string()
+                           substring-after(($crumbtrails//a[1])[1]/@href/string(), '/data/')
                         else if ($text_type eq 'workingpapers') then
                             tokenize($resourceId, '_')[1] || '/html/' || $resourceId || '_details.html'
                         else
@@ -1973,13 +1985,15 @@ declare function admin:buildRoutingInfoWork($resourceId as xs:string, $crumbtrai
 };
 
 declare function admin:buildRoutingInfoDetails($id) {
-    let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
-                                    if (doc-available(concat($subcollection, '/', $id, '.xml'))) then $subcollection
-                                    else ()
     let $text_type :=      if (starts-with($id, "L0")) then "lemmata"
                       else if (starts-with($id, "WP0")) then "workingpapers"
                       else "texts"
     let $debug := if ($config:debug = "trace") then console:log('$id: ' || $id || ' (type ' || $text_type || ').') else ()
+    let $output :=  if (contains($id, ':')) then
+                        let $wid := tokenize($id, ':')[1]
+                        return concat( $wid, '/html/', $wid, '_Vol', format-integer(xs:int(substring-after(tokenize($id, ':')[2], 'vol')), '00'), '_details.html')
+                    else
+                        concat( $id, '/html/', $id, '_details.html')
     return
         (: During routing, we have a replacement that moves an eventual 
            'mode=details' parameter out of the url query parameters
@@ -1989,7 +2003,7 @@ declare function admin:buildRoutingInfoDetails($id) {
         :)
         map {
               "input" :   "/" || $text_type || "/" || $id || '_details',
-              "outputs" : array { ( concat(tokenize($id, '_')[1], '/html/', $id, '_details.html'), 'yes' ) }
+              "outputs" : array { ( $output, 'yes' ) }
         }
 };
 
@@ -2172,8 +2186,8 @@ declare function admin:createDetails($currentResourceId as xs:string) {
                                                                     $teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when/string()[1]
                                                                 else
                                                                     'in prep.',
-                                    "hold_library" :            $teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:repository/string(),
-                                    "hold_idno" :               string-join($teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:idno/string(), ' '),
+                                    "hold_library" :            normalize-space(string-join($teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:repository/string(), ' | ')),
+                                    "hold_idno" :               normalize-space(string-join($teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:idno/string(), ' ')),
                                     "status" :                  $teiHeader/tei:revisionDesc/@status/string()
                                 }
 
@@ -2245,8 +2259,8 @@ declare function admin:createDetails($currentResourceId as xs:string) {
             "hold_library" :            if (count($volumes_list) gt 0 and not($teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:repository)) then
                                             'check individual volumes'
                                         else
-                                            $teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:repository/string(),
-            "hold_idno" :               $teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:idno/string(),
+                                            normalize-space(string-join($teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:repository/string(), ' | ')),
+            "hold_idno" :               normalize-space(string-join($teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:idno/string(), ' ')),
             "urn" :                     $teiHeader//tei:sourceDesc//tei:ref[@type eq 'url'][starts-with(./text(), 'urn:')]/string(),
             "pdfurl" :                  $teiHeader//tei:sourceDesc//tei:ref[@type eq 'url'][ends-with(./text(), '.pdf')]/string(),
             "image_filename" :          tokenize($resource//tei:text//tei:titlePage//tei:graphic/@url[ends-with(., '.png')], '/')[last()],
