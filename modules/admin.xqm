@@ -1169,48 +1169,55 @@ declare %templates:wrap function admin:renderAuthorLemma($node as node(), $model
 (:
 ~ Creates HTML fragments and TXT datasets for works and stores them in the database.
 :)
-declare %templates:wrap function admin:renderWork($workId as xs:string*) as element(div) {
+declare %templates:wrap function admin:renderHTML($id as xs:string*) as element(div) {
     let $start-time := util:system-time()
-    let $wid := if ($workId) then $workId else request:get-parameter('wid', '*')
-    
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Rendering " || $wid || " (HTML and TXT).") else ()
-    
+    let $resourceId := if ($id) then $id else request:get-parameter('rid', '*')
+
     (: define the works to be fragmented: :)
     let $todo := 
-        if ($wid = '*') then
-            collection($config:tei-works-root)//tei:TEI[.//tei:text[@type = ("work_multivolume", "work_monograph")]]
+        if ($resourceId = '*') then
+            collection($config:tei-root)//tei:TEI[.//tei:text[@type = ("work_multivolume", "work_monograph", "lemma_article")]]
         else
-            collection($config:tei-works-root)//tei:TEI[@xml:id = distinct-values($wid)][.//tei:text[@type = ("work_multivolume", "work_monograph")]]
+            collection($config:tei-root)//tei:TEI[@xml:id = distinct-values($resourceId)][.//tei:text[@type = ("work_multivolume", "work_monograph", "lemma_article")]]
 
-    (: for each requested work: create fragments, insert them into the transformation, and produce some diagnostic info :)
+    (: for each requested resource: create fragments, insert them into the transformation, and produce some diagnostic info :)
     let $createData := 
         for $work-raw in $todo
-            let $workId := $work-raw/@xml:id
+
+            let $rid := $work-raw/ancestor-or-self::tei:TEI/@xml:id/string()
+            let $text-type := ($work-raw/tei:text/@type/string())[1]
+
+            let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Rendering HTML (and TXT) for " || $text-type || " " || $rid || ".") else ()
+            let $start-time-work := util:system-time()
         
-            let $cleanStatus := admin:cleanCollection($workId, "html")
+            let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
+                                            if (doc-available(concat($subcollection, '/', $rid, '.xml'))) then $subcollection
+                                            else ()
+
+            let $cleanStatus := admin:cleanCollection($rid, "html")
             
             (: (1) HTML :)
-            
+
             let $start-time-a := util:system-time()
             let $htmlData := html:makeHTMLData($work-raw)
             let $htmlDataOld := html:makeHTMLDataOld($work-raw)
             (: Keep track of how long this work did take :)
             let $runtime-ms-a := ((util:system-time() - $start-time-a) div xs:dayTimeDuration('PT1S'))  * 1000
             let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Html files created. Saving...") else ()
-            
+
             (: store data :)
-            let $saveToc     := admin:saveFile($workId, $workId || "_toc.html", $htmlData('toc'), "html")
-            let $exportToc   := admin:exportXMLFile($workId, $workId || "_toc.html", $htmlData('toc'), "html")
+            let $saveToc     := admin:saveFile($rid, $rid || "_toc.html", $htmlData('toc'), "html")
+            let $exportToc   := admin:exportXMLFile($rid, $rid || "_toc.html", $htmlData('toc'), "html")
             let $savePages   := (
-                admin:saveFile($workId, $workId || "_pages_de.html", $htmlDataOld('pagination_de'), "html"),
-                admin:saveFile($workId, $workId || "_pages_en.html", $htmlDataOld('pagination_en'), "html"),
-                admin:saveFile($workId, $workId || "_pages_es.html", $htmlDataOld('pagination_es'), "html")
+                admin:saveFile($rid, $rid || "_pages_de.html", $htmlDataOld('pagination_de'), "html"),
+                admin:saveFile($rid, $rid || "_pages_en.html", $htmlDataOld('pagination_en'), "html"),
+                admin:saveFile($rid, $rid || "_pages_es.html", $htmlDataOld('pagination_es'), "html")
                 )
-            let $exportPages := admin:exportXMLFile($workId, $workId || "_pages.html", $htmlData('pagination'), "html")
+            let $exportPages := admin:exportXMLFile($rid, $rid || "_pages.html", $htmlData('pagination'), "html")
             let $exportFragments :=
                 for $fragment in $htmlData('fragments') return
                     let $fileName := $fragment('number') || '_' || $fragment('tei_id') || '.html'
-                    let $storeStatus := if ($fragment('html')) then admin:exportBinaryFile($workId, $fileName, $fragment('html'), 'html') else ()
+                    let $storeStatus := if ($fragment('html')) then admin:exportBinaryFile($rid, $fileName, $fragment('html'), 'html') else ()
                     return 
                         (: generate some HTML output to be shown in report :)
                         <div>
@@ -1219,7 +1226,7 @@ declare %templates:wrap function admin:renderWork($workId as xs:string*) as elem
                                  || '&quot;&gt;'} (Level {$fragment('tei_level')})</h3>
                             <div style="margin-left:4em;">
                                 <div style="border:'3px solid black';background-color:'grey';">
-                                    <code>{$wid}/{$fileName}:<br/>
+                                    <code>{$rid}/{$fileName}:<br/>
                                         target xml:id={$fragment('tei_id')} <br/>
                                         prev xml:id={$fragment('prev')} <br/>
                                         next xml:id={$fragment('next')} <br/>
@@ -1230,7 +1237,7 @@ declare %templates:wrap function admin:renderWork($workId as xs:string*) as elem
             let $saveFragments :=
                 for $fragmentOld in $htmlDataOld('fragments') return
                     let $fileName := $fragmentOld('number') || '_' || $fragmentOld('tei_id') || '.html'
-                    let $storeStatusOld := if ($fragmentOld('html')) then admin:saveFile($workId, $fileName, $fragmentOld('html'), 'html') else ()
+                    let $storeStatusOld := if ($fragmentOld('html')) then admin:saveFile($rid, $fileName, $fragmentOld('html'), 'html') else ()
                     return 
                         (: generate some HTML output to be shown in report :)
                         <div>
@@ -1239,7 +1246,7 @@ declare %templates:wrap function admin:renderWork($workId as xs:string*) as elem
                                  || '&quot;&gt;'} (Level {$fragmentOld('tei_level')})</h3>
                             <div style="margin-left:4em;">
                                 <div style="border:'3px solid black';background-color:'grey';">
-                                    <code>{$wid}/{$fileName}:<br/>
+                                    <code>{$rid}/{$fileName}:<br/>
                                         target xml:id={$fragmentOld('tei_id')} <br/>
                                         prev xml:id={$fragmentOld('prev')} <br/>
                                         next xml:id={$fragmentOld('next')} <br/>
@@ -1254,12 +1261,12 @@ declare %templates:wrap function admin:renderWork($workId as xs:string*) as elem
             
             let $txt-start-time := util:system-time()
             let $plainTextEdit       := txt:makeTXTData($work-raw, 'edit')
-            let $txtEditExportStatus := admin:exportBinaryFile($workId, $workId || "_edit.txt", $plainTextEdit, "txt")
-            let $txtEditSaveStatus   := admin:saveTextFile($workId, $workId || "_edit.txt", $plainTextEdit, "txt")
+            let $txtEditExportStatus := admin:exportBinaryFile($rid, $rid || "_edit.txt", $plainTextEdit, "txt")
+            let $txtEditSaveStatus   := admin:saveTextFile($rid, $rid || "_edit.txt", $plainTextEdit, "txt")
             let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Plain text (edit) file created and stored.") else ()
             let $plainTextOrig       := txt:makeTXTData($work-raw, 'orig')
-            let $txtOrigEXportStatus := admin:exportBinaryFile($workId, $workId || "_orig.txt", $plainTextOrig, "txt")
-            let $txtOrigSaveStatus   := admin:saveTextFile($workId, $workId || "_orig.txt", $plainTextOrig, "txt")
+            let $txtOrigEXportStatus := admin:exportBinaryFile($rid, $rid || "_orig.txt", $plainTextOrig, "txt")
+            let $txtOrigSaveStatus   := admin:saveTextFile($rid, $rid || "_orig.txt", $plainTextOrig, "txt")
             let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Plain text (orig) file created and stored.") else ()
             let $txt-end-time := ((util:system-time() - $txt-start-time) div xs:dayTimeDuration('PT1S'))
             
@@ -1267,7 +1274,7 @@ declare %templates:wrap function admin:renderWork($workId as xs:string*) as elem
             
             return 
                 <div>
-                     <p><a href='{$config:idserver}/texts/{$workId}'>{string($workId)}</a>, Fragmentation depth: <code>{$htmlData('fragmentation_depth')}</code></p>
+                     <p><a href='{$config:idserver}/texts/{$rid}'>{string($rid)}</a>, Fragmentation depth: <code>{$htmlData('fragmentation_depth')}</code></p>
                      {if (count($htmlData('missed_elements'))) then <p>{count($htmlData('missed_elements'))} missed elements:<br/>
                         {for $e in $htmlData('missed_elements') return <code>{local-name($e) || '(' || string($e/@xml:id) || '); '}</code>}</p>
                       else ()}
@@ -1304,8 +1311,8 @@ declare %templates:wrap function admin:renderWork($workId as xs:string*) as elem
         else format-number($runtime-ms-raw div (1000 * 60 * 60), "#.##") || " Std."
     
     
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Done rendering HTML and TXT for " || $wid || ".") else ()
-    let $debug := util:log('info', '[ADMIN] Created HTML for work ' || $wid || ' in ' || $runtime-ms || ' ms.')
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Done rendering HTML and TXT for " || $resourceId || ".") else ()
+    let $debug := util:log('info', '[ADMIN] Created HTML for work ' || $resourceId || ' in ' || $runtime-ms || ' ms.')
     return 
         <div>
             <h2>HTML &amp; TXT Rendering</h2>
@@ -1672,9 +1679,9 @@ declare function admin:createNodeIndex($wid as xs:string*) {
     (: define the works to be indexed: :)
     let $teiRoots := 
         if ($wid = '*') then
-            collection($config:tei-works-root)//tei:TEI[.//tei:text[@type = ("work_multivolume", "work_monograph")]]
+            collection($config:tei-root)//tei:TEI[.//tei:text[@type = ("work_multivolume", "work_monograph", "lemma_article")]]
         else
-            collection($config:tei-works-root)//tei:TEI[@xml:id = distinct-values($wid)]
+            collection($config:tei-root)//tei:TEI[@xml:id = distinct-values($wid)]
 
     (: for each requested work, create an individual index :)
     let $indexResults :=
@@ -2135,7 +2142,7 @@ declare function admin:createDetails($currentResourceId as xs:string) {
 
         let $volumes_list := for $key in map:keys($volumes) order by $key
                                 let $iiif_file      := $config:iiif-root || '/' || $key || '.json'
-                                let $iiif           := if (util:binary-doc-available($iiif_file)) then json-doc($iiif_file) else map{}
+                                let $iiif            := if (util:binary-doc-available($iiif_file)) then json-doc($iiif_file) else map{}
                                 let $vol_thumbnail  := if (count(map:keys($iiif)) gt 0 and "thumbnail" = map:keys($iiif)) then
                                                             $iiif?thumbnail
                                                         else
@@ -2301,10 +2308,11 @@ declare function admin:createDetails($currentResourceId as xs:string) {
                                     '{{- include "../../../resources/templates/template-details.html" $work_info }}'
 
         let $work_result := concat(
-                                if (count($vol_strings) gt 0) then
-                                    '{{ ' || string-join($vol_strings, ' }}&#10;{{ ') || ' }}&#10;' || $volumes_string || '&#10;&#10;'
-                                else (),
-                                $work_string, '&#10;&#10;', $include_string, '&#10;'
+                                     (if (count($vol_strings) gt 0) then
+                                         '{{ ' || string-join($vol_strings, ' }}&#10;{{ ') || ' }}&#10;' || $volumes_string || '&#10;&#10;'
+                                      else ()
+                                     ),
+                                     $work_string, '&#10;&#10;', $include_string, '&#10;'
                             )
 
         let $save   := admin:saveTextFile($id, $id || '_details.html', $work_result, 'details')
@@ -2315,8 +2323,10 @@ declare function admin:createDetails($currentResourceId as xs:string) {
                             let $debug := console:log("[Details] Rendering details for volume " || $v || "...")
                             return admin:createDetails($v)
         return ($id, $save, $export)
-    let $debug := if ($config:debug = "bla") then console:log("[ADMIN] Done rendering Details.")
-                  else if ($config:debug = ("info", "trace")) then console:log("[ADMIN] Done rendering Details. (Saved/exported to " || string-join(for $v in $process_loop return string-join($v, ','), '; ') || ").")
+    let $debug := if ($config:debug = "bla") then
+                    console:log("[ADMIN] Done rendering Details.")
+                  else if ($config:debug = ("info", "trace")) then
+                    console:log("[ADMIN] Done rendering Details. (Saved/exported to " || string-join(for $v in $process_loop return string-join($v, ','), '; ') || ").")
                   else ()
     return $process_loop
 };

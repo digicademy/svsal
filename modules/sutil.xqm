@@ -235,9 +235,11 @@ declare function sutil:getNodetrail($wid as xs:string, $node as element()?, $mod
                 default
                     return util:log('error', '[sutil] calling sutil:getNodetrail with unknown mode: ' || $mode)
         else
-            util:log('error', '[sutil] calling sutil:getNodetrail(' || $wid || ', ' || $mode || ') but found no indexed node for node: ' || serialize($node))
+            let $debug := console:log('[sutil] calling sutil:getNodetrail(' || $wid || ', ' || $mode || ') but found no indexed node for node: ' || serialize($node))
+            return util:log('error', '[sutil] calling sutil:getNodetrail(' || $wid || ', ' || $mode || ') but found no indexed node for node: ' || serialize($node))
     else
-        util:log('error', '[sutil] calling sutil:getNodetrail(' || $wid || ', ' || $mode || ') but no index file available.')
+        let $debug := console:log('[sutil] calling sutil:getNodetrail(' || $wid || ', ' || $mode || ') but no index file available.')
+        return util:log('error', '[sutil] calling sutil:getNodetrail(' || $wid || ', ' || $mode || ') but no index file available.')
 };
 
 declare function sutil:getNodetrailString($wid as xs:string, $id as xs:string, $mode as xs:string) {

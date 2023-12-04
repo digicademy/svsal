@@ -37,7 +37,7 @@ declare variable $html:titleTruncLimit := 15;
 
 declare variable $html:basicElemNames := ('p', 'head', 'note', 'item', 'cell', 'label', 'signed', 'lg', 'titlePage');
 
-declare variable $html:defaultLang := collection($config:i18n-root)/*:catalogue[@xml:lang="de"];
+declare variable $html:defaultLang := collection($config:i18n-root)/*:catalogue[@xml:lang="en"];
 
 (: sometimes, we want to i18n-look up simple strings, but exist's i18n functions need nodes as input arguments, so we wrap our strings here :)
 declare function html:i18nNodify($s as xs:string) {
@@ -788,58 +788,70 @@ declare function html:transformToLink($node as element(), $uri as xs:string) {
 ~ For a node, make a full-blown URI including the citeID of the node
 :)
 declare function html:makeCiteIDURI($node as element()) as xs:string? {
-    let $debug := if (not($node/@xml:id)) then console:log("[HTML] Problem: intend to html:makeCiteIDURI of a " || local-name($node) || " node without xml:id. After line " || $node/preceding::tei:lb[1]/@xml:id/string() || "." ) else ()
-    let $workId := $node/ancestor::tei:TEI/@xml:id
-    let $citeID := sutil:getNodetrail($workId, $node, 'citeID')
+    let $debug :=  if (not($node/@xml:id)) then
+                        console:log("[HTML] Problem: intend to html:makeCiteIDURI of a " || local-name($node) || " node without xml:id. After line " || $node/preceding::tei:lb[1]/@xml:id/string() || "." )
+                    else ()
+    let $textId := $node/ancestor::tei:TEI/@xml:id
+
+    let $textTypePrefix := 
+        if (starts-with($textId, 'W0')) then '/texts/' 
+        else if (starts-with($textId, 'WP')) then '/workingpapers/' 
+        else if (starts-with($textId, 'A')) then '/authors/'
+        else if (starts-with($textId, 'L')) then '/lemmata/'
+        else ()
+
+    let $citeID := sutil:getNodetrail($textId, $node, 'citeID')
     return
-        if ($citeID) then $config:idserver || '/texts/' || $workId || ':' || $citeID
+        if ($citeID) then $config:idserver || $textTypePrefix || $textId || ':' || $citeID
         else ()
 };
 
 
+(:
+~ For a node and a reference that may be a prefixed/private URI, create a valid internet URI
+:)
 (: TODO: debugging with references to extratextual entities :)
 declare function html:resolveURI($node as element(), $targets as xs:string) {
     let $currentWork := $node/ancestor-or-self::tei:TEI
     let $target := (tokenize($targets, ' '))[1]
-    let $prefixDef := $currentWork//tei:prefixDef
-    let $workScheme := '(work:(W[A-z0-9.:_\-]+))?#(.*)'
-    let $lemmaScheme := 'lemma:(L[0-9]+)'
-    let $facsScheme := 'facs:((W[0-9]+)[A-z0-9.:#_\-]+)'
-    let $genericScheme := '(\S+):([A-z0-9.:#_\-]+)'
+    let $targetPrefix := substring-before($target, ':')
+    let $prefixMap := map:merge(for $p in $currentWork//tei:prefixDef return map 
+                                    {   $p/@ident/string() : map {
+                                            "matchPattern" :        $p/@matchPattern/string(),
+                                            "replacementPattern" : $p/@replacementPattern/string()
+                                        }
+                                    }
+                        )
+
     return
-        if (starts-with($target, '#') and $currentWork//*[@xml:id eq substring($target, 2)]) then
-            (: target is some node within the current work :)
-            html:makeCiteIDURI($currentWork//*[@xml:id eq substring($target, 2)])
-        else if (matches($target, $workScheme)) then
-            (: target is something like "work:W...#..." :)
-            let $targetWorkId :=
-                if (replace($target, $workScheme, '$2')) then (: Target is a link containing a work id :)
-                    replace($target, $workScheme, '$2')
-                else $currentWork/@xml:id/string() (: Target is just a link to a fragment anchor, so targetWorkId = currentWork :)
-            let $anchorId := replace($target, $workScheme, '$3')
-            return 
-                if ($anchorId) then html:makeCiteIDURI($node) else ()
-        else if (matches($target, $lemmaScheme)) then (: Target is a Salamanca Lemma :)
-            concat('lemma.html?lid=', substring($target, 7))
-        else if (matches($target, $facsScheme)) then (: Target is a facs string :)
-            (: Target does not contain "#", or is not a "work:..." url: :)
-            let $targetWorkId :=
-                if (replace($target, $facsScheme, '$2')) then (: extract work id from facs string :)
-                    replace($target, $facsScheme, '$2')
-                else $currentWork/@xml:id/string()
-            let $anchorId := replace($target, $facsScheme, '$1') (: extract facs string :)
-            return
-                html:makeCiteIDURI($node)
-        else if (matches($target, $genericScheme)) then 
-            (: Use the general replacement mechanism as defined by the prefixDef in works-general.xml: :)
-            let $prefix := replace($target, $genericScheme, '$1')
-            let $value := replace($target, $genericScheme, '$2')
-            return 
-                if ($prefixDef[@ident eq $prefix]) then
-                    for $p in $prefixDef[@ident eq $prefix][matches($value, @matchPattern)] return
-                        replace($value, $p/@matchPattern, $p/@replacementPattern)
-                else replace($target, $genericScheme, '$0') (: regex-group(0) :)
-        else $target    
+        if (starts-with($target, '#') and substring($target, 2) = $currentWork//@xml:id/string()) then
+            (: target is some node within the current work - make an absolute (persistent) URI out of it :)
+            let $debug := console:log("[HTML] Create Hashtag Reference URI for " || $targets)
+            return html:makeCiteIDURI($currentWork//*[@xml:id eq substring($target, 2)])
+        else if (string-length($targetPrefix) gt 0) then
+            (: let $debug := console:log("[HTML] Create a prefixed reference URI for a " || $targetPrefix || " URI: " || $targets) :)
+            if ($targetPrefix = ("http", "https")) then
+                $target
+            else
+                let $result :=
+                    (
+                        for $p in map:keys($prefixMap)
+                            return
+                                if ($targetPrefix eq $p) then
+                                    replace($target, $targetPrefix || ":" || map:get($prefixMap, $p)?matchPattern, map:get($prefixMap, $p)?replacementPattern)
+                                else
+                                    ()
+                    )
+                return
+                    if ($result) then
+                        (: let $debug := console:log("[HTML] return URI " || $result[1]) :)
+                        $result[1]
+                    else
+                        let $debug := console:log("[HTML] Problem: Could not create URI for " || $targets || ", return empty result.")
+                        return ""
+        else
+            let $debug := console:log("[HTML] Problem? Create unprefixed URI for " || $targets || ": " || $target)
+            return $target
 };    
 
 
@@ -1690,7 +1702,7 @@ declare function html:ref($node as element(tei:ref), $mode as xs:string) {
             if ($node/@type eq 'note-anchor') then
                 () (: omit note references :)
             else if ($node/@target) then
-                let $resolvedUri := html:resolveURI($node, $node/@target) (: TODO: verify that this works :)
+                let $resolvedUri := html:resolveURI($node, $node/@target/string()) (: TODO: verify that this works :)
                 return html:transformToLink($node, $resolvedUri)
             else html:passthru($node, $mode)
 
