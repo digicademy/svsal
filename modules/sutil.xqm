@@ -217,7 +217,7 @@ declare function sutil:getFragmentID($targetWorkId as xs:string, $targetNodeId a
     doc($config:index-root || '/' || $targetWorkId || '_nodeIndex.xml')//sal:node[@n = $targetNodeId][1]/@fragment/string()
 };
 
-declare function sutil:getNodetrail($wid as xs:string, $node as element(), $mode as xs:string) {
+declare function sutil:getNodetrail($wid as xs:string, $node as element()?, $mode as xs:string) {
 (:
     let $debug := console:log("sutil:getNodetrail(" || $wid || ", " || serialize($node) || ", " || $mode || ")")
     return
@@ -236,6 +236,29 @@ declare function sutil:getNodetrail($wid as xs:string, $node as element(), $mode
                     return util:log('error', '[sutil] calling sutil:getNodetrail with unknown mode: ' || $mode)
         else
             util:log('error', '[sutil] calling sutil:getNodetrail(' || $wid || ', ' || $mode || ') but found no indexed node for node: ' || serialize($node))
+    else
+        util:log('error', '[sutil] calling sutil:getNodetrail(' || $wid || ', ' || $mode || ') but no index file available.')
+};
+
+declare function sutil:getNodetrailString($wid as xs:string, $id as xs:string, $mode as xs:string) {
+(:
+    let $debug := console:log("sutil:getNodetrail(" || $wid || ", " || serialize($node) || ", " || $mode || ")")
+    return
+:)
+    if (doc-available($config:index-root || '/' || $wid || '_nodeIndex.xml')) then
+        let $idx := doc($config:index-root || '/' || $wid || '_nodeIndex.xml')
+        return if ($idx//sal:node[@n eq $id]) then
+            switch ($mode)
+                case "citeID"
+                    return doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $id]/@citeID
+                case "crumbtrail"
+                    return doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $id]/sal:crumbtrail
+                case "label"
+                    return doc($config:index-root || '/' || $wid || '_nodeIndex.xml')//sal:node[@n eq $id]/@label/string()
+                default
+                    return util:log('error', '[sutil] calling sutil:getNodetrail with unknown mode: ' || $mode)
+        else
+            util:log('error', '[sutil] calling sutil:getNodetrail(' || $wid || ', ' || $mode || ') but found no indexed node for node: ' || $id)
     else
         util:log('error', '[sutil] calling sutil:getNodetrail(' || $wid || ', ' || $mode || ') but no index file available.')
 };
@@ -344,8 +367,8 @@ declare function sutil:extractTeiNodeFromCiteID($workId as xs:string, $citeID as
         between the two of which the acces date has to be inserted (e.g., by means of JS)
 :)
 declare function sutil:HTMLmakeCitationReference($wid as xs:string, $fileDesc as element(tei:fileDesc), $mode as xs:string, $node as element()?) as element(span)+ {
-    let $author := $fileDesc/tei:titleStmt/tei:author/tei:persName/tei:surname/text()
-    let $title := $fileDesc/tei:titleStmt/tei:title[@type eq 'short']/text()
+    let $author := string-join($fileDesc/tei:titleStmt/tei:author/tei:persName/tei:surname, '/')
+    let $title := if ($fileDesc/tei:titleStmt/tei:title[@type eq 'short']) then $fileDesc/tei:titleStmt/tei:title[@type eq 'short']/text() else $fileDesc/tei:titleStmt/tei:title[1]/text() 
     let $digitalYear := substring($fileDesc/tei:publicationStmt/tei:date[@type = ('digitizedEd', 'summaryDigitizedEd')]/@when/string()[1], 1, 4)
     let $originalYear := 
         if ($fileDesc/tei:sourceDesc//tei:date[@type eq 'thisEd']) then
@@ -355,6 +378,7 @@ declare function sutil:HTMLmakeCitationReference($wid as xs:string, $fileDesc as
         string-join(for $ed in $fileDesc/tei:seriesStmt/tei:editor/tei:persName 
                         order by $ed/tei:surname
                         return app:rotateFormatName($ed), ' &amp; '):)
+    let $seriesTitle := if (starts-with($wid, 'L')) then 'A Dictionary of its Juridical-Political Language' else 'A Digital Collection of Sources'
     let $citeID :=
         if ($mode eq 'reading-passage' and $node) then
             sutil:getNodetrail($wid, $node, 'citeID')
@@ -368,9 +392,9 @@ declare function sutil:HTMLmakeCitationReference($wid as xs:string, $fileDesc as
                 if ($passage) then <span class="cite-rec-trail">{$passage || ', '}</span> else ()
         else ()
     let $body := 
-        <span class="cite-rec-body">{$author || ', ' || $title || ' (' || $digitalYear || ' [' || $originalYear || '])'|| ', '}
+        <span class="cite-rec-body">{$author || ', ' || $title || ' (' || $digitalYear || (if ($originalYear) then ' [' || $originalYear || '])' else ()) || ', '}
             {$label}
-            <i18n:text key="inLow">in</i18n:text>{': '}<i18n:text key="editionSeries">The School of Salamanca. A Digital Collection of Sources</i18n:text>
+            <i18n:text key="inLow">in</i18n:text>{': '}<i18n:text key="editionSeries">The School of Salamanca. {$seriesTitle}</i18n:text>
             {' <'}
             <a href="{$link}">{$link}</a>
             {'>'}

@@ -65,10 +65,10 @@ declare function index:makeNodeIndex($tei as element(tei:TEI)) as map(*) {
     
     (: First, get all relevant nodes :)
     let $nodes := 
-        for $text in $work//tei:text[@type = ('work_volume', 'work_monograph')] return 
+        for $text in $work//tei:text[@type = ('work_volume', 'work_monograph', 'lemma_article')] return 
             (: make sure that we only grasp nodes that are within a published volume :)
             if (($text/@type eq 'work_volume' and sutil:WRKisPublished($wid || '_' || $text/@xml:id))
-                or $text/@type eq 'work_monograph') then 
+                or $text/@type eq 'work_monograph' or $text/@type eq 'lemma_article') then 
                 $text/descendant-or-self::*[index:isIndexNode(.)]
             else ()
                 
@@ -86,7 +86,7 @@ declare function index:makeNodeIndex($tei as element(tei:TEI)) as map(*) {
                 let $frag := (($node/ancestor-or-self::* | $node//tei:*[not(preceding-sibling::*)]) intersect $target-set)[1]
                 let $err  := if ((count($frag/@xml:id) eq 0) or ($frag/@xml:id eq "")) then
                     let $debug := if ($config:debug = ("trace", "info")) then
-                                     console:log("[INDEX] Node indexing: Could not find $frag for $node " || $n || ". Target set was: [" || string-join(fn:for-each($target-set, function ($k) {concat($k/local-name(), ':', $k/@xml:id)}), ', ') || "]. Aborting.")
+                                     console:log("[INDEX] Node indexing: Could not find $frag for $node '" || $n || "'. Target set was: [" || string-join(fn:for-each($target-set, function ($k) {concat($k/local-name(), ':', $k/@xml:id)}), ', ') || "]. Aborting.")
                                  else ()
                     return error(QName('http://salamanca.school/err', 'FragmentationProblem'),
                                  'Could not find $frag for ' || $n || '.')
@@ -94,22 +94,22 @@ declare function index:makeNodeIndex($tei as element(tei:TEI)) as map(*) {
                 let $fragId := index:makeFragmentId(functx:index-of-node($target-set, $frag), $frag/@xml:id)
                 return map:entry($n, $fragId)
         )
-    let $debug := if ($config:debug = ("trace")) then console:log("[INDEX] Node indexing: fragment ids extracted.") else ()
+    let $debug := if ($config:debug = ("trace")) then console:log("[INDEX] Node indexing: " || count($fragmentIds) || " fragment ids extracted.") else ()
                 
     let $debug := if ($config:debug = ("trace")) then console:log("[INDEX] Node indexing: creating index file ...") else ()
     (: node indexing has 2 stages: :)
     (: 1.) extract nested sal:nodes with rudimentary information :)
     let $indexTree := 
         <sal:index>
-            {index:extractNodeStructure($wid, $work//tei:text[(@type eq 'work_volume' and sutil:WRKisPublished($wid || '_' || @xml:id)) or @type eq 'work_monograph'], $xincludes, $fragmentIds)}
+            {index:extractNodeStructure($wid, $work//tei:text[(@type eq 'work_volume' and sutil:WRKisPublished($wid || '_' || @xml:id)) or @type eq 'work_monograph' or @type eq 'lemma_article'], $xincludes, $fragmentIds)}
         </sal:index>
     (: 2.) flatten the index from 1.) and enrich sal:nodes with full-blown citeID, etc. :)
-    let $debug := if ($config:debug = ("trace")) then console:log("[INDEX] Node indexing: stage 1 finished ...") else ()
+    let $debug := if ($config:debug = ("trace")) then console:log("[INDEX] Node indexing: stage 1 finished with " || count($indexTree//*) || " elements in $indexTree ...") else ()
     let $index := 
         <sal:index work="{$wid}" xml:space="preserve">
             {index:createIndexNodes($wid, $indexTree)}
         </sal:index>
-    let $debug := if ($config:debug = ("trace")) then console:log("[INDEX] Node indexing: stage 2 finished, cont'ing with quality check ...") else ()
+    let $debug := if ($config:debug = ("trace")) then console:log("[INDEX] Node indexing: stage 2 finished with " || count($index//*) || " elements in $index , cont'ing with quality check ...") else ()
         
     let $check := index:qualityCheck($index, $work, $target-set, $fragmentationDepth)
         
@@ -184,7 +184,10 @@ declare function index:getFragmentNodesOld($work as element(tei:TEI), $fragmenta
 
 declare function index:getFragmentNodes($work as element(tei:TEI), $fragmentationDepth as xs:integer) as node()* {
     (: we collect all suitable nodes (divs, front, back, text) that are not too high in the hierarchy :)
-    $work//tei:*[index:isPotentialFragmentNode(.)][index:isBestDepth(., $fragmentationDepth)]
+    if ($work/tei:text/@type eq 'lemma_article' ) then
+        $work/tei:text
+    else
+        $work//tei:*[index:isPotentialFragmentNode(.)][index:isBestDepth(., $fragmentationDepth)]
 };
 
 
@@ -1232,10 +1235,13 @@ declare function index:pb($node as element(tei:pb), $mode as xs:string) {
             else 'p. ' || $node/@n/string()
         
         (: pb nodes are good candidates for tracing the speed/performance of document processing, 
-            since they are equally distributed throughout a document :)
+            since they are equally distributed throughout a document
+            but in order not to spam the log, we log only every 250th pb element :)
         case 'debug' return
-            let $debug := console:log('[INDEX] Processing tei:pb node ' || $node/@xml:id)
-            return util:log('info', '[INDEX] Processing tei:pb node ' || $node/@xml:id)
+                if (count($node/preceding::tei:pb) mod 250 eq 0 and $config:debug = ("info", "trace")) then
+                    let $debug := console:log('[INDEX] Processing tei:pb node ' || $node/@xml:id || '(@n=' || $node/@n || ')')
+                    return util:log('info',   '[INDEX] Processing tei:pb node ' || $node/@xml:id || '(@n=' || $node/@n || ')')
+                else ()
         
         default return ()
 };

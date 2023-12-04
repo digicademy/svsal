@@ -51,7 +51,7 @@ let $output :=
         case 'crumbtrails' return
             admin:createCrumbtrails($rid) 
         case 'html' return
-            admin:renderWork($rid)
+            admin:renderHTML($rid)
         case 'details' return
             admin:createDetails($rid)
         case 'snippets' return 
@@ -73,7 +73,7 @@ let $output :=
         case 'all' return 
             (: all formats (except iiif) for a single work :)
             (admin:createNodeIndex($rid),
-            admin:renderWork($rid),
+            admin:renderHTML($rid),
             admin:sphinx-out($rid, $mode),
             admin:createRDF($rid))
             (: omitting iiif here :)
@@ -101,7 +101,7 @@ let $title :=
 return 
     <html>
         <head>
-            <title>Webdata Administration - The School of Salamanca</title>
+            <title>Webdata for {$rid}/{$format} - The School of Salamanca</title>
             <style>{'.section-title {display:none;}
                      .sal-cite-toggle {display:none !important;}
                      .sal-toolbox-body {display:none !important;}'}</style>
