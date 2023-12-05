@@ -1199,8 +1199,9 @@ declare %templates:wrap function admin:renderHTML($id as xs:string*) as element(
             (: (1) HTML :)
 
             let $start-time-a := util:system-time()
-            let $htmlData := html:makeHTMLData($work-raw)
-            let $htmlDataOld := html:makeHTMLDataOld($work-raw)
+            let $htmlData     := html:makeHTMLData($work-raw)
+            let $htmlDataOld  := html:makeHTMLDataOld($work-raw)
+
             (: Keep track of how long this work did take :)
             let $runtime-ms-a := ((util:system-time() - $start-time-a) div xs:dayTimeDuration('PT1S'))  * 1000
             let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Html files created. Saving...") else ()
@@ -1294,7 +1295,7 @@ declare %templates:wrap function admin:renderHTML($id as xs:string*) as element(
                      {if ($config:debug = 'trace') then $saveFragments else ()}
                </div>
 
-    
+
     (: (3) UPDATE TEI & TXT CORPORA :)
     
     (: (re-)create txt and xml corpus zips :)
@@ -1309,8 +1310,8 @@ declare %templates:wrap function admin:renderHTML($id as xs:string*) as element(
         if ($runtime-ms-raw < (1000 * 60)) then format-number($runtime-ms-raw div 1000, "#.##") || " Sek."
         else if ($runtime-ms-raw < (1000 * 60 * 60)) then format-number($runtime-ms-raw div (1000 * 60), "#.##") || " Min."
         else format-number($runtime-ms-raw div (1000 * 60 * 60), "#.##") || " Std."
-    
-    
+
+
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Done rendering HTML and TXT for " || $resourceId || ".") else ()
     let $debug := util:log('info', '[ADMIN] Created HTML for work ' || $resourceId || ' in ' || $runtime-ms || ' ms.')
     return 

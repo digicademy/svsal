@@ -18,11 +18,10 @@ declare namespace util             = "http://exist-db.org/xquery/util";
 import module namespace console    = "http://exist-db.org/xquery/console";
 
 import module namespace config     = "https://www.salamanca.school/xquery/config"        at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
-import module namespace i18n       = "http://exist-db.org/xquery/i18n"                  at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
+import module namespace i18n       = "http://exist-db.org/xquery/i18n"                   at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
 import module namespace sutil      = "https://www.salamanca.school/xquery/sutil"         at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
-import module namespace index      = "https://www.salamanca.school/factory/works/index" at "xmldb:exist:///db/apps/salamanca/modules/factory/works/index.xqm";
-import module namespace txt        = "https://www.salamanca.school/factory/works/txt"   at "xmldb:exist:///db/apps/salamanca/modules/factory/works/txt.xqm";
-
+import module namespace index      = "https://www.salamanca.school/factory/works/index"  at "xmldb:exist:///db/apps/salamanca/modules/factory/works/index.xqm";
+import module namespace txt        = "https://www.salamanca.school/factory/works/txt"    at "xmldb:exist:///db/apps/salamanca/modules/factory/works/txt.xqm";
 
 
 (: SETTINGS :)
@@ -62,8 +61,8 @@ declare function html:makeHTMLData($tei as element(tei:TEI), $lang as node()*) a
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] " || string(count($target-set)) || " elements to be rendered as fragments ...") else ()
 
     let $workId := $work/@xml:id
-    let $text := $work//tei:text[@type='work_volume'] | $work//tei:text[@type = 'work_monograph']
-    let $elements := $work//tei:text[@type = 'work_monograph']/(tei:front | tei:body | tei:back)  
+    let $text := $work//tei:text[@type='work_volume'] | $work//tei:text[@type = 'work_monograph'] | $work//tei:text[@type = 'lemma_article']
+    let $elements := $work//tei:text[@type = ('work_monograph', 'lemma_article')]/(tei:front | tei:body | tei:back)  
     let $title := sutil:WRKcombined($work, (), $workId)
 
     (: (1) table of contents :)
@@ -143,7 +142,7 @@ declare function html:makeHTMLData($tei as element(tei:TEI), $lang as node()*) a
     let $unidentified-elements := $target-set[not(@xml:id)]
 
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Done.") else ()
-    
+
     return 
         map {
             'toc': $toc,
@@ -326,13 +325,14 @@ declare function html:generateTocFromText($node as element(tei:text), $wid as xs
 };
 
 declare function html:generateTocFromDiv($nodes as element()*, $wid as xs:string, $lang as node()*) as element(ul)* {
+    let $textType := if (starts-with($wid, 'L')) then '/lemmata/' else '/texts/'
     for $node in $nodes/( tei:div[@type="work_part"]/tei:div[index:isIndexNode(.)]
                          |tei:div[not(@type="work_part")][index:isIndexNode(.)]
                          |*/tei:milestone[@unit ne 'other'][index:isIndexNode(.)]
                          |tei:argument[index:isIndexNode(.)]
                         ) return
         let $citeID  := sutil:getNodetrail($wid, $node, 'citeID')        
-        let $fragId  := $config:idserver || '/texts/' || $wid || ':' || $citeID || '?format=html'
+        let $fragId  := $config:idserver || $textType || $wid || ':' || $citeID || '?format=html'
         let $section := $node/@xml:id/string()
         let $i18nKey := 
             if (index:dispatch($node, 'class')) then index:dispatch($node, 'class')
@@ -648,26 +648,31 @@ declare function html:createFragment($workId as xs:string, $fragmentRoot as elem
 };
 
 declare function html:createFragment($workId as xs:string, $fragmentRoot as element(), $fragmentIndex as xs:integer, $prevId as xs:string?, $nextId as xs:string?, $lang as node()*) {
-    concat(
-        '{{$content := `', codepoints-to-string(10), serialize(
-            <div class="iasItem">                
-                {
-                if ($fragmentRoot[not(preceding-sibling::*) and
-                                  not((ancestor::tei:body|ancestor::tei:back) and
-                                       preceding::tei:front/*)
-                                 ]) then
-                    html:makeAncestorTeasers($fragmentRoot)
-                else ()    
-                }
-                {html:dispatch($fragmentRoot, 'html', $lang)}
-            </div>, map{"method":"html", "indent": true(), "encoding":"utf-8"}), codepoints-to-string(10),
-        '`}}',
-        codepoints-to-string(10), codepoints-to-string(10),
-        html:createPaginationLinks($workId, $fragmentIndex, $prevId, $nextId),
-        codepoints-to-string(10), codepoints-to-string(10),
-        '{{include "../../../resources/templates/template-work.html" $work_info }}',
-        codepoints-to-string(10)
-    )
+    let $template := if (starts-with($workId, 'L')) then
+                        'template-lemma.html'
+                     else
+                        'template-work.html'
+    return
+        concat(
+            '{{$content := `', codepoints-to-string(10), serialize(
+                <div class="iasItem">                
+                    {
+                    if ($fragmentRoot[not(preceding-sibling::*) and
+                                      not((ancestor::tei:body|ancestor::tei:back) and
+                                           preceding::tei:front/*)
+                                     ]) then
+                        html:makeAncestorTeasers($fragmentRoot)
+                    else ()    
+                    }
+                    {html:dispatch($fragmentRoot, 'html', $lang)}
+                </div>, map{"method":"html", "indent": true(), "encoding":"utf-8"}), codepoints-to-string(10),
+            '`}}',
+            codepoints-to-string(10), codepoints-to-string(10),
+            html:createPaginationLinks($workId, $fragmentIndex, $prevId, $nextId),
+            codepoints-to-string(10), codepoints-to-string(10),
+            '{{include "../../../resources/templates/' || $template || '" $work_info }}',
+            codepoints-to-string(10)
+        )
 };
     
 
@@ -692,14 +697,26 @@ declare function html:createPaginationLinksOld($workId as xs:string, $fragmentIn
 };
 
 declare function html:createPaginationLinks($workId as xs:string, $fragmentIndex as xs:integer, $prevId as xs:string?, $nextId as xs:string?) {
-    let $sourceDesc := collection($config:tei-works-root)//tei:TEI[@xml:id = $workId][.//tei:text[@type = ("work_multivolume", "work_monograph")]]//tei:sourceDesc
-    let $authorname := string-join($sourceDesc//tei:author//tei:surname, '/')
-    let $title      := $sourceDesc//tei:title[@type='short']
-    let $place      := if ($sourceDesc//tei:imprint/tei:pubPlace[@role = 'thisEd']) then $sourceDesc//tei:imprint/tei:pubPlace[@role = 'thisEd'] 
-                       else $sourceDesc//tei:imprint/tei:pubPlace[1]
-    let $printer    := string-join($sourceDesc//tei:publisher//tei:surname, '/')
-    let $year       := if ($sourceDesc//tei:imprint/tei:date[@type = 'thisEd']) then $sourceDesc//tei:imprint/tei:date[@type = 'thisEd']
-                       else $sourceDesc//tei:imprint/tei:date[1]
+    let $docTEI     := collection($config:tei-root)//tei:TEI[@xml:id eq $workId] 
+    let $textType   := $docTEI/tei:text/@type/string()
+    let $desc       :=  if ($textType = ("work_multivolume", "work_volume")) then
+                            $docTEI//tei:sourceDesc
+                        else if ($textType = "lemma_article") then
+                            $docTEI//tei:fileDesc/tei:titleStmt
+                        else
+                            let $debug := console:log("[HTML]: Problem: createPagination Links called with unknown text type.")
+                            return ()
+    let $authorname := string-join($desc//tei:author//tei:surname, '/')
+    let $title      := $desc//tei:title[@type='short']
+    let $place      := if ($desc//tei:imprint/tei:pubPlace[@role = 'thisEd']) then
+                            $desc//tei:imprint/tei:pubPlace[@role = 'thisEd'] 
+                       else
+                            $desc//tei:imprint/tei:pubPlace[1]
+    let $printer    := string-join($desc//tei:publisher//tei:surname, '/')
+    let $year       := if ($desc//tei:imprint/tei:date[@type = 'thisEd']) then
+                            $desc//tei:imprint/tei:date[@type = 'thisEd']
+                       else
+                            $desc//tei:imprint/tei:date[1]
     return
     concat(
         '{{$work_info := dict ',
