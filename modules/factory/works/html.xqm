@@ -699,7 +699,7 @@ declare function html:createPaginationLinksOld($workId as xs:string, $fragmentIn
 declare function html:createPaginationLinks($workId as xs:string, $fragmentIndex as xs:integer, $prevId as xs:string?, $nextId as xs:string?) {
     let $docTEI     := collection($config:tei-root)//tei:TEI[@xml:id eq $workId] 
     let $textType   := $docTEI/tei:text/@type/string()
-    let $desc       :=  if ($textType = ("work_multivolume", "work_volume")) then
+    let $desc       :=  if ($textType = ("work_multivolume", "work_volume", "work_monograph")) then
                             $docTEI//tei:sourceDesc
                         else if ($textType = "lemma_article") then
                             $docTEI//tei:fileDesc/tei:titleStmt
@@ -843,8 +843,8 @@ declare function html:resolveURI($node as element(), $targets as xs:string) {
     return
         if (starts-with($target, '#') and substring($target, 2) = $currentWork//@xml:id/string()) then
             (: target is some node within the current work - make an absolute (persistent) URI out of it :)
-            let $debug := console:log("[HTML] Create Hashtag Reference URI for " || $targets)
-            return html:makeCiteIDURI($currentWork//*[@xml:id eq substring($target, 2)])
+            (: let $debug := console:log("[HTML] Create Hashtag Reference URI for " || $targets) :)
+            html:makeCiteIDURI($currentWork//*[@xml:id eq substring($target, 2)])
         else if (string-length($targetPrefix) gt 0) then
             (: let $debug := console:log("[HTML] Create a prefixed reference URI for a " || $targetPrefix || " URI: " || $targets) :)
             if ($targetPrefix = ("http", "https")) then
@@ -867,7 +867,7 @@ declare function html:resolveURI($node as element(), $targets as xs:string) {
                         let $debug := console:log("[HTML] Problem: Could not create URI for " || $targets || ", return empty result.")
                         return ""
         else
-            let $debug := console:log("[HTML] Problem? Create unprefixed URI for " || $targets || ": " || $target)
+            let $debug := console:log("[HTML] Problem? Create unprefixed URI for " || local-name($node) || " (" || $node/@xml:id || ") with targets '" || $targets || "': target '" || $target || "'.")
             return $target
 };    
 

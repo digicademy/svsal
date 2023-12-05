@@ -1998,7 +1998,7 @@ declare function admin:buildRoutingInfoDetails($id) {
     let $text_type :=      if (starts-with($id, "L0")) then "lemmata"
                       else if (starts-with($id, "WP0")) then "workingpapers"
                       else "texts"
-    let $debug := if ($config:debug = "trace") then console:log('$id: ' || $id || ' (type ' || $text_type || ').') else ()
+    (: let $debug := if ($config:debug = "trace") then console:log('$id: ' || $id || ' (type ' || $text_type || ').') else () :)
     let $output :=  if (contains($id, ':')) then
                         let $wid := tokenize($id, ':')[1]
                         return concat( $wid, '/html/', $wid, '_Vol', format-integer(xs:int(substring-after(tokenize($id, ':')[2], 'vol')), '00'), '_details.html')
