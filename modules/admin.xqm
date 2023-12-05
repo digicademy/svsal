@@ -1459,15 +1459,15 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
             return util:expand($work-raw)
 
     (: which parts of those works constitute a fragment that is to count as a hit? :)
-    let $nodes := 
+    let $nodes :=
         for $w in $expanded return
-            if (starts-with($w/@xml:id, 'W0')) then
-                (: works :)
+            if (starts-with($w/@xml:id, 'W0') or starts-with($w/@xml:id, 'L0')) then
+                (: works and lemmata :)
                 $w/tei:text//*[index:isBasicNode(.)]
             else if (starts-with($w/@xml:id, 'WP')) then
                 (: working papers :)
                 $w//tei:profileDesc//(tei:p|tei:keywords)
-            else () (: TODO: authors, lemmata, etc. :)
+            else () (: TODO: authors etc. :)
     let $hits := 
         for $hit at $index in $nodes
             (: for each fragment, populate our sphinx fields and attributes :)
@@ -1501,13 +1501,12 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
                     xs:string($teiHeader//tei:sourceDesc//tei:date[@type = "summaryFirstEd"])
                 else if  ($teiHeader//tei:sourceDesc//tei:date[@type = "firstEd"]) then
                     xs:string($teiHeader//tei:sourceDesc//tei:date[@type = "firstEd"])
-                else if  ($teiHeader//tei:date[@type ="digitizedEd"]) then
-                    xs:string($teiHeader//tei:date[@type = "digitizedEd"])
+                else if  ($teiHeader//tei:publicationStmt/tei:date[@type = "digitizedEd"]) then
+                    xs:string($teiHeader//tei:publicationStmt/tei:date[@type = "digitizedEd"][1])
                 else ()
             let $hit_type := local-name($hit)
             let $hit_id := xs:string($hit/@xml:id)
             let $hit_citeID := if ($nodeType eq 'work') then sutil:getNodetrail($work_id, $hit, 'citeID') else ()
-(:                doc($config:index-root || '/' || $work_id || '_nodeIndex.xml')//sal:node[@n = $hit_id]/@citeID/string() :)
             let $hit_language := xs:string($hit/ancestor-or-self::tei:*[@xml:lang][1]/@xml:lang)
             let $hit_fragment := 
                 if ($hit_id and xmldb:collection-available($config:html-root || '/' || $work_id)) then
@@ -1541,16 +1540,14 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
             let $before_crumbtrail :=  if (substring-before($hit_crumbtrail, '">')) then (substring-before($hit_crumbtrail, '">')) else ((substring-before($hit_crumbtrail, '"/>')))
             let $substringed_crumbtrail := substring-after($before_crumbtrail, "#")
 
-let $nodetrail := sutil:getNodetrailString($wid, $substringed_crumbtrail, 'citeID')
+            let $nodetrail := sutil:getNodetrailString($wid, $substringed_crumbtrail, 'citeID')
+            let $relativeLink := concat($config:idserver, "/texts/", $wid, ":", $nodetrail)
+            let $replaced_hit_crumbtrail := fn:replace($hit_crumbtrail, substring-after($before_crumbtrail, 'href="'), $relativeLink)
 
-let $relativeLink := concat($config:idserver, "/texts/", $wid, ":", $nodetrail)
-
-let $replaced_hit_crumbtrail := fn:replace($hit_crumbtrail, substring-after($before_crumbtrail, 'href="'), $relativeLink)
-
-               let $encoded_crumbtrail :=  xmldb:encode($replaced_hit_crumbtrail)
-             (:   let $hit_crumbtrail_node_id := $nodeIndex//sal:node[@n eq $hit_crumbtrail_id] :)
-             (:  let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] This is hit_crumbtrail_decoded: " ||decode-uri(hit_crumbtrail) || ".") else () :)
-        (:  :   let $hit_crumbtrail_url :=decode :)
+            let $encoded_crumbtrail :=  xmldb:encode($replaced_hit_crumbtrail)
+            (:  let $hit_crumbtrail_node_id := $nodeIndex//sal:node[@n eq $hit_crumbtrail_id] :)
+            (:  let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] This is hit_crumbtrail_decoded: " ||decode-uri(hit_crumbtrail) || ".") else () :)
+            (:  let $hit_crumbtrail_url :=decode :)
             (: Here we define the to-be-indexed content! :)
             let $hit_content_orig := 
                 if ($hit_id) then
@@ -1561,7 +1558,7 @@ let $replaced_hit_crumbtrail := fn:replace($hit_crumbtrail, substring-after($bef
                     'There is no xml:id in the ' || $hit_type || ' hit!'
             let $hit_content_edit := 
                 if ($hit_id) then
-                    if ($nodeType eq 'work') then
+                    if ($nodeType = ('work', 'lemma')) then
                         normalize-space(string-join(txt:dispatch($hit, 'snippets-edit'), ''))
                     else normalize-space(string-join(render-app:dispatch($hit, 'snippets-edit', ()), ''))
                 else
