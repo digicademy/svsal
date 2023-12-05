@@ -19,7 +19,7 @@ import module namespace console     = "http://exist-db.org/xquery/console";
 import module namespace templates   = "http://exist-db.org/xquery/html-templating";
 import module namespace lib         = "http://exist-db.org/xquery/html-templating/lib";
 
-import module namespace config  = "https://www.salamanca.school/xquery/config"    at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace config  = "https://www.salamanca.school/xquery/config"  at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
 import module namespace i18n    = "http://exist-db.org/xquery/i18n"              at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
 
 declare option exist:timeout "166400000"; (: in miliseconds, 25.000.000 ~ 7h, 43.000.000 ~ 12h :)
@@ -55,7 +55,7 @@ declare function sutil:copy($node as element()) as node() {
 (: Normalizes work, author, lemma, news, and working paper ids (and returns everything else as-is :)
 declare function sutil:normalizeId($id as xs:string?) as xs:string? {
     if (contains($id, '_vol') or        contains($id, '_VOL')) then
- translate($id, 'wvLO', 'WVlo')
+    translate($id, 'wvLO', 'WVlo')
         else if (string-length($id) eq 5 and substring($id, 1, 1) = ('w', 'l', 'a', 'n')) then (: work, lemma, author, news :)
         upper-case($id)
         else if (matches($id, '^[wW][pP]\d{4}$')) then upper-case($id)                              (: working papers :)
@@ -310,8 +310,22 @@ declare function sutil:formatName($persName as element()*) as xs:string? {
 :)
 declare %templates:wrap
     function sutil:WRKcombined($node as node()?, $model as map(*)?, $wid as xs:string?) {
-        let $path           :=  doc($config:tei-works-root || "/" || sutil:normalizeId($wid) || ".xml")//tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr
-        let $author         :=  string-join($path//tei:author/tei:persName/tei:surname, ', ')
+        let $textType       := if (starts-with($wid, 'W0')) then
+                                    'text'
+                                else if (starts-with($wid, 'L0')) then
+                                    'lemma'
+                                else ()
+        let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
+                                        if (doc-available(concat($subcollection, '/', $wid, '.xml'))) then $subcollection
+                                        else ()
+
+        let $path           :=  if ($textType eq 'text') then
+                                    doc($targetSubcollection || "/" || sutil:normalizeId($wid) || ".xml")//tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr
+                                 else if ($textType eq 'lemma') then
+                                    doc($targetSubcollection || "/" || sutil:normalizeId($wid) || ".xml")//tei:teiHeader/tei:fileDesc
+                                 else
+                                    ()
+        let $author         :=  string-join($path//tei:author//tei:surname, '/')
         let $title          :=  $path//tei:title[@type = 'short']
         let $thisEd         :=  $path//tei:pubPlace[@role = 'thisEd']
         let $firstEd        :=  $path//tei:pubPlace[@role = 'firstEd']
@@ -328,10 +342,15 @@ declare %templates:wrap
         let $year :=  
             if ($thisEd) then 
                 $path//tei:date[@type = 'thisEd']/@when/string() 
+            else if ($textType eq 'lemma') then
+                $path//tei:date[@type = 'digitizedEd'][1]/@when/string()
             else
                 $path//tei:date[@type = 'firstEd']/@when/string()
-        let $pubDetails     :=  $place || '&#32;'||": " || $publisher || ", " || $year
-            return ($author||':  '||$title||'. '||$pubDetails||'.') 
+        let $pubDetails := if ($textType eq 'text') then
+                                ". " || $place || '&#32;'||": " || $publisher || ", " || $year
+                            else
+                                ' (' || $year || ')'
+        return ($author || ':  ' || $title || $pubDetails || '.') 
 };  
 
 

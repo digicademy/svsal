@@ -332,7 +332,7 @@ declare function html:generateTocFromDiv($nodes as element()*, $wid as xs:string
                          |tei:argument[index:isIndexNode(.)]
                         ) return
         let $citeID  := sutil:getNodetrail($wid, $node, 'citeID')        
-        let $fragId  := $config:idserver || $textType || $wid || ':' || $citeID || '?format=html'
+        let $fragId  := $config:idserver || $textType || $wid || ':' || $citeID
         let $section := $node/@xml:id/string()
         let $i18nKey := 
             if (index:dispatch($node, 'class')) then index:dispatch($node, 'class')
@@ -356,7 +356,7 @@ declare function html:generateTocFromDiv($nodes as element()*, $wid as xs:string
 
 declare function html:generateTocFromText($node as element(tei:text), $wid as xs:string, $lang as node()*) as element(ul)* {
     let $citeID  := sutil:getNodetrail($wid, $node, 'citeID')        
-    let $fragId  := $config:idserver || '/texts/' || $wid || ':' || $citeID || '?format=html'
+    let $fragId  := $config:idserver || '/texts/' || $wid || ':' || $citeID
     let $i18nKey := 
         if (index:dispatch($node, 'class')) then index:dispatch($node, 'class')
         else 'tei-generic'
@@ -562,7 +562,7 @@ declare function html:makeSectionToolbox($node as element(), $lang as node()*) a
                     <button onclick="copyLink(this); return false;" class="messengers">
                         <span class="fas fa-link"></span>{' '}{i18n:getLocalizedText(html:i18nNodify('copyLink'), $lang)}
                     </button>
-                    <span class="cite-link" style="display:none;">{$citeIDBaseUrl || '?format=html'}</span>
+                    <span class="cite-link" style="display:none;">{$citeIDBaseUrl}</span>
                 </div>
                 <div class="sal-tb-btn" title="{i18n:getLocalizedText(html:i18nNodify(concat('cite', $i18nSuffix)), $lang)}">
                     <button onclick="copyCitRef(this); return false;" class="messengers">

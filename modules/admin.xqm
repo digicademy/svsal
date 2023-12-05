@@ -1958,9 +1958,10 @@ declare function admin:createRoutes($wid as xs:string) {
 };
 
 declare function admin:buildRoutingInfoNode($wid as xs:string, $item as element(sal:node), $crumbtrails as element(sal:crumb)) {
+    let $textTypePath := if (starts-with($wid, 'W')) then '/texts/' else if (starts-with($wid, 'L')) then '/lemmata/' else ''
     let $crumb := substring-after($crumbtrails//sal:nodecrumb[@xml:id eq $item/@n]//a[last()]/@href/string(), "/data/")
     let $value := map {
-                    "input" :   concat("/texts/", $wid, ":", $item/@citeID/string()),
+                    "input" :   concat($textTypePath, $wid, ":", $item/@citeID/string()),
                     "outputs" : array { ( $crumb, 'yes' ) }
                   }
 (:    let $debug := console:log("[ADMIN] routing entry: " || serialize($value, map{"method":"json"}) || "."):)
