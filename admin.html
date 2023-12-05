@@ -83,7 +83,7 @@
         </div>
 -->
 
-        <div class="row" data-template="admin:loadListOfLemmata">
+        <div class="row" data-template="admin:loadListOfLemmata" data-template-to="currentLemma">
             <h2>Lemmata</h2>
             <p>
                 <a href="create-lists-dict.html" role="button" class="btn btn-primary">Write/overwrite list of dictionary entries!</a>
@@ -95,12 +95,16 @@
                 <tbody>
                     <tr>
                         <th>Lemma-ID</th>
+                        <th>Node Index</th>
+                        <th>Crumbtrails</th>
                         <th>HTML</th>
                         <th>Sphinx Fragmente</th>
                         <th>Routing</th>
                     </tr>
                     <tr data-template="templates:each" data-template-from="listOfLemmata" data-template-to="currentLemma">
                         <td data-template="admin:lemmaString">boing</td>
+                        <td data-template="admin:needsIndexString">boing</td>
+                        <td data-template="admin:needsCrumbtrailString">boing</td>
                         <td data-template="admin:needsHTMLString">boing</td>
                         <td data-template="admin:needsSnippetsString">boing</td>
                         <td data-template="admin:needsRoutingString">boing</td>

@@ -234,7 +234,7 @@ declare function admin:needsIndex($targetWorkId as xs:string) as xs:boolean {
 };
 
 declare function admin:needsIndexString($node as node(), $model as map(*)) {
-    let $currentWorkId := $model('currentWork')?('wid')
+    let $currentWorkId := max(($model('currentWork')?('wid'), $model('currentLemma')?('lid')))
     let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
                                     if (doc-available(concat($subcollection, '/', $currentWorkId, '.xml'))) then $subcollection
                                     else ()
@@ -245,13 +245,16 @@ declare function admin:needsIndexString($node as node(), $model as map(*)) {
         if (not($readyForIndexing)) then
             <td>Not ready yet</td>
         else if (admin:needsIndex($currentWorkId)) then
-            <td title="{if (xmldb:get-child-resources($config:index-root) = $currentWorkId || "_nodeIndex.xml") then concat('Index created on: ', xmldb:last-modified($config:index-root, $currentWorkId || "_nodeIndex.xml"), ", ") else ()}source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}"><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=index"><b>Create Node Index NOW!</b></a></td>
+            <td title="{if (xmldb:get-child-resources($config:index-root) = $currentWorkId || "_nodeIndex.xml") then concat('Index created on: ', xmldb:last-modified($config:index-root, $currentWorkId || "_nodeIndex.xml"), ", ") else ()}source from: {string(xmldb:last-modified($targetSubcollection, $currentWorkId || '.xml'))}"><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=index"><b>Create Node Index NOW!</b></a></td>
         else
-            <td title="Index created on: {xmldb:last-modified($config:index-root, $currentWorkId || "_nodeIndex.xml")}, source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}">Node indexing unnecessary. <small><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=index">Create Node Index anyway!</a></small></td>
+            <td title="Index created on: {xmldb:last-modified($config:index-root, $currentWorkId || "_nodeIndex.xml")}, source from: {string(xmldb:last-modified($targetSubcollection, $currentWorkId || '.xml'))}">Node indexing unnecessary. <small><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=index">Create Node Index anyway!</a></small></td>
 };
 
 declare function admin:needsCrumbtrail($targetWorkId as xs:string) as xs:boolean {
-    let $workModTime := xmldb:last-modified($config:tei-works-root, $targetWorkId || '.xml')
+    let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
+                                    if (doc-available(concat($subcollection, '/', $targetWorkId, '.xml'))) then $subcollection
+                                    else ()
+    let $workModTime := xmldb:last-modified($targetSubcollection, $targetWorkId || '.xml')
     return
         if ($targetWorkId || "_crumbtrails.xml" = xmldb:get-child-resources($config:crumb-root)) then
             let $renderModTime := xmldb:last-modified($config:crumb-root, $targetWorkId || "_crumbtrails.xml")
@@ -265,7 +268,7 @@ declare function admin:needsCrumbtrail($targetWorkId as xs:string) as xs:boolean
 };
 
 declare function admin:needsCrumbtrailString($node as node(), $model as map(*)) {
-    let $currentWorkId := $model('currentWork')?('wid')
+    let $currentWorkId := max(($model('currentWork')?('wid'), $model('currentLemma')?('lid')))
     let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
                                     if (doc-available(concat($subcollection, '/', $currentWorkId, '.xml'))) then $subcollection
                                     else ()
@@ -277,7 +280,7 @@ declare function admin:needsCrumbtrailString($node as node(), $model as map(*)) 
             <td>Not ready yet</td>
         else if (admin:needsCrumbtrail($currentWorkId)) then 
             <td
-                title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}{
+                title="Source from: {string(xmldb:last-modified($targetSubcollection, $currentWorkId || '.xml'))}{
                         if (xmldb:get-child-resources($config:crumb-root) = $currentWorkId || "_crumbtrails.xml") then
                             concat(', rendered on: ', xmldb:last-modified($config:crumb-root, $currentWorkId || "_crumbtrails.xml"))
                         else
@@ -287,7 +290,7 @@ declare function admin:needsCrumbtrailString($node as node(), $model as map(*)) 
             
         else
             <td
-                title="Source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}, rendered on: {xmldb:last-modified($config:crumb-root, $currentWorkId || "_crumbtrails.xml")}">Creating Crumbtrails unnecessary. <small><a  href="webdata-admin.xql?rid={$currentWorkId}&amp;format=crumbtrails">Create it anyway!</a></small></td>
+                title="Source from: {string(xmldb:last-modified($targetSubcollection, $currentWorkId || '.xml'))}, rendered on: {xmldb:last-modified($config:crumb-root, $currentWorkId || "_crumbtrails.xml")}">Creating Crumbtrails unnecessary. <small><a  href="webdata-admin.xql?rid={$currentWorkId}&amp;format=crumbtrails">Create it anyway!</a></small></td>
 };
 
 declare function admin:needsTeiCorpusZipString($node as node(), $model as map(*)) {
@@ -374,9 +377,9 @@ declare function admin:needsHTML($targetResourceId as xs:string) as xs:boolean {
             if (not(xmldb:collection-available($config:html-root || '/' || $targetResourceId))) then
                 true()
             else if (xmldb:collection-available($config:html-root || '/' || $targetResourceId)
-                      and $targetResourceId || ".html" = xmldb:get-child-resources($config:html-root || '/' || $targetResourceId)
+                      and "00001_completeWork.html" = xmldb:get-child-resources($config:html-root || '/' || $targetResourceId)
                      ) then
-                let $htmlModTime := xmldb:last-modified($config:html-root || '/' || $targetResourceId, $targetResourceId || ".html")
+                let $htmlModTime := xmldb:last-modified($config:html-root || '/' || $targetResourceId, "00001_completeWork.html")
                 return if ($htmlModTime lt $xmlModTime) then true() else false()
             else true()
         else true()
@@ -1792,7 +1795,6 @@ declare function admin:createPdf($rid as xs:string){
         else ()
 };
 
-
 declare function admin:createCrumbtrails($wid as xs:string){
    let $debug := if ($config:debug = ("trace", "info")) then
         let $d := console:log("[ADMIN] Creating Crumbtrails  for " || $wid || ".")
@@ -1803,9 +1805,9 @@ declare function admin:createCrumbtrails($wid as xs:string){
 
     (: define the works to be indexed: :)
     let $teiRoots :=  if ($wid = '*') then
-                          collection($config:tei-works-root)//tei:TEI[.//tei:text[@type = ("work_multivolume", "work_monograph")]]
+                          collection($config:tei-root)//tei:TEI[.//tei:text[@type = ("work_multivolume", "work_monograph", "lemma_article")]]
                       else
-                          collection($config:tei-works-root)//tei:TEI[@xml:id = distinct-values($wid)]
+                          collection($config:tei-root)//tei:TEI[@xml:id = distinct-values($wid)]
 
     (: for each requested work, create an individual crumbtrails :)
     let $crumbResults :=
@@ -1886,7 +1888,7 @@ declare function admin:createCrumbtrails($wid as xs:string){
 ~ Creates routing information; saves, exports and posts them to caddy.
 :)
 declare function admin:createRoutes() {
-    for $i in collection($config:tei-works-root)//tei:TEI[descendant::tei:text/@type = ('work_multivolume', 'monograph')]
+    for $i in collection($config:tei-root)//tei:TEI[descendant::tei:text/@type = ('work_multivolume', 'work_monograph', 'lemma_article')]
     return admin:createRoutes($i/@xml:id/string())
 };
 
@@ -1979,6 +1981,8 @@ declare function admin:buildRoutingInfoWork($resourceId as xs:string, $crumbtrai
                            substring-after(($crumbtrails//a[1])[1]/@href/string(), '/data/')
                         else if ($text_type eq 'workingpapers') then
                             tokenize($resourceId, '_')[1] || '/html/' || $resourceId || '_details.html'
+                        else if ($text_type eq 'lemma_article') then
+                            tokenize($resourceId, '_')[1] || '/html/00001_completeWork.html'
                         else
                             tokenize($resourceId, '_')[1] || '/html/' || $resourceId || '.html'
     let $value := array {
