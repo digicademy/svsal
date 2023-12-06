@@ -1901,9 +1901,17 @@ declare function admin:createRoutes($wid as xs:string) {
                                    else ()
     let $routingVolumeDetails   := if ($index) then
                                         array{fn:for-each($index//sal:node[@subtype = "work_volume"], function($k) {admin:buildRoutingInfoDetails($wid || ':' || $k/@citeID)} )}
+                                   else if (doc-available($config:tei-works-root || '/' || $wid || '.xml')) then
+                                        let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Routing: creating routing details info for volumes, resolving xincludes...") else ()
+                                        let $volumes := doc($config:tei-works-root || '/' || $wid || '.xml')//xi:include[contains(@href, '_Vol')]/@href/substring-before(translate(., 'V', 'v'), '.xml')
+                                        return array{fn:for-each($volumes, function($k) {
+                                                                                            let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Routing: creating routing details info for volume " || $k || "/" || $wid || ':vol' || xs:int(tokenize($k, 'vol')[2]) || " ...") else ()
+                                                                                            return admin:buildRoutingInfoDetails($wid || ':vol' || xs:int(tokenize($k, 'vol')[2]))
+                                                                                        }
+                                                    )}
                                    else
-                                        let $volumes := doc($config:tei-works-root || '/' || $wid || '.xml')//xi:include[contains(@href, '_Vol')]/@href/string()/replace(., 'Vol', 'vol')
-                                        return array{fn:for-each($volumes, function($k) {admin:buildRoutingInfoDetails($wid || ':' || xs:int(tokenize($k, 'Vol')[2]))} )}
+                                        let $debug := console:log("[ADMIN] Problem in creating volume routing for " || $wid || "?: Neither index nor a file'" || $config:tei-works-root || '/' || $wid || ".xml' could be found.")
+                                        return ()
     let $routingTable           := array:join( ( $routingWork, $routingNodes, $routingVolumeDetails, $routingWorkDetails ) )
 
     let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Routing: Joint routing table: " || substring(serialize($routingTable, map{"method":"json", "indent": false(), "encoding":"utf-8"}), 1, 500) || " ...") else ()
