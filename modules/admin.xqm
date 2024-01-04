@@ -1263,7 +1263,7 @@ declare %templates:wrap function admin:renderHTML($id as xs:string*) as element(
             
             (: (2) TXT :)
             
-            let $txt-start-time := util:system-time()
+            let $txt-start-time      := util:system-time()
             let $plainTextEdit       := txt:makeTXTData($work-raw, 'edit')
             let $txtEditExportStatus := admin:exportBinaryFile($rid, $rid || "_edit.txt", $plainTextEdit, "txt")
             let $txtEditSaveStatus   := admin:saveTextFile($rid, $rid || "_edit.txt", $plainTextEdit, "txt")
@@ -1272,7 +1272,7 @@ declare %templates:wrap function admin:renderHTML($id as xs:string*) as element(
             let $txtOrigEXportStatus := admin:exportBinaryFile($rid, $rid || "_orig.txt", $plainTextOrig, "txt")
             let $txtOrigSaveStatus   := admin:saveTextFile($rid, $rid || "_orig.txt", $plainTextOrig, "txt")
             let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Plain text (orig) file created and stored.") else ()
-            let $txt-end-time := ((util:system-time() - $txt-start-time) div xs:dayTimeDuration('PT1S'))
+            let $txt-end-time        := ((util:system-time() - $txt-start-time) div xs:dayTimeDuration('PT1S'))
             
             (: HTML & TXT Reporting :)
             
@@ -1538,7 +1538,7 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
             let $hit_label         := string($nodeIndex//sal:node[@n eq $hit_id]/@label)
             let $hit_crumbtrail    := fn:serialize($nodeCrumbtrails//sal:nodecrumb[@xml:id eq $hit_id]/sal:crumbtrail/node()[last()](:  , map{"method":"xhtml", "escape-uri-attributes":false(), "omit-xml-declaration":true() } :))
             let $before_crumbtrail :=  if (substring-before($hit_crumbtrail, '">')) then (substring-before($hit_crumbtrail, '">')) else ((substring-before($hit_crumbtrail, '"/>')))
-            let $substringed_crumbtrail := substring-after($before_crumbtrail, "#")
+        let $substringed_crumbtrail := (substring-after($before_crumbtrail, "#"))
 
             let $nodetrail := sutil:getNodetrailString($wid, $substringed_crumbtrail, 'citeID')
             let $relativeLink := concat($config:idserver, "/texts/", $wid, ":", $nodetrail)
@@ -1549,6 +1549,9 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
             (:  let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] This is hit_crumbtrail_decoded: " ||decode-uri(hit_crumbtrail) || ".") else () :)
             (:  let $hit_crumbtrail_url :=decode :)
             (: Here we define the to-be-indexed content! :)
+
+
+
             let $hit_content_orig := 
                 if ($hit_id) then
                     if ($nodeType eq 'work') then
@@ -1578,7 +1581,7 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
                             (<sphinx_year>{$work_year}</sphinx_year>)
                         </h3>
                         <h4>Label: {$hit_label}</h4>
-                        <div>Crumbtrail: {$replaced_hit_crumbtrail}</div>
+                        <div>Crumbtrail: {$encoded_crumbtrail}</div>
                         <h4>Hit
                             language: &quot;<sphinx_hit_language>{$hit_language}</sphinx_hit_language>&quot;,
                             node type: &lt;<sphinx_hit_type>{$hit_type}</sphinx_hit_type>&gt;,
@@ -1967,7 +1970,7 @@ declare function admin:createRoutes($wid as xs:string) {
 
 declare function admin:buildRoutingInfoNode($wid as xs:string, $item as element(sal:node), $crumbtrails as element(sal:crumb)) {
     let $textTypePath := if (starts-with($wid, 'W')) then '/texts/' else if (starts-with($wid, 'L')) then '/lemmata/' else ''
-    let $crumb := substring-after($crumbtrails//sal:nodecrumb[@xml:id eq $item/@n]//a[last()]/@href/string(), "/data/")
+    let $crumb := if (fn:contains($crumbtrails//sal:nodecrumb[@xml:id eq $item/@n]//a[last()]/@href/string(), "/data/")) then substring-after($crumbtrails//sal:nodecrumb[@xml:id eq $item/@n]//a[last()]/@href/string(), "/data/") else ( $crumbtrails//sal:nodecrumb[@xml:id eq $item/@n]//a[last()]/@href/string())
     let $value := map {
                     "input" :   concat($textTypePath, $wid, ":", $item/@citeID/string()),
                     "outputs" : array { ( $crumb, 'yes' ) }
@@ -1984,7 +1987,7 @@ declare function admin:buildRoutingInfoWork($resourceId as xs:string, $crumbtrai
                       else if (starts-with($resourceId, "WP0")) then "workingpapers"
                       else "texts"
     let $firstCrumb  := if (($crumbtrails//a[1])[1]/@href) then
-                           substring-after(($crumbtrails//a[1])[1]/@href/string(), '/data/')
+                          ( if(fn:contains(($crumbtrails//a[1])[1]/@href/string(), "/data")) then( substring-after(($crumbtrails//a[1])[1]/@href/string(), '/data/')) else (($crumbtrails//a[1])[1]/@href/string()))
                         else if ($text_type eq 'workingpapers') then
                             tokenize($resourceId, '_')[1] || '/html/' || $resourceId || '_details.html'
                         else if ($text_type eq 'lemma_article') then

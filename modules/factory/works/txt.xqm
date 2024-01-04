@@ -27,11 +27,14 @@ import module namespace sutil      = "https://www.salamanca.school/xquery/sutil"
 
 (:
 ~ Creates text data as a string for a whole work/volume.
+~ @param $tei : the tei:TEI element to be transformed
+~ @param $mode : select the diplomatic transcription ("orig") or the constituted text ("edit", default)
 :)
 declare function txt:makeTXTData($tei as element(tei:TEI), $mode as xs:string) as xs:string? {
     let $work := util:expand($tei)
+    let $procmode := if ($mode ne "orig") then "edit" else "orig"
     return
-        string-join(txt:dispatch($work, 'edit'), '')
+        string-join(txt:dispatch($work, $procmode), '')
 };
 
 
