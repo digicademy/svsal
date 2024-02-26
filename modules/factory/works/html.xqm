@@ -1421,44 +1421,78 @@ declare function html:list($node as element(tei:list), $mode as xs:string) {
                 (: tei:item are actually handled here, not in html:item, due to the tight coupling of their layout to tei:list :)
                 case 'ordered' return (: enumerated/ordered list :)
                     <div id="{$node/@xml:id}">
-                        {for $head in $node/tei:head return <h4>{html:passthru($head, $mode)}</h4>}
+                        {for $head in $node/tei:head return
+                            if ($head/@xml:id) then
+                                <h4 id="{$head/@xml:id/string()}">{html:passthru($head, $mode)}</h4>
+                            else
+                                <h4>{html:passthru($head, $mode)}</h4>
+                        }
                         {
                         (: in ordered lists, we outsource non-item elements before items (such as argument, p, ...) to a non-ordered, non-bulleted list :)
                         if ($node/*[not(self::tei:head or self::tei:item) and not(preceding-sibling::tei:item)]) then
                             <ul style="list-style: none;">
                                 {
                                 for $child in $node/*[not(self::tei:head or self::tei:item) and not(preceding-sibling::tei:item)] return
-                                    <li>{html:passthru($child, $mode)}</li>
+                                    if ($child/@xml:id) then
+                                        <li id="{$child/@xml:id/string()}">{html:passthru($child, $mode)}</li>
+                                    else
+                                        <li>{html:passthru($child, $mode)}</li>
                                 }    
                             </ul>
                         else ()
                         }
                         <ol>
-                            {for $child in $node/*[self::tei:item or preceding-sibling::tei:item] return 
-                                <li>{html:passthru($child, $mode)}</li>
+                            {for $child in $node/*[self::tei:item or preceding-sibling::tei:item] return
+                                if ($child/@xml:id) then 
+                                    <li id="{$child/@xml:id/string()}">{html:passthru($child, $mode)}</li>
+                                else
+                                    <li>{html:passthru($child, $mode)}</li>
                             }
                         </ol>
                     </div>
                 case 'simple' return (: make no list in html terms at all :)
                     <div id="{$node/@xml:id}">
-                        {for $head in $node/tei:head return <h4 class="inlist-head">{html:passthru($head, $mode)}</h4>}
+                        {for $head in $node/tei:head return
+                            if ($head/@xml:id) then
+                                <h4 id="{$head/@xml:id/string()}" class="inlist-head">{html:passthru($head, $mode)}</h4>
+                            else
+                                <h4 class="inlist-head">{html:passthru($head, $mode)}</h4>
+                        }
                         {for $child in $node/*[not(self::tei:head)] return
                             if ($child//list) then html:passthru($child, $mode)
                             else if (not($child/self::tei:item)) then (: argument, p, etc. :)
                                 <div>{html:passthru($child, $mode)}</div>
-                            else (' ', <span class="inline-item">{html:passthru($child, $mode)}</span>, ' ')}
+                            else (' ',
+                                    if ($child/@xml:id) then
+                                        <span id="{$child/@xml:id/string()}" class="inline-item">{html:passthru($child, $mode)}</span>
+                                    else
+                                        <span class="inline-item">{html:passthru($child, $mode)}</span>
+                                , ' ')
+                        }
                     </div>
                 case 'index'
                 case 'summaries' return (: unordered list :)
                     let $content := 
                         <div class="list-index" id="{$node/@xml:id}">
-                            {for $head in $node/tei:head return <h4 class="list-index-head">{html:passthru($head, $mode)}</h4>}
+                            {for $head in $node/tei:head return
+                                if ($head/@xml:id) then
+                                    <h4 id="{$head/@xml:id/string()}" class="list-index-head">{html:passthru($head, $mode)}</h4>
+                                else
+                                    <h4 class="list-index-head">{html:passthru($head, $mode)}</h4>
+                            }
                             <ul style="list-style-type:circle;">
                                 {for $child in $node/*[not(self::tei:head)] return 
                                     if (not($child/self::tei:item)) then (: argument, p, etc. :)
-                                        <li class="list-paragraph">{html:passthru($child, $mode)}</li>
+                                        if ($child/@xml:id) then
+                                            <li id="{$child/@xml:id/string()}" class="list-paragraph">{html:passthru($child, $mode)}</li>
+                                        else
+                                            <li class="list-paragraph">{html:passthru($child, $mode)}</li>
                                     else
-                                        <li class="list-index-item">{html:passthru($child, $mode)}</li>}
+                                        if ($child/@xml:id) then
+                                            <li id="{$child/@xml:id/string()}" class="list-index-item">{html:passthru($child, $mode)}</li>
+                                        else
+                                            <li class="list-index-item">{html:passthru($child, $mode)}</li>
+                                }
                             </ul>
                         </div>
                     return
@@ -1469,13 +1503,25 @@ declare function html:list($node as element(tei:list), $mode as xs:string) {
                 default return (: e.g., 'bulleted' :)
                     (: put an unordered list (and captions) in a figure environment (why?) of class @type :)
                     <div class="list-default" id="{$node/@xml:id}">
-                        {for $head in $node/tei:head return <h4 class="list-default-head">{html:passthru($head, $mode)}</h4>}
+                        {for $head in $node/tei:head return
+                            if ($head/@xml:id) then
+                                <h4 id="{$head/@xml:id/string()}" class="list-default-head">{html:passthru($head, $mode)}</h4>
+                            else
+                                <h4 class="list-default-head">{html:passthru($head, $mode)}</h4>
+                        }
                         <ul style="list-style-type:circle;">
-                             {for $child in $node/*[not(self::tei:head)] return 
-                                  if (not($child/self::tei:item)) then (: argument, p, etc. :)
-                                      <li class="list-paragraph">{html:passthru($child, $mode)}</li>
-                                  else
-                                      <li class="list-default-item">{html:passthru($child, $mode)}</li>}
+                            {for $child in $node/*[not(self::tei:head)] return 
+                                if (not($child/self::tei:item)) then (: argument, p, etc. :)
+                                    if ($child/@xml:id) then   
+                                        <li id="{$child/@xml:id/string()}" class="list-paragraph">{html:passthru($child, $mode)}</li>
+                                    else
+                                        <li class="list-paragraph">{html:passthru($child, $mode)}</li>
+                                else
+                                    if ($child/@xml:id) then
+                                        <li id="{$child/@xml:id/string()}" class="list-default-item">{html:passthru($child, $mode)}</li>
+                                    else
+                                        <li class="list-default-item">{html:passthru($child, $mode)}</li>
+                            }
                         </ul>
                     </div>
 
