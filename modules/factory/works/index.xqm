@@ -59,10 +59,10 @@ declare function index:makeNodeIndex($tei as element(tei:TEI)) as map(*) {
     let $work := util:expand($tei)
     let $pages := $work//tei:pb
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[INDEX] Indexing " || $wid || " (" || count($pages) || " p.) at fragmentation level " || $fragmentationDepth || ".") else ()
-    
+
     let $target-set := index:getFragmentNodes($work, $fragmentationDepth)
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[INDEX] Target set contains " || count($target-set) || " nodes (to become html fragments).") else ()
-    
+
     (: First, get all relevant nodes :)
     let $nodes := 
         for $text in $work//tei:text[@type = ('work_volume', 'work_monograph', 'lemma_article')] return 
@@ -71,7 +71,7 @@ declare function index:makeNodeIndex($tei as element(tei:TEI)) as map(*) {
                 or $text/@type eq 'work_monograph' or $text/@type eq 'lemma_article') then 
                 $text/descendant-or-self::*[index:isIndexNode(.)]
             else ()
-                
+
     (: Create the fragment id for each node beforehand, so that recursive crumbtrail creation has it readily available :)
     let $debug := if ($config:debug = ("trace")) then console:log("[INDEX] Node indexing: identifying fragment ids ...") else ()
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[INDEX] Node indexing: " || count($nodes) || " nodes to process.") else ()
@@ -91,11 +91,11 @@ declare function index:makeNodeIndex($tei as element(tei:TEI)) as map(*) {
                     return error(QName('http://salamanca.school/err', 'FragmentationProblem'),
                                  'Could not find $frag for ' || $n || '.')
                 else ()
-                let $fragId := index:makeFragmentId(functx:index-of-node($target-set, $frag), $frag/@xml:id)
+                let $fragId := index:makeFragmentId(functx:index-of-node($target-set, $frag), $frag/@xml:id/string())
                 return map:entry($n, $fragId)
         )
     let $debug := if ($config:debug = ("trace")) then console:log("[INDEX] Node indexing: " || count($fragmentIds) || " fragment ids extracted.") else ()
-                
+
     let $debug := if ($config:debug = ("trace")) then console:log("[INDEX] Node indexing: creating index file ...") else ()
     (: node indexing has 2 stages: :)
     (: 1.) extract nested sal:nodes with rudimentary information :)
@@ -584,7 +584,10 @@ declare function index:isMainNode($node as node()) as xs:boolean {
             $node/self::tei:argument[not(ancestor::tei:list)] or
             $node/self::tei:table
         ) and 
+(: A.W. 2024-02-24: change the following, in order to also index <p>s on titlepages, in arguments etc.
         not($node/ancestor::*[index:isMainNode(.) or index:isMarginalNode(.) or self::tei:list])
+:)
+        not($node/ancestor::*[index:isMarginalNode(.) or self::tei:list])
     )
 };
 
@@ -625,7 +628,11 @@ declare function index:isStructuralNode($node as node()) as xs:boolean {
 declare function index:isPotentialFragmentNode($node as node()) as xs:boolean {
     boolean($node/self::tei:front |
             $node/self::tei:back |
-            $node/self::tei:div[not($node/ancestor::tei:front | $node/ancestor::tei:back)] |
+            $node/self::tei:div[  not($node/ancestor::tei:front | $node/ancestor::tei:back)] |
+            $node/self::tei:head[ not($node/ancestor::tei:front | $node/ancestor::tei:back)] |
+            $node/self::tei:p[    not($node/ancestor::tei:front | $node/ancestor::tei:back)] |
+            $node/self::tei:list[ not($node/ancestor::tei:front | $node/ancestor::tei:back)] |
+            $node/self::tei:lg[   not($node/ancestor::tei:front | $node/ancestor::tei:back)] |
             (: $node/self::tei:argument[not($node/ancestor::tei:list)] | :)
             $node/self::tei:text[@type = ('work_monograph', 'work_volume')]
             )
@@ -649,9 +656,7 @@ declare function index:isBasicNode($node as node()) as xs:boolean {
     boolean(
         index:isMainNode($node) or
         index:isMarginalNode($node) or
-        (:(index:isListNode($node) and not($node/descendant::*[index:isListNode(.)])):)
-        $node[self::tei:item | self::tei:head[ancestor::tei:list] | self::tei:argument[ancestor::tei:list] ] 
-        (: read as: 'lists that do not contain lists (=lists at the lowest level), or siblings thereof' :)
+        $node[self::tei:item | self::tei:head | self::tei:argument ] 
         (: (this is quite a complicated XPath, but I don't know how to simplify it without breaking things...) :)
     )
 };

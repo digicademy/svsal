@@ -1062,16 +1062,17 @@ declare function html:abbr($node as element(tei:abbr), $mode) {
 declare function html:argument($node as element(tei:argument), $mode as xs:string) {
     switch($mode)
         case 'html' return
-            if (index:isBasicNode($node)) then
+(:            if (index:isBasicNode($node)) then
                 <div class="hauptText">
                     <div class="argument">
                         {html:passthru($node, $mode)}
                     </div>
                 </div>
             else
-                <div class="argument">
-                    {html:passthru($node, $mode)}
-                </div>
+:)
+            <div class="argument">
+                {html:passthru($node, $mode)}
+            </div>
 
         default return
             html:passthru($node, $mode)
@@ -1640,10 +1641,10 @@ declare function html:pb($node as element(tei:pb), $mode as xs:string) {
                     concat('[pb_corresp_', $node/@corresp, ']')
                 else
                     (: not prepending 'Vol. ' prefix here :)
-                    if (contains($node/@n, 'fol.')) then 
+                    if (contains($node/@n, 'fol.') or contains($node/@n, 'fo.' )) then 
                         $node/@n
                     else
-                        'p. ' || $node/@n
+                        'p. ' || $node/@n (: changed from p.:)
             )
 
         case 'html' return

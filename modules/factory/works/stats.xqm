@@ -106,7 +106,7 @@ declare function stats:makeCorpusStats() as map(*) {
             let $iiif := iiif:fetchResource($id)
             return
                 if (count($iiif) gt 0) then 
-                    if ($iiif('@type') eq 'sc:Manifest') then
+                    if ($iiif('@type') eq 'sc:Manifest' and count($iiif('sequences')) gt 0) then
                         array:size(array:get($iiif('sequences'), 1)?('canvases'))
                     else
                         let $debug := console:log('[Stats] Invalid iiif manifest for work ' || $id || '.')

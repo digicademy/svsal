@@ -792,7 +792,7 @@ declare function admin:exportXMLFile($wid as xs:string, $filename as xs:string, 
         else true()
     let $user := string(sm:id()//sm:real/sm:username)
     (: let $umask := sm:set-umask($user, 2) :)
-    let $store-status := file:serialize($content, $pathname, map{"method":$method, "indent": true(), "encoding":"utf-8"})
+    let $store-status := file:serialize($content, $pathname, map{"method":$method, "indent": true(), "encoding": "utf-8"})
     return  if ($store-status) then $pathname else ()
 };
 
@@ -1581,7 +1581,7 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
                             (<sphinx_year>{$work_year}</sphinx_year>)
                         </h3>
                         <h4>Label: {$hit_label}</h4>
-                        <div>Crumbtrail: {$encoded_crumbtrail}</div>
+                        <div>Crumbtrail: {$replaced_hit_crumbtrail}</div>
                         <h4>Hit
                             language: &quot;<sphinx_hit_language>{$hit_language}</sphinx_hit_language>&quot;,
                             node type: &lt;<sphinx_hit_type>{$hit_type}</sphinx_hit_type>&gt;,
@@ -1971,9 +1971,12 @@ declare function admin:createRoutes($wid as xs:string) {
 declare function admin:buildRoutingInfoNode($wid as xs:string, $item as element(sal:node), $crumbtrails as element(sal:crumb)) {
     let $textTypePath := if (starts-with($wid, 'W')) then '/texts/' else if (starts-with($wid, 'L')) then '/lemmata/' else ''
     let $crumb := if (fn:contains($crumbtrails//sal:nodecrumb[@xml:id eq $item/@n]//a[last()]/@href/string(), "/data/")) then substring-after($crumbtrails//sal:nodecrumb[@xml:id eq $item/@n]//a[last()]/@href/string(), "/data/") else ( $crumbtrails//sal:nodecrumb[@xml:id eq $item/@n]//a[last()]/@href/string())
+    let $filepath := tokenize($crumb, '#')[1]
+    let $fragmentHash := tokenize($crumb, '#')[2]
+
     let $value := map {
                     "input" :   concat($textTypePath, $wid, ":", $item/@citeID/string()),
-                    "outputs" : array { ( $crumb, 'yes' ) }
+                    "outputs" : array { ( $filepath, $fragmentHash ) }
                   }
 (:    let $debug := console:log("[ADMIN] routing entry: " || serialize($value, map{"method":"json"}) || "."):)
     return $value
@@ -1994,10 +1997,12 @@ declare function admin:buildRoutingInfoWork($resourceId as xs:string, $crumbtrai
                             tokenize($resourceId, '_')[1] || '/html/00001_completeWork.html'
                         else
                             tokenize($resourceId, '_')[1] || '/html/' || $resourceId || '.html'
+    let $filepath := tokenize($firstCrumb, '#')[1]
+    let $fragmentHash := tokenize($firstCrumb, '#')[2]
     let $value := array {
                             ( map {
                                     "input" :   "/" || $text_type || "/" || $resourceId,
-                                    "outputs" : array { ( $firstCrumb, 'yes' ) }
+                                    "outputs" : array { ( $filepath, $fragmentHash ) }
                                   }
                             )
                         }
@@ -2024,7 +2029,7 @@ declare function admin:buildRoutingInfoDetails($id) {
         :)
         map {
               "input" :   "/" || $text_type || "/" || $id || '_details',
-              "outputs" : array { ( $output, 'yes' ) }
+              "outputs" : array { ( $output, '' ) }
         }
 };
 

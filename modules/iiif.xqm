@@ -25,13 +25,14 @@ import module namespace sutil      = "https://www.salamanca.school/xquery/sutil"
 
 declare option output:method "json";
 declare option output:media-type "application/json";
- 
 
-(: Interface function for fetching a iiif resource, either (if possible) from the database or by creating it on-the-fly.
-This resource may be either a manifest (for a single-volume work or a single volume within a multi-volume work) 
-or a collection resource (for a multi-volume work).
-@param $wid: the ID of the work or volume which the manifest is requested for
-@return:     the iiif manifest/collection
+
+(: Interface function for fetching a iiif resource, either (if possible) from the database
+     or by creating it on-the-fly.
+     This resource may be either a manifest (for a single-volume work or a single volume within a multi-volume work) 
+     or a collection resource (for a multi-volume work).
+   @param $wid: the ID of the work or volume which the manifest is requested for
+   @return:     the iiif manifest/collection
 :)
 declare function iiif:fetchResource($wid as xs:string) as map(*)? {
     let $workId := sutil:normalizeId($wid)
@@ -54,15 +55,20 @@ declare function iiif:fetchResource($wid as xs:string) as map(*)? {
         else if ($workType eq 'work_volume') then
             let $collectionId := substring-before($workId, '_Vol')
             let $volume := 
+                (: if the resource for the volume is available in the DB, get it directly :)
+                if (util:binary-doc-available($config:iiif-root || '/' || $workId || '.json')) then
+                    let $debug := if ($config:debug = "trace") then console:log('Fetching iiif manifest for ' || $workId || ' from the DB...') else ()
+                    return json-doc($config:iiif-root || '/' || $workId || '.json')
                 (: if the resource for the collection is available in the DB, get the manifest from within the collection :)
-                if (util:binary-doc-available($config:iiif-root || '/' || $collectionId || '.json')) then
+                else if (util:binary-doc-available($config:iiif-root || '/' || $collectionId || '.json')) then
                     let $debug := if ($config:debug = "trace") then console:log('Fetching iiif manifest for ' || $workId || ' from collection for ' || $collectionId || ' from the DB...') else ()
                     let $collection := json-doc($config:iiif-root || '/' || $collectionId || '.json')
-                    let $manifest := if (array:size(array:filter(map:get($collection, 'members'), function($a) {contains(map:get($a, '@id'), $workId)})) ge 1) then
-                                        array:get(array:filter(map:get($collection, 'members'), function($a) {contains(map:get($a, '@id'), $workId)}), 1)
-                                     else
-                                        ()
-                    return $manifest
+                    let $members := map:get($collection, 'members')
+                    let $manifest := array:for-each($members, function ($a) {
+                                            if (ends-with(map:get($a, '@id'), $workId)) then $a else ()
+                                        })
+                    return
+                        if (count($manifest) gt 0) then $manifest[1] else ()
                 else 
                     ()
                     (: on-the-fly-creation - disabled for performance reasons :)
