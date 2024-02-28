@@ -19,7 +19,7 @@ import module namespace console     = "http://exist-db.org/xquery/console";
 import module namespace templates   = "http://exist-db.org/xquery/html-templating";
 import module namespace lib         = "http://exist-db.org/xquery/html-templating/lib";
 
-import module namespace config  = "https://www.salamanca.school/xquery/config"  at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
+import module namespace config  = "https://www.salamanca.school/xquery/config"    at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
 import module namespace i18n    = "http://exist-db.org/xquery/i18n"              at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
 
 declare option exist:timeout "166400000"; (: in miliseconds, 25.000.000 ~ 7h, 43.000.000 ~ 12h :)
@@ -55,7 +55,7 @@ declare function sutil:copy($node as element()) as node() {
 (: Normalizes work, author, lemma, news, and working paper ids (and returns everything else as-is :)
 declare function sutil:normalizeId($id as xs:string?) as xs:string? {
     if (contains($id, '_vol') or        contains($id, '_VOL')) then
-    translate($id, 'wvLO', 'WVlo')
+ translate($id, 'wvLO', 'WVlo')
         else if (string-length($id) eq 5 and substring($id, 1, 1) = ('w', 'l', 'a', 'n')) then (: work, lemma, author, news :)
         upper-case($id)
         else if (matches($id, '^[wW][pP]\d{4}$')) then upper-case($id)                              (: working papers :)
@@ -235,11 +235,9 @@ declare function sutil:getNodetrail($wid as xs:string, $node as element()?, $mod
                 default
                     return util:log('error', '[sutil] calling sutil:getNodetrail with unknown mode: ' || $mode)
         else
-            let $debug := console:log('[sutil] calling sutil:getNodetrail(' || $wid || ', ' || $mode || ') but found no indexed node for node: ' || serialize($node))
-            return util:log('error', '[sutil] calling sutil:getNodetrail(' || $wid || ', ' || $mode || ') but found no indexed node for node: ' || serialize($node))
+            util:log('error', '[sutil] calling sutil:getNodetrail(' || $wid || ', ' || $mode || ') but found no indexed node for node: ' || serialize($node))
     else
-        let $debug := console:log('[sutil] calling sutil:getNodetrail(' || $wid || ', ' || $mode || ') but no index file available.')
-        return util:log('error', '[sutil] calling sutil:getNodetrail(' || $wid || ', ' || $mode || ') but no index file available.')
+        util:log('error', '[sutil] calling sutil:getNodetrail(' || $wid || ', ' || $mode || ') but no index file available.')
 };
 
 declare function sutil:getNodetrailString($wid as xs:string, $id as xs:string, $mode as xs:string) {
@@ -310,22 +308,8 @@ declare function sutil:formatName($persName as element()*) as xs:string? {
 :)
 declare %templates:wrap
     function sutil:WRKcombined($node as node()?, $model as map(*)?, $wid as xs:string?) {
-        let $textType       := if (starts-with($wid, 'W0')) then
-                                    'text'
-                                else if (starts-with($wid, 'L0')) then
-                                    'lemma'
-                                else ()
-        let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
-                                        if (doc-available(concat($subcollection, '/', $wid, '.xml'))) then $subcollection
-                                        else ()
-
-        let $path           :=  if ($textType eq 'text') then
-                                    doc($targetSubcollection || "/" || sutil:normalizeId($wid) || ".xml")//tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr
-                                 else if ($textType eq 'lemma') then
-                                    doc($targetSubcollection || "/" || sutil:normalizeId($wid) || ".xml")//tei:teiHeader/tei:fileDesc
-                                 else
-                                    ()
-        let $author         :=  string-join($path//tei:author//tei:surname, '/')
+        let $path           :=  doc($config:tei-works-root || "/" || sutil:normalizeId($wid) || ".xml")//tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr
+        let $author         :=  string-join($path//tei:author/tei:persName/tei:surname, ', ')
         let $title          :=  $path//tei:title[@type = 'short']
         let $thisEd         :=  $path//tei:pubPlace[@role = 'thisEd']
         let $firstEd        :=  $path//tei:pubPlace[@role = 'firstEd']
@@ -342,15 +326,10 @@ declare %templates:wrap
         let $year :=  
             if ($thisEd) then 
                 $path//tei:date[@type = 'thisEd']/@when/string() 
-            else if ($textType eq 'lemma') then
-                $path//tei:date[@type = 'digitizedEd'][1]/@when/string()
             else
                 $path//tei:date[@type = 'firstEd']/@when/string()
-        let $pubDetails := if ($textType eq 'text') then
-                                ". " || $place || '&#32;'||": " || $publisher || ", " || $year
-                            else
-                                ' (' || $year || ')'
-        return ($author || ':  ' || $title || $pubDetails || '.') 
+        let $pubDetails     :=  $place || '&#32;'||": " || $publisher || ", " || $year
+            return ($author||':  '||$title||'. '||$pubDetails||'.') 
 };  
 
 
@@ -388,8 +367,8 @@ declare function sutil:extractTeiNodeFromCiteID($workId as xs:string, $citeID as
         between the two of which the acces date has to be inserted (e.g., by means of JS)
 :)
 declare function sutil:HTMLmakeCitationReference($wid as xs:string, $fileDesc as element(tei:fileDesc), $mode as xs:string, $node as element()?) as element(span)+ {
-    let $author := string-join($fileDesc/tei:titleStmt/tei:author/tei:persName/tei:surname, '/')
-    let $title := if ($fileDesc/tei:titleStmt/tei:title[@type eq 'short']) then $fileDesc/tei:titleStmt/tei:title[@type eq 'short']/text() else $fileDesc/tei:titleStmt/tei:title[1]/text() 
+    let $author := string-join($fileDesc/tei:titleStmt/tei:author/tei:persName/tei:surname/text(), '/')
+    let $title := $fileDesc/tei:titleStmt/tei:title[@type eq 'short']/text()
     let $digitalYear := substring($fileDesc/tei:publicationStmt/tei:date[@type = ('digitizedEd', 'summaryDigitizedEd')]/@when/string()[1], 1, 4)
     let $originalYear := 
         if ($fileDesc/tei:sourceDesc//tei:date[@type eq 'thisEd']) then
@@ -399,7 +378,6 @@ declare function sutil:HTMLmakeCitationReference($wid as xs:string, $fileDesc as
         string-join(for $ed in $fileDesc/tei:seriesStmt/tei:editor/tei:persName 
                         order by $ed/tei:surname
                         return app:rotateFormatName($ed), ' &amp; '):)
-    let $seriesTitle := if (starts-with($wid, 'L')) then 'A Dictionary of its Juridical-Political Language' else 'A Digital Collection of Sources'
     let $citeID :=
         if ($mode eq 'reading-passage' and $node) then
             sutil:getNodetrail($wid, $node, 'citeID')
@@ -413,9 +391,9 @@ declare function sutil:HTMLmakeCitationReference($wid as xs:string, $fileDesc as
                 if ($passage) then <span class="cite-rec-trail">{$passage || ', '}</span> else ()
         else ()
     let $body := 
-        <span class="cite-rec-body">{$author || ', ' || $title || ' (' || $digitalYear || (if ($originalYear) then ' [' || $originalYear || '])' else ()) || ', '}
+        <span class="cite-rec-body">{$author || ', ' || $title || ' (' || $digitalYear || ' [' || $originalYear || '])'|| ', '}
             {$label}
-            <i18n:text key="inLow">in</i18n:text>{': '}<i18n:text key="editionSeries">The School of Salamanca. {$seriesTitle}</i18n:text>
+            <i18n:text key="inLow">in</i18n:text>{': '}<i18n:text key="editionSeries">The School of Salamanca. A Digital Collection of Sources</i18n:text>
             {' <'}
             <a href="{$link}">{$link}</a>
             {'>'}
