@@ -91,7 +91,7 @@ declare function html:makeHTMLData($tei as element(tei:TEI), $lang as node()*) a
                 </li>
             </ul>
         </div>
-    
+
     (: (2) pagination :)
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Creating pagination ...") else ()
     let $pages :=  html:makePagination((), (), $workId)
@@ -337,9 +337,9 @@ declare function html:generateTocFromDiv($nodes as element()*, $wid as xs:string
         let $i18nKey := 
             if (index:dispatch($node, 'class')) then index:dispatch($node, 'class')
             else 'tei-generic'
-        let $label := concat('[', i18n:getLocalizedText(html:i18nNodify($i18nKey), $lang), ']')
+        let $label := if (not($textType = '/lemmata/' )) then concat('[', i18n:getLocalizedText(html:i18nNodify($i18nKey), $lang), ']') else ()
         let $titleString := index:dispatch($node, 'title')
-        let $titleAtt := '[' || i18n:getLocalizedText(html:i18nNodify($i18nKey), $lang) || '] ' || $titleString
+        let $titleAtt := (if (not($textType = '/lemmata/' )) then '[' || i18n:getLocalizedText(html:i18nNodify($i18nKey), $lang) || '] ' else ()) || $titleString
 (:        let $titleElems := html:makeTOCTitle($node):)
         (: title="{$title}" :)
         return 
@@ -539,7 +539,7 @@ declare function html:makeSectionToolbox($node as element()) as element(div) {
 
 declare function html:makeSectionToolbox($node as element(), $lang as node()*) as element(div) {
     let $id := $node/@xml:id/string()
-    let $wid := $node/ancestor::tei:TEI/@xml:id
+    let $wid := $node/ancestor::tei:TEI/@xml:id/string()
     let $fileDesc := $node/ancestor::tei:TEI/tei:teiHeader/tei:fileDesc
     let $class := 
         if (index:isMarginalNode($node)) then 

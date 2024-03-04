@@ -308,11 +308,16 @@ declare function sutil:formatName($persName as element()*) as xs:string? {
 :)
 declare %templates:wrap
     function sutil:WRKcombined($node as node()?, $model as map(*)?, $wid as xs:string?) {
-        let $path           :=  doc($config:tei-works-root || "/" || sutil:normalizeId($wid) || ".xml")//tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr
-        let $author         :=  string-join($path//tei:author/tei:persName/tei:surname, ', ')
-        let $title          :=  $path//tei:title[@type = 'short']
-        let $thisEd         :=  $path//tei:pubPlace[@role = 'thisEd']
-        let $firstEd        :=  $path//tei:pubPlace[@role = 'firstEd']
+        let $textType       := if (starts-with($wid, 'L')) then '/lemmata/' else '/texts/'
+        let $sourcePath     := if (starts-with($wid, 'L')) then $config:tei-lemmata-root else $config:tei-works-root
+        let $path           := if (doc($sourcePath || "/" || sutil:normalizeId($wid) || ".xml")//tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr) then
+                                    doc($sourcePath || "/" || sutil:normalizeId($wid) || ".xml")//tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr
+                                else
+                                    doc($sourcePath || "/" || sutil:normalizeId($wid) || ".xml")//tei:teiHeader//tei:titleStmt
+        let $author         := string-join($path//tei:author/tei:persName/tei:surname, ', ')
+        let $title          := $path//tei:title[@type = 'short']
+        let $thisEd         := $path//tei:pubPlace[@role = 'thisEd']
+        let $firstEd        := $path//tei:pubPlace[@role = 'firstEd']
         let $publisher :=  
             if ($thisEd) then
                 $path//tei:imprint/tei:publisher[@n = 'thisEd']/tei:persName[1]/tei:surname
@@ -328,8 +333,8 @@ declare %templates:wrap
                 $path//tei:date[@type = 'thisEd']/@when/string() 
             else
                 $path//tei:date[@type = 'firstEd']/@when/string()
-        let $pubDetails     :=  $place || '&#32;'||": " || $publisher || ", " || $year
-            return ($author||':  '||$title||'. '||$pubDetails||'.') 
+        let $pubDetails  := if ($place || $publisher || $year) then ' ' || $place || '&#32;'||": " || $publisher || ", " || $year || '.' else ()
+        return ($author || ':  ' || $title || '.' || $pubDetails) 
 };  
 
 

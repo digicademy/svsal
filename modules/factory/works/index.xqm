@@ -226,6 +226,7 @@ declare function index:extractNodeStructure($wid as xs:string,
                     let $parent := index:getCitableParent($node)
                     return
                         element sal:node {
+                            attribute wid               {$wid},
                             attribute type              {local-name($node)}, 
                             attribute subtype           {$subtype}, 
                             attribute xml:id            {$node/@xml:id/string()},
@@ -370,18 +371,23 @@ declare function index:qualityCheck($index as element(sal:index),
 (: LABELS, CiteID, CRUMBTRAILS (-- deep recursion) :)
 
 declare function index:constructCiteID($node as element(sal:node)) as xs:string {
-    let $prefix := 
-(:        if ($node/sal:citableParent/text() and $node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()]) then:)
-        if ($node/sal:citableParent/text()) then
-            index:constructCiteID($node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()])
-        else ()
-    let $this := 
-        if ($node/sal:cit) then
-            $node/sal:cit/text()
-        else (: if sal:cit doesn't already exist, we are dealing with a numeric/unnamed citeID node and create the citeID part here: :)
-            string(count($node/preceding-sibling::sal:node[@isNamedCit eq 'false']) + 1)
-    return
-        if ($prefix and $this) then $prefix || $index:citeIDConnector || $this else $this
+    (: 
+        if (starts-with($node/@wid, 'L') and $node/@type/string() = ('p', 'list')) then
+            xs:string(count($node/preceding::sal:node[@type = ('p', 'list')]) + 1)
+        else
+    :)
+        let $prefix := 
+    (:        if ($node/sal:citableParent/text() and $node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()]) then:)
+            if ($node/sal:citableParent/text()) then
+                index:constructCiteID($node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()])
+            else ()
+        let $this := 
+            if ($node/sal:cit) then
+                $node/sal:cit/text()
+            else (: if sal:cit doesn't already exist, we are dealing with a numeric/unnamed citeID node and create the citeID part here: :)
+                string(count($node/preceding-sibling::sal:node[@isNamedCit eq 'false']) + 1)
+        return
+            if ($prefix and $this) then $prefix || $index:citeIDConnector || $this else $this
 };
 
 (:declare function index:constructCrumbtrail($wid as xs:string, $citeID as xs:string, $node as element(sal:node)) as item()+ {
@@ -395,8 +401,9 @@ declare function index:constructCiteID($node as element(sal:node)) as xs:string 
 }; :)
 
 declare function index:constructLabel($node as element(sal:node)) as xs:string? {
-    let $prefix := 
-        if ($node/sal:citableParent/text() and $node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()]) then
+    let $prefix :=
+        if (starts-with($node/@wid, 'L') and $node/@type/string() = ('p', 'list')) then ()
+        else if ($node/sal:citableParent/text() and $node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()]) then
             index:constructLabel($node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()])
         else ()
     (: not every sal:node has a distinctive passage: :)
@@ -1187,9 +1194,15 @@ declare function index:p($node as element(tei:p), $mode as xs:string) {
         
         case 'label' return
             if (index:isLabelNode($node)) then
-                let $prefix := $config:citationLabels(local-name($node))?('abbr')
-                let $teaser := '"' || normalize-space(substring(substring-after(index:p($node, 'title'), '"'),1,15)) || '…"'(: short teaser :)
-                return $prefix || ' ' || $teaser
+                if (starts-with($node/ancestor::tei:TEI/@xml:id, 'L')) then
+                    let $prefix := $config:citationLabels(local-name($node))?('abbr')
+                    let $pNumber := count($node/(preceding::tei:p | preceding::tei:list) intersect $node/ancestor::tei:text//*) + 1
+                    let $teaser := '"' || normalize-space(substring(substring-after(index:p($node, 'title'), '"'),1,15)) || '…"'(: short teaser :)
+                    return $prefix || ' ' || $pNumber || ' (' || $teaser || ')'
+                else
+                    let $prefix := $config:citationLabels(local-name($node))?('abbr')
+                    let $teaser := '"' || normalize-space(substring(substring-after(index:p($node, 'title'), '"'),1,15)) || '…"'(: short teaser :)
+                    return $prefix || ' ' || $teaser
             else ()
         
         default return
