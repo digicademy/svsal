@@ -579,16 +579,32 @@ declare function admin:needsRoutingString($node as node(), $model as map(*)) {
 
 declare function admin:cleanCollection ($wid as xs:string, $collection as xs:string) {
     let $collectionName := 
-        if ($collection = "html") then
-            $config:html-root || "/" || $wid
-        else if ($collection = "data") then
-            $config:data-root || "/"
-        else if ($collection = "snippets") then
-            $config:snippets-root || "/" || $wid
-        else if ($collection eq "txt") then
-            $config:txt-root || "/" || $wid
-        else
-            $config:data-root || "/trash/"
+             if ($collection eq "html") then        $config:html-root || "/" || $wid
+        else if ($collection eq "details") then     $config:html-root || "/" || $wid
+        else if ($collection eq "snippets") then    $config:snippets-root || "/" || $wid
+        else if ($collection eq "txt") then         $config:txt-root || "/" || $wid
+        else if ($collection eq "iiif") then        $config:iiif-root
+        else if ($collection eq "workslist") then   $config:data-root
+        else if ($collection eq "index") then       $config:index-root
+        else if ($collection eq "crumbtrails") then $config:crumb-root
+        else if ($collection eq "rdf") then         $config:rdf-works-root
+        else if ($collection eq "routing") then     $config:routes-root
+        else if ($collection eq "stats") then       $config:stats-root
+        else if ($collection eq "data") then        $config:data-root
+        else                                          $config:data-root || "/trash/"
+    let $pattern :=
+             if ($collection eq "html")        then "^[^_]+\.html$"
+        else if ($collection eq "details")     then $wid || ".*_details\.html$"
+        else if ($collection eq "snippets")    then "\.snippet\.xml$"
+        else if ($collection eq "index")       then $wid || "_nodeIndex\.xml"
+        else if ($collection eq "text")        then ".txt"
+        else if ($collection eq "crumbtrails") then $wid || "_crumbtrails\.xml"
+        else if ($collection eq "rdf")          then $wid || "\.rdf"
+        else if ($collection eq "iiif")        then $wid || "(_Vol[0-9]+)?(_iiif_.*)?.json"
+        else if ($collection eq "stats")        then $wid || "-stats\.json"
+        else if ($collection eq "pdf")        then $wid || ".*\.pdf"
+        else if ($collection eq "routing")     then $wid || "_routes\.json"
+        else                                     "dontmatch"
     let $create-parent-status :=    
         if ($collection = "html"    and not(xmldb:collection-available($config:html-root))) then
             xmldb:create-collection($config:webdata-root, "html")
@@ -610,8 +626,50 @@ declare function admin:cleanCollection ($wid as xs:string, $collection as xs:str
     let $chmod-collection-status := sm:chmod(xs:anyURI($collectionName), 'rwxrwxr-x')
     let $remove-status := 
         if (count(xmldb:get-child-resources($collectionName))) then
-            for $file in xmldb:get-child-resources($collectionName) return xmldb:remove($collectionName, $file)
+            for $file in xmldb:get-child-resources($collectionName)
+            return if (matches($file, $pattern)) then
+                let $debug := console:log("[Admin] Remove file: " || $collectionName || "/" || $file || " from database...")
+                return xmldb:remove($collectionName, $file)
+            else
+                true()
         else ()
+    return $remove-status
+};
+
+declare function admin:cleanDirectory($wid as xs:string, $collection as xs:string) {
+    let $fsRoot := $config:export-folder
+    let $collectionname := 
+             if ($collection eq "html")        then $fsRoot || $wid || "/html/"
+        else if ($collection eq "details")     then $fsRoot || $wid || "/html/"
+        else if ($collection eq "snippets")    then $fsRoot || $wid || "/snippets/"
+        else if ($collection eq "workslist")   then $fsRoot || $wid || "/"
+        else if ($collection eq "index")       then $fsRoot || $wid || "/"
+        else if ($collection eq "crumbtrails") then $fsRoot || $wid || "/"
+        else if ($collection eq "rdf")         then $fsRoot || $wid || "/"
+        else if ($collection eq "routing")      then $fsRoot || $wid || "/"
+        else                                        $fsRoot || "trash/"
+    let $pattern :=
+             if ($collection eq "html")        then "*.html" (: [^_].html  | _toc.html :)
+        else if ($collection eq "details")     then $wid || "*_details.html"
+        else if ($collection eq "snippets")    then "*.snippet.xml"
+        else if ($collection eq "index")       then $wid || "_nodeIndex.xml"
+        else if ($collection eq "text")        then $wid || "*.txt"
+        else if ($collection eq "crumbtrails") then $wid || "_crumbtrails.xml"
+        else if ($collection eq "rdf")          then $wid || ".rdf"
+        else if ($collection eq "iiif")        then $wid || "*_iiif_*.json" (: $wid || ".json" | $wid || "_Vol*.json" :)
+        else if ($collection eq "stats")        then $wid || "-stats.json"
+        else if ($collection eq "pdf")        then $wid || "*.pdf"
+        else if ($collection eq "routing")     then $wid || "_routes.json"
+        else                                     ""
+    let $create-parent-status :=
+        if (not(file:exists($collectionname) and file:is-directory($collectionname))) then
+            file:mkdirs($collectionname)
+        else true()
+    let $remove-status := for $file in file:directory-list($collectionname, $pattern)/file:file
+        let $filename := $collectionname || $file/@name/string() 
+        let $debug := console:log("[Admin] Remove file: " || $filename || " from filesystem...")
+        return file:delete($filename)
+
     return $remove-status
 };
 
@@ -768,11 +826,13 @@ declare function admin:exportXMLFile($wid as xs:string, $filename as xs:string, 
     let $fsRoot := $config:export-folder
     let $collectionname := 
              if ($collection eq "html")        then $fsRoot || $wid || "/html/"
+        else if ($collection eq "details")     then $fsRoot || $wid || "/html/"
         else if ($collection eq "snippets")    then $fsRoot || $wid || "/snippets/"
         else if ($collection eq "workslist")   then $fsRoot || $wid || "/"
         else if ($collection eq "index")       then $fsRoot || $wid || "/"
         else if ($collection eq "crumbtrails") then $fsRoot || $wid || "/"
         else if ($collection eq "rdf")         then $fsRoot || $wid || "/"
+        else if ($collection eq "routing")      then $fsRoot || $wid || "/"
         else                                        $fsRoot || "trash/"
     let $method :=
           if ($collection = ("html", "workslist")) then "html"
@@ -1197,10 +1257,7 @@ declare %templates:wrap function admin:renderHTML($id as xs:string*) as element(
                                             if (doc-available(concat($subcollection, '/', $rid, '.xml'))) then $subcollection
                                             else ()
 
-            let $cleanStatus := admin:cleanCollection($rid, "html")
-            
             (: (1) HTML :)
-
             let $start-time-a := util:system-time()
             let $htmlData     := html:makeHTMLData($work-raw)
             let $htmlDataOld  := html:makeHTMLDataOld($work-raw)
@@ -1210,6 +1267,9 @@ declare %templates:wrap function admin:renderHTML($id as xs:string*) as element(
             let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Html files created. Saving...") else ()
 
             (: store data :)
+            let $cleanCollectionStatus := admin:cleanCollection($rid, "html")
+            let $cleanDirectoryStatus := admin:cleanDirectory($rid, "html")
+            
             let $saveToc     := admin:saveFile($rid, $rid || "_toc.html", $htmlData('toc'), "html")
             let $exportToc   := admin:exportXMLFile($rid, $rid || "_toc.html", $htmlData('toc'), "html")
             let $savePages   := (
@@ -1455,8 +1515,10 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
             collection($config:tei-root)//tei:TEI[@xml:id = distinct-values($wid)]
     let $expanded := 
         for $work-raw in $todo
-            let $cleanStatus := admin:cleanCollection($work-raw/@xml:id, "snippets")
+            let $cleanCollectionStatus := admin:cleanCollection($work-raw/@xml:id, "snippets")
+            let $cleanDirectoryStatus := admin:cleanDirectory($work-raw/@xml:id, "snippets")
             return util:expand($work-raw)
+            
 
     (: which parts of those works constitute a fragment that is to count as a hit? :)
     let $nodes :=
@@ -1622,7 +1684,9 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
                     <sphinx_fragment_number>{$hit_fragment_number}</sphinx_fragment_number>
                 </sphinx:document>
 
+            (: Save final snippet file :)
             let $fileName := format-number($index, "00000") || "_" || $hit_id || ".snippet.xml"
+
             let $exportStatus := if ($hit_id) then admin:exportXMLFile($work_id, $fileName, $sphinx_snippet, "snippets") else ()
             let $storeStatus  := if ($hit_id) then admin:saveFile($work_id, $fileName, $sphinx_snippet, "snippets") else ()
 
@@ -1700,6 +1764,10 @@ declare function admin:createNodeIndex($wid as xs:string*) {
 
             (: save final index file :)
             let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Saving index file ...") else ()
+
+            let $cleanCollectionStatus := admin:cleanCollection($wid, "index")
+            let $cleanDirectoryStatus := admin:cleanDirectory($wid, "index")
+            
             let $indexSaveStatus   := admin:saveFile($wid, $wid || "_nodeIndex.xml", $index, "index")
             let $indexExportStatus := admin:exportXMLFile($wid, $wid || "_nodeIndex.xml", $index, "index")
             let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Node index of "  || $wid || " successfully created and saved/exported (to " || $indexSaveStatus || "; " || $indexExportStatus || ").") else ()
@@ -1822,6 +1890,10 @@ declare function admin:createCrumbtrails($wid as xs:string){
 
             (: save final crumb file :)
             let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Saving Crumbtrails ...") else ()
+
+            let $cleanCollectionStatus := admin:cleanCollection($wid, "crumbtrails")
+            let $cleanDirectoryStatus := admin:cleanDirectory($wid, "crumbtrails")
+
             let $crumbSaveStatus := admin:saveFile($wid, $wid || "_crumbtrails.xml", $crumb, "crumbtrails")
             let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Crumbtrails of "  || $wid || " successfully saved.") else ()
 
@@ -1919,15 +1991,18 @@ declare function admin:createRoutes($wid as xs:string) {
 
     let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Routing: Joint routing table: " || substring(serialize($routingTable, map{"method":"json", "indent": false(), "encoding":"utf-8"}), 1, 500) || " ...") else ()
 
-    (: save routing table in database :)
+    (: save routing table :)
+    let $cleanCollectionStatus := admin:cleanCollection($wid, "routing")
+    let $cleanDirectoryStatus := admin:cleanDirectory($wid, "routing")
+
     let $routingSaveStatus  :=  if ($routingTable instance of array(*) and array:size($routingTable) > 0) then
                                     admin:saveTextFile($wid, $wid || '_routes.json', fn:serialize($routingTable, map{"method":"json", "indent": true(), "encoding":"utf-8"}), 'routes')
                                 else ()
     let $debug := if ($config:debug = ("info", "trace")) then console:log("[ADMIN] Routing: Table saved as " || $routingSaveStatus || ".") else ()
 
-    (: export routing table to filesystem :)
     let $debug := console:log("[ADMIN] Routing: Exporting routing file with " || array:size($routingTable) || " entries...")
     let $routingExportStatus := admin:exportJSONFile($wid, $wid || "_routes.json", $routingTable, "routing")
+
     let $debug := if ($routingExportStatus) then
                         console:log("[ADMIN] Routing: Routing table successfully exported to " || $routingExportStatus || ".")
                     else
@@ -1973,10 +2048,11 @@ declare function admin:buildRoutingInfoNode($wid as xs:string, $item as element(
     let $crumb := if (fn:contains($crumbtrails//sal:nodecrumb[@xml:id eq $item/@n]//a[last()]/@href/string(), "/data/")) then substring-after($crumbtrails//sal:nodecrumb[@xml:id eq $item/@n]//a[last()]/@href/string(), "/data/") else ( $crumbtrails//sal:nodecrumb[@xml:id eq $item/@n]//a[last()]/@href/string())
     let $filepath := tokenize($crumb, '#')[1]
     let $fragmentHash := tokenize($crumb, '#')[2]
+    let $hash := if (string-length($fragmentHash) gt 0) then '#' || $fragmentHash else ''
 
     let $value := map {
                     "input" :   concat($textTypePath, $wid, ":", $item/@citeID/string()),
-                    "outputs" : array { ( $filepath, $fragmentHash ) }
+                    "outputs" : array { ( $filepath, $hash ) }
                   }
 (:    let $debug := console:log("[ADMIN] routing entry: " || serialize($value, map{"method":"json"}) || "."):)
     return $value
@@ -1989,20 +2065,26 @@ declare function admin:buildRoutingInfoWork($resourceId as xs:string, $crumbtrai
     let $text_type :=      if (starts-with($resourceId, "L0")) then "lemmata"
                       else if (starts-with($resourceId, "WP0")) then "workingpapers"
                       else "texts"
-    let $firstCrumb  := if (($crumbtrails//a[1])[1]/@href) then
+    let $firstCrumb  := if (($crumbtrails//a[1])[1]/@href) then 
                           ( if(fn:contains(($crumbtrails//a[1])[1]/@href/string(), "/data")) then( substring-after(($crumbtrails//a[1])[1]/@href/string(), '/data/')) else (($crumbtrails//a[1])[1]/@href/string()))
                         else if ($text_type eq 'workingpapers') then
                             tokenize($resourceId, '_')[1] || '/html/' || $resourceId || '_details.html'
                         else if ($text_type eq 'lemma_article') then
                             tokenize($resourceId, '_')[1] || '/html/00001_completeWork.html'
+else  if (contains($resourceId, ':')) then
+                        let $id := tokenize($resourceId, ':')[1]
+                        return concat( $id, '/html/', $id, '_Vol', format-integer(xs:int(substring-after(tokenize($resourceId, ':')[2], 'vol')), '00'), '_details.html')
                         else
-                            tokenize($resourceId, '_')[1] || '/html/' || $resourceId || '.html'
+                            tokenize($resourceId, '_')[1] || '/html/' || $resourceId || '_details.html'
+                      
     let $filepath := tokenize($firstCrumb, '#')[1]
     let $fragmentHash := tokenize($firstCrumb, '#')[2]
+    let $hash := if (string-length($fragmentHash) gt 0) then '#' || $fragmentHash else ''
+
     let $value := array {
                             ( map {
                                     "input" :   "/" || $text_type || "/" || $resourceId,
-                                    "outputs" : array { ( $filepath, $fragmentHash ) }
+                                    "outputs" : array { ( $filepath, $hash ) }
                                   }
                             )
                         }
@@ -2018,8 +2100,8 @@ declare function admin:buildRoutingInfoDetails($id) {
     let $output :=  if (contains($id, ':')) then
                         let $wid := tokenize($id, ':')[1]
                         return concat( $wid, '/html/', $wid, '_Vol', format-integer(xs:int(substring-after(tokenize($id, ':')[2], 'vol')), '00'), '_details.html')
-                    else
-                        concat( $id, '/html/', $id, '_details.html')
+                    else 
+                concat( $id, '/html/', $id, '_details.html') 
     return
         (: During routing, we have a replacement that moves an eventual 
            'mode=details' parameter out of the url query parameters
@@ -2066,6 +2148,9 @@ declare function admin:createRDF($rid as xs:string) {
         else if ($runtime-ms < (1000 * 60 * 60))  then format-number($runtime-ms div (1000 * 60), "#.##") || " Min."
         else format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
     let $log    := util:log('info', 'Extracted RDF for ' || $rid || ' in ' || $runtimeString)
+
+    let $cleanCollectionStatus := admin:cleanCollection($rid, "rdf")
+    let $cleanDirectoryStatus := admin:cleanDirectory($rid, "rdf")
     let $export := admin:exportXMLFile($rid, $rid || '.rdf', $rdf, 'rdf')
     let $save   := admin:saveFile($rid, $rid || '.rdf', $rdf, 'rdf')
     let $debug  := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Done rendering RDF for " || $rid || ".") else ()
@@ -2108,8 +2193,14 @@ declare function admin:createIIIF($wid as xs:string) {
             let $timing := 'Extracted IIIF for ' || $r || ' in ' || $runtimeString
             let $log    := util:log('info', $timing)
         
-            let $store  := if ($resource instance of map(*) and map:size($resource) > 0) then admin:saveTextFile($r, $r || '.json', fn:serialize($resource, map{"method":"json", "indent": true(), "encoding":"utf-8"}), 'iiif') else ()
-            let $export := if ($resource instance of map(*) and map:size($resource) > 0) then admin:exportJSONFile($r, $r || '.json', $resource, 'iiif') else ()
+            let $store  := if ($resource instance of map(*) and map:size($resource) > 0) then
+                    let $cleanCollectionStatus := admin:cleanCollection($r, "iiif")
+                    return admin:saveTextFile($r, $r || '.json', fn:serialize($resource, map{"method":"json", "indent": true(), "encoding":"utf-8"}), 'iiif')
+                else ()
+            let $export := if ($resource instance of map(*) and map:size($resource) > 0) then
+                    let $cleanDirectoryStatus := admin:cleanDirectory($r, "iiif")
+                    return admin:exportJSONFile($r, $r || '.json', $resource, 'iiif')
+                else ()
         
             return 
                 <p>
@@ -2278,7 +2369,7 @@ declare function admin:createDetails($currentResourceId as xs:string) {
             "thumbnail" :               $thumbnail_id,
             "schol_ed" :                admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#scholarly')]/string(), ' / ')),
             "tech_ed" :                 admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#technical')]/string(), ' / ')),
-            "el_publication_date" :     if ($teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when) then
+            "el_publication_date" :    if ($teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when) then
                                             $teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when/string()[1]
                                         else
                                             'in prep.',
@@ -2363,6 +2454,7 @@ declare function admin:createStats() {
         </output:serialization-parameters>
     (: corpus stats :)
     let $corpusStats := stats:makeCorpusStats()
+
     let $save        := admin:saveFile('dummy', 'corpus-stats.json', serialize($corpusStats, $params), 'stats')
     let $export      := admin:exportJSONFile('corpus-stats.json', $corpusStats, 'stats')
     let $debug := console:log('[ADMIN] Done creating corpus stats. Saved and exported to ' || $save || ' and ' || $export || '.')
@@ -2374,6 +2466,10 @@ declare function admin:createStats() {
         for $wid in sutil:getPublishedWorkIds() order by $wid return
             let $log := if ($config:debug = 'trace') then util:log('info', '[ADMIN] Creating single work stats for ' || $wid || '...') else ()
             let $workStats := stats:makeWorkStats($wid)
+
+            let $cleanCollectionStatus := admin:cleanCollection($wid, "stats")
+            let $cleanDirectoryStatus := admin:cleanDirectory($wid, "stats")
+
             let $saveSingle   := admin:saveFile('dummy', $wid || '-stats.json', serialize($workStats, $params), 'stats')
             let $exportSingle := admin:exportJSONFile($wid, $wid || '-stats.json', $workStats, 'stats')
             let $log := if ($config:debug = 'trace') then util:log('info', '[ADMIN] Done creating single work stats for ' || $wid || '. Saved and exported to ' || $saveSingle || ' and ' || $exportSingle || '.') else ()
