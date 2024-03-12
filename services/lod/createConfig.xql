@@ -83,8 +83,8 @@ let $rawConfiguration   :=
                 <param name="webServer"           value="{$webServer}"/>
                 <param name="imageServer"         value="{$imageServer}"/>
             </parameters>
-        let $prelim        := doc("svsal-xtriples-work.xml")
-        let $localized := transform:transform($prelim, $xslSheet, $parameters)
+        let $prelim     := doc("svsal-xtriples-work.xml")
+        let $localized  := transform:transform($prelim, $xslSheet, $parameters)
         return $localized
     else
         doc("svsal-xtriples-everything.xml")
@@ -120,7 +120,7 @@ let $collection :=
             <resource uri="{{//tei:listPerson}}"/>
         </collection>
     else if (starts-with($resourceId, "works.")) then
-        <collection uri="https://c100-101.cloud.gwdg.de/exist/apps/salamanca/enhance-tei.xql?wid={substring-after($resourceId, "works.")}">
+        <collection uri="http://www.salamanca.school:8080/exist/apps/salamanca/enhance-tei.xql?wid={substring-after($resourceId, "works.")}">
             {$workMetadata}
             <!--<resource uri="{{//(*:front|*:body|*:back)}}"/>-->
             <resource uri="{{//itei:text[not(descendant::itei:text)]}}"/>
@@ -131,7 +131,7 @@ let $collection :=
         </collection>
     else if (starts-with($resourceId, 'W0')) then
         (: <collection uri="{$config:webserver}/enhance-tei.xql?wid={$resourceId}"> :)
-        <collection uri="https://c100-101.cloud.gwdg.de/exist/apps/salamanca/enhance-tei.xql?wid={$resourceId}">
+        <collection uri="http://www.salamanca.school:8080/exist/apps/salamanca/enhance-tei.xql?wid={$resourceId}">
             {$workMetadata}
             <!--<resource uri="{{//(*:front|*:body|*:back)}}"/>-->
             <resource uri="{{//itei:text[not(descendant::itei:text)]}}"/>
