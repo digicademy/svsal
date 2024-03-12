@@ -368,7 +368,7 @@ declare function admin:needsHTML($targetResourceId as xs:string) as xs:boolean {
                 and count(xmldb:get-child-resources($config:html-root || '/' || $targetResourceId)) gt 0
                ) then
                 let $indexModTime := xmldb:last-modified($config:index-root, $targetResourceId || "_nodeIndex.xml")
-                let $htmlModTime := xmldb:last-modified($config:html-root || '/' || $targetResourceId, xmldb:get-child-resources($config:html-root || '/' || $targetResourceId)[1])
+                let $htmlModTime  := xmldb:last-modified($config:html-root || '/' || $targetResourceId, xmldb:get-child-resources($config:html-root || '/' || $targetResourceId)[1])
                 return if ($htmlModTime lt $xmlModTime or $htmlModTime lt $indexModTime) then true() else false()
             else
                 true()
@@ -397,9 +397,17 @@ declare function admin:needsHTMLString($node as node(), $model as map(*)) {
         if (not($readyForHtml)) then
             <td>Not ready yet</td>
         else if (admin:needsHTML($currentResourceId)) then
-            <td title="{if (xmldb:collection-available($config:html-root || "/" || $currentResourceId) and count(xmldb:get-child-resources($config:html-root || '/' || $currentResourceId)) gt 0) then concat('HTML created on: ', xmldb:last-modified($config:html-root || '/' || $currentResourceId, xmldb:get-child-resources($config:html-root || '/' || $currentResourceId)[1]), ', ') else ()}source from: {string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml'))}"><a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=html"><b>Render HTML (&amp; TXT) NOW!</b></a></td>
+            <td title="{if (xmldb:collection-available($config:html-root || "/" || $currentResourceId) and count(xmldb:get-child-resources($config:html-root || '/' || $currentResourceId)) gt 0) then
+                            concat('HTML created on: ', string(xmldb:last-modified($config:html-root || '/' || $currentResourceId, xmldb:get-child-resources($config:html-root || '/' || $currentResourceId)[1])), ', ')
+                        else ()}
+                        {if (doc-available($config:index-root || '/' || $currentResourceId || '_nodeIndex.xml')) then
+                            concat('index created on: ', string(xmldb:last-modified($config:index-root, $currentResourceId || "_nodeIndex.xml")), ', ')
+                        else ()}
+                        source from: {string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml'))}"><a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=html"><b>Render HTML (&amp; TXT) NOW!</b></a></td>
         else
-            <td title="HTML created on {xmldb:last-modified($config:html-root || '/' || $currentResourceId, xmldb:get-child-resources($config:html-root || '/' || $currentResourceId)[1])}, source from: {string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml'))}">Rendering unnecessary. <small><a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=html">Render HTML (&amp; TXT) anyway!</a></small></td>
+            <td title="HTML created on {string(xmldb:last-modified($config:html-root || '/' || $currentResourceId, xmldb:get-child-resources($config:html-root || '/' || $currentResourceId)[1]))},
+                       index created on {string(xmldb:last-modified($config:index-root, $currentResourceId || "_nodeIndex.xml"))},
+                       source from: {string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml'))}">Rendering unnecessary. <small><a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=html">Render HTML (&amp; TXT) anyway!</a></small></td>
 };
 
 declare function admin:needsDetails($targetResourceId as xs:string) as xs:boolean {
@@ -579,32 +587,33 @@ declare function admin:needsRoutingString($node as node(), $model as map(*)) {
 
 declare function admin:cleanCollection ($wid as xs:string, $collection as xs:string) {
     let $collectionName := 
-             if ($collection eq "html") then        $config:html-root || "/" || $wid
-        else if ($collection eq "details") then     $config:html-root || "/" || $wid
-        else if ($collection eq "snippets") then    $config:snippets-root || "/" || $wid
-        else if ($collection eq "txt") then         $config:txt-root || "/" || $wid
-        else if ($collection eq "iiif") then        $config:iiif-root
-        else if ($collection eq "workslist") then   $config:data-root
-        else if ($collection eq "index") then       $config:index-root
+             if ($collection eq "html")        then $config:html-root || "/" || $wid
+        else if ($collection eq "details")     then $config:html-root || "/" || $wid
+        else if ($collection eq "snippets")    then $config:snippets-root || "/" || $wid
+        else if ($collection eq "txt")         then $config:txt-root || "/" || $wid
+        else if ($collection eq "iiif")        then $config:iiif-root
+        else if ($collection eq "workslist")   then $config:data-root
+        else if ($collection eq "index")       then $config:index-root
         else if ($collection eq "crumbtrails") then $config:crumb-root
-        else if ($collection eq "rdf") then         $config:rdf-works-root
-        else if ($collection eq "routing") then     $config:routes-root
-        else if ($collection eq "stats") then       $config:stats-root
-        else if ($collection eq "data") then        $config:data-root
-        else                                          $config:data-root || "/trash/"
+        else if ($collection eq "rdf")         then $config:rdf-works-root
+        else if ($collection eq "routing")     then $config:routes-root
+        else if ($collection eq "stats")       then $config:stats-root
+        else if ($collection eq "data")        then $config:data-root
+        else                                        $config:data-root || "/trash/"
     let $pattern :=
-             if ($collection eq "html")        then "^[^_]+\.html$"
+             if ($collection eq "html")        then "\.html$"
         else if ($collection eq "details")     then $wid || ".*_details\.html$"
         else if ($collection eq "snippets")    then "\.snippet\.xml$"
         else if ($collection eq "index")       then $wid || "_nodeIndex\.xml"
         else if ($collection eq "text")        then ".txt"
         else if ($collection eq "crumbtrails") then $wid || "_crumbtrails\.xml"
-        else if ($collection eq "rdf")          then $wid || "\.rdf"
+        else if ($collection eq "rdf")         then $wid || "\.rdf"
         else if ($collection eq "iiif")        then $wid || "(_Vol[0-9]+)?(_iiif_.*)?.json"
-        else if ($collection eq "stats")        then $wid || "-stats\.json"
-        else if ($collection eq "pdf")        then $wid || ".*\.pdf"
+        else if ($collection eq "stats")       then $wid || "-stats\.json"
+        else if ($collection eq "pdf")         then $wid || ".*\.pdf"
         else if ($collection eq "routing")     then $wid || "_routes\.json"
-        else                                     "dontmatch"
+        else                                        "dontmatch"
+    let $debug := console:log("[Admin] Cleaning " || $collectionName || " collection (db).")
     let $create-parent-status :=    
         if ($collection = "html"    and not(xmldb:collection-available($config:html-root))) then
             xmldb:create-collection($config:webdata-root, "html")
@@ -627,8 +636,10 @@ declare function admin:cleanCollection ($wid as xs:string, $collection as xs:str
     let $remove-status := 
         if (count(xmldb:get-child-resources($collectionName))) then
             for $file in xmldb:get-child-resources($collectionName)
-            return if (matches($file, $pattern)) then
-                let $debug := console:log("[Admin] Remove file: " || $collectionName || "/" || $file || " from database...")
+            return if (matches(tokenize($file, '/')[last()], $pattern)) then
+                let $debug := if ($collection = ("snippets", "html") and not(xs:int(replace(substring(tokenize($file, '/')[last()], 1, 5), 'W', '')) mod 100 = 0)) then ()
+                              else
+                                  console:log("[Admin] Remove file: " || $collectionName || "/" || $file || " from database...")
                 return xmldb:remove($collectionName, $file)
             else
                 true()
@@ -646,7 +657,7 @@ declare function admin:cleanDirectory($wid as xs:string, $collection as xs:strin
         else if ($collection eq "index")       then $fsRoot || $wid || "/"
         else if ($collection eq "crumbtrails") then $fsRoot || $wid || "/"
         else if ($collection eq "rdf")         then $fsRoot || $wid || "/"
-        else if ($collection eq "routing")      then $fsRoot || $wid || "/"
+        else if ($collection eq "routing")     then $fsRoot || $wid || "/"
         else                                        $fsRoot || "trash/"
     let $pattern :=
              if ($collection eq "html")        then "*.html" (: [^_].html  | _toc.html :)
@@ -655,19 +666,22 @@ declare function admin:cleanDirectory($wid as xs:string, $collection as xs:strin
         else if ($collection eq "index")       then $wid || "_nodeIndex.xml"
         else if ($collection eq "text")        then $wid || "*.txt"
         else if ($collection eq "crumbtrails") then $wid || "_crumbtrails.xml"
-        else if ($collection eq "rdf")          then $wid || ".rdf"
+        else if ($collection eq "rdf")         then $wid || ".rdf"
         else if ($collection eq "iiif")        then $wid || "*_iiif_*.json" (: $wid || ".json" | $wid || "_Vol*.json" :)
-        else if ($collection eq "stats")        then $wid || "-stats.json"
-        else if ($collection eq "pdf")        then $wid || "*.pdf"
+        else if ($collection eq "stats")       then $wid || "-stats.json"
+        else if ($collection eq "pdf")         then $wid || "*.pdf"
         else if ($collection eq "routing")     then $wid || "_routes.json"
-        else                                     ""
+        else                                        ""
+    let $debug := console:log("[Admin] Cleaning " || $collectionname || " directory (fs).")
     let $create-parent-status :=
         if (not(file:exists($collectionname) and file:is-directory($collectionname))) then
             file:mkdirs($collectionname)
         else true()
     let $remove-status := for $file in file:directory-list($collectionname, $pattern)/file:file
-        let $filename := $collectionname || $file/@name/string() 
-        let $debug := console:log("[Admin] Remove file: " || $filename || " from filesystem...")
+        let $filename  := $collectionname || $file/@name/string() 
+        let $debug :=  if ($collection = ("snippets", "html") and not(xs:int(replace(substring($file/@name, 1, 5), 'W', '')) mod 100 = 0)) then ()
+                       else
+                           console:log("[Admin] Remove file: " || $filename || " from filesystem...")
         return file:delete($filename)
 
     return $remove-status
@@ -2131,8 +2145,8 @@ declare function admin:createRDF($rid as xs:string) {
         $config:webserver || '/xtriples/extract.xql?format=rdf&amp;configuration='
         || $config:webserver || '/xtriples/createConfig.xql?resourceId=' || $rid :)
     let $xtriplesUrl :=
-           'https://c100-101.cloud.gwdg.de/exist/apps/salamanca/services/lod/extract.xql?format=rdf&amp;configuration='
-        || 'https://c100-101.cloud.gwdg.de/exist/apps/salamanca/services/lod/createConfig.xql?resourceId=' || $rid
+           'http://www.salamanca.school:8080/exist/apps/salamanca/services/lod/extract.xql?format=rdf&amp;configuration='
+        || 'http://www.salamanca.school:8080/exist/apps/salamanca/services/lod/createConfig.xql?resourceId=' || $rid
     let $debug := 
         if ($config:debug = ("info", "trace")) then
             let $d := console:log("[Admin] Requesting " || $xtriplesUrl || " ...")
@@ -2150,7 +2164,7 @@ declare function admin:createRDF($rid as xs:string) {
     let $log    := util:log('info', 'Extracted RDF for ' || $rid || ' in ' || $runtimeString)
 
     let $cleanCollectionStatus := admin:cleanCollection($rid, "rdf")
-    let $cleanDirectoryStatus := admin:cleanDirectory($rid, "rdf")
+    let $cleanDirectoryStatus  := admin:cleanDirectory($rid, "rdf")
     let $export := admin:exportXMLFile($rid, $rid || '.rdf', $rdf, 'rdf')
     let $save   := admin:saveFile($rid, $rid || '.rdf', $rdf, 'rdf')
     let $debug  := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Done rendering RDF for " || $rid || ".") else ()
