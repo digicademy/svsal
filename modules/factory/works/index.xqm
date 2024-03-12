@@ -82,8 +82,8 @@ declare function index:makeNodeIndex($tei as element(tei:TEI)) as map(*) {
                                     console:log("[INDEX] Node indexing: processing node no. " || string($pos)  || " ...")
                                 else ()
                 let $n := $node/@xml:id/string()
-(:              let $frag := (($node/ancestor-or-self::tei:* | $node//tei:*) intersect $target-set)[1]:)
-                let $frag := (($node/ancestor-or-self::* | $node//tei:*[not(preceding-sibling::*)]) intersect $target-set)[1]
+          (:    let $frag := (($node/ancestor-or-self::tei:* | $node//tei:*) intersect $target-set)[1] :)
+               let $frag := (($node/ancestor-or-self::tei:* | $node//tei:*[not(preceding-sibling::*)] ) intersect $target-set)[1] 
                 let $err  := if ((count($frag/@xml:id) eq 0) or ($frag/@xml:id eq "")) then
                     let $debug := if ($config:debug = ("trace", "info")) then
                                      console:log("[INDEX] Node indexing: Could not find $frag for $node '" || $n || "'. Target set was: [" || string-join(fn:for-each($target-set, function ($k) {concat($k/local-name(), ':', $k/@xml:id)}), ', ') || "]. Aborting.")
@@ -137,6 +137,7 @@ declare function index:determineFragmentationDepth($work as element(tei:TEI)) as
 };
 
 
+
 (: 
 ~ A rule picking those elements that should become the fragments for HTML-rendering a work.
 ~ Requires an expanded(!) TEI work's dataset.
@@ -187,7 +188,8 @@ declare function index:getFragmentNodes($work as element(tei:TEI), $fragmentatio
     if ($work/tei:text/@type eq 'lemma_article' ) then
         $work/tei:text
     else
-        $work//tei:*[index:isPotentialFragmentNode(.)][index:isBestDepth(., $fragmentationDepth)]
+        $work//tei:text//tei:*[index:isPotentialFragmentNode(.)][index:isBestDepth(., $fragmentationDepth)]  
+
 };
 
 
@@ -652,6 +654,26 @@ declare function index:isBestDepth($node as node(), $fragmentationDepth as xs:in
     boolean(count($node/ancestor::tei:*) le $fragmentationDepth and
             not($node/descendant::tei:*[index:isPotentialFragmentNode(.)][count(./ancestor::tei:*) le $fragmentationDepth])
            )
+};
+
+declare function index:isBestDepth_testCountAncestors($node as node(), $fragmentationDepth as xs:integer) as xs:integer {
+    count($node/ancestor::tei:*) (: le $fragmentationDepth  :)
+};
+
+declare function index:isBestDepth_testDescendantTEI($node as node(), $fragmentationDepth as xs:integer) as xs:boolean {
+    boolean(not($node/descendant::tei:*[index:isPotentialFragmentNode(.)][count(./ancestor::tei:*) le $fragmentationDepth])
+           )
+};
+
+declare function index:isBestDepth_testPrecedingSibling($node as node(), $fragmentationDepth as xs:integer) as xs:boolean {
+ (: should return true :)
+    count($node//tei:*[not(preceding-sibling::*)] )  le $fragmentationDepth
+(: | $node//tei:*[not(preceding-sibling::*)] :)
+};
+
+
+declare function index:isBestDepth_test2($node as node(), $fragmentationDepth as xs:integer) as xs:boolean {
+    (: should return false:)
 };
 
 (:
