@@ -1,4 +1,4 @@
-<package xmlns="http://expath.org/ns/pkg" name="https://www.salamanca.school" abbrev="svsal" version="3.0beta2" spec="1.0">
+<package xmlns="http://expath.org/ns/pkg" name="https://www.salamanca.school" abbrev="svsal" version="3.0rc1" spec="1.0">
     <title>The School of Salamanca. Web Application</title>
     <!-- these packages should be automatically installed with eXist 5+, but we specify them here anyway -->
     <!-- <dependency package="http://exist-db.org/apps/shared"/> this is deprecated ... -->
