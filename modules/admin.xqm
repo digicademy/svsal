@@ -637,7 +637,7 @@ declare function admin:cleanCollection ($wid as xs:string, $collection as xs:str
         if (count(xmldb:get-child-resources($collectionName))) then
             for $file in xmldb:get-child-resources($collectionName)
             return if (matches(tokenize($file, '/')[last()], $pattern)) then
-                let $debug := if ($collection = ("snippets", "html") and not(xs:int(replace(substring(tokenize($file, '/')[last()], 1, 5), 'W', '')) mod 100 = 0)) then ()
+                let $debug := if ($collection = ("snippets", "html") and not(xs:int(translate(substring(tokenize($file, '/')[last()], 1, 5), 'WLP', '')) mod 100 = 0)) then ()
                               else
                                   console:log("[Admin] Remove file: " || $collectionName || "/" || $file || " from database...")
                 return xmldb:remove($collectionName, $file)
@@ -679,7 +679,7 @@ declare function admin:cleanDirectory($wid as xs:string, $collection as xs:strin
         else true()
     let $remove-status := for $file in file:directory-list($collectionname, $pattern)/file:file
         let $filename  := $collectionname || $file/@name/string() 
-        let $debug :=  if ($collection = ("snippets", "html") and not(xs:int(replace(substring($file/@name, 1, 5), 'W', '')) mod 100 = 0)) then ()
+        let $debug :=  if ($collection = ("snippets", "html") and not(xs:int(translate(substring($file/@name, 1, 5), 'WLP', '')) mod 100 = 0)) then ()
                        else
                            console:log("[Admin] Remove file: " || $filename || " from filesystem...")
         return file:delete($filename)

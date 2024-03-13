@@ -462,13 +462,13 @@ declare function net:deleteRoutingTable() as xs:boolean {
 };
 
 declare function net:isInRoutingTable($src as xs:string) as xs:boolean {
-    let $wid := tokenize(tokenize(tokenize($src, ":")[1], '_')[1], "/")[last()]
+    let $rid := tokenize(tokenize(tokenize($src, ":")[1], '_')[1], "/")[last()]
     let $routingTable := net:getRoutingTable()
-    let $dbg := if ($config:debug = ('trace')) then console:log("[NET] Check if $wid " || $wid || " (from $src " || $src || ") is in routing table...") else ()
+    let $dbg := if ($config:debug = ('trace')) then console:log("[NET] Check if $rid " || $rid || " (from $src " || $src || ") is in routing table...") else ()
     return if ($routingTable instance of array(*) and array:size($routingTable) > 0) then
-        let $relevantEntries := array:filter($routingTable, function($i) {substring($i?input, 1, 12) eq concat("/texts/", $wid)} )
+        let $relevantEntries := array:filter($routingTable, function($i) {substring($i?input, 1, 12) eq concat("/texts/", $rid) or substring($i?input, 1, 14) eq concat("/lemmata/", $rid)})
         return if (array:size($relevantEntries) > 0) then
-            let $debug := if ($config:debug = ('trace')) then console:log("[NET] Routing table contains " || array:size($relevantEntries) || " entries concerning " || $wid || ".") else ()
+            let $debug := if ($config:debug = ('trace')) then console:log("[NET] Routing table contains " || array:size($relevantEntries) || " entries concerning " || $rid || ".") else ()
             return true()
         else
             let $debug := if ($config:debug = ('trace')) then console:log("[NET] Routing table contains no relevant entries.") else ()
@@ -484,8 +484,8 @@ declare function net:postRoutingTable($routes as array(*)) as xs:integer {
     else
         let $debug   := if ($config:debug = ('trace')) then console:log("[NET] Make sure relevant entries are not present in routing table already...") else ()
         let $testmap := array:reverse($routes)?1   (: in case of facsimile-only works, the first input is an empty string, so we take the last input for testing :)
-        let $src     := $testmap?input
-        let $dest    := $testmap?outputs
+        let $src     := tokenize($testmap?input, '_')[1] (: in case of lemmata, we don't have the *_details entry that is the last one in source works, so we eliminate the suffix :)
+        (: let $dest    := $testmap?outputs:)
         return if (not(net:isInRoutingTable($src))) then
             let $debug  := if ($config:debug = 'trace') then console:log("[NET] Routing: Posting " || array:size($routes) || " routes to '" || $config:caddyRoutes || "/...' ...") else ()
             let $request    := 
@@ -506,7 +506,7 @@ declare function net:postRoutingTable($routes as array(*)) as xs:integer {
                                     }
             let $debug := if ($resp[1]/@status ne "200") then
                                  let $debug2 := console:log("[NET] Routing: WARNING! Problematic caddy response (when trying to post routing table): " || fn:serialize($resp[1], map{"method": "text"}) )
-                                 let $debug2 := if (string-length($resp[2])>0) then console:log("[NET] Response body: " || $resp[2]) else ()
+                                 (: let $debug2 := if (string-length($resp[2])>0) then console:log("[NET] Response body: " || $resp[2]) else ():)
                                  let $debug2 := if (string-length($resp[2])>0) then console:log("[NET] Response body (decoded): " || bin:decode-string($resp[2])) else ()
                                  return ()
                             else ()
@@ -521,9 +521,9 @@ declare function net:postRoutingTable($routes as array(*)) as xs:integer {
                         return -1
 
         else
-            let $wid := tokenize(tokenize(tokenize($src, ":")[1], "_")[1], "/")[last()]
-            let $debug  := if ($config:debug = ('trace')) then console:log("[NET] Routing: At least one key of the routing information is already in caddy's configuration, need to clean live routing table for " || $wid || " first...") else ()
-            let $cleanStatus := net:cleanRoutingTable($wid)
+            let $rid := tokenize(tokenize(tokenize($src, ":")[1], "_")[1], "/")[last()]
+            let $debug  := if ($config:debug = ('trace')) then console:log("[NET] Routing: At least one key of the routing information is already in caddy's configuration, need to clean live routing table for " || $rid || " first...") else ()
+            let $cleanStatus := net:cleanRoutingTable($rid)
             return if ($cleanStatus ge 0) then
                 let $wait := util:wait(5000)
                 let $debug := if ($config:debug = ('trace')) then console:log("[NET] Routing: Retry...") else ()
@@ -533,12 +533,12 @@ declare function net:postRoutingTable($routes as array(*)) as xs:integer {
                 return -1
 };
 
-declare function net:cleanRoutingTable($wid as xs:string) as xs:integer {
+declare function net:cleanRoutingTable($rid as xs:string) as xs:integer {
     let $routingTable   := net:getRoutingTable()
     let $cleanedRT      := array:filter($routingTable, function ($i) { 
-                                                                                (: let $dbg := if (substring($i?input, 1, 12) ne concat("/texts/", $wid)) then console:log("[NET] return true (keep entry) because " || substring($i?input, 1, 12) || " ne " || concat("/texts/",  $wid)) else console:log("[NET] return false (drop entry) because " || substring($i?input, 1, 12) || " eq " || concat("/texts/",  $wid)):)
-                                                                                substring($i?input, 1, 12) ne concat("/texts/", $wid)
-                                                                            })
+                                (: let $dbg := if (substring($i?input, 1, 12) ne concat("/texts/", $wid)) then console:log("[NET] return true (keep entry) because " || substring($i?input, 1, 12) || " ne " || concat("/texts/",  $wid)) else console:log("[NET] return false (drop entry) because " || substring($i?input, 1, 12) || " eq " || concat("/texts/",  $wid)):)
+                                not(substring($i?input, 1, 12) eq concat("/texts/", $rid) or substring($i?input, 1, 14) eq concat("/lemmata/", $rid))
+                            })
     let $deleteStatus   := net:deleteRoutingTable()
     return if (array:size($cleanedRT) > 0) then net:postRoutingTable($cleanedRT) else 0
 };

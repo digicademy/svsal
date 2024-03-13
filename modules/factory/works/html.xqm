@@ -73,7 +73,7 @@ declare function html:makeHTMLData($tei as element(tei:TEI), $lang as node()*) a
                 <li>
                     <b>{$title}</b>
                     {
-                    if (not($work//tei:text[@type='work_volume'])) then
+                    if (not($work//tei:text[@type = ('work_volume', 'lemma_article')])) then
                         <span class="jstree-anchor hideMe pull-right">{html:getPagesFromDiv($text)}</span>
                     else ()
                     }
@@ -175,7 +175,7 @@ declare function html:makeHTMLDataOld($tei as element(tei:TEI)) as map(*) {
                 <li>
                     <b>{$title}</b>
                     {
-                    if (not($work//tei:text[@type='work_volume'])) then
+                    if (not($work//tei:text[@type = ('work_volume', 'lemma_article')])) then
                         <span class="jstree-anchor hideMe pull-right">{html:getPagesFromDiv($text)}</span>
                     else ()
                     }
@@ -347,7 +347,7 @@ declare function html:generateTocFromDiv($nodes as element()*, $wid as xs:string
                 <li>
                     <a class="hideMe" href="{$fragId}" title="{$titleAtt}">
                         {($label, ' ', $titleString)}
-                        <span class="jstree-anchor hideMe pull-right">{html:getPagesFromDiv($node)}</span>
+                        {if (not($textType = '/lemmata/')) then <span class="jstree-anchor hideMe pull-right">{html:getPagesFromDiv($node)}</span> else ()}
                     </a>
                     {html:generateTocFromDiv($node, $wid, $lang)}
                 </li>
