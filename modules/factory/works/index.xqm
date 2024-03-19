@@ -642,6 +642,7 @@ declare function index:isPotentialFragmentNode($node as node()) as xs:boolean {
             $node/self::tei:p[    not($node/ancestor::tei:front | $node/ancestor::tei:back)] |
             $node/self::tei:list[ not($node/ancestor::tei:front | $node/ancestor::tei:back)] |
             $node/self::tei:lg[   not($node/ancestor::tei:front | $node/ancestor::tei:back)] |
+            $node/self::tei:quote[   not($node/ancestor::tei:front | $node/ancestor::tei:back)] |
             (: $node/self::tei:argument[not($node/ancestor::tei:list)] | :)
             $node/self::tei:text[@type = ('work_monograph', 'work_volume')]
             )
@@ -654,26 +655,6 @@ declare function index:isBestDepth($node as node(), $fragmentationDepth as xs:in
     boolean(count($node/ancestor::tei:*) le $fragmentationDepth and
             not($node/descendant::tei:*[index:isPotentialFragmentNode(.)][count(./ancestor::tei:*) le $fragmentationDepth])
            )
-};
-
-declare function index:isBestDepth_testCountAncestors($node as node(), $fragmentationDepth as xs:integer) as xs:integer {
-    count($node/ancestor::tei:*) (: le $fragmentationDepth  :)
-};
-
-declare function index:isBestDepth_testDescendantTEI($node as node(), $fragmentationDepth as xs:integer) as xs:boolean {
-    boolean(not($node/descendant::tei:*[index:isPotentialFragmentNode(.)][count(./ancestor::tei:*) le $fragmentationDepth])
-           )
-};
-
-declare function index:isBestDepth_testPrecedingSibling($node as node(), $fragmentationDepth as xs:integer) as xs:boolean {
- (: should return true :)
-    count($node//tei:*[not(preceding-sibling::*)] )  le $fragmentationDepth
-(: | $node//tei:*[not(preceding-sibling::*)] :)
-};
-
-
-declare function index:isBestDepth_test2($node as node(), $fragmentationDepth as xs:integer) as xs:boolean {
-    (: should return false:)
 };
 
 (:
@@ -689,7 +670,6 @@ declare function index:isBasicNode($node as node()) as xs:boolean {
         (: (this is quite a complicated XPath, but I don't know how to simplify it without breaking things...) :)
     )
 };
-
 
 
 declare function index:getNodeCategory($node as element()) as xs:string {
