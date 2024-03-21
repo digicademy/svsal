@@ -1004,6 +1004,12 @@ declare function html:dispatch($node as node(), $mode as xs:string, $lang as nod
 
 (: ELEMENT FUNCTIONS :)
 
+(: TODO - Html:
+    * add line- and column breaks in diplomatic view? (problem: infinite scrolling has to comply with the current viewmode as well!)
+    * make bibls, ref span across (page-)breaks (like persName/placeName/... already do)
+    * teasers: break text at word boundaries
+:)
+
 declare function html:passthru($nodes as node()*, $mode as xs:string) as item()* {
     html:passthru($nodes, $mode, $html:defaultLang)
 };
@@ -1011,49 +1017,6 @@ declare function html:passthru($nodes as node()*, $mode as xs:string) as item()*
 declare function html:passthru($nodes as node()*, $mode as xs:string, $lang as node()*) as item()* {
     for $node in $nodes/node() return html:dispatch($node, $mode, $lang)
 };
-
-(: FIXME: In the following, the #anchor does not take account of html partitioning of works. Change this to use semantic section id's. :)
-declare function html:head($node as element(tei:head), $mode as xs:string) {
-    switch($mode)
-        case 'html-title' return
-            normalize-space(string-join(txt:dispatch($node, 'edit'), ''))
-(: replaced the following with the above for performance reasons on 2021-04-28 ...
-            normalize-space(replace(string-join(txt:dispatch($node, 'edit')), '\[.*?\]', ''))
-:)
-        case 'html' return
-            (: list[not(@type eq 'dict')]/head are handled in html:list() :)
-            if ($node/parent::tei:list[not(@type eq 'dict')]) then 
-                () 
-            (: within notes: :)
-            else if ($node/parent::tei:lg) then 
-                <h5 class="poem-head">{html:passthru($node, $mode)}</h5>
-            (: usual headings: :)
-            else 
-(:                let $toolbox := html:makeSectionToolbox($node)
-                return:)
-                <h3>
-                    <span class="heading-text">{html:passthru($node, $mode)}</span>
-                </h3>
-
-        default return 
-            html:passthru($node, $mode)
-};
-
-(: FIXME: In the following, work mode functionality has to be added - also paying attention to intervening pagebreak marginal divs :)
-declare function html:term($node as element(tei:term), $mode as xs:string) {
-    switch($mode)
-        case 'html' return
-            html:name($node, $mode)
-
-        default return
-            html:passthru($node, $mode)
-};
-
-(: TODO - Html:
-    * add line- and column breaks in diplomatic view? (problem: infinite scrolling has to comply with the current viewmode as well!)
-    * make bibls, ref span across (page-)breaks (like persName/placeName/... already do)
-    * teasers: break text at word boundaries
-:)
 
 declare function html:abbr($node as element(tei:abbr), $mode) {
         html:origElem($node, $mode)
@@ -1081,10 +1044,14 @@ declare function html:argument($node as element(tei:argument), $mode as xs:strin
 declare function html:bibl($node as element(tei:bibl), $mode as xs:string) {
     switch($mode)
         case 'html' return
-            if ($node/@sortKey) then 
-                <span class="{local-name($node) || ' hi_', html:makeClassableString($node/@sortKey)}">{html:passthru($node, $mode)}</span>
-            else <span>{html:passthru($node, $mode)}</span>
-
+            let $resolvedURI := $node/@corresp/string()
+            let $ele := if ($resolvedURI) then
+                            html:transformToLink($node, $resolvedURI)
+                         else
+                            html:passthru($node, $mode)
+            return if ($node/@sortKey) then 
+                         <span class="{local-name($node) || ' hi_', html:makeClassableString($node/@sortKey)}">{$ele}</span>
+                     else <span>{$ele}</span>
         default return
             html:passthru($node, $mode)
 };
@@ -1291,6 +1258,33 @@ declare function html:gap($node as element(tei:gap), $mode as xs:string) {
                 <span title="?" class="gap"/>
             else ()
         default return ()
+};
+
+(: FIXME: In the following, the #anchor does not take account of html partitioning of works. Change this to use semantic section id's. :)
+declare function html:head($node as element(tei:head), $mode as xs:string) {
+    switch($mode)
+        case 'html-title' return
+            normalize-space(string-join(txt:dispatch($node, 'edit'), ''))
+(: replaced the following with the above for performance reasons on 2021-04-28 ...
+            normalize-space(replace(string-join(txt:dispatch($node, 'edit')), '\[.*?\]', ''))
+:)
+        case 'html' return
+            (: list[not(@type eq 'dict')]/head are handled in html:list() :)
+            if ($node/parent::tei:list[not(@type eq 'dict')]) then 
+                () 
+            (: within notes: :)
+            else if ($node/parent::tei:lg) then 
+                <h5 class="poem-head">{html:passthru($node, $mode)}</h5>
+            (: usual headings: :)
+            else 
+(:                let $toolbox := html:makeSectionToolbox($node)
+                return:)
+                <h3>
+                    <span class="heading-text">{html:passthru($node, $mode)}</span>
+                </h3>
+
+        default return 
+            html:passthru($node, $mode)
 };
 
 declare function html:hi($node as element(tei:hi), $mode as xs:string) {
@@ -1565,8 +1559,10 @@ declare function html:name($node as element(*), $mode as xs:string) {
                     {html:passthru($node, $mode)}
                 </span>
                 :)
-                (: as soon as links have actual targets, execute something like the following: :)
-                let $resolvedURI := if ($node/@ref) then html:resolveURI($node, $node/@ref) else ()
+                (: as soon as links have actual targets and belong to linkable nodes (currently, only term nodes) :)
+                let $resolvedURI := if ($node[self::tei:term]) then
+                        if ($node/@ref) then html:resolveURI($node, $node/@ref) else ()
+                    else ()
                 return
                     if ($resolvedURI) then
                         html:transformToLink($node, $resolvedURI)
@@ -1826,6 +1822,16 @@ declare function html:table($node as element(tei:table), $mode as xs:string) {
             <table>{html:passthru($node, $mode)}</table>
 
         default return html:passthru($node, $mode)
+};
+
+(: FIXME: In the following, work mode functionality has to be added - also paying attention to intervening pagebreak marginal divs :)
+declare function html:term($node as element(tei:term), $mode as xs:string) {
+    switch($mode)
+        case 'html' return
+            html:name($node, $mode)
+
+        default return
+            html:passthru($node, $mode)
 };
 
 declare function html:text($node as element(tei:text), $mode as xs:string) {
