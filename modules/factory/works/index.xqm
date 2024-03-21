@@ -83,7 +83,7 @@ declare function index:makeNodeIndex($tei as element(tei:TEI)) as map(*) {
                                 else ()
                 let $n := $node/@xml:id/string()
           (:    let $frag := (($node/ancestor-or-self::tei:* | $node//tei:*) intersect $target-set)[1] :)
-               let $frag := (($node/ancestor-or-self::tei:* | $node//tei:*[not(preceding-sibling::*)] ) intersect $target-set)[1] 
+                let $frag := (($node/ancestor-or-self::tei:* | $node//tei:*[ not(preceding-sibling::*[not(local-name(.) = ("figure", "fw"))]) ] ) intersect $target-set)[1] 
                 let $err  := if ((count($frag/@xml:id) eq 0) or ($frag/@xml:id eq "")) then
                     let $debug := if ($config:debug = ("trace", "info")) then
                                      console:log("[INDEX] Node indexing: Could not find $frag for $node '" || $n || "'. Target set was: [" || string-join(fn:for-each($target-set, function ($k) {concat($k/local-name(), ':', $k/@xml:id)}), ', ') || "]. Aborting.")
@@ -643,6 +643,7 @@ declare function index:isPotentialFragmentNode($node as node()) as xs:boolean {
             $node/self::tei:list[ not($node/ancestor::tei:front | $node/ancestor::tei:back)] |
             $node/self::tei:lg[   not($node/ancestor::tei:front | $node/ancestor::tei:back)] |
             $node/self::tei:quote[   not($node/ancestor::tei:front | $node/ancestor::tei:back)] |
+$node/self::tei:argument[   not($node/ancestor::tei:front | $node/ancestor::tei:back)] |
             (: $node/self::tei:argument[not($node/ancestor::tei:list)] | :)
             $node/self::tei:text[@type = ('work_monograph', 'work_volume')]
             )
