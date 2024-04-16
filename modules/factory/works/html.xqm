@@ -787,17 +787,17 @@ declare function html:resolveFacsURI($facsTargets as xs:string) as xs:string {
 :)
 declare function html:transformToLink($node as element(), $uri as xs:string) {
     if (not($node/tei:pb)) then
-        <a href="{$uri}" target="_blank">{html:passthru($node, 'html')}</a>
+        <a href="{$uri}">{html:passthru($node, 'html')}</a>
     else
         (: make an anchor for the preceding part, then render the pb, then "continue" the anchor :)
         (: TODO: ATM, this works only if pb occurs at the child level, and only with the first pb :)
         let $before :=
-            <a href="{$uri}" target="_blank">
+            <a href="{$uri}">
                 {for $n in $node/tei:pb[1]/preceding-sibling::node() return html:dispatch($n, 'html')}
             </a>
         let $break := html:dispatch($node/tei:pb[1], 'html')
         let $after :=
-            <a href="{$uri}" target="_blank">
+            <a href="{$uri}">
                 {for $n in $node/tei:pb[1]/following-sibling::node() return html:dispatch($n, 'html')}
             </a>
         return
@@ -1574,37 +1574,6 @@ declare function html:name($node as element(*), $mode as xs:string) {
                         html:transformToLink($node, $resolvedURI)
                     else 
                         html:passthru($node, $mode)
-                (: 
-                <xsl:choose>
-                    <xsl:when test="@ref and substring(sal:resolveURI(current(), @ref)[1],1, 5) = ('http:', '/exis') ">
-                        <xsl:choose>
-                            <xsl:when test="not(./pb)"> <!-\- The entity does not contain a pagebreak intervention - no problem then -\->
-                                <xsl:element name="a">
-                                    <xsl:attribute name="href" select="sal:resolveURI(current(), @ref)"/>
-                                    <xsl:attribute name="target">_blank</xsl:attribute>
-                                    <xsl:apply-templates/>
-                                </xsl:element>
-                            </xsl:when>
-                            <xsl:otherwise>             <!-\- Otherwise, make an anchor for the preceding part, then render the pb, then "continue" the anchor -\->
-                                <xsl:element name="a">
-                                    <xsl:attribute name="href" select="sal:resolveURI(current(), @ref)"/>
-                                    <xsl:attribute name="target">_blank</xsl:attribute>
-                                    <xsl:apply-templates select="./pb/preceding-sibling::node()"/>
-                                </xsl:element>
-                                <xsl:apply-templates select="./pb"/>
-                                <xsl:element name="a">
-                                    <xsl:attribute name="href" select="sal:resolveURI(current(), @ref)"/>
-                                    <xsl:attribute name="target">_blank</xsl:attribute>
-                                    <xsl:apply-templates select="./pb/following-sibling::node()"/>
-                                </xsl:element>
-                            </xsl:otherwise>
-                        </xsl:choose>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:apply-templates/>
-                    </xsl:otherwise>
-                </xsl:choose>
-                :)
 
         default return
             html:passthru($node, $mode)
