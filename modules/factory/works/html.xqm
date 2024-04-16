@@ -582,10 +582,11 @@ declare function html:makeSectionToolbox($node as element(), $lang as node()*) a
                     </ul>
                 </div>
                 <div class="sal-tb-btn" title="{i18n:getLocalizedText(html:i18nNodify(concat('teiExp', $i18nSuffix)), $lang)}">
-                    <a href="{$citeIDBaseUrl || '?format=tei'}"><span class="messengers fas fa-align-left" title="{i18n:getLocalizedText(html:i18nNodify('downloadXML'), $lang)}"></span>{' '}{i18n:getLocalizedText(html:i18nNodify('teiExpShort'), $lang)}</a><!--
+                    <!--<a href="{$citeIDBaseUrl || '?format=tei'}"><span class="messengers fas fa-align-left" title="{i18n:getLocalizedText(html:i18nNodify('downloadXML'), $lang)}"></span>{' '}{i18n:getLocalizedText(html:i18nNodify('teiExpShort'), $lang)}</a> -->
+
                     <button class="messengers" onclick="window.location.href = '{$citeIDBaseUrl || '?format=tei'}'">
                         <span class="fas fa-file-code"></span>{' '}{i18n:getLocalizedText(html:i18nNodify('teiExpShort'), $lang)}
-                    </button>-->
+                    </button>
                 </div>
                 <div class="sal-tb-btn" style="display:none;">
                     <a class="updateHiliteBox" href="#"> 
@@ -717,6 +718,9 @@ declare function html:createPaginationLinks($workId as xs:string, $fragmentIndex
                             $desc//tei:imprint/tei:date[@type = 'thisEd']
                        else
                             $desc//tei:imprint/tei:date[1]
+let $type := if ($desc/../../tei:encodingDesc/tei:editorialDecl/tei:p[1]/contains(@xml:id, "RW")
+                                        ) then "Reference Work"
+                else "Edited Work"
     return
     concat(
         '{{$work_info := dict ',
@@ -726,6 +730,7 @@ declare function html:createPaginationLinks($workId as xs:string, $fragmentIndex
         '"place" "',   $place,      '" ',
         '"printer" "', $printer,    '" ',
         '"year" "',    $year,       '" ',
+  '"type" "',    $type,       '" ',
         if ($prevId) then concat('"prev" "', format-number($fragmentIndex - 1, "00000"), '_', $prevId, '.html" ') else (),
         if ($nextId) then concat('"next" "', format-number($fragmentIndex + 1, "00000"), '_', $nextId, '.html" ') else (),
         '"content" $content}}'
@@ -808,13 +813,13 @@ declare function html:makeCiteIDURI($node as element()) as xs:string? {
     let $debug :=  if (not($node/@xml:id)) then
                         console:log("[HTML] Problem: intend to html:makeCiteIDURI of a " || local-name($node) || " node without xml:id. After line " || $node/preceding::tei:lb[1]/@xml:id/string() || "." )
                     else ()
-    let $textId := $node/ancestor::tei:TEI/@xml:id
+    let $textId := $node/ancestor::tei:TEI/@xml:id/string()
 
     let $textTypePrefix := 
-        if (starts-with($textId, 'W0')) then '/texts/' 
+             if (starts-with($textId, 'W0')) then '/texts/' 
         else if (starts-with($textId, 'WP')) then '/workingpapers/' 
-        else if (starts-with($textId, 'A')) then '/authors/'
-        else if (starts-with($textId, 'L')) then '/lemmata/'
+        else if (starts-with($textId, 'A'))  then '/authors/'
+        else if (starts-with($textId, 'L'))  then '/lemmata/'
         else ()
 
     let $citeID := sutil:getNodetrail($textId, $node, 'citeID')
@@ -844,7 +849,7 @@ declare function html:resolveURI($node as element(), $targets as xs:string) {
         if (starts-with($target, '#') and substring($target, 2) = $currentWork//@xml:id/string()) then
             (: target is some node within the current work - make an absolute (persistent) URI out of it :)
             (: let $debug := console:log("[HTML] Create Hashtag Reference URI for " || $targets) :)
-            html:makeCiteIDURI($currentWork//*[@xml:id eq substring($target, 2)])
+            html:makeCiteIDURI($currentWork//*[@xml:id/string() eq substring($target, 2)])
         else if (string-length($targetPrefix) gt 0) then
             (: let $debug := console:log("[HTML] Create a prefixed reference URI for a " || $targetPrefix || " URI: " || $targets) :)
             if ($targetPrefix = ("http", "https")) then
@@ -1190,6 +1195,7 @@ declare function html:foreign($node as element(tei:foreign), $mode as xs:string)
             html:passthru($node, $mode)
 };
 
+(: Change this function to add the specificities of RefWorks. :)
 declare function html:g($node as element(tei:g), $mode as xs:string) {
     switch($mode)
         case 'html' return
@@ -1626,7 +1632,12 @@ declare function html:orig($node as element(tei:orig), $mode) {
 declare function html:origElem($node as element(), $mode as xs:string) {
     switch($mode)
         case 'html' return 
-            if ($node/parent::tei:choice) then
+        if ($node/parent::tei:TEI//tei:encodingDesc/tei:editorialDecl/p[2]/contains(@xml:id, "RW")) then
+         
+                    <span class="refWork {local-name($node)} unsichtbar" >
+                        {string-join(html:passthru($node, $mode), '')}
+                    </span>
+else if ($node/parent::tei:choice) then
                 let $editString := normalize-space(string-join(txt:dispatch($node/parent::tei:choice/(tei:expan|tei:reg|tei:corr), 'edit'), ''))
                 return
                     <span class="original {local-name($node)} unsichtbar" title="{$editString}">
@@ -1761,10 +1772,11 @@ declare function html:ref($node as element(tei:ref), $mode as xs:string) {
         case 'html' return
             if ($node/@type eq 'note-anchor') then
                 () (: omit note references :)
-            else if ($node/@target) then
-                let $resolvedUri := html:resolveURI($node, $node/@target/string()) (: TODO: verify that this works :)
+            else if ($node/ancestor::tei:text and $node/@target) then (:added ancestor::tei:body to avoid entering a loop for just the ref target in the header, 11.04.2024 :)(: Changed ...body/@target to ...test and $node/@target in order not to skip all because lemmata have refs in front, and neither text nor body do normally have target attributes, AW 16.04.2024 :)
+                let $resolvedUri := if ($node/@target/string() eq "" ) then "No target for this ref." else html:resolveURI($node, $node/@target/string()) (: TODO: verify that this works :) (: Bug here with W0063, a RW, 11.04.2024 :)
                 return html:transformToLink($node, $resolvedUri)
-            else html:passthru($node, $mode)
+            else
+                html:passthru($node, $mode)
 
         default return
             html:passthru($node, $mode)
