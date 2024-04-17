@@ -1,0 +1,18 @@
+<meta xmlns="http://exist-db.org/xquery/repo">
+    <description>The School of Salamanca. Web Application</description>
+    <author>Ingo Caesar</author>
+    <author>David Glück</author>
+    <author>Marie-Astrid Hugel</author>
+    <author>Maxim Kupreyev</author>
+    <author>Andreas Wagner</author>
+    <website>https://www.salamanca.school</website>
+    <status>beta</status>
+    <license>MIT</license>
+    <copyright>true</copyright>
+    <type>application</type>
+    <target>salamanca</target>
+    <prepare>pre-install.xql</prepare>
+    <finish>post-install.xql</finish>
+    <permissions user="sal" group="svsalAdmin" mode="rw-rw-r--"/>
+    <deployed>2018-01-30T12:42:16.692+01:00</deployed>
+</meta>
