@@ -318,19 +318,24 @@ declare function index:qualityCheck($index as element(sal:index),
     (: there should be as many distinctive citeID and crumbtrails as there are ordinary sal:node elements: :)
     let $debug := if ($config:debug = "trace") then console:log('[INDEX] QC: make sure @citeIDs are unique ...') else ()
     let $testAmbiguousCiteID :=
-        let $allCiteIDs := $resultNodes/@citeID/string()
-        let $numberOfAllCiteIDs := count($allCiteIDs)
-        let $uniqueCiteIDs := for $id at $pos in $allCiteIDs
+        let $uniqueCiteIDs := for $node at $pos in $resultNodes
+                                let $id := $node/@citeID/string()
                                 group by $id
-                                let $debug :=   if ($config:debug = "trace" and $pos mod 250 eq 0) then
+                                let $debug :=   if (($config:debug = "trace") and ($pos[1] mod 1000 eq 0)) then
                                                         console:log('[INDEX] QC: ... counting citeIDs ' ||
-                                                        '(' || string($pos) || '/' || string($numberOfAllCiteIDs) || ') ...')
+                                                        '(' || string($pos[1]) || '/' || string($numberOfResultNodes) || ') ...')
                                                 else ()
                                 return $id[1]
         let $numberOfUniqueCiteIDs := count($uniqueCiteIDs)
         return if ($numberOfResultNodes ne $numberOfUniqueCiteIDs) then 
-            let $debug1 := console:log('[INDEX]: ERROR: Could not produce a unique citeID for each sal:node (in ' || $wid || ').')
-            let $debug2 := console:log('[INDEX]: ERROR: Problematic nodes: '
+            let $debug1 := console:log('[INDEX]: ERROR: Could not produce a unique citeID for each sal:node (in ' || $wid || '). ' ||
+                                        $numberOfResultNodes || ' result nodes vs ' || $numberOfUniqueCiteIDs || ' unique cite ids.')
+            let $problematicNodes := for $id in $uniqueCiteIDs
+                                        let $nodes := $resultNodes[@citeID/string() = $id]
+                                        where count($nodes) gt 1
+                                        return $id || ': ' || string-join($nodes/@n/string(), ', ')
+            let $debug2 := console:log('[INDEX]: ERROR: Problematic nodes: ' || string-join($problematicNodes, '; '))
+(:
                   || string-join(
                         (for $x in $resultNodes[@citeID = preceding::sal:node/@citeID]
                          return concat($x/@n || ' (citeID ' || $x/@citeID || ') <-> ',
@@ -339,8 +344,12 @@ declare function index:qualityCheck($index as element(sal:index),
                         ), ' || '
                     )
                 )
+:)
             return error(xs:QName('admin:createNodeIndex'), 
-                  'Could not produce a unique citeID for each sal:node (in ' || $wid || '). Problematic nodes: '
+                  'Could not produce a unique citeID for each sal:node (in ' || $wid || '). ' ||
+                  $numberOfResultNodes || ' result nodes vs ' || $numberOfUniqueCiteIDs || ' unique cite ids.' ||
+                  ' Problematic nodes: ' || string-join($problematicNodes, '; '))
+(:
                   || string-join(
                         (for $x in $resultNodes[@citeID = preceding::sal:node/@citeID]
                          return concat($x/@n || ' (citeID ' || $x/@citeID || ') <-> ',
@@ -349,6 +358,7 @@ declare function index:qualityCheck($index as element(sal:index),
                         ), ' || '
                     )
                 )
+:)
         else ()
     (: search for " //@citeID[not(./string())] ":)
     (: not checking crumbtrails here ATM for not slowing down index creation too much... :)
@@ -361,7 +371,7 @@ declare function index:qualityCheck($index as element(sal:index),
                                   //text()[normalize-space() ne '']
         let $numberOfTextNodes := count($textNodes)
         for $t at $i in $textNodes return
-            let $debug := if ($config:debug = "trace" and $i mod 2500 eq 0) then
+            let $debug := if (($config:debug = "trace") and ($i mod 2500 eq 0)) then
                               console:log('[INDEX] QC: ... checking text nodes ' ||
                               '(' || xs:string($i) || '/' || xs:string($numberOfTextNodes) || ') ...')
                           else ()
