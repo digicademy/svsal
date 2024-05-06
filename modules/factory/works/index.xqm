@@ -289,11 +289,12 @@ declare function index:qualityCheck($index as element(sal:index),
                                     
     let $wid := $work/@xml:id
     let $resultNodes := $index//sal:node[not(@n eq 'completeWork')]
-    let $debug := if ($config:debug = ("info", "trace")) then console:log('[INDEX] QC: check ' || count($resultNodes) || ' nodes in index for ' || $wid || '.') else ()
+    let $numberOfResultNodes := count($resultNodes)
+    let $debug := if ($config:debug = ("info", "trace")) then console:log('[INDEX] QC: check ' || $numberOfResultNodes || ' nodes in index for ' || $wid || ' ...') else ()
     
     (: #### Basic quality / consistency check #### :)
     let $testNodes := 
-        if (count($resultNodes) eq 0) then 
+        if ($numberOfResultNodes eq 0) then 
             error(xs:QName('admin:createNodeIndex'), 'Node indexing did not produce any results.') 
         else $resultNodes
 
@@ -315,10 +316,21 @@ declare function index:qualityCheck($index as element(sal:index),
         else ()
 
     (: there should be as many distinctive citeID and crumbtrails as there are ordinary sal:node elements: :)
-    let $debug := if ($config:debug = "trace") then console:log('[INDEX] QC: Make sure @citeIDs are unique (compare number of nodes to number of distinct @citeID values)...') else ()
-    let $testAmbiguousCiteID := 
-        if (count($resultNodes) ne count(distinct-values($resultNodes/@citeID/string()))) then 
-            let $debug := console:log('[INDEX]: ERROR: Could not produce a unique citeID for each sal:node (in ' || $wid || '). Problematic nodes: '
+    let $debug := if ($config:debug = "trace") then console:log('[INDEX] QC: make sure @citeIDs are unique ...') else ()
+    let $testAmbiguousCiteID :=
+        let $allCiteIDs := $resultNodes/@citeID/string()
+        let $numberOfAllCiteIDs := count($allCiteIDs)
+        let $uniqueCiteIDs := for $id at $pos in $allCiteIDs
+                                group by $id
+                                let $debug :=   if ($config:debug = "trace" and $pos mod 250 eq 0) then
+                                                        console:log('[INDEX] QC: ... counting citeIDs ' ||
+                                                        '(' || string($pos) || '/' || string($numberOfAllCiteIDs) || ') ...')
+                                                else ()
+                                return $id[1]
+        let $numberOfUniqueCiteIDs := count($uniqueCiteIDs)
+        return if ($numberOfResultNodes ne $numberOfUniqueCiteIDs) then 
+            let $debug1 := console:log('[INDEX]: ERROR: Could not produce a unique citeID for each sal:node (in ' || $wid || ').')
+            let $debug2 := console:log('[INDEX]: ERROR: Problematic nodes: '
                   || string-join(
                         (for $x in $resultNodes[@citeID = preceding::sal:node/@citeID]
                          return concat($x/@n || ' (citeID ' || $x/@citeID || ') <-> ',
@@ -342,15 +354,22 @@ declare function index:qualityCheck($index as element(sal:index),
     (: not checking crumbtrails here ATM for not slowing down index creation too much... :)
     
     (: check whether all text is being captured through basic index nodes (that is, whether every single passage is citable) :)
-    let $debug := if ($config:debug = "trace") then console:log('[INDEX] QC: Check whether every single passage is citable...') else ()
+    let $debug := if ($config:debug = "trace") then console:log('[INDEX] QC: check whether every single passage is citable...') else ()
     let $checkBasicNodes := 
-        for $t in $work//tei:text[@type eq 'work_monograph' 
+        let $textNodes := $work//tei:text[@type eq 'work_monograph' 
                                   or (@type eq 'work_volume' and sutil:WRKisPublished($wid || '_' || @xml:id))]
-                                  //text()[normalize-space() ne ''] return
-            if ($t[not(ancestor::*[index:isBasicNode(.)]) and not(ancestor::tei:figDesc)]) then 
-                let $debug := util:log('error', 'Encountered text node without ancestor::*[index:isBasicNode(.)], in line ' || $t/preceding::tei:lb[1]/@xml:id/string() || ' – this might indicate a structural anomaly in the TEI data.')
-                return error(xs:QName('admin:createNodeIndex'), 'Encountered text node without ancestor::*[index:isBasicNode(.)], in line ' || $t/preceding::tei:lb[1]/@xml:id/string()) 
-            else ()
+                                  //text()[normalize-space() ne '']
+        let $numberOfTextNodes := count($textNodes)
+        for $t at $i in $textNodes return
+            let $debug := if ($config:debug = "trace" and $i mod 2500 eq 0) then
+                              console:log('[INDEX] QC: ... checking text nodes ' ||
+                              '(' || xs:string($i) || '/' || xs:string($numberOfTextNodes) || ') ...')
+                          else ()
+            return
+                if ($t[not(ancestor::*[index:isBasicNode(.)]) and not(ancestor::tei:figDesc)]) then 
+                    let $debug := util:log('error', 'Encountered text node without ancestor::*[index:isBasicNode(.)], in line ' || $t/preceding::tei:lb[1]/@xml:id/string() || ' – this might indicate a structural anomaly in the TEI data.')
+                    return error(xs:QName('admin:createNodeIndex'), 'Encountered text node without ancestor::*[index:isBasicNode(.)], in line ' || $t/preceding::tei:lb[1]/@xml:id/string()) 
+                else ()
     (: if no xml:id is put out, try to search these cases like so:
         //text//text()[not(normalize-space() eq '')][not(ancestor::*[@xml:id and (self::p or self::signed or self::head or self::titlePage or self::lg or self::item or self::label or self::argument or self::table)])]
     :)
@@ -361,7 +380,9 @@ declare function index:qualityCheck($index as element(sal:index),
     let $unidentified-elements := $targetNodes[not(@xml:id)]
     (: Keep track of how long this index did take :)
     
-    return 
+    let $debug := if ($config:debug = ("info", "trace")) then console:log('[INDEX] QC: all checks passed for ' || $wid || '.') else ()
+
+    return
         (: return information that we want to inform about rather than throw hard errors :)
         map {
             'missed_elements': $missed-elements,
@@ -577,8 +598,8 @@ declare function index:isMarginalNode($node as node()) as xs:boolean {
 };
 
 (:
-~ Main nodes are mixed-content elements such as tei:p, which may contain marginal or anchor nodes.
-~ Note: all main nodes should be citable in the reading view.
+~ Main nodes are mixed-content elements such as tei:p, which contain text but may also contain marginal or anchor nodes.
+~ Note: all main (i.e. directly text-containing) nodes should be citable in the reading view.
 :)
 declare function index:isMainNode($node as node()) as xs:boolean {
     boolean(
@@ -590,7 +611,13 @@ declare function index:isMainNode($node as node()) as xs:boolean {
             $node/self::tei:titlePage or
             $node/self::tei:lg or
             $node/self::tei:label[@place ne 'margin'] or
+(: A.W. 2024-05-01: Replace this
             $node/self::tei:argument[not(ancestor::tei:list)] or
+   with the following line, in order to enable indexing of p[parent:argument] and p[ancestor:list].
+   (when the argument contains a p element, it cannot itself contain text nodes,
+    so it's the contained text nodes, but not the argument that should be included in this list of main nodes.)
+:)
+            $node/self::tei:argument[not(ancestor::tei:list)][not(./tei:p)] or
             $node/self::tei:table
         ) and 
 (: A.W. 2024-02-24: change the following, in order to also index <p>s on titlepages, in arguments etc.
@@ -610,6 +637,8 @@ declare function index:isListNode($node as node()) as xs:boolean {
             $node/self::tei:list or
             $node/self::tei:item or
             $node/self::tei:head[ancestor::tei:list] or
+(: A.W. 2024-05-01: Add the following line, in order to enable indexing of p[parent:argument] and p[ancestor:list]:  :)
+            $node/self::tei:p[ancestor::tei:list] or
             $node/self::tei:argument[ancestor::tei:list]
         ) and 
         not($node/ancestor::*[index:isMainNode(.) or index:isMarginalNode(.)])
@@ -618,15 +647,20 @@ declare function index:isListNode($node as node()) as xs:boolean {
 
 
 (:
-~ Structural nodes are high-level nodes containing any of the other types of nodes (main, marginal, anchor nodes).
+~ Structural nodes are high-level nodes containing only other types of nodes (main, marginal, anchor nodes), not immediate text nodes.
 Line 584: [not(./(ancestor::tei:front || ancestor::tei:back))] added to resolve a HTML problem (#6459: <front> displayed twice)
+TODO: What about list, lg and quote nodes?
 :)
 declare function index:isStructuralNode($node as node()) as xs:boolean {
     boolean(
         $node/@xml:id and
         (
             $node/self::tei:div[@type ne "work_part"] or (: TODO: comment out for div label experiment :)
+(: A.W. 2024-05-01: Replace this
             $node/self::tei:argument[not(ancestor::tei:list)] or
+   with the following line, in order to enable indexing of p[parent:argument] and p[ancestor:list]:
+:)
+            $node/self::tei:argument[not(ancestor::tei:list)][./tei:p] or
             $node/self::tei:back or
             $node/self::tei:front or
             $node/self::tei:text[@type eq 'work_volume']
@@ -635,18 +669,19 @@ declare function index:isStructuralNode($node as node()) as xs:boolean {
 };
 
 declare function index:isPotentialFragmentNode($node as node()) as xs:boolean {
-    boolean($node/self::tei:front |
-            $node/self::tei:back |
-            $node/self::tei:div[  not($node/ancestor::tei:front | $node/ancestor::tei:back)] |
-            $node/self::tei:head[ not($node/ancestor::tei:front | $node/ancestor::tei:back)] |
-            $node/self::tei:p[    not($node/ancestor::tei:front | $node/ancestor::tei:back)] |
-            $node/self::tei:list[ not($node/ancestor::tei:front | $node/ancestor::tei:back)] |
-            $node/self::tei:lg[   not($node/ancestor::tei:front | $node/ancestor::tei:back)] |
-            $node/self::tei:quote[   not($node/ancestor::tei:front | $node/ancestor::tei:back)] |
-$node/self::tei:argument[   not($node/ancestor::tei:front | $node/ancestor::tei:back)] |
-            (: $node/self::tei:argument[not($node/ancestor::tei:list)] | :)
-            $node/self::tei:text[@type = ('work_monograph', 'work_volume')]
-            )
+    not($node/ancestor::tei:front | $node/ancestor::tei:back) and
+    boolean($node[  self::tei:front |
+                    self::tei:back |
+                    self::tei:div |
+                    self::tei:head |
+                    self::tei:p |
+                    self::tei:list |
+                    self::tei:lg |
+                    self::tei:quote |
+                    self::tei:argument |
+                    (: $node/self::tei:argument[not($node/ancestor::tei:list)] | :)
+                    self::tei:text[@type = ('work_monograph', 'work_volume')]
+            ])
 };
 
 declare function index:isBestDepth($node as node(), $fragmentationDepth as xs:integer) as xs:boolean {
@@ -667,7 +702,9 @@ declare function index:isBasicNode($node as node()) as xs:boolean {
     boolean(
         index:isMainNode($node) or
         index:isMarginalNode($node) or
-        $node[self::tei:item | self::tei:head | self::tei:argument ] 
+(: A.W. 2024-05-01: Add the following line, in order to enable indexing of p[parent:argument] and p[ancestor:list]:  :)
+        $node[self::tei:p][parent::tei:argument | ancestor::tei:list] or
+        $node[self::tei:item[not(./tei:p)] | self::tei:head | self::tei:argument[not(./tei:p)] ] 
         (: (this is quite a complicated XPath, but I don't know how to simplify it without breaking things...) :)
     )
 };
