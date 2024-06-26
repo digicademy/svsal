@@ -94,6 +94,4 @@ let $content    := for $t in $textnodes
                         else ()
 let $debug      := console:log("[NLP] Export done.")
 
-return if ($content) then
-    concat("url,xmlid,lang,wid,year,author-id,author-name,content", $config:nl, string-join($content, ''))
-        else ()
+return concat("url,xmlid,lang,wid,year,author-id,author-name,content", $config:nl, string-join($content, ''))
