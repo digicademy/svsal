@@ -192,6 +192,7 @@ declare function sutil:convertVolumeID($volId as xs:string) as xs:string {
             case 'H' return '08'
             case 'I' return '09'
             case 'J' return '10'
+           case 'K' return '11'  (:for our best friend, la siete partidas ^^ :)
             default return error(xs:QName('sutil:convertVolumeID'), 'Error: volume number not supported')
     return $workId || $volInfix || $volN
 };
@@ -388,21 +389,21 @@ declare function sutil:HTMLmakeCitationReference($wid as xs:string, $fileDesc as
             sutil:getNodetrail($wid, $node, 'citeID')
         else ()
     let $citeIDStr := if ($citeID) then ':' || $citeID else ()
-    let $link := $config:idserver || '/texts/' || $wid || $citeIDStr || (if ($mode eq 'reading-passage') then '?format=html' else ())
-    let $label := 
-        if ($mode eq 'reading-passage' and $node) then
-            let $passage := sutil:getNodetrail($wid, $node, 'label')
-            return 
-                if ($passage) then <span class="cite-rec-trail">{$passage || ', '}</span> else ()
+    let $textTypePrefix := 
+             if (starts-with($wid, 'W0')) then '/texts/' 
+        else if (starts-with($wid, 'WP')) then '/workingpapers/' 
+        else if (starts-with($wid, 'A'))  then '/authors/'
+        else if (starts-with($wid, 'L'))  then '/lemmata/'
         else ()
-    let $body := 
-        <span class="cite-rec-body">{$author || ', ' || $title || ' (' || $digitalYear || ' [' || $originalYear || '])'|| ', '}
-            {$label}
-            <i18n:text key="inLow">in</i18n:text>{': '}<i18n:text key="editionSeries">The School of Salamanca. A Digital Collection of Sources</i18n:text>
-            {' <'}
-            <a href="{$link}">{$link}</a>
-            {'>'}
-        </span>
+
+    let $link := $config:idserver || $textTypePrefix || $wid || $citeIDStr (: || (if ($mode eq 'reading-passage') then '?format=html' else ()) :)
+    let $label := if ($mode eq 'reading-passage' and $node) then
+                    let $passage := sutil:getNodetrail($wid, $node, 'label')
+                    return 
+                        if ($passage) then <span class="cite-rec-trail">{$passage || ', '}</span> else ()
+                else ()
+    let $body :=  (: testing <nobr> to avoid line break between values., 8.03.2024:)
+        <span class="cite-rec-body" style="white-space: nowrap;">{$author || ', ' || $title || ' (' || $digitalYear || ( if ($originalYear) then concat(' [', $originalYear, ']') else ()) || '), ' || $label}<i18n:text key="inLow">in</i18n:text>{': '}<i18n:text key="editionSeries">The School of Salamanca. A Digital Collection of Sources</i18n:text>{' <'}<a href="{$link}">{$link}</a>{'>'}</span>
 (:   including editors (before link): {', '}<i18n:text key="editedByAbbrLow">ed. by</i18n:text>{' ' || $editors || ' <'}     :)
     return ($body)
 };

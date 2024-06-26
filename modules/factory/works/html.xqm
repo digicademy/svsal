@@ -462,10 +462,8 @@ declare function html:makeSummaryTitle($node as element()) as element(div) {
 declare function html:makeSummaryTitle($node as element(), $lang as node()*) as element(div) {
     let $toolbox := html:makeSectionToolbox($node, $lang)
     let $fullTitle := 
-        <span class="section-title-text">{
-            if ($node/self::tei:text[@type='work_volume']) then <b>{html:dispatch($node, 'html-title', $lang)}</b>
-            else html:dispatch($node, 'html-title', $lang)
-        }</span>
+        <span class="section-title-text">{if ($node/self::tei:text[@type='work_volume']) then <b>{html:dispatch($node, 'html-title', $lang)}</b>
+                                          else html:dispatch($node, 'html-title', $lang)}</span>
     (: make anchors according to the amount of structural ancestors so that JS knows what to highlight: :)
     let $levels := count($node/ancestor::*[index:isStructuralNode(.)])
     let $levelAnchors := for $l in (1 to $levels) return <a style="display:none;" class="div-l-{$l}"></a>
@@ -477,12 +475,8 @@ declare function html:makeSummaryTitle($node as element(), $lang as node()*) as 
                     let $id := 'collapse-' || $node/@xml:id
                     return
                         <a role="button" class="collapsed title-teaser" data-toggle="collapse" href="{('#' || $id)}" 
-                           aria-expanded="false" aria-controls="{$id}">    
-                            <p class="collapse" id="{$id}" aria-expanded="false">
-                                {$fullTitle}
-                            </p>
-                        </a>
-                else 
+                           aria-expanded="false" aria-controls="{$id}"><p class="collapse" id="{$id}" aria-expanded="false">{$fullTitle}</p></a>
+                else
                     $fullTitle
             }</div>
             {$levelAnchors}
@@ -568,9 +562,7 @@ declare function html:makeSectionToolbox($node as element(), $lang as node()*) a
                     <button onclick="copyCitRef(this); return false;" class="messengers">
                         <span class="fas fa-feather-alt"></span>{' '}{i18n:getLocalizedText(html:i18nNodify('copyCit'), $lang)}
                     </button>
-                    <span class="sal-cite-rec" style="display:none">
-                        {sutil:HTMLmakeCitationReference($wid, $fileDesc, 'reading-passage', $node)}
-                    </span>
+                    <span class="sal-cite-rec" style="display:none">{sutil:HTMLmakeCitationReference($wid, $fileDesc, 'reading-passage', $node)}</span>
                 </div>
                 <div class="sal-tb-btn dropdown" title="{i18n:getLocalizedText(html:i18nNodify(concat('txtExp', $i18nSuffix)), $lang)}">
                     <button class="dropdown-toggle messengers" data-toggle="dropdown">
@@ -832,19 +824,21 @@ declare function html:makeCiteIDURI($node as element()) as xs:string? {
 (:
 ~ For a node and a reference that may be a prefixed/private URI, create a valid internet URI
 :)
-(: TODO: debugging with references to extratextual entities :)
+(: TODO: debugging with references to extratextual entities :) (:Debug locally for -re- references (Fehler 7769) for W0063, MAH 25.04.2024 :)
 declare function html:resolveURI($node as element(), $targets as xs:string) {
     let $currentWork := $node/ancestor-or-self::tei:TEI
     let $target := (tokenize($targets, ' '))[1]
+
     let $targetPrefix := substring-before($target, ':')
-    let $prefixMap := map:merge(for $p in $currentWork//tei:prefixDef return map 
+(: let $debug := console:log("[ResolveURI] This is $targetPrefix: " || $targetPrefix) :)
+    let $prefixMap := map:merge(for $p in $currentWork//tei:prefixDef return map (: what is this ? no prefixDef in the work ! :)
                                     {   $p/@ident/string() : map {
                                             "matchPattern" :        $p/@matchPattern/string(),
                                             "replacementPattern" : $p/@replacementPattern/string()
                                         }
                                     }
                         )
-
+ (:let $debug := console:log("[ResolveURI] This is $Map: " || $prefixMap) :)
     return
         if (starts-with($target, '#') and substring($target, 2) = $currentWork//@xml:id/string()) then
             (: target is some node within the current work - make an absolute (persistent) URI out of it :)
@@ -875,6 +869,25 @@ declare function html:resolveURI($node as element(), $targets as xs:string) {
             let $debug := console:log("[HTML] Problem? Create unprefixed URI for " || local-name($node) || " (" || $node/@xml:id || ") with targets '" || $targets || "': target '" || $target || "'.")
             return $target
 };    
+
+declare function html:resolveURI_test($node as element(), $targets as xs:string) {
+    let $currentWork := $node/ancestor-or-self::tei:TEI
+    let $target := (tokenize($targets, ' '))[1]
+
+    let $targetPrefix := substring-before($target, ':')
+
+      let $prefixMap := map:merge(for $p in $currentWork//tei:prefixDef return map (: what is this ? no prefixDef in the work ! :)
+                                    {   $p/@ident/string() : map {
+                                            "matchPattern" :        $p/@matchPattern/string(),
+                                            "replacementPattern" : $p/@replacementPattern/string()
+                                        }
+                                    }
+                        )
+                        
+                         return (string-length($targetPrefix) gt 0)
+      
+};    
+
 
 
 (: ####====---- TEI NODE TYPESWITCH FUNCTIONS ----====#### :)
@@ -1742,8 +1755,10 @@ declare function html:ref($node as element(tei:ref), $mode as xs:string) {
             if ($node/@type eq 'note-anchor') then
                 () (: omit note references :)
             else if ($node/ancestor::tei:text and $node/@target) then (:added ancestor::tei:body to avoid entering a loop for just the ref target in the header, 11.04.2024 :)(: Changed ...body/@target to ...test and $node/@target in order not to skip all because lemmata have refs in front, and neither text nor body do normally have target attributes, AW 16.04.2024 :)
-                let $resolvedUri := if ($node/@target/string() eq "" ) then "No target for this ref." else html:resolveURI($node, $node/@target/string()) (: TODO: verify that this works :) (: Bug here with W0063, a RW, 11.04.2024 :)
-                return html:transformToLink($node, $resolvedUri)
+         (:   let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] New Ref processed: " || string($node/@target)) else () :)
+  let $resolvedUri := if ($node/@target/string() eq "" ) then "No target for this ref." else html:resolveURI($node, $node/@target/string()) (: TODO: verify that this works :) (: Bug here with W0063, a RW, 11.04.2024 :)
+  (:let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Resolved URI: " ||$resolvedUri) else ()  :)
+               return html:transformToLink($node, $resolvedUri)
             else
                 html:passthru($node, $mode)
 
