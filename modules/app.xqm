@@ -470,11 +470,11 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
 
 declare function app:loadWRKfacets ($node as node(), $model as map (*), $lang as xs:string?) {
  if ($lang = 'de') then
-    doc($config:data-root || "/" || 'works_de.xml')/sal/text()
+    serialize(json-doc($config:html-root || "/" || 'works_de.json'), map {"method":"json", "media-type":"text/plain"})
  else  if ($lang = 'en') then
-    doc($config:data-root || "/" || 'works_en.xml')/sal/text()
+    serialize(json-doc($config:html-root || "/" || 'works_en.json'), map {"method":"json", "media-type":"text/plain"})
  else
-    doc($config:data-root || "/" || 'works_es.xml')/sal/text()
+    serialize(json-doc($config:html-root || "/" || 'works_es.json'), map {"method":"json", "media-type":"text/plain"})
 };
 
 
