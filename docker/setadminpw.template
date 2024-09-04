@@ -1,0 +1,2 @@
+(: Change password for admin :)
+sm:passwd('admin','123123')
