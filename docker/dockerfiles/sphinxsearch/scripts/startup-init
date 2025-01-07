@@ -1,0 +1,26 @@
+#!/sbin/openrc-run
+
+start() {
+  echo "   - Copying configuration files to /etc/sphinx ..."
+  for file in /tmp/sphinx/*; do
+    test -f /etc/sphinx/$(basename $file) || cp -R /tmp/sphinx/$(basename $file) /etc/sphinx/
+  done
+  echo "       Done."
+  chown -R sphinx:sphinx /var/lib/sphinx
+
+  echo "   - Copying configuration files to /opt/opensphinxsearch ..."
+  for file in /tmp/opensphinxsearch/*; do
+    test -f /opt/opensphinxsearch/$(basename $file) || cp -R /tmp/opensphinxsearch/$(basename $file) /opt/opensphinxsearch/
+  done
+  echo "       Done."
+
+  echo "   - Copying dummy xml file(s) to /var/data/existdb/data/export ..."
+  for file in /tmp/salamancadata/*; do
+    test -f /var/data/existdb/data/export/$(basename $file) || cp -R /tmp/salamancadata/$(basename $file) /var/data/existdb/data/export/
+  done
+  echo "       Done."
+
+  echo "   - Run the indexer once (don't rotate indices, searchd is not running yet) ..."
+  indexer --all --quiet > /var/log/dockerservices/indexer.log 2>&1
+  echo "       Done."
+}

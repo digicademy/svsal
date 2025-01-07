@@ -1,0 +1,1149 @@
+{
+	"admin": {
+		"disabled": false,
+		"listen": "0.0.0.0:2019"
+	},
+	"logging": {
+		"logs": {
+			"default": {
+				"writer": {
+					"filename": "/var/log/caddy/access.log",
+					"output": "file"
+				},
+				"encoder": {
+					"format": "console"
+				},
+				"level": "DEBUG"
+			}
+		}
+	},
+	"apps": {
+		"http": {
+			"servers": {
+				"srv0": {
+					"listen": [
+						":80",
+						":443"
+					],
+					"routes": [
+						{
+							"match": [ { "host": [ "search.salamanca.school" ] } ],
+							"handle": [
+								{
+									"handler": "subroute",
+									"routes": [
+										{
+											"handle": [
+												{
+													"handler": "static_response",
+													"headers": {
+														"Location": [
+															"{http.request.uri.path}/"
+														]
+													},
+													"status_code": 308
+												}
+											],
+											"match": [
+												{
+													"file": {
+														"try_files": [
+															"{http.request.uri.path}/index.php"
+														]
+													},
+													"not": [
+														{
+															"path": [
+																"*/"
+															]
+														}
+													]
+												}
+											]
+										},
+										{
+											"handle": [
+												{
+													"handler": "rewrite",
+													"uri": "{http.matchers.file.relative}"
+												}
+											],
+											"match": [
+												{
+													"file": {
+														"split_path": [
+															".php"
+														],
+														"try_files": [
+															"{http.request.uri.path}",
+															"{http.request.uri.path}/index.php",
+															"index.php"
+														]
+													}
+												}
+											]
+										},
+										{
+											"handle": [
+												{
+													"handler": "reverse_proxy",
+													"headers": {
+														"request": {
+															"set": {
+																"Host": [
+																	"{http.reverse_proxy.upstream.host}"
+																]
+															}
+														}
+													},
+													"upstreams": [
+														{
+															"dial": "sphinxsearch:80"
+														}
+													]
+												}
+											]
+										}
+									]
+								}
+							],
+							"terminal": true
+						},
+						{
+							"match": [ { "host": [ "blog.salamanca.school" ] } ],
+							"handle": [
+								{
+									"handler": "subroute",
+									"routes": [
+										{
+											"handle": [
+												{
+													"handler": "static_response",
+													"headers": {
+														"Location": [
+															"{http.request.orig_uri.path}/"
+														]
+													},
+													"status_code": 308
+												}
+											],
+											"match": [
+												{
+													"file": {
+														"try_files": [
+															"{http.request.uri.path}/index.php"
+														]
+													},
+													"not": [
+														{
+															"path": [
+																"*/"
+															]
+														}
+													]
+												}
+											]
+										},
+										{
+											"handle": [
+												{
+													"handler": "rewrite",
+													"uri": "{http.matchers.file.relative}"
+												}
+											],
+											"match": [
+												{
+													"file": {
+														"split_path": [
+															".php"
+														],
+														"try_files": [
+															"{http.request.uri.path}",
+															"{http.request.uri.path}/index.php",
+															"index.php"
+														]
+													}
+												}
+											]
+										},
+										{
+											"handle": [
+												{
+													"handler": "reverse_proxy",
+													"headers": {
+														"request": {
+															"set": {
+																"Host": [
+																	"{http.reverse_proxy.upstream.host}"
+																]
+															}
+														}
+													},
+													"upstreams": [
+														{
+															"dial": "wordpress"
+														}
+													]
+												}
+											]
+										}
+									]
+								}
+							],
+							"terminal": true
+						},
+						{
+							"match": [ { "host": [ "salamanca.school" ] } ],
+							"handle": [
+								{
+									"handler": "subroute",
+									"routes": [
+										{
+											"handle": [
+												{
+													"handler": "static_response",
+													"headers":
+														{
+															"Location": [ "https://www.salamanca.school{http.request.uri}" ]
+														},
+													"status_code": 302
+												}
+											]
+										}
+									]
+								}
+							],
+							"terminal":true
+						},
+						{
+							"match": [ { "host": [
+										"c100-101.cloud.gwdg.de",
+										"salamanca.school",
+										"www.salamanca.school",
+										"localhost"
+									] } ],
+							"handle": [
+								{
+									"handler": "subroute",
+									"routes": [
+										{
+											"handle": [
+												{
+													"defaults": [
+														"salamanca.school"
+													],
+													"destinations": [
+														"{mydomain}"
+													],
+													"handler": "map",
+													"source": "1"
+												},
+												{
+													"handler": "vars",
+													"root": "/var/data/caddy/site"
+												},
+												{
+													"handler": "headers",
+													"response": {
+														"set": {
+															"Access-Control-Allow-Headers": [
+																"*"
+															],
+															"Access-Control-Allow-Methods": [
+																"*"
+															]
+														}
+													}
+												}
+											]
+										},
+
+										{
+											"handle": [
+												{
+													"handler": "rewrite",
+													"strip_path_prefix": "/de"
+												},
+												{
+													"handler": "rewrite",
+													"strip_path_prefix": "/en"
+												},
+												{
+													"handler": "rewrite",
+													"strip_path_prefix": "/es"
+												}
+											]
+										},
+
+										{
+											"match": [
+												{
+													"path": [ "/workDetails.html" ]
+												}
+											],
+											"handle": [
+												{
+													"handler": "map",
+													"source": "{http.request.uri.query.wid}",
+													"destinations": [ "{id}" ],
+													"mappings": [
+														{
+															"input_regexp": "([^_]+)_[vV][oO][lL]0*([1-9]+0*)$",
+															"outputs": [ "${1}:vol${2}" ]
+														},
+														{
+															"input_regexp": "([^_]+)",
+															"outputs": [ "${1}" ]
+														}
+													]
+												},
+												{
+													"handler": "static_response",
+													"headers": {
+														"Location": [ "https://id.{mydomain}/texts/{id}?mode=details" ]
+													},
+													"status_code": 301
+												}
+											]
+										},
+
+										{
+											"handle": [
+												{
+													"handler": "rewrite",
+													"uri": "{http.matchers.file.relative}"
+												}
+											],
+											"match": [
+												{
+													"file": {
+														"try_files": [
+															"{http.request.uri.path}.html",
+															"{http.request.uri.path}"
+														]
+													}
+												}
+											]
+										},
+										{
+											"handle": [
+												{
+													"encodings": {
+														"gzip": {},
+														"zstd": {}
+													},
+													"handler": "encode",
+													"prefer": [
+														"zstd",
+														"gzip"
+													]
+												},
+												{
+													"handler": "push"
+												},
+												{
+													"handler": "templates",
+													"mime_types": [
+															"text/plain",
+															"text/html",
+															"text/markdown",
+															"text/xml",
+															"application/xml",
+															"application/json"
+													]
+												},
+												{
+													"handler": "file_server",
+													"hide": [
+														"./Caddyfile"
+													]
+												}
+											]
+										}
+									]
+								}
+							],
+							"terminal": true
+						},
+						{
+							"match": [ { "host": [ "files.salamanca.school" ] } ],
+							"handle": [
+								{
+									"encodings": {
+										"gzip": {},
+										"zstd": {}
+									},
+									"handler": "encode",
+									"prefer": [
+										"zstd",
+										"gzip"
+									]
+								},
+								{
+									"handler": "push"
+								},
+								{
+									"handler": "templates",
+									"mime_types": [
+											"text/plain",
+											"text/html",
+											"text/markdown",
+											"text/xml",
+											"application/xml",
+											"application/json"
+									]
+								},
+								{
+									"handler": "file_server",
+									"root": "/var/data/caddy/site/resources/files",
+									"hide": [
+										"./Caddyfile"
+									]
+								},
+								{
+									"handler": "headers",
+									"response": {
+										"set": {
+											"Access-Control-Allow-Headers": [
+												"*"
+											],
+											"Access-Control-Allow-Methods": [
+												"*"
+											]
+										}
+									}
+								}
+							],
+							"terminal": true
+						},
+						{
+							"match": [ { "host": [ "api.salamanca.school" ] } ],
+							"handle": [
+								{
+									"handler": "subroute",
+									"routes": [
+										{
+											"handle": [
+												{
+													"handler": "headers",
+													"response": {
+														"set": {
+															"Access-Control-Allow-Headers": [
+																"*"
+															],
+															"Access-Control-Allow-Methods": [
+																"*"
+															]
+														}
+													}
+												}
+											]
+										},
+										{
+											"group": "group12",
+											"handle": [
+												{
+													"handler": "rewrite",
+													"uri": "/exist/restxq{http.request.uri}"
+												}
+											]
+										},
+										{
+											"handle": [
+												{
+													"encodings": {
+														"gzip": {},
+														"zstd": {}
+													},
+													"handler": "encode",
+													"prefer": [
+														"zstd",
+														"gzip"
+													]
+												},
+												{
+													"handler": "push"
+												},
+												{
+													"handler": "reverse_proxy",
+													"headers": {
+														"response": {
+															"set": {
+																"Access-Control-Allow-Headers": [
+																	"*"
+																],
+																"Access-Control-Allow-Methods": [
+																	"*"
+																],
+																"Access-Control-Allow-Origin": [
+																	"*"
+																]
+															}
+														}
+													},
+													"upstreams": [
+														{
+															"dial": "existdb:8080"
+														}
+													]
+												}
+											]
+										}
+									]
+								}
+							],
+							"terminal": true
+						},
+						{
+							"match": [ { "host": [ "id.salamanca.school" ] } ],
+							"handle": [
+								{
+									"handler": "subroute",
+									"routes": [
+										{
+											"handle": [
+												{
+													"handler": "map",
+													"source": "1",
+													"destinations": [ "{mydomain}" ],
+													"defaults": [ "salamanca.school" ]
+												},
+												{
+													"handler": "map",
+													"source": "{http.request.uri.query.mode}",
+													"destinations": [ "{full_path}" ],
+													"mappings": [
+														{
+															"input": "details",
+															"outputs": [ "{http.request.uri.path}_details" ]
+														}
+													],
+													"defaults": [ "{http.request.uri.path}" ]
+												},
+												{
+ 													"@id": "routing_map",
+													"handler": "map",
+													"source": "{full_path}",
+													"destinations": [ "{myfile}", "{myhash}" ]
+												},
+												{
+													"handler": "headers",
+													"response": {
+														"set": {
+															"Access-Control-Allow-Headers": [
+																"*"
+															],
+															"Access-Control-Allow-Methods": [
+																"*"
+															],
+															"Access-Control-Allow-Origin": [
+																"*"
+															]
+														}
+													}
+												}
+											]
+										},
+										{
+											"group": "group13",
+											"match": [
+												{
+													"conneg":
+														{
+															"force_type_query_string": "format",
+															"match_types": [ "text/html" ]
+														}
+												}
+											],
+											"handle": [
+												{
+													"handler": "subroute",
+													"routes": [
+														{
+															"match": [
+																{
+																	"expression": "query({'q': '*'})",
+																	"vars": { "{myhash}": [ "yes" ] },
+																	"path": [
+																		"/texts/*",
+																		"/workingpapers/*",
+																		"/lemmata/*"
+																	]
+																}
+															],
+															"handle": [
+																{
+																	"handler": "static_response",
+																	"headers": {
+																		"Location": [
+																			"https://www.{mydomain}/data/{myfile}"
+																		]
+																	},
+																	"status_code": 302
+																}
+															]
+														},
+														{
+															"match": [
+																{
+																	"expression": "query({'q': '*'})",
+																	"path": [
+																		"/texts/*",
+																		"/workingpapers/*",
+																		"/lemmata/*"
+																	]
+																}
+															],
+															"handle": [
+																{
+																	"handler": "static_response",
+																	"headers": {
+																		"Location": [
+																			"https://www.{mydomain}/data/{myfile}?{http.request.uri.query}{myhash}"
+																		]
+																	},
+																	"status_code": 302
+																}
+															]
+														},
+														{
+															"match": [
+																{
+																	"vars": { "{myhash}": [ "yes" ] },
+																	"path": [
+																		"/texts/*",
+																		"/workingpapers/*",
+																		"/lemmata/*"
+																	]
+																}
+															],
+															"handle": [
+																{
+																	"handler": "static_response",
+																	"headers": {
+																		"Location": [
+																			"https://www.{mydomain}/data/{myfile}"
+																		]
+																	},
+																	"status_code": 302
+																}
+															]
+														},
+														{
+															"match": [
+																{
+																	"path": [
+																		"/texts/*",
+																		"/workingpapers/*",
+																		"/lemmata/*"
+																	]
+																}
+															],
+															"handle": [
+																{
+																	"handler": "static_response",
+																	"headers": {
+																		"Location": [
+																			"https://www.{mydomain}/data/{myfile}{myhash}"
+																		]
+																	},
+																	"status_code": 302
+																}
+															]
+														}
+													]
+												}
+											]
+										},
+										{
+											"group": "group13",
+											"match": [ { "not": [ { "path_regexp": { "pattern": ":" } } ] } ],
+											"handle": [
+												{
+													"handler": "subroute",
+													"routes": [
+														{
+															"group": "group7",
+															"match": [
+																{
+																	"conneg":
+																		{
+																			"force_type_query_string": "format",
+																			"match_types": [ "application/tei+xml" ]
+																		}
+																}
+															],
+															"handle": [
+																{
+																	"handler": "subroute",
+																	"routes": [
+																		{
+																			"match": [
+																				{
+																					"path_regexp":
+																						{
+																							"name": "wid",
+																							"pattern": "/texts/(W[^:]+)"
+																						}
+																				}
+																			],
+																			"handle": [
+																				{
+																					"handler": "static_response",
+																					"headers": { "Location": [ "https://www.{mydomain}/data/{http.regexp.wid.1}/{http.regexp.wid.1}.xml" ] },
+																					"status_code": 302
+																				}
+																			]
+																		}
+																	]
+																}
+															]
+														},
+														{
+															"group": "group7",
+															"match": [
+																{
+																	"conneg":
+																		{
+																			"force_type_query_string": "format",
+																			"match_types": [ "application/rdf+xml" ]
+																		}
+																}
+															],
+															"handle": [
+																{
+																	"handler": "subroute",
+																	"routes": [
+																		{
+																			"match": [
+																				{
+																					"path_regexp":
+																						{
+																							"name": "wid",
+																							"pattern": "/texts/(W[^:]+)"
+																						}
+																				}
+																			],
+																			"handle": [
+																				{
+																					"handler": "static_response",
+																					"headers": { "Location": [ "https://www.{mydomain}/data/{http.regexp.wid.1}/{http.regexp.wid.1}.rdf" ] },
+																					"status_code": 302
+																				}
+																			]
+																		}
+																	]
+																}
+															]
+														},
+														{
+															"group": "group7",
+															"match": [
+																{
+																	"conneg":
+																		{
+																			"force_type_query_string": "format",
+																			"match_types": [ "application/pdf" ]
+																		}
+																}
+															],
+															"handle": [
+																{
+																	"handler": "subroute",
+																	"routes": [
+																		{
+																			"match": [ { "path_regexp": { "name": "wid", "pattern": "/texts/(W[^:]+)" } } ],
+																			"handle": [
+																				{
+																					"handler": "static_response",
+																					"headers": { "Location": [ "https://www.{mydomain}/data/{http.regexp.wid.1}/{http.regexp.wid.1}.pdf" ] },
+																					"status_code": 302
+																				}
+																			]
+																		}
+																	]
+																}
+															]
+														},
+														{
+															"group": "group7",
+															"match": [
+																{
+																	"conneg":
+																		{
+																			"force_type_query_string": "format",
+																			"match_types": [ "text/plain" ]
+																		},
+																    "query": { "mode": [ "orig" ] }
+																}
+															],
+															"handle": [
+																{
+																	"handler": "subroute",
+																	"routes": [
+																		{
+																			"match": [ { "path_regexp": { "name": "wid", "pattern": "/texts/(W[^:]+)" } } ],
+																			"handle": [
+																				{
+																					"handler": "static_response",
+																					"headers": { "Location": [ "https://www.{mydomain}/data/{http.regexp.wid.1}/text/{http.regexp.wid.1}_orig.txt" ] },
+																					"status_code": 302
+																				}
+																			]
+																		}
+																	]
+																}
+															]
+														},
+														{
+															"group": "group7",
+															"match": [
+																{
+																	"conneg":
+																		{
+																			"force_type_query_string": "format",
+																			"match_types": [ "text/plain" ]
+																		},
+																    "query": { "mode": [ "edit" ] }
+																}
+															],
+															"handle": [
+																{
+																	"handler": "subroute",
+																	"routes": [
+																		{
+																			"match": [ { "path_regexp": { "name": "wid", "pattern": "/texts/(W[^:]+)" } } ],
+																			"handle": [
+																				{
+																					"handler": "static_response",
+																					"headers": { "Location": [ "https://www.{mydomain}/data/{http.regexp.wid.1}/text/{http.regexp.wid.1}_edit.txt" ] },
+																					"status_code": 302
+																				}
+																			]
+																		}
+																	]
+																}
+															]
+														},
+														{
+															"group": "group7",
+															"match": [
+																{
+																	"conneg":
+																		{
+																			"force_type_query_string": "format",
+																			"match_types": [ "text/plain" ]
+																		}
+																}
+															],
+															"handle": [
+																{
+																	"handler": "subroute",
+																	"routes": [
+																		{
+																			"match": [ { "path_regexp": { "name": "wid", "pattern": "/texts/(W[^:]+)" } } ],
+																			"handle": [
+																				{
+																					"handler": "static_response",
+																					"headers": { "Location": [ "https://www.{mydomain}/data/{http.regexp.wid.1}/text/{http.regexp.wid.1}_edit.txt" ] },
+																					"status_code": 302
+																				}
+																			]
+																		}
+																	]
+																}
+															]
+														}
+													]
+												}
+											]
+										},
+										{
+											"group": "group13",
+											"handle": [
+												{
+													"handler": "subroute",
+													"routes": [
+														{
+															"group": "group9",
+															"handle": [
+																{
+																	"handler": "rewrite",
+																	"uri": "/exist/restxq{http.request.uri}"
+																}
+															]
+														},
+														{
+															"handle": [
+																{
+																	"handler": "reverse_proxy",
+																	"headers": {
+																		"response": {
+																			"set": {
+																				"Access-Control-Allow-Headers": [
+																					"*"
+																				],
+																				"Access-Control-Allow-Methods": [
+																					"*"
+																				],
+																				"Access-Control-Allow-Origin": [
+																					"*"
+																				]
+																			}
+																		}
+																	},
+																	"upstreams": [
+																		{
+																			"dial": "existdb:8080"
+																		}
+																	]
+																}
+															]
+														}
+													]
+												}
+											]
+										}
+									]
+								}
+							],
+							"terminal": true
+						},
+						{
+							"match": [ { "host": [ "facs.salamanca.school" ] } ],
+							"handle": [
+								{
+									"handler": "subroute",
+									"routes": [
+										{
+											"handle": [
+												{
+													"handler": "rewrite",
+													"strip_path_suffix": "/manifest"
+												}
+											]
+										},
+										{
+											"group": "group3",
+											"match": [ { "path": [ "/iiif/presentation/*" ] } ],
+											"handle": [
+												{
+													"handler": "subroute",
+													"routes": [
+														{
+															"handle": [
+																{
+																	"handler": "vars",
+																	"root": "/var/data/caddy/site/data"
+																},
+																{
+																	"handler": "map",
+																	"destinations": [ "{work}", "{volume}" ],
+																	"source": "{http.request.uri.path.file}",
+																	"Defaults": [ "", "" ],
+																	"mappings": [
+																		{
+																			"input_regexp": "(([^_]*)(_[Vv]ol([0-9]+))?)",
+																			"outputs": [ "${2}", "${4}" ]
+																		}
+																	]
+																},
+																{
+																	"handler": "headers",
+																	"response": {
+																		"set": {
+																			"Access-Control-Allow-Origin": [ "*" ],
+																			"Access-Control-Allow-Methods": [ "*" ],
+																			"Access-Control-Allow-Headers": [ "*" ]
+																		}
+																	}
+																}
+															]
+														},
+														{
+															"group": "group0",
+															"handle": [
+																{
+																	"handler": "rewrite",
+																	"uri": "/{work}/{http.request.uri.path.file}"
+																}
+															]
+														},
+														{
+															"handle": [
+																{
+																	"handler": "rewrite",
+																	"uri": "{http.matchers.file.relative}"
+																}
+															],
+															"match": [
+																{
+																	"file": {
+																		"try_files": [
+																			"{http.request.uri.path}.json",
+																			"{http.request.uri.path}"
+																		]
+																	}
+																}
+															]
+														},
+														{
+															"handle": [
+																{
+																	"handler": "file_server",
+																	"hide": [
+																		"./Caddyfile"
+																	]
+																}
+															]
+														}
+													]
+												}
+											]
+										},
+										{
+											"group": "group3",
+											"match": [ { "path": [ "/iiif/image/*" ] } ],
+											"handle": [
+												{
+													"handler": "subroute",
+													"routes": [
+														{
+															"handle": [
+																{
+																	"Defaults": [
+																		"{http.request.uri.path.file}"
+																	],
+																	"destinations": [
+																		"{resource}"
+																	],
+																	"handler": "map",
+																	"mappings": [
+																		{
+																			"input_regexp": "/iiif/image/(.*)",
+																			"outputs": [
+																				"${1}"
+																			]
+																		}
+																	],
+																	"source": "{http.request.uri.path}"
+																}
+															]
+														},
+														{
+															"group": "group1",
+															"handle": [
+																{
+																	"handler": "rewrite",
+																	"uri": "/digilib/Scaler/IIIF/svsal!{resource}"
+																}
+															]
+														},
+														{
+															"handle": [
+																{
+																	"handler": "reverse_proxy",
+																	"headers": {
+																		"request": {
+																			"set": {
+																				"Host": [
+																					"{http.reverse_proxy.upstream.host}"
+																				]
+																			}
+																		}
+																	},
+																	"transport": {
+																		"protocol": "http",
+																		"tls": {}
+																	},
+																	"upstreams": [
+																		{
+																			"dial": "c099-013.cloud.gwdg.de:443"
+																		}
+																	]
+																}
+															]
+														}
+													]
+												}
+											]
+										},
+										{
+											"group": "group3",
+											"handle": [
+												{
+													"handler": "subroute",
+													"routes": [
+														{
+															"handle": [
+																{
+																	"handler": "static_response",
+																	"status_code": 302,
+																	"headers": {
+																		"Location": [ "https://c099-013.cloud.gwdg.de/svsal{http.request.uri}" ]
+																	}
+																}
+															]
+														}
+													]
+												}
+											]
+										},
+										{
+											"handle": [
+												{
+													"body": "Not Found",
+													"handler": "static_response",
+													"status_code": 404
+												}
+											]
+										}
+									]
+								}
+							],
+							"terminal": true
+						}
+
+					],
+					"tls_connection_policies": [
+						{
+							"match": {
+								"sni": [
+									"api.salamanca.school",
+									"blog.salamanca.school",
+									"facs.salamanca.school",
+									"files.salamanca.school",
+									"id.salamanca.school",
+									"search.salamanca.school",
+									"www.salamanca.school"
+								]
+							},
+							"certificate_selection": {
+								"any_tag": [
+									"cert0"
+								]
+							}
+						},
+						{}
+					],
+					"automatic_https": {
+						"disable":true
+					}
+				}
+			}
+		},
+		"tls": {
+			"certificates": {
+				"load_files": [
+					{
+						"certificate": "/root/certs/_wildcard.salamanca.school.pem",
+						"key": "/root/certs/_wildcard.salamanca.school-key.pem",
+						"tags": [
+							"cert0"
+						]
+					}
+				]
+			}
+		}
+	}
+}

@@ -17,3 +17,7 @@ yarn-error.log*
 *.bak
 /build
 /dist
+dockerfiles/any23/bak/**
+dockerfiles/caddy/bak/**
+dockerfiles/sphinxsearch/bak/**
+dockerfiles/svsal-exist/bak/**

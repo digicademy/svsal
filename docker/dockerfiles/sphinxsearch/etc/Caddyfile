@@ -1,0 +1,29 @@
+{
+	debug
+	log {
+		output file /var/log/dockerservices/caddy.log
+		format console
+	}
+}
+:80 {
+	log {
+		output file /var/log/dockerservices/caddy.log
+		format console
+	}
+	# Compress responses according to Accept-Encoding headers
+	encode zstd gzip
+
+	# Enable http2 pushing
+	push
+
+	# enable CORS headers
+	header {
+		Access-Control-Allow-Origin *
+		Access-Control-Allow-Methods *
+		Access-Control-Allow-Headers *
+	}
+
+	root * /opt/opensphinxsearch/public
+	php_fastcgi unix//run/php-fpm7/php-fpm.sock
+	file_server
+}

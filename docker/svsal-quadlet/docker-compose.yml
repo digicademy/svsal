@@ -1,0 +1,123 @@
+# Example Salamanca docker compose setup
+version: '2'
+
+# x-common-variables: &salamanca_variables
+# This can be run with
+#
+#  podman-compose up
+
+services:
+  caddy:
+    image: ghcr.io/digicademy/svsal/svsal-caddy:2.8.4rc3
+    container_name: caddy
+    restart: unless-stopped
+    environment:
+      MODE: "devel" # set to "prod" for production
+    ports:
+      - "8888:80"
+      - "8444:443"
+      - "8444:443/udp"
+    volumes:
+      # - ./caddy/etc:/etc/caddy
+      # - ./caddy/certs:/root/certs
+      - logs:/var/log/caddy
+      - website:/var/data/caddy/site                  # read-only
+      - existexport:/var/data/existdb/data/export:ro  # read-only
+    networks:
+      salamanca-network:
+        aliases:
+          - www.salamanca.school
+          - id.salamanca.school
+
+  existdb:
+    # podman run --rm -it -p 8080:8080 -p 8443:8443 --name=exist
+    # -v ./existexport:/exist/data/export -v ./exist/log:/exist/logs
+    # ghcr.io/digicademy/svsal/svsal-exist:3.0rc2
+    image: ghcr.io/digicademy/svsal/svsal-exist:3.0rc2
+    container_name: existdb
+    restart: unless-stopped
+    # environment:
+      # ENV JAVA_TOOL_OPTIONS \
+      #   -Dfile.encoding=UTF8 \
+      #   -Dsun.jnu.encoding=UTF-8 \
+      #   -Djava.awt.headless=true \
+      #   -Dorg.exist.db-connection.cacheSize=${CACHE_MEM:-256}M \
+      #   -Dorg.exist.db-connection.pool.max=${MAX_BROKER:-20} \
+      #   -Dlog4j.configurationFile=/exist/etc/log4j2.xml \
+      #   -Dexist.home=/exist \
+      #   -Dexist.configurationFile=/exist/etc/conf.xml \
+      #   -Dexist.jetty.config=/exist/etc/jetty/standard.enabled-jetty-configs \
+      #   -Djetty.home=/exist \
+      #   -XX:+UseG1GC \
+      #   -XX:+UseStringDeduplication \
+      #   -XX:+UseContainerSupport \
+      #   -XX:MaxRAMPercentage=${JVM_MAX_RAM_PERCENTAGE:-75.0} \
+      #   -XX:+ExitOnOutOfMemoryError \
+      #   -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+      # <<: *salamanca_variables
+      # EXIST_HOME: "${ EXIST_HOME }"
+      # EXIST_DATA_DIR: "${ EXIST_DATA_DIR }"
+      # EXIST_CONFIG_DIR: "${ EXIST_CONFIG_DIR }"
+      # EXIST_USER: "${ EXIST_USER }"
+      # EXIST_PASS: "${ EXIST_PASS }"
+      # JAVA_TOOL_OPTIONS: '-Xmx10g -Xms10g -XX:MaxRAMPercentage=75.0'
+    ports:
+      - 8080:8080
+      - 8443:8443
+    volumes:
+      # - ./exist/etc:/exist/config
+      - logs:/exist/logs
+      - existexport:/exist/data/export
+    networks:
+      - salamanca-network
+
+  sphinxsearch:
+    image: ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc1
+    container_name: sphinxsearch
+    restart: unless-stopped
+    mem_limit: 512m # match indexer.value from sphinx.conf
+    ports:
+      - 8081:80
+      - 9312:9312
+      - 9306:9306
+    volumes:
+      # - ./sphinx/etc:/etc/sphinx                        # directory with sphinxsearch configuration files
+      # - ./sphinx/opensphinxsearch:/opt/opensphinxsearch # directory with OpenSphinxSearch
+      - sphinx-logs:/var/log/dockerservices             # directory with log files
+      - sphinx-data:/var/lib/sphinx/data                # directory where sphinxsearch will store index data
+      - existexport:/var/data/existdb/data/export       # data directory
+    networks:
+      salamanca-network:
+        aliases:
+          - search.salamanca.school
+
+  any23:
+    image: ghcr.io/digicademy/svsal/svsal-any23:2.3rc2
+    container_name: any23
+    restart: unless-stopped
+    ports:
+      - 8082:8082
+    networks:
+      - salamanca-network
+
+volumes:
+  sphinx-data:
+    driver: local
+    name: sphinx-data
+  existexport:
+    driver: local
+    name: existexport
+  website:
+    driver: local
+    name: website
+  logs:
+    driver: local
+    name: logs
+  sphinx-logs:
+    driver: local
+    name: sphinx-logs
+
+networks:
+  salamanca-network:
+    driver: bridge
+    name: salamanca-network
