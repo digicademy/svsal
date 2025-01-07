@@ -53,7 +53,7 @@ declare variable $net:servedContentTypes        := (
 declare variable $net:requestedContentTypes     := tokenize(request:get-header('Accept'), '[, ]+');
 
 declare variable $net:errorhandler := 
-    if (($config:instanceMode = "staging") or ($config:debug = "trace")) then ()
+    if (($config:instanceMode = ("staging", "testing", "dockernet")) or ($config:debug = "trace")) then ()
     else
         <error-handler>
             <forward url="{$config:app-root}/en/error-page.html" method="get"/>

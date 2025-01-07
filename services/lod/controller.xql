@@ -117,7 +117,7 @@ let $debug2 :=  if ($config:debug = "trace") then
 (: TODO: reflect variables defined above... :)
 
 let $errorhandler := 
-    if (($config:instanceMode = "staging") or ($config:debug = "trace")) then ()
+    if (($config:instanceMode = ("staging", "testing", "dockernet")) or ($config:debug = "trace")) then ()
     else
         <error-handler>
             <forward url="{$exist:controller}/en/error-page.html" method="get"/>

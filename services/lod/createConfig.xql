@@ -120,22 +120,32 @@ let $collection :=
             <resource uri="{{//tei:listPerson}}"/>
         </collection>
     else if (starts-with($resourceId, "works.")) then
-        <collection uri="http://www.salamanca.school:8080/exist/apps/salamanca/enhance-tei.xql?wid={substring-after($resourceId, "works.")}">
-            {$workMetadata}
-            <!--<resource uri="{{//(*:front|*:body|*:back)}}"/>-->
-            <resource uri="{{//itei:text[not(descendant::itei:text)]}}"/>
-        </collection>
+        let $uri := if ($config:instanceMode = "dockernet") then 
+                "http://existdb:8080/exist/apps/salamanca/enhance-tei.xql?wid=" || substring-after($resourceId, "works.")
+            else
+                "http://www.salamanca.school:8080/exist/apps/salamanca/enhance-tei.xql?wid=" || substring-after($resourceId, "works.")
+        return
+            <collection uri="{$uri}">
+                {$workMetadata}
+                <!--<resource uri="{{//(*:front|*:body|*:back)}}"/>-->
+                <resource uri="{{//itei:text[not(descendant::itei:text)]}}"/>
+            </collection>
     else if (starts-with($resourceId, 'A')) then
         <collection uri="{$config:tei-authors-root}/{$resourceId}.xml">
             <resource uri="{{//tei:listPerson}}"/>
         </collection>
     else if (starts-with($resourceId, 'W0')) then
-        (: <collection uri="{$config:webserver}/enhance-tei.xql?wid={$resourceId}"> :)
-        <collection uri="http://www.salamanca.school:8080/exist/apps/salamanca/enhance-tei.xql?wid={$resourceId}">
-            {$workMetadata}
-            <!--<resource uri="{{//(*:front|*:body|*:back)}}"/>-->
-            <resource uri="{{//itei:text[not(descendant::itei:text)]}}"/>
-        </collection>
+        let $uri := if ($config:instanceMode = "dockernet") then 
+                "http://existdb:8080/exist/apps/salamanca/enhance-tei.xql?wid=" || $resourceId
+            else
+                "http://www.salamanca.school:8080/exist/apps/salamanca/enhance-tei.xql?wid=" || $resourceId
+        return
+            (: <collection uri="{$config:webserver}/enhance-tei.xql?wid={$resourceId}"> :)
+            <collection uri="{$uri}">
+                {$workMetadata}
+                <!--<resource uri="{{//(*:front|*:body|*:back)}}"/>-->
+                <resource uri="{{//itei:text[not(descendant::itei:text)]}}"/>
+            </collection>
     else if (starts-with($resourceId, 'Q')) then
         <collection>
             <dokument>

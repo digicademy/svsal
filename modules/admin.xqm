@@ -2145,6 +2145,10 @@ declare function admin:createRDF($rid as xs:string) {
         $config:webserver || '/xtriples/extract.xql?format=rdf&amp;configuration='
         || $config:webserver || '/xtriples/createConfig.xql?resourceId=' || $rid :)
     let $xtriplesUrl :=
+        if ($config:instanceMode eq "dockernet") then
+           'http://existdb:8080/exist/apps/salamanca/services/lod/extract.xql?format=rdf&amp;configuration='
+        || 'http://existdb:8080/exist/apps/salamanca/services/lod/createConfig.xql?resourceId=' || $rid
+        else
            'http://www.salamanca.school:8080/exist/apps/salamanca/services/lod/extract.xql?format=rdf&amp;configuration='
         || 'http://www.salamanca.school:8080/exist/apps/salamanca/services/lod/createConfig.xql?resourceId=' || $rid
     let $debug := 

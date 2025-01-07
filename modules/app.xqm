@@ -3623,7 +3623,7 @@ declare function app:serverErrorMessage($node as node(), $model as map(*)) as xs
         else if (normalize-space(request:get-attribute('error-message')) ne '') then request:get-attribute('error-message')
         else 'No description found...'
     return
-        if ($config:debug eq 'trace' or $config:instanceMode eq 'testing') then 
+        if ($config:debug eq 'trace' or $config:instanceMode = ("staging", "testing", "dockernet")) then 
             <div class="error-paragraph">
                 <h4 class="error-title">Error message (debugging mode):</h4>
                 <div class="error-paragraph"><span>{' ' || $errorMessage}</span></div>
