@@ -329,7 +329,8 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
                                            'c_hyph_proposed',
                                            'd_hyph_approved',
                                            'e_emended_unenriched',
-                                           'f_enriched'
+                                           'f_enriched',
+                                           'r_reference_work'
                                          )) then "yes"
                 else "no"
             let $wrkLink        :=  $config:idserver || '/texts/' || $wid
@@ -348,6 +349,17 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
        https://id.test.salamanca.school/texts/W0095?mode=details
             let $workDetails    :=  'workdetails.html?wid=' ||  $wid
 :)
+            let $typeWork :=  if ($item/ancestor-or-self::tei:TEI//tei:revisionDesc/@status =
+                                         ( 'a_raw',
+                                           'b_cleared',
+                                           'c_hyph_proposed',
+                                           'd_hyph_approved',
+                                           'e_emended_unenriched',
+                                           'f_enriched', 
+                                           'g_enriched_approved',
+                                           'h_revised'
+                                         )) then "Edited Work"
+                                else "Reference Work"
             let $workDetails    :=  $config:idserver || '/texts/' || $wid || '?mode=details'
             let $DetailsInfo    :=  i18n:process(<i18n:text key="details">Katalogeintrag</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en")
     
@@ -384,7 +396,7 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
                             , $lang, "/db/apps/salamanca/data/i18n", "en")
             let $facetAvailability :=
                 i18n:process(if ($WIPstatus eq 'yes') then <i18n:text key="facsimiles">Facsimiles</i18n:text>
-                                                      else <i18n:text key="fullTextAvailable">Full Text (+ Facsimiles)</i18n:text>
+                                                      else <i18n:text key="fullTextAvailable">Editions</i18n:text> (: when ready: add a section for Reference Work:)
                             , $lang, "/db/apps/salamanca/data/i18n", "en")
             let $completeWork   :=  $item/parent::tei:TEI//tei:text[@xml:id="completeWork"]
             let $volIcon        :=  if ($completeWork/@type='work_multivolume') then 'icon-text' else ()
@@ -421,6 +433,7 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
                                        "WIPstatus" :           $WIPstatus,
                                        "monoMultiUrl" :        $wrkLink,
                                        "workdetails" :         $workDetails,
+                                       "type":                 $typeWork,
                                        "titAttrib" :           $DetailsInfo,
                                        "workImages" :          $workImages,
                                        "facsAttrib" :          $FacsInfo,
@@ -1217,7 +1230,8 @@ declare function app:watermark($node as node(), $model as map(*), $wid as xs:str
                                                            'c_hyph_proposed',
                                                            'd_hyph_approved',
                                                            'e_emended_unenriched',
-                                                           'f_enriched'
+                                                           'f_enriched',
+                                                           'r_reference_work'
                                                           )) then
                             <p class="watermark-wip-text">
                                 <i18n:text key="workInProgress">Work in Progress!</i18n:text>
@@ -1242,7 +1256,8 @@ declare function app:watermark-txtonly($node as node(), $model as map(*), $wid a
                                                            'c_hyph_proposed',
                                                            'd_hyph_approved',
                                                            'e_emended_unenriched',
-                                                           'f_enriched'
+                                                           'f_enriched',
+                                                           'r_reference_work'
                                                           )) then
                             <span><i18n:text key="workInProgress">Work in Progress!</i18n:text></span>
                             (: <span>{i18n:process(<i18n:text key="workInProgress">Work in Progress!</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", session:encode-url(request:get-uri()))}</span> heute geändert :)
@@ -1363,9 +1378,11 @@ declare function app:displaySingleWork($node as node(),
     (: If we have an active query string, highlight the original html fragment accordingly :)
     let $outHTML := 
         if ($qChecked) then 
-            let $highlighted := sphinx:highlight($parametrizedDoc, $qChecked)//item[1]/description
+            let $highlighted := $parametrizedDoc(:sphinx:highlight($parametrizedDoc, $qChecked)//item[1]/description :)
+ 
             return 
-                if ($highlighted) then $highlighted else $parametrizedDoc
+                if ($highlighted) then $highlighted else $parametrizedDoc  (:  problem here with highlight ?  :)
+        (:  :  console:log("I am highlighted:" || $highlighted) :)
         else
             $parametrizedDoc
 
@@ -1403,7 +1420,7 @@ return
 (:
 ~ Recursively inserts concatenated query parameters into non-http links of an HTML fragment.
 :)
-declare %private function app:insertParams($node as node()?, $params as xs:string?) {
+declare (:  %private :)function app:insertParams($node as node()?, $params as xs:string?) {
     typeswitch($node)
         case element(a) return
             element {name($node)} {
@@ -1424,7 +1441,7 @@ declare %private function app:insertParams($node as node()?, $params as xs:strin
             }
         default return $node
 };
-declare %private function app:attrInsertParams($attr as attribute(), $params as xs:string?) {
+declare(:  %private :) function app:attrInsertParams($attr as attribute(), $params as xs:string?) {
     typeswitch($attr)
         case attribute(href) return
             if (not(contains($attr, 'http'))) then
@@ -2726,7 +2743,9 @@ declare function app:guidelines($node as node(), $model as map(*), $lang as xs:s
                                     <param name="exist:stop-on-error" value="yes"/>
                                     <param name="language" value="{$lang}"></param>
                                 </parameters>
-            return transform:transform(doc($config:tei-meta-root || "/works-general.xml")/tei:TEI//tei:div[@xml:id eq $guidelinesId], doc(($config:app-root || "/resources/xsl/guidelines.xsl")), $parameters)
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:          return transform:transform(doc($config:tei-meta-root || "/works-general.xml")/tei:TEI//tei:div[@xml:id eq $guidelinesId], doc(($config:app-root || "/resources/xsl/guidelines.xsl")), $parameters):)
+            return transform:transform(doc($config:tei-meta-root || "/works-general.xml")/id($guidelinesId), doc(($config:app-root || "/resources/xsl/guidelines.xsl")), $parameters)
         else()
 };
 
@@ -3590,7 +3609,9 @@ declare function app:legalDisclaimer ($node as node(), $model as map(*), $lang a
 declare function app:privDecl ($node as node(), $model as map(*), $lang as xs:string?) {
     let $declfile   := doc($config:data-root || "/i18n/privacy_decl.xml")
     let $decltext   := "div-privdecl-de"
-    let $html       := render-app:dispatch($declfile//tei:div[@xml:id = $decltext], "html", ())
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:  let $html       := render-app:dispatch($declfile//tei:div[@xml:id = $decltext], "html", ()):)
+    let $html       := render-app:dispatch($declfile/id($decltext), "html", ())
     return if (count($html)) then
         <div id="privDecl" class="help">
             {$html}
@@ -3601,7 +3622,9 @@ declare function app:privDecl ($node as node(), $model as map(*), $lang as xs:st
 declare function app:imprint ($node as node(), $model as map(*), $lang as xs:string?) {
     let $declfile   := doc($config:data-root || "/i18n/imprint.xml")
     let $decltext   := "div-imprint-de"
-    let $html       := render-app:dispatch($declfile//tei:div[@xml:id = $decltext], "html", ())
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:  let $html       := render-app:dispatch($declfile//tei:div[@xml:id = $decltext], "html", ()):)
+    let $html       := render-app:dispatch($declfile/id($decltext), "html", ())
     return if (count($html)) then
         <div id="imprint" class="help">
             {$html}
@@ -3668,19 +3691,28 @@ declare %templates:wrap function app:participantsBody($node as node(), $model as
     let $tei := doc($config:tei-meta-root || '/projectteam.xml')/tei:TEI
     let $body :=
         if ($id = ('directors', 'team')) then
-            for $p at $i in $tei/tei:text//tei:listPerson[@xml:id eq $id]/tei:person return
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:          for $p at $i in $tei/tei:text//tei:listPerson[@xml:id eq $id]/tei:person return:)
+            for $p at $i in $tei/id($id)/tei:person return
                 app:makeParticipantTeaser($p, $lang, 'multi', $i)
         else if ($id eq 'cooperators') then
-            for $p at $i in $tei/tei:text//tei:listPerson[@xml:id eq $id]/tei:person return
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:          for $p at $i in $tei/tei:text//tei:listPerson[@xml:id eq $id]/tei:person return:)
+            for $p at $i in $tei/id($id)/tei:person return
                 app:makeCooperatorEntry($p, $lang, $i)
         else if ($id = ('advisoryboard', 'former')) then
-            for $p in $tei//tei:listPerson[@xml:id eq $id]/tei:person return
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:          for $p in $tei//tei:listPerson[@xml:id eq $id]/tei:person return:)
+            for $p in $tei/id($id)/tei:person return
                 <div style="font-size:1.1em;">
                     <p>{render-app:dispatch($p, 'participants', $lang)}</p>
                     <br/>
                 </div>
-        else if ($tei//tei:person[@xml:id eq upper-case($id)]) then
-            let $p := $tei//tei:person[@xml:id eq upper-case($id)]
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:      else if ($tei//tei:person[@xml:id eq upper-case($id)]) then:)
+        else if ($tei/id(upper-case($id))) then
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+            let $p := $tei/id(upper-case($id))
             return
                 if ($p) then app:makeParticipantEntry($p, $lang, 'single', ()) else ()
         else (: show everything :)

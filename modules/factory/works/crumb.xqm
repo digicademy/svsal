@@ -29,7 +29,7 @@ This file is responsible for creating the crumbtrails since August 2022.
 The QualityCheck has been improved inside the admin:createCrumbtrails function. 
 
 
-Modifications 27.11.2023: changing the href to be relative and not absolute path, using the code to generate a citation link. 
+Modifications 27.11.2023:  adding "/data/" to the @href, so that it matches the path of the new server. 
 :)
 
 declare function crumb:createCrumbNode($tei as element(tei:TEI)) as map(*) {
@@ -93,7 +93,9 @@ declare function crumb:extractStructure($wid as xs:string, $input as node()*, $x
                         element sal:nodecrumb {
                             attribute type  {local-name($node)}, 
                             attribute xml:id  {$node/@xml:id/string()},
-                            if ($node/@xml:id eq 'completeWork' and $xincludes) then
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:                          if ($node/@xml:id eq 'completeWork' and $xincludes) then:)
+                            if ($node/id('completeWork') and $xincludes) then
                                 attribute xinc {$xincludes}
                             else (),
                             attribute class {index:dispatch($node, 'class')},
@@ -123,8 +125,12 @@ declare function crumb:createSalNode($input as element(sal:crumb)) as element(sa
 
 declare function crumb:constructCrumbtrail($node as element(sal:nodecrumb)) as item()+ {
     let $prefix := 
-        if ($node/sal:citableParent/text() and $node/ancestor::sal:nodecrumb[@xml:id eq $node/sal:citableParent/text()]) then
-            crumb:constructCrumbtrail( $node/ancestor::sal:nodecrumb[@xml:id eq $node/sal:citableParent/text()])
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:      if ($node/sal:citableParent/text() and $node/ancestor::sal:nodecrumb[@xml:id eq $node/sal:citableParent/text()]) then:)
+        if ($node/sal:citableParent/text() and ($node/root()/id($node/sal:citableParent/text()) intersect            $node/ancestor::sal:nodecrumb)) then
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:          crumb:constructCrumbtrail( $node/ancestor::sal:nodecrumb[@xml:id eq $node/sal:citableParent/text()]):)
+ crumb:constructCrumbtrail($node/root()/id($node/sal:citableParent/text()) intersect $node/ancestor::sal:nodecrumb)
         else ()
     let $this := $node/sal:crumbtrail/*
     return
@@ -173,7 +179,9 @@ declare function crumb:constructCiteID($node as element(sal:nodecrumb)) as xs:st
     let $prefix := 
 (:        if ($node/sal:citableParent/text() and $node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()]) then:)
         if ($node/@citableParent/text()) then
-            crumb:constructCiteID($node/ancestor::sal:nodecrumb[@xml:id eq $node/@citableParent/text()])
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:          crumb:constructCiteID($node/ancestor::sal:nodecrumb[@xml:id eq $node/@citableParent/text()]):)
+            crumb:constructCiteID($node/root()/id($node/@citableParent/text()) intersect $node/ancestor::sal:nodecrumb)
         else ()
     let $this := 
         if ($node/sal:cit) then

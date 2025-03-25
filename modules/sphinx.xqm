@@ -112,7 +112,7 @@ declare %public
     %templates:wrap
     %templates:default ("field",  "everything")
     %templates:default ("offset", "0")
-    %templates:default ("limit",  "10")
+    %templates:default ("limit",  "10") (: changing the limit to be able to sort ? :)
 function sphinx:search ($context as node()*, $model as map(*), $q as xs:string?, $field as xs:string, $offset as xs:integer, $limit as xs:integer) {
     if ($q) then
         let $searchRequestHeaders   := <headers></headers>
@@ -728,6 +728,10 @@ declare function sphinx:excerpts ($documents as node()*, $words as xs:string) as
     :)
 declare function sphinx:highlight($document as node()?, $words as xs:string) as node()* {
     let $endpoint   := concat($config:sphinxRESTURL, "/excerpts")
+    (: let $documentRetrieved := sphinx:loadHTMLFragment($wid, $fragId) :)
+(: TODO :
+- write a function to load not the snippets but the corresponding HTML fragment. 
+- rest should go as normal. :)
     let $request    := 
         <hc:request method="post" http-version="1.0">
             <hc:multipart media-type="multipart/form-data" boundary="xyzBouNDarYxyz">
@@ -895,10 +899,14 @@ declare function sphinx:help ($node as node(), $model as map(*), $lang as xs:str
         if ($lang = "de") then "div_Suchhilfe_de"
         else if ($lang = "es") then "div_searchHelp_es"
         else "div_searchHelp_en"
-    let $html       := render-app:dispatch($helpfile//tei:div[@xml:id eq $helptext], "html", ())
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:  let $html       := render-app:dispatch($helpfile//tei:div[@xml:id eq $helptext], "html", ()):)
+    let $html       := render-app:dispatch($helpfile/id($helptext), "html", ())
     return if (count($html)) then
         <div id="help" class="help">
-            {sphinx:print-sectionsHelp($helpfile//tei:div[@xml:id eq $helptext]/tei:div, true())}
+            <!-- Changed to improve performance on 2025-03-24, A.W.                               -->
+<!--        {sphinx:print-sectionsHelp($helpfile//tei:div[@xml:id eq $helptext]/tei:div, true())} -->
+            {sphinx:print-sectionsHelp($helpfile/id($helptext)/tei:div, true())}
             {$html}
         </div>
     else ()

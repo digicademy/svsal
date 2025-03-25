@@ -129,7 +129,9 @@ declare function export:WRKgetTeiPassage($wid as xs:string, $citeID as xs:string
     return
         if ($tei) then
             let $id := doc($indexPath)//sal:node[@citeID eq $citeID]/@n/string()
-            let $node := $tei//*[@xml:id eq $id]
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:          let $node := $tei//*[@xml:id eq $id]:)
+            let $node := $tei/id($id)
             let $wrappedNode := local:wrapInAncestorNode($node, $node)
             let $teiHeader := export:WRKgetTeiHeader($wid, 'passage', $citeID)
             return

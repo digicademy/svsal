@@ -111,8 +111,12 @@ declare %templates:wrap
             case 'former' return
                 <i18n:text key="projectFormer">Former Team Members</i18n:text>
             default return 
-                if (doc-available($teiPath) and doc($teiPath)//tei:person[@xml:id eq upper-case($id)]) then
-                    let $name := doc($teiPath)//tei:person[@xml:id eq upper-case($id)]/tei:persName/tei:name
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:              if (doc-available($teiPath) and doc($teiPath)//tei:person[@xml:id eq upper-case($id)]) then:)
+                if (doc-available($teiPath) and doc($teiPath)/id(upper-case($id))/self::tei:person) then
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:                  let $name := doc($teiPath)//tei:person[@xml:id eq upper-case($id)]/tei:persName/tei:name:)
+                    let $name := doc($teiPath)/id(upper-case($id))/self::tei:person/tei:persName/tei:name
                     return string($name)
                 else 
                     <i18n:text key="projectTeamConsultants">Project Team and Consultants</i18n:text>

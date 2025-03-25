@@ -192,7 +192,7 @@ declare function sutil:convertVolumeID($volId as xs:string) as xs:string {
             case 'H' return '08'
             case 'I' return '09'
             case 'J' return '10'
-           case 'K' return '11'  (:for our best friend, la siete partidas ^^ :)
+            case 'K' return '11'  (:for our best friend, la siete partidas ^^ :)
             default return error(xs:QName('sutil:convertVolumeID'), 'Error: volume number not supported')
     return $workId || $volInfix || $volN
 };
@@ -349,7 +349,9 @@ declare function sutil:getTeiNodeFromCiteID($workId as xs:string, $citeID as xs:
             else
         'completeWork'
     return
-        util:expand(doc($config:tei-works-root || '/' || sutil:normalizeId($workId) || '.xml')/tei:TEI)//tei:*[@xml:id eq $nodeId]
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:      util:expand(doc($config:tei-works-root || '/' || sutil:normalizeId($workId) || '.xml')/tei:TEI)//tei:*[@xml:id eq $nodeId]:)
+        util:expand(doc($config:tei-works-root || '/' || sutil:normalizeId($workId) || '.xml')/tei:TEI)/id($nodeId)
 };
 
 (:

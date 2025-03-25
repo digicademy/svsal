@@ -38,7 +38,10 @@ declare variable $html:basicElemNames := ('p', 'head', 'note', 'item', 'cell', '
 
 declare variable $html:defaultLang := collection($config:i18n-root)/*:catalogue[@xml:lang="en"];
 
-(: sometimes, we want to i18n-look up simple strings, but exist's i18n functions need nodes as input arguments, so we wrap our strings here :)
+(: sometimes, we want to i18n-look up simple strings,
+   but exist's i18n functions need nodes as input arguments,
+   so we wrap our strings here
+:)
 declare function html:i18nNodify($s as xs:string) {
     <msg key="{$s}">{$s}</msg>
 };
@@ -546,6 +549,15 @@ declare function html:makeSectionToolbox($node as element(), $lang as node()*) a
         else if ($class eq 'sal-toolbox') then 'Para' 
         else 'Note'
     let $citeIDBaseUrl := html:makeCiteIDURI($node)
+    let $embeddingsButton := if (local-name($node) eq 'p') then
+            <div class="sal-tb-btn beta" style="display:none;" title="{i18n:getLocalizedText(html:i18nNodify('Open embeddings experiment for this paragraph'), $lang)}">
+                <button class="messengers" onclick="showEmbeddingsExperiment(this)">
+                    <span class="fas fa-code"></span>
+                    {i18n:getLocalizedText(html:i18nNodify('Open comparison tool'), $lang)}
+                </button>
+            </div>
+        else ()
+
     return
         <div class="{$class}">
             <a id="{$id}" href="#" data-rel="popover" class="sal-tb-a"><!-- href="{('#' || $id)}" -->
@@ -562,8 +574,11 @@ declare function html:makeSectionToolbox($node as element(), $lang as node()*) a
                     <button onclick="copyCitRef(this); return false;" class="messengers">
                         <span class="fas fa-feather-alt"></span>{' '}{i18n:getLocalizedText(html:i18nNodify('copyCit'), $lang)}
                     </button>
-                    <span class="sal-cite-rec" style="display:none">{sutil:HTMLmakeCitationReference($wid, $fileDesc, 'reading-passage', $node)}</span>
+                    <span class="sal-cite-rec" style="display:none">
+                        {sutil:HTMLmakeCitationReference($wid, $fileDesc, 'reading-passage', $node)}
+                    </span>
                 </div>
+                {$embeddingsButton}
                 <div class="sal-tb-btn dropdown" title="{i18n:getLocalizedText(html:i18nNodify(concat('txtExp', $i18nSuffix)), $lang)}">
                     <button class="dropdown-toggle messengers" data-toggle="dropdown">
                         <span class="fas fa-align-left" title="{i18n:getLocalizedText(html:i18nNodify('txtExpPass'), $lang)}"></span>{' '}{i18n:getLocalizedText(html:i18nNodify('txtExpShort'), $lang)}
@@ -605,7 +620,6 @@ declare function html:makePagination($node as node()?, $model as map(*)?, $wid a
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="{$url}">{normalize-space($pb/@title/string())}</a></li>
         }</ul>
 };
-
 
 declare function html:makeClassableString($str as xs:string) as xs:string? {
     replace($str, '[,: ]', '')
@@ -690,7 +704,9 @@ declare function html:createPaginationLinksOld($workId as xs:string, $fragmentIn
 };
 
 declare function html:createPaginationLinks($workId as xs:string, $fragmentIndex as xs:integer, $prevId as xs:string?, $nextId as xs:string?) {
-    let $docTEI     := collection($config:tei-root)//tei:TEI[@xml:id eq $workId] 
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:  let $docTEI     := collection($config:tei-root)//tei:TEI[@xml:id eq $workId]    :)
+    let $docTEI     := collection($config:tei-root)/id($workId) 
     let $textType   := $docTEI/tei:text/@type/string()
     let $desc       :=  if ($textType = ("work_multivolume", "work_volume", "work_monograph")) then
                             $docTEI//tei:sourceDesc
@@ -710,9 +726,9 @@ declare function html:createPaginationLinks($workId as xs:string, $fragmentIndex
                             $desc//tei:imprint/tei:date[@type = 'thisEd']
                        else
                             $desc//tei:imprint/tei:date[1]
-let $type := if ($desc/../../tei:encodingDesc/tei:editorialDecl/tei:p[1]/contains(@xml:id, "RW")
+    let $type       := if ($desc/../../tei:encodingDesc/tei:editorialDecl/tei:p[1]/contains(@xml:id, "RW")
                                         ) then "Reference Work"
-                else "Edited Work"
+                       else "Edited Work"
     return
     concat(
         '{{$work_info := dict ',
@@ -722,7 +738,7 @@ let $type := if ($desc/../../tei:encodingDesc/tei:editorialDecl/tei:p[1]/contain
         '"place" "',   $place,      '" ',
         '"printer" "', $printer,    '" ',
         '"year" "',    $year,       '" ',
-  '"type" "',    $type,       '" ',
+        '"type" "',    $type,       '" ',
         if ($prevId) then concat('"prev" "', format-number($fragmentIndex - 1, "00000"), '_', $prevId, '.html" ') else (),
         if ($nextId) then concat('"next" "', format-number($fragmentIndex + 1, "00000"), '_', $nextId, '.html" ') else (),
         '"content" $content}}'
@@ -828,7 +844,6 @@ declare function html:makeCiteIDURI($node as element()) as xs:string? {
 declare function html:resolveURI($node as element(), $targets as xs:string) {
     let $currentWork := $node/ancestor-or-self::tei:TEI
     let $target := (tokenize($targets, ' '))[1]
-
     let $targetPrefix := substring-before($target, ':')
 (: let $debug := console:log("[ResolveURI] This is $targetPrefix: " || $targetPrefix) :)
     let $prefixMap := map:merge(for $p in $currentWork//tei:prefixDef return map (: what is this ? no prefixDef in the work ! :)
@@ -840,10 +855,14 @@ declare function html:resolveURI($node as element(), $targets as xs:string) {
                         )
  (:let $debug := console:log("[ResolveURI] This is $Map: " || $prefixMap) :)
     return
-        if (starts-with($target, '#') and substring($target, 2) = $currentWork//@xml:id/string()) then
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:      if (starts-with($target, '#') and substring($target, 2) = $currentWork//@xml:id/string()) then:)
+        if (starts-with($target, '#') and $currentWork/id(substring($target, 2))) then
             (: target is some node within the current work - make an absolute (persistent) URI out of it :)
             (: let $debug := console:log("[HTML] Create Hashtag Reference URI for " || $targets) :)
-            html:makeCiteIDURI($currentWork//*[@xml:id/string() eq substring($target, 2)])
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:          html:makeCiteIDURI($currentWork//*[@xml:id eq substring($target, 2)])   :)
+            html:makeCiteIDURI($currentWork//id(substring($target, 2)))
         else if (string-length($targetPrefix) gt 0) then
             (: let $debug := console:log("[HTML] Create a prefixed reference URI for a " || $targetPrefix || " URI: " || $targets) :)
             if ($targetPrefix = ("http", "https")) then

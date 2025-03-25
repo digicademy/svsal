@@ -30,7 +30,9 @@ declare function local:copy($input as item()*, $salNodes as map()?) as item()* {
                     (: remove frequent, but irrelevant elements :)
                     if (local-name($node) = $omittableElemTypes) then 
                         for $child in $node return local:copy($child/node(), $salNodes)
-                    else if ($node/self::tei:text and $node/@xml:id eq 'completeWork') then
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:                  else if ($node/self::tei:text and $node/@xml:id eq 'completeWork') then   :)
+                    else if ($node/self::tei:text and $node/id('completeWork')) then
                         (: since the text root itself might not be in the index, we must handle it here especially :)
                         element { fn:QName('https://www.salamanca.school/indexed-tei', 'itei:' || local-name($node)) } {
                             (

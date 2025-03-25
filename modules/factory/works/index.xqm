@@ -82,8 +82,8 @@ declare function index:makeNodeIndex($tei as element(tei:TEI)) as map(*) {
                                     console:log("[INDEX] Node indexing: processing node no. " || string($pos)  || " ...")
                                 else ()
                 let $n := $node/@xml:id/string()
-          (:    let $frag := (($node/ancestor-or-self::tei:* | $node//tei:*) intersect $target-set)[1] :)
-                let $frag := (($node/ancestor-or-self::tei:* | $node//tei:*[ not(preceding-sibling::*[not(local-name(.) = ("figure", "fw"))]) ] ) intersect $target-set)[1] 
+(:              let $frag := (($node/ancestor-or-self::tei:* | $node//tei:*) intersect $target-set)[1]:)
+                let $frag := (($node/ancestor-or-self::* | $node//tei:*[not(preceding-sibling::*)]) intersect $target-set)[1]
                 let $err  := if ((count($frag/@xml:id) eq 0) or ($frag/@xml:id eq "")) then
                     let $debug := if ($config:debug = ("trace", "info")) then
                                      console:log("[INDEX] Node indexing: Could not find $frag for $node '" || $n || "'. Target set was: [" || string-join(fn:for-each($target-set, function ($k) {concat($k/local-name(), ':', $k/@xml:id)}), ', ') || "]. Aborting.")
@@ -91,7 +91,7 @@ declare function index:makeNodeIndex($tei as element(tei:TEI)) as map(*) {
                     return error(QName('http://salamanca.school/err', 'FragmentationProblem'),
                                  'Could not find $frag for ' || $n || '.')
                 else ()
-                let $fragId := index:makeFragmentId(functx:index-of-node($target-set, $frag), $frag/@xml:id/string())
+                let $fragId := index:makeFragmentId(functx:index-of-node($target-set, $frag), $frag/@xml:id)
                 return map:entry($n, $fragId)
         )
     let $debug := if ($config:debug = ("trace")) then console:log("[INDEX] Node indexing: " || count($fragmentIds) || " fragment ids extracted.") else ()
@@ -135,7 +135,6 @@ declare function index:determineFragmentationDepth($work as element(tei:TEI)) as
                else $config:fragmentationDepthDefault
     return $fd
 };
-
 
 
 (: 
@@ -189,7 +188,6 @@ declare function index:getFragmentNodes($work as element(tei:TEI), $fragmentatio
         $work/tei:text
     else
         $work//tei:text//tei:*[index:isPotentialFragmentNode(.)][index:isBestDepth(., $fragmentationDepth)]  
-
 };
 
 
@@ -232,7 +230,9 @@ declare function index:extractNodeStructure($wid as xs:string,
                             attribute type              {local-name($node)}, 
                             attribute subtype           {$subtype}, 
                             attribute xml:id            {$node/@xml:id/string()},
-                            if ($node/@xml:id eq 'completeWork' and $xincludes) then
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:                          if ($node/@xml:id eq 'completeWork' and $xincludes) then:)
+                            if ($node/id('completeWork') and $xincludes) then
                                 attribute xinc          {$xincludes}
                             else (), 
                             attribute class             {$class},
@@ -404,15 +404,12 @@ declare function index:qualityCheck($index as element(sal:index),
 (: LABELS, CiteID, CRUMBTRAILS (-- deep recursion) :)
 
 declare function index:constructCiteID($node as element(sal:node)) as xs:string {
-    (: 
-        if (starts-with($node/@wid, 'L') and $node/@type/string() = ('p', 'list')) then
-            xs:string(count($node/preceding::sal:node[@type = ('p', 'list')]) + 1)
-        else
-    :)
-        let $prefix := 
-    (:        if ($node/sal:citableParent/text() and $node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()]) then:)
+    let $prefix := 
+(:        if ($node/sal:citableParent/text() and $node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()]) then:)
             if ($node/sal:citableParent/text()) then
-                index:constructCiteID($node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()])
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:          index:constructCiteID($node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()]):)
+                index:constructCiteID($node/root()/id($node/sal:citableParent/text()) intersect $node/ancestor::sal:node)
             else ()
         let $this := 
             if ($node/sal:cit) then
@@ -435,9 +432,12 @@ declare function index:constructCiteID($node as element(sal:node)) as xs:string 
 
 declare function index:constructLabel($node as element(sal:node)) as xs:string? {
     let $prefix :=
-        if (starts-with($node/@wid, 'L') and $node/@type/string() = ('p', 'list')) then ()
-        else if ($node/sal:citableParent/text() and $node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()]) then
-            index:constructLabel($node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()])
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:      if ($node/sal:citableParent/text() and $node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()]) then:)
+        if ($node/sal:citableParent/text() and ($node/root()/id($node/sal:citableParent/text()) intersect $node/ancestor::sal:node)) then
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:          index:constructLabel($node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()]):)
+            index:constructLabel($node/root()/id($node/sal:citableParent/text()) intersect $node/ancestor::sal:node)
         else ()
     (: not every sal:node has a distinctive passage: :)
     let $this := if ($node/sal:passage/text()) then $node/sal:passage/text() else ''
@@ -475,7 +475,9 @@ declare function index:getCitableParent($node as node()) as node()? {
     (important: nodes are citeID children of div (not of p) and are counted as such) :)
 declare function index:makeMarginalCiteID($node as element()) as xs:string {
     let $currentSection := sutil:copy(index:getCitableParent($node))
-    let $currentNode := $currentSection//*[@xml:id eq $node/@xml:id]
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:  let $currentNode := $currentSection//*[@xml:id eq $node/@xml:id]:)
+    let $currentNode := $currentSection/id($node/@xml:id)
     let $label :=
         if (matches($currentNode/@n, '^[A-Za-z0-9\[\]]+$')) then
             if (count($currentSection//*[index:isMarginalNode(.) and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))]) gt 1) then
@@ -1093,7 +1095,9 @@ declare function index:list($node as element(tei:list), $mode as xs:string) {
             (: dictionaries, indices and summaries get their type prepended to their number :)
             if(index:isNamedCiteIDNode($node)) then
                 let $currentSection := sutil:copy($node/(ancestor::tei:div|ancestor::tei:body|ancestor::tei:front|ancestor::tei:back)[last()])
-                let $currentNode := $currentSection//tei:list[@xml:id eq $node/@xml:id]
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:              let $currentNode := $currentSection//tei:list[@xml:id eq $node/@xml:id]:)
+                let $currentNode := $currentSection/id($node/@xml:id)/self::tei:list
                 return
                   concat(
                       $currentNode/@type, 
@@ -1152,7 +1156,9 @@ declare function index:milestone($node as element(tei:milestone), $mode as xs:st
         case 'citeID' return
             (: "XY" where X is the unit and Y is the anchor or the number of milestones where this occurs :)
             let $currentSection := sutil:copy(index:getCitableParent($node))
-            let $currentNode := $currentSection//tei:milestone[@xml:id eq $node/@xml:id]
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:          let $currentNode := $currentSection//tei:milestone[@xml:id eq $node/@xml:id]:)
+            let $currentNode := $currentSection/id($node/@xml:id)/self::tei:milestone
             return
                 if ($node/@n[matches(., '[a-zA-Z0-9]')]) then 
                     let $similarMs :=
@@ -1175,7 +1181,9 @@ declare function index:milestone($node as element(tei:milestone), $mode as xs:st
                     if ($node/@n[matches(., '^[0-9\[\]]+$')]) then $node/@n (:replace($node/@n, '[\[\]]', '') ? :)
                     else 
                         let $currentSection := sutil:copy($node/ancestor::*[index:isLabelNode(.) and not(self::tei:p)][1])
-                        let $currentNode := $currentSection//tei:milestone[@xml:id eq $node/@xml:id]
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:                      let $currentNode := $currentSection//tei:milestone[@xml:id eq $node/@xml:id]:)
+                        let $currentNode := $currentSection/id($node/@xml:id)/self::tei:milestone
                         let $position := count($currentSection//tei:milestone[@unit eq $currentNode/@unit and index:isLabelNode(.)]
                                                intersect $currentNode/preceding::tei:milestone[@unit eq $currentNode/@unit and index:isLabelNode(.)]) + 1
                         return string($position)
@@ -1191,7 +1199,9 @@ declare function index:note($node as element(tei:note), $mode as xs:string) {
         case 'title' return
             normalize-space(
                 let $currentSection := sutil:copy(index:getCitableParent($node))
-                let $currentNode := $currentSection//tei:note[@xml:id eq $node/@xml:id]
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:              let $currentNode := $currentSection//tei:note[@xml:id eq $node/@xml:id]:)
+                let $currentNode := $currentSection/id($node/@xml:id)/self::tei:note
                 return
                     if ($node/@n) then
                         let $noteNumber :=
@@ -1217,7 +1227,9 @@ declare function index:note($node as element(tei:note), $mode as xs:string) {
                 (: label parents of note are div, not p :)
                 (: let $debug := console:log("index:note/label for note: " || $node/@xml:id/string()) :)
                 let $currentSection := sutil:copy($node/ancestor::*[not(self::tei:p)][index:isLabelNode(.)][1])
-                let $currentNode := $currentSection//tei:note[@xml:id eq $node/@xml:id]
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:              let $currentNode := $currentSection//tei:note[@xml:id eq $node/@xml:id]:)
+                let $currentNode := $currentSection/id($node/@xml:id)/self::tei:note
                 let $prefix := $config:citationLabels(local-name($node))?('abbr')
                 let $label := 
                     if ($node/@n) then '"' || $node/@n || '"' (: TODO: what if there are several notes with the same @n in a div :)
@@ -1357,7 +1369,9 @@ declare function index:text($node as element(tei:text), $mode as xs:string) {
                 if ($node/@type eq 'work_volume') then
                     $node/@n/string()
                 (: tei:text with solely technical information: :)
-                else if ($node/@xml:id eq 'completeWork') then
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:              else if ($node/@xml:id eq 'completeWork') then:)
+                else if ($node/id('completeWork')) then
                     '[complete work]'
                 else if (matches($node/@xml:id, 'work_part_[a-z]')) then
                     '[process-technical part: ' || substring(string($node/@xml:id), 11, 1) || ']'
@@ -1366,7 +1380,9 @@ declare function index:text($node as element(tei:text), $mode as xs:string) {
         
         case 'class' return
             if ($node/@type eq 'work_volume') then 'tei-text-' || $node/@type
-            else if ($node/@xml:id eq 'completeWork') then 'tei-text-' || $node/@xml:id
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:          else if ($node/@xml:id eq 'completeWork') then 'tei-text-' || $node/@xml:id:)
+            else if ($node/id('completeWork')) then 'tei-text-' || $node/@xml:id
             else if (matches($node/@xml:id, 'work_part_[a-z]')) then 'elem-text-' || $node/@xml:id
             else 'tei-text'
         

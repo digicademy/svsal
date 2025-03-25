@@ -180,7 +180,9 @@ declare function admin:needsPdfString($node as node(), $model as map(*)) {
     let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
                                     if (doc-available(concat($subcollection, '/', $currentResourceId, '.xml'))) then $subcollection
                                     else ()
-    let $readyForPDF := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))//tei:TEI[@xml:id eq $currentResourceId]/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:  let $readyForPDF := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))//tei:TEI[@xml:id eq $currentResourceId]/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then:)
+    let $readyForPDF := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))/id($currentResourceId)/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then
                                 true()
                              else false()
 
@@ -238,7 +240,9 @@ declare function admin:needsIndexString($node as node(), $model as map(*)) {
     let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
                                     if (doc-available(concat($subcollection, '/', $currentWorkId, '.xml'))) then $subcollection
                                     else ()
-    let $readyForIndexing := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentWorkId, '.xml'))//tei:TEI[@xml:id eq $currentWorkId]/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:  let $readyForIndexing := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentWorkId, '.xml'))//tei:TEI[@xml:id eq $currentWorkId]/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then:)
+    let $readyForIndexing := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentWorkId, '.xml'))/id($currentWorkId)/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then
                             true()
                          else false()
     return 
@@ -272,7 +276,9 @@ declare function admin:needsCrumbtrailString($node as node(), $model as map(*)) 
     let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
                                     if (doc-available(concat($subcollection, '/', $currentWorkId, '.xml'))) then $subcollection
                                     else ()
-    let $readyForCrumbtrail := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentWorkId, '.xml'))//tei:TEI[@xml:id eq $currentWorkId]/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:  let $readyForCrumbtrail := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentWorkId, '.xml'))//tei:TEI[@xml:id eq $currentWorkId]/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then:)
+    let $readyForCrumbtrail := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentWorkId, '.xml'))/id($currentWorkId)/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then
                             true()
                          else false()
     return
@@ -390,7 +396,9 @@ declare function admin:needsHTMLString($node as node(), $model as map(*)) {
     let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
                                     if (doc-available(concat($subcollection, '/', $currentResourceId, '.xml'))) then $subcollection
                                     else ()
-    let $readyForHtml := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))//tei:TEI[@xml:id eq $currentResourceId]/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:  let $readyForHtml := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))//tei:TEI[@xml:id eq $currentResourceId]/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then:)
+    let $readyForHtml := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))/id($currentResourceId)/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then
                             true()
                          else false()
     return
@@ -480,7 +488,9 @@ declare function admin:needsSnippetsString($node as node(), $model as map(*)) {
     let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
                                     if (doc-available(concat($subcollection, '/', $currentResourceId, '.xml'))) then $subcollection
                                     else ()
-    let $readyForSnippets := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))//tei:TEI[@xml:id eq $currentResourceId]/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:  let $readyForSnippets := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))//tei:TEI[@xml:id eq $currentResourceId]/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then:)
+    let $readyForSnippets := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))/id($currentResourceId)/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then
                                 true()
                              else false()
 
@@ -528,7 +538,9 @@ declare function admin:needsRDFString($node as node(), $model as map(*)) {
         else if (starts-with(upper-case($currentResourceId), 'A')) then $config:rdf-authors-root
         else if (starts-with(upper-case($currentResourceId), 'L')) then $config:rdf-lemmata-root
         else ()
-    let $readyForRDF :=  if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))//tei:TEI[@xml:id eq $currentResourceId]/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:  let $readyForRDF :=  if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))//tei:TEI[@xml:id eq $currentResourceId]/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then:)
+    let $readyForRDF :=  if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))/id($currentResourceId)/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then
                             true()
                          else false()
 
@@ -824,7 +836,7 @@ declare function admin:exportXMLFile($filename as xs:string, $content as item(),
         else if (file:is-writeable($collectionname) and file:is-directory($collectionname)) then
             true()
         else
-            error("http://salamanca.school/error/NoWritableFolder", "Error: " || $collectionname || " is not a writable folder in filesystem.") 
+            error(QName("http://salamanca.school/error", "NoWritableFolder"), "Error: " || $collectionname || " is not a writable folder in filesystem.") 
     let $pathname := $collectionname || $filename
     let $remove-status := 
         if ($content and file:exists($pathname)) then
@@ -858,7 +870,7 @@ declare function admin:exportXMLFile($wid as xs:string, $filename as xs:string, 
         else if (file:is-writeable($collectionname) and file:is-directory($collectionname)) then
             true()
         else
-            error("http://salamanca.school/error/NoWritableFolder", "Error: " || $collectionname || " is not a writable folder in filesystem.") 
+            error(QName("http://salamanca.school/error", "NoWritableFolder"), "Error: " || $collectionname || " is not a writable folder in filesystem.") 
     let $pathname := $collectionname || $filename
     let $remove-status := 
         if ($content and file:exists($pathname)) then
@@ -881,7 +893,7 @@ declare function admin:exportBinaryFile($filename as xs:string, $content as xs:s
         else if (file:is-writeable($collectionname) and file:is-directory($collectionname)) then
             true()
         else
-            error("http://salamanca.school/error/NoWritableFolder", "Error: " || $collectionname || " is not a writable folder in filesystem.") 
+            error(QName("http://salamanca.school/error", "NoWritableFolder"), "Error: " || $collectionname || " is not a writable folder in filesystem.") 
     let $pathname := $collectionname || $filename
     let $remove-status := 
         if ($content and file:exists($pathname)) then
@@ -908,7 +920,7 @@ declare function admin:exportBinaryFile($workId as xs:string, $filename as xs:st
         else if (file:is-writeable($collectionname) and file:is-directory($collectionname)) then
             true()
         else
-            error("http://salamanca.school/error/NoWritableFolder", "Error: " || $collectionname || " is not a writable folder in filesystem.") 
+            error(QName("http://salamanca.school/error", "NoWritableFolder"), "Error: " || $collectionname || " is not a writable folder in filesystem.") 
     let $pathname := $collectionname || $filename
     let $remove-status := 
         if ($content and file:exists($pathname)) then
@@ -932,7 +944,7 @@ declare function admin:exportBinaryStream($workId as xs:string, $filename as xs:
         else if (file:is-writeable($collectionname) and file:is-directory($collectionname)) then
             true()
         else
-            error("http://salamanca.school/error/NoWritableFolder", "Error: " || $collectionname || " is not a writable folder in filesystem.") 
+            error(QName("http://salamanca.school/error", "NoWritableFolder"), "Error: " || $collectionname || " is not a writable folder in filesystem.") 
     let $pathname := $collectionname || $filename
     let $remove-status := 
         if ($content and file:exists($pathname)) then
@@ -946,7 +958,7 @@ declare function admin:exportBinaryStream($workId as xs:string, $filename as xs:
 
 declare function admin:exportJSONFile($filename as xs:string, $content as item()*, $collection as xs:string?) {
     let $fsRoot := $config:export-folder
-    let $collectionname := 
+    let $collectionname :=
              if ($collection eq "workslist") then $fsRoot
         else if ($collection eq "stats")     then $fsRoot
         else if ($collection eq "data")      then $fsRoot || "data/"
@@ -957,9 +969,9 @@ declare function admin:exportJSONFile($filename as xs:string, $content as item()
         else if (file:is-writeable($collectionname) and file:is-directory($collectionname)) then
             true()
         else
-            error("http://salamanca.school/error/NoWritableFolder", "Error: " || $collectionname || " is not a writable folder in filesystem.") 
+            error(QName("http://salamanca.school/error", "NoWritableFolder"), "Error: " || $collectionname || " is not a writable folder in filesystem.") 
     let $pathname := $collectionname || $filename
-    let $remove-status := 
+    let $remove-status :=
         if (count($content) gt 0 and file:exists($pathname)) then
             file:delete($pathname)
         else true()
@@ -982,7 +994,7 @@ declare function admin:exportJSONFile($wid as xs:string, $filename as xs:string,
         else if (file:is-writeable($collectionname) and file:is-directory($collectionname)) then
             true()
         else
-            error("http://salamanca.school/error/NoWritableFolder", "Error: " || $collectionname || " is not a writable folder in filesystem.") 
+            error(QName("http://salamanca.school/error", "NoWritableFolder"), "Error: " || $collectionname || " is not a writable folder in filesystem.") 
     let $pathname := $collectionname || $filename
     let $remove-status := 
         if (count($content) gt 0 and file:exists($pathname)) then
@@ -1255,7 +1267,9 @@ declare %templates:wrap function admin:renderHTML($id as xs:string*) as element(
         if ($resourceId = '*') then
             collection($config:tei-root)//tei:TEI[.//tei:text[@type = ("work_multivolume", "work_monograph", "lemma_article")]]
         else
-            collection($config:tei-root)//tei:TEI[@xml:id = distinct-values($resourceId)][.//tei:text[@type = ("work_multivolume", "work_monograph", "lemma_article")]]
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:          collection($config:tei-root)//tei:TEI[@xml:id = distinct-values($resourceId)][.//tei:text[@type = ("work_multivolume", "work_monograph", "lemma_article")]]:)
+            collection($config:tei-root)/id(distinct-values($resourceId))[.//tei:text[@type = ("work_multivolume", "work_monograph", "lemma_article")]]
 
     (: for each requested resource: create fragments, insert them into the transformation, and produce some diagnostic info :)
     let $createData := 
@@ -1272,6 +1286,7 @@ declare %templates:wrap function admin:renderHTML($id as xs:string*) as element(
                                             else ()
 
             (: (1) HTML :)
+
             let $start-time-a := util:system-time()
             let $htmlData     := html:makeHTMLData($work-raw)
             let $htmlDataOld  := html:makeHTMLDataOld($work-raw)
@@ -1526,7 +1541,9 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
         if ($wid = '*') then
             collection($config:tei-root)//tei:TEI[.//tei:text[@type = ("work_multivolume", "work_monograph", "author_article", "lemma_article", "working_paper")]]
         else
-            collection($config:tei-root)//tei:TEI[@xml:id = distinct-values($wid)]
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:          collection($config:tei-root)//tei:TEI[@xml:id = distinct-values($wid)]:)
+            collection($config:tei-root)/id(distinct-values($wid))
     let $expanded := 
         for $work-raw in $todo
             let $cleanCollectionStatus := admin:cleanCollection($work-raw/@xml:id, "snippets")
@@ -1612,7 +1629,9 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
             let $nodeIndex         := doc($config:index-root || "/" || $work_id || "_nodeIndex.xml")
             let $nodeCrumbtrails   := doc($config:crumb-root || "/" || $work_id || "_crumbtrails.xml")
             let $hit_label         := string($nodeIndex//sal:node[@n eq $hit_id]/@label)
-            let $hit_crumbtrail    := fn:serialize($nodeCrumbtrails//sal:nodecrumb[@xml:id eq $hit_id]/sal:crumbtrail/node()[last()](:  , map{"method":"xhtml", "escape-uri-attributes":false(), "omit-xml-declaration":true() } :))
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:          let $hit_crumbtrail    := fn:serialize($nodeCrumbtrails//sal:nodecrumb[@xml:id eq $hit_id]/sal:crumbtrail/node()[last()](\:  , map{"method":"xhtml", "escape-uri-attributes":false(), "omit-xml-declaration":true() } :\)):)
+            let $hit_crumbtrail    := fn:serialize($nodeCrumbtrails/id($hit_id)/sal:crumbtrail/node()[last()](:  , map{"method":"xhtml", "escape-uri-attributes":false(), "omit-xml-declaration":true() } :))
             let $before_crumbtrail :=  if (substring-before($hit_crumbtrail, '">')) then (substring-before($hit_crumbtrail, '">')) else ((substring-before($hit_crumbtrail, '"/>')))
         let $substringed_crumbtrail := (substring-after($before_crumbtrail, "#"))
 
@@ -1763,7 +1782,9 @@ declare function admin:createNodeIndex($wid as xs:string*) {
         if ($wid = '*') then
             collection($config:tei-root)//tei:TEI[.//tei:text[@type = ("work_multivolume", "work_monograph", "lemma_article")]]
         else
-            collection($config:tei-root)//tei:TEI[@xml:id = distinct-values($wid)]
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:          collection($config:tei-root)//tei:TEI[@xml:id = distinct-values($wid)]:)
+            collection($config:tei-root)/id(distinct-values($wid))
 
     (: for each requested work, create an individual index :)
     let $indexResults :=
@@ -1889,7 +1910,9 @@ declare function admin:createCrumbtrails($wid as xs:string){
     let $teiRoots :=  if ($wid = '*') then
                           collection($config:tei-root)//tei:TEI[.//tei:text[@type = ("work_multivolume", "work_monograph", "lemma_article")]]
                       else
-                          collection($config:tei-root)//tei:TEI[@xml:id = distinct-values($wid)]
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:                        collection($config:tei-root)//tei:TEI[@xml:id = distinct-values($wid)]:)
+                          collection($config:tei-root)/id(distinct-values($wid))
 
     (: for each requested work, create an individual crumbtrails :)
     let $crumbResults :=
@@ -2059,7 +2082,9 @@ declare function admin:createRoutes($wid as xs:string) {
 
 declare function admin:buildRoutingInfoNode($wid as xs:string, $item as element(sal:node), $crumbtrails as element(sal:crumb)) {
     let $textTypePath := if (starts-with($wid, 'W')) then '/texts/' else if (starts-with($wid, 'L')) then '/lemmata/' else ''
-    let $crumb := if (fn:contains($crumbtrails//sal:nodecrumb[@xml:id eq $item/@n]//a[last()]/@href/string(), "/data/")) then substring-after($crumbtrails//sal:nodecrumb[@xml:id eq $item/@n]//a[last()]/@href/string(), "/data/") else ( $crumbtrails//sal:nodecrumb[@xml:id eq $item/@n]//a[last()]/@href/string())
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:  let $crumb := if (fn:contains($crumbtrails//sal:nodecrumb[@xml:id eq $item/@n]//a[last()]/@href/string(), "/data/")) then substring-after($crumbtrails//sal:nodecrumb[@xml:id eq $item/@n]//a[last()]/@href/string(), "/data/") else ( $crumbtrails//sal:nodecrumb[@xml:id eq $item/@n]//a[last()]/@href/string()):)
+    let $crumb := if (fn:contains($crumbtrails/id($item/@n)//a[last()]/@href/string(), "/data/")) then substring-after($crumbtrails/id($item/@n)//a[last()]/@href/string(), "/data/") else ( $crumbtrails/id($item/@n)//a[last()]/@href/string())
     let $filepath := tokenize($crumb, '#')[1]
     let $fragmentHash := tokenize($crumb, '#')[2]
     let $hash := if (string-length($fragmentHash) gt 0) then '#' || $fragmentHash else ''
@@ -2184,7 +2209,9 @@ declare function admin:createRDF($rid as xs:string) {
 ~ Creates and stores a IIIF manifest/collection for work $wid.
 :)
 declare function admin:createIIIF($wid as xs:string) {
-    let $target-work := util:expand(collection($config:tei-root)//tei:TEI[@xml:id = $wid])
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:  let $target-work := util:expand(collection($config:tei-root)//tei:TEI[@xml:id = $wid]):)
+    let $target-work := util:expand(collection($config:tei-root)/id($wid))
 
     let $todo := if ($target-work/tei:text/@type = "work_multivolume") then
             distinct-values(($wid, for $vol in $target-work//tei:text[@type = "work_volume"] return $wid || "_" || $vol/@xml:id/string()))
@@ -2249,12 +2276,18 @@ declare function admin:createDetails($currentResourceId as xs:string) {
         if ($wid = '*') then
             collection($config:tei-root)//tei:TEI[.//tei:text[@type = ("work_multivolume", "work_monograph", "work_volume", "lemma_article", "working_paper")]]
         else
-            collection($targetSubcollection)//tei:TEI[@xml:id = distinct-values($wid)]
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:          collection($targetSubcollection)//tei:TEI[@xml:id = distinct-values($wid)]:)
+            collection($targetSubcollection)/id(distinct-values($wid))
     let $expanded :=  for $resource-raw in $todo return util:expand($resource-raw)
 
     let $process_loop := for $resource in $expanded
 
         let $id        := $resource/@xml:id/string()
+
+        let $exportXml := admin:exportXMLFile($id, $id || '.xml', $resource, 'index')
+        let $exportLog := console:log("[ADMIN] Exported '" || $id || ".xml' with " || xs:string(count($resource//tei:*)) || " nodes to " || $exportXml || ".")
+
         let $public_id := if ($resource//tei:text[@type = ("work_multivolume", "work_monograph", "lemma_article", "working_paper")]) then
                               $id
                           else
