@@ -311,14 +311,14 @@ declare %templates:wrap
     function sutil:WRKcombined($node as node()?, $model as map(*)?, $wid as xs:string?) {
         let $textType       := if (starts-with($wid, 'L')) then '/lemmata/' else '/texts/'
         let $sourcePath     := if (starts-with($wid, 'L')) then $config:tei-lemmata-root else $config:tei-works-root
-        let $path           := if (doc($sourcePath || "/" || sutil:normalizeId($wid) || ".xml")//tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr) then
-                                    doc($sourcePath || "/" || sutil:normalizeId($wid) || ".xml")//tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr
+        let $path           :=  if (doc($sourcePath || "/" || sutil:normalizeId($wid) || ".xml")//tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr) then
+        doc($sourcePath || "/" || sutil:normalizeId($wid) || ".xml")//tei:teiHeader//tei:sourceDesc/tei:biblStruct/tei:monogr
                                 else
                                     doc($sourcePath || "/" || sutil:normalizeId($wid) || ".xml")//tei:teiHeader//tei:titleStmt
-        let $author         := string-join($path//tei:author/tei:persName/tei:surname, ', ')
-        let $title          := $path//tei:title[@type = 'short']
-        let $thisEd         := $path//tei:pubPlace[@role = 'thisEd']
-        let $firstEd        := $path//tei:pubPlace[@role = 'firstEd']
+        let $author         :=  string-join($path//tei:author/tei:persName/tei:surname, ', ')
+        let $title          :=  $path//tei:title[@type = 'short']
+        let $thisEd         :=  $path//tei:pubPlace[@role = 'thisEd']
+        let $firstEd        :=  $path//tei:pubPlace[@role = 'firstEd']
         let $publisher :=  
             if ($thisEd) then
                 $path//tei:imprint/tei:publisher[@n = 'thisEd']/tei:persName[1]/tei:surname
@@ -334,8 +334,8 @@ declare %templates:wrap
                 $path//tei:date[@type = 'thisEd']/@when/string() 
             else
                 $path//tei:date[@type = 'firstEd']/@when/string()
-        let $pubDetails  := if ($place || $publisher || $year) then ' ' || $place || '&#32;'||": " || $publisher || ", " || $year || '.' else ()
-        return ($author || ':  ' || $title || '.' || $pubDetails) 
+        let $pubDetails     :=  if ($place || $publisher || $year) then ' ' || $place || '&#32;'||": " || $publisher || ", " || $year || '.' else ()
+            return ($author || ':  ' || $title || '.' || $pubDetails) 
 };  
 
 
@@ -373,7 +373,7 @@ declare function sutil:extractTeiNodeFromCiteID($workId as xs:string, $citeID as
     - "reading-full" for generic citations in reading view; access date has to be appended elsewhere
     - "reading-passage" for fine-granular citations in reading view, including passagetrail - this yields two <span>s, 
         between the two of which the acces date has to be inserted (e.g., by means of JS)
-:)
+:) 
 declare function sutil:HTMLmakeCitationReference($wid as xs:string, $fileDesc as element(tei:fileDesc), $mode as xs:string, $node as element()?) as element(span)+ {
     let $author := string-join($fileDesc/tei:titleStmt/tei:author/tei:persName/tei:surname/text(), '/')
     let $title := $fileDesc/tei:titleStmt/tei:title[@type eq 'short']/text()
@@ -392,9 +392,9 @@ declare function sutil:HTMLmakeCitationReference($wid as xs:string, $fileDesc as
         else ()
     let $citeIDStr := if ($citeID) then ':' || $citeID else ()
     let $textTypePrefix := 
-             if (starts-with($wid, 'W0')) then '/texts/' 
+        if (starts-with($wid, 'W0')) then '/texts/' 
         else if (starts-with($wid, 'WP')) then '/workingpapers/' 
-        else if (starts-with($wid, 'A'))  then '/authors/'
+        else if (starts-with($wid, 'A')) then '/authors/'
         else if (starts-with($wid, 'L'))  then '/lemmata/'
         else ()
 
@@ -403,9 +403,9 @@ declare function sutil:HTMLmakeCitationReference($wid as xs:string, $fileDesc as
                     let $passage := sutil:getNodetrail($wid, $node, 'label')
                     return 
                         if ($passage) then <span class="cite-rec-trail">{$passage || ', '}</span> else ()
-                else ()
-    let $body :=  (: testing <nobr> to avoid line break between values., 8.03.2024:)
-        <span class="cite-rec-body" style="white-space: nowrap;">{$author || ', ' || $title || ' (' || $digitalYear || ( if ($originalYear) then concat(' [', $originalYear, ']') else ()) || '), ' || $label}<i18n:text key="inLow">in</i18n:text>{': '}<i18n:text key="editionSeries">The School of Salamanca. A Digital Collection of Sources</i18n:text>{' <'}<a href="{$link}">{$link}</a>{'>'}</span>
+                  else ()
+    let $body := (: testing <nobr> to avoid line break between values., 8.03.2024 :)
+        <span class="cite-rec-body" style="white-space: nowrap;">{$author || ', ' || $title || ' (' || $digitalYear || ( if ($originalYear) then concat(' [', $originalYear, ']') else ()) || '), '            || $label}<i18n:text key="inLow">in</i18n:text>{': '}<i18n:text key="editionSeries">The School of Salamanca. A Digital Collection of Sources</i18n:text>{' <'}<a href="{$link}">{$link}</a>{'>'}</span>
 (:   including editors (before link): {', '}<i18n:text key="editedByAbbrLow">ed. by</i18n:text>{' ' || $editors || ' <'}     :)
     return ($body)
 };
