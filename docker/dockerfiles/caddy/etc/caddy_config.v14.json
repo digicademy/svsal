@@ -1,0 +1,2939 @@
+{
+  "logging": {
+    "logs": {
+      "default": {
+        "writer": {
+          "filename": "/var/log/caddy/access.log",
+          "output": "file"
+        },
+        "encoder": {
+          "fields": {
+            "request>remote_ip": {
+              "filter": "ip_mask",
+              "ipv4_cidr": 1,
+              "ipv6_cidr": 56
+            }
+          },
+          "format":"filter",
+          "wrap": {
+            "format":"console"
+          }
+        },
+        "level": "DEBUG"
+      }
+    }
+  },
+  "apps": {
+    "http": {
+      "servers": {
+        "srv0": {
+          "listen": [
+            ":443"
+          ],
+          "routes": [
+            {
+              "match": [
+                {
+                  "host": [
+                    "search.salamanca.school"
+                  ]
+                }
+              ],
+              "handle": [
+                {
+                  "handler": "subroute",
+                  "routes": [
+                    {
+                      "handle": [
+                        {
+                          "handler": "vars",
+                          "root": "/opt/open-sphinxsearch/public"
+                        },
+                        {
+                          "handler": "headers",
+                          "response": {
+                            "set": {
+                              "Access-Control-Allow-Headers": [
+                                "*"
+                              ],
+                              "Access-Control-Allow-Methods": [
+                                "*"
+                              ],
+                              "Access-Control-Allow-Origin": [
+                                "*"
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "encodings": {
+                            "gzip": {},
+                            "zstd": {}
+                          },
+                          "handler": "encode",
+                          "prefer": [
+                            "zstd",
+                            "gzip"
+                          ]
+                        },
+                        {
+                          "handler": "push"
+                        }
+                      ]
+                    },
+                    {
+                      "handle": [
+                        {
+                          "handler": "static_response",
+                          "headers": {
+                            "Location": [
+                              "{http.request.uri.path}/"
+                            ]
+                          },
+                          "status_code": 308
+                        }
+                      ],
+                      "match": [
+                        {
+                          "file": {
+                            "try_files": [
+                              "{http.request.uri.path}/index.php"
+                            ]
+                          },
+                          "not": [
+                            {
+                              "path": [
+                                "*/"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "handle": [
+                        {
+                          "handler": "rewrite",
+                          "uri": "{http.matchers.file.relative}"
+                        }
+                      ],
+                      "match": [
+                        {
+                          "file": {
+                            "split_path": [
+                              ".php"
+                            ],
+                            "try_files": [
+                              "{http.request.uri.path}",
+                              "{http.request.uri.path}/index.php",
+                              "index.php"
+                            ]
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "handle": [
+                        {
+                          "handler": "reverse_proxy",
+                          "transport": {
+                            "protocol": "fastcgi",
+                            "split_path": [
+                              ".php"
+                            ]
+                          },
+                          "upstreams": [
+                            {
+                              "dial": "unix//run/php/php-fpm.sock"
+                            }
+                          ]
+                        }
+                      ],
+                      "match": [
+                        {
+                          "path": [
+                            "*.php"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "handle": [
+                        {
+                          "handler": "file_server",
+                          "hide": [
+                            "./Caddyfile"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "terminal": true
+            },
+            {
+              "match": [
+                {
+                  "host": [
+                    "blog.salamanca.school"
+                  ]
+                }
+              ],
+              "handle": [
+                {
+                  "handler": "subroute",
+                  "routes": [
+                    {
+                      "handle": [
+                        {
+                          "handler": "vars",
+                          "root": "/var/data/blog/wordpress"
+                        },
+                        {
+                          "handler": "headers",
+                          "response": {
+                            "set": {
+                              "Access-Control-Allow-Headers": [
+                                "*"
+                              ],
+                              "Access-Control-Allow-Methods": [
+                                "*"
+                              ],
+                              "Access-Control-Allow-Origin": [
+                                "*"
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "encodings": {
+                            "gzip": {},
+                            "zstd": {}
+                          },
+                          "handler": "encode",
+                          "prefer": [
+                            "zstd",
+                            "gzip"
+                          ]
+                        },
+                        {
+                          "handler": "push"
+                        }
+                      ]
+                    },
+                    {
+                      "handle": [
+                        {
+                          "handler": "static_response",
+                          "headers": {
+                            "Location": [
+                              "{http.request.orig_uri.path}/"
+                            ]
+                          },
+                          "status_code": 308
+                        }
+                      ],
+                      "match": [
+                        {
+                          "file": {
+                            "try_files": [
+                              "{http.request.uri.path}/index.php"
+                            ]
+                          },
+                          "not": [
+                            {
+                              "path": [
+                                "*/"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "handle": [
+                        {
+                          "handler": "rewrite",
+                          "uri": "{http.matchers.file.relative}"
+                        }
+                      ],
+                      "match": [
+                        {
+                          "file": {
+                            "split_path": [
+                              ".php"
+                            ],
+                            "try_files": [
+                              "{http.request.uri.path}",
+                              "{http.request.uri.path}/index.php",
+                              "index.php"
+                            ]
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "handle": [
+                        {
+                          "handler": "reverse_proxy",
+                          "transport": {
+                            "protocol": "fastcgi",
+                            "split_path": [
+                              ".php"
+                            ]
+                          },
+                          "upstreams": [
+                            {
+                              "dial": "unix//run/php/php-fpm.sock"
+                            }
+                          ]
+                        }
+                      ],
+                      "match": [
+                        {
+                          "path": [
+                            "*.php"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "handle": [
+                        {
+                          "handler": "file_server",
+                          "hide": [
+                            "./Caddyfile"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "terminal": true
+            },
+            {
+              "match": [
+                {
+                  "host": [
+                    "salamanca.school"
+                  ]
+                }
+              ],
+              "handle": [
+                {
+                  "handler": "subroute",
+                  "routes": [
+                    {
+                      "handle": [
+                        {
+                          "handler": "static_response",
+                          "headers": {
+                            "Location": [
+                              "https://www.salamanca.school{http.request.uri}"
+                            ]
+                          },
+                          "status_code": 302
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "terminal": true
+            },
+            {
+              "match": [
+                {
+                  "host": [
+                    "c100-101.cloud.gwdg.de",
+                    "salamanca.school",
+                    "www.salamanca.school"
+                  ]
+                }
+              ],
+              "handle": [
+                {
+                  "handler": "subroute",
+                  "routes": [
+                    {
+                      "handle": [
+                        {
+                          "defaults": [
+                            "salamanca.school"
+                          ],
+                          "destinations": [
+                            "{mydomain}"
+                          ],
+                          "handler": "map",
+                          "source": "1"
+                        },
+                        {
+                          "handler": "vars",
+                          "root": "/var/data/caddy/site"
+                        },
+                        {
+                          "handler": "headers",
+                          "response": {
+                            "set": {
+                              "Access-Control-Allow-Headers": [
+                                "*"
+                              ],
+                              "Access-Control-Allow-Methods": [
+                                "*"
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "handle": [
+                        {
+                          "handler": "rewrite",
+                          "strip_path_prefix": "/de"
+                        },
+                        {
+                          "handler": "rewrite",
+                          "strip_path_prefix": "/en"
+                        },
+                        {
+                          "handler": "rewrite",
+                          "strip_path_prefix": "/es"
+                        }
+                      ]
+                    },
+                    {
+                      "match": [
+                        {
+                          "path": [
+                            "/workDetails.html"
+                          ]
+                        }
+                      ],
+                      "handle": [
+                        {
+                          "handler": "map",
+                          "source": "{http.request.uri.query.wid}",
+                          "destinations": [
+                            "{id}"
+                          ],
+                          "mappings": [
+                            {
+                              "input_regexp": "([^_]+)_[vV][oO][lL]0*([1-9]+0*)$",
+                              "outputs": [
+                                "${1}:vol${2}"
+                              ]
+                            },
+                            {
+                              "input_regexp": "([^_]+)",
+                              "outputs": [
+                                "${1}"
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "handler": "static_response",
+                          "headers": {
+                            "Location": [
+                              "https://id.{mydomain}/texts/{id}?mode=details"
+                            ]
+                          },
+                          "status_code": 301
+                        }
+                      ]
+                    },
+                    {
+                      "handle": [
+                        {
+                          "handler": "rewrite",
+                          "uri": "{http.matchers.file.relative}"
+                        }
+                      ],
+                      "match": [
+                        {
+                          "file": {
+                            "try_files": [
+                              "{http.request.uri.path}.html",
+                              "{http.request.uri.path}"
+                            ]
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "handle": [
+                        {
+                          "encodings": {
+                            "gzip": {},
+                            "zstd": {}
+                          },
+                          "handler": "encode",
+                          "prefer": [
+                            "zstd",
+                            "gzip"
+                          ]
+                        },
+                        {
+                          "handler": "push"
+                        },
+                        {
+                          "handler": "templates",
+                          "mime_types": [
+                            "text/plain",
+                            "text/html",
+                            "text/markdown",
+                            "text/xml",
+                            "application/xml",
+                            "application/json"
+                          ]
+                        },
+                        {
+                          "handler": "file_server",
+                          "hide": [
+                            "./Caddyfile"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "terminal": true
+            },
+            {
+              "match": [
+                {
+                  "host": [
+                    "files.salamanca.school"
+                  ]
+                }
+              ],
+              "handle": [
+                {
+                  "encodings": {
+                    "gzip": {},
+                    "zstd": {}
+                  },
+                  "handler": "encode",
+                  "prefer": [
+                    "zstd",
+                    "gzip"
+                  ]
+                },
+                {
+                  "handler": "push"
+                },
+                {
+                  "handler": "templates",
+                  "mime_types": [
+                    "text/plain",
+                    "text/html",
+                    "text/markdown",
+                    "text/xml",
+                    "application/xml",
+                    "application/json"
+                  ]
+                },
+                {
+                  "handler": "file_server",
+                  "root": "/var/data/caddy/site/resources/files",
+                  "hide": [
+                    "./Caddyfile"
+                  ]
+                },
+                {
+                  "handler": "headers",
+                  "response": {
+                    "set": {
+                      "Access-Control-Allow-Headers": [
+                        "*"
+                      ],
+                      "Access-Control-Allow-Methods": [
+                        "*"
+                      ]
+                    }
+                  }
+                }
+              ],
+              "terminal": true
+            },
+            {
+              "match": [
+                {
+                  "host": [
+                    "api.salamanca.school"
+                  ]
+                }
+              ],
+              "handle": [
+                {
+                  "handler": "subroute",
+                  "routes": [
+                    {
+                      "handle": [
+                        {
+                          "handler": "defender",
+                          "raw_responder": "block",
+                          "ranges": ["aliyun", "aws", "azurepubliccloud", "deepseek", "gcloud", "githubcopilot", "openai", "mistral", "vultr"]
+                        }    
+                      ]
+                    },
+                    {
+                      "match": [
+                        {
+                          "header": {
+                            "User-Agent": [
+                              "*ClaudeBot*",
+                              "*YandexBot*",
+                              "*DotBot*",
+                              "*AhrefsBot*",
+                              "*Bytespider*",
+                              "*facebookexternalhit*",
+                              "*007ac9 Crawler*",
+                              "*008*",
+                              "*2ip.ru*",
+                              "*360Spider-Image*",
+                              "*360Spider-Video*",
+                              "*5emeRue*",
+                              "*5erue*",
+                              "*A Patent Crawler*",
+                              "*A6-Indexer*",
+                              "*ADmantX*",
+                              "*AI2Bot*",
+                              "*AISearchBot*",
+                              "*Aboundex*",
+                              "*AcademicBotRTU*",
+                              "*Acunetix Security Scanner*",
+                              "*Acunetix Web Vulnerability Scanner*",
+                              "*AdIdxBot*",
+                              "*AddSearchBot*",
+                              "*AddThis*",
+                              "*AdsBot-Google*",
+                              "*AdsBot-Google-Mobile*",
+                              "*AdsTxtCrawler*",
+                              "*AdvBot*",
+                              "*AhrefsBot*",
+                              "*Alexabot*",
+                              "*Alexibot*",
+                              "*AlphaBot*",
+                              "*Amazonbot*",
+                              "*AmiSoftware*",
+                              "*AndersPinkBot*",
+                              "*AnyEvent*",
+                              "*Apercite*",
+                              "*AppInsights*",
+                              "*Applebot*",
+                              "*Applebot-Extended*",
+                              "*Aqua_Products*",
+                              "*ArchiveBot*",
+                              "*Arquivo-web-crawler*",
+                              "*Ask n read*",
+                              "*AspiegelBot*",
+                              "*Augure*",
+                              "*AwarioBot*",
+                              "*AwarioSmartBot*",
+                              "*B2B Bot*",
+                              "*BDCbot*",
+                              "*BIGLOTRON*",
+                              "*BLEXBot*",
+                              "*BLP_bbot*",
+                              "*BTWebClient*",
+                              "*BUbiNG*",
+                              "*BackDoorBot*",
+                              "*BacklinkCrawler*",
+                              "*Baidu-YunGuanCe*",
+                              "*Baiduspider-image*",
+                              "*Baiduspider-news*",
+                              "*Baiduspider-video*",
+                              "*Barkrowler*",
+                              "*BehloolBot*",
+                              "*Better Uptime Bot*",
+                              "*Birdcrawlerbot*",
+                              "*BitBot*",
+                              "*BitSightBot*",
+                              "*Black Hole*",
+                              "*Blackboard*",
+                              "*Blekkobot*",
+                              "*BlowFish*",
+                              "*BomboraBot*",
+                              "*Bookmark search tool*",
+                              "*Bot.AraTurka.com*",
+                              "*BotALot*",
+                              "*BotRightHere*",
+                              "*BoxcarBot*",
+                              "*BrandONbot*",
+                              "*BrandVerity*",
+                              "*BrightEdge Crawler*",
+                              "*Buck*",
+                              "*BuiltBotTough*",
+                              "*Bullseye*",
+                              "*BunnySlippers*",
+                              "*Bytespider*",
+                              "*CC Metadata Scaper*",
+                              "*CISPA Webcrawler*",
+                              "*Caliperbot*",
+                              "*CapsuleChecker*",
+                              "*Cegbfeieh*",
+                              "*ChatGPT-User*",
+                              "*CheckMarkNetwork*",
+                              "*CheeseBot*",
+                              "*CherryPicker*",
+                              "*CherryPickerElite*",
+                              "*CherryPickerSE*",
+                              "*Cincraw*",
+                              "*Cision*",
+                              "*Citoid*",
+                              "*Claritybot*",
+                              "*Claude-Web*",
+                              "*ClaudeBot*",
+                              "*Clickagy*",
+                              "*Cliqzbot*",
+                              "*CloudFlare-AlwaysOnline*",
+                              "*Cocolyzebot*",
+                              "*Companybook-Crawler*",
+                              "*ContextAd Bot*",
+                              "*ConveraCrawler*",
+                              "*Cookiebot*",
+                              "*Copernic*",
+                              "*CopyRightCheck*",
+                              "*Corporama*",
+                              "*CrawlyProjectCrawler*",
+                              "*Crescent*",
+                              "*Crescent Internet ToolPak HTTP OLE Control v.1.0*",
+                              "*CriteoBot*",
+                              "*CrunchBot*",
+                              "*CrystalSemanticsBot*",
+                              "*Curebot*",
+                              "*Cutbot*",
+                              "*CyberPatrol*",
+                              "*DareBoost*",
+                              "*Dark Visitor Client*",
+                              "*DataForSeoBot*",
+                              "*Datafeedwatch*",
+                              "*Datanyze*",
+                              "*Dataprovider.com*",
+                              "*DeuSu*",
+                              "*Diffbot*",
+                              "*Digg Deeper*",
+                              "*Digimind*",
+                              "*Digincore bot*",
+                              "*Disqus*",
+                              "*DittoSpyder*",
+                              "*DnyzBot*",
+                              "*Domain Re-Animator Bot*",
+                              "*DomainCrawler*",
+                              "*DomainStatsBot*",
+                              "*Dow Jones Searchbot*",
+                              "*Download Ninja*",
+                              "*Dragonbot*",
+                              "*Dubbotbot*",
+                              "*DuckAssistBot*",
+                              "*EZID*",
+                              "*EasyBib AutoCite*",
+                              "*EmailCollector*",
+                              "*EmailSiphon*",
+                              "*EmailWolf*",
+                              "*EroCrawler*",
+                              "*EtaoSpider*",
+                              "*EveryoneSocialBot*",
+                              "*Exabot*",
+                              "*Experibot*",
+                              "*ExtLinksBot*",
+                              "*ExtractorPro*",
+                              "*Eyeotabot*",
+                              "*Ezooms*",
+                              "*FAST Enterprise Crawler*",
+                              "*FAST-WebCrawler*",
+                              "*FacebookBot*",
+                              "*Facebot*",
+                              "*FairAd Client*",
+                              "*FediDB*",
+                              "*FeedBurner*",
+                              "*FemtosearchBot*",
+                              "*Fever*",
+                              "*FindITAnswersbot*",
+                              "*Flaming AttackBot*",
+                              "*Flamingo_SearchEngine*",
+                              "*Foobot*",
+                              "*FreeWebMonitoring SiteChecker*",
+                              "*FreshpingBot*",
+                              "*Fyrebot*",
+                              "*G2 Web Services*",
+                              "*GPTBot*",
+                              "*Gaisbot*",
+                              "*GarlikCrawler*",
+                              "*Genieo*",
+                              "*GenomeCrawlerd*",
+                              "*GetRight*",
+                              "*Gigablast*",
+                              "*Gigabot*",
+                              "*GingerCrawler*",
+                              "*Gluten Free Crawler*",
+                              "*GnowitNewsbot*",
+                              "*Google-Adwords-Instant*",
+                              "*Google-Certificates-Bridge*",
+                              "*Google-PhysicalWeb*",
+                              "*Google-Safety*",
+                              "*Google-Site-Verification*",
+                              "*Google-Structured-Data-Testing-Tool*",
+                              "*Gowikibot*",
+                              "*GrapeshotCrawler*",
+                              "*Grobbot*",
+                              "*GroupHigh*",
+                              "*Gwene*",
+                              "*HTTrack*",
+                              "*HTTrack 3.0*",
+                              "*Harvest*",
+                              "*HawaiiBot*",
+                              "*HeadlessChrome*",
+                              "*HubSpot*",
+                              "*IAS crawler*",
+                              "*ICBot*",
+                              "*ICC-Crawler*",
+                              "*INETDEX-BOT*",
+                              "*IRLbot*",
+                              "*ImagesiftBot*",
+                              "*IndeedBot*",
+                              "*InfoNaviRobot*",
+                              "*InterfaxScanBot*",
+                              "*IonCrawl*",
+                              "*Iron33*",
+                              "*IsraBot*",
+                              "*James BOT*",
+                              "*JamesBOT*",
+                              "*Jamie's Spider*",
+                              "*JenkersBot*",
+                              "*JennyBot*",
+                              "*Jetbot*",
+                              "*Jetty*",
+                              "*JikeSpider*",
+                              "*JobboerseBot*",
+                              "*Jooblebot*",
+                              "*Jugendschutzprogramm-Crawler*",
+                              "*K7MLWCBot*",
+                              "*KStandBot*",
+                              "*Kangaroo Bot*",
+                              "*Kemvibot*",
+                              "*Kenjin Spider*",
+                              "*Keyword Density*",
+                              "*Knowings*",
+                              "*KomodiaBot*",
+                              "*KosmioBot*",
+                              "*LNSpiderguy*",
+                              "*Landau-Media-Spider*",
+                              "*Laserlikebot*",
+                              "*Leikibot*",
+                              "*LexiBot*",
+                              "*LightspeedSystemsCrawler*",
+                              "*Linespider*",
+                              "*Linguee Bot*",
+                              "*LinkArchiver*",
+                              "*LinkCheck by Siteimprove.com*",
+                              "*LinkScan*",
+                              "*LinkWalker*",
+                              "*LinkextractorPro*",
+                              "*LinkisBot*",
+                              "*LinkpadBot*",
+                              "*LivelapBot*",
+                              "*Luminator-robots*",
+                              "*MBCrawler*",
+                              "*MIIxpc*",
+                              "*MJ12bot*",
+                              "*MS Search 4.0 Robot*",
+                              "*MS Search 6.0 Robot*",
+                              "*MSIECrawler*",
+                              "*MTRobot*",
+                              "*MaCoCu*",
+                              "*Mata Hari*",
+                              "*MauiBot*",
+                              "*Mediapartners-Google*",
+                              "*Mediatoolkitbot*",
+                              "*MegaIndex*",
+                              "*MegaIndex.ru*",
+                              "*Meltawer*",
+                              "*Meltwater*",
+                              "*MeltwaterNews*",
+                              "*Meta-ExternalAgent*",
+                              "*Meta-ExternalFetcher*",
+                              "*MetaInspector*",
+                              "*MetaJobBot*",
+                              "*MetaURI*",
+                              "*Mister PiX*",
+                              "*MixnodeCache*",
+                              "*Mojeek*",
+                              "*MoodleBot*",
+                              "*Moreover*",
+                              "*MuckRack*",
+                              "*Multiviewbot*",
+                              "*NICErsPRO*",
+                              "*NINJA bot*",
+                              "*NIXStatsbot*",
+                              "*NLUX_IAHarvester*",
+                              "*NPBot*",
+                              "*NTENTbot*",
+                              "*NaverBot*",
+                              "*Neevabot*",
+                              "*NerdByNature.Bot*",
+                              "*NetAnts*",
+                              "*NetMechanic*",
+                              "*NetSystemsResearch*",
+                              "*NetcraftSurveyAgent*",
+                              "*Neticle Crawler*",
+                              "*Netvibes*",
+                              "*NewsNow*",
+                              "*Newzbin*",
+                              "*NextGenSearchBot*",
+                              "*Nicecrawler*",
+                              "*NimbleCrawler*",
+                              "*Nimbostratus-Bot*",
+                              "*Nmap Scripting Engine*",
+                              "*Nutch*",
+                              "*Nuzzel*",
+                              "*OAI-SearchBot*",
+                              "*OdklBot*",
+                              "*Offline Explorer*",
+                              "*OpenGraphCheck*",
+                              "*OpenHoseBot*",
+                              "*Openbot*",
+                              "*Openfind*",
+                              "*Openfind data gatherer*",
+                              "*OpenindexSpider*",
+                              "*Operator*",
+                              "*Oracle Ultra Search*",
+                              "*OrangeBot*",
+                              "*Orthogaffe*",
+                              "*OutclicksBot*",
+                              "*PR-CY.RU*",
+                              "*PagePeeker*",
+                              "*PageThing*",
+                              "*Pandalytics*",
+                              "*PanguBot*",
+                              "*PerMan*",
+                              "*PerplexityBot*",
+                              "*Pingdom*",
+                              "*Pinterest*",
+                              "*PiplBot*",
+                              "*Primalbot*",
+                              "*PrivacyAwareBot*",
+                              "*ProPowerBot*",
+                              "*ProWebWalker*",
+                              "*Pulsepoint*",
+                              "*QueryN Metasearch*",
+                              "*Qwam content intelligence*",
+                              "*Radiation Retriever 1.1*",
+                              "*RankActiveLinkBot*",
+                              "*RankFlex*",
+                              "*Refindbot*",
+                              "*RegionStuttgartBot*",
+                              "*RepoMonkey*",
+                              "*RepoMonkey Bait & Tackle*",
+                              "*RetrevoPageAnalyzer*",
+                              "*ReverseEngineeringBot*",
+                              "*RidderBot*",
+                              "*Riddler*",
+                              "*Rivva*",
+                              "*Robozilla*",
+                              "*RukiCrawler*",
+                              "*RuxitSynthetic*",
+                              "*RyteBot*",
+                              "*SBL-BOT*",
+                              "*SEOkicks*",
+                              "*SEOkicks-Robot*",
+                              "*SEOlizer*",
+                              "*SEOstats*",
+                              "*SMTBot*",
+                              "*SWIMGBot*",
+                              "*SafeDNSBot*",
+                              "*SafeSearch microdata crawler*",
+                              "*ScoutJet*",
+                              "*Scrapy*",
+                              "*Screaming Frog SEO Spider*",
+                              "*Scrubby*",
+                              "*SearchAtlas*",
+                              "*SearchmetricsBot*",
+                              "*Seekport Crawler*",
+                              "*SeekportBot*",
+                              "*Seekr*",
+                              "*SemrushBot*",
+                              "*SemrushBot-BA*",
+                              "*SemrushBot-BM*",
+                              "*SemrushBot-CT*",
+                              "*SemrushBot-SA*",
+                              "*SemrushBot-SI*",
+                              "*SemrushBot-SWA*",
+                              "*SenutoBot*",
+                              "*SeobilityBot*",
+                              "*SimpleCrawler*",
+                              "*SimpleScraper*",
+                              "*Sindup*",
+                              "*SiteBot*",
+                              "*SiteCheckerBotCrawler*",
+                              "*SiteSnagger*",
+                              "*SiteSucker*",
+                              "*Siteimprove*",
+                              "*Siteimprove.com*",
+                              "*Slack-ImgProxy*",
+                              "*Slackbot*",
+                              "*Slurp*",
+                              "*SocialRankIOBot*",
+                              "*Sogou*",
+                              "*Sogou inst spider*",
+                              "*Sogou spider2*",
+                              "*Sonic*",
+                              "*Sosospider*",
+                              "*SpankBot*",
+                              "*Spinn3r*",
+                              "*SputnikBot*",
+                              "*Storebot-Google*",
+                              "*StorygizeBot*",
+                              "*StractBot*",
+                              "*Streamline3Bot*",
+                              "*SummalyBot*",
+                              "*SuperBot*",
+                              "*SurveyBot*",
+                              "*Swiftbot*",
+                              "*Synthesio*",
+                              "*Sysomos*",
+                              "*Szukacz*",
+                              "*Taboolabot*",
+                              "*Talkwater*",
+                              "*TangibleeBot*",
+                              "*Teleport*",
+                              "*TeleportPro*",
+                              "*Telesoft*",
+                              "*The Intraformant*",
+                              "*TheNomad*",
+                              "*Thinklab*",
+                              "*Timpibot*",
+                              "*Titan*",
+                              "*TombaPublicWebCrawler*",
+                              "*ToutiaoSpider*",
+                              "*Traackr.com*",
+                              "*TrendsmapResolver*",
+                              "*True_Robot*",
+                              "*TruliaBot*",
+                              "*Turnitin*",
+                              "*TurnitinBot*",
+                              "*TweetmemeBot*",
+                              "*Twingly*",
+                              "*Twurly*",
+                              "*URL Control*",
+                              "*URL_Spider_Pro*",
+                              "*URLy Warning*",
+                              "*UT-Dorkbot*",
+                              "*UbiCrawler*",
+                              "*Updownerbot*",
+                              "*Upflow*",
+                              "*Uptime-Kuma*",
+                              "*UptimeRobot*",
+                              "*Uptimebot.org*",
+                              "*UsineNouvelleCrawler*",
+                              "*VCI*",
+                              "*VCI WebViewer VCI WebViewer Win32*",
+                              "*VKRobot*",
+                              "*Validator.nu*",
+                              "*VelenPublicWebCrawler*",
+                              "*Veoozbot*",
+                              "*Vigil*",
+                              "*VoluumDSP-content-bot*",
+                              "*W3C-checklink*",
+                              "*W3C-mobileOK*",
+                              "*W3C_I18n-Checker*",
+                              "*W3C_Unicorn*",
+                              "*WASALive-Bot*",
+                              "*WWW-Collector-E*",
+                              "*WWW-Mechanize*",
+                              "*Web Image Collector*",
+                              "*WebAuto*",
+                              "*WebBandit*",
+                              "*WebCapture 2.0*",
+                              "*WebCopier*",
+                              "*WebCopier v.2.2*",
+                              "*WebCopier v3.2a*",
+                              "*WebDataStats*",
+                              "*WebEnhancer*",
+                              "*WebReaper*",
+                              "*WebSauger*",
+                              "*WebStripper*",
+                              "*WebZIP*",
+                              "*WebmasterWorldForumBot*",
+                              "*Website Quester*",
+                              "*Webzio*",
+                              "*Webzio-Extended*",
+                              "*WinHTTrack*",
+                              "*WiseGuys Robot*",
+                              "*WordupInfoSearch*",
+                              "*Xenu*",
+                              "*Xenu Link Sleuth*",
+                              "*Xenu's*",
+                              "*Xenu's Link Sleuth 1.1c*",
+                              "*YaK*",
+                              "*Yahoo Pipes 1.0*",
+                              "*YandexMobileBot*",
+                              "*YandexVideo*",
+                              "*Yellowbrandprotectionbot*",
+                              "*YouBot*",
+                              "*YoudaoBot*",
+                              "*Youmag*",
+                              "*Zabbix*",
+                              "*Zao*",
+                              "*Zealbot*",
+                              "*Zeus*",
+                              "*Zeus Link Scout*",
+                              "*Zite*",
+                              "*ZoomBot*",
+                              "*ZoominfoBot*",
+                              "*ZuperlistBot*",
+                              "*ZyBORG*",
+                              "*acapbot*",
+                              "*acoonbot*",
+                              "*adbeat_bot*",
+                              "*adequat*",
+                              "*adequat-systems*",
+                              "*adscanner*",
+                              "*aiHitBot*",
+                              "*anthropic-ai*",
+                              "*antibot*",
+                              "*arabot*",
+                              "*archive.org_bot*",
+                              "*asknread.com*",
+                              "*asterias*",
+                              "*auramundi*",
+                              "*awesomecrawler*",
+                              "*b2w*",
+                              "*betaBot*",
+                              "*bidswitchbot*",
+                              "*binlar*",
+                              "*blogmuraBot*",
+                              "*bnf.fr_bot*",
+                              "*bot-pge.chlooe.com*",
+                              "*botify*",
+                              "*brainobot*",
+                              "*buzzbot*",
+                              "*cXensebot*",
+                              "*careerbot*",
+                              "*centurybot*",
+                              "*changedetection*",
+                              "*citeseerxbot*",
+                              "*coccoc*",
+                              "*coccocbot*",
+                              "*coexel*",
+                              "*cohere-ai*",
+                              "*cohere-training-data-crawler*",
+                              "*content crawler spider*",
+                              "*contxbot*",
+                              "*convera*",
+                              "*cosmos*",
+                              "*crawler4j*",
+                              "*datagnionbot*",
+                              "*daumoa*",
+                              "*dcrawl*",
+                              "*deepcrawl*",
+                              "*deepnoc*",
+                              "*discobot*",
+                              "*dotbot*",
+                              "*drupact*",
+                              "*e.ventures Investment Crawler*",
+                              "*ec2linkfinder*",
+                              "*edisterbot*",
+                              "*electricmonk*",
+                              "*elisabot*",
+                              "*ellisphere*",
+                              "*epicbot*",
+                              "*eright*",
+                              "*europarchive.org*",
+                              "*ev-crawler*",
+                              "*evc-batch*",
+                              "*fedoraplanet*",
+                              "*findlink*",
+                              "*findthatfile*",
+                              "*findxbot*",
+                              "*fluffy*",
+                              "*fr-crawler*",
+                              "*fuelbot*",
+                              "*g00g1e.net*",
+                              "*g2reader-bot*",
+                              "*gnam gnam spider*",
+                              "*google-xrawler*",
+                              "*grapeshot*",
+                              "*grub-client*",
+                              "*grub.org*",
+                              "*gsa-crawler*",
+                              "*gslfbot*",
+                              "*heritrix*",
+                              "*humanlinks*",
+                              "*hypestat*",
+                              "*hyscore.io*",
+                              "*ia_archiver*",
+                              "*ia_archiver-web.archive.org*",
+                              "*ichiro*",
+                              "*imrbot*",
+                              "*infoobot*",
+                              "*infoseek*",
+                              "*integromedb*",
+                              "*intelium_bot*",
+                              "*ip-web-crawler.com*",
+                              "*iskanie*",
+                              "*istellabot*",
+                              "*it2media-domain-crawler*",
+                              "*jpg-newsbot*",
+                              "*jyxobot*",
+                              "*k2spider*",
+                              "*kbcrawl*",
+                              "*keys-so-bot*",
+                              "*larbin*",
+                              "*lb-spider*",
+                              "*leadbox*",
+                              "*libWeb*",
+                              "*linkapediabot*",
+                              "*linkdex*",
+                              "*linkdexbot*",
+                              "*linkfluence*",
+                              "*linko*",
+                              "*lipperhey*",
+                              "*lkxscan*",
+                              "*lssbot*",
+                              "*lssrocketcrawler*",
+                              "*ltx71*",
+                              "*lwp-trivial*",
+                              "*magpie-crawler*",
+                              "*mappydata*",
+                              "*memorybot*",
+                              "*mention*",
+                              "*meta-.*agent",
+                              "*mindUpBot*",
+                              "*minicrawler*",
+                              "*mlbot*",
+                              "*moatbot*",
+                              "*moget*",
+                              "*msrbot*",
+                              "*mytwip*",
+                              "*nerdybot*",
+                              "*netEstate NE Crawler*",
+                              "*netresearchserver*",
+                              "*newsharecounts*",
+                              "*newspaper*",
+                              "*niki-bot*",
+                              "*officestorebot*",
+                              "*omgili*",
+                              "*omgilibot*",
+                              "*online-webceo-bot*",
+                              "*opinion-tracker*",
+                              "*outbrain*",
+                              "*panscient.com*",
+                              "*peer39_crawler*",
+                              "*postrank*",
+                              "*proxem*",
+                              "*proximic*",
+                              "*psbot*",
+                              "*purebot*",
+                              "*scoop.it*",
+                              "*score3*",
+                              "*scribdbot*",
+                              "*searchpreview*",
+                              "*seekbot*",
+                              "*seewithkids*",
+                              "*semanticbot*",
+                              "*sempi.tech*",
+                              "*sentibot*",
+                              "*seoscanners*",
+                              "*seostar.co*",
+                              "*serpstatbot*",
+                              "*sistrix crawler*",
+                              "*sitecheck.internetseer.com*",
+                              "*siteexplorer.info*",
+                              "*spanner*",
+                              "*spbot*",
+                              "*spotter*",
+                              "*summify*",
+                              "*suzuran*",
+                              "*tagoobot*",
+                              "*theoldreader.com*",
+                              "*tigerbot*",
+                              "*toCrawl*",
+                              "*toplistbot*",
+                              "*tracemyfile*",
+                              "*trafilatura*",
+                              "*trendeo*",
+                              "*trendictionbot*",
+                              "*trendkite-akashic-crawler*",
+                              "*trendybuzz*",
+                              "*trovitBot*",
+                              "*turingos*",
+                              "*tweetedtimes*",
+                              "*twengabot*",
+                              "*um-IC*",
+                              "*um-LN*",
+                              "*urlappendbot*",
+                              "*usasearch*",
+                              "*vebidoobot*",
+                              "*vecteurplus*",
+                              "*verticalsearch*",
+                              "*virustotal*",
+                              "*voilabot*",
+                              "*voltron*",
+                              "*vsw*",
+                              "*vuhuvBot*",
+                              "*wbsearchbot*",
+                              "*web-archive-net.com.bot*",
+                              "*webcompanycrawler*",
+                              "*webmon*",
+                              "*winello*",
+                              "*wocbot*",
+                              "*woobot*",
+                              "*woorankreview*",
+                              "*woriobot*",
+                              "*wotbox*",
+                              "*www.uptime.com*",
+                              "*xovibot*",
+                              "*yanga*",
+                              "*yoozBot*",
+                              "*zenback bot*",
+                              "*zgrab*"
+                            ]
+                          }
+                        }
+                      ],
+                      "handle": [
+                        {
+                          "handler": "log_append",
+                          "key": "reason",
+                          "value": "Blocked for suspect User Agent value"
+                        },
+                        {
+                          "handler": "static_response",
+                          "status_code": 403
+                        }
+                      ]
+                    },
+                    {
+                      "handle": [
+                        {
+                          "handler": "headers",
+                          "response": {
+                            "set": {
+                              "Access-Control-Allow-Headers": [
+                                "*"
+                              ],
+                              "Access-Control-Allow-Methods": [
+                                "*"
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "group": "group12",
+                      "handle": [
+                        {
+                          "handler": "rewrite",
+                          "uri": "/exist/restxq{http.request.uri}"
+                        }
+                      ]
+                    },
+                    {
+                      "handle": [
+                        {
+                          "encodings": {
+                            "gzip": {},
+                            "zstd": {}
+                          },
+                          "handler": "encode",
+                          "prefer": [
+                            "zstd",
+                            "gzip"
+                          ]
+                        },
+                        {
+                          "handler": "push"
+                        },
+                        {
+                          "handler": "reverse_proxy",
+                          "headers": {
+                            "response": {
+                              "set": {
+                                "Access-Control-Allow-Headers": [
+                                  "*"
+                                ],
+                                "Access-Control-Allow-Methods": [
+                                  "*"
+                                ],
+                                "Access-Control-Allow-Origin": [
+                                  "*"
+                                ]
+                              }
+                            }
+                          },
+                          "upstreams": [
+                            {
+                              "dial": "localhost:8080"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "terminal": true
+            },
+            {
+              "match": [
+                {
+                  "host": [
+                    "id.salamanca.school"
+                  ]
+                }
+              ],
+              "handle": [
+                {
+                  "handler": "subroute",
+                  "routes": [
+                    {
+                      "handle": [
+                        {
+                          "handler": "defender",
+                          "raw_responder": "block",
+                          "ranges": ["aliyun", "aws", "azurepubliccloud", "deepseek", "gcloud", "githubcopilot", "openai", "mistral", "vultr"]
+                        }    
+                      ]
+                    },
+                    {
+                      "match": [
+                        {
+                          "header": {
+                            "User-Agent": [
+                              "*ClaudeBot*",
+                              "*YandexBot*",
+                              "*DotBot*",
+                              "*AhrefsBot*",
+                              "*Bytespider*",
+                              "*facebookexternalhit*",
+                              "*007ac9 Crawler*",
+                              "*008*",
+                              "*2ip.ru*",
+                              "*360Spider-Image*",
+                              "*360Spider-Video*",
+                              "*5emeRue*",
+                              "*5erue*",
+                              "*A Patent Crawler*",
+                              "*A6-Indexer*",
+                              "*ADmantX*",
+                              "*AI2Bot*",
+                              "*AISearchBot*",
+                              "*Aboundex*",
+                              "*AcademicBotRTU*",
+                              "*Acunetix Security Scanner*",
+                              "*Acunetix Web Vulnerability Scanner*",
+                              "*AdIdxBot*",
+                              "*AddSearchBot*",
+                              "*AddThis*",
+                              "*AdsBot-Google*",
+                              "*AdsBot-Google-Mobile*",
+                              "*AdsTxtCrawler*",
+                              "*AdvBot*",
+                              "*AhrefsBot*",
+                              "*Alexabot*",
+                              "*Alexibot*",
+                              "*AlphaBot*",
+                              "*Amazonbot*",
+                              "*AmiSoftware*",
+                              "*AndersPinkBot*",
+                              "*AnyEvent*",
+                              "*Apercite*",
+                              "*AppInsights*",
+                              "*Applebot*",
+                              "*Applebot-Extended*",
+                              "*Aqua_Products*",
+                              "*ArchiveBot*",
+                              "*Arquivo-web-crawler*",
+                              "*Ask n read*",
+                              "*AspiegelBot*",
+                              "*Augure*",
+                              "*AwarioBot*",
+                              "*AwarioSmartBot*",
+                              "*B2B Bot*",
+                              "*BDCbot*",
+                              "*BIGLOTRON*",
+                              "*BLEXBot*",
+                              "*BLP_bbot*",
+                              "*BTWebClient*",
+                              "*BUbiNG*",
+                              "*BackDoorBot*",
+                              "*BacklinkCrawler*",
+                              "*Baidu-YunGuanCe*",
+                              "*Baiduspider-image*",
+                              "*Baiduspider-news*",
+                              "*Baiduspider-video*",
+                              "*Barkrowler*",
+                              "*BehloolBot*",
+                              "*Better Uptime Bot*",
+                              "*Birdcrawlerbot*",
+                              "*BitBot*",
+                              "*BitSightBot*",
+                              "*Black Hole*",
+                              "*Blackboard*",
+                              "*Blekkobot*",
+                              "*BlowFish*",
+                              "*BomboraBot*",
+                              "*Bookmark search tool*",
+                              "*Bot.AraTurka.com*",
+                              "*BotALot*",
+                              "*BotRightHere*",
+                              "*BoxcarBot*",
+                              "*BrandONbot*",
+                              "*BrandVerity*",
+                              "*BrightEdge Crawler*",
+                              "*Buck*",
+                              "*BuiltBotTough*",
+                              "*Bullseye*",
+                              "*BunnySlippers*",
+                              "*Bytespider*",
+                              "*CC Metadata Scaper*",
+                              "*CISPA Webcrawler*",
+                              "*Caliperbot*",
+                              "*CapsuleChecker*",
+                              "*Cegbfeieh*",
+                              "*ChatGPT-User*",
+                              "*CheckMarkNetwork*",
+                              "*CheeseBot*",
+                              "*CherryPicker*",
+                              "*CherryPickerElite*",
+                              "*CherryPickerSE*",
+                              "*Cincraw*",
+                              "*Cision*",
+                              "*Citoid*",
+                              "*Claritybot*",
+                              "*Claude-Web*",
+                              "*ClaudeBot*",
+                              "*Clickagy*",
+                              "*Cliqzbot*",
+                              "*CloudFlare-AlwaysOnline*",
+                              "*Cocolyzebot*",
+                              "*Companybook-Crawler*",
+                              "*ContextAd Bot*",
+                              "*ConveraCrawler*",
+                              "*Cookiebot*",
+                              "*Copernic*",
+                              "*CopyRightCheck*",
+                              "*Corporama*",
+                              "*CrawlyProjectCrawler*",
+                              "*Crescent*",
+                              "*Crescent Internet ToolPak HTTP OLE Control v.1.0*",
+                              "*CriteoBot*",
+                              "*CrunchBot*",
+                              "*CrystalSemanticsBot*",
+                              "*Curebot*",
+                              "*Cutbot*",
+                              "*CyberPatrol*",
+                              "*DareBoost*",
+                              "*Dark Visitor Client*",
+                              "*DataForSeoBot*",
+                              "*Datafeedwatch*",
+                              "*Datanyze*",
+                              "*Dataprovider.com*",
+                              "*DeuSu*",
+                              "*Diffbot*",
+                              "*Digg Deeper*",
+                              "*Digimind*",
+                              "*Digincore bot*",
+                              "*Disqus*",
+                              "*DittoSpyder*",
+                              "*DnyzBot*",
+                              "*Domain Re-Animator Bot*",
+                              "*DomainCrawler*",
+                              "*DomainStatsBot*",
+                              "*Dow Jones Searchbot*",
+                              "*Download Ninja*",
+                              "*Dragonbot*",
+                              "*Dubbotbot*",
+                              "*DuckAssistBot*",
+                              "*EZID*",
+                              "*EasyBib AutoCite*",
+                              "*EmailCollector*",
+                              "*EmailSiphon*",
+                              "*EmailWolf*",
+                              "*EroCrawler*",
+                              "*EtaoSpider*",
+                              "*EveryoneSocialBot*",
+                              "*Exabot*",
+                              "*Experibot*",
+                              "*ExtLinksBot*",
+                              "*ExtractorPro*",
+                              "*Eyeotabot*",
+                              "*Ezooms*",
+                              "*FAST Enterprise Crawler*",
+                              "*FAST-WebCrawler*",
+                              "*FacebookBot*",
+                              "*Facebot*",
+                              "*FairAd Client*",
+                              "*FediDB*",
+                              "*FeedBurner*",
+                              "*FemtosearchBot*",
+                              "*Fever*",
+                              "*FindITAnswersbot*",
+                              "*Flaming AttackBot*",
+                              "*Flamingo_SearchEngine*",
+                              "*Foobot*",
+                              "*FreeWebMonitoring SiteChecker*",
+                              "*FreshpingBot*",
+                              "*Fyrebot*",
+                              "*G2 Web Services*",
+                              "*GPTBot*",
+                              "*Gaisbot*",
+                              "*GarlikCrawler*",
+                              "*Genieo*",
+                              "*GenomeCrawlerd*",
+                              "*GetRight*",
+                              "*Gigablast*",
+                              "*Gigabot*",
+                              "*GingerCrawler*",
+                              "*Gluten Free Crawler*",
+                              "*GnowitNewsbot*",
+                              "*Google-Adwords-Instant*",
+                              "*Google-Certificates-Bridge*",
+                              "*Google-PhysicalWeb*",
+                              "*Google-Safety*",
+                              "*Google-Site-Verification*",
+                              "*Google-Structured-Data-Testing-Tool*",
+                              "*Gowikibot*",
+                              "*GrapeshotCrawler*",
+                              "*Grobbot*",
+                              "*GroupHigh*",
+                              "*Gwene*",
+                              "*HTTrack*",
+                              "*HTTrack 3.0*",
+                              "*Harvest*",
+                              "*HawaiiBot*",
+                              "*HeadlessChrome*",
+                              "*HubSpot*",
+                              "*IAS crawler*",
+                              "*ICBot*",
+                              "*ICC-Crawler*",
+                              "*INETDEX-BOT*",
+                              "*IRLbot*",
+                              "*ImagesiftBot*",
+                              "*IndeedBot*",
+                              "*InfoNaviRobot*",
+                              "*InterfaxScanBot*",
+                              "*IonCrawl*",
+                              "*Iron33*",
+                              "*IsraBot*",
+                              "*James BOT*",
+                              "*JamesBOT*",
+                              "*Jamie's Spider*",
+                              "*JenkersBot*",
+                              "*JennyBot*",
+                              "*Jetbot*",
+                              "*Jetty*",
+                              "*JikeSpider*",
+                              "*JobboerseBot*",
+                              "*Jooblebot*",
+                              "*Jugendschutzprogramm-Crawler*",
+                              "*K7MLWCBot*",
+                              "*KStandBot*",
+                              "*Kangaroo Bot*",
+                              "*Kemvibot*",
+                              "*Kenjin Spider*",
+                              "*Keyword Density*",
+                              "*Knowings*",
+                              "*KomodiaBot*",
+                              "*KosmioBot*",
+                              "*LNSpiderguy*",
+                              "*Landau-Media-Spider*",
+                              "*Laserlikebot*",
+                              "*Leikibot*",
+                              "*LexiBot*",
+                              "*LightspeedSystemsCrawler*",
+                              "*Linespider*",
+                              "*Linguee Bot*",
+                              "*LinkArchiver*",
+                              "*LinkCheck by Siteimprove.com*",
+                              "*LinkScan*",
+                              "*LinkWalker*",
+                              "*LinkextractorPro*",
+                              "*LinkisBot*",
+                              "*LinkpadBot*",
+                              "*LivelapBot*",
+                              "*Luminator-robots*",
+                              "*MBCrawler*",
+                              "*MIIxpc*",
+                              "*MJ12bot*",
+                              "*MS Search 4.0 Robot*",
+                              "*MS Search 6.0 Robot*",
+                              "*MSIECrawler*",
+                              "*MTRobot*",
+                              "*MaCoCu*",
+                              "*Mata Hari*",
+                              "*MauiBot*",
+                              "*Mediapartners-Google*",
+                              "*Mediatoolkitbot*",
+                              "*MegaIndex*",
+                              "*MegaIndex.ru*",
+                              "*Meltawer*",
+                              "*Meltwater*",
+                              "*MeltwaterNews*",
+                              "*Meta-ExternalAgent*",
+                              "*Meta-ExternalFetcher*",
+                              "*MetaInspector*",
+                              "*MetaJobBot*",
+                              "*MetaURI*",
+                              "*Mister PiX*",
+                              "*MixnodeCache*",
+                              "*Mojeek*",
+                              "*MoodleBot*",
+                              "*Moreover*",
+                              "*MuckRack*",
+                              "*Multiviewbot*",
+                              "*NICErsPRO*",
+                              "*NINJA bot*",
+                              "*NIXStatsbot*",
+                              "*NLUX_IAHarvester*",
+                              "*NPBot*",
+                              "*NTENTbot*",
+                              "*NaverBot*",
+                              "*Neevabot*",
+                              "*NerdByNature.Bot*",
+                              "*NetAnts*",
+                              "*NetMechanic*",
+                              "*NetSystemsResearch*",
+                              "*NetcraftSurveyAgent*",
+                              "*Neticle Crawler*",
+                              "*Netvibes*",
+                              "*NewsNow*",
+                              "*Newzbin*",
+                              "*NextGenSearchBot*",
+                              "*Nicecrawler*",
+                              "*NimbleCrawler*",
+                              "*Nimbostratus-Bot*",
+                              "*Nmap Scripting Engine*",
+                              "*Nutch*",
+                              "*Nuzzel*",
+                              "*OAI-SearchBot*",
+                              "*OdklBot*",
+                              "*Offline Explorer*",
+                              "*OpenGraphCheck*",
+                              "*OpenHoseBot*",
+                              "*Openbot*",
+                              "*Openfind*",
+                              "*Openfind data gatherer*",
+                              "*OpenindexSpider*",
+                              "*Operator*",
+                              "*Oracle Ultra Search*",
+                              "*OrangeBot*",
+                              "*Orthogaffe*",
+                              "*OutclicksBot*",
+                              "*PR-CY.RU*",
+                              "*PagePeeker*",
+                              "*PageThing*",
+                              "*Pandalytics*",
+                              "*PanguBot*",
+                              "*PerMan*",
+                              "*PerplexityBot*",
+                              "*Pingdom*",
+                              "*Pinterest*",
+                              "*PiplBot*",
+                              "*Primalbot*",
+                              "*PrivacyAwareBot*",
+                              "*ProPowerBot*",
+                              "*ProWebWalker*",
+                              "*Pulsepoint*",
+                              "*QueryN Metasearch*",
+                              "*Qwam content intelligence*",
+                              "*Radiation Retriever 1.1*",
+                              "*RankActiveLinkBot*",
+                              "*RankFlex*",
+                              "*Refindbot*",
+                              "*RegionStuttgartBot*",
+                              "*RepoMonkey*",
+                              "*RepoMonkey Bait & Tackle*",
+                              "*RetrevoPageAnalyzer*",
+                              "*ReverseEngineeringBot*",
+                              "*RidderBot*",
+                              "*Riddler*",
+                              "*Rivva*",
+                              "*Robozilla*",
+                              "*RukiCrawler*",
+                              "*RuxitSynthetic*",
+                              "*RyteBot*",
+                              "*SBL-BOT*",
+                              "*SEOkicks*",
+                              "*SEOkicks-Robot*",
+                              "*SEOlizer*",
+                              "*SEOstats*",
+                              "*SMTBot*",
+                              "*SWIMGBot*",
+                              "*SafeDNSBot*",
+                              "*SafeSearch microdata crawler*",
+                              "*ScoutJet*",
+                              "*Scrapy*",
+                              "*Screaming Frog SEO Spider*",
+                              "*Scrubby*",
+                              "*SearchAtlas*",
+                              "*SearchmetricsBot*",
+                              "*Seekport Crawler*",
+                              "*SeekportBot*",
+                              "*Seekr*",
+                              "*SemrushBot*",
+                              "*SemrushBot-BA*",
+                              "*SemrushBot-BM*",
+                              "*SemrushBot-CT*",
+                              "*SemrushBot-SA*",
+                              "*SemrushBot-SI*",
+                              "*SemrushBot-SWA*",
+                              "*SenutoBot*",
+                              "*SeobilityBot*",
+                              "*SimpleCrawler*",
+                              "*SimpleScraper*",
+                              "*Sindup*",
+                              "*SiteBot*",
+                              "*SiteCheckerBotCrawler*",
+                              "*SiteSnagger*",
+                              "*SiteSucker*",
+                              "*Siteimprove*",
+                              "*Siteimprove.com*",
+                              "*Slack-ImgProxy*",
+                              "*Slackbot*",
+                              "*Slurp*",
+                              "*SocialRankIOBot*",
+                              "*Sogou*",
+                              "*Sogou inst spider*",
+                              "*Sogou spider2*",
+                              "*Sonic*",
+                              "*Sosospider*",
+                              "*SpankBot*",
+                              "*Spinn3r*",
+                              "*SputnikBot*",
+                              "*Storebot-Google*",
+                              "*StorygizeBot*",
+                              "*StractBot*",
+                              "*Streamline3Bot*",
+                              "*SummalyBot*",
+                              "*SuperBot*",
+                              "*SurveyBot*",
+                              "*Swiftbot*",
+                              "*Synthesio*",
+                              "*Sysomos*",
+                              "*Szukacz*",
+                              "*Taboolabot*",
+                              "*Talkwater*",
+                              "*TangibleeBot*",
+                              "*Teleport*",
+                              "*TeleportPro*",
+                              "*Telesoft*",
+                              "*The Intraformant*",
+                              "*TheNomad*",
+                              "*Thinklab*",
+                              "*Timpibot*",
+                              "*Titan*",
+                              "*TombaPublicWebCrawler*",
+                              "*ToutiaoSpider*",
+                              "*Traackr.com*",
+                              "*TrendsmapResolver*",
+                              "*True_Robot*",
+                              "*TruliaBot*",
+                              "*Turnitin*",
+                              "*TurnitinBot*",
+                              "*TweetmemeBot*",
+                              "*Twingly*",
+                              "*Twurly*",
+                              "*URL Control*",
+                              "*URL_Spider_Pro*",
+                              "*URLy Warning*",
+                              "*UT-Dorkbot*",
+                              "*UbiCrawler*",
+                              "*Updownerbot*",
+                              "*Upflow*",
+                              "*Uptime-Kuma*",
+                              "*UptimeRobot*",
+                              "*Uptimebot.org*",
+                              "*UsineNouvelleCrawler*",
+                              "*VCI*",
+                              "*VCI WebViewer VCI WebViewer Win32*",
+                              "*VKRobot*",
+                              "*Validator.nu*",
+                              "*VelenPublicWebCrawler*",
+                              "*Veoozbot*",
+                              "*Vigil*",
+                              "*VoluumDSP-content-bot*",
+                              "*W3C-checklink*",
+                              "*W3C-mobileOK*",
+                              "*W3C_I18n-Checker*",
+                              "*W3C_Unicorn*",
+                              "*WASALive-Bot*",
+                              "*WWW-Collector-E*",
+                              "*WWW-Mechanize*",
+                              "*Web Image Collector*",
+                              "*WebAuto*",
+                              "*WebBandit*",
+                              "*WebCapture 2.0*",
+                              "*WebCopier*",
+                              "*WebCopier v.2.2*",
+                              "*WebCopier v3.2a*",
+                              "*WebDataStats*",
+                              "*WebEnhancer*",
+                              "*WebReaper*",
+                              "*WebSauger*",
+                              "*WebStripper*",
+                              "*WebZIP*",
+                              "*WebmasterWorldForumBot*",
+                              "*Website Quester*",
+                              "*Webzio*",
+                              "*Webzio-Extended*",
+                              "*WinHTTrack*",
+                              "*WiseGuys Robot*",
+                              "*WordupInfoSearch*",
+                              "*Xenu*",
+                              "*Xenu Link Sleuth*",
+                              "*Xenu's*",
+                              "*Xenu's Link Sleuth 1.1c*",
+                              "*YaK*",
+                              "*Yahoo Pipes 1.0*",
+                              "*YandexMobileBot*",
+                              "*YandexVideo*",
+                              "*Yellowbrandprotectionbot*",
+                              "*YouBot*",
+                              "*YoudaoBot*",
+                              "*Youmag*",
+                              "*Zabbix*",
+                              "*Zao*",
+                              "*Zealbot*",
+                              "*Zeus*",
+                              "*Zeus Link Scout*",
+                              "*Zite*",
+                              "*ZoomBot*",
+                              "*ZoominfoBot*",
+                              "*ZuperlistBot*",
+                              "*ZyBORG*",
+                              "*acapbot*",
+                              "*acoonbot*",
+                              "*adbeat_bot*",
+                              "*adequat*",
+                              "*adequat-systems*",
+                              "*adscanner*",
+                              "*aiHitBot*",
+                              "*anthropic-ai*",
+                              "*antibot*",
+                              "*arabot*",
+                              "*archive.org_bot*",
+                              "*asknread.com*",
+                              "*asterias*",
+                              "*auramundi*",
+                              "*awesomecrawler*",
+                              "*b2w*",
+                              "*betaBot*",
+                              "*bidswitchbot*",
+                              "*binlar*",
+                              "*blogmuraBot*",
+                              "*bnf.fr_bot*",
+                              "*bot-pge.chlooe.com*",
+                              "*botify*",
+                              "*brainobot*",
+                              "*buzzbot*",
+                              "*cXensebot*",
+                              "*careerbot*",
+                              "*centurybot*",
+                              "*changedetection*",
+                              "*citeseerxbot*",
+                              "*coccoc*",
+                              "*coccocbot*",
+                              "*coexel*",
+                              "*cohere-ai*",
+                              "*cohere-training-data-crawler*",
+                              "*content crawler spider*",
+                              "*contxbot*",
+                              "*convera*",
+                              "*cosmos*",
+                              "*crawler4j*",
+                              "*datagnionbot*",
+                              "*daumoa*",
+                              "*dcrawl*",
+                              "*deepcrawl*",
+                              "*deepnoc*",
+                              "*discobot*",
+                              "*dotbot*",
+                              "*drupact*",
+                              "*e.ventures Investment Crawler*",
+                              "*ec2linkfinder*",
+                              "*edisterbot*",
+                              "*electricmonk*",
+                              "*elisabot*",
+                              "*ellisphere*",
+                              "*epicbot*",
+                              "*eright*",
+                              "*europarchive.org*",
+                              "*ev-crawler*",
+                              "*evc-batch*",
+                              "*fedoraplanet*",
+                              "*findlink*",
+                              "*findthatfile*",
+                              "*findxbot*",
+                              "*fluffy*",
+                              "*fr-crawler*",
+                              "*fuelbot*",
+                              "*g00g1e.net*",
+                              "*g2reader-bot*",
+                              "*gnam gnam spider*",
+                              "*google-xrawler*",
+                              "*grapeshot*",
+                              "*grub-client*",
+                              "*grub.org*",
+                              "*gsa-crawler*",
+                              "*gslfbot*",
+                              "*heritrix*",
+                              "*humanlinks*",
+                              "*hypestat*",
+                              "*hyscore.io*",
+                              "*ia_archiver*",
+                              "*ia_archiver-web.archive.org*",
+                              "*ichiro*",
+                              "*imrbot*",
+                              "*infoobot*",
+                              "*infoseek*",
+                              "*integromedb*",
+                              "*intelium_bot*",
+                              "*ip-web-crawler.com*",
+                              "*iskanie*",
+                              "*istellabot*",
+                              "*it2media-domain-crawler*",
+                              "*jpg-newsbot*",
+                              "*jyxobot*",
+                              "*k2spider*",
+                              "*kbcrawl*",
+                              "*keys-so-bot*",
+                              "*larbin*",
+                              "*lb-spider*",
+                              "*leadbox*",
+                              "*libWeb*",
+                              "*linkapediabot*",
+                              "*linkdex*",
+                              "*linkdexbot*",
+                              "*linkfluence*",
+                              "*linko*",
+                              "*lipperhey*",
+                              "*lkxscan*",
+                              "*lssbot*",
+                              "*lssrocketcrawler*",
+                              "*ltx71*",
+                              "*lwp-trivial*",
+                              "*magpie-crawler*",
+                              "*mappydata*",
+                              "*memorybot*",
+                              "*mention*",
+                              "*meta-.*agent",
+                              "*mindUpBot*",
+                              "*minicrawler*",
+                              "*mlbot*",
+                              "*moatbot*",
+                              "*moget*",
+                              "*msrbot*",
+                              "*mytwip*",
+                              "*nerdybot*",
+                              "*netEstate NE Crawler*",
+                              "*netresearchserver*",
+                              "*newsharecounts*",
+                              "*newspaper*",
+                              "*niki-bot*",
+                              "*officestorebot*",
+                              "*omgili*",
+                              "*omgilibot*",
+                              "*online-webceo-bot*",
+                              "*opinion-tracker*",
+                              "*outbrain*",
+                              "*panscient.com*",
+                              "*peer39_crawler*",
+                              "*postrank*",
+                              "*proxem*",
+                              "*proximic*",
+                              "*psbot*",
+                              "*purebot*",
+                              "*scoop.it*",
+                              "*score3*",
+                              "*scribdbot*",
+                              "*searchpreview*",
+                              "*seekbot*",
+                              "*seewithkids*",
+                              "*semanticbot*",
+                              "*sempi.tech*",
+                              "*sentibot*",
+                              "*seoscanners*",
+                              "*seostar.co*",
+                              "*serpstatbot*",
+                              "*sistrix crawler*",
+                              "*sitecheck.internetseer.com*",
+                              "*siteexplorer.info*",
+                              "*spanner*",
+                              "*spbot*",
+                              "*spotter*",
+                              "*summify*",
+                              "*suzuran*",
+                              "*tagoobot*",
+                              "*theoldreader.com*",
+                              "*tigerbot*",
+                              "*toCrawl*",
+                              "*toplistbot*",
+                              "*tracemyfile*",
+                              "*trafilatura*",
+                              "*trendeo*",
+                              "*trendictionbot*",
+                              "*trendkite-akashic-crawler*",
+                              "*trendybuzz*",
+                              "*trovitBot*",
+                              "*turingos*",
+                              "*tweetedtimes*",
+                              "*twengabot*",
+                              "*um-IC*",
+                              "*um-LN*",
+                              "*urlappendbot*",
+                              "*usasearch*",
+                              "*vebidoobot*",
+                              "*vecteurplus*",
+                              "*verticalsearch*",
+                              "*virustotal*",
+                              "*voilabot*",
+                              "*voltron*",
+                              "*vsw*",
+                              "*vuhuvBot*",
+                              "*wbsearchbot*",
+                              "*web-archive-net.com.bot*",
+                              "*webcompanycrawler*",
+                              "*webmon*",
+                              "*winello*",
+                              "*wocbot*",
+                              "*woobot*",
+                              "*woorankreview*",
+                              "*woriobot*",
+                              "*wotbox*",
+                              "*www.uptime.com*",
+                              "*xovibot*",
+                              "*yanga*",
+                              "*yoozBot*",
+                              "*zenback bot*",
+                              "*zgrab*"
+                            ]
+                          }
+                        }
+                      ],
+                      "handle": [
+                        {
+                          "handler": "log_append",
+                          "key": "reason",
+                          "value": "Blocked for suspect User Agent value"
+                        },
+                        {
+                          "handler": "static_response",
+                          "status_code": 403
+                        }
+                      ]
+                    },
+                    {
+                      "handle": [
+                        {
+                          "handler": "map",
+                          "source": "1",
+                          "destinations": [
+                            "{mydomain}"
+                          ],
+                          "defaults": [
+                            "salamanca.school"
+                          ]
+                        },
+                        {
+                          "handler": "map",
+                          "source": "{http.request.uri.query.mode}",
+                          "destinations": [
+                            "{full_path}"
+                          ],
+                          "mappings": [
+                            {
+                              "input": "details",
+                              "outputs": [
+                                "{http.request.uri.path}_details"
+                              ]
+                            }
+                          ],
+                          "defaults": [
+                            "{http.request.uri.path}"
+                          ]
+                        },
+                        {
+                          "@id": "routing_map",
+                          "handler": "map",
+                          "source": "{full_path}",
+                          "destinations": [
+                            "{myfile}",
+                            "{myhash}"
+                          ]
+                        },
+                        {
+                          "handler": "headers",
+                          "response": {
+                            "set": {
+                              "Access-Control-Allow-Headers": [
+                                "*"
+                              ],
+                              "Access-Control-Allow-Methods": [
+                                "*"
+                              ],
+                              "Access-Control-Allow-Origin": [
+                                "*"
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "group": "group13",
+                      "match": [
+                        {
+                          "conneg": {
+                            "force_type_query_string": "format",
+                            "match_types": [
+                              "text/html"
+                            ]
+                          }
+                        }
+                      ],
+                      "handle": [
+                        {
+                          "handler": "subroute",
+                          "routes": [
+                            {
+                              "match": [
+                                {
+                                  "expression": "query({'q': '*'})",
+                                  "vars": {
+                                    "{myhash}": [
+                                      "yes"
+                                    ]
+                                  },
+                                  "path": [
+                                    "/texts/*",
+                                    "/workingpapers/*",
+                                    "/lemmata/*"
+                                  ]
+                                }
+                              ],
+                              "handle": [
+                                {
+                                  "handler": "static_response",
+                                  "headers": {
+                                    "Location": [
+                                      "https://www.{mydomain}/data/{myfile}"
+                                    ]
+                                  },
+                                  "status_code": 302
+                                }
+                              ]
+                            },
+                            {
+                              "match": [
+                                {
+                                  "expression": "query({'q': '*'})",
+                                  "path": [
+                                    "/texts/*",
+                                    "/workingpapers/*",
+                                    "/lemmata/*"
+                                  ]
+                                }
+                              ],
+                              "handle": [
+                                {
+                                  "handler": "static_response",
+                                  "headers": {
+                                    "Location": [
+                                      "https://www.{mydomain}/data/{myfile}?{http.request.uri.query}{myhash}"
+                                    ]
+                                  },
+                                  "status_code": 302
+                                }
+                              ]
+                            },
+                            {
+                              "match": [
+                                {
+                                  "vars": {
+                                    "{myhash}": [
+                                      "yes"
+                                    ]
+                                  },
+                                  "path": [
+                                    "/texts/*",
+                                    "/workingpapers/*",
+                                    "/lemmata/*"
+                                  ]
+                                }
+                              ],
+                              "handle": [
+                                {
+                                  "handler": "static_response",
+                                  "headers": {
+                                    "Location": [
+                                      "https://www.{mydomain}/data/{myfile}"
+                                    ]
+                                  },
+                                  "status_code": 302
+                                }
+                              ]
+                            },
+                            {
+                              "match": [
+                                {
+                                  "path": [
+                                    "/texts/*",
+                                    "/workingpapers/*",
+                                    "/lemmata/*"
+                                  ]
+                                }
+                              ],
+                              "handle": [
+                                {
+                                  "handler": "static_response",
+                                  "headers": {
+                                    "Location": [
+                                      "https://www.{mydomain}/data/{myfile}{myhash}"
+                                    ]
+                                  },
+                                  "status_code": 302
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "group": "group13",
+                      "match": [
+                        {
+                          "not": [
+                            {
+                              "path_regexp": {
+                                "pattern": ":"
+                              }
+                            }
+                          ]
+                        }
+                      ],
+                      "handle": [
+                        {
+                          "handler": "subroute",
+                          "routes": [
+                            {
+                              "group": "group7",
+                              "match": [
+                                {
+                                  "conneg": {
+                                    "force_type_query_string": "format",
+                                    "match_types": [
+                                      "application/tei+xml"
+                                    ]
+                                  }
+                                }
+                              ],
+                              "handle": [
+                                {
+                                  "handler": "subroute",
+                                  "routes": [
+                                    {
+                                      "match": [
+                                        {
+                                          "path_regexp": {
+                                            "name": "wid",
+                                            "pattern": "/texts/(W[^:]+)"
+                                          }
+                                        }
+                                      ],
+                                      "handle": [
+                                        {
+                                          "handler": "static_response",
+                                          "headers": {
+                                            "Location": [
+                                              "https://www.{mydomain}/data/{http.regexp.wid.1}/{http.regexp.wid.1}.xml"
+                                            ]
+                                          },
+                                          "status_code": 302
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "group": "group7",
+                              "match": [
+                                {
+                                  "conneg": {
+                                    "force_type_query_string": "format",
+                                    "match_types": [
+                                      "application/rdf+xml"
+                                    ]
+                                  }
+                                }
+                              ],
+                              "handle": [
+                                {
+                                  "handler": "subroute",
+                                  "routes": [
+                                    {
+                                      "match": [
+                                        {
+                                          "path_regexp": {
+                                            "name": "wid",
+                                            "pattern": "/texts/(W[^:]+)"
+                                          }
+                                        }
+                                      ],
+                                      "handle": [
+                                        {
+                                          "handler": "static_response",
+                                          "headers": {
+                                            "Location": [
+                                              "https://www.{mydomain}/data/{http.regexp.wid.1}/{http.regexp.wid.1}.rdf"
+                                            ]
+                                          },
+                                          "status_code": 302
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "group": "group7",
+                              "match": [
+                                {
+                                  "conneg": {
+                                    "force_type_query_string": "format",
+                                    "match_types": [
+                                      "application/pdf"
+                                    ]
+                                  }
+                                }
+                              ],
+                              "handle": [
+                                {
+                                  "handler": "subroute",
+                                  "routes": [
+                                    {
+                                      "match": [
+                                        {
+                                          "path_regexp": {
+                                            "name": "wid",
+                                            "pattern": "/texts/(W[^:]+)"
+                                          }
+                                        }
+                                      ],
+                                      "handle": [
+                                        {
+                                          "handler": "static_response",
+                                          "headers": {
+                                            "Location": [
+                                              "https://www.{mydomain}/data/{http.regexp.wid.1}/{http.regexp.wid.1}.pdf"
+                                            ]
+                                          },
+                                          "status_code": 302
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "group": "group7",
+                              "match": [
+                                {
+                                  "conneg": {
+                                    "force_type_query_string": "format",
+                                    "match_types": [
+                                      "text/plain"
+                                    ]
+                                  },
+                                  "query": {
+                                    "mode": [
+                                      "orig"
+                                    ]
+                                  }
+                                }
+                              ],
+                              "handle": [
+                                {
+                                  "handler": "subroute",
+                                  "routes": [
+                                    {
+                                      "match": [
+                                        {
+                                          "path_regexp": {
+                                            "name": "wid",
+                                            "pattern": "/texts/(W[^:]+)"
+                                          }
+                                        }
+                                      ],
+                                      "handle": [
+                                        {
+                                          "handler": "static_response",
+                                          "headers": {
+                                            "Location": [
+                                              "https://www.{mydomain}/data/{http.regexp.wid.1}/text/{http.regexp.wid.1}_orig.txt"
+                                            ]
+                                          },
+                                          "status_code": 302
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "group": "group7",
+                              "match": [
+                                {
+                                  "conneg": {
+                                    "force_type_query_string": "format",
+                                    "match_types": [
+                                      "text/plain"
+                                    ]
+                                  },
+                                  "query": {
+                                    "mode": [
+                                      "edit"
+                                    ]
+                                  }
+                                }
+                              ],
+                              "handle": [
+                                {
+                                  "handler": "subroute",
+                                  "routes": [
+                                    {
+                                      "match": [
+                                        {
+                                          "path_regexp": {
+                                            "name": "wid",
+                                            "pattern": "/texts/(W[^:]+)"
+                                          }
+                                        }
+                                      ],
+                                      "handle": [
+                                        {
+                                          "handler": "static_response",
+                                          "headers": {
+                                            "Location": [
+                                              "https://www.{mydomain}/data/{http.regexp.wid.1}/text/{http.regexp.wid.1}_edit.txt"
+                                            ]
+                                          },
+                                          "status_code": 302
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "group": "group7",
+                              "match": [
+                                {
+                                  "conneg": {
+                                    "force_type_query_string": "format",
+                                    "match_types": [
+                                      "text/plain"
+                                    ]
+                                  }
+                                }
+                              ],
+                              "handle": [
+                                {
+                                  "handler": "subroute",
+                                  "routes": [
+                                    {
+                                      "match": [
+                                        {
+                                          "path_regexp": {
+                                            "name": "wid",
+                                            "pattern": "/texts/(W[^:]+)"
+                                          }
+                                        }
+                                      ],
+                                      "handle": [
+                                        {
+                                          "handler": "static_response",
+                                          "headers": {
+                                            "Location": [
+                                              "https://www.{mydomain}/data/{http.regexp.wid.1}/text/{http.regexp.wid.1}_edit.txt"
+                                            ]
+                                          },
+                                          "status_code": 302
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "group": "group13",
+                      "handle": [
+                        {
+                          "handler": "subroute",
+                          "routes": [
+                            {
+                              "match": [
+                                {
+                                  "header": {
+                                    "User-Agent": [
+                                      "*ClaudeBot*",
+                                      "*YandexBot*",
+                                      "*DotBot*",
+                                      "*AhrefsBot*",
+                                      "*Bytespider*"
+                                    ]
+                                  }
+                                }
+                              ],
+                              "handle": [
+                                {
+                                  "handler": "static_response",
+                                  "status_code": 403
+                                }
+                              ]
+                            },
+                            {
+                              "group": "group9",
+                              "handle": [
+                                {
+                                  "handler": "rewrite",
+                                  "uri": "/exist/restxq{http.request.uri}"
+                                }
+                              ]
+                            },
+                            {
+                              "handle": [
+                                {
+                                  "handler": "reverse_proxy",
+                                  "headers": {
+                                    "response": {
+                                      "set": {
+                                        "Access-Control-Allow-Headers": [
+                                          "*"
+                                        ],
+                                        "Access-Control-Allow-Methods": [
+                                          "*"
+                                        ],
+                                        "Access-Control-Allow-Origin": [
+                                          "*"
+                                        ]
+                                      }
+                                    }
+                                  },
+                                  "upstreams": [
+                                    {
+                                      "dial": "localhost:8080"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "terminal": true
+            },
+            {
+              "match": [
+                {
+                  "host": [
+                    "facs.salamanca.school"
+                  ]
+                }
+              ],
+              "handle": [
+                {
+                  "handler": "subroute",
+                  "routes": [
+                    {
+                      "handle": [
+                        {
+                          "handler": "rewrite",
+                          "strip_path_suffix": "/manifest"
+                        }
+                      ]
+                    },
+                    {
+                      "group": "group3",
+                      "match": [
+                        {
+                          "path": [
+                            "/iiif/presentation/*"
+                          ]
+                        }
+                      ],
+                      "handle": [
+                        {
+                          "handler": "subroute",
+                          "routes": [
+                            {
+                              "handle": [
+                                {
+                                  "handler": "vars",
+                                  "root": "/var/data/caddy/site/data"
+                                },
+                                {
+                                  "handler": "map",
+                                  "destinations": [
+                                    "{work}",
+                                    "{volume}"
+                                  ],
+                                  "source": "{http.request.uri.path.file}",
+                                  "Defaults": [
+                                    "",
+                                    ""
+                                  ],
+                                  "mappings": [
+                                    {
+                                      "input_regexp": "(([^_]*)(_[Vv]ol([0-9]+))?)",
+                                      "outputs": [
+                                        "${2}",
+                                        "${4}"
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "handler": "headers",
+                                  "response": {
+                                    "set": {
+                                      "Access-Control-Allow-Origin": [
+                                        "*"
+                                      ],
+                                      "Access-Control-Allow-Methods": [
+                                        "*"
+                                      ],
+                                      "Access-Control-Allow-Headers": [
+                                        "*"
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "group": "group0",
+                              "handle": [
+                                {
+                                  "handler": "rewrite",
+                                  "uri": "/{work}/{http.request.uri.path.file}"
+                                }
+                              ]
+                            },
+                            {
+                              "handle": [
+                                {
+                                  "handler": "rewrite",
+                                  "uri": "{http.matchers.file.relative}"
+                                }
+                              ],
+                              "match": [
+                                {
+                                  "file": {
+                                    "try_files": [
+                                      "{http.request.uri.path}.json",
+                                      "{http.request.uri.path}"
+                                    ]
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "handle": [
+                                {
+                                  "handler": "file_server",
+                                  "hide": [
+                                    "./Caddyfile"
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "group": "group3",
+                      "match": [
+                        {
+                          "path": [
+                            "/iiif/image/*"
+                          ]
+                        }
+                      ],
+                      "handle": [
+                        {
+                          "handler": "subroute",
+                          "routes": [
+                            {
+                              "match": [
+                                {
+                                  "header": {
+                                    "User-Agent": [
+                                      "*ClaudeBot*",
+                                      "*DotBot*",
+                                      "*YandexBot*",
+                                      "*AhrefsBot*",
+                                      "*Bytespider*"
+                                    ]
+                                  }
+                                }
+                              ],
+                              "handle": [
+                                {
+                                  "handler": "static_response",
+                                  "status_code": 403
+                                }
+                              ]
+                            },
+                            {
+                              "handle": [
+                                {
+                                  "Defaults": [
+                                    "{http.request.uri.path.file}"
+                                  ],
+                                  "destinations": [
+                                    "{resource}"
+                                  ],
+                                  "handler": "map",
+                                  "mappings": [
+                                    {
+                                      "input_regexp": "/iiif/image/(.*)",
+                                      "outputs": [
+                                        "${1}"
+                                      ]
+                                    }
+                                  ],
+                                  "source": "{http.request.uri.path}"
+                                }
+                              ]
+                            },
+                            {
+                              "group": "group1",
+                              "handle": [
+                                {
+                                  "handler": "rewrite",
+                                  "uri": "/digilib/Scaler/IIIF/svsal!{resource}"
+                                }
+                              ]
+                            },
+                            {
+                              "handle": [
+                                {
+                                  "handler": "reverse_proxy",
+                                  "headers": {
+                                    "request": {
+                                      "set": {
+                                        "Host": [
+                                          "{http.reverse_proxy.upstream.host}"
+                                        ]
+                                      }
+                                    }
+                                  },
+                                  "transport": {
+                                    "protocol": "http",
+                                    "tls": {}
+                                  },
+                                  "upstreams": [
+                                    {
+                                      "dial": "c099-013.cloud.gwdg.de:443"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "group": "group3",
+                      "handle": [
+                        {
+                          "handler": "subroute",
+                          "routes": [
+                            {
+                              "handle": [
+                                {
+                                  "handler": "static_response",
+                                  "status_code": 302,
+                                  "headers": {
+                                    "Location": [
+                                      "https://c099-013.cloud.gwdg.de/svsal{http.request.uri}"
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "handle": [
+                        {
+                          "body": "Not Found",
+                          "handler": "static_response",
+                          "status_code": 404
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "terminal": true
+            }
+          ]
+        }
+      }
+    },
+    "tls": {
+      "automation": {
+        "policies": [
+          {
+            "subjects": [
+              "c100-101.cloud.gwdg.de",
+              "salamanca.school",
+              "www.salamanca.school",
+              "search.salamanca.school",
+              "facs.salamanca.school",
+              "api.salamanca.school",
+              "id.salamanca.school",
+              "blog.salamanca.school",
+              "files.salamanca.school"
+            ],
+            "issuers": [
+              {
+                "email": "wagner@lhlt.mpg.de",
+                "module": "acme"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

@@ -11,10 +11,15 @@ xquery version "3.1";
 declare namespace exist             = "http://exist.sourceforge.net/NS/exist";
 declare namespace request           = "http://exist-db.org/xquery/request";
 declare namespace output            = "http://www.w3.org/2010/xslt-xquery-serialization";
+
+import module namespace console     = "http://exist-db.org/xquery/console";
 import module namespace util        = "http://exist-db.org/xquery/util";
-import module namespace upload      = "https://www.salamanca.school/xquery/upload"  at "modules/upload.xql";
-import module namespace admin       = "https://www.salamanca.school/xquery/admin"   at "modules/admin.xqm";
-import module namespace config      = "https://www.salamanca.school/xquery/config"  at "config.xqm";
+
+import module namespace config      = "https://www.salamanca.school/xquery/config"      at "modules/config.xqm";
+import module namespace upload      = "https://www.salamanca.school/xquery/upload"      at "modules/upload.xql";
+import module namespace admin       = "https://www.salamanca.school/xquery/admin"       at "modules/admin.xqm";
+import module namespace txt         = "https://www.salamanca.school/factory/works/txt"  at "modules/factory/works/txt.xqm";
+import module namespace nlp         = "https://www.salamanca.school/factory/works/nlp"  at "modules/factory/works/nlp.xqm";
 
 declare option exist:timeout "166400000"; (: in miliseconds, 25.000.000 ~ 7h, 43.000.000 ~ 12h :)
 declare option exist:output-size-limit "5000000"; (: max number of nodes in memory :)
@@ -58,12 +63,16 @@ let $output :=
             admin:sphinx-out($rid, $mode)
         case 'rdf' return
             admin:createRDF($rid)
+        case 'nlp' return
+            admin:createNLP($rid)
         case 'tei-corpus' return
             admin:createTeiCorpus('admin')
         case 'iiif' return
             admin:createIIIF($rid)
         case 'txt-corpus' return
             admin:createTxtCorpus('admin')
+        case 'stats' return
+            <pre>{fn:serialize(admin:createStats("*"), map{"method":"json", "indent": true(), "encoding":"utf-8"})}</pre>
         case 'routing' return
             switch($rid)
                 case 'all' return
@@ -71,14 +80,38 @@ let $output :=
                 default return
                     admin:createRoutes($rid)
         case 'all' return 
-            (: all formats (except iiif) for a single work :)
-            (admin:createNodeIndex($rid),
-            admin:renderHTML($rid),
-            admin:sphinx-out($rid, $mode),
-            admin:createRDF($rid))
-            (: omitting iiif here :)
-        case 'stats' return
-            <pre>{fn:serialize(admin:createStats(), map{"method":"json", "indent": true(), "encoding":"utf-8"})}</pre>
+            (: all formats (except iiif and rdf) for a single work :)
+            let $debug := console:log("Rendering all formats for " || $rid || " ...")
+            return
+            <div>
+                <div><h2>Index</h2>
+                {admin:createNodeIndex($rid)}
+                </div>
+                <div><h2>Crumbtrails</h2>
+                {admin:createCrumbtrails($rid)}
+                </div>
+                <div><h2>PDF</h2>
+                {admin:createPdf($rid)}
+                </div>
+                <div><h2>HTML</h2>
+                {admin:renderHTML($rid)}
+                </div>
+                <div><h2>Details</h2>
+                {admin:createDetails($rid)}
+                </div>
+                <div><h2>Search Snippets</h2>
+                {admin:sphinx-out($rid, $mode)}
+                </div>
+                <div><h2>NLP CSV</h2>
+                {admin:createNLP($rid)}
+                </div>
+                <div><h2>Routes</h2>
+                {admin:createRoutes($rid)}
+                </div>
+                <div><h2>Stats</h2>
+                {fn:serialize(admin:createStats($rid), map{"method":"json", "indent": true(), "encoding":"utf-8"})}
+                </div>
+            </div>
         default return 
             ()
 

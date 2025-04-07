@@ -58,7 +58,7 @@ declare function stats:makeCorpusStats() as map(*) {
         for $id in $publishedWorkIds order by $id return 
             if (fn:unparsed-text-available($config:txt-root || '/' || $id || '/' || $id || '_edit.txt')) then
                 fn:unparsed-text($config:txt-root || '/' || $id || '/' || $id || '_edit.txt')
-            else error(xs:QName('stats:makeCorpusStats()'), 'No (edit) txt available for published work ' || $id)
+            else error(QName("http://salamanca.school/error", "StatsError"), 'No (edit) txt available for published work ' || $id)
 (:    let $debug := util:log('info', '[STATS] sending ' || count($txtAll) || ' texts to nlp:tokenize()'):)
     let $charsAllCount := string-length(replace(string-join($txtAll, ''), '\s', ''))
     let $tokensAllCount := count(nlp:tokenize($txtAll, 'all'))

@@ -27,8 +27,8 @@ import module namespace i18n    = "http://exist-db.org/xquery/i18n"     at "i18n
 (: ==================================================================================== :)
 (: OOOooo... Configurable Section for the School of Salamanca Web-Application ...oooOOO :)
 
-declare variable $config:debug        := "trace"; (: possible values: trace, info, none :)
-declare variable $config:instanceMode := "dockernet"; (: possible values: production, testing, staging, fakeprod :)
+declare variable $config:debug        := "info"; (: possible values: trace, info, none :)
+declare variable $config:instanceMode := "prod"; (: possible values: testing, staging, production, fakeprod :)
 declare variable $config:contactEMail := "info.salamanca@adwmainz.de";
 declare variable $config:defaultProdserver := 'salamanca.school';
 declare variable $config:defaultTestserver := 'salamanca.school';
@@ -89,7 +89,7 @@ declare variable $config:softwareserver := $config:proto || "://files."  || $con
 declare variable $config:apiserver      := $config:proto || "://api."    || $config:serverdomain;
 declare variable $config:apiserverTexts := $config:apiserver || '/v1/texts';
 declare variable $config:lodServer      := $config:apiserver || '/v1/xtriples';
-declare variable $config:caddyAPI       := if ($config:instanceMode = "dockernet") then "http://caddy:2019" else "http://localhost:2019";
+declare variable $config:caddyAPI       := "http://localhost:2019";
 declare variable $config:caddyRoutes    := $config:caddyAPI || "/id/routing_map/mappings";
 
 
@@ -259,6 +259,7 @@ declare variable $config:index-root             := concat($config:webdata-root, 
 declare variable $config:crumb-root             := concat($config:webdata-root, "/crumbtrails");
 declare variable $config:pdf-root               := concat($config:webdata-root, "/pdf");
 declare variable $config:txt-root               := concat($config:webdata-root, "/txt");
+declare variable $config:nlp-root               := concat($config:webdata-root, "/nlp");
 declare variable $config:snippets-root          := concat($config:webdata-root, "/snippets");
 declare variable $config:iiif-root              := concat($config:webdata-root, "/iiif");
 declare variable $config:routes-root            := concat($config:webdata-root, "/routes");
@@ -270,6 +271,7 @@ declare variable $config:rdf-lemmata-root       := concat($config:rdf-root, '/le
 declare variable $config:rdf-sub-roots          := ($config:rdf-authors-root,
                                                     $config:rdf-works-root,
                                                     $config:rdf-lemmata-root);
+declare variable $config:trash-root             := concat($config:webdata-root, "/trash");
 
 (:This is  test comment, MAH 4.02.2022 :)
 
@@ -328,7 +330,7 @@ declare function config:expath-descriptor() as element(expath:package) {
 };
 
 declare function config:errorhandler($netVars as map(*)*) {
-    if (($config:instanceMode = ("staging", "testing", "dockernet")) or ($config:debug = "trace") or ("debug=trace" = $netVars('params')) ) then ()
+    if (($config:instanceMode = "staging") or ($config:debug = "trace") or ("debug=trace" = $netVars('params')) ) then ()
     else
         <error-handler>
             <forward url="{$netVars('controller')}/error-page.html" method="get"/>
