@@ -2,10 +2,8 @@ xquery version "3.1";
 
 module namespace nlp         = "https://www.salamanca.school/factory/works/nlp";
 
-declare namespace exist      = "http://exist.sourceforge.net/NS/exist";
 declare namespace sal        = "http://salamanca.adwmainz.de";
 declare namespace tei        = "http://www.tei-c.org/ns/1.0";
-declare namespace util       = "http://exist-db.org/xquery/util";
 
 import module namespace console = "http://exist-db.org/xquery/console";
 import module namespace config  = "https://www.salamanca.school/xquery/config"       at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
@@ -46,7 +44,7 @@ declare function nlp:tokenize($text as xs:string*, $mode as xs:string?) as xs:st
     return $tokenized
 };
 
-declare function nlp:createCSV($textnodes as node()*, $mode as xs:string, $lang as xs:string) {
+declare function nlp:createCSV($textnodes as node()*, $mode as xs:string?, $lang as xs:string?) {
     let $content := for $t in $textnodes
         let $wid := tokenize($t/ancestor::tei:TEI/@xml:id/string(), '_')[1]
         let $index := doc($config:index-root || '/' || $wid || '_nodeIndex.xml')

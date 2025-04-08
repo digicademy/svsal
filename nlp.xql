@@ -12,16 +12,13 @@ xquery version "3.1";
    
    ----++++#### :)
 
-declare namespace exist         = "http://exist.sourceforge.net/NS/exist";
 declare namespace output        = "http://www.w3.org/2010/xslt-xquery-serialization";
 declare namespace request       = "http://exist-db.org/xquery/request";
-declare namespace sal           = "http://salamanca.adwmainz.de";
 declare namespace tei           = "http://www.tei-c.org/ns/1.0";
 declare namespace xi            = "http://www.w3.org/2001/XInclude";
 
 import module namespace console = "http://exist-db.org/xquery/console";
 import module namespace config  = "https://www.salamanca.school/xquery/config"       at "modules/config.xqm";
-import module namespace txt     = "https://www.salamanca.school/factory/works/txt"   at "modules/factory/works/txt.xqm";
 import module namespace index   = "https://www.salamanca.school/factory/works/index" at "modules/factory/works/index.xqm";
 import module namespace nlp     = "https://www.salamanca.school/factory/works/nlp"   at "modules/factory/works/nlp.xqm";
 import module namespace sutil   = "https://www.salamanca.school/xquery/sutil"        at "modules/sutil.xqm";
@@ -52,7 +49,7 @@ let $textnodes := if ($xmlid ne '*') then
                         $collection//tei:*[not(ancestor::tei:note)][not(ancestor::xi:fallback)][index:isMainNode(.)]
 
 let $debug      := console:log("[NLP] Processing " || count($textnodes) || " text nodes in " || count($collection) || " text elements in '" || $mode || "' mode ...")
-let $content    := nlp:createCSV($textnodes)
+let $content    := nlp:createCSV($textnodes, $mode, $lang)
 let $debug      := console:log("[NLP] Export done.")
 
 return $content
