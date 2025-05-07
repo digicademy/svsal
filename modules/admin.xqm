@@ -162,68 +162,22 @@ declare function admin:WPString($node as node(), $model as map(*)) {
 :)
 
 
-declare function admin:needsPdf($targetWorkId as xs:string) as xs:boolean {
-    let $workModTime := xmldb:last-modified($config:tei-works-root, $targetWorkId || '.xml')
-    return
-        if ($targetWorkId || ".pdf" = xmldb:get-child-resources($config:pdf-root)) then
-            let $renderModTime := xmldb:last-modified($config:pdf-root, $targetWorkId || ".pdf")
-            return
-                if ($renderModTime lt $workModTime) then
-                    true()
-                else
-                    false()
+declare function admin:needsIIIFResource($targetWorkId as xs:string) as xs:boolean {
+    let $targetWorkModTime := xmldb:last-modified($config:tei-works-root, $targetWorkId || '.xml')
+
+    return if (util:binary-doc-available($config:iiif-root || '/' || $targetWorkId || '.json')) then
+                let $resourceModTime := xmldb:last-modified($config:iiif-root, $targetWorkId || '.json')
+                return if ($resourceModTime lt $targetWorkModTime) then true() else false()
         else
             true()
 };
 
-declare function admin:needsPdfString($node as node(), $model as map(*)) {
-    let $currentResourceId := max((string($model('currentWork')?('wid')), string($model('currentLemma')?('lid')), string($model('currentWP')?('wpid'))))
-    let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
-                                    if (doc-available(concat($subcollection, '/', $currentResourceId, '.xml'))) then $subcollection
-                                    else ()
-(: Changed to improve performance on 2025-03-24, A.W.                               :)
-(:  let $readyForPDF := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))//tei:TEI[@xml:id eq $currentResourceId]/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then:)
-    let $readyForPDF := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))/id($currentResourceId)/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then
-                                true()
-                             else false()
-
-    let $currentDoc := doc($targetSubcollection || "/" || $currentResourceId ||".xml")
-    let $isMultiWorkVolume as node() := $currentDoc//tei:TEI//tei:text
-    let $target_1 := $currentDoc//tei:relatedItem/@target
-    let $target_2 := for $target in $target_1 return substring-after($target, "work:") 
-
-    return 
-          if (not($readyForPDF)) then
-            <td>Not ready yet</td>
-          else if ($isMultiWorkVolume/@type="work_multivolume") then
-            <td> 
-                {for $target in $target_2 
-                  return
-                    if (admin:needsPdf($target)) then 
-                        <a title="Source from: {string(xmldb:last-modified($targetSubcollection, $target || '.xml'))}{if (xmldb:get-child-resources($config:pdf-root) = $target || ".pdf") then concat(', rendered on: ', xmldb:last-modified($config:pdf-root, $target || ".pdf")) else ()}"><b> Create PDF for <a href="webdata-admin.xql?rid={$target}&amp;format=pdf_create">{$target}!</a><br/></b></a>
-                    else if(not(admin:needsPdf($target))) then
-                        <i title="Source from: {string(xmldb:last-modified($targetSubcollection, $target || '.xml'))}, rendered on: {xmldb:last-modified($config:pdf-root, $target || ".pdf")}">PDF for {$target} created.<small><a href="webdata-admin.xql?rid={$target}&amp;format=pdf_create">Create PDF anyway!</a></small> <br/> </i>
-                    else ()
-                }
-            </td>
-          else
-            if (admin:needsPdf($currentResourceId)) then
-                <td title="Source from: {string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml'))}{if (xmldb:get-child-resources($config:pdf-root) = $currentResourceId || ".pdf") then concat(', rendered on: ', xmldb:last-modified($config:pdf-root, $currentResourceId || ".pdf")) else ()}">
-                    <a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=pdf_create"><b>Create PDF NOW!</b></a>
-                    <br/> or
-                    <br/>
-                    <form enctype="multipart/form-data" method="post" action="webdata-admin.xql?rid={$currentResourceId}&amp;format=pdf_upload">
-                      <p>Upload PDF File</p>
-                      <input type="file"  name="FileUpload"/>
-                      <input type="submit">Submit your PDF</input>
-                    </form>
-                    <br/>
-                </td>
-            else 
-                <td title="Source from: {string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml'))}, rendered on: {xmldb:last-modified($config:pdf-root, $currentResourceId || ".pdf")}">
-                    The PDF was already uploaded or created.
-                    <small><a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=pdf_create">Create PDF anyway!</a></small>
-                </td>
+declare function admin:needsIIIFResourceString($node as node(), $model as map(*)) {
+    let $currentWorkId := $model('currentWork')?('wid')
+    return if (admin:needsIIIFResource($currentWorkId)) then
+                <td title="source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}"><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=iiif"><b>Create IIIF resource NOW!</b></a></td>
+            else
+                <td title="{concat('IIIF resource created on: ', string(xmldb:last-modified($config:iiif-root, $currentWorkId || '.json')), ', Source from: ', string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml')), '.')}">Creating IIIF resource unnecessary. <small><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=iiif">Create IIIF resource anyway!</a></small></td>
 };
 
 declare function admin:needsIndex($targetWorkId as xs:string) as xs:boolean {
@@ -300,48 +254,68 @@ declare function admin:needsCrumbtrailString($node as node(), $model as map(*)) 
                 title="Source from: {string(xmldb:last-modified($targetSubcollection, $currentWorkId || '.xml'))}, rendered on: {xmldb:last-modified($config:crumb-root, $currentWorkId || "_crumbtrails.xml")}">Creating Crumbtrails unnecessary. <small><a  href="webdata-admin.xql?rid={$currentWorkId}&amp;format=crumbtrails">Create it anyway!</a></small></td>
 };
 
-declare function admin:needsTeiCorpusZipString($node as node(), $model as map(*)) {
-    let $worksModTime := max(for $work in xmldb:get-child-resources($config:tei-works-root) return xmldb:last-modified($config:tei-works-root, $work))    
-    let $needsCorpusZip := 
-        if (util:binary-doc-available($config:corpus-zip-root || '/sal-tei-corpus.zip')) then
-            let $resourceModTime := xmldb:last-modified($config:corpus-zip-root, 'sal-tei-corpus.zip')
-            return $resourceModTime lt $worksModTime
-        else true()
-    return 
-        if ($needsCorpusZip) then
-            <td title="Most current source from: {string($worksModTime)}"><a href="webdata-admin.xql?format=tei-corpus"><b>Create TEI corpus NOW!</b></a></td>
+declare function admin:needsPdf($targetWorkId as xs:string) as xs:boolean {
+    let $workModTime := xmldb:last-modified($config:tei-works-root, $targetWorkId || '.xml')
+    return
+        if ($targetWorkId || ".pdf" = xmldb:get-child-resources($config:pdf-root)) then
+            let $renderModTime := xmldb:last-modified($config:pdf-root, $targetWorkId || ".pdf")
+            return
+                if ($renderModTime lt $workModTime) then
+                    true()
+                else
+                    false()
         else
-            <td title="{concat('TEI corpus created on: ', string(xmldb:last-modified($config:corpus-zip-root, 'sal-tei-corpus.zip')), ', most current source from: ', string($worksModTime), '.')}">Creating TEI corpus unnecessary. <small><a href="webdata-admin.xql?format=tei-corpus">Create TEI corpus zip anyway!</a></small></td>
+            true()
 };
 
-declare function admin:needsTxtCorpusZipString($node as node(), $model as map(*)) {
-    if (xmldb:collection-available($config:txt-root)) then
-        let $worksModTime := max(for $work in xmldb:get-child-resources($config:txt-root) return xmldb:last-modified($config:txt-root, $work))    
-        let $needsCorpusZip := 
-            if (util:binary-doc-available($config:corpus-zip-root || '/sal-txt-corpus.zip')) then
-                let $resourceModTime := xmldb:last-modified($config:corpus-zip-root, 'sal-txt-corpus.zip')
-                return $resourceModTime lt $worksModTime
-            else true()
-        return 
-            if ($needsCorpusZip) then
-                <td title="Most current source from: {string($worksModTime)}"><a href="webdata-admin.xql?format=txt-corpus"><b>Create TXT corpus NOW!</b></a></td>
-            else
-                <td title="{concat('TXT corpus created on: ', string(xmldb:last-modified($config:corpus-zip-root, 'sal-txt-corpus.zip')), ', most current source from: ', string($worksModTime), '.')}">Creating TXT corpus unnecessary. <small><a href="webdata-admin.xql?format=txt-corpus">Create TXT corpus zip anyway!</a></small></td>
-    else <td title="No txt sources available so far!"><a href="webdata-admin.xql?format=txt-corpus"><b>Create TXT corpus NOW!</b></a></td>
-};
+declare function admin:needsPdfString($node as node(), $model as map(*)) {
+    let $currentResourceId := max((string($model('currentWork')?('wid')), string($model('currentLemma')?('lid')), string($model('currentWP')?('wpid'))))
+    let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
+                                    if (doc-available(concat($subcollection, '/', $currentResourceId, '.xml'))) then $subcollection
+                                    else ()
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:  let $readyForPDF := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))//tei:TEI[@xml:id eq $currentResourceId]/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then:)
+    let $readyForPDF := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))/id($currentResourceId)/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then
+                                true()
+                             else false()
 
-declare function admin:needsStatsString($node as node(), $model as map(*)) {
-    let $worksModTime := max(for $work in xmldb:get-child-resources($config:tei-works-root) return xmldb:last-modified($config:tei-works-root, $work))    
-    let $needsStats := 
-        if (util:binary-doc-available($config:stats-root || '/corpus-stats.json')) then
-            let $resourceModTime := xmldb:last-modified($config:stats-root, 'corpus-stats.json')
-            return $resourceModTime lt $worksModTime
-        else true()
+    let $currentDoc := doc($targetSubcollection || "/" || $currentResourceId ||".xml")
+    let $isMultiWorkVolume as node() := $currentDoc//tei:TEI//tei:text
+    let $target_1 := $currentDoc//tei:relatedItem/@target
+    let $target_2 := for $target in $target_1 return substring-after($target, "work:") 
+
     return 
-        if ($needsStats) then
-            <td title="Most current source from: {string($worksModTime)}"><a href="webdata-admin.xql?format=stats"><b>Create corpus stats NOW!</b></a></td>
-        else
-            <td title="{concat('Stats created on: ', string(xmldb:last-modified($config:stats-root, 'corpus-stats.json')), ', most current source from: ', string($worksModTime), '.')}">Creating corpus stats unnecessary. <small><a href="webdata-admin.xql?format=stats">Create corpus stats anyway!</a></small></td>
+          if (not($readyForPDF)) then
+            <td>Not ready yet</td>
+          else if ($isMultiWorkVolume/@type="work_multivolume") then
+            <td> 
+                {for $target in $target_2 
+                  return
+                    if (admin:needsPdf($target)) then 
+                        <a title="Source from: {string(xmldb:last-modified($targetSubcollection, $target || '.xml'))}{if (xmldb:get-child-resources($config:pdf-root) = $target || ".pdf") then concat(', rendered on: ', xmldb:last-modified($config:pdf-root, $target || ".pdf")) else ()}"><b> Create PDF for <a href="webdata-admin.xql?rid={$target}&amp;format=pdf_create">{$target}!</a><br/></b></a>
+                    else if(not(admin:needsPdf($target))) then
+                        <i title="Source from: {string(xmldb:last-modified($targetSubcollection, $target || '.xml'))}, rendered on: {xmldb:last-modified($config:pdf-root, $target || ".pdf")}">PDF for {$target} created.<small><a href="webdata-admin.xql?rid={$target}&amp;format=pdf_create">Create PDF anyway!</a></small> <br/> </i>
+                    else ()
+                }
+            </td>
+          else
+            if (admin:needsPdf($currentResourceId)) then
+                <td title="Source from: {string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml'))}{if (xmldb:get-child-resources($config:pdf-root) = $currentResourceId || ".pdf") then concat(', rendered on: ', xmldb:last-modified($config:pdf-root, $currentResourceId || ".pdf")) else ()}">
+                    <a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=pdf_create"><b>Create PDF NOW!</b></a>
+                    <br/> or
+                    <br/>
+                    <form enctype="multipart/form-data" method="post" action="webdata-admin.xql?rid={$currentResourceId}&amp;format=pdf_upload">
+                      <p>Upload PDF File</p>
+                      <input type="file"  name="FileUpload"/>
+                      <input type="submit">Submit your PDF</input>
+                    </form>
+                    <br/>
+                </td>
+            else 
+                <td title="Source from: {string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml'))}, rendered on: {xmldb:last-modified($config:pdf-root, $currentResourceId || ".pdf")}">
+                    The PDF was already uploaded or created.
+                    <small><a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=pdf_create">Create PDF anyway!</a></small>
+                </td>
 };
 
 declare function admin:authorMakeHTML($node as node(), $model as map(*)) {
@@ -504,6 +478,100 @@ declare function admin:needsSnippetsString($node as node(), $model as map(*)) {
                 <td title="{concat('Snippets created on: ', xmldb:last-modified($config:snippets-root || '/' || $currentResourceId, xmldb:get-child-resources($config:snippets-root || '/' || $currentResourceId)[1]), ', Source from: ', string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml')), '.')}">Creating snippets unnecessary. <small><a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=snippets">Create snippets anyway!</a></small></td>
 };
 
+declare function admin:needsNLP($targetWorkId as xs:string) as xs:boolean {
+    let $targetSubcollection := 
+        for $subcollection in $config:tei-sub-roots return 
+            if (doc-available(concat($subcollection, '/', $targetWorkId, '.xml'))) then $subcollection
+            else ()
+    let $targetWorkModTime := xmldb:last-modified($targetSubcollection, $targetWorkId || '.xml')
+    let $subcollection := $config:nlp-root
+    return    
+        if (util:binary-doc-available($subcollection || '/' || $targetWorkId || '.csv')) then
+            let $csvModTime := xmldb:last-modified($subcollection, $targetWorkId || '.csv')
+            return 
+                if (starts-with(upper-case($targetWorkId), 'W0')) then
+                    let $indexModTime := xmldb:last-modified($config:index-root, $targetWorkId || "_nodeIndex.xml")
+                    return 
+                        if ($csvModTime lt $targetWorkModTime or $csvModTime lt $indexModTime) then true() else false()
+                else if ($csvModTime lt $targetWorkModTime) then true() 
+                else false()
+        else true()
+};
+
+declare function admin:needsNLPString ($node as node(), $model as map(*)) {
+    let $currentResourceId := max((string($model('currentWork')?('wid')), string($model('currentLemma')?('lid')), string($model('currentWP')?('wpid'))))
+    let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
+                                    if (doc-available(concat($subcollection, '/', $currentResourceId, '.xml'))) then $subcollection
+                                    else ()
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:  let $readyForNLP := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))//tei:TEI[@xml:id eq $currentResourceId]/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then:)
+    let $readyForNLP := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))/id($currentResourceId)/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then
+                            true()
+                        else false()
+    return
+        if (not($readyForNLP)) then
+            <td>Not ready yet</td>
+        else if (admin:needsNLP($currentResourceId)) then
+            <td title="{if (util:binary-doc-available($config:nlp-root || "/" || $currentResourceId || '.csv')) then
+                            concat('NLP CSV created on: ', string(xmldb:last-modified($config:nlp-root, $config:nlp-root || "/" || $currentResourceId || '.csv')), ', ')
+                        else ()}
+                        {if (doc-available($config:index-root || '/' || $currentResourceId || '_nodeIndex.xml')) then
+                            concat('index created on: ', string(xmldb:last-modified($config:index-root, $currentResourceId || "_nodeIndex.xml")), ', ')
+                        else ()}
+                        source from: {string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml'))}"><a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=nlp"><b>Render NLP (CSV) NOW!</b></a></td>
+        else
+            <td title="NLP created on {string(xmldb:last-modified($config:nlp-root, $currentResourceId || ".csv"))},
+                       index created on {string(xmldb:last-modified($config:index-root, $currentResourceId || "_nodeIndex.xml"))},
+                       source from: {string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml'))}">Rendering unnecessary. <small><a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=nlp">Render NLP (CSV) anyway!</a></small></td>
+};
+
+declare function admin:needsStats($targetWorkId as xs:string) as xs:boolean {
+    let $targetSubcollection := 
+        for $subcollection in $config:tei-sub-roots return 
+            if (doc-available(concat($subcollection, '/', $targetWorkId, '.xml'))) then $subcollection
+            else ()
+    let $targetWorkModTime := xmldb:last-modified($targetSubcollection, $targetWorkId || '.xml')
+    let $subcollection := $config:nlp-root
+    return    
+        if (util:binary-doc-available($subcollection || '/' || $targetWorkId || '.json')) then
+            let $jsonModTime := xmldb:last-modified($subcollection, $targetWorkId || '.json')
+            return 
+                if (starts-with(upper-case($targetWorkId), 'W0')) then
+                    let $indexModTime := xmldb:last-modified($config:index-root, $targetWorkId || "_nodeIndex.xml")
+                    return 
+                        if ($jsonModTime lt $targetWorkModTime or $jsonModTime lt $indexModTime) then true() else false()
+                else if ($jsonModTime lt $targetWorkModTime) then true() 
+                else false()
+        else true()
+};
+
+declare function admin:needsStatsString ($node as node(), $model as map(*)) {
+    ""
+};
+
+declare function admin:needsRoutingResource($targetResourceId as xs:string) as xs:boolean {
+    let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
+                                    if (doc-available(concat($subcollection, '/', $targetResourceId, '.xml'))) then $subcollection
+                                    else ()
+    let $targetWorkModTime := xmldb:last-modified($targetSubcollection, $targetResourceId || '.xml')
+    return if (util:binary-doc-available($config:routes-root || '/' || $targetResourceId || '_routes.json')) then
+                let $resourceModTime := xmldb:last-modified($config:routes-root, $targetResourceId || '_routes.json')
+                return if ($resourceModTime lt $targetWorkModTime) then true() else false()
+        else
+            true()
+};
+
+declare function admin:needsRoutingString($node as node(), $model as map(*)) {
+    let $currentResourceId := max((string($model('currentWork')?('wid')), string($model('currentLemma')?('lid')), string($model('currentWP')?('wpid'))))
+    let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
+                                    if (doc-available(concat($subcollection, '/', $currentResourceId, '.xml'))) then $subcollection
+                                    else ()
+    return if (admin:needsRoutingResource($currentResourceId)) then
+                <td title="source from: {string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml'))}"><a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=routing"><b>Create Routing table NOW!</b></a></td>
+           else
+                <td title="{concat('Routing resource created on: ', string(xmldb:last-modified($config:routes-root, $currentResourceId || '_routes.json')), ', Source from: ', string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml')), '.')}">Creating Routing resource unnecessary. <small><a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=routing">Create Routing resource anyway!</a></small></td>
+};
+
 declare function admin:needsRDF($targetWorkId as xs:string) as xs:boolean {
     let $targetSubcollection := 
         for $subcollection in $config:tei-sub-roots return 
@@ -554,92 +622,48 @@ declare function admin:needsRDFString($node as node(), $model as map(*)) {
             <td title="{concat('RDF created on: ', string(xmldb:last-modified($rdfSubcollection, $currentResourceId || '.rdf')), ', Source from: ', string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml')), '.')}">Creating RDF unnecessary. <small><a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=rdf">Create RDF anyway!</a></small></td>
 };
 
-declare function admin:needsNLP($targetWorkId as xs:string) as xs:boolean {
-    let $targetSubcollection := 
-        for $subcollection in $config:tei-sub-roots return 
-            if (doc-available(concat($subcollection, '/', $targetWorkId, '.xml'))) then $subcollection
-            else ()
-    let $targetWorkModTime := xmldb:last-modified($targetSubcollection, $targetWorkId || '.xml')
-    let $subcollection := $config:nlp-root
-    return    
-        if (util:binary-doc-available($subcollection || '/' || $targetWorkId || '.csv')) then
-            let $csvModTime := xmldb:last-modified($subcollection, $targetWorkId || '.csv')
-            return 
-                if (starts-with(upper-case($targetWorkId), 'W0')) then
-                    let $indexModTime := xmldb:last-modified($config:index-root, $targetWorkId || "_nodeIndex.xml")
-                    return 
-                        if ($csvModTime lt $targetWorkModTime or $csvModTime lt $indexModTime) then true() else false()
-                else if ($csvModTime lt $targetWorkModTime) then true() 
-                else false()
+declare function admin:needsTeiCorpusZipString($node as node(), $model as map(*)) {
+    let $worksModTime := max(for $work in xmldb:get-child-resources($config:tei-works-root) return xmldb:last-modified($config:tei-works-root, $work))    
+    let $needsCorpusZip := 
+        if (util:binary-doc-available($config:corpus-zip-root || '/sal-tei-corpus.zip')) then
+            let $resourceModTime := xmldb:last-modified($config:corpus-zip-root, 'sal-tei-corpus.zip')
+            return $resourceModTime lt $worksModTime
         else true()
-};
-
-declare function admin:needsNLPString ($node as node(), $model as map(*)) {
-    let $currentResourceId := max((string($model('currentWork')?('wid')), string($model('currentLemma')?('lid')), string($model('currentWP')?('wpid'))))
-    let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
-                                    if (doc-available(concat($subcollection, '/', $currentResourceId, '.xml'))) then $subcollection
-                                    else ()
-(: Changed to improve performance on 2025-03-24, A.W.                               :)
-(:  let $readyForNLP := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))//tei:TEI[@xml:id eq $currentResourceId]/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then:)
-    let $readyForNLP := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))/id($currentResourceId)/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then
-                            true()
-                        else false()
-    return
-        if (not($readyForNLP)) then
-            <td>Not ready yet</td>
-        else if (admin:needsNLP($currentResourceId)) then
-            <td title="{if (util:binary-doc-available($config:nlp-root || "/" || $currentResourceId || '.csv')) then
-                            concat('NLP CSV created on: ', string(xmldb:last-modified($config:nlp-root, $config:nlp-root || "/" || $currentResourceId || '.csv')), ', ')
-                        else ()}
-                        {if (doc-available($config:index-root || '/' || $currentResourceId || '_nodeIndex.xml')) then
-                            concat('index created on: ', string(xmldb:last-modified($config:index-root, $currentResourceId || "_nodeIndex.xml")), ', ')
-                        else ()}
-                        source from: {string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml'))}"><a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=nlp"><b>Render NLP (CSV) NOW!</b></a></td>
+    return 
+        if ($needsCorpusZip) then
+            <td title="Most current source from: {string($worksModTime)}"><a href="webdata-admin.xql?format=tei-corpus"><b>Create TEI corpus NOW!</b></a></td>
         else
-            <td title="NLP created on {string(xmldb:last-modified($config:nlp-root, $currentResourceId || ".csv"))},
-                       index created on {string(xmldb:last-modified($config:index-root, $currentResourceId || "_nodeIndex.xml"))},
-                       source from: {string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml'))}">Rendering unnecessary. <small><a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=nlp">Render NLP (CSV) anyway!</a></small></td>
+            <td title="{concat('TEI corpus created on: ', string(xmldb:last-modified($config:corpus-zip-root, 'sal-tei-corpus.zip')), ', most current source from: ', string($worksModTime), '.')}">Creating TEI corpus unnecessary. <small><a href="webdata-admin.xql?format=tei-corpus">Create TEI corpus zip anyway!</a></small></td>
 };
 
-declare function admin:needsIIIFResource($targetWorkId as xs:string) as xs:boolean {
-    let $targetWorkModTime := xmldb:last-modified($config:tei-works-root, $targetWorkId || '.xml')
-
-    return if (util:binary-doc-available($config:iiif-root || '/' || $targetWorkId || '.json')) then
-                let $resourceModTime := xmldb:last-modified($config:iiif-root, $targetWorkId || '.json')
-                return if ($resourceModTime lt $targetWorkModTime) then true() else false()
-        else
-            true()
-};
-
-declare function admin:needsIIIFResourceString($node as node(), $model as map(*)) {
-    let $currentWorkId := $model('currentWork')?('wid')
-    return if (admin:needsIIIFResource($currentWorkId)) then
-                <td title="source from: {string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml'))}"><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=iiif"><b>Create IIIF resource NOW!</b></a></td>
+declare function admin:needsTxtCorpusZipString($node as node(), $model as map(*)) {
+    if (xmldb:collection-available($config:txt-root)) then
+        let $worksModTime := max(for $work in xmldb:get-child-resources($config:txt-root) return xmldb:last-modified($config:txt-root, $work))    
+        let $needsCorpusZip := 
+            if (util:binary-doc-available($config:corpus-zip-root || '/sal-txt-corpus.zip')) then
+                let $resourceModTime := xmldb:last-modified($config:corpus-zip-root, 'sal-txt-corpus.zip')
+                return $resourceModTime lt $worksModTime
+            else true()
+        return 
+            if ($needsCorpusZip) then
+                <td title="Most current source from: {string($worksModTime)}"><a href="webdata-admin.xql?format=txt-corpus"><b>Create TXT corpus NOW!</b></a></td>
             else
-                <td title="{concat('IIIF resource created on: ', string(xmldb:last-modified($config:iiif-root, $currentWorkId || '.json')), ', Source from: ', string(xmldb:last-modified($config:tei-works-root, $currentWorkId || '.xml')), '.')}">Creating IIIF resource unnecessary. <small><a href="webdata-admin.xql?rid={$currentWorkId}&amp;format=iiif">Create IIIF resource anyway!</a></small></td>
+                <td title="{concat('TXT corpus created on: ', string(xmldb:last-modified($config:corpus-zip-root, 'sal-txt-corpus.zip')), ', most current source from: ', string($worksModTime), '.')}">Creating TXT corpus unnecessary. <small><a href="webdata-admin.xql?format=txt-corpus">Create TXT corpus zip anyway!</a></small></td>
+    else <td title="No txt sources available so far!"><a href="webdata-admin.xql?format=txt-corpus"><b>Create TXT corpus NOW!</b></a></td>
 };
 
-declare function admin:needsRoutingResource($targetResourceId as xs:string) as xs:boolean {
-    let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
-                                    if (doc-available(concat($subcollection, '/', $targetResourceId, '.xml'))) then $subcollection
-                                    else ()
-    let $targetWorkModTime := xmldb:last-modified($targetSubcollection, $targetResourceId || '.xml')
-    return if (util:binary-doc-available($config:routes-root || '/' || $targetResourceId || '_routes.json')) then
-                let $resourceModTime := xmldb:last-modified($config:routes-root, $targetResourceId || '_routes.json')
-                return if ($resourceModTime lt $targetWorkModTime) then true() else false()
+declare function admin:needsCorpusStatsString($node as node(), $model as map(*)) {
+    let $worksModTime := max(for $work in xmldb:get-child-resources($config:tei-works-root) return xmldb:last-modified($config:tei-works-root, $work))    
+    let $needsCorpusStats := 
+        if (util:binary-doc-available($config:stats-root || '/corpus-stats.json')) then
+            let $resourceModTime := xmldb:last-modified($config:stats-root, 'corpus-stats.json')
+            return $resourceModTime lt $worksModTime
+        else true()
+    return 
+        if ($needsCorpusStats) then
+            <td title="Most current source from: {string($worksModTime)}"><a href="webdata-admin.xql?format=stats"><b>Create corpus stats NOW!</b></a></td>
         else
-            true()
-};
-
-declare function admin:needsRoutingString($node as node(), $model as map(*)) {
-    let $currentResourceId := max((string($model('currentWork')?('wid')), string($model('currentLemma')?('lid')), string($model('currentWP')?('wpid'))))
-    let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
-                                    if (doc-available(concat($subcollection, '/', $currentResourceId, '.xml'))) then $subcollection
-                                    else ()
-    return if (admin:needsRoutingResource($currentResourceId)) then
-                <td title="source from: {string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml'))}"><a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=routing"><b>Create Routing table NOW!</b></a></td>
-           else
-                <td title="{concat('Routing resource created on: ', string(xmldb:last-modified($config:routes-root, $currentResourceId || '_routes.json')), ', Source from: ', string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml')), '.')}">Creating Routing resource unnecessary. <small><a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=routing">Create Routing resource anyway!</a></small></td>
+            <td title="{concat('Stats created on: ', string(xmldb:last-modified($config:stats-root, 'corpus-stats.json')), ', most current source from: ', string($worksModTime), '.')}">Creating corpus stats unnecessary. <small><a href="webdata-admin.xql?format=stats">Create corpus stats anyway!</a></small></td>
 };
 
 
