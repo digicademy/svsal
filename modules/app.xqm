@@ -330,7 +330,7 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
                                            'd_hyph_approved',
                                            'e_emended_unenriched',
                                            'f_enriched',
-                                           'r_reference_work'
+                                           
                                          )) then "yes"
                 else "no"
             let $wrkLink        :=  $config:idserver || '/texts/' || $wid
@@ -348,8 +348,15 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
    With the new infrastructure, the catalogue view is at URLs like:
        https://id.test.salamanca.school/texts/W0095?mode=details
             let $workDetails    :=  'workdetails.html?wid=' ||  $wid
-:)
-            let $typeWork :=  if ($item/ancestor-or-self::tei:TEI//tei:revisionDesc/@status =
+:)          let $typeWork :=   if ($item/ancestor-or-self::tei:TEI//tei:revisionDesc/@status =
+                                         ( 'a_raw',
+                                           'b_cleared',
+                                           'c_hyph_proposed',
+                                           'd_hyph_approved',
+                                           'e_emended_unenriched',
+                                           'f_enriched'
+                                          )) then "Facsimiles"
+else if ($item/ancestor-or-self::tei:TEI//tei:revisionDesc/@status =
                                          ( 'a_raw',
                                            'b_cleared',
                                            'c_hyph_proposed',
@@ -358,8 +365,18 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
                                            'f_enriched', 
                                            'g_enriched_approved',
                                            'h_revised'
-                                         )) then "Edited Work"
-                                else "Reference Work"
+                                          ) and contains($item//tei:encodingDesc/tei:editorialDecl/tei:p/@xml:id, 'AEW'))  then "Automatically Edited Work"
+                            else if ($item/ancestor-or-self::tei:TEI//tei:revisionDesc/@status =
+                                         ( 'a_raw',
+                                           'b_cleared',
+                                           'c_hyph_proposed',
+                                           'd_hyph_approved',
+                                           'e_emended_unenriched',
+                                           'f_enriched', 
+                                           'g_enriched_approved',
+                                           'h_revised'
+                                          ) and contains($item//tei:encodingDesc/tei:editorialDecl/tei:p/@xml:id, 'RW'))  then "Reference Work"
+else 'Edited Work'
             let $workDetails    :=  $config:idserver || '/texts/' || $wid || '?mode=details'
             let $DetailsInfo    :=  i18n:process(<i18n:text key="details">Katalogeintrag</i18n:text>, $lang, "/db/apps/salamanca/data/i18n", "en")
     
@@ -394,10 +411,11 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
                 i18n:process(if ($item/parent::tei:TEI//tei:text/@xml:lang = 'la') then <i18n:text key="latin">Latein</i18n:text>
                                                                                    else <i18n:text key="spanish">Spanisch</i18n:text>
                             , $lang, "/db/apps/salamanca/data/i18n", "en")
-            let $facetAvailability :=
-                i18n:process(if ($WIPstatus eq 'yes') then <i18n:text key="facsimiles">Facsimiles</i18n:text>
-                                                      else <i18n:text key="fullTextAvailable">Editions</i18n:text> (: when ready: add a section for Reference Work:)
-                            , $lang, "/db/apps/salamanca/data/i18n", "en")
+                let $facetAvailability :=
+                i18n:process(if (($WIPstatus eq 'yes')) then <i18n:text key="facsimiles">Facsimiles</i18n:text>
+                                                      else if (($WIPstatus eq 'no') and contains($item//tei:encodingDesc/tei:editorialDecl/tei:p/@xml:id, 'AEW')) then  <i18n:text key="AEW">Automatically Edited Work</i18n:text> 
+  else if (($WIPstatus eq 'no') and contains($item//tei:encodingDesc/tei:editorialDecl/tei:p/@xml:id, 'RW')) then  <i18n:text key="referenceWork">Reference Work</i18n:text> 
+else <i18n:text key="fullTextAvailable">Editions</i18n:text>  , $lang, "/db/apps/salamanca/data/i18n", "en")
             let $completeWork   :=  $item/parent::tei:TEI//tei:text[@xml:id="completeWork"]
             let $volIcon        :=  if ($completeWork/@type='work_multivolume') then 'icon-text' else ()
             let $volLabel       :=  
