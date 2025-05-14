@@ -2545,10 +2545,41 @@ declare function admin:createDetails($currentResourceId as xs:string) {
             "thumbnail" :               $thumbnail_id,
             "schol_ed" :                admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#scholarly')]/string(), ' / ')),
             "tech_ed" :                 admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#technical')]/string(), ' / ')),
-            "el_publication_date" :     if ($teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when) then
-                                            $teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when/string()[1]
-                                        else
-                                            'in prep.',
+              "el_publication_date" :     if ($teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when) then
+                                                                    $teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when/string()[1]
+else if ($teiHeader//tei:editionStmt//tei:date[@type eq 'summaryDigitizedEd']/@when) then $teiHeader//tei:editionStmt//tei:date[@type eq 'summaryDigitizedEd']/@when/string()[1]
+                                                                else
+                                                                    'in prep.',
+                                 
+          "type": if ($teiHeader//tei:revisionDesc/@status =
+                                         ( 'a_raw',
+                                           'b_cleared',
+                                           'c_hyph_proposed',
+                                           'd_hyph_approved',
+                                           'e_emended_unenriched',
+                                           'f_enriched'
+                                          )) then "Facsimiles"
+else if ($teiHeader//tei:revisionDesc/@status =
+                                         ( 'a_raw',
+                                           'b_cleared',
+                                           'c_hyph_proposed',
+                                           'd_hyph_approved',
+                                           'e_emended_unenriched',
+                                           'f_enriched', 
+                                           'g_enriched_approved',
+                                           'h_revised'
+                                          ) and contains($teiHeader//tei:encodingDesc/tei:editorialDecl/tei:p/@xml:id, 'AEW'))  then "Automatically Edited Work"
+                            else if ($teiHeader//tei:revisionDesc/@status =
+                                         ( 'a_raw',
+                                           'b_cleared',
+                                           'c_hyph_proposed',
+                                           'd_hyph_approved',
+                                           'e_emended_unenriched',
+                                           'f_enriched', 
+                                           'g_enriched_approved',
+                                           'h_revised'
+                                          ) and contains($teiHeader//tei:encodingDesc/tei:editorialDecl/tei:p/@xml:id, 'RW'))  then "Reference Work"
+else 'Edited Work',
             "hold_library" :            if (count($volumes_list) gt 0 and not($teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:repository)) then
                                             'check individual volumes'
                                         else
