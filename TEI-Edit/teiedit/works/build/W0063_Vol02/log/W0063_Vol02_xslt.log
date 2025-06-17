@@ -1,0 +1,123 @@
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol02\xml\W0063_Vol02_001.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol02\xml\W0063_Vol02_002.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol02\xsl\W0063_Vol02_001.xsl
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol02\xml\W0063_Vol02_002.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol02\xml\W0063_Vol02_003.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol02\xsl\W0063_Vol02_002.xsl
+Apache resolver library not found, internal resolver will be used
+     [xslt] Info: encountered special character in text node: *
+
+     [xslt] Info: encountered special character in text node: *
+
+     [xslt] Info: encountered special character in text node: *
+
+     [xslt] Info: encountered special character in text node: *
+
+     [xslt] Info: encountered special character in text node: *
+
+     [xslt] Info: encountered special character in text node: *
+
+     [xslt] Info: encountered special character in text node: *
+
+     [xslt] Info: encountered special character in text node: *
+
+     [xslt] Info: encountered special character in text node: *
+
+     [xslt] Info: encountered special character in text node: *
+
+     [xslt] -----------------------------------------------------------
+
+     [xslt] WARN: different amounts of input and output pb/cb: 
+
+     [xslt] Input pb: 460 | cb: 884
+
+     [xslt] Output pb: 460 | cb: 886
+
+     [xslt] -----------------------------------------------------------
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol02\xml\W0063_Vol02_003.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol02\xml\W0063_Vol02_004.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol02\xsl\W0063_Vol02_003.xsl
+     [xslt] Warning: amount of non-whitespace characters differs in input and output doc: 
+
+     [xslt] Input characters: 1340644
+
+     [xslt] Output characters: 1327907
+
+     [xslt] 
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol02\xml\W0063_Vol02_004.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol02\xml\W0063_Vol02_005.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol02\xsl\W0063_Vol02_004.xsl
+Apache resolver library not found, internal resolver will be used
+     [xslt] INFO: added 101915 special character tags (tei:g).
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol02\xml\W0063_Vol02_005.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol02\xml\W0063_Vol02_006.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol02\xsl\W0063_Vol02_005.xsl
+     [xslt] Generated temporary lb/@xml:id.
+
+     [xslt] Extracted tei:lb from pages in the main area of the text.
+
+     [xslt] Numbered tei:lb from the main area.
+
+     [xslt] INFO: Added line numbers to tei:lb/@n.
+
+     [xslt] INFO: Serializing final output...
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol02\xml\W0063_Vol02_006.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol02\xml\W0063_Vol02_007.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol02\xsl\W0063_Vol02_006.xsl
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol02\xml\W0063_Vol02_007.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol02\xml\W0063_Vol02_008.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol02\xsl\W0063_Vol02_007.xsl
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol02\xml\W0063_Vol02_008.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol02\xml\W0063_Vol02_009.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol02\xsl\W0063_Vol02_008.xsl
+Apache resolver library not found, internal resolver will be used
+     [xslt] INFO: tagged 1 pb as break=no and rendition=#noHyphen
+
+     [xslt] INFO: tagged 3 cb as break=no and rendition=#noHyphen
+
+     [xslt] INFO: tagged 924 lb as break=no and rendition=#noHyphen
+
+     [xslt] INFO: tagged 928 breaks in total as break=no and rendition=#noHyphen
+
+     [xslt] ------------------------------------------------------
+
+     [xslt] INFO: quality check successfull.
+
+     [echo] Tagged unmarked hyphenations (es).
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol02\xml\W0063_Vol02_009.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol02\xml\W0063_Vol02_010.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol02\xsl\W0063_Vol02_008.xsl
+Apache resolver library not found, internal resolver will be used
+     [xslt] INFO: tagged 2 pb as break=no and rendition=#noHyphen
+
+     [xslt] INFO: tagged 9 cb as break=no and rendition=#noHyphen
+
+     [xslt] INFO: tagged 885 lb as break=no and rendition=#noHyphen
+
+     [xslt] INFO: tagged 896 breaks in total as break=no and rendition=#noHyphen
+
+     [xslt] ------------------------------------------------------
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol02\xml\W0063_Vol02_010.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol02\xml\W0063_Vol02_011.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol02\xsl\W0063_Vol02_009.xsl

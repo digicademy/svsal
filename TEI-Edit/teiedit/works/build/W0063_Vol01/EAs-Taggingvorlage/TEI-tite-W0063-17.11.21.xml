@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_tite.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_tite.rng" type="application/xml"
+	schematypens="http://purl.oclc.org/dsdl/schematron"?>
+
+
+
+<!-- 
+17.11.21
+
+Revised: #CR
+
+TEI-Tite structure for W0063-A "Las Siete Partidas", Gregorio Lopez. 
+         
+    Text in main area in div(s) type="commented" xml:lang="es" 
+    Text in marginal area in div(s) @type="gloss" xml:lang="la"
+       
+General structure W0063-A
+302 pages
+
+front
+    titlePage W0063-A-0001
+    div1 @type privileges W0063-A-0002
+    div1 @type privileges W0063-A-0002
+    div1 @type foreword W0063-A-0003
+    div1 @type preface W0063-A-0004
+    div1 @type contents W0063-A-0004 Should lead to texts in Spanish.
+
+body
+    div1 @type preface W0063-A-0005
+
+        div2 type="commented" xml:lang="es"
+            div3 @type type section
+            div3 @type type section
+        div2 @type type="gloss" xml:lang="la"
+            div3 @type type section
+            div3 @type type section
+        
+    div1 @type partida n="1" W0063-A-0009
+        div2 @type title  @n="1"
+            
+            div3 @type="commented" xml:lang="es"
+                
+                div4 @type section
+                
+                div4 @type="law" @n="1"
+                ¶ Ley primera. Que leyes son estas.
+                
+                div4 @type="law" @n="2"
+                ¶ Ley. II. Del derecho natural, e de las gentes.
+
+            div3 @type="gloss" xml:lang="la"
+                div4 @type="law" @n="1"
+                ¶ Lex prima
+
+                div4 @type="law" @n="1"
+                ¶ Lex. II.
+                [...]
+ 
+        div2 @type title  n="2"
+                [...]
+        div2 @type title  n="3"
+                [...]
+        
+                [...]
+        div2 @type title  n="24"
+
+No back-matter
+#############################################################################
+
+body//div1  @type partida n="1" total 1
+    div2 @type title  total 24
+        
+        div3 @type="commented" xml:lang="es" 1 per title, total 24
+            div4 @type law - multiple, the nubering starts from 1 per title.
+
+        div3 @type="gloss" xml:lang="la" 1 per title, total 24
+            div4 @type law - multiple, the nubering starts from 1 per title.
+
+
+        -->
+<text xmlns="http://www.tei-c.org/ns/1.0" xmlns:t="http://www.tei-c.org/ns/tite/1.0">
+    <front><!--<front>-->
+        <titlePage>
+            <titlePart type="main">
+                <pb n="[1r]" facs="W0063-A-0001" xml:id="W0063-A-0001"/>
+                <lb/>LAS SIETE
+                <lb/>PARTIDAS DEL SABIO REY [...]
+            </titlePart>
+        </titlePage>
+        <div1>
+            <p rend="hx"><pb n="[1v]" xml:id="W0063-A-0002" facs="W0063-A-0002"/>
+            <lb/>El Rey. [...]</p> <p>[...]</p>
+        </div1>
+        <div1>
+            <p rend="hx">
+            <lb/>El Rey. [...]</p> <p>[...]</p>
+        </div1>
+        <div1>
+            <p rend="hx"><pb n="[2r]" xml:id="W0063-A-0003" facs="W0063-A-0003"/>
+            <lb/>Andreas a Portonarijs [...]</p> <p>[...]</p>
+        </div1>
+        <div1>
+            <p rend="hx"><pb n="[2v]" xml:id="W0063-A-0004" facs="W0063-A-0004"/>
+            <lb/>PRAEFATIO<lb/>Authoris.</p> <p>[...]</p>
+        </div1>
+        <div1><p rend="hx"><lb/>Tabla de los titulos [...]</p></div1>
+    </front>
+    <body><!--<body>-->
+    <div1 type="preface"><!--<div1 type="preface">-->
+        <div2 type="commented" xml:lang="es"><!--<div2 type="commented" xml:lang="es">-->
+        <p rend="hx"><pb n="3r" xml:id="W0063-A-0005" facs="W0063-A-0005"/>
+        <lb/>PROLOGO DEL MVY
+        <lb/>noble Rey don Alfonſo noueno de-
+        <lb/>ſte nombre, ſobre la Copilacion de
+        <lb/>las ſiete Partidas.</p>
+        <div3 type="section"><!--<div3 type="section">--><p><cb/><lb/><hi rend="init">D</hi>Ios es comien
+        <lb/>ço <ref target="#W0063-A-gloss-0005a" xml:id="W0063-A-ref-0005a"><hi rend="sup">a</hi></ref> e medio, e acaba-
+        <lb/>miento de todas las co
+        <lb/>ſas, e ſin el <ref target="#W0063-A-gloss-0005b" xml:id="W0063-A-ref-0005b"><hi rend="sup">b</hi></ref> ninguna
+        <lb/>coſa puede ſer : ca por
+        <lb/>el ſu poder ſon fechas, <ref target="#W0063-A-gloss-0005c" xml:id="W0063-A-ref-0005c"><hi rend="sup">c</hi></ref>e por el ſu ſaber
+        <lb/>ſon gouernadas, <ref target="#W0063-A-gloss-0005d" xml:id="W0063-A-ref-0005d"><hi rend="sup">d</hi></ref>e por la ſu bõdad ſon 
+        <lb/>mantenidas <ref target="#W0063-A-gloss-0005e" xml:id="W0063-A-ref-0005e"><hi rend="sup">e</hi></ref>. Onde todo ome que al-
+        <lb/>gun buen fecho quiſiere començar, pri
+        <lb/>mero deue poner, e adelantar a Dios en
+        <lb/>el <ref target="#W0063-A-gloss-0005f" xml:id="W0063-A-ref-0005f"><hi rend="sup">f</hi></ref>, rogandole e pidiendole merced, que
+        <lb/>le de ſaber, e voluntad, e poder, porque
+        <lb/>lo pueda bien acabar. Porende nos don
+        <lb/>Alfonſo <ref target="#W0063-A-gloss-0005g" xml:id="W0063-A-ref-0005g"><hi rend="sup">g</hi></ref> por la gracia de Dios Rey de
+        <lb/>Caſtilla, e de Toledo, e de Leon, e de Ga-
+        <lb/>lizia, e de Seuilla, e de Cordoua, e de Mur
+        <lb/>cia, e de Iaen, del Algarue, <ref target="#W0063-A-gloss-0005h" xml:id="W0063-A-ref-0005h"><hi rend="sup">h</hi></ref> entendien-
+        <lb/>do los grãdes lugares q̃ tienen de Dios <ref target="#W0063-A-gloss-0005i" xml:id="W0063-A-ref-0005i"><hi rend="sup">i</hi></ref>
+        <lb/>los reyes en el mundo, e los bienes que
+        <lb/>del reſciben en muchas maneras ſeñala
+        <lb/>damente en la muy gran honra que a
+        <cb/><lb/>ellos faze, queriendo que ellos ſean lla-
+        <lb/>mados Reyes, que es el ſu nombre <ref target="#W0063-A-gloss-0005k" xml:id="W0063-A-ref-0005k"><hi rend="sup">k</hi></ref>. E
+        <lb/>otroſi, por la iuſticia que han de fazer pa
+        <lb/>ra mantener los pueblos de que ſon ſe-
+        <lb/>ñores, que es la ſu obra <ref target="#W0063-A-gloss-0005l" xml:id="W0063-A-ref-0005l"><hi rend="sup">l</hi></ref>: e conociẽdo la
+        <lb/>muy gran carga, que les es con eſto, ſi
+        <lb/>bien no lo fizieſſen: no tan ſolamente
+        <lb/>por el miede de Dios que es tan pode-
+        <lb/>roſo e iuſticiero, a cuyo iuyzio han de
+        <lb/>venir <ref target="#W0063-A-gloss-0005m" xml:id="W0063-A-ref-0005m"><hi rend="sup">m</hi></ref>, e de quiẽ ſe no pueden por nin-
+        <lb/>guna manera aſconder, ni eſcuſar: que ſi
+        <lb/>mal fizieren, no ayan la pena que mere-
+        <lb/>cen: mas avn por la verguença <ref target="#W0063-A-gloss-0005n" xml:id="W0063-A-ref-0005n"><hi rend="sup">n</hi></ref> e la afren
+        <lb/>ta de las gentes del mundo que juzgan
+        <lb/>las coſas, mas por voluntad <ref target="#W0063-A-gloss-0005o" xml:id="W0063-A-ref-0005o"><hi rend="sup">o</hi></ref>, que por
+        <lb/>derecho <ref target="#W0063-A-gloss-0005p" xml:id="W0063-A-ref-0005p"><hi rend="sup">p</hi></ref>. E auiendo ſabor de nos guar
+        <lb/>dar deſtas afrentas e del daño que ende
+        <lb/>nos puede venir. E otroſi, la muy gran-
+        <lb/>de merced que nos Dios fizo en querer
+        <lb/>que vinieſſemos del linage <ref target="#W0063-A-gloss-0005q" xml:id="W0063-A-ref-0005q"><hi rend="sup">q</hi></ref> onde veni-
+        <lb/>mos, e el lugar en que nos puſo, fazien-
+        <lb/>donos ſeñor de tantas buenas gentes, e
+        <pb n="[3v]" xml:id="W0063-A-0006" facs="W0063-A-0006"/>
+        <lb/>de tan grãdes tierras, como el quiſo me
+        <lb/>ter ſo nueſtro ſeñorio. Catamos carreras
+        <lb/>porque nos, e los q̃ deſpues de nos rey-
+        <lb/>naſſen en nueſtro ſeñorio, ſopiſſemos <ref target="#W0063-A-gloss-0006a" xml:id="W0063-A-ref-0006a"><hi rend="sup">a</hi></ref> [...]</p>
+        <p>[... paragraphs until W0063-A-0007 ...]</p></div3>
+        <div3 type="section"><!--<div3 type="section">-->
+        <p rend="hx"><lb/>[...]<t:i>SEPTENARIO.</t:i></p>
+        <p><lb/><hi rend="init">S</hi>Eptenario <ref target="#W0063-A-gloss-0007g" xml:id="W0063-A-ref-0007g"><hi rend="sup">g</hi></ref> es cuēto muy [...]</p>
+        </div3>
+        </div2>
+        <div2 type="gloss" xml:lang="la"><!--<div2 type="gloss" xml:lang="la">-->
+        <div3 type="section"><!--<div3 type="section">-->
+        <p rend="hx"><lb/>In Christi nomine.</p>
+        <p n="a" corresp="#W0063-A-ref-0005a" xml:id="W0063-A-gloss-0005a">
+            <pb sameAs="#W0063-A-0005"/><cb/>
+            <lb/><ref target="#W0063-A-ref-0005a">a</ref> <foreign xml:lang="es"><t:i><hi rend="init">D</hi>IOS es comienço.</t:i></foreign> Deus eſt omnium ſcientiarum caput &amp; au-[...]</p>
+        <p n="b" corresp="#W0063-A-ref-0005b" xml:id="W0063-A-gloss-0005b">
+            <lb/><ref target="#W0063-A-ref-0005b">b</ref> ¶ <foreign xml:lang="es"><t:i>Sin el.</t:i></foreign> Ex ipſo &amp; peripſum, &amp; in ipſo ſunt omnia. ad Rom. ca.11.. &amp;[...]</p>
+        <p n="c" corresp="#W0063-A-ref-0005c" xml:id="W0063-A-gloss-0005c">
+            <lb/><ref target="#W0063-A-ref-0005c">c</ref> ¶ <foreign xml:lang="es"><t:i>Son fechas.</t:i></foreign><lb/>Geñ. cap.1. &amp; [...]</p>
+        <p n="d" corresp="#W0063-A-ref-0005d" xml:id="W0063-A-gloss-0005d">
+            <lb/><ref target="#W0063-A-ref-0005d">d</ref> ¶ <foreign xml:lang="es"><t:i>Gouernadas.</t:i></foreign> Sapientiæ.14. Tu aũt pater gubernas omnia prouiden [...]</p>
+        <p n="e" corresp="#W0063-A-ref-0005e" xml:id="W0063-A-gloss-0005e">
+            <lb/><ref target="#W0063-A-ref-0005e">e</ref> ¶ <foreign xml:lang="es"><t:i>Mantenidas.</t:i></foreign> Portansq́; omnia verbo virtutis ſuæ, ad Hebræos.1.&amp; [...]</p>
+        <p n="f" corresp="#W0063-A-ref-0005f" xml:id="W0063-A-gloss-0005f">
+            <lb/><ref target="#W0063-A-ref-0005f">f</ref> ¶ <foreign xml:lang="es"><t:i>Adelantar a Dios en el.</t:i></foreign> Nomen Dei inuocãdum eſt in quolibet actu [...]</p>
+        <p n="g" corresp="#W0063-A-ref-0005g" xml:id="W0063-A-gloss-0005g">
+            <lb/><ref target="#W0063-A-ref-0005g">g</ref> ¶ <foreign xml:lang="es"><t:i>Don Alfonſo.</t:i></foreign> Hic fuit filius regis Ferdinãdi qui à Saracenis recupe- [...]</p>
+        <p n="h" corresp="#W0063-A-ref-0005h" xml:id="W0063-A-gloss-0005h">
+            <cb/><lb/><ref target="#W0063-A-ref-0005h">h</ref> ¶ <foreign xml:lang="es"><t:i>Del Algarue.</t:i></foreign> Vides limites iſtos quibus cõcludebatur Caſtellæ co [...]</p>
+        <p n="i" corresp="#W0063-A-ref-0005i" xml:id="W0063-A-gloss-0005i">
+            <lb/><ref target="#W0063-A-ref-0005i">i</ref> ¶ <foreign xml:lang="es"><t:i>Que tienen<lb/>de Dios.</t:i></foreign> Sunt em [...]</p>
+        <p n="k" corresp="#W0063-A-ref-0005k" xml:id="W0063-A-gloss-0005k">
+            <lb/><ref target="#W0063-A-ref-0005k">k</ref> ¶ <foreign xml:lang="es"><t:i>El ſu nombre.</t:i></foreign> <lb/>Qui eſt Rex [...]</p>
+        <p n="l" corresp="#W0063-A-ref-0005l" xml:id="W0063-A-gloss-0005l">
+            <lb/><ref target="#W0063-A-ref-0005l">l</ref> ¶ <foreign xml:lang="es"><t:i>Que es la ſu o<lb/>bra.</t:i></foreign> Iuſtitia, &amp;[...]</p>
+        <p n="m" corresp="#W0063-A-ref-0005m" xml:id="W0063-A-gloss-0005m">
+            <lb/><ref target="#W0063-A-ref-0005m">m</ref> ¶ <foreign xml:lang="es"><t:i>A cuyo juyzio<lb/>han de venir.</t:i></foreign> <lb/>pſal. 74. Cum[...]</p>
+        <p n="n" corresp="#W0063-A-ref-0005n" xml:id="W0063-A-gloss-0005n">
+            <lb/><ref target="#W0063-A-ref-0005n">n</ref> ¶ <foreign xml:lang="es"><t:i>Por la ver-<lb/>guença.</t:i></foreign> Pudor [...]</p>
+        <p n="o" corresp="#W0063-A-ref-0005o" xml:id="W0063-A-gloss-0005o">
+            <lb/><ref target="#W0063-A-ref-0005o">o</ref> ¶ <foreign xml:lang="es"><t:i>Por voluntad.</t:i></foreign> Tunc vanæ voces populi non ſunt audiendæ. l. decu- [...]</p>
+        <p n="p" corresp="#W0063-A-ref-0005p" xml:id="W0063-A-gloss-0005p">
+            <lb/><ref target="#W0063-A-ref-0005p">p</ref> ¶ <foreign xml:lang="es"><t:i>Que por derecho.</t:i></foreign> Dicit Bal. in. l. oēs populi. col. 2. ff. de iuſt. &amp; iu. ꝙ nul [...]</p>
+        <p n="q" corresp="#W0063-A-ref-0005q" xml:id="W0063-A-gloss-0005q">
+            <lb/><ref target="#W0063-A-ref-0005q">q</ref> ¶ <foreign xml:lang="es"><t:i>Del linage.</t:i></foreign> Nota hic ꝙ donum maximũ Dei eſt, naſci ex [...]
+            <pb sameAs="#W0063-A-0006"/><cb/><lb/>peregia. facit. [...] rabilis. de p̃b.</p>
+        <p n="a" corresp="#W0063-A-ref-0006a" xml:id="W0063-A-gloss-0006a">
+            <lb/><ref target="#W0063-A-ref-0006a">a</ref> ¶ <foreign xml:lang="es"><t:i>Sopieſſemos.</t:i></foreign><lb/>Adde. l. 16. tit. [... Glosses until W0063-A-0007 cb2 ]</p>
+        
+        </div3>
+        <div3 type="section"><!--<div3 type="section">-->
+        <p rend="hx"><lb/><t:i>SEPTENARIO.</t:i></p>
+        <p n="g" corresp="#W0063-A-ref-0007g" xml:id="W0063-A-gloss-0007g">
+            <lb/><ref target="#W0063-A-ref-0007g">g</ref> <foreign xml:lang="es"><hi rend="init">M</hi><t:i>Vy noble.</t:i></foreign> Habes hic excellentias numeri Septenarij. adde gl. in [ Glosses until the end W0063-A-0008...]</p>
+        </div3>
+        </div2>
+        
+     </div1>
+     <div1 n="1" type="partida"><!--<div1 n="1" type="partida">-->
+        <p rend="hx"><pb n="4[r]" facs="W0063-A-0009" xml:id="W0063-A-0009"/><t:ornament/>
+        <lb/>Aqui comiença la primera partida, que fabla<lb/>de todas las coſas que perteneſcen ala fe catholica, que faze al ome co- [...]</p>
+            <div2 type="title" n="1"><!--<div2 type="title" n="1">-->
+                <div3 type="commented" xml:lang="es"><!--<div3 type="commented" xml:lang="es">-->
+                    <p rend="hx"><t:ornament/>
+                    <lb/>Titulo primero, que<lb/>fabla de las leyes, e por quantas razo- [...]</p>
+                    <div4 type="section"><!--<div4 type="section">-->
+                    <p><lb/><hi rend="init">A</hi> Servicio de<lb/>Dios, e a pro comunal<lb/>delas gentes fazemos<lb/>eſte libro, ſegun q̃ mo [...]</p></div4>
+                    <div4 type="law" n="1"><!--<div4 type="law">-->
+                    <p rend="hx"><lb/>¶ <t:i>Ley primera. Que leyes ſon eſtas.</t:i></p>
+                    <p><lb/><hi rend="init">E</hi>Stas leyes ſon eſtableſci-<lb/>mientos, <ref target="#W0063-A-gloss-0009a" xml:id="W0063-A-ref-0009a"><hi rend="sup">a</hi></ref> porq̃ los omes
+                    <lb/>ſepan biuir biẽ, <ref target="#W0063-A-gloss-0009b" xml:id="W0063-A-ref-0009b"><hi rend="sup">b</hi></ref>  e ordena [...]</p></div4>
+                </div3>
+                <div3 type="gloss" xml:lang="la"><!--<div3 type="gloss" xml:lang="la">-->
+                    <p rend="hx">
+                        <pb sameAs="#W0063-A-0009"/><cb/>
+                        <lb/>Titulus primus, De legibus.</p>
+                    <div4 type="law" n="1"><!--<div4 type="law">-->
+                    <p rend="hx"><lb/><t:i>Lex prima</t:i></p>
+                    <p><t:ornament/>Statutæ ſunt leges iſtæ, vt inter homines ius &amp; iuſtitia ſeruetur. h. d.</p>
+                    <p n="a" corresp="#W0063-A-ref-0009a" xml:id="W0063-A-gloss-0009a">
+                    <lb/><ref target="#W0063-A-ref-0009a">a</ref> ¶ <foreign xml:lang="es"><t:i>Eſtableſcimientos.</t:i></foreign> Non ponitur hic legis diffinitio, de qua infra eo-[...]</p>
+                    <p n="b" corresp="#W0063-A-ref-0009b" xml:id="W0063-A-gloss-0009b">
+                    <lb/><ref target="#W0063-A-ref-0009b">b</ref> ¶ <foreign xml:lang="es"><t:i>Biuir bien.</t:i></foreign> Eſt<lb/>enim lex oim [...]</p></div4>
+                </div3>
+            </div2>
+        </div1>
+    </body>
+</text>

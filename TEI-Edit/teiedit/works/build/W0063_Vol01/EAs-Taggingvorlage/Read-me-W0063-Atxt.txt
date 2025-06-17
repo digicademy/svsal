@@ -1,0 +1,10 @@
+08.02.22
+
+For structural annotation use:
+
+- Update_SvSal_W0063Vol01_EA.docx and...
+- SvSal_Taggingvolagen_W0063_A_alternativ.xml 
+
+<foreign> in marginal notes will not be transcribed by Textloop.
+This cases can be found with //div1[@type eq 'gloss']//t:i[1][preceding-sibling::*[1]/self::ref] 
+and transformed in <foreign lang="es"><hi rendition="#it">

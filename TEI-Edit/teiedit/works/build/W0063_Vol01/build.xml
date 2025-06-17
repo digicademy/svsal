@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="W0063_Vol01" default="finalize">
+    
+    <property name="diff.dir" value="diff"/>
+    <property name="log.dir" value="log"/>
+    <property name="xml.dir" value="xml"/>
+    <property name="xsl.dir" value="xsl"/>
+    <property name="xslt.log" value="${log.dir}/${ant.project.name}_xslt.log"/>
+    <property name="xslt.processor" value="../../../lib/xsltproc/Saxon-HE-9.8.0-12.jar"/>
+    <property name="xslt.class" value="net.sf.saxon.TransformerFactoryImpl"/>
+    
+    <property name="orig.file" value="../../orig/textloop/W0063-A/W0063-A.xml"/>
+    
+    <target name="initialize">
+        <echo>Initializing W0063_Vol01.</echo>
+        <mkdir dir="${xml.dir}"/>
+        <mkdir dir="${log.dir}"/>
+        <copy file="${orig.file}" tofile="${xml.dir}/W0063_Vol01_000.xml"/>
+        <xmlvalidate file="${xml.dir}/W0063_Vol01_000.xml" lenient="true"/>
+    </target>
+    
+    <target name="cp-000" depends="initialize">
+        <copy file="${xml.dir}/W0063_Vol01_000.xml" tofile="${xml.dir}/W0063_Vol01_v1-0.xml"/>
+        <echo>Checkpoint: W0063_Vol01_v1-0.xml (W0063_Vol01_000.xml).</echo>
+        <delete file="${xml.dir}/W0063_Vol01_000.xml"/>
+    </target>
+    <target name="patch-000"> <!-- depends="cp-000" Do not delete W0063_Vol01_001.xml-->
+        <echo>Structural annotation.</echo>
+        <patch originalfile="${xml.dir}/W0063_Vol01_v1-0.xml" destfile="${xml.dir}/W0063_Vol01_001.xml" patchfile="${diff.dir}/W0063_Vol01_000.diff"/>
+    </target>
+    
+    <target name="xslt-001"> <!--depends="patch-000"-->
+        <echo>Tagged @n, @type, @xml:id(s) in div(s) and @target in TOC.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0063_Vol01_001.xml" out="${xml.dir}/W0063_Vol01_002.xml" style="${xsl.dir}/W0063_Vol01_001.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+    </target>
+    <!--Changed to fit with primera partida CR 24.01.24 see details in W0063_Vol01_002b.xsl--> 
+    <target name="xslt-002" depends="xslt-001"> 
+        <echo>Transformation TEI tite to TEI P5.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0063_Vol01_002.xml" out="${xml.dir}/W0063_Vol01_003.xml" style="${xsl.dir}/W0063_Vol01_002.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0063_Vol01_002.xml"/>
+    </target>
+    <target name="xslt-003" depends="xslt-002"> 
+        <echo>Annotated hyphenated breaks.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0063_Vol01_003.xml" out="${xml.dir}/W0063_Vol01_004.xml" style="${xsl.dir}/W0063_Vol01_003.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0063_Vol01_003.xml"/>
+    </target>
+    <target name="xslt-004" depends="xslt-003"> 
+        <echo>Tagged special characters.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0063_Vol01_004.xml" out="${xml.dir}/W0063_Vol01_005.xml" style="${xsl.dir}/W0063_Vol01_004.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0063_Vol01_004.xml"/>
+    </target>
+    <target name="xslt-005" depends="xslt-004">
+        <echo>Numbered lines.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0063_Vol01_005.xml" out="${xml.dir}/W0063_Vol01_006.xml" style="${xsl.dir}/W0063_Vol01_005.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0063_Vol01_005.xml"/>
+    </target>
+    <target name="xslt-006" depends="xslt-005"> <!--Changed to fit with primera partida CR 24.01.24 see details in W0063_Vol01_006.xsl-->
+        <echo>Added @xml:ids.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0063_Vol01_006.xml" out="${xml.dir}/W0063_Vol01_007.xml" style="${xsl.dir}/W0063_Vol01_006.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0063_Vol01_006.xml"/>
+    </target>
+    <target name="xslt-007" depends="xslt-006">
+        <echo>Rearranged pb/@sameAs and lb/xml:id(s) in gloss.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0063_Vol01_007.xml" out="${xml.dir}/W0063_Vol01_008.xml" style="${xsl.dir}/W0063_Vol01_007.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>            
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0063_Vol01_007.xml"/>
+    </target>
+    <target name="xslt-008" depends="xslt-007">
+        <echo>Tagged unmarked hyphenations (la).</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0063_Vol01_008.xml" out="${xml.dir}/W0063_Vol01_009.xml" style="${xsl.dir}/W0063_Vol01_008.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+            <param name="corrListPaths" expression="../corrlist/lists/W0063_Vol01-la_supposed-hyphenations-from-text.html" type="STRING"/>
+            <param name="lang" expression="la" type="STRING"/>            
+        </xslt>
+        <echo>Tagged unmarked hyphenations (es).</echo>
+        <xslt force="true" in="${xml.dir}/W0063_Vol01_009.xml" out="${xml.dir}/W0063_Vol01_010.xml" style="${xsl.dir}/W0063_Vol01_008.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+            <param name="corrListPaths" expression="../corrlist/lists/W0063_Vol01-es_supposed-hyphenations-from-text.html" type="STRING"/>
+            <param name="lang" expression="es" type="STRING"/>
+            <param name="changeId" expression="W0063_Vol01_change_013" type="STRING"/>       
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0063_Vol01_008.xml"/>
+        <delete file="${xml.dir}/W0063_Vol01_009.xml"/>
+    </target>
+    <target name="xslt-009" depends="xslt-008">
+        <echo>teiHeader update for online publication.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0063_Vol01_010.xml" out="${xml.dir}/W0063_Vol01_011.xml" style="${xsl.dir}/W0063_Vol01_009.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>            
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0063_Vol01_010.xml"/>
+    </target>
+    <target name="finalize" depends="xslt-009">
+        <echo>Reached end of pipeline.</echo>
+    </target>
+</project>
+    
+<!-- **********************************************************************************************************************************************        
+
+******************************************    
+*    REFERENZWERK - - REFERENCE WORK     *
+******************************************
+    
+teiHeader update for online publication 09.04.24 CR
+
+    No automatic abbreviations. 
+    No manual correction.
+
+NOTES:
+
+    18.11.21 #CR
+
+    * Check SvSal_W0063_Vol01_EA.pdf, SvSal_Taggingvolagen_W0063_A.xml, TEI-tite-W0063-17.11.21.xml and TEI-All-W0063-17.11.21.xml 
+      for further information about the structural annotation and edition.
+      
+    Structural annotation started: CR 14.11.23 Finished 10.01.24
+    sal-tei.sch = 117 irrelevant errors
+    
+    Total time from xslt-001 - xslt-009: 13 minutes 41 seconds
+
+    
+
+INFORMATION for online publication:
+
+06.11.24 CR:
+
+W0063_Vol01_011.xml saved as SVN/trunk/svsal-tei/works/W0063_Vol01.xml for online publication.
+
+//div[@type eq 'gloss']//pb should only have @sameAs and @xml:id.
+
+      
+        Global structure, first level div1:
+        
+        <text type="work_volume" xml:lang="es" n="1" xml:id="Vol01">
+            
+            Only Spanish
+            div type="administrative" 
+            div type="administrative" 
+            div type="foreword" 
+            div type="preface" 
+            div type="contents" 
+        
+        From facs="W0063-A-0005":
+        
+        First starts the main text in Spanish:
+            
+            div type="preface" xml:id="preface"
+            div n="1" type="partida"
+            
+        Then it comes the text with gloss:
+            
+            div type="gloss" xml:lang="la"
+      
+1) References:
+   
+    Added ref(s) with @target and @xml:id(s), so there are links back and forth, from main text to gloss and the other way around.
+    Missing reference in Partida or gloss?
+    Added missing ref in n="[]" in main text or in gloss.
+    e.g.:
+    
+    <ref target="#W0063-A-gloss-0005k" xml:id="W0063-A-ref-0005k"><t:sup>[k]</t:sup></ref>
+    
+    <ref target="#W0063-A-gloss-0006d" xml:id="W0063-A-ref-0006d">[d]</ref>
+
+2) <pb/> structures:
+    
+    All <pb/> in main text (Spanish) with:
+    <pb n="..."  facs="facs:W0063-A-..." xml:id="..." [if it is the case: break/rendition]/>
+    
+    All <pb/> in gloss (Latin) with:
+     
+    <pb sameAs="#W0063-01..." [if it is the case: break/rendition]/>
+    
+    * Special case:
+    No text in Spanish only in gloss, that is why tagged as @type="blank". 
+    
+    In "partida" <pb type="blank" facs="facs:W0063-A-0088" xml:id="W0063-01-0088-pb-043f"/>
+    In "gloss" <pb n="[44]v" break="no" rendition="#hyphen" xml:id="W0063-01-0088-pb-0569" sameAs="#W0063-01-0088-pb-043f"/>
+    
+    Otherwise error:
+    ERROR: pb must be directly followed by either cb or lb, or have @type='blank'.
+    
+3) <lb/> @xml:id(s)
+
+    //lb[ancestor::div[@type eq 'gloss']]/@xml:id are tagged with "-gl" at the end to have unique id(s) for the same line, but with different text.
+    For instance:
+    
+    xml:id="W0063-01-0005-lb-0001" for first line in partida W0063-01-0005 (Spanish)
+    xml:id="W0063-01-0005-lb-0001-gl" for first line in gloss W0063-01-0005 (Latin)  
+-->
