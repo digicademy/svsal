@@ -1,0 +1,6 @@
+Textloop lieferte W0063-B 06.06.24
+
+Länge des Texts: 2439837 Zeichen
+Anzahl der reinen Textzeichen: 1630800
+Anzahl der Zeichen der Tags: 809036
+Anteil der Tag-Zeichen am Gesamttext: 0.33159428273282193

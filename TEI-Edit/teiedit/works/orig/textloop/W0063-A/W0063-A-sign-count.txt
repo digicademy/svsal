@@ -1,0 +1,6 @@
+Textloop delivered W0063-A.xml 02.11.23
+
+Länge des Texts: 3455997 Zeichen
+Anzahl der reinen Textzeichen: 2209481
+Anzahl der Zeichen der Tags: 1246516
+Anteil der Tag-Zeichen am Gesamttext: 0.3606820260549995
