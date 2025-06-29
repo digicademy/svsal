@@ -23,6 +23,7 @@ declare namespace sm                = "http://exist-db.org/xquery/securitymanage
 declare namespace util              = "http://exist-db.org/xquery/util";
 declare namespace xi                = "http://www.w3.org/2001/XInclude";
 declare namespace xmldb             = "http://exist-db.org/xquery/xmldb";
+declare namespace zip               = "http://expath.org/ns/zip";
 
 import module namespace bin         = "http://expath.org/ns/binary";
 import module namespace console     = "http://exist-db.org/xquery/console";
@@ -546,7 +547,9 @@ declare function admin:needsStats($targetWorkId as xs:string) as xs:boolean {
 };
 
 declare function admin:needsStatsString ($node as node(), $model as map(*)) {
-    ""
+    <td>
+        &amp;nbsp;
+    </td>
 };
 
 declare function admin:needsRoutingResource($targetResourceId as xs:string) as xs:boolean {
@@ -1186,7 +1189,7 @@ declare function admin:saveFileWRK ($node as node(), $model as map (*), $lang as
         </span>   
 };
 
-declare function admin:exportFileWRKnoJs ($node as node(), $model as map (*), $lang as xs:string?) {
+(:declare function admin:exportFileWRKnoJs ($node as node(), $model as map (*), $lang as xs:string?) {
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Exporting finalFacets (noJS)...") else ()
     let $fileNameDeSn := 'worksNoJs_de_surname.html'
     let $fileNameEnSn := 'worksNoJs_en_surname.html'
@@ -1260,7 +1263,7 @@ declare function admin:saveFileWRKnoJs ($node as node(), $model as map (*), $lan
     return      
         <p><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Noscript-files saved to eXist-db ({serialize($store)})!</p>
 
-};
+}; :)
 
 (:declare %templates:wrap function admin:saveEditors($node as node()?, $model as map(*)?) {
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Storing finalFacets...") else ()
@@ -1505,34 +1508,32 @@ declare %templates:wrap function admin:renderHTML($id as xs:string*) as element(
  @param $processId: can be any string and serves only for avoiding conflicts with parallel corpus building routines
 :)
 declare function admin:createTeiCorpus($processId as xs:string) {
+    let $debug := console:log("[Admin] admin:createTeiCorpus: Building TEI XML corpus ...")
+
+    (: make sure corpus directory exists :)
     let $corpusCollection := if (not(xmldb:collection-available($config:corpus-zip-root))) then xmldb:create-collection($config:webdata-root, 'corpus-zip') else ()
-    (: Create temporary collection to be zipped :)
-    let $checkTempRoot := if (not(xmldb:collection-available($config:temp-root))) then xmldb:create-collection($config:data-root, 'temp') else ()
-    let $tempCollection := $config:temp-root || '/tei-corpus-temp-' || $processId
-    let $removeStatus := if (xmldb:collection-available($tempCollection)) then xmldb:remove($tempCollection) else ()
-    let $zipTmp := xmldb:create-collection($config:temp-root, 'tei-corpus-temp-' || $processId)  
+
     (: Get TEI data, expand them and store them in the temporary collection :)
     let $serializationOpts := 'method=xml expand-xincludes=yes omit-xml-declaration=no indent=yes encoding=UTF-8 media-type=application/tei+xml' 
-    let $works := 
+    let $entries := 
         for $reqWork in collection($config:tei-works-root)/tei:TEI/@xml:id[string-length(.) eq 5]/string()
-            return if (doc-available($config:tei-works-root || '/' || $reqWork || '.xml')) then
+            return if (doc-available($config:tei-works-root || '/' || $reqWork || '.xml') and sutil:WRKvalidateId($reqWork) eq 2) then
                 let $expanded := util:expand(doc($config:tei-works-root || '/' || $reqWork || '.xml')/tei:TEI, $serializationOpts) 
-                let $store := xmldb:store-as-binary($tempCollection, $expanded/@xml:id || '.xml', $expanded)
-                return $expanded
+                return <entry name="{$reqWork || '.xml'}" type="xml" method="store">{$expanded}</entry>
             else ()
-    (: Create a zip archive from the temporary collection and store it :)
-    let $zip := compression:zip(xs:anyURI($tempCollection), false())
-    (: Clean the database from temporary files/collections :)
-    let $removeStatus2 := for $work in $works return xmldb:remove($tempCollection, $work/@xml:id || '.xml')
-    let $removeStatus3 := if (xmldb:collection-available($tempCollection)) then xmldb:remove($tempCollection) else ()
-    let $filepath := $config:corpus-zip-root  || '/sal-tei-corpus.zip'
-    let $filepath := $config:corpus-zip-root  || '/sal-tei-corpus.zip'
-    let $removeStatus4 := 
-        if (file:exists($filepath)) then
-            xmldb:remove($filepath)
-        else ()
-    let $save   := xmldb:store-as-binary($config:corpus-zip-root , 'sal-tei-corpus.zip', $zip)
+    (: let $debug   := console:log("[Admin] admin:createTxtCorpus: $entries are: " || serialize($entries, map { "method": "xml" }) || ".") :)
+    let $debug   := console:log("[Admin] admin:createTeiCorpus: $entries contains " || xs:string(count($entries)) || " entries.")
+
+    (: Create a zip archive from the temporary collection and store it :)    
+    let $zip    := compression:zip($entries, false())
+    let $debug  := console:log("[Admin] admin:createTeiCorpus: $zip has length: " || xs:string(string-length(util:binary-to-string($zip))) || ".")
+    let $save   := xmldb:store-as-binary($config:corpus-zip-root, 'sal-tei-corpus.zip', util:binary-to-string($zip))
+    let $debug  := console:log("[Admin] admin:createTeiCorpus: $zip saved to: " || $save || ".")
     let $export := admin:exportBinaryFile('sal-tei-corpus.zip', $zip, 'data')
+    let $debug  := console:log("[Admin] admin:createTeiCorpus: $zip exported to: " || $export || ".")
+    let $debug  := console:log("[Admin] admin:createTeiCorpus: resource " || $save || " has approx. " || xs:string(xmldb:size($config:corpus-zip-root, "sal-tei-corpus.zip")) || " bytes.")
+
+    (: Log/output :)
     let $debug  := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] TEI corpus zip done (" || serialize($save) || "/" || serialize($export) || ").") else ()
     return
         <div>
@@ -1554,45 +1555,50 @@ declare function admin:createTeiCorpus($processId as xs:string) {
  @param $processId: can be any string and serves only for avoiding conflicts with parallel corpus building routines
 :)
 declare function admin:createTxtCorpus($processId as xs:string) {
-    let $tempCollection := $config:temp-root || '/txt-corpus-temp-' || $processId
+    let $debug := console:log("[Admin] admin:createTxtCorpus: Building plaintext corpus ...")
+
+    (: make sure corpus directory exists :)
     let $corpusCollection := if (not(xmldb:collection-available($config:corpus-zip-root))) then xmldb:create-collection($config:webdata-root, 'corpus-zip') else ()
-    let $checkTempRoot := if (not(xmldb:collection-available($config:temp-root))) then xmldb:create-collection($config:data-root, 'temp') else ()
-    (: Create temporary collection to be zipped :)
-    let $removeStatus := if (xmldb:collection-available($tempCollection)) then xmldb:remove($tempCollection) else ()
-    let $zipTmp := xmldb:create-collection($config:temp-root, 'txt-corpus-temp-' || $processId)  
+
     (: Get TXT data (or if they aren't available, render them officially) and store them in the temporary collection :)
-    let $storeWorks := 
-        for $wid in collection($config:tei-works-root)/tei:TEI/@xml:id[string-length(.) eq 5 and app:WRKisPublished(<dummy/>,map{},.)]/string()
+    let $entries := 
+        for $wid in collection($config:tei-works-root)/tei:TEI/@xml:id[string-length(.) eq 5][sutil:WRKvalidateId(./string()) eq 2]/string()
             return 
-                let $renderOrig := 
-                    if (util:binary-doc-available($config:txt-root || '/' || $wid || '/' || $wid || '_orig.txt')) then ()
+                let $orig := 
+                    if (util:binary-doc-available($config:txt-root || '/' || $wid || '/' || $wid || '_orig.txt')) then
+                        util:binary-to-string(util:binary-doc($config:txt-root || '/' || $wid || '/' || $wid || '_orig.txt'))
                     else 
                         let $tei := util:expand(doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI)
                         let $debug := if ($config:debug = ("trace", "info")) then console:log('[ADMIN] Rendering txt version of work: ' || $config:tei-works-root || '/' || $wid || '.xml') else ()
                         let $origTxt := string-join(txt:dispatch($tei, 'orig'), '')
                         let $debug := if ($config:debug = ("trace", "info")) then console:log('[ADMIN] Rendered ' || $wid || ', string length: ' || string-length($origTxt)) else ()
-                        return admin:saveFile($wid, $wid || "_orig.txt", $origTxt, "txt")
-                let $storeOrig := xmldb:store-as-binary($tempCollection, $wid || '_orig.txt', util:binary-doc($config:txt-root || '/' || $wid || '/' || $wid || '_orig.txt'))
-                let $renderEdit := 
-                    if (util:binary-doc-available($config:txt-root || '/' || $wid || '/' || $wid || '_edit.txt')) then ()
+                        let $saveOrig := admin:saveFile($wid, $wid || "_orig.txt", $origTxt, "txt")
+                        let $exportOrig := admin:exportBinaryFile($wid || "_orig.txt", $origTxt, "/data/" || $wid || "/text/" )
+                        return $origTxt
+                let $edit := 
+                    if (util:binary-doc-available($config:txt-root || '/' || $wid || '/' || $wid || '_edit.txt')) then
+                        util:binary-to-string(util:binary-doc($config:txt-root || '/' || $wid || '/' || $wid || '_edit.txt'))
                     else 
                         let $tei := util:expand(doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI)
                         let $editTxt := string-join(txt:dispatch($tei, 'edit'), '')
-                        return admin:saveFile($wid, $wid || "_edit.txt", $editTxt, "txt")
-                let $storeEdit := xmldb:store-as-binary($tempCollection, $wid || '_edit.txt', util:binary-doc($config:txt-root || '/' || $wid || '/' || $wid || '_edit.txt'))
-                return ()
+                        let $saveEdit := admin:saveFile($wid, $wid || "_edit.txt", $editTxt, "txt")
+                        let $exportEdit := admin:exportBinaryFile($wid || "_edit.txt", $editTxt, "/data/" || $wid || "/text/" )
+                        return $editTxt
+                return (<entry name="{$wid || '_orig.txt'}" type="text" method="store">{$orig}</entry>,
+                        <entry name="{$wid || '_edit.txt'}" type="text" method="store">{$edit}</entry>)
+    (: let $debug   := console:log("[Admin] admin:createTxtCorpus: $entries are: " || serialize($entries, map { "method": "xml" }) || ".") :)
+    let $debug   := console:log("[Admin] admin:createTxtCorpus: $entries contains " || xs:string(count($entries)) || " entries.")
+
     (: Create a zip archive from the temporary collection and store it :)    
-    let $zip := compression:zip(xs:anyURI($tempCollection), false())
-    (: Clean the database from temporary files/collections :)
-    let $removeStatus2 := for $file in xmldb:get-child-resources($tempCollection) return xmldb:remove($tempCollection, $file)
-    let $removeStatus3 := if (xmldb:collection-available($tempCollection)) then xmldb:remove($tempCollection) else ()
-    let $filepath := $config:corpus-zip-root  || '/sal-txt-corpus.zip'
-    let $removeStatus4 := 
-        if (file:exists($filepath)) then
-            xmldb:remove($filepath)
-        else ()
-    let $save   := xmldb:store-as-binary($config:corpus-zip-root , 'sal-txt-corpus.zip', $zip)
+    let $zip    := compression:zip($entries, false())
+    let $debug  := console:log("[Admin] admin:createTxtCorpus: $zip has length: " || xs:string(string-length(util:binary-to-string($zip))) || ".")
+    let $save   := xmldb:store-as-binary($config:corpus-zip-root, 'sal-txt-corpus.zip', util:binary-to-string($zip))
+    let $debug  := console:log("[Admin] admin:createTxtCorpus: $zip saved to: " || $save || ".")
     let $export := admin:exportBinaryFile('sal-txt-corpus.zip', $zip, 'data')
+    let $debug  := console:log("[Admin] admin:createTxtCorpus: $zip exported to: " || $export || ".")
+    let $debug  := console:log("[Admin] admin:createTxtCorpus: resource " || $save || " has approx. " || xs:string(xmldb:size($config:corpus-zip-root, "sal-txt-corpus.zip")) || " bytes.")
+
+    (: Log/output :)
     let $debug  := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] TXT corpus zip done (" || serialize($save) || "/" || serialize($export) || ").") else ()
     return
         <div>
@@ -1879,6 +1885,9 @@ declare function admin:createNodeIndex($wid as xs:string*) {
             let $missed-elements := $indexing('missed_elements')
             let $unidentified-elements := $indexing('unidentified_elements')
 
+
+let $debug := if ($config:debug = ("info")) then console:log("[ADMIN] There are "  || count($tei//tei:ref[@xml:id])|| " refs with xml:id in this work.") else ()
+
             (: save final index file :)
             let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Saving index file ...") else ()
 
@@ -1889,6 +1898,7 @@ declare function admin:createNodeIndex($wid as xs:string*) {
             let $indexExportStatus := admin:exportXMLFile($wid, $wid || "_nodeIndex.xml", $index, "index")
             let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Node index of "  || $wid || " successfully created and saved/exported (to " || $indexSaveStatus || "; " || $indexExportStatus || ").") else ()
             let $debug := if ($config:debug = ("info")) then console:log("[ADMIN] Node index of "  || $wid || " successfully created.") else ()
+
 
             (: Reporting... :)
             let $runtime-ms-a := ((util:system-time() - $start-time-a) div xs:dayTimeDuration('PT1S'))  * 1000
@@ -1941,21 +1951,25 @@ declare function admin:uploadPdf($rid as xs:string) {
                 <message>There is not input PDF file. Please upload the PDF before submitting it.</message>
             </results>
         else
-            <results>
-                <message>The PDF {$PdfInput} of the work {$rid} could not be uploaded. The file does not correspond to the work. Did you try to upload the PDF for the work {$rid} ?</message>
+           
+ <results>
+                <message>The PDF {$PdfInput} of the work {$rid} could not be uploaded. </message>
             </results>
 };
 
 declare function admin:createPdf($rid as xs:string){
     let $pdf-start-time           := util:system-time()
     let $doctotransform as node() := doc($config:tei-works-root || '/'|| $rid || '.xml')//tei:TEI
+
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Creating pdf from " || $rid || " ...") else ()
-    let $debug := if ($config:debug = "trace") then console:log("[PDF-" || $rid ||"] Transforming into XSL-FO...") else ()
-    let $doctransformed2          := transform:transform($doctotransform, "xmldb:exist:///db/apps/salamanca/modules/factory/works/pdf/generic_template.xsl", ())
+    let $debug := if ($config:debug = ("trace", "info") )then console:log("[PDF-" || $rid ||"] Transforming into XSL-FO...") else ()
+  let $debug := if ( transform:transform($doctotransform, "xmldb:exist:///db/apps/salamanca/modules/factory/works/pdf/generic_template.xsl", ())  )then console:log("transformed2 OK") else ( console:log("transformed2  NOT OK"))
+let $doctransformed2          := transform:transform($doctotransform, "xmldb:exist:///db/apps/salamanca/modules/factory/works/pdf/generic_template.xsl", ()) 
+
     (:let $storexslfo := xmldb:store($config:xsl-fo-root ,$rid || '_xsl-fo.xml', $doctransformed2) :)
 
     (:let $xsl-fo-document as document-node() := doc($config:xsl-fo-root || '/'|| $rid || '_xsl-fo.xml') :)
-    let $debug := if ($config:debug = "trace") then console:log("[PDF-" || $rid ||"] Transforming from XSL-FO to PDF...") else ()                         
+    let $debug := if ($config:debug = ("trace", "info") ) then console:log("[PDF-" || $rid ||"] Transforming from XSL-FO to PDF...") else ()                         
     let $media-type as xs:string  := 'application/pdf'
     let $renderedxslfo            := xslfo:render($doctransformed2, $media-type, ())
 
@@ -2424,8 +2438,8 @@ declare function admin:createDetails($currentResourceId as xs:string) {
         let $debug          := if (count($volume_names)>0) then console:log('[Details] $volume_names: ' || string-join($volume_names, ', ')) else ()
         let $volumes        := for $f in $volume_names return if (doc-available($config:tei-root || '/works/' || $f || '.xml')) then map:entry($f, doc($config:tei-root || '/works/' || $f || '.xml')) else ()
         let $volumes        := map:merge($volumes)
-        (: let $debug := console:log('$volumes: ' || serialize($volumes, map {"method":"json", "media-type":"application/json"})) :)
-
+   (:  let $debug := console:log('$volumes: ' || serialize($volumes, map {"method":"json", "media-type":"application/json"}))  :)
+    
         let $volumes_list := for $key in map:keys($volumes) order by $key
                                 let $iiif_file      := $config:iiif-root || '/' || $key || '.json'
                                 let $iiif            := if (util:binary-doc-available($iiif_file)) then json-doc($iiif_file) else map{}
@@ -2434,11 +2448,12 @@ declare function admin:createDetails($currentResourceId as xs:string) {
                                                         else
                                                             let $debug := console:log("[Details] No iiif information for " || $wid || "/" || $key || " found.")
                                                             return ()
-                                (: let $debug := console:log('$vol_thumbnail: ' || serialize($vol_thumbnail, map {"method":"json", "media-type":"application/json"})) :)
-                                (: let $debug := console:log('$iiif-vol?thumbnail?@id: ' || serialize(map:get($vol_thumbnail, '@id'), map {"method":"json", "media-type":"application/json"})) :)
+                                 let $debug := console:log('$vol_thumbnail: ' || serialize($vol_thumbnail, map {"method":"json", "media-type":"application/json"})) 
+                                 let $debug := console:log('$iiif-vol?thumbnail?@id: ' || serialize(map:get($vol_thumbnail, '@id'), map {"method":"json", "media-type":"application/json"})) 
                                 let $teiHeader := map:get($volumes, $key)//tei:teiHeader
                                 let $isFirstEd := not($teiHeader//tei:sourceDesc//tei:imprint/(tei:date[@type eq "thisEd"] | tei:pubPlace[@role eq "thisEd"] | tei:publisher[@n eq "thisEd"]))
-                                return map {
+                                 let $debug := console:log("thumbnail : " || map:get($vol_thumbnail, '@id'))
+     return map {
                                     "key" :                     $key,
                                     "id" :                      tokenize($key, '_')[1] || ':vol' || map:get($volumes, $key)//tei:text/@n/string(),
                                     "uri" :                     $config:idserver || '/texts/' ||
@@ -2463,10 +2478,10 @@ declare function admin:createDetails($currentResourceId as xs:string) {
                                                                     admin:StripLBs(string-join($teiHeader//tei:sourceDesc//tei:imprint/tei:publisher[@n eq "thisEd"]/tei:persName/string(), '/'))
                                                                 else
                                                                     admin:StripLBs(string-join($teiHeader//tei:sourceDesc//tei:imprint/tei:publisher/tei:persName/string(), '/')),
-                                    "year" :                    if (not($isFirstEd)) then
-                                                                    $teiHeader//tei:sourceDesc//tei:imprint/tei:date[@type eq 'thisEd']/@when/string()
+                                    "year" :                    if ($isFirstEd) then
+                                                                     $teiHeader//tei:sourceDesc//tei:imprint/tei:date[@type eq 'firstEd']/@when/string()
                                                                 else
-                                                                    $teiHeader//tei:sourceDesc//tei:imprint/tei:date[@type ne 'summaryFirstEd']/@when/string(),
+ $teiHeader//tei:sourceDesc//tei:imprint/tei:date[@type eq 'thisEd']/@when/string(),                                                                
                                     "src_publication_period" :  $teiHeader//tei:sourceDesc//tei:imprint/tei:date[@type eq 'summaryFirstEd']/string(),
                                     "language" :                string-join($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n eq 'main']/string(), ', ') ||
                                                                 (if ($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n ne 'main']) then
@@ -2477,11 +2492,14 @@ declare function admin:createDetails($currentResourceId as xs:string) {
                                     "tech_ed" :                 admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#technical')]/string(), ' / ')),
                                     "el_publication_date" :     if ($teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when) then
                                                                     $teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when/string()[1]
+else if ($teiHeader//tei:editionStmt//tei:date[@type eq 'summaryDigitizedEd']/@when) then $teiHeader//tei:editionStmt//tei:date[@type eq 'summaryDigitizedEd']/@when/string()[1]
                                                                 else
                                                                     'in prep.',
                                     "hold_library" :            normalize-space(string-join($teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:repository/string(), ' | ')),
                                     "hold_idno" :               normalize-space(string-join($teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:idno/string(), ' ')),
                                     "status" :                  $teiHeader/tei:revisionDesc/@status/string()
+                              
+
                                 }
 
         let $dbg := for $v in $volumes_list return
@@ -2545,13 +2563,13 @@ declare function admin:createDetails($currentResourceId as xs:string) {
             "thumbnail" :               $thumbnail_id,
             "schol_ed" :                admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#scholarly')]/string(), ' / ')),
             "tech_ed" :                 admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#technical')]/string(), ' / ')),
-              "el_publication_date" :     if ($teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when) then
+                 "el_publication_date" :     if ($teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when) then
                                                                     $teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when/string()[1]
 else if ($teiHeader//tei:editionStmt//tei:date[@type eq 'summaryDigitizedEd']/@when) then $teiHeader//tei:editionStmt//tei:date[@type eq 'summaryDigitizedEd']/@when/string()[1]
                                                                 else
                                                                     'in prep.',
                                  
-          "type": if ($teiHeader//tei:revisionDesc/@status =
+                                    "type": if ($teiHeader//tei:revisionDesc/@status =
                                          ( 'a_raw',
                                            'b_cleared',
                                            'c_hyph_proposed',
@@ -2580,7 +2598,7 @@ else if ($teiHeader//tei:revisionDesc/@status =
                                            'h_revised'
                                           ) and contains($teiHeader//tei:encodingDesc/tei:editorialDecl/tei:p/@xml:id, 'RW'))  then "Reference Work"
 else 'Edited Work',
-            "hold_library" :            if (count($volumes_list) gt 0 and not($teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:repository)) then
+       "hold_library" :            if (count($volumes_list) gt 0 and not($teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:repository)) then
                                             'check individual volumes'
                                         else
                                             normalize-space(string-join($teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:repository/string(), ' | ')),
