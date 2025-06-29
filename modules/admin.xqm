@@ -966,6 +966,29 @@ declare function admin:exportXMLFile($wid as xs:string, $filename as xs:string, 
     return  if ($store-status) then $pathname else ()
 };
 
+declare function admin:exportBase64File($filename as xs:string, $content as xs:string, $collection as xs:string?) {
+    let $fsRoot := $config:export-folder
+    let $collectionname :=
+             if ($collection eq "data")      then $fsRoot
+        else                                      $fsRoot || "trash/"
+    let $collectionStatus :=
+        if (not(file:exists($collectionname))) then
+            file:mkdirs($collectionname)
+        else if (file:is-writeable($collectionname) and file:is-directory($collectionname)) then
+            true()
+        else
+            error(QName("http://salamanca.school/error", "NoWritableFolder"), "Error: " || $collectionname || " is not a writable folder in filesystem.") 
+    let $pathname := $collectionname || $filename
+    let $remove-status := 
+        if ($content and file:exists($pathname)) then
+            file:delete($pathname)
+        else true()
+    let $user := string(sm:id()//sm:real/sm:username)
+    (: let $umask := sm:set-umask($user, 2) :)
+    let $store-status := file:serialize-binary($content, $pathname)    (: eXist-db also has util:base64-encode(xs:string) :)
+    return  if ($store-status) then $pathname else ()
+};
+
 declare function admin:exportBinaryFile($filename as xs:string, $content as xs:string, $collection as xs:string?) {
     let $fsRoot := $config:export-folder
     let $collectionname :=
@@ -1514,12 +1537,12 @@ declare function admin:createTeiCorpus($processId as xs:string) {
     let $corpusCollection := if (not(xmldb:collection-available($config:corpus-zip-root))) then xmldb:create-collection($config:webdata-root, 'corpus-zip') else ()
 
     (: Get TEI data, expand them and store them in the temporary collection :)
-    let $serializationOpts := 'method=xml expand-xincludes=yes omit-xml-declaration=no indent=yes encoding=UTF-8 media-type=application/tei+xml' 
+    let $serializationOpts := map { "method": "xml", "encoding": "UTF-8" , "expand-xincludes": true(), "omit-xml-declaration": false(), "ident": false()}
     let $entries := 
         for $reqWork in collection($config:tei-works-root)/tei:TEI/@xml:id[string-length(.) eq 5]/string()
             return if (doc-available($config:tei-works-root || '/' || $reqWork || '.xml') and sutil:WRKvalidateId($reqWork) eq 2) then
-                let $expanded := util:expand(doc($config:tei-works-root || '/' || $reqWork || '.xml')/tei:TEI, $serializationOpts) 
-                return <entry name="{$reqWork || '.xml'}" type="xml" method="store">{$expanded}</entry>
+                let $expanded := util:expand(doc($config:tei-works-root || '/' || $reqWork || '.xml')/tei:TEI) 
+                return <entry name="{$reqWork || '.xml'}" type="xml" method="deflate">{serialize($expanded, $serializationOpts)}</entry>
             else ()
     (: let $debug   := console:log("[Admin] admin:createTxtCorpus: $entries are: " || serialize($entries, map { "method": "xml" }) || ".") :)
     let $debug   := console:log("[Admin] admin:createTeiCorpus: $entries contains " || xs:string(count($entries)) || " entries.")
@@ -1527,9 +1550,9 @@ declare function admin:createTeiCorpus($processId as xs:string) {
     (: Create a zip archive from the temporary collection and store it :)    
     let $zip    := compression:zip($entries, false())
     let $debug  := console:log("[Admin] admin:createTeiCorpus: $zip has length: " || xs:string(string-length(util:binary-to-string($zip))) || ".")
-    let $save   := xmldb:store-as-binary($config:corpus-zip-root, 'sal-tei-corpus.zip', util:binary-to-string($zip))
+    let $save   := xmldb:store($config:corpus-zip-root, 'sal-tei-corpus.zip', $zip)
     let $debug  := console:log("[Admin] admin:createTeiCorpus: $zip saved to: " || $save || ".")
-    let $export := admin:exportBinaryFile('sal-tei-corpus.zip', $zip, 'data')
+    let $export := admin:exportBase64File('sal-tei-corpus.zip', $zip, 'data')
     let $debug  := console:log("[Admin] admin:createTeiCorpus: $zip exported to: " || $export || ".")
     let $debug  := console:log("[Admin] admin:createTeiCorpus: resource " || $save || " has approx. " || xs:string(xmldb:size($config:corpus-zip-root, "sal-tei-corpus.zip")) || " bytes.")
 
@@ -1584,17 +1607,17 @@ declare function admin:createTxtCorpus($processId as xs:string) {
                         let $saveEdit := admin:saveFile($wid, $wid || "_edit.txt", $editTxt, "txt")
                         let $exportEdit := admin:exportBinaryFile($wid || "_edit.txt", $editTxt, "/data/" || $wid || "/text/" )
                         return $editTxt
-                return (<entry name="{$wid || '_orig.txt'}" type="text" method="store">{$orig}</entry>,
-                        <entry name="{$wid || '_edit.txt'}" type="text" method="store">{$edit}</entry>)
+                return (<entry name="{$wid || '_orig.txt'}" type="text" method="deflate">{$orig}</entry>,
+                        <entry name="{$wid || '_edit.txt'}" type="text" method="deflate">{$edit}</entry>)
     (: let $debug   := console:log("[Admin] admin:createTxtCorpus: $entries are: " || serialize($entries, map { "method": "xml" }) || ".") :)
     let $debug   := console:log("[Admin] admin:createTxtCorpus: $entries contains " || xs:string(count($entries)) || " entries.")
 
     (: Create a zip archive from the temporary collection and store it :)    
     let $zip    := compression:zip($entries, false())
     let $debug  := console:log("[Admin] admin:createTxtCorpus: $zip has length: " || xs:string(string-length(util:binary-to-string($zip))) || ".")
-    let $save   := xmldb:store-as-binary($config:corpus-zip-root, 'sal-txt-corpus.zip', util:binary-to-string($zip))
+    let $save   := xmldb:store($config:corpus-zip-root, 'sal-txt-corpus.zip', $zip)
     let $debug  := console:log("[Admin] admin:createTxtCorpus: $zip saved to: " || $save || ".")
-    let $export := admin:exportBinaryFile('sal-txt-corpus.zip', $zip, 'data')
+    let $export := admin:exportBase64File('sal-txt-corpus.zip', $zip, 'data')
     let $debug  := console:log("[Admin] admin:createTxtCorpus: $zip exported to: " || $export || ".")
     let $debug  := console:log("[Admin] admin:createTxtCorpus: resource " || $save || " has approx. " || xs:string(xmldb:size($config:corpus-zip-root, "sal-txt-corpus.zip")) || " bytes.")
 
