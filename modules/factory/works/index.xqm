@@ -477,21 +477,32 @@ declare function index:makeMarginalCiteID($node as element()) as xs:string {
     let $currentSection := sutil:copy(index:getCitableParent($node))
 (: Changed to improve performance on 2025-03-24, A.W.                               :)
 (:  let $currentNode := $currentSection//*[@xml:id eq $node/@xml:id]:)
+
+(:TO DO: distinguish between note with or without n, otherwise pb with indexing compmlex works like Siete Partidas. DONE 20.05.2025:)
     let $currentNode := $currentSection/id($node/@xml:id)
     let $label :=
-        if (matches($currentNode/@n, '^[A-Za-z0-9\[\]]+$')) then
-            if (count($currentSection//*[index:isMarginalNode(.) and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))]) gt 1) then
+        if ($currentNode/self::tei:note) then
+        
+          if (matches($currentNode/@n, '^[A-Za-z0-9\[\]]+$')) then
+            if (count($currentSection//tei:note[index:isMarginalNode(.) and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))]) gt 1) then
                 concat(
                     upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', '')),
-                    string(
-                        count($currentSection//*[index:isMarginalNode(.) and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))]
-                              intersect $currentNode/preceding::*[index:isMarginalNode(.) and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))])
-                        + 1)
+                    concat('n_n', string(
+                        count($currentSection//tei:note[index:isMarginalNode(.) and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))]
+                              intersect $currentNode/preceding::tei:note[index:isMarginalNode(.) and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))])
+                        + 1))
                 )
             else upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))
-        else string(count($currentNode/preceding::*[index:isMarginalNode(.)] intersect $currentSection//*[index:isMarginalNode(.)]) + 1)
-    return 'n' || $label
+        else concat('n_un', string(count($currentNode/preceding::tei:note[not(@n) and index:isMarginalNode(.) ] intersect $currentSection//tei:note[not(@n) and index:isMarginalNode(.)]) + 1))
+        
+       else if($currentNode/self::tei:ref) then
+            concat('ref', string(count($currentNode/preceding::tei:ref[index:isMarginalNode(.)] intersect $currentSection//tei:ref[index:isMarginalNode(.)]) + 1))
+            else if ($currentNode/self::tei:label) then
+            concat('lab', string(count($currentNode/preceding::tei:label[index:isMarginalNode(.)] intersect $currentSection//tei:label[index:isMarginalNode(.)]) + 1)) 
+        else () 
+    return  $label
 };
+
 
 
 (: BOOLEAN FUNCTIONS for defining different classes of nodes :)
@@ -603,7 +614,8 @@ declare function index:isMarginalNode($node as node()) as xs:boolean {
         $node/@xml:id and
         (
             $node/self::tei:note[@place eq 'margin'] or
-            $node/self::tei:label[@place eq 'margin']
+            $node/self::tei:label[@place eq 'margin'] or 
+            $node/self::tei:ref
         )
         (:and not($node/ancestor::*[index:isMarginalNode(.)]):) (: that shouldn't be possible :)
     )
@@ -802,6 +814,7 @@ declare function index:dispatch($node as node(), $mode as xs:string) {
         case element(tei:p)             return index:p($node, $mode)
         case element(tei:signed)        return index:signed($node, $mode)
         case element(tei:note)          return index:note($node, $mode)
+        case element(tei:ref)          return index:ref($node, $mode)
         case element(tei:div)           return index:div($node, $mode)
         case element(tei:milestone)     return index:milestone($node, $mode)
         
@@ -1195,6 +1208,54 @@ declare function index:milestone($node as element(tei:milestone), $mode as xs:st
 };
 
 declare function index:note($node as element(tei:note), $mode as xs:string) {
+    switch($mode)
+        case 'title' return
+            normalize-space(
+                let $currentSection := sutil:copy(index:getCitableParent($node))
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:              let $currentNode := $currentSection//tei:note[@xml:id eq $node/@xml:id]:)
+                let $currentNode := $currentSection/id($node/@xml:id)/self::tei:note
+                return
+                    if ($node/@n) then
+                        let $noteNumber :=
+                            if (count($currentSection//tei:note[upper-case(normalize-space(@n)) eq upper-case(normalize-space($currentNode/@n))]) gt 1) then
+                                ' (' || 
+                                string(count($currentNode/preceding::tei:note[upper-case(normalize-space(@n)) eq upper-case(normalize-space($currentNode/@n))] 
+                                             intersect $currentSection//tei:note[upper-case(normalize-space(@n)) eq upper-case(normalize-space($currentNode/@n))])
+                                       + 1) 
+                                || ')'
+                            else ()
+                        return '"' || normalize-space($currentNode/@n) || '"' || $noteNumber
+                    else string(count($currentNode/preceding::tei:note intersect $currentSection//tei:note) + 1)
+            )
+        
+        case 'class' return
+            'tei-' || local-name($node)
+        
+        case 'citeID' return
+            index:makeMarginalCiteID($node)
+        
+        case 'label' return
+            if (index:isLabelNode($node)) then
+                (: label parents of note are div, not p :)
+                (: let $debug := console:log("index:note/label for note: " || $node/@xml:id/string()) :)
+                let $currentSection := sutil:copy($node/ancestor::*[not(self::tei:p)][index:isLabelNode(.)][1])
+(: Changed to improve performance on 2025-03-24, A.W.                               :)
+(:              let $currentNode := $currentSection//tei:note[@xml:id eq $node/@xml:id]:)
+                let $currentNode := $currentSection/id($node/@xml:id)/self::tei:note
+                let $prefix := $config:citationLabels(local-name($node))?('abbr')
+                let $label := 
+                    if ($node/@n) then '"' || $node/@n || '"' (: TODO: what if there are several notes with the same @n in a div :)
+                    else string(count($currentSection//tei:note
+                                      intersect $currentNode/preceding::tei:note) + 1)
+                return $prefix || ' ' || $label
+            else ()
+        
+        default return
+            ()
+};
+
+declare function index:ref($node as element(tei:ref), $mode as xs:string) {
     switch($mode)
         case 'title' return
             normalize-space(
