@@ -1,12 +1,16 @@
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:rx="http://www.renderx.com/XSL/Extensions" xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="2.0">
+<xsl:stylesheet xmlns:rx="http://www.renderx.com/XSL/Extensions" xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="2.0">
 <xsl:output method="xml" indent="no" encoding="UTF-8"/>
-<xsl:variable name="guidelines" select="document('works-general.xml') "/>
-<xsl:variable name="specialchars" select="document('specialchars.xml') "/>
+<!-- xsl:variable name="guidelines"   select="document('works-general.xml') "/ -->
+<!-- xsl:variable name="sources"      select="document('sources-list.xml')"/ -->
+<!-- xsl:variable name="specialchars" select="document('specialchars.xml') "/ -->
+<xsl:variable name="guidelines" select="document('https://files.salamanca.school/works-general.xml')"/>
+<xsl:variable name="sources" select="document('https://files.salamanca.school/sources-list.xml')"/>
+<xsl:variable name="specialchars" select="document('https://files.salamanca.school/specialchars.xml')"/>
 <xsl:variable name="work_id" select="tei:TEI/@xml:id"/>
 <xsl:key name="title_image" match="//tei:graphic" use="@xml:id"/>
 <xsl:key name="chars" match="//tei:char" use="@xml:id"/>
-    <xsl:template match="/">    
-        <fo:root font-selection-strategy="character-by-character" font-family="Junicode, Antinoou">
+    <xsl:template match="/">    <!--current font-family : Junicode, Antinoou -->
+        <fo:root font-selection-strategy="character-by-character" font-family="Cardo, serif">
             <fo:layout-master-set>
                 <!-- "Schmutztitel" layout: no header, no page numbers-->
                 <fo:simple-page-master master-name="start" page-height="29.7cm" page-width="21cm" margin-top="1.77cm" margin-bottom="1.77cm" margin-left="1.5cm" margin-right="1.5cm">
@@ -100,10 +104,14 @@
                     <xsl:apply-templates select="//tei:msIdentifier"/>  
                      <fo:block font-size="14pt" space-before="10mm" space-after="10mm">Proposed citation: </fo:block>
                     <fo:block font-size="14pt" font-style="normal" font-weight="normal" text-align="center">
-                <fo:inline><xsl:value-of select="$guidelines/key('title_image', $work_id)/@source"/></fo:inline>                
+                <fo:inline>
+                            <xsl:value-of select="$guidelines/key('title_image', $work_id)/@source"/>
+                        </fo:inline>                
                 <fo:inline>, in: The School of Salamanca. A Digital Collection of Sources</fo:inline>
                 </fo:block>
-                <fo:block font-size="14pt" text-align="center"><xsl:apply-templates select="//tei:publicationStmt//tei:idno[@xml:id = 'urlid']"/></fo:block> 
+                <fo:block font-size="14pt" text-align="center">
+                        <xsl:apply-templates select="//tei:publicationStmt//tei:idno[@xml:id = 'urlid']"/>
+                    </fo:block> 
                 </fo:flow>
             </fo:page-sequence>
 
@@ -362,21 +370,23 @@
     <!--TEMPLATES MATCH FOR <TEI:SOURCE DESCRIPTION>   -->
     <!--msIdentifier refers to a separate template match   -->
     <xsl:template match="tei:sourceDesc">
-        <xsl:variable name="guidelines" select="document('works-general.xml')"/>
+        <!-- xsl:variable name="guidelines" select="document('works-general.xml')"/ -->
         <fo:block text-align="center" font-size="20pt" font-style="normal" font-weight="normal" space-before="5mm">
             <xsl:apply-templates select="//tei:sourceDesc//tei:author"/>
         </fo:block>
         <fo:block text-align="center" font-size="18pt" font-style="normal" font-weight="normal">
             <xsl:apply-templates select="//tei:sourceDesc//tei:pubPlace"/>
             <fo:inline padding-left="2mm">
-            <xsl:apply-templates select="//tei:sourceDesc//tei:date"/></fo:inline>
+            <xsl:apply-templates select="//tei:sourceDesc//tei:date"/>
+            </fo:inline>
                 (            
             <xsl:apply-templates select="//tei:sourceDesc//tei:publisher"/>)</fo:block>               
         <fo:block text-align="center" font-size="18pt" font-style="normal" font-weight="normal" space-before="15mm">The School of Salamanca</fo:block>
         <fo:block text-align="center" font-size="18pt" font-style="normal" font-weight="normal">A Digital Collection of Sources and a Dictionary of its Juridical-Political Language</fo:block>
         <fo:block text-align="center" font-size="18pt" font-style="normal" font-weight="normal">https://www.salamanca.school</fo:block>
         <fo:block text-align="center" font-size="16pt" space-before="15mm">
-         <fo:inline>Volume <xsl:apply-templates select="//tei:seriesStmt//tei:biblScope/@n"/></fo:inline>   
+         <fo:inline>Volume <xsl:apply-templates select="//tei:seriesStmt//tei:biblScope/@n"/>
+            </fo:inline>   
         </fo:block>
         <fo:block text-align="center" font-size="16pt" space-before="7mm">Directors:</fo:block>
         <fo:block text-align="center" font-size="16pt">
@@ -391,11 +401,13 @@
         <fo:block text-align="center" font-size="16pt" space-before="12mm">Electronic publication, 
             
             
-            <xsl:apply-templates select="//tei:publicationStmt/tei:date[@type = 'digitizedEd']"/></fo:block>
+            <xsl:apply-templates select="//tei:publicationStmt/tei:date[@type = 'digitizedEd']"/>
+        </fo:block>
         <fo:block text-align="center" font-size="15pt">Online: 
             
             
-            <xsl:apply-templates select="//tei:publicationStmt//tei:idno[@xml:id = 'urlid']"/></fo:block>
+            <xsl:apply-templates select="//tei:publicationStmt//tei:idno[@xml:id = 'urlid']"/>
+        </fo:block>
     </xsl:template>
 
     <xsl:template match="tei:orgName">
@@ -424,11 +436,15 @@
     </xsl:template>
 
  <xsl:template match="tei:repository">
-        <fo:block><xsl:apply-templates/></fo:block>
+        <fo:block>
+            <xsl:apply-templates/>
+        </fo:block>
     </xsl:template>
 
  <xsl:template match="tei:idno">
-        <fo:block><xsl:apply-templates/></fo:block>
+        <fo:block>
+            <xsl:apply-templates/>
+        </fo:block>
     </xsl:template>
 
     <!--TEMPLATES MATCH FOR DIFFERENT TYPES OF <TEI:P>   -->
@@ -494,7 +510,7 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-
+<!-- replac here with precomposed ? -->
     <xsl:template match="tei:g">
         <xsl:variable name="char_id" select="(substring(@ref,2))"/>
         <xsl:variable name="char_itself" select="./text()"/>
@@ -504,14 +520,20 @@
             <xsl:when test="($char_id = 'char017f') or ($char_id = 'char204a') ">
                 <xsl:choose>
                 <xsl:when test="(ancestor::tei:head) or (ancestor::tei:titlePart)">
-                <fo:inline font-weight="bold"><xsl:value-of select="$replace"/></fo:inline>
+                <fo:inline font-weight="bold">
+                            <xsl:value-of select="$replace"/>
+                        </fo:inline>
                 </xsl:when>
                 <xsl:otherwise>
-                <fo:inline font-weight="normal"><xsl:value-of select="$replace"/></fo:inline>
+                <fo:inline font-weight="normal">
+                            <xsl:value-of select="$replace"/>
+                        </fo:inline>
                 </xsl:otherwise>
                 </xsl:choose>
             </xsl:when>
-            <xsl:otherwise><xsl:apply-templates/></xsl:otherwise>
+            <xsl:otherwise>
+                <xsl:apply-templates/>
+            </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
 
@@ -673,7 +695,11 @@
         <xsl:variable name="id_anchor" select="concat('#', @xml:id)"/>
         <xsl:variable name="link_note" select="@xml:id"/>
         <xsl:variable name="number" select="@n"/>
-        <fo:inline baseline-shift="super" font-size="9pt" font-weight="bold" id="{$id_anchor}"><fo:basic-link color="#0a0c75" internal-destination="{$link_note}"><xsl:value-of select="count(preceding::tei:note[ancestor::tei:text])+1"/></fo:basic-link></fo:inline>
+        <fo:inline baseline-shift="super" font-size="9pt" font-weight="bold" id="{$id_anchor}">
+            <fo:basic-link color="#0a0c75" internal-destination="{$link_note}">
+                <xsl:value-of select="count(preceding::tei:note[ancestor::tei:text])+1"/>
+            </fo:basic-link>
+        </fo:inline>
     </xsl:template>
     <xsl:template match="tei:lb[not(@break eq 'no')]">
         <fo:inline>
@@ -715,7 +741,9 @@
                                         <fo:basic-link font-weight="bold" color="#0a0c75" internal-destination="{$link_anchor}">
                                             <xsl:value-of select="count(preceding::tei:note[ancestor::tei:text])+1"/>                                      
                                         </fo:basic-link>
-                                           <fo:inline><xsl:text xml:space="preserve"> </xsl:text></fo:inline>
+                                           <fo:inline>
+                                <xsl:text xml:space="preserve"> </xsl:text>
+                            </fo:inline>
                                            <xsl:apply-templates/>
                                     </fo:block>
                         </xsl:for-each>
