@@ -127,10 +127,10 @@ declare function crumb:constructCrumbtrail($node as element(sal:nodecrumb)) as i
     let $prefix := 
 (: Changed to improve performance on 2025-03-24, A.W.                               :)
 (:      if ($node/sal:citableParent/text() and $node/ancestor::sal:nodecrumb[@xml:id eq $node/sal:citableParent/text()]) then:)
-        if ($node/sal:citableParent/text() and ($node/root()/id($node/sal:citableParent/text()) intersect            $node/ancestor::sal:nodecrumb)) then
+        if ($node/sal:citableParent/text() and ($node/root()/id($node/sal:citableParent/text()) intersect $node/ancestor::sal:nodecrumb)) then
 (: Changed to improve performance on 2025-03-24, A.W.                               :)
 (:          crumb:constructCrumbtrail( $node/ancestor::sal:nodecrumb[@xml:id eq $node/sal:citableParent/text()]):)
- crumb:constructCrumbtrail($node/root()/id($node/sal:citableParent/text()) intersect $node/ancestor::sal:nodecrumb)
+            crumb:constructCrumbtrail($node/root()/id($node/sal:citableParent/text()) intersect $node/ancestor::sal:nodecrumb)
         else ()
     let $this := $node/sal:crumbtrail/*
     return

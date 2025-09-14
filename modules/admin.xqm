@@ -680,6 +680,7 @@ declare function admin:cleanCollection ($wid as xs:string, $collection as xs:str
         else if ($collection eq "txt")         then $config:txt-root || "/" || $wid
         else if ($collection eq "iiif")        then $config:iiif-root
         else if ($collection eq "workslist")   then $config:data-root
+        else if ($collection eq "lemmalist")   then $config:data-root
         else if ($collection eq "index")       then $config:index-root
         else if ($collection eq "crumbtrails") then $config:crumb-root
         else if ($collection eq "rdf")         then $config:rdf-works-root
@@ -699,6 +700,7 @@ declare function admin:cleanCollection ($wid as xs:string, $collection as xs:str
         else if ($collection eq "nlp")         then $wid || "\.csv"
         else if ($collection eq "iiif")        then $wid || "(_Vol[0-9]+)?(_iiif_.*)?.json"
         else if ($collection eq "stats")       then $wid || "-stats\.json"
+        else if ($collection eq "xsl-fo")         then $wid || ".*\.fo"
         else if ($collection eq "pdf")         then $wid || ".*\.pdf"
         else if ($collection eq "routing")     then $wid || "_routes\.json"
         else                                        "dontmatch"
@@ -728,7 +730,7 @@ declare function admin:cleanCollection ($wid as xs:string, $collection as xs:str
         if (count(xmldb:get-child-resources($collectionName))) then
             for $file in xmldb:get-child-resources($collectionName)
             return if (matches(tokenize($file, '/')[last()], $pattern)) then
-                let $debug := if ($collection = ("snippets", "html") and not(xs:int(translate(substring(tokenize($file, '/')[last()], 1, 5), 'WLP', '')) mod 100 = 0)) then ()
+                let $debug := if ($collection = ("snippets", "html") and not(xs:int(translate(substring(tokenize($file, '/')[last()], 1, 5), 'WLP', '')) mod 250 = 0)) then ()
                               else
                               console:log("[Admin] Remove file: " || $collectionName || "/" || $file || " from database...")
                 return xmldb:remove($collectionName, $file)
@@ -762,6 +764,7 @@ declare function admin:cleanDirectory($wid as xs:string, $collection as xs:strin
         else if ($collection eq "nlp")         then $wid || ".csv"
         else if ($collection eq "iiif")        then $wid || "*_iiif_*.json" (: $wid || ".json" | $wid || "_Vol*.json" :)
         else if ($collection eq "stats")       then $wid || "-stats.json"
+        else if ($collection eq "xsl-fo")         then $wid || "*.xsl-fo.xml"
         else if ($collection eq "pdf")         then $wid || "*.pdf"
         else if ($collection eq "routing")     then $wid || "_routes.json"
         else                                        ""
@@ -772,7 +775,7 @@ declare function admin:cleanDirectory($wid as xs:string, $collection as xs:strin
         else true()
     let $remove-status := for $file in file:directory-list($collectionname, $pattern)/file:file
         let $filename  := $collectionname || $file/@name/string() 
-        let $debug :=  if ($collection = ("snippets", "html") and not(xs:int(translate(substring($file/@name, 1, 5), 'WLP', '')) mod 100 = 0)) then ()
+        let $debug :=  if ($collection = ("snippets", "html") and not(xs:int(translate(substring($file/@name, 1, 5), 'WLP', '')) mod 250 = 0)) then ()
                        else
                            console:log("[Admin] Remove file: " || $filename || " from filesystem...")
         return file:delete($filename)
@@ -848,6 +851,7 @@ declare function admin:saveTextFile($workId as xs:string, $fileName as xs:string
         else if ($collection eq "txt")       then $config:txt-root      || "/" || $wid
         else if ($collection eq "snippets")  then $config:snippets-root || "/" || $wid
         else if ($collection eq "workslist") then $config:html-root     || "/"
+ else if ($collection eq "lemmalist") then $config:html-root     || "/"
         else if ($collection eq "index")     then $config:index-root    || "/"
         else if ($collection eq "iiif")      then $config:iiif-root     || "/"
         else if ($collection eq "routes")    then $config:routes-root   || "/"
@@ -863,6 +867,8 @@ declare function admin:saveTextFile($workId as xs:string, $fileName as xs:string
         else if ($collection eq "details"   and not(xmldb:collection-available($config:html-root)))     then
             xmldb:create-collection($config:webdata-root, "html")
         else if ($collection eq "workslist" and not(xmldb:collection-available($config:html-root)))     then
+            xmldb:create-collection($config:webdata-root, "html")
+    else if ($collection eq "lemmalist" and not(xmldb:collection-available($config:html-root)))     then
             xmldb:create-collection($config:webdata-root, "html")
         else if ($collection eq "txt"       and not(xmldb:collection-available($config:txt-root)))      then
             xmldb:create-collection($config:webdata-root, "txt")
@@ -939,6 +945,7 @@ declare function admin:exportXMLFile($wid as xs:string, $filename as xs:string, 
         else if ($collection eq "details")     then $fsRoot || $wid || "/html/"
         else if ($collection eq "snippets")    then $fsRoot || $wid || "/snippets/"
         else if ($collection eq "workslist")   then $fsRoot || $wid || "/"
+ else if ($collection eq "lemmalist")   then $fsRoot || $wid || "/"
         else if ($collection eq "index")       then $fsRoot || $wid || "/"
         else if ($collection eq "crumbtrails") then $fsRoot || $wid || "/"
         else if ($collection eq "rdf")         then $fsRoot || $wid || "/"
@@ -946,6 +953,7 @@ declare function admin:exportXMLFile($wid as xs:string, $filename as xs:string, 
         else                                        $fsRoot || "trash/"
     let $method :=
           if ($collection = ("html", "workslist")) then "html"
+else if ($collection = ("html", "lemmalist")) then "html"
         else                                            "xml"
 
     let $collectionStatus :=
@@ -1068,6 +1076,7 @@ declare function admin:exportJSONFile($filename as xs:string, $content as item()
     let $fsRoot := $config:export-folder
     let $collectionname :=
              if ($collection eq "workslist") then $fsRoot
+        else if ($collection eq "lemmalist") then $fsRoot
         else if ($collection eq "stats")     then $fsRoot
         else if ($collection eq "data")      then $fsRoot || "data/"
         else                                      $fsRoot || "trash/"
@@ -1110,6 +1119,7 @@ declare function admin:exportJSONFile($wid as xs:string, $filename as xs:string,
         else true()
     let $user := string(sm:id()//sm:real/sm:username)
     (: let $umask := sm:set-umask($user, 2) :)
+     let $debug        := if($collection eq 'lemmalist') then console:log("Contents in buildDic: " || $content ) else () 
     let $store-status := file:serialize-binary(bin:encode-string(fn:serialize($content, map{"method":"json", "indent": true(), "encoding":"utf-8"})), $pathname)
     return  if ($store-status) then $pathname else ()
 };
@@ -1128,7 +1138,7 @@ declare function admin:buildFacets ($node as node(), $model as map (*), $lang as
     return $result
 };
 
-declare function admin:buildFacetsNoJs ($node as node(), $model as map (*), $lang as xs:string?) {
+ (:declare function admin:buildFacetsNoJs ($node as node(), $model as map (*), $lang as xs:string?) {
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Building facets for list view (versions without Javascript)...") else ()
     let $facets := map { "surname" :    map { "de" : app:WRKcreateListSurname($node, $model, 'de'),
                                               "en" : app:WRKcreateListSurname($node, $model, 'en'),
@@ -1163,27 +1173,42 @@ declare function admin:buildFacetsNoJs ($node as node(), $model as map (*), $lan
                           })
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] finalFacets (No Js) done!") else ()
     return $result
+}; :)
+
+
+(:Categories : title, status, WIP, monoMultiUrl, name, sortName, nameFacet :)
+
+
+declare function admin:buildDictList ($node as node(), $model as map (*), $lang as xs:string?) {
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Building lemma facets for list view (version with Javascript)...") else ()
+    let $result := for $l in ( "en")
+                    let $content      := app:LEMfinalFacets($node, $model, $l)
+                    let $filename     := 'dictionary_' || $l || '.json'
+                    let $debug        := console:log("[ADMIN] Saving (Js) " || $l || " facets file in the database...")
+                    let $storeStatus  := admin:saveTextFile("dummy", $filename, fn:serialize($content, map{"method":"json", "indent": true(), "encoding":"utf-8"}), "lemmalist")
+                    let $debug        := console:log("[ADMIN] Exporting (Js) " || $l || " facets json file...")
+                    let $exportStatus := admin:exportJSONFile($filename, $content, 'lemmalist')
+                    return <div>Saved {$l} works list to {$storeStatus} and exported it to {$exportStatus}.</div>
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] LEmma finalFacets (Js) done!") else ()
+    return $result
 };
 
-declare function admin:buildDictList ($node as node(), $model as map (*)) {
-    <div><p>The function admin:buildDictList() remains to be written...</p></div>
-};
-
+(: No noJS function needed, MAH 6.08.2025 :)
 declare function admin:buildDictListNoJs ($node as node(), $model as map (*)) {
     <div><p>The function admin:buildDictList() remains to be written...</p></div>
 };
 
 declare function admin:exportFileWRK ($node as node(), $model as map (*), $lang as xs:string?) {
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Exporting finalFacets (Js)...") else ()
-    let $fileNameDe         :=  'works_de.json'
+ (:   let $fileNameDe         :=  'works_de.json' :)
     let $fileNameEn         :=  'works_en.json'
-    let $fileNameEs         :=  'works_es.json'
-    let $contentDe          := fn:parse-json("[" || string-join(app:WRKfinalFacets($node, $model, 'de'), ", ") || "]") (: app:WRKfinalFacets returns a sequence of strings, one per work in the collection :)
+ (:   let $fileNameEs         :=  'works_es.json' :)
+  (:  let $contentDe          := fn:parse-json("[" || string-join(app:WRKfinalFacets($node, $model, 'de'), ", ") || "]") admin:exportJSONFile($fileNameDe, $contentDe, 'workslist'), :) (: app:WRKfinalFacets returns a sequence of strings, one per work in the collection :)
     let $contentEn          := fn:parse-json("[" || string-join(app:WRKfinalFacets($node, $model, 'en'), ", ") || "]")
-    let $contentEs          := fn:parse-json("[" || string-join(app:WRKfinalFacets($node, $model, 'es'), ", ") || "]")
-    let $store :=  (admin:exportJSONFile($fileNameDe, $contentDe, 'workslist'),
-                    admin:exportJSONFile($fileNameEn, $contentEn, 'workslist'),
-                    admin:exportJSONFile($fileNameEs, $contentEs, 'workslist'))
+  (:  let $contentEs          := fn:parse-json("[" || string-join(app:WRKfinalFacets($node, $model, 'es'), ", ") || "]")    admin:exportJSONFile($fileNameEs, $contentEs, 'workslist'):)
+    let $store :=  (
+                    admin:exportJSONFile($fileNameEn, $contentEn, 'workslist')
+                  )
     return
         <span>
             <p><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> List of works exported to filesystem ({serialize($store)})!</p>
@@ -1192,23 +1217,62 @@ declare function admin:exportFileWRK ($node as node(), $model as map (*), $lang 
         </span>   
 };
 
+declare function admin:exportFileLEM ($node as node(), $model as map (*), $lang as xs:string?) {
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Exporting lemma list (Js)...") else ()
+ (:   let $fileNameDe         :=  'works_de.json' :)
+    let $fileNameEn         :=  'dictionary_en.json'
+ (:   let $fileNameEs         :=  'works_es.json' :)
+  (:  let $contentDe          := fn:parse-json("[" || string-join(app:WRKfinalFacets($node, $model, 'de'), ", ") || "]") admin:exportJSONFile($fileNameDe, $contentDe, 'workslist'), :) (: app:WRKfinalFacets returns a sequence of strings, one per work in the collection :)
+    let $contentEn          := fn:parse-json("[" || string-join(app:LEMfinalFacets($node, $model, 'en'), ", ") || "]")
+  (:  let $contentEs          := fn:parse-json("[" || string-join(app:WRKfinalFacets($node, $model, 'es'), ", ") || "]")    admin:exportJSONFile($fileNameEs, $contentEs, 'workslist'):)
+    let $store :=  (
+                    admin:exportJSONFile($fileNameEn, $contentEn, 'lemmalist')
+                  )
+    return
+        <span>
+            <p><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> List of lemma exported to filesystem ({serialize($store)})!</p>
+            <br/><br/>
+            <a href="works.html" class="btn btn-info" role="button"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Open dictionary.html</a>
+        </span>   
+};
+
 declare function admin:saveFileWRK ($node as node(), $model as map (*), $lang as xs:string?) {
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Saving finalFacets (Js)...") else ()
     let $create-collection  :=  if (not(xmldb:collection-available($config:data-root))) then xmldb:create-collection($config:app-root, "data") else ()
-    let $fileNameDe         :=  'works_de.xml'
+   (: let $fileNameDe         :=  'works_de.xml' :)
     let $fileNameEn         :=  'works_en.xml'
-    let $fileNameEs         :=  'works_es.xml'
-    let $contentDe          := <sal>{app:WRKfinalFacets($node, $model, 'de')}</sal>
+ (:   let $fileNameEs         :=  'works_es.xml' :)
+   (: let $contentDe          := <sal>{app:WRKfinalFacets($node, $model, 'de')}</sal>  xmldb:store($config:data-root, $fileNameDe, $contentDe),:)
     let $contentEn          := <sal>{app:WRKfinalFacets($node, $model, 'en')}</sal>
-    let $contentEs          := <sal>{app:WRKfinalFacets($node, $model, 'es')}</sal> 
-    let $store              :=  (xmldb:store($config:data-root, $fileNameDe, $contentDe),
-                                 xmldb:store($config:data-root, $fileNameEn, $contentEn),
-                                 xmldb:store($config:data-root, $fileNameEs, $contentEs))
+(:    let $contentEs          := <sal>{app:WRKfinalFacets($node, $model, 'es')}</sal> xmldb:store($config:data-root, $fileNameEs, $contentEs) :)
+    let $store              :=  (
+                                 xmldb:store($config:data-root, $fileNameEn, $contentEn)
+                                 )
     return
         <span>
             <p><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> List of works saved to exist-db ({serialize($store)})!</p>
             <br/><br/>
             <a href="works.html" class="btn btn-info" role="button"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Open works.html</a>
+        </span>   
+};
+
+declare function admin:saveFileLEM ($node as node(), $model as map (*), $lang as xs:string?) {
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Saving lemma list (Js)...") else ()
+    let $create-collection  :=  if (not(xmldb:collection-available($config:data-root))) then xmldb:create-collection($config:app-root, "data") else ()
+   (: let $fileNameDe         :=  'works_de.xml' :)
+    let $fileNameEn         :=  'dictionary_test_en.xml'
+ (:   let $fileNameEs         :=  'works_es.xml' :)
+   (: let $contentDe          := <sal>{app:WRKfinalFacets($node, $model, 'de')}</sal>  xmldb:store($config:data-root, $fileNameDe, $contentDe),:)
+    let $contentEn          := <sal>{app:LEMfinalFacets($node, $model, 'en')}</sal>
+(:    let $contentEs          := <sal>{app:WRKfinalFacets($node, $model, 'es')}</sal> xmldb:store($config:data-root, $fileNameEs, $contentEs) :)
+    let $store              :=  (
+                                 xmldb:store($config:data-root, $fileNameEn, $contentEn)
+                                 )
+    return
+        <span>
+            <p><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> List of lemma saved to exist-db ({serialize($store)})!</p>
+            <br/><br/>
+            <a href="dictionary.html" class="btn btn-info" role="button"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Open dictionary.html</a>
         </span>   
 };
 
@@ -1640,7 +1704,7 @@ declare function admin:createTxtCorpus($processId as xs:string) {
 };
 
 (: Generate fragments for sphinx' indexer to grok :)
-(: NOTE: the largest part of the snippets creation takes place here, not in factory/*,
+(: NOTE: the largest part of the snippets creation takes place here, not in factory,
          since it applies to different types of texts (works, working papers) at once :)
 declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
 
@@ -1652,17 +1716,17 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
         if ($wid = '*') then
             collection($config:tei-root)//tei:TEI[.//tei:text[@type = ("work_multivolume", "work_monograph", "author_article", "lemma_article", "working_paper")]]
         else
-(: Changed to improve performance on 2025-03-24, A.W.                               :)
-(:          collection($config:tei-root)//tei:TEI[@xml:id = distinct-values($wid)]:)
             collection($config:tei-root)/id(distinct-values($wid))
     let $expanded := 
         for $work-raw in $todo
             let $cleanCollectionStatus := admin:cleanCollection($work-raw/@xml:id, "snippets")
-            let $cleanDirectoryStatus := admin:cleanDirectory($work-raw/@xml:id, "snippets")
+            let $cleanDirectoryStatus  := admin:cleanDirectory($work-raw/@xml:id, "snippets")
             return util:expand($work-raw)
-            
 
-    (: which parts of those works constitute a fragment that is to count as a hit? :)
+    (: which parts of those works constitute a fragment that is to count as a hit?:
+       - In works and lemmata, all index:isBasicNode nodes;
+       - in Working Papers, all paragraphs and keywords in tei:profileDesc
+    :)
     let $nodes :=
         for $w in $expanded return
             if (starts-with($w/@xml:id, 'W0') or starts-with($w/@xml:id, 'L0')) then
@@ -1696,7 +1760,7 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
                 else if ($teiHeader//tei:titleStmt/tei:title[@type="main"]) then
                     $teiHeader//tei:titleStmt/tei:title[@type="main"]/text()
                 else $teiHeader//tei:titleStmt/tei:title[1]/text()
-            let $work_year :=    
+            let $work_year :=
                 if ($teiHeader//tei:sourceDesc//tei:date[@type = "summaryThisEd"]) then
                     xs:string($teiHeader//tei:sourceDesc//tei:date[@type = "summaryThisEd"])
                 else if  ($teiHeader//tei:sourceDesc//tei:date[@type = "thisEd"]) then
@@ -1726,7 +1790,7 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
                     $config:webserver || "/data/" || $work_id || "/html/" || $hit_fragment || ".html"
                 else
                     "#No fragment discoverable!"
-            let $hit_url :=      
+            let $hit_url :=
                 if ($hit_fragment and $nodeType eq 'work') then
                     $config:idserver || "/texts/"   || $work_id || ':' || $hit_citeID
                 else if ($nodeType eq 'author') then
@@ -1738,26 +1802,14 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
                 else
                     "#No fragment discoverable!"
             let $nodeIndex         := doc($config:index-root || "/" || $work_id || "_nodeIndex.xml")
-            let $nodeCrumbtrails   := doc($config:crumb-root || "/" || $work_id || "_crumbtrails.xml")
+            (: let $nodeCrumbtrails   := doc($config:crumb-root || "/" || $work_id || "_crumbtrails.xml") :)
             let $hit_label         := string($nodeIndex//sal:node[@n eq $hit_id]/@label)
-(: Changed to improve performance on 2025-03-24, A.W.                               :)
-(:          let $hit_crumbtrail    := fn:serialize($nodeCrumbtrails//sal:nodecrumb[@xml:id eq $hit_id]/sal:crumbtrail/node()[last()](\:  , map{"method":"xhtml", "escape-uri-attributes":false(), "omit-xml-declaration":true() } :\)):)
-            let $hit_crumbtrail    := fn:serialize($nodeCrumbtrails/id($hit_id)/sal:crumbtrail/node()[last()](:  , map{"method":"xhtml", "escape-uri-attributes":false(), "omit-xml-declaration":true() } :))
-            let $before_crumbtrail :=  if (substring-before($hit_crumbtrail, '">')) then (substring-before($hit_crumbtrail, '">')) else ((substring-before($hit_crumbtrail, '"/>')))
-        let $substringed_crumbtrail := (substring-after($before_crumbtrail, "#"))
+            (: Currently we create the crumbtrail in the indexing step and just retrieve it here. Could be optimized...
+               Also, currently the crumbtrail consists of fragment-type html links, not of PID-style ones. This could also be improved...
+            :)
+            let $crumbtrail := string($nodeIndex//sal:node[@n eq $hit_id]/@crumbtrail)
 
-            let $nodetrail := sutil:getNodetrailString($wid, $substringed_crumbtrail, 'citeID')
-            let $relativeLink := concat($config:idserver, "/texts/", $wid, ":", $nodetrail)
-            let $replaced_hit_crumbtrail := fn:replace($hit_crumbtrail, substring-after($before_crumbtrail, 'href="'), $relativeLink)
-
-            let $encoded_crumbtrail :=  xmldb:encode($replaced_hit_crumbtrail)
-            (:  let $hit_crumbtrail_node_id := $nodeIndex//sal:node[@n eq $hit_crumbtrail_id] :)
-            (:  let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] This is hit_crumbtrail_decoded: " ||decode-uri(hit_crumbtrail) || ".") else () :)
-            (:  let $hit_crumbtrail_url :=decode :)
             (: Here we define the to-be-indexed content! :)
-
-
-
             let $hit_content_orig := 
                 if ($hit_id) then
                     if ($nodeType eq 'work') then
@@ -1787,7 +1839,7 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
                             (<sphinx_year>{$work_year}</sphinx_year>)
                         </h3>
                         <h4>Label: {$hit_label}</h4>
-                        <div>Crumbtrail: {$replaced_hit_crumbtrail}</div>
+                        <div>Crumbtrail: {$crumbtrail}</div>
                         <h4>Hit
                             language: &quot;<sphinx_hit_language>{$hit_language}</sphinx_hit_language>&quot;,
                             node type: &lt;<sphinx_hit_type>{$hit_type}</sphinx_hit_type>&gt;,
@@ -1820,7 +1872,7 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
                     <sphinx_hit_type>{$hit_type}</sphinx_hit_type>
                     <sphinx_hit_id>{$hit_id}</sphinx_hit_id>
                     <sphinx_hit_label>{$hit_label}</sphinx_hit_label>
-                    <sphinx_hit_crumbtrail>{$encoded_crumbtrail}</sphinx_hit_crumbtrail>
+                    <sphinx_hit_crumbtrail>{$crumbtrail}</sphinx_hit_crumbtrail>
                     <sphinx_description_orig>{$hit_content_orig}</sphinx_description_orig>
                     <sphinx_description_edit>{$hit_content_edit}</sphinx_description_edit>
                     <sphinx_html_path>{$hit_path}</sphinx_html_path>
@@ -1908,8 +1960,7 @@ declare function admin:createNodeIndex($wid as xs:string*) {
             let $missed-elements := $indexing('missed_elements')
             let $unidentified-elements := $indexing('unidentified_elements')
 
-
-let $debug := if ($config:debug = ("info")) then console:log("[ADMIN] There are "  || count($tei//tei:ref[@xml:id])|| " refs with xml:id in this work.") else ()
+            let $debug := if ($config:debug = ("info")) then console:log("[ADMIN] There are "  || count($tei//tei:ref[@xml:id])|| " refs with xml:id in this work.") else ()
 
             (: save final index file :)
             let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Saving index file ...") else ()
@@ -1959,6 +2010,7 @@ let $debug := if ($config:debug = ("info")) then console:log("[ADMIN] There are 
         </div>
 };
 
+
 declare function admin:uploadPdf($rid as xs:string) {
     let $PdfInput := request:get-uploaded-file-name('FileUpload')
     let $content  := request:get-uploaded-file-data('FileUpload')
@@ -1980,18 +2032,28 @@ declare function admin:uploadPdf($rid as xs:string) {
             </results>
 };
 
+
 declare function admin:createPdf($rid as xs:string){
     let $pdf-start-time           := util:system-time()
     let $doctotransform as node() := doc($config:tei-works-root || '/'|| $rid || '.xml')//tei:TEI
 
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Creating pdf from " || $rid || " ...") else ()
     let $debug := if ($config:debug = ("trace", "info") )then console:log("[PDF-" || $rid ||"] Transforming into XSL-FO...") else ()
-  let $debug := if ( transform:transform($doctotransform, "xmldb:exist:///db/apps/salamanca/modules/factory/works/pdf/generic_template.xsl", ())  )then console:log("transformed2 OK") else ( console:log("transformed2  NOT OK"))
-let $doctransformed2          := transform:transform($doctotransform, "xmldb:exist:///db/apps/salamanca/modules/factory/works/pdf/generic_template.xsl", ()) 
 
-    (:let $storexslfo := xmldb:store($config:xsl-fo-root ,$rid || '_xsl-fo.xml', $doctransformed2) :)
+let $doctransformed2          := transform:transform($doctotransform, "xmldb:exist:///db/apps/salamanca/modules/factory/works/pdf/generic_template.xsl", ())
 
-    (:let $xsl-fo-document as document-node() := doc($config:xsl-fo-root || '/'|| $rid || '_xsl-fo.xml') :)
+    let $debug := if ($config:debug = ("trace", "info") )then console:log("[PDF-" || $rid ||"] FO OK..") else ()
+
+let $fo-config :=
+  <parameters>
+    <fop-config>xmldb:exist:///db/apps/salamanca/resources/config/fop.xconf</fop-config>
+  </parameters>
+   let $storexslfo := xslfo:render(
+    $doctransformed2,
+    "application/pdf",
+    $fo-config
+)
+
     let $debug := if ($config:debug = ("trace", "info") ) then console:log("[PDF-" || $rid ||"] Transforming from XSL-FO to PDF...") else ()                         
     let $media-type as xs:string  := 'application/pdf'
     let $renderedxslfo            := xslfo:render($doctransformed2, $media-type, ())

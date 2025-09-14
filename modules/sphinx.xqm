@@ -728,7 +728,7 @@ declare function sphinx:excerpts ($documents as node()*, $words as xs:string) as
     :)
 declare function sphinx:highlight($document as node()?, $words as xs:string) as node()* {
     let $endpoint   := concat($config:sphinxRESTURL, "/excerpts")
-    (: let $documentRetrieved := sphinx:loadHTMLFragment($wid, $fragId) :)
+   (: let $documentRetrieved := sphinx:loadHTMLFragment($wid, $fragId) :)
 (: TODO :
 - write a function to load not the snippets but the corresponding HTML fragment. 
 - rest should go as normal. :)
@@ -904,7 +904,7 @@ declare function sphinx:help ($node as node(), $model as map(*), $lang as xs:str
     let $html       := render-app:dispatch($helpfile/id($helptext), "html", ())
     return if (count($html)) then
         <div id="help" class="help">
-            <!-- Changed to improve performance on 2025-03-24, A.W.                               -->
+<!-- Changed to improve performance on 2025-03-24, A.W.                               -->
 <!--        {sphinx:print-sectionsHelp($helpfile//tei:div[@xml:id eq $helptext]/tei:div, true())} -->
             {sphinx:print-sectionsHelp($helpfile/id($helptext)/tei:div, true())}
             {$html}

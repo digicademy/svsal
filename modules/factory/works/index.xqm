@@ -73,8 +73,8 @@ declare function index:makeNodeIndex($tei as element(tei:TEI)) as map(*) {
             else ()
 
     (: Create the fragment id for each node beforehand, so that recursive crumbtrail creation has it readily available :)
-    let $debug := if ($config:debug = ("trace")) then console:log("[INDEX] Node indexing: identifying fragment ids ...") else ()
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[INDEX] Node indexing: " || count($nodes) || " nodes to process.") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[INDEX] Node indexing: Found " || count($nodes) || " nodes to process.") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[INDEX] Node indexing: Identifying fragment ids ...") else ()
     let $fragmentIds :=
         map:merge(
             for $node at $pos in $nodes
@@ -82,7 +82,6 @@ declare function index:makeNodeIndex($tei as element(tei:TEI)) as map(*) {
                                     console:log("[INDEX] Node indexing: processing node no. " || string($pos)  || " ...")
                                 else ()
                 let $n := $node/@xml:id/string()
-(:              let $frag := (($node/ancestor-or-self::tei:* | $node//tei:*) intersect $target-set)[1]:)
                 let $frag := (($node/ancestor-or-self::* | $node//tei:*[not(preceding-sibling::*)]) intersect $target-set)[1]
                 let $err  := if ((count($frag/@xml:id) eq 0) or ($frag/@xml:id eq "")) then
                     let $debug := if ($config:debug = ("trace", "info")) then
@@ -94,15 +93,18 @@ declare function index:makeNodeIndex($tei as element(tei:TEI)) as map(*) {
                 let $fragId := index:makeFragmentId(functx:index-of-node($target-set, $frag), $frag/@xml:id)
                 return map:entry($n, $fragId)
         )
-    let $debug := if ($config:debug = ("trace")) then console:log("[INDEX] Node indexing: " || count($fragmentIds) || " fragment ids extracted.") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[INDEX] Node indexing: Extracted " || count($fragmentIds) || " fragment ids.") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[INDEX] Node indexing: Creating index file ...") else ()
 
-    let $debug := if ($config:debug = ("trace")) then console:log("[INDEX] Node indexing: creating index file ...") else ()
     (: node indexing has 2 stages: :)
     (: 1.) extract nested sal:nodes with rudimentary information :)
     let $indexTree := 
         <sal:index>
-            {index:extractNodeStructure($wid, $work//tei:text[(@type eq 'work_volume' and sutil:WRKisPublished($wid || '_' || @xml:id)) or @type eq 'work_monograph' or @type eq 'lemma_article'], $xincludes, $fragmentIds)}
+            {index:extractNodeStructure($wid, $work//tei:text[(@type eq 'work_volume' and sutil:WRKisPublished($wid || '_' || @xml:id))
+                                                            or @type eq 'work_monograph'
+                                                            or @type eq 'lemma_article'], $xincludes, $fragmentIds)}
         </sal:index>
+
     (: 2.) flatten the index from 1.) and enrich sal:nodes with full-blown citeID, etc. :)
     let $debug := if ($config:debug = ("trace")) then console:log("[INDEX] Node indexing: stage 1 finished with " || count($indexTree//*) || " elements in $indexTree ...") else ()
     let $index := 
@@ -211,46 +213,56 @@ declare function index:extractNodeStructure($wid as xs:string,
                                   let $log := util:log('info', '[INDEX] Processing tei:pb node ' || $node/@n)
                                   return console:log('[INDEX] Processing tei:pb ' || $node/@n || ' ...')
                             else ()
-                return
-                (: index:isIndexNode($node) has already been called in admin:createIndex, so we can use that run here: :)
-                if ($node/@xml:id and $fragmentIds($node/@xml:id/string())) then
-                    let $subtype := 
-                        if ($node[self::tei:milestone]/@n) then (: TODO: where is this used? :)
-                            string($node/@n)
-                        else if ($node/@type) then
-                            string($node/@type)
-                        else ()
-                    let $title  := index:dispatch($node, 'title')
-                    let $class  := index:dispatch($node, 'class')
-                    let $crumb  := index:makeCrumb($wid, $node, $fragmentIds)
-                    let $parent := index:getCitableParent($node)
-                    return
-                        element sal:node {
-                            attribute wid               {$wid},
-                            attribute type              {local-name($node)}, 
-                            attribute subtype           {$subtype}, 
-                            attribute xml:id            {$node/@xml:id/string()},
-(: Changed to improve performance on 2025-03-24, A.W.                               :)
-(:                          if ($node/@xml:id eq 'completeWork' and $xincludes) then:)
-                            if ($node/id('completeWork') and $xincludes) then
-                                attribute xinc          {$xincludes}
-                            else (), 
-                            attribute class             {$class},
-                            attribute isNamedCit        {index:isNamedCiteIDNode($node)},
-                                element sal:title           {$title},
-                                element sal:fragment        {$fragmentIds($node/@xml:id/string())},
-                                element sal:citableParent   {$parent/@xml:id/string()},
-                                element sal:children        {index:extractNodeStructure($wid, $node/node(), $xincludes, $fragmentIds)},
-                                if (index:isLabelNode($node)) then
-                                    element sal:passage     {index:dispatch($node, 'label')}
-                                else (),
-                                (: if the node is a named citeID node, we include its citeID part here already 
-                                   - unnamed citeID can be done much faster in phase 2 :)
-                                if (index:isNamedCiteIDNode($node)) then 
-                                    element sal:cit         {index:dispatch($node, 'citeID')} 
-                                else ()
-                        }
-                else index:extractNodeStructure($wid, $children, $xincludes, $fragmentIds)
+                let $dbg := if (contains($node/@xml:id, 'W0116-00-0526-pa')) then console:log('[INDEX] DEBUG: processing (1) node ' || string($node/@xml:id) || ' ...') else ()
+                let $returnvalue :=
+                    if ($node/@xml:id and $fragmentIds($node/@xml:id/string())) then
+                        let $subtype := 
+                            if ($node[self::tei:milestone]/@n) then (: TODO: where is this used? :)
+                                string($node/@n)
+                            else if ($node/@type) then
+                                string($node/@type)
+                            else ()
+                        let $title  := index:dispatch($node, 'title')
+                        let $class  := index:dispatch($node, 'class')
+                        (:  The link created below serves to build the crumbtrail for the search engine.
+                            Ideally, we woult want them to be PID-style links, but the citeID is being created only
+                            in the next phase.
+                        :)
+                        let $link   := index:makeLink($wid, $node, $title, $class, $fragmentIds)
+                        let $parent := index:getCitableParent($node)
+                        return
+                            element sal:node {
+                                attribute wid               {$wid},
+                                attribute type              {local-name($node)}, 
+                                attribute subtype           {$subtype}, 
+                                attribute xml:id            {$node/@xml:id/string()},
+                                if ($node/id('completeWork') and $xincludes) then
+                                    attribute xinc          {$xincludes}
+                                else (), 
+                                attribute class             {$class},
+                                attribute isNamedCit        {index:isNamedCiteIDNode($node)},
+                                    element sal:title           {$title},
+                                    element sal:fragment        {$fragmentIds($node/@xml:id/string())},
+                                    element sal:citableParent   {$parent/@xml:id/string()},
+                                    element sal:link            {$link},
+                                    if (index:isLabelNode($node)) then
+                                        element sal:passage     {index:dispatch($node, 'label')}
+                                    else (),
+                                    (: if the node is a named citeID node, we include its citeID part here already 
+                                       - unnamed citeID can be done much faster in phase 2 :)
+                                    if (index:isNamedCiteIDNode($node)) then 
+                                        element sal:cit         {index:dispatch($node, 'citeID')} 
+                                    else (),
+                                    element sal:children        {index:extractNodeStructure($wid, $node/node(), $xincludes, $fragmentIds)}
+                            }
+                    else
+                        (: let $dbg := if ($node/@xml:id and not(contains($node/@xml:id, '-lb-')) and not(contains($node/@xml:id, '-ce-'))) then
+                                        console:log('[INDEX] Skipping node with xml:id "' || $node/@xml:id/string() || '" but not present as a key in $fragmentIds map.  Continuing with children...')
+                                    else
+                                        ()
+                        return :) index:extractNodeStructure($wid, $children, $xincludes, $fragmentIds)
+                let $dbg := if (contains($node/@xml:id, 'W0116-00-0526-pa')) then console:log('[INDEX] DEBUG: processed (1) node ' || string($node/@xml:id) || ', result: ' || serialize($returnvalue)) else ()
+                return $returnvalue
             default return ()
 };
 
@@ -267,19 +279,26 @@ declare function index:createIndexNodes($wid as xs:string, $input as element(sal
 
         let $citeID     := index:constructCiteID($node)
         let $label      := index:constructLabel($node)
-        return
-            element sal:node {
-                attribute n        {$node/@xml:id/string()},
-                (: copy some attributes from the previous node :)
-                $node/@* except ($node/@category, $node/@isBasicNode, $node/@isNamedCit, $node/@isPassage, $node/@xml:id),
-                attribute title         {$node/sal:title/string()},
-                attribute fragment      {$node/sal:fragment/string()},
-                attribute citableParent {$node/sal:citableParent/string()},
-                attribute citeID        {$citeID},
-                attribute label         {$label}
-            }
+        (: 
+            Ideally, we woult want the crumbtrail to consist of PID-style links, but the citeID is being created only
+            in this phase. And we want to utilize the link hierarchy created in the previous phase.
+            Maybe we should do the crumtrail creation in the sphinx export after all? But there we don't have the hierarchy either...
+        :)
+        let $crumbtrail := encode-for-uri(string-join(for $link in $node/ancestor-or-self::sal:node/sal:link/* return serialize($link), ' ⨠ '))
+        let $returnvalue := element sal:node {
+                    attribute n             {$node/@xml:id/string()},
+                    (: copy some attributes from the previous node :)
+                    $node/@* except ($node/@category, $node/@isBasicNode, $node/@isNamedCit, $node/@isPassage, $node/@xml:id),
+                    attribute title         {$node/sal:title/string()},
+                    attribute fragment      {$node/sal:fragment/string()},
+                    attribute citableParent {$node/sal:citableParent/string()},
+                    attribute citeID        {$citeID},
+                    attribute crumbtrail    {$crumbtrail},
+                    attribute label         {$label}
+                }
+        let $dbg := if (contains($node/@xml:id, 'W0116-00-0526-pa')) then console:log('[INDEX] DEBUG: processed (2) node ' || string($node/@xml:id) || ', result: ' || serialize($returnvalue)) else ()
+        return $returnvalue
 };
-
 
 (: Conducts some basic quality checks with regards to consistency, uniqueness of citeID, etc. within an sal:index :)
 declare function index:qualityCheck($index as element(sal:index), 
@@ -320,21 +339,21 @@ declare function index:qualityCheck($index as element(sal:index),
     let $testAmbiguousCiteID :=
         let $uniqueCiteIDs := for $node at $pos in $resultNodes
                                 let $id := $node/@citeID/string()
-                                group by $id
-                                let $debug :=   if (($config:debug = "trace") and ($pos[1] mod 1000 eq 0)) then
-                                                        console:log('[INDEX] QC: ... counting citeIDs ' ||
-                                                        '(' || string($pos[1]) || '/' || string($numberOfResultNodes) || ') ...')
-                                                else ()
-                                return $id[1]
-        let $numberOfUniqueCiteIDs := count($uniqueCiteIDs)
-        return if ($numberOfResultNodes ne $numberOfUniqueCiteIDs) then 
-            let $debug1 := console:log('[INDEX]: ERROR: Could not produce a unique citeID for each sal:node (in ' || $wid || '). ' ||
-                                        $numberOfResultNodes || ' result nodes vs ' || $numberOfUniqueCiteIDs || ' unique cite ids.')
-            let $problematicNodes := for $id in $uniqueCiteIDs
+ group by $id
+            let $debug := if (($config:debug = "trace") and ($pos[1]                        mod 1000 eq 0)) then
+ console:log('[INDEX] QC: ... counting citeIDs ' ||
+                         '(' || string($pos[1]) || '/' || string($numberOfResultNodes) || ') ...')
+                                       else ()
+ return $id[1]
+ let $numberOfUniqueCiteIDs := count($uniqueCiteIDs)
+ return if ($numberOfResultNodes ne                                       $numberOfUniqueCiteIDs)                        then 
+                    let                $debug1            := console:log('[INDEX]: ERROR: Could not produce a unique citeID for each sal:node (in ' || $wid || '). ' ||
+                  $numberOfResultNodes || ' result nodes vs ' || $numberOfUniqueCiteIDs                  || ' unique cite ids.')
+                        let $problematicNodes := for $id in $uniqueCiteIDs
                                         let $nodes := $resultNodes[@citeID/string() = $id]
-                                        where count($nodes) gt 1
-                                        return $id || ': ' || string-join($nodes/@n/string(), ', ')
-            let $debug2 := console:log('[INDEX]: ERROR: Problematic nodes: ' || string-join($problematicNodes, '; '))
+                         where count($nodes) gt 1
+ return $id || ': '                                       || string-join($nodes/@n/string(), ', ')
+ let $debug2 := console:log('[INDEX]: ERROR: Problematic nodes: ' || string-join($problematicNodes, '; '))
 (:
                   || string-join(
                         (for $x in $resultNodes[@citeID = preceding::sal:node/@citeID]
@@ -345,10 +364,10 @@ declare function index:qualityCheck($index as element(sal:index),
                     )
                 )
 :)
-            return error(xs:QName('admin:createNodeIndex'), 
-                  'Could not produce a unique citeID for each sal:node (in ' || $wid || '). ' ||
-                  $numberOfResultNodes || ' result nodes vs ' || $numberOfUniqueCiteIDs || ' unique cite ids.' ||
-                  ' Problematic nodes: ' || string-join($problematicNodes, '; '))
+ return error(xs:QName('admin:createNodeIndex'), 
+                                       'Could not produce a unique citeID for each sal:node (in '                        || $wid || '). ' ||
+                    $numberOfResultNodes || ' result nodes vs ' || $numberOfUniqueCiteIDs || ' unique cite ids.' ||
+                ' Problematic nodes: ' || string-join($problematicNodes, '; '))
 (:
                   || string-join(
                         (for $x in $resultNodes[@citeID = preceding::sal:node/@citeID]
@@ -369,7 +388,7 @@ declare function index:qualityCheck($index as element(sal:index),
         let $textNodes := $work//tei:text[@type eq 'work_monograph' 
                                   or (@type eq 'work_volume' and sutil:WRKisPublished($wid || '_' || @xml:id))]
                                   //text()[normalize-space() ne '']
-        let $numberOfTextNodes := count($textNodes)
+ let $numberOfTextNodes := count($textNodes)
         for $t at $i in $textNodes return
             let $debug := if (($config:debug = "trace") and ($i mod 2500 eq 0)) then
                               console:log('[INDEX] QC: ... checking text nodes ' ||
@@ -377,9 +396,9 @@ declare function index:qualityCheck($index as element(sal:index),
                           else ()
             return
                 if ($t[not(ancestor::*[index:isBasicNode(.)]) and not(ancestor::tei:figDesc)]) then 
-                    let $debug := util:log('error', 'Encountered text node without ancestor::*[index:isBasicNode(.)], in line ' || $t/preceding::tei:lb[1]/@xml:id/string() || ' – this might indicate a structural anomaly in the TEI data.')
-                    return error(xs:QName('admin:createNodeIndex'), 'Encountered text node without ancestor::*[index:isBasicNode(.)], in line ' || $t/preceding::tei:lb[1]/@xml:id/string()) 
-                else ()
+                let $debug := util:log('error', 'Encountered text node without ancestor::*[index:isBasicNode(.)], in line ' || $t/preceding::tei:lb[1]/@xml:id/string() || ' – this might indicate a structural anomaly in the TEI data.')
+                return error(xs:QName('admin:createNodeIndex'), 'Encountered text node without ancestor::*[index:isBasicNode(.)], in line ' || $t/preceding::tei:lb[1]/@xml:id/string()) 
+            else ()
     (: if no xml:id is put out, try to search these cases like so:
         //text//text()[not(normalize-space() eq '')][not(ancestor::*[@xml:id and (self::p or self::signed or self::head or self::titlePage or self::lg or self::item or self::label or self::argument or self::table)])]
     :)
@@ -392,7 +411,7 @@ declare function index:qualityCheck($index as element(sal:index),
     
     let $debug := if ($config:debug = ("info", "trace")) then console:log('[INDEX] QC: all checks passed for ' || $wid || '.') else ()
 
-    return
+        return
         (: return information that we want to inform about rather than throw hard errors :)
         map {
             'missed_elements': $missed-elements,
@@ -405,19 +424,16 @@ declare function index:qualityCheck($index as element(sal:index),
 
 declare function index:constructCiteID($node as element(sal:node)) as xs:string {
     let $prefix := 
-(:        if ($node/sal:citableParent/text() and $node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()]) then:)
-            if ($node/sal:citableParent/text()) then
-(: Changed to improve performance on 2025-03-24, A.W.                               :)
-(:          index:constructCiteID($node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()]):)
-                index:constructCiteID($node/root()/id($node/sal:citableParent/text()) intersect $node/ancestor::sal:node)
-            else ()
-        let $this := 
-            if ($node/sal:cit) then
-                $node/sal:cit/text()
-            else (: if sal:cit doesn't already exist, we are dealing with a numeric/unnamed citeID node and create the citeID part here: :)
-                string(count($node/preceding-sibling::sal:node[@isNamedCit eq 'false']) + 1)
-        return
-            if ($prefix and $this) then $prefix || $index:citeIDConnector || $this else $this
+        if ($node/sal:citableParent/text()) then
+            index:constructCiteID($node/root()/id($node/sal:citableParent/text()) intersect $node/ancestor::sal:node)
+        else ()
+    let $this := 
+        if ($node/sal:cit) then
+            $node/sal:cit/text()
+        else (: if sal:cit doesn't already exist, we are dealing with a numeric/unnamed citeID node and create the citeID part here: :)
+            string(count($node/preceding-sibling::sal:node[@isNamedCit eq 'false']) + 1)
+    return
+        if ($prefix and $this) then $prefix || $index:citeIDConnector || $this else $this
 };
 
 (:declare function index:constructCrumbtrail($wid as xs:string, $citeID as xs:string, $node as element(sal:node)) as item()+ {
@@ -432,13 +448,13 @@ declare function index:constructCiteID($node as element(sal:node)) as xs:string 
 
 declare function index:constructLabel($node as element(sal:node)) as xs:string? {
     let $prefix :=
-(: Changed to improve performance on 2025-03-24, A.W.                               :)
-(:      if ($node/sal:citableParent/text() and $node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()]) then:)
-        if ($node/sal:citableParent/text() and ($node/root()/id($node/sal:citableParent/text()) intersect $node/ancestor::sal:node)) then
-(: Changed to improve performance on 2025-03-24, A.W.                               :)
-(:          index:constructLabel($node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()]):)
-            index:constructLabel($node/root()/id($node/sal:citableParent/text()) intersect $node/ancestor::sal:node)
-        else ()
+        (: find citable parent node :)
+        let $citableParent := if ($node/sal:citableParent/text()) then
+                                    $node/root()/id($node/sal:citableParent/text()) intersect $node/ancestor::sal:node
+                                else ()
+        return  if ($citableParent) then
+                    index:constructLabel($citableParent)
+                else ()
     (: not every sal:node has a distinctive passage: :)
     let $this := if ($node/sal:passage/text()) then $node/sal:passage/text() else ''
     return
@@ -447,15 +463,14 @@ declare function index:constructLabel($node as element(sal:node)) as xs:string? 
         else $prefix || $this (: this will only return one of both, if any at all :)
 };
 
-declare function index:makeCrumb($wid as xs:string, $node as node(), $fragmentIds as map(*)) as element(a)? {
-    let $class := index:dispatch($node, 'class')
+declare function index:makeLink($wid as xs:string, $node as node(), $title as xs:string*, $class as xs:string*, $fragmentIds as map(*)) as element(a)? {
+    let $t := if (string-length($title) gt 0) then $title else " · "
     return
         if ($class) then
-            <a class="{$class}" href="{index:makeUrl($wid, $node, $fragmentIds)}">{index:dispatch($node, 'title')}</a>
+            <a class="{$class}" href="{index:makeUrl($wid, $node, $fragmentIds)}">{$t}</a>
         else 
-            <a href="{index:makeUrl($wid, $node, $fragmentIds)}">{index:dispatch($node, 'title')}</a>
+            <a                  href="{index:makeUrl($wid, $node, $fragmentIds)}">{$t}</a>
 };
-
 
 (: Gets the citable crumbtrail/citeID (not label!) parent :)
 declare function index:getCitableParent($node as node()) as node()? {
@@ -470,7 +485,6 @@ declare function index:getCitableParent($node as node()) as node()? {
     else $node/ancestor::*[index:isIndexNode(.)][1]
 };
 
-
 (: Marginal citeID: "nX" where X is the anchor used (if it is alphanumeric) and "nXY" where Y is the number of times that X occurs inside the current div
     (important: nodes are citeID children of div (not of p) and are counted as such) :)
 declare function index:makeMarginalCiteID($node as element()) as xs:string {
@@ -478,7 +492,7 @@ declare function index:makeMarginalCiteID($node as element()) as xs:string {
 (: Changed to improve performance on 2025-03-24, A.W.                               :)
 (:  let $currentNode := $currentSection//*[@xml:id eq $node/@xml:id]:)
 
-(:TO DO: distinguish between note with or without n, otherwise pb with indexing compmlex works like Siete Partidas. DONE 20.05.2025:)
+(:TO DO: distinguish between note with or without n, otherwise pb with indexing. DONE 20.05.2025:)
     let $currentNode := $currentSection/id($node/@xml:id)
     let $label :=
         if ($currentNode/self::tei:note) then
@@ -501,6 +515,60 @@ declare function index:makeMarginalCiteID($node as element()) as xs:string {
             concat('lab', string(count($currentNode/preceding::tei:label[index:isMarginalNode(.)] intersect $currentSection//tei:label[index:isMarginalNode(.)]) + 1)) 
         else () 
     return  $label
+};
+
+declare function index:getNodeCategory($node as element()) as xs:string {
+    if (index:isMainNode($node)) then 'main'
+    else if (index:isMarginalNode($node)) then 'marginal'
+    else if (index:isStructuralNode($node)) then 'structural'
+    else if (index:isListNode($node)) then 'list'
+    else if (index:isPageNode($node)) then 'page'
+    else if (index:isAnchorNode($node)) then 'anchor'
+    else error()
+};
+
+declare function index:makeUrl($wid as xs:string, $targetNode as node(), $fragmentIds as map(*)) as xs:string {
+    let $targetNodeId := $targetNode/@xml:id/string()
+    let $viewerPage   :=      
+        if (substring($wid, 1, 2) eq 'W0') then
+            'work.html?wid='
+        else if (substring($wid, 1, 2) eq 'L0') then
+            'lemma.html?lid='
+        else if (substring($wid, 1, 2) eq 'A0') then
+            'author.html?aid='
+        else if (substring($wid, 1, 2) eq 'WP') then
+            'workingpaper.html?wpid='
+        else
+            'index.html?wid='
+    let $targetNodeHTMLAnchor :=    
+        if (contains($targetNodeId, '-pb-')) then
+            concat('pageNo_', $targetNodeId)
+        else $targetNodeId
+    let $frag := $fragmentIds($targetNodeId)
+(: Edit 2023-05-25 Andreas Wagner:
+   In the new infrastructure URLs are no longer like "work.html?wid=W0013&amp;frag=ae-fa-fwef-134#Vol01" ...
+   This is how it was before:
+      return concat($viewerPage, $targetWorkId, (if ($frag) then concat('&amp;frag=', $frag) else ()), '#', $targetNodeHTMLAnchor)
+:)
+    return concat($wid, "/html/", $frag, '.html#', $targetNodeHTMLAnchor)
+};
+
+(:
+~  Creates a teaser string of limited length (defined in $config:chars_summary) from a given node.
+~  @param mode: must be one of 'orig', 'edit' (default)
+:)
+declare function index:makeTeaserString($node as element(), $mode as xs:string?) as xs:string {
+    let $thisMode := if ($mode = 'edit') then $mode else 'orig'
+    let $string := normalize-space(string-join(txt:dispatch($node, $thisMode), ''))
+    return 
+        if (string-length($string) gt $config:chars_summary) then
+            concat('&#34;', normalize-space(substring($string, 1, $config:chars_summary)), '…', '&#34;')
+        else
+            concat('&#34;', $string, '&#34;')
+};
+
+declare function index:makeFragmentId($index as xs:integer, $xmlId as xs:string) as xs:string {
+    format-number($index, '00000') || '_' || $xmlId
 };
 
 
@@ -542,7 +610,8 @@ declare function index:isIndexNode($node as node()) as xs:boolean {
                 index:isMarginalNode($node) or
                 index:isAnchorNode($node) or
                 index:isPageNode($node) or
-                index:isListNode($node)
+                index:isListNode($node) 
+               
             )
         default return 
             false()
@@ -598,10 +667,8 @@ declare function index:isAnchorNode($node as node()) as xs:boolean {
 ~ (NOTE: should work with on-the-fly copying of sections. )
 :)
 declare function index:isPageNode($node as node()) as xs:boolean {
-    boolean(
-        $node/@xml:id and
-        $node/self::tei:pb[not(@sameAs or @corresp)]
-    )
+    $node/@xml:id and
+    $node/self::tei:pb[not(@sameAs or @corresp)]
 };
 
 (:
@@ -610,15 +677,14 @@ declare function index:isPageNode($node as node()) as xs:boolean {
 :)
 (: TODO: if this is changed, we also need to change txt:isMarginalNode() :)
 declare function index:isMarginalNode($node as node()) as xs:boolean {
-    boolean(
-        $node/@xml:id and
-        (
-            $node/self::tei:note[@place eq 'margin'] or
-            $node/self::tei:label[@place eq 'margin'] or 
-            $node/self::tei:ref
-        )
-        (:and not($node/ancestor::*[index:isMarginalNode(.)]):) (: that shouldn't be possible :)
+    $node/@xml:id and
+    (
+        $node/self::tei:note[@place eq 'margin'] or
+        $node/self::tei:label[@place eq 'margin'] or
+        $node/self::tei:ref or
+        $node/self::tei:p[ancestor::tei:note[@place eq 'margin']]
     )
+    (:and not($node/ancestor::*[index:isMarginalNode(.)]):) (: that shouldn't be possible :)
 };
 
 (:
@@ -669,7 +735,6 @@ declare function index:isListNode($node as node()) as xs:boolean {
     )
 };
 
-
 (:
 ~ Structural nodes are high-level nodes containing only other types of nodes (main, marginal, anchor nodes), not immediate text nodes.
 Line 584: [not(./(ancestor::tei:front || ancestor::tei:back))] added to resolve a HTML problem (#6459: <front> displayed twice)
@@ -687,16 +752,17 @@ declare function index:isStructuralNode($node as node()) as xs:boolean {
             $node/self::tei:argument[not(ancestor::tei:list)][./tei:p] or
             $node/self::tei:back or
             $node/self::tei:front or
-            $node/self::tei:text[@type eq 'work_volume']
+            $node/self::tei:text[@type eq 'work_volume'] or
+            $node/self::tei:note[@place eq 'margin'][./tei:p]
         )
     )
 };
 
 declare function index:isPotentialFragmentNode($node as node()) as xs:boolean {
-    not($node/ancestor::tei:front | $node/ancestor::tei:back) and
-    boolean($node[  self::tei:front |
-                    self::tei:back |
-                    self::tei:div |
+    not($node/ancestor::tei:front |            $node/ancestor::tei:back) and
+            boolean($node[  self::tei:front |
+ self::tei:back |
+            self::tei:div |
                     self::tei:head |
                     self::tei:p |
                     self::tei:list |
@@ -704,7 +770,7 @@ declare function index:isPotentialFragmentNode($node as node()) as xs:boolean {
                     self::tei:quote |
                     self::tei:argument |
                     (: $node/self::tei:argument[not($node/ancestor::tei:list)] | :)
-                    self::tei:text[@type = ('work_monograph', 'work_volume')]
+            self::tei:text[@type = ('work_monograph', 'work_volume')]
             ])
 };
 
@@ -723,72 +789,11 @@ declare function index:isBestDepth($node as node(), $fragmentationDepth as xs:in
     To be used for Sphinx snippets, for checking consistency etc.
 :)
 declare function index:isBasicNode($node as node()) as xs:boolean {
-    boolean(
-        index:isMainNode($node) or
-        index:isMarginalNode($node) or
-(: A.W. 2024-05-01: Add the following line, in order to enable indexing of p[parent:argument] and p[ancestor:list]:  :)
-        $node[self::tei:p][parent::tei:argument | ancestor::tei:list] or
-        $node[self::tei:item[not(./tei:p)] | self::tei:head | self::tei:argument[not(./tei:p)] ] 
-        (: (this is quite a complicated XPath, but I don't know how to simplify it without breaking things...) :)
-    )
-};
-
-
-declare function index:getNodeCategory($node as element()) as xs:string {
-    if (index:isMainNode($node)) then 'main'
-    else if (index:isMarginalNode($node)) then 'marginal'
-    else if (index:isStructuralNode($node)) then 'structural'
-    else if (index:isListNode($node)) then 'list'
-    else if (index:isPageNode($node)) then 'page'
-    else if (index:isAnchorNode($node)) then 'anchor'
-    else error()
-};
-
-
-declare function index:makeUrl($wid as xs:string, $targetNode as node(), $fragmentIds as map(*)) {
-    let $targetNodeId := $targetNode/@xml:id/string()
-    let $viewerPage   :=      
-        if (substring($wid, 1, 2) eq 'W0') then
-            'work.html?wid='
-        else if (substring($wid, 1, 2) eq 'L0') then
-            'lemma.html?lid='
-        else if (substring($wid, 1, 2) eq 'A0') then
-            'author.html?aid='
-        else if (substring($wid, 1, 2) eq 'WP') then
-            'workingpaper.html?wpid='
-        else
-            'index.html?wid='
-    let $targetNodeHTMLAnchor :=    
-        if (contains($targetNodeId, '-pb-')) then
-            concat('pageNo_', $targetNodeId)
-        else $targetNodeId
-    let $frag := $fragmentIds($targetNodeId)
-(: Edit 2023-05-25 Andreas Wagner:
-   In the new infrastructure URLs are no longer like "work.html?wid=W0013&amp;frag=ae-fa-fwef-134#Vol01" ...
-   This is how it was before:
-      return concat($viewerPage, $targetWorkId, (if ($frag) then concat('&amp;frag=', $frag) else ()), '#', $targetNodeHTMLAnchor)
-:)
-    return concat($wid, "/html/", $frag, '.html#', $targetNodeHTMLAnchor)
-};
-
-
-(:
-~  Creates a teaser string of limited length (defined in $config:chars_summary) from a given node.
-~  @param mode: must be one of 'orig', 'edit' (default)
-:)
-declare function index:makeTeaserString($node as element(), $mode as xs:string?) as xs:string {
-    let $thisMode := if ($mode = 'edit') then $mode else 'orig'
-    let $string := normalize-space(string-join(txt:dispatch($node, $thisMode), ''))
-    return 
-        if (string-length($string) gt $config:chars_summary) then
-            concat('&#34;', normalize-space(substring($string, 1, $config:chars_summary)), '…', '&#34;')
-        else
-            concat('&#34;', $string, '&#34;')
-};
-
-
-declare function index:makeFragmentId($index as xs:integer, $xmlId as xs:string) as xs:string {
-    format-number($index, '00000') || '_' || $xmlId
+    index:isMainNode($node) or
+    index:isMarginalNode($node) or
+    $node[self::tei:p][parent::tei:argument | ancestor::tei:list] or
+    $node[self::tei:item[not(./tei:p)] | self::tei:head | self::tei:argument[not(./tei:p)] ] 
+    (: (this is quite a complicated XPath, but I don't know how to simplify it without breaking things...) :)
 };
 
 
@@ -1319,10 +1324,10 @@ declare function index:p($node as element(tei:p), $mode as xs:string) {
             if (index:isLabelNode($node)) then
                 if (starts-with($node/ancestor::tei:TEI/@xml:id, 'L')) then
                     let $prefix := $config:citationLabels(local-name($node))?('abbr')
-                    let $pNumber := count($node/(preceding::tei:p | preceding::tei:list) intersect $node/ancestor::tei:text//*) + 1
+                let $pNumber := count($node/(preceding::tei:p | preceding::tei:list) intersect $node/ancestor::tei:text//*) + 1
                     let $teaser := '"' || normalize-space(substring(substring-after(index:p($node, 'title'), '"'),1,15)) || '…"'(: short teaser :)
-                    return $prefix || ' ' || $pNumber || ' (' || $teaser || ')'
-                else
+                return $prefix || ' ' || $pNumber || ' (' || $teaser || ')'
+            else
                     let $prefix := $config:citationLabels(local-name($node))?('abbr')
                     let $teaser := '"' || normalize-space(substring(substring-after(index:p($node, 'title'), '"'),1,15)) || '…"'(: short teaser :)
                     return $prefix || ' ' || $teaser
@@ -1349,7 +1354,9 @@ declare function index:pb($node as element(tei:pb), $mode as xs:string) {
                     (: not prepending 'Vol. ' prefix here :)
                     if (contains($node/@n, 'fol.')) then 
                         $node/@n
-                    else
+                    else if  (contains($node/@n, 'r')|| contains($node/@n, ']r') ||  ends-with($node/@n, 'v') and $node/@n[string-length(.) >1]  || contains($node/@n, ']v')) then
+ 'fol. ' || $node/@n
+else 
                         'p. ' || $node/@n
             )
         
@@ -1372,8 +1379,12 @@ declare function index:pb($node as element(tei:pb), $mode as xs:string) {
                 (ideally, such collisions should be resolved in TEI markup, but one never knows...) :)
         
         case 'label' return
-            if (contains($node/@n, 'fol.')) then $node/@n/string()
-            else 'p. ' || $node/@n/string()
+            if (contains($node/@n, 'fol.')) then 
+                        $node/@n
+                    else if  (contains($node/@n, 'r')|| contains($node/@n, ']r') ||  ends-with($node/@n, 'v') and $node/@n[string-length(.) >1]  || contains($node/@n, ']v')) then
+ 'fol. ' || $node/@n
+else 
+                        'p. ' || $node/@n
         
         (: pb nodes are good candidates for tracing the speed/performance of document processing, 
             since they are equally distributed throughout a document

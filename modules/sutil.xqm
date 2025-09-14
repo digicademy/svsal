@@ -61,16 +61,6 @@ declare function sutil:normalizeId($id as xs:string?) as xs:string? {
         else if (matches($id, '^[wW][pP]\d{4}$')) then upper-case($id)                              (: working papers :)
         else $id
 };
-(: replaced the following with the above for performance reasons on 2021-04-28 ...
-declare function sutil:normalizeId($id as xs:string?) as xs:string? {
-    if ($id) then
-        if      (matches($id, '^[wW]\d{4}(_[vV][oO][lL]\d{2})?$')) then translate($id, 'wvLO', 'WVlo')
-        else if (matches($id, '^[lLaAnN]\d{4}$')) then upper-case($id) (: lemma, author, news :)
-        else if (matches($id, '^[wW][pP]\d{4}$')) then upper-case($id)
-        else $id
-    else ()
-};
-:)
 
 (:
 ~ Strips combining diacritics for normalization purposes.
@@ -151,6 +141,7 @@ declare function sutil:WRKvalidateId($wid as xs:string?) as xs:integer {
 
 declare function sutil:WRKisPublished($wid as xs:string) as xs:boolean {
     let $workId := sutil:normalizeId($wid)
+ (:   let $debug := console:log('$workId: ' || $workId)  :)
     let $status :=  if (doc-available($config:tei-works-root || '/' || $workId || '.xml')) then 
                         doc($config:tei-works-root || '/' || $workId || '.xml')/tei:TEI/tei:teiHeader/tei:revisionDesc/@status/string()
                     else 'no_status'
@@ -206,7 +197,6 @@ declare function sutil:convertNumericVolumeID($volId as xs:string) as xs:string?
         return 'W' || $mainN || ':vol' || $volN
     else ()
 };
-
 
 declare function sutil:getNodeIndexValue($wid as xs:string, $node as element()) {
     if (doc-available($config:index-root || '/' || $wid || '.xml')) then
