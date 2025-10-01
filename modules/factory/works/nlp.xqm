@@ -5,7 +5,6 @@ module namespace nlp         = "https://www.salamanca.school/factory/works/nlp";
 declare namespace sal        = "http://salamanca.adwmainz.de";
 declare namespace tei        = "http://www.tei-c.org/ns/1.0";
 
-import module namespace console = "http://exist-db.org/xquery/console";
 import module namespace config  = "https://www.salamanca.school/xquery/config"       at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
 import module namespace sutil   = "https://www.salamanca.school/xquery/sutil"        at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
 import module namespace txt     = "https://www.salamanca.school/factory/works/txt"   at "txt.xqm";
