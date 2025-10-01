@@ -64,8 +64,8 @@ declare function nlp:createCSV($textnodes as node()*, $mode as xs:string?, $lang
         let $text-content := translate(normalize-space(string-join(txt:dispatch($t, $mode), ' ')), '"', "'")
         return if ($lang = '*' or $lang = $plang) then                        
             let $report := if ($config:debug = ("trace")) then 
-                             let $debug := console:log("[NLP] *[xml:id='" || string($t/@xml:id) || "'] - " || string-join(distinct-values(for $e in $t/* return local-name($e)), ', ') || ": " || serialize($t))
-                             let $debug := console:log("[NLP] txt:dispatch($t, $mode): " || $text-content)
+                             let $debug := trace("[NLP] *[xml:id='" || string($t/@xml:id) || "'] - " || string-join(distinct-values(for $e in $t/* return local-name($e)), ', ') || ": " || serialize($t), "[NLP]")
+                             let $debug := trace("[NLP] txt:dispatch($t, $mode): " || $text-content, "[NLP]")
                              return ()
                             else ()
             
