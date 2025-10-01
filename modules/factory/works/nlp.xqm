@@ -5,7 +5,6 @@ module namespace nlp         = "https://www.salamanca.school/factory/works/nlp";
 declare namespace sal        = "http://salamanca.adwmainz.de";
 declare namespace tei        = "http://www.tei-c.org/ns/1.0";
 
-import module namespace console = "http://exist-db.org/xquery/console";
 import module namespace config  = "https://www.salamanca.school/xquery/config"       at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
 import module namespace sutil   = "https://www.salamanca.school/xquery/sutil"        at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
 import module namespace txt     = "https://www.salamanca.school/factory/works/txt"   at "txt.xqm";
@@ -65,8 +64,8 @@ declare function nlp:createCSV($textnodes as node()*, $mode as xs:string?, $lang
         let $text-content := translate(normalize-space(string-join(txt:dispatch($t, $mode), ' ')), '"', "'")
         return if ($lang = '*' or $lang = $plang) then                        
             let $report := if ($config:debug = ("trace")) then 
-                             let $debug := console:log("[NLP] *[xml:id='" || string($t/@xml:id) || "'] - " || string-join(distinct-values(for $e in $t/* return local-name($e)), ', ') || ": " || serialize($t))
-                             let $debug := console:log("[NLP] txt:dispatch($t, $mode): " || $text-content)
+                             let $debug := trace("[NLP] *[xml:id='" || string($t/@xml:id) || "'] - " || string-join(distinct-values(for $e in $t/* return local-name($e)), ', ') || ": " || serialize($t), "[NLP]")
+                             let $debug := trace("[NLP] txt:dispatch($t, $mode): " || $text-content, "[NLP]")
                              return ()
                             else ()
             
