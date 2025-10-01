@@ -12,11 +12,7 @@ module namespace txt               = "https://www.salamanca.school/factory/works
 declare namespace tei              = "http://www.tei-c.org/ns/1.0";
 declare namespace sal              = "http://salamanca.adwmainz.de";
 
-declare namespace exist            = "http://exist.sourceforge.net/NS/exist";
 declare namespace output           = "http://www.w3.org/2010/xslt-xquery-serialization";
-declare namespace util             = "http://exist-db.org/xquery/util";
-
-import module namespace console    = "http://exist-db.org/xquery/console";
 
 import module namespace config     = "https://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
 import module namespace sutil      = "https://www.salamanca.school/xquery/sutil"  at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
@@ -31,10 +27,9 @@ import module namespace sutil      = "https://www.salamanca.school/xquery/sutil"
 ~ @param $mode : select the diplomatic transcription ("orig") or the constituted text ("edit", default)
 :)
 declare function txt:makeTXTData($tei as element(tei:TEI), $mode as xs:string) as xs:string? {
-    let $work := util:expand($tei)
     let $procmode := if ($mode ne "orig") then "edit" else "orig"
     return
-        string-join(txt:dispatch($work, $procmode), '')
+        string-join(txt:dispatch($tei, $procmode), '')
 };
 
 
@@ -493,7 +488,7 @@ declare function txt:pb($node as element(tei:pb), $mode as xs:string) as xs:stri
         (: pb nodes are good candidates for tracing the speed/performance of document processing, 
             since they are equally distributed throughout a document :)
         case 'debug' return
-            let $debug := util:log('info', '[RENDER] Processing tei:pb node ' || $node/@xml:id)
+            let $debug := trace($node/@xml:id, '[RENDER] Processing tei:pb node')
             return ''
         
         default return ' '

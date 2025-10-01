@@ -15,12 +15,9 @@ declare namespace tei     = "http://www.tei-c.org/ns/1.0";
 declare namespace sal     = "http://salamanca.adwmainz.de";
 declare namespace admin   = "https://www.salamanca.school/xquery/admin";
 
-declare namespace exist   = "http://exist.sourceforge.net/NS/exist";
 declare namespace map     = "http://www.w3.org/2005/xpath-functions/map";
-declare namespace util    = "http://exist-db.org/xquery/util";
 declare namespace xi      = "http://www.w3.org/2001/XInclude";
 
-import module namespace console = "http://exist-db.org/xquery/console";
 import module namespace functx  = "http://www.functx.com";
 
 import module namespace config = "https://www.salamanca.school/xquery/config"      at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
@@ -29,8 +26,11 @@ import module namespace txt    = "https://www.salamanca.school/factory/works/txt
 
 (: SETTINGS :)
 
-declare option exist:timeout "166400000"; (: in miliseconds, 25.000.000 ~ 7h, 43.000.000 ~ 12h :)
-declare option exist:output-size-limit "5000000"; (: max number of nodes in memory :)
+(: Note: The following eXist-db specific options have been removed for portability:
+   - exist:timeout
+   - exist:output-size-limit
+   These settings should be configured at the XQuery processor level instead.
+:)
 
 declare variable $index:citeIDConnector := '.';
 declare variable $index:labelConnector := ' ';
