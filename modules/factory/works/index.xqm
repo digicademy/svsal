@@ -34,7 +34,7 @@ declare option exist:output-size-limit "5000000"; (: max number of nodes in memo
 
 declare variable $index:citeIDConnector := '.';
 declare variable $index:labelConnector := ' ';
-(: declare variable $index:crumbtrailConnector := ' » '; :)
+declare variable $index:crumbtrailConnector := ' » ';
 
 
 (: NODE INDEX functions :)
@@ -75,6 +75,7 @@ declare function index:makeNodeIndex($tei as element(tei:TEI)) as map(*) {
     (: Create the fragment id for each node beforehand, so that recursive crumbtrail creation has it readily available :)
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[INDEX] Node indexing: Found " || count($nodes) || " nodes to process.") else ()
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[INDEX] Node indexing: Identifying fragment ids ...") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log(concat('Number of tei:ref to be indexed: ', count($work//tei:text[@type = ('work_volume', 'work_monograph', 'lemma_article')]//tei:body//tei:ref[index:isIndexNode(.)]))) else()
     let $fragmentIds :=
         map:merge(
             for $node at $pos in $nodes
@@ -83,6 +84,7 @@ declare function index:makeNodeIndex($tei as element(tei:TEI)) as map(*) {
                                 else ()
                 let $n := $node/@xml:id/string()
                 let $frag := (($node/ancestor-or-self::* | $node//tei:*[not(preceding-sibling::*)]) intersect $target-set)[1]
+   
                 let $err  := if ((count($frag/@xml:id) eq 0) or ($frag/@xml:id eq "")) then
                     let $debug := if ($config:debug = ("trace", "info")) then
                                      console:log("[INDEX] Node indexing: Could not find $frag for $node '" || $n || "'. Target set was: [" || string-join(fn:for-each($target-set, function ($k) {concat($k/local-name(), ':', $k/@xml:id)}), ', ') || "]. Aborting.")
@@ -95,6 +97,7 @@ declare function index:makeNodeIndex($tei as element(tei:TEI)) as map(*) {
         )
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[INDEX] Node indexing: Extracted " || count($fragmentIds) || " fragment ids.") else ()
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[INDEX] Node indexing: Creating index file ...") else ()
+ 
 
     (: node indexing has 2 stages: :)
     (: 1.) extract nested sal:nodes with rudimentary information :)
@@ -275,6 +278,7 @@ declare function index:createIndexNodes($wid as xs:string, $input as element(sal
     return
     for $node at $pos in $input//sal:node return
         let $debug := if ($pos mod 500 eq 0 and $config:debug = ("info", "trace")) then console:log('[INDEX] Processing sal:node ' || $pos || ' of ' || $numberOfNodes || '.') else ()
+
         let $log   := if ($pos mod 500 eq 0 and $config:debug = ("info", "trace")) then util:log('info', '[INDEX] Processing sal:node ' || $pos || ' of ' || $numberOfNodes || '.') else ()
 
         let $citeID     := index:constructCiteID($node)
@@ -282,9 +286,10 @@ declare function index:createIndexNodes($wid as xs:string, $input as element(sal
         (: 
             Ideally, we woult want the crumbtrail to consist of PID-style links, but the citeID is being created only
             in this phase. And we want to utilize the link hierarchy created in the previous phase.
-            Maybe we should do the crumtrail creation in the sphinx export after all? But there we don't have the hierarchy either...
+            Maybe we should do the crumbtrail creation in the sphinx export after all? But there we don't have the hierarchy either...
         :)
-        let $crumbtrail := encode-for-uri(string-join(for $link in $node/ancestor-or-self::sal:node/sal:link/* return serialize($link), ' ⨠ '))
+        (: let $crumbtrail := encode-for-uri(string-join(for $link in $node/ancestor-or-self::sal:node/sal:link/* return serialize($link), ' ⨠ ')) :)
+        let $crumbtrail := encode-for-uri(string-join(for $a in index:constructCrumbtrail($node, $wid, $citeID) return serialize($a), $index:crumbtrailConnector))
         let $returnvalue := element sal:node {
                     attribute n             {$node/@xml:id/string()},
                     (: copy some attributes from the previous node :)
@@ -423,9 +428,10 @@ declare function index:qualityCheck($index as element(sal:index),
 (: LABELS, CiteID, CRUMBTRAILS (-- deep recursion) :)
 
 declare function index:constructCiteID($node as element(sal:node)) as xs:string {
+    let $parent := $node/sal:citableParent/text()
     let $prefix := 
-        if ($node/sal:citableParent/text()) then
-            index:constructCiteID($node/root()/id($node/sal:citableParent/text()) intersect $node/ancestor::sal:node)
+        if ($parent) then
+            index:constructCiteID($node/root()/id($parent) intersect $node/ancestor::sal:node)
         else ()
     let $this := 
         if ($node/sal:cit) then
@@ -436,15 +442,19 @@ declare function index:constructCiteID($node as element(sal:node)) as xs:string 
         if ($prefix and $this) then $prefix || $index:citeIDConnector || $this else $this
 };
 
-(:declare function index:constructCrumbtrail($wid as xs:string, $citeID as xs:string, $node as element(sal:node)) as item()+ {
-    let $prefix := 
-        if ($node/sal:citableParent/text() and $node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()]) then
-            index:constructCrumbtrail($wid, index:constructCiteID($node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()]), $node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()])
+declare function index:constructCrumbtrail($node as element(sal:node), $wid as xs:string, $citeID as xs:string) as item()+ {
+    let $parent := $node/sal:citableParent/text()
+    let $ancestorLinks := 
+        (: if ($node/sal:citableParent/text() and $node/ancestor::sal:node[@xml:id eq $node/sal:citableParent/text()]) then :)
+        if ($parent) then
+            let $newCiteID := functx:substring-before-last($citeID, $index:citeIDConnector)
+            return index:constructCrumbtrail($node/root()/id($parent) intersect $node/ancestor::sal:node, $wid, $newCiteID)
         else ()
-    let $this := if ($citeID) then <a href="{$config:idserver || '/texts/' || $wid || ':' || $citeID}">{$node/sal:title/text()}</a> else $node/sal:crumb/*
+    let $this := <a href="{$config:idserver || '/texts/' || $wid || ':' || $citeID}">{$node/sal:title/text()}</a>
     return
-        if ($prefix and $this) then ($prefix, $index:crumbtrailConnector, $this) else $this
-}; :)
+        (: if ($ancestorLinks and $this) then ($ancestorLinks, $index:crumbtrailConnector, $this) else $this :)
+        ($ancestorLinks, $this)
+};
 
 declare function index:constructLabel($node as element(sal:node)) as xs:string? {
     let $prefix :=
@@ -555,11 +565,11 @@ declare function index:makeUrl($wid as xs:string, $targetNode as node(), $fragme
 
 (:
 ~  Creates a teaser string of limited length (defined in $config:chars_summary) from a given node.
-~  @param mode: must be one of 'orig', 'edit' (default)
 :)
 declare function index:makeTeaserString($node as element(), $mode as xs:string?) as xs:string {
-    let $thisMode := if ($mode = 'edit') then $mode else 'orig'
-    let $string := normalize-space(string-join(txt:dispatch($node, $thisMode), ''))
+    (: let $thisMode := if ($mode = 'edit') then $mode else 'orig' :)
+    (: let $string := normalize-space(string-join(txt:dispatch($node, $thisMode), '')) :)
+    let $string := normalize-space(string-join(txt:dispatch($node, 'clean'), ''))
     return 
         if (string-length($string) gt $config:chars_summary) then
             concat('&#34;', normalize-space(substring($string, 1, $config:chars_summary)), '…', '&#34;')
@@ -684,7 +694,7 @@ declare function index:isMarginalNode($node as node()) as xs:boolean {
         $node/self::tei:ref or
         $node/self::tei:p[ancestor::tei:note[@place eq 'margin']]
     )
-    (:and not($node/ancestor::*[index:isMarginalNode(.)]):) (: that shouldn't be possible :)
+
 };
 
 (:

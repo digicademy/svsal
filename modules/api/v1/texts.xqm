@@ -90,7 +90,7 @@ declare
 %rest:header-param("X-Forwarded-Host", "{$host}", "")
 %output:indent("no")
 function textsv1:textsResource1($rid, $format, $mode, $q, $lang, $viewer, $frag, $canvas, $accept, $host) {
-    let $debug1 := if ($config:debug = ("trace")) then console:log("texts.xqm (api v1) requested: " || $rid || " (format: " || $format || ", mode: " || $mode || ")") else ()
+   (:  : let $debug1 := if ($config:debug = ("trace")) then console:log("texts.xqm (api v1) requested: " || $rid || " (format: " || $format || ", mode: " || $mode || ")") else () :)
     (: for determining the requested format, the "format" query param has priority over the "Accept" header param: :)
     let $format := if ($format) then $format else api:getFormatFromContentTypes(tokenize($accept, '[, ]+'), 'text/html')
     return

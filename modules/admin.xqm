@@ -1826,7 +1826,8 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
                     'There is no xml:id in the ' || $hit_type || ' hit!'
             
             (: Now build a sphinx "row" for the fragment :)
-            let $sphinx_id    := xs:long(substring($work_id, functx:index-of-string-first($work_id, "0"))) * 1000000 + ( (string-to-codepoints(substring($work_id, 1, 1)) + string-to-codepoints(substring($work_id, 2, 1))) * 10000 ) + $index
+            (: let $sphinx_id    := xs:long(substring($work_id, functx:index-of-string-first($work_id, "0"))) * 1000000 + ( (string-to-codepoints(substring($work_id, 1, 1)) + string-to-codepoints(substring($work_id, 2, 1))) * 10000 ) + $index :)
+            let $sphinx_id    := xs:long(substring($work_id, 2)) * 100000000 + $index
             let $html_snippet :=
                 <sphinx:document id="{$sphinx_id}">
                     <div>
@@ -2262,46 +2263,51 @@ declare function admin:createRoutes($wid as xs:string) {
 };
 
 declare function admin:buildRoutingInfoNode($wid as xs:string, $item as element(sal:node), $crumbtrails as element(sal:crumb)) {
-    let $textTypePath := if (starts-with($wid, 'W')) then '/texts/' else if (starts-with($wid, 'L')) then '/lemmata/' else ''
-(: Changed to improve performance on 2025-03-24, A.W.                               :)
-(:  let $crumb := if (fn:contains($crumbtrails//sal:nodecrumb[@xml:id eq $item/@n]//a[last()]/@href/string(), "/data/")) then substring-after($crumbtrails//sal:nodecrumb[@xml:id eq $item/@n]//a[last()]/@href/string(), "/data/") else ( $crumbtrails//sal:nodecrumb[@xml:id eq $item/@n]//a[last()]/@href/string()):)
-    let $crumb := if (fn:contains($crumbtrails/id($item/@n)//a[last()]/@href/string(), "/data/")) then
-                      substring-after($crumbtrails/id($item/@n)//a[last()]/@href/string(), "/data/")
-                  else
-                      ( $crumbtrails/id($item/@n)//a[last()]/@href/string())
-    let $filepath := tokenize($crumb, '#')[1]
-    let $fragmentHash := tokenize($crumb, '#')[2]
-    let $hash := if (string-length($fragmentHash) gt 0) then '#' || $fragmentHash else ''
-
+    let $textTypePath := if (starts-with($wid, 'W')) then
+                            '/texts/'
+                         else if (starts-with($wid, 'L')) then
+                            '/lemmata/'
+                         else
+                            ''
+    let $filepath := $wid || "/html/" || $item/@fragment/string() || ".html"
+    let $hash := "#" || $item/@n/string()
     let $value := map {
                     "input" :   concat($textTypePath, $wid, ":", $item/@citeID/string()),
                     "outputs" : array { ( $filepath, $hash ) }
                   }
-(:    let $debug := console:log("[ADMIN] routing entry: " || serialize($value, map{"method":"json"}) || "."):)
     return $value
 };
 
 declare function admin:buildRoutingInfoWork($resourceId as xs:string, $crumbtrails as element(sal:crumb)*) {
-    let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
-                                    if (doc-available(concat($subcollection, '/', $resourceId, '.xml'))) then $subcollection
+    let $targetSubcollection := for $subcollection in $config:tei-sub-roots return
+                                    if (doc-available(concat($subcollection, '/', $resourceId, '.xml'))) then
+                                        $subcollection
                                     else ()
     let $text_type :=      if (starts-with($resourceId, "L0")) then "lemmata"
                       else if (starts-with($resourceId, "WP0")) then "workingpapers"
                       else "texts"
-    let $firstCrumb  := if (($crumbtrails//a[1])[1]/@href) then 
-                          ( if(fn:contains(($crumbtrails//a[1])[1]/@href/string(), "/data")) then( substring-after(($crumbtrails//a[1])[1]/@href/string(), '/data/')) else (($crumbtrails//a[1])[1]/@href/string()))
-                        else if ($text_type eq 'workingpapers') then
-                            tokenize($resourceId, '_')[1] || '/html/' || $resourceId || '_details.html'
-                        else if ($text_type eq 'lemma_article') then
-                            tokenize($resourceId, '_')[1] || '/html/00001_completeWork.html'
-else  if (contains($resourceId, ':')) then
+    let $anchor :=  if ($text_type eq 'texts') then
+                            let $index := if (doc-available($config:index-root || "/" || $resourceId || "_nodeIndex.xml")) then
+                                            doc($config:index-root || "/" || $resourceId || "_nodeIndex.xml")/sal:index
+                                          else ()
+                            return
+                                if ($index) then
+                                    $index/sal:node[1]/@fragment/string() || "#" || $index/sal:node[1]/@n/string()
+                                else
+                                    let $debug := console:log("Error in admin:buildRoutingInfoWork: Could not find index for work " || $resourceId || ".")
+                                    return ()
+                    else if ($text_type eq 'workingpapers') then
+                        tokenize($resourceId, '_')[1] || '/html/' || $resourceId || '_details.html'
+                    else if ($text_type eq 'lemma_article') then
+                        tokenize($resourceId, '_')[1] || '/html/00001_completeWork.html'
+                    else  if (contains($resourceId, ':')) then
                         let $id := tokenize($resourceId, ':')[1]
                         return concat( $id, '/html/', $id, '_Vol', format-integer(xs:int(substring-after(tokenize($resourceId, ':')[2], 'vol')), '00'), '_details.html')
-                        else
-                            tokenize($resourceId, '_')[1] || '/html/' || $resourceId || '_details.html'
-                      
-    let $filepath := tokenize($firstCrumb, '#')[1]
-    let $fragmentHash := tokenize($firstCrumb, '#')[2]
+                    else
+                        tokenize($resourceId, '_')[1] || '/html/' || $resourceId || '_details.html'
+
+    let $filepath := tokenize($anchor, '#')[1]
+    let $fragmentHash := tokenize($anchor, '#')[2]
     let $hash := if (string-length($fragmentHash) gt 0) then '#' || $fragmentHash else ''
 
     let $value := array {
@@ -2311,7 +2317,6 @@ else  if (contains($resourceId, ':')) then
                                   }
                             )
                         }
-(:    let $debug := console:log("[ADMIN] routing entry: " || serialize($value, map{"method":"json"}) || "."):)
     return $value
 };
 
