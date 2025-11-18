@@ -64,7 +64,7 @@ RUN echo ${SVN_PASS} | git svn clone --username ${SVN_USER} ${APP1_REPO} \
 
 ARG APP2_NAME=svsal
 ARG APP2_REPO=https://github.com/digicademy/svsal.git
-ARG APP2_TAG_OR_BRANCH=refactoring/2022
+ARG APP2_TAG_OR_BRANCH=main
 
 # Build the app
 RUN  git clone -b ${APP2_TAG_OR_BRANCH} --single-branch ${APP2_REPO} \
