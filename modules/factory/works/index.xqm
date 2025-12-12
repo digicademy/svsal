@@ -213,8 +213,8 @@ declare function index:extractNodeStructure($wid as xs:string,
             case element() return
                 let $children := $node/*
                 let $dbg := if ($node/self::tei:pb and count($node/preceding::tei:pb) mod 250 eq 0 and $config:debug = ("info", "trace")) then
-                                  let $log := util:log('info', '[INDEX] Processing tei:pb node ' || $node/@n)
-                                  return console:log('[INDEX] Processing tei:pb ' || $node/@n || ' ...')
+                                  let $log := util:log('info', '[INDEX] Processing tei:pb node ' || $node/@n || ' (' || $node/@xml:id || ').')
+                                  return console:log('[INDEX] Processing tei:pb ' || $node/@n || ' (' || $node/@xml:id || ').')
                             else ()
                 let $dbg := if (contains($node/@xml:id, 'W0116-00-0526-pa')) then console:log('[INDEX] DEBUG: processing (1) node ' || string($node/@xml:id) || ' ...') else ()
                 let $returnvalue :=
@@ -277,9 +277,9 @@ declare function index:createIndexNodes($wid as xs:string, $input as element(sal
     let $numberOfNodes := count($input//sal:node)
     return
     for $node at $pos in $input//sal:node return
-        let $debug := if ($pos mod 500 eq 0 and $config:debug = ("info", "trace")) then console:log('[INDEX] Processing sal:node ' || $pos || ' of ' || $numberOfNodes || '.') else ()
+        let $debug := if ($pos mod 500 eq 0 and $config:debug = ("info", "trace")) then console:log('[INDEX] (' || $wid || ') Processing sal:node ' || $pos || ' of ' || $numberOfNodes || '.') else ()
 
-        let $log   := if ($pos mod 500 eq 0 and $config:debug = ("info", "trace")) then util:log('info', '[INDEX] Processing sal:node ' || $pos || ' of ' || $numberOfNodes || '.') else ()
+        let $log   := if ($pos mod 500 eq 0 and $config:debug = ("info", "trace")) then util:log('info', '[INDEX] (' || $wid || ') Processing sal:node ' || $pos || ' of ' || $numberOfNodes || '.') else ()
 
         let $citeID     := index:constructCiteID($node)
         let $label      := index:constructLabel($node)
@@ -495,35 +495,83 @@ declare function index:getCitableParent($node as node()) as node()? {
     else $node/ancestor::*[index:isIndexNode(.)][1]
 };
 
-(: Marginal citeID: "nX" where X is the anchor used (if it is alphanumeric) and "nXY" where Y is the number of times that X occurs inside the current div
-    (important: nodes are citeID children of div (not of p) and are counted as such) :)
+(: Make another attempt due to issues with note counting in W0004, 2025-11-21, A.W.:
+ : The idea is the following:
+ : - "nX"   where X is the anchor used (if it is alphanumeric and occurs only once)
+ :          (allow notes that are alphanumeric plus "[" and "]" to be handled, too)
+ :          (but, for the time being, don't allow spaces in this route)
+ : - "nX_Y" (if it is alphanumeric and occurs multiple times in the current div)
+ :          where Y-1 is the number of times that a note with anchor X occurs
+ :          before the current note inside the current div
+ : - "n_Y"  where there is no anchor or the anchor contains "complex" characters
+ :          and where Y is a number, with Y-1 specifying the number of times that
+ :          a note without anchor or with an anchor containing "complex" characters
+ :          appears in the current div before the current note
+ : (important: notes counted based on the ancestor div, not p !! :)
 declare function index:makeMarginalCiteID($node as element()) as xs:string {
-    let $currentSection := sutil:copy(index:getCitableParent($node))
-(: Changed to improve performance on 2025-03-24, A.W.                               :)
-(:  let $currentNode := $currentSection//*[@xml:id eq $node/@xml:id]:)
-
-(:TO DO: distinguish between note with or without n, otherwise pb with indexing. DONE 20.05.2025:)
+    let $currentSection := sutil:copy($node/ancestor::tei:div[1])
     let $currentNode := $currentSection/id($node/@xml:id)
     let $label :=
         if ($currentNode/self::tei:note) then
         
-          if (matches($currentNode/@n, '^[A-Za-z0-9\[\]]+$')) then
-            if (count($currentSection//tei:note[index:isMarginalNode(.) and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))]) gt 1) then
-                concat(
-                    upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', '')),
-                    concat('n_n', string(
-                        count($currentSection//tei:note[index:isMarginalNode(.) and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))]
-                              intersect $currentNode/preceding::tei:note[index:isMarginalNode(.) and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))])
-                        + 1))
-                )
-            else upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))
-        else concat('n_un', string(count($currentNode/preceding::tei:note[not(@n) and index:isMarginalNode(.) ] intersect $currentSection//tei:note[not(@n) and index:isMarginalNode(.)]) + 1))
-        
+            (: Check if we have a note the anchor of which we can use for citeID :)
+            if (matches($currentNode/@n, '^[A-Za-z0-9\[\]]+$')) then
+                (: Check if the anchor occurs only once in the current div :)
+                if (count($currentSection//tei:note[index:isMarginalNode(.)
+                                                    and
+                                                        upper-case(replace(@n, '[^a-zA-Z0-9]', ''))
+                                                        eq
+                                                        upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))
+                                                    ])
+                        eq 1
+                ) then
+                    concat('n', upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', '')))
+
+                (: The anchor occurs several times :)
+                else
+                    concat(
+                        upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', '')),
+                        concat('n', upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', '')), '_', string(
+                            count(
+                                $currentSection//tei:note[index:isMarginalNode(.)
+                                                            and
+                                                                upper-case(replace(@n, '[^a-zA-Z0-9]', ''))
+                                                                eq
+                                                                upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))
+                                                            ]
+                                intersect
+                                $currentNode/preceding::tei:note[index:isMarginalNode(.)
+                                                                   and
+                                                                       upper-case(replace(@n, '[^a-zA-Z0-9]', ''))
+                                                                       eq
+                                                                       upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))
+                                                                ]
+                            ) + 1)
+                        )
+                    )
+
+            (: We have a note without usable anchor :)
+            else concat('n_', string(
+                        count($currentNode/preceding::tei:note[index:isMarginalNode(.)
+                                                               and
+                                                               not(matches(./@n, '^[A-Za-z0-9\[\]]+$'))
+                                                              ]
+                              intersect
+                              $currentSection//tei:note[index:isMarginalNode(.)
+                                                        and
+                                                        not(matches(./@n, '^[A-Za-z0-9\[\]]+$'))
+                                                       ]
+                             ) + 1 )
+                       )
+
        else if($currentNode/self::tei:ref) then
             concat('ref', string(count($currentNode/preceding::tei:ref[index:isMarginalNode(.)] intersect $currentSection//tei:ref[index:isMarginalNode(.)]) + 1))
-            else if ($currentNode/self::tei:label) then
+
+        else if ($currentNode/self::tei:label) then
             concat('lab', string(count($currentNode/preceding::tei:label[index:isMarginalNode(.)] intersect $currentSection//tei:label[index:isMarginalNode(.)]) + 1)) 
-        else () 
+
+        else ()
+
     return  $label
 };
 
@@ -1243,13 +1291,13 @@ declare function index:note($node as element(tei:note), $mode as xs:string) {
                         return '"' || normalize-space($currentNode/@n) || '"' || $noteNumber
                     else string(count($currentNode/preceding::tei:note intersect $currentSection//tei:note) + 1)
             )
-        
+
         case 'class' return
             'tei-' || local-name($node)
-        
+
         case 'citeID' return
             index:makeMarginalCiteID($node)
-        
+
         case 'label' return
             if (index:isLabelNode($node)) then
                 (: label parents of note are div, not p :)
@@ -1265,7 +1313,7 @@ declare function index:note($node as element(tei:note), $mode as xs:string) {
                                       intersect $currentNode/preceding::tei:note) + 1)
                 return $prefix || ' ' || $label
             else ()
-        
+
         default return
             ()
 };

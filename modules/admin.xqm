@@ -2187,11 +2187,10 @@ declare function admin:createRoutes($wid as xs:string) {
     let $start-time := util:system-time()
     let $debug := console:log("[ADMIN] Routing: Creating routing for " || $wid || " ...")
     let $index                  := if (doc-available($config:index-root || "/" || $wid || "_nodeIndex.xml")) then doc($config:index-root || "/" || $wid || "_nodeIndex.xml")/sal:index else ()
-    let $crumbtrails            := if (doc-available($config:crumb-root || "/" || $wid || "_crumbtrails.xml")) then doc($config:crumb-root || "/" || $wid || "_crumbtrails.xml")/sal:crumb else ()
-    let $routingWork            := admin:buildRoutingInfoWork($wid, $crumbtrails)
+    let $routingWork            := admin:buildRoutingInfoWork($wid)
     let $routingWorkDetails     := array{ admin:buildRoutingInfoDetails($wid) }
     let $routingNodes           := if ($index) then
-                                        array{fn:for-each($index//sal:node, function($k) {admin:buildRoutingInfoNode($wid, $k, $crumbtrails)} )}
+                                        array{fn:for-each($index//sal:node, function($k) {admin:buildRoutingInfoNode($wid, $k)} )}
                                    else ()
     let $routingVolumeDetails   := if ($index) then
                                         array{fn:for-each($index//sal:node[@subtype = "work_volume"], function($k) {admin:buildRoutingInfoDetails($wid || ':' || $k/@citeID)} )}
@@ -2262,7 +2261,7 @@ declare function admin:createRoutes($wid as xs:string) {
         </div>
 };
 
-declare function admin:buildRoutingInfoNode($wid as xs:string, $item as element(sal:node), $crumbtrails as element(sal:crumb)) {
+declare function admin:buildRoutingInfoNode($wid as xs:string, $item as element(sal:node)) {
     let $textTypePath := if (starts-with($wid, 'W')) then
                             '/texts/'
                          else if (starts-with($wid, 'L')) then
@@ -2278,7 +2277,7 @@ declare function admin:buildRoutingInfoNode($wid as xs:string, $item as element(
     return $value
 };
 
-declare function admin:buildRoutingInfoWork($resourceId as xs:string, $crumbtrails as element(sal:crumb)*) {
+declare function admin:buildRoutingInfoWork($resourceId as xs:string) {
     let $targetSubcollection := for $subcollection in $config:tei-sub-roots return
                                     if (doc-available(concat($subcollection, '/', $resourceId, '.xml'))) then
                                         $subcollection
@@ -2292,10 +2291,11 @@ declare function admin:buildRoutingInfoWork($resourceId as xs:string, $crumbtrai
                                           else ()
                             return
                                 if ($index) then
-                                    $index/sal:node[1]/@fragment/string() || "#" || $index/sal:node[1]/@n/string()
+                                    tokenize($resourceId, '_')[1] || '/html/' || $index/sal:node[1]/@fragment/string() || ".html#" || $index/sal:node[1]/@n/string()
                                 else
-                                    let $debug := console:log("Error in admin:buildRoutingInfoWork: Could not find index for work " || $resourceId || ".")
-                                    return ()
+                                    let $debug := console:log("[ADMIN] admin:buildRoutingInfoWork: No index for work " || $resourceId || ". Possibly the work is only available as image facsimiles. We let work id resolve to catalogue view.")
+                                    let $log := util:log("warn", "[ADMIN] admin:buildRoutingInfoWork: No index for work " || $resourceId || ". Possibly the work is only available as image facsimiles. We let work id resolve to catalogue view.")
+                                    return tokenize($resourceId, '_')[1] || '/html/' || $resourceId || '_details.html'
                     else if ($text_type eq 'workingpapers') then
                         tokenize($resourceId, '_')[1] || '/html/' || $resourceId || '_details.html'
                     else if ($text_type eq 'lemma_article') then
