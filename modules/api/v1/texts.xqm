@@ -440,7 +440,7 @@ declare function textsv1:validateResourceId($rid as xs:string?) as map(*) {
             $valMap
     
     let $debug := 
-        if ($config:debug = ('trace', 'info')) then 
+        if ($config:debug = 'trace') then 
             util:log('info', '[TEXTSAPI] validation results: ' || serialize($valMap, $api:jsonOutputParams))
         else ()
         
