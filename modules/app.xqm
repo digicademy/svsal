@@ -329,8 +329,9 @@ declare function app:WRKfinalFacets ($node as node(), $model as map (*), $lang a
                                            'c_hyph_proposed',
                                            'd_hyph_approved',
                                            'e_emended_unenriched',
-                                           'f_enriched',
-                                           
+                                           'f_enriched', 
+                                           'g_enriched_approved',
+                                           'h_revised'
                                          )) then "yes"
                 else "no"
             let $wrkLink        :=  $config:idserver || '/texts/' || $wid

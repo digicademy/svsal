@@ -306,12 +306,18 @@ declare
 %rest:query-param("frag", "{$frag}", "")
 %rest:query-param("canvas", "{$canvas}", "")
 %rest:header-param("X-Forwarded-Host", "{$host}", "id.salamanca.school")
+%rest:header-param("X-Forwarded-For", "{$remote_ip}", "")
 %rest:header-param("Accept", "{$accept}", "text/html")
 %output:indent("no")
-function api:redirectTextsResource1($rid, $host, $accept, $format, $mode, $q, $lang, $viewer, $frag, $canvas) {
+function api:redirectTextsResource1($rid, $host, $remote_ip, $accept, $format, $mode, $q, $lang, $viewer, $frag, $canvas) {
     let $format := if ($format) then $format else api:getFormatFromContentTypes(tokenize($accept, '[, ]+'), 'text/html')
     let $paramStr := api:concatDocQueryParams($format, $mode, $q, $lang, $viewer, $frag, $canvas)
-    let $debug1 := if ($config:debug = ("trace")) then console:log("api.xqm (unversioned api) requested: " || $host || ", " || $rid || ".") else ()
+    let $log := if ($config:debug = ('info', 'trace')) then 
+                util:log('info', '[API] (unversioned) Request: id: "texts/' || $rid || '" ; remote_ip: "' || $remote_ip || '" ; format: "' || $format || '".')
+            else ()
+    let $debug1 := if ($config:debug = ("info", "trace")) then
+                console:log("[API] api.xqm (unversioned api) requested: " || $host || ", " || $rid || ".")
+            else ()
     return
         api:redirect-with-303($api:proto || 'api.' || api:getDomain($host) || '/' || $config:currentApiVersion || 
             '/texts/' || $rid || (if ($paramStr) then '?' || $paramStr else ''))
@@ -449,7 +455,9 @@ declare function api:getDomain($xForwardedHost as xs:string) as xs:string? {
 
 declare function api:getFormatFromContentTypes($requestedContentTypes as xs:string*, $defaultType as xs:string) {
     let $contentType := api:negotiateContentType($requestedContentTypes, $api:servedContentTypes, $defaultType)
-    let $debug := util:log('info', '[API] determined content type: ' || $contentType)
+    let $debug := if ($config:debug = 'trace') then
+                    util:log('info', '[API] determined content type: ' || $contentType)
+                  else ()
     return 
         switch ($contentType)
             case 'application/tei+xml'

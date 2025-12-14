@@ -88,10 +88,14 @@ declare
 %rest:query-param("canvas", "{$canvas}", "")
 %rest:header-param("Accept", "{$accept}", "text/html")
 %rest:header-param("X-Forwarded-Host", "{$host}", "")
+%rest:header-param("X-Forwarded-For", "{$remote_ip}", "")
 %output:indent("no")
-function textsv1:textsResource1($rid, $format, $mode, $q, $lang, $viewer, $frag, $canvas, $accept, $host) {
+function textsv1:textsResource1($rid, $format, $mode, $q, $lang, $viewer, $frag, $canvas, $accept, $host, $remote_ip) {
    (:  : let $debug1 := if ($config:debug = ("trace")) then console:log("texts.xqm (api v1) requested: " || $rid || " (format: " || $format || ", mode: " || $mode || ")") else () :)
     (: for determining the requested format, the "format" query param has priority over the "Accept" header param: :)
+    let $log := if ($config:debug = ('info', 'trace')) then 
+                    util:log('info', '[API] Request: id: "v1/texts/' || $rid || '" ; remote_ip: "' || $remote_ip || '" ; format: "' || $format || '".')
+                else ()
     let $format := if ($format) then $format else api:getFormatFromContentTypes(tokenize($accept, '[, ]+'), 'text/html')
     return
         switch($format)
@@ -257,7 +261,10 @@ declare %private function textsv1:HTMLdeliverDoc($rid as xs:string, $mode as xs:
                 if ($uriParams) then '?' || $uriParams || (if ($requestParams) then '&amp;' || $requestParams else ())
                 else if ($requestParams) then '?' || $requestParams
                 else ()
-            let $log := util:log('info', '$pathname: "' || $pathname || '" ; $hash: "' || $hash || '" ; ')
+            let $log := 
+                if ($config:debug = 'trace') then 
+                    util:log('info', '$pathname: "' || $pathname || '" ; $hash: "' || $hash || '" ; ')
+                else ()
             return api:redirect-with-303($pathname || $parameters || $hash )
         else if ($resource('tei_status') eq 1) then
             (: work/volume not yet fully available, but metadata exist -> redirect to work details page (regardless of passage) :)
