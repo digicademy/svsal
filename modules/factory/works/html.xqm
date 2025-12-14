@@ -157,121 +157,6 @@ declare function html:makeHTMLData($tei as element(tei:TEI), $lang as node()*) a
         }
 };
 
-declare function html:makeHTMLDataOld($tei as element(tei:TEI)) as map(*) {
-    let $work := util:expand($tei)
-    let $fragmentationDepth := index:determineFragmentationDepth($tei)
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Rendering " || string($tei/@xml:id) || " at fragmentation level " || $fragmentationDepth || " ...") else ()
-
-    let $target-set := index:getFragmentNodes($work, $fragmentationDepth)
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] " || string(count($target-set)) || " elements to be rendered as fragments ...") else ()
-
-    let $workId := $work/@xml:id
-    let $text := $work//tei:text[@type='work_volume'] | $work//tei:text[@type = 'work_monograph']
-    let $elements := $work//tei:text[@type = 'work_monograph']/(tei:front | tei:body | tei:back)  
-    let $title := sutil:WRKcombined($work, (), $workId)
-
-    (: (1) table of contents :)
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Creating ToC file for " || $workId || " ...") else ()
-    let $toc :=     
-        <div id="tableOfConts">
-            <ul>
-                <li>
-                    <b>{$title}</b>
-                    {
-                    if (not($work//tei:text[@type = ('work_volume', 'lemma_article')])) then
-                        <span class="jstree-anchor hideMe pull-right">{html:getPagesFromDiv($text)}</span>
-                    else ()
-                    }
-                    {
-                    if ($work//tei:text[@type='work_volume']) then 
-                        for $a in $work//tei:text where $a[@type='work_volume' and sutil:WRKisPublished($workId || '_' || @xml:id)] return
-                            <ul>
-                                <li>
-                                    <a class="hideMe">
-                                        <b><i18n:text key="volume">Volume</i18n:text>{concat(': ', $a/@n/string())}</b>
-                                        <span class="jstree-anchor hideMe pull-right">{html:getPagesFromDiv($a)}</span>
-                                    </a>
-                                    { html:generateTocFromDiv($a/(tei:front | tei:body | tei:back), $workId)}
-                                </li>
-                            </ul>
-                    else html:generateTocFromDiv($elements, $workId)
-                    }
-                </li>
-            </ul>
-        </div>
-    
-    (: (2) pagination :)
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Creating pagination ...") else ()
-    let $pagesDe :=  html:makePagination((), (), $workId)
-    let $pagesEn :=  html:makePagination((), (), $workId)
-    let $pagesEs :=  html:makePagination((), (), $workId)
-
-    (: (3) fragments :)
-    (: TODO: Mysteriously, if you look at top or a similar tool, the following seems to run mainly on one processor core only... :)
-    (: get "previous" and "next" fragment ids and hand the current fragment over to the renderFragment function :)
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Rendering fragments (old method) ...") else ()
-    let $fragments := 
-        for $section at $index in $target-set
-            let $debug :=   if ($config:debug = ("trace", "info") and ($index mod 50 eq 0)) then
-                                console:log("[HTML] HTML rendering: processing fragment no. " || string($index)  || " ...")
-                            else ()
-            let $prev   :=  
-                if ($index > 1) then
-                    $target-set[(xs:integer($index) - 1)]
-                else ()
-            let $next   :=  
-                if ($index < count($target-set)) then
-                    $target-set[(xs:integer($index) + 1)]
-                else ()
-            let $prevId :=  
-                if ($prev) then
-                    xs:string($prev/@xml:id)
-                else ()
-            let $nextId := 
-                if ($next) then
-                    xs:string($next/@xml:id)
-                else ()
-            let $result := html:renderFragmentOld($work, xs:string($workId), $section, $index, $fragmentationDepth, $prevId, $nextId, $config:serverdomain)
-            return 
-                map {
-                    'index': $index,
-                    'number': format-number($index, "00000"),
-                    'tei_name': local-name($section),
-                    'tei_id': string($section/@xml:id),
-                    'tei_level': count($section/ancestor-or-self::tei:*),
-                    'prev': $prevId,
-                    'next': $nextId,
-                    'html': $result
-                }
-            
-    (: Reporting :)
-    
-    (: See if there are any leaf elements in our text that are not matched by our rule :)
-    let $missed-elements := $work//(tei:front|tei:body|tei:back)//tei:*[count(./ancestor-or-self::tei:*) < $fragmentationDepth][not(*)]
-    (: See if any of the elements we did get is lacking an xml:id attribute :)
-    let $unidentified-elements := $target-set[not(@xml:id)]
-
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Done.") else ()
-    
-    return 
-        map {
-            'toc': $toc,
-            'pagination_de': $pagesDe,
-            'pagination_en': $pagesEn,
-            'pagination_es': $pagesEs,
-            'fragments': $fragments,
-            'missed_elements': $missed-elements,
-            'unidentified_elements': $unidentified-elements,
-            'tei_fragment_roots': $target-set
-        }
-};
-
-declare function html:renderFragmentOld($work as node(), $wid as xs:string, $target as node(), $targetindex as xs:integer, $fragmentationDepth as xs:integer, $prevId as xs:string?, $nextId as xs:string?, $serverDomain as xs:string?) {
-    let $targetid := xs:string($target/@xml:id)
-    let $fragment := html:createFragmentOld($wid, $target, $targetindex, $prevId, $nextId)
-    return $fragment
-};
-
 declare function html:renderFragment($work as node(), $wid as xs:string, $target as node(), $targetindex as xs:integer, $fragmentationDepth as xs:integer, $prevId as xs:string?, $nextId as xs:string?, $serverDomain as xs:string?) {
     html:renderFragment($work, $wid, $target, $targetindex, $fragmentationDepth, $prevId, $nextId, $serverDomain, $html:defaultLang)
 };
@@ -626,30 +511,6 @@ declare function html:makeClassableString($str as xs:string) as xs:string? {
 };
 
 
-declare function html:createFragmentOld($workId as xs:string, $fragmentRoot as element(), $fragmentIndex as xs:integer, $prevId as xs:string?, $nextId as xs:string?) as element(div) {
-    (: SvSalPage: main area (id/class page in order to identify page-able content :)
-    <div class="row" xml:space="preserve">
-        <div class="col-md-12">
-            <div id="SvSalPages">
-                <div class="SvSalPage">                
-                    {
-                    if ($fragmentRoot[not(preceding-sibling::*) and
-                                      not((ancestor::tei:body|ancestor::tei:back) and
-                                           preceding::tei:front/*)
-                                     ]) then
-                        html:makeAncestorTeasers($fragmentRoot)
-                    else ()    
-                    }
-                    {html:dispatch($fragmentRoot, 'html')}
-                </div>
-            </div>
-        </div>
-        {html:createPaginationLinksOld($workId, $fragmentIndex, $prevId, $nextId) (: finally, add pagination links :)}
-    </div>
-    (: the rest (to the right, in col-md-12) is filled by _spans_ of class marginal, possessing
-         a negative right margin (this happens in eXist's work.html template) :)
-};
-
 declare function html:createFragment($workId as xs:string, $fragmentRoot as element(), $fragmentIndex as xs:integer, $prevId as xs:string?, $nextId as xs:string?) {
     html:createFragment($workId, $fragmentRoot, $fragmentIndex, $prevId, $nextId, $html:defaultLang)  
 };
@@ -682,27 +543,6 @@ declare function html:createFragment($workId as xs:string, $fragmentRoot as elem
         )
 };
     
-
-declare function html:createPaginationLinksOld($workId as xs:string, $fragmentIndex as xs:integer, $prevId as xs:string?, $nextId as xs:string?) {
-    let $prevLink :=
-        if ($prevId) then
-            let $link := 'work.html?wid=' || $workId || '&amp;frag=' || index:makeFragmentId($fragmentIndex - 1, $prevId)
-            return
-                (<a class="previous" href="{$link}">prev</a>, ' | ')
-        else ()
-    let $top := <a class="top" href="work.html?wid={$workId}">top</a>
-    let $nextLink :=
-        if ($nextId) then
-            let $link := 'work.html?wid=' || $workId || '&amp;frag=' || index:makeFragmentId($fragmentIndex + 1, $nextId)
-            return 
-                (' | ', <a class="next" href="{$link}">next</a>)
-        else ()
-    return
-        <div id="SvSalPagination">
-            {($prevLink, $top, $nextLink)}
-        </div>
-};
-
 declare function html:createPaginationLinks($workId as xs:string, $fragmentIndex as xs:integer, $prevId as xs:string?, $nextId as xs:string?) {
 (: Changed to improve performance on 2025-03-24, A.W.                               :)
 (:  let $docTEI     := collection($config:tei-root)//tei:TEI[@xml:id eq $workId]    :)

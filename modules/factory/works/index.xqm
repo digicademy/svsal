@@ -818,17 +818,18 @@ declare function index:isStructuralNode($node as node()) as xs:boolean {
 
 declare function index:isPotentialFragmentNode($node as node()) as xs:boolean {
     not($node/ancestor::tei:front |            $node/ancestor::tei:back) and
-            boolean($node[  self::tei:front |
- self::tei:back |
-            self::tei:div |
-                    self::tei:head |
-                    self::tei:p |
-                    self::tei:list |
-                    self::tei:lg |
-                    self::tei:quote |
-                    self::tei:argument |
-                    (: $node/self::tei:argument[not($node/ancestor::tei:list)] | :)
-            self::tei:text[@type = ('work_monograph', 'work_volume')]
+            boolean($node[
+                self::tei:front |
+                self::tei:back |
+                self::tei:div |
+                self::tei:head |
+                self::tei:p |
+                self::tei:list |
+                self::tei:lg |
+                self::tei:argument |
+                self::tei:quote |
+                (: $node/self::tei:argument[not($node/ancestor::tei:list)] | :)
+                self::tei:text[@type = ('work_monograph', 'work_volume')]
             ])
 };
 

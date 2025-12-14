@@ -1461,7 +1461,6 @@ declare %templates:wrap function admin:renderHTML($id as xs:string*) as element(
 
             let $start-time-a := util:system-time()
             let $htmlData     := html:makeHTMLData($work-raw)
-            let $htmlDataOld  := html:makeHTMLDataOld($work-raw)
 
             (: Keep track of how long this work did take :)
             let $runtime-ms-a := ((util:system-time() - $start-time-a) div xs:dayTimeDuration('PT1S'))  * 1000
@@ -1473,16 +1472,20 @@ declare %templates:wrap function admin:renderHTML($id as xs:string*) as element(
             
             let $saveToc     := admin:saveFile($rid, $rid || "_toc.html", $htmlData('toc'), "html")
             let $exportToc   := admin:exportXMLFile($rid, $rid || "_toc.html", $htmlData('toc'), "html")
-            let $savePages   := (
-                admin:saveFile($rid, $rid || "_pages_de.html", $htmlDataOld('pagination_de'), "html"),
-                admin:saveFile($rid, $rid || "_pages_en.html", $htmlDataOld('pagination_en'), "html"),
-                admin:saveFile($rid, $rid || "_pages_es.html", $htmlDataOld('pagination_es'), "html")
-                )
+            (: 
+                let $savePages   := (
+                    admin:saveFile($rid, $rid || "_pages_de.html", $htmlData('pagination_de'), "html"),
+                    admin:saveFile($rid, $rid || "_pages_en.html", $htmlData('pagination_en'), "html"),
+                    admin:saveFile($rid, $rid || "_pages_es.html", $htmlData('pagination_es'), "html")
+                    )
+                :)
             let $exportPages := admin:exportXMLFile($rid, $rid || "_pages.html", $htmlData('pagination'), "html")
+            let $savePages := admin:saveFile($rid, $rid || "_pages.html", $htmlData('pagination'), "html")
             let $exportFragments :=
                 for $fragment in $htmlData('fragments') return
                     let $fileName := $fragment('number') || '_' || $fragment('tei_id') || '.html'
-                    let $storeStatus := if ($fragment('html')) then admin:exportBinaryFile($rid, $fileName, $fragment('html'), 'html') else ()
+                    let $exportStatus := if ($fragment('html')) then admin:exportBinaryFile($rid, $fileName, $fragment('html'), 'html') else ()
+                    let $saveStatus   := if ($fragment('html')) then admin:saveFile($rid, $fileName, $fragment('html'), 'html') else ()
                     return 
                         (: generate some HTML output to be shown in report :)
                         <div>
@@ -1495,26 +1498,6 @@ declare %templates:wrap function admin:renderHTML($id as xs:string*) as element(
                                         target xml:id={$fragment('tei_id')} <br/>
                                         prev xml:id={$fragment('prev')} <br/>
                                         next xml:id={$fragment('next')} <br/>
-                                    </code>
-                                </div>
-                            </div>
-                        </div>
-            let $saveFragments :=
-                for $fragmentOld in $htmlDataOld('fragments') return
-                    let $fileName := $fragmentOld('number') || '_' || $fragmentOld('tei_id') || '.html'
-                    let $storeStatusOld := if ($fragmentOld('html')) then admin:saveFile($rid, $fileName, $fragmentOld('html'), 'html') else ()
-                    return 
-                        (: generate some HTML output to be shown in report :)
-                        <div>
-                            <h3>Fragment (old) {$fragmentOld('index')}:</h3>
-                            <h3>{$fragmentOld('number')}: &lt;{$fragmentOld('tei_name') || ' xml:id=&quot;' || $fragmentOld('tei_id') 
-                                 || '&quot;&gt;'} (Level {$fragmentOld('tei_level')})</h3>
-                            <div style="margin-left:4em;">
-                                <div style="border:'3px solid black';background-color:'grey';">
-                                    <code>{$rid}/{$fileName}:<br/>
-                                        target xml:id={$fragmentOld('tei_id')} <br/>
-                                        prev xml:id={$fragmentOld('prev')} <br/>
-                                        next xml:id={$fragmentOld('next')} <br/>
                                     </code>
                                 </div>
                             </div>
@@ -2011,7 +1994,6 @@ declare function admin:createNodeIndex($wid as xs:string*) {
         </div>
 };
 
-
 declare function admin:uploadPdf($rid as xs:string) {
     let $PdfInput := request:get-uploaded-file-name('FileUpload')
     let $content  := request:get-uploaded-file-data('FileUpload')
@@ -2032,7 +2014,6 @@ declare function admin:uploadPdf($rid as xs:string) {
                 <message>The PDF {$PdfInput} of the work {$rid} could not be uploaded. </message>
             </results>
 };
-
 
 declare function admin:createPdf($rid as xs:string){
     let $pdf-start-time           := util:system-time()
