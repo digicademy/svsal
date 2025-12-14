@@ -1539,7 +1539,6 @@ declare %templates:wrap function admin:renderHTML($id as xs:string*) as element(
                      </p>
                      <p>Computing time (TXT: orig and edit): {$txt-end-time} seconds.</p>
                      {if ($config:debug = 'trace') then $exportFragments else ()}
-                     {if ($config:debug = 'trace') then $saveFragments else ()}
                </div>
 
 
