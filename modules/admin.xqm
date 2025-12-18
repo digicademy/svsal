@@ -1469,7 +1469,7 @@ declare %templates:wrap function admin:renderHTML($id as xs:string*) as element(
             (: store data :)
             let $cleanCollectionStatus := admin:cleanCollection($rid, "html")
             let $cleanDirectoryStatus := admin:cleanDirectory($rid, "html")
-            
+
             let $saveToc     := admin:saveFile($rid, $rid || "_toc.html", $htmlData('toc'), "html")
             let $exportToc   := admin:exportXMLFile($rid, $rid || "_toc.html", $htmlData('toc'), "html")
             (: 
@@ -1479,13 +1479,13 @@ declare %templates:wrap function admin:renderHTML($id as xs:string*) as element(
                     admin:saveFile($rid, $rid || "_pages_es.html", $htmlData('pagination_es'), "html")
                     )
                 :)
-            let $exportPages := admin:exportXMLFile($rid, $rid || "_pages.html", $htmlData('pagination'), "html")
             let $savePages := admin:saveFile($rid, $rid || "_pages.html", $htmlData('pagination'), "html")
+            let $exportPages := admin:exportXMLFile($rid, $rid || "_pages.html", $htmlData('pagination'), "html")
             let $exportFragments :=
                 for $fragment in $htmlData('fragments') return
                     let $fileName := $fragment('number') || '_' || $fragment('tei_id') || '.html'
+                    let $saveStatus   := if ($fragment('html')) then admin:saveTextFile($rid, $fileName, $fragment('html'), 'html') else ()
                     let $exportStatus := if ($fragment('html')) then admin:exportBinaryFile($rid, $fileName, $fragment('html'), 'html') else ()
-                    let $saveStatus   := if ($fragment('html')) then admin:saveFile($rid, $fileName, $fragment('html'), 'html') else ()
                     return 
                         (: generate some HTML output to be shown in report :)
                         <div>

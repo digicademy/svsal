@@ -13,10 +13,11 @@ module namespace api = "https://www.salamanca.school/xquery/api";
 
 declare namespace output="http://www.w3.org/2010/xslt-xquery-serialization";
 declare namespace exist = "http://exist.sourceforge.net/NS/exist";
+declare namespace util    = "http://exist-db.org/xquery/util";
 
 import module namespace console     = "http://exist-db.org/xquery/console";
 import module namespace http        = "http://expath.org/ns/http-client";
-import module namespace util        = "http://exist-db.org/xquery/util";
+(: import module namespace util        = "http://exist-db.org/xquery/util"; :)
 import module namespace rest        = "http://exquery.org/ns/restxq";
 
 import module namespace config = "https://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
@@ -313,7 +314,7 @@ function api:redirectTextsResource1($rid, $host, $remote_ip, $accept, $format, $
     let $format := if ($format) then $format else api:getFormatFromContentTypes(tokenize($accept, '[, ]+'), 'text/html')
     let $paramStr := api:concatDocQueryParams($format, $mode, $q, $lang, $viewer, $frag, $canvas)
     let $log := if ($config:debug = ('info', 'trace')) then 
-                util:log('info', '[API] (unversioned) Request: id: "texts/' || $rid || '" ; remote_ip: "' || $remote_ip || '" ; format: "' || $format || '".')
+                util:log('info', '[API] (unversioned) Request: id: "texts/' || $rid || '"; remote_ip: ' || $remote_ip[1] || '; format: ' || $format || '.')
             else ()
     let $debug1 := if ($config:debug = ("info", "trace")) then
                 console:log("[API] api.xqm (unversioned api) requested: " || $host || ", " || $rid || ".")
