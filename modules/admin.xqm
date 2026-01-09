@@ -274,49 +274,36 @@ declare function admin:needsPdfString($node as node(), $model as map(*)) {
     let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
                                     if (doc-available(concat($subcollection, '/', $currentResourceId, '.xml'))) then $subcollection
                                     else ()
-(: Changed to improve performance on 2025-03-24, A.W.                               :)
-(:  let $readyForPDF := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))//tei:TEI[@xml:id eq $currentResourceId]/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then:)
     let $readyForPDF := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))/id($currentResourceId)/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then
                                 true()
                              else false()
 
     let $currentDoc := doc($targetSubcollection || "/" || $currentResourceId ||".xml")
-    let $isMultiWorkVolume as node() := $currentDoc//tei:TEI//tei:text
+    let $isMultiWorkVolume := xs:boolean($currentDoc//tei:TEI//tei:text/@type="work_multivolume")
     let $target_1 := $currentDoc//tei:relatedItem/@target
     let $target_2 := for $target in $target_1 return substring-after($target, "work:") 
+    let $anyNeedsPdf := some $t in (($currentResourceId), $target_2) satisfies admin:needsPdf($t)
 
     return 
-          if (not($readyForPDF)) then
+        if (not($readyForPDF)) then
             <td>Not ready yet</td>
-          else if ($isMultiWorkVolume/@type="work_multivolume") then
-            <td> 
-                {for $target in $target_2 
-                  return
-                    if (admin:needsPdf($target)) then 
-                        <a title="Source from: {string(xmldb:last-modified($targetSubcollection, $target || '.xml'))}{if (xmldb:get-child-resources($config:pdf-root) = $target || ".pdf") then concat(', rendered on: ', xmldb:last-modified($config:pdf-root, $target || ".pdf")) else ()}"><b> Create PDF for <a href="webdata-admin.xql?rid={$target}&amp;format=pdf_create">{$target}!</a><br/></b></a>
-                    else if(not(admin:needsPdf($target))) then
-                        <i title="Source from: {string(xmldb:last-modified($targetSubcollection, $target || '.xml'))}, rendered on: {xmldb:last-modified($config:pdf-root, $target || ".pdf")}">PDF for {$target} created.<small><a href="webdata-admin.xql?rid={$target}&amp;format=pdf_create">Create PDF anyway!</a></small> <br/> </i>
-                    else ()
-                }
+        else if ($anyNeedsPdf) then
+            <td title="Source from: {string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml'))}{if (xmldb:get-child-resources($config:pdf-root) = $currentResourceId || ".pdf") then concat(', rendered on: ', xmldb:last-modified($config:pdf-root, $currentResourceId || ".pdf")) else ()}">
+                <a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=pdf_create"><b>Create PDF NOW!</b></a>
+                <br/> or
+                <br/>
+                <form enctype="multipart/form-data" method="post" action="webdata-admin.xql?rid={$currentResourceId}&amp;format=pdf_upload">
+                  <p>Upload PDF File</p>
+                  <input type="file"  name="FileUpload"/>
+                  <input type="submit">Submit your PDF</input>
+                </form>
+                <br/>
             </td>
-          else
-            if (admin:needsPdf($currentResourceId)) then
-                <td title="Source from: {string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml'))}{if (xmldb:get-child-resources($config:pdf-root) = $currentResourceId || ".pdf") then concat(', rendered on: ', xmldb:last-modified($config:pdf-root, $currentResourceId || ".pdf")) else ()}">
-                    <a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=pdf_create"><b>Create PDF NOW!</b></a>
-                    <br/> or
-                    <br/>
-                    <form enctype="multipart/form-data" method="post" action="webdata-admin.xql?rid={$currentResourceId}&amp;format=pdf_upload">
-                      <p>Upload PDF File</p>
-                      <input type="file"  name="FileUpload"/>
-                      <input type="submit">Submit your PDF</input>
-                    </form>
-                    <br/>
-                </td>
-            else 
-                <td title="Source from: {string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml'))}, rendered on: {xmldb:last-modified($config:pdf-root, $currentResourceId || ".pdf")}">
-                    The PDF was already uploaded or created.
-                    <small><a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=pdf_create">Create PDF anyway!</a></small>
-                </td>
+        else
+            <td title="Source from: {string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml'))}, rendered on: {xmldb:last-modified($config:pdf-root, $currentResourceId || ".pdf")}">
+                The PDF was already uploaded or created.
+                <small><a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=pdf_create">Create PDF anyway!</a></small>
+            </td>
 };
 
 declare function admin:authorMakeHTML($node as node(), $model as map(*)) {
@@ -2016,39 +2003,45 @@ declare function admin:uploadPdf($rid as xs:string) {
 
 declare function admin:createPdf($rid as xs:string){
     let $pdf-start-time           := util:system-time()
-    let $doctotransform as node() := doc($config:tei-works-root || '/'|| $rid || '.xml')//tei:TEI
-
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Creating pdf from " || $rid || " ...") else ()
-    let $debug := if ($config:debug = ("trace", "info") )then console:log("[PDF-" || $rid ||"] Transforming into XSL-FO...") else ()
+    let $debug := if ($config:debug = ("trace")) then console:log("[PDF-" || $rid ||"] Transforming into XSL-FO...") else ()
 
-let $doctransformed2          := transform:transform($doctotransform, "xmldb:exist:///db/apps/salamanca/modules/factory/works/pdf/generic_template.xsl", ())
+    let $doctotransform := doc($config:tei-works-root || '/'|| $rid || '.xml')//tei:TEI
+    let $volumes := $doctotransform//xi:include[contains(@href, '_Vol')]/@href/substring-before(., '.xml')
+    let $transformedvolumes := array{fn:for-each($volumes, function($k) {
+                                                                            let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Creating pdf for volume " || $k || " ...") else ()
+                                                                            return admin:createPdf($k)
+                                                                        }
+                                    )}
+    let $doctransformed2 := transform:transform($doctotransform, "xmldb:exist:///db/apps/salamanca/modules/factory/works/pdf/generic_template.xsl", ())
 
-    let $debug := if ($config:debug = ("trace", "info") )then console:log("[PDF-" || $rid ||"] FO OK..") else ()
+    let $debug := if ($config:debug = ("trace")) then console:log("[PDF-" || $rid ||"] FO OK..") else ()
 
-let $fo-config :=
-  <parameters>
-    <fop-config>xmldb:exist:///db/apps/salamanca/resources/config/fop.xconf</fop-config>
-  </parameters>
-   let $storexslfo := xslfo:render(
-    $doctransformed2,
-    "application/pdf",
-    $fo-config
-)
+    let $fo-config := <parameters>
+                        <fop-config>xmldb:exist:///db/apps/salamanca/resources/config/fop.xconf</fop-config>
+                      </parameters>
+    let $storexslfo := xslfo:render(
+                            $doctransformed2,
+                            "application/pdf",
+                            $fo-config
+                        )
 
-    let $debug := if ($config:debug = ("trace", "info") ) then console:log("[PDF-" || $rid ||"] Transforming from XSL-FO to PDF...") else ()                         
-    let $media-type as xs:string  := 'application/pdf'
-    let $renderedxslfo            := xslfo:render($doctransformed2, $media-type, ())
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[PDF-" || $rid ||"] Transforming from XSL-FO to PDF...") else ()
 
-    let $savedPdfFile             := xmldb:store($config:pdf-root, $rid || '.pdf', $renderedxslfo)
+    let $media-type := 'application/pdf'
+    let $renderedxslfo := xslfo:render($doctransformed2, $media-type, ())
+
+    let $savedPdfFile := xmldb:store($config:pdf-root, $rid || '.pdf', $renderedxslfo)
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Stored pdf from " || $rid || " at " || $savedPdfFile || ".") else ()   
-    let $exportedPdfFile          := admin:exportBinaryStream($rid, $rid || '.pdf', $renderedxslfo, 'pdf')
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Exported pdf from " || $rid || " to " || $exportedPdfFile || ".") else ()   
+    let $exportedPdfFile := admin:exportBinaryStream($rid, $rid || '.pdf', $renderedxslfo, 'pdf')
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Exported pdf from " || $rid || " to " || $exportedPdfFile || ".") else ()
 
     let $pdf-end-time := util:system-time() 
     let $runtime-pdf := ((util:system-time() - $pdf-start-time) div xs:dayTimeDuration('PT1S'))  * 1000
     return
         if ($doctransformed2)   (:(doc-available($config:xsl-fo-root || '/'|| $rid || '_xsl-fo.xml')) :)   then
             <div>
+                {$transformedvolumes}
                 {$savedPdfFile} 
                 <p> The transformation from XML to PDF was successfull and the file is stored in the pdf collection.
                     Duration: {if ($runtime-pdf < (1000 * 60)) then format-number($runtime-pdf div 1000, "#.##") || " Sec."
