@@ -1074,11 +1074,10 @@ declare function html:g($node as element(tei:g), $mode as xs:string) {
             let $thisString := 
                 if ($node/text()) then 
                     xs:string($node/text())
-                else error(xs:QName('html:g'), 'Found tei:g without text content') (: ensure correct character markup :)
+                else error(xs:QName('html:g'), 'Found tei:g without text content')             (: ensure correct character markup :)
             let $charCode  := lower-case(substring($node/@ref, 2))                             (: substring to remove leading '#' :)
-(:            let $char := $node/ancestor::tei:TEI//tei:charDecl/tei:char[@xml:id eq $charCode]:)
             let $char := $config:tei-specialchars/tei:char[lower-case(@xml:id) eq $charCode]
-            let $test :=                                                       (: make sure that the char reference is correct :)
+            let $test :=                                                                       (: make sure that the char reference is correct :)
                 if (not($char)) then 
                     error(xs:QName('html:g'), 'g/@ref is invalid, the char code "' || $charCode || '" does not exist in specialChars.')
                 else ()

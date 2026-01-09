@@ -284,7 +284,10 @@ declare function txt:g($node as element(tei:g), $mode as xs:string) {
     switch($mode)
         case 'orig'
         case 'snippets-orig' return
+            let $mapping := $char/tei:mapping[@type = ('precomposed', 'composed', 'standardized')]/text()
+            (: Replaced the following call with the one above for performance reasons, A.W. 2025-12-23
             let $mapping := for $m in $char/tei:mapping where $m/@type = ('precomposed', 'composed', 'standardized') return $m/text()
+            :)
             return
                 if ($mapping) then
                     string($mapping[1])
@@ -296,8 +299,8 @@ declare function txt:g($node as element(tei:g), $mode as xs:string) {
 
         case 'edit' 
         case 'snippets-edit' return
-            if (for $m in $char/tei:mapping where $m/@type = 'standardized' return $m/text()) then
-                (for $m in $char/tei:mapping where $m/@type = 'standardized' return $m/text())[1]
+            if ($char/tei:mapping[@type = 'standardized']/text()) then
+                ($char/tei:mapping[@type = 'standardized']/text())[1]
             else if ($node/text()) then
                 string($node)
             else
@@ -306,8 +309,8 @@ declare function txt:g($node as element(tei:g), $mode as xs:string) {
         case 'nonotes'
         case 'clean' return
             if ($node/@ref eq "#char00b6") then () else
-                if (for $m in $char/tei:mapping where $m/@type = 'standardized' return $m/text()) then
-                    (for $m in $char/tei:mapping where $m/@type = 'standardized' return $m/text())[1]
+                if ($char/tei:mapping[@type = 'standardized']/text()) then
+                    ($char/tei:mapping[@type = 'standardized']/text())[1]
                 else if ($node/text()) then
                     string($node)
                 else
