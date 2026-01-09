@@ -691,6 +691,7 @@ declare function admin:cleanCollection ($wid as xs:string, $collection as xs:str
         else if ($collection eq "pdf")         then $wid || ".*\.pdf"
         else if ($collection eq "routing")     then $wid || "_routes\.json"
         else                                        "dontmatch"
+    let $keep-files := if ($collection eq "html") then "_details\.html$" else ()
     let $debug := console:log("[Admin] Cleaning " || $collectionName || " collection (db).")
     let $create-parent-status :=    
         if ($collection = "html"    and not(xmldb:collection-available($config:html-root))) then
@@ -713,13 +714,17 @@ declare function admin:cleanCollection ($wid as xs:string, $collection as xs:str
     let $chown-collection-status := sm:chown(xs:anyURI($collectionName), 'sal')
     let $chgrp-collection-status := sm:chgrp(xs:anyURI($collectionName), 'svsal')
     let $chmod-collection-status := sm:chmod(xs:anyURI($collectionName), 'rwxrwxr-x')
+    let $remove-files := if ($keep-files) then
+                            filter(xmldb:get-child-resources($collectionName), function($i) {not(matches($i, $keep-files))})
+                        else
+                            xmldb:get-child-resources($collectionName)
     let $remove-status := 
         if (count(xmldb:get-child-resources($collectionName))) then
-            for $file in xmldb:get-child-resources($collectionName)
+            for $file in $remove-files
             return if (matches(tokenize($file, '/')[last()], $pattern)) then
                 let $debug := if ($collection = ("snippets", "html") and not(xs:int(translate(substring(tokenize($file, '/')[last()], 1, 5), 'WLP', '')) mod 250 = 0)) then ()
                               else
-                              console:log("[Admin] Remove file: " || $collectionName || "/" || $file || " from database...")
+                              console:log("[Admin] Remove file: " || $file || " from database collection " || $collectionName || " ...")
                 return xmldb:remove($collectionName, $file)
         else
                 true()
@@ -755,16 +760,22 @@ declare function admin:cleanDirectory($wid as xs:string, $collection as xs:strin
         else if ($collection eq "pdf")         then $wid || "*.pdf"
         else if ($collection eq "routing")     then $wid || "_routes.json"
         else                                        ""
+    let $keep-files := if ($collection eq "html") then "_details\.html$" else ()
     let $debug := console:log("[Admin] Cleaning " || $collectionname || " directory (fs).")
     let $create-parent-status :=
         if (not(file:exists($collectionname) and file:is-directory($collectionname))) then
             file:mkdirs($collectionname)
         else true()
-    let $remove-status := for $file in file:directory-list($collectionname, $pattern)/file:file
+    let $remove-files := if ($keep-files) then
+                            filter(file:directory-list($collectionname, $pattern)/file:file, function($i) {not(matches($i/@name/string(), $keep-files))})
+                        else
+                            file:directory-list($collectionname, $pattern)/file:file
+
+    let $remove-status := for $file in $remove-files
         let $filename  := $collectionname || $file/@name/string() 
-        let $debug :=  if ($collection = ("snippets", "html") and not(xs:int(translate(substring($file/@name, 1, 5), 'WLP', '')) mod 250 = 0)) then ()
-                       else
-                           console:log("[Admin] Remove file: " || $filename || " from filesystem...")
+        let $debug :=   if ($collection = ("snippets", "html") and not(xs:int(translate(substring($file/@name, 1, 5), 'WLP', '')) mod 250 = 0)) then ()
+                        else
+                            console:log("[Admin] Remove file: " || $filename || " from filesystem...")
         return file:delete($filename)
 
     return $remove-status
@@ -1125,7 +1136,7 @@ declare function admin:buildFacets ($node as node(), $model as map (*), $lang as
     return $result
 };
 
- (:declare function admin:buildFacetsNoJs ($node as node(), $model as map (*), $lang as xs:string?) {
+(:declare function admin:buildFacetsNoJs ($node as node(), $model as map (*), $lang as xs:string?) {
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Building facets for list view (versions without Javascript)...") else ()
     let $facets := map { "surname" :    map { "de" : app:WRKcreateListSurname($node, $model, 'de'),
                                               "en" : app:WRKcreateListSurname($node, $model, 'en'),
@@ -1263,7 +1274,7 @@ declare function admin:saveFileLEM ($node as node(), $model as map (*), $lang as
         </span>   
 };
 
-(:declare function admin:exportFileWRKnoJs ($node as node(), $model as map (*), $lang as xs:string?) {
+(: declare function admin:exportFileWRKnoJs ($node as node(), $model as map (*), $lang as xs:string?) {
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Exporting finalFacets (noJS)...") else ()
     let $fileNameDeSn := 'worksNoJs_de_surname.html'
     let $fileNameEnSn := 'worksNoJs_en_surname.html'
@@ -1357,7 +1368,8 @@ declare function admin:saveFileWRKnoJs ($node as node(), $model as map (*), $lan
             <br/><br/>
             <a href="works.html" class="btn btn-info" role="button"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Open works.html</a>
         </span> 
-};:)
+};
+:)
 
 
 (: #### RENDERING ADMINISTRATION FUNCTIONS #### :)
@@ -1426,8 +1438,6 @@ declare %templates:wrap function admin:renderHTML($id as xs:string*) as element(
         if ($resourceId = '*') then
             collection($config:tei-root)//tei:TEI[.//tei:text[@type = ("work_multivolume", "work_monograph", "lemma_article")]]
         else
-(: Changed to improve performance on 2025-03-24, A.W.                               :)
-(:          collection($config:tei-root)//tei:TEI[@xml:id = distinct-values($resourceId)][.//tei:text[@type = ("work_multivolume", "work_monograph", "lemma_article")]]:)
             collection($config:tei-root)/id(distinct-values($resourceId))[.//tei:text[@type = ("work_multivolume", "work_monograph", "lemma_article")]]
 
     (: for each requested resource: create fragments, insert them into the transformation, and produce some diagnostic info :)
