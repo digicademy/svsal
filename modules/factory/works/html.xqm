@@ -546,7 +546,7 @@ declare function html:createFragment($workId as xs:string, $fragmentRoot as elem
 declare function html:createPaginationLinks($workId as xs:string, $fragmentIndex as xs:integer, $prevId as xs:string?, $nextId as xs:string?) {
 (: Changed to improve performance on 2025-03-24, A.W.                               :)
 (:  let $docTEI     := collection($config:tei-root)//tei:TEI[@xml:id eq $workId]    :)
-    let $docTEI     := collection($config:tei-root)/id($workId) 
+    let $docTEI     := collection($config:tei-root)/id($workId)
     let $textType   := $docTEI/tei:text/@type/string()
     let $desc       :=  if ($textType = ("work_multivolume", "work_volume", "work_monograph")) then
                             $docTEI//tei:sourceDesc
@@ -566,9 +566,10 @@ declare function html:createPaginationLinks($workId as xs:string, $fragmentIndex
                             $desc//tei:imprint/tei:date[@type = 'thisEd']
                        else
                             $desc//tei:imprint/tei:date[1]
-    let $type       := if ($desc/../../tei:encodingDesc/tei:editorialDecl/tei:p[1]/contains(@xml:id, "RW")
-                                        ) then "Reference Work"
-                       else "Edited Work"
+    let $type       := if ($docTEI//tei:encodingDesc/tei:editorialDecl/tei:p/@xml:id[contains(., "RW")]) then
+                            "Reference Work"
+                       else
+                            "Edited Work"
     return
     concat(
         '{{$work_info := dict ',
