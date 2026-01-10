@@ -16,13 +16,15 @@ Image=ghcr.io/digicademy/svsal/svsal-exist:3.0rc1
 # will be restarted. It is that easy 😍
 #
 # (Just don't use the `latest` tag!)
-AutoUpdate=registry
+# AutoUpdate is commented out by default for manual updates.
+# Uncomment the line below to enable automatic updates:
+# AutoUpdate=registry
 
-Volume=%h/exist/data:/exist/data
-Volume=%h/exist/logs:/exist/logs
+Volume=logs.volume:/exist/logs:z
+Volume=existexport.volume:/exist/data/export:z
 
-PublishPort=0.0.0.0:8080:8080/tcp
-PublishPort=0.0.0.0:8443:8443/tcp
+# Port mappings are handled at the pod level (svsal.pod)
+# PublishPort directives are not needed here
 
 Environment=JAVA_TOOL_OPTIONS='-Xmx10g -Xms10g -XX:MaxRAMPercentage=75.0'
 

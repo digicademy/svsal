@@ -1,5 +1,28 @@
 [Pod]
 PodName=svsal-pod
 Network=svsal.network
+
+# Port mappings for all services in the pod
+# Caddy (web server)
 PublishPort=0.0.0.0:80:80
 PublishPort=0.0.0.0:443:443
+
+# eXist-db (database)
+PublishPort=0.0.0.0:8080:8080
+PublishPort=0.0.0.0:8443:8443
+
+# Sphinxsearch (search engine)
+PublishPort=0.0.0.0:8081:80
+PublishPort=0.0.0.0:9312:9312
+PublishPort=0.0.0.0:9306:9306
+
+# Any23 (RDF extraction)
+PublishPort=0.0.0.0:8082:8082
+
+# Note: Podman pods do not natively support network aliases like Docker Compose.
+# For production deployments, configure DNS records for:
+#   - www.salamanca.school
+#   - id.salamanca.school
+#   - search.salamanca.school
+# For development, add entries to /etc/hosts pointing to 127.0.0.1 or the pod IP.
+# For CI/CD environments using docker-compose.cicd.yml, container names are used directly.

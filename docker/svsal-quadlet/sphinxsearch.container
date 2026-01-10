@@ -1,0 +1,40 @@
+[Unit]
+Description=SvSal Sphinxsearch Container
+After=local-fs.target
+
+
+[Container]
+ContainerName=sphinxsearch
+Image=ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc1
+
+# AutoUpdate is commented out by default for manual updates.
+# Uncomment the line below to enable automatic updates:
+# AutoUpdate=registry
+
+# Memory limit matches indexer.value from sphinx.conf
+PodmanArgs=--memory=512m
+
+Volume=sphinx-logs.volume:/var/log/dockerservices:z
+Volume=sphinx-data.volume:/var/lib/sphinx/data:z
+Volume=existexport.volume:/var/data/existdb/data/export:ro,z
+
+# Port mappings are handled at the pod level (svsal.pod)
+
+Pod=svsal.pod
+
+
+[Install]
+WantedBy=default.target
+
+
+[Service]
+Restart=always
+
+# Extend Timeout to allow time to pull the image
+TimeoutStartSec=300
+RestartSec=30
+
+ExecStop=/bin/sh -c "podman stop sphinxsearch"
+ExecStop=/bin/sh -c "podman rm sphinxsearch"
+
+KillMode=control-group
