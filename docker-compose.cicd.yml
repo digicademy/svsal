@@ -1,0 +1,153 @@
+# Docker Compose Configuration for CI/CD Pipeline
+#
+# This configuration is designed for automated CI/CD workflows where TEI files
+# are processed to generate derivatives (HTML, RDF, snippets, etc.) and deployed
+# to a webserver.
+#
+# Key Features:
+# - TEI source files mounted from repository checkout
+# - Export volume for generated derivatives
+# - Network access for work resolution and generation
+#
+# Usage in CI/CD:
+#   1. Clone TEI repository
+#   2. Mount TEI files as volume (see tei-source below)
+#   3. Run work resolution to determine what needs regeneration
+#   4. Generate derivatives using webdata-admin.xql
+#   5. Extract generated files from existexport volume
+#   6. Deploy to webserver
+#
+# Example:
+#   docker-compose -f docker-compose.cicd.yml run \
+#     -v ./tei-repo:/exist/apps/salamanca-tei:ro \
+#     -e CHANGED_FILES="works/W0013.xml" \
+#     -e EXISTDB_PASSWORD="secret" \
+#     existdb /docker/scripts/generate-derivatives.sh
+
+version: '3.8'
+
+services:
+  existdb:
+    image: ghcr.io/digicademy/svsal/svsal-exist:3.0rc2
+    container_name: existdb-cicd
+    environment:
+      # eXist-db admin credentials (set EXISTDB_PASSWORD in CI secrets)
+      EXIST_USER: ${EXISTDB_USER:-admin}
+      EXIST_PASS: ${EXISTDB_PASSWORD:?EXISTDB_PASSWORD must be set}
+      
+      # Java memory settings - adjust based on workload
+      JAVA_TOOL_OPTIONS: '-Xmx4g -Xms4g -XX:MaxRAMPercentage=75.0'
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    volumes:
+      # Persistent data storage (indexes, user data, etc.)
+      - existdata:/exist/data
+      
+      # Export directory where generated derivatives are stored
+      # This volume should be extracted/copied after generation completes
+      - existexport:/exist/data/export
+      
+      # TEI source files (mounted from TEI repository checkout)
+      # REQUIRED: This volume must be bind-mounted from your TEI repository in CI/CD
+      # 
+      # The work resolver needs access to TEI files to detect XInclude dependencies.
+      # In CI/CD workflows, mount your checked-out TEI repository here:
+      #
+      # Example GitHub Actions:
+      #   - uses: actions/checkout@v3
+      #     with:
+      #       repository: digicademy/salamanca-tei
+      #       path: tei-repo
+      #   - run: |
+      #       docker-compose -f docker-compose.cicd.yml run \
+      #         -v ./tei-repo:/exist/apps/salamanca-tei:ro \
+      #         existdb /docker/scripts/generate-derivatives.sh
+      #
+      # Example GitLab CI:
+      #   - git clone https://gitlab.com/your-org/salamanca-tei.git tei-repo
+      #   - docker-compose -f docker-compose.cicd.yml run \
+      #       -v ./tei-repo:/exist/apps/salamanca-tei:ro \
+      #       existdb /docker/scripts/generate-derivatives.sh
+      #
+      # Note: The mount is read-only (:ro) to prevent accidental modifications
+      - tei-source:/exist/apps/salamanca-tei:ro
+      
+      # Optional: Mount generation script if not baked into image
+      # - ./docker/scripts:/docker/scripts:ro
+    networks:
+      - cicd-network
+    # Healthcheck to ensure eXist-db is ready before generation
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/exist/apps/salamanca"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+
+  # Optional: Sphinx search service for generating search snippets
+  # Uncomment if your CI/CD pipeline requires search index generation
+  # sphinxsearch:
+  #   image: ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc1
+  #   container_name: sphinxsearch-cicd
+  #   volumes:
+  #     - sphinx-data:/var/lib/sphinx/data
+  #     - existexport:/var/data/existdb/data/export:ro
+  #   networks:
+  #     - cicd-network
+
+volumes:
+  # Persistent eXist-db data (survives container restarts)
+  existdata:
+    driver: local
+    name: existdata-cicd
+  
+  # Export directory containing generated derivatives
+  # After generation, copy files from this volume to deploy location
+  existexport:
+    driver: local
+    name: existexport-cicd
+  
+  # TEI source files volume
+  # This should be bind-mounted from your TEI repository checkout
+  # See service volume configuration above for usage examples
+  tei-source:
+    driver: local
+    name: tei-source-cicd
+  
+  # Optional: Sphinx search data
+  # sphinx-data:
+  #   driver: local
+  #   name: sphinx-data-cicd
+
+networks:
+  cicd-network:
+    driver: bridge
+    name: cicd-network
+
+# CI/CD Environment Variables Reference:
+#
+# Required:
+#   EXISTDB_PASSWORD - Admin password for eXist-db (store in CI secrets)
+#
+# Optional:
+#   EXISTDB_USER - Admin username (default: admin)
+#   EXISTDB_URL - Base URL for eXist-db (default: http://localhost:8080/exist/apps/salamanca)
+#   CHANGED_FILES - Comma-separated list of changed TEI files (e.g., "works/W0013.xml,works/W0066_Vol_02.xml")
+#   WORK_IDS - Comma-separated list of work IDs (alternative to CHANGED_FILES)
+#   FORMAT - Derivative format to generate: index, html, snippets, rdf, iiif, all (default: all)
+#   TIMEOUT - Timeout in seconds for eXist-db readiness check (default: 300)
+#
+# Example CI/CD Commands:
+#
+# 1. Resolve work IDs from changed files:
+#    curl "http://localhost:8080/exist/apps/salamanca/webdata-resolve-works.xql?files=works/W0013.xml&format=csv"
+#
+# 2. Generate derivatives for specific works:
+#    curl "http://localhost:8080/exist/apps/salamanca/webdata-admin.xql?rid=W0013&format=all"
+#
+# 3. Use the automated script:
+#    CHANGED_FILES="works/W0013.xml" EXISTDB_PASSWORD="secret" docker/scripts/generate-derivatives.sh
+#
+# 4. Extract generated files:
+#    docker cp existdb-cicd:/exist/data/export ./output
