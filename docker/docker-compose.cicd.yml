@@ -1,22 +1,45 @@
-# CI/CD Docker Compose Configuration for Salamanca
-# This configuration is optimized for automated derivative generation
-version: '3'
+# CI/CD Docker Compose Configuration for SvSal
+# Lightweight setup for derivative file generation workflows
+#
+# This configuration includes only the services needed for CI/CD pipelines:
+# - existdb: for running webdata-admin.xql to generate derivatives
+# - any23: for RDF extraction from TEI/XML
+#
+# Usage:
+#   docker-compose -f docker-compose.cicd.yml up -d
+#   # Run derivative generation scripts
+#   docker-compose -f docker-compose.cicd.yml down
+#
+# Required environment variables (set in your CI/CD platform):
+#   - EXISTDB_ADMIN_PASSWORD: Admin password for eXist-db
+#   - SSH_PRIVATE_KEY: SSH private key for rsync to webserver (if using)
+#   - WEBSERVER_HOST: Target webserver hostname (if using rsync)
+#   - WEBSERVER_USER: SSH user for webserver (if using rsync)
+#
+# Note: SSH_KNOWN_HOSTS is optional. Use ssh-keyscan or -o StrictHostKeyChecking=no
+
+version: '3.8'
 
 services:
   existdb:
     image: ghcr.io/digicademy/svsal/svsal-exist:3.0rc2
     container_name: existdb-cicd
+    restart: "no"
     environment:
-      JAVA_TOOL_OPTIONS: '-Xmx4g -Xms2g'
+      # Reduced memory for CI/CD environments
+      JAVA_TOOL_OPTIONS: '-Xmx4g -Xms2g -XX:MaxRAMPercentage=75.0'
+      # Optional: Set admin password via environment variable
+      # EXIST_PASS: ${EXISTDB_ADMIN_PASSWORD}
     ports:
       - "8080:8080"
+      - "8443:8443"
     volumes:
-      - existdata:/exist/data
+      # Mount TEI source files from repository (adjust path as needed)
+      # In CI/CD, mount with: docker cp /path/to/tei-files/. existdb-cicd:/exist/apps/salamanca-tei/
+      # - ./tei-sources:/tei-sources:ro
+      # Output directory for generated derivatives (will be rsync'd to webserver)
       - existexport:/exist/data/export
-      # Mount TEI source files from the TEI repository
-      # In CI/CD, mount with: -v /path/to/tei-repo:/exist/apps/salamanca-tei:ro
-      # For local testing: docker cp /path/to/tei-files/. existdb-cicd:/exist/apps/salamanca-tei/
-      - tei-source:/exist/apps/salamanca-tei:ro
+      - logs:/exist/logs
     networks:
       - cicd-network
     healthcheck:
@@ -29,6 +52,7 @@ services:
   any23:
     image: ghcr.io/digicademy/svsal/svsal-any23:2.3rc2
     container_name: any23-cicd
+    restart: "no"
     ports:
       - "8082:8082"
     networks:
@@ -40,15 +64,12 @@ services:
       retries: 10
 
 volumes:
-  existdata:
-    driver: local
-    name: existdata-cicd
   existexport:
     driver: local
     name: existexport-cicd
-  tei-source:  # TEI XML source files (mounted from external repo in CI/CD)
+  logs:
     driver: local
-    name: tei-source-cicd
+    name: logs-cicd
 
 networks:
   cicd-network:
