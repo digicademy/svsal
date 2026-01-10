@@ -35,12 +35,19 @@ services:
       - "8443:8443"
     volumes:
       # Mount TEI source files from repository (adjust path as needed)
+      # In CI/CD, mount with: docker cp /path/to/tei-files/. existdb-cicd:/exist/apps/salamanca-tei/
       # - ./tei-sources:/tei-sources:ro
       # Output directory for generated derivatives (will be rsync'd to webserver)
       - existexport:/exist/data/export
       - logs:/exist/logs
     networks:
       - cicd-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
 
   any23:
     image: ghcr.io/digicademy/svsal/svsal-any23:2.3rc2
@@ -50,6 +57,11 @@ services:
       - "8082:8082"
     networks:
       - cicd-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
 volumes:
   existexport:
