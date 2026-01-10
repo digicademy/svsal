@@ -30,11 +30,54 @@ graph LR
 
 **Scenario:** User updates `works/W0066_Vol_02.xml`
 
+**Parent Work TEI Structure (W0066.xml):**
+```xml
+<TEI xmlns="http://www.tei-c.org/ns/1.0" 
+     xmlns:xi="http://www.w3.org/2001/XInclude" 
+     xml:id="W0066">
+  <teiHeader>
+    <fileDesc>
+      <titleStmt>
+        <title>Multivolume Work Example</title>
+      </titleStmt>
+    </fileDesc>
+  </teiHeader>
+  <text type="work_multivolume">
+    <group>
+      <xi:include href="W0066_Vol_01.xml"/>
+      <xi:include href="W0066_Vol_02.xml"/>
+      <xi:include href="W0066_Vol_03.xml"/>
+    </group>
+  </text>
+</TEI>
+```
+
+**Resolution Process:**
 1. Git detects: `works/W0066_Vol_02.xml`
 2. `webdata-resolve-works.xql` finds:
-   - Direct ID: `W0066_Vol_02`
-   - Parent work: `W0066` (contains `<xi:include href="W0066_Vol_02.xml"/>`)
+   - Direct ID: `W0066_Vol_02` (extracted from filename)
+   - Parent work: `W0066` (found by searching for `<xi:include href="W0066_Vol_02.xml"/>`)
 3. Generates derivatives for: **`W0066`** (the multivolume parent)
+
+**API Call Example:**
+```bash
+curl "http://localhost:8080/exist/apps/salamanca/webdata-resolve-works.xql" \
+  --data-urlencode "files=works/W0066_Vol_02.xml" \
+  --data-urlencode "format=json"
+```
+
+**Response:**
+```json
+{
+  "works": ["W0066"],
+  "resolved": {
+    "works/W0066_Vol_02.xml": ["W0066"]
+  },
+  "count": 1
+}
+```
+
+Note: When a volume is updated, the entire parent work is regenerated to ensure consistency across all volumes.
 
 ### TEI Repository CI/CD Configuration
 
