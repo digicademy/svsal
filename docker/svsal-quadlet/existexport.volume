@@ -1,0 +1,7 @@
+[Volume]
+# eXist-db exported data volume
+# Contains data exported from eXist-db, shared with Caddy (read-only) and Sphinxsearch (read-only)
+# This volume is also used in CI/CD workflows for derivative file generation
+
+[Install]
+WantedBy=default.target
