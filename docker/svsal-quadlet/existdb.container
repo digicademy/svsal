@@ -1,0 +1,47 @@
+[Unit]
+Description=SvSal eXist-db Webapp Container
+# Requires=test-db.service
+# After=test-db.service     # N.B.: .service, not .container
+After=local-fs.target
+
+
+[Container]
+ContainerName=existdb
+Image=ghcr.io/digicademy/svsal/svsal-exist:3.0rc1
+
+# If you set `AutoUpdate=registry`, you can just run
+# `podman auto-update` and Podman will check if the registry
+# has a newer image which is compatible with the used tag.
+# In that case, the image will be pulled and the container
+# will be restarted. It is that easy 😍
+#
+# (Just don't use the `latest` tag!)
+AutoUpdate=registry
+
+Volume=%h/exist/data:/exist/data
+Volume=%h/exist/logs:/exist/logs
+
+PublishPort=0.0.0.0:8080:8080/tcp
+PublishPort=0.0.0.0:8443:8443/tcp
+
+Environment=JAVA_TOOL_OPTIONS='-Xmx10g -Xms10g -XX:MaxRAMPercentage=75.0'
+
+Pod=svsal.pod
+
+
+[Install]
+WantedBy=default.target    # multi-user.target is not available in rootlesss mode
+
+
+[Service]
+Restart=always
+# Restart=on-failure
+
+# Extend Timeout to allow time to pull the image
+TimeoutStartSec=450
+RestartSec=60
+
+ExecStop=/bin/sh -c "podman stop existdb"
+ExecStop=/bin/sh -c "podman rm existdb"
+
+KillMode=control-group

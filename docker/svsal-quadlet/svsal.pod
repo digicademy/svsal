@@ -1,0 +1,5 @@
+[Pod]
+PodName=svsal-pod
+Network=svsal.network
+PublishPort=0.0.0.0:80:80
+PublishPort=0.0.0.0:443:443
