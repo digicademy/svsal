@@ -34,7 +34,7 @@ services:
       # eXist-db admin credentials (set EXISTDB_PASSWORD in CI secrets)
       EXIST_USER: ${EXISTDB_USER:-admin}
       EXIST_PASS: ${EXISTDB_PASSWORD:?EXISTDB_PASSWORD must be set}
-      
+
       # Java memory settings - adjust based on workload
       JAVA_TOOL_OPTIONS: '-Xmx4g -Xms4g -XX:MaxRAMPercentage=75.0'
     ports:
@@ -43,14 +43,14 @@ services:
     volumes:
       # Persistent data storage (indexes, user data, etc.)
       - existdata:/exist/data
-      
+
       # Export directory where generated derivatives are stored
       # This volume should be extracted/copied after generation completes
       - existexport:/exist/data/export
-      
+
       # TEI source files (mounted from TEI repository checkout)
       # REQUIRED: This volume must be bind-mounted from your TEI repository in CI/CD
-      # 
+      #
       # The work resolver needs access to TEI files to detect XInclude dependencies.
       # In CI/CD workflows, mount your checked-out TEI repository here:
       #
@@ -72,7 +72,7 @@ services:
       #
       # Note: The mount is read-only (:ro) to prevent accidental modifications
       - tei-source:/exist/apps/salamanca-tei:ro
-      
+
       # Optional: Mount generation script if not baked into image
       # - ./docker/scripts:/docker/scripts:ro
     networks:
@@ -101,20 +101,20 @@ volumes:
   existdata:
     driver: local
     name: existdata-cicd
-  
+
   # Export directory containing generated derivatives
   # After generation, copy files from this volume to deploy location
   existexport:
     driver: local
     name: existexport-cicd
-  
+
   # TEI source files volume
   # This should be bind-mounted from your TEI repository checkout
   # See service volume configuration above for usage examples
   tei-source:
     driver: local
     name: tei-source-cicd
-  
+
   # Optional: Sphinx search data
   # sphinx-data:
   #   driver: local

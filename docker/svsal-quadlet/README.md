@@ -195,13 +195,13 @@ on:
 jobs:
   generate:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout TEI repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 2  # Need previous commit to detect changes
-      
+
       - name: Detect changed files
         id: changes
         run: |
@@ -209,27 +209,27 @@ jobs:
           CHANGED=$(git diff --name-only HEAD^ HEAD | grep '\.xml$' | tr '\n' ',' | sed 's/,$//')
           echo "files=$CHANGED" >> $GITHUB_OUTPUT
           echo "Changed files: $CHANGED"
-      
+
       - name: Checkout Salamanca application
         uses: actions/checkout@v4
         with:
           repository: digicademy/svsal
           path: svsal-app
-      
+
       - name: Start eXist-db
         run: |
           cd svsal-app
           docker-compose -f docker-compose.cicd.yml up -d existdb
-          
+
           # Wait for eXist-db to be ready
           timeout 300 bash -c 'until curl -sf http://localhost:8080/exist/apps/salamanca; do sleep 5; done'
           echo "eXist-db is ready"
-      
+
       - name: Mount TEI files
         run: |
           # Copy TEI files into volume
           docker cp . existdb-cicd:/exist/apps/salamanca-tei/
-      
+
       - name: Generate derivatives
         env:
           EXISTDB_PASSWORD: ${{ secrets.EXISTDB_PASSWORD }}
@@ -238,21 +238,21 @@ jobs:
           cd svsal-app
           docker-compose -f docker-compose.cicd.yml exec -T existdb \
             /docker/scripts/generate-derivatives.sh
-      
+
       - name: Extract generated files
         run: |
           # Copy generated files from container
           docker cp existdb-cicd:/exist/data/export ./output
-          
+
           # List generated files
           find ./output -type f
-      
+
       - name: Deploy to webserver
         run: |
           # Your deployment logic here
           # Example: rsync, scp, cloud storage upload, etc.
           rsync -avz ./output/ user@webserver:/var/www/salamanca/
-      
+
       - name: Cleanup
         if: always()
         run: |
@@ -303,26 +303,26 @@ generate-derivatives:
     - apk add --no-cache git bash curl
     - git clone https://github.com/digicademy/svsal.git svsal-app
     - cd svsal-app
-    
+
     # Start eXist-db
     - docker-compose -f docker-compose.cicd.yml up -d existdb
-    
+
     # Wait for readiness
     - timeout 300 bash -c 'until curl -sf http://existdb-cicd:8080/exist/apps/salamanca; do sleep 5; done'
-    
+
     # Copy TEI files
     - docker cp ../ existdb-cicd:/exist/apps/salamanca-tei/
-    
+
     # Generate derivatives
     - |
       docker-compose -f docker-compose.cicd.yml exec -T existdb \
         env EXISTDB_PASSWORD="$EXISTDB_PASSWORD" \
         CHANGED_FILES="$CHANGED_FILES" \
         /docker/scripts/generate-derivatives.sh
-    
+
     # Extract generated files
     - docker cp existdb-cicd:/exist/data/export ../output
-    
+
     # Cleanup
     - docker-compose -f docker-compose.cicd.yml down -v
   artifacts:
@@ -354,12 +354,12 @@ deploy:
 ```groovy
 pipeline {
     agent any
-    
+
     environment {
         EXISTDB_PASSWORD = credentials('existdb-password')
         DEPLOY_HOST = 'webserver.salamanca.school'
     }
-    
+
     stages {
         stage('Detect Changes') {
             steps {
@@ -373,13 +373,13 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Setup') {
             steps {
                 sh 'git clone https://github.com/digicademy/svsal.git svsal-app'
             }
         }
-        
+
         stage('Generate') {
             steps {
                 dir('svsal-app') {
@@ -396,14 +396,14 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Deploy') {
             steps {
                 sh "rsync -avz output/ user@${DEPLOY_HOST}:/var/www/salamanca/"
             }
         }
     }
-    
+
     post {
         always {
             dir('svsal-app') {

@@ -3,19 +3,19 @@ xquery version "3.1";
 (: ####++++----
 
     Work Resolution Endpoint
-    
+
     This endpoint accepts TEI file paths and returns work IDs that need regeneration.
     Handles XInclude parent detection for multivolume works.
-    
+
     Parameters:
     - files: Comma-separated list of file paths or multiple file parameters
     - format: Output format (json, csv, text) - defaults to json
-    
+
     Example calls:
     - /webdata-resolve-works.xql?files=works/W0013.xml
     - /webdata-resolve-works.xql?files=works/W0013.xml,works/W0066_Vol_02.xml
     - /webdata-resolve-works.xql?files=works/W0013.xml&format=csv
-    
+
 ----++++#### :)
 
 declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
@@ -47,22 +47,22 @@ declare function local:format-output($work-ids as xs:string*, $format as xs:stri
             return string-join($work-ids, "&#10;")
         case "json" return
             let $set-type := response:set-header("Content-Type", "application/json")
-            let $json := '{"works": [' || 
+            let $json := '{"works": [' ||
                          string-join(
-                             for $id in $work-ids 
-                             return '"' || $id || '"', 
+                             for $id in $work-ids
+                             return '"' || $id || '"',
                              ", "
-                         ) || 
+                         ) ||
                          ']}'
             return $json
         default return
             let $set-type := response:set-header("Content-Type", "application/json")
-            let $json := '{"works": [' || 
+            let $json := '{"works": [' ||
                          string-join(
-                             for $id in $work-ids 
-                             return '"' || $id || '"', 
+                             for $id in $work-ids
+                             return '"' || $id || '"',
                              ", "
-                         ) || 
+                         ) ||
                          ']}'
             return $json
 };
@@ -72,7 +72,7 @@ let $start-time := util:system-time()
 
 (: Get file parameters - support both comma-separated and multiple parameters :)
 let $files-param := request:get-parameter("files", ())
-let $files := 
+let $files :=
     if (empty($files-param)) then
         ()
     else if (count($files-param) > 1) then
@@ -104,27 +104,27 @@ return
             let $debug := if ($config:debug = "trace") then
                 console:log("[WEBDATA-RESOLVE-WORKS] Received files: " || string-join($files, ", "))
             else ()
-            
+
             let $work-ids := resolver:resolve-work-ids($files)
-            
+
             (: Set success status :)
             let $set-status := response:set-status-code(200)
-            
+
             (: Log the operation :)
             let $runtime-ms := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S')) * 1000
             let $log := console:log(
-                "[WEBDATA-RESOLVE-WORKS] Resolved " || count($files) || " file(s) to " || 
+                "[WEBDATA-RESOLVE-WORKS] Resolved " || count($files) || " file(s) to " ||
                 count($work-ids) || " work ID(s) in " || format-number($runtime-ms, "#.##") || "ms"
             )
-            
+
             (: Format and return output :)
-            return 
+            return
                 if (empty($work-ids)) then
                     (: No work IDs found - return empty result :)
                     local:format-output((), $format)
                 else
                     local:format-output($work-ids, $format)
-                    
+
         } catch * {
             (: Handle unexpected errors :)
             let $error-msg := "Internal error: " || $err:description
