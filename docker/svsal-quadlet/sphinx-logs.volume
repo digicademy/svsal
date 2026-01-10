@@ -1,0 +1,6 @@
+[Volume]
+# Sphinxsearch logs volume
+# Stores log files for the Sphinxsearch service
+
+[Install]
+WantedBy=default.target
