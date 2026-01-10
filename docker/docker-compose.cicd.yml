@@ -1,0 +1,56 @@
+# CI/CD Docker Compose Configuration for Salamanca
+# This configuration is optimized for automated derivative generation
+version: '3'
+
+services:
+  existdb:
+    image: ghcr.io/digicademy/svsal/svsal-exist:3.0rc2
+    container_name: existdb-cicd
+    environment:
+      JAVA_TOOL_OPTIONS: '-Xmx4g -Xms2g'
+    ports:
+      - "8080:8080"
+    volumes:
+      - existdata:/exist/data
+      - existexport:/exist/data/export
+      # Mount TEI source files from the TEI repository
+      # In CI/CD, mount with: -v /path/to/tei-repo:/exist/apps/salamanca-tei:ro
+      # For local testing: docker cp /path/to/tei-files/. existdb-cicd:/exist/apps/salamanca-tei/
+      - tei-source:/exist/apps/salamanca-tei:ro
+    networks:
+      - cicd-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+
+  any23:
+    image: ghcr.io/digicademy/svsal/svsal-any23:2.3rc2
+    container_name: any23-cicd
+    ports:
+      - "8082:8082"
+    networks:
+      - cicd-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  existdata:
+    driver: local
+    name: existdata-cicd
+  existexport:
+    driver: local
+    name: existexport-cicd
+  tei-source:  # TEI XML source files (mounted from external repo in CI/CD)
+    driver: local
+    name: tei-source-cicd
+
+networks:
+  cicd-network:
+    driver: bridge
+    name: cicd-network
