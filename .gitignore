@@ -18,3 +18,4 @@ yarn-error.log*
 /build
 /dist
 *-key.pem
+apache-any23-service-2.3.war
