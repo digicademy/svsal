@@ -1,20 +1,20 @@
 # Dockerfile for Salamanca eXist-db Webapp
 #
 # Build image with
-# . .env && time TMPDIR="/home/awagner/Temp" buildah bud --secret=id=setadminpw,src=./.setadminpw --build-arg SVN_USER=${SVN_USER} --build-arg SVN_PASS=${SVN_PASS} --build-arg EXIST_USER=${EXIST_USER} --build-arg EXIST_PASS=${EXIST_PASS} -t ghcr.io/digicademy/svsal/svsal-exist:3.0rc1 -f Dockerfile .
+# . .env && time TMPDIR="/home/awagner/Temp" buildah bud --secret=id=setadminpw,src=./.setadminpw --build-arg SVN_USER=${SVN_USER} --build-arg SVN_PASS=${SVN_PASS} --build-arg EXIST_USER=${EXIST_USER} --build-arg EXIST_PASS=${EXIST_PASS} -t ghcr.io/digicademy/svsal/svsal-exist:3.0rc2 -f Dockerfile .
 #
 # Then run with
 #   buildah from svsal-exist
 #   buildah run --tty -p 8080:8080 -p 8443:8443 svsal-exist-working-container /bin/bash
 #
 # or
-#   podman run --rm -it -p 8080:8080 -p 8443:8443 --name exist ghcr.io/digicademy/svsal/svsal-exist:3.0rc1
+#   podman run --rm -it -p 8080:8080 -p 8443:8443 --name exist ghcr.io/digicademy/svsal/svsal-exist:3.0rc2
 #     perhaps add mount options:
 #       -v svsal-webdata:/var/data/exist/data/export -v $(pwd)/tmp/logs:/exist/logs
 #
 # This is the last working podman run command:
 #
-#  podman run --rm -it -p 8080:8080 -p 8443:8443 --name=exist -v ./existexport:/exist/data/export -v ./exist/log:/exist/logs ghcr.io/digicademy/svsal/svsal-exist:3.0rc1
+#  stats_dictpodman run --rm -it -p 8080:8080 -p 8443:8443 --name=exist -v ./existexport:/exist/data/export -v ./exist/log:/exist/logs ghcr.io/digicademy/svsal/svsal-exist:3.0rc2
 #
 # These are (systemd service unit) podman parameters used in production,
 # whether they make sense depends on the environment the container is being run in:
@@ -23,7 +23,8 @@
 
 # === STAGE 1 ===
 
-FROM openjdk:8-jdk-slim as builder
+# FROM openjdk:8-jdk-slim as builder
+FROM eclipse-temurin:21-jre-jammy as builder
 
 USER root
 
@@ -64,7 +65,7 @@ RUN echo ${SVN_PASS} | git svn clone --username ${SVN_USER} ${APP1_REPO} \
 
 ARG APP2_NAME=svsal
 ARG APP2_REPO=https://github.com/digicademy/svsal.git
-ARG APP2_TAG_OR_BRANCH=main
+ARG APP2_TAG_OR_BRANCH=feature/cicd
 
 # Build the app
 RUN  git clone -b ${APP2_TAG_OR_BRANCH} --single-branch ${APP2_REPO} \
@@ -98,7 +99,7 @@ RUN echo ${SVN_PASS} | git svn clone --username ${SVN_USER} ${APP4_REPO} \
 
 # -- other eXist apps and libraries --
 
-ARG TEMPLATING_VERSION=1.1.0
+ARG TEMPLATING_VERSION=1.2.1
 ARG EXPATH_BIN_VERSION=1.0.1
 ARG FUNCTX_VERSION=1.0.1
 
@@ -113,29 +114,41 @@ RUN ls -la /tmp
 
 # === STAGE 2 ===
 
-FROM existdb/existdb:6.2.0-DEBUG
+FROM existdb/existdb:6.4.0-DEBUG
 
 LABEL org.opencontainers.image.source https://github.com/digicademy/svsal
 LABEL org.opencontainers.image.description "The School of Salamanca. XQuery Web Application"
 LABEL org.opencontainers.image.licenses MIT
 
+# These are the labels of the existdb-6.4.0-DEBUG image:
+# Build-time metadata as defined at http://label-schema.org
+# and used by autobuilder @hooks/build
+# LABEL org.label-schema.build-date=${maven.build.timestamp} \
+#       org.label-schema.description="${project.description} (DEBUG version)" \
+#       org.label-schema.name="existdb-debug" \
+#       org.label-schema.schema-version="1.0" \
+#       org.label-schema.url="${project.url}" \
+#       org.label-schema.vcs-ref=${build-commit-abbrev} \
+#       org.label-schema.vcs-url="${project.scm.url}" \
+#       org.label-schema.vendor="existdb"
+
 ARG EXIST_USER
 ARG EXIST_PASS
 
-ARG TOOLS="bash less curl ca-certificates gnupg ant mlocate"
-ARG JDK="openjdk-8-jdk-headless"
+ARG TOOLS="bash less curl ca-certificates wget gpg ant mlocate apt-transport-https"
+ARG JDK="temurin-8-jdk"
 ARG UTILS="git git-svn htop jq vim"
 ARG LATEX="biber latexmk texlive-latex-recommended texlive-fonts-recommended texlive-latex-extra texlive-fonts-extra texlive-lang-all"
 
-# RUN echo "deb http://security.debian.org/debian-security bullseye-security main contrib non-free" > /etc/apt/sources.list
-RUN echo "deb http://archive.debian.org/debian/ stretch main contrib non-free" > /etc/apt/sources.list
-RUN echo "deb http://archive.debian.org/debian/ stretch-proposed-updates main contrib non-free" >> /etc/apt/sources.list
-RUN echo "deb http://archive.debian.org/debian-security stretch/updates main contrib non-free" >> /etc/apt/sources.list
-
-RUN apt-get update && apt-get -y install apt && \
+RUN apt-get update && apt-get -y install apt apt-utils && \
   apt-get -y dist-upgrade && \
   apt-get install -y --no-install-recommends \
-  ${TOOLS} \
+  ${TOOLS}
+
+RUN wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor | tee /etc/apt/trusted.gpg.d/adoptium.gpg > /dev/null
+RUN echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
   ${JDK} \
   ${UTILS} \
   ${LATEX}
@@ -146,40 +159,37 @@ RUN updatedb
 # TODO: update local ssl certificate
 
 # Copy Salamanca files
-COPY --from=builder /tmp/*.xar                /exist/autodeploy/
-COPY etc/log4j2.xml etc/conf.xml              /exist/etc/
+COPY --from=builder /tmp/*.xar                   /exist/autodeploy/
+COPY etc/log4j2.xml etc/conf.xml                 /exist/etc/
+COPY etc/jetty-ssl-context.xml etc/keystore.p12  /exist/etc/jetty/
 # COPY etc/web.xml                              /exist/etc/webapp/WEB-INF/
 # COPY etc/controller-config.xml                /exist/etc/webapp/WEB-INF/
 # COPY etc/standard.enabled-jetty-configs       /exist/etc/jetty/
 
 # Configure JVM for use in container (here be dragons)
 # also sets default values to previous two arguments
-# ENV JAVA_TOOL_OPTIONS \
-#   -Dfile.encoding=UTF8 \
-#   -Dsun.jnu.encoding=UTF-8 \
-#   -Djava.awt.headless=true \
-#   -Dorg.exist.db-connection.cacheSize=${CACHE_MEM:-256}M \
-#   -Dorg.exist.db-connection.pool.max=${MAX_BROKER:-20} \
-#   -Dlog4j.configurationFile=/exist/etc/log4j2.xml \
-#   -Dexist.home=/exist \
-#   -Dexist.configurationFile=/exist/etc/conf.xml \
-#   -Dexist.jetty.config=/exist/etc/jetty/standard.enabled-jetty-configs \
-#   -Djetty.home=/exist \
-#   -XX:+UseG1GC \
-#   -XX:+UseStringDeduplication \
-#   -XX:+UseContainerSupport \
-#   -XX:MaxRAMPercentage=${JVM_MAX_RAM_PERCENTAGE:-75.0} \
-#   -XX:+ExitOnOutOfMemoryError \
-#   -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
-
+ENV JAVA_TOOL_OPTIONS \
+  -Dfile.encoding=UTF8 \
+  -Dsun.jnu.encoding=UTF-8 \
+  -Djava.awt.headless=true \
+  -Dorg.exist.db-connection.cacheSize=${CACHE_MEM:-256}M \
+  -Dorg.exist.db-connection.pool.max=${MAX_BROKER:-20} \
+  -Dlog4j.configurationFile=/exist/etc/log4j2.xml \
+  -Dexist.home=/exist \
+  -Dexist.configurationFile=/exist/etc/conf.xml \
+  -Dexist.jetty.config=/exist/etc/jetty/standard.enabled-jetty-configs \
+  -Djetty.home=/exist \
+  -XX:+UseG1GC \
+  -XX:+UseStringDeduplication \
+  -XX:+UseContainerSupport \
+  -XX:MaxRAMPercentage=${JVM_MAX_RAM_PERCENTAGE:-75.0} \
+  -XX:+ExitOnOutOfMemoryError \
+  -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
 
 # pre-populate the database by launching it once
 # this presupposes a secret file ".setadminpw" containing "sm:passwd('admin','123')"
 # being passed via --secret=id=setadminpw,src=./.setadminpw to the build process
 RUN --mount=type=secret,id=setadminpw,target=setadminpw ["java", "org.exist.start.Main", "client", "--no-gui", "-l", "-u", "admin", "-P", "", "-F", "/setadminpw" ]
-
-# RUN ["java", "org.exist.start.Main", "client", "--no-gui", "-l", "-u", "admin" -P "${EXIST_PASS}"]
-# RUN ["java", "org.exist.start.Main", "client", "--no-gui", "-l", "-u", "${EXIST_USER}" -P "${EXIST_PASS}"]
 
 # === Finalize ===
 
@@ -190,10 +200,11 @@ VOLUME [ /exist/data/export, \
 
 EXPOSE 8080 8443
 
-# 6.3.0-Debug Dockerfile:
-CMD [ "java", "org.exist.start.Main", "jetty" ]
+HEALTHCHECK CMD [ "java", \
+    "org.exist.start.Main", "client", \
+    "--no-gui", \
+    "--user", "guest", "--password", "guest", \
+    "--xpath", "system:get-version()" ]
 
-# Default (i.e. non-Debug) Dockerfile:
-# ENTRYPOINT [ "java", "-jar", "start.jar" ]
-# CMD [ "jetty" ]
-# CMD [ "java", "org.exist.start.Main", "client", "--no-gui", "-l" ]
+# 6.4.0-Debug Dockerfile:
+CMD [ "java", "org.exist.start.Main", "jetty" ]
