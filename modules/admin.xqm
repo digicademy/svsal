@@ -508,10 +508,10 @@ declare function admin:needsStats($targetWorkId as xs:string) as xs:boolean {
             if (doc-available(concat($subcollection, '/', $targetWorkId, '.xml'))) then $subcollection
             else ()
     let $targetWorkModTime := xmldb:last-modified($targetSubcollection, $targetWorkId || '.xml')
-    let $subcollection := $config:nlp-root
+    let $subcollection := $config:stats-root
     return    
-        if (util:binary-doc-available($subcollection || '/' || $targetWorkId || '.json')) then
-            let $jsonModTime := xmldb:last-modified($subcollection, $targetWorkId || '.json')
+        if (util:binary-doc-available($subcollection || '/' || $targetWorkId || '-stats.json')) then
+            let $jsonModTime := xmldb:last-modified($subcollection, $targetWorkId || '-stats.json')
             return 
                 if (starts-with(upper-case($targetWorkId), 'W0')) then
                     let $indexModTime := xmldb:last-modified($config:index-root, $targetWorkId || "_nodeIndex.xml")
@@ -669,9 +669,9 @@ declare function admin:needsCorpusNLPString($node as node(), $model as map(*)) {
         else true()
     return
         if ($needsCorpusNLP) then
-            <td title="Most current source from: {string($worksModTime)}"><a href="webdata-admin.xql?format=stats-nlp"><b>Create corpus NLP</b></a></td>
+            <td title="Most current source from: {string($worksModTime)}"><a href="webdata-admin.xql?format=nlp-corpus"><b>Create corpus NLP</b></a></td>
         else
-            <td title="{concat('NLP created on: ', string(xmldb:last-modified($config:stats-root, 'corpus.csv')), ', most current source from: ', string($worksModTime), '.')}">Creating corpus NLP unnecessary. <small><a href="webdata-admin.xql?format=stats-nlp">Create corpus NLP anyway!</a></small></td>
+            <td title="{concat('NLP created on: ', string(xmldb:last-modified($config:stats-root, 'corpus.csv')), ', most current source from: ', string($worksModTime), '.')}">Creating corpus NLP unnecessary. <small><a href="webdata-admin.xql?format=nlp-corpus">Create corpus NLP anyway!</a></small></td>
 };
 
 (: #### DATABASE UTIL FUNCTIONS #### :)
@@ -2825,15 +2825,61 @@ declare function admin:createStatsCorpus() {
         <output:serialization-parameters xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
             <output:method value="json"/>
         </output:serialization-parameters>
-    
+
     let $works := xmldb:get-child-resources($config:stats-root)
-    let $all-stats := for $fn in $works (: position() < 6] :)
+
+    (: Collect all work stats and calculate aggregations :)
+    let $all-contents := for $fn in $works
+                         return json-doc($config:stats-root || "/" || $fn)
+
+    (: Aggregate corpus statistics :)
+    let $corpus-stats := 
+        map {
+            "id": "salamanca-corpus",
+            "lang": map:merge( for $c in $all-contents
+                                let $lang := string-join($c?lang, " &amp; ")
+                                group by $lang
+                                return map { $lang: count($c) }
+                            ),
+            "chars_count": sum(for $c in $all-contents return $c?chars_count),
+            "words_count": sum(for $c in $all-contents return $c?words_count),
+            "tokens_count": sum(for $c in $all-contents return $c?tokens_count),
+            "wordforms_count": sum(for $c in $all-contents return $c?wordforms_count),
+            "normalizations_count": map {
+                "abbr": sum(for $c in $all-contents return $c?normalizations_count?abbr),
+                "sic": sum(for $c in $all-contents return $c?normalizations_count?sic),
+                "unmarked_hyph": sum(for $c in $all-contents return $c?normalizations_count?unmarked_hyph)
+            },
+            "facs_count": map {
+                "full_text": sum(for $c in $all-contents return $c?facs_count?full_text)
+            },
+            "mf_lemmata":   let $all-lemmata := array:flatten(for $c in $all-contents return $c?mf_lemmata)
+                            let $maps := for $i in $all-lemmata
+                                         where $i instance of map(*)
+                                         return $i
+                            return
+                                for $item in $maps
+                                group by $lid := $item?lid
+                                return map {
+                                    "lid"   : $lid,
+                                    "freq"  : sum($item?freq),
+                                    "terms" : ($item?terms)[1]
+                                }
+        }
+    
+    (: Create work-specific stats maps :)
+    let $log  := if ($config:debug = ('info', 'trace')) then console:log("[ADMIN] Stats: Build work-specific stats ...") else ()
+    let $all-stats := for $fn in $works
                       let $content := json-doc($config:stats-root || "/" || $fn)
                       return map { substring($fn, 1, 5) : $content }
-    let $full := array { $all-stats }
     
-    let $save        := admin:saveFile('dummy', 'corpus-stats.json', serialize($full, $params), 'stats')
-    let $export      := admin:exportJSONFile('corpus-stats.json', $full, 'stats')
+    (: Combine corpus stats with work stats :)
+    let $log  := if ($config:debug = ('info', 'trace')) then console:log("[ADMIN] Stats: Concat work-specific and aggregate stats ...") else ()
+    let $full := array { map { "corpus": $corpus-stats }, $all-stats }
+    let $log  := if ($config:debug = ('info', 'trace')) then console:log("[ADMIN] Stats: Done now saving/exporting ...") else ()
+
+    let $save   := xmldb:store($config:corpus-zip-root, 'corpus-stats.json', serialize($full, $params))
+    let $export := admin:exportBinaryFile('corpus-stats.json', serialize($full, $params), 'data')
 
     let $log := if ($config:debug = ('info', 'trace')) then util:log('info', '[ADMIN] Done creating corpus stats. Saved and exported to ' || $save || ' and ' || $export || '.') else ()
 
@@ -2843,6 +2889,6 @@ declare function admin:createStatsCorpus() {
         else if ($runtime-ms < (1000 * 60 * 60))  then format-number($runtime-ms div (1000 * 60), "#.##") || " Min."
         else format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
     let $debug := console:log('[ADMIN] Done creating corpus stats. Saved and exported to ' || $save || ' and ' || $export || '.')
-    
+
     return $full
 };
