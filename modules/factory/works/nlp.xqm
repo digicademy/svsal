@@ -17,7 +17,6 @@ for statistical and/or NLP analysis.
 
 ----++++#### :)
 
-
 (:
 ~ Modes:
 ~   - 'all': punctuation characters/symbols count as tokens
