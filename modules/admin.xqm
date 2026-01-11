@@ -2451,7 +2451,7 @@ declare function admin:createNLPCorpus() {
         if ($runtime-ms < (1000 * 60)) then format-number($runtime-ms div 1000, "#.##") || " Sek."
         else if ($runtime-ms < (1000 * 60 * 60))  then format-number($runtime-ms div (1000 * 60), "#.##") || " Min."
         else format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
-    let $log    := util:log('info', 'Extracted NLP CSV for ' || $rid || ' in ' || $runtimeString)
+    let $log    := util:log('info', 'Extracted NLP corpus in ' || $runtimeString)
 
     let $save   := xmldb:store($config:corpus-zip-root, 'corpus.csv', $full)
     let $export := admin:exportBinaryFile('corpus.csv', $full, 'data')
@@ -2818,8 +2818,8 @@ declare function admin:createStats($wid as xs:string) {
 declare function admin:createStatsCorpus() {
     let $start-time := util:system-time()
 
-    let $debug := console:log("[ADMIN] Stats: Creating stats for " || $wid || " ...")
-    let $log  := if ($config:debug = ('info', 'trace')) then util:log('info', "[ADMIN] Stats: Creating stats for " || $wid || " ...") else ()
+    let $debug := console:log("[ADMIN] Stats: Creating corpus stats ...")
+    let $log  := if ($config:debug = ('info', 'trace')) then util:log('info', "[ADMIN] Stats: Creating corpus stats ...") else ()
 
     let $params := 
         <output:serialization-parameters xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
@@ -2835,13 +2835,14 @@ declare function admin:createStatsCorpus() {
     let $save        := admin:saveFile('dummy', 'corpus-stats.json', serialize($full, $params), 'stats')
     let $export      := admin:exportJSONFile('corpus-stats.json', $full, 'stats')
 
+    let $log := if ($config:debug = ('info', 'trace')) then util:log('info', '[ADMIN] Done creating corpus stats. Saved and exported to ' || $save || ' and ' || $export || '.') else ()
+
     let $runtime-ms := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000
     let $runtimeString :=
         if ($runtime-ms < (1000 * 60)) then format-number($runtime-ms div 1000, "#.##") || " Sek."
         else if ($runtime-ms < (1000 * 60 * 60))  then format-number($runtime-ms div (1000 * 60), "#.##") || " Min."
         else format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
     let $debug := console:log('[ADMIN] Done creating corpus stats. Saved and exported to ' || $save || ' and ' || $export || '.')
-    let $log := if ($config:debug = ('info', 'trace')) then util:log('info', '[ADMIN] Done creating corpus stats. Saved and exported to ' || $save || ' and ' || $export || '.') else ()
     
     return $full
 };
