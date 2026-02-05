@@ -2297,7 +2297,7 @@ declare function admin:buildRoutingInfoWork($resourceId as xs:string) {
                                     return tokenize($resourceId, '_')[1] || '/html/' || $resourceId || '_details.html'
                     else if ($text_type eq 'workingpapers') then
                         tokenize($resourceId, '_')[1] || '/html/' || $resourceId || '_details.html'
-                    else if ($text_type eq 'lemma_article') then
+                    else if ($text_type eq 'lemmata') then
                         tokenize($resourceId, '_')[1] || '/html/00001_completeWork.html'
                     else  if (contains($resourceId, ':')) then
                         let $id := tokenize($resourceId, ':')[1]
