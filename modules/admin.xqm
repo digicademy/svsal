@@ -252,7 +252,10 @@ declare function admin:needsCrumbtrailString($node as node(), $model as map(*)) 
 };
 
 declare function admin:needsPdf($targetWorkId as xs:string) as xs:boolean {
-    let $workModTime := xmldb:last-modified($config:tei-works-root, $targetWorkId || '.xml')
+    let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
+                                    if (doc-available(concat($subcollection, '/', $targetWorkId, '.xml'))) then $subcollection
+                                    else ()
+    let $workModTime := xmldb:last-modified($targetSubcollection, $targetWorkId || '.xml')
     return
         if ($targetWorkId || ".pdf" = xmldb:get-child-resources($config:pdf-root)) then
             let $renderModTime := xmldb:last-modified($config:pdf-root, $targetWorkId || ".pdf")
@@ -1826,8 +1829,9 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
                     'There is no xml:id in the ' || $hit_type || ' hit!'
             
             (: Now build a sphinx "row" for the fragment :)
-            (: let $sphinx_id    := xs:long(substring($work_id, functx:index-of-string-first($work_id, "0"))) * 1000000 + ( (string-to-codepoints(substring($work_id, 1, 1)) + string-to-codepoints(substring($work_id, 2, 1))) * 10000 ) + $index :)
-            let $sphinx_id    := xs:long(substring($work_id, 2)) * 100000000 + $index
+            (: Lemmata and Works may happen to have the same numeric part of the work_id, resulting in duplicate $sphinx_ids if we don't take precautions :)
+            let $lemma_offset := if (starts-with($work_id, 'L0')) then xs:long(substring($work_id, 2)) * 10000 else 0
+            let $sphinx_id    := xs:long(substring($work_id, 2)) * 100000000 + $lemma_offset + $index
             let $html_snippet :=
                 <sphinx:document id="{$sphinx_id}">
                     <div>
@@ -2034,7 +2038,11 @@ declare function admin:createPdf($rid as xs:string){
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Creating pdf from " || $rid || " ...") else ()
     let $debug := if ($config:debug = ("trace")) then console:log("[PDF-" || $rid ||"] Transforming into XSL-FO...") else ()
 
-    let $doctotransform := doc($config:tei-works-root || '/'|| $rid || '.xml')//tei:TEI
+    let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
+                                    if (doc-available(concat($subcollection, '/', $rid, '.xml'))) then $subcollection
+                                    else ()
+
+    let $doctotransform := doc($targetSubcollection || '/'|| $rid || '.xml')//tei:TEI
     let $volumes := $doctotransform//xi:include[contains(@href, '_Vol')]/@href/substring-before(., '.xml')
     let $transformedvolumes := array{fn:for-each($volumes, function($k) {
                                                                             let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Creating pdf for volume " || $k || " ...") else ()
@@ -2071,7 +2079,7 @@ declare function admin:createPdf($rid as xs:string){
             <div>
                 {$transformedvolumes}
                 {$savedPdfFile} 
-                <p> The transformation from XML to PDF was successfull and the file is stored in the pdf collection.
+                <p> The transformation from XML to PDF was successful and the file is stored in {$savedPdfFile} and has been exported to {$exportedPdfFile}.
                     Duration: {if ($runtime-pdf < (1000 * 60)) then format-number($runtime-pdf div 1000, "#.##") || " Sec."
                                else if ($runtime-pdf < (1000 * 60 * 60)) then format-number($runtime-pdf div (1000 * 60), "#.##") || " Min."
                                else format-number($runtime-pdf div (1000 * 60 * 60), "#.##") || " Hrs."
