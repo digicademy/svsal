@@ -1,0 +1,129 @@
+# CI/CD: Render derivative data when TEI XML source files change
+name: Render Webdata
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      # Adjust this to wherever your TEI source files live or are referenced
+      - '**.xml'
+  workflow_dispatch:
+    inputs:
+      work_ids:
+        description: 'Comma-separated work IDs to re-render (e.g., W0100,W0200)'
+        required: false
+
+env:
+  EXIST_ADMIN_PW: ${{ secrets.EXIST_ADMIN_PW }}
+  SVN_USER: ${{ secrets.SVN_USER }}
+  SVN_PASS: ${{ secrets.SVN_PASS }}
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      changed_files: ${{ steps.detect.outputs.files }}
+      has_changes: ${{ steps.detect.outputs.has_changes }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Detect changed XML files
+        id: detect
+        run: |
+          if [ -n "${{ github.event.inputs.work_ids }}" ]; then
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
+            echo "files=manual" >> "$GITHUB_OUTPUT"
+          else
+            CHANGED=$(git diff --name-only HEAD~1 HEAD -- '*.xml' | tr '\n' ' ')
+            if [ -n "$CHANGED" ]; then
+              echo "has_changes=true" >> "$GITHUB_OUTPUT"
+              echo "files=${CHANGED}" >> "$GITHUB_OUTPUT"
+            else
+              echo "has_changes=false" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+
+  render:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.has_changes == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 360  # 6 hours max (large works can take hours)
+
+    services:
+      existdb:
+        image: ghcr.io/digicademy/svsal/svsal-exist-ci:latest
+        ports:
+          - 8080:8080
+        options: >-
+          --health-cmd "curl -sf http://localhost:8080/exist/status || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 30
+          --health-start-period 120s
+        env:
+          JAVA_TOOL_OPTIONS: '-Xmx4g -Xms2g'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Wait for eXist-db
+        run: |
+          echo "Waiting for eXist-db to be fully ready..."
+          for i in $(seq 1 60); do
+            if curl -sf http://localhost:8080/exist/status; then
+              echo "eXist-db is up!"
+              break
+            fi
+            sleep 10
+          done
+
+      - name: Render webdata
+        run: |
+          chmod +x docker/dockerfiles/svsal-exist/ci-render.sh
+
+          # If manual trigger with specific work IDs
+          if [ -n "${{ github.event.inputs.work_ids }}" ]; then
+            IFS=',' read -ra WIDS <<< "${{ github.event.inputs.work_ids }}"
+            for wid in "${WIDS[@]}"; do
+              for fmt in index crumbtrails html details snippets nlp stats routing; do
+                echo "Rendering ${fmt} for ${wid}..."
+                curl -sf -u "admin:${EXIST_ADMIN_PW}" \
+                  --max-time 7200 \
+                  "http://localhost:8080/exist/apps/salamanca/webdata-admin.xql?rid=${wid}&format=${fmt}" \
+                  > /dev/null
+              done
+            done
+          else
+            # Auto-detect changed files and render
+            docker/dockerfiles/svsal-exist/ci-render.sh \
+              "http://localhost:8080" \
+              "${EXIST_ADMIN_PW}" \
+              ${{ needs.detect-changes.outputs.changed_files }}
+          fi
+
+      - name: Export generated artifacts
+        run: |
+          mkdir -p artifacts
+          # Export webdata from eXist-db via REST API
+          # HTML fragments
+          curl -sf -u "admin:${EXIST_ADMIN_PW}" \
+            "http://localhost:8080/exist/rest/db/apps/salamanca-webdata/" \
+            -o artifacts/webdata-listing.xml || true
+
+          # Alternatively, if you mounted an export volume:
+          # cp -r /path/to/export/* artifacts/
+
+          echo "Artifacts exported."
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: webdata-${{ github.sha }}
+          path: artifacts/
+          retention-days: 30
+
+      # Optional: deploy artifacts to a static file server, S3, etc.
+      # - name: Deploy to S3
+      #   run: aws s3 sync artifacts/ s3://your-bucket/webdata/

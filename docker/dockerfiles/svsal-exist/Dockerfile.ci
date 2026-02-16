@@ -1,0 +1,102 @@
+# CI/CD variant of the svsal-exist Dockerfile
+# Optimized for headless webdata generation, not interactive use
+
+# === STAGE 1: Build XAR packages ===
+
+FROM openjdk:8-jdk-slim as builder
+
+USER root
+
+WORKDIR /usr/local
+RUN apt-get update && apt-get -y install apt-utils && apt-get -y dist-upgrade && apt-get install -y --no-install-recommends \
+  git \
+  git-svn \
+  curl \
+  ca-certificates \
+  gnupg \
+  openssh-client \
+  ant
+
+RUN mkdir -p ~/.ssh && ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+
+ARG SVN_USER
+ARG SVN_PASS
+
+# -- svsal-existadmin --
+ARG APP1_REPO=https://svn.adwmainz.net/04-39/trunk/svsal-existadmin
+ARG APP1_PATH=svsal-existadmin
+RUN echo ${SVN_PASS} | git svn clone --username ${SVN_USER} ${APP1_REPO} \
+  && cd ${APP1_PATH} \
+  && ant \
+  && cp build/*.xar /tmp;
+
+# -- svsal (use the current commit, not necessarily 'main') --
+ARG APP2_NAME=svsal
+ARG APP2_REPO=https://github.com/digicademy/svsal.git
+ARG APP2_TAG_OR_BRANCH=main
+RUN git clone -b ${APP2_TAG_OR_BRANCH} --single-branch ${APP2_REPO} \
+  && cd ${APP2_NAME} \
+  && ant \
+  && cp build/*.xar /tmp;
+
+# -- svsal-tei --
+ARG APP3_REPO=https://svn.adwmainz.net/04-39/trunk/svsal-tei
+ARG APP3_PATH=svsal-tei
+RUN echo ${SVN_PASS} | git svn clone --username ${SVN_USER} ${APP3_REPO} \
+  && cd ${APP3_PATH} \
+  && ant \
+  && cp build/*.xar /tmp;
+
+# -- svsal-webdata (target package where generated data will be stored) --
+ARG APP4_REPO=https://svn.adwmainz.net/04-39/trunk/svsal-webdata
+ARG APP4_PATH=svsal-webdata
+RUN echo ${SVN_PASS} | git svn clone --username ${SVN_USER} ${APP4_REPO} \
+  && cd ${APP4_PATH} \
+  && ant \
+  && cp build/*.xar /tmp;
+
+# -- eXist library dependencies --
+ARG TEMPLATING_VERSION=1.1.0
+ARG EXPATH_BIN_VERSION=1.0.1
+ARG FUNCTX_VERSION=1.0.1
+
+RUN curl -L -o /tmp/templating-${TEMPLATING_VERSION}.xar http://exist-db.org/exist/apps/public-repo/public/templating-${TEMPLATING_VERSION}.xar
+RUN curl -L -o /tmp/expath-bin-${EXPATH_BIN_VERSION}.xar http://exist-db.org/exist/apps/public-repo/public/expath-bin-module-${EXPATH_BIN_VERSION}.xar
+RUN curl -L -o /tmp/functx-${FUNCTX_VERSION}.xar http://exist-db.org/exist/apps/public-repo/public/functx-${FUNCTX_VERSION}.xar
+
+# === STAGE 2: eXist-db runtime (CI/CD optimized) ===
+
+FROM existdb/existdb:6.2.0-DEBUG
+
+LABEL org.opencontainers.image.source https://github.com/digicademy/svsal
+LABEL org.opencontainers.image.description "svsal CI/CD webdata generation"
+
+# Lighter package set — no LaTeX, no interactive tools
+ARG TOOLS="bash curl ca-certificates jq"
+
+RUN echo "deb http://archive.debian.org/debian/ stretch main contrib non-free" > /etc/apt/sources.list
+RUN echo "deb http://archive.debian.org/debian/ stretch-proposed-updates main contrib non-free" >> /etc/apt/sources.list
+RUN echo "deb http://archive.debian.org/debian-security stretch/updates main contrib non-free" >> /etc/apt/sources.list
+
+RUN apt-get update && apt-get -y install apt && \
+  apt-get -y dist-upgrade && \
+  apt-get install -y --no-install-recommends ${TOOLS}
+
+COPY --from=builder /tmp/*.xar /exist/autodeploy/
+COPY etc/log4j2.xml etc/conf.xml /exist/etc/
+
+# Set admin password during build
+RUN --mount=type=secret,id=setadminpw,target=setadminpw ["java", "org.exist.start.Main", "client", "--no-gui", "-l", "-u", "admin", "-P", "", "-F", "/setadminpw" ]
+
+# Add a health-check so CI can wait for eXist to be ready
+HEALTHCHECK --interval=5s --timeout=3s --start-period=30s --retries=20 \
+  CMD curl -sf http://localhost:8080/exist/status || exit 1
+
+# Directory where we'll mount new/changed TEI source files
+RUN mkdir -p /import
+
+VOLUME [ "/exist/data/export", "/exist/logs", "/import" ]
+
+EXPOSE 8080
+
+CMD [ "java", "org.exist.start.Main", "jetty" ]
