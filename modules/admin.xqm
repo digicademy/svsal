@@ -196,8 +196,6 @@ declare function admin:needsIndexString($node as node(), $model as map(*)) {
     let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
                                     if (doc-available(concat($subcollection, '/', $currentWorkId, '.xml'))) then $subcollection
                                     else ()
-(: Changed to improve performance on 2025-03-24, A.W.                               :)
-(:  let $readyForIndexing := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentWorkId, '.xml'))//tei:TEI[@xml:id eq $currentWorkId]/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then:)
     let $readyForIndexing := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentWorkId, '.xml'))/id($currentWorkId)/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then
                             true()
                          else false()
@@ -232,8 +230,6 @@ declare function admin:needsCrumbtrailString($node as node(), $model as map(*)) 
     let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
                                     if (doc-available(concat($subcollection, '/', $currentWorkId, '.xml'))) then $subcollection
                                     else ()
-(: Changed to improve performance on 2025-03-24, A.W.                               :)
-(:  let $readyForCrumbtrail := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentWorkId, '.xml'))//tei:TEI[@xml:id eq $currentWorkId]/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then:)
     let $readyForCrumbtrail := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentWorkId, '.xml'))/id($currentWorkId)/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then
                             true()
                          else false()
@@ -256,7 +252,10 @@ declare function admin:needsCrumbtrailString($node as node(), $model as map(*)) 
 };
 
 declare function admin:needsPdf($targetWorkId as xs:string) as xs:boolean {
-    let $workModTime := xmldb:last-modified($config:tei-works-root, $targetWorkId || '.xml')
+    let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
+                                    if (doc-available(concat($subcollection, '/', $targetWorkId, '.xml'))) then $subcollection
+                                    else ()
+    let $workModTime := xmldb:last-modified($targetSubcollection, $targetWorkId || '.xml')
     return
         if ($targetWorkId || ".pdf" = xmldb:get-child-resources($config:pdf-root)) then
             let $renderModTime := xmldb:last-modified($config:pdf-root, $targetWorkId || ".pdf")
@@ -274,49 +273,36 @@ declare function admin:needsPdfString($node as node(), $model as map(*)) {
     let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
                                     if (doc-available(concat($subcollection, '/', $currentResourceId, '.xml'))) then $subcollection
                                     else ()
-(: Changed to improve performance on 2025-03-24, A.W.                               :)
-(:  let $readyForPDF := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))//tei:TEI[@xml:id eq $currentResourceId]/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then:)
     let $readyForPDF := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))/id($currentResourceId)/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then
                                 true()
                              else false()
 
     let $currentDoc := doc($targetSubcollection || "/" || $currentResourceId ||".xml")
-    let $isMultiWorkVolume as node() := $currentDoc//tei:TEI//tei:text
+    let $isMultiWorkVolume := xs:boolean($currentDoc//tei:TEI//tei:text/@type="work_multivolume")
     let $target_1 := $currentDoc//tei:relatedItem/@target
     let $target_2 := for $target in $target_1 return substring-after($target, "work:") 
+    let $anyNeedsPdf := some $t in (($currentResourceId), $target_2) satisfies admin:needsPdf($t)
 
     return 
-          if (not($readyForPDF)) then
+        if (not($readyForPDF)) then
             <td>Not ready yet</td>
-          else if ($isMultiWorkVolume/@type="work_multivolume") then
-            <td> 
-                {for $target in $target_2 
-                  return
-                    if (admin:needsPdf($target)) then 
-                        <a title="Source from: {string(xmldb:last-modified($targetSubcollection, $target || '.xml'))}{if (xmldb:get-child-resources($config:pdf-root) = $target || ".pdf") then concat(', rendered on: ', xmldb:last-modified($config:pdf-root, $target || ".pdf")) else ()}"><b> Create PDF for <a href="webdata-admin.xql?rid={$target}&amp;format=pdf_create">{$target}!</a><br/></b></a>
-                    else if(not(admin:needsPdf($target))) then
-                        <i title="Source from: {string(xmldb:last-modified($targetSubcollection, $target || '.xml'))}, rendered on: {xmldb:last-modified($config:pdf-root, $target || ".pdf")}">PDF for {$target} created.<small><a href="webdata-admin.xql?rid={$target}&amp;format=pdf_create">Create PDF anyway!</a></small> <br/> </i>
-                    else ()
-                }
+        else if ($anyNeedsPdf) then
+            <td title="Source from: {string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml'))}{if (xmldb:get-child-resources($config:pdf-root) = $currentResourceId || ".pdf") then concat(', rendered on: ', xmldb:last-modified($config:pdf-root, $currentResourceId || ".pdf")) else ()}">
+                <a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=pdf_create"><b>Create PDF NOW!</b></a>
+                <br/> or
+                <br/>
+                <form enctype="multipart/form-data" method="post" action="webdata-admin.xql?rid={$currentResourceId}&amp;format=pdf_upload">
+                  <p>Upload PDF File</p>
+                  <input type="file"  name="FileUpload"/>
+                  <input type="submit">Submit your PDF</input>
+                </form>
+                <br/>
             </td>
-          else
-            if (admin:needsPdf($currentResourceId)) then
-                <td title="Source from: {string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml'))}{if (xmldb:get-child-resources($config:pdf-root) = $currentResourceId || ".pdf") then concat(', rendered on: ', xmldb:last-modified($config:pdf-root, $currentResourceId || ".pdf")) else ()}">
-                    <a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=pdf_create"><b>Create PDF NOW!</b></a>
-                    <br/> or
-                    <br/>
-                    <form enctype="multipart/form-data" method="post" action="webdata-admin.xql?rid={$currentResourceId}&amp;format=pdf_upload">
-                      <p>Upload PDF File</p>
-                      <input type="file"  name="FileUpload"/>
-                      <input type="submit">Submit your PDF</input>
-                    </form>
-                    <br/>
-                </td>
-            else 
-                <td title="Source from: {string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml'))}, rendered on: {xmldb:last-modified($config:pdf-root, $currentResourceId || ".pdf")}">
-                    The PDF was already uploaded or created.
-                    <small><a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=pdf_create">Create PDF anyway!</a></small>
-                </td>
+        else
+            <td title="Source from: {string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml'))}, rendered on: {xmldb:last-modified($config:pdf-root, $currentResourceId || ".pdf")}">
+                The PDF was already uploaded or created.
+                <small><a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=pdf_create">Create PDF anyway!</a></small>
+            </td>
 };
 
 declare function admin:authorMakeHTML($node as node(), $model as map(*)) {
@@ -372,8 +358,6 @@ declare function admin:needsHTMLString($node as node(), $model as map(*)) {
     let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
                                     if (doc-available(concat($subcollection, '/', $currentResourceId, '.xml'))) then $subcollection
                                     else ()
-(: Changed to improve performance on 2025-03-24, A.W.                               :)
-(:  let $readyForHtml := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))//tei:TEI[@xml:id eq $currentResourceId]/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then:)
     let $readyForHtml := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))/id($currentResourceId)/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then
                             true()
                          else false()
@@ -442,7 +426,6 @@ declare function admin:needsSnippets($targetResourceId as xs:string) as xs:boole
                                     if (doc-available(concat($subcollection, '/', $targetResourceId, '.xml'))) then $subcollection
                                     else ()
     let $targetWorkModTime := xmldb:last-modified($targetSubcollection, $targetResourceId || '.xml')
-(:    let $newestSnippet := max(for $file in xmldb:get-child-resources($config:snippets-root || '/' || $targetWorkId) return xmldb:last-modified($config:snippets-root || '/' || $targetWorkId, $file)):)
 
     return if (xmldb:collection-available($config:snippets-root || '/' || $targetResourceId)
                 and count(xmldb:get-child-resources($config:snippets-root || '/' || $targetResourceId)) gt 0
@@ -464,8 +447,6 @@ declare function admin:needsSnippetsString($node as node(), $model as map(*)) {
     let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
                                     if (doc-available(concat($subcollection, '/', $currentResourceId, '.xml'))) then $subcollection
                                     else ()
-(: Changed to improve performance on 2025-03-24, A.W.                               :)
-(:  let $readyForSnippets := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))//tei:TEI[@xml:id eq $currentResourceId]/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then:)
     let $readyForSnippets := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))/id($currentResourceId)/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then
                                 true()
                              else false()
@@ -504,8 +485,6 @@ declare function admin:needsNLPString ($node as node(), $model as map(*)) {
     let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
                                     if (doc-available(concat($subcollection, '/', $currentResourceId, '.xml'))) then $subcollection
                                     else ()
-(: Changed to improve performance on 2025-03-24, A.W.                               :)
-(:  let $readyForNLP := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))//tei:TEI[@xml:id eq $currentResourceId]/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then:)
     let $readyForNLP := if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))/id($currentResourceId)/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then
                             true()
                         else false()
@@ -532,10 +511,10 @@ declare function admin:needsStats($targetWorkId as xs:string) as xs:boolean {
             if (doc-available(concat($subcollection, '/', $targetWorkId, '.xml'))) then $subcollection
             else ()
     let $targetWorkModTime := xmldb:last-modified($targetSubcollection, $targetWorkId || '.xml')
-    let $subcollection := $config:nlp-root
+    let $subcollection := $config:stats-root
     return    
-        if (util:binary-doc-available($subcollection || '/' || $targetWorkId || '.json')) then
-            let $jsonModTime := xmldb:last-modified($subcollection, $targetWorkId || '.json')
+        if (util:binary-doc-available($subcollection || '/' || $targetWorkId || '-stats.json')) then
+            let $jsonModTime := xmldb:last-modified($subcollection, $targetWorkId || '-stats.json')
             return 
                 if (starts-with(upper-case($targetWorkId), 'W0')) then
                     let $indexModTime := xmldb:last-modified($config:index-root, $targetWorkId || "_nodeIndex.xml")
@@ -547,9 +526,26 @@ declare function admin:needsStats($targetWorkId as xs:string) as xs:boolean {
 };
 
 declare function admin:needsStatsString ($node as node(), $model as map(*)) {
-    <td>
-        &amp;nbsp;
-    </td>
+    let $currentResourceId := max((string($model('currentWork')?('wid')), string($model('currentLemma')?('lid')), string($model('currentWP')?('wpid'))))
+    let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
+                                    if (doc-available(concat($subcollection, '/', $currentResourceId, '.xml'))) then $subcollection
+                                    else ()
+    let $readyForStats := ($currentResourceId || "_nodeIndex.xml" = xmldb:get-child-resources($config:index-root))
+    return
+        if (not($readyForStats)) then
+            <td>Not ready yet (no index)</td>
+        else if (admin:needsStats($currentResourceId)) then
+            <td title="{if (util:binary-doc-available($config:stats-root || "/" || $currentResourceId || '-stats.json')) then
+                            concat('Stats JSON created on: ', string(xmldb:last-modified($config:stats-root, $config:stats-root || "/" || $currentResourceId || '-stats.json')), ', ')
+                        else ()}
+                        {if (doc-available($config:index-root || '/' || $currentResourceId || '_nodeIndex.xml')) then
+                            concat('index created on: ', string(xmldb:last-modified($config:index-root, $currentResourceId || "_nodeIndex.xml")), ', ')
+                        else ()}
+                        source from: {string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml'))}"><a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=stats"><b>Render Stats (JSON) NOW!</b></a></td>
+        else
+            <td title="Stats created on {string(xmldb:last-modified($config:stats-root, $currentResourceId || "-stats.json"))},
+                       index created on {string(xmldb:last-modified($config:index-root, $currentResourceId || "_nodeIndex.xml"))},
+                       source from: {string(xmldb:last-modified($targetSubcollection, $currentResourceId || '.xml'))}">Rendering unnecessary. <small><a href="webdata-admin.xql?rid={$currentResourceId}&amp;format=stats">Render Stats (JSON) anyway!</a></small></td>
 };
 
 declare function admin:needsRoutingResource($targetResourceId as xs:string) as xs:boolean {
@@ -610,8 +606,6 @@ declare function admin:needsRDFString($node as node(), $model as map(*)) {
         else if (starts-with(upper-case($currentResourceId), 'A')) then $config:rdf-authors-root
         else if (starts-with(upper-case($currentResourceId), 'L')) then $config:rdf-lemmata-root
         else ()
-(: Changed to improve performance on 2025-03-24, A.W.                               :)
-(:  let $readyForRDF :=  if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))//tei:TEI[@xml:id eq $currentResourceId]/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then:)
     let $readyForRDF :=  if ($targetSubcollection and doc(concat($targetSubcollection, '/', $currentResourceId, '.xml'))/id($currentResourceId)/tei:teiHeader/tei:revisionDesc/@status = ("f_enriched", "g_enriched_approved", "h_revised", "i_revised_approved")) then
                             true()
                          else false()
@@ -634,7 +628,7 @@ declare function admin:needsTeiCorpusZipString($node as node(), $model as map(*)
         else true()
     return 
         if ($needsCorpusZip) then
-            <td title="Most current source from: {string($worksModTime)}"><a href="webdata-admin.xql?format=tei-corpus"><b>Create TEI corpus NOW!</b></a></td>
+            <td title="Most current source from: {string($worksModTime)}"><a href="webdata-admin.xql?format=tei-corpus"><b>Create TEI corpus</b></a></td>
         else
             <td title="{concat('TEI corpus created on: ', string(xmldb:last-modified($config:corpus-zip-root, 'sal-tei-corpus.zip')), ', most current source from: ', string($worksModTime), '.')}">Creating TEI corpus unnecessary. <small><a href="webdata-admin.xql?format=tei-corpus">Create TEI corpus zip anyway!</a></small></td>
 };
@@ -649,7 +643,7 @@ declare function admin:needsTxtCorpusZipString($node as node(), $model as map(*)
             else true()
         return 
             if ($needsCorpusZip) then
-                <td title="Most current source from: {string($worksModTime)}"><a href="webdata-admin.xql?format=txt-corpus"><b>Create TXT corpus NOW!</b></a></td>
+                <td title="Most current source from: {string($worksModTime)}"><a href="webdata-admin.xql?format=txt-corpus"><b>Create TXT corpus</b></a></td>
             else
                 <td title="{concat('TXT corpus created on: ', string(xmldb:last-modified($config:corpus-zip-root, 'sal-txt-corpus.zip')), ', most current source from: ', string($worksModTime), '.')}">Creating TXT corpus unnecessary. <small><a href="webdata-admin.xql?format=txt-corpus">Create TXT corpus zip anyway!</a></small></td>
     else <td title="No txt sources available so far!"><a href="webdata-admin.xql?format=txt-corpus"><b>Create TXT corpus NOW!</b></a></td>
@@ -658,17 +652,30 @@ declare function admin:needsTxtCorpusZipString($node as node(), $model as map(*)
 declare function admin:needsCorpusStatsString($node as node(), $model as map(*)) {
     let $worksModTime := max(for $work in xmldb:get-child-resources($config:tei-works-root) return xmldb:last-modified($config:tei-works-root, $work))    
     let $needsCorpusStats := 
-        if (util:binary-doc-available($config:stats-root || '/corpus-stats.json')) then
-            let $resourceModTime := xmldb:last-modified($config:stats-root, 'corpus-stats.json')
+        if (util:binary-doc-available($config:corpus-zip-root || '/corpus-stats.json')) then
+            let $resourceModTime := xmldb:last-modified($config:corpus-zip-root, 'corpus-stats.json')
             return $resourceModTime lt $worksModTime
         else true()
-    return 
+    return
         if ($needsCorpusStats) then
-            <td title="Most current source from: {string($worksModTime)}"><a href="webdata-admin.xql?format=stats"><b>Create corpus stats NOW!</b></a></td>
+            <td title="Most current source from: {string($worksModTime)}"><a href="webdata-admin.xql?format=stats-corpus"><b>Create corpus stats</b></a></td>
         else
-            <td title="{concat('Stats created on: ', string(xmldb:last-modified($config:stats-root, 'corpus-stats.json')), ', most current source from: ', string($worksModTime), '.')}">Creating corpus stats unnecessary. <small><a href="webdata-admin.xql?format=stats">Create corpus stats anyway!</a></small></td>
+            <td title="{concat('Stats created on: ', string(xmldb:last-modified($config:stats-root, 'corpus-stats.json')), ', most current source from: ', string($worksModTime), '.')}">Creating corpus stats unnecessary. <small><a href="webdata-admin.xql?format=stats-corpus">Create corpus stats anyway!</a></small></td>
 };
 
+declare function admin:needsCorpusNLPString($node as node(), $model as map(*)) {
+    let $worksModTime := max(for $work in xmldb:get-child-resources($config:tei-works-root) return xmldb:last-modified($config:tei-works-root, $work))    
+    let $needsCorpusNLP := 
+        if (util:binary-doc-available($config:corpus-zip-root || '/corpus.csv')) then
+            let $resourceModTime := xmldb:last-modified($config:corpus-zip-root, 'corpus.csv')
+            return $resourceModTime lt $worksModTime
+        else true()
+    return
+        if ($needsCorpusNLP) then
+            <td title="Most current source from: {string($worksModTime)}"><a href="webdata-admin.xql?format=nlp-corpus"><b>Create corpus NLP</b></a></td>
+        else
+            <td title="{concat('NLP created on: ', string(xmldb:last-modified($config:stats-root, 'corpus.csv')), ', most current source from: ', string($worksModTime), '.')}">Creating corpus NLP unnecessary. <small><a href="webdata-admin.xql?format=nlp-corpus">Create corpus NLP anyway!</a></small></td>
+};
 
 (: #### DATABASE UTIL FUNCTIONS #### :)
 
@@ -704,6 +711,7 @@ declare function admin:cleanCollection ($wid as xs:string, $collection as xs:str
         else if ($collection eq "pdf")         then $wid || ".*\.pdf"
         else if ($collection eq "routing")     then $wid || "_routes\.json"
         else                                        "dontmatch"
+    let $keep-files := if ($collection eq "html") then "_details\.html$" else ()
     let $debug := console:log("[Admin] Cleaning " || $collectionName || " collection (db).")
     let $create-parent-status :=    
         if ($collection = "html"    and not(xmldb:collection-available($config:html-root))) then
@@ -726,13 +734,17 @@ declare function admin:cleanCollection ($wid as xs:string, $collection as xs:str
     let $chown-collection-status := sm:chown(xs:anyURI($collectionName), 'sal')
     let $chgrp-collection-status := sm:chgrp(xs:anyURI($collectionName), 'svsal')
     let $chmod-collection-status := sm:chmod(xs:anyURI($collectionName), 'rwxrwxr-x')
+    let $remove-files := if ($keep-files) then
+                            filter(xmldb:get-child-resources($collectionName), function($i) {not(matches($i, $keep-files))})
+                        else
+                            xmldb:get-child-resources($collectionName)
     let $remove-status := 
         if (count(xmldb:get-child-resources($collectionName))) then
-            for $file in xmldb:get-child-resources($collectionName)
+            for $file in $remove-files
             return if (matches(tokenize($file, '/')[last()], $pattern)) then
                 let $debug := if ($collection = ("snippets", "html") and not(xs:int(translate(substring(tokenize($file, '/')[last()], 1, 5), 'WLP', '')) mod 250 = 0)) then ()
                               else
-                              console:log("[Admin] Remove file: " || $collectionName || "/" || $file || " from database...")
+                              console:log("[Admin] Remove file: " || $file || " from database collection " || $collectionName || " ...")
                 return xmldb:remove($collectionName, $file)
         else
                 true()
@@ -768,16 +780,22 @@ declare function admin:cleanDirectory($wid as xs:string, $collection as xs:strin
         else if ($collection eq "pdf")         then $wid || "*.pdf"
         else if ($collection eq "routing")     then $wid || "_routes.json"
         else                                        ""
+    let $keep-files := if ($collection eq "html") then "_details\.html$" else ()
     let $debug := console:log("[Admin] Cleaning " || $collectionname || " directory (fs).")
     let $create-parent-status :=
         if (not(file:exists($collectionname) and file:is-directory($collectionname))) then
             file:mkdirs($collectionname)
         else true()
-    let $remove-status := for $file in file:directory-list($collectionname, $pattern)/file:file
+    let $remove-files := if ($keep-files) then
+                            filter(file:directory-list($collectionname, $pattern)/file:file, function($i) {not(matches($i/@name/string(), $keep-files))})
+                        else
+                            file:directory-list($collectionname, $pattern)/file:file
+
+    let $remove-status := for $file in $remove-files
         let $filename  := $collectionname || $file/@name/string() 
-        let $debug :=  if ($collection = ("snippets", "html") and not(xs:int(translate(substring($file/@name, 1, 5), 'WLP', '')) mod 250 = 0)) then ()
-                       else
-                           console:log("[Admin] Remove file: " || $filename || " from filesystem...")
+        let $debug :=   if ($collection = ("snippets", "html") and not(xs:int(translate(substring($file/@name, 1, 5), 'WLP', '')) mod 250 = 0)) then ()
+                        else
+                            console:log("[Admin] Remove file: " || $filename || " from filesystem...")
         return file:delete($filename)
 
     return $remove-status
@@ -851,7 +869,7 @@ declare function admin:saveTextFile($workId as xs:string, $fileName as xs:string
         else if ($collection eq "txt")       then $config:txt-root      || "/" || $wid
         else if ($collection eq "snippets")  then $config:snippets-root || "/" || $wid
         else if ($collection eq "workslist") then $config:html-root     || "/"
- else if ($collection eq "lemmalist") then $config:html-root     || "/"
+        else if ($collection eq "lemmalist") then $config:html-root     || "/"
         else if ($collection eq "index")     then $config:index-root    || "/"
         else if ($collection eq "iiif")      then $config:iiif-root     || "/"
         else if ($collection eq "routes")    then $config:routes-root   || "/"
@@ -868,7 +886,7 @@ declare function admin:saveTextFile($workId as xs:string, $fileName as xs:string
             xmldb:create-collection($config:webdata-root, "html")
         else if ($collection eq "workslist" and not(xmldb:collection-available($config:html-root)))     then
             xmldb:create-collection($config:webdata-root, "html")
-    else if ($collection eq "lemmalist" and not(xmldb:collection-available($config:html-root)))     then
+        else if ($collection eq "lemmalist" and not(xmldb:collection-available($config:html-root)))     then
             xmldb:create-collection($config:webdata-root, "html")
         else if ($collection eq "txt"       and not(xmldb:collection-available($config:txt-root)))      then
             xmldb:create-collection($config:webdata-root, "txt")
@@ -945,16 +963,17 @@ declare function admin:exportXMLFile($wid as xs:string, $filename as xs:string, 
         else if ($collection eq "details")     then $fsRoot || $wid || "/html/"
         else if ($collection eq "snippets")    then $fsRoot || $wid || "/snippets/"
         else if ($collection eq "workslist")   then $fsRoot || $wid || "/"
- else if ($collection eq "lemmalist")   then $fsRoot || $wid || "/"
+        else if ($collection eq "lemmalist")   then $fsRoot || $wid || "/"
         else if ($collection eq "index")       then $fsRoot || $wid || "/"
         else if ($collection eq "crumbtrails") then $fsRoot || $wid || "/"
         else if ($collection eq "rdf")         then $fsRoot || $wid || "/"
         else if ($collection eq "routing")      then $fsRoot || $wid || "/"
         else                                        $fsRoot || "trash/"
     let $method :=
-          if ($collection = ("html", "workslist")) then "html"
-else if ($collection = ("html", "lemmalist")) then "html"
-        else                                            "xml"
+        if ($collection = ("html", "workslist", "lemmalist")) then
+            "html"
+        else
+            "xml"
 
     let $collectionStatus :=
         if (not(file:exists($collectionname))) then
@@ -1138,7 +1157,7 @@ declare function admin:buildFacets ($node as node(), $model as map (*), $lang as
     return $result
 };
 
- (:declare function admin:buildFacetsNoJs ($node as node(), $model as map (*), $lang as xs:string?) {
+(: declare function admin:buildFacetsNoJs ($node as node(), $model as map (*), $lang as xs:string?) {
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Building facets for list view (versions without Javascript)...") else ()
     let $facets := map { "surname" :    map { "de" : app:WRKcreateListSurname($node, $model, 'de'),
                                               "en" : app:WRKcreateListSurname($node, $model, 'en'),
@@ -1173,7 +1192,8 @@ declare function admin:buildFacets ($node as node(), $model as map (*), $lang as
                           })
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] finalFacets (No Js) done!") else ()
     return $result
-}; :)
+};
+:)
 
 
 (:Categories : title, status, WIP, monoMultiUrl, name, sortName, nameFacet :)
@@ -1200,12 +1220,12 @@ declare function admin:buildDictListNoJs ($node as node(), $model as map (*)) {
 
 declare function admin:exportFileWRK ($node as node(), $model as map (*), $lang as xs:string?) {
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Exporting finalFacets (Js)...") else ()
- (:   let $fileNameDe         :=  'works_de.json' :)
+(:   let $fileNameDe         :=  'works_de.json' :)
     let $fileNameEn         :=  'works_en.json'
- (:   let $fileNameEs         :=  'works_es.json' :)
-  (:  let $contentDe          := fn:parse-json("[" || string-join(app:WRKfinalFacets($node, $model, 'de'), ", ") || "]") admin:exportJSONFile($fileNameDe, $contentDe, 'workslist'), :) (: app:WRKfinalFacets returns a sequence of strings, one per work in the collection :)
+(:   let $fileNameEs         :=  'works_es.json' :)
+(:   let $contentDe          := fn:parse-json("[" || string-join(app:WRKfinalFacets($node, $model, 'de'), ", ") || "]") admin:exportJSONFile($fileNameDe, $contentDe, 'workslist'), :) (: app:WRKfinalFacets returns a sequence of strings, one per work in the collection :)
     let $contentEn          := fn:parse-json("[" || string-join(app:WRKfinalFacets($node, $model, 'en'), ", ") || "]")
-  (:  let $contentEs          := fn:parse-json("[" || string-join(app:WRKfinalFacets($node, $model, 'es'), ", ") || "]")    admin:exportJSONFile($fileNameEs, $contentEs, 'workslist'):)
+(:   let $contentEs          := fn:parse-json("[" || string-join(app:WRKfinalFacets($node, $model, 'es'), ", ") || "]")    admin:exportJSONFile($fileNameEs, $contentEs, 'workslist'):)
     let $store :=  (
                     admin:exportJSONFile($fileNameEn, $contentEn, 'workslist')
                   )
@@ -1219,12 +1239,12 @@ declare function admin:exportFileWRK ($node as node(), $model as map (*), $lang 
 
 declare function admin:exportFileLEM ($node as node(), $model as map (*), $lang as xs:string?) {
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Exporting lemma list (Js)...") else ()
- (:   let $fileNameDe         :=  'works_de.json' :)
+(:   let $fileNameDe         :=  'works_de.json' :)
     let $fileNameEn         :=  'dictionary_en.json'
- (:   let $fileNameEs         :=  'works_es.json' :)
-  (:  let $contentDe          := fn:parse-json("[" || string-join(app:WRKfinalFacets($node, $model, 'de'), ", ") || "]") admin:exportJSONFile($fileNameDe, $contentDe, 'workslist'), :) (: app:WRKfinalFacets returns a sequence of strings, one per work in the collection :)
+(:   let $fileNameEs         :=  'works_es.json' :)
+(:   let $contentDe          := fn:parse-json("[" || string-join(app:WRKfinalFacets($node, $model, 'de'), ", ") || "]") admin:exportJSONFile($fileNameDe, $contentDe, 'workslist'), :) (: app:WRKfinalFacets returns a sequence of strings, one per work in the collection :)
     let $contentEn          := fn:parse-json("[" || string-join(app:LEMfinalFacets($node, $model, 'en'), ", ") || "]")
-  (:  let $contentEs          := fn:parse-json("[" || string-join(app:WRKfinalFacets($node, $model, 'es'), ", ") || "]")    admin:exportJSONFile($fileNameEs, $contentEs, 'workslist'):)
+(:   let $contentEs          := fn:parse-json("[" || string-join(app:WRKfinalFacets($node, $model, 'es'), ", ") || "]")    admin:exportJSONFile($fileNameEs, $contentEs, 'workslist'):)
     let $store :=  (
                     admin:exportJSONFile($fileNameEn, $contentEn, 'lemmalist')
                   )
@@ -1239,10 +1259,10 @@ declare function admin:exportFileLEM ($node as node(), $model as map (*), $lang 
 declare function admin:saveFileWRK ($node as node(), $model as map (*), $lang as xs:string?) {
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Saving finalFacets (Js)...") else ()
     let $create-collection  :=  if (not(xmldb:collection-available($config:data-root))) then xmldb:create-collection($config:app-root, "data") else ()
-   (: let $fileNameDe         :=  'works_de.xml' :)
+(:    let $fileNameDe         :=  'works_de.xml' :)
     let $fileNameEn         :=  'works_en.xml'
- (:   let $fileNameEs         :=  'works_es.xml' :)
-   (: let $contentDe          := <sal>{app:WRKfinalFacets($node, $model, 'de')}</sal>  xmldb:store($config:data-root, $fileNameDe, $contentDe),:)
+(:    let $fileNameEs         :=  'works_es.xml' :)
+(:    let $contentDe          := <sal>{app:WRKfinalFacets($node, $model, 'de')}</sal>  xmldb:store($config:data-root, $fileNameDe, $contentDe),:)
     let $contentEn          := <sal>{app:WRKfinalFacets($node, $model, 'en')}</sal>
 (:    let $contentEs          := <sal>{app:WRKfinalFacets($node, $model, 'es')}</sal> xmldb:store($config:data-root, $fileNameEs, $contentEs) :)
     let $store              :=  (
@@ -1259,10 +1279,10 @@ declare function admin:saveFileWRK ($node as node(), $model as map (*), $lang as
 declare function admin:saveFileLEM ($node as node(), $model as map (*), $lang as xs:string?) {
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Saving lemma list (Js)...") else ()
     let $create-collection  :=  if (not(xmldb:collection-available($config:data-root))) then xmldb:create-collection($config:app-root, "data") else ()
-   (: let $fileNameDe         :=  'works_de.xml' :)
+(:    let $fileNameDe         :=  'works_de.xml' :)
     let $fileNameEn         :=  'dictionary_test_en.xml'
- (:   let $fileNameEs         :=  'works_es.xml' :)
-   (: let $contentDe          := <sal>{app:WRKfinalFacets($node, $model, 'de')}</sal>  xmldb:store($config:data-root, $fileNameDe, $contentDe),:)
+(:    let $fileNameEs         :=  'works_es.xml' :)
+(:    let $contentDe          := <sal>{app:WRKfinalFacets($node, $model, 'de')}</sal>  xmldb:store($config:data-root, $fileNameDe, $contentDe),:)
     let $contentEn          := <sal>{app:LEMfinalFacets($node, $model, 'en')}</sal>
 (:    let $contentEs          := <sal>{app:WRKfinalFacets($node, $model, 'es')}</sal> xmldb:store($config:data-root, $fileNameEs, $contentEs) :)
     let $store              :=  (
@@ -1276,7 +1296,7 @@ declare function admin:saveFileLEM ($node as node(), $model as map (*), $lang as
         </span>   
 };
 
-(:declare function admin:exportFileWRKnoJs ($node as node(), $model as map (*), $lang as xs:string?) {
+(: declare function admin:exportFileWRKnoJs ($node as node(), $model as map (*), $lang as xs:string?) {
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Exporting finalFacets (noJS)...") else ()
     let $fileNameDeSn := 'worksNoJs_de_surname.html'
     let $fileNameEnSn := 'worksNoJs_en_surname.html'
@@ -1311,8 +1331,9 @@ declare function admin:saveFileLEM ($node as node(), $model as map (*), $lang as
     return      
         <p><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Noscript-files exported to filesystem ({serialize($store)})!</p>
 };
+:)
 
-declare function admin:saveFileWRKnoJs ($node as node(), $model as map (*), $lang as xs:string?) {
+(: declare function admin:saveFileWRKnoJs ($node as node(), $model as map (*), $lang as xs:string?) {
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Saving finalFacets (noJS)...") else ()
     let $create-collection  :=  
         if (not(xmldb:collection-available($config:data-root))) then 
@@ -1350,9 +1371,10 @@ declare function admin:saveFileWRKnoJs ($node as node(), $model as map (*), $lan
     return      
         <p><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Noscript-files saved to eXist-db ({serialize($store)})!</p>
 
-}; :)
+};
+:)
 
-(:declare %templates:wrap function admin:saveEditors($node as node()?, $model as map(*)?) {
+(: declare %templates:wrap function admin:saveEditors($node as node()?, $model as map(*)?) {
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Storing finalFacets...") else ()
     let $create-collection  :=  
         if (not(xmldb:collection-available($config:data-root))) then 
@@ -1370,7 +1392,8 @@ declare function admin:saveFileWRKnoJs ($node as node(), $model as map (*), $lan
             <br/><br/>
             <a href="works.html" class="btn btn-info" role="button"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Open works.html</a>
         </span> 
-};:)
+};
+:)
 
 
 (: #### RENDERING ADMINISTRATION FUNCTIONS #### :)
@@ -1439,8 +1462,6 @@ declare %templates:wrap function admin:renderHTML($id as xs:string*) as element(
         if ($resourceId = '*') then
             collection($config:tei-root)//tei:TEI[.//tei:text[@type = ("work_multivolume", "work_monograph", "lemma_article")]]
         else
-(: Changed to improve performance on 2025-03-24, A.W.                               :)
-(:          collection($config:tei-root)//tei:TEI[@xml:id = distinct-values($resourceId)][.//tei:text[@type = ("work_multivolume", "work_monograph", "lemma_article")]]:)
             collection($config:tei-root)/id(distinct-values($resourceId))[.//tei:text[@type = ("work_multivolume", "work_monograph", "lemma_article")]]
 
     (: for each requested resource: create fragments, insert them into the transformation, and produce some diagnostic info :)
@@ -1461,7 +1482,6 @@ declare %templates:wrap function admin:renderHTML($id as xs:string*) as element(
 
             let $start-time-a := util:system-time()
             let $htmlData     := html:makeHTMLData($work-raw)
-            let $htmlDataOld  := html:makeHTMLDataOld($work-raw)
 
             (: Keep track of how long this work did take :)
             let $runtime-ms-a := ((util:system-time() - $start-time-a) div xs:dayTimeDuration('PT1S'))  * 1000
@@ -1470,19 +1490,23 @@ declare %templates:wrap function admin:renderHTML($id as xs:string*) as element(
             (: store data :)
             let $cleanCollectionStatus := admin:cleanCollection($rid, "html")
             let $cleanDirectoryStatus := admin:cleanDirectory($rid, "html")
-            
+
             let $saveToc     := admin:saveFile($rid, $rid || "_toc.html", $htmlData('toc'), "html")
             let $exportToc   := admin:exportXMLFile($rid, $rid || "_toc.html", $htmlData('toc'), "html")
-            let $savePages   := (
-                admin:saveFile($rid, $rid || "_pages_de.html", $htmlDataOld('pagination_de'), "html"),
-                admin:saveFile($rid, $rid || "_pages_en.html", $htmlDataOld('pagination_en'), "html"),
-                admin:saveFile($rid, $rid || "_pages_es.html", $htmlDataOld('pagination_es'), "html")
-                )
+            (: 
+                let $savePages   := (
+                    admin:saveFile($rid, $rid || "_pages_de.html", $htmlData('pagination_de'), "html"),
+                    admin:saveFile($rid, $rid || "_pages_en.html", $htmlData('pagination_en'), "html"),
+                    admin:saveFile($rid, $rid || "_pages_es.html", $htmlData('pagination_es'), "html")
+                    )
+            :)
+            let $savePages := admin:saveFile($rid, $rid || "_pages.html", $htmlData('pagination'), "html")
             let $exportPages := admin:exportXMLFile($rid, $rid || "_pages.html", $htmlData('pagination'), "html")
             let $exportFragments :=
                 for $fragment in $htmlData('fragments') return
                     let $fileName := $fragment('number') || '_' || $fragment('tei_id') || '.html'
-                    let $storeStatus := if ($fragment('html')) then admin:exportBinaryFile($rid, $fileName, $fragment('html'), 'html') else ()
+                    let $saveStatus   := if ($fragment('html')) then admin:saveTextFile($rid, $fileName, $fragment('html'), 'html') else ()
+                    let $exportStatus := if ($fragment('html')) then admin:exportBinaryFile($rid, $fileName, $fragment('html'), 'html') else ()
                     return 
                         (: generate some HTML output to be shown in report :)
                         <div>
@@ -1495,26 +1519,6 @@ declare %templates:wrap function admin:renderHTML($id as xs:string*) as element(
                                         target xml:id={$fragment('tei_id')} <br/>
                                         prev xml:id={$fragment('prev')} <br/>
                                         next xml:id={$fragment('next')} <br/>
-                                    </code>
-                                </div>
-                            </div>
-                        </div>
-            let $saveFragments :=
-                for $fragmentOld in $htmlDataOld('fragments') return
-                    let $fileName := $fragmentOld('number') || '_' || $fragmentOld('tei_id') || '.html'
-                    let $storeStatusOld := if ($fragmentOld('html')) then admin:saveFile($rid, $fileName, $fragmentOld('html'), 'html') else ()
-                    return 
-                        (: generate some HTML output to be shown in report :)
-                        <div>
-                            <h3>Fragment (old) {$fragmentOld('index')}:</h3>
-                            <h3>{$fragmentOld('number')}: &lt;{$fragmentOld('tei_name') || ' xml:id=&quot;' || $fragmentOld('tei_id') 
-                                 || '&quot;&gt;'} (Level {$fragmentOld('tei_level')})</h3>
-                            <div style="margin-left:4em;">
-                                <div style="border:'3px solid black';background-color:'grey';">
-                                    <code>{$rid}/{$fileName}:<br/>
-                                        target xml:id={$fragmentOld('tei_id')} <br/>
-                                        prev xml:id={$fragmentOld('prev')} <br/>
-                                        next xml:id={$fragmentOld('next')} <br/>
                                     </code>
                                 </div>
                             </div>
@@ -1556,14 +1560,14 @@ declare %templates:wrap function admin:renderHTML($id as xs:string*) as element(
                      </p>
                      <p>Computing time (TXT: orig and edit): {$txt-end-time} seconds.</p>
                      {if ($config:debug = 'trace') then $exportFragments else ()}
-                     {if ($config:debug = 'trace') then $saveFragments else ()}
                </div>
 
 
     (: (3) UPDATE TEI & TXT CORPORA :)
     
     (: (re-)create txt and xml corpus zips :)
-(:  let $corpus-start-time := util:system-time()
+(:
+    let $corpus-start-time := util:system-time()
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Corpus packages created and stored.") else ()
     let $createTeiCorpus := admin:createTeiCorpus(encode-for-uri($workId))
     let $createTxtCorpus := admin:createTxtCorpus(encode-for-uri($workId))
@@ -1707,7 +1711,6 @@ declare function admin:createTxtCorpus($processId as xs:string) {
 (: NOTE: the largest part of the snippets creation takes place here, not in factory,
          since it applies to different types of texts (works, working papers) at once :)
 declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
-
     let $start-time := util:system-time()
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Rendering sphinx snippets for " || $wid || ".") else ()
 
@@ -1826,7 +1829,9 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
                     'There is no xml:id in the ' || $hit_type || ' hit!'
             
             (: Now build a sphinx "row" for the fragment :)
-            let $sphinx_id    := xs:long(substring($work_id, functx:index-of-string-first($work_id, "0"))) * 1000000 + ( (string-to-codepoints(substring($work_id, 1, 1)) + string-to-codepoints(substring($work_id, 2, 1))) * 10000 ) + $index
+            (: Lemmata and Works may happen to have the same numeric part of the work_id, resulting in duplicate $sphinx_ids if we don't take precautions :)
+            let $lemma_offset := if (starts-with($work_id, 'L0')) then xs:long(substring($work_id, 2)) * 10000 else 0
+            let $sphinx_id    := xs:long(substring($work_id, 2)) * 100000000 + $lemma_offset + $index
             let $html_snippet :=
                 <sphinx:document id="{$sphinx_id}">
                     <div>
@@ -1945,8 +1950,6 @@ declare function admin:createNodeIndex($wid as xs:string*) {
         if ($wid = '*') then
             collection($config:tei-root)//tei:TEI[.//tei:text[@type = ("work_multivolume", "work_monograph", "lemma_article")]]
         else
-(: Changed to improve performance on 2025-03-24, A.W.                               :)
-(:          collection($config:tei-root)//tei:TEI[@xml:id = distinct-values($wid)]:)
             collection($config:tei-root)/id(distinct-values($wid))
 
     (: for each requested work, create an individual index :)
@@ -2010,7 +2013,6 @@ declare function admin:createNodeIndex($wid as xs:string*) {
         </div>
 };
 
-
 declare function admin:uploadPdf($rid as xs:string) {
     let $PdfInput := request:get-uploaded-file-name('FileUpload')
     let $content  := request:get-uploaded-file-data('FileUpload')
@@ -2026,50 +2028,58 @@ declare function admin:uploadPdf($rid as xs:string) {
                 <message>There is not input PDF file. Please upload the PDF before submitting it.</message>
             </results>
         else
-           
- <results>
+            <results>
                 <message>The PDF {$PdfInput} of the work {$rid} could not be uploaded. </message>
             </results>
 };
 
-
 declare function admin:createPdf($rid as xs:string){
     let $pdf-start-time           := util:system-time()
-    let $doctotransform as node() := doc($config:tei-works-root || '/'|| $rid || '.xml')//tei:TEI
-
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Creating pdf from " || $rid || " ...") else ()
-    let $debug := if ($config:debug = ("trace", "info") )then console:log("[PDF-" || $rid ||"] Transforming into XSL-FO...") else ()
+    let $debug := if ($config:debug = ("trace")) then console:log("[PDF-" || $rid ||"] Transforming into XSL-FO...") else ()
 
-let $doctransformed2          := transform:transform($doctotransform, "xmldb:exist:///db/apps/salamanca/modules/factory/works/pdf/generic_template.xsl", ())
+    let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
+                                    if (doc-available(concat($subcollection, '/', $rid, '.xml'))) then $subcollection
+                                    else ()
 
-    let $debug := if ($config:debug = ("trace", "info") )then console:log("[PDF-" || $rid ||"] FO OK..") else ()
+    let $doctotransform := doc($targetSubcollection || '/'|| $rid || '.xml')//tei:TEI
+    let $volumes := $doctotransform//xi:include[contains(@href, '_Vol')]/@href/substring-before(., '.xml')
+    let $transformedvolumes := array{fn:for-each($volumes, function($k) {
+                                                                            let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Creating pdf for volume " || $k || " ...") else ()
+                                                                            return admin:createPdf($k)
+                                                                        }
+                                    )}
+    let $doctransformed2 := transform:transform($doctotransform, "xmldb:exist:///db/apps/salamanca/modules/factory/works/pdf/generic_template.xsl", ())
 
-let $fo-config :=
-  <parameters>
-    <fop-config>xmldb:exist:///db/apps/salamanca/resources/config/fop.xconf</fop-config>
-  </parameters>
-   let $storexslfo := xslfo:render(
-    $doctransformed2,
-    "application/pdf",
-    $fo-config
-)
+    let $debug := if ($config:debug = ("trace")) then console:log("[PDF-" || $rid ||"] FO OK..") else ()
 
-    let $debug := if ($config:debug = ("trace", "info") ) then console:log("[PDF-" || $rid ||"] Transforming from XSL-FO to PDF...") else ()                         
-    let $media-type as xs:string  := 'application/pdf'
-    let $renderedxslfo            := xslfo:render($doctransformed2, $media-type, ())
+    let $fo-config := <parameters>
+                        <fop-config>xmldb:exist:///db/apps/salamanca/resources/config/fop.xconf</fop-config>
+                      </parameters>
+    let $storexslfo := xslfo:render(
+                            $doctransformed2,
+                            "application/pdf",
+                            $fo-config
+                        )
 
-    let $savedPdfFile             := xmldb:store($config:pdf-root, $rid || '.pdf', $renderedxslfo)
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[PDF-" || $rid ||"] Transforming from XSL-FO to PDF...") else ()
+
+    let $media-type := 'application/pdf'
+    let $renderedxslfo := xslfo:render($doctransformed2, $media-type, ())
+
+    let $savedPdfFile := xmldb:store($config:pdf-root, $rid || '.pdf', $renderedxslfo)
     let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Stored pdf from " || $rid || " at " || $savedPdfFile || ".") else ()   
-    let $exportedPdfFile          := admin:exportBinaryStream($rid, $rid || '.pdf', $renderedxslfo, 'pdf')
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Exported pdf from " || $rid || " to " || $exportedPdfFile || ".") else ()   
+    let $exportedPdfFile := admin:exportBinaryStream($rid, $rid || '.pdf', $renderedxslfo, 'pdf')
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Exported pdf from " || $rid || " to " || $exportedPdfFile || ".") else ()
 
     let $pdf-end-time := util:system-time() 
     let $runtime-pdf := ((util:system-time() - $pdf-start-time) div xs:dayTimeDuration('PT1S'))  * 1000
     return
         if ($doctransformed2)   (:(doc-available($config:xsl-fo-root || '/'|| $rid || '_xsl-fo.xml')) :)   then
             <div>
+                {$transformedvolumes}
                 {$savedPdfFile} 
-                <p> The transformation from XML to PDF was successfull and the file is stored in the pdf collection.
+                <p> The transformation from XML to PDF was successful and the file is stored in {$savedPdfFile} and has been exported to {$exportedPdfFile}.
                     Duration: {if ($runtime-pdf < (1000 * 60)) then format-number($runtime-pdf div 1000, "#.##") || " Sec."
                                else if ($runtime-pdf < (1000 * 60 * 60)) then format-number($runtime-pdf div (1000 * 60), "#.##") || " Min."
                                else format-number($runtime-pdf div (1000 * 60 * 60), "#.##") || " Hrs."
@@ -2091,8 +2101,6 @@ declare function admin:createCrumbtrails($wid as xs:string){
     let $teiRoots :=  if ($wid = '*') then
                           collection($config:tei-root)//tei:TEI[.//tei:text[@type = ("work_multivolume", "work_monograph", "lemma_article")]]
                       else
-(: Changed to improve performance on 2025-03-24, A.W.                               :)
-(:                        collection($config:tei-root)//tei:TEI[@xml:id = distinct-values($wid)]:)
                           collection($config:tei-root)/id(distinct-values($wid))
 
     (: for each requested work, create an individual crumbtrails :)
@@ -2161,7 +2169,7 @@ declare function admin:createCrumbtrails($wid as xs:string){
     (: Time counting :)
     let $runtime-ms-raw := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000 
     let $runtime-ms :=
-        if ($runtime-ms-raw < (1000 * 60)) then format-number($runtime-ms-raw div 1000, "#.##") || " Sek."
+             if ($runtime-ms-raw < (1000 * 60)) then format-number($runtime-ms-raw div 1000, "#.##") || " Sek."
         else if ($runtime-ms-raw < (1000 * 60 * 60)) then format-number($runtime-ms-raw div (1000 * 60), "#.##") || " Min."
         else format-number($runtime-ms-raw div (1000 * 60 * 60), "#.##") || " Std."
     let $debug := if ($config:debug = ("trace", "info")) then util:log("warn", "[ADMIN] Finished node crumbing for " || $wid || " in " || $runtime-ms || ".") else ()
@@ -2186,11 +2194,10 @@ declare function admin:createRoutes($wid as xs:string) {
     let $start-time := util:system-time()
     let $debug := console:log("[ADMIN] Routing: Creating routing for " || $wid || " ...")
     let $index                  := if (doc-available($config:index-root || "/" || $wid || "_nodeIndex.xml")) then doc($config:index-root || "/" || $wid || "_nodeIndex.xml")/sal:index else ()
-    let $crumbtrails            := if (doc-available($config:crumb-root || "/" || $wid || "_crumbtrails.xml")) then doc($config:crumb-root || "/" || $wid || "_crumbtrails.xml")/sal:crumb else ()
-    let $routingWork            := admin:buildRoutingInfoWork($wid, $crumbtrails)
+    let $routingWork            := admin:buildRoutingInfoWork($wid)
     let $routingWorkDetails     := array{ admin:buildRoutingInfoDetails($wid) }
     let $routingNodes           := if ($index) then
-                                        array{fn:for-each($index//sal:node, function($k) {admin:buildRoutingInfoNode($wid, $k, $crumbtrails)} )}
+                                        array{fn:for-each($index//sal:node, function($k) {admin:buildRoutingInfoNode($wid, $k)} )}
                                    else ()
     let $routingVolumeDetails   := if ($index) then
                                         array{fn:for-each($index//sal:node[@subtype = "work_volume"], function($k) {admin:buildRoutingInfoDetails($wid || ':' || $k/@citeID)} )}
@@ -2261,47 +2268,53 @@ declare function admin:createRoutes($wid as xs:string) {
         </div>
 };
 
-declare function admin:buildRoutingInfoNode($wid as xs:string, $item as element(sal:node), $crumbtrails as element(sal:crumb)) {
-    let $textTypePath := if (starts-with($wid, 'W')) then '/texts/' else if (starts-with($wid, 'L')) then '/lemmata/' else ''
-(: Changed to improve performance on 2025-03-24, A.W.                               :)
-(:  let $crumb := if (fn:contains($crumbtrails//sal:nodecrumb[@xml:id eq $item/@n]//a[last()]/@href/string(), "/data/")) then substring-after($crumbtrails//sal:nodecrumb[@xml:id eq $item/@n]//a[last()]/@href/string(), "/data/") else ( $crumbtrails//sal:nodecrumb[@xml:id eq $item/@n]//a[last()]/@href/string()):)
-    let $crumb := if (fn:contains($crumbtrails/id($item/@n)//a[last()]/@href/string(), "/data/")) then
-                      substring-after($crumbtrails/id($item/@n)//a[last()]/@href/string(), "/data/")
-                  else
-                      ( $crumbtrails/id($item/@n)//a[last()]/@href/string())
-    let $filepath := tokenize($crumb, '#')[1]
-    let $fragmentHash := tokenize($crumb, '#')[2]
-    let $hash := if (string-length($fragmentHash) gt 0) then '#' || $fragmentHash else ''
-
+declare function admin:buildRoutingInfoNode($wid as xs:string, $item as element(sal:node)) {
+    let $textTypePath := if (starts-with($wid, 'W')) then
+                            '/texts/'
+                         else if (starts-with($wid, 'L')) then
+                            '/lemmata/'
+                         else
+                            ''
+    let $filepath := $wid || "/html/" || $item/@fragment/string() || ".html"
+    let $hash := "#" || $item/@n/string()
     let $value := map {
                     "input" :   concat($textTypePath, $wid, ":", $item/@citeID/string()),
                     "outputs" : array { ( $filepath, $hash ) }
                   }
-(:    let $debug := console:log("[ADMIN] routing entry: " || serialize($value, map{"method":"json"}) || "."):)
     return $value
 };
 
-declare function admin:buildRoutingInfoWork($resourceId as xs:string, $crumbtrails as element(sal:crumb)*) {
-    let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
-                                    if (doc-available(concat($subcollection, '/', $resourceId, '.xml'))) then $subcollection
+declare function admin:buildRoutingInfoWork($resourceId as xs:string) {
+    let $targetSubcollection := for $subcollection in $config:tei-sub-roots return
+                                    if (doc-available(concat($subcollection, '/', $resourceId, '.xml'))) then
+                                        $subcollection
                                     else ()
     let $text_type :=      if (starts-with($resourceId, "L0")) then "lemmata"
                       else if (starts-with($resourceId, "WP0")) then "workingpapers"
                       else "texts"
-    let $firstCrumb  := if (($crumbtrails//a[1])[1]/@href) then 
-                          ( if(fn:contains(($crumbtrails//a[1])[1]/@href/string(), "/data")) then( substring-after(($crumbtrails//a[1])[1]/@href/string(), '/data/')) else (($crumbtrails//a[1])[1]/@href/string()))
-                        else if ($text_type eq 'workingpapers') then
-                            tokenize($resourceId, '_')[1] || '/html/' || $resourceId || '_details.html'
-                        else if ($text_type eq 'lemma_article') then
-                            tokenize($resourceId, '_')[1] || '/html/00001_completeWork.html'
-else  if (contains($resourceId, ':')) then
+    let $anchor :=  if ($text_type eq 'texts') then
+                            let $index := if (doc-available($config:index-root || "/" || $resourceId || "_nodeIndex.xml")) then
+                                            doc($config:index-root || "/" || $resourceId || "_nodeIndex.xml")/sal:index
+                                          else ()
+                            return
+                                if ($index) then
+                                    tokenize($resourceId, '_')[1] || '/html/' || $index/sal:node[1]/@fragment/string() || ".html#" || $index/sal:node[1]/@n/string()
+                                else
+                                    let $debug := console:log("[ADMIN] admin:buildRoutingInfoWork: No index for work " || $resourceId || ". Possibly the work is only available as image facsimiles. We let work id resolve to catalogue view.")
+                                    let $log := util:log("warn", "[ADMIN] admin:buildRoutingInfoWork: No index for work " || $resourceId || ". Possibly the work is only available as image facsimiles. We let work id resolve to catalogue view.")
+                                    return tokenize($resourceId, '_')[1] || '/html/' || $resourceId || '_details.html'
+                    else if ($text_type eq 'workingpapers') then
+                        tokenize($resourceId, '_')[1] || '/html/' || $resourceId || '_details.html'
+                    else if ($text_type eq 'lemmata') then
+                        tokenize($resourceId, '_')[1] || '/html/00001_completeWork.html'
+                    else  if (contains($resourceId, ':')) then
                         let $id := tokenize($resourceId, ':')[1]
                         return concat( $id, '/html/', $id, '_Vol', format-integer(xs:int(substring-after(tokenize($resourceId, ':')[2], 'vol')), '00'), '_details.html')
-                        else
-                            tokenize($resourceId, '_')[1] || '/html/' || $resourceId || '_details.html'
-                      
-    let $filepath := tokenize($firstCrumb, '#')[1]
-    let $fragmentHash := tokenize($firstCrumb, '#')[2]
+                    else
+                        tokenize($resourceId, '_')[1] || '/html/' || $resourceId || '_details.html'
+
+    let $filepath := tokenize($anchor, '#')[1]
+    let $fragmentHash := tokenize($anchor, '#')[2]
     let $hash := if (string-length($fragmentHash) gt 0) then '#' || $fragmentHash else ''
 
     let $value := array {
@@ -2311,7 +2324,6 @@ else  if (contains($resourceId, ':')) then
                                   }
                             )
                         }
-(:    let $debug := console:log("[ADMIN] routing entry: " || serialize($value, map{"method":"json"}) || "."):)
     return $value
 };
 
@@ -2404,7 +2416,7 @@ declare function admin:createNLP($rid as xs:string) {
 
     let $mode       := 'nonotes' (: edit, snippets-edit, nonotest, [nlp, ner, plain, ...] :)
     let $lang       := '*'
-    let $collection := util:expand(collection($config:tei-works-root)/id($rid)/self::tei:TEI)//tei:text
+    let $collection := util:expand(collection($config:tei-works-root)/id($rid)/self::tei:TEI)//tei:text[not(.//tei:text)]
     let $textnodes  := $collection//tei:*[not(ancestor::tei:note)][not(ancestor::xi:fallback)][index:isMainNode(.)]
     let $csv        := nlp:createCSV($textnodes, $mode, $lang)
 
@@ -2421,20 +2433,50 @@ declare function admin:createNLP($rid as xs:string) {
     let $save   := admin:saveFile($rid, $rid || '.csv', $csv, 'nlp')
 
     let $debug  := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Done rendering NLP CSV for " || $rid || ".") else ()
-    return 
+    return
         <div>
             <h2>NLP Extraction</h2>
             <p>Extracted NLP CSV in {$runtimeString} and saved at {$save}</p>
             <div style="margin-left:5em;">{if ($config:debug = ("trace")) then $csv else ()}</div>
         </div>
 };
- 
+
+declare function admin:createNLPCorpus() {
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Compiling Corpus NLP CSV table.") else ()
+    let $start-time := util:system-time()
+
+    let $works := xmldb:get-child-resources($config:nlp-root)
+    let $theaders := "url,xmlid,lang,wid,author-id,author-name,title,year,passage,citation-recommendation,content"
+    let $all-lines := for $fn in $works (: position() < 6] :)
+                      let $csv := util:binary-to-string(util:binary-doc($config:nlp-root || "/" || $fn))
+                      let $lines := tokenize($csv, "&#10;")
+                      return $lines[position() > 1] (: position() < 6] :)  (: skip first line of each file :)
+                      (: return concat($fn, ": ", xs:string(count($lines)), " lines.") :)
+    let $full := concat($theaders, $config:nl, string-join($all-lines, $config:nl))
+
+    let $runtime-ms := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000
+    let $runtimeString := 
+        if ($runtime-ms < (1000 * 60)) then format-number($runtime-ms div 1000, "#.##") || " Sek."
+        else if ($runtime-ms < (1000 * 60 * 60))  then format-number($runtime-ms div (1000 * 60), "#.##") || " Min."
+        else format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
+    let $log    := util:log('info', 'Extracted NLP corpus in ' || $runtimeString)
+
+    let $save   := xmldb:store($config:corpus-zip-root, 'corpus.csv', $full)
+    let $export := admin:exportBinaryFile('corpus.csv', $full, 'data')
+
+    let $debug  := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Done compiling corpus NLP CSV table.") else ()
+    return
+        <div>
+            <h2>NLP Corpus Compilation</h2>
+            <p>Combined {xs:string(count($works))} NLP CSV files in {$runtimeString}, saved at {$save} and exported to {$export}.</p>
+            <div style="margin-left:5em;">{if ($config:debug = ("trace")) then $full else ()}</div>
+        </div>
+};
+
 (:
 ~ Creates and stores a IIIF manifest/collection for work $wid.
 :)
 declare function admin:createIIIF($wid as xs:string) {
-(: Changed to improve performance on 2025-03-24, A.W.                               :)
-(:  let $target-work := util:expand(collection($config:tei-root)//tei:TEI[@xml:id = $wid]):)
     let $target-work := util:expand(collection($config:tei-root)/id($wid))
 
     let $todo := if ($target-work/tei:text/@type = "work_multivolume") then
@@ -2462,14 +2504,14 @@ declare function admin:createIIIF($wid as xs:string) {
             let $timing := 'Extracted IIIF for ' || $r || ' in ' || $runtimeString
             let $log    := util:log('info', $timing)
         
-            let $store  := if ($resource instance of map(*) and map:size($resource) > 0) then
- let $cleanCollectionStatus := admin:cleanCollection($r, "iiif")
-                    return admin:saveTextFile($r, $r || '.json', fn:serialize($resource, map{"method":"json", "indent": true(), "encoding":"utf-8"}), 'iiif')
- else ()
-            let $export := if ($resource instance of map(*) and map:size($resource) > 0) then
- let $cleanDirectoryStatus := admin:cleanDirectory($r, "iiif")
-                    return admin:exportJSONFile($r, $r || '.json', $resource, 'iiif')
- else ()
+            let $store  :=  if ($resource instance of map(*) and map:size($resource) > 0) then
+                                let $cleanCollectionStatus := admin:cleanCollection($r, "iiif")
+                                return admin:saveTextFile($r, $r || '.json', fn:serialize($resource, map{"method":"json", "indent": true(), "encoding":"utf-8"}), 'iiif')
+                            else ()
+            let $export :=  if ($resource instance of map(*) and map:size($resource) > 0) then
+                                let $cleanDirectoryStatus := admin:cleanDirectory($r, "iiif")
+                                return admin:exportJSONFile($r, $r || '.json', $resource, 'iiif')
+                            else ()
         
             return 
                 <p>
@@ -2500,8 +2542,6 @@ declare function admin:createDetails($currentResourceId as xs:string) {
         if ($wid = '*') then
             collection($config:tei-root)//tei:TEI[.//tei:text[@type = ("work_multivolume", "work_monograph", "work_volume", "lemma_article", "working_paper")]]
         else
-(: Changed to improve performance on 2025-03-24, A.W.                               :)
-(:          collection($targetSubcollection)//tei:TEI[@xml:id = distinct-values($wid)]:)
             collection($targetSubcollection)/id(distinct-values($wid))
     let $expanded :=  for $resource-raw in $todo return util:expand($resource-raw)
 
@@ -2523,22 +2563,20 @@ declare function admin:createDetails($currentResourceId as xs:string) {
         let $debug          := if (count($volume_names)>0) then console:log('[Details] $volume_names: ' || string-join($volume_names, ', ')) else ()
         let $volumes        := for $f in $volume_names return if (doc-available($config:tei-root || '/works/' || $f || '.xml')) then map:entry($f, doc($config:tei-root || '/works/' || $f || '.xml')) else ()
         let $volumes        := map:merge($volumes)
-   (:  let $debug := console:log('$volumes: ' || serialize($volumes, map {"method":"json", "media-type":"application/json"}))  :)
-    
         let $volumes_list := for $key in map:keys($volumes) order by $key
                                 let $iiif_file      := $config:iiif-root || '/' || $key || '.json'
-                                let $iiif            := if (util:binary-doc-available($iiif_file)) then json-doc($iiif_file) else map{}
+                                let $iiif           := if (util:binary-doc-available($iiif_file)) then json-doc($iiif_file) else map{}
                                 let $vol_thumbnail  := if (count(map:keys($iiif)) gt 0 and "thumbnail" = map:keys($iiif)) then
                                                             $iiif?thumbnail
                                                         else
                                                             let $debug := console:log("[Details] No iiif information for " || $wid || "/" || $key || " found.")
                                                             return ()
-                                 let $debug := console:log('$vol_thumbnail: ' || serialize($vol_thumbnail, map {"method":"json", "media-type":"application/json"})) 
-                                 let $debug := console:log('$iiif-vol?thumbnail?@id: ' || serialize(map:get($vol_thumbnail, '@id'), map {"method":"json", "media-type":"application/json"})) 
+                                let $debug := console:log('$vol_thumbnail: ' || serialize($vol_thumbnail, map {"method":"json", "media-type":"application/json"})) 
+                                let $debug := console:log('$iiif-vol?thumbnail?@id: ' || serialize(map:get($vol_thumbnail, '@id'), map {"method":"json", "media-type":"application/json"})) 
                                 let $teiHeader := map:get($volumes, $key)//tei:teiHeader
                                 let $isFirstEd := not($teiHeader//tei:sourceDesc//tei:imprint/(tei:date[@type eq "thisEd"] | tei:pubPlace[@role eq "thisEd"] | tei:publisher[@n eq "thisEd"]))
-                                 let $debug := console:log("thumbnail : " || map:get($vol_thumbnail, '@id'))
-     return map {
+                                let $debug := console:log("thumbnail : " || map:get($vol_thumbnail, '@id'))
+                                return map {
                                     "key" :                     $key,
                                     "id" :                      tokenize($key, '_')[1] || ':vol' || map:get($volumes, $key)//tei:text/@n/string(),
                                     "uri" :                     $config:idserver || '/texts/' ||
@@ -2564,9 +2602,9 @@ declare function admin:createDetails($currentResourceId as xs:string) {
                                                                 else
                                                                     admin:StripLBs(string-join($teiHeader//tei:sourceDesc//tei:imprint/tei:publisher/tei:persName/string(), '/')),
                                     "year" :                    if ($isFirstEd) then
-                                                                     $teiHeader//tei:sourceDesc//tei:imprint/tei:date[@type eq 'firstEd']/@when/string()
+                                                                    $teiHeader//tei:sourceDesc//tei:imprint/tei:date[@type eq 'firstEd']/@when/string()
                                                                 else
- $teiHeader//tei:sourceDesc//tei:imprint/tei:date[@type eq 'thisEd']/@when/string(),                                                                
+                                                                    $teiHeader//tei:sourceDesc//tei:imprint/tei:date[@type eq 'thisEd']/@when/string(),
                                     "src_publication_period" :  $teiHeader//tei:sourceDesc//tei:imprint/tei:date[@type eq 'summaryFirstEd']/string(),
                                     "language" :                string-join($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n eq 'main']/string(), ', ') ||
                                                                 (if ($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n ne 'main']) then
@@ -2577,14 +2615,13 @@ declare function admin:createDetails($currentResourceId as xs:string) {
                                     "tech_ed" :                 admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#technical')]/string(), ' / ')),
                                     "el_publication_date" :     if ($teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when) then
                                                                     $teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when/string()[1]
-else if ($teiHeader//tei:editionStmt//tei:date[@type eq 'summaryDigitizedEd']/@when) then $teiHeader//tei:editionStmt//tei:date[@type eq 'summaryDigitizedEd']/@when/string()[1]
+                                                                else if ($teiHeader//tei:editionStmt//tei:date[@type eq 'summaryDigitizedEd']/@when) then
+                                                                    $teiHeader//tei:editionStmt//tei:date[@type eq 'summaryDigitizedEd']/@when/string()[1]
                                                                 else
                                                                     'in prep.',
                                     "hold_library" :            normalize-space(string-join($teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:repository/string(), ' | ')),
                                     "hold_idno" :               normalize-space(string-join($teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:idno/string(), ' ')),
                                     "status" :                  $teiHeader/tei:revisionDesc/@status/string()
-                              
-
                                 }
 
         let $dbg := for $v in $volumes_list return
@@ -2642,48 +2679,49 @@ else if ($teiHeader//tei:editionStmt//tei:date[@type eq 'summaryDigitizedEd']/@w
                                                 (if ($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n ne 'main']) then
                                                     ' (' || string-join($teiHeader/tei:profileDesc/tei:langUsage/tei:language[@n ne 'main']/string(), ', ') || ')'
                                                  else ()
-                                            )
+                                                )
                                          else
                                             string-join($teiHeader/tei:profileDesc/tei:langUsage/tei:language/string(), ', '),
             "thumbnail" :               $thumbnail_id,
             "schol_ed" :                admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#scholarly')]/string(), ' / ')),
             "tech_ed" :                 admin:StripLBs(string-join($teiHeader//tei:titleStmt/tei:editor[contains(@role, '#technical')]/string(), ' / ')),
-                 "el_publication_date" :     if ($teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when) then
-                                                                    $teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when/string()[1]
-else if ($teiHeader//tei:editionStmt//tei:date[@type eq 'summaryDigitizedEd']/@when) then $teiHeader//tei:editionStmt//tei:date[@type eq 'summaryDigitizedEd']/@when/string()[1]
-                                                                else
-                                                                    'in prep.',
-                                 
-                                    "type": if ($teiHeader//tei:revisionDesc/@status =
-                                         ( 'a_raw',
-                                           'b_cleared',
-                                           'c_hyph_proposed',
-                                           'd_hyph_approved',
-                                           'e_emended_unenriched',
-                                           'f_enriched'
-                                          )) then "Facsimiles"
-else if ($teiHeader//tei:revisionDesc/@status =
-                                         ( 'a_raw',
-                                           'b_cleared',
-                                           'c_hyph_proposed',
-                                           'd_hyph_approved',
-                                           'e_emended_unenriched',
-                                           'f_enriched', 
-                                           'g_enriched_approved',
-                                           'h_revised'
-                                          ) and contains($teiHeader//tei:encodingDesc/tei:editorialDecl/tei:p/@xml:id, 'AEW'))  then "Automatically Edited Work"
-                            else if ($teiHeader//tei:revisionDesc/@status =
-                                         ( 'a_raw',
-                                           'b_cleared',
-                                           'c_hyph_proposed',
-                                           'd_hyph_approved',
-                                           'e_emended_unenriched',
-                                           'f_enriched', 
-                                           'g_enriched_approved',
-                                           'h_revised'
-                                          ) and contains($teiHeader//tei:encodingDesc/tei:editorialDecl/tei:p/@xml:id, 'RW'))  then "Reference Work"
-else 'Edited Work',
-       "hold_library" :            if (count($volumes_list) gt 0 and not($teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:repository)) then
+            "el_publication_date" :     if ($teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when) then
+                                            $teiHeader//tei:editionStmt//tei:date[@type eq 'digitizedEd']/@when/string()[1]
+                                        else if ($teiHeader//tei:editionStmt//tei:date[@type eq 'summaryDigitizedEd']/@when) then
+                                            $teiHeader//tei:editionStmt//tei:date[@type eq 'summaryDigitizedEd']/@when/string()[1]
+                                        else
+                                            'in prep.',
+            "type":                     if ($teiHeader//tei:revisionDesc/@status = ( 'a_raw',
+                                                                                     'b_cleared',
+                                                                                     'c_hyph_proposed',
+                                                                                     'd_hyph_approved',
+                                                                                     'e_emended_unenriched',
+                                                                                     'f_enriched'
+                                                                                    )) then
+                                            "Facsimiles"
+                                        else if ($teiHeader//tei:revisionDesc/@status = ( 'a_raw',
+                                                                                          'b_cleared',
+                                                                                          'c_hyph_proposed',
+                                                                                          'd_hyph_approved',
+                                                                                          'e_emended_unenriched',
+                                                                                          'f_enriched', 
+                                                                                          'g_enriched_approved',
+                                                                                          'h_revised'
+                                                                                        ) and contains($teiHeader//tei:encodingDesc/tei:editorialDecl/tei:p/@xml:id, 'AEW')) then
+                                            "Automatically Edited Work"
+                                        else if ($teiHeader//tei:revisionDesc/@status = ( 'a_raw',
+                                                                                          'b_cleared',
+                                                                                          'c_hyph_proposed',
+                                                                                          'd_hyph_approved',
+                                                                                          'e_emended_unenriched',
+                                                                                          'f_enriched', 
+                                                                                          'g_enriched_approved',
+                                                                                          'h_revised'
+                                                                                        ) and contains($teiHeader//tei:encodingDesc/tei:editorialDecl/tei:p/@xml:id, 'RW')) then
+                                            "Reference Work"
+                                        else
+                                            "Edited Work",
+            "hold_library" :            if (count($volumes_list) gt 0 and not($teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:repository)) then
                                             'check individual volumes'
                                         else
                                             normalize-space(string-join($teiHeader//tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:repository/string(), ' | ')),
@@ -2700,7 +2738,7 @@ else 'Edited Work',
 
         let $vol_keys := for $v in $volumes_list return concat('$', map:get($v, 'key')) 
         let $volumes_string := '{{ $Volumes := dict "number" ' || xs:string(map:get($work_info, 'number_of_volumes')) ||
-                                                    ' "volumes" (list ' || string-join($vol_keys, ' ') || ') }}'
+                                    ' "volumes" (list ' || string-join($vol_keys, ' ') || ') }}'
         let $work_string := if ("working_paper" = $text_type) then
                                     '{{ $map := dict "id" "' || $public_id ||
                                                     '" "title" "' || $work_info?title_full ||
@@ -2743,6 +2781,7 @@ else 'Edited Work',
                             let $debug := console:log("[Details] Rendering details for volume " || $v || "...")
                             return admin:createDetails($v)
         return ($id, $save, $export)
+
     let $debug := if ($config:debug = "bla") then
                     console:log("[ADMIN] Done rendering Details.")
                   else if ($config:debug = ("info", "trace")) then
@@ -2754,66 +2793,110 @@ else 'Edited Work',
 (: 
 ~ Creates and stores statistics.
 :)
-declare function admin:createStats($rid as xs:string) {
-    let $wid := if ($rid eq "") then "*" else $rid
+declare function admin:createStats($wid as xs:string) {
+    if (not($wid = sutil:getPublishedWorkIds())) then
+        ("Problem: wid " || $wid || " is not in the list of published WorkIDs.")
+    else
+        let $start-time := util:system-time()
+        let $debug := console:log("[ADMIN] Stats: Creating stats for " || $wid || " ...")
+        let $log  := if ($config:debug = ('info', 'trace')) then util:log('info', "[ADMIN] Stats: Creating stats for " || $wid || " ...") else ()
+        let $params := 
+            <output:serialization-parameters xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
+                <output:method value="json"/>
+            </output:serialization-parameters>
+    
+        let $workStats := stats:makeWorkStats($wid)
 
+        let $cleanCollectionStatus := admin:cleanCollection($wid, "stats")
+        let $cleanDirectoryStatus := admin:cleanDirectory($wid, "stats")
+        let $save   := admin:saveFile('dummy', $wid || '-stats.json', serialize($workStats, $params), 'stats')
+        let $export := admin:exportJSONFile($wid, $wid || '-stats.json', $workStats, 'stats')
+
+        let $runtime-ms := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000
+        let $runtimeString :=
+            if ($runtime-ms < (1000 * 60)) then format-number($runtime-ms div 1000, "#.##") || " Sek."
+            else if ($runtime-ms < (1000 * 60 * 60))  then format-number($runtime-ms div (1000 * 60), "#.##") || " Min."
+            else format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
+        let $log   := util:log('info', '[ADMIN] Extracted stats for ' || $wid || ' in ' || $runtimeString || '.')
+        let $debug := console:log('Extracted stats for ' || $wid || ' in ' || $runtimeString || '. Saved at ' || $save || ' and exported to ' || $export || '.')
+
+        return $workStats
+};
+
+declare function admin:createStatsCorpus() {
     let $start-time := util:system-time()
 
-    let $debug := console:log("[ADMIN] Stats: Creating stats for " || $wid || " ...")
-    let $log  := if ($config:debug = ('info', 'trace')) then util:log('info', "[ADMIN] Stats: Creating stats for " || $wid || " ...") else ()
+    let $debug := console:log("[ADMIN] Stats: Creating corpus stats ...")
+    let $log  := if ($config:debug = ('info', 'trace')) then util:log('info', "[ADMIN] Stats: Creating corpus stats ...") else ()
 
     let $params := 
         <output:serialization-parameters xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
             <output:method value="json"/>
         </output:serialization-parameters>
 
-    (: corpus stats :)
-    let $result := if ($wid eq "*") then
-        let $debug := console:log('[ADMIN] Create corpus stats...')
-        let $corpusStats := stats:makeCorpusStats()
+    let $works := xmldb:get-child-resources($config:stats-root)
 
-        let $save        := admin:saveFile('dummy', 'corpus-stats.json', serialize($corpusStats, $params), 'stats')
-        let $export      := admin:exportJSONFile('corpus-stats.json', $corpusStats, 'stats')
+    (: Collect all work stats and calculate aggregations :)
+    let $all-contents := for $fn in $works
+                         return json-doc($config:stats-root || "/" || $fn)
 
-        let $debug := console:log('[ADMIN] Done creating corpus stats. Saved and exported to ' || $save || ' and ' || $export || '.')
-        let $log := if ($config:debug = ('info', 'trace')) then util:log('info', '[ADMIN] Done creating corpus stats. Saved and exported to ' || $save || ' and ' || $export || '.') else ()
-
-        (: single work stats:)
-        let $debug := console:log('[ADMIN] Creating all single work stats...')
-        let $allSingleWorksStats :=
-            for $id in sutil:getPublishedWorkIds() order by $id return
-                let $log := if ($config:debug = 'trace') then util:log('info', '[ADMIN] Creating single work stats for ' || $id || '...') else ()
-                let $workStats := stats:makeWorkStats($id)
+    (: Aggregate corpus statistics :)
+    let $corpus-stats := 
+        map {
+            "id": "salamanca-corpus",
+            "lang": map:merge( for $c in $all-contents
+                                let $lang := string-join($c?lang, " &amp; ")
+                                group by $lang
+                                return map { $lang: count($c) }
+                            ),
+            "chars_count": sum(for $c in $all-contents return $c?chars_count),
+            "words_count": sum(for $c in $all-contents return $c?words_count),
+            "tokens_count": sum(for $c in $all-contents return $c?tokens_count),
+            "wordforms_count": sum(for $c in $all-contents return $c?wordforms_count),
+            "normalizations_count": map {
+                "abbr": sum(for $c in $all-contents return $c?normalizations_count?abbr),
+                "sic": sum(for $c in $all-contents return $c?normalizations_count?sic),
+                "unmarked_hyph": sum(for $c in $all-contents return $c?normalizations_count?unmarked_hyph)
+            },
+            "facs_count": map {
+                "full_text": sum(for $c in $all-contents return $c?facs_count?full_text)
+            },
+            "mf_lemmata":   let $all-lemmata := array:flatten(for $c in $all-contents return $c?mf_lemmata)
+                            let $maps := for $i in $all-lemmata
+                                         where $i instance of map(*)
+                                         return $i
+                            return
+                                for $item in $maps
+                                group by $lid := $item?lid
+                                return map {
+                                    "lid"   : $lid,
+                                    "freq"  : sum($item?freq),
+                                    "terms" : ($item?terms)[1]
+                                }
+        }
     
-                let $cleanCollectionStatus := admin:cleanCollection($id, "stats")
-                let $cleanDirectoryStatus := admin:cleanDirectory($id, "stats")
+    (: Create work-specific stats maps :)
+    let $log  := if ($config:debug = ('info', 'trace')) then console:log("[ADMIN] Stats: Build work-specific stats ...") else ()
+    let $all-stats := for $fn in $works
+                      let $content := json-doc($config:stats-root || "/" || $fn)
+                      return map { substring($fn, 1, 5) : $content }
     
-                let $saveSingle   := admin:saveFile('dummy', $id || '-stats.json', serialize($workStats, $params), 'stats')
-                let $exportSingle := admin:exportJSONFile($id, $id || '-stats.json', $workStats, 'stats')
-                let $log := if ($config:debug = 'trace') then util:log('info', '[ADMIN] Done creating single work stats for ' || $id || '. Saved and exported to ' || $saveSingle || ' and ' || $exportSingle || '.') else ()
-                return $workStats
-        return ($corpusStats, $allSingleWorksStats)
-    else
-        if ($wid = sutil:getPublishedWorkIds()) then
-            let $log := if ($config:debug = ('info', 'trace')) then util:log('info', '[ADMIN] Creating single work stats for ' || $wid || '...') else ()
-            let $workStats := stats:makeWorkStats($wid)
+    (: Combine corpus stats with work stats :)
+    let $log  := if ($config:debug = ('info', 'trace')) then console:log("[ADMIN] Stats: Concat work-specific and aggregate stats ...") else ()
+    let $full := array { map { "corpus": $corpus-stats }, $all-stats }
+    let $log  := if ($config:debug = ('info', 'trace')) then console:log("[ADMIN] Stats: Done now saving/exporting ...") else ()
 
-            let $cleanCollectionStatus := admin:cleanCollection($wid, "stats")
-            let $cleanDirectoryStatus := admin:cleanDirectory($wid, "stats")
+    let $save   := xmldb:store($config:corpus-zip-root, 'corpus-stats.json', serialize($full, $params))
+    let $export := admin:exportBinaryFile('corpus-stats.json', serialize($full, $params), 'data')
 
-            let $saveSingle   := admin:saveFile('dummy', $wid || '-stats.json', serialize($workStats, $params), 'stats')
-            let $exportSingle := admin:exportJSONFile($wid, $wid || '-stats.json', $workStats, 'stats')
-            let $log := if ($config:debug = 'trace') then util:log('info', '[ADMIN] Done creating single work stats for ' || $wid || '. Saved and exported to ' || $saveSingle || ' and ' || $exportSingle || '.') else ()
-            return $workStats
-        else
-            ("Problem: wid " || $wid || " was not in the list of published WorkIDs.")
+    let $log := if ($config:debug = ('info', 'trace')) then util:log('info', '[ADMIN] Done creating corpus stats. Saved and exported to ' || $save || ' and ' || $export || '.') else ()
 
     let $runtime-ms := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000
     let $runtimeString :=
         if ($runtime-ms < (1000 * 60)) then format-number($runtime-ms div 1000, "#.##") || " Sek."
         else if ($runtime-ms < (1000 * 60 * 60))  then format-number($runtime-ms div (1000 * 60), "#.##") || " Min."
         else format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
-    let $log  := util:log('info', '[ADMIN] Extracted corpus and works stats in ' || $runtimeString || '.')
-    let $debug := console:log('Extracted corpus and works stats in ' || $runtimeString || '.')
-    return $result
+    let $debug := console:log('[ADMIN] Done creating corpus stats. Saved and exported to ' || $save || ' and ' || $export || '.')
+
+    return $full
 };

@@ -1,0 +1,44 @@
+name: Build CI Docker Image
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'docker/dockerfiles/svsal-exist/**'
+      - 'modules/**'
+      - 'build.xml'
+      - 'expath-pkg.xml'
+  workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * 0'  # Weekly rebuild on Sunday 3am
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create admin password secret file
+        run: echo "sm:passwd('admin','${{ secrets.EXIST_ADMIN_PW }}')" > .setadminpw
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: docker/dockerfiles/svsal-exist
+          file: docker/dockerfiles/svsal-exist/Dockerfile.ci
+          push: true
+          tags: ghcr.io/digicademy/svsal/svsal-exist-ci:latest
+          build-args: |
+            SVN_USER=${{ secrets.SVN_USER }}
+            SVN_PASS=${{ secrets.SVN_PASS }}
+          secrets: |
+            setadminpw=.setadminpw

@@ -30,15 +30,7 @@ declare option exist:timeout "166400000"; (: in miliseconds, 25.000.000 ~ 7h, 43
     (supposed to increase speed especially where "intersect" statements are applied).
 :)
 declare function sutil:copy($node as element()) as node() {
-    (:element {node-name($node)}
-    {$node/@*,
-        for $child in $node/node()
-             return if ($child instance of element()) then 
-                sutil:copy($child)
-             else $child
-    }:)
-    (:util:deep-copy($node):)
-    (: this seems to be the fastest option: :)
+    (: compared with util:deep-copy and recursive flowr, this seems to be the fastest option: :)
     let $xsl :=
         <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
             <xsl:template match="@*|node()">

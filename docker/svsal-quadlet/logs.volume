@@ -1,0 +1,6 @@
+[Volume]
+# Shared log volume for Caddy and eXist-db services
+# Stores application logs for both web server and database
+
+[Install]
+WantedBy=default.target

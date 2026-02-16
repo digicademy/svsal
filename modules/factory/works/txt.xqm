@@ -44,7 +44,9 @@ declare function txt:isMarginalNode($node as node()) as xs:boolean {
         $node/@xml:id and
         (
             $node/self::tei:note[@place eq 'margin'] or
-            $node/self::tei:label[@place eq 'margin']
+            $node/self::tei:label[@place eq 'margin'] or
+            $node/self::tei:ref
+
         )
         (:and not($node/ancestor::*[index:isMarginalNode(.)]):) (: that shouldn't be possible :)
     )
@@ -240,7 +242,8 @@ declare function txt:editElem($node as element(), $mode as xs:string) {
             ()
         
         case 'edit' 
-        case 'snippets-edit' return
+        case 'snippets-edit'
+        case 'clean' return
             txt:passthru($node, $mode)
             
         default return
@@ -276,7 +279,10 @@ declare function txt:g($node as element(tei:g), $mode as xs:string) {
     switch($mode)
         case 'orig'
         case 'snippets-orig' return
+            let $mapping := $char/tei:mapping[@type = ('precomposed', 'composed', 'standardized')]/text()
+            (: Replaced the following call with the one above for performance reasons, A.W. 2025-12-23
             let $mapping := for $m in $char/tei:mapping where $m/@type = ('precomposed', 'composed', 'standardized') return $m/text()
+            :)
             return
                 if ($mapping) then
                     string($mapping[1])
@@ -287,15 +293,23 @@ declare function txt:g($node as element(tei:g), $mode as xs:string) {
 (:                  error(xs:QName('txt:g'), 'Found tei:g without text content'):)
 
         case 'edit' 
-        case 'snippets-edit'
-        case 'nonotes' return
-            if (for $m in $char/tei:mapping where $m/@type = 'standardized' return $m/text()) then
-                (for $m in $char/tei:mapping where $m/@type = 'standardized' return $m/text())[1]
+        case 'snippets-edit' return
+            if ($char/tei:mapping[@type = 'standardized']/text()) then
+                ($char/tei:mapping[@type = 'standardized']/text())[1]
             else if ($node/text()) then
                 string($node)
             else
                 string('')
 (:              return error(xs:QName('txt:g'), 'Found tei:g without either standardized mapping or text content'):)
+        case 'nonotes'
+        case 'clean' return
+            if ($node/@ref eq "#char00b6") then () else
+                if ($char/tei:mapping[@type = 'standardized']/text()) then
+                    ($char/tei:mapping[@type = 'standardized']/text())[1]
+                else if ($node/text()) then
+                    string($node)
+                else
+                    string('')
         default return
             if ($node/text()) then
                 $node/text()
@@ -439,7 +453,8 @@ declare function txt:orig($node as element(tei:orig), $mode) {
 declare function txt:origElem($node as element(), $mode as xs:string) {
     switch($mode)
         case 'orig'
-        case 'snippets-orig' return
+        case 'snippets-orig'
+        case 'clean' return
             txt:passthru($node, $mode)
         
         case 'edit'
@@ -465,8 +480,15 @@ declare function txt:p($node as element(tei:p), $mode as xs:string) {
 };
 
 declare function txt:passthru($nodes as node()*, $mode as xs:string) {
-    for $n in $nodes/node() return
-        txt:dispatch($n, $mode)
+    if ($mode eq 'clean') then
+        for $n in $nodes/node() return
+            if ($n[self::tei:note]) then
+                ()
+            else
+                txt:dispatch($n, $mode)
+    else
+        for $n in $nodes/node() return
+            txt:dispatch($n, $mode)
 };
 
 declare function txt:passthruWithParaMarkers($nodes as node()*, $mode as xs:string) {

@@ -47,38 +47,40 @@ let $checkIndex :=
 
 let $output :=
     switch($format)
-        case 'index' return 
-            admin:createNodeIndex($rid)
-        case 'pdf_upload' return
-            upload:uploadPdf($rid)  
-        case 'pdf_create' return
-            admin:createPdf($rid)
-        case 'crumbtrails' return
-            admin:createCrumbtrails($rid) 
-        case 'html' return
-            admin:renderHTML($rid)
         case 'details' return
             admin:createDetails($rid)
-        case 'snippets' return 
-            admin:sphinx-out($rid, $mode)
-        case 'rdf' return
-            admin:createRDF($rid)
-        case 'nlp' return
-            admin:createNLP($rid)
-        case 'tei-corpus' return
-            admin:createTeiCorpus('admin')
+        case 'html' return
+            admin:renderHTML($rid)
         case 'iiif' return
             admin:createIIIF($rid)
-        case 'txt-corpus' return
-            admin:createTxtCorpus('admin')
-        case 'stats' return
-            <pre>{fn:serialize(admin:createStats("*"), map{"method":"json", "indent": true(), "encoding":"utf-8"})}</pre>
+        case 'index' return 
+            admin:createNodeIndex($rid)
+        case 'nlp' return
+            admin:createNLP($rid)
+        case 'nlp-corpus' return
+            admin:createNLPCorpus()
+        case 'pdf_create' return
+            admin:createPdf($rid)
+        case 'pdf_upload' return
+            upload:uploadPdf($rid)  
+        case 'rdf' return
+            admin:createRDF($rid)
         case 'routing' return
             switch($rid)
                 case 'all' return
                     admin:createRoutes()
                 default return
                     admin:createRoutes($rid)
+        case 'snippets' return 
+            admin:sphinx-out($rid, $mode)
+        case 'stats' return
+            fn:serialize(admin:createStats($rid), map{"method":"json", "indent": true(), "encoding":"utf-8"})
+        case 'stats-corpus' return
+            fn:serialize(admin:createStatsCorpus(), map{"method":"json", "indent": true(), "encoding":"utf-8"})
+        case 'tei-corpus' return
+            admin:createTeiCorpus('admin')
+        case 'txt-corpus' return
+            admin:createTxtCorpus('admin')
         case 'all' return 
             (: all formats (except iiif and rdf) for a single work :)
             let $debug := console:log("Rendering all formats for " || $rid || " ...")
@@ -87,17 +89,14 @@ let $output :=
                 <div><h2>Index</h2>
                 {admin:createNodeIndex($rid)}
                 </div>
-                <div><h2>Crumbtrails</h2>
-                {admin:createCrumbtrails($rid)}
-                </div>
-                <div><h2>PDF</h2>
-                {admin:createPdf($rid)}
-                </div>
                 <div><h2>HTML</h2>
                 {admin:renderHTML($rid)}
                 </div>
                 <div><h2>Details</h2>
                 {admin:createDetails($rid)}
+                </div>
+                <div><h2>PDF</h2>
+                {admin:createPdf($rid)}
                 </div>
                 <div><h2>Search Snippets</h2>
                 {admin:sphinx-out($rid, $mode)}
