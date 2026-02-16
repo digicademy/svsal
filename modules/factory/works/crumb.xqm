@@ -1,7 +1,6 @@
 xquery version "3.1";
 
 module namespace crumb         = "https://www.salamanca.school/factory/works/crumb";
-declare namespace exist            = "http://exist.sourceforge.net/NS/exist";
 declare namespace tei              = "http://www.tei-c.org/ns/1.0";
 declare namespace sal              = "http://salamanca.adwmainz.de";
 declare namespace xi                = "http://www.w3.org/2001/XInclude";
@@ -9,8 +8,6 @@ declare namespace admin              = "https://www.salamanca.school/xquery/admi
  
 
 import module namespace functx      = "http://www.functx.com";
-import module namespace util       = "http://exist-db.org/xquery/util";
-import module namespace console    = "http://exist-db.org/xquery/console";
 import module namespace config     = "https://www.salamanca.school/xquery/config" at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
 import module namespace sutil    = "https://www.salamanca.school/xquery/sutil" at "xmldb:exist:///db/apps/salamanca/modules/sutil.xqm";
 import module namespace txt        = "https://www.salamanca.school/factory/works/txt" at "xmldb:exist:///db/apps/salamanca/modules/factory/works/txt.xqm";
@@ -34,10 +31,9 @@ Modifications 27.11.2023:  adding "/data/" to the @href, so that it matches the 
 
 declare function crumb:createCrumbNode($tei as element(tei:TEI)) as map(*) {
   let $wid := $tei/@xml:id
-  let $work := util:expand($tei)
   let $xincludes := $tei//tei:text//xi:include/@href
   let $fragmentationDepth := index:determineFragmentationDepth($tei)
-  let $target-set := index:getFragmentNodes($work, $fragmentationDepth)
+  let $target-set := index:getFragmentNodes($tei, $fragmentationDepth)
   (: First, get all relevant nodes :)
   let $nodes := 
         for $text in $work//tei:text[@type = ('work_volume', 'work_monograph', 'lemma_article')] return 
@@ -230,7 +226,7 @@ declare function crumb:qualityCheck($crumb as element(sal:crumb),
                                   or (@type eq 'work_volume' and sutil:WRKisPublished($wid || '_' || @xml:id))]
                                   //text()[normalize-space() ne ''] return
             if ($t[not(ancestor::*[index:isBasicNode(.)]) and not(ancestor::tei:figDesc)]) then 
-                let $debug := util:log('error', 'Encountered text node without ancestor::*[index:isBasicNode(.)], in line ' || $t/preceding::tei:lb[1]/@xml:id/string() || ' – this might indicate a structural anomaly in the TEI data.')
+                let $debug := trace('Encountered text node without ancestor::*[index:isBasicNode(.)], in line ' || $t/preceding::tei:lb[1]/@xml:id/string() || ' – this might indicate a structural anomaly in the TEI data.', "[CRUMB-ERROR]")
                 return error(xs:QName('admin:createCrumbNode'), 'Encountered text node without ancestor::*[index:isBasicNode(.)], in line ' || $t/preceding::tei:lb[1]/@xml:id/string()) 
             else ()
     (: if no xml:id is put out, try to search these cases like so:
@@ -238,7 +234,7 @@ declare function crumb:qualityCheck($crumb as element(sal:crumb),
     :)
 
     (: See if there are any leaf elements in our text that are not matched by our rule :)
-    let $missed-elements := $work//(tei:front|tei:body|tei:back)//tei:*[count(./ancestor-or-self::tei:*) < $fragmentationDepth][not(*)]
+    let $missed-elements := $tei//(tei:front|tei:body|tei:back)//tei:*[count(./ancestor-or-self::tei:*) < $fragmentationDepth][not(*)]
     (: See if any of the elements we did get is lacking an xml:id attribute :)
     let $unidentified-elements := $targetNodes[not(@xml:id)]
     (: Keep track of how long this index did take :)

@@ -10,15 +10,10 @@ xquery version "3.1";
 module namespace iiif     = "https://www.salamanca.school/factory/works/iiif";
 
 declare namespace array   = "http://www.w3.org/2005/xpath-functions/array";
-declare namespace exist   = "http://exist.sourceforge.net/NS/exist";
-declare namespace map     = "http://www.w3.org/2005/xpath-functions/map";
 declare namespace output  = "http://www.w3.org/2010/xslt-xquery-serialization";
 declare namespace sal     = "http://salamanca.adwmainz.de";
 declare namespace tei     = "http://www.tei-c.org/ns/1.0";
 declare namespace xi      = "http://www.w3.org/2001/XInclude";
-
-import module namespace console   = "http://exist-db.org/xquery/console";
-import module namespace util      = "http://exist-db.org/xquery/util";
 
 import module namespace config    = "https://www.salamanca.school/xquery/config"       at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
 import module namespace app       = "https://www.salamanca.school/xquery/app"          at "xmldb:exist:///db/apps/salamanca/modules/app.xqm";
@@ -27,15 +22,18 @@ import module namespace index     = "https://www.salamanca.school/factory/works/
 
 (: SETTINGS :)
 
-declare option exist:timeout "166400000"; (: in miliseconds, 25.000.000 ~ 7h, 43.000.000 ~ 12h :)
-declare option exist:output-size-limit "5000000"; (: max number of nodes in memory :)
+(: Note: The following eXist-db specific options have been removed for portability:
+   - exist:timeout
+   - exist:output-size-limit
+   These settings should be configured at the XQuery processor level instead.
+:)
 
 (: Creates a new iiif resource, either a manifest (for a single-volume work or 
 a single volume within a multi-volume work) or a collection resource (for a multi-volume work).
 @param $wid: the ID of the work or volume which the manifest is requested for
 @return:     the iiif manifest/collection :)
 declare function iiif:createResource($targetWorkId as xs:string) as map(*) {
-    let $debug := console:log("[iiif] Create iiif resource for " || $targetWorkId || "...")
+    let $debug := trace(("[iiif] Create iiif resource for " || $targetWorkId || "..."), "[iiif]")
     let $tei  := doc($config:tei-works-root || '/' || sutil:normalizeId($targetWorkId) || '.xml')//tei:TEI
     let $iiifResource :=
         if ($tei) then
@@ -53,12 +51,12 @@ declare function iiif:createResource($targetWorkId as xs:string) as map(*) {
             else ()
         else ()
         (: no TEI dataset available -> do nothing :)
-    let $debug := console:log("[iiif] Done.")
+    let $debug := trace("[iiif] Done.", "[iiif]")
     return $iiifResource
 };
 
 declare function iiif:mkMultiVolumeCollection($workId as xs:string, $tei as node()) as map(*) {
-    let $debug           := if ($config:debug = ("info", "trace")) then console:log("[iiif] iiif:mkMultiVolumeCollection running (" || $workId || " requested) ...") else ()
+    let $debug           := if ($config:debug = ("info", "trace")) then trace(("[iiif] iiif:mkMultiVolumeCollection running (" || $workId || " requested), "[iiif]") ...") else ()
     let $id              := $config:iiifPresentationServer || $workId
     let $basiclabel      := string-join(for $a in $tei//tei:titleStmt/tei:author//tei:surname return normalize-space($a), "/") || ": " ||
                             normalize-space($tei//tei:titleStmt/tei:title[@type = "short"]/text())
@@ -70,7 +68,7 @@ declare function iiif:mkMultiVolumeCollection($workId as xs:string, $tei as node
     let $attribution     := "Presented by the project 'The School of Salamanca. A Digital Collection of Sources and a Dictionary of its Juridical-Political Language.' (https://salamanca.school/)"
 
     (: get manifests for each volume :)
-    let $volumes         := for $t in util:expand($tei)//tei:text[@type = "work_volume"]
+    let $volumes         := for $t in $tei//tei:text[@type = "work_volume"]
                                 order by xs:int($t/@n) ascending
                                 return
                                     map {
@@ -100,8 +98,8 @@ declare function iiif:mkMultiVolumeCollection($workId as xs:string, $tei as node
 (: includes single-volume works as well as single volumes as part of multi-volume works:)
 (: volumeId: xml:id of TEI node of single TEI file, e.g. "W0004" or "W0013_Vol01" :)
 declare function iiif:mkSingleVolumeManifest($volumeId as xs:string, $teiDoc as node(), $collectionId as xs:string?) {
-    let $debug := if ($config:debug = "trace") then console:log("[iiif] iiif:mkSingleVolumeManifest running (" || $volumeId || " requested) ...") else ()
-    let $tei := util:expand($teiDoc)
+    let $debug := if ($config:debug = "trace") then trace(("[iiif] iiif:mkSingleVolumeManifest running (" || $volumeId || " requested), "[iiif]") ...") else ()
+    let $tei := $teiDoc
     (: File metadata section :)
     let $id := $config:iiifPresentationServer || $volumeId
     let $label := string-join(for $a in $tei//tei:titleStmt/tei:author//tei:surname return normalize-space($a), "/") || ": " ||
@@ -177,7 +175,7 @@ declare function iiif:mkSingleVolumeManifest($volumeId as xs:string, $teiDoc as 
     @tei The TEI node of the volume.
     @thumbnailUrl The complete URL of the thumbnail, as also stated in the "thumbnail" field's "@id" attribute :)
 declare function iiif:mkSequence($volumeId as xs:string, $tei as node(), $thumbnailUrl as xs:string) {
-    let $debug := if ($config:debug = "trace") then console:log("[iiif] iiif:mkSequence running...") else ()
+    let $debug := if ($config:debug = "trace") then trace("[iiif] iiif:mkSequence running...", "[iiif]") else ()
     let $id := $config:iiifPresentationServer || $volumeId || "/sequence/normal"
 
     let $canvases :=
@@ -229,7 +227,7 @@ declare function iiif:mkSequence($volumeId as xs:string, $tei as node(), $thumbn
 };
 
 declare function iiif:mkStructures($tei) {
-        let $work := util:expand($tei)
+        let $work := $tei
         let $workId := $work/@xml:id
         let $title := sutil:WRKcombined($work, (), $workId)
         let $structures-static :=  array {
@@ -272,9 +270,9 @@ declare function iiif:mkStructuresFromTeiDivs($div, $tei) {
     return
         (substring-after(iiif:teiFacs2IiifImageId($facs), "-"))
  (:     
-    let $debug := console:log("Div " || $div-id || " $facs_in_div: " || string-join($facs_in_div, ", ") || ".")
-    let $debug := console:log("Div " || $div-id || " erster Text: " || $tei/id($div-id)/descendant::text()[string-length(normalize-space(.)) gt 0][1])
-    let $debug := console:log("Div " || $div-id || " letztes vorangegangenes pb: " || serialize($tei/id($div-id)/descendant::text()[string-length(normalize-space(.)) gt 0][1]/preceding::tei:pb[not(@sameAs or @corresp)][1]))
+    let $debug := trace(("Div " || $div-id || " $facs_in_div: " || string-join($facs_in_div, ", "), "[iiif]") || ".")
+    let $debug := trace(("Div " || $div-id || " erster Text: " || $tei/id($div-id), "[iiif]")/descendant::text()[string-length(normalize-space(.)) gt 0][1])
+    let $debug := trace(("Div " || $div-id || " letztes vorangegangenes pb: " || serialize($tei/id($div-id), "[iiif]")/descendant::text()[string-length(normalize-space(.)) gt 0][1]/preceding::tei:pb[not(@sameAs or @corresp)][1]))
  :)   
     let $titleString := index:dispatch($div, 'title')
     let $labelString := index:dispatch($div, 'label')  
@@ -426,7 +424,7 @@ declare function iiif:mkMetadata($tei as node()) as array(*) {
 };
 
 declare function iiif:getThumbnailId($tei as node()) as xs:string {
-    let $expandedTei := util:expand($tei)
+    let $expandedTei := $tei
     let $thumbnailFacs :=
         if ($expandedTei/tei:text/tei:front//tei:titlePage[1]//tei:pb[1]) then
             $expandedTei/tei:text/tei:front//tei:titlePage[1]//tei:pb[1]/@facs
