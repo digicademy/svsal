@@ -1,0 +1,758 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml"
+	schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:tei="http://www.tei-c.org/ns/1.0" xml:id="W0034">
+  <teiHeader>
+        <fileDesc>
+            
+            <titleStmt>
+                <title type="short" level="m">Treinta proposiciones</title>
+                <title type="main" level="m">Aqui se co[n]tiene[n] treynta proposiciones muy juridicas: en las quales sumaria y succintamente se toca[n] muchas cosas pertenecie[n]tes al derecho q[ue] la yglesia y los principes christianos tienen / o puede[n] tener sobre los infieles de qual quier especie que sean</title>
+                <author>
+                    <persName ref="author:A0018 cerl:cnp01316779 viaf:46758461 gnd:118726625" key="Las Casas, Bartolomé de">
+                        <forename>Bartolomé</forename>
+                        <nameLink>de</nameLink>
+                        <surname>Las Casas</surname>
+                    </persName>
+                </author>
+                <editor xml:id="CB">
+                    <persName ref="gnd:138962987">
+                        <surname>Birr</surname>, <forename>Christiane</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="CC">
+                    <persName ref="orcid:0000-0003-1240-649X" full="yes">
+                        <surname full="yes">Cárdenas Velásquez</surname>, <forename full="yes">Luisa Carolina</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="DG">
+                    <persName ref="orcid:0000-0002-0273-3844">
+                        <surname>Glück</surname>, <forename>David</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="CR">
+                    <persName ref="orcid:0000-0001-5095-1793" full="yes">
+                        <surname full="yes">Rico Carmona</surname>, <forename full="yes">Cindy</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="AW">
+                    <persName ref="orcid:0000-0003-1835-1653 gnd:108835820">
+                        <surname>Wagner</surname>, <forename>Andreas</forename>
+                    </persName>
+                </editor>
+            </titleStmt>
+            
+            <publicationStmt xml:id="publicationStmt">
+            	<xi:include href="../meta/W_Head_general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:fileDesc/tei:publicationStmt/*)">
+            		<xi:fallback><publisher><ref target="https://www.salamanca.school" xml:lang="en">For information about the digital edition, please 
+            					refer to our website.</ref></publisher>
+            		</xi:fallback>
+            	</xi:include>
+            	<date type="digitizedEd" n="unpublished"/>
+            	<idno/>
+            </publicationStmt>
+            <seriesStmt>
+                <xi:include href="../meta/W_Head_general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:fileDesc/tei:seriesStmt/*)">
+                    <xi:fallback>
+                       <title xml:lang="en"><ref target="https://www.salamanca.school" xml:lang="en">The School of Salamanca. A Digital Collection of Sources</ref></title>
+                    </xi:fallback>
+                </xi:include>
+                <biblScope unit="volume" n="unpublished"/>
+            </seriesStmt>
+            
+            <sourceDesc>
+                <biblStruct>
+                    <monogr>
+                        <author>
+                            <persName ref="author:A0018 cerl:cnp01316779 viaf:46758461 gnd:118726625" key="Las Casas, Bartolomé de">
+                                <forename>Bartolomé</forename>
+                                <nameLink>de</nameLink>
+                                <surname>Las Casas</surname>
+                            </persName>
+                        </author>
+                        <title type="short" level="m">Treinta proposiciones</title>
+                        <title type="main" level="m">Aqui se co[n]tiene[n] treynta proposiciones muy juridicas: en las quales sumaria y succintamente se toca[n] muchas cosas pertenecie[n]tes al derecho q[ue] la yglesia y los principes christianos tienen / o puede[n] tener sobre los infieles de qual quier especie que sean</title>
+                        <title type="245a" level="m">Aqui se co[n]tiene[n] treynta proposiciones muy juridicas: en las quales sumaria y succintamente se toca[n] muchas cosas pertenecie[n]tes al derecho q[ue] la yglesia y los principes christianos tienen / o puede[n] tener sobre los infieles de qual quier especie que sean</title>
+                        <imprint>
+                            <pubPlace role="firstEd" ref="getty:7008676" key="Sevilla">[Sevilla]</pubPlace>
+                            <date type="firstEd" when="1552">1552</date>
+                            <publisher n="firstEd">
+                                <persName ref="cerl:cni00036706" key="Trugillo, Sebastián"> <!--not in GND-->
+                                    <forename>Sebastián</forename> 
+                                    <surname>Trugillo</surname>
+                                </persName>
+                            </publisher>
+                        </imprint>
+                        <extent xml:lang="en">[20] p.</extent>
+                    </monogr>
+                </biblStruct>
+                <msDesc type="main">
+                    <msIdentifier>
+                        <repository ref="gnd:4313400-2" xml:lang="es">Bibliotecas de la Universidad de Salamanca</repository>
+                        <idno type="catlink" xml:lang="es">http://brumario.usal.es/record=b1417287~S1*spi</idno>
+                    </msIdentifier>
+                    <physDesc>
+                        <typeDesc>
+                            <typeNote n="antiqua" xml:lang="en">Antiqua typeface</typeNote>
+                        </typeDesc>
+                    </physDesc>
+                </msDesc>
+            </sourceDesc>
+        </fileDesc>
+        
+        <profileDesc>
+           <langUsage>
+              <language ident="es" n="main" xml:lang="en">Spanish</language>
+           </langUsage>
+        </profileDesc>
+        
+        <encodingDesc>
+            <xi:include href="../meta/W_Head_general.xml" xpointer="projectDesc">
+                <xi:fallback><projectDesc><p xml:id="meta-pa-0004"><ref target="https://www.salamanca.school" xml:lang="en">For information about the project, please 
+                               refer to our website.</ref></p></projectDesc>
+                </xi:fallback>
+            </xi:include>
+            <editorialDecl>
+                <xi:include href="../meta/W_Head_general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:encodingDesc/tei:editorialDecl/tei:p)">
+                    <xi:fallback><p xml:id="meta-pa-0005"><ref target="https://www.salamanca.school" xml:lang="en">For information about the digital edition, please 
+                                refer to our website.</ref></p>
+                    </xi:fallback>
+                </xi:include>
+            </editorialDecl>
+            <xi:include href="../meta/W_Head_general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:encodingDesc/tei:editorialDecl/following-sibling::*)">
+                <xi:fallback/>
+            </xi:include>
+            <xi:include href="../meta/Sonderzeichen.xml" xpointer="charDecl">
+                <xi:fallback><charDecl><char xml:lang="en"><note xml:id="meta-no-0001">The definition of 
+                     non-standard characters could not be embedded, but it is available on the 
+                     <ref target="https://files.salamanca.school/Sonderzeichen.xml">project website</ref>.</note></char></charDecl>
+                </xi:fallback>
+            </xi:include>
+			<appInfo>
+                <application ident="auto-markup" version="1" xml:id="auto">
+                    <desc>Automatically generated markup.</desc>
+                </application>
+            </appInfo>
+        </encodingDesc>
+        
+        <revisionDesc status="a_raw">
+            <listChange ordered="true">
+                <change who="#DG" when="2018-11-28" status="c_hyph_proposed" xml:lang="en">Revised metadata and title page.</change>
+                <change who="#DG" when="2018-11-27" status="c_hyph_proposed" xml:lang="en">Annotated title page and line/page breaks further.</change>
+                <change who="#CR" when="2018-11-26" status="a_raw" xml:lang="en">Transformation from transcription to TEI, structural annotation</change>
+                <change who="#CB #CC" when="2018-11-23" status="a_raw" xml:lang="en">Transcription</change>
+                <change who="#DG" when="2018-09-26" status="a_raw" xml:lang="en">Revision of teiHeader and status reset; set language to "es".</change>
+                <change who="#AW" when="2017-07-30" status="a_raw">Create template/file for metadata</change>
+                <change who="#CB" when="2012" status="a_raw" xml:lang="en">Identification of basic bibliographic data.</change>
+            </listChange>
+        </revisionDesc>
+    </teiHeader>
+     
+<text type="work_monograph" xml:lang="es" xml:id="completeWork">   
+<front xml:id="fghj">
+<titlePage xml:id="dgf">
+<pb n="[i]" xml:id="W0034-0001" facs="W0034-0001"/>
+<docTitle xml:id="asd"><titlePart type="desc" xml:id="wer"><lb/>¶ Aqui ſe cõntienẽ </titlePart><titlePart type="main" xml:id="fhg">tre
+<lb/>ynta propoſiciones muy juridicas</titlePart><titlePart type="desc" xml:id="truzt">: en
+<lb/>las quales ſumaria y ſuccintamente ſe
+<lb/>tocã muchas coſas perteneciẽtes al de
+<lb/>recho q̃ la ygleſia y los principes chri<lb rendition="#hyphen" break="no"/>ſtianos tienen / o puedẽ tener ſobre los 
+<lb/>infieles de qual quier eſpecie que ſean.
+<lb/>Mayormente ſe aſſigna el verdadero
+<lb/>y fortiſſimo fundamento en que ſe aſſi
+<lb/>enta y eſtriba: el titulo y ſeñorio ſupre<lb rendition="#hyphen" break="no"/>mo y vniuerſal que los Reyes ꝺ̇ Caſti<lb rendition="#noHyphen" break="no"/>lla y Leon tienen al orbe de las que lla
+<lb/>mamos occidẽtales Indias. Por el q̃l
+<lb/>ſon conſtituydos vniuerſales ſeñores ygleſia
+<lb/>Emperadores enellas ſobre muchos re
+<lb/>yes. Apuntã ſe tambien otras coſas cõ
+<lb/>cernientes al hecho acaecido en aq̃l or
+<lb/>be notabiliſſimas: y dignas ꝺ̇ ſer viſtas
+<lb/>y ſabidas.</titlePart></docTitle><byline> Colijo las dichas treynta ꝓ
+<lb/>poſiciones El obispo dõ Fray Bartho
+<lb/>lome de las Caſas / o Caſaus: Obiſpo
+<lb/>q̃ fue ꝺ̇la ciudad Real de Chiapa:</byline> <imprimatur>cier
+<lb/>to Reyno delos dela nueua España.</imprimatur>
+<docImprint><lb/><docDate when="1552"><hi rendition="#r-center">Año. 1552.</hi></docDate></docImprint></titlePage>
+<div type="foreword" n="Prefacio">
+<head>
+<pb n="[ii]" xml:id="W0034-0002" facs="W0034-0002"/>
+<lb/>¶ Argumẽnto dela cauſa delas
+<lb/>ſiguientes propoſiciones.</head>
+<p>
+<lb/><hi rendition="#initCaps">E</hi>l obiſpo don fray Bartholome delas
+<lb/>caſas / o caſus ſiendo obiſpo dela ciu<lb break="no" rendition="#hyphen"/>dad real de Chiapa q̃ es vn reyno dela
+<lb/>nueua eſpaña: como conoſcieſſe por ex<lb break="no" rendition="#hyphen"/>periẽcia de cincuenta años las neceſſi<lb break="no" rendition="#hyphen"/>dades eſpirituales q̃ los Eſpañoles an
+<lb/>incurrido enlas Indias: delas quales
+<lb/>no eſtauã libres los q̃ biuiã en aq̃l obiſpado: antes eran
+<lb/>delos mas neceſſitados de tener lumbre de ſus errores
+<lb/>y peccados: y q̃ le incũbia por su officio paſtoral darles
+<lb/>Remedio para ſu ceguedad y peligro (lo quoal no ſuele
+<lb/>darse por otra via deſpues dela predicaciõ y Doctrina
+<lb/>ſino por las confeſſiones) por eſta causa ordeno vna bre
+<lb/>ue informaciõ como confeſſionario aſſignando ciertas
+<lb/>reglas por las quales enel foro dela conciencia se guiaſ
+<lb/>ſen / o rigeſſen los confeſſores. Traydo eſte confeſſiona
+<lb/>rio a eſtos Reynos de caſtilla y viſto y reuiſto y exami
+<lb/>nado: fue aprouado y firmado por ſeys maeſtros ſeñala
+<lb/>dos en theologia. Pero algunos emulos dela verdad:
+<lb/>ygnorãtes del hecho y del derecho delas coſas paſſadas
+<lb/>enlas Indias: que pretendiã poner eſcuſas y colores a
+<lb/>obras nefandiſſimas / queriẽndo lo calumniar: tomaron
+<lb/>por ocaſion para fundarſe vna delas reglas dichas im<lb break="no" rendition="#hyphen"/>poniendo le q̃ cõtenia negar el titulo / o señorio ꝺ̇ aquel
+<lb/>orbe q̃ enel tienen los Reyes de Castilla. Porq̃ afirma
+<lb/>q̃ todo lo q̃ enlas yndias ſe ha hecho por los Eſpañoles
+<lb/>nullo ⁊ de ningun valor de derecho aya ſido como coſa 
+<lb/>hecha ſin autoridad de principe y contra toda natural
+<lb/>juſticia. Deſta ocaſion tuuieron las ſiguientes propoſi
+<lb/>ciones ſu origen y principio.</p>
+</div>
+<div type="preface" n="Prologo">
+<head>
+<pb n="[iii]" xml:id="W0034-0003" facs="W0034-0003"/>
+<lb/>¶ Prologo ꝺ̇l obispo dõ Fray
+<lb/>Bartholome de las Caſas / o Caſaus Alos muy
+<lb/>poderosos y chriſtianiſſimos ſeñores
+<lb/>el Cõſejo real delas Indias.</head>
+<p>
+<lb/><hi rendition="#initCaps">U</hi>uestra alteza mãndo llamarme a eſte Real cõ 
+<lb/>ſejo de las Indias: ſobre vn confeſſionario
+<lb/>que yo hize: por el qual ſe regieſſen los con<lb break="no" rendition="#hyphen"/>feſſores en las confeſſiones de españoles en 
+<lb/>mi Obiſpado: delqual diz que reſultan algu 
+<lb/>nas propoſiciones ſegun el entendimienco [typographical error: entendimiento] que le dan
+<lb/>algunos: delas quales ſe podra inferir quelos [typographical error: que los] reyes de 
+<lb/>Caſtilla no tienen titulo / ono [typographical error: o no] buen titulo al imperio y
+<lb/>ſeñorio de que vsan en aquel Orbe. Y parecio a vueſtra
+<lb/>alteza que yo deuia declarar por eſcrito lo q̃ dello ſien 
+<lb/>to / pues muchas vezes eneste Real conſejo he hablado 
+<lb/>en fauor dello. E porque eſta es materia de grã calidad 
+<lb/>⁊ importãcia y para dar cuẽta della requiere largo tra- 
+<lb/>tado: pues a de venir a manos de varones doctos y per 
+<lb/>ſonas excelentes ⁊ yo lo he començado a collegir delo q̃ 
+<lb/>ha algũos años q̃ he penſado y eſtudiado: pero porque 
+<lb/>vueſtra Alteza me da prieſſa por lo ẽbiar a su magestad: 
+<lb/>pareciome mucho abreuiando hazer de todo lo q̃ ſegun 
+<lb/>dios y ſu ley cerca deſte articulo alcanço: por las ſiguiẽ 
+<lb/>tes propoſiciones ſin prouallas el ſumario preſente. La 
+<lb/>prueua dellas cõ lo demas ſe quedara ꝑa enel dicho tra- 
+<lb/>tado q̃ en breues dias ſi plaze a Dios vueſtra alteza ve- 
+<lb/>ra eneſte real cõſejo preſentado. Y porque neceſſariamẽ
+<lb/>te tractando deſto ſe han de tocar coſas a nueſtra ſancta 
+<lb/>fee concerniẽtes: porende todo lo q̃ dixere y cada parte 
+<lb/>dello ſomero ala correction dela ſancta romana ygleſia.</p></div>
+</front>
+<body>
+<div type="section" n="Proposicion 1">
+<head>
+<pb n="[1]" xml:id="W0034-0004" facs="W0034-0004"/>
+<lb/>¶ Propoſicion. i.</head>
+<p>
+<lb/><hi rendition="#initCaps">E</hi>L romano põtifice canonicamẽte elegido vicario
+<lb/>de Jeſu xp̃o ſuceſſor de ſant Pedro: tiene auctori<lb break="no" rendition="#hyphen"/>dad y poder ꝺ̇l miſmo jeſu xp̃o hijo de dios ſobre todos
+<lb/>los hombres del mundo / fieles/ o infieles: quãto viere q̃
+<lb/>es meneſter para guiar y endereçar los hombres  al fin
+<lb/>dela vida eterna ⁊ quitar los impedimentosdel: pueſto
+<lb/>que de vna manera vſa y deue vſar del tal poder con los 
+<lb/>infierles que nunca entraron  por el ſancto baptiſmo enla
+<lb/>ſancta ygleſia: mayormẽte los q̃ nunca oyeron nueuas
+<lb/>de Chriſto: ni de ſu fee: y de otra con los fieles que ſon /
+<lb/>o que algun tiempo fueron fieles.</p>
+</div>
+<div type="section" n="Proposicion 2">
+<head><lb/>¶ Propoſicion. ii.</head>
+<p>
+<lb/><hi rendition="#initCaps">S</hi>An Pedro y ſus  ſuce-sso-res tuuo y tienẽ obligaciõ
+<lb/>neceſſaria por precepto diuino de procurar cõ ſum
+<lb/>ma diligencia q̃ el euanglio y fee de Jeſu xp̃o ſe predi<lb break="no" rendition="#hyphen"/>que por todo el mũdo a todos los infieles del: de quien
+<lb/>ſe tenga probable opinion que no reſiſtiran la promul<lb break="no" rendition="#hyphen"/>gacion euangelica y doctrina Chriſtiana.</p></div>
+<div type="section" n="Proposicion 3">
+<head>¶ Propoſicion. iii.</head>
+<p>
+<lb/><hi rendition="#initCaps">P</hi>Uede y deue el Romano y ſummo pontifice por a
+<lb/>utoridad ꝺ̇ ſu apoſtolico officio: nõbrar y ſeñalar
+<lb/>los neceſſarios y conuenientes Idoneos minſtros ꝺ̇ to
+<lb/>dos los eſtados dela chriſtiandad: para la cõſecucion ꝺ̇l
+<lb/>dicho fin: y ponelles neceſſidad ꝺ̇ precepto que acepten
+<lb/>y exerciten el cargo / cuydado/ ⁊ officio que para effecto
+<pb n="[2]" xml:id="W0034-0005" facs="W0034-0005"/>
+<lb/>deſto les impuſiere y ellos ſon obligados alo aceptar y 
+<lb/>obedecelle como al miſmo Jeſu Chriſto.</p></div>
+<div type="section" n="Proposicion 4">
+<head><lb/>¶ Propoſicion. iiii.</head>
+<p>
+<lb/><hi rendition="#initCaps">E</hi>Ntre los otros miniſtros os para la dilitacion y cõ<lb break="no" rendition="#hyphen"/>ſeruaciõ de la fee y religion chriſtiana y conuerſiõ
+<lb/>delos infieles / ſon muy neceſſarios los Reyes chriſtia
+<lb/>nos enla yglesia: para que con ſu braço y fuerças reales
+<lb/>y riquezas temporales ayuden / amparen/ conſeruen y 
+<lb/>defiendan los miniſtros eccleſiaſticos y eſpirituales y 
+<lb/>ſe pueda  commodamẽte proſeguir ⁊ cõſeguir ⁊ no eſtor
+<lb/>nar / o impedir al ſuſo dicho fin.</p></div>
+<div type="section" n="Proposicion 5">
+<head>¶ Propoſicion. v.</head>
+<p>
+<lb/><hi rendition="#initCaps">E</hi>L ſummo pontifice por la auctoridad q̃ tiene en la 
+<lb/>tierra de Jeſu Chriſto: puede imponer neceſſidad 
+<lb/>de precepto a los Principes y Reyes Chriſtianos y a 
+<lb/>cada vno dellos por ſi ſolo ſi viere que es neceſſario / o
+<lb/>mucho conueniente para conſeguir / o para q̃no [error: q̃ no] ſe impi
+<lb/>da el dicho fin: que a ſus propias expẽſas / o por ſus per<lb break="no" rendition="#hyphen"/>ſonas reales / o por ſus ydoneos miniſtros: vayan / o en 
+<lb/>tiendan con effecto enla expedicion del ſuſo dicho chri<lb break="no" rendition="#hyphen"/>ſtiano fin: para lo qual puede tambiẽ imponer ſubſidio
+<lb/>en toda la chriſtiandad /  el q̃ bien viſto le fuere: confor<lb break="no" rendition="#hyphen"/>me ala neceſſidad / o conueniẽcia del negocio q̃ ocurrie
+<lb/>re de hazer y alas facultades de cada Reyno.</p></div>
+<div type="section" n="Proposicion 6">
+<head><lb/>¶ Propoſicion. vi.</head>
+<p>
+<pb n="[3]" xml:id="W0034-0006" facs="W0034-0006"/>
+<lb/><hi rendition="#initCaps">N</hi>Ingun Rey / o principe chriſtiano / ſe puede ocu- 
+<lb/>par enla tal expedicion (fuera del caſo de extrema 
+<lb/>neceſſidad) ſin expreſſa / o tacita licencia y auctoridad 
+<lb/>del ſummo ſacerdote vicario de jeſu Chriſto. Y ſi la nece 
+<lb/>ſſidad es fuera del propio reyno y el papa cometiere / o 
+<lb/>mandare el negocio a vn solo principe: los de mas no ſe 
+<lb/>pueden en coſa alguna: tocante a ello entremeter.</p></div>
+<div type="section" n="Proposicion 7">
+<head>¶ Propoſicion. vii.</head>
+<p>
+<lb/><hi rendition="#initCaps">S</hi>Apientiſſima / prouida / ⁊ juſtamente el Vicario de 
+<lb/>chriſto por auctoridad diuina para euitar confuſi- 
+<lb/>on: diuidio ⁊ puede diuidir entre los principes Chriſ 
+<lb/>tianos: los Reynos ⁊ prouincias de todos los infieles 
+<lb/>de qualquiera infidelidad / o ſecta que sean: encomen<lb break="no" rendition="#hyphen"/>dandoles ⁊ cometiẽdoles la dilatacion dela ſancta fee:
+<lb/>ampliaciõ dela vniuerſal ygleſia ⁊ religion chriſtiana:
+<lb/>conuerſion ⁊ ſalud delas animas dellos como vltima<lb break="no" rendition="#hyphen"/>do fin.</p></div>
+<div type="section" n="Proposicion 8">
+<head><lb/>¶ Propoſicion. viii.</head>
+<p>
+<lb/><hi rendition="#initCaps">E</hi>Sta tal diuiſion / comiſſiõ / o conceſſiõ no la hizo 
+<lb/>ni haze ni la deue hazer el ſummo pontifice princi 
+<lb/>pal ⁊ finalmente por conceder gracia ni augmentar cõ 
+<lb/>honrra ⁊ mas titulos ⁊ riquezas los eſtados a los prin 
+<lb/>cipes chriſtianos: ſino principal ⁊ finalmente / por la dila 
+<lb/>tacion del diuino culto / honor de dios y conuerſion ⁊ 
+<lb/>saluacion delos infieles / que es el intento ⁊ final inten 
+<lb/>cion del rey delos Reyes ⁊ señor ꝺ̇los señores jeſu chri 
+<lb/>ſto: antes ſe les impone carga ⁊ officio peligroſiſſimo 
+<lb/>del qual han de dar eſtrechiſſima quenta enel fin de ſus 
+<pb n="[4]" xml:id="W0034-0007" facs="W0034-0007"/>
+<lb/>dias ante el juyzio diuino. Por manera q̃ mas es la di<lb break="no" rendition="#hyphen"/>cha diuiſion y encomiẽda para el bien y vtilidad delos 
+<lb/>infieles: que no delos chriſtianos principes.</p>
+</div>
+<div type="section" n="Proposicion 9">
+<head><lb/>¶ Propoſicion. ix.</head>
+<p>
+<lb/><hi rendition="#initCaps">I</hi>Uſta y digna coſa es q̃ aun  que el premio principal 
+<lb/>delos Reyes chriſtianos por los ſeruicios que ha 
+<lb/>zen a Dios y bien a ſu madre la vniuerſal ygleſia cõ ſus 
+<lb/>reales perſonas: no conſiſta ni ellos lo deuã decudiciar 
+<lb/>eneſtas coſas mundanas y terrenas: porque todas ellas 
+<lb/>ſon de poca entidad y tranſitorias: ſino el verdadero y 
+<lb/>vltimado Reynar con Chriſto / cuyo lugar y tenencia 
+<lb/>quãto toca a lo temporal tienen enla tierra: pero que el 
+<lb/>ſummo pontifice les conceda y haga donacion remune 
+<lb/>ratoria enlos miſmos Reynos que para el dicho repe- 
+<lb/>tido fin le encomienda: juſta coſa es: empero ſin daño
+<lb/>y perjuyzio notable del derecho ageno delos Reyes y 
+<lb/>Principes ⁊ ſingulares perſonas delos infieles.</p></div>
+<div type="section" n="Proposicion 10">
+<head><lb/>¶ Propoſicion. x.</head>
+<p>
+<lb/><hi rendition="#initCaps">E</hi>Ntre los infieles que tienen Reynos apartados
+<lb/>que nunca oyeron nueuas de Chriſto ni reſcibie<lb break="no" rendition="#hyphen"/>ron la fee/ ay verdaderos ſeñores Reyes y Principes:
+<lb/>y el ſeñorio y dignidad  y priminencia realles compe<lb break="no" rendition="#hyphen"/>te de derecho natural y de derecho delas gẽtes: en q̃nto
+<lb/>el tal ſeñorio ſe endereça al regimiẽto y gouernaciõ de 
+<lb/>los reynos / cõfirmado por el derecho diuino euãgelico
+<lb/>Lo miſmi alas ꝑſonas ſingulares en ſeñorio ꝺ̇las coſas 
+<pb n="[5]" xml:id="W0034-0008" facs="W0034-0008"/>
+<lb/>inferiores: y por tanto enel aduenimiento de Jeſu chri 
+<lb/>ſto ꝺ̇los tales ſeñorios / honrras / preminencias reales 
+<lb/>y lo demas: no fueron priuados en vniuerſal ni en par<lb break="no" rendition="#hyphen"/>ticular <foreign xml:lang="la">ipſo facto nec ipſo iure.</foreign></p>
+</div>
+<div type="section" n="Proposicion 11">
+<head><lb/>¶ Propoſicion. xi.</head>
+<p>
+<lb/><hi rendition="#initCaps">L</hi>A opinion contradictoria dela precedente propoſi 
+<lb/>cion es erronea y pernicioſiſſima: y quien con per 
+<lb/>tinacia le defendiere incurrira formal eregia. Es aſſi 
+<lb/>miſmo impiiſſima / iniquiſima / y cauſatiua de ynumera 
+<lb/>bles robos / violẽcias y tiranias / eſtragos y latrocinios /
+<lb/>daños yrreparables y peccados graui-ssimos: infamia: 
+<lb/>hedor : y aborreſcimiento del nombre de Chriſto y dela 
+<lb/>religion chriſtiana: y efficaciſſimo impedimẽto de nrã 
+<lb/>catholica fee: muerte / perdicion y jactura de la mayor 
+<lb/>parte del linaje humano: damnacion certiſſimoa de infi<lb break="no" rendition="#hyphen"/>nitas animas: y finalmente de la piedad manſedumbre 
+<lb/>y coſtumbre Euãngelica y chriſtiana: cruel y capital ene 
+<lb/>miga.</p></div>
+<div type="section" n="Proposicion 12">
+<head><lb/>¶ Propoſicion. xii.</head>
+<p>
+<lb/><hi rendition="#initCaps">P</hi>Or ningun peccado de ydolatria ni de otro algu<lb break="no" rendition="#hyphen"/>no por graue y nephando que ſea: no ſon priuados 
+<lb/>los dichos infieles ſeñores ni ſubditos de ſus ſeñorios 
+<lb/>dignidades ni otros algunos bienes <foreign xml:lang="la">ipſo facto vel ipſo iure.</foreign></p></div>
+<div type="section" n="Proposicion 13">
+<head><lb/>¶ Propoſicion. xiii.</head>
+<p>
+<pb n="[6]" xml:id="W0034-0009" facs="W0034-0009"/>
+<lb/><hi rendition="#initCaps">P</hi>or razon preciſa del pecado dela ydolatria ni de 
+<lb/>otro q̃lquier peccado por enorme / grãde y nephã 
+<lb/>do q̃ sea cometido / en todo el tiempo de ſ infidelidad 
+<lb/>antes que recibã de ſu propia y libre voluntad el ſancto 
+<lb/>baptiſmo: los infieles mayormente aquellos cuya infi- 
+<lb/>delidad es ſegun pura negacion: no puedẽ ſer punidos 
+<lb/>por ningun juez del mundo / ſino fueſſe ꝺ̇ aquellos que 
+<lb/>directamente impidieſſen la predicacion ꝺ̇la fee y amo 
+<lb/>neſtados ſufficientemente no deſiſtieſſen dellos por ma 
+<lb/>licia.</p></div>
+<div type="section" n="Proposicion 14">
+<head><lb/>¶ Propoſicion. xiiii.</head>
+<p>
+<lb/><hi rendition="#initCaps">N</hi>Eceſario fue y obligacion tuuo de precepto diui- 
+<lb/>no el ſummo pontifice alexãdro ſexto: ſo cuyo pon 
+<lb/>tificado fue deſcubierto el nueuo orbe grandiſſimo de 
+<lb/>las que llamamos occidentales yndias: ꝺ̇ elegir vn rey 
+<lb/>chriſtiano aquien impuſieſſe officio de proueer y tener 
+<lb/>la ſolicitud / diligencia ⁊ cuydado ꝺ̇la promulgaciõ del 
+<lb/>Euãgelio ⁊ ley de xp̃o / y fundacion y ãpliaciõ del culto 
+<lb/>diuino y vniuerſal ygleſia por todos los reynos ꝺ̇llas: 
+<lb/>⁊ de la conuerſiõ y saluaciõ de los vezinos naturales y 
+<lb/>moradores q̃ enellos biuian y de todo lo demas neceſſa 
+<lb/>rio y conueniente al dicho fin: y en remuneracion del 
+<lb/>tal officio y cuydado donalle la dignidad y corona im 
+<lb/>perial y ſoberano ſeñorio dellas.</p></div>
+<div type="section" n="Proposicion 15">
+<head><lb/><figure type="inline"/>Propoſicion. xv.</head> 
+<p>
+<lb/><hi rendition="#initCaps">S</hi>Ingulares prerogatiuas mas que enlos otros 
+<lb/>chriſtianos principes: concurrieron enlos reyes ꝺ̇
+<lb/>caſtilla y leon don Fernando y doña Yſbel catholicos 
+<pb n="[7]" xml:id="W0034-0010" facs="W0034-0010"/>
+<lb/>Principes: para q̃ el Vicario de Chriſto mas a ellos q̃ a 
+<lb/>otros ꝺ̇ toda la xp̃iandad: cometieſſe el dicho cuydado
+<lb/>⁊ officio. Que no fue otra coſa ſino por auctoridad di<lb break="no" rendition="#hyphen"/>uina inſtituyllos ⁊ inueſtillos de la mas alta dignidad
+<lb/>que Reyes jamas tuuieron ſobre la tierra ( conuiene a 
+<lb/>ſaber) de apoſtoles architectonicos delas yndias. En<lb break="no" rendition="#hyphen"/>tre otras excelencias tuuieron dos q̃ ſon eſtas. La vna
+<lb/>que allende de heredar de ſus progenitores el recobra<lb break="no" rendition="#hyphen"/>miẽto de todos eſtos Reynos de Eſpaña delas manos 
+<lb/>delos tiranos enemigos de nueſtra ſancta fee catholica
+<lb/>mahometicos: con mucho derramamiento ꝺ̇ ſu real ſan
+<lb/>gre / ellos miſmos con ſus propias reales perſonas con
+<lb/>incomparables trabajos recobraron el gran Reyno de 
+<lb/>Granada y lo reſtituyeron finalmente a Chriſto y ala
+<lb/>vniuerſal ygleſia. Otra fue que a ſus propias expenſas
+<lb/>y por ſu fauor / expedicion y mandado: tomando por me
+<lb/>dio al Egregio varon Don Chriſtoual Colon a quien
+<lb/>honrraron y ſublimaron con titulo de primero almiran
+<lb/>te dellas: ſe deſcubrierõ aquellas tan amplas y tan eſten
+<lb/>didas Indias.</p></div>
+<div type="section" n="Proposicion 16">
+<head><lb/>¶ Propoſicion. xvi.</head> 
+<p>
+<lb/><hi rendition="#initCaps">P</hi>Udo prouida / licita y juſtamente el Romano pon
+<lb/>tifice vicario de Jeſu Chriſto por auctoridad diui
+<lb/>na cuyos ſon todos los reynos ꝺ̇los cielos ⁊ ꝺ̇la tierra:
+<lb/>inueſtir alos Reyes de Caſtilla y Leõ del ſuppremo ⁊ 
+<lb/>ſoberano Imperio ⁊ ſeñorio de todo aquel orbe vniuer
+<lb/>ſo delas Indias: cõſtituyendo los Emperadores ſobre
+<lb/>muchos Reyes: tomando ſus catholicas perſonas exce
+<lb/>lẽcia y dignidad real / y anſi eligiendo ſu real induſtria
+<lb/>por medio conuenientiſſimo y aun neceſſario ordena<pb n="[8]" break="no" rendition="#hyphen" xml:id="W0034-0011" facs="W0034-0011"/><lb break="no"/>
+<lb/>do para la conſecucion del ſuſo dicho Chriſtiano fin.</p>
+<p>
+<lb/>Dela mañra que la ſede apoſtolica acepto y approuo la
+<lb/>dignidad imperial que hallo entre los infieles en el mũ
+<lb/>do / no las tiranias por donde los romanos la auian ad
+<lb/>quirido: para que el Emperador fueſſe abogado y de<lb break="no" rendition="#hyphen"/>fenſor dela vniuerſal ygleſia  adoptando lo por hijo. La
+<lb/>qual dignidad ſi viera el Vicario de chriſto que no con 
+<lb/>uenia para el bien eſpiritual dela chriſtiandad pudiera 
+<lb/>ſin ningũa dubta por la miſma auctoridad diuina que
+<lb/>tiene y vſa en la tierra:  annihilalla y conſumilla: y cria 
+<lb/>lla / o inſtituylla de nueuo ſino la ouiera / como tuuo po
+<lb/>der de tranſferilla delos griegos alos germanos. Por 
+<lb/>la miſma razõ pudo prohibir la ſede apoſtolica a todos
+<lb/>los otros Reyes Chriſtianos ſo pena de excomunion 
+<lb/>que ni vayan ni embien alas dichas Indias ſin licen<lb break="no" rendition="#hyphen"/>cia y auctoridad delos Reyes de Caſtilla: y ſi el contra
+<lb/>rio hazen peccan mortalmente ⁊ incurren enla excomu
+<lb/>nion.</p></div>
+<div type="section" n="Proposicion 17">
+<head><lb/><figure type="inline"/>Propoſicion. xvii.</head>
+<p>
+<lb/><hi rendition="#initCaps">L</hi>Os Reyes de Caſtilla y leon ſon verdaderon prin
+<lb/>cipes ſoberanos ⁊ vniuerſales Señores y empera
+<lb/>dores ſobre muchos Reyes ⁊ aquien perteneſce de de<lb break="no" rendition="#hyphen"/>recho todo aquel Imperio alto ⁊ vniuerſal juriſdicion
+<lb/>ſobre todas las Indias: por la auctoridad / conceſſion y 
+<lb/>donacion dela dicha ſancta ſede apoſtolica. Y aſſi por
+<lb/>auctoridad diuina. Y eſte es y no otro el fundamento 
+<lb/>juridico y ſubſtancial donde eſta fundado y aſſentado
+<lb/>todo ſu titulo.</p></div>
+<div type="section" n="Proposicion 18">
+<head><lb/><figure type="inline"/>Propoſicion. xviii.</head>
+<p>
+<pb n="[9]" xml:id="W0034-0012" facs="W0034-0012"/>
+<lb/><hi rendition="#initCaps">A</hi>Un eſte ſoberano imperial y vniuerſal principado
+<lb/>y ſeñorio delos Reyes de caſtilla enlas yndias: ſe
+<lb/>compadece tener los Reyes y ſeñores naturales dellas
+<lb/>ſu adminiſtracion / principado / juriſdiciõ / derechos y 
+<lb/>dominio ſobre ſus ſubditos pueblos / o q̃ politica / o real
+<lb/>mente ſe rijan: como ſe compadecia el ſeñorio vniuerſal
+<lb/>y ſuppremo delos Emperadores que ſobre los Reyes 
+<lb/>antiguamente tenian.</p></div>
+<div type="section" n="Proposicion 19">
+<head><lb/>¶ Propoſicion. xix.</head>
+<p>
+<lb/><hi rendition="#initCaps">T</hi>Odos los Reyes y ſeñores naturales / ciudades / 
+<lb/>comunidades y pueblos de aq̃llas yndias ſon obli
+<lb/>gados a reconocer alos Reyes de Caſtilla por vniuer<lb break="no" rendition="#hyphen"/>ſales y ſoberanos ſeñores y Emperadores dela manera
+<lb/>dicha: deſpues de auer recebido de ſu propia y libre vo
+<lb/>luntad nueſtra ſancta fee y el ſacro baptiſmo: y ſi antes q̃
+<lb/>lo reſciban no lo hazen ni quieren hazer no pueden ſer
+<lb/>por algun juez / o juſticia punidos.</p></div>
+<div type="section" n="Proposicion 20">
+<head><lb/>¶ Propoſicion. xx.</head>
+<p>
+<lb/><hi rendition="#initCaps">S</hi>On obligados los Reyes de caſtilla por precepto 
+<lb/>formal dela apoſtolica ſilla: y tambien por derecho
+<lb/>diuino: a conſumma diligẽcia procurar y proueer e em
+<lb/>biar miniſtros ydoneos que prediquen la fee por todo 
+<lb/>aquel orbe / llamando y combidando a las gentes del / q̃
+<lb/>vengan alas bodas y cena de Chriſto y a todo lo demas
+<lb/>que enla ſegũda propoſicion eſta dicho para conſeguir 
+<lb/>eſte fin.</p></div>
+<div type="section" n="Proposicion 21">
+<head>¶ Propoſicion. xxi.</head>
+<p>
+<pb n="[10]" xml:id="W0034-0013" facs="W0034-0013"/>
+<lb/><hi rendition="#initCaps">T</hi>Ienen los Reyes de Caſtilla el miſmo poder y ju<lb break="no" rendition="#hyphen"/>riſdicion ſobre aquellos infieles avn antes que ſe 
+<lb/>conuiertan que tener el romano pontifice ſobre ellos
+<lb/>la .i. propoſicion dize: tanto quanto fuere meneſter ſe 
+<lb/>gun las reglas ꝺ̇la recta razon para la promocion y pro 
+<lb/>ſecucion de aquel fin y para quitar los obſtaculos qua- 
+<lb/>les quiera que ſean que lo puedan impedir.</p></div>
+<div type="section" n="Proposicion 22">
+<head><lb/>¶ Propoſicion. xxii.</head>
+<p>
+<lb/><hi rendition="#initCaps">L</hi>Os reyes de caſtilla ſon obligados de derecho di 
+<lb/>uino a procurar que la fee de jeſu chriſto ſe prediq̃ 
+<lb/>por la forma q̃ el hifo de dios dexo en ſu ygleſia eſtatuy- 
+<lb/>da / y ſus apoſtoles con efecto ⁊ ſin alguna falta / o men<lb break="no" rendition="#hyphen"/>gua la proſiguieron: y la vniuerſal ygleſia tuuo ſiempre 
+<lb/>de coſtumbre / y tambien en ſus decretos tiene ordena- 
+<lb/>do y conſtituydo: y los ſanctos doctores la perſuaden y 
+<lb/>engrandecen en ſus libros. Conuiene a ſaber: pacifica 
+<lb/>y amoroſa y dulce charitatiua y allectiuamente: por mã 
+<lb/>ſedumbre y humildad y buenos exemplos: cõhindando 
+<lb/>los infieles y mayormente los yndios que de ſu natura 
+<lb/>ſon manſiſſimos y humillimos y pacificos: dandoles 
+<lb/>antes dones y dadiuas delo nueſtro: que tomandoles 
+<lb/>nada delo ſuyo. Y aſſi ternan por bueno y ſuaue ⁊ juſto 
+<lb/>dios al dios delos chriſtianos y deſte modo querrã ſer 
+<lb/>ſuyos y recebir ſu fee Catholica y ſancta doctrina.</p></div>
+<div type="section" n="Proposicion 23">
+<head><lb/>¶ Propoſicion. xxiii.</head>
+<p>
+<lb/><hi rendition="#initCaps">S</hi>O juzgallos primero por guerra es forma ⁊ via cõ 
+<lb/>traria dela ley y yugo suaue y carga ligera y man-  
+<pb n="[11]" xml:id="W0034-0014" facs="W0034-0014"/>
+<lb/>ſedumbre de Jeſu chriſto: es la propia q̃ lleuo mahoma 
+<lb/>y lleuaron los Romanos con q̃ inquietarõ y robaron 
+<lb/>el mũdo: es la q̃ tienen oy los turcos ⁊ moros y q̃ comi- 
+<lb/>ença a tener el xarife: ⁊ por tanto es iniquiſſima tirani- 
+<lb/>ca infamatiua del nõbre melifluo de Chriſto: cauſatiua 
+<lb/>de inifinitas nueuas blaſfemias cõtra el verdadero dios 
+<lb/>⁊ contra la religion chriſtiana: como tenemos longiſſi 
+<lb/>ma experiẽcia q̃ se ha hecho ⁊ oy se haze enlas Indias. 
+<lb/>Porque eſtima de Dios ſer el mas cruel ⁊ mas injusto 
+<lb/>⁊ ſin piedad q̃ ay enlos dioses: ⁊ por conſiguiẽte: es im- 
+<lb/>peditiua dela cõuersion de qualeſquiera infieles: y que 
+<lb/>ha engendrado impoſibilidad de q̃ jamas ſean chriſtia 
+<lb/>nos en aquel orbe gẽtes infinitas: allende de todos los 
+<lb/>yrreparables ⁊ lamentables males y daños pueſtos ẽla 
+<lb/>ꝓpoſiciõ vndecima: de q̃ es eſta infernal via pleniſſima.</p></div>
+<div type="section" n="Proposicion 24">
+<head><lb/>¶ Propoſicion. xxiiii.</head>
+<p>
+<lb/><hi rendition="#initCaps">Q</hi>Uien eſta via oſa perſuadir grã velamen es el ſuyo 
+<lb/>cerca ꝺ̇la ley diuina: mayor es ſu audacia y temeri 
+<lb/>dad q̃ podria tener / el que deſnudo en carnes / ſe puſieſſe
+<lb/>voluntariamẽte a luchar cõ cient brauos Leones y fie<lb break="no" rendition="#hyphen"/>ros Tigres: mal ha entendido las differencias delos in 
+<lb/>fieles q̃ eneſta materia ſe han ꝺ̇ supponer / para determi 
+<lb/>nar contra q̃en ſe han de hazer conquiſtas. Ho lo apren 
+<lb/>dio delos preceptos dela charidad q̃ tanto nos dexo en 
+<lb/>cargada y mãdada Chriſto: y no se deue auer deſuelado 
+<lb/>mucho enla cuẽta eſtrecha y duro juyzio q̃ le ha ꝺ̇ venir 
+<lb/>por los inexpiables pecados de q̃ es causa efficaciſſima.</p></div>
+<div type="section" n="Proposicion 25">
+<head><lb/>¶ Propoſicion. xxv.</head>
+<p>
+<lb/><hi rendition="#initCaps">S</hi>Iempre ſ hã prohibido las guerras por los reyes 
+<lb/>de caſtilla cõtra los yndios delas yndias: desdel in 
+<lb/>cipio q̃ por el almirante primero dellas fueron deſcubri 
+<lb/>das: y nunca jamas guardaron ni cumplieron los espa 
+<pb n="[12]" xml:id="W0034-0015" facs="W0034-0015"/><lb/>ñoles instruycion / ni prouision / ni cedula / ni mandami 
+<lb/>ento vno ni ninguno q̃ los reyes les dieſſen: y ſi alguna 
+<lb/>carta / o prouisiõ real alguna vez ſono y toco en cauſa de 
+<lb/>guerra: fue porlas falſiſſimas ⁊ iniquas informaciones 
+<lb/>ſubrepticias q̃ los tiranos por robar y hazer eſclauos y 
+<lb/>hazer ſe ricos dela ſangre delos yndios alos Reyes ha 
+<lb/>zian. Lo qual aduertido por los Reyes muchas vezes 
+<lb/>las renouaron y ſobre lo contrario luego mandauan y 
+<lb/>proueyan.</p></div>
+<div type="section" n="Proposicion 26"> 
+<head><lb/>¶ Propoſicion. xxvi.</head>
+<p>
+<lb/><hi rendition="#initCaps">C</hi>Omo ſiempre falto auctoridad ꝺ̇l principe y cauſa 
+<lb/>juſta para mouer guerra alos Indios innocentes 
+<lb/>q̃ estauã en ſus tierras y caſas ſeguros ⁊ pacificos: afir 
+<lb/>mamos q̃ fueron / ſon / y ſeran ſiempre (no auiẽdo cauſa 
+<lb/>nueua) nullas y de ningung valor de derecho: injuſtas / 
+<lb/>iniquas / tiranicas ⁊ por todas las leyes condenadas 
+<lb/>desde q̃ las Indias ſe deſcubrieron haſta oy enellas las 
+<lb/>conquiſtas. Y ſolo deue baſtar por prouãça las reſiden- 
+<lb/>cias q̃ ſe han tomado a todos los Gouernadores y los 
+<lb/>proceſſos q̃ cõtra ellos ⁊ otros muchos eſtan enel archi 
+<lb/>uo deſte real cõſejo / y los q̃ cada ora alla y aca de nueuo 
+<lb/>con facilidad ſe pueden hazer: porque eſto clama ya to 
+<lb/>do el Mundo.</p></div>
+<div type="section" n="Proposicion 27"> 
+<head><lb/>¶ Propoſicion. xxvii.</head>
+<p>
+<lb/><hi rendition="#initCaps">L</hi>Os Reyes de Caſtilla ſon obligados de derecho 
+<lb/>diuino a poner tal gouernacion y regimiento en 
+<lb/>aquellas gentes naturales delas Indias: conſeruadas 
+<lb/>ſus juſtas leyes y buenas coſtumbres que tenian algu<lb break="no" rendition="#hyphen"/>nas: y quitadas las malas que no eran muchas / y ſupli<pb n="[13]" xml:id="W0034-0016" facs="W0034-0016" break="no" rendition="#hyphen"/><lb break="no"/>dos los defectos que tuuieren en ſu policia: todo lo q̃l 
+<lb/>ſe quita y ſuple principalmente con la predicacion y re- 
+<lb/>ception dela fee: que poſpueſta y muy ala poſtre ſu pro<lb break="no" rendition="#hyphen"/>pia vtilidad real / rentas y temporal intereſſe: aq̃llas gen 
+<lb/>tes sean ayudadas y no impedidas en lo tocante alo eſ 
+<lb/>piritual y en ſu cõuerſion y recebimiento de nueſtra ca- 
+<lb/>tholica fee / y enel exercicio de los ſanctos ſacramentos 
+<lb/>dela ygleſia: y tambien conſeruados en ſus derechos y 
+<lb/>juſticia. Y ſobre eſto principalmẽte augmẽtadas y proſ<lb break="no" rendition="#hyphen"/>peradas enla vida corporal y enlo demas que a ſu bien 
+<lb/>tẽporal pertenece. Porque eſte es el fin / o la cauſa final 
+<lb/>porque alos Reyes de Castilla y Leon no teniendo an 
+<lb/>tes nada enellas les fueron por la ygleſia concedidas.</p></div>  
+<div type="section" n="Proposicion 28">
+<head><lb/>¶ Propoſicion. xxviii.</head>
+<p>
+<lb/><hi rendition="#initCaps">N</hi>Ingũa otra peſtilẽcia pudo el diablo inuẽtar ꝑa ꝺ̇ 
+<lb/>struyr todo aq̃l orbe / cõſumir y matar todas aq̃llas 
+<lb/>gẽtes ꝺ̇l: y ꝺ̇ſpoblar como ha deſpoblado tã grãdes y tã 
+<lb/>poblados reynos: y eſta ſola baſtaua ꝑa deſpoblar el mũ 
+<lb/>do: como fue la inuẽciõ del repartimiẽto y encomiẽdas 
+<lb/>de aq̃llas gentes que repartieron y las encomendaron 
+<lb/>alos eſpañoles: como ſi las encomẽdarã a todos los dia 
+<lb/>blos / o como atajos de ganados entregados a hambriẽ 
+<lb/>tos lobos. Por eſta encomiẽda / o repartimiento q̃ fue 
+<lb/>la mas cruel eſpecie de tirania y mas digna de fuego in 
+<lb/>fernal q̃ pudo ſer ymaginada: todas aq̃llas gentes ſon 
+<lb/>impedidas de reſcebir la fee y religion chriſtiana: por 
+<lb/>occupallos noches y dias los eſpañoles ſus infelices ti 
+<lb/>ranos comẽderos enlas minas / y trabajos perſonales / 
+<lb/>y tributos increybles: y cõ echalles cargas acueſtas q̃ las 
+<lb/>lleuen ciẽto y doziẽtas leguas como y peores que ſi fue 
+<lb/>ſſen beſtias: y cõ perſeguir y echar delos pueblos delos 
+<lb/>yndios alos religiosos Predicadores dela fee que les 
+<lb/>doctrinan y dan conoſcimiento de Dios: por no tener 
+<pb n="[14]" xml:id="W0034-0017" facs="W0034-0017"/><lb/>teſtigos de ſus violencias / crueldades / latrocinios con 
+<lb/>tinuos y homicidios. Por eſtas encomiendas y repar 
+<lb/>timiento han padecido y padecen continuos tormentos. 
+<lb/>Robos / injuſticias en ſus perſonas y en fijos ⁊ mugeres 
+<lb/>y bienos los indios. Por eſtas encomiendas y reparti 
+<lb/>miento han perecido en obra de quarẽta y seys años yo 
+<lb/>presente: ſobre quinze cuentos de animas ſin fee y ſin ſa 
+<lb/>cramentos / y han deſpoblado mas de tres mil leguas ꝺ̇ 
+<lb/>tierra. E yo: digo preſente: y mientras eſtas encomien<lb break="no" rendition="#hyphen"/>das duraren: yo pido a dios que ſea teſtigo y juez deſto 
+<lb/>que digo: que no baſtara el poder de los reyes aun que 
+<lb/>eſtuuieſſen preſentes: a que no perezcan y ſe acaben y cõ 
+<lb/>ſuman todos los indios: como por eſta via ſe acabarian 
+<lb/>mil mundos ſin tener remedio.</p></div>
+<div type="section" n="Proposicion 29"> 
+<head><lb/>¶ Propoſicion. xxix.</head>
+<p>
+<lb/><hi rendition="#initCaps">L</hi>As dichas encomiendas y repartimiento de hom<lb break="no" rendition="#hyphen"/>bres que ſe haze y ha hecho ſegun dixe como ſi fue- 
+<lb/>ran beſtias: nunca fue mandado hazer deſde ſu tiranico 
+<lb/>principio por los reyes de caſtilla: ni tal pensamiẽto tu<lb break="no" rendition="#hyphen"/>uierõ. Porque no le cõpadece tal gouernaciõ iniquia /
+<lb/>tiranica / vaſlatiua / y ꝺ̇ſpoblatiua de tã grãdes reynos:
+<lb/>poniendo atodo vn mundo en aſperrima y cõtinua/ hor 
+<lb/>rible y mortifera ſeruidumbre: con la retitud y juſticia 
+<lb/>de ningunos q̃ ſean catholicos Chriſtianos ni aun que 
+<lb/>fueſſen gentiles infieles: con q̃ tuuieſſen alguna razon  
+<lb/>de reyes. La reyna doña Yſabel de imnmortal memoria q̃
+<lb/>deſto tracto la primera: luego anſi como por ſu mãdado 
+<lb/>y fauor ſe deſcubrieron las indias / al primero q̃ embio 
+<lb/>por gouernador que fue el dicho Almirante: y el ſegun 
+<lb/>do que ſe llamo dõ Frãciſco de Bouadilla: y el tercero 
+<lb/>que fue vn comẽdador de lares: mãdo eficaciſſimamẽte
+<pb n="[15]" xml:id="W0034-0018" facs="W0034-0018"/><lb/>que conſeruaſſen los yndios en toda ſu paz / juſticia y li
+<lb/>bertad. Lo qual porque el dicho almirãte dio ſolos tre
+<lb/>zientos yndios a eſpañoles los quales auian bien ſerui
+<lb/>do alos reyes y dellos yo que eſto digo tuue vno: quiſo
+<lb/>hundir y deſtruyr al almirante diziendo: q̃ q̃ poder te<lb break="no" rendition="#hyphen"/>nia el ſuyo para dar a nadie ſus vaſſallos. Los quales
+<lb/>luego eſtando la corte en granada quando lo Lanja 
+<lb/>ron / o Alpuxarras todos mando q̃ fueſſen a ſus tierras
+<lb/>libres reſtituydos. Que dixera la ſereniſſima y chriſtia
+<lb/>niſſima reyna ſeñores: ſi ſupiera auer repartido alos ti
+<lb/>ranos crueles como ſi fueran carneros todos ſin ſacar 
+<lb/>grandes ni chicos los vniuerſos vezinos y moradores
+<lb/>de aquel ſu otro mundo y por el tal repartimiento auer 
+<lb/>pereſcido (como dixe) quinze cuentos de animas como 
+<lb/>vueſtra alteza ſeñores los aueys viſto: eſtoy por dezir que
+<lb/>puſiera fuego a caſtilla. Deſpues confirmo y refirmo lo
+<lb/>miſmo al dicho ſegundo gouernador Bouadilla: y deſ<lb break="no" rendition="#hyphen"/>pues al tercero comendador de lares: el qual el año de q̃<lb break="no" rendition="#hyphen"/>nientos y tres ſiendo yo preſente yntroduxo contra vo<lb break="no" rendition="#hyphen"/>luntad y ſciencia y contra los mãdamientos de la dicha 
+<lb/>ſeñora reyna eſta infernal peſtilẽcia. Y vltimadamẽte to<lb break="no" rendition="#hyphen"/>do lo que auia mandado y proueydo: lo mando y recon
+<lb/>firmo en ſu vltimo teſtamento. Venido el Rey catholi<lb break="no" rendition="#hyphen"/>co de Napoles el año de ſiete quiſo emendar tanto mal
+<lb/>como pareſce algo enla inſtrucion que mando dar a pe<lb break="no" rendition="#hyphen"/>drarias que fue el primero conquiſtador dela grã tier<lb break="no" rendition="#hyphen"/>ra firme: pero como tuuo pocos que le dieſſen lumbre y 
+<lb/>dixeſſen verdad a ſu alteza aprouecho poco lo que fizo.
+<lb/>Ultimamente ſu Mageſtad eſtando eneſta villa de Va<lb break="no" rendition="#hyphen"/>lladolid enel Año de quinientos y veynte y tres por el
+<lb/>mes de Junio teniendo informacion como el dicho re<pb n="[16]" xml:id="W0034-0019" facs="W0034-0019" break="no" rendition="#hyphen"/><lb break="no"/>partimiento era injuſto y tiranico: y ſer cauſa de pereſ<lb break="no" rendition="#hyphen"/>cer todas aquellas infinitas naciones auiendo precedi
+<lb/>do por ſu mandand ayuntamientos de letrados de ſus 
+<lb/>conſejos y de Theologos y de perſonas de muchas le<lb break="no" rendition="#hyphen"/>tras y de buena y ſanta vida: como ſu Mageſtad miſmo 
+<lb/>refiere: alos quales parecio que con buena conciencia 
+<lb/>pues dios nueſtro ſeñor crio los dichos yndios libres 
+<lb/>y no ſubjectos: ſu Mageſtad no podia mandar los en<lb break="no" rendition="#hyphen"/>comendar ni fazer repartimiẽto dellos a los Chriſtia<lb break="no" rendition="#hyphen"/>nos (Estos ſon palabras formales de ſu Mageſtad) en
+<lb/>vna inſtrucion que embio a Hernando Cortes que po
+<lb/>co auia qze era entrado enla nueua eſpaña por las miſ
+<lb/>mas tiranicas conquiſtas: en la qual le mando que no
+<lb/>fizieſſe encomienda ni repartimiento ni depoſito algu
+<lb/>no de yndios en Eſpañoles: ſino que lo dexaſſen biuir 
+<lb/>libremente como ſus vaſſallos eneſtos Reynos de Ca<lb break="no" rendition="#hyphen"/>ſtilla biuen: y ſi quando aquella inſtrucion llegaſſe oui
+<lb/>eſſe hecho algun repartimiento / o encomienda: luego 
+<lb/>la reuocaſſe  y los puſieſſe en ſu libertad. ⁊c. (Todas eſ<lb break="no" rendition="#hyphen"/>tas ſon palabras de ſu Mageſtad como en la dicha in<lb break="no" rendition="#hyphen"/>ſtrucion Real pareſce) El qual no cumplio nada por lo
+<lb/>mucho que a elle yua enello. Eſta fue tambien final con 
+<lb/>cluſion de todo el Conſejo Real y ayuntamientos que
+<lb/>ſe hizieron por mandado de ſu Mageſtad quando paſ<lb break="no" rendition="#hyphen"/>ſaua a Italia deſtos Reynos el Año de veynte y nueue 
+<lb/>en tiempo que don Juan Tauera era preſidente: y de to
+<lb/>do nunca ſe cumplio nada. Y aſſi como ſu Mageſtad ha
+<lb/>hecho tan frequentes auſencias y por ſus muchos nego
+<lb/>cios externos: no ha acabado de tener noticia delas mi
+<lb/>ſerias y calamidades delos Indios y la maldad y põço
+<lb/>ña vaſtatiua de reynos q̃ contienen enſi eſte repartimien
+<lb/>to: y como todo quãto alla tiene ſele pierde: y ſe ha enue
+<pb n="[17]" xml:id="W0034-0020" facs="W0034-0020"/><lb/>gecido y tupido eſta tiranica ceguedad haſta agora. Y 
+<lb/>Dios ſabe ſi ſera baſtãte como es obligado a eſtirparla
+<lb/>algun dia.</p></div>
+<div type="section" n="Proposicion 30">
+<head><lb/>Propoſicion. xxx. y vltima.</head>
+<p>
+<lb/><hi rendition="#initCaps">D</hi>E todo lo ſuſo dicho en fuerça de cõſequencia nece 
+<lb/>ſſaria ſe ſigue: q̃ ſin perjuyzio del titulo y ſeñorio 
+<lb/>ſoberano y real q̃ alos Reyes de Caſtilla pertenece ſo<lb break="no" rendition="#hyphen"/>bre aquel orbe delas Indias: todo lo q̃ enellas ſe ha he<lb break="no" rendition="#hyphen"/>cho: anſi enlo delas injuſtas y tiranicas conquiſtas: co<lb break="no" rendition="#hyphen"/>mo en lo delos repartimiẽtos y encomiendas: ha ſido nul 
+<lb/>lo / ninguno y de ningũ valor ni fuerça de derecho: por 
+<lb/>auer lo fecho todo tiranos puros ſin cauſa juſta ni razõ 
+<lb/>ni auctoridad de ſu principe y rey natural: antes cõtra 
+<lb/>expreſſos mãdamientos ſuyos: como conſta eneſte real 
+<lb/>conſejo no auerſe guardado vno ni ninguno enlo tocan 
+<lb/>te a eſto. Y es tan notorio q̃ ninguna perſona de quãtos 
+<lb/>ay enlas Indias lo ygnora. Y anſi entiendo la ſeptima 
+<lb/>regla ꝺ̇ mi cõfeſſionario q̃ han calumniado los q̃ parte 
+<lb/>o arte tienen / o eſperã delos robos y tiranias y deſtruy 
+<lb/>ciones y perdimiẽto de animas delos indios q̃leſquie- 
+<lb/>ra q̃ eneſtos reynos ſean.</p> 
+<p>
+<lb/>Eſto es ſeñores muy inclitos todo lo q̃ ye en quaren 
+<lb/>ta y nueue años q̃ ha que veo enlas indias el mal hecho 
+<lb/>y treynta y quatro q̃ eſtudio el derecho: ſiento. La pro<lb break="no" rendition="#hyphen"/>uança y corroboraciõ delas ſuſo dichas treynta propo<lb break="no" rendition="#hyphen"/>ſiciones: yo la dare preſto en romãce y en latin a vueſtra 
+<lb/>alteza: donde parecera fundado / prouado y corrobora<lb break="no" rendition="#hyphen"/>do el titulo q̃ los Reyes de Caſtilla y Leon tienen al 
+<lb/>imperio vniuerſal y ſoberano ꝺ̇l orbe nueuo delas ocea 
+<lb/>nas indias. Enlo qual eſpero hazer a ſu Mageſtad y a 
+<lb/>los reyes venideros eneſtos reynos vn no pequeño ſer
+<lb/>uicio.</p>
+<p><lb/>Impreſſo en ſeuilla en caſa de sebastiã trugillo.</p></div>
+</body>  
+</text>
+</TEI>

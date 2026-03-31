@@ -1,0 +1,23 @@
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Polina\SVN\trunk\teiedit\works\build\W0008_Vol07\xml\W0008_Vol07_020.xml to D:\Polina\SVN\trunk\teiedit\works\build\W0008_Vol07\xml\W0008_Vol07_021.xml
+     [xslt] Loading stylesheet D:\Polina\SVN\trunk\teiedit\works\build\W0008_Vol07\xsl\W0008_Vol07_020.xsl
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Polina\SVN\trunk\teiedit\works\build\W0008_Vol07\xml\W0008_Vol07_021.xml to D:\Polina\SVN\trunk\teiedit\works\build\W0008_Vol07\xml\W0008_Vol07_022.xml
+     [xslt] Loading stylesheet D:\Polina\SVN\trunk\teiedit\works\build\W0008_Vol07\xsl\W0008_Vol07_021.xsl
+     [xslt] Generated temporary lb/@xml:id.
+
+     [xslt] Extracted tei:lb from pages in the main area of the text.
+
+     [xslt] Numbered tei:lb from the main area.
+
+     [xslt] INFO: Added line numbers to tei:lb/@n.
+
+     [xslt] INFO: Serializing final output...
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Polina\SVN\trunk\teiedit\works\build\W0008_Vol07\xml\W0008_Vol07_022.xml to D:\Polina\SVN\trunk\teiedit\works\build\W0008_Vol07\xml\W0008_Vol07_023.xml
+     [xslt] Loading stylesheet D:\Polina\SVN\trunk\teiedit\works\build\W0008_Vol07\xsl\W0008_Vol07_022.xsl
+     [xslt] INFO: quality check successfull.
+

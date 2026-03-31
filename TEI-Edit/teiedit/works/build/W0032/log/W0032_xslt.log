@@ -1,0 +1,11 @@
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing /home/marie-astrid/Documents/Salamanca/trunk/teiedit/works/build/W0032/xml/W0032_015.xml to /home/marie-astrid/Documents/Salamanca/trunk/teiedit/works/build/W0032/xml/W0032_016.xml
+     [xslt] Loading stylesheet W0032_013.xsl
+     [xslt] WARN: amount of whitespace characters differs in input and output doc: 
+     [xslt] Input whitespace: 161145
+     [xslt] Output whitespace: 161133
+     [xslt] 
+     [xslt] INFO: quality check successfull.
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing /home/marie-astrid/Documents/Salamanca/trunk/teiedit/works/build/W0032/xml/W0032_016.xml to /home/marie-astrid/Documents/Salamanca/trunk/teiedit/works/build/W0032/xml/W0032_017.xml
+     [xslt] Loading stylesheet W0032_014.xsl

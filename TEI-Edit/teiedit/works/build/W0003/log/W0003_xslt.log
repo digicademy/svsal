@@ -1,0 +1,71 @@
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0003\xml\W0003_029.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0003\xml\W0003_030.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0003\xsl\W0003_029.xsl
+     [xslt] WARN: amount of whitespace characters differs in input and output doc: 
+
+     [xslt] Input whitespace: 626586
+
+     [xslt] Output whitespace: 412145
+
+     [xslt] 
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0003\xml\W0003_030.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0003\xml\W0003_031.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0003\xsl\W0003_030.xsl
+     [xslt] INFO: identified 0 *pb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 0 *cb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 0 *cb* as secondary break that were not previously marked as no-break at all.
+
+     [xslt] INFO: identified 12 *cb* as secondary break that were previously marked as primary no-break.
+
+     [xslt] INFO: identified 0 *lb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 0 *lb* as secondary break that were not previously marked as no-break at all.
+
+     [xslt] INFO: identified 21 *lb* as secondary break that were previously marked as primary no-break.
+
+     [xslt] INFO: replaced trailing whitespace in 17 text nodes before primary no-breaks.
+
+     [xslt] INFO: replaced trailing whitespace in 0 text nodes before secondary no-breaks.
+
+     [xslt] Input whitespace: 412145
+
+     [xslt] Output whitespace: 412128
+
+     [xslt] ---------------------------------------------------------
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0003\xml\W0003_031.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0003\xml\W0003_032.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0003\xsl\W0003_031.xsl
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0003\xml\W0003_032.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0003\xml\W0003_033.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0003\xsl\W0003_032.xsl
+     [xslt] Generated temporary lb/@xml:id.
+
+     [xslt] Extracted tei:lb from pages in the main area of the text.
+
+     [xslt] Numbered tei:lb from the main area.
+
+     [xslt] Extracted tei:lb from the marginal area.
+
+     [xslt] Numbered tei:lb from the marginal area.
+
+     [xslt] INFO: Added line numbers to tei:lb/@n.
+
+     [xslt] INFO: Serializing final output...
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0003\xml\W0003_033.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0003\xml\W0003_034.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0003\xsl\W0003_033.xsl
+     [xslt] INFO: quality check successfull.
+

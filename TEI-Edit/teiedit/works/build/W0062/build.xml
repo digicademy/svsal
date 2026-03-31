@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="W0062" default="finalize">
+    
+    <property name="diff.dir" value="diff"/>
+    <property name="log.dir" value="log"/>
+    <property name="xml.dir" value="xml"/>
+    <property name="xsl.dir" value="xsl"/>
+    <property name="xslt.log" value="${log.dir}/${ant.project.name}_xslt.log"/>
+    <property name="xslt.processor" value="../../../lib/xsltproc/Saxon-HE-9.8.0-12.jar"/>
+    <property name="xslt.class" value="net.sf.saxon.TransformerFactoryImpl"/>
+    
+    <property name="orig.file" value="../../orig/grepect/W0062/W0062.xml"/>
+    
+    <target name="initialize">
+        <echo>Initializing W0062.</echo>
+        <mkdir dir="${xml.dir}"/>
+        <mkdir dir="${log.dir}"/>
+        <copy file="${orig.file}" tofile="${xml.dir}/W0062_000.xml"/>
+        <xmlvalidate file="${xml.dir}/W0062_000.xml" lenient="true"/>
+    </target>
+    
+    <target name="cp-000" depends="initialize">
+        <copy file="${xml.dir}/W0062_000.xml" tofile="${xml.dir}/W0062_v1-0.xml"/>
+        <echo>Checkpoint: W00 65_v1-0.xml (W0062_000.xml).</echo>
+        <delete file="${xml.dir}/W0062_000.xml"/>
+    </target>
+    
+    <target name="patch-000"> <!-- depends="cp-000" -->
+        <echo>Structural annotation.</echo>
+        <patch originalfile="${xml.dir}/W0062_v1-0.xml" destfile="${xml.dir}/W0062_001.xml" patchfile="${diff.dir}/W0062_000.diff"/>
+        <delete file="${xml.dir}/W0062_000.xml"/>
+        <!-- TODO: create diff between W0062_v1-0.xml and W0062_edit-000.xml (=W0062_001.xml) -->
+    </target>
+    <target name="xslt-001"> 
+        <echo>Structural annotation in 4 rounds.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0062_001.xml" out="${xml.dir}/W0062_002.xml" style="${xsl.dir}/W0062_001.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+    </target>
+
+    <target name="xslt-002" depends="xslt-001"> 
+        <echo>Added abbreviations depending on word endings with regex (la)</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0062_002.xml" out="${xml.dir}/W0062_003a.xml" style="${xsl.dir}/W0062_002.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+ <echo>Added (again) abbreviations depending on word endings with regex (la)</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0062_003a.xml" out="${xml.dir}/W0062_003.xml" style="${xsl.dir}/W0062_002.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+       <delete file="${xml.dir}/W0062_003a.xml"/>
+    </target>
+
+    
+
+<!-- control all the # before this step !-->
+
+<target name="xslt-003" depends="xslt-002"> 
+        <echo>Transformation TEI tite to TEI P5.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0062_003.xml" out="${xml.dir}/W0062_004.xml" style="${xsl.dir}/W0062_003.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+
+        <record name="${xslt.log}" action="stop"/>
+     
+    </target>
+
+ <target name="xslt-004" depends="xslt-003"> 
+        <echo>Tagged special characters.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0062_004.xml" out="${xml.dir}/W0062_005.xml" style="${xsl.dir}/W0062_004.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/></target>
+
+
+    
+   <target name="xslt-005" depends="xslt-004">
+        <echo>Tagged Hyphenation.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+
+        <xslt force="true" in="${xml.dir}/W0062_005.xml" out="${xml.dir}/W0062_006.xml" style="${xsl.dir}/W0062_005.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+ 
+    </target> 
+
+
+
+  <target name="xslt-006" depends="xslt-005">
+
+        <echo>Numbered lines.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0062_006.xml" out="${xml.dir}/W0062_007.xml" style="${xsl.dir}/W0062_006.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+  
+  </target>
+   <target name="xslt-007" depends="xslt-006">
+        <echo>Added @xml:ids.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0062_007.xml" out="${xml.dir}/W0062_008.xml" style="${xsl.dir}/W0062_007.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+   
+    </target>   
+
+<!-- create lists !! -->
+ <target name="xslt-008" depends="xslt-007">  <!--depends="xslt-009"  -->
+        <echo>Tagged unmarked hyphenations. in main</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0062_008.xml" out="${xml.dir}/W0062_009.xml" style="${xsl.dir}/W0062_008.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+            <param name="corrListPaths" expression="../corrlist/W0062-la_supposed-hyphenations-from-text.html" type="STRING"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+  
+    </target>
+
+ <target name="xslt-009"  depends="xslt-008">  <!--depends="xslt-009"  -->
+        <echo>Tagged unmarked hyphenations. in main</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0062_009.xml" out="${xml.dir}/W0062_010.xml" style="${xsl.dir}/W0062_008.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+            <param name="corrListPaths" expression="../corrlist/marginals/W0062-marg-la_supposed-hyphenations-from-text.html" type="STRING"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+  
+    </target>
+
+
+<target name="xslt-010" depends="xslt-009" > <!---->
+        <echo>Expanded abbreviations (la) main text.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0062_010.xml" out="${xml.dir}/W0062_011.xml" style="${xsl.dir}/W0062_009.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+            <param name="lang" expression="la" type="STRING"/>
+            <param name="mode" expression="main" type="STRING"/>
+            <param name="startAtLineBeginning" expression="TRUE" type="BOOLEAN"/>
+            <param name="changeId" expression="W0062_change_012" type="STRING"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+      
+    </target>
+<target name="xslt-011" depends="xslt-010"> 
+        <echo>Expanded abbreviations in marginal text.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0062_011.xml" out="${xml.dir}/W0062_012.xml" style="${xsl.dir}/W0062_009.xsl" classpath="${xslt.processor}" >
+            <factory name="${xslt.class}"/>
+            <param name="lang" expression="la" type="STRING"/>
+            <param name="mode" expression="marginal" type="STRING"/>
+            <param name="changeId" expression="W0062_change_013" type="STRING"/>
+            <param name="startAtLineBeginning" expression="TRUE" type="BOOLEAN"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+    
+    </target> 
+  <!--<target name="py-012" input file W0062_012.xml output W0062_013.xml > 
+        <echo>Expanded abbreviations with breaks.</echo>
+        <record name="${py.log}" action="start" loglevel="verbose"/>
+        <exec executable="${executable-full-path}">
+            <arg file="${py.dir}/W0062_012.py"/>
+        </exec>
+        <record name="${py.log}" action="stop"/>
+    </target> -->
+
+<target name="xslt-013"><!--  depends="py-012"-->
+        <echo>teiHeader update.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0062_013.xml" out="${xml.dir}/W0062_014.xml" style="${xsl.dir}/W0062_011.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+    </target>
+    <target name="finalize" depends="xslt-013">
+        <echo>Reached end of pipeline.</echo>
+    </target>
+</project>
+<!--
+  
+MAH 27.05.2024
+No manual corrections, only unclear resolution.
+
+    *DONE:
+    *body > div1, 2, 3 and 4 ok. 
+    *milestones ok. 
+    *colShift, pb, cb, lb ok.
+    * unecessary t:i okay.  hi @rend=recte corrected. 
+    *all div1 corrected. 
+ 
+       
+
+    *TODO: 
+    *0034: ToC inside book 2, but pars septima before pars prima ? inside P7C1 no dubatio 1 ? 
+    *change the IDs: the sections are NOT in the ToC. 
+
+
+
+
+    STRUCTURE:
+    *810 elements of greek! Also 8 elements in hebrew.  134 unclears are actually greek problems. 
+    *4 books. 
+    * 2nd books has sectio > caput > dubitatio. The rest (book1, book 3 and book 4) is book > caput > dubitatio.
+        ->book 1: 2 chaps -> 4 D + 4 D. 
+        -> book 2: 7 sections -> 47 chaps, numerated without regard to the sections !
+        -> book 3: 2 chaps -> 6D + 6D. 
+        -> book 4: 4 chaps.  -> 4D + 16D + 15 D + 14D. 
+    *inside the sectiones, there is a table of contents.  
+    
+    *no spanish. 
+    
+   
+    *sal-tei.rng:  14
+    * sal-tei.sch: 50
+    *until xslt-010 (expansions abbr) : 280 minutes.
+    * List generation: xslt-010  : ca. 120 minutes for the 2. 
+    * Abbr. list resolution time: 
+    * Abbr. regex: //abbr[@resp = ('#CR #auto','#MAH #auto')]: 3590, checked. + 91  (checked)
+    * Abbr. list: //expan[@resp eq '#auto']  : 2042 (checked)
+    * Abbr. breaks with python //expan[@resp eq '#CRPY #auto'] = 0
+           Total:  5632
+
+    MAH 2025-10-28
+    W0062_014.xml saved as trunk/svsal-tei/works/W0062.xml  for online publication.
+
+ -->

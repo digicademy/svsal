@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="W0114" default="finalize">
+    
+    <property name="diff.dir" value="diff"/>
+    <property name="log.dir" value="log"/>
+    <property name="xml.dir" value="xml"/>
+    <property name="xsl.dir" value="xsl"/>
+    <property name="xslt.log" value="${log.dir}/${ant.project.name}_xslt.log"/>
+    <property name="xslt.processor" value="../../../lib/xsltproc/Saxon-HE-9.8.0-12.jar"/>
+    <property name="xslt.class" value="net.sf.saxon.TransformerFactoryImpl"/>
+    
+    <property name="orig.file" value="../../../../tustep/svsal/v1/teitite/W0114/W0114_v1.xml"/>
+    
+    <target name="initialize">
+        <echo>Initializing W0114.</echo>
+        <mkdir dir="${xml.dir}"/>
+        <mkdir dir="${log.dir}"/>
+        <copy file="${orig.file}" tofile="${xml.dir}/W0114_000.xml"/>
+        <xmlvalidate file="${xml.dir}/W0114_000.xml" lenient="true"/>
+    </target>
+    
+    <target name="cp-000" depends="initialize">
+        <copy file="${xml.dir}/W0114_000.xml" tofile="${xml.dir}/W0114_v1-0.xml"/>
+        <echo>Checkpoint: W0114_v1-0.xml (W0114_000.xml).</echo>
+        <delete file="${xml.dir}/W0114_000.xml"/>
+    </target>
+    
+    <target name="patch-000"> <!-- depends="cp-000" -->
+        <echo>Structural annotation.</echo>
+        <patch originalfile="${xml.dir}/W0114_v1-0.xml" destfile="${xml.dir}/W0114_001.xml" patchfile="${diff.dir}/W0114_000.diff"/>
+        <delete file="${xml.dir}/W0114_000.xml"/>
+        <!-- TODO: create diff between W0114_v1-0.xml and W0114_edit-000.xml (=W0114_001.xml) -->
+    </target>
+    
+    <target name="xslt-001"> <!--depends="patch-000"-->
+        <echo>Added missing pagination (pb/@n).</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0114_001.xml" out="${xml.dir}/W0114_002.xml" style="${xsl.dir}/W0114_001.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+    </target>
+    
+    <target name="xslt-002" depends="xslt-001"> 
+        <echo>Transformed hi(s) @rend.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0114_002.xml" out="${xml.dir}/W0114_003.xml" style="${xsl.dir}/W0114_002.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0114_002.xml"/>
+    </target>
+    
+    <target name="xslt-003" depends="xslt-002"> 
+        <echo>Added @type, @xml:id to div2 and @target to ref.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0114_003.xml" out="${xml.dir}/W0114_004.xml" style="${xsl.dir}/W0114_003.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0114_003.xml"/>
+    </target>
+    <target name="xslt-004" depends="xslt-003"> 
+        <echo>Transformed label into head.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0114_004.xml" out="${xml.dir}/W0114_005.xml" style="${xsl.dir}/W0114_004.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0114_004.xml"/>
+    </target>
+    <target name="xslt-005" depends="xslt-004">
+        <echo>Transformation from TEI Tite to TEI P5.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0114_005.xml" out="${xml.dir}/W0114_006.xml" style="${xsl.dir}/W0114_005.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0114_005.xml"/>
+    </target>
+    
+    <target name="xslt-006" depends="xslt-005">
+        <echo>Annotated hyphenated breaks.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0114_006.xml" out="${xml.dir}/W0114_007.xml" style="${xsl.dir}/W0114_006.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0114_006.xml"/>
+    </target>
+    <target name="xslt-007" depends="xslt-006">
+        <echo>Tagged special characters.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0114_007.xml" out="${xml.dir}/W0114_008.xml" style="${xsl.dir}/W0114_007.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0114_007.xml"/>
+    </target>
+    <target name="xslt-008" depends="xslt-007">
+        <echo>Numbered lines.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0114_008.xml" out="${xml.dir}/W0114_009.xml" style="${xsl.dir}/W0114_008.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0114_008.xml"/>
+    </target>
+    <target name="xslt-009" depends="xslt-008">
+        <echo>Added @xml:ids.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0114_009.xml" out="${xml.dir}/W0114_010.xml" style="${xsl.dir}/W0114_009.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0114_009.xml"/>
+    </target>
+    <target name="xslt-010" depends="xslt-009"> <!---->
+        <echo>Tagged unmarked hyphenations.
+            Added manually fragmenationDepth</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0114_010.xml" out="${xml.dir}/W0114_011.xml" style="${xsl.dir}/W0114_010.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+            <param name="corrListPaths" expression="../corrlist/lists/W0114-la_supposed-hyphenations-from-text.html" type="STRING"/>            
+            <param name="lang" expression="la" type="STRING"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0114_010.xml"/>
+    </target>
+    <target name="xslt-011" > <!--depends="xslt-010"-->
+        <echo>teiHeader update for online publication.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0114_011.xml" out="${xml.dir}/W0114_012.xml" style="${xsl.dir}/W0114_011.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <!--<delete file="${xml.dir}/W0114_011.xml"/>-->
+    </target>    
+    <target name="finalize" depends="xslt-011">
+        <echo>Reached end of pipeline.</echo>
+    </target>
+  
+</project>
+<!--
+    
+******************************************    
+*    REFERENZWERK - - REFERENCE WORK     *
+******************************************
+ teiHeader Update for online publication 09.04.24 CR
+ 
+ No automatic abbreviations. 
+ No manual correction.
+
+* sal-tei.sch Errors: 321
+* Total time until @xml:id(s) xslt-009: 45 seconds
+* unclear: 11
+ 
+
+
+Total time bis xslt-011: 1 minute 50 seconds
+
+TO DO:
+
+1) Documentation:
+
+    "cambiorum" was added in toc the item, and the items "Tyrannis" and "Torneamentum" were rearranged in alphabetical order.
+    "Excōmunicatio", "Negligentia", "Irrisio" were added as item in the toc and/or as label in main text W0114-0135, W0114-0175.
+    "Bellum" W0114-0044, "COgitationis" W0114-0063, "COmmunio" W0114-0065, "Peccatum" W0114-0385, the argument and the first part were separated in different paragraphs.
+-->
+        
+    

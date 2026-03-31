@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_tite.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_tite.rng" type="application/xml"
+	schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<text xmlns="http://www.tei-c.org/ns/1.0" xmlns:t="http://www.tei-c.org/ns/tite/1.0">
+<body>
+<p><pb facs="W0008-A-0077"/><cb n="125" xml:id="W0008-A-0077-cb-1"/>
+<lb/>vt spectans ex iure ad exercentem. Quód
+<lb/>si tempore ad præscribendũ constituto per-
+<lb/>seueret in eiusmodi possessione, præscri-
+<lb/>bet tale ius, esto alium titulum non osten<lb type="nb"/>dat. Hæc conclusio colligitur apertè ex
+<lb/>cap. cum ecclesia, de causa possessionis &amp;
+<lb/>propietatis, &amp; ex l. Si quis dioturno. ff. si
+<lb/>seruitus vendicetur. &amp; ex l. 2. C. de serui-
+<lb/>tutibus, eamq; per partes asseuerat cum 
+<lb/>Inncent. &amp; Bartol. Panormit. cap. cum
+<lb/>ecclesia citato. n. 3. $ .4. &amp; rursus á n. 20.
+<lb/>vsq; ad .27. &amp; .30. vsq; ad .36. &amp; cap. bonæ
+<lb/>memoriæ. 2. de postul. prælat. n. 19.20. &amp;
+<lb/>.21. &amp; cõsonat Ant. Gom. loco citato cum
+<lb/>alijs, quos citat. Dictur est, modo vtatur in<lb type="nb"/>tendẽns &amp; credẽs se vti iure suo. Quoniã, vt
+<lb/>habetur. l. vltima. ff. quemadmodũ seruitus
+<lb/>amittatur, nullus actus est seruitutis, aut
+<lb/>alterius iuris, nisi quo quis <abbr rend="choice"><abbr rend="sic">cre</abbr><abbr rend="corr" resp="#CB">credat</abbr></abbr> su vti suo
+<lb/>iure aut seruitute sua: atq: ob eam causam,
+<lb/>nisi actus sit huiusmodi, per illum posses-
+<lb/>sio talis iuris aut seruitutis no acquiri-
+<lb/>tur. Prætereà, si quis non credat eo se vti
+<lb/>iure suo, non erit bonæ fidei possessor talis
+<lb/>iuris, &amp; idcircò non præscribet. Dictum
+<lb/>quoq; est, nmodo etiã actus sit talis, vt ex
+<lb/>natura sua, aut ex frequentatione &amp; cir-
+<lb/>cunstantijs credatur non concessus &amp; per-
+<lb/>missus pro tũc solum ex gratia: nam alio-
+<lb/>quin nullius iuris comparabitur possessio.
+<lb/>Verbi gratia, esto aliquis sæpius amicum
+<lb/>ad cænam vel prandium inuitet, non pro-
+<lb/>inde amicus, quamuis sæpissimè conuiuia
+<lb/>fuerit, possessionem acquirit comedendi
+<lb/>apud illum, qui eum inuitare consueuerat:
+<lb/>quoniam ex natura actus intelligitur id
+<lb/>concessum fuisse ex gratia vsq: ad bene-
+<lb/>placitum inuitantis. Quo circa Panormit.
+<lb/>loco citato´à .22. docet optimè cum Inno-
+<lb/>centio &amp; Bartol. ex natura actus, spectatis
+<lb/>reliquis circunstantijs, arbitrio prudentis
+<lb/>iudicis esse iudicandum, an vnus solus ac-
+<lb/>tus sufficiat ad iudicandum aliquem esse in 
+<lb/>possessione alicuius iuris, an vero requi-
+<lb/>rãtur multi, &amp; quot, pro verisimilitudine,
+<lb/>quæ est, concessos, aut non concessos fuis-
+<lb/>se ex gratia. Si enim aliquis electioni ali-
+<lb/>cuius episcopi interfuit cum voce &amp; suffra<lb type="nb"/>gio, quoniam eiusmodi actus non videtur
+<lb/>ex gratia concessus, eo quòd non ita con-
+<lb/>sueuerit concedi, sane vnus sufficit, vt quis
+<lb/>censeatur esse in possessione talis iuris eli-
+<lb/>gendi, modò aliunde non constet conces-
+<lb/>sum fuisse ex gratia. At verò si, qui ita in-
+<lb/>terfuit, non sit de eorum numero, ad quos
+<lb/>de iure cõmuni eligere spectat, neq; aliun-<cb n="126" xml:id="W0008-A-0077-cb2"/><lb/>de probet se ad eligẽndum habere ius, vtiq;
+<lb/>cum præsumptio sit in contrarium, eo
+<lb/>quod de iure communi ad solum canoni-
+<lb/>corum capitulum ius eligendi consueuerit
+<lb/>spectare, deijcietur ab eo iure, &amp; in conse-
+<lb/>quentia à possessione. Atq; hic est casus
+<lb/>ac decisio capitis cum ecclesia citati. Quòd
+<lb/>si actus talis sit, vt concedi interdum so-
+<lb/>leat ex gratia, vt concedi solet iter per alie<lb type="nb"/>num fundum, profectò neq; ex vno, neq;
+<lb/>ex duobus actibus censenda est possessio
+<lb/>seruitutis, quando non adest titulus, sed
+<lb/>ex multò pluribus, spectatis cæteris cir-
+<lb/>cunstantijs concurrentibus.
+<lb/>Quarta conclusio, vsus alicuius iuris<note n="noRef" xml:id="W0008-A-0077-mn-1"><t:i><lb/>4. conclu.</t:i></note>
+<lb/>aut seruitutis tanto tempore, vt initium
+<lb/>illius memoriam hominum excedat, non 
+<lb/>solum possessionem efficit, sed &amp; præscri-
+<lb/>ptionemn, ita vt ad id necessarium non sit
+<lb/>probare scientiam &amp; pacientiam eius, ad-
+<lb/>uersus quem erat præscribendum, aut ad
+<lb/>quem concedere, aut prohibere possessio-
+<lb/>nem spectabat. Semper tamen necessaria
+<lb/>est bona fides: quoniam malæ fidei posses-
+<lb/>sor nullo temproe præscribit. Hæc conclu-
+<lb/>sio est Couar. loco citato &amp; multorũ, quos
+<lb/>citat, &amp; colligitur ex l. 1. C. de seruituti-
+<lb/>bus, &amp; ex alijs iuribus. Eam etiam affir-
+<lb/>mat Glos. l. hoc iure. §. ducuts aquæ. ff. de
+<lb/>aqua quotidiana &amp; ætiua. Ratio huius
+<lb/>conclusionis est, quoniam vsus bona fide
+<lb/>iuris alicuius tanto tempore, vim habet
+<lb/>consuetudinis, habetq; priuilegiũ ad præ-
+<lb/>scribendum absq; alio titulo, &amp; quin ne-
+<lb/>cessarium sit probare scientiam &amp; patien-
+<lb/>tiam eius, ad quem pertinebat concedere 
+<lb/>possessionem; quin potiùs, ea scientia &amp;
+<lb/>patientia, atq; adeo possessio eiusmodi iu<lb type="nb"/>ris præsumitur. Hæc dicta sint in particu-
+<lb/>lari de possessione iurium quæ non mo-
+<lb/>dicam lucem asserent ijs, quæ in sequen-
+<lb/>tibus dicentur. De possessione beneficij
+<lb/>ecclesiastici alio in loco dicendum est.</p>
+<p rend="hx"><t:i><lb/>DE AMISSIONE POS-
+<lb/>seßionis. Disp. 15.</t:i></p>
+<p>
+<lb/><hi rend="init" >E</hi>Xplicatis modis, quibus pos-<note n="noRef" xml:id="W0008-A-0077-mn-2"><t:i><lb/>Posseßio<lb/>solo ani-<lb/>mo nõ pos<lb type="nb"/>sidendi a-<lb type="nb"/>mittitur.</t:i></note>
+<lb/>sessio cõparatur, modi etiam
+<lb/>subijciendi sunt, quibus amit<lb type="nb"/>titur. Possessio solo animo nõ
+<lb/>possidendi amittitur, vt pa-
+<lb/>tet. l. 1. §. si vir. l. 3. § in amittenda, &amp;. l. si
+<lb/>quis. ff. de acquirenda possessione. Si quis
+<lb/>tamen sub tacita conditione recedat à pos-
+</p>
+</body></text>

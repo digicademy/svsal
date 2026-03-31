@@ -1,0 +1,32 @@
+
+- correct summary cross-references: //list[@type='summaries']//item//ref  [CR, DG]
+
+- put pb in wrong places (//head[@change]//pb) to the correct places & delete double values in ref/@target
+
+- delete //note//lb[not(following-sibling::node())]
+
+- delete //note//lb where note is at the bottom of page and has no lb
+
+- delete head/hi[@rendition='#r-center'] (redundant information)
+
+- add CR as editor in teiHeader [DG] (also in general metadata files)
+
+- resolve 1 remaining instance of <note place="margin" n="noRef"...> to <note place="margin" n="k" anchored="false"...>
+
+- remove milestone/@n[. eq 'noRef']
+
+- //body: <div n="1" becomes <div n="1" type="chapter"
+
+- facs 0055: replace marg. note "f" as anchored="false" at the end of the proper line and resolve tao unclear mark
+    + same with note c, d on facs 231
+    + same with note f on 337
+
+- remove unclear tag on facs 334
+
+- add marg. note [o] on facs 587
+
+- add missing milestone <milestone unit="article" n="12" xml:id="W0002_00_0025_ms_0001"/> and delete @n in previous asterisk milestone
+
+(- further, automatic changes: see xsl/W0002_005.xsl
+
+(- final version is W0002_v2.xml)

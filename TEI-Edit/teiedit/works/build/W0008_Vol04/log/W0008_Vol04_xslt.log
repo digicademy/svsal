@@ -1,0 +1,98 @@
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing C:\Users\solonets\Documents\SVN\trunk\teiedit\works\build\W0008_Vol04\xml\W0008_Vol04_019.xml to C:\Users\solonets\Documents\SVN\trunk\teiedit\works\build\W0008_Vol04\xml\W0008_Vol04_020.xml
+     [xslt] Loading stylesheet C:\Users\solonets\Documents\SVN\trunk\teiedit\works\build\W0008_Vol04\xsl\W0008_Vol04_019.xsl
+     [xslt] INFO: repositioned lb W0008-04-0220-lb-2041
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0008-04-0280-lb-2066 )
+
+     [xslt] 
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0008-04-0210-lb-m006 :
+
+     [xslt] 	child::tei:abbr (child 1) has content: "Ad ſecundũ"
+
+     [xslt] 	child::tei:expan (child 2) has content: "secundum"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0008-04-0219-lb-1054 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "emeri, tignorans"
+
+     [xslt] 	child::tei:corr (child 2) has content: "emerit, ignorans"
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing C:\Users\solonets\Documents\SVN\trunk\teiedit\works\build\W0008_Vol04\xml\W0008_Vol04_020.xml to C:\Users\solonets\Documents\SVN\trunk\teiedit\works\build\W0008_Vol04\xml\W0008_Vol04_021.xml
+     [xslt] Loading stylesheet C:\Users\solonets\Documents\SVN\trunk\teiedit\works\build\W0008_Vol04\xsl\W0008_Vol04_020.xsl
+     [xslt] INFO: identified 0 *pb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 0 *cb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 0 *cb* as secondary break that were not previously marked as no-break at all.
+
+     [xslt] INFO: identified 0 *cb* as secondary break that were previously marked as primary no-break.
+
+     [xslt] INFO: identified 0 *lb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 0 *lb* as secondary break that were not previously marked as no-break at all.
+
+     [xslt] INFO: identified 56 *lb* as secondary break that were previously marked as primary no-break.
+
+     [xslt] INFO: replaced trailing whitespace in 3 text nodes before primary no-breaks.
+
+     [xslt] INFO: replaced trailing whitespace in 0 text nodes before secondary no-breaks.
+
+     [xslt] Input whitespace: 279608
+
+     [xslt] Output whitespace: 279605
+
+     [xslt] ---------------------------------------------------------
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing C:\Users\solonets\Documents\SVN\trunk\teiedit\works\build\W0008_Vol04\xml\W0008_Vol04_021.xml to C:\Users\solonets\Documents\SVN\trunk\teiedit\works\build\W0008_Vol04\xml\W0008_Vol04_022.xml
+     [xslt] Loading stylesheet C:\Users\solonets\Documents\SVN\trunk\teiedit\works\build\W0008_Vol04\xsl\W0008_Vol04_021.xsl
+     [xslt] INFO: quality check successfull.
+
+     [xslt] INFO: added 3 choice/*[2]/pb.
+
+     [xslt] INFO: added 11 choice/*[2]/cb.
+
+     [xslt] INFO: added 1058 choice/*[2]/lb.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing C:\Users\solonets\Documents\SVN\trunk\teiedit\works\build\W0008_Vol04\xml\W0008_Vol04_022.xml to C:\Users\solonets\Documents\SVN\trunk\teiedit\works\build\W0008_Vol04\xml\W0008_Vol04_023.xml
+     [xslt] Loading stylesheet C:\Users\solonets\Documents\SVN\trunk\teiedit\works\build\W0008_Vol04\xsl\W0008_Vol04_022.xsl
+Apache resolver library not found, internal resolver will be used
+     [xslt] INFO: added 33 special character tags (tei:g).
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing C:\Users\solonets\Documents\SVN\trunk\teiedit\works\build\W0008_Vol04\xml\W0008_Vol04_023.xml to C:\Users\solonets\Documents\SVN\trunk\teiedit\works\build\W0008_Vol04\xml\W0008_Vol04_024.xml
+     [xslt] Loading stylesheet C:\Users\solonets\Documents\SVN\trunk\teiedit\works\build\W0008_Vol04\xsl\W0008_Vol04_023.xsl
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing C:\Users\solonets\Documents\SVN\trunk\teiedit\works\build\W0008_Vol04\xml\W0008_Vol04_024.xml to C:\Users\solonets\Documents\SVN\trunk\teiedit\works\build\W0008_Vol04\xml\W0008_Vol04_025.xml
+     [xslt] Loading stylesheet C:\Users\solonets\Documents\SVN\trunk\teiedit\works\build\W0008_Vol04\xsl\W0008_Vol04_024.xsl
+     [xslt] Generated temporary lb/@xml:id.
+
+     [xslt] Extracted tei:lb from pages in the main area of the text.
+
+     [xslt] Numbered tei:lb from the main area.
+
+     [xslt] Extracted tei:lb from the marginal area.
+
+     [xslt] Numbered tei:lb from the marginal area.
+
+     [xslt] INFO: Added line numbers to tei:lb/@n.
+
+     [xslt] INFO: Serializing final output...
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing C:\Users\solonets\Documents\SVN\trunk\teiedit\works\build\W0008_Vol04\xml\W0008_Vol04_025.xml to C:\Users\solonets\Documents\SVN\trunk\teiedit\works\build\W0008_Vol04\xml\W0008_Vol04_026.xml
+     [xslt] Loading stylesheet C:\Users\solonets\Documents\SVN\trunk\teiedit\works\build\W0008_Vol04\xsl\W0008_Vol04_025.xsl
+     [xslt] INFO: quality check successfull.
+

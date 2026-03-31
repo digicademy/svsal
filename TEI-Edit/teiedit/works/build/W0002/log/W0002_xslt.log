@@ -1,0 +1,38 @@
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing L:\SVN\04-39\trunk\teiedit\works\build\W0002\xml\W0002_020.xml to L:\SVN\04-39\trunk\teiedit\works\build\W0002\xml\W0002_021.xml
+     [xslt] Loading stylesheet L:\SVN\04-39\trunk\teiedit\works\build\W0002\xsl\W0002_020.xsl
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing L:\SVN\04-39\trunk\teiedit\works\build\W0002\xml\W0002_021.xml to L:\SVN\04-39\trunk\teiedit\works\build\W0002\xml\W0002_022.xml
+     [xslt] Loading stylesheet L:\SVN\04-39\trunk\teiedit\works\build\W0002\xsl\W0002_021.xsl
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing L:\SVN\04-39\trunk\teiedit\works\build\W0002\xml\W0002_022.xml to L:\SVN\04-39\trunk\teiedit\works\build\W0002\xml\W0002_023.xml
+     [xslt] Loading stylesheet L:\SVN\04-39\trunk\teiedit\works\build\W0002\xsl\W0002_022.xsl
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing L:\SVN\04-39\trunk\teiedit\works\build\W0002\xml\W0002_023.xml to L:\SVN\04-39\trunk\teiedit\works\build\W0002\xml\W0002_024.xml
+     [xslt] Loading stylesheet L:\SVN\04-39\trunk\teiedit\works\build\W0002\xsl\W0002_023.xsl
+     [xslt] Generated temporary lb/@xml:id.
+
+     [xslt] Extracted tei:lb from pages in the main area of the text.
+
+     [xslt] Numbered tei:lb from the main area.
+
+     [xslt] Extracted tei:lb from the marginal area.
+
+     [xslt] Numbered tei:lb from the marginal area.
+
+     [xslt] Added line numbers to tei:lb/@n.
+
+     [xslt] Serializing final output...
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing L:\SVN\04-39\trunk\teiedit\works\build\W0002\xml\W0002_024.xml to L:\SVN\04-39\trunk\teiedit\works\build\W0002\xml\W0002_025.xml
+     [xslt] Loading stylesheet L:\SVN\04-39\trunk\teiedit\works\build\W0002\xsl\W0002_024.xsl
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing L:\SVN\04-39\trunk\teiedit\works\build\W0002\xml\W0002_025.xml to L:\SVN\04-39\trunk\teiedit\works\build\W0002\xml\W0002_026.xml
+     [xslt] Loading stylesheet L:\SVN\04-39\trunk\teiedit\works\build\W0002\xsl\W0002_025.xsl
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing L:\SVN\04-39\trunk\teiedit\works\build\W0002\xml\W0002_026.xml to L:\SVN\04-39\trunk\teiedit\works\build\W0002\xml\W0002_027.xml
+     [xslt] Loading stylesheet L:\SVN\04-39\trunk\teiedit\works\build\W0002\xsl\W0002_026.xsl
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing L:\SVN\04-39\trunk\teiedit\works\build\W0002\xml\W0002_027.xml to L:\SVN\04-39\trunk\teiedit\works\build\W0002\xml\W0002_028.xml
+     [xslt] Loading stylesheet L:\SVN\04-39\trunk\teiedit\works\build\W0002\xsl\W0002_027.xsl

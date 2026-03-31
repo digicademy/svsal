@@ -1,0 +1,1014 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_tite.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_tite.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<text xmlns="http://www.tei-c.org/ns/1.0" xmlns:t="http://www.tei-c.org/ns/tite/1.0">
+<front>
+<titlePage>
+<titlePart type="main">
+<pb facs="W0095-0001" n="[i]"/>
+<lb/><hi rend="centered spaced">APOLOGIA
+<lb/>IOANNIS GENESII
+<lb/>SEPVLVEDAE
+<lb/>PRO LIBRO
+<lb/>DE IVSTIS BELLI CAVSIS</hi></titlePart>
+<titlePart type="desc">
+<lb/><hi rend="centered spaced"><hi rend="sp">AD</hi> ampliſſimum, &amp; doctiſſimum
+<lb/>præſulem. D. ANTONIVM
+<lb/>RAMIRVM Episcopum
+<lb/>Segouienſem.</hi>
+<figure type="illustration"/>
+</titlePart></titlePage>
+<div1 type="dedication">
+<p rend="hx">
+<pb facs="W0095-0002" n="[ii]"/>
+<lb/><hi rend="sp">ANT. AVGVSTINVSIO. GENESIO
+<lb/>SEPVLVEDAE. S.</hi></p>
+<p>
+<lb/><hi rend="init">S</hi>VMMAM illius quæſtio=<lb type="nb"/>nis de bello Indico, quæ a te
+<lb/>in libro de iustis belli cauſis
+<lb/>pluribus uerbis perdocte
+<lb/>perq; eleganter disputatur,
+<lb/>cũ optimo antistite Philippo
+<lb/>Archinto Pontificis Maxi=<lb type="nb"/>mi Vicario, &amp; cum reli=<lb type="nb"/>gioſiſſ. Viro Eegidio Foſcarario Sacri Palatij Magis=<lb type="nb"/>tro, atq; alijs grauiſſimis &amp; doctiſſimis theologis ae
+<lb/>iure cõſultis cõmunicaui, ſic enim mihi per litteras mã
+<lb/>daueras. Omnes ſingularẽ in omni genere litterarum
+<lb/>eruditionem &amp; acre ingenium tuum ſemper admirati
+<lb/>ſumus, atq; coluimus. Hæc etiam nobis quæstio digna
+<lb/>uiſa est, quæ in omniũ hominum theatro tractaretur.
+<lb/>Res enim maxima est, &amp; ad plurimos homines nostræ
+<lb/>natiõis ac gẽtis pertinet, neq; est a republica Christia=<lb type="nb"/>na aliena. Itaq; libellum ipſum pluribus exemplis de=<lb type="nb"/>ſcribi ediq; permiſimus, te fortaſſe nõ inuito. qui quãuis
+<lb/>hæc non eo animo ſcripſeris, ut in uulgus manarent,
+<lb/>tamen comprimi ea abste &amp; abscõdi oportuerat; ſi nõ
+<lb/>te digna euolatura fuiſſe putaueras. Tu nos ama, &amp;
+<lb/>vale. ROMA Kal. April.</p></div1></front>
+<body>
+<div1 type="part">    
+<p rend="hx">
+<pb facs="W0095-0003" n="[1]"/>
+<lb/><hi rend="centered spaced">APOLOGIA IOANNIS GENESII
+<lb/>SEPVLVED</hi> AE <hi rend="sp">PRO LIBRO DE
+<lb/>IVSTIS BELLI CAVSIS
+<lb/>AD</hi> ampliſſimum, &amp; doctiſſimum præſulem. D.
+<lb/><hi rend="sp">ANTONIVM RAMIRVM</hi>
+<lb/>Epiſcopum Segouienſem.</p>
+<p>
+<lb/><hi rend="init">C</hi>OMMENT Ationem tuam
+<lb/>Præſul ampliſſime, quam de
+<lb/>bello barbarico aduerſus meũ
+<lb/>de iustis belli cauſis libellum
+<lb/>elucubrasti, &amp; mihi miſisti
+<lb/>cordubæ acceptam non ſine
+<lb/>quadã cõſilij tui demiratiõe
+<lb/>perlegi. Mirabar enim,
+<lb/>quæ te cauſa impuliſſet, vt elucubrato libello meã hu=<lb type="nb"/>ius generis ſententiam, oppugnare animum induceres,
+<lb/>hominis primũ tui, tuarumq; virtutum, &amp; dignitatis
+<lb/>ſtudioſi, &amp; cupidi, deindæ publicam, &amp; honestiſſimam,
+<lb/>nostræ nationis &amp; principis, cui tu plurima debes, cau
+<lb/>ſã aduerſus quorũdam pertinatiã apertiſſimis, &amp; gra=<lb type="nb"/>uiſſimis diuinarum ſcripturarum, &amp; ſacrorũ doctorũ
+<lb/>testimonijs, &amp; firmiſſimo rationũ præſidio, &amp; eccle=<lb type="nb"/>ſiæ auctoritate defendẽtis. Nam te virum prudẽtem &amp;
+<lb/>antistitem grauiſſimum ambitioni ſeruiſſe, vt ingenium
+<lb/>tam alieno loco, &amp; doctrinã ostẽtares adduci nõ pote=<lb type="nb"/>ram. Præſertim cũ parum, aut nihil de tuo afferas, ſed
+<lb/>pleraq́; omnia aliena, nec ſatis tua ſingulari eruditione
+<lb/>digna, &amp; ab his ſũpta, qui calumnijs, &amp; strophis, parũ
+<pb facs="W0095-0004" n="[2]"/>
+<lb/>vel prudenter, uel modeste, ne quid grauius dicã, in mea
+<lb/>ſententia honestiſſimam. R. Publicæ, ac Regum nostro=<lb type="nb"/>rum cauſam oppugnant. Sed cum omnia ſolicito animo
+<lb/>&amp; uaga cogitatione perlustraſſem, in eam potiſſimum
+<lb/>opinionẽ adductus ſum, ut te uirum optimum, &amp; per=<lb type="nb"/>humanum, nihil aliud ſecutũ fuiſſe, quã offitiũ existi=<lb type="nb"/>marẽ, &amp; libello, quo rationum, quibus maxime nitun=<lb type="nb"/>tur aduerſarij, momenta complexus es conficiendo, ad=<lb type="nb"/>meq; mittẽdo, id egiſſe, vt uel me errantem, &amp; rationi=<lb type="nb"/>bus cedẽtem, in uiã reduceres, aut ſi perſisterẽ in ſen=<lb type="nb"/>tentia, quomodo obiecta diluerẽ, me reſpondente planius
+<lb/>intelligeres. Faciã igitur quod tacitus iubes, immo uero
+<lb/>plusꝗ̃ iubes, proponam enim non tua ſolum argumenta
+<lb/>ſed etiã omnia, quæ mihi uel cõpluti, uel Salamanticæ
+<lb/>fuerunt obiecta, &amp; interiectis more ſcholastico mearũ
+<lb/>rationum fundamentis, &amp; confirmationibus, ad ſingula
+<lb/>reſpondebo, refellamq́; calumnias non tuas (noui enim
+<lb/>animi tui candorem, ac ſimplicitatem) ſed quorũdã, am
+<lb/>bitione, aut etiam grauioribus animi morbis laborantiũ
+<lb/>hominum, quos certum habeo, omni ope elaboraſſe, quo
+<lb/>te, ut multos alios eisdem præstigijs ludificarentur. Sed
+<lb/>primum omnium deponenda tibi est falſa perſuaſio, ſi
+<lb/>forte putas Salmanticẽſẽ aut Complutenſem academiã
+<lb/>cõtra meũ libellũ iudicaſſe, non enim vniuerſitatis illud
+<lb/>iudiciũ fuit ſed paucorũ corruptorũ hominũ artificiũ,
+<lb/>non cõmunis ſententia, ſed duorum aut trium vtrobiq́;
+<lb/>præstigiæ quorũ cæteri auctoritatem propter doctrinæ
+<lb/>maiorem opinionem ſuo iuditio prætulerũt. Sic igitur
+<lb/>diſputationem ordiris. Quæstio est, inquis, an liceat bello
+<pb facs="W0095-0005" n="[3]"/>
+<lb/>indos proſequi auferendo ab eis dominia, poſſeſſionesq́;,
+<lb/>&amp; bona temporalia, &amp; occidẽdo eos, ſi reſistentiã ap=<lb type="nb"/>poſuerint, ut ſic ſpoliati, &amp; ſubiecti facilius per prædi=<lb type="nb"/>catores ſuadeatur eis fides. Quæstionẽ autẽ, ut de mea
+<lb/>ſententia diſſeratur, ad hunc modũ proponere quid ali=<lb type="nb"/>ud est, quã in limine ut aiunt offendere? &amp; ipſo ſtatim
+<lb/>diſputationis principio artes eorum prodere, unde ista
+<lb/>ſumpſisti? Qui cæterarũ machinationum, quibus meũ
+<lb/>librum oppugnant, infirmitati diffidẽtes præſidium pe=<lb type="nb"/>tunt a falſis criminibus, &amp; quas iniurias, &amp; impia la
+<lb/>trocinia acerrime meus libellus infectatur, harum me
+<lb/>patrocinium ſuscepiſſe mentiuntur, ut mihi faciãt in=<lb type="nb"/>uidiam ſibi ueró concilient fauorẽ popularem, niſi for
+<lb/>te meum librum uel non legerunt, uel lectum propter
+<lb/>characteris paulo cultioris inſolentiam nõ intellexerũt.
+<lb/>Quod multis accidiſſe ſẽſi ex his, quorum ſuffragio res
+<lb/>permiſſa est, ut ſcias ipſũ a plerisq; indicta cauſa fuiſſe
+<lb/>damnatũ, iure diuino &amp; naturali repugnante. Ego igi=<lb type="nb"/>tur ne te mea ſententia, de qua quærendũ est lateat, hos
+<lb/>barbaros non poſſeſſionibus &amp; facul tatibus ſpoliandos
+<lb/>eſſe dico, nec in ſeruitutẽ redigendos, ſed Christianorũ
+<lb/>imperio ſubijciendos, ne fidem, aut eius propagationem
+<lb/>impediãt, prædicatoribus obſistẽdo, &amp; deum per idolo=<lb type="nb"/>latriam blasphemando, &amp; ob alias ipſorum utilitates.
+<lb/>Aliter igitur quæstio proponẽda eſt in hunc modum.
+<lb/>Quæritur, utrũ barbari, quos Indosuocamus Christia=<lb type="nb"/>norum Hiſpanorum imperio iure ſubijciantur, ut bar=<lb type="nb"/>baris moribus, &amp; cultu idolorum ac impijs ritibus ſu=<lb type="nb"/>blatis ad accipiendam Chriſtianam religionem ipſorum
+<pb facs="W0095-0006" n="[4]"/>
+<lb/>animi præparẽtur, qui negãt his rationibus ducũtur.</p>
+<p>
+<lb/>Primũ ita diſſerunt bellum, quo isti barbari in Christia
+<lb/>norum ditionem rediguntur non est iuſtum, non igitur
+<lb/>iure debellantur. Illud probatur: iusta bella definiri ſo
+<lb/>lent (vt inquit Augustinus. 23. q. 2. c. dominus) quæ
+<lb/>ulciſcũtur iniurias, isti autẽ barbari nulla iniuria Chri
+<lb/>stianos affecerũt, nõ igitur iure his bellũ infertur.</p>
+<p>
+<lb/>Secundo, bellum, quod ad tradendã religionem pertinet
+<lb/>nõ potest eſſe iustum, religionis igitur prætextu bellum
+<lb/>barbaris iuste inferri non potest, Namq; ad fidem ne=<lb type="nb"/>minem eſſe cogendum teſtis est Augustinus in episto=<lb type="nb"/>la Petiliani, &amp; habetur. 23. q. 5. ad fidem, &amp; concilij
+<lb/>Toletani. 4. decretum est ad credẽdum nemini eſſe uim
+<lb/>faciendam, de quo est in c. de iudæis. disti. 45. &amp;. c.
+<lb/>maiores de bapt. &amp; eius effectu. Idem testatur Grego.
+<lb/>in æpiſtola ad Pascas. de qua est in eadem diſt. c. qui
+<lb/>Syncera.</p>
+<p>
+<lb/>Tertio hoc bellum fit cõtra Christi &amp; apostolorũ exẽ=<lb type="nb"/>plum qui perſuaſionibus tantũ, nulla omnino ui adhibi
+<lb/>ta religionem tradiderunt, nõ igitur iuste infertur. Cũ
+<lb/>omnis Christi actio debeat eſſe nostra instructio aucto
+<lb/>re Paulo Rom. 15.</p>
+<p>
+<lb/>Quarto finis huic bello propoſitus. s. barbarorum con=<lb type="nb"/>uerſio ad fidem, alia ratione, &amp; ſine armis commodius
+<lb/>obtineri poſſet. s. per Euãgelij prædicationẽ miſſis Apo=<lb type="nb"/>ſtolis, ſeu prædicatoribus, ut in primitiua Eccleſia factũ
+<lb/>est, nõ igitur est bellum inferẽdũ. Nam bellum neceſſita
+<lb/>tis eſſe debet, id est cũ nulla alia ratione belli finẽ pacẽq;
+<lb/>cõſequi datur vt teſtatur Augustin. 23. q. 1. c. noli.
+<pb facs="W0095-0007" n="[5]"/>
+<lb/>Quinto. Nulli genti bellum est inferendum, niſi antece=<lb type="nb"/>dente monitione, &amp; cognita pertinacia, nam obtempe=<lb type="nb"/>rantibus iniustiſſime uis adhibetur. Quanuis igitur ido
+<lb/>lorum cultum deponere, &amp; prædicatores admittere no=<lb type="nb"/>lentibus, iure poſſit bellum inferri, prius tamen ut hæc
+<lb/>facerent, eſſent admonendi, ut non aliter, ꝗ̃ ſpreta admo
+<lb/>nitione pertinacibus bellum inferretur. Hoc autẽ nunꝗ̃
+<lb/>factum est ab Hiſpanis in hoc bello, nunꝗ̃ igitur iuste
+<lb/>hoc bellum intulerunt.</p>
+<p>
+<lb/>Sexto, fieri non potest, aut certe difficillimum est, ut
+<lb/>bellum hoc ſine peccatis, multisq; malis geratur, ut res
+<lb/>ipſa docuit, nunꝗ̃ enim gestum est ſine iniuria &amp; ma=<lb type="nb"/>leficio magnisq; incommodis, &amp; iacturis barbarorum.
+<lb/>Non est igitur gerendum ne ſpe quidẽ boni quamlibet
+<lb/>magni, quod euenturum eſſe uideatur, non enim facien
+<lb/>da mala ſũt, ut eueniãt bona auctore Paulo ad Ro. c. 3.
+<lb/>Septimo, Non est iuris, aut potestatis Eccleſiæ ſiue Pon
+<lb/>tificis de infide libus iudicare, Papa ergo nec per ſe, nec
+<lb/>per alium potest infideles ad cuiuſpiã legis obſeruatio=<lb type="nb"/>nem compellere. Non enim fuit talis potestas Apostolis
+<lb/>conceſſa, ut Paulus testatur. 1. cor. 5. dicens quid enim
+<lb/>pertinet ad me de ijs qui foris ſunt iudicare, ergo nec
+<lb/>Eccleſiæ.</p>
+<p>
+<lb/>Contra hæc faciunt ſãctorum patrum apertiſſima testi
+<lb/>monia &amp; Eccleſiæ decretũ factum, atq́; declaratio.</p>
+<p>
+<lb/>Reſpõdetur. optimo iure iſti barbari a Christianis indi=<lb type="nb"/>tionem rediguntur.</p>
+<p>
+<lb/>Primum, quia ſunt, aut erant certe, anteꝗ̃ in Christia=<lb type="nb"/>norum ditionem uenirent, omnes moribus, plæriq́; etiã
+<pb facs="W0095-0008" n="[6]"/>
+<lb/>natura barbari, ſine litteris, ſine prudentia, &amp; multis
+<lb/>barbaricis uitijs cõtaminati, ut testatur historia gene=<lb type="nb"/>ralis de ipſis ſcripta, &amp; auctoritate Indici conſilij pro=<lb type="nb"/>bata lib. 3. c. 6. Barbari enim, ut ait Thomas, po=<lb type="nb"/>lit. primo lectione prima Simpliciter nominãtur, qui ra
+<lb/>tione deficiunt, uel propter regionem cœli, ex qua hebe
+<lb/>tes magna ex parte inueniuntur, uel propter aliquam
+<lb/>malam conſuetudinem, qua homines fiunt quaſi bruta
+<lb/>les, huiusmodi autẽ gentes, iure naturæ, debent huma=<lb type="nb"/>nioribus, prudentioribus, &amp; præstantioribus parere, ut
+<lb/>melioribus moribus &amp; institutis gubernentur, ſed ſi ad
+<lb/>moniti imperiũ recuſent, poſſunt armis cogi &amp; id bel=<lb type="nb"/>lum erit iustum iure naturæ, ut auctor eſt Ariſto. pri=<lb type="nb"/>mo Politicorum. c. 3. &amp;. 5. &amp; Thomas ibidem, quo
+<lb/>factum est, ut imperium Romanorum in alias gentes
+<lb/>fuerit iustum &amp; uoluntate dei queſitum, ut teſtatur
+<lb/>Augustinus lib. 5. de ciuitate dei. c. 12. &amp; deinde Ro=<lb type="nb"/>manis, inquit, conceſſit deus maximum &amp; illuſtriſſimũ
+<lb/>imperium ad domandum grauia mala multarum gen=<lb type="nb"/>tium, qui Romani propter gloriam multa uitia compri
+<lb/>mebant. i. uirtutes colebant. Ergo eadem potioreq; ra=<lb type="nb"/>tione Hiſpani poſſunt Indos in ſuam ditionem redigere.
+<lb/>Hoc idẽ aſſerit ſanctus Thomas de Reg. prin. lib. 3. c. 4
+<lb/>&amp; deinde allegans Augustin.</p>
+<p>
+<lb/>Secundo iſti barbari implicati erãt grauiſſimis peccatis
+<lb/>contra legem naturæ, cuius ignoratio, nemini ſuffraga
+<lb/>tur, propter quæ deus deleuit gentes peccatrices, quæ
+<lb/>terram promiſſionis incolebant, cuncti. n. idolorum cul=<lb type="nb"/>tores erãt &amp; pleriq́; omnes immolabãt uictimas huma=<pb facs="W0095-0009" n="[7]"/><lb type="nb"/>nas. Nam quod deus nõ occulto iudicio, ſed propter hu=<lb type="nb"/>iusmodi idololatriam deleuerit eas gẽtes, testatur ſcri=<lb type="nb"/>ptura diuina non obſcure ſed uerbis apertiſſimis. Sic
+<lb/>enim ſcriptum est in deut. c. 9. ne dicas, cum deleuerit
+<lb/>eos dominus in conſpectu tuo, propter iustitiam meam
+<lb/>introduxit me deus, ut poſſiderem terrã hãc, cum prop=<lb type="nb"/>ter impietates ſuas istæ deletæ ſint nationes, &amp;. c. 12.
+<lb/>omnes abominationes, quas auerſatur dominus fecerũt
+<lb/>dijs ſuis, offerentes filios &amp; filias, &amp; comburentes igni
+<lb/>&amp;. c. 18. explicans ſcriptura impietates propter quas
+<lb/>deletæ ſunt gẽtes: ſic ait. Quando ingreſſus fueris ter=<lb type="nb"/>ram, quam dominus deus tuus dabit tibi, caue ne imitari
+<lb/>uelis abominationes illarum gentium, nec inueniatur in
+<lb/>te, qui luſtret filiũ ſuum, aut filiam ducens per ignem,
+<lb/>aut qui ariolos ſciscitetur, &amp; obſeruet ſomnia, atq́; au=<lb type="nb"/>guria, nec ſit maleficus, nec incãtator, nec qui Pythones
+<lb/>conſulat, nec diuinus &amp; quærat a mortuis ueritatem,
+<lb/>omnia enim hæc abominatur dominus, &amp; propter isti=<lb type="nb"/>usmodi ſcelera delebit eos in introitu tuo. Quibus testi
+<lb/>monijs aperte declaratur has gentes propter idolorum
+<lb/>cultum, fuiſſe deletas. omnia enim peccata, quæ hic me
+<lb/>morantur Theologorum conſenſu ad idolorum cultum
+<lb/>referuntur, aut impiam ſuperstitionem. Idem prope
+<lb/>traditum eſt leuit. 18. &amp;. 20. &amp; ps. 105. Item
+<lb/>ob eadẽ peccata populum Iſraeliticum magna ex par=<lb type="nb"/>te fuiſſe deletum, &amp; in ſeruitutem &amp; captiuitatem ab
+<lb/>stractum, testatum est eodem pſalmo. Cõmixti ſunt,
+<lb/>inquit, inter gentes, &amp; didicerunt opera eorum, immo=<lb type="nb"/>lauerunt filios ſuos, &amp; filias ſuas dæmonijs, &amp; iratus
+<pb facs="W0095-0010" n="[8]"/>
+<lb/>est furore dominus in populum ſuum, &amp; tradidit eos
+<lb/>in manus gentium. Adiuuat quod est ſapientiæ. 12. &amp;
+<lb/>exod. 32. quibus rebus declaratur eis peccatis lex na=<lb type="nb"/>turæ uiolari, cũ ob eadẽ, utriq́; fideles &amp; infideles pu=<lb type="nb"/>niti fuerint. Quare eiſdem de rebus memorans Cypria
+<lb/>nus in exhortatione ad martyrium addit, ꝙ ſi ãte aduẽ=<lb type="nb"/>tum Chriſti circa deum colendum, &amp; idola ſpernenda
+<lb/>hæc præcepta ſeruata ſunt, quanto magis poſt aduentũ
+<lb/>Christi ſeruanda, quæ uerba habentur. 23. q. 5. c.
+<lb/>ſi audieris. Cui plane aſtipulatur Ambroſius ut eſt.
+<lb/>23. q. 5. c. remittuntur. His testimonijs cum idolo
+<lb/>rum cultus modo per ſe, modo accedentibus humanarũ
+<lb/>uictimarum ſacrificijs, cauſa iuſti belli ac internicionis
+<lb/>fuiſſe memoretur, aperte declaratur idololatria per ſe
+<lb/>ſatis magnã &amp; iuſtã cauſam præbere fidelibus ad bel=<lb type="nb"/>lũ idololatris inferendum, ut Nicolao Lyræ uiſum est.
+<lb/>Numerorũ. c. 31. illud præcipue ex Deut. 12. citãti,
+<lb/>ſubuertite omnia loca in quibus gentes, quas poſſeſſuri
+<lb/>estis, coluerunt deos ſuos. Quod etiam Diui Thomæ do=<lb type="nb"/>ctrina, &amp; testimonio cõprobatur, qui cum ſecunda ſecũ
+<lb/>de. q. 10. ar. 8. ſcripſiſſet, infideles poſſe bello a fideli=<lb type="nb"/>bus compelli, non ut credant ſed ut fidem non impediãt,
+<lb/>blaſphemijs, uel malis perſuaſionibus, aut per ſecutioni=<lb type="nb"/>bus post hæc. q. 94. ar. 3. idololatria magnam blaſphe=<lb type="nb"/>miam contineri, &amp; opere fidem impugnari testatur.
+<lb/>Quam doctrinam ſecutus Lyra, quo loco diximus, una
+<lb/>inquit iuſti belli cauſa est, contra terram, in qua deus
+<lb/>per idololatriã blaſphematur, itaq́; Augustinus in Epi=<lb type="nb"/>stola. 50. quæ est ad Bonif. docẽs pios roges ſeruire deo
+<pb facs="W0095-0011" n="[9]"/>
+<lb/>idolorum cultum oppugnando ſic (inquit) Ezechias ſer=<lb type="nb"/>uiuit domino lucos &amp; tẽpla idolorum, &amp; excelſa quæ
+<lb/>contra præceptum dei fuerant conſtructa deſtruẽdo. 4.
+<lb/>Reg. 18. &amp; Ioſias eadem faciendo. 4. Reg. 23. ſicue
+<lb/>Rex Niniuitarum ad placandum dominum vniuerſam
+<lb/>ciuitatem compellẽdo. Ios. 3. ſicut ſeruiuit Darius ido=<lb type="nb"/>lum frãgendum in potestatẽ Danieli dando Daniel. 14
+<lb/>ſicut ſeruiuit Nabuchodonoſor &amp;c. Nã quod Caieta=<lb type="nb"/>nus infideles negat iure poſſe a christianis ob infidelita
+<lb/>tem, debellari, intelligendum eſt ob ſolam infidelitatem,
+<lb/>puniendi gratia, non autem ſi fuerint ſimul idolorum
+<lb/>cultores, aut alia ratione non ſeruent legem naturæ.</p>
+<p>
+<lb/>Item alia ratione probatur conceſſum eſſe Christianis
+<lb/>bello perſequi idolorum cultores auctoritate publica; &amp;
+<lb/>pontiſicia. Chriſto enim ſecundum humanitatem data
+<lb/>eſt omnis potestas in cœlo &amp; in terra. Vt est Mathæi
+<lb/>vltimo. hanc autem potestatem Christus Petro vicario
+<lb/>ſuo &amp; ſucceſſoribus cõmunicauit, ut docet Thomas de
+<lb/>Reg. Prin. lib. 3. c. 10. &amp;. 12. quæ poteſtas &amp; ſi pro=<lb type="nb"/>prie uerſatur in ijs quæ pertinẽt ad ſalutem animæ &amp;
+<lb/>bonis ſpiritualibus tamen a temporalibus quatenus or=<lb type="nb"/>dinãtur ad ſpiritualia non excluditur. vt est in eodem
+<lb/>libro. c. 13. Habet igitur Papa potestatem ubiq́; gen=<lb type="nb"/>tium, non ſolum ad prædicandum euangelium, ſed etiã
+<lb/>ut gentes ſifacultas adſit cogat, legem naturæ, cui om
+<lb/>nes homines ſubiecti ſunt, ſeruare. vt Innoc. &amp; Hostiẽ
+<lb/>grauiſſimi Auctores tradiderunt, in. c. quod ſuper his de
+<lb/>uoto quibus Ioan. Andreas &amp; Panor. ſuffragantur.</p>
+<p>
+<lb/>Nã Chriſtus qui ſic præcepit Apostolis Mathæi vltimo
+<pb facs="W0095-0012" n="[10]"/>
+<lb/>docete omnes gẽtes, quæcũq́; mãdaui uobis. Idẽ naturæ
+<lb/>leges, quæ decalogo, &amp; dilectione proximi continetur,
+<lb/>in primis ſeruari iuſſit. Vt autem infideles euangelicã
+<lb/>prædicationẽ audire &amp; legem naturæ ſeruare cogan=<lb type="nb"/>tur neceſſe est ut Chriſtianornm imperio ſubijciantur,
+<lb/>cauſaliter igitur ut utar uerbo põtificio hoc quoq́; per=<lb type="nb"/>tinet ad poteſtatẽ Papæ ꝙ magnopere dirigitur ad ſpi=<lb type="nb"/>ritalia quæ ſunt eiuſdem poteſtatis. c. per uenerabilem
+<lb/>§. rationib. qui filij ſint legit. Qui autẽ idola colunt ij
+<lb/>maximo uiolant legem naturæ. Iure igitur Idololatræ
+<lb/>bcllo poſſunt a Christianis coerceri, ut ipſorum imperio
+<lb/>ſubiecti ex lege naturæ uiuere cogãtur, neue per idolo=<lb type="nb"/>rum eultum ab ipſis deus blaſphemetur, &amp; offendatur.
+<lb/>Legem autem naturæ ab idolorum cultoribus minime
+<lb/>ſeruari dubitari non poterit, ſi legem naturæ ab aliqua
+<lb/>gente non ſeruari, quid ſit intelligatur. Quãuisq́; enim
+<lb/>omnia peccata mortalia ſint contra legem naturæ, ut
+<lb/>eſſe docet Augustinus contra Fauſtum lib. 22. nõ ta=<lb type="nb"/>men ſi qua in gente peccata mortalia patrantur, proti=<lb type="nb"/>nus hi dicendi ſunt legem naturæ non ſeruare, ut, iunio=<lb type="nb"/>res quidam theologi falſo putarunt. Nam eo quidem mo
+<lb/>do nusꝗ̃ gentium lex naturæ ſeruaretur. Cauſa enim
+<lb/>publica publicis moribus &amp; inſtitutis diiudicanda eſt,
+<lb/>vt docet Aristotiles Politic. 3. non ſingulorum recte, aut
+<lb/>perperam factis. Sed ea demum gens legem naturæ non
+<lb/>ſeruare intelligenda est, apud quam peccatum aliquod
+<lb/>mortale in rebus turpibus nõ habetur, ſed publice pro=<lb type="nb"/>batur, ut apud hos barbaros homicidium innocentium,
+<lb/>qui multis in regionibus immolabantur, &amp; ubiq́; apud
+<pb facs="W0095-0013" n="[11]"/>
+<lb/>eoſdẽ idololatria, quod est peccatorũ grauiſſimũ. Quibus
+<lb/>rationibus planè intelligitur nõ peculiari dei uolunta=<lb type="nb"/>te &amp; occulto iudicio, ſed comuni lege naturæ, propter
+<lb/>memorata flagitia, quæ pertinent omnia ad idolorum
+<lb/>cultum, illas gẽtes fuiſſe deletas. Itaq; his diuinæ histo=<lb type="nb"/>riæ &amp; ſacrorũ doctorũ teſtimonijs colligitur hos bar=<lb type="nb"/>baros propter ſuas impietates, ſi iure ſummo agendum
+<lb/>eſſet, potuiſſe, &amp; vita, &amp; terris ac bonis omnibus mul=<lb type="nb"/>ctari ad iustam punitionem, quanto igitur magis iure
+<lb/>poſſnnt Christianorũ imperio ſubijci, nõ ut talia patiã=<lb type="nb"/>tur (nã poſſeſſionibus eos aut libertate priuare uetitũ
+<lb/>est lege Regum Hiſpanorum) ſed ut Christianorum
+<lb/>imperio ſubiecti a talibus flagitijs, quibus maxime deus
+<lb/>offenditur abstinere cogãtur, &amp; meliorum rerum cõ=<lb type="nb"/>ſuetudine &amp; piorum commercio ad ueri dei cultum &amp;
+<lb/>religionem accipiendam præparentur. Huc quoq; perti
+<lb/>net, ꝙ est Deut. 20. ſi quando, inquit, acceſſeris ad ex=<lb type="nb"/>pugnandam ciuitatem, offeres ei primum pacem ſi rece
+<lb/>perit &amp; aperuerit tibi portas, cunctus populus, qui in
+<lb/>ea est ſaluabitur, &amp; ſeruiet tibi ſub tributo. ſin autem
+<lb/>&amp;c. deinde ſic (inquit) facies cunctis ciuitatibus, quæ
+<lb/>a te procul ualde ſunt. 1. quæ ſunt diuerſæ religionis,
+<lb/>ut gloſſa interlinearis exponit, quod in idololatras maxi
+<lb/>me conuenit itaq; idolorum cultores deſignat, quamuis
+<lb/>eorũ iniquitates nõ eſſent completæ ut Amorrheorum,
+<lb/>ut melioribus &amp; pijs hominibus parẽtes ad ueri dei cul
+<lb/>tum ipſorum uel doctrina, uel exemplo dirigerentur.</p>
+<p>
+<lb/>Tertio, innocentes homines, ne indigna morte truciden=<lb type="nb"/>tur, ſeruare omnes homines iubentur lege diuina &amp;
+<pb facs="W0095-0014" n="[12]"/>
+<lb/>naturali, ſi facere id poſſint, ſine magno ſuo incõmodo.
+<lb/>Cum igitur isti barbari ſingulis annis multa innocẽtiũ
+<lb/>hominum millia ad impias dæmoniorum aras mactarẽt
+<lb/>(constat enim in ſola noua Hiſpania ſingulis annis, am
+<lb/>plius uiginti millia immolari ſolita) idq; prohiberi hac
+<lb/>una ratione poſſet, ſi proborum, &amp; a talibus, &amp; tam
+<lb/>in manibus flagitijs abhorrentium hominum, quales ſũt
+<lb/>Hiſpani, imperio ſubijcerẽtur. Quis dubitet, uel hac una
+<lb/>ratione, iustiſſime barbaros potuiſſe &amp; poſſe a Christia
+<lb/>nis in ditionem redigi.</p>
+<p>
+<lb/>Quarto, homines periculoſiſſime errantes, &amp; ad ſuam
+<lb/>certam perniciem contendentes, ſeu ignorantes id, ſeu
+<lb/>ſcientes faciant, reuocare atq; etiam inuitos ad ſalutem
+<lb/>retrahere, iuris est diuini &amp; naturalis, &amp; officiũ quod
+<lb/>ſibi etiam inuitis præstari omnes homines ſanæ mentis
+<lb/>uellent. Omnes autem homines qui extra Chriſtianam
+<lb/>religionem uagantur æterna morte perire, ſi quis dubi=<lb type="nb"/>tat, non est Chriſtianus. Iure igitur barbari ſalutis ſuæ
+<lb/>cauſa ad iuſtitiam compelluntur. Hoc autem officium
+<lb/>dupliciter præſtari poteſt, uno modo per doctrinã tan=<lb type="nb"/>tum &amp; exhortationem, altero ui quadam adhibita, &amp;
+<lb/>pœnarum metu, non ut credere cogantur, ſed ut tollan
+<lb/>tur impedimenta, quæ obeſſe poſſent fidei prædicationi,
+<lb/>&amp; propagationi. Priore modo uſus eſt Chriſtus, &amp;
+<lb/>Apoſtoli, ſecundo uſa est Eccleſia poſtꝗ̃ Regum &amp;
+<lb/>Principum Chriſtianorum potẽtia, &amp; præſidio muni=<lb type="nb"/>ta est, &amp; utrunq́; factum, vt docet Auguſt. diuino &amp;
+<lb/>euangelico præcepto, quod conuiuij ſimilitudine cõtine=<lb type="nb"/>tur Lucæ. 14. Nam, cũ primi inuitati uenire noluerint,
+<pb facs="W0095-0015" n="[13]"/>
+<lb/>Seeundi permonitu &amp; doctrina fuerint ad epulas diui=<lb type="nb"/>nas introducti, Poſtremi, ut intrent compelli iubentur
+<lb/>Qua de re Augustinus Epiſtola ultima &amp; habetur. c.
+<lb/>diſplicet. 23. q. 4. cum ipſi primorum temporum ra=<lb type="nb"/>tio ab hæretico Donato obijceretur, Non attendis, inquit
+<lb/>quod tunc Eccleſia nouo germine pullulabat, nondum
+<lb/>cõpleta fuerat illa prophetia, &amp; adorabunt eum omnes
+<lb/>Reges terræ, omnes gẽtes ſeruient ei. Quod utiq; quãto
+<lb/>magis impletur, tanto maiore Eccleſia utitur poteſtate,
+<lb/>ut non ſolum inuitet, ſed etiam cogat ad bonum, ad cu=<lb type="nb"/>ius confirmationem ſubijcit Parabolam Euangelicam,
+<lb/>de qua dixi. Nam quod eſt in concilio Tol etano, &amp;. c.
+<lb/>maiores de bapt. &amp; eius effectu neminẽ ad credẽdum
+<lb/>cogi debere, plãum &amp; apertum habet intellectũ, nemi=<lb type="nb"/>nẽ nec ui, aut bello, nec minis cõpellẽdum eſſe ut Chri=<lb type="nb"/>stianus fiat, baptiſmumq́; ſuscipiat inuitus. Cuius ra=<lb type="nb"/>tio eſt, quoniã ea uis eſſet innutilis, nemo enim uolun=<lb type="nb"/>tate, quæ cogi non potest repugnante, potest effici fide=<lb type="nb"/>lis. Itaq; doctrina &amp; perſuaſionibus utendum eſt. Cæ=<lb type="nb"/>terum, ut quisꝗ̃ deponat omnia impedimenta ut ſuper=<lb type="nb"/>biam licentiamq́; peccandi, quæ obeſſe poſſent tradendæ
+<lb/>doctrinæ, minis, &amp; pœnarũ metu iustiſſime cogitur au=<lb type="nb"/>ctoribus August. Amb. &amp; Gregorio nã quod eſt in
+<lb/>concilio Toletano. idẽ Auguſt. qui uim probat, multo
+<lb/>ante dixerat ad fidem, inquit, nemo cogẽdus eſt, ut dici
+<lb/>tis. alloquitur autẽ hæreticum Petilianum. 23. q. 5
+<lb/>ad fidem, ſed uos imperatoria lege non benefacere cogi=<lb type="nb"/>mini, ſed malefacere prohibemini. Nam benefacere ne
+<lb/>mo poteſt, niſi elegerit quod eſt in libera uoluntate. Cũ
+<pb facs="W0095-0016" n="[14]"/>
+<lb/>aliquid ergo aduerſus uos leges conſtituunt, admoneri
+<lb/>uos credite, ut cogitetis, quare iſta patiamini. At idem
+<lb/>in Epiſtola ad Vincẽti. ut habetur. 23. q. 6. c. uides ſic
+<lb/>ſcribit. Vides inquit non eſſe conſiderandũ quod quisꝗ̃
+<lb/>cogitur ſed quale ſit illud ad quod cogitur, utrum bonũ
+<lb/>an malum, non quod quisꝗ̃ bonus poſſit eſſe inuitus, ſed
+<lb/>timendo quod non uult pati, uel reliquit impedientem
+<lb/>animoſitatem, uel ignoratã compellitur agnoſcere ue=<lb type="nb"/>ritatem, ut timens uel reſpuat falſum, de quo cõtende=<lb type="nb"/>bat, uel quærat uerum, quod neſciebat, ut uolẽs iam te=<lb type="nb"/>neat, quod nolebat. Nã licet cõtra hæreticos hæc diſſe=<lb type="nb"/>rat Augusti tamen rationes ipſius contra paganos ſi=<lb type="nb"/>militer ualere idem ipſe Auguſt, docet in eadem æpiſto
+<lb/>la ad Vinc. ubi de legibus contra utrosq; latis memorat
+<lb/>declarãs, neutris uim factã fuiſſe a Christo, uel Apos=<lb type="nb"/>tolis, postea uerò utrisq; illatam ab æccleſia potëtia &amp;
+<lb/>legibus imperatorum Christianorum munita, ut habe=<lb type="nb"/>tur. 23. q. 4. c. nõ inuenitur, in qua æpistola docet eis=<lb type="nb"/>dem rationibus iustam eſſe legẽ latam, aduerſus ſacri=<lb type="nb"/>ficia paganorum, &amp; ab omnibus Chriſtianis laudatam
+<lb/>quæ habetur in. c. de paganis &amp; eorum ſacrificijs. l. 1
+<lb/>ibi enim constituta eſt pæna capitalis &amp; bonorum pu=<lb type="nb"/>blicatio. ſi quis ãplius ſacris &amp; ritibus paganicis ute=<lb type="nb"/>retur quam legem primum a Constantino ut Euſebius
+<lb/>in historia eccleſiastica &amp; Hieroni. in chronicis testã=<lb type="nb"/>tur latam, &amp; post a Constantio filio &amp; alijs impera=<lb type="nb"/>toribus confirmatam ut piam &amp; iustiſſimã pugnaciſſi=<lb type="nb"/>me deffendit Ambro, apud Imperatorem Valentinianũ
+<lb/>æpistolis. 30. &amp;. 31. Gregorius autẽ in æpistola ad
+<pb facs="W0095-0017" n="[15]"/>
+<lb/>Aldibertum Britanorum Regem, que sst nom. lib. 60.
+<lb/>hæc de rebus eisdem tradit. Sic enim Cõstantinus quõ=<lb type="nb"/>dam pijſſimus Imperator Romanam Remp. a peruerſis
+<lb/>idolorum cultoribus reuocans, omnipotenti deo Domi=<lb type="nb"/>no nostro Ieſu Christo ſecum ſubdidit &amp;c. nec intereſt
+<lb/>ſubiecti ſint Pagani imperio Christianorum an ſecus,
+<lb/>quibus uis ſalutifera est inferẽda. Nam ſi ſibutus Rex
+<lb/>hiſpaniæ, qui Iudæos ut Christiani fierint coegit, in ſibi
+<lb/>ſubiectos uim intulit, tamen factum eius non perinde
+<lb/>probatur quia talis uis ſimpliciter, ſiue directe ad Chri
+<lb/>stianiſmum compellens, inutilis habetur, quia uolunta=<lb type="nb"/>tem cogere nequit, &amp; pertinaciores facit. Prohibere
+<lb/>autẽ amalo, quod fit lege Cõstantini, quæ eadẽ eſt Cõs=<lb type="nb"/>tãtij magnum beneficium est, &amp; quod, ſi absq; incom=<lb type="nb"/>modo nostro poſſumus, omnibus hominibus, ut proxi=<lb type="nb"/>mis impendere iubemur, lege diuina &amp; naturali. Mã=<lb type="nb"/>dauit deus unicuiq; de proximo ſuo. Hæc igitur eſt ra=<lb type="nb"/>tio ex Euangelica parabola, &amp; Auguſt. Ambroſij &amp;
+<lb/>Gregorij doctrina, paganos ut ad Chriſti epulas intrẽt
+<lb/>compellendi. Vt primum Chriſtianorũ imperio, ſi fie=<lb type="nb"/>ri ſine magno incommodo nostro poſſit, qui non ſunt
+<lb/>ſubiecti, ſubijciantur. Deinde ut lege Constantini con=<lb type="nb"/>uenienter Idolorum cultu &amp; omnibus Ethnicis ritibus
+<lb/>prohibeãtur, tollanturq; omnia impedimẽta, quæ obeſſe
+<lb/>poſſent euangelicæ prædicationi. Quibus rationibus, &amp;
+<lb/>testimonijs edoctus diuus Thomas ſecunda. 2. q. 10.
+<lb/>ar. 11. Ritus infidelium præterꝗ̃ Iudeorum negat eſſe
+<lb/>ullo modo tolerandos ſi facultas adſit, quanuis aliquã=<lb type="nb"/>do, inquit, fuerint ab Eccleſia tolerati, cũ. s. erat magna
+<pb facs="W0095-0018" n="[16]"/>
+<lb/>infidelium multitudo. 1. anteꝗ̃ eſſent Principes Chris=<lb type="nb"/>tiani, qui cogere poſſent. His autem rebus cõfectis, nul=<lb type="nb"/>la præterea uis, nullus metus, quo Christiani fiant, est
+<lb/>adhibẽdus. Sed ita præparati doceri debent, &amp; fidei præ
+<lb/>dicationi, ut Christianiſmum uolentes ſuscipiãt, induci,
+<lb/>ut ſapiẽtiſſimi ac ſanctiſſimi Pontificis Gregorij decre=<lb type="nb"/>to ſeu testimonio declaratur, quod habetur. 23. q. 4. ſi
+<lb/>nõ. quo in loco Gẽnadium uirum optimum, &amp; Chris=<lb type="nb"/>tianiſſimum laudat &amp; ab omnibus laudari teſtatur, ꝙ
+<lb/>gentes paganas haud dubie non ſubiectas in Christiano
+<lb/>rum ditionem bello redigendas curaret, non ob aliam
+<lb/>Cauſam, niſi ut cum eſſent debellatæ facilius in Chris=<lb type="nb"/>tianam religionem per liberam fidei prædicationẽ, in=<lb type="nb"/>ducerẽtur. Nam Gennadium ſcribit ubiq́; laudari, quod
+<lb/>bella frequenter appeteret, nõ, inquit, deſiderio fundẽdi
+<lb/>ſanguinis, ſed tantũ dilatandæ cauſa Rei p. in qua deũ
+<lb/>coli conſpicimus, quatenus Chriſti nomen per ſubditas
+<lb/>gentes fidei prædicatione circumquaq; diſcurrat. Loqui
+<lb/>tur autem non ut quidam ſomniarunt de Saracenis ſi=<lb type="nb"/>ue Mahumetanis, qui eo tempore nulli dum erant, nec
+<lb/>ut alij, de Vandalis, qui iam fuerant a Belliſario deleti
+<lb/>nec ut alij de hæreticis, qui puniendi erant, nõ debellã=<lb type="nb"/>di, nec gentium alieno nomine uocandi, ſed de gentibus
+<lb/>in Africa interiore Romano Imperio finitimis, ut decla
+<lb/>ratur in extremo eiusdem Epiſtolæ, quæ primi libri eſt
+<lb/>73. nec deniq́; quod Christianos infestarent, ut falſo
+<lb/>quidam cauſantur. hoc enim excluſum eſt a Gregorio
+<lb/>per uerbum tantum, ſed ut a Chriſtianis debellati fidei
+<lb/>prædicationem, &amp; propagationem nõ impedirent. Hoc
+<pb facs="W0095-0019" n="[17]"/>
+<lb/>est enim quod Thomas ait ſecũda. 2. q. 10. ar. 8. fre=<lb type="nb"/>quenter, inquit, Chriſti fideles contra infideles bellum
+<lb/>mouent, non quidem ut eos ad credendum cogant, ſed ut
+<lb/>compellant, ne ſidem impediant, explicãs uidelicet cau=<lb type="nb"/>ſam cur Gennadius, pium bellum infidelibus frequẽter
+<lb/>inferret. Nam gẽtes, quæ non ſunt Chriſtianorum im=<lb type="nb"/>perio ſubiectæ multifariam fidem eiusq; propagationẽ
+<lb/>ſi quis eã inducere uelit impediunt. Primum quia pu=<lb type="nb"/>blicam eius predicationẽ non admittunt, ut constat etiã
+<lb/>auctore Thoma lib. 3. de Reg. prin. c. 16. nunꝗ̃ ante
+<lb/>Constantini tempus ſine mortis periculo publice fidem
+<lb/>prædicare licuiſſe. deinde quia prædicatores etiam oc=<lb type="nb"/>cultos occidunt, &amp; ne qui ſuorum cõuertãtur obſistunt
+<lb/>&amp; cõuerſos perſuaſionibus, aut etiam perſecutionibus
+<lb/>auertere conantur ut ſæpe &amp; a multis ante Cõſtantini
+<lb/>principatum factum est, &amp; paſſim initio Eccleſiæ ſie=<lb type="nb"/>bat. Accedit quod infideles Christianis ſubiecti facilius
+<lb/>adducuntur, ut nostros mores &amp; religionẽ ſequãtur.</p>
+<p>
+<lb/>Non igitur ſola prædicatione &amp; diſputatione utendum
+<lb/>eſt, nec in paganos, nec in hæreticos, ut in primitiua
+<lb/>Eccleſia cum nullus principum crediderat, ſed cum fa=<lb type="nb"/>cultas adſit, uis utilis &amp; permiſſa quemadmodum ex=<lb type="nb"/>poſuimus, adhibenda. Hæc enim expeditiſſima ratio est
+<lb/>gentes ad Christi fidem conuertendi, ut omni ſeculo res
+<lb/>ipſa &amp; exempla docuerunt. quæ exempla uim habent
+<lb/>demostrationis teste eodẽ Auguſt. in eadẽ ad Vincent.
+<lb/>Epistola. Cuius uerba translata ſunt. 23. q. 6. uides
+<lb/>mea primitus inquit Sententia erat, neminẽ ad Christi
+<lb/>&amp; Eccleſiæ unitatem eſſe cogẽdum, uerbis eſſe agẽdũ,
+<pb facs="W0095-0020" n="[18]"/>
+<lb/>diſputatione pugnandum, ratione uincendum. Sed
+<lb/>hæc mea opinio non contradicentium uerbis, ſed de=<lb type="nb"/>mostrantium ſuperabatur exemplis. Nam primum op=<lb type="nb"/>ponebatur mihi, mea ciuitas, quæ cũ tota fuiſſet in par
+<lb/>te Donati, ad unitatem catholicam legum imperialium
+<lb/>timore conuerſa est. Quam nunc uidemus ita animo=<lb type="nb"/>ſitatis uestræ perniciem detestari, ut in ea nunꝗ̃ fuiſſe
+<lb/>credatur. Et item aliæ multæ. Thomas quoq; de Reg.
+<lb/>prin. lib. 3. c. 16. quo ãno, inquit, Cõstantinus conuer=<lb type="nb"/>ſus est ad fidem, bapti Zata ſunt circa partes Romanas
+<lb/>plusꝗ̃ cẽtũ millia hominum. Quod euenire constat eodẽ
+<lb/>modo in hac Indorum conuerſione, qui cum fuerint in
+<lb/>ditionem redacti, &amp; impijs ſacrorum ritibus prohibiti
+<lb/>uix euangelica prædicatione audita, agminatim cõflu=<lb type="nb"/>unt baptiſmum poſtulantes, ſic enim ferè hominũ mo=<lb type="nb"/>re ac natura comparatum est, ut uicti facile in morem
+<lb/>uictorum &amp; imperantium tranſeant, &amp; facta, dictaq́;
+<lb/>eorum libenter imitentur. Itaq́; hac ratione paucis die=<lb type="nb"/>bus plures &amp; tutius ad Christi fidem conuertuntur, ꝗ̃
+<lb/>fortaſſe trecentis annis, ſola prædicatione conuerterẽ=<lb type="nb"/>tur. Fieri enim non potest, ut Philoſophus ait, Ethico=<lb type="nb"/>rum. 10. aut non facile fit, ut ea uerbis mutentur, &amp;
+<lb/>extrudantur, quæ impreſſa ſunt moribus, temporeq;
+<lb/>diuturno retenta. Itaq; ui opus eſſe ait, Vnde natæ ſint
+<lb/>leges, quæ uim cogentem habent. Cui naturali dogmati
+<lb/>maxime cõuenit, Auguſt. Ambroſiq́; doctrina, &amp; Ec=<lb type="nb"/>cleſiæ atq; Gregorij Sapientiſſimi Papæ decretum in
+<lb/>memorato cap. Si nõ. Quod ſolum per ſe potest omnẽ
+<lb/>cõtrouerſiã in hac cauſa cõuni lege rationeq; dirimire.
+<pb facs="W0095-0021" n="[19]"/>
+<lb/>Congruit Etiã Ioan. Scoti doctrina, qui maiorem etiã
+<lb/>uim in tradenda religione infidelibus &amp; filijs infideliũ
+<lb/>adhiberi cẽſet. 4. ſententiarũ diſt. 4. q. ultima &amp; Ioã.
+<lb/>Maioris 4. ſententiarũ diſt. 44. q. 3. qui hanc in bar=<lb type="nb"/>baros expeditionem nominatim probat.</p>
+<p>
+<lb/>Quas rationes atq; decreta ſecutus Alexãder Sex. Pa=<lb type="nb"/>pa ãno Christi. 1493. Fernando &amp; Iſabellæ Regibus
+<lb/>nostris, ab eximia religione Catholicis cognominatis
+<lb/>oraculum &amp; ſentẽtiam ſedis Apostolicæ iuxta tradita
+<lb/>deut. 17. &amp;. c. per uenerabilem, qui filij ſint legi=<lb type="nb"/>timi. Sciscitantibus uolentibusq́, &amp; ſuo iure petẽtibus
+<lb/>reſcribens negotium dedit, &amp; magnopere hortatus eſt,
+<lb/>ut hos barbaros imperio ſuo ſubij cerent, &amp; ad Christi
+<lb/>fidem reducẽdos curarent, his uerbis, quæ ex bulla plũ=<lb type="nb"/>bata deſcripta ſunt. unde omnibus diligenter, &amp; pre=<lb type="nb"/>ſertim fidei catholice exaltatione &amp; dilatatione pro ut
+<lb/>decet catholicos Reges &amp; principes conſideratis more
+<lb/>progenitorum uestrorũ claræ memoriæ Regum terras
+<lb/>firmas &amp; Inſulas prædictas illarumq́; incolas &amp; ha=<lb type="nb"/>bitatores, uobis diuina fauente clementia ſubijcere &amp;
+<lb/>ad fidem catholicam reducere propoſuistis. Nos igitur
+<lb/>huiusmodi uestrum ſanctum ac laudabile propoſitum,
+<lb/>plurimum in domino commendantes, ac cupientes, ut
+<lb/>illud ad debitum finem perducatur, hortamur uos quã=<lb type="nb"/>plurimum in domino &amp; per ſacri lauacri ſuſceptionẽ
+<lb/>qua mandatis Apoſtolicis obligati eſtis &amp; uiſcera mi=<lb type="nb"/>ſericordiæ domini nostri Ieſu Chriſti attẽte requirimus
+<lb/>ut cum expiditionem huiuſmodi omnino proſſequi &amp;
+<lb/>aſſumere prona mente orthodoxæ fidei zelo intendatis,
+<pb facs="W0095-0022" n="[20]"/>
+<lb/>populos in eiusmodi inſulis &amp; terris degẽtes ad Chris=<lb type="nb"/>tianam religionẽ ſuſcipiendam inducere uelitis &amp; de=<lb type="nb"/>beatis, nec pericula, nec labores ullo unꝗ̃ tempore uos
+<lb/>deterreant, firma ſpe, fidutiaq; cõceptis, quod deus om=<lb type="nb"/>nipotens conatus uestros feliciter proſequetur. Hæc
+<lb/>Alexander Pontifex. Cui &amp; ſimilibus decretis nõ ſo=<lb type="nb"/>lum stare Chriſtiani homines eo decreto iubentur, ſed
+<lb/>ſiquis non paruerit, aut contradixerit ipſo iure per dic
+<lb/>tum Caput per ue nerabilem excomunicatur, &amp; alio=<lb type="nb"/>quin Christi vicarium, ut in libro de diſpenſatione tes=<lb type="nb"/>tatur Bernardus, tanꝗ̃ ipſum Christum, in ijs quæ non
+<lb/>ſunt aperte contra deum audire debemus. Cuius decreta
+<lb/>&amp; reſcripta in ijs, quæ fidem, aut mores attingunt, con
+<lb/>temnere, hæreticum eſſe, magni Theologi tradiderunt.
+<lb/>(vide Syluium in uerbo canoni Zatio) Quo igitur iure
+<lb/>Christi vicarius potest gẽtes omnes ab idolorum cultu,
+<lb/>ſi facultas adſit, prohibere, &amp; ad prædicationem Euan
+<lb/>gelicam audiendam compellere. Eodẽ ualet ipſas impe=<lb type="nb"/>rio Christianorum per ſe, aut Principes Christianos
+<lb/>ſubijcere. Cum hæc uia expeditiſſima ſit &amp; cõmodiſſi=<lb type="nb"/>ma ad ea perficienda &amp; ſalutẽ animarũ cõparãdã.</p>
+<p>
+<lb/>Cæterum quidam docti quidẽ homines, ſed non perinde
+<lb/>vſu rerum periti oportere tradiderunt, ut anteꝗ̃ bellum
+<lb/>pararetur, miſſis legatis admonerentur barbari ut ab
+<lb/>idolorum cultu deſisterent, &amp; Christianæ religionis
+<lb/>predicatores publice admitterent, ut ſi postulatis ad=<lb type="nb"/>quieſcerent, ipſorum animarum ſaluti citra bellum cõ
+<lb/>ſuleretur, ſin autẽ hæc ab ipſis impetrari non poſſint,
+<lb/>tunc iustis armis debellati imperata ſacere cõpellerẽtur
+<pb facs="W0095-0023" n="[21]"/>
+<lb/>quæ admonitio, fateor, ſi abſq; magnis difficultatibus, et
+<lb/>utiliter fieri poſſet, non erat repudianda, nec omittenda
+<lb/>Eſt. n. ſimilis ei, quam Christus fieri iubet in fraterna
+<lb/>correctione, priusꝗ̃ ad denuntiationem procedatur.</p>
+<p>
+<lb/>Cæterum quemadmodum in fraterna correptione, inu=<lb type="nb"/>tilis admonitio omittenda est Theologorum conſenſu,
+<lb/>&amp; ad denuntiationem, ſi res præſertim publica postu=<lb type="nb"/>let, procedendum, ſic est de huiusmodi admonitione in
+<lb/>hoc bello barbarico statuendum, ut omittatur omnino,
+<lb/>ſi prudenter existimantibus inutilis fore uideatur.</p>
+<p>
+<lb/>Nam debet, qui arat, arare, inſpe fructus percipiendi
+<lb/>auctore Paulo. i. cor. 9. &amp; quod est inutite pro nullo
+<lb/>habetur, ut dederat caput inter corporalia de transla=<lb type="nb"/>tione Epiſcopi. hanc autem admonitionem eſſe inutilẽ
+<lb/>in tali cauſa, ac iccirco nunꝗ̃ factam fuiſſe, multifariã
+<lb/>declaratur. Primũ quia est factu difficilis, &amp; erat diffi
+<lb/>cillima initio belli tot enim nationes tam barbaras, im=<lb type="nb"/>menſo Oceani &amp; terrarum interuallo distantes, nullo
+<lb/>linguæ commercio adire &amp; admonere, nec ſolum quid
+<lb/>reſponderent, ſed etiã quid facerent expectare, res eſſet
+<lb/>tam difficilis, tanti ſumptus, tam longi temporis, ut fa=<lb type="nb"/>cile principes omnes Christianos a tali cõatu deterreret
+<lb/>Itaq; hanc admonitionẽ, ut neceſſariam inducere, nihil
+<lb/>aliud erat, ꝗ̃ expeditionẽ piam &amp; barbaris ſalutiferã,
+<lb/>ac proinde ipſorum conuerſionẽ, quæ finis belli est pe=<lb type="nb"/>nitus impedire. Est igitur inutilis &amp; proinde omittẽda
+<lb/>Nam quæ ordinantur ad finem, hæc rationem boni, ex
+<lb/>ordine ad finem ſortiuntur, Quare quæ finẽ impediunt
+<lb/>non habent rationẽ boni. Vt Thomas, ſecunda. 2. q. 33
+<pb facs="W0095-0024" n="[22]"/>
+<lb/>ar. 6. ad. 3. tradidit. Deinde hæc admonitio, &amp; ſi ſu=<lb type="nb"/>peratis difficultatibus fieret nihil tamen, aut parũ pro=<lb type="nb"/>ſicerent, eſſet igitur inutilis &amp; ommittenda. non. n.
+<lb/>est probabile, neq; uero ſimile gentẽ aliquam per ſolã
+<lb/>admonitionẽ &amp; externæ nationis exhortationẽ adduci
+<lb/>poſſe, ut inſitam &amp; a maioribus acceptam religionem
+<lb/>relinquat. Nam ut est in æpistola Auguſt. ad Vincen.
+<lb/>ſi docerentur infideles, &amp; non terrerẽtur, uetustate cõ=<lb type="nb"/>ſuetudinis obdurati ad capeſſendã uiam ſalutis, pigrius
+<lb/>mouerentur. Si quis autem dicat non uerbis ſolum ad=<lb type="nb"/>monendos eſſe barbaros ſed etiam metu admoti exerci=<lb type="nb"/>tus terrendos, ut metu ſaltem imperata faciant, iã hoc
+<lb/>eſſet difficultatẽ admonitionis plurimum augere, &amp;
+<lb/>uim facere, propter quam uitandam ipſi admonitionem
+<lb/>inducunt, quæ uis ſi facienda est, nõ est omittenda uti=<lb type="nb"/>liſſima, quæ imperium Christianorum accipere cogat.
+<lb/>Præterea quamuis barbari metu impulſſi prædicatores
+<lb/>admitterent, &amp; cultum idolorum ad tempus deponerẽt
+<lb/>uel potius deponere ſimularent, tamen non dubium est
+<lb/>quin timore ſublato eſſent ad pristinos mores reuerſuri
+<lb/>&amp; prædicatores eiecturi, aut ipſos etiã &amp; ab ipſis cõ=<lb type="nb"/>uerſos niſi ad pristinam impietatem redirent occiſuri
+<lb/>vt initio naſcentis æccleſiæ fiebat. Quæ omnia incom=<lb type="nb"/>moda &amp; difficultates debellatis barbaris facillime tollũ
+<lb/>tur, &amp; ſic plus uno menſe in ipſorum cõuerſione pro=<lb type="nb"/>ficitur, quam centum annis per ſolam prædicationem,
+<lb/>non pacatis barbaris proficeretur. Non enim, arbitror,
+<lb/>nostri tẽporis prædicatores ſine miraculis plus effice=<lb type="nb"/>rent, quam quondam Apostoli, domino cooperante &amp;
+<pb facs="W0095-0025" n="[23]"/>
+<lb/>ſermonem confirmante ſequentibus ſignis. Quæ ſigna
+<lb/>iam non ſunt a deo postulanda, cum nobis liceat præ=<lb type="nb"/>ceptum eius ſequentes prudẽti conſilio barbaros ad cõ=<lb type="nb"/>uiuium euangelicum, qua diximus ratione compellere.
+<lb/>Accedit quod barbarorum ſubiectio cauſa est magni
+<lb/>Christianorum concurſus quorum illi commertio, &amp;
+<lb/>conſuetudine facilius conuertuntur, &amp; conuerſi com=<lb type="nb"/>modius edocentur, constantius in accepta fide perſistũt
+<lb/>nec in hæreſes labi permittuntur, &amp; facilius barbariẽ
+<lb/>exuunt, humanioribus &amp; Christianis moribus induũ=<lb type="nb"/>tur. Cum igitur duæ viæ ſint, quibus ad barbarorũ cõ=<lb type="nb"/>uerſionem procedi poſſe uideatur, altera per monitionẽ
+<lb/>ſolum, doctrinamq; &amp; prædicationem, difficilis, longa,
+<lb/>&amp; multis periculis, &amp; laboribus impedita, altera per
+<lb/>ſubiectionem barbarorum, facilis, breuis, &amp; cũ mul=<lb type="nb"/>tis barbarorum cõmoditatibus expedita, utra progre=<lb type="nb"/>diendum ſit, non est prudentis hominis dubitare, præſer
+<lb/>tim cum Auguſt. auctorem habeamus, qui expiditiore,
+<lb/>progrediẽdũ eſſe, aperte uerbis illis, quæ ex Paulo ante
+<lb/>citauimus declarat. Si docerentur, inquit, &amp; non terre=<lb type="nb"/>rentur uetustate conſuetudinis obdurati ad capeſſendã
+<lb/>uiam ſalutis pigrius mouerentur, quibus plane docet
+<lb/>Auguſt. non doctrina modo agendum eſſe, ſed uim etiã
+<lb/>ſalutiferam, quæ uiam doctrinæ muniat adhibendam.</p>
+<p>
+<lb/>His rebus explicatis ſuperest, ut ad obiecta reſpondea=<lb type="nb"/>mus.</p>
+<p>
+<lb/>Ad primum igitur reſpondeo. bello quod idololatris in=<lb type="nb"/>fertur, non tam hominũ quam dei iniurias, quæ multo
+<lb/>grauiores ſunt, uindicari, &amp; alioquin iniuriam infert
+<pb facs="W0095-0026" n="[24]"/>
+<lb/>postulanti, qui iusta postulata non facit, &amp; qui parere
+<lb/>alteri debet, is ſi admonitus imperium recuſet, iniurio=<lb type="nb"/>ſus est, ut appareat hoc bello, humanas quoq; non ſolũ
+<lb/>diuinas iniurias uindicari, nam nec iniustũ bellum in=<lb type="nb"/>ferre, nec iustum illatum, ſi rite fuerit indictum propul
+<lb/>ſare licet, ſine iniuria, non enim ſolum, contu meliam
+<lb/>inferre, ſed ut cunq; iniuste in quenꝗ̃ facere iniuria eſt
+<lb/>Ad ſecundum, fateor, neminem eſſe ad fidem cogendũ,
+<lb/>ut inuitus credat, inuitus bapti Zetur, ut pœnis, aut me=<lb type="nb"/>tu Christianus fieri compellatur, quæ ſumma est decre
+<lb/>torum &amp; testimoniorum obiectorũ. Eſſet enim ius inu
+<lb/>tilis, &amp; irrita opera, nã credere uoluntatis est, quæ co=<lb type="nb"/>gi non potest. Idolorum autem cultores Christianorum
+<lb/>imperio ſubijcere, ut impijs ritibus abstinere, &amp; legem
+<lb/>naturæ ſeruare euangelicos prædicatores ſublatis im=<lb type="nb"/>pedimentis audire cogantur, iustum est ac pium, &amp; ab
+<lb/>æccleſia comprobatum &amp; factum eorundẽ ſacrorum
+<lb/>Doctorum testimonio Auguſt. 23. q. 4. c. nõ inuenitur
+<lb/>Gregor. in Epistola ad Aldibertum, quæ est lib. 9.
+<lb/>Sexageſima.</p>
+<p>
+<lb/>Ad tertiũ Christi facta, ſiue actiones, ſi poſſumus imi=<lb type="nb"/>tari fas est &amp; piũ, ſed ita, niſi Christus aliter statuat.
+<lb/>quanꝗ̃ igitur Christus nullum, nec paganum, nec hære
+<lb/>ticum ad æpulas euang elicas, hoc eſt ad fidem compu=<lb type="nb"/>lit, nec ipſe, nec Apostoli, idem tamen, cum Regum ac
+<lb/>principum Christianorũ facultas eſſet, ut utrosq́;, qua
+<lb/>ratione diximus, compelleremus, præcepit in euangeli=<lb type="nb"/>ca parabola. vt August. Amb. Gregoriusq; exponunt,
+<lb/>&amp; ita factum est ab eccleſia tempore Constantini, itẽ
+<pb facs="W0095-0027" n="[25]"/>
+<lb/>Gennadij, cuius bella Grego. maxime laudat, ut ſupra
+<lb/>memorauimus. Hanc tertiam obiectionẽ accuratiſſime
+<lb/>confutat Auguſt. in Epistola. 50. quæ est ad Bonifatiũ
+<lb/>Non conſiderant, inquit, aliud tunc fuiſſe tempus &amp;
+<lb/>omnia ſuis temporibus agi. Quis enim tunc in Christũ
+<lb/>crediderat Imperatorum &amp;c. Quod ergo quidã cauil=<lb type="nb"/>lantur euangelicam illam compulſionem, ad exemplo=<lb type="nb"/>rum &amp; miraculorum uim eſſe referendam, cõmentitiũ
+<lb/>est, &amp; stropha hæreticorum ab Auguſt. in eadem ad
+<lb/>Bonifacium æpistola conſutata.</p>
+<p>
+<lb/>Ad quartum nego cõmodius barbaros per ſolam præ=<lb type="nb"/>dicationem ad fidem induci, ꝗ̃ ſi prius fuerint debellati,
+<lb/>quin potius niſi debellentur, multæ &amp; magnæ difficul=<lb type="nb"/>tates obſunt prædicationi, &amp; cõuerſioni, de quibus ſu=<lb type="nb"/>pra diximus. Quæ omnia impedimenta tolluntur, ſi
+<lb/>prius gentes fuerint in Christianorum ditionem redac=<lb type="nb"/>tæ. Itaq́; bellum eſt neceſſarium ad prædicationem &amp;
+<lb/>conuerſionem, non quidem ſimpliciter, ſed quia recte,
+<lb/>hoc est ſine magnis difficultatibus, res fieri non potest,
+<lb/>niſi gentibus debellatis. Nam cum neceſſarium quinque
+<lb/>modis dicatur auctore Aristot. Metaphyſicorum quinto
+<lb/>vno modo neceſſarium id eſſe intelligitur, ſine quo res,
+<lb/>aut omnino, aut recte fieri non potest. Bellum igitur
+<lb/>neceſſarium est, niſi forte barbari uoluntate, &amp; ſine
+<lb/>armis inditionem redigerentur. Nam uia prædicationis
+<lb/>ſine ulla ui lõga est, &amp; multis difficultatibus impedita.
+<lb/>Ad quintum. duplex hoc in bello intelligi potest admo=<lb type="nb"/>nitio, vna qua pax offertur, ſi fecerint imperata, ut
+<lb/>præcipitur. Deute. c. 20. his uerbis. Si quãdo acceſſeris
+<pb facs="W0095-0028" n="[26]"/>
+<lb/>ad expugnandum ciuitatem, offeres ei primum pacem,
+<lb/>ſi receperit, &amp; aperuerit portas cunctus Populus qui in
+<lb/>ea est ſaluabitur, &amp; ſeruiet tibi ſub tributo. Quæ ad=<lb type="nb"/>monitio non in hoc ſolum, ſed in omni bello iuste infe=<lb type="nb"/>rendo neceſſaria est, ſi forte ratione, aut denutiatione
+<lb/>periculi, ſine ſanguine hostes ad deditionem compellere
+<lb/>&amp; quod petimus aſſequi detur. Alia eſſet admonitio, de
+<lb/>qua ſupra memorauimus, &amp; quam inutilem fore, ac
+<lb/>proinde omiſſam, &amp; omittendã eſſe demonstrauimus.
+<lb/>Ad ſextum reſpondeo, istam rationem, nihil magis cõ=<lb type="nb"/>tra hoc bellum facere, quam contra cætera, quacunq; ra
+<lb/>tione fuerint illata, uix enim unꝗ̃ bellum gestum eſt ſi
+<lb/>ne magnis incommoditatibus, &amp; iacturis, ſine aliqua
+<lb/>iniuria &amp; maleficio. Cæterum non ſi difficile est bellũ
+<lb/>et ex cauſa iusta gerentem, iniurias &amp; maleficia caue
+<lb/>re protinus, est impoſſibile, nec principi, cuius iusta, uel
+<lb/>iniusta cauſa, bellum iustum facit, aut uiciſſim iniustũ
+<lb/>aſſignanda ſũt crimina a militibus præter eius uolunta
+<lb/>tem admiſſa, nec ea ex cauſa iuſta, intustam faciũt ſi=<lb type="nb"/>ue damnandam. Quod ſi pericula etiam &amp; peccandi
+<lb/>occaſiones Chriſtianis legibus uitare iubemur, non ta=<lb type="nb"/>men cum maius alterum malum uitare eodem tempore
+<lb/>neceſſitas adhortatur, aut ſi aliorſum uocet publica &amp;
+<lb/>magna commoditas. Nam licet nemo poſſit in eas angus
+<lb/>tias cõpelli, ut peccare ſit illi neceſſe, ſi tamẽ duo præ=<lb type="nb"/>cepta ſimul urgeant, quæ ſimul adimpleri nequeunt,
+<lb/>qui grauiori paret, altero prætermiſſo non peccat. Vt
+<lb/>concilij Toletani decreto, &amp; Gregorij testimonio doce=<lb type="nb"/>mur diſt. 13. c. duo mala &amp;. c. nerui, &amp; Gerſonis
+<pb facs="W0095-0029" n="[27]"/>
+<lb/>regula morali &amp; Aristot. doctrina Ethi. tertio quæ
+<lb/>ratio in bellis potiſſimum est ineunda, ut docet idem
+<lb/>Ioan. Gerſon Auctor grauiſſimus ibidem, Sic enim
+<lb/>diſſerit. c. de auaritia in bellis faciendis, quæ malis in=<lb type="nb"/>numeris plena ſunt, Nunc ad iſtos innocentes, nunc ad
+<lb/>illos ſola utilitas Rei p. excuſat a mortali, aut euitatio
+<lb/>damni publici, notabiliter peioris, quam ſit damnum
+<lb/>priuatum ex bello proueniens. Ex hoc igitur præcep=<lb type="nb"/>to ſi mala &amp; bona, quæ hoc bellum barbaris importat,
+<lb/>ad calculos reuocemus, haud dubie mala bonorũ mul=<lb type="nb"/>titudine &amp; grauitate prorſus obruantur. Summa
+<lb/>enim malorum est, quod principes mutare coguntur,
+<lb/>nec eos omnes, ſed quos oportere uiſum est, &amp; bonis
+<lb/>mobilibus magna ex parte priuantur, auro. ſ. &amp;
+<lb/>argento, quæ metalla apud ipſos in paruo pretio erant,
+<lb/>quippe qui, nec aureis, nec argenteis nummis uteban=<lb type="nb"/>tur, &amp; pro his ab Hiſpanis ferri metallum, quod ad
+<lb/>uitæ plurimos uſus longe commodius est, accipiunt,
+<lb/>præterea triticum, hordeum, legumina, frugiferarũ
+<lb/>arborum, &amp; oleorum multa genera, equos, mulas,
+<lb/>aſinos, oues, boues, capras, &amp; alia multa barbaris
+<lb/>nunquam uiſa, quæ hinc allata feliciſſime proueniunt
+<lb/>in illis regionibus. Quarum rerum ſingularum
+<lb/>commoditate, utilitas, quam barbari ex auro &amp; ar=<lb type="nb"/>gento accipiebant, longe ſuperatur. Adde nunc lite=<lb type="nb"/>ras, quarum barbari ſunditus erant expertes legendi,
+<lb/>&amp; ſcribendi prorſus ignari, adde humanitatem,
+<lb/>optimas leges, &amp; instituta, &amp; quæ ſola uincit
+<lb/>omnes omnium cæterarum rerum commoditates,
+<pb facs="W0095-0030" n="[28]"/>
+<lb/>veri dei cognitionem, &amp; religionem Christianam, qui=<lb type="nb"/>bus rebus cognitis, &amp; animaduerſis, qui hanc expedi=<lb type="nb"/>tionem impedire conantur, ne barbari ueniãt in Chris=<lb type="nb"/>tianorum ditionem, hos ego nõ barbaris humane fauere
+<lb/>ut ipſi uideri uolunt, ſed eiſdem plurima &amp; maxima
+<lb/>bona crudeliter inuidere cõtendam. Quæ bona ingnaua
+<lb/>&amp; importuna ipſorum ſententia, uel tolluntur omnino
+<lb/>uel plurimum retardantur. Neq́; tamen negauerim
+<lb/>poſſe tempus incidere, cum ſit a ſubiectione barbarorũ
+<lb/>licet cogẽdi facultas adſit temperandũ, ut ſiquis Prin=<lb type="nb"/>ceps cum ſua ciuitate aut gente, non metu, &amp; ſimula=<lb type="nb"/>tione, ſed ſua ſponte bona fide ſpiritu dei afflatus, ma=<lb type="nb"/>giſtros Christianæ religiõis a nostris postularet, ſi quo
+<lb/>ue alio caſu recta ratio in maxima rerum humanarum
+<lb/>uarietate. quam vna regula metiri non poſſumus, bar=<lb type="nb"/>barorum ſaluti aliter conſulere adhortaretur, legibus
+<lb/>enim atq́; præceptis, quid in quoq́; genere magna ex
+<lb/>parte fieri oporteat conſtituitur. Cætera quæ extra or=<lb type="nb"/>dinẽ accidunt, iuſtorum Principum &amp; proborũ virorũ
+<lb/>qui rebus gerendis præfuerint prudentiæ. Prout ratio
+<lb/>boni publici postulabit adminiſtranda relinquũtur. Vt
+<lb/>Philoſoph. Polit. 3. &amp; ethic. lib. 5. declarat.</p>
+<p>
+<lb/>Ad ſeptimum, quod Paulus ad ſe pertinere negat, de eis
+<lb/>qui foris ſunt tudicare, hunc habet intellectum, non eſſe
+<lb/>muneris Apostolici, ut a Christianis, ſic ab eis qui ex=<lb type="nb"/>tra fidem ſunt, vitæ rationẽ poſcere, &amp; ut Christiane
+<lb/>uiuant postulare. Cæterum dare operam, ut ijdem ad
+<lb/>Christi fidẽ conuertantur, ac eis euangelium prædicare
+<lb/>&amp; omnia quæ ad hoc commode præstandum conducũt
+<pb facs="W0095-0031" n="[29]"/>
+<lb/>pro facultate conari proprium eſſe muneris Apoſtolici
+<lb/>non ſolum eiuſdem Pauli. Sed omnis omnium Aposto=<lb type="nb"/>lorum uita &amp; ob id oppetita mors teſtificatur.</p>
+<p>
+<lb/>Quod uero pertinet ad æditionem libri, in quo belli fa=<lb type="nb"/>ciendi, Iuſtitia &amp; ratio, &amp; quod iure, quid iniuria fiat,
+<lb/>declaratur &amp; crudeliter, atq́; auare facta uituperãtur
+<lb/>ſi quis miles aut præfectus per occaſionem libri ſe pec=<lb type="nb"/>caſſe dixerit, is per ignorantiã affectatam, &amp; malitiã,
+<lb/>ſeu per ſcandalum Phariſæorum deliquiſſe facile con=<lb type="nb"/>uincetur. Contra uero ex editione libri, hæc maxima
+<lb/>commoda conſequentur, Tolletur magnum ſcandalum
+<lb/>&amp; infamia Regum nostrorum &amp; nationis, qui vulgo
+<lb/>propter falſam, aut male intellectam quorumdã Theo=<lb type="nb"/>logorum doctrinam iniuste &amp; tyrannice hos barbaros
+<lb/>in ſuam ditionem redegiſſe putantur, ut quidam nuper
+<lb/>impudentiſſime prodidit. Deinde qui ex hac expeditio=<lb type="nb"/>ne aurũ, uel argentũ retulerũt, quid iuſte, quid inius=<lb type="nb"/>te parauerint, quid iure retinere poſſint, quid restitue=<lb type="nb"/>re debeant facile &amp; ab ipſis, &amp; a ſacerdotibus, quibus
+<lb/>peccata confitentur, intelligetur. Nunc enim utriq; in
+<lb/>magna iuris ignoratione uerſantur.</p>
+<p>
+<lb/>Poſtremo, quæſtione perorata, ſi Rex perſtet in ſen=<lb type="nb"/>tentia, confeſſor contrariam probet, num recte pieq; ab
+<lb/>eo poſſit abſolui, reſpondes statuisq; poſſe, propterea
+<lb/>quod utraq́; opinio probabilis ſit, ſeq́; pari doctorum nu
+<lb/>mero tueatur, quod ſi ita est obſecro te Præſul grauiſſi
+<lb/>me, quid tibi &amp; istis meis areopagitis in mentem uenit
+<lb/>in cauſa dubia regem ueſtrum, uestramq́; nationẽ iu=<lb type="nb"/>ditio ueſtro condemnare infamiaq; notare, &amp; cum
+<pb facs="W0095-0032" n="[30]"/>
+<lb/>magno totius orbis ſcandalo ſumi ſacerdotis Eccleſiæq;
+<lb/>iudicium atq; decretum tam ſine cauſa reijcere, ut con=<lb type="nb"/>temnere uideamini. hoc igitur dicerem ſi cauſa, ut uo=<lb type="nb"/>bis uidetur, eſſet dubia, nunc autem meis rationibus
+<lb/>expoſitis, ſi uerum quærimus nihil habet ambiguitatis.
+<lb/>Istorum enim opinio, nec uera est, nec probabilis.</p>
+<p>
+<lb/>Nam quod memoras de doctorum ſeu iudicum numero
+<lb/>vide ne parum diligenter rationem ſuffragiorum inie=<lb type="nb"/>ris pro ista. n. opinione de ſcriptoribus ſolus Thomas
+<lb/>Caietanus facit, nec id aperte, ex cæteris autem nemo,
+<lb/>qui meæ ſententiæ fundamenta ex me uel meis ſcriptis
+<lb/>plane cognouerit, præter admodum paucos ambitione
+<lb/>corruptos, qui ueritatem ſcienter &amp; pertinaciter op=<lb type="nb"/>pugnant, ne ab eo quod uoce, aut comentariolis ipſi
+<lb/>uel adiurati amici predicauerant, cum aliqua existima
+<lb/>tionis iactura diſcedere uideantur. Nostra uero ſentẽ=<lb type="nb"/>tia auctores habet ex Philoſophis Principem ipſorum
+<lb/>Aristotelem Pol. 1. c. tertio &amp; quinto. Ex iuris Ponti=<lb type="nb"/>ficij peritis nobiſcum faciunt conſultiſſimi quiq; in. c.
+<lb/>quod ſuper his de uoto. Ex Theologis uero Auguſt.
+<lb/>Amhro. Gregorius &amp; Thomas uiri ſanctitate &amp; doc=<lb type="nb"/>trina clari, qui omnes uim apertiſſime probant, ut in
+<lb/>hæreticos, ſic etiam in paganos, ut demonstraui. Item
+<lb/>Ioan. Scotus, qui. 4. ſententiarum dist. 4. q. ultima
+<lb/>maiorem etiam uim inſidelibus horumq; ſilys adhiben=<lb type="nb"/>dam cenſet. Nicolaus Lyra numer. 31. Mag. Roa.
+<lb/>explicans art. Poli. 1. Io. Maioris qui. 4. ſentent. dist.
+<lb/>44. q. 3. hanc in barbaros expeditionem nominatim
+<lb/>probat. Alfon. Castrus lib. 2. de iusta hæreticorum
+<pb facs="W0095-0033" n="[31]"/>
+<lb/>punitione qui &amp; ipſe nuper Salmãticæ ſũma quæstio=<lb type="nb"/>nis, quam ipſe confeceram diligẽter, ut idem Chirogra=<lb type="nb"/>pho quod penes me est proſitetur perlecta &amp; cõſiderata
+<lb/>libellum meamq́; ſententiam ſine ulla exceptione pro=<lb type="nb"/>bauit. Ad ſummam meum librum anteꝗ̃ uerſutus &amp;
+<lb/>inimicus homo Zizaniã figmentis diſſeminaſſet, nemo
+<lb/>legit, &amp; intellexit, quin magnopere probaret, in pri=<lb type="nb"/>misq; quatuor doctiſſimi, &amp; grauiſſimi uiri Fernãdus
+<lb/>Gueuara, &amp; Franciſcus Montaluus regij conſiliarij,
+<lb/>Aluarus Moſcoſus, Didacus Victoria monachus domi=<lb type="nb"/>nicanus, quibus ſingulis libri mei examen a regio cõſi=<lb type="nb"/>lio fuit cõmiſſum, quorum theologorum Iudicium, quod
+<lb/>uterq́; ſua manu operi ſubſcripſit, ſubieci.</p>
+<p>
+<lb/>Perlegi hoc opus, in quo nihil inueni a ueritate alienũ,
+<lb/>ſed plura quæ legantur digna, adeoq; opus cum aucto=<lb type="nb"/>re non modo commendo, ſed admiror. Fr. Didacus
+<lb/>de Victoria. Quam ſententiam nunꝗ̃ ille contra com=<lb type="nb"/>munem ſuorum perſuaſionem tã libere &amp; incunctã=<lb type="nb"/>ter pronuntiaſſet, niſi Franciſci fratris Germani docti=<lb type="nb"/>ſſimi &amp; animo ingenuo liberoq́; uiri, qui bidui aberat
+<lb/>auctoritate fuiſſet confirmatus, cum quo librum meum
+<lb/>quem diu cauſis illatis retinuit &amp; conſilium comuni=<lb type="nb"/>caſſe claris coniecturis pro certo mihi perſuaſſi. Moſ=<lb type="nb"/>coſus autem ita ſubſcripſit.</p>
+<p>
+<lb/>Et ego legi hoc opus docte elaboratum, &amp; nihil inueni
+<lb/>quod meo iudicio probabilitate careat, immo ea quæ ex
+<lb/>ſacris literis &amp; ſacris doctoribus hic adducuntur, ita
+<lb/>ſuadent huius doctoris intentum, ut nullus quãuis pro=<lb type="nb"/>teruus oppoſitum audeat affirmare. Moſcoſus. nec est
+<pb facs="W0095-0034" n="[32]"/>
+<lb/>ſilentio prætereundũ grauiſſimũ ampliſſimi &amp; doctiſ=<lb type="nb"/>ſimi uiri Fernandi Valdeſij Hiſpalenſis Archiepiſcopi
+<lb/>&amp; Inquiſitoris generalis testimonium, qui cum meum
+<lb/>librum &amp; ſummam quæstionis, de qua dixi ſemel &amp;
+<lb/>iterum legiſſet, nuper post præclarum illud iudiciũ in
+<lb/>doctiſſimorum grauiſſimorumq́; virorum conſeſſu. cum
+<lb/>de his rebus quæ tunc erant in ore omnium, cui. n. non
+<lb/>ſcandalo fuit, res tam inſperata? pauca diſſeruiſſet. Di=<lb type="nb"/>cam, inquit, quod ſentio, qui hunc librũ impediẽdi auc=<lb type="nb"/>tores initio fuerunt, hi multo magis ex officio facerent,
+<lb/>ſi ſedulo darent operam, ut idem grãdioribus literis ex=<lb type="nb"/>cuſus ex pulpitis per omnem Hiſpaniam prædicaretur.
+<lb/>Idem ſæpe profeſſus est Petrus Ortiſius præstãti doc=<lb type="nb"/>trina Theologus, in ciuius immatura morte magna<unclear resp="#TL"></unclear>
+<lb/>nuper iacturam studia theologica fecerunt.</p>
+<p>
+<lb/>Petrus Sotus monachus Dominicanus Caroli Cæſaris
+<lb/>ſacræ confeſſionis administer, in æpistola quam ad me
+<lb/>miſit, negat ſe ullo modo de iusticia belli huius dubitare
+<lb/>ſed ne libri æditionẽ properarem me in eadem æpistola
+<lb/>ſollicite ſemel &amp; iterũ, neſcio qua ratione ductus, ad=<lb type="nb"/>hortatur. Idem Palam aſſerunt Ioa. Egidius, qui Sal=<lb type="nb"/>manticæ ex cathedra theologiam docet. &amp; hõcala ca=<lb type="nb"/>nonicus Auilenſis primarij theologi, quorum hic non
+<lb/>uoce tantũ ſed etiam ſcripto ſententiam ſuam testatus
+<lb/>est. Et Alfonſus Herrera monachus Dominicanus cõ=<lb type="nb"/>cionator regius uir doctiſſimus animo cãdido &amp; inge=<lb type="nb"/>nuo, qui cum mea ſcripta legiſſet, meq́; diſſerentẽ au=<lb type="nb"/>diſſet ex me, inquit, Geneſi coniecturam facio, nec pu=<lb type="nb"/>to a te quenꝗ̃ diſſentire, niſi qui te tuaq́; ſcripta, uel nõ
+<pb facs="W0095-0035" n="[33]"/>
+<lb/>audierit, uel non intellexerit. Item nobis ſuffragantur
+<lb/>magno conſenſu hiſpalenſes theologi, qui nuper ſum=<lb type="nb"/>mam quæstionis diligẽter perlegerunt, in primisq; duo
+<lb/>uiri doctiſſimi Ludouicus Caruaialus Franciſcano=<lb type="nb"/>rum præfectus &amp; Augustinus Sbaroia monachus do=<lb type="nb"/>minicanus, qui theologiam ex cathedra in ſuorum colle
+<lb/>gio docet. Præterea uir, ut auctoritate, ſic doctrina
+<lb/>Præstans Michael Arcus Dominicani ordinis in bætica
+<lb/>præſectus Prouincialis qui nuper in Cordubenſi cæno=<lb type="nb"/>bio re diligenter ex meis ſcriptis, meq́; diſſerente per=<lb type="nb"/>ſpecta, &amp; cum doctis monachis non paucis collata, non
+<lb/>ſolum meam ſententiam cæteris, quos dixi, &amp; impri=<lb type="nb"/>mis Martino Mendo Za eiuſdẽ cænobij præfecto gra=<lb type="nb"/>uiſſimo &amp; ægregia doctrina uiro conſentientibus palã
+<lb/>probauit, ſed etiam mirari ſe ſe profeſſus est, quæ cau=<lb type="nb"/>ſa impreſſionem libri huius moraretur, qui ad multorũ
+<lb/>errorem tollendũ, &amp; mentes ſcrupulis, &amp; aculeis cõs=<lb type="nb"/>cientiæ perperam fortaſſis iniectis explicandas mag no=<lb type="nb"/>pere pertineret a cuius ſenſu non abhorrere uirum ei
+<lb/>doctrina &amp; auctoritate ſimilem Dominicũ cognomẽto
+<lb/>ſanctæ Crucis eiuſdem ordinis ad Castellam præfectũ
+<lb/>Prouincialem, nuper mihi retulit Dominicus a Cruce
+<lb/>cognominatus ad nouam Hiſpaniam Præfectus &amp; ipſe
+<lb/>Prouincialis, qui cum alijs perſpectæ probitatis &amp; re=<lb type="nb"/>ligionis monachis ex illo altero orbe miſſus fuit, vt Ca=<lb type="nb"/>rolum Cæſarem coram quid boni publici, &amp; iustitiæ
+<lb/>ratio postularet edocerent, peterẽtq; (id quod impetra=<lb type="nb"/>runt) vt pro ſua prudentia, &amp; æquitate tumultibus
+<lb/>illarũ regionũ incolarum Hiſpanorum, &amp; ſeditionibus
+<pb facs="W0095-0036" n="[34]"/>
+<lb/>leges temperando proſpiceret, &amp; pro ſua ſapiẽtia mo=<lb type="nb"/>dum imponeret tantis malis, quæ mala, ſi uerum quæ=<lb type="nb"/>rimus ex unius hominis uel errore nostræ huic ſenten=<lb type="nb"/>tiæ contrario, uel etiam temeritate &amp; rerum nouarum
+<lb/>studio primam originem habuerunt, pro quibus malis,
+<lb/>&amp; quietis impatiente animo, qui nos quoq; hic exercet
+<lb/>homini malum cupere, uel imprecari alienum est meæ
+<lb/>naturæ, &amp; instituto, quin magis precor, ut deus illi
+<lb/>meliorem mentem prebeat, quo diſcat aliquãdo quietas
+<lb/>cogitationes turbulentis conſilijs anteferre. Ad ſum=<lb type="nb"/>mam, ut unde ſumus digreſſi reuertamur, a nobis ſũt
+<lb/>omnes eruditi, quibuſcunq́; meam ſententiam, &amp; ra=<lb type="nb"/>tiones expoſui, præter paucos quos dixi, ambitione, aut
+<lb/>alio grauiore morbo corruptum, &amp; repugnantem ani=<lb type="nb"/>mum gerentes, quos ipſos tamẽ tergiuerſantes, &amp; la=<lb type="nb"/>borantes diſputatione coegi, ut ad leuiſſima &amp; plane
+<lb/>indocta commenta, nolo enim dicere puerilia, miſera=<lb type="nb"/>biliter confugerent more factioſorum hominum, qui in
+<lb/>ciuilibus contentionibus. &amp; magnis rerum angustijs
+<lb/>ergastula ſoluunt. Longe igitur diſpar nostra, &amp; ad=<lb type="nb"/>uerſariorũ cauſa est. A quibus ſi ceteris in rebus tãto=<lb type="nb"/>pere uinceremur, quanto ſumus ſuperiores. Vna tamen
+<lb/>ſummi Sacerdotis, &amp; Eccleſiæ Sacroſãcta, qua ipſi ni=<lb type="nb"/>timur auctoritas in hac mores, &amp; religionem publice
+<lb/>attingente cauſa, omnes omnium aliorum iudicum ſẽ=<lb type="nb"/>tentias pondere, &amp; maiestate apud pios omnes longe
+<lb/>ſuperaret, nec ſuperaret modo, ſedetiã pertinaciter ob=<lb type="nb"/>ſistẽtes, hæreticos eſſe cõuinceret. Vtigitur dicã quod
+<lb/>ſentio, &amp; aliquando perorem, haud equidem uideo,
+<pb facs="W0095-0037" n="[35]"/>
+<lb/>quomodo istorum opinio defendi queat quæ fundamẽ=<lb type="nb"/>tis, &amp; strophis hæreticorum nititur, Euangelio, &amp; ſa=<lb type="nb"/>crorum doctorum conſentientibus declarationibus, &amp;
+<lb/>testimonijs aduerſatur, a uetere iuditio Eccleſiæ diſſẽ=<lb type="nb"/>tit, &amp; nouum eiuſdem grauiſſimum decretum, &amp;
+<lb/>reſcriptum nostris principibus Apostolicum oraculum
+<lb/>ex diuino præcepto (de quo est Deut. 17. &amp;. c. per
+<lb/>venerabilẽ, qui filij ſint legit) conſulẽtibus datum cõ=<lb type="nb"/>temnit, aut quomodo non ſit hæretica, ſi rebus, &amp; ra=<lb type="nb"/>tionibus cognitis, cum pertinatia defendatur.</p>
+<p>
+<lb/>¶ Hoc opus iudicio doctiſſimorum &amp; grauiſſimorum
+<lb/>dominorum Philippi Archinti Sãctiſſimi domini nostri
+<lb/>Papæ Vicarij, &amp; Aegidij Foſcararij magistri Sacri
+<lb/>Palatij, ac Antonij Augustini auditoris Rotæ exami=<lb type="nb"/>natum &amp; approbatum &amp; multorum aliorum erudi=<lb type="nb"/>tiſſimorum virorũ conſenſu in vrbe commendatum.</p></div1>
+<div1 type="colophon">
+<p><hi rend="center">
+<lb/>Impreſſum fuit Romæ apud Valerium
+<lb/>Doricum &amp; Ludouicum fratres
+<lb/>Brixienſes.
+<lb/>Prima Maij Anno a Christo nato.
+<lb/>M. D. L.</hi></p>
+<pb facs="W0095-0038" n="[36]" type="blank"/></div1>
+<div1 type="part">
+<p rend="hx">
+<pb facs="W0095-0039" n="[37]"/>
+<lb/><hi rend="sp">DECRETVM ET INDVLTVM
+<lb/>ALEXANDRI SEXTI.
+<lb/>SVPER</hi> expiditione in barbaros noui
+<lb/>orbis quos Indos vocant.</p>
+<q><p>
+<lb/><hi rend="sp"><hi rend="init">I</hi>N NOMINE DOMINI</hi>
+<lb/>Amen. Nouerint vniuerſi hoc
+<lb/>preſens publicum traſumptum
+<lb/>inſpecturi ꝙ nos Iacobus Con=<lb type="nb"/>chillos Dei &amp; apostolice ſedis
+<lb/>gratia Epiſcopus Cathanienſis:
+<lb/>habuimus, vidimus, &amp; diligẽter
+<lb/>inſpeximus infraſcriptas litteras felicis recordationis
+<lb/>Alexandri Pape ſexti eius uera bulla plumbea cũ cor=<lb type="nb"/>dulis ſericeis, croceiq; coloris more Romane curie impẽ
+<lb/>dentis bullatas ſanas ſiquidẽ &amp; integras ac omnimoda
+<lb/>ſuſpitione carentes huiusmodi ſub tenore. ALEXAN
+<lb/>DER Epiſcopus ſeruus ſeruorũ dei cariſſimo in chriſto
+<lb/>ſilio Ferdinãdo Regi &amp; cariſſime in Christo filie Eliſa
+<lb/>beth Regine Castelle Legionis, Aragonum, Siciliæ &amp;
+<lb/>Granate illustribus ſalutem &amp; apostolicam benedictio
+<lb/>nem. Inter cetera diuine maiestati beneplacita opera
+<lb/>&amp; cordis nostri deſiderabilia illud profecto potiſſimum
+<lb/>existit ut fides catholica &amp; Chriſtiana religio nostris
+<lb/>preſertim tẽporibus exaltetur ac ubilibet amplietur &amp;
+<lb/>dilatetur animarumq; ſalus procuretur ac barbarc na=<lb type="nb"/>tiones deprimãtur &amp; ad fidẽ ipſam reducantur. Vnde
+<lb/>cũ ad hanc ſacram Petri ſedem diuina fauẽte clemẽtia
+<lb/>(meritis licet imparibus) euocati fuerimus cognoſcẽtes
+<pb facs="W0095-0040" n="[38]"/>
+<lb/>vos tãꝗ̃ ueros catholicos Reges &amp; principes quales ſẽ=<lb type="nb"/>per fuiſſe nouimus &amp; a uobts preclare gesta toti pene
+<lb/>iam orbi notiſſima demostrant: ne dũ id exoptare ſed
+<lb/>omni conatu, studio &amp; diligẽtia: nullis laboribus, nul=<lb type="nb"/>lis impenſis, nullisq; parcendo periculis etiam propriũ
+<lb/>ſanguinem effundendo efficere ac omnẽ animũ uestrũ
+<lb/>omnesq; conatus ad hoc iamdudũ dedicaſſe quẽadmodũ
+<lb/>recuperatio regni Granate a tirannide Saracenorũ ho=<lb type="nb"/>diernis tẽporibus per uos cũ tãta diuini nominis gloria
+<lb/>facta testatur. Digne ducimur non immerito &amp; debe=<lb type="nb"/>mus illa uobis etiam ſponte &amp; fauorabiliter concedere
+<lb/>per que huiuſmodi ſanctum &amp; laudabile ac immortali
+<lb/>deo acceptum propoſitum in dies feruentiori animo ad
+<lb/>ipſius dei honorem &amp; imperij Christiani propagationẽ
+<lb/>proſequi ualeatis. Sane accepimus quod uos qui dudũ
+<lb/>animũ propoſueratis aliquas inſulas &amp; terras firmas
+<lb/>remotas &amp; incognitas ac per alios hactenus nõ reper=<lb type="nb"/>tas querere &amp; inuenire ut illarũ incolas &amp; habitato=<lb type="nb"/>res ad colendum redẽptorem nostrũ &amp; fidẽ catholicã
+<lb/>profitẽdum reduceretis: hactenus in expugnatione &amp;
+<lb/>recuperatione ipſius regni Granate plurimũ occupati
+<lb/>huiuſmodi ſanctum &amp; laudabile propoſitũ uestrum ad
+<lb/>optatum finem perducere nequiuistis ſed tandem ſicut
+<lb/>domino placuit regno predicto recuperato, uolẽtes deſi=<lb type="nb"/>deriũ adimplere uestrum dilectũ filium Christophorum
+<lb/>Colon uirum utiq; dignum &amp; plurimum cõmendandũ
+<lb/>ac tanto negocio aptum cum nauigijs &amp; hominibus ad
+<lb/>ſimilia instructis nõ ſine maximis laboribus &amp; pericu
+<lb/>lis ac expenſis destinastis ut terras firmas &amp; inſulas
+<pb facs="W0095-0041" n="[39]"/>
+<lb/>remotas &amp; incognitas huiuſmodi per mare ubi hacte=<lb type="nb"/>nus nauigatũ non fuerat diligẽter inquiriret. Qui tãdẽ
+<lb/>(diuino auxilio facta extrema diligẽtia in mari Ocea=<lb type="nb"/>no nauigãtes certas inſulas remotiſſimas &amp; etiã terras
+<lb/>firmas que per alios hactenus reperte non fuerant) in=<lb type="nb"/>uenerunt in quibus ꝗ̃ plurime gentes pacifice uiuentes
+<lb/>&amp; ut aſſeritur nudi incedentes nec carnibus ueſcentes
+<lb/>inhabitant, &amp; ut prefati Nuncij uestri poſſunt opinari
+<lb/>gentes ipſe in Inſulis &amp; terris predictis habitãtes cre=<lb type="nb"/>dunt vnum deum creatorem in celis eſſe ac ad fidẽ ca=<lb type="nb"/>tholicam amplexandum &amp; bonis moribus imbuendum
+<lb/>ſatis apti uidentur ſpesq; habetur quod ſi erudirentur
+<lb/>nomen ſaluatoris domini noſtri Ieſu Christi in terris
+<lb/>&amp; inſulis predictis facile induceretur. Ac prefatus
+<lb/>Christophorus in vna ex principalibus Inſulis predic=<lb type="nb"/>tis iam unam turrim ſatis munitã in qua certos Chris=<lb type="nb"/>tianos qui ſecum iuerant in custodiam &amp; ut alias In=<lb type="nb"/>ſulas ac terras firmas remotas &amp; incognitas inquire=<lb type="nb"/>rent poſuit: construi &amp; edificare fecit. In quibus qui=<lb type="nb"/>dem Inſulis &amp; terris iam repertis aurum aromata &amp;
+<lb/>alie ꝗ̃ plurime res pretioſe diuerſi generis &amp; diuerſe
+<lb/>qualitatis reperiuntur. Vnde omnibus diligenter &amp;
+<lb/>preſertim fidei catholice exaltatione &amp; dilatatione
+<lb/>(prout decet catholicos Reges &amp; principes) cõſideratis:
+<lb/>more progenitorum ueſtrorum clare memorie Regum
+<lb/>terras firmas &amp; Inſulas predictas illarumq; incolas et
+<lb/>habitatores uobis diuina fauente clementia ſubijcere et
+<lb/>ad fidem catholicam redducere propoſuistis. Nos igitur
+<lb/>huiuſmodi uestrum ſanctum &amp; laudabile propoſitum
+<pb facs="W0095-0042" n="[40]"/>
+<lb/>plurimum in domino commendantes ac cupiẽtes ut il=<lb type="nb"/>lud ad debitum finem perducatur &amp; ipſũ nomẽ ſalua=<lb type="nb"/>toris noſtri in partibus illis inducatur: Hortamur uos
+<lb/>ꝗ̃ plurimũ in domino &amp; per ſacri lauacri ſuſceptionẽ
+<lb/>qua mandatis apostolicis obligati estis &amp; uiſcera mi=<lb type="nb"/>ſericordie domini nostri Ieſu Christi attẽte requirtmus
+<lb/>ut cum expiditionem huiuſmodi omnino proſequi &amp;
+<lb/>aſſumere prona mente orthodoxe fidei Zelo intendatis
+<lb/>populos in huiuſmodi inſulis &amp; terris degẽtes ad Chris
+<lb/>tianam religionem ſuſcipiendum inducere uelitis &amp;
+<lb/>debeatis nec pericula nec labores ullo unꝗ̃ tempore uos
+<lb/>deterreant firma ſpe fiduciaq; conceptis quod deus om=<lb type="nb"/>nipotens conatus uestros fcliciter proſequetur. Et ut
+<lb/>tãti negocij prouinciam apostolice gratie largitate do=<lb type="nb"/>nati liberius &amp; audatius aſſumatis Motu proprio non
+<lb/>ad uestram uel alterius pro uobis ſuper hoc nobis obla
+<lb/>te petitionis inſtantiam ſed de nostra mera liberalitate
+<lb/>&amp; ex certa ſcientia ac de apostolice potestatis pleni=<lb type="nb"/>tudine omnes inſulas &amp; terras firmas inuentas &amp; in=<lb type="nb"/>ueniendas detectas &amp; detegendas uerſus occidentem et
+<lb/>meridiem fabricando &amp; construendo unam lineam a
+<lb/>polo arctico ſcilicet ſeptentrione ad polum antarcticũ
+<lb/>ſcilicet meridiem ſiue terre firme &amp; inſule inuenente
+<lb/>&amp; inueniende ſint: verſus Indiam aut uerſus aliam
+<lb/>quãcumq; partem que linea distet a qualibet inſularũ
+<lb/>que uulgariter nuncupantur de los A Zores &amp; Cabo
+<lb/>verde centum leucis uerſus occidentem &amp; meridie m.
+<lb/>Itaq; omnes inſule &amp; terre firme reperte &amp; reperiẽ=<lb type="nb"/>de detecte &amp; detegende a prefata linea uerſus occidẽtẽ
+<pb facs="W0095-0043" n="[41]"/>
+<lb/>&amp; meridiem per alium regem aut principem Christia
+<lb/>num non fuerint actualiter poſſeſſe uſq; ad diem nati=<lb type="nb"/>tiuitatis domini nostri Ieſu Christi proxime preteritũ
+<lb/>a quo incipit Annus preſens milleſimus quadringenſi=<lb type="nb"/>mus nouageſimus tertius quando fuerunt per Nuncios
+<lb/>&amp; Capitaneos uestros inuente alique predictarum in=<lb type="nb"/>ſularum. Auctoritate omnipotentis dei nobis in beato
+<lb/>Petro conceſſa ac vicariatus Ieſu Christi qua fungi=<lb type="nb"/>mur in terris cum omnibus illarum dominijs ciuitatibus
+<lb/>castris locis &amp; uillis iuribuſq; &amp; iuriſditionibus ac
+<lb/>pertinẽtijs uniuerſis uobis heredibusq; et ſucceſſoribus
+<lb/>uestris Castelle &amp; Legionis Regibus in perpetuũ te=<lb type="nb"/>nore preſentium donamus concedimus &amp; aſſignamus
+<lb/>uosq́; &amp; heredes ac ſucceſſores prefatos illarum domi=<lb type="nb"/>nos cum plena libera &amp; omnimoda potestate auctori=<lb type="nb"/>tate &amp; iuriſditione facimus constituimus &amp; deputa=<lb type="nb"/>mus. Decernentes nihilominus per huiusmodi donatio=<lb type="nb"/>nem conceſſionem &amp; aſſignationem nostram nulli
+<lb/>Christiano principi qui actualiter prefatas inſulas &amp;
+<lb/>terras firmas poſſederit uſq; ad predictũ diẽ Natiuitatis
+<lb/>domini nostri Ieſu Christi ius queſitum ſublatum intel
+<lb/>ligi poſſe aut auferri debere. Et inſuper mãdamus uo=<lb type="nb"/>bis in uirtute ſancte obedientiæ (vt ſicut etiam pollice=<lb type="nb"/>mini &amp; non dubitamus pro uestra maxima deuotione
+<lb/>&amp; regia magnanimitate uos eſſe facturos) ad terras fir
+<lb/>mas &amp; inſulas predictas viros probos &amp; deum timen=<lb type="nb"/>tes doctos peritos &amp; expertos ad instruendum incolas
+<lb/>&amp; habitatores prefactos in fide catholica &amp; bonis mo
+<lb/>ribus imbuendum destinare debeatis, omnem debitam
+<pb facs="W0095-0044" n="[42]"/>
+<lb/>diligentiam in premiſſis adhibentes. Ac quibuscunq;
+<lb/>perſonis cuiuscũq; dignitatis etiã imperialis &amp; rega=<lb type="nb"/>lis ſtatus gradus ordinis uel conditionis ſub excommu=<lb type="nb"/>nicationis latæ ſententiæ pena quam eo ipſo ſi contra
+<lb/>fecerint incurrant districtius inhibemus ne ad inſulas
+<lb/>&amp; terras firmas inuentas &amp; inueniendas detectas &amp;
+<lb/>detegendas uerſus occidentem &amp; meridiem fabricando
+<lb/>&amp; construẽdo lineã a polo arctico ad polũ antarcticũ
+<lb/>ſiue terre firme &amp; inſule inuente &amp; inueniende ſint:
+<lb/>uerſus indiam aut aliam quãcunq; partem: que linea
+<lb/>distet a qualibet inſularum que uulgariter nũcupãtur
+<lb/>de los A Zores &amp; Cabo verde centum leucis uerſus
+<lb/>occidentem &amp; meridiem ut prefertur pro mercibus ha
+<lb/>bendis uel quauis alia de cauſa accedere preſũant abſq;
+<lb/>uestra ac heredum &amp; ſucceſſorũ uestrorum predictorũ
+<lb/>licentia ſpeciali. Non obstantibus constitutionibus &amp;
+<lb/>ordinationibus apostolicis ceterisq; contrarijs quibus=<lb type="nb"/>cũq;: in illo a quo imperia &amp; dominationes ac bona
+<lb/>cuncta procedunt confidentes: quod dirigente domino
+<lb/>actus ueſtros ſi huiusmodi ſãctum &amp; laudabile propo=<lb type="nb"/>ſitum proſequamini breui tempore cum felicitate &amp;
+<lb/>gloria totius populi Christiani uestri labores &amp; cona=<lb type="nb"/>tus exitũ feliciſſimũ conſequentur. Verũ quia difficile
+<lb/>foret preſentes litteras ad ſingula queq; loca in qui=<lb type="nb"/>bus expediens fuerit deferri: volumus ac motu &amp;
+<lb/>ſcientia ſimilibus decernimus: quod illarum tranſũptis
+<lb/>manu publici Notarij inde rogati ſubſcriptis &amp; ſigillo
+<lb/>alicuius perſone in eccleſiastica dignitate cõstitute ſeu
+<lb/>curie eccleſistice munitis ea prorſus fides in iudicio &amp;
+<pb facs="W0095-0045" n="[43]"/>
+<lb/>extra ac alias ubilibet adhibeatur que preſẽtibus adhi=<lb type="nb"/>beretur ſi eſſent exhibite uel ostenſe. Nulli ergo omni=<lb type="nb"/>no hominum liceat hanc paginam nostre cõmẽdationis
+<lb/>hortationis, requiſitionis, donationis, cõceſſionis, aſſigna
+<lb/>tionis, conſtitutionis, deputationis, decreti, mandati,
+<lb/>inhibitionis, &amp; uolũtatis, infringere uel ei auſu teme=<lb type="nb"/>rario contraire, Si quis autem hoc attentare preſumpſe
+<lb/>rit indignationem omnipotentis dei ac beatorum Petri
+<lb/>&amp; Pauli apostolorum eius ſe nouerit incurſurum.</p>
+<p>
+<lb/>Datis ROMAE apud ſanctum Petrum Anno incarna
+<lb/>tionis dominice milleſimo quadringẽteſimo nonageſimo
+<lb/>tertio, quarto nonas Maij pontificatus nostri anno
+<lb/>primo.</p></q>
+<p>
+<lb/><hi rend="init">H</hi>AEC declaratio decretum atq; conceſſio Sacrorũ
+<lb/>canonum ſententiæ conſentit quæ habetur cap.
+<lb/>per uenerabilem. §. rationibus qui filij ſunt legitimi
+<lb/>&amp; cap. ſi non. 23. q. 4. inquo inquit Gregorius iustũ
+<lb/>ſanctumq; eſſe bellum quod infidelibus a Chriſtianis
+<lb/>infertur ut eis imperio ſubditis prædicari poſſit Chris=<lb type="nb"/>ti euangeliũ, ne ſi imperio ſubditi nõ ſint, prædicationi
+<lb/>&amp; conuerſioni eorum qui crediderint impedimẽto eſſe
+<lb/>poſſint. Idemq; decretum atq; cõceſſio potestati Chriſti
+<lb/>inititur qui cũ ei ſecũdum humanitatẽ, ut Hieronimus
+<lb/>&amp; Auguſtinus exponunt data fuiſſet omnis potestas
+<lb/>in cœlo &amp; in terra, ut est Matth. ultimo hãc poteſtatẽ
+<lb/>comm unicauit vicario ſuo, quæ quamuis ordinetur ad
+<lb/>ſalutem animarum &amp; bona ſpiritalia, non tamen ex=<lb type="nb"/>cluditur a temporalibus quatenus hæc ordinantur ad
+<lb/>ſpiritalia ut Tho. testatur de Reg. princ. liber. 3. c. 10
+<pb facs="W0095-0046" n="[44]"/>
+<lb/>&amp;. 13. ſubiectio autem barbarorum ad Euãgelij præ=<lb type="nb"/>dicationem ordinatur, ad quã Papa non ſolum potesta=<lb type="nb"/>tem habet a deo, ſed etiam preceptum Euangelicum.
+<lb/>Non quod Paulus ad ſe pertineri negat de ijs qui foris
+<lb/>ſunt iudicare, hunc habet intellectum non eſſe muneris
+<lb/>apostolici ut a Christianis, ſic ab ijs, qui extra fidem ſũt
+<lb/>uitæ rationem poſcere, uel ab eis ut Christiane uiuant
+<lb/>postulare. Cæterum dare operam ut ijdem ad Christi
+<lb/>fidem conuertantur proprium eſſe muneris apostolici,
+<lb/>non ſolum ipſius Pauli, ſed omnis omnium apostolorũ
+<lb/>uita, &amp; ob id oppetita mors testificatur. Vide
+<lb/>Auguſtini Epistolas. 48. &amp;. 50. &amp;. 204. quæ
+<lb/>ſunt ad Vincentium ad Bonifacium ad Donatum &amp;
+<lb/>citantur in decretis. 23. q. 4. c. non inuenitur. c. ſi Ec=<lb type="nb"/>cleſia. c. diſplicet. q. 6. c. uides item Epiſtolas Gregorij
+<lb/>73. primi libri &amp; 60. noni &amp; Ambroſij Epistolas
+<lb/>30. &amp;. 31. Nam licet in hereticos diſputat Auguſti.
+<lb/>in eiſdẽ rationibus a Charitate profectis concludit iuſte
+<lb/>paganos compelli ut deſistant idololatra dicto cap. non
+<lb/>inuenitur. Thomas ſecunda ſecunde. q. 10. ar. 8. infi=<lb type="nb"/>deles inquit compellendi ſunt. ſi facultas adſit ne fidem
+<lb/>impediant blasphemijs uel alia ratione &amp; ideo frequẽ=<lb type="nb"/>ter bellum in eos fideliter mouent, idem. q. 94. ar. 3.
+<lb/>testatur idololatria magnam blasphemiã contineri &amp;
+<lb/>fidem opere impugnari. Vnde Lyra ſuper numer. c. 31
+<lb/>iustum eſſe bellum dicit contra idololatras, ne deum
+<lb/>blasphement per idololatriam. Sed omnium maxime
+<lb/>facit. c. ſi non. 23. q. 4. uide etiam Innocentium &amp;
+<lb/>ostienſem &amp; Panormitanũ in. c. ꝙ ſuper his de uoto.</p>
+<p>
+<pb facs="W0095-0047" n="[45]"/>
+<lb/>Itaq; uis prohibita. c. de Iudæis dist. 45. est nequis
+<lb/>inuitus bapti Zetur aut Christianus eſſe cogatur. Nam
+<lb/>deponere idololatriam &amp; Christianorũ imperio parere
+<lb/>iufl<unclear resp="#TL"></unclear>ſſime compellũtur infideles ne fidei prædicationem
+<lb/>&amp; propagationem impediant, &amp; facilius conuertãtur
+<lb/>non tamen ſunt nec poſſeſſionibus ſpoliandi, nec in ſer=<lb type="nb"/>uitutem redigendi.</p>
+<figure type="illustration"/>
+</div1>
+</body>
+</text>

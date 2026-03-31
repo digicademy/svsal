@@ -1,0 +1,76 @@
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\SVN\trunk\teiedit\works\build\W0006_Vol03\xml\W0006_Vol03_016.xml to D:\SVN\trunk\teiedit\works\build\W0006_Vol03\xml\W0006_Vol03_017.xml
+     [xslt] Loading stylesheet D:\SVN\trunk\teiedit\works\build\W0006_Vol03\xsl\W0006_Vol03_016.xsl
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\SVN\trunk\teiedit\works\build\W0006_Vol03\xml\W0006_Vol03_017.xml to D:\SVN\trunk\teiedit\works\build\W0006_Vol03\xml\W0006_Vol03_018.xml
+     [xslt] Loading stylesheet D:\SVN\trunk\teiedit\works\build\W0006_Vol03\xsl\W0006_Vol03_017.xsl
+     [xslt] INFO: identified 7 *pb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 14 *cb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 6 *cb* as secondary break that were not previously marked as no-break at all.
+
+     [xslt] INFO: identified 0 *cb* as secondary break that were previously marked as primary no-break.
+
+     [xslt] INFO: identified 0 *lb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 0 *lb* as secondary break that were not previously marked as no-break at all.
+
+     [xslt] INFO: identified 21 *lb* as secondary break that were previously marked as primary no-break.
+
+     [xslt] INFO: replaced trailing whitespace in 389 text nodes before primary no-breaks.
+
+     [xslt] INFO: replaced trailing whitespace in 0 text nodes before secondary no-breaks.
+
+     [xslt] Input whitespace: 282549
+
+     [xslt] Output whitespace: 282160
+
+     [xslt] ---------------------------------------------------------
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\SVN\trunk\teiedit\works\build\W0006_Vol03\xml\W0006_Vol03_018.xml to D:\SVN\trunk\teiedit\works\build\W0006_Vol03\xml\W0006_Vol03_019.xml
+     [xslt] Loading stylesheet D:\SVN\trunk\teiedit\works\build\W0006_Vol03\xsl\W0006_Vol03_018.xsl
+     [xslt] INFO: quality check successfull.
+
+     [xslt] INFO: added 4 choice/*[2]/pb.
+
+     [xslt] INFO: added 11 choice/*[2]/cb.
+
+     [xslt] INFO: added 733 choice/*[2]/lb.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\SVN\trunk\teiedit\works\build\W0006_Vol03\xml\W0006_Vol03_019.xml to D:\SVN\trunk\teiedit\works\build\W0006_Vol03\xml\W0006_Vol03_020.xml
+     [xslt] Loading stylesheet D:\SVN\trunk\teiedit\works\build\W0006_Vol03\xsl\W0006_Vol03_019.xsl
+Apache resolver library not found, internal resolver will be used
+     [xslt] INFO: added 146 special character tags (tei:g).
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\SVN\trunk\teiedit\works\build\W0006_Vol03\xml\W0006_Vol03_020.xml to D:\SVN\trunk\teiedit\works\build\W0006_Vol03\xml\W0006_Vol03_021.xml
+     [xslt] Loading stylesheet D:\SVN\trunk\teiedit\works\build\W0006_Vol03\xsl\W0006_Vol03_020.xsl
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\SVN\trunk\teiedit\works\build\W0006_Vol03\xml\W0006_Vol03_021.xml to D:\SVN\trunk\teiedit\works\build\W0006_Vol03\xml\W0006_Vol03_022.xml
+     [xslt] Loading stylesheet D:\SVN\trunk\teiedit\works\build\W0006_Vol03\xsl\W0006_Vol03_021.xsl
+     [xslt] Generated temporary lb/@xml:id.
+
+     [xslt] Extracted tei:lb from pages in the main area of the text.
+
+     [xslt] Numbered tei:lb from the main area.
+
+     [xslt] INFO: Added line numbers to tei:lb/@n.
+
+     [xslt] INFO: Serializing final output...
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\SVN\trunk\teiedit\works\build\W0006_Vol03\xml\W0006_Vol03_022.xml to D:\SVN\trunk\teiedit\works\build\W0006_Vol03\xml\W0006_Vol03_023.xml
+     [xslt] Loading stylesheet D:\SVN\trunk\teiedit\works\build\W0006_Vol03\xsl\W0006_Vol03_022.xsl
+     [xslt] INFO: quality check successfull.
+

@@ -1,0 +1,100 @@
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\SVN\trunk\teiedit\works\build\W0041\xml\W0041_013.xml to D:\SVN\trunk\teiedit\works\build\W0041\xml\W0041_014.xml
+     [xslt] Loading stylesheet D:\SVN\trunk\teiedit\works\build\W0041\xsl\W0041_013.xsl
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0041-00-0164-lb-0014 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0041-00-0212-lb-0006 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0041-00-0230-lb-0018 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0041-00-0267-lb-0014 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0041-00-0281-lb-0022 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0041-00-0298-lb-0009 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0041-00-0299-lb-0006 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0041-00-0328-lb-0009 )
+
+     [xslt] 
+
+     [xslt] WARN: found choice element with empty child, in line W0041-00-0253-lb-0030 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "con"
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\SVN\trunk\teiedit\works\build\W0041\xml\W0041_014.xml to D:\SVN\trunk\teiedit\works\build\W0041\xml\W0041_015.xml
+     [xslt] Loading stylesheet D:\SVN\trunk\teiedit\works\build\W0041\xsl\W0041_014.xsl
+     [xslt] INFO: identified 1 *pb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 0 *cb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 0 *cb* as secondary break that were not previously marked as no-break at all.
+
+     [xslt] INFO: identified 0 *cb* as secondary break that were previously marked as primary no-break.
+
+     [xslt] INFO: identified 0 *lb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 0 *lb* as secondary break that were not previously marked as no-break at all.
+
+     [xslt] INFO: identified 1 *lb* as secondary break that were previously marked as primary no-break.
+
+     [xslt] INFO: replaced trailing whitespace in 7 text nodes before primary no-breaks.
+
+     [xslt] INFO: replaced trailing whitespace in 0 text nodes before secondary no-breaks.
+
+     [xslt] Input whitespace: 82163
+
+     [xslt] Output whitespace: 82156
+
+     [xslt] ---------------------------------------------------------
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\SVN\trunk\teiedit\works\build\W0041\xml\W0041_015.xml to D:\SVN\trunk\teiedit\works\build\W0041\xml\W0041_016.xml
+     [xslt] Loading stylesheet D:\SVN\trunk\teiedit\works\build\W0041\xsl\W0041_015.xsl
+     [xslt] INFO: quality check successfull.
+
+     [xslt] INFO: added 5 choice/*[2]/pb.
+
+     [xslt] INFO: added 0 choice/*[2]/cb.
+
+     [xslt] INFO: added 248 choice/*[2]/lb.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\SVN\trunk\teiedit\works\build\W0041\xml\W0041_016.xml to D:\SVN\trunk\teiedit\works\build\W0041\xml\W0041_017.xml
+     [xslt] Loading stylesheet D:\SVN\trunk\teiedit\works\build\W0041\xsl\W0041_016.xsl
+Apache resolver library not found, internal resolver will be used
+     [xslt] INFO: added 88 special character tags (tei:g).
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\SVN\trunk\teiedit\works\build\W0041\xml\W0041_017.xml to D:\SVN\trunk\teiedit\works\build\W0041\xml\W0041_018.xml
+     [xslt] Loading stylesheet D:\SVN\trunk\teiedit\works\build\W0041\xsl\W0041_017.xsl
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\SVN\trunk\teiedit\works\build\W0041\xml\W0041_018.xml to D:\SVN\trunk\teiedit\works\build\W0041\xml\W0041_019.xml
+     [xslt] Loading stylesheet D:\SVN\trunk\teiedit\works\build\W0041\xsl\W0041_018.xsl
+     [xslt] Generated temporary lb/@xml:id.
+
+     [xslt] Extracted tei:lb from pages in the main area of the text.
+
+     [xslt] Numbered tei:lb from the main area.
+
+     [xslt] INFO: Added line numbers to tei:lb/@n.
+
+     [xslt] INFO: Serializing final output...
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\SVN\trunk\teiedit\works\build\W0041\xml\W0041_019.xml to D:\SVN\trunk\teiedit\works\build\W0041\xml\W0041_020.xml
+     [xslt] Loading stylesheet D:\SVN\trunk\teiedit\works\build\W0041\xsl\W0041_019.xsl
+     [xslt] INFO: quality check successfull.
+

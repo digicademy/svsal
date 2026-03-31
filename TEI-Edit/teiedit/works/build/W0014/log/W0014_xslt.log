@@ -1,0 +1,24 @@
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0014\xml\W0014_023.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0014\xml\W0014_024.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0014\xsl\W0014_023.xsl
+     [xslt] Generated temporary lb/@xml:id.
+
+     [xslt] Extracted tei:lb from pages in the main area of the text.
+
+     [xslt] Numbered tei:lb from the main area.
+
+     [xslt] Extracted tei:lb from the marginal area.
+
+     [xslt] Numbered tei:lb from the marginal area.
+
+     [xslt] INFO: Added line numbers to tei:lb/@n.
+
+     [xslt] INFO: Serializing final output...
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0014\xml\W0014_024.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0014\xml\W0014_025.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0014\xsl\W0014_024.xsl
+     [xslt] INFO: quality check successfull.
+

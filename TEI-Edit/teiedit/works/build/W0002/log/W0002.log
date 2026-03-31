@@ -1,0 +1,12 @@
+
+initialize:
+     [copy] Copying 1 file to /home/dglck/Development/SVN/04-39/trunk/teiedit/works/build/W0002/xml
+[xmlvalidate] 1 file(s) have been successfully validated.
+     [copy] Copying 1 file to /home/dglck/Development/SVN/04-39/trunk/teiedit/works/build/W0002/versions
+     [echo] Checkpoint: W0002_v1-0.xml (W0002-c-000.xml).
+
+finalize:
+     [echo] Building W0002 done. Current version: ./versions/W0002...
+
+BUILD SUCCESSFUL
+Total time: 0 seconds

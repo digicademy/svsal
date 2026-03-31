@@ -1,0 +1,5 @@
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\SVN\trunk\teiedit\works\build\W0061\xml\W0061_026.xml to D:\SVN\trunk\teiedit\works\build\W0061\xml\W0061_027.xml
+     [xslt] Loading stylesheet D:\SVN\trunk\teiedit\works\build\W0061\xsl\W0061_026.xsl
+     [xslt] INFO: quality check successfull.
+

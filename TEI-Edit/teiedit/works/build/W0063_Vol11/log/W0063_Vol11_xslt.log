@@ -1,0 +1,16 @@
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol11\xml\W0063_Vol11_006.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol11\xml\W0063_Vol11_007.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol11\xsl\W0063_Vol11_006.xsl
+Apache resolver library not found, internal resolver will be used
+     [xslt] INFO: tagged 7 pb as break=no and rendition=#noHyphen
+
+     [xslt] INFO: tagged 15 cb as break=no and rendition=#noHyphen
+
+     [xslt] INFO: tagged 1918 lb as break=no and rendition=#noHyphen
+
+     [xslt] INFO: tagged 1940 breaks in total as break=no and rendition=#noHyphen
+
+     [xslt] ------------------------------------------------------
+
+     [xslt] INFO: quality check successfull.
+

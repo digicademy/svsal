@@ -204,7 +204,7 @@
         <record name="${xslt.log}" action="stop"/>
         <delete file="${xml.dir}/W0076_020.xml"/>
     </target>
-    <target name="finalize" depends="cp-000">
+    <target name="finalize" depends="xslt-020">
         <echo>Reached end of pipeline.</echo>
     </target>
 </project>    

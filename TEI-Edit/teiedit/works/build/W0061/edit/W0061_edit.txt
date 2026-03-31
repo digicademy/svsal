@@ -1,0 +1,53 @@
+W0061: Manual and semi-automatic editing in the TEI Tite version of W0061 (DG, oXygen)
+
+- added \n before each <lb/> (not: <lb type=nb"/> !) for better readability
+
+- deleted "empty" <pb/>s at the beginning/end of the work
+
+- annotated front, body and back
+
+- annotated title page
+
+- structured front and back matter using <div1>; 
+structured main part of the text with: <div1 type="part">; <div2 type="chapter">; <div3 type="section>
+(--> div in body are completely typed)
+
+- added <epigraph> on last page
+
+- structured table of contents as one list with two sublists; added <ref> for page references
+
+- replaced dagger "†" on W0061-0180 without referencable marginal numbers by:
+<unclear resp="#DG" cert="unknown"><milestone n="noRef" unit="x" rend="dagger"/></unclear>
+
+- added @type="summaries" to <list> element on level div2 (which always comprise summaries)
+
+- added @type= margin to all notes, which are always marginal notes
+
+- pagination: 
+	+ added "[]" in recto pb/@n where pagination in original was missing (3 cases overall)
+	+ added "[]" for all verso pb/@n in body, which are not given in original
+
+- <item><lb/><pb n="[182]r" facs="W0061-0399"/><i>Forma</i> de encomendar, f. 30. 4. f 
+    -->
+    <item><pb n="[182]r" facs="W0061-0399"/><lb/><i>Forma</i> de encomendar, f. 30. 4. f
+	
+- Textloop unclear marks:
+	+ replaced <unclear reason="dagger-oder-neuer-Absatz\?"> by <unclear cert="unknown" reason="no-dagger">
+	[places where it is not sure which point exactly in the text/line is referenced...]
+	+ replaced <unclear reason="gilt-als-dagger-oder-neuer-Absatz?"><milestone n="3" unit="x">*</unclear>
+	by <milestone n="3" unit="x" rend="[#dagger]" resp="#DG" cert="medium"/>
+	+ replaced <unclear reason="uneindeutiges-Zeichen-ueber-e">è</unclear>
+	by <unclear reason="unclear-character" cert="unknown">è</unclear>
+	+ replaced <unclear reason="unlesbar"><i>e</i></unclear>
+	by <unclear reason="unreadable" cert="unknown"><i>e</i></unclear>
+	+ replaced <unclear/>
+	
+-----------------------------------------------------------
+
+
+
+To do:
+
+- Lieferprotokoll
+
+- Erfassungsanweisungen

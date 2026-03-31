@@ -1,0 +1,13 @@
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing /home/marie-astrid/Documents/Salamanca/trunk/teiedit/works/build/W0116/xml/W0116_008.xml to /home/marie-astrid/Documents/Salamanca/trunk/teiedit/works/build/W0116/xml/W0116_009.xml
+     [xslt] Loading stylesheet W0116_008.xsl
+Apache resolver library not found, internal resolver will be used
+     [xslt] INFO: tagged 11 pb as break=no and rendition=#noHyphen
+     [xslt] INFO: tagged 0 cb as break=no and rendition=#noHyphen
+     [xslt] INFO: tagged 591 lb as break=no and rendition=#noHyphen
+     [xslt] INFO: tagged 602 breaks in total as break=no and rendition=#noHyphen
+     [xslt] ------------------------------------------------------
+     [xslt] INFO: Amount of whitespace characters differs in input and output doc: 
+     [xslt] Input whitespace: 60353
+     [xslt] Output whitespace: 60352
+     [xslt] INFO: quality check successfull.

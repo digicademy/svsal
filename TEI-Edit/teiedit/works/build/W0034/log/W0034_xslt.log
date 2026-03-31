@@ -1,0 +1,11 @@
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing L:\SVN\04-39\trunk\teiedit\works\build\W0034\xml\W0034_010.xml to L:\SVN\04-39\trunk\teiedit\works\build\W0034\xml\W0034_011.xml
+     [xslt] Loading stylesheet L:\SVN\04-39\trunk\teiedit\works\build\W0034\xsl\W0034_010.xsl
+Property "xsl.log" has not been set
+xslt-010:  duration 0 seconds
+
+finalize:
+     [echo] Reached end of pipeline.
+finalize:  duration 0 seconds
+
+BUILD SUCCESSFUL

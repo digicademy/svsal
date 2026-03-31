@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="W0029_Vol01" default="finalize">
+    
+    <property name="diff.dir" value="diff"/>
+    <property name="log.dir" value="log"/>
+    <property name="xml.dir" value="xml"/>
+    <property name="xsl.dir" value="xsl"/>
+    <property name="xslt.log" value="${log.dir}/${ant.project.name}_xslt.log"/>
+    <property name="xslt.processor" value="../../../lib/xsltproc/Saxon-HE-9.8.0-12.jar"/>
+    <property name="xslt.class" value="net.sf.saxon.TransformerFactoryImpl"/>
+    
+    <property name="orig.file" value="../../orig/grepect/W0029-A/W0029-A.xml"/>
+    
+    <target name="initialize">
+        <echo>Initializing W0029_Vol01.</echo>
+        <mkdir dir="${xml.dir}"/>
+        <mkdir dir="${log.dir}"/>
+        <copy file="${orig.file}" tofile="${xml.dir}/W0029_Vol01_000.xml"/>
+        <xmlvalidate file="${xml.dir}/W0029_Vol01_000.xml" lenient="true"/>
+    </target>
+    
+    <target name="cp-000" depends="initialize">
+        <copy file="${xml.dir}/W0029_Vol01_000.xml" tofile="${xml.dir}/W0029_Vol01_v1-0.xml"/>
+        <echo>Checkpoint: W0029_Vol01_v1-0.xml (W0029_Vol01_000.xml).</echo>
+        <delete file="${xml.dir}/W0029_Vol01_000.xml"/>
+    </target>
+    <target name="patch-000"> 
+        <echo>Structural annotation.</echo>
+        <patch originalfile="${xml.dir}/W0029_Vol01_v1-0.xml" destfile="${xml.dir}/W0029_Vol01_001.xml" patchfile="${diff.dir}/W0029_Vol01_000.diff"/>
+    </target>
+    <target name="xslt-001">
+        <echo>Adding @xml:id to milestone, adding toc.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0029_Vol01_001.xml" out="${xml.dir}/W0029_Vol01_002.xml" style="${xsl.dir}/W0029_Vol01_001.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+    </target>
+    <target name="xslt-002" depends="xslt-001"> 
+        <echo>Adding xml:ids to refs in summaries.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0029_Vol01_002.xml" out="${xml.dir}/W0029_Vol01_003.xml" style="${xsl.dir}/W0029_Vol01_002.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0029_Vol01_002.xml"/>
+    </target>
+    <target name="xslt-003" depends="xslt-002"> 
+        <echo>Transformation TEI tite to TEI P5.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0029_Vol01_003.xml" out="${xml.dir}/W0029_Vol01_004.xml" style="${xsl.dir}/W0029_Vol01_003.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0029_Vol01_003.xml"/>
+    </target>
+    <target name="xslt-004" depends="xslt-003"> 
+        <echo>Annotated hyphenated breaks.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0029_Vol01_004.xml" out="${xml.dir}/W0029_Vol01_005.xml" style="${xsl.dir}/W0029_Vol01_004.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0029_Vol01_004.xml"/>
+    </target>
+    <target name="xslt-005" depends="xslt-004"> 
+        <echo>Tagged special characters.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0029_Vol01_005.xml" out="${xml.dir}/W0029_Vol01_006.xml" style="${xsl.dir}/W0029_Vol01_005.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0029_Vol01_005.xml"/>
+    </target>
+    <target name="xslt-006" depends="xslt-005"> 
+        <echo>Numbered lines.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0029_Vol01_006.xml" out="${xml.dir}/W0029_Vol01_007.xml" style="${xsl.dir}/W0029_Vol01_006.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0029_Vol01_006.xml"/>
+    </target>
+    <target name="xslt-007" depends="xslt-006">
+        <echo>Added @xml:ids.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0029_Vol01_007.xml" out="${xml.dir}/W0029_Vol01_008.xml" style="${xsl.dir}/W0029_Vol01_007.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0029_Vol01_007.xml"/>
+    </target>
+    <target name="xslt-008" depends="xslt-007">
+        <echo>Tagged unmarked hyphenations (la).</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0029_Vol01_008.xml" out="${xml.dir}/W0029_Vol01_009.xml" style="${xsl.dir}/W0029_Vol01_008.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+            <param name="corrListPaths" expression="../corrlist/lists/W0029_Vol01-la_supposed-hyphenations-from-text.html" type="STRING"/>
+            <param name="lang" expression="la" type="STRING"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0029_Vol01_008.xml"/>
+    </target>
+    <target name="xslt-009" > <!--depends="xslt-008"-->
+        <echo>teiHeader update.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0029_Vol01_009.xml" out="${xml.dir}/W0029_Vol01_010.xml" style="${xsl.dir}/W0029_Vol01_009.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <!--<delete file="${xml.dir}/W0029_Vol01_009.xml"/>-->
+    </target>
+    <target name="finalize" depends="xslt-009">
+        <echo>Reached end of pipeline.</echo>
+    </target>
+</project>
+    
+<!-- **********************************************************************************************************************************************        
+
+******************************************    
+*    REFERENZWERK - - REFERENCE WORK     *
+******************************************
+
+    No automatic abbreviations. 
+    No manual correction.
+
+NOTES:
+
+    Structural annotation started: PS 06.05.24 Finished 15.10.24
+    sal-tei.sch = 
+    Total time from xslt-001 - xslt-007: 6 minutes 21 seconds 
+    Lists for unmarked breaks:  appr. 20 minutes 
+
+Bereit für online publication.
+W0029_Vol01_010.xml als W0029_Vol01 unter  trunk/svsal-tei/works/ gespeichert.
+  
+-->

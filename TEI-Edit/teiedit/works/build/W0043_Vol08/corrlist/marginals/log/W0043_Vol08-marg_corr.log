@@ -1,0 +1,23 @@
+     [java] Executing '/usr/lib/jvm/jdk-19/bin/java' with arguments:
+'-Xmx3000m'
+'-classpath'
+'/home/marie-astrid/Documents/Salamanca/trunk/teiedit/lib/xsltproc/Saxon-HE-9.8.0-12.jar'
+'net.sf.saxon.Query'
+'-q:../../xql/corrList_1_marginals.xql'
+'-s:/home/marie-astrid/Documents/Salamanca/trunk/teiedit/works/build/W0043_Vol08/xml/W0043_Vol08_008.xml'
+'-o:/home/marie-astrid/Documents/Salamanca/trunk/teiedit/works/build/W0043_Vol08/corrlist/marginals/W0043_Vol08-marg-la_all-wordforms.html'
+'-traceout:#err'
+'-t'
+'language=la'
+
+The ' characters around the executable and arguments are
+not part of the command.
+     [java] Saxon-HE 9.8.0.12J from Saxonica
+     [java] Java version 19.0.2
+     [java] Analyzing query from ../../xql/corrList_1_marginals.xql
+     [java] Analysis time: 987.776353 milliseconds
+     [java] Processing file:/home/marie-astrid/Documents/Salamanca/trunk/teiedit/works/build/W0043_Vol08/xml/W0043_Vol08_008.xml
+     [java] Using parser com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl$JAXPSAXParser
+     [java] Building tree for file:/home/marie-astrid/Documents/Salamanca/trunk/teiedit/works/build/W0043_Vol08/xml/W0043_Vol08_008.xml using class net.sf.saxon.tree.tiny.TinyBuilder
+     [java] Tree built in 550.111574ms
+     [java] Tree size: 256338 nodes, 1071810 characters, 129711 attributes

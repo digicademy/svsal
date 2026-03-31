@@ -1,0 +1,361 @@
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0106\xml\W0106_021.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0106\xml\W0106_022.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0106\xsl\W0106_021.xsl
+     [xslt] INFO: amount of whitespace characters differs in input and output doc: 
+
+     [xslt] Input whitespace: 537196
+
+     [xslt] Output whitespace: 524781
+
+     [xslt] 
+
+     [xslt] INFO: amount of non-whitespace characters differs in input and output doc: 
+
+     [xslt] Input characters: 2938451
+
+     [xslt] Output characters: 2813187
+
+     [xslt] 
+
+     [xslt] INFO: different amount of input and output pb/cb/lb: 
+
+     [xslt] Input pb: 632 | cb: 1255 | lb: 86232
+
+     [xslt] Output pb: 632 | cb: 1247 | lb: 75228
+
+     [xslt] 
+
+     [xslt] INFO: different amount of input and output special chars: 
+
+     [xslt] Input special chars: 70232 | output special chars: 64589
+
+     [xslt] 
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0106\xml\W0106_022.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0106\xml\W0106_023.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0106\xsl\W0106_022.xsl
+     [xslt] INFO: repositioned lb W0106-00-0315-lb-2031
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0106-00-0008-lb-0034 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0106-00-0015-lb-1057 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0106-00-0038-lb-2037 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0106-00-0045-lb-1028 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0106-00-0056-lb-2037 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0106-00-0091-lb-2049 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0106-00-0094-lb-1031 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0106-00-0107-lb-2062 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0106-00-0118-lb-2014 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0106-00-0118-lb-2014 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0106-00-0187-lb-1029 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0106-00-0270-lb-1055 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0106-00-0292-lb-1027 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0106-00-0339-lb-1042 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0106-00-0340-lb-1001 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0106-00-0357-lb-1058 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0106-00-0455-lb-1053 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0106-00-0521-lb-1010 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0106-00-0550-lb-2012 )
+
+     [xslt] 
+
+     [xslt] WARN: found choice element with empty child, in line W0106-00-0038-lb-2037 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "c"
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0106-00-0091-lb-2049 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "."
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0106-00-0094-lb-1031 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "se "
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0106-00-0107-lb-2062 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "quale "
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0106-00-0118-lb-2014 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "quale "
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0106-00-0187-lb-1029 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "in "
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0106-00-0223-lb-1041 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "(tur."
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0106-00-0292-lb-1027 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0106-00-0339-lb-1042 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0106-00-0340-lb-1001 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "in "
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0106-00-0357-lb-1058 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "si "
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0106-00-0450-lb-1052 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "llomata"
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0106-00-0455-lb-1053 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "in "
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0106-00-0521-lb-1010 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ","
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0106-00-0062-lb-2028 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "qui us"
+
+     [xslt] 	child::tei:corr (child 2) has content: "quibus"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0106-00-0094-lb-1031 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "se "
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0106-00-0107-lb-2062 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "quale "
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0106-00-0118-lb-2014 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "quale "
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0106-00-0187-lb-1029 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "in "
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0106-00-0307-lb-1016 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "apparent, inaturali,"
+
+     [xslt] 	child::tei:corr (child 2) has content: "apparenti, naturali,"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0106-00-0340-lb-1001 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "in "
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0106-00-0357-lb-1058 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "si "
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0106-00-0424-lb-1040 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "capitu, locausam"
+
+     [xslt] 	child::tei:corr (child 2) has content: "capitulo causam"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0106-00-0447-lb-2058 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "à cerca"
+
+     [xslt] 	child::tei:corr (child 2) has content: "acerca"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0106-00-0447-lb-2061 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "præsto"
+
+     [xslt] 	child::tei:corr (child 2) has content: "para esto"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0106-00-0450-lb-1053 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "conoci mist."
+
+     [xslt] 	child::tei:corr (child 2) has content: "conocimiento"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0106-00-0455-lb-1053 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "in "
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0106-00-0465-lb-2060 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "astos"
+
+     [xslt] 	child::tei:corr (child 2) has content: "a estos"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0106-00-0479-lb-2002 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "con uetudini"
+
+     [xslt] 	child::tei:corr (child 2) has content: "consuetudini"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0106-00-0493-lb-1033 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "dat. afacit"
+
+     [xslt] 	child::tei:corr (child 2) has content: "data. facit"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0106-00-0537-lb-1052 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "nume. r7"
+
+     [xslt] 	child::tei:corr (child 2) has content: "numer. 7"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0106-00-0539-lb-2005 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "regular ter"
+
+     [xslt] 	child::tei:corr (child 2) has content: "regulariter"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0106-00-0550-lb-2012 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "mendicantib."
+
+     [xslt] 	child::tei:corr (child 2) has content: "mendicantibus "
+
+     [xslt] WARN: amount of whitespace characters differs in input and output doc: 
+
+     [xslt] Input whitespace: 524781
+
+     [xslt] Output whitespace: 524778
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0106\xml\W0106_023.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0106\xml\W0106_024.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0106\xsl\W0106_023.xsl
+     [xslt] INFO: identified 13 *pb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 20 *cb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 13 *cb* as secondary break that were not previously marked as no-break at all.
+
+     [xslt] INFO: identified 0 *cb* as secondary break that were previously marked as primary no-break.
+
+     [xslt] INFO: identified 0 *lb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 0 *lb* as secondary break that were not previously marked as no-break at all.
+
+     [xslt] INFO: identified 33 *lb* as secondary break that were previously marked as primary no-break.
+
+     [xslt] INFO: replaced trailing whitespace in 18 text nodes before primary no-breaks.
+
+     [xslt] INFO: replaced trailing whitespace in 0 text nodes before secondary no-breaks.
+
+     [xslt] Input whitespace: 524778
+
+     [xslt] Output whitespace: 524760
+
+     [xslt] ---------------------------------------------------------
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0106\xml\W0106_024.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0106\xml\W0106_025.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0106\xsl\W0106_024.xsl
+     [xslt] INFO: quality check successfull.
+
+     [xslt] INFO: added 5 choice/*[2]/pb.
+
+     [xslt] INFO: added 8 choice/*[2]/cb.
+
+     [xslt] INFO: added 736 choice/*[2]/lb.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0106\xml\W0106_025.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0106\xml\W0106_026.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0106\xsl\W0106_025.xsl
+Apache resolver library not found, internal resolver will be used
+     [xslt] INFO: added 1107 special character tags (tei:g).
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0106\xml\W0106_026.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0106\xml\W0106_027.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0106\xsl\W0106_026.xsl
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0106\xml\W0106_027.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0106\xml\W0106_028.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0106\xsl\W0106_027.xsl
+     [xslt] Generated temporary lb/@xml:id.
+
+     [xslt] Extracted tei:lb from pages in the main area of the text.
+
+     [xslt] Numbered tei:lb from the main area.
+
+     [xslt] Extracted tei:lb from the marginal area.
+
+     [xslt] Numbered tei:lb from the marginal area.
+
+     [xslt] INFO: Added line numbers to tei:lb/@n.
+
+     [xslt] INFO: Serializing final output...
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0106\xml\W0106_028.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0106\xml\W0106_029.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0106\xsl\W0106_028.xsl
+     [xslt] INFO: quality check successfull.
+

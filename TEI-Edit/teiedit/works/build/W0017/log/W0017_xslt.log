@@ -1,0 +1,126 @@
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0017\xml\W0017_015.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0017\xml\W0017_016.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0017\xsl\W0017_015.xsl
+     [xslt] INFO: externalized whitespace after g/choice W0017-00-0251-lb-m005
+
+     [xslt] INFO: repositioned lb W0017-00-0064-lb-m038
+
+     [xslt] INFO: repositioned lb W0017-00-0064-lb-m047
+
+     [xslt] INFO: repositioned lb W0017-00-0205-lb-2049
+
+     [xslt] INFO: repositioned lb W0017-00-0340-lb-1039
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0017-00-0366-lb-1011 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0017-00-0366-lb-1011 )
+
+     [xslt] 
+
+     [xslt] WARN: found choice element with empty child, in line W0017-00-0053-lb-1018 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "cõ"
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0017-00-0057-lb-2023 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "co"
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0017-00-0136-lb-m060 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "el"
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0017-00-0305-lb-1044 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "del"
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0017-00-0366-lb-1011 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "a"
+
+     [xslt] 	child::tei:corr (child 2) has content: "a "
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0017\xml\W0017_016.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0017\xml\W0017_017.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0017\xsl\W0017_016.xsl
+     [xslt] INFO: identified 9 *pb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 14 *cb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 9 *cb* as secondary break that were not previously marked as no-break at all.
+
+     [xslt] INFO: identified 0 *cb* as secondary break that were previously marked as primary no-break.
+
+     [xslt] INFO: identified 0 *lb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 0 *lb* as secondary break that were not previously marked as no-break at all.
+
+     [xslt] INFO: identified 23 *lb* as secondary break that were previously marked as primary no-break.
+
+     [xslt] INFO: replaced trailing whitespace in 56 text nodes before primary no-breaks.
+
+     [xslt] INFO: replaced trailing whitespace in 0 text nodes before secondary no-breaks.
+
+     [xslt] Input whitespace: 307165
+
+     [xslt] Output whitespace: 307109
+
+     [xslt] ---------------------------------------------------------
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0017\xml\W0017_017.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0017\xml\W0017_018.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0017\xsl\W0017_017.xsl
+     [xslt] INFO: quality check successfull.
+
+     [xslt] INFO: added 17 choice/*[2]/pb.
+
+     [xslt] INFO: added 38 choice/*[2]/cb.
+
+     [xslt] INFO: added 1842 choice/*[2]/lb.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0017\xml\W0017_018.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0017\xml\W0017_019.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0017\xsl\W0017_018.xsl
+Apache resolver library not found, internal resolver will be used
+     [xslt] INFO: added 165 special character tags (tei:g).
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0017\xml\W0017_019.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0017\xml\W0017_020.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0017\xsl\W0017_019.xsl
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0017\xml\W0017_020.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0017\xml\W0017_021.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0017\xsl\W0017_020.xsl
+     [xslt] Generated temporary lb/@xml:id.
+
+     [xslt] Extracted tei:lb from pages in the main area of the text.
+
+     [xslt] Numbered tei:lb from the main area.
+
+     [xslt] Extracted tei:lb from the marginal area.
+
+     [xslt] Numbered tei:lb from the marginal area.
+
+     [xslt] INFO: Added line numbers to tei:lb/@n.
+
+     [xslt] INFO: Serializing final output...
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0017\xml\W0017_021.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0017\xml\W0017_022.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0017\xsl\W0017_021.xsl
+     [xslt] INFO: quality check successfull.
+

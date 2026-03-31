@@ -1,0 +1,35 @@
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0113\xml\W0113_023.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0113\xml\W0113_024.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0113\xsl\W0113_023.xsl
+     [xslt] ERROR: amount of whitespace characters differs in input and output doc: 
+
+     [xslt] Input whitespace: 28249
+
+     [xslt] Output whitespace: 28091
+
+     [xslt] 
+
+     [xslt] ERROR: amount of non-whitespace characters differs in input and output doc: 
+
+     [xslt] Input characters: 134977
+
+     [xslt] Output characters: 134316
+
+     [xslt] 
+
+     [xslt] ERROR: different amount of input and output pb/cb/lb: 
+
+     [xslt] Input pb: 97 | cb: 0 | lb: 3328
+
+     [xslt] Output pb: 97 | cb: 0 | lb: 3250
+
+     [xslt] 
+
+     [xslt] ERROR: different amount of input and output special chars: 
+
+     [xslt] Input special chars: 7937 | output special chars: 7912
+
+     [xslt] 
+
+     [xslt] INFO: quality check successfull.
+

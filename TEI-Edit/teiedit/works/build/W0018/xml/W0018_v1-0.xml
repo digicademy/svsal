@@ -1,0 +1,2265 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_tite.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_tite.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<text xmlns="http://www.tei-c.org/ns/1.0" xmlns:t="http://www.tei-c.org/ns/tite/1.0">
+<front>
+<titlePage>
+<pb facs="W0018-0001" n="[i]r"/>
+<t:ornament></t:ornament>
+<figure></figure>
+<t:ornament></t:ornament>
+<titlePart>
+<lb/><t:b>¶ Tractado en que ala</t:b>
+<lb/>clara ſe ponen y determinan las materias delos prcſta
+<lb/>mos que ſe vſan entre los que tractan y negocian: y de
+<lb/>los logros ⁊ cõpras adelantadas y ventas al fiado. ⁊c.
+<lb/>Compueſto por fray Luys de Alcala/ dela orden del
+<lb/>bienauentutado padre ſant Franciſco de obſeruancia:
+<lb/>dela prouincia de Caſtilla. Uiſto y examinado por el
+<lb/>conſejo Real deſtos Reynos.
+<lb/>Con auctoridad aſſi miſmo/ y aprobacion del ca-<lb type="nb"/>pitulo prouincial dela orden del auctor/ y tambien
+<lb/><t:b>Con priuilegio Imperial.</t:b>
+<lb/>Concedido a diez y ocho de Março de. 1543. Años.</titlePart>
+<t:ornament></t:ornament>
+</titlePage>
+</front>
+<body>
+<div1>
+<p rend="hx">
+<pb facs="W0018-0002" n="[i]v"/>
+<pb facs="W0018-0003" n="[ii]r"/>
+<lb/><t:b>¶ El auctor deſte tractado
+<lb/>al benigno lector.</t:b></p>
+<p>
+<lb/><hi rend="init"><unclear resp="#TL"></unclear></hi>O ſon pocas las vezes prudẽte lector/ que he ſi-<lb type="nb"/>do importunado/ lo vno de porfias de algunos
+<lb/>hõbres/ que buſcando excuſaciones para ſus pe
+<lb/>cados: hã querido defender la materia delos pre
+<lb/>ſtamos q̃ hazen ⁊ tomã enſus negociaciones: ſin
+<lb/>querer para ellos admitir limitaciõ alguna que ſea: lo otro
+<lb/>de ruegos ď otros/ q̃ andan eneſto cõ mas temor de conſciẽ
+<lb/>cia: los quales deſſean mucho tener claridad enlas coſas ſe
+<lb/>mejantes para hallarſe el dia ďla muerte con menos carga
+<lb/>de peccados y delos bienes ajenos: porq̃ aſſi puedan tener
+<lb/>mayor ſeguridad de no perder el fin bienauẽturado: para el
+<lb/>qual todos fuymos criados. Ha ſe tambicn a eſto juntado:
+<lb/>la inſtancia charitatiua ď algunos padres confeſſores/ que
+<lb/>no podian leer tantos libros: quãtos ſe requiere leer/ y avn
+<lb/>muy bien rumiar/ para determinacion ďlas materias/ que
+<lb/>eneſte tractado (avn que breue) ſe contienẽ. Poreſtas razo
+<lb/>nes/ y por no querer aſſi miſmo del todo/ eſcõder debaxo la
+<lb/>tierra el pequeño talento q̃ de nueſtro ſeñor reſcebi: avn que
+<lb/>de verdad cõ miedo y temor de mi poco ſaber/ copile lo que
+<lb/>aqui va: y deſpues ď moſtrado a muchos hõbres doctos/ y
+<lb/>paſſado porel examen q̃ al principio ſe pone: he trabajado q̃
+<lb/>ſe imprima/ par<unclear resp="#TL"></unclear>a gloria de dios y ꝓuecho de vnos y otros.
+<lb/>y la intenciõ deſte prouecho: me le hizo poner en romance/
+<lb/>porq̃ aſſi los que defendiã ſu opinion como los q̃ deſſean ſa
+<lb/>ber lo cierto/ y no ſaben latin: no dexẽ de entender lo q̃ digo.
+<lb/>Lo qual empero no ha cauſado poca dificultad: trabajãdo
+<lb/>(como era neceſſario) de dar al romance/ no ſolamẽte el ſen
+<lb/>tido mas a vn las proprias palabras q̃ los textos y docto-<lb type="nb"/>res ponen en latin. Por todo ſe de gloria ala clemencia del
+<lb/>Rey delos cielos: al qual aſſi miſmo ſe atribuya q̈lquier co
+<lb/>ſa buena que aqui ſe hallare: y (porel cõtrario) a mi poque-<lb type="nb"/>dad y rudeza/ lo q̃ tal no fuere.</p>
+<list>
+<item>
+<list>
+<head>
+<pb facs="W0018-0004" n="[ii]v"/>
+<lb/><t:b>¶Tabla delos parrafos
+<lb/>y coſas aqui contenidas.</t:b></head>
+<item>
+<lb/>¶ El caſo y queſtion ſobrc que ſe funda eſte tractado.
+<lb/>Folio.<seg rend="gap"/>j. plana. j.</item>
+</list>
+</item>
+<item>
+<list>
+<head>
+<lb/><t:b>¶ Notable primero.</t:b></head>
+<item>
+<lb/><hi rend="init">E</hi>L primer notable en que ſe tracta. Que coſa es vſura
+<lb/>o logro: y en que conſiſte/ comiença/ codẽ. fo. et pla.</item>
+<item>
+<lb/>¶ §. j. difinicion dela vſura. enla miſma hoja y plana.</item>
+<item>
+<lb/>¶ §. ij. que coſa es la demaſia q̃ ſe veda enel preſtar/ y vna
+<lb/>regla gencral para conoſcer lo q̃ es logro. eodẽ. fo. pla. ij.</item>
+<item>
+<lb/>¶ Quatro maneras de cambios.<seg rend="gap"/>fo. ij. pla. j.</item>
+<item>
+<lb/>¶ §. iij. diſtincion delos contractos que ſe llaman mutuum
+<lb/>cõmodatum y locatum.<seg rend="gap"/>fo. ij. pla. ij.</item>
+<item>
+<lb/>¶ Que cnlos precios ay alguna anchura/ y quando ſe di-<lb type="nb"/>ze venderſe el tiempo.<seg rend="gap"/>fo. iij. pla. j.</item>
+<item>
+<lb/>¶ §. iiij. que el que preſta puede tener dos intenciones/ y
+<lb/>que la primera que es mala/ puede ſer de tres maneras.
+<lb/>folio.<seg rend="gap"/>iij. pla. ij.</item>
+<item>
+<lb/>¶ §. v. dela vſura mental.<seg rend="gap"/>fo. iiij. pla. j.</item>
+<item>
+<lb/>¶ §. vj. dela ſegunda intenciõ enel preſtar/ que no es mala.
+<lb/>folio.<seg rend="gap"/>v. pla. j.</item>
+<item>
+<lb/>¶ §. vij. que lo que ſe puede eſperar por la dicha ſegunda in
+<lb/>tencion noſe ha de reduzir a obligacion/ y diferencia de-<lb type="nb"/>las dichas dos intenciones.<seg rend="gap"/>eodẽ. fo. pla. ij.</item>
+<item>
+<lb/>¶ §. viij. declaracion delas dos poſtreras palabras que ſc
+<lb/>puſieron enla difinicion dela vſura. eodem. folio. pla. ij. y
+<lb/>folio.<seg rend="gap"/>vj. pla. j.</item>
+<item>
+<lb/>¶ §. ix. de treze caſos en que licitamente fe lleua demaſia.
+<lb/>ibidem.</item>
+<item>
+<pb facs="W0018-0005" n="[iii]r"/>
+<lb/>¶ §. x. quc el Scoto comprehende todos eſtos caſos/ deba
+<lb/>xo de dos maneras de juſta demaſia.<seg rend="gap"/>fo. vij. pla. j.</item>
+<item>
+<lb/>¶ §. xj. proſigue los caſos del Scoto: y habla delos que cõ-<lb type="nb"/>pran y venden fiado. vbi ſupra.</item>
+<item>
+<lb/>¶ §. xij. y. xiij. tracta delos que compran antes de tiempo/
+<lb/>pan/ vino/ azeyte y otras coſas ſemejantes. folio. vij. pla
+<lb/>na. ij. y folio. viij. plana. j.</item>
+<item>
+<lb/>¶ §. xiiij. proſigue delos q̃ venden fiado pan y qualeſquier
+<lb/>otras coſas.<seg rend="gap"/>fo. ix. pla. j. y. ij.</item>
+<item>
+<lb/>¶ §. xv. ſi ſera licito enla paga de tales ventas cõcertar dia
+<lb/>ſeñalado.<seg rend="gap"/>fo. x. pla. j.</item>
+<item>
+<lb/>¶ Que ſe ha ď deſcontar la mengua o coſta que auia de ha
+<lb/>zer lo que ſe fia.<seg rend="gap"/>codẽ. fo. pla. ij.</item>
+</list>
+</item>
+<item>
+<list>
+<head>
+<lb/><t:b>¶ Notable ſegundo.</t:b></head>
+<item>
+<lb/>¶ §. j. del ſegundo notable que es en que conſiſte el intereſſe
+<lb/>y ſi enel preſtar ſe puede tener acatamiẽto al tal intereſſe.
+<lb/>folio.<seg rend="gap"/>x. plana. ij.</item>
+<item>
+<lb/>¶ Que el intereſſe cõſiſte enel daño que ſe ſigue/ y enlo que
+<lb/>dexa de ganar el que preſta ſus dineros.<seg rend="gap"/>Ibidem.</item>
+<item>
+<lb/>¶ De dos maneras de daño.<seg rend="gap"/>fo. xj. plana. j.</item>
+<item>
+<lb/>¶ §. ij. del intereſſe delo que ſe dexa de ganar/ que ſe llama
+<lb/>lucri ceſſantis/ y dela ganancia probable/ o veriſſimil.
+<lb/>folio. xj. plana. ij. y tambien.<seg rend="gap"/>fo. xxv. pla. j.</item>
+<item>
+<lb/>¶ §. iij. dela ganancia incierta.<seg rend="gap"/>fo. xij. pla. j.</item>
+<item>
+<lb/>¶ §. iiij. de tres enxemplos que ſe ponen para los caſos en
+<lb/>que licitamente ſe puede lleuar el intereſſe dela ganancia
+<lb/>que ſe eſtorua: q̃ ſe dize: lucri ceſſantis.<seg rend="gap"/>eo. fo. pla. j. y. ij.</item>
+<item>
+<lb/>¶ Delos que compran algunas coſas y las venden luego
+<lb/>ſin mejorallas ni guardallas para otro tiempo. eodẽ. fo-<lb type="nb"/>lio. y plana. y.<seg rend="gap"/>folio. xiij.</item>
+<item>
+<lb/>¶ §. v. de otros dos enxemplos para lo q̃ ſe dixo enel. §. del
+<lb/>intereſſe.<seg rend="gap"/>folio. xiiij. plana. j.</item>
+<item>
+<pb facs="W0018-0006" n="[iii]v"/>
+<lb/>¶ §. vj. de cinco condiciones que ſe hã de guardar para lle-<lb type="nb"/>uar eſte intereſſe. eodẽ. fo. pla. ij. y. fo. xv. pla. j. y. ij.</item>
+<item>
+<lb/>¶ §. vij. reſolucion deſte ſegundo notable/ y reſpueſta y ver
+<lb/>dadero entẽdimiento del capitulo: in ciuitate. de vſuris.
+<lb/>folio.<seg rend="gap"/>xvj. plana. j.</item>
+<item>
+<lb/>¶ §. viij. primera reſpueſta ala queſtion/ o caſo que ſe puſo
+<lb/>al principio deſte tractado.<seg rend="gap"/>fo. xvj. pla. ij.</item>
+<item>
+<lb/>¶ §. ix. ſegunda reſpueſta alo miſmo.<seg rend="gap"/>Ibidem.</item>
+<item>
+<lb/>¶ Dela primera manera en que ſe pueden hazer los preſta
+<lb/>mos/ o preſtidos entre los que tractan con mereſcimien-<lb type="nb"/>to. folio.<seg rend="gap"/>xvij. plana. j.</item>
+<item>
+<lb/>¶ §. x. dela ſegunda manera en que ſe puede eſto hazer ſin
+<lb/>mereſcimiẽto/ pero tambien ſin pecado.<seg rend="gap"/>fo. xvij. pla. ij.
+<lb/>y folio.<seg rend="gap"/>xviij.</item>
+<item>
+<lb/>¶ Que el que puede cobrar lo que le deuen por juſticia/ no
+<lb/>lo ha de tomar a eſcondidas.<seg rend="gap"/>fo. xviij. pla. ij.</item>
+<item>
+<lb/>¶ §. xj. dela tercera manera en que ſe pueden hazer los di-<lb type="nb"/>chos preſtamos con pecado mortal/ pero ſin cargo de re-<lb type="nb"/>ſtitucion.<seg rend="gap"/>folio. xix. plana. j. y. ij.</item>
+<item>
+<lb/>¶ §. xij. de ciertos enxemplos que ſe ponen para ver como
+<lb/>eneſta tercera manera eſcuſa de reſtituyr: la intencion vir
+<lb/>tual de negociar que tẽga el que preſta: avn que nolo piẽ
+<lb/>ſe actualmẽte al pũto del preſtar.<seg rend="gap"/>fo. xx. pla. j.</item>
+<item>
+<lb/>¶ §. xiij. dela quarta manera en que eſtos preſtamos ſe ha-<lb type="nb"/>zen ſiempre con pecado mortal/ ⁊ con cargo de reſtituciõ.
+<lb/>folio.<seg rend="gap"/>xxj. plana. j.</item>
+<item>
+<lb/>¶ §. xiiij. de quando ſe dize perdonar vno liberalmẽte y de
+<lb/>voluntad lo que le es deuido/ para que el que ha de reſti
+<lb/>tuyr quede ſin cargo.<seg rend="gap"/>eodẽ. fo. y plana.</item>
+</list>
+</item>
+<item>
+<list>
+<head>
+<lb/><t:b>¶ Queſtion particular y muy ala lar</t:b></head>
+<item>
+<lb/>ga ſobre lo que ſe dixo enel. §. iiij. del ſegundo notable/
+<lb/>enel ſegundo en xemplo/ que es: ſi puede lleuar con buc-<lb type="nb"/>na conſciencia el que preſta ſus dineros: lo que dexa de
+<lb/>ganar.<seg rend="gap"/>fo. xxij. plana. j.</item>
+<item>
+<pb facs="W0018-0007" n="[iv]r"/>
+<lb/>¶ De como algunos yerran eneſte caſo por no diſtinguirle
+<lb/>ſegun deuen.<seg rend="gap"/>fo. xxij. pla. ij.</item>
+<item>
+<lb/>¶ Prueua ſe ſer licito lleuar eſta ganancia por razon/ o
+<lb/>ygualdad.<seg rend="gap"/>Ibidem.</item>
+<item>
+<lb/>¶ Item por ſemejança de otros caſos y dichos de docto-<lb type="nb"/>res.<seg rend="gap"/>fo. xxiij. pla. j.</item>
+<item>
+<lb/>¶ Señalan ſc. xxij. doctores q̃ tienen ſer licito lo ſuſo dicho
+<lb/>dende la dicha plana/ haſta<seg rend="gap"/>fo. xxiiij. pla. ij.</item>
+<item>
+<lb/>¶ Ponen ſe los doctores que pareſcen contrarios aeſta de
+<lb/>terminacion/ y reſponde ſe a ſancto Thomas/ y a Du-<lb type="nb"/>rando.<seg rend="gap"/>fo. xxv. pla. j.</item>
+<item>
+<lb/>¶ Que coſa es ganãcia ꝓbable o veriſſimil. eodẽ. fo. ⁊ pla.
+<lb/>mas ala larga q̃ primero ſe auia dicho enla.<seg rend="gap"/>fo. xj. pla. ij.</item>
+<item>
+<lb/>¶ Que es de juzgar por coſa cierta lo que por la mayor par
+<lb/>te ſuele acaeſcer.<seg rend="gap"/>fo. xxv. pla. ij.</item>
+<item>
+<lb/>¶ Quiẽ ſon los ꝓpios juezes ďlas ganãcias: y ďlo q̃ ſe deue
+<lb/>deſcõtar por los peligros y dubdas q̃ puede auer. Ibidẽ.</item>
+<item>
+<lb/>¶ Reſpueſta a Alexãdre de ales y a Ricardo. fo. xxv. pla. j.</item>
+<item>
+<lb/>¶ Reſpueſta al Innocencio.<seg rend="gap"/>Ibidem.</item>
+<item>
+<lb/>¶ Que el Panormitano alega mal eneſta materia al In-<lb type="nb"/>nocencio.<seg rend="gap"/>fo. xxvij. pla. j.</item>
+<item>
+<lb/>¶ Que ſe contradizen a ſi miſmos Innocencio y el Abad.
+<lb/>folio.<seg rend="gap"/>eodẽ. pla. ij.</item>
+<item>
+<lb/>¶ Reſpueſta al Abad.<seg rend="gap"/>fo. xxviij. pla. j.</item>
+<item>
+<lb/>¶ Que baſta tener la opinion ſegura/ avn q̃ no ſea la mas
+<lb/>ſegura.<seg rend="gap"/>eodẽ. fo. ⁊ pla.</item>
+<item>
+<lb/>¶ Reſpueſta a Juan andres.<seg rend="gap"/>fo. xxviij. pla. ij.</item>
+<item>
+<lb/>¶ Que ſe contradizen enſus propios dichos Juan andres
+<lb/>y el Abad.<seg rend="gap"/>codẽ. fo. ⁊ pla.</item>
+<item>
+<lb/>¶ Reſpueſta a Enrique bohic.<seg rend="gap"/>fo. xxix. pla. ij.</item>
+<item>
+<lb/>¶ Que noſe abre puerta alos logreros enlo que aqui ſe de
+<lb/>termina.<seg rend="gap"/>Ibidem.</item>
+<item>
+<lb/>¶ Que es malo afirmar ſer pecado mortal: lo q̃ eſta en dub
+<lb/>da ſilo es.<seg rend="gap"/>fo. vltimo. ⁊ fo. xxviij. pla. ij.</item>
+</list>
+</item>
+</list>
+<p rend="center">
+<lb/>¶ Finis tabule.</p>
+<list>
+<head>
+<pb facs="W0018-0008" n="[iv]v"/>
+<lb/><t:b>¶ Siguen ſe las faltas que
+<lb/>ha auido eneſta impreſſion.</t:b></head>
+<item>
+<lb/>¶ Folio. iij. plana. j. linea. vj. dize aquile/ por alquile.</item>
+<item>
+<lb/>¶ Eodẽ folio. plana. ij. linea. xxx. do dize: o otra que es ſegũ
+<lb/>da: ſobra la primera o.</item>
+<item>
+<lb/>¶ Folio. xvij. plana. ij. linea. xvij. antes dela palabra: pide/
+<lb/>falta eſta palabra Pedro.</item>
+<item>
+<lb/>¶ Folio. xviij. plana. j. linea. xiiij. en lugar de: y/ ha de auer
+<lb/><unclear resp="#TL"></unclear>y/ que ſea pauſa.</item>
+<item>
+<lb/>¶ Folio. xx. plana. j. linea penultima: do dize: del que preſto
+<lb/>ha de dezir: delo que preſto.</item>
+<item>
+<lb/>¶ Folio. xxiij. plana. ij. linea. iij. dize canoniſta/ por cano-<lb type="nb"/>niſtas.</item>
+<item>
+<lb/>¶ Folio. xxiiij. plana. ij. linca. v. dize: meles: por melos.</item>
+<item>
+<lb/>¶ Folio. xxvj. plana. ij. linea. ix. donde dize: no que tiene: ha
+<lb/>de dezir: no que no tiene.</item>
+</list>
+<figure/>
+<p rend="hx">
+<pb facs="W0018-0009" n="fo.j.r"/>
+<lb/><t:b>¶ Sigue ſe el tractado.</t:b></p>
+<p>
+<lb/><hi rend="init"><unclear resp="#TL"></unclear></hi><t:b>Coſtumbra ſe mucho en</t:b><note type="margin">
+<lb/>El caſo y
+<lb/>queſti<unclear resp="#TL"></unclear>.</note>
+<lb/>las ferias y lugares de tractos de Ca-<lb type="nb"/>ſtilla: que vn mercader (el qual ponga
+<lb/>mos que ſe llama Juan) preſta a otro
+<lb/>que ſe llama Pedro/ tantos ducados
+<lb/>por algun tiempo: ſobre concierto que
+<lb/>Pedro torne a preſtar a Juã otros tã
+<lb/>tos/ o mas/ o menos: y para eſto hazen ſus contrataciones
+<lb/>por eſcripto/ o de palabra. Pregunta ſe agora: ſi es vſura-<lb type="nb"/>rio el tal contracto/ o ſi ſe podra hazer con buena conciẽcia.
+<lb/>La reſpueſta ſe pone adelante enel notable. ij. §. 8. y. 9.</p>
+<p>
+<lb/>¶ Para biẽ aueriguar eſta quiſtiõ: pornemos primero dos
+<lb/>notables que aprouecharã aſſi miſmo mucho para toda la
+<lb/>materia ďlas vſuras. Enel primero ſe tractara/ que coſa es
+<lb/>vſura/ o logro: y en que conſiſte. Enel ſegundo veremos: <unclear resp="#TL"></unclear>
+<lb/>enel preſtar ſe puede tener reſpecto al intereſſe: y en que con
+<lb/>ſiſte eſte intereſſe. Sobre los quales notables/ ſe reſpõdera
+<lb/>conel ayuda de dios ala queſtiõ ſuſo dicha. Y los notables
+<lb/>van diſtinctos por parrafos: y ſon eſtos que ſe ſiguen.</p>
+<p>
+<lb/>¶ Quãto al primer notable que es/ ver que coſa ſea vſura<note type="margin" n="1" xml:id="W0018_note0009a">
+<lb/>§. 1.</note>
+<lb/>o logro y en que conſiſte/ digo: que avn que muchos ponen
+<lb/>muchas difiniciones: ſumariamẽte (ſegun muy bien: y deſ-<lb type="nb"/>pues de tãtos que han eſcripto/ lo recolige el Gabriel/ enel
+<lb/>quarto delas ſentẽcias. Diſt. 15. q. xj. en prĩcipio.) Uſura es:
+<lb/>qualquier demaſia/ q̃ el q̃ preſta/ o ſia: principalmẽte entiẽ-<lb type="nb"/>de lleuar/ por razõ del tal preſtamo/ o coſa fiada. Y porque
+<lb/>mejor ſe entiẽda: ſon ď declarar las palabras aqui pueſtas.
+<lb/>¶ La primera es lo que dize: qualquier demaſia. La ſegũ-<lb type="nb"/>da lo que dize: preſta/ o ſia. La tercera lo que dize: principal
+<lb/>mente. La quarta lo que dize: entiẽde lleuar. La quinta lo
+<lb/>que dize: por razon del tal preſtamo/ o coſa ſiada.</p>
+<p>
+<pb facs="W0018-0010" n="[fo.j.]v"/>
+<lb/>¶ Pues quãto ala primera palabra. Por q̈lquier dema-<note type="margin">
+<lb/>Palabra
+<lb/>primera.</note><lb type="nb"/>ſia ſe entiẽde qualquier coſa q̃ ſea: agora ſeã dineros: agora
+<lb/>ſea algũa dadiua/ o preſente: agora ſea ſeruicio ď perſona o
+<lb/>fauor de lẽgua q̃ trae algũ prouecho/ o q̈lquiera otra coſa q̃
+<lb/>pueda ſer apreciada por dinero: como q̈nto al ſeruicio ď per
+<lb/>ſona: ſeria: toda ocupaciõ o trabajo q̃ otro romaſſe por mi: y
+<lb/>quãto al fauor ďla lẽgua ſeria: ſi algũ truhã/ o otra perſona
+<lb/>ouieſſe de alabar poreſto mi manera de negociar: o mis mer
+<lb/>caderias: o me preſtaſſe algun cauallo/ o coſa ſemejante de
+<lb/>que ſuelen lleuar dineros.</p>
+<p>
+<lb/>¶ Y ſeſialadamente dixe: coſa q̃ pueda ſer apreciada por di<note type="margin" n="2" xml:id="W0018_note0010a">
+<lb/>§. 2.</note>
+<lb/>nero: porq̃ ſegũ verdad ⁊ ſegũ aſſi miſmo lo dizẽ ſanto Tho
+<lb/>mas. 2. 2. q. lxxviij. arti. 2. ĩ corpo. et ad. 6. y el miſmo Gabriel
+<lb/>vbi ſupra/ ſiguiẽdo ala ſuma angelica (ala q̈l avn q̃ tã do-<lb type="nb"/>cto ſigue y alega acada paſſo eneſta <unclear resp="#TL"></unclear>iſtincio) preſtar vno a
+<lb/>otro prĩcipalmẽte por ganar ſu amiſtad o beniuolẽcia: o eſ-<lb type="nb"/>perãdo las coſas q̃ entre amigos ſin precio alguno ſe ſuelen
+<lb/>preſtar: como q̃ tu me preſtes vn libro/ o otras coſas ſeme-<lb type="nb"/>jantes/ no haze q̃ ſea vſura. Y q̃ qualquier demaſia deſtas
+<lb/>cauſe vſura: pareſce porel capi. 6. ď ſant Lucas dõde fe dize.
+<lb/>Dad p̃ſtado ſin eſperar nada porello. Y quiẽ biẽ lo miraſſe:<note type="margin">
+<lb/>regla ge
+<lb/>neral pa
+<lb/>ra cono-<lb type="nb"/>cer lavſu
+<lb/>ra.</note>
+<lb/>cõ ſola eſta regla ď Chriſto q̃ dize: ſin eſperar nada porello:
+<lb/>y la autoridad ď Ezechiel q̃ pornemos enel. §. 4. podria de
+<lb/>terminar quãtos millares ď caſos particulares ſe offrecen q̃
+<lb/>toquẽ en vſura. Porq̃ quãdo algũo preſta/ o fia algo: es de
+<lb/>ver ſi lleua o eſpera alguna otra coſa porello: o no. Sino lle
+<lb/>ua ni eſpera nada porello: no ay q̃ dezir. Pero ſi lleua algo:
+<lb/>entõces digo q̃/ o lo lleua por cauſa delo q̃ preſta o ſia/ o por
+<lb/>cauſa delo q̃ pierde por fiarlo o preſtarlo. Si lo lleua por lo
+<lb/>q̃ preſta/ o fia: q̈lquier coſa q̃ ello ſea: ſe llama vſura/ y cae
+<lb/>debaxo dela prohibicion que aqui ſe dize por la boca del re
+<lb/>dẽptor: ſin eſperar nada porello. y ſi lo llcua por cauſa delo
+<lb/>que pierde: ya no es por razon delo q̃ fia/ o preſta: y anſi no
+<lb/>es vſura: y entonces entra el intereſſe q̃ ſe dize del daño que
+<lb/>ſe recrece/ o dela ganancia q̃ ceſſa. Y poreſto tãbien ſe puede
+<pb facs="W0018-0011" n="fo.ij.r"/>
+<lb/>conoſcer/ como de quatro maneras de cãbios q̃ comũmen-<note type="margin">
+<lb/>Quatre
+<lb/>maneras
+<lb/>ď cãbios.</note><lb type="nb"/>te andan eneſtos reynos: los dos primeros ſon licitos y ſin
+<lb/>targo: y el tercero y quarto ſon ylicitos y vſurarios. El pri-<milestone n="1" unit="x"/><lb type="nb"/>mero es/ el delos cãbiadores q̃ dan plata/ o moneda menu
+<lb/>da por oro/ o por otra moncda mayor/ o vna moneda por
+<lb/>otra. El ſegũdo es el cãbio por letras: de quien quiere auer<milestone n="2" unit="x"/>
+<lb/>en Roma/ o en Flãdres tantos ducados: y da a qui en To
+<lb/>ledo cierta coſa mas: porq̃ ſelos hagan dar alla. Enlos qua
+<lb/>les cãbios: lo q̃ ſe da (ſiendo coſa moderada/ y como paſſa
+<lb/>comũmente) es por razon delos trabajos/ gaſtos/ daños y
+<lb/>peligros q̃ eſtan anexos alos tales cãbios: y anſi enellos no
+<lb/>ay logro ni cargo. El tercero malo y vſurario con todos ſus<milestone n="3" unit="x"/>
+<lb/>ſemejantes: es el q̃ ſe llama cambio ſeco: porq̃ de verdad es
+<lb/>ſeco dela caridad del proximo/ y ſeca las bolſas y haziẽdas
+<lb/>delos que tienẽ neceſſidad/ y alos que le vſan haze que ten
+<lb/>gan ellalma ſeca ďla gracia diuina/ y que ſean yeſca y leña
+<lb/>para el infierno. Y eſte es delos q̃ preſtan dineros ſecos/ con
+<lb/>obligacion que les den cinco/ o diez por ciento/ por tantos
+<lb/>meſes/ o haſta tal feria/ o aſſi al reſpecto/ todo el tiẽpo q̃ no
+<lb/>ſelos pagan: y a vn pujã el intereſſe/ ſi ſe dilata la paga. Dõ
+<lb/>de los trabajos/ gaſtos y daños/ no puedẽ con mucho mõ
+<lb/>tar tanto/ ni ſe mira ſino aganar el intereſſe deſta manera: y
+<lb/>anſi lo que ſe lleua demaſiado: es por razõ delo q̃ ſe preſta:
+<lb/>⁊ por conſiguiẽte vſura manifieſta/ o alomenos encubierta
+<lb/>debaxo de nombre de cãbio. El quarto es ſemejante tãbien<milestone n="4" unit="x"/>
+<lb/>aeſte enla obra y enla intencion: pero encubierto debaxo de
+<lb/>cedulas de cambio: porq̃ ſe da por letras como el ſegundo:
+<lb/>aſſicomo ď Seuilla/ o Toledo/ a Medina/ o a Uillalõ/ o
+<lb/>a otro lugar cercano: donde la intẽcion del que da los dine-<lb type="nb"/>ros/ y la breuedad del camino/ y la demaſia delo q̃ ſe llcua
+<lb/>ſegun los gaſtos y tiempos: no conſienten q̃ eſte tal cambio
+<lb/>pierda ſu p<unclear resp="#TL"></unclear>opiedad y cargo de verdadero logro. De mane
+<lb/>ra q̃ entrãbos eſtos dos cambios/ por la regla ſobredicha/
+<lb/>ſon conuencidos ſer vſurarios: y q̃ por conſiguiẽte/ ſe eſtien
+<lb/>den aellos todas las penas que los derechos ponen contra
+<pb facs="W0018-0012" n="[fo.ij.]v"/>
+<lb/>los logreros: y anſi conellos deuen los cõfeſſores abrir los
+<lb/>ojos: ſaluo ſi cn algũ caſo particular/ no fueſſe alguno eſcu-<lb type="nb"/>ſado por razon delos gaſtos/ o daños que ſele ſiguieſſen/ o
+<lb/>ganancia probable que ſele eſtoruaſe/ o otra razon ſufficiẽ-<lb type="nb"/>te: como a qui luego y enel ſegundo notable pornemos mas
+<lb/>ala larga: que por la miſma regla ſe podria tambiẽ eſcuſar.
+<lb/>Aſſi que (como he dicho) por la ſobre dicha regla ſe podriã
+<lb/>ligeramẽte determinar eſtas coſas. Pero porq̃ los ſentidos
+<lb/>no del todo deſpiertos y la variedad delos caſos y las opi-<lb type="nb"/>niones ď doctores: eſpecialmẽte ſobre lo ďl intereſſe dela ga
+<lb/>nancia que ceſſa: eſcureſcẽ muchas vezes la materia: es me-<lb type="nb"/>neſter particularizar mas cada coſa: y anſi lo hare yo agora
+<lb/>aqui. Digo pues q̃ lo q̃ eſta dicho q̃ qualquier demaſia de-<lb type="nb"/>las q̃ ſeñalamos/ cauſe vſura: no ſolamẽte lo declara la ſo-<lb type="nb"/>bre dicha auctoridad ď ſant Lucas y Ezechiel: mas avn ſe
+<lb/>determina expreſſamẽte enel capitulo cõſuluit de vſu. Y por
+<lb/>toda la. 14. q. 3. 4. y quinta cõ ſus gloſas. Dõde entre otras
+<lb/>auctoridades dize ſant Auguſtin alli enel. ca. ſi feneraueris.
+<lb/>No ſolamente eres logrero reſcibiẽdo dineros por lo q̃ pre-<lb type="nb"/>ſtas: mas a vn qualquiera coſa q̃ eſperes allende delo que
+<lb/>diſte: agora ſea trigo/ agora ſea vino: agora ſea azeyte/ ago
+<lb/>ra ſea qualquiera otra coſa que quiſieres: te lo haze verda-<lb type="nb"/>deramente ſer. Y el abad enel dicho capitulo conſuluit y en
+<lb/>el capitulo nauiganti. eo. ti. dize tambiẽ anſl. Porquc toda
+<lb/>demaſia es vedada: ſigueſe q̃ qualquiera coſa por pequeña
+<lb/>que ſea/ ⁊ qualquier q̃ ſea: que ſe da por razõ del preſtamo:
+<lb/>cauſa ſiẽpre vſura y trae obligaciõ de reſtituyrſe. Has ď en
+<lb/>tender eſto/ ſegũ lo q̃ ſe dize aqui ſobre la tercera palabra.</p>
+<p>
+<lb/>¶ La ſegunda palabra q̃ ſe ha de declarar: es/ lo que dize:<note type="margin" n="3" xml:id="W0018_note0012a">
+<lb/>§ 3.
+<lb/>Palab<unclear resp="#TL"></unclear>
+<lb/>ij.
+<lb/>mutuñ.</note>
+<lb/>preſta/ o fia. Por eſta ſe entiende lo q̃ en latin ſe llama: mu-<lb type="nb"/>tuũ: que quiere dezir: hazer tuyolo q̃ es mio: que es propria
+<lb/>mente quãdo paſſa en ti el ſeñorio delo q̃ te doy: como quã
+<lb/>do te preſto dineros o lleuas de mi tantas hanegas de tri-<lb type="nb"/>go/ o coſas ſemejãtes para q̃ lo gaſtes: y deſpues me buel-<lb type="nb"/>uas otro tanto/ o ſu valor: porq̃ no ſe entienda hablar aqui
+<pb facs="W0018-0013" n="fo.iij.r"/>
+<lb/>del preſtido q̃ en latin es dicho/ cõmodatũ: que es quando<note type="margin">
+<lb/>Cõmoda
+<lb/>tum.</note>
+<lb/>te preſto gracioſamente vna cadena de oro/ o coſa ſemejãte
+<lb/>para con q̃ te atauies algun dia: o del preſtido q̃ ſe llama: lo
+<lb/>catum/ o alquile en caſtellano: q̃ es quando te preſto vn ca<note type="margin">
+<lb/>Locat<unclear resp="#TL"></unclear>.</note>
+<lb/>uallo/ o vna ropa para q̃ me tornes deſpues la miſma coſa:
+<lb/>y conella el aquile q̃ ygualamos. Y anſi entre eſtos tres cõ-<lb type="nb"/>tractos ay dos diferencias/ quanto haze al pũto preſente.
+<lb/>La primera es/ q̃ enel primero preſtido/ o mutuo: paſſa el
+<lb/>ſeñorio enel q̃ lo reſcibe: pero eneſtotros contractos no. La
+<lb/>ſegunda es/ q̃ ſi porel mutuo ſolamente lleuo algo: luego el
+<lb/>tal contracto ſe haze vicioſo y vſurario/ ſi lo lleuo porel co-<lb type="nb"/>modatũ: dexa de ſer comodatũ: y paſſa en alquile: mas ſi lo
+<lb/>lleuo porel locatum/ o alquile: puedo lo lleuar con buena
+<lb/>conſciencia: y queda ſe el contrato cõ ſu nombre. Y ſobre la
+<lb/>palabra: preſta/ añadi eſta palabra/ fia: para ſatiſfazer al
+<lb/>romãce delo que quiere dezir mutuũ/ y porq̃ ſe entiẽda que
+<lb/>toca tambien eſto a los q̃ venden trigo/ o paños/ o lanas/
+<lb/>azeytes/ o otras coſas fiadas: o las cõpran adelãtadas: lle-<lb type="nb"/>uando mas de ſu valor/ o quitando algo ſolamẽte por cau
+<lb/>ſa del tiempo: lo qual es vſura manifieſta/ o encubierta ſe-<lb type="nb"/>gun el contrato como ſe dira mas ala larga al fin deſte no-<lb type="nb"/>table: porq̃ (ſegũ lo nota el Gabriel: vbi ſupra in principio)
+<lb/>ſi yo te vẽdo vna vara de paño que vale vn ducado por vn
+<lb/>real mas/ porq̃ lo quieres fiado: y por cauſa del tiempo te
+<lb/>lleuo aquel real: lo miſmo es q̃ ſi te dieſſe yn ducado en di-<lb type="nb"/>neros: y porel te lleuaſſe el real de mas. Porq̃ cada coſa ſe
+<lb/>puede reſoluer en ſu valor. Deuẽ ſe empero acerca deſto cõ
+<lb/>ſiderar tres coſas q̃ pone el Scoto in. 4. diſ. 15. q. 2. ar. 2. La
+<lb/>vna es q̃ el precio delas coſas no eſta atado a punto tan in-<lb type="nb"/>diuiſible que no tẽga alguna anchura de algũ poco mas o
+<lb/>menos. La ſegunda que el que vende o cõtracta: no ha de
+<lb/>vender el tiempo q̃ no es ſuyo. Y entonces ſe dize vender el
+<lb/>tiempo: quando (como es dicho y ſe dira tãbien algo dello
+<lb/>adelante enel. §. 13.) lo que yo lleuo demaſiado: no lo lleuo
+<lb/>ſino ſolamente por cauſa del tiẽpo que eſpero: y no por da-<pb facs="W0018-0014" n="[fo.iij.]v"/><lb type="nb"/>ño que ſe me ſigua/ o ganãcia veriſſimil q̃ ſe me eſtorue. La
+<lb/>tercera coſa es/ que el tal q̃ aſſi vendeo cõtracta: no haga el
+<lb/>cõcierto de manera que (ſegun lo que ſiempre o por la ma-<lb type="nb"/>yor parte ſuele acõteſcer) ſu hazienda quede a buen ſeguro:
+<lb/>y la del proximo a peligro de daño. Y ſobre eſtos fundamẽ-<lb type="nb"/>tos: la ſumma Ange. vſu. 1. §. 58. Y el Gabriel enla dicha
+<lb/>diſt. 15. q. 11. ar. 3. dubio. 9. y otros muchos ponẽ vn exemplo
+<lb/>por donde ſe pueda conoſcer quãdo el q̃ vende algo fiado:
+<lb/>no ſe dira lleuar mas del juſto precio por lo que fia: el qual
+<lb/>es eſte. Pongamos (dizen) que vna vara de vn miſmo pa-<lb type="nb"/>ñio/ o vna hanega de trigo en vn miſmo lugar y entre quiẽ
+<lb/>lo conoſce: vnos la aprecian q̃ vale/ o la vẽden a luego pa-<lb type="nb"/>gar por diez reales: otros por onze: otros por doze: alos qua
+<lb/>les doze ſe eſtiende eſta anchura del precio: y cada vno de<unclear resp="#TL"></unclear>
+<lb/>ſtos tres precios ſe tiene por juſto. En tal caſo: no ſe podra
+<lb/>dezir q̃ yo lleuo mas del juſto precio por lo que vendo: ſi al
+<lb/>que me la paga luego la doy por nueue o por diez: y al que
+<lb/>me la lleua fiada no la quiero dar ſino por doze: porq̃ eſta
+<lb/>demaſia no ſale dela eſtimacion del juſto precio: pues ay al
+<lb/>gunos q̃ (ſin que enello aya fraude) la apreſcian por tanto
+<lb/>como es dicho. Mas para eſte vender fiado/ o cõprar ade-<lb type="nb"/>lãtado: vea ſe tãbien lo q̃ ſe dira en ſin deſte notable. Dõde
+<lb/>(como poco antes dixe) ſe tracta mas ala larga deſtas ven
+<lb/>tas y compras: y tambien enla primera delas cinco condi-<lb type="nb"/>ciones que ſe ponen enel ſegundo notable. §. 6.</p>
+<p>
+<lb/>¶ La palabra tercera es lo que dize: principalmente. Pa-<note type="margin" n="4" xml:id="W0018_note0014a">
+<lb/>§. 4.
+<lb/>Palabra
+<lb/>iij.</note><lb type="nb"/>ra eſto es de ſaber: q̃ el que preſta o fia puede tener dos intẽ
+<lb/>çiones (ſegun lo reſumen la ſumma ange. enel titu. vſu. 1. in
+<lb/>prĩcipio. y deſpues ďlla el Gabriel vbi ſupra arti. 1. nota. 1.)
+<lb/>Una que ſe llama principal: o otra que es ſegũda. La pri-<note type="margin">
+<lb/>Dos in-<lb type="nb"/>tẽciones
+<lb/>enel pre-<lb type="nb"/>ſtar.</note><lb type="nb"/>mera puede ſer en vna de tres mancras: conuiene a ſaber/ <unclear resp="#TL"></unclear>
+<lb/>antes del preſtido/ quando en ninguna manera ſe moue-<lb type="nb"/>ria a preſtar/ lo que preſta o fia: ſino por la demaſia que ſe
+<lb/>le ha de ſeguir. Y la tal es propria y verdadera vſura: daña<note type="margin">
+<lb/>Propia
+<lb/>vſura.</note>
+<lb/>da por aquello q̃ ya diximos: quel ſeñor dize. Luce. 6. Dad
+<pb facs="W0018-0015" n="fo.iiij.r"/>
+<lb/>preſtado: no eſperãdo por cllo alguna otra coſa: y porel ca.
+<lb/>18. del propheta Ezechiel donde dixo dios. Aquel terna vi
+<lb/>da y no morira/ que no recibiere logro ni otra demaſia al-<lb type="nb"/>guna: y ſegũ lo determina la ygleſia enel dicho. c. conſuluit
+<lb/>y en otros: y queda dicho ſobre la primera palabra: y lo po
+<lb/>ne Alexandre de ales enla. 3. parte. q. 36. membro. 4. arti. 1.
+<lb/>y enla. q. 66. de precepto mutui. membro quarto: y comun-<lb type="nb"/>mente vnos y otros doctores ſin diferencia. Sobre lo qual
+<lb/>tambien dize ſancto Tho. vbi ſupra. arti. 1. ad quartũ: y el
+<lb/>Gabri. arti. 1. nota. 2. enla reſpueſta al ſexto argu. q̃ lo q̃ dize
+<lb/>el ſeñor: dad preſtado: es cõſejo fuera de caſo de neceſſidad:
+<lb/>mas lo que dize: no eſperando por ello coſa alguna: es pre-<lb type="nb"/>cepto que obliga.</p>
+<p>
+<lb/>¶ La ſegunda manera deſta intencion principal/ es deſ-<lb type="nb"/>pues del preſtamo: quãdo al ticmpo que preſta o fia: lo ha-<lb type="nb"/>ze gracioſamente ſin ninguna mala intenciõ: pero deſpues
+<lb/>andando el tiempo: pide/ o mueſtra querer que le ſea da-<lb type="nb"/>da alguna coſa.</p>
+<p>
+<lb/>¶ La tercera manera es/ juntamente conel preſtido: quan
+<lb/>do el que preſta no lo haze porque le den nada porello: mas
+<lb/>el deudor dale alguna coſa moſtrando hazerlo por cauſa
+<lb/>del preftamo/ y el que preſta lo reſcibe tambien por la miſ-<lb type="nb"/>ma cauſa. Eneſtas dos maneras: ay tãbien verdadera vſu
+<lb/>ra como fue dicho dela primera.</p>
+<p>
+<lb/>¶ Pero es de ſaber (quanto ala reſtitucion) q̃ ſi qualquie-<note type="margin" n="5" xml:id="W0018_note0015a">
+<lb/>§. 5.</note><lb type="nb"/>ra deſtas tres maneras ſe mueſtra defuera por qualquier
+<lb/>palabra o ſeñal: trae ſiempre conſigo (allende del peccado
+<lb/>mortal) cargo de reſtitucion. Y anſi ſe entiende el dicho. ca
+<lb/>conſuluit y ſu gloſa: y lo dize alli el Abad y lo notan tãbien
+<lb/>comunmente todos los ſummiſtas y muchos theologos.
+<lb/>Mas ſi defuera no ſe mueſtra ſeñal alguna por dõde ſe co-<note type="margin">
+<lb/>vſura <unclear resp="#TL"></unclear>ẽ
+<lb/>tal.</note><lb type="nb"/>nozca que el que preſta/ deſſea la tal demaſia: y el q̃ la da:
+<lb/>ſe mueue de ſu libre voluntad a darla: ⁊ no porque vea que
+<lb/>el que preſta la quiere/ o demanda: pueſto que de hecho la
+<lb/>deſſee: entonces/ ayn que aya peccado mortal por la intẽ-<pb facs="W0018-0016" n="[fo.iiij.]v"/><lb type="nb"/>cion mala: no ay cargo de reſtituciõ de neceſſidad ſaluo de
+<lb/>conſejo. Y anſi ſe entiende lo q̃ el Richardo dize enel. 4. de-<lb type="nb"/>las ſen. diſti. 15. q. 5. arti. 5. y el Scoto eadẽ diſti q. 2. arti. 2. ſe
+<lb/>gun tambien le entiẽde y lo dize Nicolao de Orbellis eadẽ
+<lb/>diſt. q. 3. §. 7. que bien y breuemente declara eſtas intencio-<lb type="nb"/>nes. Y eſto anſi miſmo tienẽ el Arçobiſpo de Florencia. 2.
+<lb/>parti. titu. 2. c. 5. §. penulti. Y otros a quien alega y ſigue la
+<lb/>ſũma ange. reſti. 1. in verbo vſurarius: y otros ſummiſtas. Y
+<lb/>las palabras del Scoto ſon eſtas. Sola la voluntad/ no in
+<lb/>teruiniendo contratacion de palabras/ o otra alguna ſeñal
+<lb/>equiualente: por dõde conozca el deudor: que el q̃ le preſta
+<lb/>no le preſtaria/ ſino fueſſe con cſperança de demaſia: no ha
+<lb/>ze al que preſta tener coſa agena/ ni por cõſiguiẽte ſer obli-<lb type="nb"/>gado a reſtitucion. Y dize tambien el Gabriel vbi ſupra. ar
+<lb/>ti. 1. caſi al medio del primer notable: que ſi el q̃ reſcibe pre-<lb type="nb"/>ſtado ofrece alguna coſa al q̃ le preſta: y expreſſamente di-<lb type="nb"/>ze que no lo da por cauſa del preſtido q̃ le haze entonces: ni
+<lb/>por otro que eſpere q̃ le aya de hazer: muy biẽ ſe puede pre-<lb type="nb"/>ſumir/ que lo da gracioſamente para tomar lo ſin cargo: ſi
+<lb/>otra coſa mas clara no pareſcieſſe por otros indicios. Eſto
+<lb/>quanto ala primera o principal yntencion.</p>
+<p>
+<lb/>¶ Quiero que ſepan los q̃ eſto leyeren que para mas aſſe-<lb type="nb"/>gurar lo q̃ eſcriuo: yo di eſte tratado al muy reuerẽdo ſeñor
+<lb/>doctor Medina canonigo enla ygleſia/ y cathredatico de<note type="margin">
+<lb/>Doctor
+<lb/><unclear resp="#TL"></unclear>edina.</note>
+<lb/>theologia enla vniuerſidad ď Alcala: ynica luz en nueſtros
+<lb/>tiempos (ſino me engaña mi juyzio) de nr̃a eſpaña en toda
+<lb/>facultad: para q̃ le vieſſe y quiſieſſe dezirme ſu pareſcer. El
+<lb/>qual de ſeys coſas q̃ me reſpõdio le pareſcia q̃ ſe deuiã en-<lb type="nb"/>mendar en todo el tractado: las dos ſe contienẽ eneſte. §. 5.
+<lb/>Y la primera es: q̃ enlo q̃ digo/ que ſi el que preſta/ no mue-<lb type="nb"/>ſtra por ſeñales deſſear alguna demaſia: a vn q̃ aya pecado
+<lb/>mortal: no ay cargo de reſtituciõ. ⁊c. Pareſce al dicho ſeñor
+<lb/>doctor/ q̃ avn que no aya ſeñales: ſola la voluntad obliga
+<lb/>a reſtituyr: y q̃ por tanto ſe deuria dezir aqui: q̃ no ay obli-<lb type="nb"/>gacion de reſtituyr abſolutamente: pero q̃ ſi el propoſito del
+<pb facs="W0018-0017" n="fo.v.r"/>
+<lb/>q̃ anſi preſta: es lleuar la tal demaſia por razõ del preſtido:
+<lb/>no lo puede retener: y q̃ anſi ſera obligado a vna de dos co
+<lb/>ſas: eſto es: o a dexar el propoſito: o a reſtituyr lo q̃ lleuare.
+<lb/>La ſegunda coſa es/ q̃ le pareſce ſer impertinẽte para el re-<lb type="nb"/>ſtituyr/ q̃ la tal intencion ſe mueſtre defuera o no: como yo
+<lb/>aqui diſtingo: porq̃ ſi el que da la demaſia/ la da enteramẽ
+<lb/>te de ſu voluntad: agora ſe mueſtre la mala intencion del q̃
+<lb/>preſta/ agora no: la reſtitucion no ſera obligatoria. Y ſi por
+<lb/>el contrario no la da de ſu libre voluntad: ſino porel preſti-<lb type="nb"/>do: agora mueſtre el que preſta ſu intencion/ agora no: obli
+<lb/>gado ſera a reſtituyr lo q̃ lleua. Lo que yo puſe eneſte. §. va
+<lb/>fundado como enel ſe contiene: pero no obſtante todo: digo
+<lb/>que eſta enmienda me pareſce muy biẽ: y que lo primero es
+<lb/>para mas reſtreñir los logros: y lo ſegundo para mas ali-<lb type="nb"/>uio dela reſtitucion.</p>
+<p>
+<lb/>¶ La ſegunda intencion es: quando el que preſta princi-<note type="margin" n="6" xml:id="W0018_note0017a">
+<lb/>§. 6.
+<lb/>Segũda
+<lb/>intenciõ.</note><lb type="nb"/>palmente ſe mueue por caridad/ o por amiſtad/ o por otro
+<lb/>buen reſpecto: de manera que avn q̃ no eſperaſſe prouecho
+<lb/>alguno: no dexaria de fiar o preſtar lo que preſta: pero tiniẽ
+<lb/>do eſto por principal motiuo: eſpera ſegundariamente algũ
+<lb/>ſeruicio o ganancia/ o otra buena obra como la q̃ el haze/
+<lb/>o coſa ſemejãte/ ſin pedirlo ni moſtrar ſeñal alguna q̃ quie
+<lb/>re o eſpera eſto. Y eneſta intenciõ no ay culpa/ ni haze al hõ
+<lb/>bre vſurario: antes puede tomar todo lo q̃ liberalmente ſe
+<lb/>le ofreciere ſin cargo de conſciencia. Eſto eſta claro enel ca.
+<lb/>ſicut. 1. q. 2. q̃ dize anſi (hablando ď coſa ſemejante/ o peor q̃
+<lb/>es del vicio dela ſimonia.) Ninguna manzilla de culpa/
+<lb/>cauſa la coſa q̃ ſe ofrece: ſino es pedida por la cobdicia del q̃
+<lb/>la reſcibe. Lo miſmo ſe prueua porel cap. dilectus. de ſimo.
+<lb/>el. 2. in fine donde ſe dize. Aq̃llo ſe podra reſcebir con hazi-<lb type="nb"/>miento de gracias: q̃ gracioſamente fuere ofreſcido ſin taſſa
+<lb/>cion de algun precio. Eſto determina aſſi miſmo la glo. enel
+<lb/>dicho. ca. conſuluit: y el Abad alli. y ſant Buenauentura<note type="margin">
+<lb/>Buena-<lb type="nb"/>uẽtura.</note>
+<lb/>enel tercero. diſtĩ. 37. ſobre la letra del maeſtro: hablando ďl
+<lb/>quarto precepto dela ſegñda tabla: y ſancto Tho. 2. 2. q. 78.
+<pb facs="W0018-0018" n="[fo.v.]v"/>
+<lb/>arti. 2. Y el Richardo enel lugar ya dicho: y otros muchos.
+<lb/>Y anſi dize el Gabriel/ vbi ſupra. arti. 1. al fin. del primer no
+<lb/>table (lo qual es tomado ala letra de Alexandre de ales/
+<lb/>enlos lugares arriba alegados) que el que preſta puede eſ-<lb type="nb"/>perar alguna coſa que en otra manera por via de amiſtad/
+<lb/>o de natural obligacion/ le es deuida: anſi como q̃ aquel a
+<lb/>quien yo preſto: me torne el a preſtar otra vez: eſtando yo en
+<lb/>otra tal neſceſſidad. Eſto no principalmẽte por razõ ni obli
+<lb/>gacion de mi preſtido: ſino por ſu caridad/ o amiſtad: porq̃
+<lb/>los beneficios hechos de vna parte a otra: enciẽdẽ y abiuã
+<lb/>la charidad. Y lo miſmo en ſentencia tiene ſancto Tho. vbi
+<lb/>ſupra. arti. 2. in reſpon. ad. 3. et. 4. Y la ſũma angelica que le
+<lb/>alega y ſigue vbi ſupra. §. 1. al fin. Y el Aſtẽſe enel libro. 3. ti
+<lb/>tu. 11. arti. 5. algo antes del ſin q̃ lo tiene tambien ala letra.
+<lb/>Y deſto tambien ſe habla adelante: enel ſegundo notable.
+<lb/>§. 10. hablando del quarto caſo.</p>
+<p>
+<lb/>¶ Mas es de notar/ que pueſto que yo pueda eſperar de-<note type="margin" n="7" xml:id="W0018_note0018a">
+<lb/>§. 7.</note><lb type="nb"/>la manera que ſe ha dicho/ eſte reconoſcimiento de aquel a
+<lb/>quien preſto: no empero ſeria licito/ hazer ſobrello alguna
+<lb/>contratacion por eſcrito ni por pa la bra: como lo dize el miſ<note type="margin">
+<lb/>Obliga-<lb type="nb"/>ciõ ciuil.</note>
+<lb/>mo ſancto Tho. ibidẽ/ y el Gabriel: y lo ponẽ tãbien la glo.
+<lb/>enel dicho. ca. ſi feneraueris: y el Abad enel ca. ſalubriter. de
+<lb/>vſu. y la ſũma Ange. vbi ſupra. §. 4. y otros muchos: porq̃
+<lb/>eſto ſeria ya obligar de neceſſidad al q̃ preſta: y por cõſiguiẽ
+<lb/>te eſperaria ſobre concierto la demaſia o ganancia/ de que
+<lb/>aquel me tornaſſe a preſtar por razon de mi preſtido. Anſi<note type="margin">
+<lb/>Differen
+<lb/>cia delas
+<lb/>dos intẽ
+<lb/>ciones.</note>
+<lb/>q̃ eneſtas dos intenciones: la primera q̃ cauſa vſura: tiene
+<lb/>por principal reſpecto fu prouecho y ganãcia: y no la chari
+<lb/>dad ni amiſtad: pero la ſegunda q̃ no es vſuraria: tiene por
+<lb/>principal/ la charidad o amiſtad/ y no la ganãcia: a vn que
+<lb/>ſegundariamente ſe le ſiga.</p>
+<p>
+<lb/>¶ La quarta palabra/ es lo que dize: entiẽde lleuar. Aqui<note type="margin" n="8" xml:id="W0018_note0018b">
+<lb/>§. 8.
+<lb/>y palabra
+<lb/>iiij.</note>
+<lb/>ſe incluye qualquier conuenencia/ o concierto de eſcriptu-<lb type="nb"/>ra o de palabra/ o de ſeñas: y toda eſperãça o intenciõ prin
+<lb/>cipal: ſegun ſe dixo agora ſobre la palabra tercera. §. 4. y. 5.
+<pb facs="W0018-0019" n="fo.vj.r"/>
+<lb/>y lo mueſtra la palabra: ſpcres/ enel dicho. ca. ſi fenerauc-<lb type="nb"/>ris: y la glo. alli/ y la palabra ſperantes. Luc. 6. y enel di-<lb type="nb"/>cho. c. conſuluit.</p>
+<p>
+<lb/>¶ La quinta y poſtrera palabra de declarar: es lo que di-<note type="margin">
+<lb/>palabra.
+<lb/>v.</note><lb type="nb"/>ze: por razon del tal preſtido o coſa q̃ fia. Eſto tambien eſta
+<lb/>declarado ſobre la dicha tercera palabra: ſer lo que princi-<lb type="nb"/>palmente ſe pide o eſpera o ſe lleua allende delo q̃ ſe preſta:
+<lb/>por razon ſolamente del preſtido: pero poneſe tambien di-<lb type="nb"/>ſtincta eſta palabra: para que no ſe entienda aqui lo que ſe
+<lb/>lleua por razon de intereſſe: o en los otros caſos: en que lici-<lb type="nb"/>tamente ſe puede lleuar demaſia.</p>
+<p>
+<lb/>¶ Y deſtos caſos en que ſe puede lleuar demaſia: la glo. en<note type="margin" n="9" xml:id="W0018_note0019a">
+<lb/>§. 9.</note>
+<lb/>el capi. conqueſtus de vſu. pone ſeys. Alexã. de ales. vbi ſu
+<lb/>pra. q. 66. mẽbro. 1. pone quatro. Richardo vbi ſupra. (fue-<lb type="nb"/>ra delos contractos delas ventas/ cõpras y alquilees) po-<lb type="nb"/>ne cinco: debaxo delas quales encierra otros cinco: que ſon
+<lb/>los diez primeros delos treze q̃ luego aqui abaxo ſe pornã.
+<lb/>La ſuma angeli. pone doze. El abad enel dicho. c. conque-<lb type="nb"/>ſtus/ pone los ſeys dela glo. y otros ſeys ſobrellos: y otro<note type="margin">
+<lb/>xiij. caſoſ
+<lb/>ſin vſura</note>
+<lb/>que añade enel. c. poſt miſerabilẽ de vſu. que ſon treze. Los
+<lb/>dela glo. ſon eſtos breuemente.</p>
+<p>
+<lb/>¶ El primero es/ quando alguna poſſeſſion eſta enajena-<milestone n="1" unit="x"/><lb type="nb"/>da injuſtamente/ y no puede el ſeñor por otra manera ſatiſ
+<lb/>fazer ſe: o quando es feudo dela ygleſia. Y lo del feudo: po-<lb type="nb"/>ne la ſuma Ange. por primero de ſus caſos y remite ſe/ alo
+<lb/>que dize enel titulo: feudum. §. 31. Lo qual aqui yo no de-<lb type="nb"/>claro: porque no ſe en Eſpaña donde ſe acoſtumbre: ⁊ porq̃
+<lb/>no haze mucho a nueſtro propoſito.</p>
+<p>
+<lb/>¶ El ſegundo dela glo. es/ del yerno que no ha reſcebido<milestone n="2" unit="x"/>
+<lb/>el dote y ſuſtenta las cargas del matrimonio: como ſe dira
+<lb/>enel quinto enxemplo del ſegundo notable. §. 5.</p>
+<p>
+<lb/>¶ El tercero/ quando el que preſta no es pagado a ſu ter-<milestone n="3" unit="x"/><lb type="nb"/>mino: y poreſto ha perdido algo.</p>
+<p>
+<lb/>¶ El q̈rto por razõ delo q̃ pudiera ganar/ el tiẽpo q̃ el otro<milestone n="4" unit="x"/>
+<lb/>le detuuo ſus dineros: ſegũ ſe dira enel ſegũdo notable.</p>
+<p>
+<pb facs="W0018-0020" n="[fo.vj.]v"/>
+<lb/>¶ El quinto/ quando los dineros ſe preſtan para pompa<milestone n="5" unit="x"/>
+<lb/>o demoſtracion: que entonces ſon como coſa alquilada.</p>
+<p>
+<lb/>¶ El ſexto/ por razon de pena pueſta enel contrato: ſiendo<milestone n="6" unit="x"/>
+<lb/>la pena moderada: como ſe dira aqui abaxo.</p>
+<p>
+<lb/>¶ Los q̃ añade el abad ſon eſtos. El ſeptimo es/ del fiador<milestone n="7" unit="x"/>
+<lb/>q̃ ha reſce bido daño por amor dela fiança que hizo.</p>
+<p>
+<lb/>¶ El octauo es/ quando ſe comprã tributos o coſas ſeme-<milestone n="8" unit="x"/><lb type="nb"/>jantes de por vida o al quitar: con tanto que el precio q̃ por
+<lb/>ellos ſe da/ ſea conuenible: eſto es el q̃ comunmente ſe vſa
+<lb/>y ſe tiene por juſto/ enlos lugares y al tiempo en q̃ ſe com-<lb type="nb"/>pran: y que no aya otra condicion alguna/ q̃ ſe tenga ſegũ
+<lb/>buena conſciencia por injuſta o agrauiada contra el q̃ los
+<lb/>vende. Lo qual todo (allende de otros muchos doctores)
+<lb/>concluye docta y largamente el Gabriel. dicta. diſtin. 15. q.
+<lb/>12. per totum.</p>
+<p>
+<lb/>¶ El nono/ por dubda q̃ ay enla mercaduria: como quan-<milestone n="9" unit="x"/><lb type="nb"/>do vendo o compro vna coſa adelantada: que al tiempo de
+<lb/>la paga/ veriſſimilmente puede valer mas o menos: como
+<lb/>ſe dira en fin deſte notable. §. 13. y. 14.</p>
+<p>
+<lb/>¶ El decimo/ quãdo lo q̃ ſc da demaſiado: es dado gracio<milestone n="10" unit="x"/>
+<lb/>ſa y libremente: como ſe dixo ſobre la tercera palabra. §. 6.</p>
+<p>
+<lb/>¶ El vndecimo/ quãdo por razon dela deuda o cobrança:<milestone n="11" unit="x"/>
+<lb/>el q̃ preſto/ paſſa algunos trabajos que no auia de paſſar.</p>
+<p>
+<lb/>¶ El duodecimo/ quãdo el tutor o perſona q̃ aſſi tiene ad-<milestone n="12" unit="x"/><lb type="nb"/>miniſtraciõ: fue negligẽte en emplear los dineros de aquel
+<lb/>cuya adminiſtracion tiene/ en poſſeſſiones/ o coſas de li-<lb type="nb"/>cita ganancia.</p>
+<p>
+<lb/>¶ El. 13. y poſtrero es: quando lo que ſe lleua/ es a inficles<milestone n="13" unit="x"/>
+<lb/>que tienen vſurpado lo que poſſeen/ o a aquellos a quien
+<lb/>juſtamente podemos matar/ o tomar ſus haziẽdas. Eſtos
+<lb/>caſos vca ala larga quiẽ quiſiere enlos lugares alegados:
+<lb/>pero muy mejor (quanto alos mas dellos) enel gabriel vbi
+<lb/>ſupra. q. 11. arti. 1. nota. 2. y arti. 2. concluſion. 4.</p>
+<p>
+<lb/>¶ Mas porque (como dize la dicha. glo. del. ca. cõqueſtus)<note type="margin" n="10" xml:id="W0018_note0020a">
+<lb/>§. 10.</note>
+<lb/>en todos aquellos ſus caſos: ay mas verdaderamente in-<pb facs="W0018-0021" n="fo.vij.r"/><lb type="nb"/>tereſſe q̃ vſura: y el. 7. 8. 11. y. 12. ďlos que añade el abad: per-<lb type="nb"/>tenecẽ tambien a intereſſe: y el. 9. es eſcuſado por la duda: y
+<lb/>el. 10. ꝑteneſce a dadiua liberal: y enel. 13. (como dize el Ga-<lb type="nb"/>briel. dicta. q. 11. arti. 1. poco antes dela replica) toma hom-<lb type="nb"/>bre lo q̃ es ſuyo: y no es ganancia vſuraria: muy bien y cla-<lb type="nb"/>ramente (ſegũ el meſmo Gabriel: enel dicho arti. 1. nota. 2.)
+<lb/>lo comprehende todo el Scoto enla dicha diſtin. 15. q. 2. ar-<note type="margin">
+<lb/>Scot<unclear resp="#TL"></unclear>.</note><lb type="nb"/>ti. 2. (avn que enlo del intereſſe ay la differencia que adelã-<lb type="nb"/>te parecera) y lo reduze a dos maneras en general: enlas
+<lb/>quales ſin conſciencia ſe puede lleuar alguna juſta dema-<lb type="nb"/>ſia. La vna es ſobre contrato: la otra ſin contrato. Enla pri<note type="margin">
+<lb/>Los. xiij
+<lb/>caſos r<unclear resp="#TL"></unclear>-<lb type="nb"/>duzidos
+<lb/>a dos ma
+<lb/>ner<unclear resp="#TL"></unclear>.</note>
+<lb/>mera pone tres caſos. El vno es/ por razon de pena ſegun
+<lb/>fue dicho aqui arriba enel ſexto caſo: con tanto que la pena
+<lb/>no ſea pueſta con engaño para encubrir la vſura. Y enton-<lb type="nb"/>ces ſe preſumiria eſto (ſegun alli dize el Scoto) quando el
+<lb/>acreedor querria mas que ſe paſſaſſe el termino por lleuar
+<lb/>la pena: que no que le pagaſſen enel dia ſeñalado: o tãbien
+<lb/>(ſegũ añade el Gabriel. nota. 2.) ſi veriſſimilmẽte preſumia
+<lb/>q̃ no le auian de pagar enel tiẽpo q̃ ſe ſeñalaua/ o quãdo ſe
+<lb/>pone demaſiada pena: o aſſi miſmo (ſegun dize la glo. enel
+<lb/>dicho ca. conq̃ſtus) quãdo yo te vẽdo vna heredad <unclear resp="#TL"></unclear>l qui-<lb type="nb"/>tar: y el precio es pequeño: o (como tãbiẽ dize el Arçobiſpo
+<lb/>de floren. enla. 2. parte. titu. j. ca. 7. §. 23. y la ſuma ange. vſu.
+<lb/>j. §. 31.) quando el que haze poner la pena: tiene coſtumbre
+<lb/>de logrear: porel cap̃. illo vos. infi. extra de pigno. o ſi ſe po-<lb type="nb"/>ne enel contrato/ q̃ por cada vno delos años/ o meſes: ſe en
+<lb/>tienda incurrir el deudor enla pena: y anſi en otros caſos ſe
+<lb/>mejantes: de muchos delos quales habla la ſumma ange.
+<lb/>largamente: dende el. §. 50. haſta en fin. Todo eſto empero
+<lb/>es: quanto alo q̃ ſe puede preſumir: ſegun el juyzio exterior:
+<lb/>mas quanto ala conſciencia: cſtaremos alo que confeſſare
+<lb/>el que haze los tales contractos: con tanto que nunca ſe cõ-<lb type="nb"/>ſienta ningun agrauio notable.</p>
+<p>
+<lb/>¶ El ſegundo caſo del Scoto es: quãdo lo que ſe reſcibe de<note type="margin" n="11" xml:id="W0018_note0021a">
+<lb/>§. 11.</note>
+<lb/>maſiado: es por razon de intereſſe: delo q̈l hablaremos enel
+<pb facs="W0018-0022" n="[fo.vij.]v"/>
+<lb/>ſegundo notable. El tercero es/ por razon dela dubda q̃ ay<note type="margin">
+<lb/>quãdo<unclear resp="#TL"></unclear>y
+<lb/><unclear resp="#TL"></unclear>bda.</note>
+<lb/>(como fue dicho aqui arriba enel nono caſo del Abad) dõ-<lb type="nb"/>de aſſi el caudal como la demaſia ſepone debaxo de acaeſci
+<lb/>miento incierto: delo qual el Gabriel enla dicha. q. xj. arti. j.
+<lb/>nota. ij. ſub lr̃a. g. (ſegun eſto/ y ſegun la primera delas des
+<lb/>reglas q̃ poco adelãte da el Scoto) pone enxẽplo/ enel que
+<lb/>compra vna coſa por menos delo q̃ vale/ quãdo la compra
+<lb/>auiẽdola de reſcebir adelate: que ſi ſe preſume veriſſimilmẽ
+<lb/>te que al tiempo de recebirla podra valer mas/ o menos: la
+<lb/>dubda le eſcuſa: como el q̃ vende cõ tal dubda/ es eſcuſado
+<lb/>enel. ca. inciuitate ⁊ nauiganti. de vſu pero ſi veriſſimilmẽte
+<lb/>ſe preſume q̃ ha de valer entonces mucho mas ⁊ no menos:
+<lb/>o que ſi fuere menos: ſera bien poco: el tal contrato es vſura
+<lb/>rio: o tiene encubierta la vſura/ porq̃ lo que ſe lleua entõces
+<lb/>demaſiado: es por cauſa del tiempo y no por otra coſa. Y cõ
+<lb/>eſto conciertan el Abad enel dicho. ca. nauiganti/ y otros.
+<lb/>Y lo miſmo dize el Scoto del que vẽde alguna coſa y lleua
+<lb/>mas delo q̃ valẽ juſtamente al contado: ſolo porq̃ la fia: que
+<lb/>ſegun el dicho. ca. cõſuluit: es vſurero: no auiendo eſta dub
+<lb/>da que podia la tal coſa valer mas/ o menos al tiempo ďla
+<lb/>paga/ y que junto coneſto la auia de guardar para adelãte
+<lb/>el que la vẽde: delo qual hablaremos luego mas largo. La
+<lb/>ſegunda manera q̃ el Scoto pone es: quando no paſſa con-<lb type="nb"/>trato: y aeſta ſe reduze todo lo q̃ ſe da liberalmente: nolo pi-<lb type="nb"/>diendo ni moſtrãdo q̃rerlo/ el q̃ preſta ni tomãdolo por pre-<lb type="nb"/>cio del preſtido y todo lo q̃ ſe dixo arriba enla declaraciõ de
+<lb/>la tercera palabra: hablãdo dela ſegunda intẽcion. §. 6. y. 7.</p>
+<p>
+<lb/>¶ Y porq̃ muchas vezes aconteſce lo q̃ acabamos de dezir<note type="margin" n="12" xml:id="W0018_note0022a">
+<lb/>§. 12.</note>
+<lb/>agora ſobre el tercero caſo del Scoto: que ſe compran coſas
+<lb/>antes del tiempo que ſe hã de reſcebir (anſi como es pan/ o
+<lb/>vino/ o azeyte antes q̃ ſe coxga: o carneros antes que ſe ha-<lb type="nb"/>gan/ o lana/ o qualquiera otra coſa deſta manera/ que por
+<lb/>tiempo ſuben o baran) o ſe venden fiadas para q̃ ſe paguen
+<lb/>adelante: delas quales coſas hablã el. ca. inciuitate: y el. ca.
+<lb/>conſuluit/ y el. ca. nauiganti. de vſu. y alli los canoniſtas/ y
+<pb facs="W0018-0023" n="fo.viij.r"/>
+<lb/>el Scoto (ſegun diximos) en la diſtĩ. 15. q. 2. arti. 2. al qual ſi-<lb type="nb"/>gue el Gabriel vbi ſupra. arti. j. nota. 2. y lo trata tambien la
+<lb/>ſũma ange. vſu. j. §. 33. y. 34. y la ſi lueſ. vſu. 2. §. 2. per totũ: pa
+<lb/>reſciome que para mayor claridad dello deuia mas eſtẽder
+<lb/>eſta coſa. Y para ella digo: que legñ los dichos textos y do
+<lb/>ctores y ſegun verdad: toda eſta materia ſe puede ſuficiente
+<lb/>mente diſtinguir y aueriguar deſta manera.</p>
+<p>
+<lb/>¶ O yo compro antes ďl tiempo: o vendo antes del tiempo<note type="margin" n="13" xml:id="W0018_note0023a">
+<lb/>§. 13.</note>
+<lb/>en que ſe me ha de dar/ o pagar la coſa q̃ compro/ o vendo.
+<lb/>¶ Si la vẽdo: dezir ſe ha lo q̃ ſe ha de hazer enel. §. ſiguiẽte.<note type="margin">
+<lb/>Cõpra<unclear resp="#TL"></unclear>
+<lb/>adelanta
+<lb/>das.</note>
+<lb/>¶ Si la cõpro: digo q̃ o yo lo hago porq̃ he meneſter aque-<lb type="nb"/>lla coſa que compro y quiero la tener ſegura/ o lo hago por
+<lb/>auerla mas barato: con daño del que mela vende. ¶ Si es
+<lb/>por auerla con tal daño: ſera el pecado y obligacion de reſti
+<lb/>tucion q̃ ſe dira aqui abaxo eneſte miſmo. §. hablando del q̃
+<lb/>compra la coſa que tiene por cierto q̃ ha de valer mas.¶ Si
+<lb/>la compro por tener la coſa ſegura: o taſſamos luego el pre-<lb type="nb"/>cio/ o no.¶ Si no le taſſamos ni ſe diminuye por dar adelã
+<lb/>tados los dineros nada ďlo que ha de valer al tiempo en q̃
+<lb/>he de reſcebir lo que compro: ſino q̃ lo dexamos a como va
+<lb/>liere quando melo han de dar: entõces es prouiſion de pru-<lb type="nb"/>dẽcia humana/ y no hago agrauio alguno: antes hago biẽ
+<lb/>ami proximo ſi tiene neceſſidad de mis dineros: ſaluo ſi el q̃
+<lb/>melo vende no quinera venderlo enel tiempo q̃ ponemos q̃
+<lb/>melo ha de dar: ſi no quando mas auia de valer: aſſi como ſi
+<lb/>puſieſſemos q̃ melo ha de dar por Enero y el no lo auia de
+<lb/>vender haſta Abril o mayo: y ſolamente lo vende para co-<lb type="nb"/>mo valiere en Enero: por razon delos dineros q̃ le doy ade
+<lb/>lãtados: que ental caſo ya ſe me da por mis dineros alguna
+<lb/>demaſia/ y aſſi ſeria logro ⁊ contrato reprouado porel ſexto
+<lb/>ca. de ſant Lucas donde ſe dize: nichil indeſperãtes: y porel
+<lb/>dicho ca. conſuluit/ y porel caſo ſemejante del dicho. ca. na-<lb type="nb"/>uiganti: y queda mas largamẽte prouado al princinio deſte
+<lb/>notable. §. 2. y. 3.¶ Si taſſamos luego el precio: entonces/ o
+<lb/>la coſa puede valer mas delo q̃ doy al tiẽpo en q̃ me la han
+<pb facs="W0018-0024" n="[fo.viij.]v"/>
+<lb/>de pagar: o menos delo q̃ doy. ¶ Si ſe o preſumo q̃ valdra
+<lb/>menos delo q̃ doy: el agrauio es para mi: y anſi no aura de
+<lb/>que tener eſcrupulo para conel proximo.¶ Si puede valer
+<lb/>mas: es ď ver entonces ſi yo q̃ compro/ tengo eſto por cier-<lb type="nb"/>to: o eſtoy en dubda dello.¶ Si tẽgo por cierto q̃ la coſa q̃
+<lb/>compro/ ha de valer mas delo q̃ agora doy al tiẽpo que la
+<lb/>tẽgo de reſcebir: el tal cõtrato es yſurario/ o tiene encubier-<lb type="nb"/>ta la vſura/ ſegun ya fue dicho aqui arriba enel tercero ca-<lb type="nb"/>ſo del Scoto. §. 11. y anſi la compra es illicita/ ⁊ yo q̃ la ha-<lb type="nb"/>go pecco mortalmente/ y ſoy obligado a reſtituyr lo q̃ va-<lb type="nb"/>lio mas al tiempo que me la dieron: porq̃ lo q̃ deſta mane-<lb type="nb"/>ra ſe lleua: es por cauſa del tiempo/ o del preſtido: y no por
+<lb/>otra coſa. Y eſto queda ya prouado aqui enel. §. 11. y ſe mo-<lb type="nb"/>ſtro enel. §. 2. y. 3. ¶ Si tengo dubda delo que ha de valer:
+<lb/>entonces/ o ponemos el precio ſegun lo q̃ veriſſimilmẽte ſe
+<lb/>preſume que podra valer la coſa al tiẽpo en q̃ la he de rece-<lb type="nb"/>bir/ y quando el otro la queria vender: o no le ponemos en
+<lb/>tal ygualdad.¶ Si le ponemos eneſta ygualdad: la com-<lb type="nb"/>pra es licita y ſegura/ porque ygualmente corre el peligro
+<lb/>anſi para mi q̃ compro: como para el otro q̃ vende. Y deſta
+<lb/>manera ſe aprueua eſto enlos dichos capitulos inciuitate/
+<lb/>et nauiganti: y en otros lugares. Para lo qual tambien ſe
+<lb/>vea lo q̃ digo enel. 2. nota. §. 2. enel vltimo delos enxemplos
+<lb/>q̃ alli pongo. ¶ Pero ſino ponemos el precio en tal ygual
+<lb/>dad: ſino q̃ ſe/ o preſumo/ q̃ ſi la coſa baxare mas de lo que
+<lb/>doy/ ſera poco o no nada: y que ſi ſubiere ſera mucho mas
+<lb/>delo que doy (anſi como ſi puſſeſſemos el precio del trigo a
+<lb/>tres reales/ en año y en tierra dõde ſi falta vn poco el agua
+<lb/>puede ſobir a ſiete y ocho reales o por ay: y a vn que haga
+<lb/>buen aſio no puede baxar medio real) entonces/ es lo miſ-<lb type="nb"/>mo que queda dicho eneſte. §. 13. y ſe dixo arriba enel. §. 11.
+<lb/>del que tiene por cierto que la coſa que compra ha de valer
+<lb/>mas al tiempo de recebirla: eſto es q̃ el tal contrato es vlu-<lb type="nb"/>rario/ o tiene encubierta la vſura: ⁊ que por conſiguiente yo
+<lb/>que lo hago peco mortalmente/ y ſoy obligado a reſtituciõ
+<pb facs="W0018-0025" n="fo.ix.r"/>
+<lb/>delo que mas valio: porq̃ falta aqui lo que ſegũ los dichos
+<lb/>capitulos in ciuitate ⁊ nauiganti ſe requiere: q̃ la dubda ſea
+<lb/>veriſſimil/ de poder valer la coſa tãto mas como menos pa
+<lb/>ra quel peligro corra por ygual aſſi para el q̃ compra como
+<lb/>para el que vende: y tãbien porq̃ lo poquito q̃ puede baxar:
+<lb/>no deſhaze la certidumbre ſobre dicha: y anſi reſta/ que lo q̃
+<lb/>lleuo demas: es porel tiempo/ o por lo que preſto.</p>
+<p>
+<lb/>¶ Quãto al vender: a quien bien lo miraſſe: por lo q̃ ſe aca-<note type="margin" n="14" xml:id="W0018_note0025a">
+<lb/>§. 14.</note><lb type="nb"/>ba agora de dezir del cõprar y por lo q̃ eſta dicho delos que
+<lb/>fiã paños/ o otras mercadurias eneſte primero notable. §. 3.<note type="margin">
+<lb/>Uentas
+<lb/>fiadas.</note>
+<lb/>y ſe dira enel ſegundo notable. §. 6. ſe podria tãbien determi
+<lb/>nar eſto de quãdo yo vendo algo fiado. Pero allende delo
+<lb/>dicho eneſtos lugares: para q̃ mas claridad y menos traba
+<lb/>jo aya entodo (ſiguiẽdo la diſtinciõ que eneſto hazẽ el Sco
+<lb/>to y el Gabriel y la ſũma Ange. dõde dixe enel dicho. §. 3. la
+<lb/>qual diſtinciõ es fundada entodo derecho y razon y por to-<lb type="nb"/>dos los que bien entienden aceptada) digo agora hablan-<lb type="nb"/>do eſpecialmẽte del vender del pan que ſe vſa mas que otra
+<lb/>coſa (y enlo qual ſe puede tomar regla para todo lo demas
+<lb/>que ſe da o vende fiado) que ſi yo vendo tantas hanegas de
+<lb/>trigo o ceuada para q̃ me las paguen: põgo por caſo (ſegun
+<lb/>lo pone Scoto) para Junio quando ſuele valer mas q̃ por
+<lb/>nauidad: que es el tiẽpo quãdo yo lo doy: q̃ o yo lo auia de
+<lb/>vender agora quando lo vendo: o no. ¶ Si lo auia de ven-<lb type="nb"/>der agora y lo doy al preſcio q̃ de preſente vale y eſpero por
+<lb/>los dineros haſta Junio/ o para otro tiempo alguno: hago
+<lb/>miſericordia con mi proximo que lo lleua agora fiado pues
+<lb/>le ſocorro en ſu neceſſidad ſin lleuarle nada porel tiẽpo que
+<lb/>le eſpero.¶ Pero ſi lleuo mas delo q̃ vale agora quãdo lo
+<lb/>vendo: no por mas de porq̃ lo fio: es clara vſura: como que-<lb type="nb"/>da determinado por razon dela demaſia enlo q̃ auemos di
+<lb/>cho del cõprar: ⁊ parece claro porel dicho capitulo cõſuluit.
+<lb/>¶ Sino lo auia de vender agora al tiempo q̃ lo vendo: ſino
+<lb/>que lo auia ď guardar (põgo por caſo para Abril o Mayo
+<lb/>quando mas ſuele valer) entonces: digo que/ o ſeñalamos
+<pb facs="W0018-0026" n="[fo.ix.]v"/>
+<lb/>agora el precio: o queda ſuſpenſo para otro tiẽpo.¶ Sile ſe
+<lb/>fialamos agora/ y es el preſcio q̃ al preſente vale: hazeſe mi
+<lb/>ſericordia conel proximo ⁊ no queda de que tener eſcrupulo
+<lb/>de cõſciẽcia.¶ Pero ſino es el precio q̃ al preſente vale ſino
+<lb/>mayor: entõces es ď ver ſi es claramẽte mayor/ o alomenos
+<lb/>tal/ q̃ ſi el pã ſubiere: ſegũ lo q̃ por la mayor parte ſuele acae
+<lb/>ſcer no puede ſubir mas ď como yo lo vẽdo o muy poco me
+<lb/>nos: y q̃ ſi baxare: puede (tãbiẽ ſegun lo q̃ ſuele acaeſcer por
+<lb/>la mayor parte) baxar mucho mas del preſcio q̃ ſe me ha de
+<lb/>pagar: de manera q̃ ala clara/ o ſegũ lo q̃ por la mayor par
+<lb/>te fuele acaeſcer: yo me põgo en ſeguridad de ganãcia/ y al
+<lb/>otro en peligro de ꝑdida. En tal caſo: no ay dubda ſino q̃ en
+<lb/>la ſemejãte cõtrataciõ ay anſi mifmo vſura clara o encubier
+<lb/>ta y tãbien pecado mortal y cargo de reſtituciõ: ſegũ en caſo
+<lb/>ſemejãte auemos dicho enlo del cõprar adelãtado.¶ Mas
+<lb/><unclear resp="#TL"></unclear> el precio q̃ ſeñalamos/ es tan moderado: q̃ veriſſimilmẽte
+<lb/>ſe preſume q̃ puede baxar tãto como ſubir al tiẽpo en que ſe
+<lb/>me ha de pagar lo q̃ vendo/ entõces es eſcuſado de culpa el
+<lb/>tal cõtrato por razõ dela dubda: como pareſce enlos dichos
+<lb/>capitulos in ciuitate ⁊ nauiganti. Y alo que enel dicho ca. in
+<lb/>ciuitate pareſce que cõtradize algo aeſto: adelante reſpõde-<lb type="nb"/>mos enel. fegundo notable. §. 7. ſegun los dichos doctores.
+<lb/>¶ Si el preſcio queda ſuſpẽſo para otro tiẽpo (preſupueſto
+<lb/>ſtẽpre lo que ſe ha dicho q̃ yo lo auia de guardar para quan
+<lb/>do mas ſuele valer) entõces digo que: o quando lo doy que
+<lb/>da determinado que ſe me pague ſegun valiere enel tal tiẽ-<lb type="nb"/>po en q̃ yo lo queria vender y ſe me ha ď pagar: o en otro tiẽ
+<lb/>po en q̃ no ſuele valer mas: o q̃ no queda anſi determinado.
+<lb/>¶ Si queda determinado ďſta manera: en tal caſo hago mi
+<lb/>ſericordia cõ mi proximo: dãdole mi haziẽda por no mas de
+<lb/>lo q̃ vale en aq̃l tiempo para el q̈l yo queria guardalla: o en
+<lb/>otro cercano ael.¶ Sino queda determinado el precio: ſino
+<lb/>que pongo q̃ ſe pague a razõ de como mas valiere en qual-<lb type="nb"/>quier tiempo del que corre dende que lo vẽdo haſta el tiẽpo
+<lb/>en q̃ ſe me ha de pagar: entõces digo q̃ porq̃ yo me põgo e<unclear resp="#TL"></unclear>
+<pb facs="W0018-0027" n="fo.x.r"/>
+<lb/>ſeguro alomenos por la mayor parte: ⁊ ami ꝓximo en peli-<lb type="nb"/>gro ď daño: cometo vſura ⁊ ſere obligado ala reſtituciõ: ſegũ
+<lb/>queda dicho a<unclear resp="#TL"></unclear>q arriba eneſte miſmo. §. eñl caſo del q̃ ſeñala
+<lb/>el p̃cio mayor: o q̃ por la mayor parte ſabe q̃ ha ď ſer mayor.
+<lb/>¶ Todos eſtos puntos y diſtinciones ſe han afſi miſmo de
+<lb/>mirar/ quando doy o preſto el trigo o ceuada: para q̃ me lo
+<lb/>bueluan tãbiẽ en trigo o ceuada: o en otra q̈lquier coſa q̃ no
+<lb/>ſea dinero. Que auiẽdolo de preſtar o vẽder de preſente por
+<lb/>algũa neceſſidad o ꝓuecho q̃ ſe me ofrezca/ o por hazer pla
+<lb/>zer a quiẽ melo ruega: ſiẽpre tẽgo de tener acatamiẽto al pre
+<lb/>cio del tiẽpo en q̃ lo preſto: y al del tiẽpo en q̃ me lo hã de bol
+<lb/>uer. De manera q̃ ſi quãdo yo lo p̃ſto vale la hanega a qua
+<lb/>tro reales: y al tiẽpo en q̃ he de ſer pagado: vale la miſma ha
+<lb/>nega/ o lo q̃ ſe me ha ď dar/ ocho reales: no podre lleuar por
+<lb/>dos hanegas delas q̃ yo preſte mas de vna hanega o ſu va
+<lb/>lor enla coſa q̃ ſe me ha de dar. Pero ſi yo entõces nolo que
+<lb/>ria preſtar ni vẽder porq̃ lo queria guardar para q̈ndo mas
+<lb/>valieſſe: podre poner el precio ďla manera y como agora lo
+<lb/>acabe ď dezir de quãdo lo vẽdo de p̃ſente para q̃ adelãte me
+<lb/>lo paguẽ a dinero. Y lo miſmo es ďlas vẽtas ď vino/ y azey
+<lb/>te/ y q̈lquier otra coſa q̃ ſea.</p>
+<p>
+<lb/>¶ Es tãbien aqui de notar q̃ lo q̃ dize el Angel. vſu. j. §. 34<note type="margin" n="15" xml:id="W0018_note0027a">
+<lb/>§. 15.</note>
+<lb/>q̃ es menos ſeguro ſeñalar eñſte caſo de q̃ aucmos hablado
+<lb/>la paga para prĩcipio/ o medio/ o fin de mayo/ q̃ no/ ſi indi
+<lb/>ferẽtemẽte ſe ſeñalaſſe para mayo: quãdo como dicho es ſe<note type="margin">
+<lb/>Señalar
+<lb/>el dia de
+<lb/>la paga.</note>
+<lb/>auia de guardar para entõces: ſu opinion eneſto no pareſce
+<lb/>cierta: porq̃ eneſto la dubda es (ſegũ ſe dixo) la q̃ eſcuſa quã
+<lb/>do ſe pone el precio q̃ veriſſimilmẽte ſe preſume q̃ ha ď valer
+<lb/>la coſa enel tiẽpo para quãdo ſe auia ď guardar y ſe ha ď pa
+<lb/>gar: la q̈l dubda tiene mas lugar q̈ndo ſe ſeñala la paga pa
+<lb/>ra vn dia cierto: q̃ no aſſi para todo el mes ĩdiferẽtemẽte: eñl
+<lb/>q̈l mes vn dia puede valer mas q̃ otro: y entonces yo q̃ anſi
+<lb/>lo vẽdi: podria lleuar a como valio mas entodo el mes: y an
+<lb/>ſi ſeria mayor agrauio para el q̃ cõpro. Y tãbien el Scoto en
+<lb/>fin dela dicha quiſtiõ. 2. no cõdena el ponerſe dia cierto: <unclear resp="#TL"></unclear>no
+<pb facs="W0018-0028" n="[fo.x.]v"/>
+<lb/>el poner q̃ ſe pague como mas valiere. Y la ſilueſ. vſu. 2. §. 2.
+<lb/>particula. 3. y enla roſa aurea. caſu. 16. delas q̃ſtiones imper
+<lb/>tinẽtes tãbiẽ dize: q̃ licitamẽte ſe ſeñala dia o ſemana en q̃ ſe
+<lb/>haga la paga: quãdo como dicho es lo auia de guardar pa
+<lb/>ra adelante el q̃ lo vẽde o preſta: y nolo vẽde o preſta agora
+<lb/>prĩcipalmẽte ſino por hazer plazer a <unclear resp="#TL"></unclear>qen ſelo pide. Itẽ es de
+<lb/>notar como lo dize tãbiẽ el angel enel dicho. §. 34. y deſpues
+<lb/>ďl el Gabriel. vbi ſupra. arti. j. nota. 2. ſub lr̃a. j. q̃ para poner
+<lb/>juſtamẽte el preſcio ďlo q̃ anſi vẽdo para q̃ adelãte ſe me pa
+<lb/>gue auiẽdolo ď guardar como dicho es: de neceſſidad ſe ha
+<lb/>de deſcõtar lo q̃ podria mẽguar/ o hazer de coſta el pã/ o vi<note type="margin">
+<lb/>que es lo
+<lb/>que ſe ha
+<lb/>de deſcõ-<lb type="nb"/>tar.</note>
+<lb/>no o azeyte q̃ ſe vẽde/ o q̈lquier otra coſa q̃ ſea: q̃ guardãdo
+<lb/>lo ſe ſuele diminuyr: o hazer algũa coſta en guardarlo.</p>
+<p rend="hx">
+<lb/>¶ Segundo notable.</p>
+<p>
+<lb/><hi rend="init">E</hi>L ſegundo notable es: ver en q̃ conſiſte el intereſſe: y ſi<note type="margin" n="1" xml:id="W0018_note0028a">
+<lb/>§. 1.</note>
+<lb/>enel preſtar ſe puede tener acatamiẽto al tal intereſſe.
+<lb/>Y dexadas otras muchas coſas q̃ del dizen Innocẽcio enel
+<lb/>ca. ſacro ď ſen. exco. y Bartolo enla ley vnica. C. ď ſen. q̃ pro
+<lb/>eo qď intereſt profe. enlo q̃ haze ala materia preſente (ſegun
+<lb/>lo colige el Gabriel vbi ſupra. y lo dize Anto. de bu. enel ca.
+<lb/>ſalubriter. y el Abad enel ca. cõqueſtus de vſuris: y enel ca.
+<lb/>per vr̃as. de dona. in. vi. et vxo. y Pedro de ancarrano enel
+<lb/>ca. j. de vſu. libro. 6. alos q̈les ſiguẽ la ſũma ange. vſu. j. §. 15.
+<lb/>y la Silueſ. eo. ti. §. 19.) eſte intereſſe eſta en dos coſas: cõuie<note type="margin">
+<lb/>en dos co
+<lb/>ſas eſta
+<lb/>el ĩtereſ-<lb type="nb"/>ſe.</note>
+<lb/>ne aſaber/ enel daño q̃ ſele recrece al q̃ preſta: y tãbiẽ enlo q̃
+<lb/>dexa de ganar: por careſcer de ſus dineros. Enlo del daño
+<lb/>no ay q̃ de tenernos: por lo q̃ ya fue dicho enel. iij. vij. y. xj. ca
+<lb/>ſos delos q̃ ſe puſierõ enel primer notable. §. 9. q̃ cierto es/ q̃
+<lb/>ſi yo te preſto algo para q̃ melo des tal dia/ y por no darme
+<lb/>lo tu: ſoy cõſtreñido cõ neceſſidad a tomar otros dineros a lo
+<lb/>gro: o paſſo algunos trabajos q̃ no auia de paſſar/ o vendo
+<lb/>por vẽtura mi haziẽda a menoſprecio: o coſa ſemejãte: tu me
+<lb/>q̃das obligado alos tales daños. Lo primero pareſce enel
+<lb/>capitu peruenit de fideiuſſo. y lo dizẽ comũmente los cano-<lb type="nb"/>niſtas enel primer capitu. de vſu. y la gloſa. y el Abad enel
+<pb facs="W0018-0029" n="fo.xj.r"/>
+<lb/>dicho capi. conqueſtus. Y lo ſegundo ſi vendo la hazienda
+<lb/>a menoſprecio/ lo nota la glo. enel miſmo capi. conqueſtus
+<lb/>y el Innocẽcio enel cap̃. nauiganti de vſu. y muchos otros.
+<lb/>Y eſto eneſpecial pone por intereſſe obligatorio Scoto/ vbi
+<lb/>ſupra: diziẽdo que a vn q̃ no aya por donde ſe pueda conde
+<lb/>nar el deudor/ es obligado a tal recõpenſa: inforo conſcien-<lb type="nb"/>tie: lo qual tambien figue y alega el Gabriel/ dicta diſtĩ. 15.
+<lb/>q. xj. arti. j. nota. 2. Lo miſmo es del fiador q̃ paga por otro
+<lb/>el principal y las coſtas o demaſia q̃ ſele recreſcen por no ſa
+<lb/>carle el deudor deſu fiança en tiempo deuido: ſegun el texto
+<lb/>enel. ca. cõſtitutus. de fideiuſſo. y anſi de qualquier otro da-<lb type="nb"/>ño: q̃ por cauſas ſemejãtes vẽgan a alguno: enlo qual no ay
+<lb/>dubda. Y ſegun algunos (como lo nota la ſũma ange. vſu. 1.
+<lb/>§. 20. y la Silueſ. §. 26. y tãbien el Gabriel dicto nota. 2.) el q̃
+<lb/>ſegun dicho es/ tomo alogro para cõplir lo q̃ nole era paga
+<lb/>do a ſu tiẽpo: podra pedir lo q̃ anſi pago de logro: ſi cõcurrie
+<lb/>ron dos coſas. La vna q̃ auiſo primero a ſu deudor q̃ le era
+<lb/>neſceſſario tomar aq̃llo a logro: y la ſegũda que nolo pudo
+<lb/>hallar de otra manera ſaluo deſta. Concluyẽ empero las di
+<lb/>chas ſũmas: que avn q̃ pudieſſe hallar los dineros preſta-<lb type="nb"/>dos ſin logro: podria pedir lo q̃ anſi pagaſſe: porq̃ no es obli
+<lb/>gado a echar ſobre ſi el cargo del preſtarſelos gracioſamẽte:
+<lb/>pueſto caſo q̃ lo primero parezca coſa mas razonable. Y es
+<lb/>tãbien de cõſiderar/ q̃ como dize ſancto Tho. ſecũda ſecũde<note type="margin">
+<lb/>daño de
+<lb/>dosma-<lb type="nb"/>neras.</note>
+<lb/><unclear resp="#TL"></unclear>q. 62. arti. 4. de dos maneras puede alguno reſcebir daño.
+<lb/>La primera quitandole lo q̃ ya tenia enſu poder (como el q̃
+<lb/>pierde/ o paga algo q̃ no deuia) y lo tal ſiempre ſe ha de re-<lb type="nb"/>cõpenſar enteramẽte ſin que falte nada. La ſegunda impi-<lb type="nb"/>diendole lo q̃ eſtaua en camino de auer (anſi como es enel q̃
+<lb/>negocia y le es eſtoruado lo q̃ ha de ganar/ o enel q̃ ſiembra
+<lb/>alguna coſa y otro le coge o deſtruye todo lo q̃ ſembro y en
+<lb/>caſos ſemejantes) y eſto no es neceſſario ď recõpenſar todo
+<lb/>enteramẽte lo q̃ ſe eſperaua: ſino lo q̃ a buen juyzio pareſcie
+<lb/>re ſegun la condicion delas perſonas y negocios. Y coneſto
+<lb/>queda a parte lo del daño.</p>
+<p>
+<pb facs="W0018-0030" n="[fo.xj.]v"/>
+<lb/>¶ Enlo del intereſſe por cauſa delo que ſe dexa ď ganar: ay<note type="margin" n="2" xml:id="W0018_note0030a">
+<lb/>§. 2.</note>
+<lb/>mas difficultad. Pero ſegũ los doctores en principio deſte
+<lb/>notable alegados: eſte intereſſe conſiſte en qualquier ganã-<note type="margin">
+<lb/>intereſſe
+<lb/>lucri ceſ-<lb type="nb"/>ſantis.</note><lb type="nb"/>cia que ſe me eſtorua por tener otro mis dineros: con tal que
+<lb/>eſta ganancia la tenga ya enlas manos o caſi: eſto es q̃ pro-<lb type="nb"/>bable o veriſſimilmẽte la eſpero de auer en tanto tiẽpo: tra-<lb type="nb"/>tando licitamẽte con mis dineros ſegun la eſperiencia q̃ de
+<lb/>otras vezes tengo y ſegun los tiempos/ tierras y negocios.
+<lb/>Conforme alo qual/ y conforme tambiẽ alo q̃ dizen los do
+<lb/>ctores pueſtos enel ſegundo enxẽplo/ delos cinco que aqui
+<lb/>abaxo ſe ſiguẽ. §. 4. y otros q̃ tienẽ aquello miſmo (hablan
+<lb/>do delos q̃ quieren yr a ferias a cõprar mercadurias/ o em-<lb type="nb"/>plear ſus dineros de otra manera licita) ganãcia probable<note type="margin">
+<lb/>Ganãcia
+<lb/>probable</note>
+<lb/>o veriſſimil ſe llamaria la q̃ en Toledo ſuelen auer los mer
+<lb/>caderes que eneſtos tiẽpos ſeguros traẽ ſedas de Ualencia
+<lb/>o de Granada/ enlo qual tienen ya eſperiencia delo que ſue
+<lb/>len comũmente y a juſto preſcio ganar en tanto tiempo: y lo
+<lb/>traen a ſus caſas ſin paſſar peligros de mar ni de ladrones
+<lb/>ni de otros inconuiniẽtes manifieſtos: delo qual ſe hablara
+<lb/>mas largamente en vna queſtion que al fin deſte tratado ſe
+<lb/>añade al principio delas reſpueſtas delos argumentos en<note type="margin">
+<lb/>fo. xxv.</note>
+<lb/>contrario. Y eſte es el intereſſe dela ganancia que ſe eſtorua:
+<lb/>al qual puede tener acatamiento el mercader/ quando ſien
+<lb/>do rogado preſta ſus dineros: guardadas empero las con-<lb type="nb"/>diciones que aqui adelante ſe han de poner/ y con que tam
+<lb/>bien no hagan cuenta delo que ſuclen ganar quando fian
+<lb/>las mercadurias ſegun les plaze: ſino delo que ſuelen/ o po
+<lb/>drian ganar vendiendo las juſtamente al contado: como lo
+<lb/>nota muy bien la Silueſtri. vſu. ij. §. j. hablando delos que
+<lb/>anſi fian las mercadurias. Y con acuerdo digo/ juſtamente
+<lb/>al contado: porque ſi vendiendo al contado: noſe puede ſa-<lb type="nb"/>car el juſto preſcio: no ſe ha de mirar entonces alo que vale
+<lb/>al contado/ ſino al tal juſto preſcio/ avn que ſe fie: ſegun lo
+<lb/>dire enla primera delas cinco condiciones que ſe ponen ade
+<lb/>lante/ eneſte notable. §. 6.</p>
+<p>
+<pb facs="W0018-0031" n="fo.xij.r"/>
+<lb/>¶ Mas ſi la ganancia no fueſſe aſſi probable o veriſſimil/<note type="margin" n="3" xml:id="W0018_note0031a">
+<lb/>§. 3.</note>
+<lb/>ſino que fueſſe incierta (como ſeria enlos q̃ no tienẽ determi
+<lb/>nado ſi emplearã o no ſus dineros: o ſi los emplearã/ es en<note type="margin">
+<lb/>Ganãcia
+<lb/>incierta.</note>
+<lb/>coſas dubdoſas: donde no ay probabilidad de cierta ganã
+<lb/>cia/ o que han de paſſar por lugares peligroſos/ o que mu
+<lb/>chas vezes ſuele auer enlas tales coſas otros inconuinien
+<lb/>tes: por donde acõteſce perder ſe no ſolamente la ganancia
+<lb/>mas avn el principal/ y en caſos ſemejantes) entonces no
+<lb/>ſe llamaria eſto intereſſe de ganancia probable/ ſino de ga
+<lb/>nancia poſſible/ q̃ ſe puede eſtoruar de muchas maneras:
+<lb/>lo qual/ la haze ſer incierta: y poreſſo querer lleuar intereſſe
+<lb/>alguno/ poreſta tal ganancia: ſeria verdadera vſura ſegun
+<lb/>ſancto Tho. vbi ſupra. q. 78. arti. 2. ad primũ. Y tambiẽ ſegũ
+<lb/>el Scoto/ vbi ſupra: el qual da por regla: ſer clara vſura/
+<lb/>quando la vna parte ſe pone/ a ſi en ſeguro/ por la mayor
+<lb/>parte: y ala otra en auẽtura/ como es aqui: y ſegũ anſi miſ-<lb type="nb"/>mo/ el Gabriel vbi ſupra. nota. 2. que eneſto ſigue ala ſũma
+<lb/>ange. ⁊ otros muchos doctores/ y ſe ſaca ďlos dichos capi.
+<lb/>cõſuluit et in ciuitate de vſu. Y habla ſancto Thom. eneſte
+<lb/>lugar propriamente dela ganãcia yncierta/ y no dela pro-<lb type="nb"/>bable/ ſegun lo requierẽ otras palabras q̃ poco antes po-<lb type="nb"/>ne enel miſmo arti. y ſegũ lo que dize enla queſtion. 66. arti.
+<lb/>4. como tambiẽ lo dizẽ y entiẽdẽ/ el Gabriel y el ſuplemen-<lb type="nb"/>to: y el Angel. §. 16. y el Silueſ. enel dicho. §. 19. y reſti. 3. §. 9.
+<lb/>¶ Y para que mas claro ſe vca/ quando por razõ dela di-<note type="margin" n="4" xml:id="W0018_note0031b">
+<lb/>§. 4.</note><lb type="nb"/>cha ganancia q̃ ſe eſtorua/ ſe puede lleuar el juſto intereſſe:
+<lb/>porne cinco enxemplos/ por dõde tãbien ſe podran juzgar
+<lb/>otros muchos caſos deſtos. El primero es: q̃ ſi vno/ no me<note type="margin">
+<lb/>exemplo
+<lb/>primero.</note>
+<lb/>pago a ſu tiẽpo/ lo q̃ le auia preſtado: ſiendo yo acoſtũbra-<lb type="nb"/>do a tratar cõ mis dineros: le puedo lleuar por intereſſe to-<lb type="nb"/>do lo que en aq̃l tiempo pudiera ganar licitamẽte a juyzio
+<lb/>de buenos mercaderes. Eſto dizẽ el Abad enel ca. ſalubri-<lb type="nb"/>ter/ y enel ca. conqueſtus. de vſu. deſpues ď Inno. enel. c. ſa
+<lb/>cro de ſen. ex. y el Angel. §. 16. y el Gabriel vbi ſupra. arti. 1.
+<lb/>not. 2. y la ſilueſ. §. 26. deſpues ď ſctõ Tho. enla dicha. q. 66.
+<pb facs="W0018-0032" n="[fo.xij.]v"/>
+<lb/>arti. 4. Pero es de notar/ q̃ en todos eſtos caſos/ ſe han de
+<lb/>guardar las cinco cõdiciones q̃ aqui abaxo pornemos. §. 6.
+<lb/>¶ El ſegundo enxemplo es: del que quiere negociar licita-<milestone n="2" unit="x"/><lb type="nb"/>mente con ſus dineros/ o comprar algunas poſſeſſiones: q̃<note type="margin">
+<lb/>ſobre eſto
+<lb/>ſe pone o
+<lb/>tra queſ-<lb type="nb"/>tiõ: al fin
+<lb/>deſte tra
+<lb/>ctado. fo.
+<lb/>xxij.</note>
+<lb/>ſi otro le pide preſtados aquellos dineros que queria em-<lb type="nb"/>plear eneſto: puede lleuar la ganancia o el valor delos fru-<lb type="nb"/>tos q̃ ſe le pudieran veriſſimilmente ſeguir. Eſto dizẽ el Ga
+<lb/>briel/ y el Angel/ vbi ſupra/ ⁊ Nicolao ď orbellis in. 4. ſen.
+<lb/>diſtĩ. 15. q. 3. §. 23. y la Silueſtri. §. 22. 23. 25. deſpues de otros
+<lb/>muchos doctores q̃ tienẽ lo miſmo: con q̃ toda via ſe guar-<lb type="nb"/>den las dichas cinco condiciones/ q̃ dixe q̃ porniamos.</p>
+<p>
+<lb/>¶ El tercero es/ quando vno quiſieſſe lleuar ſus mercadu<milestone n="3" unit="x"/>
+<lb/>rias a otra parte/ y otro ſe las quiſieſſe cõprar dõde las te-<lb type="nb"/>nia: q̃ licitamẽte le podria pedir lo q̃ eſperaua ganar. Y avn
+<lb/>que algunos digan eſto ſer vſura/ la mas comun ſentencia
+<lb/>es: que ſi la ganancia era probable/ y no ſe haze eſto con fi-<lb type="nb"/>ction ni engaño: ſe puede bien lleuar: guardadas ſiẽpre las
+<lb/>dichas cinco condiciones que ſe pornan abaxo. Eſto tienen
+<lb/>Anto. de bu. enel ca. ſalubriter: y el Innocencio enel ca. na
+<lb/>niganti: y Raymundo enla ſuma. ti. de vſu. y el Abad enel
+<lb/>dicho cap. nauigãti: y el Gabriel: y el Angel vbi ſupra: y la
+<lb/>Silueſtri. §. 21. reſpondiendo alli alos contrarios. ¶ Y por
+<lb/>lo q̃ aqui digo/ de lleuar ſus mercadurias a otra parte: ⁊ de
+<lb/>lo q̃ cſperaua ganar: ſe puede aſſi miſmo ver: ſi es licito o no
+<lb/>lo que algunos hazen: q̃ es cõprar ď preſente tantas libras
+<lb/>de ſeda o arrobas ď azeyte/ o peſcado/ o qualeſquier otras<note type="margin">
+<lb/>Delos q̃
+<lb/>vẽdẽ las
+<lb/>coſasque
+<lb/>cõprã ſin
+<lb/>mejora-<lb type="nb"/>llas.</note>
+<lb/>coſas: y luego al miſmo punto/ o dende a poco: ſin lleuarlo
+<lb/>a otra parte ni hazer enello mejoria alguna: lo vẽdẽ a otros
+<lb/>porq̃ les dẽ alguna coſa mas q̃ les coſto. Eſto tractã. Alex.
+<lb/>de ales. 3. par. q. 50. mẽb. 1. y el Arçobiſpo de flo. ſancto An
+<lb/>tonino. 3. par. ti. 8. c. 3. §. vlti. y la ſũma Ange. negotiũ. §. 3. y
+<lb/>el Gabriel. 4. ſen. di. 15. q. 10. ar. 3. dubio. 2. (q̃ eneſto ſigne y
+<lb/>alega alos dichos Alex. y ſũma ange.) y la ſiluef. Emptio.
+<lb/>§. 10. y. 11. (ſiguiendo a ſancto Tho. 2. 2. q. 77. y a Ancarra-<lb type="nb"/>no. c. 1. de vſu. li. 6.) y otros muchos. Y la reſolucion del Ga
+<pb facs="W0018-0033" n="fo.xiij.r"/>
+<lb/>briel (defpues de tãtos doctores) es. Que ſi el que compra
+<lb/>las tales coſas: las compra para ſi: y andãdo el tiempo/ no
+<lb/>las ha meneſter y quiere vendellas: licitamente las puede
+<lb/>vender porel precio q̃ juſtamente paſſa al tiempo q̃ las ven
+<lb/>de: a vn que ſea mas caro que quãdo las cõpro: porque en-<lb type="nb"/>tonces la ganãcia ſe le recrece por razõ del tiẽpo q̃ hizo mu-<lb type="nb"/>dar el precio. Puede aſſi miſmo ſer/ q̃ las cõpre con algu-<lb type="nb"/>na de otras tres yntenciones/ q̃ podria auer enel negocio.
+<lb/>La primera es: querer guardallas para tiempo en que ſue
+<lb/>lẽ valer mas caro: queriendo por eſta manera de ganãcia:
+<lb/>ſin yntencion de agrauiar a nadie/ proueer alas neceſſida-<lb type="nb"/>des de ſu perſona y caſa. Y aſſi lo hazen muchos q̃ comprã
+<lb/>pan/ o vino/ o otras coſas quãdo ſe cojen/ o valẽ mas ba-<lb type="nb"/>rato: y las guardã para vendellas adelante: los quales ſon
+<lb/>eſcuſados de peccado/ con eſta yntencion y neceſſidad. La
+<lb/>ſegunda es deſſeo de aprouechar ala republica/ q̃ es: com-<lb type="nb"/>prallas entonces para q̃ deſpues los hõbres q̃ las han de
+<lb/>auer meneſter/ y por vẽtura no las hallariã a cõprar: las ha
+<lb/>llen en ſu poder y las cõpren ſi quiſierẽ. La tercera es: quã-<lb type="nb"/>do alguno/ por eſta manera de negociar: q̃ es cõprar las ta
+<lb/>les coſas y guardallas para quãdo puedã mas valer/ por
+<lb/>ganar lo q̃ pudiere juſtamẽte/ es mouido cõ voluntad pia
+<lb/>doſa/ de querer tener con que ayudar alos pobres y neceſ-<lb type="nb"/>ſitados. En todos eſtos caſos/ licitamente ſe venden las
+<lb/>coſas aſſi cõpradas: enel miſmo lugar con moderada ganã
+<lb/>cia ſobre lo q̃ coſtaron. Y (ſegũ añade la ſũm. ange. enel di-<lb type="nb"/>cho. §. 3. y enel. 27. avn q̃ no lo pone el Gabriel: con la qual
+<lb/>otroſi cõcuerda la ſilueſ. enel. §. 10. ſobredicho/ y enel. 9.) tã-<lb type="nb"/>bien es licito lleuar la tal moderada ganãcia: ſi a caſo algu
+<lb/>no cõpra las tales coſas por buẽ precio: y luego halla otro
+<lb/>q̃ le quiere dar porellas mas delo q̃ le coſtaron. Con tãto q̃
+<lb/>el vno y el otro tengã conocimiento delas tales coſas y del
+<lb/>valor dellas/ y q̃ ninguno dellos lo haga por neceſſidad q̃
+<lb/>tenga: dela qual no pueda ſalir de otra manera: y q̃ tãpoco
+<lb/>aya enello otro engaño ni malicia. Y (ſegũ aſſi miſmo aña-<pb facs="W0018-0034" n="[fo.xiij.]v"/><lb type="nb"/>den el arçobiſpo ď flo. vbi ſupra: y la ſilueſ. enel dicho. §. 10.)
+<lb/>tãbien el q̃ cõpra puede lleuar ganãcia moderada: quãdo
+<lb/>cõpra la coſa en junto y la vẽde por menudo/ o haze enella
+<lb/>alguna mutaciõ. ⁊c. Y deſta manera ſe ha de entender/ lo q̃
+<lb/>dize el miſmo Arçob. ď flo. enlas deciſiones ď ciertas dub-<lb type="nb"/>das: q̃ el q̃ cõpra algo por diez: lo puede vẽder por doze/ ſin
+<lb/>lleuar lo a otra parte ni mejorarlo: no excediẽdo el juſto pre
+<lb/>cio: porq̃ de otra manera: ſeria contrario a ſi miſmo/ y avn
+<lb/>ala verdad. Pero (como deſpues de todo lo dicho conclu-<lb type="nb"/>yen el Gabriel y los doctores ſobredichos: y cõ lo q̈l ſe reſ-<lb type="nb"/>põde ala dubda q̃ aqui he mouido) quãdo alguno ſe pone
+<lb/>a cõprar y vẽder ďla manera ſobredicha: eſto es/ q̃ no haze
+<lb/>ſino cõprallo y vẽdello luego enel miſmo lugar y dela miſ-<lb type="nb"/>ma forma q̃ lo cõpro: por mas precio ďlo q̃ le cueſta: eſpecial
+<lb/>mẽte como lo hazẽ algunos (ſegun dize la ſilueſ. enel dicho.
+<lb/>§. 11.) q̃ ygualã lo que <unclear resp="#TL"></unclear>qerẽ cõprar por diez: primero q̃ lo cõ-<lb type="nb"/>prẽ: y antes a vn q̃ paſſe a ſu poder/ lo vẽdẽ por onze o doze:
+<lb/>no ay dubda/ ſino que el q̃ eſto haze/ peca mortalmente/ y
+<lb/>ſera obligado ala reſtitucion delo q̃ lleua demaſiado: y que
+<lb/>cõtra el tal propriamẽte ſe endereça lo q̃ ſant Chriſoſtomo
+<lb/>dize/ ſobre el capi. 21. de ſant Matheo/ y ſe pone. 88. diſ. ca.
+<lb/>eijciẽs. Quc el q̃ cõpra alguna coſa para vendella aſſi ente
+<lb/>ra como la compra ſin otra mejoria ni mutacion: por precio
+<lb/>mas caro q̃ ael le coſto: el tal es negociador malo/ que ha ď
+<lb/>ſer echado del tẽplo/ y q̃ ninguno q̃ ſe tiene por chriſtiano:
+<lb/>deue negociar de tal manera: y lo q̃ aſſi miſmo dize Caſio-<lb type="nb"/>doro ſobre el pſalmo. 70. q̃ los negociadores q̃ el ſcñor echo
+<lb/>fuera del tẽplo: ſon aq̃llos q̃ vẽdẽ las coſas/ por ma yor pre
+<lb/>cio que las cõprarõ. Conuiene ſaber: ſin las cõdiciones ya
+<lb/>dichas. Podria empero ſer tambiẽ eſto eſcuſado de culpa
+<lb/>(como tractamos en todos eſtos parrafos del intereſſe q̃ ſe
+<lb/>eſtorua) quãdo vno ouieſſe de emplear ſus dineros en otra
+<lb/>coſa/ o ď otra manera: y otro q̃ no tiene al p̃ſente dineros/ le
+<lb/>rogaſſea eſte q̃ los tiene q̃ le cõpraſſe aq̃llas coſas q̃ el auia
+<lb/>meneſter y ſe las fiaſſe por algũ tiẽpo: q̃ entõces ſin cõſciẽcia
+<pb facs="W0018-0035" n="fo.xiiij.r"/>
+<lb/>le podria lleuar (mas delo q̃ le cueſtã) el intereſſe q̃ aqui de-<lb type="nb"/>zimos q̃ ſe puede lleuar por razõ dela ganãcia q̃ ſe eſtorua/
+<lb/>guardadas las cõdiciones q̃ moſtramos q̃ ſe hã ď guardar.
+<lb/>¶ El quarto enxemplo es: que ſi yo tengo dozientos duca-<note type="margin">
+<lb/>Exẽplo
+<lb/>iiij.</note><lb type="nb"/>dos con los quales quiero negociar: y por tu ruego te preſto
+<lb/>los ciento con condicion q̃ me pagues todo lo q̃ ganare con<note type="margin" n="5" xml:id="W0018_note0035a">
+<lb/>§. 5.</note>
+<lb/>los otros ciento q̃ me quedan: ſi de verdad yo auia ď tratar
+<lb/>con todos dozientos: puedo lleuar eſto ſin conciencia. Eſto
+<lb/>ponẽ el angel. §. 17. y deſpues del el Gabriel. arti. 3. dubio. 3.
+<lb/>y la Silueſt. §. 23. Pero has ď entẽder eſto ſi en vna miſma
+<lb/>mercaduria/ o de ganancia ſemejante y en aquel miſmo tiẽ
+<lb/>po auia yo ď tratar coneſtos dozientos ducados y q̃ eſpero
+<lb/>doblada ganancia tratando con dozientos que tratãdo con
+<lb/>ciento ſolos. Lo qual digo: porq̃ tanta mercaduria podria
+<lb/>yo comprar con dozientos: que por ventura no valdria tan
+<lb/>to como ſino compraſſe mas de ciento.</p>
+<p>
+<lb/>¶ El quinto enxemplo es quando vno ſe caſa y miẽtras ſu<milestone n="5" unit="x"/>
+<lb/>ſuegro le da el dote: puede ygualarſe conel: que haſta que le
+<lb/>pague le de tanta cantidad ď dineros cada año ſin q̃ ſe deſ-<lb type="nb"/>cuente nada del principal: lo qual es de entẽder quando el
+<lb/>yerno ſuſtenta ya a ſu coſta las cargas del matrimonio: y q̃
+<lb/>es hombre que ha de negociar con los dineros: y que dãdo
+<lb/>ſelos: los emplearia donde veriſſimilmẽte podria ganar tã-<lb type="nb"/>to como lo q̃ lleua ďl ſuegro: y quel ſuegro eſta ya obligado
+<lb/>al dote que le ha de dar y no de otra manera: porq̃ no auria
+<lb/>intereſſe. Eſto dizẽ (allende ď otros) el Abad enel dicho ca
+<lb/>pitulo ſalubriter. y la ſũma ange. §. 25. ⁊ la Silueſ. vſu. 3. §. 3.
+<lb/>Y lo miſmo dize el Abad enel capi. conqueſtus. que pueden
+<lb/>hazer las biudas/ o otras perſonas q̃ ſuelen tener ſus dine
+<lb/>ros en cambios/ o compañias licitas/ con los q̃ ſelos de tie
+<lb/>nen auiendo ſelos de dar: concurriẽdo empero (como dicho
+<lb/>es) que ſe auia ď negociar conellos/ y la probabilidad dela
+<lb/>ganãcia que ya hemos dicho: y no de otra manera como lo
+<lb/>hazen muchos ygnorantes. Otros muchos caſos ſe podriã
+<lb/>poner: pero baſten eſtos.</p>
+<p>
+<pb facs="W0018-0036" n="[fo.xiiij.]v"/>
+<lb/>¶ Es contodo de mirar mucho: que para que en qualquier<note type="margin" n="6" xml:id="W0018_note0036a">
+<lb/>§. 6.</note>
+<lb/>deſtos cinco enxemplos/ o caſos y enlos ſemejantes: ſe pue
+<lb/>da lleuar con buena cõſciencia el intereſſe ſuſo dicho: hã de
+<lb/>andar ſiempre delante las cinco condiciones q̃ arriba he di
+<lb/>cho que pornia: las quales ſon las ſiguientes/ y las ponen
+<lb/>ala letra el Gabriel vbi ſupra arti. j. nota. 2. y el Angel vſu. j.
+<lb/>§. 16. y la Silueſ. eo. titu. §. 19. ſaluo algunas coſas q̃ yo aña
+<lb/>do para mas claridad/ verdad y ſeguridad: y deuẽ ſe notar
+<lb/>mucho/ porque ſon la llaue de todo eſto.</p>
+<p>
+<lb/>¶ La primera es: que el q̃ tal intereſſe lleua: nolo haga prin<note type="margin">
+<lb/>Las cico
+<lb/>condicio
+<lb/>nes que
+<lb/>ſe hã de
+<lb/>guar dar</note>
+<lb/>cipalmente por ganarlo deſta manera: poniendo ſe el en ſe-<lb type="nb"/>guro/ y queriendo lleuar la ganãcia ſin trabajo: ſino q̃ quer
+<lb/>ria mas ganarlo por ſu negociacion ſino tuuieſſe voluntad
+<lb/>de cumplir cõ ſu proximo quedãdo el ſin daño. De manera
+<lb/>que la principal intenciõ ha de ſer ſiempre por hazer bien al
+<lb/>proximo: mas q̃ por ſu propia ganancia auida deſta mane
+<lb/>ra. Los mercaderes empero q̃ fian paños/ o otras mercadu
+<lb/>rias: a vn q̃ a yan ſiempre de tener deſſeo de quererlas (ſi es
+<lb/>poſſible) antes vender alcõtado q̃ fiarlas/ mas ſi por ventu
+<lb/>ra por alguna mala coſtumbre que aya deno cõprar al cõta
+<lb/>do ſino es a menoſprecio/ o por auer pocos dineros: no pu-<lb type="nb"/>dieſſen ſacar el juſto precio alcontado: podriã (como lo notã
+<lb/>la ſũma angel. vbi ſupra. §. 59. y el Gabriel vbi ſupra. arti. 3.
+<lb/>dubio. 9. y la Silueſt. vſu. 2. §. 1. dicto. 2.) lleuar enlo que fian
+<lb/>todo lo que ſegun juſto preſcio valen las mercadurias. Y el
+<lb/>juſto precio es/ lo q̃ ſe auia de dar al contado (ſegun comun
+<lb/>eſtimaciõ) por lo que ſe cõpra: ſino vuieſſe la tal mala coſtũ-<lb type="nb"/>bre/ o poquedad ď dineros: con que (conſiderado el tiempo
+<lb/>los gaſtos: trabajos/ ⁊ manera ď mercaduria) quede el mer
+<lb/>cader cõ alguna moderada ganãcia a juyzio del ſabio con-<lb type="nb"/>feſſor/ o de otro buen varõ. Y deſto auemos tambien habla
+<lb/>do enel primero notable. §. 3. y. §. 13. y. 14.</p>
+<p>
+<lb/>¶ Sobre eſta cõdiciõ primera parecẽ otras dos coſas al di
+<lb/>cho ſeñor doctor Medina: de quiẽ hize mẽciõ al fin del. §. 5.
+<lb/>enel primer notable. La vna es enlo q̃ digo que el q̃ preſta:
+<pb facs="W0018-0037" n="fo.xv.r"/>
+<lb/>ha de querer mas ganarlo por ſu negociaciõ/ q̃ lleuar la ga
+<lb/>nancia ſin trabajo: y dize el/ q̃ a ſu ver/ baſtaria q̃ le ſea im-<lb type="nb"/>pertinẽte ganar lo vno cõ trabajo y lo otro ſin el: eſto es q̃ ſi
+<lb/>le dieſſen a eſcojer: no ſe le dieſſe mas por lo vno que por lo
+<lb/>otro. La otra coſa es: q̃ donde yo digo q̃ ha de tener volun-<lb type="nb"/>tad delo hazer por ſu proximo: el dize/ q̃ no es meneſter pa-<lb type="nb"/>ra librarſe dela reſtituciõ delo q̃ lleua por razon dela tal ga
+<lb/>nancia q̃ ſe eſtorua/ que tenga tal fin: porq̃ lo puede hazer
+<lb/>por otros fines licitos: dado q̃ no tẽga tal amor al proximo.
+<lb/>Sobre eſto digo tambien/ lo q̃ enel dicho. §. 5. dixe: que lo
+<lb/>aqui pueſto es tomado ala letra delos doctores eneſte. §.
+<lb/>alegados: pero que tengo en tanto el juyzio del dicho ſeñor
+<lb/>doctor/ que no me puedo apartar de ſu pareſcer: y que en-<lb type="nb"/>tramas coſas ſon para mas deſcargo del q̃ ha de reſtituyr.
+<lb/>Item ſobre lo q̃ aqui/ y enel. §. 2. y en otros lugares digo: q̃
+<lb/>lo q̃ ſe lleua por razõ dela ganãcia que ſe eſtorua: ha de ſer
+<lb/>probable o veriſſimil/ y no dubdoſo/ para no ſe auer ď reſti
+<lb/>tuyr: dize anſi miſmo/ q̃ quanto al rigor dela cõſciencia/ ter
+<lb/>nia eſto haz y enues: porque por la ganancia dubdoſa que
+<lb/>ſe eſpera: bien ſe puede lleuar y dar algo que ſea cierto: con-<lb type="nb"/>certãdoſe entre ſi las partes. Eſto entiendo yo ſer anſi: quã-<lb type="nb"/>do la ganãcia eſta dubdoſa/ dela manera que queda dicho
+<lb/>enel primer notable. §. 13. y. 14. y dixe aqui enel. §. 2. y al fin
+<lb/>del. 5. y por lo que yo eſpero ganar de aquellamanera/ con
+<lb/>certamos q̃ ſe me de vn tanto que a entramos nos pareſce
+<lb/>juſto y q̃ ningũo va agrauiado: o dãdo melo deſu volũtad.
+<lb/>¶ La ſegunda condicion es: q̃ del intereſſe o demaſia q̃ ha<note type="margin">
+<lb/>Quiẽ ſõ
+<lb/>los ꝓpri
+<lb/>os juezeſ
+<lb/>deſto. di-<lb type="nb"/>golo ẽla
+<lb/>dicha q̃ſ
+<lb/>tiõ que al
+<lb/>fin ſe põe
+<lb/>fo. xxv.</note>
+<lb/>de lleuar: ďſcuente todo aq̃llo en que ſe pueden eſtimar (ſe-<lb type="nb"/>gun buena conciencia) los peligros/ gaſtos y trabajos que
+<lb/>auia de auer para ganar lo que eſperaua: porque el yntereſ
+<lb/>ſe o ganancia ſe entiende/ deſcontados los tales peligros/
+<lb/>trabajos y gaſtos.</p>
+<p>
+<lb/>¶ La tercera: que el q̃ reſcibe el preſtido/ no tenga tal neſ-<lb type="nb"/>ceſſidad/ y el que preſta tãta abundãcia: que de neceſſidad
+<lb/>ſea obligado a ſocorerle: ſegun los caſos en que el que anſi
+<pb facs="W0018-0038" n="[fo.xv.]v"/>
+<lb/>tiene es obligado ď ſocorrer/ o hazer limoſna a ſu proximo:
+<lb/>los quales caſos vea quiẽ quiſiere enlos theologos. 4. ſen.
+<lb/>diſtĩ. 15. y enlos ſũmiſtas. ti. eleemoſina. Porque ſi tal diſ-<lb type="nb"/>poſicion ouieſſe en entramos: ſeria obligado a preſtar le aq̃-<lb type="nb"/>llo ſin ningun yntereſſe: ſo pena de peccado mortal.</p>
+<p>
+<lb/>¶ La quarta condiciõ es: q̃ lo que ſe lleua/ ſea verdadera-<lb type="nb"/>mente por razon del intereſſe: y no porel preſtido/ o tiẽpo: y
+<lb/>q̃ tambien ſea: lo q̃ probablemẽte eſperaua ganar ſegũ bue
+<lb/>na conſciencia/ y no mas: y q̃ ſea otroſi/ lo q̃ auia de ganar
+<lb/>vendiẽdo al contado (ſegun dixe aqui arriba. §. 2. hablãdo
+<lb/>dela ganancia probable) o conforme al juſto preſcio ſi paſ-<lb type="nb"/>ſa fiado: como eſta dicho enla primera condicion: quitando
+<lb/>ſiempre dello (ſegun dicho es enla ſegunda condicion) los
+<lb/>peligros/ trabajos/ y gaſtos.</p>
+<p>
+<lb/>¶ La quinta condicion y poſtrera es: que el preſtido no ſea
+<lb/>perpetuo/ ſino por algun tiẽpo limitado: porq̃ ſi fueſſe per-<lb type="nb"/>petuo/ o para tiẽpo muy luengo: pornia ſe ya en continua
+<lb/>ſeguridad y deſcãſo el q̃ preſta: lo qual de todo en todo cõ-<lb type="nb"/>dena el Scoto por clara vſura enla dicha diſt. 15. como arri
+<lb/>ba diximos: y pareſceria otro ſi alos hõbres q̃ ſu deſſeo era
+<lb/>de ganar antes deſta manera q̃ por otra negociaciõ hone-<lb type="nb"/>ſta/ y ſer les ya cauſa de mal juyzio: el qual es de eſcuſar.
+<lb/>Por lo qual dize tambien el Hoſtienſe enel dicho ca. ſalu-<lb type="nb"/>briter/ que ſe deue mirar/ que el q̃ anſi preſtare/ no ſea hõ-<lb type="nb"/>bre que ſuele dar a logro.</p>
+<p>
+<lb/>¶ Item quanto a eſta condicion poſtrera/ parcſce anſi miſ
+<lb/>mo al dicho ſeñor doctor Medina/ q̃ ſi concurren las otras
+<lb/>cõdiciones para eſcuſar ď culpa eſta ganãcia: no haze al ca
+<lb/>ſo q̃ ſe p̃ſte a brcue o largo tiẽpo: ſaluo ſi (como yo digo) no
+<lb/>nacieſſe eſcãdalo dello: cõuiene ſaber infamia al q̃ anſi pre-<lb type="nb"/>ſta/ o coſa ſemejante. Eſto anſimiſmo me pareſce a mi biẽ:
+<lb/>entẽdiendo que tiẽpo largo ſe llame haſta dos o tres años:
+<lb/>que es largo tiẽpo a reſpeto de quatro o cinco meſes/ o por
+<lb/>ay/ que puede auer de vna feria a otra: para quando ſe ſue
+<lb/>len hazer eſtos preſtamos: y del qual tiempo puede hõbre
+<pb facs="W0018-0039" n="fo.xvj.r"/>
+<lb/>comunmente determinar/ ſi ha de tractar cõ ſus dineros/ o
+<lb/>no/ y como andan las coſas. Y deſta manera/ eſte pareſcer
+<lb/>no es contra lo que aqui ſe dize/ q̃ no ſea el preſtido perpe-<lb type="nb"/>tuo: que ſi fueſſe perpetuo: aſſi (lo primero) porque el Sco-<lb type="nb"/>to (ſegun aqui digo) y los otros doctores q̃ puſe al princi-<lb type="nb"/>pio deſte. §. 6. y otros tãbien/ de todo en todo condenã eſto
+<lb/>por contrato vſurario: y (lo ſegundo) porque a mi juyzio/
+<lb/>ſiendo anſi perpetuo: no ſe podria eſcuſar el eſcandalo/ por
+<lb/>el qual anſi miſmo el dicho ſeñor doctor le reprueua: y (lo
+<lb/>tercero) porque en todos los años arreo: no puedẽ ſer ygua
+<lb/>les los peligros/ gaſtos y trabajos a q̃ ſe ha de mirar/ ni la
+<lb/>probabilidad dela ganancia: ni ſaber ſe ſi ha ď emplear ſus
+<lb/>dineros ni las otras coſas que ſe requieren: no veo razou ſu
+<lb/>ficiẽte/ para que ſe dexe de guardar eſta quinta condicion.
+<lb/>¶ Anſi q̃ lo que queda deſte notable (quanto alo del pre-<note type="margin" n="7" xml:id="W0018_note0039a">
+<lb/>§. 7.
+<lb/>reſoluciõ
+<lb/>deſte. ij.
+<lb/>notable.</note><lb type="nb"/>ſtar) es: q̃ el intereſſe conſiſte enel dafio que ſe recrece/ y en-<lb type="nb"/>lo q̃ ſe dexa de ganar probablemente: y que el mercader/ o
+<lb/>perſona que auia de ganar/ y no tener guardados ſus di-<lb type="nb"/>neros enel arca: ſiendo rogado que los preſte/ puede lleuar
+<lb/>el tal intereſſe/ dela manera y debaxo delas cõdiciones ſo-<lb type="nb"/>bredichas. ¶ Y no es contra lo a<unclear resp="#TL"></unclear>q dicho el ca. in ciuitate. de<note type="margin">
+<lb/>Reſpue-<lb type="nb"/>ſta al. c. <unclear resp="#TL"></unclear>
+<lb/>ciuitate.</note>
+<lb/>vſu. (Y los tales que condenan las demaſias) en ninguna
+<lb/>coſa delas que alli ſe dizen. No es contraria la primera par
+<lb/>te del dicho ca. Porq̃ (ſegun ſuena el rubro) lo que lleuauã
+<lb/>demas aq̃llos mercaderes: era por la dilacion dela paga/ y
+<lb/>no ſe haze mencion ď intereſſe: ſin el qual intereſſe: aqui tã-<lb type="nb"/>bien/ y enel primer notable/ ſe reprueua qualquier dema-<lb type="nb"/>ſia. No es cõtraria la ſegunda parte/ antes fauoreſce a eſto:
+<lb/>porq̃ alli ſe eſcuſa aquel cõtrato por la dubda veriſſimil del
+<lb/>valer mas o menos la coſa/ y aqui tambien/ no ſon eſcuſa
+<lb/>dos eſtos preſtidos/ ſaluo quãdo es la ganãcia probable/
+<lb/>q̃ es lo miſmo q̃ veriſſimil. No es tãpoco cõtraria la poſtre-<lb type="nb"/>ra parte del dicho cap. enlo q̃ dize/ ſer ſaludable ceſſar de ta
+<lb/>les contratos: porq̃ aquello es para mas ſeguridad/ y con-<lb type="nb"/>tra los que quiſieſſen yſar de engaños para logrear: lo qual
+<pb facs="W0018-0040" n="[fo.xvj.]v"/>
+<lb/>pareſce ſer anſi: porque concluye el Papa diziẽdo: que no
+<lb/>ſe pueden eſconder a dios los penſamiẽtos/ y por lo q̃ dize
+<lb/>el Scoto vbi ſupra: que eneſtas palabras/ es cõtenida amo
+<lb/>neſtacion prouechoſa/ pero no mandamiento neceſſario.
+<lb/>Item digo/ que no es cõtrario el dicho ca. ni ſus ſemejan-<lb type="nb"/>tes: porque (ſegun ſe colige delas coſas ya dichas/ y ſegun
+<lb/>tambien lo determinaron los dos coroneles/ doctores fa-<lb type="nb"/>moſos en vna reſolucion que ſobre eſtos tratos hizieron/
+<lb/>año de. 1517. cõ otros catorze doctores dela vniuerſidad de
+<lb/>Paris) el Papa/ preſupone enel dicho ca. (o ſe ha de pre-<lb type="nb"/>ſuponer/ porque es conforme a razon) que los que dan ſus
+<lb/>dineros o mercadurias/ no recibẽ daño: o que no hã de tra-<lb type="nb"/>tar cõellos en coſas/ dõde aſſi eſta la ganãcia probable.</p>
+<p rend="hx">
+<lb/>¶ Primera reſpueſta ala queſtiõ o caſo ꝓpueſto.</p>
+<p>
+<lb/><hi rend="init">P</hi>Reſupueſtos pues eſtos notables: reſponden ſe dos<note type="margin" n="8" xml:id="W0018_note0040a">
+<lb/>§. 8.</note>
+<lb/>coſas ala queſtiõ o pregunta q̃ al principio de todo ſe
+<lb/>puſo. La primera es: q̃ tomado abſolutamẽte el dicho con-<lb type="nb"/>trato/ en q̃ Juan preſta a Pedro doziẽtos ducados prin-<lb type="nb"/>cipalmente porq̃ Pedro le torne ael a preſtar otros tãtos/
+<lb/>o mas/ o menos: es de ſi vicioſo y vſurario: porq̃ no ſe pue-<lb type="nb"/>de negar que aqui no interuẽga alguna demaſia por razon
+<lb/>del primer preſtamo/ q̃ es aquel tornar a preſtar: la qual de
+<lb/>maſia aſſi lleuada/ es verdadera vſura cõ peccado mortal
+<lb/>y cargo de reſtituciõ/ dela manera que ſe trato enel primer
+<lb/>notable ſobre la primera palabra q̃ dize: qualquier dema-<lb type="nb"/>ſia. §. 1. y. 2. y ſobre la tercera y quarta palabra: dende el. §.
+<lb/>4. haſta el. 8. Y poreſto es ď temer mucho/ y ver como ſe ha
+<lb/>zen eſtos contratos: porque ſiendo como ſon de ſi inficiona
+<lb/>dos: corromperan muy de ligero toda la negociacion/ ſino
+<lb/>ſe guardan complidamente las circunſtancias deuidas.</p>
+<p rend="hx">
+<lb/>¶ Segunda reſpueſta.</p>
+<p>
+<lb/><hi rend="init"><unclear resp="#TL"></unclear></hi>A ſegunda coſa q̃ ſe reſponde es: que a vnque ſea ver-<note type="margin" n="9" xml:id="W0018_note0040b">
+<lb/>§. 9.</note><lb type="nb"/>dad que eſtos preſtidos anſi abſolutamente tomados
+<lb/>como agora fue dicho/ ſeã vicioſos y vſurarios: pero no ob
+<lb/>ſtante eſto es meneſter limitar eſta propoſicion abſoluta: y
+<pb facs="W0018-0041" n="fo.xvij.r"/>
+<lb/>limitada/ ſe daran caſos en que no aya vicio ni vſura. Y an
+<lb/>ſi digo: que eſte tal contrato ſe puede hazer de quatro mane
+<lb/>ras La primera es/ con mereſcimiẽto: la ſegunda/ ſin peca
+<lb/>do alomenos mortal: la tercera/ con pecado mortal: pero ſin
+<lb/>cargo de reſtitucion: la quarta/ juntamẽte con pecado mor-<lb type="nb"/>tal y cargo de reſtitucion.</p>
+<p>
+<lb/>¶ Quanto ala primera manera digo: que Juan mercader<note type="margin">
+<lb/>primera
+<lb/>manera.</note>
+<lb/>puede preſtar a Pedro tantos ducados ſobre cõcierto que
+<lb/>Pedro le torne a preſtar ael otros tantos/ o mas/ o menos
+<lb/>y q̃ Juan puede mereſcer eneſto gualardõ delante de dios:
+<lb/>en dos caſos. El vno quãdo principalmẽte ſe mueue a pre-<lb type="nb"/>ſtar a Pedro lo que le pide por ſola caridad viendo q̃ lo ha
+<lb/>meneſter/ y quando ſe mouio a preſtarle: no tenia intencion
+<lb/>ni eſperãça que Pedro le tornaſſe ael a preſtar: pero ya que
+<lb/>preſta: obligaſele Pedro deſu propia y libre voluntad q̃ le
+<lb/>tornara a preſtar otro tãto/ o mas o menos: y reſcibelo Juã
+<lb/>no por intencion del preſtido: mas porq̃ Pedro ſe mueue a
+<lb/>hazerlo deſu volũtad ſola: pudiẽdolo deſpues hazer. A qui
+<lb/>Juan mereſce: porq̃ mouido por caridad vſa de miſericor-<lb type="nb"/>dia con ſu proximo/ cũpliendo el mandamiento del ſeñor q̃
+<lb/>dize (ſegun ya es dicho) por ſant Lucas. Dad preſtado: no
+<lb/>eſperãdo porello coſa alguna demaſiada/ y no ſele eſtorua
+<lb/>el mereſcimiẽro por la obligaciõ de Pedro que la hizo deſu
+<lb/>propia voluntad ſin ver en Juã ninguna ſeñal de aquello:
+<lb/>enlo qual no ay vicio alguno ſegũ ſe dixo enel primer nota-<lb type="nb"/>ble ſobre la tercera palabra. §. 5. y. 6. ¶ El ſegundo caſo es:
+<lb/>quando Juan que preſta a Pedro ſe mueue principalmen
+<lb/>te por caridad: de forma que en ninguna manera preſtaria
+<lb/>ſi la charidad nole mouieſſe: pero el auia de buſcar deſpues
+<lb/>preſtado/ lo que Pedro le ha de preſtar y Pedro lo puede
+<lb/>bien hazer: y a vn que pierda algo enello: pierde mas veriſſi
+<lb/>milmente Juan que no el: agora ſea por razon del tiempo/
+<lb/>agora por razon del trato/ o por qualquiera otra cauſa lici-<lb type="nb"/>ta: y poreſſo quiere eſta recompenſa de Pedro. Claro eſta/
+<lb/>que Juan mereſce eneſto por la charidad con que ſe mueue
+<pb facs="W0018-0042" n="[fo.xvij.]v"/>
+<lb/>ſegũ enel caſo antes deſte ſe dixo: y que no ſelo eſtorua el tor
+<lb/>nalle Pedro a preſtar: pues que puede tener reſpeto a ſu in
+<lb/>tereſſe dela manera que ſe dixo enel ſegundo notable. §. 2. Y
+<lb/>la diferencia deſtos dos caſos es: que enel primero/ Juã to
+<lb/>ma el preſtido de Pedro porque le es ofrecido voluntaria-<lb type="nb"/>mente y ſin penſarlo: mas enel ſegundo reſcibelo por recom
+<lb/>penſa deſu intereſſe. Y anſi (quanto aeſta manera) ſe puede
+<lb/>dar regla general/ que cada y quando que el que preſta ſe<note type="margin">
+<lb/>Regla.</note>
+<lb/>mueue principalmẽte por caridad: y ſi lle<unclear resp="#TL"></unclear>a alguna dema-<lb type="nb"/>ſia: no es mas delo que ſu probable intereſſe requiere/ o lo
+<lb/>que le ofreſce deſu libre voluntad el que reſcibe el preſtido: ⁊
+<lb/>junto coneſto/ no interuiene la tercera condicion delas cin-<lb type="nb"/>co que ſe puſierõ en fin del ſegundo notable. §. 6. ſiempre ay
+<lb/>enello mereſcimiento y no pecado alguno.</p>
+<p>
+<lb/>¶ La ſegunda manera en que ſe puede hazer lo ſuſo dicho<note type="margin" n="10" xml:id="W0018_note0042a">
+<lb/>§. 10.
+<lb/>ij. mã<unclear resp="#TL"></unclear>a</note>
+<lb/>ſin pecado: pero tambien ſin merecimiento: es en quatro ca
+<lb/>ſos. El primero quando pide a Juan que le preſte tanto: y
+<lb/>Juan dize que le plaze: pero Juan niſe mueue principalmẽ
+<lb/>te por caridad ni tampoco tiene voluntad de agrauiar a ſu
+<lb/>proximo: mas mueue ſe principalmente/ o por importuna-<lb type="nb"/>cion/ o amiſtad: enla qual ſino es por dios/ o en dios no ay
+<lb/>mereſcimiento: ⁊ junto coneſto haziendo tambien conſidera
+<lb/>cion de ſu ganancia/ q̃ probable o veriſſimilmẽte ſe le auia
+<lb/>de ſeguir (la qual puede lleuar con las condiciones y ſegun
+<lb/>ſe dixo enel ſegundo notable. §. 2.) pide Pedro eſta recom-<lb type="nb"/>penſa: enla qual ſegun los trabajos del vno y del otro: no
+<lb/>es mas agrauiado Pedro que Juan. A qui Juan es eſcu
+<lb/>ſado de peccado/ porque no haze coſa yiicita contra ſu pro
+<lb/>ximo conſiderado ſu intereſſe: pero no mereſce: porque no
+<lb/>preſta principalmente por caridad. Y aſſi la differencia que
+<lb/>ay entre eſte caſo y los dos ſobre dichos dela primera ma-<lb type="nb"/>nera para que alli aya mereſcimiẽto y aqui no: es/ que alli
+<lb/>Juan ſe mueue principalmente por caridad/ que es la rayz
+<lb/>del mereſcer: pero aqui no: a vn que no va contra ella. ¶ El
+<lb/>ſegundo caſo es: quando Pedro ſin tal neſceſſidad/ enla
+<pb facs="W0018-0043" n="fo.xviij.r"/>
+<lb/>qual deua ſer ſocorrido ſegun la obligaciõ dela limoſna: de
+<lb/>que ya hablamos enla tercera condicion/ delas cinco que ſe
+<lb/>puſieron enel ſegundo notable. §. 6. o por ventura por mas
+<lb/>ganar/ o de otra manera aſſi: viene a Juan que le preſte tan
+<lb/>tos ducados: y ſin que Juan le mueſtre ninguna ſeñal de
+<lb/>querer nada deſto: obliga ſele Pedro de tornarle a preſtar
+<lb/>tantos/ o mas o menos: ⁊ Juã lo haze aſſi/ y le plaze por la
+<lb/>oferta de Pedro: no parandoſe a penſar de hazerlo o no ha
+<lb/>zerlo principalmente por charidad. A qui aſſi miſmo no ay
+<lb/>mereſcimiento: porque no es la principal mouedora la cari
+<lb/>dad o miſericordia del proximo: pero tampoco ay peccado:
+<lb/>porque no va contra ella. Y el plazer dela offerta ď Pedro
+<lb/>nole cauſa: porque no me es defendido que me plega de mi
+<lb/>bien que juſtamente puedo alcançar: y que juſtamente pue
+<lb/>da yo aceptar lo que liberalmente ſeme offrece (quando yo
+<lb/>no preſto principalmẽte por la tal offerta o obligacion que
+<lb/>Pedro me haze ď tornarme el a preſtar lo ſobre dicho: ni re
+<lb/>cibo la tal obligacion/ o offerta: principalmente por lo que
+<lb/>le preſto/ o he preſtado) ya ſe moſtro enel primer notable ſo
+<lb/>bre la tercera palabra. §. 5. y. 6. y enel decimo caſo delos que
+<lb/>alli ſe ponen ſobre la quinta palabra. §. 9. Y eſte caſo es dife
+<lb/>rente del primero aqui pueſto/ por quãto el primero va por
+<lb/>via de intereſſe: mas eſte por ofrecimiento voluntario. ¶ El
+<lb/>tercero caſo es: quando Juan preſta a Pedro deſta ſuerte
+<lb/>por entregarſe de alguna coſa que Pedro le deue/ y verda
+<lb/>deramente nola pudieſſe cobrar de otra manera: y la deuda
+<lb/>fueſſe mas o tanto como es lo que veriſſimilmente lleua de
+<lb/>maſiado a Pedro. Eſto ſe funda en juſticia y lo afirma el
+<lb/>Gabriel vbi ſupra. arti. j. quaſi in principio/ y no ay aqui pe
+<lb/>cado: porque no pudiẽdolo cobrar por otra via/ ſe entrega
+<lb/>y ſatiſfaze delo que le es deuido y es proprio ſuyo y pertene
+<lb/>ce al. xiij. caſo delos que ſe puſierõ enel primer notable. §. 9.
+<lb/>y. 10. y al intereſſe ďl qual ſe habla en principio del ſegundo
+<lb/>notable. Pero mire ſe bien que ſea verdad que nolo puede
+<lb/>cobrar buenamente de otra manera: porque pudiendo co-<pb facs="W0018-0044" n="[fo.xviij.]v"/><lb type="nb"/>brar alguno por juſticia o por otra via lo que le deuẽ: come<note type="margin">
+<lb/>No ſe ha
+<lb/>ď tomar
+<lb/>lo que ſe
+<lb/>puede co
+<lb/>brar por
+<lb/>juſticia.</note>
+<lb/>teria hurto/ o otro pecado graue en tomarlo a eſcondidas:
+<lb/>delo qual habla mas largamẽte el dicho Gabriel vbi ſupra
+<lb/>.q. iij. dubio. iij. y el Angel furtum. §. 40. ¶ El quarto caſo
+<lb/>deſta ſegũda manera en que ſe puede preſtar/ y eſperar preſ
+<lb/>tido ſin pecado/ es: quando Juan preſta a Pedro con in-<lb type="nb"/>tencion/ o eſperança que Pedro le torne a preſtar no poniẽ
+<lb/>do eſta eſperança principalmente enlo que le preſta: mas po
+<lb/>niendola enla caridad de Pedro/ o enel amiſtad que piẽſa
+<lb/>que le ha de tomar por la buena obra que le haze: preſumiẽ
+<lb/>do que Pedro lo podra hazer buenamente/ y para en tiem
+<lb/>po que Juan ſe ha de ver en otra tal neſceſſidad. Y eſto no
+<lb/>es pecado: porque (como dize Alexan. de ales. iij. par. q. 36.
+<lb/>membro. 4. arti. j. ad primum. y. q. 66. membro. 2.) el q̃ preſta
+<lb/>puede eſperar del que recibe el preſtido/ lo que queda obli-<lb type="nb"/>gado a hazer: lo qual es/ que en ſemejante caſo de neſceſſi-<lb type="nb"/>dad: torne a preſtar al que primero le preſto: no por obliga-<lb type="nb"/>cion del preſtido: ſino por ſu caridad. Y eſto ya ſe tracto enel
+<lb/>primer notable ſobre la tercera palabra/ hablando dela ſe-<lb type="nb"/>gunda intencion. §. 5. y. 6. donde tambien ſe dixo. §. 7. como
+<lb/>a vn que eſto ſe podia eſperar: noſe podia empero hazer ďllo
+<lb/>contratacion por eſcrito/ ni por palabra/ ni a vn moſtrar ſe-<lb type="nb"/>ſial alguna de quererlo. Y allẽde delo que alli ſe puſo: prue-<lb type="nb"/>uaſe eſto poderſe hazer ſin pecado: porque Juan puede lici
+<lb/>tamẽte ganar amor por ſu preſtido/ como fue dicho en prin
+<lb/>cipio ďl primer notable: y no es ylicito (como agora y alli ſo
+<lb/>bre la tercera palabra. §. 6. y. 7. ſe dixo) que Juan eſpere co-<lb type="nb"/>ſa ſemeiante dela caridad o amiſtad de Pedro/ dela mane
+<lb/>ra aqui y alli declarada: pues lo podria eſperar de qual-<lb type="nb"/>quier otra perſona ſin preſtido: eſpecialmente como eſte tal
+<lb/>preſtar reſponda ala ſegunda intencion q̃ no es mala: pues
+<lb/>no eſta ſu principal eſperança enel preſtido/ ſino enel amor
+<lb/>de Pedro/ a vn que ſe ha cauſado porel tal preſtido. Y an-<lb type="nb"/>ſi pareſce q̃ eſto no va contra la diffiniciõ dela vſura/ que es
+<lb/>lleuar coſa demaſiada principalmẽte por cauſa ďl preſtido.
+<pb facs="W0018-0045" n="fo.xix.r"/>
+<lb/>Y eſto ſuenã tambien las palabras dela gloſa enel capi. con
+<lb/>ſuluit. ya alegado: que donde el texto dize: no eſperãdo coſa
+<lb/>alguna: la dicha gloſa añade: cõuiene a ſaber por cauſa del
+<lb/>preſtido: fundada principalmẽte ſobre la eſperança dela de
+<lb/>maſia. De manera q̃ eſto ques dicho ſe podra hazer ſin pe-<lb type="nb"/>cado: porque principalmente no preſta Juan por la dema-<lb type="nb"/>ſia: pero no ay mereſcimiẽto enello/ porque como dizẽ Ale-<lb type="nb"/>xan. de ales. vbi ſupra in fine/ y el Gabriel en fin del primer
+<lb/>notable: el que con tal eſperança preſta: avn que no peque:
+<lb/>tãpoco mereſce/ porque no es ſu fin prĩcipal dios: el qual di
+<lb/>ze. Luce. 6. Preſtad/ ſin eſperar porello coſa alguna (cõuie
+<lb/>ne ſaber) delos hombres: ſino el gualardon que dios os da
+<lb/>ra. Y para eſta manera/ ſe puede dar regla general: que ca-<note type="margin">
+<lb/>Regla.</note><lb type="nb"/>da y quando que Juan preſta a Pedro tantos ducados/
+<lb/>no ſe mouiendo principalmẽte por caridad/ ſino por impor
+<lb/>tunacion/ o por amiſtad/ o por ganar. ſin intẽcion principal
+<lb/>de otro intereſſe/ el amor de Pedro/ o por otra coſa femejã
+<lb/>te que no ſea pecado: pero junto coneſto no haze agrauio a
+<lb/>Pedro ni le lleua mas de ſu intereſſe probable/ o lo que no
+<lb/>puede cobrar del dela manera ya declarada: no peca/ porq̃
+<lb/>no va contra lo que es obligado: pero tampoco merece: por
+<lb/>que nolo haze principalmẽte por dios.</p>
+<p>
+<lb/>¶ La tercera manera en q̃ el preſtar dela forma ſuſo dicha<note type="margin" n="11" xml:id="W0018_note0045a">
+<lb/>§. 11.
+<lb/>Tercera
+<lb/>manera.</note>
+<lb/>ſeria pecado mortal/ pero ſin cargo ď reſtitucion: es en tres
+<lb/>caſos. El primero quando Juan preſta a Pedro con prin-<milestone n="1" unit="x"/><lb type="nb"/>cipal intencion/ o eſperança que Pedro le torne a preſtar a
+<lb/>el/ o ſaca del otro prouecho alguno/ por razon delo que le
+<lb/>preſta: de ſuerte que ſino tuuieſſe tal eſperança: nole preſta-<lb type="nb"/>ria aquello. Pero eſta intencion/ o eſperança nola mueſtra
+<lb/>Juan de fuera/ por palabra ni por otra ſeñal alguna: ſino
+<lb/>que ſolamente ſela tiene dentro enſu penſamiento. Eſto ſe
+<lb/>declaro enel primer notable ſobre la tercera palabra. §. 4.
+<lb/>Uerdad es: que ſegun el pareſcer del ſeñor doctor Medina
+<lb/>(que puſe ſobre la dicha tercera palabra. §. 5.) tambien ay<note type="margin">
+<lb/>Fo. iiij.</note>
+<lb/>cargo de reſtitucion a vn que no ſe mueſtre defuera eſta eſpe
+<pb facs="W0018-0046" n="[fo.xix.]v"/>
+<lb/>rança: ſi de verdad la tiene el que preſta/ y nola quita de <unclear resp="#TL"></unclear>.
+<lb/>Y la diferencia que ay entre eſte caſo/ y el poſtrero que ago
+<lb/>ra ſe acabo de dezir enla ſegunda manera/ para que alli no
+<lb/>aya pecado/ y aqui ſi: es porque alli lo que eſpera Juan no
+<lb/>es por razon del preſtido principalmẽte: ſino por la caridad
+<lb/>o amiſtad de Pedro: mas aqui la eſperãça o intencion prin
+<lb/>cipal: es/ por razon del preſtido: la qual haze auer aqui ver
+<lb/>dadera vſura. El ſegundo caſo es: quãdo Juan que preſta<milestone n="2" unit="x"/>
+<lb/>a Pedro no ha de negociar con ſus dineros: o a vn que ne-<lb type="nb"/>gociaſſe no tiene aquella probabilidad dela ganancia que
+<lb/>ya fue dicha enel ſegundo notable. §. 2. y preſta coneſta tal
+<lb/>intencion principal y la mueſtra por palabras o por ſeñales
+<lb/>(lo qual es verdadera vſura y de reſtituyr ſegun ſe dixo ſo-<lb type="nb"/>bre la tercera palabra del primer notable. §. 4. y. 5.) pero en
+<lb/>hecho de verdad Pedro no pierde coſa alguna ni es agra-<lb type="nb"/>uiado: porque anſi miſmo no ha de negociar con lo que tor
+<lb/>na a preſtar a Juan/ o porque de ſu negociacion tãpoco tie
+<lb/>ne probabilidad de ganancia. Aqui eſta el pecado mortal
+<lb/>enla intencion con que Juan preſta: mas no ay reſtitucion
+<lb/>pues tampoco ay agrauio. El tercero caſo es: quando a vn<milestone n="3" unit="x"/>
+<lb/>que es la verdad que Juan y Pedro auian de negociar cõ
+<lb/>ſus dineros/ y que podian ganar alguna coſa: mas quãdo
+<lb/>Juan preſto a Pedro coneſta condicion que Pedro le tor
+<lb/>naſſe a preſtar ael: no endereſço ſu intencion al intereſſe que
+<lb/>probablemente ſe podia ſeguir a qualquiera dellos: ſino ſo
+<lb/>lamente miro a que entonces no tenia tanta neſceſſidad de
+<lb/>ſus dineros quanta terna deſpues dellos y delos otros que
+<lb/>Pedro le ha de tornar a preſtar: y anſi preſta principalmen
+<lb/>te poreſto: pero con todo eſſo venido a examinacion lo vno
+<lb/>y lo otro: parece que Pedro no ha perdido porello nada/ o
+<lb/>que ſi algo perdio o dexo de ganar es tanto o mas (a juyzio
+<lb/>de buen varon) el daño o intereſſe de Juan como el de Pe
+<lb/>dro: porque a vn que entonces no tuuo reſpecto al tal inte-<lb type="nb"/>reſſe: verdaderamẽte noſe auia de tener ſus dineros enel ar-<lb type="nb"/>ca: antes los auia de emplear en coſas de probable ganan-<pb facs="W0018-0047" n="fo.xx.r"/><lb type="nb"/>cia. Aqui eſta el pecado mortal en preſtar Juan principal-<lb type="nb"/>mente por ſu prouecho: que es proueer ala neſceſſidad que
+<lb/>le eſtaua por venir: lo qual es demaſia/ que tiene lugar de
+<lb/>dinero: mas no ay reſtituciõ: porque Pedro no reſcibio da
+<lb/>ño: o ſi le reſcibio haze ſe recompenſa porel daño/ o intereſſe
+<lb/>de Juan que ſele auia de ſeguir. Y ſiempre ſe mire que ha-<lb type="nb"/>blo eneſtos caſos del intereſſe probable/ y no del incierto:
+<lb/>delos qu<unclear resp="#TL"></unclear>les trate enel ſegundo notable. §. 2. y. 3.</p>
+<p>
+<lb/>¶ Haze aeſte caſo para eſcuſar la reſtitucion: la intencion<note type="margin" n="12" xml:id="W0018_note0047a">
+<lb/>§. 12.</note>
+<lb/>virtual de negociar que aqui concurre quãdo dezimos que
+<lb/>Juan y Pedro auian ď negociar: y que Pedro no ſe auia
+<lb/>de tener los dineros enel arca. ⁊c. la qual intencion virtual:
+<lb/>eſcuſa como la actual/ de que emos hablado enla ſegunda
+<lb/>manera antes deſta/ ſegũ lo que eſcriuẽ los theologos/ eſ-<lb type="nb"/>pecialmente ſant Buenauentura y el Scoto y el Gabriel en
+<lb/>la diſtinction. 41. del ſegundo delas ſentencias: tractando
+<lb/>delas obras referidas a dios actual o virtualmente. Haze
+<lb/>tambien aeſto lo que nota la ſumma Angelica. vſu. j. §. 5. y
+<lb/>la Silueſtrina. eodem titu. §. 7. con textos y dotores/ delos
+<lb/>que preſtan algo a otros porque vayan a ſus tiendas o mo
+<lb/>linos: que ſi los que tomaron el preſtido no reſciben daño
+<lb/>por yr alas tiendas o molinos: no ay que reſtituyr: a vn que
+<lb/>el preſtar poreſta cauſa ſea vſura/ ⁊ por conſiguiente pecca-<lb type="nb"/>do mortal. Hazen anſi miſmo aeſto la gloſa in. capi. vnico.
+<lb/>de voto. lib. 6. in verſi. approbatis/ la qual affirmando por
+<lb/>el texto alli/ que ſi alguno haze profeſſion en alguna religiõ
+<lb/>no aprobada: vale el matrimonio ſi ſe caſa deſpues: añade
+<lb/>luego: que lo miſmo es a vn ſi quando hazia profeſſion cre-<lb type="nb"/>ya ſer aquella religion approbada: de manera que vale el
+<lb/>matrimonio por auer verdad que le eſcuſe: a vn que la inten
+<lb/>cion fue otra enla tal profeſſion. Haze otro ſi/ lo que dize el
+<lb/>Hoſtiẽſe enla ſumma. ti. de vſu. §. in aliquo: al qual alega y
+<lb/>ſigue el Abad enel dicho ca. cõqueſtus/ y tambiẽ la miſma
+<lb/>ſumma ange. vbi ſupra. §. 23. del q̃ por ocaſiõ del que preſto
+<lb/>reſcibe algunos trabajos o daños: q̃ puede tomar la recom
+<pb facs="W0018-0048" n="[fo.xx.]v"/>
+<lb/>penſa ſin vſura/ como ſe nota. de rebus eccle. non alie. c. ad
+<lb/>nr̃am. Y ſegun ſe dixo arriba enel primero notable ſobre la
+<lb/>tercera palabra. §. 9. caſo. 11. Haze anſi miſmo a eſto otro
+<lb/>enxemplo que pone la dicha ſũma angelica vbi ſupra. §. 33.
+<lb/>donde dize: q̃ ſi alguno cõpra vna coſa adelantada (aſſi co-<lb type="nb"/>mo es trigo/ o azeyte/ o coſa ſemejante) antes del tiẽpo de
+<lb/>cojerla: y quãdo la compra/ pienſa q̃ ha de valer al tiempo
+<lb/>de reſcebirla/ mas delo q̃ el da/ y no menos: pero ſegun co-<lb type="nb"/>mun eſtimacion/ veriſſimil mente puede valer mas/ o me-<lb type="nb"/>nos: el tal (ſegun Innocẽcio y Anto. de bu. enel capi. in ciui
+<lb/>tate. ď vſu. Y ſegun tãbiẽ ſe dixo enel primer notable. §. 13.)
+<lb/>es vſurero: por quãto da menos delo q̃ pienſa que ha de va
+<lb/>ler la coſa por dar los dineros adelãtados: mas no es obli-<lb type="nb"/>gado a reſtitucion: por quanto/ quãdo el da los tales dine
+<lb/>ros/ ſe preſume veriſſimilmente: ſegun comun juyzio: q̃ pue
+<lb/>de valer mas o menos: por la qual dubda pudiera de ver-<lb type="nb"/>dad ſer eſcuſado: como ſe dize enel dicho capi. nauiganti. de
+<lb/>vſuris: y ſe dixo tambiẽ enel dicho. §. 13. del primer notable.
+<lb/>De manera/ q̃ aſſi como eſte es eſcuſado: porque en hecho
+<lb/>de verdad era veriſſimil que la coſa comprada podia valer
+<lb/>mas/ o menos (a vn que el no tenia acatamiẽto a eſto) an-<lb type="nb"/>ſi tambien en nueſtro caſo: a vn que Juan no miro ala recõ
+<lb/>penſa de ſu intereſſe: por quãto de verdad auia de negociar
+<lb/>con ſus dineros ⁊ veriſſimilmente fuera ſu ganancia tanta/
+<lb/>o mas que la de Pedro/ y anſi ay lugar de recompenſa: o
+<lb/>por quanto Pedro no perdio nada: reſta que (ſegun dixi-<lb type="nb"/>mos) Juan peco mortalmente por la intenciõ principal de
+<lb/>ſu prouecho q̃ tuuo: pero no queda obligado a reſtitucion.
+<lb/>Y anſi quanto a eſta manera (donde pueden entrar otros
+<lb/>muchos caſos) ſe puede dar eſta regla general que cada y<note type="margin">
+<lb/>Regla.</note>
+<lb/>quando que alguno preſta: pidiendo/ o eſperãdo otro pre-<lb type="nb"/>ſtido/ o qualquier demaſia: principalmente por cauſa delo
+<lb/>que preſta: pecca mortalmente: porque comete verdadera
+<lb/>vſura: mas ſi de verdad/ el auia de negociar y ſele eſtoruo
+<lb/>probablemẽte tanta ganancia como la demaſia (a vn q̃ no
+<pb facs="W0018-0049" n="fo.xxj.r"/>
+<lb/>pienſe enello quando preſta) o ſi el que tomo el preſtido/ no
+<lb/>reſcibe daño alguno por lo que ha de tornar a preſtar/ o ha
+<lb/>zer: no queda el que primero preſto/ con cargo alguno de
+<lb/>reſtitucion.</p>
+<p>
+<lb/>¶ La quarta manera en q̃ eſtos preſtamos ſe hazen ſiẽpre<note type="margin" n="13" xml:id="W0018_note0049a">
+<lb/>§. 13.
+<lb/>Quarta
+<lb/>manera.</note>
+<lb/>con peccado mortal/ y cargo de reſtituciõ/ es: cada y quan
+<lb/>do que Juã preſta ſus dineros a Pedro: no principalmẽte
+<lb/>por caridad ni amiſtad/ ni tampoco por querer ſe recõpen-<lb type="nb"/>ſar de ſu juſto yntereſſe: ſino principalmente por la intenciõ
+<lb/>ſobre dicha/ q̃ Pedro le torne a preſtar/ o le de otra qual-<lb type="nb"/>quier demaſia: ďlo qual Pedro es mas agrauiado q̃ Juã:
+<lb/>o porq̃ Juan no auia de negociar como Pedro/ o porque
+<lb/>no tenia la ganãcia aſſi probable como el: o porq̃ para tor-<lb type="nb"/>narle a preſtar lo q̃ puſo cõel: ha de tomar los dineros a cã-<lb type="nb"/>bio/ con mayor coſta que podia ſer el intereſſe probable de
+<lb/>Juan/ o ď qualquier otra manera q̃ acaezca/ en q̃ Pedro
+<lb/>reſciba agrauio de ſu tornar a preſtar/ o de coſa ſemejante.
+<lb/>Toda eſta demaſia/ o agrauio es obligado Juan de reſti-<lb type="nb"/>tuyr: porq̃ eſto tal es verdadera y manifieſta vſura/ q̃ trae
+<lb/>conſigo las dos coſas ſobre dichas: cõuiene a ſaber pecca-<lb type="nb"/>do mortal y cargo de reſtitucion: como ſe declaro enel pri-<lb type="nb"/>mer notable/ ſobre la tercera palabra. §. 4. ⁊ ſe dixo anſi miſ
+<lb/>mo enel ſegundo notable/ enla primera reſpueſta ala que-<lb type="nb"/>ſtion. §. 8. ſin la qual reſtitucion nunca ſe perdonan los pec-<lb type="nb"/>cados/ pudiẽdo la hazer: ſegun lo dize ſant Auguſtin/ y ſe
+<lb/>pone enel ca. ſi. res. 14. q. 6. y enel ca. peccatũ de regu. ju. li. 6.
+<lb/>y enla qual reſtitucion dela vſura no ay diſpenſacion algu
+<lb/>na: como ſe dize enel cap. ſuper eo. de vſu.</p>
+<p>
+<lb/>¶ Eſto empero ſe ha ď entender/ ſi el agrauiado no lo per-<note type="margin" n="14" xml:id="W0018_note0049b">
+<lb/>§. 14:
+<lb/>remiſſiõ
+<lb/>volunta
+<lb/>ria.</note><lb type="nb"/>donaſſe liberal y voluntariamente: lo qual ſeria (ſegũ Egi
+<lb/>dio ď Roma enel. 2. quotlibeto. q. 27. y el Gabriel q̃ le ſigue
+<lb/>en fin dela dicha. q. 11. dubio. 17.) quãdo el q̃ anſi ha de reſti
+<lb/>tuyr/ le offrece delãte los dineros: o alomenos ſea ď tal ma
+<lb/>nera que el agrauiado tenga libre y entera facultad de to-<lb type="nb"/>mar o de perdonar lo q̃ le ha de ſer reſtituydo: porq̃ (como
+<pb facs="W0018-0050" n="[fo.xxj.]v"/>
+<lb/>añaden la ſumma Angeli. reſti. vlti. §. 2. y la Silueſt. reſti. 6.
+<lb/>q. 2. dicto. 1.) ſi lo perdonaſſe/ no de ſu libre voluntad: ſino
+<lb/>por miedo de no incurrir enla deſgracia del que reſtitu ye/ o
+<lb/>con deſeſperacion/ que ſi no lo perdona nunca lo cobrara: o
+<lb/>alomenos que ſi cobra algo ſera poco (anſi como ſi le deuie
+<lb/>ſen ciento/ y le fueſſe dicho que ſi no ſe contenta con la mi-<lb type="nb"/>tad/ o con alguna parte dello que no le daran nada) o ſi ſe
+<lb/>alcança el perdon con engaño/ dando a entender que no ſe
+<lb/>puede reſtituyr todo lo que ſe deue/ o que pueden poco/ o
+<lb/>lo que ſe deue que no es tanto como de verdad lo es/ o co-<lb type="nb"/>ſas ſemejantes: quando algo deſto ſe conoſce: no queda li-<lb type="nb"/>bre en ninguna manera el que ha ď reſtituyr. Y concluye el
+<lb/>Gabriel/ q̃ eſto miſmo ſe ha de entẽder/ en todas las otras
+<lb/>reſtituciones delas coſas mal auidas: y es anſi verdad: ſal-<lb type="nb"/>uo que ay algunos caſos/ en que diſpone el derecho que la
+<lb/>parte no pueda perdonar la coſa lleuada ſin que verdade-<lb type="nb"/>ramente ſe haga primero real reſtitucion: los quales caſos
+<lb/>dexo/ porque no perteneſcen ala preſente materia: para la
+<lb/>qual baſte lo que ha ſido dicho/ debaxo de fiel corecion/ ⁊
+<lb/>a gloria de nueſtro ſeñor Jeſu chriſto: el qual conel padre y
+<lb/>conel ſpiritu ſancto biue ⁊ reyna vn dios por ſiempre jamas
+<lb/>Amen.</p>
+<p rend="hx">
+<lb/>¶ Otra queſtion enla materia ſobredicha.</p>
+<p>
+<lb/><t:b>¶ A cerca delo que ſe dixo enel ſegun</t:b>
+<lb/>do notable dende el. §. 2. haſta el fin/ que el que preſta ſus
+<lb/>dineros/ puede tener acatamiento al yntereſſe delo q̃ pro-<lb type="nb"/>bable/ o veriſſimilmente podria ganar enel tiempo que los
+<lb/>da preſtados: eſpecialmente ſobre lo que ſe dize alli enel ſe-<lb type="nb"/>gundo enxemplo. §. 4. podrian naſcer eſcrupulos: por quã-<note type="margin">
+<lb/>fo. xij.</note><lb type="nb"/>to ay coſas y dichos ď doctores que pareſcen en contrario:
+<lb/>y por tanto determine de tornar a tractar aqui la materia
+<lb/>mas largamẽte/ en terminos de quiſtion dubdoſa: y la pro
+<lb/>pria dubda o queſtion es eſta.</p>
+<p>
+<pb facs="W0018-0051" n="fo.xxij.r"/>
+<lb/><hi rend="init">Y</hi>O tengo ciẽ ducados con los quales ſuelo/ y<note type="margin">
+<lb/>queſti<unclear resp="#TL"></unclear>.</note>
+<lb/>quiero negociar: ruegas me tu que te los pre
+<lb/>ſte/ ⁊ yo te los doy con tal concierto que me
+<lb/>hagas recompenſa: delo que probablemente
+<lb/>yo pudiera ganar. Es de ver ſi eſte contracto
+<lb/>(en quanto toca ala conſciencia) es vſurario/ o no. Podrã
+<lb/>dezir algunos q̃ es vfurario/ y no licito: lo primero porque
+<lb/>muchos doctores lo affirman aſſi: lo ſegundo porque ſeria
+<lb/>abrir puerta alos logreros. Los doctores q̃ parecen cõtra-<lb type="nb"/>rios: ſon. Santo Thomas/ Alexandre de ales/ Ricardo/
+<lb/>Durando/ el Innocẽcio/ el Abad/ Juan andres: y Enri-<lb type="nb"/>que bohic: cuyos dichos ſe pornã adelante. Porel contra-<lb type="nb"/>rio (ſegun reſolucion de muchos) ſe determino enlos luga-<lb type="nb"/>res arriba dichos/ que eſte cõtrato es licito y ajeno de vſu-<lb type="nb"/>ra: guardadas cinco cõdiciones q̃ alli ſe ponen. Para mas
+<lb/>claridad de todo: veremos primero lo que haze en fauor
+<lb/>deſte dicho contracto: y deſpues reſponder ſe ha alas razo-<lb type="nb"/>nes contrarias.</p>
+<p>
+<lb/>¶ Ante todas coſas digo y amoneſto que ſeria muy mejor
+<lb/>que ninguno preſtaſſe ſus dineros deſta manera/ y que eſta
+<lb/>mas ſeguro el q̃ menos lo haze: ſino que como buenos chri
+<lb/>ſtianos deuriã ſocorrerſe vnos a otros en ſus neceſſidades/
+<lb/>por ſola caridad y miſericordia de ſus proximos: porq̃ (co-<lb type="nb"/>mo muy bien dize el ſancto Arçobiſpo de florencia enel. §.
+<lb/>16. dela ſegunda parte de ſu ſũma. ti. j. ca. 7. quiriẽdo quitar
+<lb/>los tropieços/ a vn eneſte nr̃o caſo q̃ el alli a prueua) los hõ
+<lb/>bres comũmente fe aman tanto a ſi miſmos: q̃ muchas ve-<lb type="nb"/>zes ſe engañan eneſtos contratos: no haziẽdo los como de-<lb type="nb"/>uen. Y anſi dize el/ q̃ deuemos eſtoruar los que no ſe hagã:
+<lb/>y ſu conſejo es muy ſaludable. Pero ya que por la mayor
+<lb/>parte/ vemos que andan eſtos preſtidos/ o preſtamos: y q̃
+<lb/>no quierẽ por eſte camino ſaludable ganar algo para el cie
+<lb/>lo: digo lo primero (como ſe porna mas abaxo al fin ď todo
+<lb/>eſto) que es menos ſeguro callar/ lo que eneſto ſe tiene por
+<lb/>mas aueriguado/ que dezirlo o eſcreuirlo. Lo ſegundo di-<pb facs="W0018-0052" n="[fo.xxij.]v"/><lb type="nb"/>go/ que la dubda aqui pueſta nace de no auer texto eſpreſ-<lb type="nb"/>ſo q̃ la aprueue o condene: y poreſſo nos auemos de llegar
+<lb/>ala razon/ o ygualdad: y ala ſemejança de otros caſos: y a
+<lb/>los doctores que la tractan. Lo tercero digo: q̃ eneſte caſo
+<lb/>ay equiuocacion/ quando ſe habla del ſin deſtinguir: por-<lb type="nb"/>que el yntereſſe de que enel ſe haze mencion: ſe puede enten
+<lb/>der de quando es la ganancia yncierta/ y tambien de quã-<lb type="nb"/>do es probable/ o veriſſimil: como enel dicho ſegũdo nota-<lb type="nb"/>table al principio ſe diſtingue. Y es meneſter mirar mucho
+<lb/>eſta diſtincion: para no errar enel caſo: porque algunos do<note type="margin">
+<lb/>diuerſas
+<lb/>conſide-<lb type="nb"/>raciones</note>
+<lb/>ctores/ no diſtinguiendo nada: ſino mirando ſolamente alo
+<lb/>q̃ ſe puede preſumir/ enel foro judicial o ala ganancia yn-<lb type="nb"/>cierta: ſin otra condicion condenan eſte cõtrato. Otros con
+<lb/>ſiderando la ganancia probable con las condiciones deui-<lb type="nb"/>das/ o con las principales: le aprueuan. Otros no ponien-<lb type="nb"/>do todas las condiciones neceſſarias/ o temiẽdo el peligro
+<lb/>dizen que no ſe haga: y aſſi ay ſentẽcias diuerſas. Y enel di-<lb type="nb"/>cho ſegundo notable. §. 3. ſe mueſtra ſer eſte contrato vſura
+<lb/>rio: quando la ganancia es yncierta: pero quãdo es proba-<lb type="nb"/>ble: determina ſe/ ſer licito con las dichas cinco cõdiciones
+<lb/>q̃ alli ſe ponen. §. 6. con las q̈les ſe eſtrecha tanto el caſo quã
+<lb/>to ſe puede eſtrechar/ y ſe pone todo el freno q̃ ſe puede po-<lb type="nb"/>ner a quien quiſiere mirar ſu conciencia: q̃ para el q̃ no qui-<lb type="nb"/>ſiere: no baſtan razones ni a vn leyes. Pues quãto alo pri-<lb type="nb"/>mero que haze ala razon/ o ygualdad: el Arçobiſpo de flo-<note type="margin">
+<lb/>razõ/ o y
+<lb/>gualdad</note><lb type="nb"/>ren. enel dicho. §. 16. mueſtra por tres razones/ no ſer ynju-<lb type="nb"/>ſticia lleuar el yntereſſe deſta manera: las quales razones
+<lb/>no põgo aqui por no alargar mas/ y porque las puede ver
+<lb/>quien quiſiere. Y ſin ſus razones/ no puedo penſar porque
+<lb/>no ſea razon: que auiendo yo de negociar con mis dineros/
+<lb/>y preſtando te los a ti por tus ruegos/ o ymportunacion (q̃
+<lb/>es la primera delas cinco condiciones ſobre dichas) no te
+<lb/>pueda pedir la recompenſa delo que probablemẽte por ex-<lb type="nb"/>periencia de otras vezes/ y ſaluãdo los gaſtos y peligros
+<lb/>(q̃ es la ſegunda condicion) yo ſuelo ganar: no tuuiendo tu
+<pb facs="W0018-0053" n="fo.xxiij.r"/>
+<lb/>tal neceſſidad ⁊ yo tal abundancia/ q̃ ſea obligado de te ſo-<lb type="nb"/>correr ſin ningun yntereſſe (como lo dize la tercera cõdiciõ)
+<lb/>y no lo haziendo por cauſa del tal preſtido/ ſino por mi yn-<lb type="nb"/>tereſſe: como ſe pone enla quarta condiciõ. ¶ Quanto alo
+<lb/>ſegundo ďla ſemejãça de otros caſos (allende ďlo q̃ ſe dixo<note type="margin">
+<lb/>ſemejãça</note>
+<lb/>enel dicho ſegũdo notable. §. 4. y. 5.) el primero delos q̃ por
+<lb/>eſta manera determinan ſer licito eſte caſo/ es el Oſtienſe: el
+<lb/>qual deſpues de auer pueſto enel. c. ſalubriter de vſu. aquel
+<lb/>caſo q̃ pone la gloſa enel ca. conqueſtus/ q̃ ſi yo te vẽdo vna
+<lb/>heredad/ y me la has ď pagar a tal termino: ſi ſe paſſa el pla
+<lb/>zo y no me pagas: te puedo pedir el daño q̃ ſe me ha ſegui-<lb type="nb"/>do/ y tambien el intereſſe delo q̃ veriſſimilmẽte pudiera ga-<lb type="nb"/>nar (el qual caſo aprucuã todos ſin q̃ ninguno diſcrepe) di-<lb type="nb"/>ze q̃ ſegun la yntencion delos derechos/ que para eſte caſo
+<lb/>ſe alegan: lo miſmo q̃ ſe juzga deſto dela heredad: ſe ha de
+<lb/>juzgar deſtotro nueſtro caſo ſobre q̃ es la dubda: el qual el
+<lb/>tiene. Lo miſmo haze el Arçobiſpo de florencia enel dicho.
+<lb/>§. 16. porel cap. nauiganti. y el Aſtenſe enel arti. 4. q̃ abaxo
+<lb/>ſe alegara/ porel caſo del daño de que habla el. ca. conſtitu
+<lb/>tus. de fideiuſſo. Y aſſi otros que proceden deſta manera.
+<lb/>¶ Quanto alo tercero delos dichos de doctores: para con-<note type="margin">
+<lb/>doctores</note><lb type="nb"/>firmar eſta determinacion ſe puſieron enel dicho ſegũdo no
+<lb/>table. §. 4. y. 5. cinco exemplos: el ſegundo delos quales/ es
+<lb/>el caſo formal q̃ aqui ſe trata: enel qual ſe dize como ſe pue-<lb type="nb"/>de lleuar eſte yntereſſe dela manera ſobredicha ſin concien
+<lb/>cia: trayẽdo para ello dos theologos/ y dos ſũmiſtas/ que
+<lb/>ponen el miſmo caſo ala letra/ y le affir mã (deſpues ď otros
+<lb/>doctores a quien ſiguen) ſin ningun eſcrupulo: con tãto que
+<lb/>ſean guardadas las dichas cinco condiciones. El vn theo-<lb type="nb"/>logo fue el Gabriel/ doctor reſolutiſſimo q̃ lo dize aſſi eñl. 4
+<lb/>diſtĩ. 15. q. 11. arti. 1. nota. 2. El ſegundo es Nicolao de orbel-<lb type="nb"/>lis/ abreuiador ďl Scoto/ ea. diſt. q. 3. §. 25. Los otros ſon/
+<lb/>la ſũma angelica/ vſu. 1. §. 16. y la Silueſt. eo. ti. 22. 23. y. 25. y
+<lb/>tãbien enla Roſa aurea enel caſo. 25. delas queſtiones ym-<lb type="nb"/>pertinentes. Mas porq̃ eſtos no parezcan pocos/ y la mu-<pb facs="W0018-0054" n="[fo.xxiij.]v"/><lb type="nb"/>chedũbre quite mejor la dubda: añaden ſe agora otros diez
+<lb/>y ocho/ que ſobre nueſtro caſo tienen lo que aqui affirma-<lb type="nb"/>mos. El vno dellos que (entre los canoniſtas ſolenes) tiene
+<lb/>eſto ala letra: es el Oſtiẽſe (ſegun ya dixe) enel ca. ſalubriter
+<lb/>y enel cap. nauiganti. de vſu. enel qual. ca. ſalubriter (como
+<lb/>tambien lo refiere el Abad enel dicho cap. nauigãti.) ſobre
+<lb/>la determinacion del caſo/ dize: que el que anſi toma el em-<lb type="nb"/>preſtido: queda obligado alo que veriſſimilmente eſperaua
+<lb/>ganar el que le haze. Lo miſmo tiene Raymũdo enla ſum
+<lb/>ma. titu. de vſu. ꝟ. ytem aliquis/ al fin. Y a eſtos dos han ſe
+<lb/>guido los mas q̃ deſpues han tocado la materia. Lo miſ-<lb type="nb"/>mo (ſegun lo notan el Arçobiſpo de florencia/ vbi ſupra. y
+<lb/>Bernardino de buſtis enel ſermon. 27. que abaxo alegare-<lb type="nb"/>mos: y la ſilueſt. §. 19. y. 23.) tienen Juan de ligñano: y An-<lb type="nb"/>tonio de butrio enel dicho capi. ſalubriter: los quales tãbiẽ
+<lb/>conformandoſe conel Oſtienſe dizen (ſegun lo refiere el di-<lb type="nb"/>cho Bernardino de buſtis) que es obligado por via ď juſta
+<lb/>ygualdad/ el q̃ anſi reſcibio el preſtido/ al yntereſſe ſobredi
+<lb/>cho: conſideradas las dubdas/ y las circunſtancias delo q̃
+<lb/>pudiera ganar el que preſta: y q̃ no ſe haga nada con enga-<lb type="nb"/>ño (como añade el Arçobiſpo de Florencia que dize Juan
+<lb/>de ligñano) lo qual todo ſe ſalua enlas condiciones ſobre-<lb type="nb"/>dichas. Y dize mas Buſtis/ que lo miſmo tiene Mõnaldo
+<lb/>enla ſũma: diziẽdo q̃ lo tal ſe reſcibe por razon de yntereſſe.
+<lb/>Lo miſmo tienẽ Pedro ď ancarrano/ y Guillermo Durã
+<lb/>do/ como lo dize la dicha Silueſtrina. §. 19. y. 23. Lo miſmo
+<lb/>tiene Lorẽço de ridolphis/ como lo dize el Arçobiſpo y la
+<lb/>Silueſtrina vbi ſupra: a vn que con algun eſcrupulo/ porq̃
+<lb/>ſe funda algo enel mal q̃ ſe puede preſumir exteriormẽte/ y
+<lb/>porq̃ no pone las condiciones neceſſarias. Y lo que dize (ſe
+<lb/>gun el Arçobiſpo flo. vbi ſupra) es: q̃ no ſe ha de contar la
+<lb/>ganancia yncierta/ y q̃ el tal contrato/ antes de hazer ſe es
+<lb/>de conſejar que no ſe haga (todo lo qual digo yo tambien)
+<lb/>pero q̃ deſpues de hecho: ſe puede diſſimular enel foro dela
+<lb/>conſciencia/ donde cada vno ha de ſer creydo: ſi el q̃ lo hizo
+<pb facs="W0018-0055" n="fo.xxiiij.r"/>
+<lb/>dixere: no auerlo hecho con engaño. Lo miſmo tiene el di-<lb type="nb"/>cho Arçobiſpo de flo. (conuiene a ſaber ſer licito eſte cõtra-<lb type="nb"/>to) enel. §. 16. ya alegado: donde (allẽde de otras coſas que
+<lb/>auemos dicho que alli pone) dize: que la demaſia que deſta
+<lb/>manera ſe lleua: no ſe ha ď tener ſino por coſa ď caudal prin
+<lb/>cipal: pues la ganancia aſſi probable eſta ya caſi enlas ma
+<lb/>nos. Y a vn que al fin aconſeja alli (ſegun ya dixe al prin-<lb type="nb"/>cipio) que no ſe deurian hazer eſtos tales preſtidos: adelan
+<lb/>te empero enel. §. 27. del miſmo capitulo: affirma ſin ningũ
+<lb/>eſcrupulo: que el que eſta para comprar de ſus dineros al-<lb type="nb"/>guna poſſeſſion/ o quiere emplearlos en ganãcias licitas:
+<lb/>puede pedir ſu intereſſe ſi los preſta. Y dize tambien la Sil
+<lb/>ueſtri. enel dicho. §. 13. (y es neceſſario entenderlo anſi por-<lb type="nb"/>que lo eſcriue el ſancto Arçobiſpo ẽlos dichos dos. §.) que
+<lb/>lo que dize el Arçobiſpo alli enel. §. 16. ſer vſura quando yo
+<lb/>hizieſſe eſto por los ruegos de mi amigo fuera de caſo de ne
+<lb/>ceſſidad: ſe entiende/ quanto alo que ſe puede preſumir de-<lb type="nb"/>fuera: mas no quanto ala verdad. El miſmo caſo y deter-<lb type="nb"/>minacion nueſtra ala letra: tiene el Aſtenſe enel libro. 3. ti-<lb type="nb"/>tulo. 11. articulo. 4. enel quinto caſo delos que alli pone/ y
+<lb/>enel articulo. 5. ſiguiente enla palabra que comiença: poteſt
+<lb/>tamen hic excogitari/ y Pedro caſuel/ que hizo el direto-<lb type="nb"/>rium iuris/ libro. 3. titu. de vſu. §. 21. que comiença. Item po
+<lb/>ne ꝙ aliquis/ y Bernardino de Buſtis enla. 2. parte de ſu
+<lb/>roſario. ſer. 27. parte ſegunda del ſermon/ enla ſegunda re-<lb type="nb"/>gla principal/ y la Summa piſana/ o Bartulina (ala qual
+<lb/>alega muchas vezes Gerſon en ſus tractados de abſolu-<lb type="nb"/>cion/ y en otros) vſu. 1. §. 26. y alli conella Nicolao de auſ-<lb type="nb"/>mo que hizo el ſuplemento dela dicha ſũma: con tal que ſe
+<lb/>guarden algunas delas condiciones ya dichas/ y la ſum-<lb type="nb"/>ma roſela. vſu. 1. §. 16. y generalmente (como concluye/ la
+<lb/>Silueſtri. enel dicho. §. 23.) todos los Sũmiſtas/ que a vn
+<lb/>no ſe ponen aqui todos. Lo miſmo tiene Utino en ſus ſer-<lb type="nb"/>mones de tempore/ ſer. 39. flore. 3. quando dize (hablando
+<lb/>delos preſtidos de Uenecia) que ſi es licito (como aqui al
+<pb facs="W0018-0056" n="[fo.xxiiij.]v"/>
+<lb/>principio diximos que lo afirmã todos y ſe ha de dezir ade
+<lb/>lante enla reſpueſra a Juã andres) pedir el intereſſe del da-<lb type="nb"/>õo ſeguido/ y dela ganancia que ſe eſtorua a quien no me
+<lb/>paga los dineros que le preſte deſpues de paſſado el termi-<lb type="nb"/>no en que melos auia de dar: tambien es licito pedirle den-<lb type="nb"/>de el principio ďl contracto por la dilacion dela paga. Eſto
+<lb/>has de entender ſiempre/ concurriendo las cinco condicio-<lb type="nb"/>nes ſo bre dichas. El miſmo caſo aprueuan el Aabad enel
+<lb/>capi. nauiganti: y Enrique bohic enel capi. conqueſtus: los
+<lb/>quales a vn q̃ ſe alegaron por cõtrarios: porq̃ dize el Abad
+<lb/>ſer la opinion de Innocẽcio ⁊ Juan Andres mas ſegura/
+<lb/>y Enrique otras palabras deſta manera: contodo eſto (co-<lb type="nb"/>mo pareſcera enſus reſpueſtas) el Abad pone alli por ſegu
+<lb/>ra nueſtra determinaciõ/ y en otros caſos ſemejãtes la con
+<lb/>firma (ſegũ ſe mueſtra porel primero/ tercero y quinto ďlos
+<lb/>enxemplos q̃ ſe puſierõ enel ſegundo notable. §. 4. y. 5.) y el
+<lb/>Enrique declara: q̃ hablo el Innocẽcio dela ganãcia incier
+<lb/>ta: lo qual todo haze a nueſtro caſo. De manera q̃ puede juz
+<lb/>gar cada vno/ ſi deue ſer tenida por ſegura eſta determina-<lb type="nb"/>cion: para la qual (ſin otras coſas q̃ aqui y enel tratado prin
+<lb/>cipal arriba eſcrito ſe dizẽ: y ſin otros ſũmiſtas q̃ amontona
+<lb/>la Silueſtrina) ay veynte y dos doctores q̃ la aprueuan ha<note type="margin">
+<lb/>xxij. do-<lb type="nb"/>ctores.</note>
+<lb/>blando della eneſpecial: ſin q̃ ninguno delos q̃ ſe alegan por
+<lb/>contrarios la reprueue ſuficientemẽte ni tenga lo contrario:
+<lb/>diſtinguiẽdola dela manera que aqui ſe diſtingue: como lue
+<lb/>go ſe moſtrara.</p>
+<p rend="hx">
+<lb/>¶ Reſpueſtas alas objectiones.</p>
+<p>
+<lb/><hi rend="init">P</hi>Ues quanto alos contrarios que ſe alegarõ: con ſola
+<lb/>vna palabra ſe podria reſpõder/ no ſolamẽte aellos q̃
+<lb/>ſon pocos: pero a vn a mil millones mas q̃ hablaſſen como
+<lb/>ellos. Y es: que pues en hecho de verdad (como luego dire-<lb type="nb"/>mos) no limitã eſte caſo dela manera y con las condiciones
+<lb/>ſobre dichas q̃ diximos ſer neſceſſarias: no es eſpãto q̃ algu
+<lb/>nos dellos le condenẽ: porq̃ ſin ellas: tambien eſta condena
+<lb/>do enel tractado ſobre dicho y q̈lquier perſona le deue cõde
+<pb facs="W0018-0057" n="fo.xxv.r"/>
+<lb/>nar. Pero (allende deſto) vengamos alas contrariedades
+<lb/>particulares. Los doctores que aprimafacie pareſcen con-<lb type="nb"/>trarios ſon ocho: quatro theologos y quatro canoniſtas. De
+<lb/>los theologos/ el primero es ſanto Thomas enla ſecũda ſe<note type="margin">
+<lb/>Sancto
+<lb/>thomas.</note>
+<lb/>cũde. q. lxxviij. arti. ij. in reſpon. ad primũ donde dize/ q̃ nin
+<lb/>guno puede pedir recompenſa ďl daño que ſele ſigue por lo
+<lb/>que dexa de ganar: porque ninguno puede vender lo q̃ a vn
+<lb/>no tiene/ y que por muchas maneras ſele puede impedir.
+<lb/>Eſtas ſon formalmẽte ſus palabras/ y tambien las de Du<note type="margin">
+<lb/>Durãdo</note>
+<lb/>rando/ que es otro alegado en contrario: que ſin mudar pa
+<lb/>labra dize lo miſmo. in. iij. ſentẽ. diſtĩ. xxxvij. q. ij. al fin: por lo
+<lb/>qual reſpondiendo al vno quedara el otro tambiẽ reſpondi
+<lb/>do. Aeſtos dos juntamente reſpondo. Lo primero que ſus
+<lb/>miſmas palabras mueſtran claramente hablar dela ganã-<lb type="nb"/>cia incierta (que enel dicho notable. ij. §. 3. ſe reprueua) enlo
+<lb/>que dizẽ: que ſe puede impedir de muchas maneras: lo qual
+<lb/>es ageno dela ganancia probable/ o veriſſimil que eſcuſa<note type="margin">
+<lb/>ganãcia
+<lb/>probable
+<lb/>ďla qual
+<lb/>tambien
+<lb/>ſupra. no
+<lb/>ta. 2. ¶. 2.</note>
+<lb/>eſte cõtrato: y es (ſegun ſe dixo enel dicho notable. §. 2) quã
+<lb/>do ay della eſperiencia por otras muchas vezes: ſegun los
+<lb/>tiempos/ tierras y negocios/ y q̃ no paſſa por peligros eui-<lb type="nb"/>dentes de mar/ ni de ladrones: ni tiene otros inconuiniẽtes
+<lb/>comunes: donde no pareſce como pueda auer los tales im-<lb type="nb"/>pedimẽtos de muchas maneras. Y eſta ganancia que aqui
+<lb/>y enel ſobre dicho tractado llamamos probable/ o veriſſi-<lb type="nb"/>mil (ſegũ la llama el Abad enlos dichos capkos cõqueſtus:
+<lb/>ſalubriter y nauigãti) es la que algunos llamã in actu/ vel
+<lb/>quaſi in actu (que quiere dezir q̃ eſta ya enlas manos o caſi)
+<lb/>como lo ponen/ el Gabriel vbi ſupra. arti. j. nota. ij. enla le-<lb type="nb"/>tra. f. y la ſũma Ange. §. 15. y la Silueſ. §. 19. Y eſta es la eſti
+<lb/>macion veriſſimil: por la qual ſe eſcuſan las vẽtas por mas
+<lb/>o compras adelãtadas de que hablan el capi. in ciuitate/ y
+<lb/>el capi. nauiganti ſobredichos/ y lo q̃ dize el directorio que
+<lb/>arriba alegamos/ que para que aquel intereſſe ſe pueda lle
+<lb/>uar: ha de ſer la dubda o ganancia probable/ ſegun comun
+<lb/>opinion. Y a vn digo mas: que eſta probabilidad q̃ aſſi eſta
+<pb facs="W0018-0058" n="[fo.xxv.]v"/>
+<lb/>ajena de euidẽtes peligros/ y dõde pocas vezes ſuelẽ acae-<lb type="nb"/>cer menoſcabos/ o perdidas: ď derecho ſe tiene por coſa cier
+<lb/>ta: porq̃ los derechos/ aquello juzgan y tienen por cierto/ q̃<note type="margin">
+<lb/>coſa cier
+<lb/>ta lo que
+<lb/>las mas
+<lb/>vezes a-<lb type="nb"/>caeſçe.</note>
+<lb/>por la mayor parte acontece: como lo nota la glo. enel capi.
+<lb/>literas. de deſpon. impu. porel texto alli enla palabra: con-<lb type="nb"/>ſueuerĩt/ y por la diſtin. 18. enla palabra: ſolet/ y porel ca. di
+<lb/>uerſis. de cle. coniu. enla palabra: ſoleat. Y las leyes princi-<lb type="nb"/>palmẽte ſe han de aplicar alos caſos q̃ mas continua y mas
+<lb/>facilmẽte vienen: como lo dize la ley. Nam ad ea. ff. de legi-<lb type="nb"/>bus. ⁊c. Y anſi tambien dize el Abad enel dicho capi. naui-<lb type="nb"/>ganti. ſobre la dubda de aquel capi. que para q̃ ſe pueda de
+<lb/>zir ſer cierto q̃ la coſa vendida valdra mas al tiempo ďla pa
+<lb/>ga: ſe ha ď mirar (ſegun el Oſtienſe) la opinion comun/ y la
+<lb/>coſtumbre dela tierra. Y es de notar que los juezes propios<note type="margin">
+<lb/>juezesde
+<lb/>las ganã
+<lb/>cias.</note>
+<lb/>deſtas tales ganancias/ y como/ y quanto ſe a ya de deſcõ-<lb type="nb"/>tar por los peligros y dubdas que puede auer: ſon los mer
+<lb/>caderes de buena conſciencia: ſegun lo nota el Gabriel vbi
+<lb/>ſupra/ y Thomas de argentina/ enel quarto. diſtin. 15. arti.
+<lb/>4. q. 4. que dize que eneſtas coſas/ es de eſtar al juyzio del
+<lb/>hombre eſperimentado y bueno: y que podra juzgar mejor
+<lb/>eſto/ vn mercader que vn letrado. Lo ſegundo que reſpon-<lb type="nb"/>do es: que enel dicho notable. 2. §. 2. ſe prouo eſto que dixe/
+<lb/>que ſaneto Thomas habla enel dicho. arti. 2. dela ganancia
+<lb/>incierta (donde noſe guardan las cõdiciones que diximos)
+<lb/>y no dela probable: porq̃ lo requierẽ otras palabras que di
+<lb/>xo el miſmo ſancto en otra parte/ y porq̃ anſi entienden efte
+<lb/>ſu dicho/ y le declarã el Gabriel enel lugar agora alegado/
+<lb/>y el ſuplemento ⁊ la ſumma ange. y la Silueſtrina. enlos. §.
+<lb/>alli pueſtos: la qual Silueſtrina (que entodas las coſas tra
+<lb/>baja quanto le es poſſible por defender todos los dichos ď
+<lb/>eſte ſancto: interponiendo muchas vezes duras y deſmedi-<lb type="nb"/>d<unclear resp="#TL"></unclear> reprehenſiones contra los que otra coſa ſienten) alaba
+<lb/>alli enel. §. 19. al ſuplemento que primero eſcriuio/ que ſan-<lb type="nb"/><unclear resp="#TL"></unclear>to Thomas/ habla aqui dela ganancia incierta: y tambi<unclear resp="#TL"></unclear>
+<lb/><unclear resp="#TL"></unclear>el titu, reſtitu. 3. q. 9. al fin/ ſegun ſe remite enel dicho. §. 19.
+<pb facs="W0018-0059" n="fo.xxvj.r"/>
+<lb/>pueſto caſo q̃ el numero dela remiſſion eſta errado enla im-<lb type="nb"/>preſſion que haſta agora ha venido. Aſſi que (a vn que no
+<lb/>miremos alas palabras) mas razon ſera de creer lo q̃ eſtos
+<lb/>quatro declaran dela intencion de ſancto Thomas: que al
+<lb/>eſcrupulo que podra formar el no bien atento. ¶ Los otros
+<lb/>dos theologos ſon Alexandre ď ales/ que trata la materia<note type="margin">
+<lb/>alexãdre
+<lb/>de ales.</note>
+<lb/>enla. 3. parte. q. 36. membro. 4. arti. 2. y mas eſpecialmẽte en
+<lb/>la. q. 66. mẽbro. 1. y Ricardo enel quarto. diſtĩ. 15. q. 5. arti. 5.<note type="margin">
+<lb/>Ricarde</note>
+<lb/>Aeſtos reſpondo/ que en ninguna coſa ſon contrarios: por
+<lb/>que ni ponẽ nueſtra queſtion/ ni la tocan/ ni a vn la ſueñan.
+<lb/>Mas la razon porq̃ algunos los quieren alegar por contra
+<lb/>rios es: porque ponen otros caſos y no eſte. Pero digo que
+<lb/>eſto no haze al caſo: porq̃ el Abad enel capi conqueſtus ya
+<lb/>dicho/ afirma que ay treze caſos (ſegun ſe puſieron enel pri
+<lb/>mer notable. §. 9.) enlos quales dize q̃ ſe puede lleuar el in-<lb type="nb"/>tereſſe: delos quales caſos ſe dexan Alexandre de ales el. 2.
+<lb/>4. 11. y. 12. y el Ricardo los dos poſtreros que agora ſe dixe
+<lb/>ron: como alli tambien lo notamos. Y por tanto ſi ſe ouieſſe
+<lb/>de condenar eſte nueſtro caſo por quanto eſtos doctores no
+<lb/>le tocaron: por la miſma razon ſerian de reprouar todos los
+<lb/>otros caſos que ponen los miſmos Alexandre/ y Ricardo
+<lb/>que puſimos enel dicho primer notable. §. 9. y todos los que
+<lb/>el Abad pone mas que ellos: porque ellos ſe dexan los de-<lb type="nb"/>mas que pone el Abad como hemos dicho/ y ſant Buena
+<lb/>uentura donde habla dela vſura/ que es enel tercero. diſtĩ.
+<lb/>xxxvij. ſobre la letra del maeſtro encl. vij. precepto/ y otros
+<lb/>doctores conel: no tocan alguno deſtos caſos/ ni hablan de
+<lb/>llos/ ni a vn ſancto Thomas ni Durando/ que ſe alegaron
+<lb/>por contrarios ſacan alguno: ſaluo el del daño que ſe ha de
+<lb/>reſce bir/ y lo que ſe da liberalmente.</p>
+<p>
+<lb/>¶ Uengamos alos canoniſtas. El primero y que pareſce
+<lb/>piedra fundamẽtal/ es Innocẽcio enel dicho. ca. nauigãti/<note type="margin">
+<lb/>Inno<unclear resp="#TL"></unclear>
+<lb/>cio.</note>
+<lb/>cuyas palabras ſin faltar vna/ ſon eſtas. Si alguno eſtu-<lb type="nb"/>uieſſe para cõprar algunas mercadurias q̃ quiſieſſe lleuar
+<lb/>las a otra parte o guardallas algun tiẽpo/ de dõde pudieſ-<pb facs="W0018-0060" n="[fo.xxvj.]v"/><lb type="nb"/>ſe ganar algo: y vinieſſe otro que ouieſſe meneſter dineros y
+<lb/>le offrecieſſe q̃ le daria a cierto termino lo que le preſtaſſe/ y
+<lb/>mas lo q̃ eſperaua ganar dõde queria lleuar las mercadu-<lb type="nb"/>rias: el tal cõtrato es vſurario ⁊ yo no le ſabria eſcuſar: a vn
+<lb/>q̃ otros an dicho lo cõtrario. Eſtas ſon todas ſus palabras:
+<lb/>las quales tienẽ muchas reſpueſtas. La primera es/ que
+<lb/>Innocẽcio mueſtra no ďterminarſe del todo: ſino dar ſu ſen
+<lb/>tencia cõ temor/ quãdo dize: q̃ otros han dicho lo cõtrario:
+<lb/>y (no q̃ tiene eſcuſa: ſino) q̃ el no le ſabria eſcuſar. La ſegũda
+<lb/>es/ q̃ ſi el no le ſupo eſcuſar/ porq̃ habla fin condiciõ: otros
+<lb/>le ſupierõ y ſabẽ muy bien eſcuſar/ poniẽdo las cinco cõdi-<lb type="nb"/>ciones que arriba diximos. La tercera/ q̃ dela manera q̃ el
+<lb/>habla ſin ninguna diſtincion: yo tambiẽ condeno eſte cõtra
+<lb/>to: como aqui al principio delas reſpueſtas dixe: porq̃ para
+<lb/>eſcuſalle ſon meneſter las dichas condiciones: de ninguna
+<lb/>delas quales el haze mẽcion. La quarta/ q̃ toda eſta razon
+<lb/>de Innocẽcio va fundada ſobre lo q̃ con mala conſciencia
+<lb/>podria fingir el logrero/ para lleuar ſin pena ſus logros: lo
+<lb/>qual mueſtra el Abad enel dicho capitulo nauigãti/ quã-<lb type="nb"/>do queriẽdo dar la cauſa deſtas palabras de Innocencio
+<lb/>dize ſer: porq̃ de otra manera ſe daria alos q̃ quiſieſſen/ ma
+<lb/>teria ď logrear: lo qual ſalua el Oſtiẽſe/ enlo q̃ dixo: ſer eſto
+<lb/>licito no haziẽdo ſe con engaño para encobrir la vſura: y to
+<lb/>do eſto ceſſa enlos q̃ preſtaren ſegun las condiciones ſobre
+<lb/>dichas. Y poreſta miſma cauſa/ dizẽ Gernardino de buſtis
+<lb/>vbi ſupra/ y la ſilueſt. §. 23. q̃ Juan andres ſe mouio a dezir
+<lb/>lo q̃ dixo: ſegun ſe porna en ſu reſpueſta. La quinta es/ que
+<lb/>propriamẽte habla aqui el Innocẽcio quando la ganãcia
+<lb/>fueſſe incierta: como diximos ď ſancto Thomas: la q̈l aqui
+<lb/>y enel dicho notable ſegundo ſe reprueua. Eſto pareſce por
+<lb/>ſus miſmas palabras/ enlo q̃ dize: q̃ quiſieſſe lleuar las mer
+<lb/>cadurias a otra parte o guardallas: enlo qual ay comun-<lb type="nb"/>mente muchos peligros ⁊ ynconuinientes: ſi la calidad de
+<lb/>la tierra y de los tiempos no lo ſalua: lo otro enlo que dize:
+<lb/>pudieſſe ganar/ y eſperaua ganar: ſin añadir (como no aña
+<pb facs="W0018-0061" n="fo.xxvij.r"/>
+<lb/>de) palabra alguna en que mueſtre hablar <unclear resp="#TL"></unclear>ela ganancia
+<lb/>probable/ que ſe requiere: para que (con las otras condicio
+<lb/>nes) ſea licito eſte contracto. Por lo qual ala clara es con-<lb type="nb"/>uencido de falſa alegacion el Abad/ que ſobre lo dela ga-<note type="margin">
+<lb/>falſa ale
+<lb/>gaciõ del
+<lb/>Abad.</note><lb type="nb"/>nancia que Innocencio dize/ añade el eſta palabra: veriſſi-<lb type="nb"/>mil: la qual es la llaue de todo: y no poniẽdo la Innocẽcio
+<lb/>ni coſa que le parezca: dize que Innocencio tiene eſta opi-<lb type="nb"/>nion: dando a entender q̃ la tiene cõ aquella palabra: veriſ-<lb type="nb"/>ſimil: lo qual es falſo: ſegũ cada vno lo puede ver por la eſ-<lb type="nb"/>critura de entrambos. Pero al fin/ el miſmo Abad pueſta
+<lb/>eſta palabra: veriſſimil (q̃ es la que llamamos probable/ y
+<lb/>es tambien la quarta condicion delas dichas cinco) y aña-<lb type="nb"/>diendo mas/ q̃ ſi el que anſi preſta ſe mueue con buena yn-<lb type="nb"/>tencion/ y mas principalmente por hazer bien a ſu amigo/
+<lb/>q̃ por querer tratar engaño (lo qual ſe encierra enla prime-<lb type="nb"/>ra delas dichas cinco condiciones) concluye: que a vn que
+<lb/>dende el principio del contrato pida lo q̃ veriſſimilmẽte po
+<lb/>dria ganar: puede ſer eſcuſado de peccado: pueſto q̃ (como
+<lb/>el dize) la opiniõ de Innocẽcio ſea mas ſegura: al qual pũ-<lb type="nb"/>to ya hemos reſpõdido/ aqui al principio/ y reſpõderemos
+<lb/>tambiẽ mas/ quando hablemos del Abad. Solamẽte nos
+<lb/>aprouechemos aqui deſto: q̃ el abad miſmo q̃ dize: ſer mas
+<lb/>ſegura la opiniõ de Innocẽcio/ q̃ hablo ſin ninguna limita
+<lb/>cion/ mueſtra auer hablado: no quanto alo q̃ ſegun buena
+<lb/>conciencia ſe puede hazer: ſino quanto alo q̃ con engaño po
+<lb/>dria fingir el logrero: y q̃ viniendo a poner algunas ď nue-<lb type="nb"/>ſtras condiciones: tiempla al rigor del Innocẽcio: y eſcuſa
+<lb/>de peccado: lo q̃ el otro cõdena. Y poſſible es/ q̃ ſi todas las
+<lb/>cinco condiciones puſiera: la aprouara del todo. Prueua-<lb type="nb"/>ſe anſi miſmo auer hablado aqui Innocẽcio dela ganãcia
+<lb/>yncierta/ y no ďla probable/ por las proprias palabras de
+<lb/>Enrrique bohic/ q̃ fue alegado por contrario (porq̃ no eſte
+<lb/>mos a mis ſolos dichos) el qual enel dicho. ca. conqueſtus:
+<lb/>deſpues de auer pueſto/ lo q̃ dizen Oſtiẽſe/ y Raymundo:
+<lb/>dize/ q̃ Innocẽcio empero y el Abad tienẽ lo cõtrario/ y q̃
+<pb facs="W0018-0062" n="[fo.xxvij.]v"/>
+<lb/>cree que mejor: porq̃ la ganancia es yncierta. Y añade mas
+<lb/>abaxo/ que la opinion de Raymũdo y Oſtienſe/ ſe podria
+<lb/>tolerar: quando el que anſi preſta/ tuuieſſe la ganancia cier
+<lb/>ta ⁊ ajena de dubda. Deſtas palabras ſe han de notar qua
+<lb/>tro coſas. La primera/ que ganancia cierta y ajena de dub
+<lb/>da: es la que aqui llamamos probable/ o veriſſimil: por-<lb type="nb"/>que ninguna otra certidumbre ſe puede tener dela ganãcia
+<lb/>que eſta por venir: y porque tambiẽ (ſegun ſe dixo enla reſ-<lb type="nb"/>pueſta a ſancto Thomas) eſta ganancia probable o veriſ-<lb type="nb"/>ſimil: de derecho es tenida por cierta. La ſegunda coſa es/
+<lb/>que por los dichos deſte/ ſe manifieſta: como Innocencio
+<lb/>quãdo reprouo eſte cõtrato/ y el Abad enlo q̃ le ſeguio: en-<lb type="nb"/>tendieron (ſegun yo lo digo) quando la ganãcia fueſſe yn-<lb type="nb"/>cierta: y los otros quãdo fueſſe probable. La tercera coſa
+<lb/>es/ q̃ lo que eſte dize q̃ es contrario el Abad: es en no mas
+<lb/>ďlo que hemos dicho: que la opiniõ de Innocẽcio es mas
+<lb/>ſegura: porq̃ no dize otra coſa el Abad: lo qual tambien he
+<lb/>yo concedido: ſino ſe añadẽ las condiciones que he dicho.
+<lb/>La quarta es/ q̃ a vn alegando a Oſtiẽſe y Raymũdo con
+<lb/>ſola vna condiciõ de ſer la ganancia cierta: dize eſte/ que es
+<lb/>tolerable ſu opinion: de dõde pareſce q̃ ſi puſiera todas las
+<lb/>cinco condiciones ſobredichas (las quales a vn Oſtienſe y
+<lb/>Raymũdo no ponen) dixera/ ſer del todo buena la deter-<lb type="nb"/>minaciõ deſtos: porq̃ porellas ſe quitan todos los yncõui-<lb type="nb"/>nientes q̃ puſieron los otros. De manera que (ſegũ todo lo
+<lb/>ſobredicho) pareſce q̃ Innocẽcio cõdena eſte caſo/ quãdo
+<lb/>la ganãcia q̃ ſe eſperaſſe fueſſe ſolamẽte yncierta: y no quã
+<lb/>do es probable/ dela manera q̃ ha ſido ďclarada. Y a vn no<note type="margin">
+<lb/>cõtradizẽ
+<lb/>ſeaſſi miſ
+<lb/>mos yno
+<lb/>cẽcio y el
+<lb/>abad.</note>
+<lb/>puedo dexar de marauillarme: porq̃ razõ el Innocẽcio y el
+<lb/>miſmo Abad enel dicho ca. nauigãti/ tienen q̃ no es vſura:
+<lb/>ſi yo tengo en Toledo vnas mercadurias q̃ las quiero lle-<lb type="nb"/>uar a otra parte: y pidiẽdo me las tu: te puedo llcuar en To
+<lb/>ledo todo lo q̃ veriſſimilmẽte ganara donde las queria lle-<lb type="nb"/>nar (como lo puſi mos enel tercero enxẽplo del dicho. 2. no-<lb type="nb"/>table. §. 4.) y ſientẽ otra coſa eneſte nueſtro caſo: pues no ſe
+<pb facs="W0018-0063" n="fo.xxviij.r"/>
+<lb/>me da mas: dar las mercadurias q̃ tengo deſta manera: q̃
+<lb/>los dineros que auia luego de emplear enellas: donde anſi
+<lb/>miſmo eſperaua ganar el intereſſe que lleuo/ ⁊ ay tanto pe-<lb type="nb"/>ligro enlo vno como enlo otro. Y q̃ eneſtas dos cofas no aya
+<lb/>differẽcia (allende dela miſma razon q̃ lo mueſtra) pone lo
+<lb/>Utino enlos dichos ſus ſermones de tẽpore/ ſer. 39. flore. 2.
+<lb/>donde dize: q̃ el miſmo juyzio ſe ha de tener del dinero que
+<lb/>ďlas mercadurias q̃ ſe dan: pues ſon ordenadas para auer
+<lb/>dinero: y trae para eſto la. l. cętera. §. ſed ſi parauit. ff. ď lega
+<lb/>tis. ¶ El ſegundo canoniſta q̃ fue alegado en contrario/ es<note type="margin">
+<lb/>Pano<unclear resp="#TL"></unclear></note>
+<lb/>el Abad enel dicho ca. nauigãti: cuyas palabras ſon: refe-<lb type="nb"/>rir lo que dize Innocẽcio/ ſaluo que aña de el alo dela ga-<lb type="nb"/>nancia (ſegun ya dixe) eſta palabra veriſſimil/ y la opinion
+<lb/>de Juan andres que adelãte ſe porna: ſobre lo qual conclu
+<lb/>yendo el/ dize: ſer mas ſegura la opiniõ de Innocẽcio/ y q̃
+<lb/>nueſtro caſo podria ſer eſcuſado de peccado/ como poco ha
+<lb/>diximos. A todo eſto eſta reſpondido enlo del Innocẽcio:
+<lb/>pero a vn ſobrello digo: lo primero quel Abad/ a vn ſin po
+<lb/>ner todas las cõdiciones q̃ yo pongo/ no reprueua nueſtra
+<lb/>determinacion: antes la pone por ſegura: porq̃ primero dize
+<lb/>deſta q̃ ſe podria eſcuſar ď pecado: y luego q̃ la otra es mas
+<lb/>ſegura. Y anſi dando ala de Innocẽcio/ cõparatiuo de me
+<lb/>jor: da ala nueſtra poſitiuo ď buena: porq̃ (como a vn el miſ
+<lb/>mo lo dize enel capi. peruenit. de iure iu. el. 2.) ſiẽpre el termi
+<lb/>no cõparatiuo/ preſupone al poſitiuo: y trae para ello la. l.
+<lb/>vbi autẽ. ff. de ver. obli. Y como dize tãbien el Arçobiſpo de
+<lb/>flo. (al q̈l alega y ſigue la ſumma Silueſ. reſtitu. 5. in princi
+<lb/>pio) no ſomos obligados de tomar ſiempre el camino mas<note type="margin">
+<lb/>ba<unclear resp="#TL"></unclear>a to-<lb type="nb"/>mar lo ſe
+<lb/>guro: añ
+<lb/>q̃ no ſe<unclear resp="#TL"></unclear>
+<lb/>lo mas.</note>
+<lb/>ſeguro/ porq̃ baſta tomar el ſeguro: q̃ es el poſitiuo q̃ dezi-<lb type="nb"/>mos. Y ſi todas las cinco condiciones ſobredichas puſiera:
+<lb/>ſin dubda es de creer/ que no ſolamente aprouara nueſtro
+<lb/>caſo con termino poſitiuo: mas a vn con comparatiuo/ o ſu
+<lb/>perlatiuo: pues pareſce claro ſer anſi la coſa. Lo ſegũdo di
+<lb/>go/ q̃ a vn que lo que dize fueſſe contrario a nueſtro caſo (lo
+<lb/>qual no es pues no le limita dela manera que he dicho) no
+<pb facs="W0018-0064" n="[fo.xxviij.]v"/>
+<lb/>poreſſo ſe ha de hazer mucha quenta delo que dize: porque
+<lb/>a vn que vn doctor diga con algun eſcrupulo/ ſer vna coſa
+<lb/>mas ſegura: no ſe ſigue que le deuemos luego creer/ ſi no lo
+<lb/>prueua ſuficientemẽte. Para eſto pone Gerſon enla. 2. par-<lb type="nb"/>te de ſus contratos/ propoſicion. 13. vna regla diziendo: q̃ el
+<lb/>argumẽto q̃ ſe toma del conſejo/ o dubda de algũ doctor: el
+<lb/>qual en alguna coſa dubdoſa dize/ auer pecado mortal: no
+<lb/>es valedero: antes es atreuido y digno de ſer negado: porq̃
+<lb/>conuiene q̃ la incertidumbre no ſea ſolamẽte eſcrupuloſa/ li
+<lb/>uiana/ y embuelra en temor: mas es meneſter que ſca muy
+<lb/>probable/ antes q̃ porella ſea alguno condenado ď pecado<note type="margin">
+<lb/>Et. infra
+<lb/>Fol. xxx.</note>
+<lb/>mortal. Eſto es de Gerſon. El tercero contrario (cuya opi-<lb type="nb"/>nion tambiẽ refiere el Abad) fue Juã andres q̃ ſigue al In<note type="margin">
+<lb/>Juan an
+<lb/>dres.</note>
+<lb/>nocẽcio enel dicho. capi. nauiganti: diziẽdo q̃ la opinion del
+<lb/>Oſtiẽſe auria lugar: quando el q̃ tomo los dineros nolos pa
+<lb/>gaſſe al termino q̃ puſo/ porq̃ de otra manera podria fingir
+<lb/>el logrero quando quiſieſſe/ q̃ eſta de camino para yr a com
+<lb/>prar mercadurias/ y aſſi dar ſus dineros alogro coneſta co
+<lb/>lor. Aeſte y a qualquier otro q̃ diga las pala bras q̃ el dize/
+<lb/>reſpõdo. Lo primero aquello q̃ ya muchas vezes eſta repe
+<lb/>tido: q̃ preſtando ſin las condiciones q̃ he dicho (las quales
+<lb/>el no pone) no ay dubda ſino q̃ el contracto es malo/ y ſe ha
+<lb/>de condenar. Lo ſegundo q̃ el miſmo ſe mueſtra por ſus pa
+<lb/>labras/ hablar del q̃ quiſieſſe andar eneſto cõ engaño/ y no
+<lb/>con verdad: y q̃ lo q̃ dize/ no es quanto al foro dela conſciẽ-<lb type="nb"/>cia/ dõde hemos de creer alo q̃ dixere cada vno: ſino quan-<lb type="nb"/>to alas preſumpciones del foro judicial: por lo q̃ dize q̃ po-<lb type="nb"/>dria fingir el logrero. ⁊c. el qual fue ſu intento principal por
+<lb/>donde ſe mouio a dezir eſto: ſegũ dixe enla quarta reſpueſta
+<lb/>que ſe dio al Innocẽcio. Y aſſi pareſce q̃ no es nada contra-<lb type="nb"/>rio a nueſtra determinaciõ que ſe entiẽde quãto ala conſciẽ-<lb type="nb"/>cia. Y no dexo anſi miſmo de marauillarme: como Juan an<note type="margin">
+<lb/>cõtradizẽ
+<lb/>ſe Juan
+<lb/>andres y
+<lb/>el Abad.</note>
+<lb/>dres eneſte. ca. y el Abad alli enel miſmo. ca. dõde haze mu
+<lb/>cha fieſta del dicho de Juan andres/ y tambiẽ enel. ca. con-<lb type="nb"/>queſtus ſiguiẽdo ala glo. y enel. c. per veſtras. de dona. inter
+<pb facs="W0018-0065" n="fo.xxix.r"/>
+<lb/>vi. ⁊ vxo. afirmã: que quando vno no me torna los dineros
+<lb/>que le preſte al termino q̃ los auia ď dar: puedo deſpues del
+<lb/>tal termino pedille (a vn por derecho canonico) el intereſſe:
+<lb/>no ſolamẽte del daño que ſe me aya ſeguido: mas a vn delo
+<lb/>que veriſſimilmẽte pudiera ganar: alegando para eſto la. l.
+<lb/>2. ff. de eo quod certo loco. §. vlti. y dubdã de dezillo en nuc-<lb type="nb"/>ſtro caſo. Si por ventura eneſte caſo dubdan/ porq̃ no puſie
+<lb/>ron las condiciones q̃ hemos dicho q̃ ſe requierẽ: ellos acier
+<lb/>tan y tienẽ mucha razon: porque anſi digo yo tambiẽ que ſe
+<lb/>deue hazer. Mas ſi por ventura dubdan/ porq̃ dando anſi
+<lb/>los dineros y pidiẽdo el intereſſe dende el principio: podria
+<lb/>fingir lo q̃ ſele antojaſſe el q̃ quiſieſſe logrear/ como Juã an
+<lb/>dres dize: ya eſta reſpõdido q̃ eneſte caſo hemos de eſtar ala
+<lb/>verdad dela conſciencia: y no alas preſunciones judiciales.
+<lb/>Y digo mas q̃ por euitar los engaños delos malos q̃ ſin na
+<lb/>da deſto los harã: no hemos de condenar las conſciẽcias de
+<lb/>los buenos/ y que tãpoco no ſe ha de preſumir eſto de cada
+<lb/>vno en tal caſo como el nueſtro: el q̈l tantos doctores aprue
+<lb/>uan: mas ſolamẽte ſe puede preſumir engaño/ o ſimulaciõ
+<lb/>en quiẽ tuuieſſe coſtumbre de dar a logro: como lo requiere
+<lb/>el capi. illo vos. extra. de pigno. con ſus ſemejantes. Si por
+<lb/>vẽtura dubdan: porq̃ el preſtar deſta manera (que es lo que
+<lb/>en latin ſe llama mutuum) ha de ſer gracioſamẽte hecho/ ſe
+<lb/>gun el euãgelio y los derechos: digo q̃ entonces ſeria hecho
+<lb/>no gracioſamẽte: quãdo yo lleuaſſe algo principalmẽte por
+<lb/>el preſtamo: que es lo q̃ vedan el euangelio y los derechos:
+<lb/>quando dizẽ: dad preſtado: no eſperãdo coſa alguna de alli:
+<lb/>eſto es: porel tal preſtar: lo qual no es aſſi: quã<unclear resp="#TL"></unclear>o lo q̃ lleuo
+<lb/>demaſiado/ es porel daño que ſe me ha ď ſeguir (como a vn
+<lb/>lo ponẽ ſancto Thomas y Durando enlos lugares arriba
+<lb/>alegados) o quãdo no arraygo mi primera y principal intẽ
+<lb/>ciõ/ en ſolo el preſtamo (ſegũ lo dize la glo. enel ca. conſuluit
+<lb/>de vſu.) o quando la demaſia/ es porel intereſſe q̃ puedo lle
+<lb/>uar/ o por coſas ſemejãtes: que entõces noſe llama vſura/ ni
+<lb/>coſa lleuada porel preſtamo/ o mutuo: como lo dize la glo.
+<pb facs="W0018-0066" n="[fo.xxix.]v"/>
+<lb/>enel dicho. c. conq̃ſtus/ y lo pondera alli mucho el Abad: y
+<lb/>ſegun que mas largamente eſta determinado enel primer
+<lb/>notable ďl dicho tratado/ ſobre la. 3. y. 5. palabra. §. 4. y los
+<lb/>ſiguientes: ſegun loqual tambien el Arçobiſpo de Flo. y el
+<lb/>Oſtienſe: y el Aſtenſe/ y Utino (como aqui al principio di-<lb type="nb"/>ximos) por el caſo del daño: juſtifican eſtotro nueſtro. El
+<lb/>quarto y poſtrero canoniſta en contrario fue Enrrique bo-<note type="margin">
+<lb/>enrrique
+<lb/><unclear resp="#TL"></unclear>hic.</note><lb type="nb"/>hic: cuyas palabras ſe eſcriuieron arriba/ enla quinta reſ-<lb type="nb"/>pueſta ala opinion de Innocẽcio: ſegun las quales (como
+<lb/>alli ſe dixo) es mas en nr̃o fauor que contrario: pues mue-<lb type="nb"/>ſtra q̃ Innocẽcio y eſtotros hablaron dela ganãcia yncier-<lb type="nb"/>ta/ que aqui tambien ſe reprueua: y los q̃ tienen nueſtra de
+<lb/>terminacion: dela probable/ con que ſe eſcuſa. De ſuerte q̃
+<lb/>todo bien mirado: queda nueſtra queſtion firme y ſin con-<lb type="nb"/>trariedad que algo valga.</p>
+<p>
+<lb/>¶ Alo ſegundo/ q̃ fue alegado en contrario: que eſto ſeria<note type="margin">
+<lb/><unclear resp="#TL"></unclear>o ſe a-<lb type="nb"/>bre aqui
+<lb/>puerta a
+<lb/>los logre
+<lb/><unclear resp="#TL"></unclear>os.</note>
+<lb/>abrir puerta alos logreros: reſpondo/ lo primero: q̃ eſta es
+<lb/>vna adcuinaciõ preſumptuoſa. Lo ſegundo/ q̃ lo que aſſi
+<lb/>ſe funda ſobre preſuncion: no haze al caſo/ como diximos
+<lb/>alo de Juã andres. Lo. 3. que es muy mas prouechoſo pu-<lb type="nb"/>blicar eſto q̃ callarlo: y q̃ antes ſe cierra puerta/ q̃ no ſe abre:
+<lb/>porq̃ eſtos preſtidos/ o preſtamos ſe hazẽ cada ora/ y a ca-<lb type="nb"/>da paſſo en toda eſpaña mil cuentos de vezes: y (ſegune n
+<lb/>muy muchos he viſto) ſin ninguna limitacion ni condicion
+<lb/>delas q̃ aqui ſe ponen/ ni ſin ſaber como ſe han de auer: y
+<lb/>eneſte tratado ſon eſtrechados y enſeñados como y quãdo
+<lb/>los pueden hazer licita/ o ylicitamente: y muchos q̃ lo ha-<lb type="nb"/>zen ſolamente por ſu propria ganãcia: veran aqui como no
+<lb/>lo han de hazer aſſi: y otros que ſolamente hazen cuenta de
+<lb/>qualquier ganãcia/ a vnq̃ ſea yncierta para eſcuſar ſus pre-<lb type="nb"/>ſtidos: podran ver: como no los eſcuſa/ ſino la probable/ y
+<lb/>anſi ďlo otro. Lo. 4. digo (como tãbiẽ lo dize la Silueſt. vbi
+<lb/>ſupra. §. 23.) q̃ poreſto no ſe haze camino para los logros/
+<lb/>enlos q̃ no quieren con mala conſciẽcia logrear: ni a vn alos
+<lb/>que quieren/ tãpoco ſe les haze: porq̃ ellos le tienen ya be-<pb facs="W0018-0067" n="fo.xxx.r"/><lb type="nb"/>cho: ſino q̃ ſi algo fueſſe/ podria ſer ſolamente cobertura pa
+<lb/>ra ſus logros: enlos quales ſaben buſcar muchas mas co-<lb type="nb"/>berturas los malos: pero ni por lo vno ni por lo otro/ ſe ha
+<lb/>ď callar la verdad. Lo. 5. q̃ pueſto caſo q̃ de todo en todo an
+<lb/>ſi fueſſe: pues tãtos doctores ⁊ ſũmiſtas/ como alegamos/
+<lb/>ponen en ſus libros eſta determinacion clara y abiertamen
+<lb/>te (enla qual tropieçan a cada paſſo los cõfeſſores q̃ leen/ y
+<lb/>los predicadores y letrados y otras perſonas) poco apro-<lb type="nb"/>uecharia callarlo. Lo. 6. y vltimo digo (allẽde delo q̃ tãbiẽ<note type="margin">
+<lb/>fo. xxviij</note>
+<lb/>dixe poco antes: al fin ďla reſpueſta al abad por autoridad
+<lb/>de Gerſon) q̃ (como enſeña el Gabriel enla dicha. di. 15. q. 13.
+<lb/>ar. 2. al. fin/ hablãdo delos juegos) coſa es yndiſcreta y ma<note type="margin">
+<lb/>malo es
+<lb/>dezir ſer
+<lb/>mortal/
+<lb/>lo q̃ nolo
+<lb/>es.</note>
+<lb/>la/ afirmar q̃ alguna obra es pecado mortal quando no ſe
+<lb/>prueua por auctoridad ſuficiente/ o razon manifieſta: porq̃
+<lb/>lo tal ſeria poner lazo alos hõbres q̃ viniendo contra aq̃llo
+<lb/>q̃ creen ſer pecado mortal (a vn q̃ lo crean con error) les ha
+<lb/>ria peccar mortalmẽte: porq̃ van contra ſu conciencia: enel
+<lb/>qual peccado no yncurririã/ ſino penſaſſen ſer cierto/ aq̃llo
+<lb/>q̃ es yncierto. Por lo qual cõclu ye/ q̃ a vn que aquello de
+<lb/>que el alli trata/ ſe aya de reprehẽder con toda eficacia: no
+<lb/>empero ſe ha de afirmar como coſa neceſſaria ala ſalud del
+<lb/>alma: lo qual es anſi en nueſtro caſo. Y ſancto Thomas en
+<lb/>ſus quotlibetos quotli. 9. arti. 15. in corpore/ aſſi miſmo afir
+<lb/>ma: ſer muy peligroſo/ determinar q̃ algũa coſa ſea pecado
+<lb/>mortal: quãdo no pareſce ala clara la verdad/ para tal de-<lb type="nb"/>terminacion. Y eſto baſte para cõcluſion ď nueſtra dubda/
+<lb/>que por mas claridad ſe ha eſtendido tanto: a gloria de nue
+<lb/>ſtro ſeñor dios. ⁊c. Y todo ſea dicho/ debaxo de enmienda ⁊
+<lb/>correcion dela ſancta ygleſia/ y de quien mejor lo ſupiere y
+<lb/>ſintiere.</p>
+<p rend="center">
+<lb/>¶ Finis.</p>
+<p rend="center">
+<lb/>¶ Ympreſſo en Toledo en caſa de Juã de A yala acaboſſe
+<lb/>a veynte y ocho de Junio del año. M. D. xliij.</p>
+<pb facs="W0018-0068" n="[fo.xxx.]v"/>
+</div1>
+</body>
+</text>

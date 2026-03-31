@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="W0004" default="finalize">
+    
+    <property name="diff.dir" value="diff"/>
+    <property name="log.dir" value="log"/>
+    <property name="xml.dir" value="xml"/>
+    <property name="xsl.dir" value="xsl"/>
+    <property name="xslt.log" value="${log.dir}/${ant.project.name}_xslt.log"/>
+    <property name="xslt.processor" value="../../../lib/xsltproc/Saxon-HE-9.8.0-12.jar"/>
+    <property name="xslt.class" value="net.sf.saxon.TransformerFactoryImpl"/>
+    
+        
+    <!-- this pipeline currently starts with a version of the text that is already in state "f_enriched"; previous changes 
+        are documented only in the SVN system -->
+    <property name="orig.file" value="../../orig/svsal-edit/W0004/W0004_2018-06-22.xml"/>
+    
+    <target name="initialize">
+        <mkdir dir="${xml.dir}"/>
+        <mkdir dir="${log.dir}"/>
+        <copy file="${orig.file}" tofile="${xml.dir}/W0004_100.xml"/>
+        <xmlvalidate file="${xml.dir}/W0004_100.xml" lenient="true"/>
+        <copy file="${xml.dir}/W0004_100.xml" tofile="${xml.dir}/W0004_v3-0.xml"/>
+        <delete file="${xml.dir}/W0004_100.xml"/>
+        <echo>Checkpoint: W0004_v3-0.xml (W0004_100.xml).</echo>
+    </target>
+    
+    <target name="patch-100" depends="initialize">
+        <echo>Resolve special chars, comments, and errors from previous correction (CB).</echo>
+        <patch originalfile="${xml.dir}/W0004_v3-0.xml" destfile="${xml.dir}/W0004_101.xml" patchfile="${diff.dir}/W0004_100.diff" failonerror="true"/>
+        <xmlvalidate file="${xml.dir}/W0004_101.xml" lenient="true"/>
+    </target>
+    
+    <target name="patch-101" depends="patch-100">
+        <echo>Add further corrections (merge between revisions by DG and by AW); add new teiHeader.</echo>
+        <patch originalfile="${xml.dir}/W0004_101.xml" destfile="${xml.dir}/W0004_102.xml" patchfile="${diff.dir}/W0004_101.diff" failonerror="true"/>
+        <xmlvalidate file="${xml.dir}/W0004_102.xml" lenient="true"/>
+        <delete file="${xml.dir}/W0004_101.xml"/>
+    </target>
+    
+    <target name="xslt-102" depends="patch-101">
+        <delete file="${xml.dir}/W0004_103.xml"/>
+        <echo>Adaptation of XML structure and special chars to new edition guidelines.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt in="${xml.dir}/W0004_102.xml" out="${xml.dir}/W0004_103.xml" style="${xsl.dir}/W0004_102.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0004_102.xml"/>
+    </target>
+    
+    <target name="xslt-103" depends="xslt-102"> 
+        <delete file="${xml.dir}/W0004_104.xml"/>
+        <echo>Generate new xml:id keys.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt in="${xml.dir}/W0004_103.xml" out="${xml.dir}/W0004_104.xml" style="${xsl.dir}/W0004_103.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0004_103.xml"/>
+    </target>
+    
+    <target name="xslt-104" depends="xslt-103"> 
+        <echo>Add language information to structural text units.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt in="${xml.dir}/W0004_104.xml" out="${xml.dir}/W0004_105.xml" style="${xsl.dir}/W0004_104.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0004_104.xml"/>
+    </target>
+    
+    <target name="xslt-105" depends="xslt-104"> 
+        <echo>Restructure teiHeader.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt in="${xml.dir}/W0004_105.xml" out="${xml.dir}/W0004_106.xml" style="${xsl.dir}/W0004_105.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0004_105.xml"/>
+    </target>
+    <target name="xslt-106" > <!--depends="xslt-105"-->
+        <echo>Revised teiHeader, update @role in editor.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt in="${xml.dir}/W0004_106.xml" out="${xml.dir}/W0004_107.xml" style="${xsl.dir}/W0004_106.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <!--<delete file="${xml.dir}/W0004_106.xml"/>-->
+    </target>
+
+<!-- ###################################################################################################################################
+                                    Post-correction update after publication 17.03.21
+                                    Added choice elements with abbr/expan and sic/corr
+     ###################################################################################################################################-->
+
+    <target name="patch-107"> <!-- depends="xslt-106" -->
+        <echo>Published version until 17.03.21.</echo>
+        <patch originalfile="${xml.dir}/W0004_107.xml" destfile="${xml.dir}/W0004_108.xml" patchfile="${diff.dir}/W0004_017.xml.diff"/>
+    </target>
+    <target name="xslt-108"> <!-- depends="patch-107" -->
+        <echo>Reduced excessive whitespace.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0004_108.xml" out="${xml.dir}/W0004_109.xml" style="${xsl.dir}/W0004_108.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+    </target>
+    <target name="patch-109"> <!-- depends="patch-018" -->
+        <echo>Post-correction after publication manual changes (CR).</echo>
+        <patch originalfile="${xml.dir}/W0004_109.xml" destfile="${xml.dir}/W0004_110.xml" patchfile="${diff.dir}/W0004_109.xml.diff"/>
+    </target>
+    <target name="xslt-110"> <!-- depends="patch-109" -->
+        <echo>Post-correction fixes.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0004_110.xml" out="${xml.dir}/W0004_111.xml" style="${xsl.dir}/W0004_110.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+    </target>
+    <target name="xslt-111" depends="xslt-110">
+        <echo>Fixed order of break attributes (@rendition and @break).</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0004_111.xml" out="${xml.dir}/W0004_112.xml" style="${xsl.dir}/W0004_111.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0004_111.xml"/>
+    </target>
+    <target name="xslt-112" depends="xslt-111">
+        <echo>Correct choice/(pb|cb|lb) pairings.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0004_112.xml" out="${xml.dir}/W0004_113.xml" style="${xsl.dir}/W0004_112.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0004_112.xml"/>
+    </target>
+    <target name="xslt-113" depends="xslt-112">
+        <echo>Tagged special characters after postcorrections.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0004_113.xml" out="${xml.dir}/W0004_114.xml" style="${xsl.dir}/W0004_113.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0004_113.xml"/>
+    </target>
+<!--Manual corrections-->
+    <target name="patch-114"> <!-- depends="xslt-113" -->
+        <echo>Post-corrections (CB) and fixed Whitespace bug.</echo>
+        <patch originalfile="${xml.dir}/W0004_114.xml" destfile="${xml.dir}/W0004_115.xml" patchfile="${diff.dir}/W0004_0114.xml.diff"/>
+    </target>
+    <target name="patch-115"> <!-- depends="xslt-113" -->
+        <echo>Manual changes update (CR).</echo>
+        <patch originalfile="${xml.dir}/W0004_115.xml" destfile="${xml.dir}/W0004_116.xml" patchfile="${diff.dir}/W0004_0115.xml.diff"/>
+    </target>
+    <target name="xslt-116"> <!--depends="patch-115"-->
+        <echo>Nummered lines after post corrections.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0004_116.xml" out="${xml.dir}/W0004_117.xml" style="${xsl.dir}/W0004_116.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+    </target>
+    <target name="xslt-117" depends="xslt-116"> <!---->
+        <echo>Generated @xml:id after post corrections.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0004_117.xml" out="${xml.dir}/W0004_118.xml" style="${xsl.dir}/W0004_117.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0004_117.xml"/>
+    </target>
+    <target name="finalize" depends="xslt-117">
+        <echo>W0004: reached end of pipeline.</echo>
+    </target>
+  
+</project>
+
+<!-- INFO:
+
+* sal-tei.sch: 16 
+* Post-correction version for new publication W0004_118.xml 31.05.21
+
+Last Update 03.09.21
+
+<g>-elements corrected.
+* <g resp="#CB" cert="high" ref="#char204a">⁊</g> in Latin were converted in - <choice><abbr><g ref="#char204a">⁊</g></abbr><expan>et</expan></choice>
+  <g resp="#CB" cert="high" ref="#char204a">y</g in Spanish were converted in Textabschnitten - <choice><abbr><g ref="#char204a">⁊</g></abbr><expan>y</expan></choice> 
+
+
+-->

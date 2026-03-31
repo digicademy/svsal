@@ -1,0 +1,85 @@
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol10\xml\W0063_Vol10_001.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol10\xml\W0063_Vol10_002.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol10\xsl\W0063_Vol10_001.xsl
+Apache resolver library not found, internal resolver will be used
+     [xslt] -----------------------------------------------------------
+
+     [xslt] WARN: different amounts of input and output pb/cb: 
+
+     [xslt] Input pb: 15 | cb: 26
+
+     [xslt] Output pb: 15 | cb: 27
+
+     [xslt] -----------------------------------------------------------
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol10\xml\W0063_Vol10_002.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol10\xml\W0063_Vol10_003.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol10\xsl\W0063_Vol10_002.xsl
+     [xslt] Warning: amount of non-whitespace characters differs in input and output doc: 
+
+     [xslt] Input characters: 79421
+
+     [xslt] Output characters: 79332
+
+     [xslt] 
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol10\xml\W0063_Vol10_003.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol10\xml\W0063_Vol10_004.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol10\xsl\W0063_Vol10_003.xsl
+Apache resolver library not found, internal resolver will be used
+     [xslt] INFO: added 2340 special character tags (tei:g).
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol10\xml\W0063_Vol10_004.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol10\xml\W0063_Vol10_005.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol10\xsl\W0063_Vol10_004.xsl
+     [xslt] Generated temporary lb/@xml:id.
+
+     [xslt] Extracted tei:lb from pages in the main area of the text.
+
+     [xslt] Numbered tei:lb from the main area.
+
+     [xslt] INFO: Added line numbers to tei:lb/@n.
+
+     [xslt] INFO: Serializing final output...
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol10\xml\W0063_Vol10_005.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol10\xml\W0063_Vol10_006.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol10\xsl\W0063_Vol10_005.xsl
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol10\xml\W0063_Vol10_006.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol10\xml\W0063_Vol10_007.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol10\xsl\W0063_Vol10_006.xsl
+Apache resolver library not found, internal resolver will be used
+     [xslt] WARN: could not align list entry with lb of xml:id: W0063-10-0011-lb-1006 because ending/starting characters differ:
+
+     [xslt] token 1 ending is: x , preceding text ending is: .
+
+     [xslt] token part 2 beginning is: t , following text node beginning is: C
+
+     [xslt] WARN: could not align list entry with lb of xml:id: W0063-10-0012-lb-1067 because ending/starting characters differ:
+
+     [xslt] token 1 ending is: i , preceding text ending is: .
+
+     [xslt] token part 2 beginning is: m , following text node beginning is: A
+
+     [xslt] INFO: tagged 0 pb as break=no and rendition=#noHyphen
+
+     [xslt] INFO: tagged 0 cb as break=no and rendition=#noHyphen
+
+     [xslt] INFO: tagged 14 lb as break=no and rendition=#noHyphen
+
+     [xslt] INFO: tagged 14 breaks in total as break=no and rendition=#noHyphen
+
+     [xslt] ------------------------------------------------------
+
+     [xslt] INFO: quality check successfull.
+

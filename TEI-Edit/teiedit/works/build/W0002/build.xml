@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="W0002" default="finalize">
+    
+    <property name="diff.dir" value="diff"/>
+    <property name="log.dir" value="log"/>
+    <property name="xml.dir" value="xml"/>
+    <property name="xsl.dir" value="xsl"/>
+    <property name="xslt.log" value="${log.dir}/${ant.project.name}_xslt.log"/>
+    <property name="xslt.processor" value="../../../lib/xsltproc/Saxon-HE-9.8.0-12.jar"/>
+    
+    <property name="orig.file" value="../../orig/digicademy/W0002/w0002_tite_1275.xml"/>
+    
+    <target name="initialize">
+        <mkdir dir="${xml.dir}"/>
+        <mkdir dir="${log.dir}"/>
+        <copy file="${orig.file}" tofile="${xml.dir}/W0002_000.xml"/>
+        <xmlvalidate file="${xml.dir}/W0002_000.xml" lenient="true" failonerror="true"/> 
+        <copy file="${xml.dir}/W0002_000.xml" tofile="${xml.dir}/W0002_v1-0.xml"/>
+        <echo>Checkpoint: W0002_v1-0.xml (W0002_000.xml).</echo>
+        <delete file="${xml.dir}/W0002_000.xml"/>
+    </target>
+    
+    <!-- ==================================================== -->
+    
+    <!-- STRUCTURAL PREPARATION -->
+    
+    <target name="patch-000" depends="initialize">
+        <echo>Basic structural editing. See edit/W0002_edit-000.txt for a list of changes.</echo>
+        <patch originalfile="${xml.dir}/W0002_v1-0.xml" destfile="${xml.dir}/W0002_001.xml" patchfile="${diff.dir}/W0002_000.diff"/>
+        <xmlvalidate file="${xml.dir}/W0002_001.xml" lenient="true" failonerror="true"/>
+    </target>
+    
+    <target name="xslt-001" depends="patch-000">
+        <echo>Basic TEI Tite to TEI All transformation.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt in="${xml.dir}/W0002_001.xml" out="${xml.dir}/W0002_002.xml" style="${xsl.dir}/W0002_001.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <xmlvalidate file="${xml.dir}/W0002_002.xml" lenient="true" failonerror="true"/>
+        <delete file="${xml.dir}/W0002_001.xml"/>
+    </target>
+
+    <target name="patch-002" depends="xslt-001">
+        <echo>Add (old) xml:id keys.</echo>
+        <patch originalfile="${xml.dir}/W0002_002.xml" destfile="${xml.dir}/W0002_003.xml" patchfile="${diff.dir}/W0002_002.diff"/>
+        <xmlvalidate file="${xml.dir}/W0002_003.xml" lenient="true" failonerror="true"/>
+        <delete file="${xml.dir}/W0002_002.xml"/>
+    </target>
+    
+    <target name="xslt-003" depends="patch-002">
+        <echo>Automatically add cross-references in summaries.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt in="${xml.dir}/W0002_003.xml" out="${xml.dir}/W0002_004.xml" style="${xsl.dir}/W0002_003.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0002_003.xml"/>
+    </target>
+    
+    <target name="patch-004" depends="xslt-003">
+        <echo>Correct the summary cross-references tagged automatically in xslt-003 and do further editings; see edit/W0002_004.txt for
+            further details.</echo>
+        <patch originalfile="${xml.dir}/W0002_004.xml" destfile="${xml.dir}/W0002_005.xml" patchfile="${diff.dir}/W0002_004.diff"/>
+        <xmlvalidate file="${xml.dir}/W0002_005.xml" lenient="true" failonerror="true"/>
+        <delete file="${xml.dir}/W0002_004.xml"/>
+    </target>
+    
+    <target name="xslt-005" depends="patch-004">
+        <echo>Further structural transformations.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt in="${xml.dir}/W0002_005.xml" out="${xml.dir}/W0002_006.xml" style="${xsl.dir}/W0002_005.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0002_005.xml"/>
+    </target>
+    
+    <target name="patch-006" depends="xslt-005">
+        <echo>Add newer xml:id keys and structural changes with marginal notes, headings, and milestones.</echo>
+        <patch originalfile="${xml.dir}/W0002_006.xml" destfile="${xml.dir}/W0002_007.xml" patchfile="${diff.dir}/W0002_006.diff"/>
+        <xmlvalidate file="${xml.dir}/W0002_007.xml" lenient="true" failonerror="true"/>
+        <delete file="${xml.dir}/W0002_006.xml"/>
+    </target>
+    
+    <target name="patch-007" depends="patch-006">
+        <echo>Small structural changes.</echo>
+        <patch originalfile="${xml.dir}/W0002_007.xml" destfile="${xml.dir}/W0002_008.xml" patchfile="${diff.dir}/W0002_007.diff"/>
+        <delete file="${xml.dir}/W0002_007.xml"/>
+    </target>
+    
+    <target name="patch-008" depends="patch-007">
+        <echo>Adjust metadata and restructure teiHeader; resolve ref/@target[contains(., 'unclear')]; add ref/@target in TOC; add further div/@type.</echo>
+        <patch originalfile="${xml.dir}/W0002_008.xml" destfile="${xml.dir}/W0002_009.xml" patchfile="${diff.dir}/W0002_008.diff"/>
+        <xmlvalidate file="${xml.dir}/W0002_009.xml" lenient="true" failonerror="true"/>
+        <delete file="${xml.dir}/W0002_008.xml"/>
+    </target>
+    
+    <target name="xslt-009" depends="patch-008"> 
+        <echo>Further structural adaptations and validation according to SalTEI.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt in="${xml.dir}/W0002_009.xml" out="${xml.dir}/W0002_010.xml" style="${xsl.dir}/W0002_009.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0002_009.xml"/>
+    </target>
+    
+    <target name="xslt-010" depends="xslt-009">
+        <echo>Automatically resolve (hyphen-based) breaks.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt in="${xml.dir}/W0002_010.xml" out="${xml.dir}/W0002_011.xml" style="${xsl.dir}/W0002_010.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0002_010.xml"/>
+    </target>
+    
+    <target name="xslt-011" depends="xslt-010">
+        <echo>Automatically annotate special characters.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt in="${xml.dir}/W0002_011.xml" out="${xml.dir}/W0002_012.xml" style="${xsl.dir}/W0002_011.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0002_011.xml"/>
+    </target>
+    
+    <target name="xslt-012" depends="xslt-011">
+        <echo>Resolve excessive hi/@rendition.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt in="${xml.dir}/W0002_012.xml" out="${xml.dir}/W0002_013.xml" style="${xsl.dir}/W0002_012.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0002_012.xml"/>
+    </target>
+    
+    <target name="xslt-013" depends="xslt-012">
+        <echo>Add language information to structural text units.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt in="${xml.dir}/W0002_013.xml" out="${xml.dir}/W0002_014.xml" style="${xsl.dir}/W0002_013.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0002_013.xml"/>
+    </target>
+    
+    <target name="xslt-014" depends="xslt-013">
+        <echo>Restructure teiHeader.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt in="${xml.dir}/W0002_014.xml" out="${xml.dir}/W0002_015.xml" style="${xsl.dir}/W0002_014.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0002_014.xml"/>
+    </target>
+    
+    <target name="cp-015" depends="xslt-014">
+        <echo>Checkpoint: v2-0 (text has been structurally annotated).</echo>
+        <copy file="${xml.dir}/W0002_015.xml" tofile="${xml.dir}/W0002_v2-0.xml"/>
+        <delete file="${xml.dir}/W0002_015.xml"/>
+    </target>
+    
+    <!-- ==================================================================== -->
+    
+    <!-- CORRECTIONS -->
+    
+    <target name="patch-015">
+        <echo>Partial, manual corrections by CB.</echo>
+        <patch originalfile="${xml.dir}/W0002_v2-0.xml" destfile="${xml.dir}/W0002_016.xml" patchfile="${diff.dir}/W0002_015.diff"/>
+        <xmlvalidate file="${xml.dir}/W0002_016.xml" lenient="true" failonerror="true"/>
+    </target>
+    
+    <target name="xslt-016" depends="patch-015">
+        <echo>Expand q with tilde.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt in="${xml.dir}/W0002_016.xml" out="${xml.dir}/W0002_017.xml" style="${xsl.dir}/W0002_016.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0002_016.xml"/>
+    </target>
+    
+    <target name="patch-017" depends="xslt-016">
+        <echo>Manual corrections by CB.</echo>
+        <patch originalfile="${xml.dir}/W0002_017.xml" destfile="${xml.dir}/W0002_018.xml" patchfile="${diff.dir}/W0002_017.diff"/>
+        <xmlvalidate file="${xml.dir}/W0002_018.xml" lenient="true" failonerror="true"/>
+        <delete file="${xml.dir}/W0002_017.xml"/>
+    </target>
+    
+    <target name="xslt-018"> <!-- depends="patch-017" -->
+        <echo>Reduce excessive hi taggings.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt in="${xml.dir}/W0002_018.xml" out="${xml.dir}/W0002_019.xml" style="${xsl.dir}/W0002_018.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+<!--        <delete file="${xml.dir}/W0002_018.xml"/>-->
+    </target>
+    
+    <target name="patch-019"> <!-- depends="xslt-018" -->
+        <echo>Additional corrections by CB.</echo>
+        <patch originalfile="${xml.dir}/W0002_019.xml" destfile="${xml.dir}/W0002_020.xml" patchfile="${diff.dir}/W0002_019.diff"/>
+        <xmlvalidate file="${xml.dir}/W0002_020.xml" lenient="true" failonerror="true"/>
+        <delete file="${xml.dir}/W0002_019.xml"/>
+    </target>
+    
+    <target name="xslt-020">
+        <echo>Get @break and @rendition into the right order (pb/cb).</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt in="${xml.dir}/W0002_020.xml" out="${xml.dir}/W0002_021.xml" style="${xsl.dir}/W0002_020.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+<!--        <delete file="${xml.dir}/W0002_020.xml"/>-->
+    </target>
+    
+    <target name="xslt-021" depends="xslt-020">
+        <echo>Correct break pairings in choice.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt in="${xml.dir}/W0002_021.xml" out="${xml.dir}/W0002_022.xml" style="${xsl.dir}/W0002_021.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0002_021.xml"/>
+    </target>
+    
+    <target name="xslt-022" depends="xslt-021">
+        <echo>Renamed milestone/@unit (article -> number).</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt in="${xml.dir}/W0002_022.xml" out="${xml.dir}/W0002_023.xml" style="${xsl.dir}/W0002_022.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0002_022.xml"/>
+    </target>
+    
+    <target name="xslt-023" depends="xslt-022">
+        <echo>Number lines.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt in="${xml.dir}/W0002_023.xml" out="${xml.dir}/W0002_024.xml" style="${xsl.dir}/W0002_023.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0002_023.xml"/>
+    </target>
+    
+    <target name="xslt-024" depends="xslt-023">
+        <echo>Generated xml:id.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt in="${xml.dir}/W0002_024.xml" out="${xml.dir}/W0002_025.xml" style="${xsl.dir}/W0002_024.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0002_024.xml"/>
+    </target>
+    
+    <target name="xslt-025" depends="xslt-024">
+        <echo>New teiHeader with publication data.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt in="${xml.dir}/W0002_025.xml" out="${xml.dir}/W0002_026.xml" style="${xsl.dir}/W0002_025.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0002_025.xml"/>
+    </target>
+    <target name="xslt-026" depends="xslt-025"> <!--depends="xslt-025"-->
+        <echo>teiHeader update. Added @role to editor.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt in="${xml.dir}/W0002_026.xml" out="${xml.dir}/W0002_027.xml" style="${xsl.dir}/W0002_026.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <!--<delete file="${xml.dir}/W0002_026.xml"/>-->
+    </target>
+    <target name="xslt-027" depends="xslt-026"> <!--depends="xslt-026"-->
+        <echo>teiHeader update. Added #additional to @role in editor(s).</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt in="${xml.dir}/W0002_027.xml" out="${xml.dir}/W0002_028.xml" style="${xsl.dir}/W0002_027.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <!--<delete file="${xml.dir}/W0002_027.xml"/>-->
+    </target>
+
+    <target name="finalize" depends="xslt-027">
+        <echo>Building W0002 done.</echo>
+    </target>
+  
+</project>

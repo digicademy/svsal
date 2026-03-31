@@ -1,0 +1,2343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<abbrExpanList xmlns="http://salamanca.adwmainz.de" xml:lang="la">
+    
+    <!-- ALTERUM -->
+    <abbrExpan xml:id="Alterum1">
+        <abbreviation>
+            <abbrPart type="text">Alter</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Alterum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Alterum2">
+        <abbreviation>
+            <abbrPart type="text">Alter</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Alterum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="alterum1">
+        <abbreviation>
+            <abbrPart type="text">alter</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">alterum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="alterum2">
+        <abbreviation>
+            <abbrPart type="text">alter</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">alterum</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- ATQUE -->
+    <abbrExpan xml:id="Atque1">
+        <abbreviation>
+            <abbrPart type="text">Atq;</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Atque</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="atque1">
+        <abbreviation>
+            <abbrPart type="text">atq;</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">atque</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- AUTEM -->
+    <abbrExpan xml:id="Autem1">
+        <abbreviation>
+            <abbrPart type="text">Aut</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Autem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Autem2">
+        <abbreviation>
+            <abbrPart type="text">Aut</abbrPart>
+            <abbrPart type="g">#chare0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Autem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="autem1">
+        <abbreviation>
+            <abbrPart type="text">aut</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">autem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="autem2">
+        <abbreviation>
+            <abbrPart type="text">aut</abbrPart>
+            <abbrPart type="g">#chare0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">autem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Autem3">
+        <abbreviation>
+            <abbrPart type="text">A</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">t</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Autem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Autem4">
+        <abbreviation>
+            <abbrPart type="text">A</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+            <abbrPart type="text">t</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Autem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="autem3">
+        <abbreviation>
+            <abbrPart type="text">a</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">t</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">autem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="autem4">
+        <abbreviation>
+            <abbrPart type="text">a</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+            <abbrPart type="text">t</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">autem</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- BONUM -->
+    <abbrExpan xml:id="Bonum1">
+        <abbreviation>
+            <abbrPart type="text">Bon</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Bonum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Bonum2">
+        <abbreviation>
+            <abbrPart type="text">Bon</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Bonum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="bonum1">
+        <abbreviation>
+            <abbrPart type="text">bon</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">bonum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="bonum2">
+        <abbreviation>
+            <abbrPart type="text">bon</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">bonum</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- CHRISTI -->
+    <abbrExpan xml:id="Christi1">
+        <abbreviation>
+            <abbrPart type="text">X</abbrPart>
+            <abbrPart type="g">#charp0303</abbrPart>
+            <abbrPart type="text">i</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Christi</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Christi2">
+        <abbreviation>
+            <abbrPart type="text">X</abbrPart>
+            <abbrPart type="g">#charp0304</abbrPart>
+            <abbrPart type="text">i</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Christi</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="christi1">
+        <abbreviation>
+            <abbrPart type="text">x</abbrPart>
+            <abbrPart type="g">#charp0303</abbrPart>
+            <abbrPart type="text">i</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">christi</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="christi2">
+        <abbreviation>
+            <abbrPart type="text">x</abbrPart>
+            <abbrPart type="g">#charp0304</abbrPart>
+            <abbrPart type="text">i</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">christi</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- CHRISTIANAE -->
+    <abbrExpan xml:id="christianae1">
+        <abbreviation>
+            <abbrPart type="text">xp</abbrPart>
+            <abbrPart type="g">#chari0303</abbrPart>
+            <abbrPart type="text">an</abbrPart>
+            <abbrPart type="g">#char00e6</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">christian</expanPart>
+            <expanPart type="g">#char00e6</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="christianae2">
+        <abbreviation>
+            <abbrPart type="text">xp</abbrPart>
+            <abbrPart type="g">#chari0304</abbrPart>
+            <abbrPart type="text">an</abbrPart>
+            <abbrPart type="g">#char00e6</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">christian</expanPart>
+            <expanPart type="g">#char00e6</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- CHRISTUS -->
+    <abbrExpan xml:id="Christus1">
+        <abbreviation>
+            <abbrPart type="text">Christ</abbrPart>
+            <abbrPart type="g">#chara770</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Christus</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="christus1">
+        <abbreviation>
+            <abbrPart type="text">christ</abbrPart>
+            <abbrPart type="g">#chara770</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">christus</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Christus2">
+        <abbreviation>
+            <abbrPart type="text">Xp</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">s</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Christus</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Christus3">
+        <abbreviation>
+            <abbrPart type="text">Xp</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+            <abbrPart type="text">s</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Christus</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="christus2">
+        <abbreviation>
+            <abbrPart type="text">xp</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">s</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">christus</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="christus3">
+        <abbreviation>
+            <abbrPart type="text">xp</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+            <abbrPart type="text">s</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">christus</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- CONCILIO -->
+    <abbrExpan xml:id="Concilio1">
+        <abbreviation>
+            <abbrPart type="text">C</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">cilio</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Concilio</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Concilio2">
+        <abbreviation>
+            <abbrPart type="text">C</abbrPart>
+            <abbrPart type="g">#charo0304</abbrPart>
+            <abbrPart type="text">cilio</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Concilio</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="concilio1">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">cilio</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">concilio</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="concilio2">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0304</abbrPart>
+            <abbrPart type="text">cilio</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">concilio</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- CONFIRMATIO -->
+    <abbrExpan xml:id="Confirmatio1">
+        <abbreviation>
+            <abbrPart type="text">C</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">firmatio</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Confirmatio</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Confirmatio2">
+        <abbreviation>
+            <abbrPart type="text">C</abbrPart>
+            <abbrPart type="g">#charo0304</abbrPart>
+            <abbrPart type="text">firmatio</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Confirmatio</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="confirmatio1">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">firmatio</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">confirmatio</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="confirmatio2">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0304</abbrPart>
+            <abbrPart type="text">firmatio</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">confirmatio</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- CONTRARIUM -->
+    <abbrExpan xml:id="Contrarium1">
+        <abbreviation>
+            <abbrPart type="text">C</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">trari</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Contrarium</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Contrarium2">
+        <abbreviation>
+            <abbrPart type="text">C</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">trari</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Contrarium</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Contrarium3">
+        <abbreviation>
+            <abbrPart type="text">C</abbrPart>
+            <abbrPart type="g">#charo0304</abbrPart>
+            <abbrPart type="text">trari</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Contrarium</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Contrarium4">
+        <abbreviation>
+            <abbrPart type="text">C</abbrPart>
+            <abbrPart type="g">#charo0304</abbrPart>
+            <abbrPart type="text">trari</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Contrarium</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="contrarium1">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">trari</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">contrarium</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="contrarium2">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">trari</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">contrarium</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="contrarium3">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0304</abbrPart>
+            <abbrPart type="text">trari</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">contrarium</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="contrarium4">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0304</abbrPart>
+            <abbrPart type="text">trari</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">contrarium</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- COMPENDIUM -->
+    <abbrExpan xml:id="Compendium1">
+        <abbreviation>
+            <abbrPart type="text">Comp</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">dium</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Compendium</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Compendium2">
+        <abbreviation>
+            <abbrPart type="text">Comp</abbrPart>
+            <abbrPart type="g">#chare0304</abbrPart>
+            <abbrPart type="text">dium</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Compendium</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="compendium1">
+        <abbreviation>
+            <abbrPart type="text">comp</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">dium</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">compendium</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="compendium2">
+        <abbreviation>
+            <abbrPart type="text">comp</abbrPart>
+            <abbrPart type="g">#chare0304</abbrPart>
+            <abbrPart type="text">dium</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">compendium</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- CONTRA -->
+    <abbrExpan xml:id="Contra1">
+        <abbreviation>
+            <abbrPart type="text">C</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">tra</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Contra</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Contra2">
+        <abbreviation>
+            <abbrPart type="text">C</abbrPart>
+            <abbrPart type="g">#charo0304</abbrPart>
+            <abbrPart type="text">tra</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Contra</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="contra1">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">tra</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">contra</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="contra2">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0304</abbrPart>
+            <abbrPart type="text">tra</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">contra</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- CUIUS -->
+    <abbrExpan xml:id="Cuius1">
+        <abbreviation>
+            <abbrPart type="text">Cui</abbrPart>
+            <abbrPart type="g">#chara770</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Cuius</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="cuius1">
+        <abbreviation>
+            <abbrPart type="text">cui</abbrPart>
+            <abbrPart type="g">#chara770</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">cuius</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- CUM -->
+    <abbrExpan xml:id="Cum1">
+        <abbreviation>
+            <abbrPart type="text">C</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Cum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Cum2">
+        <abbreviation>
+            <abbrPart type="text">C</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Cum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="cum1">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">cum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="cum2">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">cum</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- DICENS -->
+    <abbrExpan xml:id="Dicens1">
+        <abbreviation>
+            <abbrPart type="text">Dic</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">s</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Dicens</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Dicens2">
+        <abbreviation>
+            <abbrPart type="text">Dic</abbrPart>
+            <abbrPart type="g">#chare0304</abbrPart>
+            <abbrPart type="text">s</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Dicens</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="dicens1">
+        <abbreviation>
+            <abbrPart type="text">dic</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">s</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">dicens</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="dicens2">
+        <abbreviation>
+            <abbrPart type="text">dic</abbrPart>
+            <abbrPart type="g">#chare0304</abbrPart>
+            <abbrPart type="text">s</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">dicens</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- DOMINE -->
+    <abbrExpan xml:id="Domine1">
+        <abbreviation>
+            <abbrPart type="text">D</abbrPart>
+            <abbrPart type="g">#charn0303</abbrPart>
+            <abbrPart type="text">e</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Domine</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Domine2">
+        <abbreviation>
+            <abbrPart type="text">D</abbrPart>
+            <abbrPart type="g">#charn0304</abbrPart>
+            <abbrPart type="text">e</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Domine</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="domine1">
+        <abbreviation>
+            <abbrPart type="text">d</abbrPart>
+            <abbrPart type="g">#charn0303</abbrPart>
+            <abbrPart type="text">e</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">domine</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="domine2">
+        <abbreviation>
+            <abbrPart type="text">d</abbrPart>
+            <abbrPart type="g">#charn0304</abbrPart>
+            <abbrPart type="text">e</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">domine</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- DOMINI -->
+    <abbrExpan xml:id="Domini1">
+        <abbreviation>
+            <abbrPart type="text">D</abbrPart>
+            <abbrPart type="g">#charn0303</abbrPart>
+            <abbrPart type="text">i</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Domini</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Domini2">
+        <abbreviation>
+            <abbrPart type="text">D</abbrPart>
+            <abbrPart type="g">#charn0304</abbrPart>
+            <abbrPart type="text">i</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Domini</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="domini1">
+        <abbreviation>
+            <abbrPart type="text">d</abbrPart>
+            <abbrPart type="g">#charn0303</abbrPart>
+            <abbrPart type="text">i</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">domini</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="domini2">
+        <abbreviation>
+            <abbrPart type="text">d</abbrPart>
+            <abbrPart type="g">#charn0304</abbrPart>
+            <abbrPart type="text">i</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">domini</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- DOMINUS -->
+    <abbrExpan xml:id="Dominus1">
+        <abbreviation>
+            <abbrPart type="text">D</abbrPart>
+            <abbrPart type="g">#charn0303</abbrPart>
+            <abbrPart type="text">s</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Dominus</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Dominus2">
+        <abbreviation>
+            <abbrPart type="text">D</abbrPart>
+            <abbrPart type="g">#charn0304</abbrPart>
+            <abbrPart type="text">s</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Dominus</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="dominus1">
+        <abbreviation>
+            <abbrPart type="text">d</abbrPart>
+            <abbrPart type="g">#charn0303</abbrPart>
+            <abbrPart type="text">s</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">dominus</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="dominus2">
+        <abbreviation>
+            <abbrPart type="text">d</abbrPart>
+            <abbrPart type="g">#charn0304</abbrPart>
+            <abbrPart type="text">s</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">dominus</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- DOMUS -->
+    <abbrExpan xml:id="Domus1">
+        <abbreviation>
+            <abbrPart type="text">Dom</abbrPart>
+            <abbrPart type="g">#chara770</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Domus</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="domus1">
+        <abbreviation>
+            <abbrPart type="text">dom</abbrPart>
+            <abbrPart type="g">#chara770</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">domus</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- DUBIUM -->
+    <abbrExpan xml:id="Dubium1">
+        <abbreviation>
+            <abbrPart type="text">Dubi</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Dubium</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Dubium2">
+        <abbreviation>
+            <abbrPart type="text">Dubi</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Dubium</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="dubium1">
+        <abbreviation>
+            <abbrPart type="text">dubi</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">dubium</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="dubium2">
+        <abbreviation>
+            <abbrPart type="text">dubi</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">dubium</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- EIUS -->
+    <abbrExpan xml:id="Eius1">
+        <abbreviation>
+            <abbrPart type="text">Ei</abbrPart>
+            <abbrPart type="g">#chara770</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Eius</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="eius1">
+        <abbreviation>
+            <abbrPart type="text">ei</abbrPart>
+            <abbrPart type="g">#chara770</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">eius</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- ETIAM -->
+    <abbrExpan xml:id="Etiam1">
+        <abbreviation>
+            <abbrPart type="text">Eti</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Etiam</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Etiam2">
+        <abbreviation>
+            <abbrPart type="text">Eti</abbrPart>
+            <abbrPart type="g">#chara0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Etiam</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="etiam1">
+        <abbreviation>
+            <abbrPart type="text">eti</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">etiam</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="etiam2">
+        <abbreviation>
+            <abbrPart type="text">eti</abbrPart>
+            <abbrPart type="g">#chara0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">etiam</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- ENIM -->
+    <abbrExpan xml:id="Enim1">
+        <abbreviation>
+            <abbrPart type="text">E</abbrPart>
+            <abbrPart type="g">#charm0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Enim</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Enim2">
+        <abbreviation>
+            <abbrPart type="text">E</abbrPart>
+            <abbrPart type="g">#charm0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Enim</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="enim1">
+        <abbreviation>
+            <abbrPart type="text">e</abbrPart>
+            <abbrPart type="g">#charm0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">enim</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="enim2">
+        <abbreviation>
+            <abbrPart type="text">e</abbrPart>
+            <abbrPart type="g">#charm0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">enim</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- EX -->
+    <abbrExpan xml:id="ex1">
+        <abbreviation>
+            <abbrPart type="g">#chare0300</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">ex</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- GENTES -->
+    <abbrExpan xml:id="Gentes1">
+        <abbreviation>
+            <abbrPart type="text">G</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">tes</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Gentes</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Gentes2">
+        <abbreviation>
+            <abbrPart type="text">G</abbrPart>
+            <abbrPart type="g">#chare0304</abbrPart>
+            <abbrPart type="text">tes</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Gentes</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="gentes1">
+        <abbreviation>
+            <abbrPart type="text">g</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">tes</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">gentes</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="gentes2">
+        <abbreviation>
+            <abbrPart type="text">g</abbrPart>
+            <abbrPart type="g">#chare0304</abbrPart>
+            <abbrPart type="text">tes</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">gentes</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- IDEM -->
+    <abbrExpan xml:id="Idem1">
+        <abbreviation>
+            <abbrPart type="text">Id</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Idem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Idem2">
+        <abbreviation>
+            <abbrPart type="text">Id</abbrPart>
+            <abbrPart type="g">#chare0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Idem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="idem1">
+        <abbreviation>
+            <abbrPart type="text">id</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">idem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="idem2">
+        <abbreviation>
+            <abbrPart type="text">id</abbrPart>
+            <abbrPart type="g">#chare0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">idem</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- ITEM -->
+    <abbrExpan xml:id="Item1">
+        <abbreviation>
+            <abbrPart type="text">It</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Item</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Item2">
+        <abbreviation>
+            <abbrPart type="text">It</abbrPart>
+            <abbrPart type="g">#chare0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Item</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="item1">
+        <abbreviation>
+            <abbrPart type="text">it</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">item</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="item2">
+        <abbreviation>
+            <abbrPart type="text">it</abbrPart>
+            <abbrPart type="g">#chare0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">item</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- LONGE -->
+    <abbrExpan xml:id="Longe1">
+        <abbreviation>
+            <abbrPart type="text">L</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">ge</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Longe</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Longe2">
+        <abbreviation>
+            <abbrPart type="text">L</abbrPart>
+            <abbrPart type="g">#charo0304</abbrPart>
+            <abbrPart type="text">ge</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Longe</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="longe1">
+        <abbreviation>
+            <abbrPart type="text">l</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">ge</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">longe</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="longe2">
+        <abbreviation>
+            <abbrPart type="text">l</abbrPart>
+            <abbrPart type="g">#charo0304</abbrPart>
+            <abbrPart type="text">ge</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">longe</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- MATRIMONIUM -->
+    <abbrExpan xml:id="Matrimonium1">
+        <abbreviation>
+            <abbrPart type="text">Matrimoni</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Matrimonium</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Matrimonium2">
+        <abbreviation>
+            <abbrPart type="text">Matrimoni</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Matrimonium</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="matrimonium1">
+        <abbreviation>
+            <abbrPart type="text">matrimoni</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">matrimonium</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="matrimonium2">
+        <abbreviation>
+            <abbrPart type="text">matrimoni</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">matrimonium</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- MEUM -->
+    <abbrExpan xml:id="Meum1">
+        <abbreviation>
+            <abbrPart type="text">Me</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Meum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Meum2">
+        <abbreviation>
+            <abbrPart type="text">Me</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Meum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="meum1">
+        <abbreviation>
+            <abbrPart type="text">me</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">meum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="meum2">
+        <abbreviation>
+            <abbrPart type="text">me</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">meum</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- NAM -->
+    <abbrExpan xml:id="Nam1">
+        <abbreviation>
+            <abbrPart type="text">N</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Nam</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Nam2">
+        <abbreviation>
+            <abbrPart type="text">N</abbrPart>
+            <abbrPart type="g">#chara0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Nam</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="nam1">
+        <abbreviation>
+            <abbrPart type="text">n</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">nam</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="nam2">
+        <abbreviation>
+            <abbrPart type="text">n</abbrPart>
+            <abbrPart type="g">#chara0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">nam</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- NON -->
+    <abbrExpan xml:id="Non1">
+        <abbreviation>
+            <abbrPart type="text">N</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Non</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Non2">
+        <abbreviation>
+            <abbrPart type="text">N</abbrPart>
+            <abbrPart type="g">#charo0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Non</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="non1">
+        <abbreviation>
+            <abbrPart type="text">n</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">non</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="non2">
+        <abbreviation>
+            <abbrPart type="text">n</abbrPart>
+            <abbrPart type="g">#charo0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">non</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- OMNES -->
+    <abbrExpan xml:id="Omnes1">
+        <abbreviation>
+            <abbrPart type="text">O</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">s</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Omnes</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Omnes2">
+        <abbreviation>
+            <abbrPart type="text">O</abbrPart>
+            <abbrPart type="g">#chare0304</abbrPart>
+            <abbrPart type="text">s</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Omnes</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="omnes1">
+        <abbreviation>
+            <abbrPart type="text">o</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">s</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">omnes</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="omnes2">
+        <abbreviation>
+            <abbrPart type="text">o</abbrPart>
+            <abbrPart type="g">#chare0304</abbrPart>
+            <abbrPart type="text">s</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">omnes</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- OMNIA -->
+    <abbrExpan xml:id="Omnia1">
+        <abbreviation>
+            <abbrPart type="text">O</abbrPart>
+            <abbrPart type="g">#chari0303</abbrPart>
+            <abbrPart type="text">a</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Omnia</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Omnia2">
+        <abbreviation>
+            <abbrPart type="text">O</abbrPart>
+            <abbrPart type="g">#chari0304</abbrPart>
+            <abbrPart type="text">a</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Omnia</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="omnia1">
+        <abbreviation>
+            <abbrPart type="text">o</abbrPart>
+            <abbrPart type="g">#chari0303</abbrPart>
+            <abbrPart type="text">a</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">omnia</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="omnia2">
+        <abbreviation>
+            <abbrPart type="text">o</abbrPart>
+            <abbrPart type="g">#chari0304</abbrPart>
+            <abbrPart type="text">a</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">omnia</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- OMNIS -->
+    <abbrExpan xml:id="Omnis1">
+        <abbreviation>
+            <abbrPart type="text">O</abbrPart>
+            <abbrPart type="g">#chari0303</abbrPart>
+            <abbrPart type="text">s</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Omnis</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Omnis2">
+        <abbreviation>
+            <abbrPart type="text">O</abbrPart>
+            <abbrPart type="g">#chari0304</abbrPart>
+            <abbrPart type="text">s</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Omnis</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="omnis1">
+        <abbreviation>
+            <abbrPart type="text">o</abbrPart>
+            <abbrPart type="g">#chari0303</abbrPart>
+            <abbrPart type="text">s</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">omnis</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="omnis2">
+        <abbreviation>
+            <abbrPart type="text">o</abbrPart>
+            <abbrPart type="g">#chari0304</abbrPart>
+            <abbrPart type="text">s</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">omnis</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- PENTHECOSTE -->
+    <abbrExpan xml:id="Penthecoste1">
+        <abbreviation>
+            <abbrPart type="text">P</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">thecoste</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Penthecoste</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Penthecoste2">
+        <abbreviation>
+            <abbrPart type="text">P</abbrPart>
+            <abbrPart type="g">#chare0304</abbrPart>
+            <abbrPart type="text">thecoste</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Penthecoste</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="penthecoste1">
+        <abbreviation>
+            <abbrPart type="text">p</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">thecoste</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">penthecoste</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="penthecoste2">
+        <abbreviation>
+            <abbrPart type="text">p</abbrPart>
+            <abbrPart type="g">#chare0304</abbrPart>
+            <abbrPart type="text">thecoste</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">penthecoste</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- PER -->
+    <abbrExpan xml:id="per1">
+        <abbreviation>
+            <abbrPart type="g">#chara751</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">per</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- POTEST -->
+    <abbrExpan xml:id="Potest1">
+        <abbreviation>
+            <abbrPart type="text">P</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">t</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Potest</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Potest2">
+        <abbreviation>
+            <abbrPart type="text">P</abbrPart>
+            <abbrPart type="g">#charo0304</abbrPart>
+            <abbrPart type="text">t</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Potest</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="potest1">
+        <abbreviation>
+            <abbrPart type="text">p</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">t</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">potest</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="potest2">
+        <abbreviation>
+            <abbrPart type="text">p</abbrPart>
+            <abbrPart type="g">#charo0304</abbrPart>
+            <abbrPart type="text">t</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">potest</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- PUPILLUM -->
+    <abbrExpan xml:id="Pupillum1">
+        <abbreviation>
+            <abbrPart type="text">Pupill</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Pupillum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Pupillum2">
+        <abbreviation>
+            <abbrPart type="text">Pupill</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Pupillum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="pupillum1">
+        <abbreviation>
+            <abbrPart type="text">pupill</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">pupillum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="pupillum2">
+        <abbreviation>
+            <abbrPart type="text">pupill</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">pupillum</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- QUAMUIS -->
+    <abbrExpan xml:id="Quamuis1">
+        <abbreviation>
+            <abbrPart type="text">Qu</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+            <abbrPart type="text">uis</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Quamuis</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Quamuis2">
+        <abbreviation>
+            <abbrPart type="text">Qu</abbrPart>
+            <abbrPart type="g">#chara0304</abbrPart>
+            <abbrPart type="text">uis</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Quamuis</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="quamuis1">
+        <abbreviation>
+            <abbrPart type="text">qu</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+            <abbrPart type="text">uis</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">quamuis</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="quamuis2">
+        <abbreviation>
+            <abbrPart type="text">qu</abbrPart>
+            <abbrPart type="g">#chara0304</abbrPart>
+            <abbrPart type="text">uis</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">quamuis</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- QUANDO -->
+    <abbrExpan xml:id="Quando1">
+        <abbreviation>
+            <abbrPart type="text">Q</abbrPart>
+            <abbrPart type="g">#charn0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Quando</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Quando2">
+        <abbreviation>
+            <abbrPart type="text">Q</abbrPart>
+            <abbrPart type="g">#charn0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Quando</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="quando1">
+        <abbreviation>
+            <abbrPart type="text">q</abbrPart>
+            <abbrPart type="g">#charn0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">quando</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="quando2">
+        <abbreviation>
+            <abbrPart type="text">q</abbrPart>
+            <abbrPart type="g">#charn0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">quando</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- QUANTUM -->
+    <abbrExpan xml:id="Quantum1">
+        <abbreviation>
+            <abbrPart type="text">Qu</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+            <abbrPart type="text">tum</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Quantum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Quantum2">
+        <abbreviation>
+            <abbrPart type="text">Qu</abbrPart>
+            <abbrPart type="g">#chara0304</abbrPart>
+            <abbrPart type="text">tum</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Quantum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="quantum1">
+        <abbreviation>
+            <abbrPart type="text">qu</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+            <abbrPart type="text">tum</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">quantum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="quantum2">
+        <abbreviation>
+            <abbrPart type="text">qu</abbrPart>
+            <abbrPart type="g">#chara0304</abbrPart>
+            <abbrPart type="text">tum</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">quantum</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- QUOD -->
+    <abbrExpan xml:id="quod1">
+        <abbreviation>
+            <abbrPart type="g">#chara759</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">quod</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- QUONIAM -->
+    <abbrExpan xml:id="Quoniam1">
+        <abbreviation>
+            <abbrPart type="text">Quoni</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Quoniam</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Quoniam2">
+        <abbreviation>
+            <abbrPart type="text">Quoni</abbrPart>
+            <abbrPart type="g">#chara0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Quoniam</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="quoniam1">
+        <abbreviation>
+            <abbrPart type="text">quoni</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">quoniam</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="quoniam2">
+        <abbreviation>
+            <abbrPart type="text">quoni</abbrPart>
+            <abbrPart type="g">#chara0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">quoniam</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- QUORUM -->
+    <abbrExpan xml:id="Quorum1">
+        <abbreviation>
+            <abbrPart type="text">Quor</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Quorum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Quorum2">
+        <abbreviation>
+            <abbrPart type="text">Quor</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Quorum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="quorum1">
+        <abbreviation>
+            <abbrPart type="text">quor</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">quorum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="quorum2">
+        <abbreviation>
+            <abbrPart type="text">quor</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">quorum</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- REBUS -->
+    <abbrExpan xml:id="Rebus1">
+        <abbreviation>
+            <abbrPart type="text">Reb</abbrPart>
+            <abbrPart type="g">#chara770</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Rebus</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="rebus1">
+        <abbreviation>
+            <abbrPart type="text">reb</abbrPart>
+            <abbrPart type="g">#chara770</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">rebus</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- SACRAMENTIS -->
+    <abbrExpan xml:id="Sacramentis1">
+        <abbreviation>
+            <abbrPart type="text">Sacram</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">tis</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Sacramentis</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Sacramentis2">
+        <abbreviation>
+            <abbrPart type="text">Sacram</abbrPart>
+            <abbrPart type="g">#chare0304</abbrPart>
+            <abbrPart type="text">tis</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Sacramentis</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="sacramentis1">
+        <abbreviation>
+            <abbrPart type="text">sacram</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">tis</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">sacramentis</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="sacramentis2">
+        <abbreviation>
+            <abbrPart type="text">sacram</abbrPart>
+            <abbrPart type="g">#chare0304</abbrPart>
+            <abbrPart type="text">tis</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">sacramentis</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- SECUNDUM -->
+    <abbrExpan xml:id="Secundum1">
+        <abbreviation>
+            <abbrPart type="text">Secund</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Secundum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Secundum2">
+        <abbreviation>
+            <abbrPart type="text">Secund</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Secundum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="secundum1">
+        <abbreviation>
+            <abbrPart type="text">secund</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">secundum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="secundum2">
+        <abbreviation>
+            <abbrPart type="text">secund</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">secundum</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- SEMPER -->
+    <abbrExpan xml:id="Semper1">
+        <abbreviation>
+            <abbrPart type="text">Sem</abbrPart>
+            <abbrPart type="g">#chara751</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Semper</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="semper1">
+        <abbreviation>
+            <abbrPart type="text">sem</abbrPart>
+            <abbrPart type="g">#chara751</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">semper</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- SIGNUM -->
+    <abbrExpan xml:id="Signum1">
+        <abbreviation>
+            <abbrPart type="text">Sign</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Signum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Signum2">
+        <abbreviation>
+            <abbrPart type="text">Sign</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Signum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="signum1">
+        <abbreviation>
+            <abbrPart type="text">sign</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">signum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="signum2">
+        <abbreviation>
+            <abbrPart type="text">sign</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">signum</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- SPIRITUALEM -->
+    <abbrExpan xml:id="Spiritualem1">
+        <abbreviation>
+            <abbrPart type="text">Sp</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">al</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Spiritualem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Spiritualem2">
+        <abbreviation>
+            <abbrPart type="text">Sp</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">al</abbrPart>
+            <abbrPart type="g">#chare0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Spiritualem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Spiritualem3">
+        <abbreviation>
+            <abbrPart type="text">Sp</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+            <abbrPart type="text">al</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Spiritualem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Spiritualem4">
+        <abbreviation>
+            <abbrPart type="text">Sp</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+            <abbrPart type="text">al</abbrPart>
+            <abbrPart type="g">#chare0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Spiritualem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="spiritualem1">
+        <abbreviation>
+            <abbrPart type="text">sp</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">al</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">spiritualem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="spiritualem2">
+        <abbreviation>
+            <abbrPart type="text">sp</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">al</abbrPart>
+            <abbrPart type="g">#chare0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">spiritualem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="spiritualem3">
+        <abbreviation>
+            <abbrPart type="text">sp</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+            <abbrPart type="text">al</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">spiritualem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="spiritualem4">
+        <abbreviation>
+            <abbrPart type="text">sp</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+            <abbrPart type="text">al</abbrPart>
+            <abbrPart type="g">#chare0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">spiritualem</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- SUNT -->
+    <abbrExpan xml:id="Sunt1">
+        <abbreviation>
+            <abbrPart type="text">S</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">t</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Sunt</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Sunt2">
+        <abbreviation>
+            <abbrPart type="text">S</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+            <abbrPart type="text">t</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Sunt</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="sunt1">
+        <abbreviation>
+            <abbrPart type="text">s</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">t</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">sunt</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="sunt2">
+        <abbreviation>
+            <abbrPart type="text">s</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+            <abbrPart type="text">t</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">sunt</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- TAM -->
+    <abbrExpan xml:id="Tam1">
+        <abbreviation>
+            <abbrPart type="text">T</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Tam</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Tam2">
+        <abbreviation>
+            <abbrPart type="text">T</abbrPart>
+            <abbrPart type="g">#chara0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Tam</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="tam1">
+        <abbreviation>
+            <abbrPart type="text">t</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">tam</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="tam2">
+        <abbreviation>
+            <abbrPart type="text">t</abbrPart>
+            <abbrPart type="g">#chara0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">tam</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- TAMEN -->
+    <abbrExpan xml:id="Tamen1">
+        <abbreviation>
+            <abbrPart type="text">Tam</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Tamen</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Tamen2">
+        <abbreviation>
+            <abbrPart type="text">Tam</abbrPart>
+            <abbrPart type="g">#chare0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Tamen</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="tamen1">
+        <abbreviation>
+            <abbrPart type="text">tam</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">tamen</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="tamen2">
+        <abbreviation>
+            <abbrPart type="text">tam</abbrPart>
+            <abbrPart type="g">#chare0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">tamen</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Tamen3">
+        <abbreviation>
+            <abbrPart type="text">T</abbrPart>
+            <abbrPart type="g">#charm0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Tamen</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Tamen4">
+        <abbreviation>
+            <abbrPart type="text">T</abbrPart>
+            <abbrPart type="g">#charm0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Tamen</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="tamen3">
+        <abbreviation>
+            <abbrPart type="text">t</abbrPart>
+            <abbrPart type="g">#charm0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">tamen</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="tamen4">
+        <abbreviation>
+            <abbrPart type="text">t</abbrPart>
+            <abbrPart type="g">#charm0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">tamen</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Tamen5">
+        <abbreviation>
+            <abbrPart type="text">T</abbrPart>
+            <abbrPart type="g">#charn0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Tamen</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Tamen6">
+        <abbreviation>
+            <abbrPart type="text">T</abbrPart>
+            <abbrPart type="g">#charn0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Tamen</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="tamen5">
+        <abbreviation>
+            <abbrPart type="text">t</abbrPart>
+            <abbrPart type="g">#charn0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">tamen</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="tamen6">
+        <abbreviation>
+            <abbrPart type="text">t</abbrPart>
+            <abbrPart type="g">#charn0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">tamen</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- TANTUM -->
+    <abbrExpan xml:id="Tantum1">
+        <abbreviation>
+            <abbrPart type="text">Tant</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Tantum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Tantum2">
+        <abbreviation>
+            <abbrPart type="text">Tant</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Tantum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="tantum1">
+        <abbreviation>
+            <abbrPart type="text">tant</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">tantum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="tantum2">
+        <abbreviation>
+            <abbrPart type="text">tant</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">tantum</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- TENENTES -->
+    <abbrExpan xml:id="Tenentes1">
+        <abbreviation>
+            <abbrPart type="text">Ten</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">tes</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Tenentes</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Tenentes2">
+        <abbreviation>
+            <abbrPart type="text">Ten</abbrPart>
+            <abbrPart type="g">#chare0304</abbrPart>
+            <abbrPart type="text">tes</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Tenentes</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="tenentes1">
+        <abbreviation>
+            <abbrPart type="text">ten</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">tes</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">tenentes</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="tenentes2">
+        <abbreviation>
+            <abbrPart type="text">ten</abbrPart>
+            <abbrPart type="g">#chare0304</abbrPart>
+            <abbrPart type="text">tes</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">tenentes</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- TRACTATUS -->
+    <abbrExpan xml:id="Tractatus1">
+        <abbreviation>
+            <abbrPart type="text">Tractat</abbrPart>
+            <abbrPart type="g">#chara770</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Tractatus</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="tractatus1">
+        <abbreviation>
+            <abbrPart type="text">tractat</abbrPart>
+            <abbrPart type="g">#chara770</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">tractatus</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- VEL -->
+    <abbrExpan xml:id="Vel1">
+        <abbreviation>
+            <abbrPart type="text">V</abbrPart>
+            <abbrPart type="g">#char0142</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Vel</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="vel1">
+        <abbreviation>
+            <abbrPart type="text">v</abbrPart>
+            <abbrPart type="g">#char0142</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">vel</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!-- VTRUM -->
+    <abbrExpan xml:id="Vtrum1">
+        <abbreviation>
+            <abbrPart type="text">Vtr</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Vtrum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Vtrum2">
+        <abbreviation>
+            <abbrPart type="text">Vtr</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Vtrum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="vtrum1">
+        <abbreviation>
+            <abbrPart type="text">vtr</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">vtrum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="vtrum2">
+        <abbreviation>
+            <abbrPart type="text">vtr</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">vtrum</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    
+    
+    <!-- TEMPLATE FOR ADDITIONAL ABBREVIATIONS: -->
+    <!--
+    <abbrExpan xml:id="">
+        <abbreviation>
+            <abbrPart type="text"></abbrPart>
+            <abbrPart type="g"></abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text"></expanPart>
+            <expanPart type="g"></expanPart>
+        </expansion>
+    </abbrExpan>
+    -->
+    
+    
+</abbrExpanList>

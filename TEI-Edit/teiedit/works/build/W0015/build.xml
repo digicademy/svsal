@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="W0015" default="finalize">
+    
+    <property name="diff.dir" value="diff"/>
+    <property name="log.dir" value="log"/>
+    <property name="xml.dir" value="xml"/>
+    <property name="xsl.dir" value="xsl"/>
+    <property name="xslt.log" value="${log.dir}/${ant.project.name}_xslt.log"/>
+    <property name="xslt.processor" value="../../../lib/xsltproc/Saxon-HE-9.8.0-12.jar"/>
+    <property name="xslt.class" value="net.sf.saxon.TransformerFactoryImpl"/>
+    
+    <!-- this pipeline currently starts with a version of the text that is already in state "g_enriched_approved"; previous changes 
+        are documented only in the SVN system -->
+    <property name="orig.file" value="../../orig/svsal-edit/W0015/W0015_2018-07-06.xml"/>
+    
+    <target name="initialize">
+        <mkdir dir="${xml.dir}"/>
+        <mkdir dir="${log.dir}"/>
+        <copy file="${orig.file}" tofile="${xml.dir}/W0015_100.xml"/>
+        <xmlvalidate file="${xml.dir}/W0015_100.xml" lenient="true"/>
+        <copy file="${xml.dir}/W0015_100.xml" tofile="${xml.dir}/W0015_v5-0.xml"/>
+        <echo>Checkpoint: W0015_v5-0.xml (W0015_100.xml).</echo>
+        <delete file="${xml.dir}/W0015_100.xml"/>
+    </target>
+    
+    <target name="patch-100">
+        <echo>Add missing pp. 38-39; adjust pagination; add JLE to editors.</echo>
+        <patch originalfile="${xml.dir}/W0015_v5-0.xml" destfile="${xml.dir}/W0015_101.xml" patchfile="${diff.dir}/W0015_100.diff" failonerror="true"/>
+        <xmlvalidate lenient="true" file="${xml.dir}/W0015_101.xml" failonerror="true"/>
+    </target>
+    
+    <target name="xslt-101" depends="patch-100">
+        <echo>Generate @xml:id and validate special characters.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt in="${xml.dir}/W0015_101.xml" out="${xml.dir}/W0015_102.xml" style="${xsl.dir}/W0015_101.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0015_101.xml"/>
+    </target>
+    
+    <target name="xslt-102" depends="xslt-101">
+        <echo>Revision of teiHeader.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt in="${xml.dir}/W0015_102.xml" out="${xml.dir}/W0015_103.xml" style="${xsl.dir}/W0015_102.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0015_102.xml"/>
+    </target>
+    <target name="xslt-103"><!-- depends="xslt-102"-->
+        <echo>Revised teiHeader, update @role in editor.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt in="${xml.dir}/W0015_103.xml" out="${xml.dir}/W0015_104.xml" style="${xsl.dir}/W0015_103.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <!--<delete file="${xml.dir}/W0015_103.xml"/>-->
+    </target>
+    <target name="patch-104">
+        <echo>Structural annotation update.</echo>
+        <patch originalfile="${xml.dir}/W0015_104.xml" destfile="${xml.dir}/W0015_105.xml" patchfile="${diff.dir}/W0015_104.diff" failonerror="true"/>
+    </target>
+    <target name="xslt-105">
+        <echo>Line Numbering.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt in="${xml.dir}/W0015_105.xml" out="${xml.dir}/W0015_106.xml" style="${xsl.dir}/W0015_105.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <!--<delete file="${xml.dir}/W0015_105.xml"/>-->
+    </target>
+    <target name="xslt-106" depends="xslt-105">
+        <echo>Added @xml:ids.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt in="${xml.dir}/W0015_106.xml" out="${xml.dir}/W0015_107.xml" style="${xsl.dir}/W0015_106.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0015_106.xml"/>
+    </target>
+    <target name="xslt-107"><!-- depends="xslt-106"-->
+        <echo>teiHeader update. Rearranged editor(s) sequece and @role #additional.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt in="${xml.dir}/W0015_107.xml" out="${xml.dir}/W0015_108.xml" style="${xsl.dir}/W0015_107.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <!--<delete file="${xml.dir}/W0015_107.xml"/>-->
+    </target>
+<!-- ###################################################################################################################################
+                                    Post-correction update after publication 16.08.21
+                                    Added choice elements with abbr/expan and sic/corr
+     ###################################################################################################################################-->
+    <target name="patch-108"><!-- depends="xslt-107"-->
+        <echo>Published version until 16.08.21.</echo>
+        <patch originalfile="${xml.dir}/W0015.xml" destfile="${xml.dir}/W0015_109.xml" patchfile="${diff.dir}/W0015_108.diff" failonerror="true"/>
+    </target>
+    <target name="xslt-109"> <!-- depends="patch-108" -->
+        <echo>Reduced excessive whitespace.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0015_109.xml" out="${xml.dir}/W0015_110.xml" style="${xsl.dir}/W0015_109.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+    </target>
+    <target name="patch-110"> <!-- depends="xslt-109" -->
+        <echo>Post-correction after publication, g in choice elemente - manual changes (CR).</echo>
+        <patch originalfile="${xml.dir}/W0015_110.xml" destfile="${xml.dir}/W0015_111.xml" patchfile="${diff.dir}/W0015_110.xml.diff"/>
+    </target>
+    <target name="xslt-111"><!-- depends="patch-110"-->
+        <echo>Post-correction fixes #auto.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="yes" in="${xml.dir}/W0015_111.xml" out="${xml.dir}/W0015_112.xml" style="${xsl.dir}/W0015_111.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+    </target>
+    <target name="xslt-112" depends="xslt-111">
+        <echo>Correct breaks.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="yes" in="${xml.dir}/W0015_112.xml" out="${xml.dir}/W0015_113.xml" style="${xsl.dir}/W0015_112.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0015_112.xml"/>
+    </target>
+    <target name="xslt-113" depends="xslt-112">
+        <echo>Correct breaks pairs in choice elemente.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="yes" in="${xml.dir}/W0015_113.xml" out="${xml.dir}/W0015_114.xml" style="${xsl.dir}/W0015_113.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0015_113.xml"/>
+    </target>
+    <target name="xslt-114" depends="xslt-113">
+        <echo>Special character tagging after corrections.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="yes" in="${xml.dir}/W0015_114.xml" out="${xml.dir}/W0015_115.xml" style="${xsl.dir}/W0015_114.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0015_114.xml"/>
+    </target>
+    <target name="xslt-115" depends="xslt-114">
+        <echo>Numbered lines.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="yes" in="${xml.dir}/W0015_115.xml" out="${xml.dir}/W0015_116.xml" style="${xsl.dir}/W0015_115.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0015_115.xml"/>
+    </target>
+    <target name="xslt-116" depends="xslt-115">
+        <echo>Generated @xml:id.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="yes" in="${xml.dir}/W0015_116.xml" out="${xml.dir}/W0015_117.xml" style="${xsl.dir}/W0015_116.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0015_116.xml"/>
+    </target>
+    <target name="finalize" depends="xslt-116"/>
+  
+</project>
+
+<!-- 
+
+INFO:
+
+* Last update 03.09.21 by #CR. Expansions in only g-elements were updated in complete choice-elements: 
+  
+  For example W0015-00-0001-lb-0013 
+    t<g ref="#chare0303" resp="#AW" cert="low">en</g>ga 
+    was converted in:
+    <choice xml:id="W0015-00-0001-ce-03ec"><abbr>t<g ref="#chare0303" resp="#AW" cert="low">ẽ</g>ga</abbr><expan resp="#CR #auto">tenga</expan></choice>
+    
+    <g resp="#CB" cert="high" ref="#char204a">⁊</g> in Spanish was converted in:
+    <choice><abbr><g resp="#CB" cert="high" ref="#char204a">⁊</g></abbr><expan resp="#CR #auto">y</expan></choice>
+    
+    No cases of <g resp="#CB" cert="high" ref="#char204a">⁊</g> in Latin.
+
+-->

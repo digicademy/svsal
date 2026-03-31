@@ -1,0 +1,395 @@
+--- xml/W0002_008.xml	2018-07-10 16:36:42.585429300 +0200
++++ xml/W0002_009.xml	2018-09-21 14:45:42.526271600 +0200
+@@ -25,36 +25,16 @@
+                         <surname>Caesar</surname>, <forename>Ingo</forename>
+                     </persName>
+                 </editor>
+-                <editor xml:id="TD">
+-                    <persName ref="gnd:1028938721">
+-                        <surname>Duve</surname>, <forename>Thomas</forename>
+-                    </persName>
+-                </editor>
+                 <editor xml:id="DG">
+                     <persName ref="orcid:0000-0002-0273-3844">
+                         <surname>Glück</surname>, <forename>David</forename>
+                     </persName>
+                 </editor>
+-                <editor xml:id="MLB">
+-                    <persName ref="gnd:1022577581">
+-                        <surname>Lutz-Bachmann</surname>, <forename>Matthias</forename>
+-                    </persName>
+-                </editor>
+                 <editor xml:id="CR">
+                     <persName ref="orcid:0000-0001-5095-1793">
+                         <surname>Rico Carmona</surname>, <forename>Cindy</forename>
+                     </persName>
+                 </editor>
+-                <editor xml:id="AS">
+-                    <persName ref="gnd:13605708X">
+-                        <surname>Spindler</surname>, <forename>Anselm</forename>
+-                    </persName>
+-                </editor>
+-                <editor xml:id="MT">
+-                    <persName ref="orcid:0000-0002-1488-6477">
+-                        <surname>Thönes</surname>, <forename>Martin</forename>
+-                    </persName>
+-                </editor>
+                 <editor xml:id="AW">
+                     <persName ref="gnd:108835820">
+                         <surname>Wagner</surname>, <forename>Andreas</forename>
+@@ -62,41 +42,39 @@
+                 </editor>
+             </titleStmt>
+             
+-            <xi:include href="http://files.salamanca.school/W_Head_general.xml" xpointer="editionStmt">
+-                <xi:fallback>
+-                    <editionStmt>
+-                        <p xml:lang="en" xml:id="W0002-00-meta-pa-0001">For information about the digital edition, please 
+-                            refer to
+-                            <ref target="http://salamanca.adwmainz.de/about">our website</ref>.</p>
+-                    </editionStmt>
+-                </xi:fallback>
+-            </xi:include>
+-            <xi:include href="http://files.salamanca.school/W_Head_general.xml" xpointer="publicationStmt">
+-                <xi:fallback>
+-                    <publicationStmt>
+-                        <p xml:lang="en" xml:id="W0002-00-meta-pa-0002">For information about the digital edition, please 
+-                            refer to
+-                            <ref target="http://salamanca.adwmainz.de/about">our website</ref>.</p>
+-                    </publicationStmt>
+-                </xi:fallback>
+-            </xi:include>
+-            <xi:include href="http://files.salamanca.school/W_Head_general.xml" xpointer="seriesStmt">
+-                <xi:fallback>
+-                    <seriesStmt>
+-                        <p xml:lang="en" xml:id="W0002-00-meta-pa-0003">For information about the digital edition, please 
+-                            refer to
+-                            <ref target="http://salamanca.adwmainz.de/about">our website</ref>.</p>
+-                    </seriesStmt>
+-                </xi:fallback>
+-            </xi:include>
++            <editionStmt>
++               <edition n="" xml:id="W0002-v1" xml:lang="en">
++                   <!--Complete digitized edition, <date type="digitizedEd"/>.-->
++               </edition>
++            </editionStmt>
+             
+-            <notesStmt>
+-                <note xml:id="url">
+-                    <ref target="work.html?wid=W0002">.../work.html?wid=W0002</ref>
+-                </note>
+-            </notesStmt>
+             
+-            <!-- Bibliographische Beschreibung der Vorlage -->
++            <publicationStmt xml:id="publicationStmt" xml:lang="de">
++                <xi:include href="../meta/W_Head_general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:fileDesc/tei:publicationStmt/*)">
++                    <xi:fallback><publisher><ref target="https://www.salamanca.school" xml:lang="en">For information about the digital edition, please 
++                                refer to our website.</ref></publisher>
++                    </xi:fallback>
++                </xi:include>
++                <!--<date type="digitizedEd"/>-->
++                <idno>
++                    <!--<idno xml:id="urlid">https://id.salamanca.school/works.W0002</idno>-->
++                    <!--<idno xml:id="urltei">https://tei.salamanca.school/W0002.xml</idno>-->
++                    <!--<idno xml:id="urlhtml">https://www.salamanca.school/work.html?wid=W0002</idno>-->
++                    <!--<idno xml:id="urlrdf">https://data.salamanca.school/works.W0002.rdf</idno>-->
++                    <idno xml:id="urliiif">https://facs.salamanca.school/iiif/presentation/W0002/manifest</idno>
++                    <!--<idno xml:id="urltext">https://api.salamanca.school/txt/work.W0002.edit</idno>-->
++                </idno>
++            </publicationStmt>
++            
++            <seriesStmt>
++                <xi:include href="../meta/W_Head_general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:fileDesc/tei:seriesStmt/*)">
++                    <xi:fallback>
++                       <title xml:lang="en"><ref target="https://www.salamanca.school">The School of Salamanca. A Digital Collection of Sources</ref></title>
++                    </xi:fallback>
++                </xi:include>
++                <!--<biblScope unit="volume" n="" xml:lang="en"></biblScope>-->
++            </seriesStmt>
++            
+             <sourceDesc>
+                 <biblStruct>
+                     <monogr>
+@@ -138,27 +116,82 @@
+                             [16], 797 [i.e. 799] S. ; 4° 
+                         </extent>
+                     </monogr>
+-                    <note xml:id="ownerOfPrimarySource">
+-                        <ref type="institution" target="gnd:4313400-2">Universität Salamanca / Bibliothek</ref>
+-                        <ref type="catLink" target="http://brumario.usal.es/record=b1857195~S1*spi#.VEdkThaq5OI"/>
+-                    </note>
+                 </biblStruct>
++                <msDesc type="main">
++                    <msIdentifier>
++                        <repository ref="gnd:4313400-2" xml:lang="es">Bibliotecas de la Universidad de Salamanca</repository>
++                        <idno type="catlink">http://brumario.usal.es/record=b1857195~S1*spi</idno>
++                    </msIdentifier>
++                    <physDesc>
++                        <typeDesc xml:lang="en"><p xml:id="W0002-00-meta-pa-0003">Antiqua</p></typeDesc>
++                    </physDesc>
++                </msDesc>
++                <!-- where do facs:W0002-0430 facs:W0002-0431 originate from? -->
++                <!--<msDesc type="additional" corresp="facs:W0002-0430 facs:W0002-0431">
++                    <msIdentifier>
++                        <repository></repository>
++                        <idno type="catlink"></idno>
++                    </msIdentifier>
++                </msDesc>-->
+             </sourceDesc>
+         </fileDesc>
+         
+-        <xi:include href="http://files.salamanca.school/W_Head_general.xml" xpointer="encodingDesc">
+-            <xi:fallback>
+-                <encodingDesc>
+-                    <p xml:lang="en" xml:id="W0002-00-meta-pa-0004">For information about the edition principles, please refer to the 
+-                        <ref target="https://www.salamanca.school/en/guidelines.html">Edition Guidelines</ref>.</p>
+-                </encodingDesc>
+-            </xi:fallback>
+-        </xi:include>
++        <profileDesc>
++           <langUsage>
++              <language ident="es" usage="85" n="main" xml:lang="en">Spanish</language>
++              <language ident="la" usage="15" n="marginal" xml:lang="en">Latin</language>
++           </langUsage>
++        </profileDesc>
++        
++        <encodingDesc>
++            <xi:include href="../meta/W_Head_general.xml" xpointer="projectDesc">
++                <xi:fallback><projectDesc><p xml:id="W0002-00-meta-pa-0004"><ref target="https://www.salamanca.school" xml:lang="en">For information about the project, please 
++                               refer to our website.</ref></p></projectDesc>
++                </xi:fallback>
++            </xi:include>
++            
++            <editorialDecl>
++                <xi:include href="../meta/W_Head_general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:encodingDesc/tei:editorialDecl/tei:p)">
++                    <xi:fallback><p xml:id="W0002-00-meta-pa-0005"><ref target="https://www.salamanca.school" xml:lang="en">For information about the digital edition, please 
++                                refer to our website.</ref></p>
++                    </xi:fallback>
++                </xi:include>
++                <normalization>
++                    <p xml:id="W0002-00-meta-pa-0006" xml:lang="en" n="long-s">Long s (<q>ſ</q>) were silently normalized, 
++                      i.e. resolved to <q>s</q>.</p>
++                    <p xml:id="W0002-00-meta-pa-0007" xml:lang="en" n="head-change">Where the structure of sections does not follow a 
++                    "heading - summary - text body" structure in the original, the structure was normalized in TEI (head - list - p). These instances are retrievable through the following 
++                    XPath, e.g.: /TEI/text//head[@change='#W0002_change_0010'].</p>
++                </normalization>
++            </editorialDecl>
++            
++            <xi:include href="../meta/W_Head_general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:encodingDesc/tei:editorialDecl/following-sibling::*)">
++                <xi:fallback/>
++            </xi:include>
++            
++            <xi:include href="../meta/Sonderzeichen.xml" xpointer="charDecl">
++                <xi:fallback><charDecl><char xml:lang="en"><note xml:id="W0002-00-meta-no-0002"><p xml:id="d1e305">The definition of 
++                     non-standard characters could not be embedded, but it is available on the 
++                     <ref target="https://files.salamanca.school/Sonderzeichen.xml">project website</ref>.</p></note></char></charDecl>
++                </xi:fallback>
++            </xi:include>
++            
++            <appInfo>
++                <application ident="auto-markup" version="0.99" xml:id="auto">
++                    <desc>Automatically generated markup.</desc>
++                </application>
++            </appInfo>
++        </encodingDesc>
+         
+-        <!-- Hier anpassen: Überarbeitungshistorie dieses Dokuments -->
+         <revisionDesc status="a_raw">
+             <listChange>
+-                <change who="#CR" when="2018-02-08" status="a_raw" xml:id="W0002_change_0011">Added hyperlinks for summary references</change>
++                <change who="#DG #auto" when="2018-08-07" status="a_raw" xml:id="W0002_change_0017" xml:lang="en">Add language information to structural text units.</change>
++                <change who="#DG #auto" when="2018-08-06" status="a_raw" xml:id="W0002_change_0016" xml:lang="en">Reduced excessive hi/@rendition[#it] in summaries.</change>
++                <change who="#DG #auto" when="2018-08-02" status="a_raw" xml:lang="en" xml:id="W0002_change_0015">Generally annotated special characters.</change>
++                <change who="#DG #auto" when="2018-08-02" status="a_raw" xml:lang="en" xml:id="W0002_change_0014">Annotated (hyphen-based) breaks.</change>
++                <change who="#DG #auto" when="2018-08-02" status="a_raw" xml:lang="en" xml:id="W0002_change_0013">Further structural adaptations and validation according to SalTEI.</change>
++                <change who="#DG" when="2018-07-16" status="a_raw" xml:id="W0002_change_0012">Revised and restructured teiHeader; resolved cross-references with unclear @target.</change>
++                <change who="#CR #DG #auto" when="2018-02-08" status="a_raw" xml:id="W0002_change_0011">Added hyperlinks for summary references</change>
+                 <change who="#DG" when="2018-01-22" status="a_raw">
+                     <list>
+                         <item xml:id="W0002_change_0010">Restructured headings in subchapters that originally have a summary-heading-text structure into a normalized heading-summary-text structure; see /TEI/text//head[@change='#W0002_change_0010']</item>
+@@ -207,49 +240,49 @@
+ <lb xml:id="W0002-00-0004-lb-0023"/>Portonarijs, Impressor de la S. C. Magestad.</docImprint>
+ <docDate><lb xml:id="W0002-00-0004-lb-0024"/>1556</docDate>
+ <docImprint><lb xml:id="W0002-00-0004-lb-0025"/><hi rendition="#it">Esta tassado en cinco blancas el pliego.</hi></docImprint></titlePage>
+-<div xml:id="W0002-00-0005-d1-03e8"><list type="simple" xml:id="W0002-00-0005-ls-03eb"><item xml:id="W0002-00-0005-it-03f5"><pb n="[ii]" facs="facs:W0002-0005" xml:id="W0002-00-0005-pb-03e9"/><lb xml:id="W0002-00-0005-lb-0001"/>¶ Capitulo primero, Dela contricion primera par
+-<lb xml:id="W0002-00-0005-lb-0002"/>te dela penitencia. pag. 4.</item>
+-<item xml:id="W0002-00-0005-it-03f6"><lb xml:id="W0002-00-0005-lb-0003"/>¶ Cap. segundo, Dela segunda parte de la penitencia, que es confession. <ref>p. 19</ref>.</item>
+-<item xml:id="W0002-00-0005-it-03f7"><lb xml:id="W0002-00-0005-lb-0004"/>¶ Cap. tercero, Dela satisfacion, tercera parte dela penitancia. <ref>pag. 23</ref>.</item>
+-<item xml:id="W0002-00-0005-it-03f8"><lb xml:id="W0002-00-0005-lb-0005"/>¶ Capitulo quarto, Del poder, saber, y bondad del confessor. <ref>pag. 25</ref>.</item>
++<div xml:id="W0002-00-0005-d1-03e8" type="contents" n="[Tabla]"><list type="simple" xml:id="W0002-00-0005-ls-03eb"><item xml:id="W0002-00-0005-it-03f5"><pb n="[ii]" facs="facs:W0002-0005" xml:id="W0002-00-0005-pb-03e9"/><lb xml:id="W0002-00-0005-lb-0001"/>¶ Capitulo primero, Dela contricion primera par
++<lb xml:id="W0002-00-0005-lb-0002"/>te dela penitencia. <ref target="#W0002-00-0020-d1-03f3">pag. 4</ref>.</item>
++<item xml:id="W0002-00-0005-it-03f6"><lb xml:id="W0002-00-0005-lb-0003"/>¶ Cap. segundo, Dela segunda parte de la penitencia, que es confession. <ref target="#W0002-00-0037-d1-03f4">p. 19</ref>.</item>
++<item xml:id="W0002-00-0005-it-03f7"><lb xml:id="W0002-00-0005-lb-0004"/>¶ Cap. tercero, Dela satisfacion, tercera parte dela penitancia. <ref target="#W0002-00-0041-d1-03f5">pag. 23</ref>.</item>
++<item xml:id="W0002-00-0005-it-03f8"><lb xml:id="W0002-00-0005-lb-0005"/>¶ Capitulo quarto, Del poder, saber, y bondad del confessor. <ref target="#W0002-00-0043-d1-03f6">pag. 25</ref>.</item>
+ <item xml:id="W0002-00-0005-it-03f9"><lb xml:id="W0002-00-0005-lb-0006"/>¶ Capit. v. Que el confessor es obligado a preguntar al penitente, y la pruden
+-<lb xml:id="W0002-00-0005-lb-0007"/>cia, de que acerea dello deue vsar. <ref>pag. 29</ref>.</item>
+-<item xml:id="W0002-00-0005-it-03fa"><lb xml:id="W0002-00-0005-lb-0008"/>¶ Capitulo. vj. Delas circunstancias. <ref>pag. 31</ref>.</item>
+-<item xml:id="W0002-00-0005-it-03fb"><lb xml:id="W0002-00-0005-lb-0009"/>¶ Cap. vij. que el penitente deue conseruar la fama del, con quien peco. <ref>pa. 39</ref>.</item>
+-<item xml:id="W0002-00-0005-it-03fc"><lb xml:id="W0002-00-0005-lb-0010"/>¶ Capitulo viij. Del sello dela confession. <ref>pag. 41</ref>.</item>
+-<item xml:id="W0002-00-0005-it-03fd"><lb xml:id="W0002-00-0005-lb-0011"/>¶ Cap. ix. en que casos se ha de iterar la confession. <ref>pag. 47</ref>.</item>
++<lb xml:id="W0002-00-0005-lb-0007"/>cia, de que acerea dello deue vsar. <ref target="#W0002-00-0047-d1-03f7">pag. 29</ref>.</item>
++<item xml:id="W0002-00-0005-it-03fa"><lb xml:id="W0002-00-0005-lb-0008"/>¶ Capitulo. vj. Delas circunstancias. <ref target="#W0002-00-0049-d1-03f8">pag. 31</ref>.</item>
++<item xml:id="W0002-00-0005-it-03fb"><lb xml:id="W0002-00-0005-lb-0009"/>¶ Cap. vij. que el penitente deue conseruar la fama del, con quien peco. <ref target="#W0002-00-0057-d1-03f9">pa. 39</ref>.</item>
++<item xml:id="W0002-00-0005-it-03fc"><lb xml:id="W0002-00-0005-lb-0010"/>¶ Capitulo viij. Del sello dela confession. <ref target="#W0002-00-0060-d1-03fa">pag. 41</ref>.</item>
++<item xml:id="W0002-00-0005-it-03fd"><lb xml:id="W0002-00-0005-lb-0011"/>¶ Cap. ix. en que casos se ha de iterar la confession. <ref target="#W0002-00-0066-d1-03fb">pag. 47</ref>.</item>
+ <item xml:id="W0002-00-0005-it-03fe"><lb xml:id="W0002-00-0005-lb-0012"/>¶ Cap. x. Como se ha de auer el confessor acerca de si y acerca del penitene, y
+-<lb xml:id="W0002-00-0005-lb-0013"/>lo que enel principio le ha de preguntar. <ref>pag. 55</ref>.</item>
++<lb xml:id="W0002-00-0005-lb-0013"/>lo que enel principio le ha de preguntar. <ref target="#W0002-00-0074-d1-03fc">pag. 55</ref>.</item>
+ <item xml:id="W0002-00-0005-it-03ff"><lb xml:id="W0002-00-0005-lb-0014"/>¶ Cap. xj. Del primero mādamiento del Decalogo, que es de bien honrrar a
+ <lb xml:id="W0002-00-0005-lb-0015"/>Dios, y del mādamiẽto delo biẽ amar, y de biẽ creer enel, q̃ son otros dos, q̃
+-<lb xml:id="W0002-00-0005-lb-0016"/>todos los del Decalogo presuponẽ, como primeros prĩcipios suyos. <ref>pa. 58</ref>.</item>
+-<item xml:id="W0002-00-0005-it-0400"><lb xml:id="W0002-00-0005-lb-0017"/>¶ Ca. xij. Del segũdo mādamiẽto, No tomaras el nōbre đ Dios en vano. <ref>p. 90</ref>.</item>
+-<item xml:id="W0002-00-0005-it-0401"><lb xml:id="W0002-00-0005-lb-0018"/>¶ Cap. xiij. Del tercero mandamiento de guardar las fiestas. <ref>pag. 118</ref>.</item>
+-<item xml:id="W0002-00-0005-it-0402"><lb xml:id="W0002-00-0005-lb-0019"/>¶ Cap. xiiij. Del quarto mandamiento de honrrar al padrey madre. <ref>pa. 128</ref>.</item>
+-<item xml:id="W0002-00-0005-it-0403"><lb xml:id="W0002-00-0005-lb-0020"/>¶ Cap. xv. Del quinto mandamiento. No mataras. <ref>pag. 147</ref>.</item>
+-<item xml:id="W0002-00-0005-it-0404"><lb xml:id="W0002-00-0005-lb-0021"/>¶ Cap. xvj. Del sexto mandamiento. No adulteraras, ofornicaras. <ref>pag. 158</ref>.</item>
+-<item xml:id="W0002-00-0005-it-0405"><lb xml:id="W0002-00-0005-lb-0022"/>¶ Cap. xvij. Del septimo mādamiẽto. No hurtaras, y delas restituciones. <ref>p. 182</ref>.</item>
+-<item xml:id="W0002-00-0005-it-0406"><lb xml:id="W0002-00-0005-lb-0023"/>¶ Cap. xviij. del octauo mandamiento. No diras falso testimonio. <ref>pag. 306</ref>.</item>
+-<item xml:id="W0002-00-0005-it-0407"><lb xml:id="W0002-00-0005-lb-0024"/>¶ Cap. xix. Del nono mandamiento. No codiciaras las colas agenas. <ref>pa. 344</ref>.</item>
++<lb xml:id="W0002-00-0005-lb-0016"/>todos los del Decalogo presuponẽ, como primeros prĩcipios suyos. <ref target="#W0002-00-0078-d1-03fd">pa. 58</ref>.</item>
++<item xml:id="W0002-00-0005-it-0400"><lb xml:id="W0002-00-0005-lb-0017"/>¶ Ca. xij. Del segũdo mādamiẽto, No tomaras el nōbre đ Dios en vano. <ref target="#W0002-00-0099-d1-0402">p. 90</ref>.</item>
++<item xml:id="W0002-00-0005-it-0401"><lb xml:id="W0002-00-0005-lb-0018"/>¶ Cap. xiij. Del tercero mandamiento de guardar las fiestas. <ref target="#W0002-00-0137-d1-040d">pag. 118</ref>.</item>
++<item xml:id="W0002-00-0005-it-0402"><lb xml:id="W0002-00-0005-lb-0019"/>¶ Cap. xiiij. Del quarto mandamiento de honrrar al padrey madre. <ref target="#W0002-00-0146-d1-0410">pa. 128</ref>.</item>
++<item xml:id="W0002-00-0005-it-0403"><lb xml:id="W0002-00-0005-lb-0020"/>¶ Cap. xv. Del quinto mandamiento. No mataras. <ref target="#W0002-00-0166-d1-041a">pag. 147</ref>.</item>
++<item xml:id="W0002-00-0005-it-0404"><lb xml:id="W0002-00-0005-lb-0021"/>¶ Cap. xvj. Del sexto mandamiento. No adulteraras, ofornicaras. <ref target="#W0002-00-0177-d1-041e">pag. 158</ref>.</item>
++<item xml:id="W0002-00-0005-it-0405"><lb xml:id="W0002-00-0005-lb-0022"/>¶ Cap. xvij. Del septimo mādamiẽto. No hurtaras, y delas restituciones. <ref target="#W0002-00-0201-d1-0427">p. 182</ref>.</item>
++<item xml:id="W0002-00-0005-it-0406"><lb xml:id="W0002-00-0005-lb-0023"/>¶ Cap. xviij. del octauo mandamiento. No diras falso testimonio. <ref target="#W0002-00-0324-d1-0451">pag. 306</ref>.</item>
++<item xml:id="W0002-00-0005-it-0407"><lb xml:id="W0002-00-0005-lb-0024"/>¶ Cap. xix. Del nono mandamiento. No codiciaras las colas agenas. <ref target="#W0002-00-0362-d1-045c">pa. 344</ref>.</item>
+ <item xml:id="W0002-00-0005-it-0408"><lb xml:id="W0002-00-0005-lb-0025"/>¶ Cap. xx. Del decimo mādamiento. No codiciaras la muger agena, y de los
+-<lb xml:id="W0002-00-0005-lb-0026"/>consejos euangelicos. <ref>pag. 351</ref>.</item>
++<lb xml:id="W0002-00-0005-lb-0026"/>consejos euangelicos. <ref target="#W0002-00-0370-d1-045f">pag. 351</ref>.</item>
+ <item xml:id="W0002-00-0005-it-0409"><lb xml:id="W0002-00-0005-lb-0027"/>¶ Cap. xxj. Delos mandamientos de la y glesia. s. Oyr missa entera en los Do-
+ <lb xml:id="W0002-00-0005-lb-0028"/>mingos y fiestas. Ayunar los dias que māda la y glesia, Pagar los diezmos,
+-<lb xml:id="W0002-00-0005-lb-0029"/>Confessar vna vez en el año. Comulgar por Pascua. <ref>pag. 353</ref>.</item>
+-<item xml:id="W0002-00-0005-it-040a"><lb xml:id="W0002-00-0005-lb-0030"/>¶ Cap. xxij. Delos fiete sacramentos dela y glesia. <ref>pag. 385</ref>.</item>
++<lb xml:id="W0002-00-0005-lb-0029"/>Confessar vna vez en el año. Comulgar por Pascua. <ref target="#W0002-00-0371-d1-0462">pag. 353</ref>.</item>
++<item xml:id="W0002-00-0005-it-040a"><lb xml:id="W0002-00-0005-lb-0030"/>¶ Cap. xxij. Delos fiete sacramentos dela y glesia. <ref target="#W0002-00-0404-d1-046e">pag. 385</ref>.</item>
+ <item xml:id="W0002-00-0005-it-040b"><lb xml:id="W0002-00-0005-lb-0031"/>¶ Cap. xxiij. De los siete pecados capitales, que el vulgo llama mortales, y la
+-<lb xml:id="W0002-00-0005-lb-0032"/>glosa cardenales. Y de la so beruia reyna dellos, y de todos. <ref>pag. 436</ref>.</item>
++<lb xml:id="W0002-00-0005-lb-0032"/>glosa cardenales. Y de la so beruia reyna dellos, y de todos. <ref target="#W0002-00-0454-d1-04ae">pag. 436</ref>.</item>
+ <item xml:id="W0002-00-0005-it-040c"><lb xml:id="W0002-00-0005-lb-0033"/>¶ Cap. xxiiij. Delos cinco sentidos exteriores: y de las obras de misericordia
+-<lb xml:id="W0002-00-0005-lb-0034"/>espirituales, y corporales<ref>pag. 506</ref>.</item>
++<lb xml:id="W0002-00-0005-lb-0034"/>espirituales, y corporales<ref target="#W0002-00-0525-d1-04e4">pag. 506</ref>.</item>
+ <item xml:id="W0002-00-0005-it-040d"><lb xml:id="W0002-00-0005-lb-0035"/>¶ Cap. xxv. de algunas preguntas particulares de algunos estados, y primera
+ <lb xml:id="W0002-00-0005-lb-0036"/>mente de los Reyes, y señores, que en esta vida no tienen superiores, quan-
+-<lb xml:id="W0002-00-0005-lb-0037"/>to a lo temporal. <ref>pag. 517</ref>.</item>
++<lb xml:id="W0002-00-0005-lb-0037"/>to a lo temporal. <ref target="#W0002-00-0536-d1-04ec">pag. 517</ref>.</item>
+ <item xml:id="W0002-00-0005-it-040e"><lb xml:id="W0002-00-0005-lb-0038"/>¶ Cap. xxvj. Como se ha de auer el confessor con el penitente despues q̃ vuie
+-<lb xml:id="W0002-00-0005-lb-0039"/>re dicho, lo que se le acuerda de sus pecados. <ref>pag. 598</ref>.</item>
++<lb xml:id="W0002-00-0005-lb-0039"/>re dicho, lo que se le acuerda de sus pecados. <ref target="#W0002-00-0616-d1-04ff">pag. 598</ref>.</item>
+ <item xml:id="W0002-00-0005-it-040f"><lb xml:id="W0002-00-0005-lb-0040"/>¶ Capitu. xxvij. Delas censuras dela y glesia. s. descomunion, suspẽsion, y entre
+ <lb xml:id="W0002-00-0005-lb-0041"/>dicho. Y dela irregularidad, y ciertas reglas para el confessor, y primeramẽ
+-<lb xml:id="W0002-00-0005-lb-0042"/>te dela descomunion. <ref>pag. 620</ref>.</item></list></div>
+-<div xml:id="W0002-00-0006-d1-03e9"><head xml:id="W0002-00-0006-he-03e8"><pb n="[iii]" facs="facs:W0002-0006" xml:id="W0002-00-0006-pb-03ea"/><lb xml:id="W0002-00-0006-lb-0001"/>El Rey.</head>
++<lb xml:id="W0002-00-0005-lb-0042"/>te dela descomunion. <ref target="#W0002-00-0638-d1-0504">pag. 620</ref>.</item></list></div>
++<div type="privileges" xml:id="W0002-00-0006-d1-03e9"><head xml:id="W0002-00-0006-he-03e8"><pb n="[iii]" facs="facs:W0002-0006" xml:id="W0002-00-0006-pb-03ea"/><lb xml:id="W0002-00-0006-lb-0001"/>El Rey.</head>
+ <p xml:id="W0002-00-0006-pa-0405"><lb xml:id="W0002-00-0006-lb-0002"/><hi rendition="#initCaps">P</hi>Or quāto vos el Doctor Martin de Azpilcueta
+ <lb xml:id="W0002-00-0006-lb-0003"/>Catedratico de prima de Canones jubilado en
+ <lb xml:id="W0002-00-0006-lb-0004"/>la Vniuer sidad de Coimbra nos hezistes relaciō,
+@@ -315,7 +348,7 @@
+ <lb xml:id="W0002-00-0007-lb-0031"/>Por mandado de su Alteza en su nōbre.</hi></p>
+ <p xml:id="W0002-00-0007-pa-0407"><lb xml:id="W0002-00-0007-lb-0032"/><hi rendition="#right">Francisco de Ledesma.</hi></p>
+ </div>
+-<div xml:id="W0002-00-0008-d1-03ea"><head xml:id="W0002-00-0008-he-03e9"><pb n="[v]" facs="facs:W0002-0008" xml:id="W0002-00-0008-pb-03ec"/><lb xml:id="W0002-00-0008-lb-0001"/>El priuilegio de Aragon.</head>
++<div xml:id="W0002-00-0008-d1-03ea" type="privileges"><head xml:id="W0002-00-0008-he-03e9"><pb n="[v]" facs="facs:W0002-0008" xml:id="W0002-00-0008-pb-03ec"/><lb xml:id="W0002-00-0008-lb-0001"/>El priuilegio de Aragon.</head>
+ <p xml:id="W0002-00-0008-pa-0408"><lb xml:id="W0002-00-0008-lb-0002"/><hi rendition="#initCaps">N</hi><hi rendition="#it">OS Don Carlos: Por la diuina clemencia Emperador de Ro</hi>
+ <lb xml:id="W0002-00-0008-lb-0003"/><hi rendition="#it">manos siempre Augusto, Rey de Alemaña, &amp;c. y por la</hi>
+ <lb xml:id="W0002-00-0008-lb-0004"/><hi rendition="#it">gracia de Dios Rey de Castilla, de Aragon, de Leon, delas</hi>
+@@ -370,7 +403,7 @@
+ <lb xml:id="W0002-00-0009-lb-0015"/><hi rendition="#it">nientos y cinquenta y seys.</hi></p>
+ <p xml:id="W0002-00-0009-pa-0409"><lb xml:id="W0002-00-0009-lb-0016"/><hi rendition="#r-center">Yo la Princesa.</hi></p>
+ </div>
+-<div xml:id="W0002-00-0010-d1-03eb"><head xml:id="W0002-00-0010-he-03ea"><pb n="[vii]" facs="facs:W0002-0010" xml:id="W0002-00-0010-pb-03ee"/><lb xml:id="W0002-00-0010-lb-0001"/>Priuilegio del Rey de Portugal.</head>
++<div xml:id="W0002-00-0010-d1-03eb" type="privileges"><head xml:id="W0002-00-0010-he-03ea"><pb n="[vii]" facs="facs:W0002-0010" xml:id="W0002-00-0010-pb-03ee"/><lb xml:id="W0002-00-0010-lb-0001"/>Priuilegio del Rey de Portugal.</head>
+ <p xml:id="W0002-00-0010-pa-040a"><lb xml:id="W0002-00-0010-lb-0002"/><hi rendition="#initCaps">E</hi><hi rendition="#it">V El Rey fa</hi>ç<hi rendition="#it">o saber a os que este meu aluara virẽ, que</hi>
+ <lb xml:id="W0002-00-0010-lb-0003"/><hi rendition="#it">eu ey por bem, e me apraz, de conceder priuilegio ao</hi>
+ <lb xml:id="W0002-00-0010-lb-0004"/><hi rendition="#it">doctor Martin de Azpilcueta lente da cadeyra de Pri-</hi>
+@@ -402,7 +435,7 @@
+ <lb xml:id="W0002-00-0010-lb-0030"/><hi rendition="#it">a quatro dias de Setembro de.</hi> 1554.</p>
+ <p xml:id="W0002-00-0010-pa-040b"><lb xml:id="W0002-00-0010-lb-0031"/><hi rendition="#r-center">Rey.</hi></p>
+ </div>
+-<div xml:id="W0002-00-0011-d1-03ec"><head xml:id="W0002-00-0011-he-03eb"><pb n="[viii]" facs="facs:W0002-0011" xml:id="W0002-00-0011-pb-03ef"/><lb xml:id="W0002-00-0011-lb-0001"/>Frater Martinus Ledesmius Do-
++<div type="preface" xml:id="W0002-00-0011-d1-03ec" xml:lang="la"><head xml:id="W0002-00-0011-he-03eb"><pb n="[viii]" facs="facs:W0002-0011" xml:id="W0002-00-0011-pb-03ef"/><lb xml:id="W0002-00-0011-lb-0001"/>Frater Martinus Ledesmius Do-
+ <lb xml:id="W0002-00-0011-lb-0002"/>ctor Theologus, Lectori Salutem.</head>
+ <p xml:id="W0002-00-0011-pa-040c"><lb xml:id="W0002-00-0011-lb-0003"/><hi rendition="#initCaps">P</hi><hi rendition="#it">Erlegi, vt potui accuratißimè summā hanc Cōfeßionum</hi>
+ <lb xml:id="W0002-00-0011-lb-0004"/><hi rendition="#it">quam meæ trutinæ probandam atque expendendam com</hi>
+@@ -421,7 +454,7 @@
+ <lb xml:id="W0002-00-0011-lb-0017"/><hi rendition="#it">quàm optimè mereri. Vale Coimbricæ. die vndeci-</hi>
+ <lb xml:id="W0002-00-0011-lb-0018"/><hi rendition="#it">mo</hi> D<hi rendition="#it">ecembris Anni.</hi> 1552.</p>
+ </div>
+-<div xml:id="W0002-00-0012-d1-03ed"><head xml:id="W0002-00-0012-he-03ec"><pb n="[ix]" facs="facs:W0002-0012" xml:id="W0002-00-0012-pb-03f0"/><lb xml:id="W0002-00-0012-lb-0001"/><figure/> Petrus de Illanes Scholasticus
++<div type="foreword" xml:id="W0002-00-0012-d1-03ed" xml:lang="la"><head xml:id="W0002-00-0012-he-03ec"><pb n="[ix]" facs="facs:W0002-0012" xml:id="W0002-00-0012-pb-03f0"/><lb xml:id="W0002-00-0012-lb-0001"/><figure/> Petrus de Illanes Scholasticus
+ <lb xml:id="W0002-00-0012-lb-0002"/>Ouetensis in Decretis Licẽtiatus, Of-
+ <lb xml:id="W0002-00-0012-lb-0003"/>ficialis &amp; vicarius generalis in ec-
+ <lb xml:id="W0002-00-0012-lb-0004"/>clesia &amp; Episcopatu Sal-
+@@ -451,7 +484,7 @@
+ <p xml:id="W0002-00-0012-pa-040e"><lb xml:id="W0002-00-0012-lb-0028"/><hi rendition="#right"><hi rendition="#it">Licenciatus Petrus</hi>
+ <lb xml:id="W0002-00-0012-lb-0029"/><hi rendition="#it">Illanes.</hi></hi></p>
+ </div>
+-<div xml:id="W0002-00-0013-d1-03ee"><head xml:id="W0002-00-0013-he-03ed"><pb n="[x]" facs="facs:W0002-0013" xml:id="W0002-00-0013-pb-03f1"/><lb xml:id="W0002-00-0013-lb-0001"/>A la altissima Princesa. N. S. Do-
++<div type="dedication" xml:id="W0002-00-0013-d1-03ee"><head xml:id="W0002-00-0013-he-03ed"><pb n="[x]" facs="facs:W0002-0013" xml:id="W0002-00-0013-pb-03f1"/><lb xml:id="W0002-00-0013-lb-0001"/>A la altissima Princesa. N. S. Do-
+ <lb xml:id="W0002-00-0013-lb-0002"/>ña Iuana la primera deste nombre, el Do-
+ <lb xml:id="W0002-00-0013-lb-0003"/>ctor Martin de Azpilcueta Nauarro, gracia y
+ <lb xml:id="W0002-00-0013-lb-0004"/>gloria soberana, temporal
+@@ -515,9 +548,9 @@
+ <lb xml:id="W0002-00-0014-lb-0031"/>da a todos gracia heroica, para sanctissimamẽte reynando
+ <lb xml:id="W0002-00-0014-lb-0032"/>enel suelo, merecer Gloria seraphica enel Cielo, Amen.</p>
+ </div>
+-<div xml:id="W0002-00-0015-d1-03ef"><div xml:id="W0002-00-0015-d2-03ef"><head xml:id="W0002-00-0015-he-03ee"><pb n="[xii]" facs="facs:W0002-0015" xml:id="W0002-00-0015-pb-03f3"/><lb xml:id="W0002-00-0015-lb-0001"/>Al pio Lector, el Doctor Martin
++<div type="preface" xml:id="W0002-00-0015-d1-03ef"><head xml:id="W0002-00-0015-he-03ee"><pb n="[xii]" facs="facs:W0002-0015" xml:id="W0002-00-0015-pb-03f3"/><lb xml:id="W0002-00-0015-lb-0001"/>Al pio Lector, el Doctor Martin
+ <lb xml:id="W0002-00-0015-lb-0002"/>de Azpilcueta Nauarro, Salud.
+-<lb xml:id="W0002-00-0015-lb-0003"/>en. N. S. Iesu Christo.</head>
++<lb xml:id="W0002-00-0015-lb-0003"/>en. N. S. Iesu Christo.</head><div xml:id="W0002-00-0015-d2-03ef" type="section">
+ <p xml:id="W0002-00-0015-pa-0410"><lb xml:id="W0002-00-0015-lb-0004"/><hi rendition="#initCaps">P</hi>Or algunos justos respectos, q̃
+ <lb xml:id="W0002-00-0015-lb-0005"/>por no enhadaros pio Lector, ni dezir mal de
+ <lb xml:id="W0002-00-0015-lb-0006"/>quien nos lo ha hecho, no los expressamos aqui,
+@@ -652,7 +685,7 @@
+ <lb xml:id="W0002-00-0018-lb-0019"/>Virgẽ y madre, guia y Princesa della y de todos los sanctos, esperamos
+ <lb xml:id="W0002-00-0018-lb-0020"/>de alcançar los sobrenaturales necessarios, para ver aq̃lla infinita Ium-
+ <lb xml:id="W0002-00-0018-lb-0021"/>bre diuina, q̃ por su ygual bondad todos le veamos. Amen.</p></div>
+-<div xml:id="W0002-00-0018-d2-03f0"><head xml:id="W0002-00-0018-he-03ef"><lb xml:id="W0002-00-0018-lb-0022"/>¶ Auiso.</head>
++<div xml:id="W0002-00-0018-d2-03f0" type="section"><head xml:id="W0002-00-0018-he-03ef"><lb xml:id="W0002-00-0018-lb-0022"/>¶ Auiso.</head>
+ <p xml:id="W0002-00-0018-pa-0413"><lb xml:id="W0002-00-0018-lb-0023"/><hi rendition="#initCaps">A</hi>L desseo delos penitentes, que desseauan vna muy breue memoria
+ <lb xml:id="W0002-00-0018-lb-0024"/>para acordarse de todos sus pecados muy presto, se satisfaze enel re
+ <lb xml:id="W0002-00-0018-lb-0025"/>portorio con auer puesto muy breuemente en la palabra mandamien-
+@@ -666,7 +699,7 @@
+ <lb xml:id="W0002-00-0018-lb-0033"/>tal, o venial: o ni mortal, nivenial. Y assi enel Manual, como enel Repor
+ <lb xml:id="W0002-00-0018-lb-0034"/>torio. M. fignifica mortal, o mortalmente.</p>
+ </div></div>
+-<div xml:id="W0002-00-0019-d1-03f2"><head xml:id="W0002-00-0019-he-03f0"><pb n="[xvi]" facs="facs:W0002-0019" xml:id="W0002-00-0019-pb-03f7"/><lb xml:id="W0002-00-0019-lb-0001"/>Prologo introductorio</head>
++<div xml:id="W0002-00-0019-d1-03f2" type="foreword"><head xml:id="W0002-00-0019-he-03f0"><pb n="[xvi]" facs="facs:W0002-0019" xml:id="W0002-00-0019-pb-03f7"/><lb xml:id="W0002-00-0019-lb-0001"/>Prologo introductorio</head>
+ <p xml:id="W0002-00-0019-pa-0414"><lb xml:id="W0002-00-0019-lb-0002"/><hi rendition="#initCaps">E</hi>L pecado de Adan causo que la perfection y
+ <lb xml:id="W0002-00-0019-lb-0003"/>bienauenturança, que antes del se alcançara
+ <lb xml:id="W0002-00-0019-lb-0004"/>aun con entera paz de la carne y espiritu, no
+@@ -23502,12 +23535,14 @@
+ <lb xml:id="W0002-00-0324-lb-m007"/>Pro socio.</note>
+ , que no cōtiene desygualdad reprouada en
+ <lb xml:id="W0002-00-0324-lb-0002"/>esta materia.</p></div></div></div>
+-<div type="chapter" xml:id="W0002-00-0324-d1-0450"><head xml:id="W0002-00-0324-he-0494"><lb xml:id="W0002-00-0324-lb-0003"/>¶ Capitulo. xviij. Del octauo mandamiẽto.</head>
+-</div><div type="chapter" xml:id="W0002-00-0324-d1-0451"><head xml:id="W0002-00-0324-he-0495"><lb xml:id="W0002-00-0324-lb-0004"/>No diras falso testimonio 
++<div type="chapter" xml:id="W0002-00-0324-d1-0451">
++<head xml:id="W0002-00-0324-he-0494"><lb xml:id="W0002-00-0324-lb-0003"/>¶ Capitulo. xviij. Del octauo mandamiẽto.
++<lb xml:id="W0002-00-0324-lb-0004"/>No diras falso testimonio 
+ <ref type="note-anchor" n="b" target="#W0002-00-0324-nm-0f48"><hi rendition="#sup">b</hi></ref><note place="margin" n="b" anchored="true" xml:id="W0002-00-0324-nm-0f48"><lb xml:id="W0002-00-0324-lb-m008"/>Exod. 20.</note>
+-. ¶ Quanto al falso testimonio, men
++.</head>
++<div xml:id="W0002-00-0324-d2-0451"><head xml:id="W0002-00-0324-he-0495">¶ Quanto al falso testimonio, men
+ <lb xml:id="W0002-00-0324-lb-0005"/>tira, Fe quebrada, Simulaciō, y Hypocrisia, que son pecados de
+-<lb xml:id="W0002-00-0324-lb-0006"/>palabras, y señales contra este octauo mandamiento.</head><div xml:id="W0002-00-0324-d2-0451">
++<lb xml:id="W0002-00-0324-lb-0006"/>palabras, y señales contra este octauo mandamiento.</head>
+ <list type="summaries" xml:id="W0002-00-0324-ls-043b"><head xml:id="W0002-00-0324-he-0496"><lb xml:id="W0002-00-0324-lb-0007"/><hi rendition="#it">SVMARIO.</hi></head>
+ <item xml:id="W0002-00-0324-it-05ec"><lb xml:id="W0002-00-0324-lb-0008"/><hi rendition="#it">Mandamiento octauo principalmẽte veda el falso testimonio</hi> j<hi rendition="#it">u-</hi>
+ <lb xml:id="W0002-00-0324-lb-0009"/><hi rendition="#it">dicial, y menos principalmente todos los pecados de palabras y</hi>
+@@ -61975,8 +62010,10 @@
+ <lb xml:id="W0002-00-0818-lb-0011"/>en estos reynos aquella Christianissima, y incomparable Reyna, y
+ <lb xml:id="W0002-00-0818-lb-0012"/>nuestra Señora doña Cathalina la primera deste nombre, con
+ <lb xml:id="W0002-00-0818-lb-0013"/>quien esperamos de perfectamente solennizarla para siẽpre en los
+-<lb xml:id="W0002-00-0818-lb-0014"/>cielos. Amen. Amen.</p></div></div></body><back xml:id="W0002-00-0818-bm-03e8">
+-<div xml:id="W0002-00-0818-d1-0546"><p xml:id="W0002-00-0818-pa-0843"><lb xml:id="W0002-00-0818-lb-0015"/><hi rendition="#it">LAVS DEO.</hi></p>
++<lb xml:id="W0002-00-0818-lb-0014"/>cielos. Amen. Amen.</p>
++<p xml:id="W0002-00-0818-pa-0843"><lb xml:id="W0002-00-0818-lb-0015"/><hi rendition="#it #r-center">LAVS DEO.</hi></p>
++</div></div></body><back xml:id="W0002-00-0818-bm-03e8">
++<div xml:id="W0002-00-0818-d1-0546" type="colophon">
+ <p xml:id="W0002-00-0818-pa-0844"><lb xml:id="W0002-00-0818-lb-0016"/>Fue impressa la presente obra
+ <lb xml:id="W0002-00-0818-lb-0017"/>enla muy noble ciudad de Salaman-
+ <lb xml:id="W0002-00-0818-lb-0018"/>ca, en casa de Andrea de Por-

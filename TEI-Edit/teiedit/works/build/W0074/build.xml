@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="W0074" default="finalize">
+    
+    <property name="diff.dir" value="diff"/>
+    <property name="log.dir" value="log"/>
+    <property name="xml.dir" value="xml"/>
+    <property name="xsl.dir" value="xsl"/>
+    <property name="xslt.log" value="${log.dir}/${ant.project.name}_xslt.log"/>
+    <property name="xslt.processor" value="../../../lib/xsltproc/Saxon-HE-9.8.0-12.jar"/>
+    <property name="xslt.class" value="net.sf.saxon.TransformerFactoryImpl"/>
+    
+    <property name="orig.file" value="../../orig/textloop/W0074/W0074.xml"/>
+    
+    <target name="initialize">
+        <echo>Initializing W0074.</echo>
+        <mkdir dir="${xml.dir}"/>
+        <mkdir dir="${log.dir}"/>
+        <copy file="${orig.file}" tofile="${xml.dir}/W0074_000.xml"/>
+        <xmlvalidate file="${xml.dir}/W0074_000.xml" lenient="true"/>
+    </target>
+    
+    <target name="cp-000" depends="initialize">
+        <copy file="${xml.dir}/W0074_000.xml" tofile="${xml.dir}/W0074_v1-0.xml"/>
+        <echo>Checkpoint: W0074_v1-0.xml (W0074_000.xml).</echo>
+        <delete file="${xml.dir}/W0074_000.xml"/>
+    </target>
+    
+    <target name="patch-000" depends="cp-000"><!--, W0074_edit.xml renamed W0074-001.xml, --> 
+        <patch originalfile="${xml.dir}/W0074_v1-0.xml" destfile="${xml.dir}/W0074_001.xml" patchfile="${diff.dir}/W0074_000.diff"/>
+        <echo>Structural Annotation</echo>
+        <delete file="${xml.dir}/W0074_000.xml"/>
+    </target>
+    <target name="patch-001"> <!-- patch-000 -->
+        <echo>Resolution remaining 5 unclear marks (CB).</echo>
+        <patch originalfile="${xml.dir}/W0074_001.xml" destfile="${xml.dir}/W0074_001_unclear.xml" patchfile="${diff.dir}/W0074_001.diff"/>
+    </target>
+    <target name="xslt-001"> 
+        <echo>Tagged @n, @type in div(s) and list(s).</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0074_001_unclear.xml" out="${xml.dir}/W0074_002.xml" style="${xsl.dir}/W0074_001.xsl" classpath="${xslt.processor}" >
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+    </target>
+    <target name="xslt-002" depends="xslt-001"> 
+        <echo>Added (la) abbreviations depending on word structure with regex.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0074_002.xml" out="${xml.dir}/W0074_003a.xml" style="${xsl.dir}/W0074_002.xsl" classpath="${xslt.processor}" >
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <echo>Repeated (la) abbreviations depending on word structure with regex.</echo>
+        <xslt force="true" in="${xml.dir}/W0074_003a.xml" out="${xml.dir}/W0074_003.xml" style="${xsl.dir}/W0074_002.xsl" classpath="${xslt.processor}" >
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <delete file="${xml.dir}/W0074_002.xml"/>
+        <delete file="${xml.dir}/W0074_003a.xml"/>      
+        <record name="${xslt.log}" action="stop"/>
+    </target>
+    <target name="xslt-003" depends="xslt-002">
+        <echo>Transformation from TEI Tite to TEI P5.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0074_003.xml" out="${xml.dir}/W0074_004.xml" style="${xsl.dir}/W0074_003.xsl" classpath="${xslt.processor}" >
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <!--<delete file="${xml.dir}/W0074_003.xml"/>-->
+    </target>
+    <target name="xslt-004" depends="xslt-003">
+        <echo>Special characters tagging.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0074_004.xml" out="${xml.dir}/W0074_005.xml" style="${xsl.dir}/W0074_004.xsl" classpath="${xslt.processor}" >
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0074_004.xml"/>
+    </target>
+    <target name="xslt-005" depends="xslt-004">
+        <echo>Annotated Hyphenation.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0074_005.xml" out="${xml.dir}/W0074_006.xml" style="${xsl.dir}/W0074_005.xsl" classpath="${xslt.processor}" >
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0074_005.xml"/>
+    </target>
+    <target name="xslt-006" depends="xslt-005">
+        <echo>Line numbering.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0074_006.xml" out="${xml.dir}/W0074_007.xml" style="${xsl.dir}/W0074_006.xsl" classpath="${xslt.processor}" >
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0074_006.xml"/>
+    </target>
+    <target name="xslt-007" depends="xslt-006">
+        <echo>Generated @xml:id.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0074_007.xml" out="${xml.dir}/W0074_008.xml" style="${xsl.dir}/W0074_007.xsl" classpath="${xslt.processor}" >
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0074_007.xml"/>
+    </target>
+    <target name="xslt-008" ><!--depends="xslt-007" commented to avoid new generation of ids (too much time)-->
+        <echo>Tagged unmarked breaks.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0074_008.xml" out="${xml.dir}/W0074_009.xml" style="${xsl.dir}/W0074_008.xsl" classpath="${xslt.processor}" >
+            <factory name="${xslt.class}"/>            
+            <param name="corrListPaths" expression="../corrlist/lists/W0074-la_supposed-hyphenations-from-text.html"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <!--<delete file="${xml.dir}/W0074_008.xml"/>-->
+    </target>
+    <target name="xslt-009" depends="xslt-008">  <!-- No abbreviations found in marginal notes.-->
+        <echo>Expanded abbreviations in main text (la). No abbreviations in marginal notes.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0074_009.xml" out="${xml.dir}/W0074_010.xml" style="${xsl.dir}/W0074_009.xsl" classpath="${xslt.processor}" >
+            <factory name="${xslt.class}"/>
+            <param name="lang" expression="la" type="STRING"/>
+            <param name="mode" expression="main" type="STRING"/>
+            <param name="changeId" expression="W0074_change_011" type="STRING"/>
+            <param name="startAtLineBeginning" expression="TRUE" type="BOOLEAN"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <!--<delete file="${xml.dir}/W0074_009.xml"/>-->
+    </target>
+
+<target name="py-010"> <!-- depends="xslt-010" - input W0074_010.xml and output W0074_011.xml files in python script -->
+    <!--Run and edit directly from Python. ANT causes encoding/decoding problems.-->
+        <echo>Expanded abbreviations with breaks using python.</echo>
+        <record name="${py.log}" action="start" loglevel="verbose"/>
+        <exec executable="${executable-full-path}">
+            <arg file="${py.dir}/W0074_010.py"/>
+        </exec>
+        <record name="${py.log}" action="stop"/>
+    </target>
+  <target name="xslt-011">  <!--depends="py-010"-->
+        <echo>teiHeader update for online publication.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0074_011.xml" out="${xml.dir}/W0074_012.xml" style="${xsl.dir}/W0074_011.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+    </target>
+    
+    <target name="finalize" depends="xslt-011">
+        <echo>Reached end of pipeline.</echo>
+    </target>
+</project>    
+<!--
+
+ INFO:
+   
+    * Abbr. INFO: 
+
+      Abbr. regex //expan[@resp eq '#CR #auto'] = 8809
+      Abbr. List //expan[@resp eq '#auto'] = 4433
+      Abbr. break(s) Python //expan[@resp eq '#CRPY #auto'] = 286
+      Abbr. manual //expan[@resp eq '#MAH'] = 1
+      
+      Automatic abb. TOTAL = 13529
+  
+    * sal-tei.sch: 122
+    * sal-tei.rng: 14
+    * Pipeline until @xml:id(s): 5 minutes 32 seconds
+    * corrlists: 33 minutes 38 seconds
+    * Pipeline until Abbr. list:
+      Total time:  31 minutes 25 seconds
+ 
+-->

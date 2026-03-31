@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="W0013_Vol01" default="finalize">
+    
+    <property name="diff.dir" value="diff"/>
+    <property name="log.dir" value="log"/>
+    <property name="xml.dir" value="xml"/>
+    <property name="xsl.dir" value="xsl"/>
+    <property name="xslt.log" value="${log.dir}/${ant.project.name}_xslt.log"/>
+    <property name="xslt.processor" value="../../../lib/xsltproc/Saxon-HE-9.8.0-12.jar"/>
+    
+    <!-- this pipeline starts with a version almost fully edited, thus version number _100... -->
+    <property name="orig.file" value="../../orig/svsal-edit/W0013/W0013_Vol01/W0013_Vol01_2018-09-19.xml"/>
+    
+    <target name="initialize">
+        <mkdir dir="${xml.dir}"/>
+        <mkdir dir="${log.dir}"/>
+        <copy file="${orig.file}" tofile="${xml.dir}/W0013_Vol01_100.xml"/>
+        <xmlvalidate file="${xml.dir}/W0013_Vol01_100.xml" lenient="true"/>
+        <copy file="${xml.dir}/W0013_Vol01_100.xml" tofile="${xml.dir}/W0013_Vol01_v5-0.xml"/>
+        <echo>Checkpoint: W0013_Vol01_v5-0.xml (W0013_Vol01_100.xml).</echo>
+        <delete file="${xml.dir}/W0013_Vol01_100.xml"/>
+    </target>
+    
+    <target name="patch-100">
+        <echo>Post-correction fixes; revise teiHeader.</echo>
+        <patch originalfile="${xml.dir}/W0013_Vol01_v5-0.xml" destfile="${xml.dir}/W0013_Vol01_101.xml" patchfile="${diff.dir}/W0013_Vol01_100.diff"/>
+        <!-- TODO: create diff between W0013_Vol01_v5-0.xml and W0013_Vol01_edit-100.xml (=W0013_Vol01_101.xml) -->
+    </target>
+    
+    <target name="xslt-101"> <!-- depends="patch-100" -->
+        <echo>Re-generate @xml:id and line numbers.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0013_Vol01_101.xml" out="${xml.dir}/W0013_Vol01_102.xml" style="${xsl.dir}/W0013_Vol01_101.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+<!--        <delete file="${xml.dir}/W0013_Vol01_101.xml"/>-->
+    </target>
+    
+    <target name="xslt-102" depends="xslt-101">
+        <echo>New teiHeader.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0013_Vol01_102.xml" out="${xml.dir}/W0013_Vol01_103.xml" style="${xsl.dir}/W0013_Vol01_102.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0013_Vol01_102.xml"/>
+    </target>
+    
+    <target name="xslt-103">  <!--depends="xslt-101"-->
+        <echo>Revised teiHeader, update @role in editor.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0013_Vol01_103.xml" out="${xml.dir}/W0013_Vol01_104.xml" style="${xsl.dir}/W0013_Vol01_103.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <!--<delete file="${xml.dir}/W0013_Vol01_103.xml"/>-->
+    </target>
+    <target name="patch-104">
+        <echo>Structural annotation update.</echo>
+        <patch originalfile="${xml.dir}/W0013_Vol01_104.xml" destfile="${xml.dir}/W0013_Vol01_105.xml" patchfile="${diff.dir}/W0013_Vol01_104.diff"/>
+        <delete file="${xml.dir}/W0013_Vol01_104.xml"/>
+    </target>
+    <target name="xslt-105">  <!--depends="patch-104"-->
+        <echo>Revised teiHeader, update @role in editor.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0013_Vol01_105.xml" out="${xml.dir}/W0013_Vol01_106.xml" style="${xsl.dir}/W0013_Vol01_105.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+    </target>
+    
+<!--  : 
+
+Abbreviations, print errors, and structural annotation Update after first online publication (28.11.18) started 19.05.22 #CR and finished 22.11.23.
+
+Do not delete: W0013_Vol01_107.xml, W0013_Vol01_108.xml
+
+Manual changes:
+
+Done:
+        - Abbreviations in g-elements converted into choice-elements, and g-elements with several characters. e.g. <g ref="#char00e6">ae</g> should be <g ref="#char00e6">æ</g>
+        - //g[matches(.,'\w{2}') and not(ancestor::abbr)] 5092
+        - //g[matches(.,'\w{2}') and not(ancestor::sic)] 140
+        - Structural annotation update. @n in div(s) should be numbers, not text.
+        - //(sic|abbr|corr|expan)[not(parent::choice)] sic without choice parent: 11 marked as <unclear cert="high" resp="#CR" reason="unknown"/>
+     
+    NOTES:
+
+    - 306 sal-tei.sch irrelevant issues. #CR 08.11.22 
+    - Version W0013_Vol01_115.xml copied as W0013_Vol01.xml in SVN/trunk/svsal-tei/works/ for online update.
+    
+--> 
+    <target name="patch-106">
+        <echo>First Online Publication W0013_Vol01 (28.11.18) until 19.05.22.</echo>
+        <patch originalfile="${xml.dir}/W0013_Vol01_106.xml" destfile="${xml.dir}/W0013_Vol01_107.xml" patchfile="${diff.dir}/W0013_Vol01_106.diff"/>
+    </target>
+    <target name="patch-107">
+        <echo>Abbreviations in g-elements converted into choice-elements #CR.</echo>
+        <patch originalfile="${xml.dir}/W0013_Vol01_107.xml" destfile="${xml.dir}/W0013_Vol01_108.xml" patchfile="${diff.dir}/W0013_Vol01_107.diff"/>
+    </target>
+    <target name="patch-107a"> <!--08.09.22-->
+        <echo>Correction lists (CB).</echo>
+        <patch originalfile="${xml.dir}/W0013_Vol01_108.xml" destfile="${xml.dir}/W0013_Vol01_109.xml" patchfile="${diff.dir}/W0013_Vol01_108.diff"/>
+    </target>
+<!--Automatic changes:-->
+
+    <target name="xslt-109">  <!--depends="patch-107a"-->
+        <echo>Post-correction fixes.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0013_Vol01_109.xml" out="${xml.dir}/W0013_Vol01_110.xml" style="${xsl.dir}/W0013_Vol01_109.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+    </target>
+    <target name="xslt-110" depends="xslt-109">
+        <echo>Fixed order of break attributes (@rendition and @break) and removed whitespace before non-breaking elements.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0013_Vol01_110.xml" out="${xml.dir}/W0013_Vol01_111.xml" style="${xsl.dir}/W0013_Vol01_110.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0013_Vol01_110.xml"/>
+    </target>
+    <target name="xslt-111" depends="xslt-110">
+        <echo>Correct choice/(pb|cb|lb) pairings.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0013_Vol01_111.xml" out="${xml.dir}/W0013_Vol01_112.xml" style="${xsl.dir}/W0013_Vol01_111.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0013_Vol01_111.xml"/>
+    </target>
+    <target name="xslt-112" depends="xslt-111">
+        <echo>Tagged special characters after corrections.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0013_Vol01_112.xml" out="${xml.dir}/W0013_Vol01_113.xml" style="${xsl.dir}/W0013_Vol01_112.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0013_Vol01_112.xml"/>
+    </target>
+    <target name="xslt-113" depends="xslt-112">
+        <echo>Numbered lines after corrections.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0013_Vol01_113.xml" out="${xml.dir}/W0013_Vol01_114.xml" style="${xsl.dir}/W0013_Vol01_113.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0013_Vol01_113.xml"/>
+    </target>
+    <target name="xslt-114" depends="xslt-113">
+        <echo>Added xml:id(s) after corrections.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0013_Vol01_114.xml" out="${xml.dir}/W0013_Vol01_115.xml" style="${xsl.dir}/W0013_Vol01_114.xsl" classpath="${xslt.processor}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0013_Vol01_114.xml"/>
+    </target>
+    <target name="finalize" depends="xslt-114"/>
+</project>

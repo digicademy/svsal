@@ -1,0 +1,4 @@
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing /home/marie-astrid/Documents/Salamanca/trunk/teiedit/works/build/W0006_Vol01/xml/W0006_Vol01_022.xml to /home/marie-astrid/Documents/Salamanca/trunk/teiedit/works/build/W0006_Vol01/xml/W0006_Vol01_023.xml
+     [xslt] Loading stylesheet /home/marie-astrid/Documents/Salamanca/trunk/teiedit/works/build/W0006_Vol01/xsl/W0006_Vol01_022.xsl
+     [xslt] INFO: quality check successfull.

@@ -236,7 +236,13 @@
         <record name="${xslt.log}" action="stop"/>
         <delete file="${xml.dir}/W0033_023.xml"/>
     </target>
-    <target name="finalize" depends="xslt-023">
+    <target name="patch-024" > <!--depends="xslt-023"-->
+        <echo>Manually corrected CR 02.24.24: Placed empty elements inside the nearest mixed-content element.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <patch originalfile="${xml.dir}/W0033_024.xml" destfile="${xml.dir}/W0033_025.xml" patchfile="${diff.dir}/W0033_024.diff"/>
+        <record name="${xslt.log}" action="stop"/>
+    </target>
+    <target name="finalize" depends="patch-024">
         <echo>Reached end of pipeline.</echo>
     </target>
     
@@ -246,14 +252,6 @@
 <!--
     INFO:
         
-    * sal-tei.sch 25 Errors.
-    * W0033_012.xml sent to CB for manual corrections 18.06.20
-    
-    To Do:
-    * Separate </ref><hi </ref> <hi
-    
-    teiHeader update.
-
-
-    
+    * sal-tei.sch 26 Errors. 02.04.24 CR
+        
    -->

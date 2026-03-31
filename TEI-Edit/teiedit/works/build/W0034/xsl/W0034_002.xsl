@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:tei="http://www.tei-c.org/ns/1.0"
+    xmlns:local="http://salamanca.adwmainz.de"
+    xmlns="http://www.tei-c.org/ns/1.0"
+    exclude-result-prefixes="xs"
+    version="2.0">
+    
+    <!-- stylesheet developed using Saxon-HE v9.6.0.7+ -->
+    
+    <xsl:output method="xml"/> 
+    
+    <!-- identity transform -->
+    <xsl:template match="@*|node()">
+        <xsl:copy>
+            <xsl:apply-templates select="@*|node()"/>
+        </xsl:copy>
+    </xsl:template>
+    
+    <xsl:param name="editors" as="xs:string" select="'#CR #auto'"/>
+    <xsl:param name="editingDate" as="xs:string" select="'2018-11-28'"/>
+    <xsl:param name="editingDesc" as="xs:string" select="'Tagged special characters.'"/>
+    <xsl:param name="changeId" as="xs:string" select="'W0034_change_003'"/>
+    <xsl:param name="specialCharFile" as="xs:string" select="'../../../resources/chars/Sonderzeichen_2018-09-11.xml'"/>
+    
+    <xsl:template match="tei:teiHeader/tei:revisionDesc/tei:listChange">
+        <xsl:copy>
+            <xsl:copy-of select="@*"/>
+            <xsl:text>&#xa;                </xsl:text>
+            <xsl:element name="change">
+                <xsl:attribute name="who" select="$editors"/>
+                <xsl:attribute name="when" select="$editingDate"/>
+                <xsl:attribute name="status" select="ancestor::tei:revisionDesc[1]/@status"/>
+                <xsl:attribute name="xml:lang" select="'en'"/>
+                <xsl:attribute name="xml:id" select="$changeId"/>
+                <xsl:value-of select="$editingDesc"/>
+            </xsl:element>
+            <xsl:apply-templates/>
+        </xsl:copy>
+    </xsl:template>
+    
+    
+    <!-- load special characters from the Sonderzeichen.xml file and concat them (in length-descending order) into a long regular expression -->
+    <xsl:variable name="specialCharacters" select="doc($specialCharFile)//tei:teiHeader//tei:charDecl//tei:char"/>
+    <xsl:variable name="specialCharsSorted" as="xs:string*">
+        <xsl:for-each select="$specialCharacters/tei:mapping[@type = ('precomposed', 'composed')]">
+            <xsl:sort select="string-length(.)" order="descending"/>
+            <xsl:value-of select="."/>
+        </xsl:for-each>
+    </xsl:variable>
+    <xsl:variable name="specialCharsRegex"  as="xs:string" select="concat('(', string-join($specialCharsSorted, '|'), ')')"/>
+    
+    
+    <!-- annotate all special chars declared in the charDecl with g tags; the "original" character is kept as the text content of the g tag -->
+    <!-- warning: this template must not be applied before milestones have been tagged (otherwise, daggers etc. would 
+         be tagged with g elements)-->
+    <xsl:template match="tei:text//text()" priority="2">
+        <xsl:if test="$specialCharsRegex = '()'"> <!-- check whether the characters have been loaded correctly -->
+            <xsl:message terminate="yes"/>
+        </xsl:if>
+        <xsl:choose>
+            <!-- process only text nodes that a) are not empty and b) are not already annotated as special or "foreign" chars -->
+            <xsl:when test="(normalize-space(.) != '') and not(ancestor::tei:g or ancestor::tei:foreign[@xml:lang=('gr', 'gre', 'grc')])">
+                <xsl:analyze-string select="." regex="{$specialCharsRegex}"> 
+                    <xsl:matching-substring>
+                        <xsl:variable name="specChar" as="xs:string" select="."/>
+                        <xsl:variable name="specCharID" as="xs:string">
+                            <xsl:choose>
+                                <xsl:when test="$specialCharacters//tei:mapping[@type = ('precomposed', 'composed') and . = $specChar]">
+                                    <xsl:value-of select="$specialCharacters//tei:mapping[@type = ('precomposed', 'composed') and . = $specChar]/ancestor::tei:char[1]/@xml:id"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:message terminate="yes">Error: no valid character reference found.</xsl:message>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:variable> 
+                        <xsl:element name="g">
+                            <xsl:attribute name="ref" select="concat('#', $specCharID)"/>
+                            <xsl:value-of select="."/>
+                        </xsl:element>
+                    </xsl:matching-substring>
+                    <xsl:non-matching-substring>
+                        <!-- check if there are any further special chars not (yet) declared in the charDecl -->
+                        <xsl:if test="matches(., '[&#x0100;-&#x10ffff;]')">
+                            <xsl:message terminate="yes" select="concat('Error: found undeclared special character in text node: ', .)"/>
+                        </xsl:if>
+                        <xsl:value-of select="."/>
+                    </xsl:non-matching-substring>
+                </xsl:analyze-string>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="."/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+</xsl:stylesheet>

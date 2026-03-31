@@ -1,0 +1,100 @@
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0006_Vol02\xml\W0006_Vol02_015.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0006_Vol02\xml\W0006_Vol02_016.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0006_Vol02\xsl\W0006_Vol02_015.xsl
+     [xslt] WARN: found choice element with empty child, in line W0006-02-0114-lb-1048 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "in"
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0006-02-0017-lb-1047 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "ei 9"
+
+     [xslt] 	child::tei:corr (child 2) has content: "eius"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0006-02-0379-lb-2010 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "decies centũ"
+
+     [xslt] 	child::tei:corr (child 2) has content: "decicentum"
+
+     [xslt] WARN: amount of whitespace characters differs in input and output doc: 
+
+     [xslt] Input whitespace: 481136
+
+     [xslt] Output whitespace: 481106
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0006_Vol02\xml\W0006_Vol02_016.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0006_Vol02\xml\W0006_Vol02_017.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0006_Vol02\xsl\W0006_Vol02_016.xsl
+     [xslt] INFO: identified 13 *pb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 23 *cb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 13 *cb* as secondary break that were not previously marked as no-break at all.
+
+     [xslt] INFO: identified 0 *cb* as secondary break that were previously marked as primary no-break.
+
+     [xslt] INFO: identified 0 *lb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 0 *lb* as secondary break that were not previously marked as no-break at all.
+
+     [xslt] INFO: identified 36 *lb* as secondary break that were previously marked as primary no-break.
+
+     [xslt] INFO: replaced trailing whitespace in 13 text nodes before primary no-breaks.
+
+     [xslt] INFO: replaced trailing whitespace in 0 text nodes before secondary no-breaks.
+
+     [xslt] Input whitespace: 481106
+
+     [xslt] Output whitespace: 481093
+
+     [xslt] ---------------------------------------------------------
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0006_Vol02\xml\W0006_Vol02_017.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0006_Vol02\xml\W0006_Vol02_018.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0006_Vol02\xsl\W0006_Vol02_017.xsl
+     [xslt] INFO: quality check successfull.
+
+     [xslt] INFO: added 12 choice/*[2]/pb.
+
+     [xslt] INFO: added 21 choice/*[2]/cb.
+
+     [xslt] INFO: added 1218 choice/*[2]/lb.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0006_Vol02\xml\W0006_Vol02_018.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0006_Vol02\xml\W0006_Vol02_019.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0006_Vol02\xsl\W0006_Vol02_018.xsl
+Apache resolver library not found, internal resolver will be used
+     [xslt] INFO: added 324 special character tags (tei:g).
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0006_Vol02\xml\W0006_Vol02_019.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0006_Vol02\xml\W0006_Vol02_020.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0006_Vol02\xsl\W0006_Vol02_019.xsl
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0006_Vol02\xml\W0006_Vol02_020.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0006_Vol02\xml\W0006_Vol02_021.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0006_Vol02\xsl\W0006_Vol02_020.xsl
+     [xslt] Generated temporary lb/@xml:id.
+
+     [xslt] Extracted tei:lb from pages in the main area of the text.
+
+     [xslt] Numbered tei:lb from the main area.
+
+     [xslt] INFO: Added line numbers to tei:lb/@n.
+
+     [xslt] INFO: Serializing final output...
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0006_Vol02\xml\W0006_Vol02_021.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0006_Vol02\xml\W0006_Vol02_022.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0006_Vol02\xsl\W0006_Vol02_021.xsl
+     [xslt] INFO: quality check successfull.
+

@@ -1,0 +1,62 @@
+
+- annotat title page
+
+- delete empty pages at the beginning/end of the work:
+	+ <pb n="799" facs="http://wwwuser.gwdg.de/~svsal/images/W0002/W0002-0819.jpg"/>
+
+- table of contents: <ref> for page numbers
+
+- delete remaining control chars:
+    + <pb n="374"/>: Ca aunq̃ aquel excellente} varō Ange. --> Ca aunq̃ aquel excellente varō Ange.
+	+ <pb n="714"/>: <lb/>cunctis. §. fi. de<lb/>e}lect. --> <lb/>cunctis. §. fi. de<lb/>elect.
+	
+- add pagination:
+    + <pb n="417".../>
+	
+- add "[]" for normalized pagination in pb/@n in the whole text (also in case of incorrect page numbers)
+
+- add <l> in <lg> on page <pb n="20"/>
+	
+- add items in (summary) lists //list/item/:
+
+	+ automatically:
+	</?p> --> <$1item>
+	(\d{1,3}[\.,])(\n<item>) --> $1</item>$2
+	(</item>\n)(<lb/>) --> $1<item>$2
+
+	+ semi-automatically:
+	(\d{1,3}[\.,])(\n) --> $1</item><item>$2
+
+- add div1 for table of contents
+
+- resolve remaining daggers "†" and according marginal numbers in the text:
+
+	+ automatically: 
+		- <note n="noRef" type="marginalia">(\d{1,3})</note>(\n<lb/>.*?)† --> $2<milestone unit="article" n="$1" rend="dagger"/>
+		- †(.*?)<note n="noRef" type="marginalia">(\d{1,3})</note> --> <milestone unit="article" n="$2" rend="dagger"/>$1
+		- †(.*?)\n<note n="noRef" type="marginalia">(\d{1,3})</note> --> <milestone unit="article" n="$2" rend="dagger"/>$1
+		- \n<note n="noRef" type="marginalia">(\d{1,3})</note>(\n(<lb/>.*?\n){1,2}<lb/></note>\n.*?)† --> $2<milestone unit="article" n="$1" rend="dagger"/>
+		- \n<note n="noRef" type="marginalia">(\d{1,3})</note>(\n(<lb/>.*?\n){3,4}<lb/></note>\n.*?)† --> $2<milestone unit="article" n="$1" rend="dagger"/>
+	+ manually:
+		- † --> <milestone unit="article" n="" rend="dagger"/>  [+ manual resolving and deleting of marginal numbers]
+		- check remaining <note rend="noRef"...> 
+
+- reorder elements in a way that "break elements" are located within the first mixed content element in any given place:
+	+ automatically: ((<milestone.*?/>)|(<lb.*?/>)|(<pb.*?/>))((<head.*?>)|(<p.*?>)|(<item.*?>)|(<note.*?>)|(<l>)) --> $5$1
+	 (may require several runs)
+	+ manually
+	
+- add @resp="#TT" in TAO's <unclear/> tags
+		
+- add <div1> in <back>
+
+- delete automatically added whitespace in text nodes
+
+- restructure subchapters where structure does not follow a heading-summary-text order, due to TEI requirements (<div><list/><head/> not allowed!); new structure always heading-summary-text
+
+- facs 0085: deleted <sup xmlns="http://www.tei-c.org/ns/tite/1.0">k <unclear xmlns="http://www.tei-c.org/ns/1.0"/></sup>
+	and put according note at the end of the line. Changed note/@n to "noRef"
+
+- remove blanklines: \n\n --> \n
+
+- remove irrelevant leading whitespace in lines

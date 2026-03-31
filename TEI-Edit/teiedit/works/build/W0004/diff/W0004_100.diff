@@ -1,0 +1,1038 @@
+--- xml/W0004_100.xml	2018-06-25 16:33:28.017994600 +0200
++++ xml/W0004_101.xml	2018-06-27 11:50:12.010000000 +0200
+@@ -36,16 +36,21 @@
+                         <surname full="yes">Duve</surname>, <forename full="yes">Thomas</forename>
+                     </persName>
+                 </editor>
++                <editor xml:id="DG">
++                    <persName ref="orcid:0000-0002-0273-3844">
++                        <surname>Glück</surname>, <forename>David</forename>
++                    </persName>
++                </editor>
++                <editor xml:id="MK" ref="gnd:1161481540">
++                    <persName>
++                        <surname>Kirchen</surname>, <forename>Matthias</forename>
++                    </persName>
++                </editor>
+                 <editor xml:id="MLB">
+                     <persName ref="gnd:1022577581" full="yes">
+                         <surname full="yes">Lutz-Bachmann</surname>, <forename full="yes">Matthias</forename>
+                     </persName>
+                 </editor>
+-                <editor xml:id="AS">
+-                    <persName ref="gnd:13605708X" full="yes">
+-                        <surname full="yes">Spindler</surname>, <forename full="yes">Anselm</forename>
+-                    </persName>
+-                </editor>
+                 <editor xml:id="AW">
+                     <persName ref="gnd:108835820" full="yes">
+                         <surname full="yes">Wagner</surname>, <forename full="yes">Andreas</forename>
+@@ -54,34 +59,37 @@
+             </titleStmt>
+ 
+             <!--Xincludes: editionStmt, publicationStmt, seriesStmt -->
+-            <xi:include href="../../../salamanca/resources/files/W_Head_general.xml" xpointer="editionStmt" parse="xml">
++            <xi:include href="../../../salamanca/resources/files/W_Head_general.xml" xpointer="editionStmt">
+                 <xi:fallback>
+                     <editionStmt>
+-                        <p xml:id="p_editionStmt" part="N">Für Angaben zur digitalen Edition siehe
+-                            <ref target="http://salamanca.adwmainz.de/about">unsere Webseite</ref>.</p>
++                        <p xml:lang="en" xml:id="W0004-00-meta-pa-0001">For information about the digital edition, please 
++                            refer to
++                            <ref target="http://salamanca.adwmainz.de/about">our website</ref>.</p>
+                     </editionStmt>
+                 </xi:fallback>
+             </xi:include>
+-            <xi:include href="../../../salamanca/resources/files/W_Head_general.xml" xpointer="publicationStmt" parse="xml">
++            <xi:include href="../../../salamanca/resources/files/W_Head_general.xml" xpointer="publicationStmt">
+                 <xi:fallback>
+                     <publicationStmt>
+-                        <p xml:id="p_publicationStmt" part="N">Für Angaben zur digitalen Edition siehe
+-                            <ref target="http://salamanca.adwmainz.de/about">unsere Webseite</ref>.</p>
++                        <p xml:lang="en" xml:id="W0004-00-meta-pa-0002">For information about the digital edition, please 
++                            refer to
++                            <ref target="http://salamanca.adwmainz.de/about">our website</ref>.</p>
+                     </publicationStmt>
+                 </xi:fallback>
+             </xi:include>
+-            <xi:include href="../../../salamanca/resources/files/W_Head_general.xml" xpointer="seriesStmt" parse="xml">
++            <xi:include href="../../../salamanca/resources/files/W_Head_general.xml" xpointer="seriesStmt">
+                 <xi:fallback>
+                     <seriesStmt>
+-                        <p xml:id="p_seriesStmt" part="N">Für Angaben zur digitalen Edition siehe
+-                            <ref target="http://salamanca.adwmainz.de/about">unsere Webseite</ref>.</p>
++                        <p xml:lang="en" xml:id="W0004-00-meta-pa-0003">For information about the digital edition, please 
++                            refer to
++                            <ref target="http://salamanca.adwmainz.de/about">our website</ref>.</p>
+                     </seriesStmt>
+                 </xi:fallback>
+             </xi:include>
+ 
+             <!-- Eindeutige URL-->
+             <notesStmt>
+-                <note xml:id="url" anchored="true">
++                <note xml:id="url">
+                     <ref target="work.html?wid=W0004">.../work.html?wid=W0004</ref>
+                </note>
+             </notesStmt>
+@@ -113,7 +121,7 @@
+                         </imprint>
+                         <extent>XXVIII Bl. ; 8°</extent>
+                     </monogr>
+-                    <note xml:id="ownerOfPrimarySource" anchored="true">
++                    <note xml:id="ownerOfPrimarySource">
+                         <ref type="institution" target="gnd:1083752-8">Columbia University / Libraries</ref>
+                         <ref type="catLink" target="http://clio.columbia.edu/catalog/7480120"/>
+                     </note>
+@@ -122,11 +130,11 @@
+         </fileDesc>
+ 
+         <!--Xinclude encodingDesc -->
+-        <xi:include href="../../../salamanca/resources/files/W_Head_general.xml" xpointer="encodingDesc" parse="xml">
++        <xi:include href="../../../salamanca/resources/files/W_Head_general.xml" xpointer="encodingDesc">
+             <xi:fallback>
+                 <encodingDesc>
+-                    <p xml:id="p_encodingDesc" part="N">Für Angaben zu unseren Editionsprinzipien siehe
+-                        <ref target="http://salamanca.adwmainz.de/edition">unsere Webseite</ref>.</p>
++                    <p xml:lang="en" xml:id="W0004-00-meta-pa-0004">For information about the edition principles, please refer to the 
++                        <ref target="https://www.salamanca.school/en/guidelines.html">Edition Guidelines</ref>.</p>
+                 </encodingDesc>
+             </xi:fallback>
+         </xi:include>
+@@ -134,28 +142,30 @@
+         <!-- Hier anpassen: Überarbeitungshistorie dieses Dokuments -->
+         <revisionDesc status="c_hyph_proposed">
+             <listChange ordered="true">
+-                <change who="#AW" when="2016-04-28" status="d_hyph_approved">Einrückungen korrigiert.</change>
+-                <change who="#MK" when="2016-03-30" status="c_hyph_proposed">MK Textkorrekturen.</change>
+-                <change who="#AW" when="2015-09-13" status="c_hyph_proposed">persNames eingefügt, harte Zeilenumbrüche und Element-Reihenfolgen korrigiert.</change>
+-                <change who="#AW" when="2015-09-11" status="c_hyph_proposed">HWB: Zeilenzählung in Marginalnoten korrigiert</change>
+-                <change who="#IC" when="2014-11-27" status="e_unrevised">revision of teiHeader</change>
+-                <change who="#IC" when="2014-09-01" status="e_unrevised">titleStmt und sourceDesc angepasst</change>
+-                <change who="#AW" when="2014-03-26" status="e_unrevised">Überarbeitet nach neuem Schema/Editionsrichtlinien</change>
+-                <change who="#AW" when="2013-10-05" status="e_unrevised">Seitenumbrüche *vor* die Abschnitte gezogen</change>
+-                <change who="#AW" when="2013-09-27" status="e_unrevised">Anpassung nach Schema-Update</change>
+-                <change who="#AW" when="2013-09-17" status="e_unrevised">
++                <change who="#DG" when="2018-06-26" status="f_enriched" xml:lang="en">Formal adaptations to revised edition guidelines; edit editors.</change>
++                <change who="#CB" when="2018-06-22" status="f_enriched" xml:lang="en">Corrections, abbreviation expansions, enrichments (names).</change>
++                <change who="#AW" when="2016-04-28" status="e_emended_unenriched" xml:lang="de">Einrückungen korrigiert.</change>
++                <change who="#MK" when="2016-03-30" status="e_emended_unenriched" xml:lang="de">MK Textkorrekturen.</change>
++                <change who="#AW" when="2015-09-13" status="e_emended_unenriched" xml:lang="de">persNames eingefügt, harte Zeilenumbrüche und Element-Reihenfolgen korrigiert.</change>
++                <change who="#AW" when="2015-09-11" status="e_emended_unenriched" xml:lang="de">HWB: Zeilenzählung in Marginalnoten korrigiert</change>
++                <change who="#IC" when="2014-11-27" status="e_emended_unenriched" xml:lang="en">revision of teiHeader</change>
++                <change who="#IC" when="2014-09-01" status="e_emended_unenriched" xml:lang="de">titleStmt und sourceDesc angepasst</change>
++                <change who="#AW" when="2014-03-26" status="e_emended_unenriched" xml:lang="de">Überarbeitet nach neuem Schema/Editionsrichtlinien</change>
++                <change who="#AW" when="2013-10-05" status="e_emended_unenriched" xml:lang="de">Seitenumbrüche *vor* die Abschnitte gezogen</change>
++                <change who="#AW" when="2013-09-27" status="e_emended_unenriched" xml:lang="de">Anpassung nach Schema-Update</change>
++                <change who="#AW" when="2013-09-17" status="e_emended_unenriched">
+                     <list type="simple">
+-                        <item xml:id="item_sgfawef1">Leerräume und Zeilenumbrüche angepasst</item>
+-                        <item xml:id="item_sgfawef2">führende Nullen in @n-Tags entfernt</item>
+-                        <item xml:id="item_sgfawef3">Kommentare und Fragen aus den vorausgegangenen Beratungen übernommen</item>
+-                        <item xml:id="item_sgfawef4">Typen von text und div-tags z.T. angepasst.</item>
++                        <item xml:id="item_sgfawef1" xml:lang="de">Leerräume und Zeilenumbrüche angepasst</item>
++                        <item xml:id="item_sgfawef2" xml:lang="de">führende Nullen in @n-Tags entfernt</item>
++                        <item xml:id="item_sgfawef3" xml:lang="de">Kommentare und Fragen aus den vorausgegangenen Beratungen übernommen</item>
++                        <item xml:id="item_sgfawef4" xml:lang="de">Typen von text und div-tags z.T. angepasst.</item>
+                     </list>
+                 </change>
+-                <change who="#AW" when="2013-08-22" status="e_unrevised">Nach Schema-Updates
++                <change who="#AW" when="2013-08-22" status="e_emended_unenriched" xml:lang="de">Nach Schema-Updates
+                     angepasst.</change>
+-                <change who="#AW" when="2013-08-13" status="a_raw">Datei(en) aufgeteilt und mit XInclude
++                <change who="#AW" when="2013-08-13" status="a_raw" xml:lang="de">Datei(en) aufgeteilt und mit XInclude
+                     zusammengehalten (Header und die div. Teile des mehrbändigen Werkes).</change>
+-                <change who="#AW" when="2013-08-08" status="a_raw">Ausgehend von Testdatensatz W0014 angelegt, um
++                <change who="#AW" when="2013-08-08" status="a_raw" xml:lang="de">Ausgehend von Testdatensatz W0014 angelegt, um
+                     das schwierige Layout abzubilden</change>
+             </listChange>
+         </revisionDesc>
+@@ -165,19 +175,18 @@
+             <titlePage xml:id="titleW0004">
+                 <titlePart xml:id="titlePart" type="main">
+ <pb facs="facs:W0004-0005" n="fol. 1r" xml:id="facs_W0004-0005"/>
+-<lb n="005_001" xml:id="lb_005_001"/>¶ Tratado de <choice><abbr>cu<g ref="#chare0303">e</g>tas</abbr><expan resp="#AW" cert="high">cuentas</expan></choice> 
+-<lb n="005_002" xml:id="lb_005_002"/>hecho por el licenciado Diego del
+-<lb n="005_003" xml:id="lb_005_003"/>Castillo: natural <g ref="#charebd1">de</g>la <choice><orig>cibdad</orig><reg resp="#AW" cert="high" xml:id="jb3_5fz_ht">ciudad</reg></choice> de Mo<lb break="no" rendition="#noHyphen" n="005_004" xml:id="lb_005_004"/>lina. Enel qual se contiene que cosa
++<lb n="005_001" xml:id="lb_005_001"/>¶ Tratado de <choice><abbr>cu<g ref="#chare0303">e</g>tas</abbr><expan resp="#AW" cert="high">cuentas</expan></choice></titlePart>
++<lb n="005_002" xml:id="lb_005_002"/><byline>hecho por el licenciado <docAuthor>Diego del
++<lb n="005_003" xml:id="lb_005_003"/>Castillo</docAuthor>: natural <g ref="#charebd1">de</g>la <choice><orig>cibdad</orig><reg resp="#AW" cert="high" xml:id="jb3_5fz_ht">ciudad</reg></choice> de Mo<lb break="no" rendition="#noHyphen" n="005_004" xml:id="lb_005_004"/>lina.</byline> <argument><p xml:id="p-aslkdasd">Enel qual se contiene que cosa
+ <lb n="005_005" xml:id="lb_005_005"/>es <choice><abbr>cu<g ref="#chare0303">e</g>ta</abbr><expan resp="#AW" cert="high">cuenta</expan></choice>: y a quien: y como an de dar
+-<lb n="005_006" xml:id="lb_005_006"/>la <choice><abbr>cu<g ref="#chare0303">e</g>ta</abbr><expan resp="#AW" cert="high">cuenta</expan></choice> los tutores: y otros admini<lb break="no" rendition="#noHyphen" n="005_007" xml:id="lb_005_007"/>stradores de bienes agenos. Obra
++<lb n="005_006" xml:id="lb_005_006"/>la <choice><abbr>cu<g ref="#chare0303">e</g>ta</abbr><expan resp="#AW" cert="high">cuenta</expan></choice> los tutores: y otros admini<lb break="no" rendition="#noHyphen" n="005_007" xml:id="lb_005_007"/>stradores de bienes agenos.</p></argument> <docEdition>Obra
+ <lb n="005_008" xml:id="lb_005_008"/>muy necessaria y <g ref="#chara753">pro</g>uechosa. La qual
+ <lb n="005_009" xml:id="lb_005_009"/>el hi<g ref="#char0292">z</g>o en latin: y assi la presento al
+-<lb n="005_010" xml:id="lb_005_010"/>Rey <choice><abbr>nr̃o</abbr><expan resp="#AW" cert="high">nuestro</expan></choice> señor. y por<g ref="#charq0303">que</g> parescio a su
+-<lb n="005_011" xml:id="lb_005_011"/>magestad <g ref="#charq0303">que</g> puesta en <choice><abbr>romāce</abbr><expan resp="#AW" cert="high">romance</expan></choice> seria
+-<lb n="005_012" xml:id="lb_005_012"/>mas general: por su mandado la tra<lb break="no" rendition="#noHyphen" n="005_013" xml:id="lb_005_013"/>slado en <choice><abbr>nr̃a</abbr><expan resp="#AW" cert="high">nuestra</expan></choice> lengua Castellana.
+-<lb n="005_014" xml:id="lb_005_014"/><hi rendition="#r-center">Con preuilegio Real.
+-<lb n="005_015" xml:id="lb_005_015"/>1522.</hi>
+-                </titlePart>
++<lb n="005_010" xml:id="lb_005_010"/>Rey <choice><abbr>n<g ref="#charr0303">r</g>o</abbr><expan resp="#AW" cert="high">nuestro</expan></choice> señor. y por<g ref="#charq0303">que</g> parescio a su
++<lb n="005_011" xml:id="lb_005_011"/>magestad <g ref="#charq0303">que</g> puesta en <choice><abbr>rom<g ref="#chara0304">a</g>ce</abbr><expan resp="#AW" cert="high">romance</expan></choice> seria
++<lb n="005_012" xml:id="lb_005_012"/>mas general: por su mandado la tra<lb break="no" rendition="#noHyphen" n="005_013" xml:id="lb_005_013"/>slado en <choice><abbr>n<g ref="#charr0303">r</g>a</abbr><expan resp="#AW" cert="high">nuestra</expan></choice> lengua Castellana.</docEdition>
++<lb n="005_014" xml:id="lb_005_014"/><imprimatur><hi rendition="#r-center">Con preuilegio Real.</hi></imprimatur>
++<lb n="005_015" xml:id="lb_005_015"/><docDate when="1522"><hi rendition="#r-center">1522.</hi></docDate>
+             </titlePage>
+             <div type="foreword" xml:id="div_Prologo" n="Prologo">
+                 <head xml:id="head_Prologo">
+@@ -197,7 +206,7 @@
+ <lb n="006_107" xml:id="lb_006_107"/>ti. delas leyes fo. le<lb break="no" rendition="#hyphen" n="006_108" xml:id="lb_006_108"/>gum.</p>
+                </note> Que las leyes deuen
+ <lb n="006_007" xml:id="lb_006_007"/>ser claras: y hordenadas por esti<lb break="no" rendition="#hyphen" n="006_008" xml:id="lb_006_008"/>lo que todos las entiendan: y que
+-<lb n="006_009" xml:id="lb_006_009"/><choice><abbr>ningũo</abbr><expan resp="#CB" cert="high">ninguno</expan></choice> por ellas reciba engaño. <hi rendition="#sup">c</hi>
++<lb n="006_009" xml:id="lb_006_009"/><choice><abbr>ning<g ref="#charu0303">u</g>o</abbr><expan resp="#CB" cert="high">ninguno</expan></choice> por ellas reciba engaño. <hi rendition="#sup">c</hi>
+                <note xml:id="note_d1e451" anchored="true"><p xml:id="p_d1e454" part="N">
+ <lb n="006_110" xml:id="lb_006_110"/>Engaño. <hi rendition="#sup">c</hi>. ¶ Lex.
+ <lb n="006_111" xml:id="lb_006_111"/>ij. ti. delas leyes lib.
+@@ -208,7 +217,7 @@
+                <note xml:id="note_d1e481" anchored="true"><p xml:id="p_d1e484" part="N">
+ <lb n="006_114" xml:id="lb_006_114"/>Saben. <hi rendition="#sup">d</hi>. ¶ Vt in
+ <lb n="006_115" xml:id="lb_006_115"/><g ref="#chara753">pro</g>hemio leg<g resp="#CB" cert="high" ref="#charu0303">um</g> taurij.</p>
+-               </note> Y cay<g resp="#CB" cert="high" ref="#chare0303">en</g>do to<lb break="no" rendition="#noHyphen" n="006_013" xml:id="lb_006_013"/>dos enel la<g ref="#char0292">z</g>o de ignor<g resp="#CB" cert="high" ref="#chara0303">an</g>cia: <choice><abbr>vr̃a</abbr><expan resp="#CB" cert="high">vuestra</expan></choice> magestad como
++               </note> Y cay<g resp="#CB" cert="high" ref="#chare0303">en</g>do to<lb break="no" rendition="#noHyphen" n="006_013" xml:id="lb_006_013"/>dos enel la<g ref="#char0292">z</g>o de ignor<g resp="#CB" cert="high" ref="#chara0303">an</g>cia: <choice><abbr>v<g ref="#charr0303">r</g>a</abbr><expan resp="#CB" cert="high">vuestra</expan></choice> magestad como
+ <lb n="006_014" xml:id="lb_006_014"/>nuestro Rey y señor: y como ha<g ref="#char0292">z</g>edor <g ref="#charebd1">de</g>las dichas
+ <lb n="006_015" xml:id="lb_006_015"/>leyes: seria obligado / a nos sacar del. <hi rendition="#sup">e</hi>
+                <note xml:id="note_d1e516" anchored="true"><p xml:id="p_d1e519" part="N">
+@@ -233,7 +242,7 @@
+ <lb n="006_130" xml:id="lb_006_130"/>lib. ordina. et. l. iiij.
+ <lb n="006_131" xml:id="lb_006_131"/>eo. ti. fo. legum.</p>
+                </note> Pues ha<g ref="#char0292">z</g>i<g resp="#CB" cert="high" ref="#chare0303">en</g>do leyes por estilo es<lb break="no" rendition="#hyphen" n="006_020" xml:id="lb_006_020"/>curo / y tal que no se pueda entender: seria causa
+-<lb n="006_021" xml:id="lb_006_021"/>que a muchos sin culpa se diesse pena: y por escu<lb break="no" rendition="#noHyphen" n="006_022" xml:id="lb_006_022"/>sar este daño: los cristianissimos principes ante<lb break="no" rendition="#noHyphen" n="006_023" xml:id="lb_006_023"/>cessores de <choice><abbr>vr̃a</abbr><expan resp="#CB" cert="high">vuestra</expan></choice> magestad: mandaron escriuir en
++<lb n="006_021" xml:id="lb_006_021"/>que a muchos sin culpa se diesse pena: y por escu<lb break="no" rendition="#noHyphen" n="006_022" xml:id="lb_006_022"/>sar este daño: los cristianissimos principes ante<lb break="no" rendition="#noHyphen" n="006_023" xml:id="lb_006_023"/>cessores de <choice><abbr>v<g ref="#charr0303">r</g>a</abbr><expan resp="#CB" cert="high">vuestra</expan></choice> magestad: mandaron escriuir en
+ <lb n="006_024" xml:id="lb_006_024"/>romance castellano: <hi rendition="#sup">h</hi>
+                <note xml:id="note_d1e608" anchored="true"><p xml:id="p_d1e611" part="N">
+ <lb n="006_133" xml:id="lb_006_133"/>Castellano.
+@@ -261,12 +270,10 @@
+                </note> ¶ E
+ <lb n="007_019" xml:id="lb_007_019"/>ansi yo el licenciado Diego del Castillo: natural
+ <lb n="007_020" xml:id="lb_007_020"/>dela villa de Molina lugar noble / y del titulo y
+-<lb n="007_021" xml:id="lb_007_021"/>corona Real de vuestra magestad. Dexado el de<lb break="no" rendition="#noHyphen" n="007_022" xml:id="lb_007_022"/><g ref="#char0292">z</g>ir de aquellos que con mucha ra<g ref="#char0292">z</g>on podran <?oxy_comment_start author="birr" timestamp="20180621T164723+0200" comment="In der Vorschau zur Leseansicht wird &quot;detraer&quot; zweigeteilt wiedergegeben, mit Zeilenumbruch."?>de<?oxy_comment_end?><lb break="no" rendition="#noHyphen"/>
+-<lb n="007_023" xml:id="lb_007_023"/>traer desta obra: anteponi<g resp="#CB" cert="high" ref="#chare0303">en</g>do el m<g resp="#CB" cert="high" ref="#chara0303">an</g>dado de vue<lb break="no" rendition="#noHyphen" n="007_024" xml:id="lb_007_024"/>stra Magestad la com<g resp="#CB" cert="high" ref="#chare0303">en</g>ce. Yra comprouada en
++<lb n="007_021" xml:id="lb_007_021"/>corona Real de vuestra magestad. Dexado el de<lb break="no" rendition="#noHyphen" n="007_022" xml:id="lb_007_022"/><g ref="#char0292">z</g>ir de aquellos que con mucha ra<g ref="#char0292">z</g>on podran de<lb break="no" rendition="#noHyphen"/>traer desta obra: anteponi<g resp="#CB" cert="high" ref="#chare0303">en</g>do el m<g resp="#CB" cert="high" ref="#chara0303">an</g>dado de vue<lb break="no" rendition="#noHyphen" n="007_024" xml:id="lb_007_024"/>stra Magestad la com<g resp="#CB" cert="high" ref="#chare0303">en</g>ce. Yra comprouada en
+ <lb n="007_025" xml:id="lb_007_025"/>la margen de cada plana / con determinacion de
+-<lb n="007_026" xml:id="lb_007_026"/>algunas leyes y capitulos: y comparecer de algu<?oxy_comment_start author="birr" timestamp="20180621T164740+0200" comment="In der Vorschau zur Leseansicht wird &quot;algunos&quot; zweigeteilt wiedergegeben, mit Zeilenumbruch."?><lb break="no" rendition="#noHyphen"/><?oxy_comment_end?>
+-<lb n="007_027" xml:id="lb_007_027"/>nos doctores: por que si algo bueno dixere se atri<lb break="no" rendition="#noHyphen" n="007_028" xml:id="lb_007_028"/>buya a ellos. ¶ E por que enla manera de dar y
+-<lb n="007_029" xml:id="lb_007_029"/>tomar la cuenta concurren muchas <choice><abbr>⁊</abbr><expan resp="#CB" cert="high">et</expan></choice> diuersas
++<lb n="007_026" xml:id="lb_007_026"/>algunas leyes y capitulos: y comparecer de algu<lb break="no" rendition="#noHyphen"/>nos doctores: por que si algo bueno dixere se atri<lb break="no" rendition="#noHyphen" n="007_028" xml:id="lb_007_028"/>buya a ellos. ¶ E por que enla manera de dar y
++<lb n="007_029" xml:id="lb_007_029"/>tomar la cuenta concurren muchas <choice><abbr><g ref="#char204a">et</g></abbr><expan resp="#CB" cert="high">et</expan></choice> diuersas
+ <lb n="007_030" xml:id="lb_007_030"/>cosas: ansi este tratado se diuidira en muchas
+ <lb n="007_031" xml:id="lb_007_031"/>partes que ser<g resp="#CB" cert="high" ref="#chara0303">an</g> cator<g ref="#char0292">z</g>e. ¶ Enla primera se dira 
+ <lb n="007_032" xml:id="lb_007_032"/>que cosa es cuenta / o ra<g ref="#char0292">z</g>on. ¶ Enla seg<g resp="#CB" cert="high" ref="#charu0303">un</g>da <choice><sic>qui<g resp="#CB" cert="high" ref="#chare0303">en</g></sic><corr resp="#CB" cert="medium" xml:id="afb_2p1_12b">quienes</corr></choice><pb facs="facs:W0004-0008" n="fol. 2v" xml:id="facs_W0004-0008"/>
+@@ -283,11 +290,9 @@
+ <lb n="008_016" xml:id="lb_008_016"/>cuenta se tiene de fa<g ref="#char0292">z</g>er pago delo que sobra. En
+ <lb n="008_017" xml:id="lb_008_017"/>la tre<g ref="#char0292">z</g>ena si dada la cuenta / y hecho pago delo <g ref="#charq0303">que</g>
+ <lb n="008_018" xml:id="lb_008_018"/>sobra: se hallan algunas cosas en poder del que
+-<lb n="008_019" xml:id="lb_008_019"/>administro los bienes / o que se / a hecho rico <?oxy_comment_start author="birr" timestamp="20180621T164652+0200" comment="In der Vorschau zur Leseansicht wird &quot;des pues&quot; zweigeteilt wiedergegeben, mit Zeilenumbruch."?>des<?oxy_comment_end?><lb break="no" rendition="#noHyphen"/>
+-<lb n="008_020" xml:id="lb_008_020"/>pues que tomo el officio: se presuma auer lo ac<g resp="#CB" cert="high" ref="#charq0301">qui</g><lb break="no" rendition="#noHyphen" n="008_021" xml:id="lb_008_021"/>rido por ra<g ref="#char0292">z</g>on del officio / o de d<g ref="#charo0303" resp="#AW" cert="low">on</g>de. ¶ En la ca<lb break="no" rendition="#hyphen" n="008_022" xml:id="lb_008_022"/>tor<g ref="#char0292">z</g>ena si sera obligado el administrador de dar
++<lb n="008_019" xml:id="lb_008_019"/>administro los bienes / o que se / a hecho rico des<lb break="no" rendition="#noHyphen"/>pues que tomo el officio: se presuma auer lo ac<g resp="#CB" cert="high" ref="#charq0301">qui</g><lb break="no" rendition="#noHyphen" n="008_021" xml:id="lb_008_021"/>rido por ra<g ref="#char0292">z</g>on del officio / o de d<g ref="#charo0303" resp="#AW" cert="low">on</g>de. ¶ En la ca<lb break="no" rendition="#hyphen" n="008_022" xml:id="lb_008_022"/>tor<g ref="#char0292">z</g>ena si sera obligado el administrador de dar
+ <lb n="008_023" xml:id="lb_008_023"/>copia delas cuentas <g resp="#CB" cert="high" ref="#char204a">y</g> / a quien. Y de que manera
+-<lb n="008_024" xml:id="lb_008_024"/>se tiene de ha<g ref="#char0292">z</g>er el <choice><orig>instrum<g ref="#chare0303">e</g>to</orig><reg resp="#MK" cert="high" xml:id="qkj_bj5_1v">instrumento</reg></choice> delas cu<g resp="#CB" cert="high" ref="#chare0303">en</g>tas qu<g resp="#CB" cert="high" ref="#chara0303">an</g><?oxy_comment_start author="birr" timestamp="20180621T164615+0200" comment="In der Vorschau zur Leseansicht wird &quot;quanto&quot; zweigeteilt wiedergegeben, mit Zeilenumbruch."?><lb break="no" rendition="#noHyphen"/><?oxy_comment_end?>
+-<lb n="008_025" xml:id="lb_008_025"/>do son fechas. y de que manera hara las posicio<lb break="no" rendition="#noHyphen" n="008_026" xml:id="lb_008_026"/>nes el que pide cuenta. y de que manera senten<lb break="no" rendition="#hyphen" n="008_027" xml:id="lb_008_027"/>ciara el jue<g ref="#char0292">z</g> sobre las cuentas. Y si se puede ape<lb break="no" rendition="#hyphen" n="008_028" xml:id="lb_008_028"/>lar dela sentencia que se da sobre las cuentas / o
++<lb n="008_024" xml:id="lb_008_024"/>se tiene de ha<g ref="#char0292">z</g>er el <choice><orig>instrum<g ref="#chare0303">e</g>to</orig><reg resp="#MK" cert="high" xml:id="qkj_bj5_1v">instrumento</reg></choice> delas cu<g resp="#CB" cert="high" ref="#chare0303">en</g>tas qu<g resp="#CB" cert="high" ref="#chara0303">an</g><lb break="no" rendition="#noHyphen"/>do son fechas. y de que manera hara las posicio<lb break="no" rendition="#noHyphen" n="008_026" xml:id="lb_008_026"/>nes el que pide cuenta. y de que manera senten<lb break="no" rendition="#hyphen" n="008_027" xml:id="lb_008_027"/>ciara el jue<g ref="#char0292">z</g> sobre las cuentas. Y si se puede ape<lb break="no" rendition="#hyphen" n="008_028" xml:id="lb_008_028"/>lar dela sentencia que se da sobre las cuentas / o
+ <lb n="008_029" xml:id="lb_008_029"/>en que el jue<g ref="#char0292">z</g> manda contar / o que se pague lo
+ <lb n="008_030" xml:id="lb_008_030"/>contado. Lo qual todo visto parescera fenescida
+ <lb n="008_031" xml:id="lb_008_031"/>la cuenta: entre el señor y el administrador: y el
+@@ -297,9 +302,9 @@
+ 
+         <body>
+             <div xml:id="div_primeraParte" type="part" n="Primera parte">
+-                <head xml:id="head_primeraParte" rendition="#r-center">
++                <head xml:id="head_primeraParte">
+ <pb facs="facs:W0004-0009" n="fol. 3r" xml:id="facs_W0004-0009"/>
+-<lb n="009_001" xml:id="lb_009_001"/>¶ Comi<g resp="#CB" cert="high" ref="#chare0303">en</g>ça la primera parte.</head>
++<lb n="009_001" xml:id="lb_009_001"/><hi rendition="#r-center">¶ Comi<g resp="#CB" cert="high" ref="#chare0303">en</g>ça la primera parte.</hi></head>
+                 <p xml:id="p_primeraParte01" part="N">
+ <lb n="009_002" xml:id="lb_009_002"/><hi rendition="#initCaps">Q</hi>Vanto a la primera
+ <lb n="009_003" xml:id="lb_009_003"/>parte en que diximos que cosa es
+@@ -347,9 +352,7 @@
+ <lb n="010_007" xml:id="lb_010_007"/>assientan en sus libros: en vna parte el rescibio: y
+ <lb n="010_008" xml:id="lb_010_008"/>en otra parte lo <g ref="#charq0303">que</g> dan. Y quando aueriguan sus
+ <lb n="010_009" xml:id="lb_010_009"/>cu<g resp="#CB" cert="high" ref="#chare0303">en</g>tas con otros: entr<g resp="#CB" cert="high" ref="#chara0303">an</g> por dacta / y rescibo. ¶ O<lb break="no" rendition="#noHyphen" n="010_010" xml:id="lb_010_010"/>tros assi<g resp="#CB" cert="high" ref="#chare0303">en</g>t<g resp="#CB" cert="high" ref="#chara0303">an </g>en vna plana / lo <g ref="#charq0303">que</g> deu<g ref="#chare0303">e</g>: y en otra pla<lb break="no" rendition="#noHyphen" n="010_011" xml:id="lb_010_011"/>na / lo <g ref="#charq0303">que</g> deu<g ref="#chare0303">e</g> de auer. y qu<g resp="#XY" cert="medium" ref="#chara0303">an</g>do ha<g ref="#char0292">z</g>en cuenta: en<lb break="no" rendition="#hyphen" n="010_012" xml:id="lb_010_012"/>tr<g resp="#CB" cert="high" ref="#chara0303">an</g> con deue. y deue auer. ¶ Otros contadores /
+-<lb n="010_013" xml:id="lb_010_013"/>entr<g resp="#CB" cert="high" ref="#chara0303">an</g> por cargo y descargo: ha<g ref="#char0292">z</g>i<g resp="#CB" cert="high" ref="#chare0303">en</g>do cargo al <?oxy_comment_start author="birr" timestamp="20180621T165141+0200" comment="In der Vorschau zur Leseansicht wird &quot;administrador&quot; zweigeteilt wiedergegeben, mit Zeilenumbruch."?>ad<?oxy_comment_end?><lb break="no" rendition="#noHyphen"/>
+-<lb n="010_014" xml:id="lb_010_014"/>ministrador de todo lo que rescibio. y rescibi<g resp="#CB" cert="high" ref="#chare0303">en</g>do<?oxy_comment_start author="birr" timestamp="20180621T165222+0200" comment="In der Vorschau zur Leseansicht wird &quot;rescibiendole&quot; zweigeteilt wiedergegeben, mit Zeilenumbruch."?><lb break="no" rendition="#noHyphen"/><?oxy_comment_end?>
+-<lb n="010_015" xml:id="lb_010_015"/>le en descargo / todo lo <g ref="#charq0303">que</g> dio y gasto. ¶ Y qual<g resp="#CB" cert="high" ref="#char307">qui</g>e<lb break="no" rendition="#noHyphen" n="010_016" xml:id="lb_010_016"/>ra <g resp="#CB" cert="high" ref="#charebd1">de</g>stas maneras de assentar y contar: son bast<g resp="#CB" cert="high" ref="#chara0303">an</g><lb break="no" rendition="#noHyphen" n="010_017" xml:id="lb_010_017"/>tes para salir con la cuenta: mas las dos prime<lb break="no" rendition="#hyphen" n="010_018" xml:id="lb_010_018"/>ras parec<g resp="#CB" cert="high" ref="#chare0303">en</g> mejores. y la postrera algo grossera:
++<lb n="010_013" xml:id="lb_010_013"/>entr<g resp="#CB" cert="high" ref="#chara0303">an</g> por cargo y descargo: ha<g ref="#char0292">z</g>i<g resp="#CB" cert="high" ref="#chare0303">en</g>do cargo al ad<lb break="no" rendition="#noHyphen"/>ministrador de todo lo que rescibio. y rescibi<g resp="#CB" cert="high" ref="#chare0303">en</g>do<lb break="no" rendition="#noHyphen"/>le en descargo / todo lo <g ref="#charq0303">que</g> dio y gasto. ¶ Y qual<g resp="#CB" cert="high" ref="#char307">qui</g>e<lb break="no" rendition="#noHyphen" n="010_016" xml:id="lb_010_016"/>ra <g resp="#CB" cert="high" ref="#charebd1">de</g>stas maneras de assentar y contar: son bast<g resp="#CB" cert="high" ref="#chara0303">an</g><lb break="no" rendition="#noHyphen" n="010_017" xml:id="lb_010_017"/>tes para salir con la cuenta: mas las dos prime<lb break="no" rendition="#hyphen" n="010_018" xml:id="lb_010_018"/>ras parec<g resp="#CB" cert="high" ref="#chare0303">en</g> mejores. y la postrera algo grossera:
+ <lb n="010_019" xml:id="lb_010_019"/>por entrar por cargo y descargo. ¶ Y por<g ref="#charq0303">que</g> arri<lb break="no" rendition="#hyphen" n="010_020" xml:id="lb_010_020"/>ba se nombra cuenta / o ra<g ref="#char0292">z</g>on: y algunos podri<g resp="#CB" cert="high" ref="#chara0303">an</g>
+ <lb n="010_021" xml:id="lb_010_021"/><choice><orig>p<g ref="#chare0303">e</g>sar</orig><reg resp="#MK" cert="high" xml:id="smk_bsl_cv">pensar</reg></choice> que son diuersas. digo que en derecho en<lb break="no" rendition="#hyphen" n="010_022" xml:id="lb_010_022"/>tre cuenta y ra<g ref="#char0292">z</g>on no se ha<g ref="#char0292">z</g>e differencia. <hi rendition="#sup">e</hi>
+                <note xml:id="note_d1e1262" anchored="true"><p xml:id="p_d1e1265" part="N">
+@@ -362,8 +365,7 @@
+                 <p xml:id="p_segundaParte01" part="N">
+ <lb n="010_024" xml:id="lb_010_024"/><hi rendition="#initCaps">Q</hi>Vanto ala seg<g resp="#CB" cert="high" ref="#charu0303">un</g>da par<lb break="no" rendition="#hyphen" n="010_025" xml:id="lb_010_025"/>te en que diximos / qui<g resp="#CB" cert="high" ref="#chare0303">en</g> son obligados
+ <lb n="010_026" xml:id="lb_010_026"/>a dar cuenta. digo que si vno m<g resp="#CB" cert="high" ref="#chara0303">an</g>do / a
+-<lb n="010_027" xml:id="lb_010_027"/>otro en su testam<g resp="#CB" cert="high" ref="#chare0303">en</g>to: por manda / o herencia / to<lb break="no" rendition="#hyphen" n="010_028" xml:id="lb_010_028"/>dos sus bienes: y que / a cierto tiempo los restitu<lb break="no" rendition="#noHyphen" n="010_029" xml:id="lb_010_029"/>yesse / a otro: sera obligado el <g ref="#charq0303">que</g> primero fue insti<lb break="no" rendition="#noHyphen" n="010_030" xml:id="lb_010_030"/>tuydo: de dar cu<g resp="#CB" cert="high" ref="#chare0303">en</g>ta delos bienes <g ref="#charq0303">que</g> <g resp="#CB" cert="high" ref="#charq0303">que</g>daron / <g resp="#CB" cert="high" ref="#charebd1">de</g>l <?oxy_comment_start author="birr" timestamp="20180621T165328+0200" comment="In der Vorschau zur Leseansicht wird &quot;dicho&quot; zweigeteilt wiedergegeben, mit Zeilenumbruch."?>di<?oxy_comment_end?><lb break="no" rendition="#noHyphen"/>
+-<lb n="010_031" xml:id="lb_010_031"/>cho testador. <hi rendition="#sup">a</hi>
++<lb n="010_027" xml:id="lb_010_027"/>otro en su testam<g resp="#CB" cert="high" ref="#chare0303">en</g>to: por manda / o herencia / to<lb break="no" rendition="#hyphen" n="010_028" xml:id="lb_010_028"/>dos sus bienes: y que / a cierto tiempo los restitu<lb break="no" rendition="#noHyphen" n="010_029" xml:id="lb_010_029"/>yesse / a otro: sera obligado el <g ref="#charq0303">que</g> primero fue insti<lb break="no" rendition="#noHyphen" n="010_030" xml:id="lb_010_030"/>tuydo: de dar cu<g resp="#CB" cert="high" ref="#chare0303">en</g>ta delos bienes <g ref="#charq0303">que</g> <g resp="#CB" cert="high" ref="#charq0303">que</g>daron / <g resp="#CB" cert="high" ref="#charebd1">de</g>l di<lb break="no" rendition="#noHyphen"/>cho testador. <hi rendition="#sup">a</hi>
+                <note xml:id="note_d1e1319" anchored="true"><p xml:id="p_d1e1322" part="N">
+ <lb n="010_110" xml:id="lb_010_110"/>Testador. <hi rendition="#sup">a</hi>. ¶ Tex.
+ <lb n="010_111" xml:id="lb_010_111"/>et glo. in. l. cum tale
+@@ -386,8 +388,7 @@
+ <lb n="011_108" xml:id="lb_011_108"/><g resp="#CB" cert="high" ref="#char2184">con</g>t<g resp="#CB" cert="medium" ref="#chari0303">in</g>git. §. illi. <g ref="#chare0303">e</g>t de relig.
+ <lb n="011_109" xml:id="lb_011_109"/>do. aut. de sant. epi. §. ico<lb break="no" rendition="#noHyphen" n="011_110" xml:id="lb_011_110"/>nomis col. ix.</p>
+                </note> ¶ T<g resp="#CB" cert="high" ref="#chara0303">am</g><lb n="011_010" xml:id="lb_011_010" break="no" rendition="#noHyphen"/>bi<g resp="#CB" cert="high" ref="#chare0303">en</g> si dos <g resp="#CB" cert="high" ref="#charp0751">per</g>sonas / o mas tien<g resp="#CB" cert="high" ref="#chare0303">en</g> c<g ref="#charo0303" resp="#AW" cert="high">om</g>pañia: y el vno
+-<lb n="011_011" xml:id="lb_011_011"/>dellos trae el trato / y mercadurias: es obliga<lb break="no" rendition="#noHyphen"/><?oxy_comment_start author="birr" timestamp="20180621T165544+0200" comment="In der Vorschau zur Leseansicht wird &quot;obligado&quot; zweigeteilt wiedergegeben, mit Zeilenumbruch."?>
+-<?oxy_comment_end?><lb n="011_012" xml:id="lb_011_012"/>do de dar cu<g resp="#CB" cert="high" ref="#chare0303">en</g>ta / a su c<g ref="#charo0303" resp="#AW" cert="high">om</g>pañero: delo <g ref="#charq0303">que</g> rescibio
++<lb n="011_011" xml:id="lb_011_011"/>dellos trae el trato / y mercadurias: es obliga<lb break="no" rendition="#noHyphen"/>do de dar cu<g resp="#CB" cert="high" ref="#chare0303">en</g>ta / a su c<g ref="#charo0303" resp="#AW" cert="high">om</g>pañero: delo <g ref="#charq0303">que</g> rescibio
+ <lb n="011_013" xml:id="lb_011_013"/>dela ganancia <g ref="#charq0303">que</g> ouo: y delo <g ref="#charq0303">que</g> dio / pago / distri<lb break="no" rendition="#noHyphen" n="011_014" xml:id="lb_011_014"/>buyo / y gasto: y <g resp="#CB" cert="high" ref="#charebd1">de</g>lo <g ref="#charq0303">que</g> se <g resp="#CB" cert="high" ref="#charp0751">per</g>dio. <hi rendition="#sup">d</hi>
+                <note xml:id="note_d1e1442" anchored="true"><p xml:id="p_d1e1445" part="N">
+ <lb n="011_112" xml:id="lb_011_112"/>Perdio. <hi rendition="#sup">d</hi>. ¶ <persName ref="cerl:cnp01302817 gnd:118652885 viaf:66498105" key="Bartolus">Bar.</persName> <g resp="#CB" cert="high" ref="#chari0303">in</g>. l. ij
+@@ -400,18 +401,18 @@
+                <note xml:id="note_d1e1478" anchored="true"><p xml:id="p_d1e1481" part="N">
+ <lb n="011_117" xml:id="lb_011_117"/>Dellos. <hi rendition="#sup">e</hi>. ¶ Lex. hac e<lb break="no" rendition="#hyphen" n="011_118" xml:id="lb_011_118"/>dictali. §. is illud. C. <g resp="#CB" cert="high" ref="#charebd1">de</g> se.
+ <lb n="011_119" xml:id="lb_011_119"/>nup. <g resp="#CB" cert="high" ref="#char204a">et</g>. l. ij. C. q<g resp="#CB" cert="high" ref="#charn0303">uan</g>do muli.
+-<lb n="011_120" xml:id="lb_011_120"/>offi. tu. fun. <persName ref="cerl:cnp01341446 gnd:118803085 viaf:29618397" key="Baldus">bal.</persName> in. l. <choice><abbr>cu<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">cum</expan></choice><lb break="yes" n="011_121" xml:id="lb_011_121"/><choice><abbr>oport<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high"> oportet</expan></choice>. §. fi. <g resp="#CB" cert="high" ref="#char75f">ver</g>. <g resp="#CB" cert="high" ref="#char2184">con</g>cludo er<lb break="no" rendition="#hyphen" n="011_122" xml:id="lb_011_122"/>go. C. <g ref="#charebd1">de</g> <choice><abbr>bonis.</abbr><expan resp="#CB" cert="high">bonis quae</expan></choice> li. et. l. fi<lb break="no" rendition="#noHyphen" n="011_123" xml:id="lb_011_123"/>lie. ff. <g ref="#charebd1">de</g> solu. <g resp="#CB" cert="high" ref="#char204a">et</g>. l. <g resp="#CB" cert="high" ref="#char307">qui</g> aliena.
++<lb n="011_120" xml:id="lb_011_120"/>offi. tu. fun. <persName ref="cerl:cnp01341446 gnd:118803085 viaf:29618397" key="Baldus">bal.</persName> in. l. <choice><abbr>cu<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">cum</expan></choice><lb break="yes" n="011_121" xml:id="lb_011_121"/><choice><abbr>oport<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high"> oportet</expan></choice>. §. fi. <g resp="#CB" cert="high" ref="#char75f">ver</g>. <g resp="#CB" cert="high" ref="#char2184">con</g>cludo er<lb break="no" rendition="#hyphen" n="011_122" xml:id="lb_011_122"/>go. C. <g ref="#charebd1">de</g> <choice><abbr>bonis<g ref="#chare8bf">q</g>.</abbr><expan resp="#CB" cert="high">bonis quae</expan></choice> li. et. l. fi<lb break="no" rendition="#noHyphen" n="011_123" xml:id="lb_011_123"/>lie. ff. <g ref="#charebd1">de</g> solu. <g resp="#CB" cert="high" ref="#char204a">et</g>. l. <g resp="#CB" cert="high" ref="#char307">qui</g> aliena.
+ <lb n="011_124" xml:id="lb_011_124"/>§. qu<g resp="#CB" cert="high" ref="#chara0303">am</g><g resp="#CB" cert="high" ref="#char8bf0301">quam</g>. ff. <g ref="#charebd1">de</g> nego. ge. <g resp="#CB" cert="high" ref="#char204a">et</g>.
+ <lb n="011_125" xml:id="lb_011_125"/>l. fi. §. paterna reuer<g resp="#CB" cert="high" ref="#chare0303">en</g>tia
+-<lb n="011_126" xml:id="lb_011_126" break="yes"/><g resp="#CB" cert="high" ref="#char204a">et</g> ibi glo. su<g resp="#CB" cert="high" ref="#char751">per</g> ea. par. C. <g resp="#CB" cert="high" ref="#charebd1">de</g><lb break="yes" n="011_127" xml:id="lb_011_127"/><choice><abbr>bonis.</abbr><expan resp="#CB" cert="high"> bonis quae</expan></choice> lib.</p>
++<lb n="011_126" xml:id="lb_011_126" break="yes"/><g resp="#CB" cert="high" ref="#char204a">et</g> ibi glo. su<g resp="#CB" cert="high" ref="#char751">per</g> ea. par. C. <g resp="#CB" cert="high" ref="#charebd1">de</g><lb break="yes" n="011_127" xml:id="lb_011_127"/><choice><abbr>bonis<g ref="#chare8bf">q</g>.</abbr><expan resp="#CB" cert="high"> bonis quae</expan></choice> lib.</p>
+                </note> ¶ Lo <g resp="#CB" cert="high" ref="#charq0303">qua</g>l es <g resp="#CB" cert="high" ref="#char75f">ver</g>dad: en
+ <lb n="011_018" xml:id="lb_011_018"/>las cosas <g ref="#charq0303">que</g> son algo en c<g resp="#CB" cert="high" ref="#chara0303">an</g>tidad. Mas si fuesse
+ <lb n="011_019" xml:id="lb_011_019"/>en pequeña c<g resp="#CB" cert="high" ref="#chara0303">an</g>tidad: la madre no es obligada
+ <lb n="011_020" xml:id="lb_011_020"/>a dar cu<g resp="#CB" cert="high" ref="#chare0303">en</g>ta / a sus hijos <g resp="#CB" cert="high" ref="#charebd1">de</g>lla. <hi rendition="#sup">f</hi>
+                <note xml:id="note_d1e1540" anchored="true"><p xml:id="p_d1e1543" part="N">
+ <lb n="011_129" xml:id="lb_011_129"/>Della. <hi rendition="#sup">f</hi>. ¶ <choice><abbr>T<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="medium">Tenet</expan></choice>. <persName ref="cerl:cnp01341446 gnd:118803085 viaf:29618397" key="Baldus">bal.</persName> in. l.
+-<lb n="011_130" xml:id="lb_011_130"/>c<g resp="#CB" cert="high" ref="#charu0303">um</g> <choice><abbr>oport<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">oportet</expan></choice>. <g resp="#CB" cert="high" ref="#char75f">ver</g>. <choice><abbr>q̃ro</abbr><expan resp="#CB" cert="high">quaero</expan></choice> an ma<g resp="#CB" cert="medium" ref="#chart0303">ter</g>
+-<lb n="011_131" xml:id="lb_011_131"/>C. de b<g ref="#charo0303" resp="#AW" cert="low">on</g>is <choice><abbr></abbr><expan resp="#CB" cert="high">quae</expan></choice> lib. <g resp="#CB" cert="medium" ref="#char751">per</g> leg<g resp="#CB" cert="high" ref="#chare0303">em</g> <choice><abbr></abbr><expan resp="#CB" cert="high">quam</expan></choice><lb break="no" rendition="#noHyphen" n="011_132" xml:id="lb_011_132"/>uis. ff. de con. <g resp="#CB" cert="high" ref="#char204a">et</g> dem<g ref="#charo0303" resp="#AW" cert="low">on</g>s.</p>
++<lb n="011_130" xml:id="lb_011_130"/>c<g resp="#CB" cert="high" ref="#charu0303">um</g> <choice><abbr>oport<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">oportet</expan></choice>. <g resp="#CB" cert="high" ref="#char75f">ver</g>. <choice><abbr><g ref="#charq0303">q</g>ro</abbr><expan resp="#CB" cert="high">quaero</expan></choice> an ma<g resp="#CB" cert="medium" ref="#chart0303">ter</g>
++<lb n="011_131" xml:id="lb_011_131"/>C. de b<g ref="#charo0303" resp="#AW" cert="low">on</g>is <choice><abbr><g ref="#chare8bf">q</g></abbr><expan resp="#CB" cert="high">quae</expan></choice> lib. <g resp="#CB" cert="medium" ref="#char751">per</g> leg<g resp="#CB" cert="high" ref="#chare0303">em</g> <choice><abbr><g ref="#chare8bf">q</g></abbr><expan resp="#CB" cert="high">quam</expan></choice><lb break="no" rendition="#noHyphen" n="011_132" xml:id="lb_011_132"/>uis. ff. de con. <g resp="#CB" cert="high" ref="#char204a">et</g> dem<g ref="#charo0303" resp="#AW" cert="low">on</g>s.</p>
+                </note> ¶ Mas si la ma<lb break="no" rendition="#noHyphen" n="011_021" xml:id="lb_011_021"/>dre se casasse c<g ref="#charo0303" resp="#AW" cert="low">on</g> otro segunda / o tercera ve<g ref="#char0292">z</g>. di<lb break="no" rendition="#noHyphen" n="011_022" xml:id="lb_011_022"/>go <g ref="#charq0303">que</g> es obligada / a dar cuenta / a los hijos del
+ <lb n="011_023" xml:id="lb_011_023"/><g resp="#CB" cert="high" ref="#char307">pri</g>mero marido: <g ref="#charebd1">de</g> todo lo <g ref="#charq0303">que</g> vino a su poder ha<lb n="011_024" xml:id="lb_011_024" break="no" rendition="#noHyphen"/>sta la menor cosa <g ref="#charebd1">de</g> todo lo <g ref="#charq0303">que</g> rescibio. <hi rendition="#sup">g</hi>
+                <note xml:id="note_d1e1587" anchored="true"><p xml:id="p_d1e1590" part="N">
+@@ -421,12 +422,12 @@
+ <lb n="011_025" xml:id="lb_011_025"/>mesmo el avuela: es obligada a dar cu<g resp="#CB" cert="high" ref="#chare0303">en</g>ta a los
+ <lb n="011_026" xml:id="lb_011_026"/>nietos: <g resp="#CB" cert="high" ref="#charebd1">de</g>los bienes <g ref="#charq0303">que</g> rescibio <g resp="#CB" cert="high" ref="#charebd1">de</g>llos. <hi rendition="#sup">h</hi>
+                <note xml:id="note_d1e1616" anchored="true"><p xml:id="p_d1e1619" part="N">
+-<lb n="011_137" xml:id="lb_011_137"/>Dellos. <hi rendition="#sup">h</hi>. ¶ <persName ref="cerl:cnp01341446 gnd:118803085 viaf:29618397" key="Baldus">Bal.</persName> <g resp="#CB" cert="high" ref="#chari0303">in</g>. l. <choice><abbr>cu<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">cum </expan></choice><choice><abbr><lb break="yes" n="011_138" xml:id="lb_011_138"/>oport<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">oportet</expan></choice>. <g resp="#CB" cert="high" ref="#char75f">ver</g>. c<g ref="#charo0303" resp="#AW" cert="low">on</g>cludo ergo.
++<lb n="011_137" xml:id="lb_011_137"/>Dellos. <hi rendition="#sup">h</hi>. ¶ <persName ref="cerl:cnp01341446 gnd:118803085 viaf:29618397" key="Baldus">Bal.</persName> <g resp="#CB" cert="high" ref="#chari0303">in</g>. l. <choice><abbr>cu<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">cum </expan></choice><lb break="yes" n="011_138" xml:id="lb_011_138"/><choice><abbr>oport<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">oportet</expan></choice>. <g resp="#CB" cert="high" ref="#char75f">ver</g>. c<g ref="#charo0303" resp="#AW" cert="low">on</g>cludo ergo.
+ <lb n="011_139" xml:id="lb_011_139"/>C. de fideico.</p>
+                </note> Otrosi el
+ <lb n="011_027" xml:id="lb_011_027"/>padre si es tutor <g resp="#CB" cert="high" ref="#charebd1">de</g>l hijo: es obligado a dar cu<g resp="#CB" cert="high" ref="#chare0303">en</g><lb break="no" rendition="#noHyphen" n="011_028" xml:id="lb_011_028"/>ta y ra<g ref="#char0292">z</g><g ref="#charo0303" resp="#AW" cert="low">on</g> <g resp="#CB" cert="high" ref="#charebd1">de</g>los bienes <g ref="#charq0303">que</g> rescibio <g resp="#CB" cert="high" ref="#charebd1">de</g> su hijo. <hi rendition="#sup">i</hi>
+                <note xml:id="note_d1e1648" anchored="true"><p xml:id="p_d1e1651" part="N">
+-<lb n="011_141" xml:id="lb_011_141"/>Hijo. <hi rendition="#sup">i</hi>. ¶ Lex <choice><abbr>ł<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">Licet</expan></choice>. C. ad
++<lb n="011_141" xml:id="lb_011_141"/>Hijo. <hi rendition="#sup">i</hi>. ¶ Lex <choice><abbr><g ref="#char0142">l</g><g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">Licet</expan></choice>. C. ad
+ <lb n="011_142" xml:id="lb_011_142"/><choice><abbr>lege<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">legem</expan></choice> fal. l. su<g resp="#CB" cert="high" ref="#char751">per</g>stite. C. de
+ <lb n="011_143" xml:id="lb_011_143"/>dolo. l. aureli<g resp="#CB" cert="high" ref="#char770">us</g>. ff. <g ref="#charebd1">de</g> lib. le<lb n="011_144" xml:id="lb_011_144" break="no" rendition="#noHyphen"/>ga. §. tici<g resp="#CB" cert="high" ref="#char770">us</g>. <persName ref="cerl:cnp01341446 gnd:118803085 viaf:29618397" key="Baldus">bal.</persName> <g resp="#CB" cert="high" ref="#chari0303">in</g>. d. l. c<g resp="#CB" cert="high" ref="#charu0303">um</g> o<lb n="011_145" xml:id="lb_011_145" break="no" rendition="#noHyphen"/><choice><abbr>port<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">portet</expan></choice>. §. <choice><abbr>s<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">sed</expan></choice> c<g resp="#CB" cert="high" ref="#charu0303">um</g> tacitas. aut.
+ <lb n="011_146" xml:id="lb_011_146"/>eisd<g resp="#CB" cert="high" ref="#chare0303">em</g>. iij. co<g resp="#CB" cert="high" ref="#char0142">l</g>. <g resp="#CB" cert="high" ref="#char75f">ver</g>. <g resp="#CB" cert="high" ref="#charq0303">quae</g>ro pone
+@@ -444,7 +445,7 @@
+ <lb n="011_032" xml:id="lb_011_032"/><g resp="#CB" cert="high" ref="#charebd1">de</g>los bienes <g ref="#charq0303">que</g> rescibio <g ref="#charebd1">de</g> su hijo. <hi rendition="#sup">k</hi>
+                <note xml:id="note_d1e1732" anchored="true"><p xml:id="p_d1e1735" part="N">
+ <lb n="011_156" xml:id="lb_011_156"/>Hijo. <hi rendition="#sup">k</hi> ¶ Lex <choice><abbr>cu<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">cum</expan></choice> <choice><abbr>oport<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">oportet</expan></choice>.
+-<lb n="011_157" xml:id="lb_011_157"/>§. n<g ref="#charo0303" resp="#AW" cert="low">on</g> <choice><abbr>aũt</abbr><expan resp="#CB" cert="high">autem</expan></choice>. C. <g ref="#charebd1">de</g> <choice><abbr>b<g ref="#charo0303" resp="#AW" cert="low">on</g>is.</abbr><expan resp="#CB" cert="high">bonis quae</expan></choice> lib.</p>
++<lb n="011_157" xml:id="lb_011_157"/>§. n<g ref="#charo0303" resp="#AW" cert="low">on</g> <choice><abbr>a<g ref="#charu0303">u</g>t</abbr><expan resp="#CB" cert="high">autem</expan></choice>. C. <g ref="#charebd1">de</g> <choice><abbr>b<g ref="#charo0303" resp="#AW" cert="low">on</g>is<g ref="#chare8bf">q</g>.</abbr><expan resp="#CB" cert="high">bonis quae</expan></choice> lib.</p>
+                </note> Ansi mismo
+ <pb facs="facs:W0004-0012" n="fol. 4v" xml:id="facs_W0004-0012"/>
+ <lb n="012_001" xml:id="lb_012_001"/>el esecutor de testam<g resp="#CB" cert="high" ref="#chare0303">en</g>to / o de vltima vol<g resp="#CB" cert="high" ref="#charu0303">un</g>tad: es
+@@ -457,11 +458,7 @@
+                </note> ¶ Jtem el hermano
+ <lb n="012_004" xml:id="lb_012_004"/>mayor que despues dela muerte de su padre ad<lb break="no" rendition="#hyphen" n="012_005" xml:id="lb_012_005"/>ministro los bienes de su herm<g resp="#CB" cert="high" ref="#chara03093">an</g>o menor: es obli<lb break="no" rendition="#noHyphen" n="012_006" xml:id="lb_012_006"/>gado a le dar cuenta dellos. <hi rendition="#sup">m</hi>
+                <note xml:id="note_d1e1795" anchored="true"><p xml:id="p_d1e1798" part="N">
+-<lb n="012_105" xml:id="lb_012_105"/>Dellos. <hi rendition="#sup">m</hi>. ¶<?oxy_comment_start author="birr" timestamp="20180621T163044+0200" comment="Fehler beim Auflösen als Abkürzung - irgendwas hakt im xml.
+-
+-Die Auflösung ist &quot;Tenet&quot;
+-
+-David, können wir da nochmal zusammen draufschauen, bitte?"?> T<g ref="#char0292">z<?oxy_comment_end?> </g>ro<lb break="no" rendition="#noHyphen" n="012_106" xml:id="lb_012_106"/>ma. c<g ref="#charo0303" resp="#AW" cert="low">on</g>si. 414. <g resp="#CB" cert="high" ref="#chari0303">in</g>cipit
++<lb n="012_105" xml:id="lb_012_105"/>Dellos. <hi rendition="#sup">m</hi>. ¶ <choice><abbr>T<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="medium">Tenet</expan></choice> ro<lb break="no" rendition="#noHyphen" n="012_106" xml:id="lb_012_106"/>ma. c<g ref="#charo0303" resp="#AW" cert="low">on</g>si. 414. <g resp="#CB" cert="high" ref="#chari0303">in</g>cipit
+ <lb n="012_107" xml:id="lb_012_107"/><g ref="#charq0366">quo</g> ad prim<g resp="#CB" cert="high" ref="#charu0303">um</g> in primo
+ <lb n="012_108" xml:id="lb_012_108"/>dubio.</p>
+                </note> ¶ Y si por caso el
+@@ -490,14 +487,14 @@
+                <note xml:id="note_d1e1916" anchored="true"><p xml:id="p_d1e1919" part="N">
+ <lb n="012_122" xml:id="lb_012_122"/>Dellos. <hi rendition="#sup">p</hi>. ¶ Aut.
+ <lb n="012_123" xml:id="lb_012_123"/>excipi<g resp="#CB" cert="high" ref="#chart0303">tur</g> <choice><abbr>cu<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">cum</expan></choice> aut. seq.
+-<lb n="012_124" xml:id="lb_012_124"/>C. <g ref="#charebd1">de</g> <choice><abbr>bonis.</abbr><expan resp="#CB" cert="high">bonis quae</expan></choice> lib. glo.
++<lb n="012_124" xml:id="lb_012_124"/>C. <g ref="#charebd1">de</g> <choice><abbr>bonis<g ref="#chare8bf">q</g>.</abbr><expan resp="#CB" cert="high">bonis quae</expan></choice> lib. glo.
+ <lb n="012_125" xml:id="lb_012_125"/><g resp="#CB" cert="high" ref="#chari0303">in</g> aut. id<g resp="#CB" cert="high" ref="#chare0303">em</g> est. eo. ti. l.
+ <lb n="012_126" xml:id="lb_012_126"/>viij. legum tauri.</p>
+                </note> ¶ Y avn en caso <g ref="#charq0303">que</g> el padre touiesse vso fru<lb break="no" rendition="#noHyphen" n="012_025" xml:id="lb_012_025"/>to / en los bienes del hijo: seria obligado de dar
+ <lb n="012_026" xml:id="lb_012_026"/>cuenta al hijo: si el padre se casa segunda ve<g ref="#char0292">z</g>.  <hi rendition="#sup">q</hi>
+                <note xml:id="note_d1e1954" anchored="true"><p xml:id="p_d1e1957" part="N">
+ <lb n="012_128" xml:id="lb_012_128"/>Ve<g ref="#char0292">z</g>. <hi rendition="#sup">q</hi>. ¶ Vt aut. <g resp="#CB" cert="high" ref="#charebd1">de</g>
+-<lb n="012_129" xml:id="lb_012_129"/>nup. §. placet <choice><abbr>quo</abbr><expan resp="#CB" cert="high">quoque</expan></choice><lb break="yes" n="012_130" xml:id="lb_012_130"/> col. iiij.</p>
++<lb n="012_129" xml:id="lb_012_129"/>nup. §. placet <choice><abbr>quo<g ref="#chare8bf">q</g></abbr><expan resp="#CB" cert="high">quoque</expan></choice><lb break="yes" n="012_130" xml:id="lb_012_130"/> col. iiij.</p>
+                </note>
+ <lb n="012_027" xml:id="lb_012_027"/>¶ Jtem si el padre dolosamente destribuyesse / o
+ <lb n="012_028" xml:id="lb_012_028"/>mal gastasse los bienes <g resp="#CB" cert="high" ref="#charebd1">de</g>l hijo: seria obligado / a
+@@ -548,12 +545,11 @@
+ <lb n="013_121" xml:id="lb_013_121"/>C. vbi de ratio. agi.
+ <lb n="013_122" xml:id="lb_013_122"/><choice><abbr>opport<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="medium">opportet</expan></choice>. et. c. j. de.
+ <lb n="013_123" xml:id="lb_013_123"/>obli. act. r<g ref="#charo0303" resp="#AW" cert="medium">om</g>.</p>
+-               </note> ¶ Y es de saber: que todos los que ad<lb break="no" rendition="#noHyphen"/><?oxy_comment_start author="birr" timestamp="20180621T170015+0200" comment="In der Vorschau zur Leseansicht wird &quot;administran&quot; zweigeteilt wiedergegeben, mit Zeilenumbruch."?>
+-<?oxy_comment_end?><lb n="013_015" xml:id="lb_013_015"/>ministr<g resp="#CB" cert="high" ref="#chara0303">an</g> bienes de otros: como quier que se n<g ref="#charo0303" resp="#AW" cert="high">om</g><lb break="no" rendition="#hyphen" n="013_016" xml:id="lb_013_016"/>bren: todos se di<g ref="#char0292">z</g>en procuradores. y procurador
++               </note> ¶ Y es de saber: que todos los que ad<lb break="no" rendition="#noHyphen"/>ministr<g resp="#CB" cert="high" ref="#chara0303">an</g> bienes de otros: como quier que se n<g ref="#charo0303" resp="#AW" cert="high">om</g><lb break="no" rendition="#hyphen" n="013_016" xml:id="lb_013_016"/>bren: todos se di<g ref="#char0292">z</g>en procuradores. y procurador
+ <lb n="013_017" xml:id="lb_013_017"/>se di<g ref="#char0292">z</g>e: todo aquel que por mandado de otro / ad<lb break="no" rendition="#hyphen" n="013_018" xml:id="lb_013_018"/>ministra los negocios agenos: en juy<g ref="#char0292">z</g>io / o fuera
+-<lb n="013_019" xml:id="lb_013_019"/><g resp="#CB" cert="high" ref="#charebd1">de</g>l. <hi rendition="#sup">⁊</hi>
++<lb n="013_019" xml:id="lb_013_019"/><g resp="#CB" cert="high" ref="#charebd1">de</g>l. <hi rendition="#sup"><g ref="#char204a">⁊</g></hi>
+                <note xml:id="note_d1e2212" anchored="true"><p xml:id="p_d1e2215" part="N">
+-<lb n="013_125" xml:id="lb_013_125"/>Del. <hi rendition="#sup">⁊</hi>. ¶ Lex. j. ff.
++<lb n="013_125" xml:id="lb_013_125"/>Del. <hi rendition="#sup"><g ref="#char204a">⁊</g></hi>. ¶ Lex. j. ff.
+ <lb n="013_126" xml:id="lb_013_126"/><g resp="#CB" cert="high" ref="#char753">pro</g>cu. i<g resp="#CB" cert="high" ref="#charu0303">un</g>cta. l. remune<lb break="no" rendition="#noHyphen" n="013_127" xml:id="lb_013_127"/>randi. §. j. ff. man.</p>
+                </note> ¶ Y en tanto los que administran bienes de
+ <lb n="013_020" xml:id="lb_013_020"/>otros: son obligados / a dar cuenta dellos: que si
+@@ -608,7 +604,7 @@
+                <note xml:id="note_d1e2430" anchored="true"><p xml:id="p_d1e2433" part="N">
+ <lb n="014_119" xml:id="lb_014_119"/>Herederos. <hi rendition="#sup">e</hi> ¶ Lex
+ <lb n="014_120" xml:id="lb_014_120"/>j. C. arbi. tut. et. l. si.
+-<lb n="014_121" xml:id="lb_014_121"/>pater in fi. C. <choice><abbr>coĩa</abbr><expan resp="#CB" cert="high">communia</expan></choice> <g resp="#CB" cert="high" ref="#charebd1">de </g><lb break="yes" n="014_122" xml:id="lb_014_122"/>sucesio. l. ij. i<g resp="#CB" cert="high" ref="#charu0303">un</g>cta gl.
++<lb n="014_121" xml:id="lb_014_121"/>pater in fi. C. <choice><abbr>co<g ref="#chari0303">i</g>a</abbr><expan resp="#CB" cert="high">communia</expan></choice> <g resp="#CB" cert="high" ref="#charebd1">de </g><lb break="yes" n="014_122" xml:id="lb_014_122"/>sucesio. l. ij. i<g resp="#CB" cert="high" ref="#charu0303">un</g>cta gl.
+ <lb n="014_123" xml:id="lb_014_123"/>ti. dela guarda delos
+ <lb n="014_124" xml:id="lb_014_124"/>huerfanos fo. le.</p>
+                </note> ¶ Los reptores: gouernadores: li<lb break="no" rendition="#hyphen" n="014_016" xml:id="lb_014_016"/>mosneros: procuradores: perlados: sindicos: y
+@@ -644,24 +640,24 @@
+                </note>
+ <lb n="015_007" xml:id="lb_015_007"/>Alomenos podran los menores pedir restitu<lb break="no" rendition="#hyphen" n="015_008" xml:id="lb_015_008"/>cion: Jn integr<g resp="#CB" cert="high" ref="#charu0303">um</g>. <hi rendition="#sup">i</hi>
+                <note xml:id="note_d1e2597" anchored="true"><p xml:id="p_d1e2600" part="N">
+-<lb n="015_105" xml:id="lb_015_105"/>Jntegr<g resp="#CB" cert="high" ref="#charu0303">um</g>. <hi rendition="#sup">i</hi>. ¶ Lex. eti<g resp="#CB" cert="high" ref="#chara0303">am</g><lb break="yes" n="015_106" xml:id="lb_015_106"/><choice><abbr>cu<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high"> cum</expan></choice> duabus seq. C. si. tu<lb break="no" rendition="#noHyphen" n="015_107" xml:id="lb_015_107"/>tor. <choice><abbr>ł.</abbr><expan resp="#CB" cert="high">vel</expan></choice> cura. inter. <persName ref="cerl:cnp01341446 gnd:118803085 viaf:29618397" key="Baldus">bal.</persName> in
++<lb n="015_105" xml:id="lb_015_105"/>Jntegr<g resp="#CB" cert="high" ref="#charu0303">um</g>. <hi rendition="#sup">i</hi>. ¶ Lex. eti<g resp="#CB" cert="high" ref="#chara0303">am</g><lb break="yes" n="015_106" xml:id="lb_015_106"/><choice><abbr>cu<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high"> cum</expan></choice> duabus seq. C. si. tu<lb break="no" rendition="#noHyphen" n="015_107" xml:id="lb_015_107"/>tor. <choice><abbr><g ref="#char0142">l</g>.</abbr><expan resp="#CB" cert="high">vel</expan></choice> cura. inter. <persName ref="cerl:cnp01341446 gnd:118803085 viaf:29618397" key="Baldus">bal.</persName> in
+ <lb n="015_108" xml:id="lb_015_108"/>l. ij. §. ad hec. C. <g ref="#charebd1">de</g> <g resp="#CB" cert="high" ref="#charq0303">qua</g>dri.
+ <lb n="015_109" xml:id="lb_015_109"/>pres. dixi. <g resp="#CB" cert="high" ref="#chari0303">in</g> sexta <g resp="#CB" cert="high" ref="#char751">par</g>te hu<lb break="no" rendition="#noHyphen" n="015_110" xml:id="lb_015_110"/>ius tractat<g resp="#CB" cert="high" ref="#char770">us</g> facit lex m<g resp="#CB" cert="high" ref="#chara0303">an</g><lb break="no" rendition="#noHyphen" n="015_111" xml:id="lb_015_111"/>dato geraldi. ff. <g ref="#charebd1">de</g> <g resp="#CB" cert="high" ref="#char753">pro</g>cu.</p>
+                </note> Ni para prouar el tutor por
+ <lb n="015_009" xml:id="lb_015_009"/>el tal instrumento que ya dio cu<g resp="#CB" cert="high" ref="#chare0303">en</g>ta: no le apro<lb break="no" rendition="#noHyphen" n="015_010" xml:id="lb_015_010"/>uecha por que la confession /  <hi rendition="#sup">k</hi>
+-               <note xml:id="note_d1e2640" anchored="true"><p xml:id="p_d1e2643" part="N">
+-<lb n="015_113" xml:id="lb_015_113"/>Confessi<g ref="#charo0303">on</g>. k. ¶<choice><abbr> T<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="medium">Tenet</expan></choice>. <persName ref="cerl:cnp01302817 gnd:118652885 viaf:66498105" key="Bartolus">bar.</persName>
++               <note xml:id="note_d1e2640" anchored="true" n="Confession. k."><p xml:id="p_d1e2643" part="N">
++<lb n="015_113" xml:id="lb_015_113"/>¶<choice><abbr> T<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="medium">Tenet</expan></choice>. <persName ref="cerl:cnp01302817 gnd:118652885 viaf:66498105" key="Bartolus">bar.</persName>
+ <lb n="015_114" xml:id="lb_015_114"/>post cign<g resp="#CB" cert="high" ref="#charu0303">um</g> <g resp="#CB" cert="high" ref="#chari0303">in</g>. l. j. pe. col<g resp="#CB" cert="high" ref="#char0142">l</g>. 
+ <lb n="015_115" xml:id="lb_015_115"/>in fi. <g resp="#CB" cert="high" ref="#char75f">ver</g>. oppono. iter<g resp="#CB" cert="high" ref="#charu0303">um</g> de 
+ <lb n="015_116" xml:id="lb_015_116"/>ipso. §. C. <g ref="#charebd1">de</g> c<g ref="#charo0303" resp="#AW" cert="low">on</g>fe. <g resp="#CB" cert="high" ref="#char204a">et</g> in. l. 
+ <lb n="015_117" xml:id="lb_015_117"/>lucius la. ij. §. tutele. ff. 
+ <lb n="015_118" xml:id="lb_015_118"/>de admi. tuto. et. l. cert<g resp="#CB" cert="high" ref="#charu0303">um</g> 
+-<lb n="015_119" xml:id="lb_015_119"/>§. sed an <g resp="#CB" cert="high" ref="#char751">per</g> i<g resp="#CB" cert="high" ref="#charp0303">ps</g>̃os. ij. col<g resp="#CB" cert="high" ref="#char0142">l</g>. 
++<lb n="015_119" xml:id="lb_015_119"/>§. sed an <g resp="#CB" cert="high" ref="#char751">per</g> i<g resp="#CB" cert="high" ref="#charp0303">ps</g>os. ij. col<g resp="#CB" cert="high" ref="#char0142">l</g>. 
+ <lb n="015_120" xml:id="lb_015_120"/><g resp="#CB" cert="high" ref="#chari0303">in</g> <g resp="#CB" cert="high" ref="#char307">pri</g>ncipio. <g resp="#CB" cert="high" ref="#char75f">ver</g>. alij. docto. 
+ <lb n="015_121" xml:id="lb_015_121"/>dic<g resp="#CB" cert="high" ref="#charu0303">um</g>t ver<g resp="#CB" cert="high" ref="#charu0303">um</g>. ff. <g ref="#charebd1">de</g> <g resp="#CB" cert="high" ref="#char2184">con</g>fessis. 
+ <lb n="015_122" xml:id="lb_015_122"/><persName ref="cerl:cnp01341446 gnd:118803085 viaf:29618397" key="Baldus">bal.</persName> <g resp="#CB" cert="high" ref="#chari0303">in</g> addi. ad specul<g resp="#CB" cert="high" ref="#charu0303">um</g> <g ref="#charEBD1">de</g>
+ <lb n="015_123" xml:id="lb_015_123"/>appela. <g resp="#CB" cert="high" ref="#char75f">ver</g>si. tutori <g resp="#CB" cert="high" ref="#char204a">et</g> <g resp="#CB" cert="high" ref="#chari0303">in</g>. l. <g resp="#CB" cert="high" ref="#chari0303">in</g> 
+-<lb n="015_124" xml:id="lb_015_124"/><g resp="#CB" cert="high" ref="#char2184">con</g>tratib<g resp="#CB" cert="high" ref="#char770">us</g>. §. <choice><abbr>s<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="medium">sed</expan></choice> <choice><abbr>qm</abbr><expan resp="#CB" cert="high">quoniam</expan></choice>̃. <g resp="#CB" cert="high" ref="#char75f">ver</g>. <g resp="#CB" cert="high" ref="#char307">qui</g>d
++<lb n="015_124" xml:id="lb_015_124"/><g resp="#CB" cert="high" ref="#char2184">con</g>tratib<g resp="#CB" cert="high" ref="#char770">us</g>. §. <choice><abbr>s<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="medium">sed</expan></choice> <choice><abbr>qm</abbr><expan resp="#CB" cert="high">quoniam</expan></choice>. <g resp="#CB" cert="high" ref="#char75f">ver</g>. <g resp="#CB" cert="high" ref="#char307">qui</g>d
+ <lb n="015_125" xml:id="lb_015_125"/>in tutore. C. <g ref="#charebd1">de</g> n<g ref="#charo0303" resp="#AW" cert="low">on</g>nu. pe<lb break="no" rendition="#noHyphen" n="015_126" xml:id="lb_015_126"/>cu. vbi dicit <g resp="#CB" cert="high" ref="#char759">quod</g> n<g ref="#charo0303">on</g> nocet
+ <lb n="015_127" xml:id="lb_015_127"/>minori <choice><abbr>s<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">sed</expan></choice> i<g resp="#CB" cert="medium" ref="#charp0303">ps</g>i tuto. istud
+ <lb n="015_128" xml:id="lb_015_128"/>eti<g ref="#chara0303">am</g> <choice><abbr>t<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="medium">tenet</expan></choice> <persName ref="cerl:cnp01341446 gnd:118803085 viaf:29618397" key="Baldus">bal.</persName> in. d. l. j. xviij<lb break="yes" n="015_129" xml:id="lb_015_129"/> co<g resp="#CB" cert="high" ref="#char0142">l</g>. <g resp="#CB" cert="high" ref="#char75f">ver</g>. <sic>m</sic><g ref="#charo0303" resp="#AW" cert="low">on</g> se<g resp="#CB" cert="high" ref="#char307">qui</g>tur videre 
+@@ -732,7 +728,7 @@
+ <lb n="016_117" xml:id="lb_016_117"/>Ciudad. <hi rendition="#sup">t</hi>. ¶ Vt in
+ <lb n="016_118" xml:id="lb_016_118"/>auct<g ref="#chare0303">e</g>. de colla. §. ad
+ <lb n="016_119" xml:id="lb_016_119"/>hec iubem<g resp="#CB" cert="high" ref="#char770">us</g> <g resp="#CB" cert="high" ref="#char204a">et</g>. §. si<g resp="#CB" cert="high" ref="#char307"> qui</g>s
+-<lb n="016_120" xml:id="lb_016_120"/><choice><abbr>aũt</abbr><expan resp="#CB" cert="high">autem</expan></choice>. col. ix. glo. <g resp="#CB" cert="high" ref="#chari0303">in</g>. l. ne<lb break="no" rendition="#noHyphen" n="016_121" xml:id="lb_016_121"/>minem <g ref="#charebd1">de</g> suscep. <g resp="#CB" cert="high" ref="#char204a">et</g> ar<lb n="016_122" xml:id="lb_016_122" break="no" rendition="#noHyphen"/>ca. li. x.</p>
++<lb n="016_120" xml:id="lb_016_120"/><choice><abbr>a<g ref="#charu0303">u</g>t</abbr><expan resp="#CB" cert="high">autem</expan></choice>. col. ix. glo. <g resp="#CB" cert="high" ref="#chari0303">in</g>. l. ne<lb break="no" rendition="#noHyphen" n="016_121" xml:id="lb_016_121"/>minem <g ref="#charebd1">de</g> suscep. <g resp="#CB" cert="high" ref="#char204a">et</g> ar<lb n="016_122" xml:id="lb_016_122" break="no" rendition="#noHyphen"/>ca. li. x.</p>
+                </note> Y la causa por que / a
+ <lb n="016_009" xml:id="lb_016_009"/>estos se tiene de dar la cu<g resp="#CB" cert="high" ref="#chare0303">en</g>ta: es por que represen<lb break="no" rendition="#hyphen" n="016_010" xml:id="lb_016_010"/>tan todo el pueblo. y ansi las leyes destos reynos
+ <lb n="016_011" xml:id="lb_016_011"/>di<g ref="#char0292">z</g>en: <g ref="#charq0303">que</g> los regidores delas cibdades / con el pre<lb break="no" rendition="#noHyphen" n="016_012" xml:id="lb_016_012"/>sidente / o jue<g ref="#char0292">z</g> que reside enla prouincia: puede
+@@ -754,8 +750,8 @@
+ <lb n="016_018" xml:id="lb_016_018"/>andemos / a saber por menudo / a quien se tiene <g resp="#CB" cert="high" ref="#charebd1">de</g>
+ <lb n="016_019" xml:id="lb_016_019"/>dar cuenta: digo que se tiene de dar / a todas las
+ <lb n="016_020" xml:id="lb_016_020"/>personas que pretenden auer interesse della. <hi rendition="#sup">y</hi>
+-               <note xml:id="note_d1e3159" anchored="true"><p xml:id="p_d1e3162" part="N">
+-<lb n="016_137" xml:id="lb_016_137"/>Della. y. ¶ Habe<g resp="#CB" cert="high" ref="#chart0303">tur</g>
++               <note xml:id="note_d1e3159" anchored="true" n="Della. y."><p xml:id="p_d1e3162" part="N">
++<lb n="016_137" xml:id="lb_016_137"/>¶ Habe<g resp="#CB" cert="high" ref="#chart0303">tur</g>
+ <lb n="016_138" xml:id="lb_016_138"/>in spe. <g ref="#charebd1">de</g> instru. edi. <g resp="#CB" cert="high" ref="#char204a">et</g>
+ <lb n="016_139" xml:id="lb_016_139"/>ibi. ioa. an. <g resp="#CB" cert="high" ref="#chari0303">in</g>. §. nunc<lb break="yes" n="016_140" xml:id="lb_016_140"/><g resp="#CB" cert="high" ref="#char75f"> ver</g>o ali<g resp="#CB" cert="low" ref="#charq0303">quae</g>. <g resp="#CB" cert="high" ref="#char204a">et</g>. <g resp="#CB" cert="high" ref="#char75f">ver</g>si. sed an
+ <lb n="016_141" xml:id="lb_016_141"/>simplex. c<g resp="#CB" cert="high" ref="#charu0303">um</g> seq.</p>
+@@ -884,7 +880,7 @@
+                </note> Por<g ref="#charq0303">que</g> pues no fue en cul<lb break="no" rendition="#hyphen" n="018_017" xml:id="lb_018_017"/>pa / no le sera dada pena. <hi rendition="#sup">n</hi>
+                <note xml:id="note_d1e3675" anchored="true"><p xml:id="p_d1e3678" part="N">
+ <lb n="018_129" xml:id="lb_018_129"/>Pena. <hi rendition="#sup">n</hi>. ¶ <choice><abbr>Qr</abbr><expan resp="#CB" cert="medium">Quoniam</expan></choice> res
+-<lb n="018_130" xml:id="lb_018_130"/>que culpa caret <g resp="#CB" cert="high" ref="#chari0303">in</g> <sic>da</sic><lb break="no" rendition="#hyphen" n="018_131" xml:id="lb_018_131"/><sic><?oxy_comment_start author="birr" timestamp="20180622T150548+0200" comment="Das [sic] sollte sich eigentlich auf das getrennte Wort &quot;dauum&quot; insgesasmt beziehen."?>uum<?oxy_comment_end?></sic> vocari non con<lb n="018_132" xml:id="lb_018_132" break="no" rendition="#noHyphen"/>uenit regula iur<g ref="#chara76d">is</g> est.</p>
++<lb n="018_130" xml:id="lb_018_130"/>que culpa caret <g resp="#CB" cert="high" ref="#chari0303">in</g> <sic resp="#CB">da<lb break="no" rendition="#hyphen" n="018_131" xml:id="lb_018_131"/>uum</sic> vocari non con<lb n="018_132" xml:id="lb_018_132" break="no" rendition="#noHyphen"/>uenit regula iur<g ref="#chara76d">is</g> est.</p>
+                </note> ¶ Lo octauo se re<g resp="#CB" cert="high" ref="#char307">qui</g>e<lb break="no" rendition="#hyphen" n="018_018" xml:id="lb_018_018"/>re que enla tassacion delos frutos que mandar<g resp="#CB" cert="high" ref="#chare0303">en</g>
+ <lb n="018_019" xml:id="lb_018_019"/>pagar al administrador porque no los cobro por
+ <lb n="018_020" xml:id="lb_018_020"/>su negligencia: se aya consideraci<g ref="#charo0303" resp="#AW" cert="low">on</g> a lo que solia
+@@ -899,10 +895,9 @@
+ <lb n="018_027" xml:id="lb_018_027"/>rescibio / y lo que rento lo rescebido: sin dexar co<lb break="no" rendition="#noHyphen" n="018_028" xml:id="lb_018_028"/>sa alguna <g resp="#CB" cert="high" ref="#charebd1">de</g>llo por contar y aueriguar. <hi rendition="#sup">p</hi>
+                <note xml:id="note_d1e3754" anchored="true"><p xml:id="p_d1e3757" part="N">
+ <lb n="018_141" xml:id="lb_018_141"/>Aueriguar. <hi rendition="#sup">p</hi>. ¶ <choice><abbr>T<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="medium">Tenet</expan></choice><lb break="yes" n="018_142" xml:id="lb_018_142"/><persName ref="cerl:cnp01341446 gnd:118803085 viaf:29618397" key="Baldus">bal.</persName> in. l. pe. vij. col<g resp="#CB" cert="high" ref="#char0142">l</g>.
+-<lb n="018_143" xml:id="lb_018_143"/><g resp="#CB" cert="high" ref="#char75f">ver</g>si. it<g resp="#CB" cert="high" ref="#chare0303">em</g> pone. C. <g ref="#charebd1">de</g> c<g ref="#charo0303" resp="#AW" cert="low">on</g><lb break="no" rendition="#hyphen" n="018_144" xml:id="lb_018_144"/>di. <g resp="#CB" cert="high" ref="#chari0303">in</g> <?oxy_comment_start author="birr" timestamp="20180622T150811+0200" comment="Das habe ich nicht in der Sonderzeichenliste gefunden: durchgestrichenes Sshaft-S.
+-Zu ersetzen ist es an dieser Stelle mit &quot;ser&quot;."?>ẜ<?oxy_comment_end?>. <g resp="#CB" cert="high" ref="#char751">per</g>. l. creditor. §.
++<lb n="018_143" xml:id="lb_018_143"/><g resp="#CB" cert="high" ref="#char75f">ver</g>si. it<g resp="#CB" cert="high" ref="#chare0303">em</g> pone. C. <g ref="#charebd1">de</g> c<g ref="#charo0303" resp="#AW" cert="low">on</g><lb break="no" rendition="#hyphen" n="018_144" xml:id="lb_018_144"/>di. <g resp="#CB" cert="high" ref="#chari0303">in</g> <g resp="#CB" cert="medium" ref="#char1e9c">ser</g>. <g resp="#CB" cert="high" ref="#char751">per</g>. l. creditor. §.
+ <lb n="018_145" xml:id="lb_018_145"/>j. ff. m<g resp="#CB" cert="high" ref="#chara0303">an</g>da. <g resp="#CB" cert="high" ref="#char204a">et</g>. l. <g resp="#CB" cert="high" ref="#char307">qui</g> sub
+-<lb n="018_146" xml:id="lb_018_146"/>c<g ref="#charo0303" resp="#AW" cert="low">on</g>ditione <choice><sic>redemda<lb break="no" rendition="#hyphen" n="018_147" xml:id="lb_018_147"/>r<g resp="#CB" cert="high" ref="#charu0303">um</g></sic><corr resp="#CB" cert="high" xml:id="k3l_r1q_f2b">reddendarum</corr></choice>. ff. de <g resp="#CB" cert="high" ref="#char2184">con</g>di. <g resp="#CB" cert="high" ref="#char204a">et</g> <g resp="#CB" cert="high" ref="#charebd1">de</g>m<g ref="#charo0303" resp="#AW" cert="low">on</g>s.</p>
++<lb n="018_146" xml:id="lb_018_146"/>c<g ref="#charo0303" resp="#AW" cert="low">on</g>ditione <choice><sic>redemda<lb break="no" rendition="#hyphen" n="018_147" xml:id="lb_018_147"/>r<g resp="#CB" cert="high" ref="#charu0303">um</g></sic><corr resp="#CB" cert="high" xml:id="k3l_r1q_f2b">reddenda<lb break="no" rendition="#hyphen" sameAs="#lb_018_147"/>rum</corr></choice>. ff. de <g resp="#CB" cert="high" ref="#char2184">con</g>di. <g resp="#CB" cert="high" ref="#char204a">et</g> <g resp="#CB" cert="high" ref="#charebd1">de</g>m<g ref="#charo0303" resp="#AW" cert="low">on</g>s.</p>
+                </note> ¶ Lo de<lb n="018_029" xml:id="lb_018_029" break="no" rendition="#noHyphen"/><g ref="#char0292">z</g>eno se requiere que se cuente primero el resci<lb break="no" rendition="#hyphen" n="018_030" xml:id="lb_018_030"/>bo ante que la dacta: lo que el administrador re<lb break="no" rendition="#hyphen" n="018_031" xml:id="lb_018_031"/>scibio / ante que lo que gasto. <hi rendition="#sup">q</hi>
+                <note xml:id="note_d1e3797" anchored="true"><p xml:id="p_d1e3800" part="N">
+ <lb n="018_149" xml:id="lb_018_149"/>Gasto. <hi rendition="#sup">q</hi>. ¶ <choice><abbr>T<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="medium">Tenet</expan></choice> nico<lb n="018_150" xml:id="lb_018_150" break="no" rendition="#noHyphen"/>la<g resp="#CB" cert="high" ref="#char770">us</g> <g ref="#charebd1">de</g> neapo. in. l. spa<lb break="no" rendition="#hyphen" n="018_151" xml:id="lb_018_151"/>don<g resp="#CB" cert="high" ref="#chare0303">em</g> <g resp="#CB" cert="high" ref="#chari0303">in</g>. §. laticinatio
+@@ -913,21 +908,21 @@
+ <lb n="019_001" xml:id="lb_019_001"/>varon: <hi rendition="#sup">r</hi>
+                <note xml:id="note_d1e3842" anchored="true"><p xml:id="p_d1e3845" part="N">
+ <lb n="019_101" xml:id="lb_019_101"/>Varon. <hi rendition="#sup">r</hi>. ¶ Per<lb break="yes" n="019_102" xml:id="lb_019_102"/><persName ref="cerl:cnp01341446 gnd:118803085 viaf:29618397" key="Baldus">bal.</persName> in. l. vol<g resp="#CB" cert="high" ref="#charu0303">un</g>tatis. j.
+-<lb n="019_103" xml:id="lb_019_103"/>co. circa fin<g resp="#CB" cert="high" ref="#chare0303">em</g> <g resp="#CB" cert="high" ref="#char75f">ver</g>si. <choice><abbr>ite<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">item</expan></choice><lb break="yes" n="019_104" xml:id="lb_019_104"/><choice><abbr>vbic<g resp="#CB" cert="high" ref="#charu0303">um</g></abbr><expan resp="#CB" cert="high">ubicumque</expan></choice>. C. <g ref="#charebd1">de</g> fideic.
++<lb n="019_103" xml:id="lb_019_103"/>co. circa fin<g resp="#CB" cert="high" ref="#chare0303">em</g> <g resp="#CB" cert="high" ref="#char75f">ver</g>si. <choice><abbr>ite<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">item</expan></choice><lb break="yes" n="019_104" xml:id="lb_019_104"/><choice><abbr>vbic<g resp="#CB" cert="high" ref="#charu0303">um</g><g ref="#chare8bf">q</g></abbr><expan resp="#CB" cert="high">ubicumque</expan></choice>. C. <g ref="#charebd1">de</g> fideic.
+ <lb n="019_105" xml:id="lb_019_105"/><g resp="#CB" cert="medium" ref="#char751">per</g> l. thais. §. soror<g resp="#CB" cert="high" ref="#chare0303">em</g>. ff.
+ <lb n="019_106" xml:id="lb_019_106"/>de fidei. liber.</p>
+                </note> Quiero de<g ref="#char0292">z</g>ir <g ref="#charq0303">que</g> ansi en contar como en
+-<lb n="019_002" xml:id="lb_019_002"/>tassar lo rescebido y gastado: no se cu<g resp="#CB" cert="high" ref="#chare0303">en</g>ta <choice><orig> desorde<lb break="no" rendition="#noHyphen" n="019_003" xml:id="lb_019_003"/>nadam<g ref="#chare0303">e</g>te</orig><reg resp="#MK" cert="high" xml:id="eh2_cnn_1v">desordenadamente</reg></choice> / o demasiado precio ni / a precio baxo:
++<lb n="019_002" xml:id="lb_019_002"/>tassar lo rescebido y gastado: no se cu<g resp="#CB" cert="high" ref="#chare0303">en</g>ta <choice><orig> desorde<lb break="no" rendition="#noHyphen" n="019_003" xml:id="lb_019_003"/>nadam<g ref="#chare0303">e</g>te</orig><reg resp="#MK" cert="high" xml:id="eh2_cnn_1v">desorde<lb break="no" rendition="#noHyphen" sameAs="#lb_019_003"/>nadamente</reg></choice> / o demasiado precio ni / a precio baxo:
+ <lb n="019_004" xml:id="lb_019_004"/>mas <g ref="#charq0303">que</g> guarden los c<g ref="#charo0303" resp="#AW" cert="low">on</g>tadores en todo / el medio.
+ <lb n="019_005" xml:id="lb_019_005"/>¶ Lo de<g ref="#char0292">z</g>eno que si son muchos los administra<lb break="no" rendition="#noHyphen" n="019_006" xml:id="lb_019_006"/>dores: todos juntos den la cuenta / y no cada vno
+ <lb n="019_007" xml:id="lb_019_007"/>dellos por si / o por su parte. y si la diesse el vno de<lb n="019_008" xml:id="lb_019_008" break="no" rendition="#noHyphen"/>llos no bastaria: por quanto / a todos juntamen<lb break="no" rendition="#hyphen" n="019_009" xml:id="lb_019_009"/>te se dio el administracion: mas si cada vno <g resp="#CB" cert="high" ref="#charebd1">de</g>llos
+ <lb n="019_010" xml:id="lb_019_010"/>administro por su parte: sera cada vno <g resp="#CB" cert="high" ref="#charebd1">de</g>llos obli<lb break="no" rendition="#noHyphen" n="019_011" xml:id="lb_019_011"/>gado / a dar cu<g resp="#CB" cert="high" ref="#chare0303">en</g>ta <g resp="#CB" cert="high" ref="#charebd1">de</g>los bienes que administro:  <hi rendition="#sup">s</hi>
+                <note xml:id="note_d1e3915" anchored="true"><p xml:id="p_d1e3918" part="N">
+ <lb n="019_108" xml:id="lb_019_108"/>Administro.
+-<lb n="019_109" xml:id="lb_019_109"/><hi rendition="#sup">s</hi>. ¶ Lex. si <choice><abbr>plur̃es</abbr><expan resp="#CB" cert="high">plures</expan></choice><lb break="yes" n="019_110" xml:id="lb_019_110"/>j. <g resp="#CB" cert="high" ref="#char204a">et</g>. ij. ff. de admi. tu<lb break="no" rendition="#hyphen" n="019_111" xml:id="lb_019_111"/>to. et. l. si duo. eo. ti.
++<lb n="019_109" xml:id="lb_019_109"/><hi rendition="#sup">s</hi>. ¶ Lex. si <choice><abbr>plu<g ref="#charr0303">r</g>es</abbr><expan resp="#CB" cert="high">plures</expan></choice><lb break="yes" n="019_110" xml:id="lb_019_110"/>j. <g resp="#CB" cert="high" ref="#char204a">et</g>. ij. ff. de admi. tu<lb break="no" rendition="#hyphen" n="019_111" xml:id="lb_019_111"/>to. et. l. si duo. eo. ti.
+ <lb n="019_112" xml:id="lb_019_112"/><persName ref="cerl:cnp01341446 gnd:118803085 viaf:29618397" key="Baldus">bal.</persName> in. l. pe. v. col<g resp="#CB" cert="high" ref="#char0142">l</g>. <g resp="#CB" cert="high" ref="#char75f">ver</g>.
+ <lb n="019_113" xml:id="lb_019_113"/>it<g resp="#CB" cert="high" ref="#chare0303">em</g> si iste. C. de c<g ref="#charo0303" resp="#AW" cert="low">on</g>di.
+-<lb n="019_114" xml:id="lb_019_114"/>in <?oxy_comment_start author="birr" timestamp="20180622T150931+0200" comment="S.o.: durchgestrichenes Schaft-S, zu ersetzen durch &quot;ser&quot;."?>ẜ.<?oxy_comment_end?> <g resp="#CB" cert="high" ref="#char204a">et</g> l. ad eos. C. de
++<lb n="019_114" xml:id="lb_019_114"/>in <g resp="#CB" cert="medium" ref="#char1e9c">ser</g>. <g resp="#CB" cert="high" ref="#char204a">et</g> l. ad eos. C. de
+ <lb n="019_115" xml:id="lb_019_115"/>peri. tuto. l. j. <g resp="#CB" cert="high" ref="#char204a">et</g> ibi.
+ <lb n="019_116" xml:id="lb_019_116"/><persName ref="cerl:cnp01302817 gnd:118652885 viaf:66498105" key="Bartolus">bar.</persName> C. si vn<g resp="#CB" cert="high" ref="#char770">us</g> ex. plu.
+ <lb n="019_117" xml:id="lb_019_117"/>tuto.</p>
+@@ -995,9 +990,9 @@
+ <lb n="020_018" xml:id="lb_020_018"/>podra el jue<g ref="#char0292">z</g> en su deffecto nombrar la: y delos
+ <lb n="020_019" xml:id="lb_020_019"/>nombrados tiene de rescebir el jue<g ref="#char0292">z</g> juramento /
+ <lb n="020_020" xml:id="lb_020_020"/>que haran las cuentas bien y lealmente: y mira<lb break="no" rendition="#noHyphen" n="020_021" xml:id="lb_020_021"/>ran y guardaran <choice><orig>ygualm<g ref="#chare0303">e</g>te</orig><reg resp="#MK" cert="high" xml:id="yxd_gg5_1v">ygualmente</reg></choice> el derecho de cada
+-<lb n="020_022" xml:id="lb_020_022"/>vna delas dichas partes sin afficcion  <hi rendition="#sup">⁊</hi>
++<lb n="020_022" xml:id="lb_020_022"/>vna delas dichas partes sin afficcion  <hi rendition="#sup"><g ref="#char204a">⁊</g></hi>
+                <note xml:id="note_d1e4236" anchored="true"><p xml:id="p_d1e4239" part="N">
+-<lb n="020_115" xml:id="lb_020_115"/>Affici<g ref="#charo0303" resp="#AW" cert="low">on</g>. <hi rendition="#sup">⁊</hi>. ¶ Habe<g resp="#CB" cert="high" ref="#chart0303">tur</g>
++<lb n="020_115" xml:id="lb_020_115"/>Affici<g ref="#charo0303" resp="#AW" cert="low">on</g>. <hi rendition="#sup"><g ref="#char204a">⁊</g></hi>. ¶ Habe<g resp="#CB" cert="high" ref="#chart0303">tur</g>
+ <lb n="020_116" xml:id="lb_020_116"/>in. l. hac edictali. §.
+ <lb n="020_117" xml:id="lb_020_117"/>is illud. <g resp="#CB" cert="high" ref="#char75f">ver</g>. in<g resp="#CB" cert="high" ref="#chart0303">ter</g>posito
+ <lb n="020_118" xml:id="lb_020_118"/>C. de secu. nup. <persName ref="cerl:cnp01302817 gnd:118652885 viaf:66498105" key="Bartolus">bar.</persName>
+@@ -1062,7 +1057,7 @@
+                </note> ¶ Otro
+ <lb n="021_031" xml:id="lb_021_031"/>si en caso que el señor pide cuenta al administra<pb break="no" rendition="#noHyphen" facs="facs:W0004-0022" n="fol. 9v" xml:id="facs_W0004-0022"/><lb break="no" rendition="#noHyphen" n="022_001" xml:id="lb_022_001"/>dor con engaño / o el compañero / a su compañe<lb break="no" rendition="#hyphen" n="022_002" xml:id="lb_022_002"/>ro: por que saben que el administrador / o el com<lb break="no" rendition="#hyphen" n="022_003" xml:id="lb_022_003"/>pañero tien<g ref="#chare0303">e</g> el libro de sus cu<g resp="#CB" cert="high" ref="#chare0303">en</g>tas en otras par<lb break="no" rendition="#hyphen" n="022_004" xml:id="lb_022_004"/>tes: donde tuuieron causa justa de los leuar: y en
+ <lb n="022_005" xml:id="lb_022_005"/>tan breue tiempo como es vn año: no lo podri<g resp="#CB" cert="high" ref="#chara0303">an</g>
+-<lb n="022_006" xml:id="lb_022_006"/>traer. Como podria ser entre muchos mercade<lb break="no" rendition="#noHyphen" n="022_007" xml:id="lb_022_007"/>ros y sus ha<g ref="#char0292">z</g>iendas: que tratan en <?oxy_comment_start author="birr" timestamp="20180621T171919+0200" comment="Ortsname: Flandern."?>flandes<?oxy_comment_end?> desta
++<lb n="022_006" xml:id="lb_022_006"/>traer. Como podria ser entre muchos mercade<lb break="no" rendition="#noHyphen" n="022_007" xml:id="lb_022_007"/>ros y sus ha<g ref="#char0292">z</g>iendas: que tratan en <placeName ref="getty:7024097" key="Flanders">flandes</placeName> desta
+ <lb n="022_008" xml:id="lb_022_008"/>tierra / y en otras partes: que estonçe avn que pa<lb break="no" rendition="#noHyphen" n="022_009" xml:id="lb_022_009"/>sse el año que no diessen cuenta: no serian culpa<lb break="no" rendition="#hyphen" n="022_010" xml:id="lb_022_010"/>dos. <hi rendition="#sup">e</hi>
+                <note xml:id="note_d1e4565" anchored="true"><p xml:id="p_d1e4568" part="N">
+ <lb n="022_101" xml:id="lb_022_101"/>Culpados. <hi rendition="#sup">e</hi>. ¶ Ar<lb break="no" rendition="#hyphen" n="022_102" xml:id="lb_022_102"/>gu. ei<g resp="#CB" cert="high" ref="#char770">us</g> q<g resp="#CB" cert="high" ref="#charebd1">uod</g> dicit <persName ref="cerl:cnp01341446 gnd:118803085 viaf:29618397" key="Baldus">bal.</persName> <g resp="#CB" cert="high" ref="#chari0303">in</g>
+@@ -1091,7 +1086,7 @@
+                </note> Dixe solenne<lb break="no" rendition="#hyphen" n="022_020" xml:id="lb_022_020"/>mente y como deuia: por que si dio cu<g resp="#CB" cert="high" ref="#chare0303">en</g>ta / a qui<g resp="#CB" cert="high" ref="#chare0303">en</g>
+ <lb n="022_021" xml:id="lb_022_021"/>no tenia de darla / o falto en dar la cuenta / las co<lb break="no" rendition="#noHyphen" n="022_022" xml:id="lb_022_022"/>sas que se requerian / o no parece la cuenta: <hi rendition="#sup">i</hi>
+                <note xml:id="note_d1e4713" anchored="true"><p xml:id="p_d1e4716" part="N">
+-<lb n="022_123" xml:id="lb_022_123"/>Cuenta. <hi rendition="#sup">i</hi>. ¶ Quia<choice><abbr><lb break="yes" n="022_124" xml:id="lb_022_124"/>deb<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">debet</expan></choice> <choice><abbr>apare<g ref="#charr0303">r</g></abbr><expan resp="#AW" cert="medium">aparecer</expan></choice> apocha
++<lb n="022_123" xml:id="lb_022_123"/>Cuenta. <hi rendition="#sup">i</hi>. ¶ Quia<lb break="yes" n="022_124" xml:id="lb_022_124"/><choice><abbr>deb<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">debet</expan></choice> <choice><abbr>apare<g ref="#charr0303">r</g></abbr><expan resp="#AW" cert="medium">aparecer</expan></choice> apocha
+ <lb n="022_125" xml:id="lb_022_125"/>rationis semel redite
+ <lb n="022_126" xml:id="lb_022_126"/>i. i<g resp="#CB" cert="high" ref="#charp0303">ps</g>a calculatio pro<lb break="no" rendition="#hyphen" n="022_127" xml:id="lb_022_127"/>batur a<g resp="#CB" cert="high" ref="#char751">per</g>te in. d. l. se<lb break="no" rendition="#hyphen" n="022_128" xml:id="lb_022_128"/>mel et ibi <persName ref="cerl:cnp01302817 gnd:118652885 viaf:66498105" key="Bartolus">bar.</persName></p>
+                </note> Es
+@@ -1125,12 +1120,12 @@
+ <lb n="023_008" xml:id="lb_023_008"/>obra solamente que no le tomen cuenta re<g ref="#char0292">z</g>ia / o
+ <lb n="023_009" xml:id="lb_023_009"/>muy estrecha. <hi rendition="#sup">m</hi>
+                <note xml:id="note_d1e4885" anchored="true"><p xml:id="p_d1e4888" part="N">
+-<lb n="023_109" xml:id="lb_023_109"/>Estrecha. <hi rendition="#sup">m</hi>. ¶ <choice><abbr>T<g ref="#char0292">z </g></abbr><expan resp="#CB" cert="medium">Tenet</expan><expan> </expan></choice><lb break="yes" n="023_110" xml:id="lb_023_110"/>Jaso. <g resp="#CB" cert="high" ref="#chari0303">in</g>. l. <choice><abbr>acti<g ref="#charo0303" resp="#AW" cert="low">on</g>e<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">actionem</expan></choice> vlt.
++<lb n="023_109" xml:id="lb_023_109"/>Estrecha. <hi rendition="#sup">m</hi>. ¶ <choice><abbr>T<g ref="#char0292">z </g></abbr><expan resp="#CB" cert="medium">Tenet</expan></choice><lb break="yes" n="023_110" xml:id="lb_023_110"/>Jaso. <g resp="#CB" cert="high" ref="#chari0303">in</g>. l. <choice><abbr>acti<g ref="#charo0303" resp="#AW" cert="low">on</g>e<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">actionem</expan></choice> vlt.
+ <lb n="023_111" xml:id="lb_023_111"/>co<g resp="#CB" cert="high" ref="#char0142">l</g>. C. de tr<g resp="#CB" cert="high" ref="#chara0303">an</g>sac. <g resp="#CB" cert="medium" ref="#char751">per</g>. l.
+ <lb n="023_112" xml:id="lb_023_112"/>si seru<g resp="#CB" cert="high" ref="#char770">us</g> vetitus <g resp="#CB" cert="high" ref="#char204a">et</g> ibi
+ <lb n="023_113" xml:id="lb_023_113"/><persName ref="cerl:cnp01302817 gnd:118652885 viaf:66498105" key="Bartolus">bar.</persName> <g ref="#charebd1">de</g> leg. j. <persName ref="cerl:cnp01302817 gnd:118652885 viaf:66498105" key="Bartolus">bar.</persName> in. l.
+-<lb n="023_114" xml:id="lb_023_114"/><choice><sic>ne quid.</sic><corr resp="#CB" cert="high" xml:id="e3v_d3j_f2b">nec quidquam</corr></choice> §. <g ref="#charebd1">de</g> plano<lb break="yes" n="023_115" xml:id="lb_023_115"/>circa medi<g resp="#CB" cert="high" ref="#charu0303">um</g>. ff. <g ref="#charebd1">de</g> ofi.
+-<lb n="023_116" xml:id="lb_023_116"/>proco. vel legati. <choice><abbr>t<g ref="#char0292">z</g><lb break="yes" n="023_117" xml:id="lb_023_117"/></abbr><expan resp="#CB" cert="medium">tenet</expan></choice> joh. an. <g resp="#CB" cert="high" ref="#chari0303">in</g> adi. ad spe.
++<lb n="023_114" xml:id="lb_023_114"/><choice><sic>ne quid<g ref="#chare8bf">q</g>.</sic><corr resp="#CB" cert="high" xml:id="e3v_d3j_f2b">nec quidquam</corr></choice> §. <g ref="#charebd1">de</g> plano<lb break="yes" n="023_115" xml:id="lb_023_115"/>circa medi<g resp="#CB" cert="high" ref="#charu0303">um</g>. ff. <g ref="#charebd1">de</g> ofi.
++<lb n="023_116" xml:id="lb_023_116"/>proco. vel legati. <choice><abbr>t<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="medium">tenet</expan></choice><lb break="yes" n="023_117" xml:id="lb_023_117"/> joh. an. <g resp="#CB" cert="high" ref="#chari0303">in</g> adi. ad spe.
+ <lb n="023_118" xml:id="lb_023_118"/>ti. de instro. edic. §.
+ <lb n="023_119" xml:id="lb_023_119"/>xiiij. <persName ref="cerl:cnp01302817 gnd:118652885 viaf:66498105" key="Bartolus">bar.</persName> in. l. tres fra<lb break="no" rendition="#hyphen" n="023_120" xml:id="lb_023_120"/>tres. ff. de pactis per
+ <lb n="023_121" xml:id="lb_023_121"/>l. sicui. ff. de. lib. lega.
+@@ -1177,12 +1172,8 @@
+ <lb n="024_007" xml:id="lb_024_007" break="yes"/>ausentar / fasta ser dada la cu<g resp="#CB" cert="high" ref="#chare0303">en</g>ta. y por ra<g ref="#char0292">z</g><g ref="#charo0303" resp="#AW" cert="low">on</g> <g resp="#CB" cert="high" ref="#charebd1">de</g>l de<lb break="no" rendition="#hyphen" n="024_008" xml:id="lb_024_008"/>lito / el mas <g resp="#CB" cert="high" ref="#char307">pri</g>ncipal jue<g ref="#char0292">z</g> / es a<g resp="#CB" cert="high" ref="#charq0303">que</g>l d<g ref="#charo0303" resp="#AW" cert="low">on</g>de se comete. <hi rendition="#sup">c</hi>
+                <note xml:id="note_d1e5130" anchored="true"><p xml:id="p_d1e5133" part="N">
+ <lb n="024_109" xml:id="lb_024_109"/>Comete. <hi rendition="#sup">c</hi>. ¶ <choice><abbr>T<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="medium">Tenet</expan></choice>.
+-<lb n="024_110" xml:id="lb_024_110"/><persName ref="cerl:cnp01341446 gnd:118803085 viaf:29618397" key="Baldus">bal.</persName> in. l. fi. vj. <g ref="#charq0366"><?oxy_comment_start author="birr" timestamp="20180621T135412+0200" comment="Sicher bin ich mir da aber nicht, dafür hab ich&apos;s bei Baldus nachgeschlagen.
+-
+-Allegation ist:
+-
+-Cod. 6.33.3"?>quaestio</g>ne<?oxy_comment_end?>. C.
+-<lb n="024_111" xml:id="lb_024_111"/><g resp="#CB" cert="high" ref="#charebd1">de</g> edic. di. adri. toll<g resp="#CB" cert="high" ref="#chare0303">en</g>.</p>
++<lb n="024_110" xml:id="lb_024_110"/><bibl sortKey="Cod-6-33-3"><persName ref="cerl:cnp01341446 gnd:118803085 viaf:29618397" key="Baldus">bal.</persName> in. l. fi. vj. <g ref="#charq0366" resp="#CB" cert="low">quaestio</g>ne. C.
++<lb n="024_111" xml:id="lb_024_111"/><g resp="#CB" cert="high" ref="#charebd1">de</g> edic. di. adri. toll<g resp="#CB" cert="high" ref="#chare0303">en</g></bibl>.</p>
+                </note>
+ <lb n="024_009" xml:id="lb_024_009"/>Y como <g resp="#CB" cert="high" ref="#chara0303">an</g>te jue<g ref="#char0292">z</g> mas <g resp="#CB" cert="high" ref="#char307">pri</g>ncipal se tiene de ha<g ref="#char0292">z</g>er la
+ <lb n="024_010" xml:id="lb_024_010"/>remissi<g ref="#charo0303" resp="#AW" cert="low">on</g>: para <g ref="#charq0303">que</g> ante el <g ref="#charebd1">de</g> cu<g resp="#CB" cert="high" ref="#chare0303">en</g>ta el administrador
+@@ -1222,8 +1213,7 @@
+ <lb n="024_026" xml:id="lb_024_026"/><hi rendition="#initCaps">Q</hi>Vanto a la setena parte
+ <lb n="024_027" xml:id="lb_024_027"/>en <g ref="#charq0303">que</g> diximos <g ref="#charq0303">que</g> cosas / a de tener en si el
+ <lb n="024_028" xml:id="lb_024_028"/>libro de cu<g resp="#CB" cert="high" ref="#chare0303">en</g>tas para <g ref="#charq0303">que</g> este ordenado co<lb break="no" rendition="#noHyphen" n="024_029" xml:id="lb_024_029"/>mo deue: digo<g resp="#CB" cert="high" ref="#charq0303"> que</g> / a de tener <g resp="#CB" cert="high" ref="#char307">pri</g>mero escrito todo a<lb break="no" rendition="#noHyphen" n="024_030" xml:id="lb_024_030"/><g resp="#CB" cert="high" ref="#charq0303">que</g>llo <g ref="#charq0303">que</g> el administrador recibio <g resp="#CB" cert="high" ref="#charebd1">de</g>l señor. ¶ Lo se<lb break="no" rendition="#noHyphen" n="024_031" xml:id="lb_024_031"/>g<g resp="#CB" cert="high" ref="#charu0303">un</g>do todo lo <g ref="#charq0303">que</g> dio al señor y / a otros por su m<g resp="#CB" cert="high" ref="#chara0303">an</g>da<pb break="no" rendition="#noHyphen" facs="facs:W0004-0025" n="fol. 11r" xml:id="facs_W0004-0025"/><lb break="no" rendition="#noHyphen" n="025_001" xml:id="lb_025_001"/>do: y lo <g ref="#charq0303">que</g> gasto en su <g resp="#CB" cert="high" ref="#char751">per</g>sona y bienes <g resp="#CB" cert="high" ref="#charebd1">de</g>l señor: y en
+-<lb n="025_002" xml:id="lb_025_002"/>sus negocios y causas. ¶ Y el libro <g ref="#charebd1">de</g> cu<g resp="#CB" cert="high" ref="#chare0303">en</g>tas <g resp="#CB" cert="high" ref="#charebd1">de</g>l <?oxy_comment_start author="birr" timestamp="20180621T172510+0200" comment="In der Vorschau zur Leseansicht wird &quot;administrador&quot; zweigeteilt wiedergegeben, mit Zeilenumbruch."?>ad<?oxy_comment_end?><lb break="no" rendition="#noHyphen"/>
+-<lb n="025_003" xml:id="lb_025_003"/>ministrador <g ref="#charq0303">que</g> no tiene dacta y rescibo: no es bi<g resp="#CB" cert="high" ref="#chare0303">en</g>
++<lb n="025_002" xml:id="lb_025_002"/>sus negocios y causas. ¶ Y el libro <g ref="#charebd1">de</g> cu<g resp="#CB" cert="high" ref="#chare0303">en</g>tas <g resp="#CB" cert="high" ref="#charebd1">de</g>l ad<lb break="no" rendition="#noHyphen"/>ministrador <g ref="#charq0303">que</g> no tiene dacta y rescibo: no es bi<g resp="#CB" cert="high" ref="#chare0303">en</g>
+ <lb n="025_004" xml:id="lb_025_004"/>ordenado / y ha<g ref="#char0292">z</g>e sospecha contra el administra<lb break="no" rendition="#noHyphen" n="025_005" xml:id="lb_025_005"/>dor. y es obligado / a pagar al señor el interesse <g ref="#charq0303">que</g>
+ <lb n="025_006" xml:id="lb_025_006"/>se <g resp="#CB" cert="medium" ref="#char753">pro</g>uasse: <hi rendition="#sup">a</hi>
+                <note xml:id="note_d1e5393" anchored="true"><p xml:id="p_d1e5396" part="N">
+@@ -1276,7 +1266,7 @@
+ <lb n="026_102" xml:id="lb_026_102"/>aparitorib<g resp="#CB" cert="high" ref="#char770">us</g> <g ref="#charebd1">de</g> exacto.
+ <lb n="026_103" xml:id="lb_026_103"/>tribu. lib. x. <g resp="#CB" cert="high" ref="#char204a">et</g>. d. l. c<g ref="#charo0303" resp="#AW" cert="high">om</g><lb break="no" rendition="#hyphen" n="026_104" xml:id="lb_026_104"/>perimus <persName ref="cerl:cnp01341446 gnd:118803085 viaf:29618397" key="Baldus">bal.</persName> in rub.
+ <lb n="026_105" xml:id="lb_026_105"/>C. de fide. instr. pe.
+-<lb n="026_106" xml:id="lb_026_106"/>char. <g resp="#CB" cert="high" ref="#char75f">ver</g>. se<g resp="#CB" cert="high" ref="#char307">qui</g>tur <choice><abbr>vider</abbr><expan resp="#CB" cert="medium">videtur</expan></choice>̃.</p>
++<lb n="026_106" xml:id="lb_026_106"/>char. <g resp="#CB" cert="high" ref="#char75f">ver</g>. se<g resp="#CB" cert="high" ref="#char307">qui</g>tur <choice><abbr>vider</abbr><expan resp="#CB" cert="medium">videtur</expan></choice>.</p>
+                </note> ¶ Ansi mesmo es necessario que el admini<lb break="no" rendition="#hyphen" n="026_002" xml:id="lb_026_002"/>strador escriua enel libro de cu<g resp="#CB" cert="high" ref="#chare0303">en</g>tas estensamen<lb break="no" rendition="#hyphen" n="026_003" xml:id="lb_026_003"/>te / o por menudo lo que gasto: y en que lo gasto /
+ <lb n="026_004" xml:id="lb_026_004"/>y a quien lo dio y pago. <hi rendition="#sup">g</hi>
+                <note xml:id="note_d1e5679" anchored="true"><p xml:id="p_d1e5682" part="N">
+@@ -1308,8 +1298,7 @@
+ <lb n="026_122" xml:id="lb_026_122"/>fi. et ibi <persName ref="cerl:cnp01341446 gnd:118803085 viaf:29618397" key="Baldus">bal.</persName> C. vt in
+ <lb n="026_123" xml:id="lb_026_123"/>pose. legatorum.</p>
+                </note> ¶ De
+-<lb n="026_019" xml:id="lb_026_019"/>d<g ref="#charo0303" resp="#AW" cert="low">on</g>de se sigue <g ref="#charq0303">que</g> los c<g ref="#charo0303" resp="#AW" cert="low">on</g>tadores no tien<g resp="#CB" cert="high" ref="#chare0303">en</g> de dar cre<lb break="no" rendition="#noHyphen" n="026_020" xml:id="lb_026_020"/>dito alguno al libro <g resp="#CB" cert="high" ref="#charebd1">de</g>l administrador: saluo qu<g resp="#CB" cert="high" ref="#chara0303"><?oxy_comment_start author="birr" timestamp="20180621T172732+0200" comment="In der Vorschau zur Leseansicht wird &quot;quando&quot; zweigeteilt wiedergegeben, mit Zeilenumbruch."?>an<?oxy_comment_end?></g><lb break="no" rendition="#noHyphen"/>
+-<lb n="026_021" xml:id="lb_026_021"/>do allende dela dacta y rescibo esta assentado en
++<lb n="026_019" xml:id="lb_026_019"/>d<g ref="#charo0303" resp="#AW" cert="low">on</g>de se sigue <g ref="#charq0303">que</g> los c<g ref="#charo0303" resp="#AW" cert="low">on</g>tadores no tien<g resp="#CB" cert="high" ref="#chare0303">en</g> de dar cre<lb break="no" rendition="#noHyphen" n="026_020" xml:id="lb_026_020"/>dito alguno al libro <g resp="#CB" cert="high" ref="#charebd1">de</g>l administrador: saluo qu<g resp="#CB" cert="high" ref="#chara0303">an</g><lb break="no" rendition="#noHyphen"/>do allende dela dacta y rescibo esta assentado en
+ <lb n="026_022" xml:id="lb_026_022"/>cada vn partido el dia / mes / y año: en <g ref="#charq0303">que</g> di<g ref="#char0292">z</g>e que
+ <lb n="026_023" xml:id="lb_026_023"/>dio / gasto / y pago: y la causa del gasto. <hi rendition="#sup">l</hi>
+                <note xml:id="note_d1e5803" anchored="true"><p xml:id="p_d1e5806" part="N">
+@@ -1332,7 +1321,7 @@
+ <pb facs="facs:W0004-0027" n="fol. 12r" xml:id="facs_W0004-0027"/>
+ <lb n="027_001" xml:id="lb_027_001"/>t<g resp="#CB" cert="high" ref="#chare0303">en</g>ga puesto en <g ref="#charq0303">que</g> dia se tiene <g ref="#charebd1">de</g> rescebir c<g ref="#charo0303" resp="#AW" cert="low">on</g>tra el ad<lb n="027_002" xml:id="lb_027_002" break="no" rendition="#noHyphen"/>ministrador el tal partido. <hi rendition="#sup">n</hi>
+                <note xml:id="note_d1e5916" anchored="true"><p xml:id="p_d1e5919" part="N">
+-<lb n="027_101" xml:id="lb_027_101"/>Partido. <hi rendition="#sup">n</hi>. ¶ <choice><abbr>T<g ref="#char0292">z</g><lb break="yes" n="027_102" xml:id="lb_027_102"/></abbr><expan resp="#CB" cert="medium">Tenet</expan></choice> joh. an. in ti. de instr.
++<lb n="027_101" xml:id="lb_027_101"/>Partido. <hi rendition="#sup">n</hi>. ¶ <choice><abbr>T<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="medium">Tenet</expan></choice><lb break="yes" n="027_102" xml:id="lb_027_102"/> joh. an. in ti. de instr.
+ <lb n="027_103" xml:id="lb_027_103"/>edic. §. n<g resp="#CB" cert="high" ref="#charu0303">un</g>c <choice><abbr>vid<g resp="#CB" cert="high" ref="#chare0303">en</g>du<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">videndum</expan></choice> <g resp="#CB" cert="high" ref="#chari0303">in</g>
+ <lb n="027_104" xml:id="lb_027_104"/>additi<g ref="#charo0303" resp="#AW" cert="low">on</g>e mag. abb. <g resp="#CB" cert="high" ref="#char204a">et</g>
+ <lb n="027_105" xml:id="lb_027_105"/>anto. <g resp="#CB" cert="high" ref="#chari0303">in</g>. c. ij. <g ref="#charebd1">de</g> fide <g resp="#CB" cert="high" ref="#chari0303">in</g>str.</p>
+@@ -1383,7 +1372,7 @@
+ <lb n="027_127" xml:id="lb_027_127"/>
+                </note> ¶ Y ansi n<g ref="#charo0303" resp="#AW" cert="high">om</g>brada cu<g resp="#CB" cert="high" ref="#chare0303">en</g>ta los administra<pb break="no" rendition="#hyphen" facs="facs:W0004-0028" n="fol. 12v" xml:id="facs_W0004-0028"/><lb break="no" rendition="#noHyphen" n="028_001" xml:id="lb_028_001"/>dores y cogedores de los tributos reales: an de
+ <lb n="028_002" xml:id="lb_028_002"/>rescebir las copias de lo que les mandan cobrar
+-<lb n="028_003" xml:id="lb_028_003"/>Di<g ref="#char0292">z</g>i<g ref="#chare0303">e</g>do que cobre de <?oxy_comment_start author="birr" timestamp="20180621T173116+0200" comment="In dieser Passage: keine Personennamen, sondern Blankettnamen, um eine Fallkonstellation zu verdeutlichen (Juan und Pedro, heute würde man G und S o.ä. schreiben)."?>pedro<?oxy_comment_end?> tantos marauedis:
++<lb n="028_003" xml:id="lb_028_003"/>Di<g ref="#char0292">z</g>i<g ref="#chare0303">e</g>do que cobre de pedro tantos marauedis:
+ <lb n="028_004" xml:id="lb_028_004"/>y de Juan tantos. y ansi quando cobraren tien<g ref="#chare0303">e</g>
+ <lb n="028_005" xml:id="lb_028_005"/>de assentar por escrito: que cobraron de Pedro
+ <lb n="028_006" xml:id="lb_028_006"/>tanto / y de Juan tanto: <hi rendition="#sup">s</hi>
+@@ -1406,13 +1395,12 @@
+ <lb n="028_109" xml:id="lb_028_109"/>
+                </note> Lo qual yo vi y halle c<g ref="#charo0303" resp="#AW" cert="low">on</g> otros dipu<lb break="no" rendition="#noHyphen" n="028_020" xml:id="lb_028_020"/>tado para tomar y rescebir cu<g resp="#CB" cert="high" ref="#chare0303">en</g>ta / a vn receptor
+ <lb n="028_021" xml:id="lb_028_021"/>por comission de los muy altos y cristianissimos
+-<lb n="028_022" xml:id="lb_028_022"/>principes <?oxy_comment_start author="birr" timestamp="20180621T173328+0200" comment="Personennamen taggen"?>don Fern<g resp="#CB" cert="high" ref="#chara0303">an</g>do / y doña Ysabel:<?oxy_comment_end?> rey y rey<lb n="028_023" xml:id="lb_028_023" break="no" rendition="#noHyphen"/>na nuestros señores de gloriosa memoria: en las
++<lb n="028_022" xml:id="lb_028_022"/>principes don <persName resp="#CB" ref="cerl:cnp01361651" key="Ferdinand II., Aragon">Fern<g resp="#CB" cert="high" ref="#chara0303">an</g>do</persName> / y doña <persName resp="#CB" ref="cerl:cnp01036714" key="Isabela I., Castile">Ysabel</persName>: rey y rey<lb n="028_023" xml:id="lb_028_023" break="no" rendition="#noHyphen"/>na nuestros señores de gloriosa memoria: en las
+ <lb n="028_024" xml:id="lb_028_024"/>quales halle que en la dacta / pagos / y gastos que
+ <lb n="028_025" xml:id="lb_028_025"/>el receptor de<g ref="#char0292">z</g>ia auer hecho: tenia c<g ref="#charo0303" resp="#AW" cert="low">on</g>tado y ass<g resp="#CB" cert="high" ref="#chare0303">en</g><lb break="no" rendition="#hyphen" n="028_026" xml:id="lb_028_026"/>tado enel libro de cuentas / vna cosa tres ve<g ref="#char0292">z</g>es. y
+ <lb n="028_027" xml:id="lb_028_027"/>el vn partido estaua bien apartado del otro. y de<lb break="no" rendition="#noHyphen" n="028_028" xml:id="lb_028_028"/><g ref="#char0292">z</g>ia desta manera. En primero de Mayo de mill
+-<lb n="028_029" xml:id="lb_028_029"/>y quinientos años / di a <?oxy_comment_start author="birr" timestamp="20180621T173528+0200" comment="Personenname.
+-Allerdings keine Ahnung, ob das eine reale Person sein soll oder wieder ein, diesmal elaborierterer, Blankettname."?>Gonçalo hern<g resp="#CB" cert="high" ref="#chara0303">an</g>de<g ref="#char0292">z</g><?oxy_comment_end?> die<g ref="#char0292">z</g>
+-<lb n="028_030" xml:id="lb_028_030"/>mill marauedis por mandado de los señores ju<lb break="no" rendition="#noHyphen" n="028_031" xml:id="lb_028_031"/>sticia y regidores: por<g ref="#charq0303">que</g> fuesse a la corte de sus al<lb break="no" rendition="#noHyphen" n="028_032" xml:id="lb_028_032"/>te<g ref="#char0292">z</g>as. Y en otro partido <g resp="#CB" cert="high" ref="#charebd1">de</g><g ref="#char0292">z</g>ia / en primero <g ref="#charebd1">de</g> Ma<pb break="no" rendition="#noHyphen" facs="facs:W0004-0029" n="fol. 13r" xml:id="facs_W0004-0029"/><lb break="no" rendition="#noHyphen" n="029_001" xml:id="lb_029_001"/>yo de mill y quinientos años: di a <?oxy_comment_start author="birr" timestamp="20180621T173545+0200" comment="S.o."?>Gonçalo<?oxy_comment_end?> her<lb break="no" rendition="#hyphen" n="029_002" xml:id="lb_029_002"/>nande<g ref="#char0292">z</g> cinco mill marauedis por mandado de<lb break="no" rendition="#hyphen" n="029_003" xml:id="lb_029_003"/>los señores justicia y regidores / por que fuesse / a
++<lb n="028_029" xml:id="lb_028_029"/>y quinientos años / di a Gonçalo hern<g resp="#CB" cert="high" ref="#chara0303">an</g>de<g ref="#char0292">z</g> die<g ref="#char0292">z</g>
++<lb n="028_030" xml:id="lb_028_030"/>mill marauedis por mandado de los señores ju<lb break="no" rendition="#noHyphen" n="028_031" xml:id="lb_028_031"/>sticia y regidores: por<g ref="#charq0303">que</g> fuesse a la corte de sus al<lb break="no" rendition="#noHyphen" n="028_032" xml:id="lb_028_032"/>te<g ref="#char0292">z</g>as. Y en otro partido <g resp="#CB" cert="high" ref="#charebd1">de</g><g ref="#char0292">z</g>ia / en primero <g ref="#charebd1">de</g> Ma<pb break="no" rendition="#noHyphen" facs="facs:W0004-0029" n="fol. 13r" xml:id="facs_W0004-0029"/><lb break="no" rendition="#noHyphen" n="029_001" xml:id="lb_029_001"/>yo de mill y quinientos años: di a Gonçalo her<lb break="no" rendition="#hyphen" n="029_002" xml:id="lb_029_002"/>nande<g ref="#char0292">z</g> cinco mill marauedis por mandado de<lb break="no" rendition="#hyphen" n="029_003" xml:id="lb_029_003"/>los señores justicia y regidores / por que fuesse / a
+ <lb n="029_004" xml:id="lb_029_004"/>la corte de sus alte<g ref="#char0292">z</g>as. y en otro partido de<g ref="#char0292">z</g>ia de
+ <lb n="029_005" xml:id="lb_029_005"/>la mesma manera <g ref="#charq0303">que</g> le auia dado cinco mill ma<lb break="no" rendition="#hyphen" n="029_006" xml:id="lb_029_006"/>rauedis / y por la mesma causa. De manera que
+ <lb n="029_007" xml:id="lb_029_007"/>si passaran en cu<g resp="#CB" cert="high" ref="#chare0303">en</g>ta estos tres partidos: lleuara
+@@ -1501,20 +1489,17 @@
+ <lb n="031_116" xml:id="lb_031_116"/><hi rendition="#sup">c</hi>. <persName ref="cerl:cnp01302817 gnd:118652885 viaf:66498105" key="Bartolus">Bar.</persName> in. d. l. admo<lb break="no" rendition="#noHyphen" n="031_117" xml:id="lb_031_117"/>n<g resp="#CB" cert="high" ref="#chare0303">en</g>di. vj. col<g resp="#CB" cert="high" ref="#char0142">l</g>. <g resp="#CB" cert="high" ref="#char75f">ver</g>. <g resp="#CB" cert="high" ref="#char307">pri</g>mo
+ <lb n="031_118" xml:id="lb_031_118"/>quero q<g resp="#CB" cert="high" ref="#charebd1">uod</g> probat <g resp="#CB" cert="high" ref="#char751">per</g> l.
+ <lb n="031_119" xml:id="lb_031_119"/>rationes. C. de <g resp="#CB" cert="high" ref="#char753">pro</g>ba.
+-<lb n="031_120" xml:id="lb_031_120"/>facit pro <persName ref="cerl:cnp01302817 gnd:118652885 viaf:66498105" key="Bartolus">bar.</persName> l. <g resp="#CB" cert="high" ref="#char307">qui</g> <choice><abbr>cu<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">cum</expan></choice><lb break="yes" n="031_121" xml:id="lb_031_121"/>maior. §. pe. ff. de. <choice><abbr>bo<lb break="no" rendition="#noHyphen" n="031_122" xml:id="lb_031_122"/>nis</abbr><expan resp="#CB" cert="high">bonis quae</expan></choice> lib. <choice><abbr>t<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">tenet</expan></choice> abb. <g resp="#CB" cert="high" ref="#char204a">et</g> an<lb break="no" rendition="#hyphen" n="031_123" xml:id="lb_031_123"/>to. <g resp="#CB" cert="high" ref="#chari0303">in</g>. c. ij. de fide instr.
++<lb n="031_120" xml:id="lb_031_120"/>facit pro <persName ref="cerl:cnp01302817 gnd:118652885 viaf:66498105" key="Bartolus">bar.</persName> l. <g resp="#CB" cert="high" ref="#char307">qui</g> <choice><abbr>cu<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">cum</expan></choice><lb break="yes" n="031_121" xml:id="lb_031_121"/>maior. §. pe. ff. de. <choice><abbr>bo<lb break="no" rendition="#noHyphen" n="031_122" xml:id="lb_031_122"/>nis<g ref="#chare8bf">q</g></abbr><expan resp="#CB" cert="high">bo<lb break="no" rendition="#noHyphen" sameAs="#lb_031_122"/>nis quae</expan></choice> lib. <choice><abbr>t<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">tenet</expan></choice> abb. <g resp="#CB" cert="high" ref="#char204a">et</g> an<lb break="no" rendition="#hyphen" n="031_123" xml:id="lb_031_123"/>to. <g resp="#CB" cert="high" ref="#chari0303">in</g>. c. ij. de fide instr.
+ <lb n="031_124" xml:id="lb_031_124"/>et ibi glo.</p>
+                </note> ¶ Fue otra opinion <g ref="#charq0303">que</g> las escrituras de los
+ <lb n="031_011" xml:id="lb_031_011"/>mercaderes avn <g ref="#charq0303">que</g> sean escrituras en su fauor ha<lb break="no" rendition="#noHyphen" n="031_012" xml:id="lb_031_012"/><g ref="#char0292">z</g>en media prou<g resp="#CB" cert="high" ref="#chara0303">an</g>ça: y <g ref="#charq0303">que</g> c<g ref="#charo0303" resp="#AW" cert="low">on</g> su <choice><orig>juram<g ref="#chare0303">e</g>to</orig><reg resp="#MK" cert="high" xml:id="zgz_hkm_cv">juramento</reg></choice> ha<g ref="#char0292">z</g><g ref="#chare0303">e</g> pro<lb break="no" rendition="#hyphen" n="031_013" xml:id="lb_031_013"/>uança entera. <hi rendition="#sup">d</hi>
+                <note xml:id="note_d1e6826" anchored="true"><p xml:id="p_d1e6829" part="N">
+ <lb n="031_126" xml:id="lb_031_126"/>Entera. <hi rendition="#sup">d</hi>. ¶ Joh.
+-<lb n="031_127" xml:id="lb_031_127"/>an. in addi. ad. spe. <g resp="#CB" cert="high" ref="#charebd1">de</g><lb break="yes" n="031_128" xml:id="lb_031_128"/>instru. edic. §. n<g resp="#CB" cert="high" ref="#charu0303">un</g>c <choice><abbr>dic<g resp="#CB" cert="high" ref="#chare0303">en</g><lb break="no" rendition="#noHyphen" n="031_129" xml:id="lb_031_129"/>du<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">dicendum</expan></choice> post principi<g resp="#CB" cert="high" ref="#charu0303">um</g>.</p>
++<lb n="031_127" xml:id="lb_031_127"/>an. in addi. ad. spe. <g resp="#CB" cert="high" ref="#charebd1">de</g><lb break="yes" n="031_128" xml:id="lb_031_128"/>instru. edic. §. n<g resp="#CB" cert="high" ref="#charu0303">un</g>c <choice><abbr>dic<g resp="#CB" cert="high" ref="#chare0303">en</g><lb break="no" rendition="#noHyphen" n="031_129" xml:id="lb_031_129"/>du<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">dicen<lb break="no" rendition="#noHyphen" sameAs="#lb_031_129"/>dum</expan></choice> post principi<g resp="#CB" cert="high" ref="#charu0303">um</g>.</p>
+                </note> Y esta opinion no apla<g ref="#char0292">z</g>e a otros
+-<lb n="031_014" xml:id="lb_031_014"/>doctores ni a <?oxy_comment_start author="birr" timestamp="20180622T130740+0200" comment="Cinus da Pistoia.
+-
+-GND: 119028921 | LCCN: n85224853 | VIAF: 162879953"?>cino<?oxy_comment_end?>. <hi rendition="#sup">e</hi>
++<lb n="031_014" xml:id="lb_031_014"/>doctores ni a <persName ref="cerl:cnp01323747 gnd:119028921 viaf:162879953" key="Cinus, de Pistorio" resp="#CB">cino</persName>. <hi rendition="#sup">e</hi>
+                <note xml:id="note_d1e6855" anchored="true"><p xml:id="p_d1e6858" part="N">
+-<lb n="031_131" xml:id="lb_031_131"/><?oxy_comment_start author="birr" timestamp="20180622T130752+0200" comment="dto.
+-"?>Cino<?oxy_comment_end?>. <hi rendition="#sup">e</hi>. ¶ Jn. l. in<lb break="no" rendition="#hyphen" n="031_132" xml:id="lb_031_132"/>strum<g resp="#CB" cert="high" ref="#chare0303">en</g>ta. C. de <g resp="#CB" cert="high" ref="#char753">pro</g>ba.</p>
++<lb n="031_131" xml:id="lb_031_131"/><persName ref="cerl:cnp01323747 gnd:119028921 viaf:162879953" key="Cinus, de Pistorio" resp="#CB">Cino</persName>. <hi rendition="#sup">e</hi>. ¶ Jn. l. in<lb break="no" rendition="#hyphen" n="031_132" xml:id="lb_031_132"/>strum<g resp="#CB" cert="high" ref="#chare0303">en</g>ta. C. de <g resp="#CB" cert="high" ref="#char753">pro</g>ba.</p>
+                </note> Antes la reprueuan por vna
+ <lb n="031_015" xml:id="lb_031_015"/>ra<g ref="#char0292">z</g>on <g ref="#charq0303">que</g> me paresce buena di<g ref="#char0292">z</g><g ref="#chare0303">e</g> ansi: <g ref="#charq0303">que</g> no puede
+ <lb n="031_016" xml:id="lb_031_016"/>mas obrar ni prouar la escritura que vno ha<g ref="#char0292">z</g>e <g ref="#charq0303">que</g>
+@@ -1685,9 +1670,9 @@
+ <lb n="034_129" xml:id="lb_034_129"/>in. bonefidei. C. eo.</p>
+                </note> Que di<g ref="#char0292">z</g><g ref="#chare0303">e</g> que la es<lb break="no" rendition="#hyphen" n="034_022" xml:id="lb_034_022"/>critura prouada / o que ha<g ref="#char0292">z</g>e qual<g resp="#CB" cert="high" ref="#char307">qui</g>era persona /
+ <lb n="034_023" xml:id="lb_034_023"/>ha<g ref="#char0292">z</g>e media prou<g resp="#CB" cert="high" ref="#chara0303">an</g>ça: se entiende quando la per<lb break="no" rendition="#hyphen" n="034_024" xml:id="lb_034_024"/>sona que la hi<g ref="#char0292">z</g>o / era <g resp="#CB" cert="high" ref="#char751">per</g>sona de buena fama y h<g ref="#charo0303" resp="#AW" cert="low">on</g><lb break="no" rendition="#hyphen" n="034_025" xml:id="lb_034_025"/>rrada. ¶ Y es de notar que quando el mercader
+-<lb n="034_026" xml:id="lb_034_026"/>o cambiador es aprouado en su arte y officio: su li<lb break="no" rendition="#noHyphen" n="034_027" xml:id="lb_034_027"/>bro ha<g ref="#char0292">z</g>e entera fee. <hi rendition="#sup">⁊</hi>
++<lb n="034_026" xml:id="lb_034_026"/>o cambiador es aprouado en su arte y officio: su li<lb break="no" rendition="#noHyphen" n="034_027" xml:id="lb_034_027"/>bro ha<g ref="#char0292">z</g>e entera fee. <hi rendition="#sup"><g ref="#char204a">⁊</g></hi>
+                <note xml:id="note_d1e7728" anchored="true"><p xml:id="p_d1e7731" part="N">
+-<lb n="034_131" xml:id="lb_034_131"/>Fee. <hi rendition="#sup">⁊</hi>. Vt. d. l. que<lb break="no" rendition="#noHyphen"/>
++<lb n="034_131" xml:id="lb_034_131"/>Fee. <hi rendition="#sup"><g ref="#char204a">⁊</g></hi>. Vt. d. l. que<lb break="no" rendition="#noHyphen"/>
+ <lb n="034_132" xml:id="lb_034_132"/>d<g resp="#CB" cert="high" ref="#chara0303">am</g>. d. §. numularios.</p>
+ <lb n="034_133" xml:id="lb_034_133"/>
+                </note> Pero si el mercader por su
+@@ -1721,13 +1706,11 @@
+ <lb n="035_016" xml:id="lb_035_016"/>que le deuia / o daua tanto. <hi rendition="#sup">c</hi>
+                <note xml:id="note_d1e7871" anchored="true"><p xml:id="p_d1e7874" part="N">
+ <lb n="035_112" xml:id="lb_035_112"/>Tanto. <hi rendition="#sup">c</hi>. ¶ Vide
+-<lb n="035_113" xml:id="lb_035_113"/>ad hoc <persName ref="cerl:cnp01341446 gnd:118803085 viaf:29618397" key="Baldus">bal.</persName> <g resp="#CB" cert="high" ref="#chari0303">in</g> l. <choice><abbr>qm</abbr><expan resp="#CB" cert="medium">quoniam</expan></choice>̃ in
++<lb n="035_113" xml:id="lb_035_113"/>ad hoc <persName ref="cerl:cnp01341446 gnd:118803085 viaf:29618397" key="Baldus">bal.</persName> <g resp="#CB" cert="high" ref="#chari0303">in</g> l. <choice><abbr>qm</abbr><expan resp="#CB" cert="medium">quoniam</expan></choice> in
+ <lb n="035_114" xml:id="lb_035_114"/>dign<g resp="#CB" cert="high" ref="#charu0303">um</g> <g resp="#CB" cert="high" ref="#chari0303">in</g> fi. C. <g ref="#charebd1">de</g> testa.
+ <lb n="035_115" xml:id="lb_035_115"/><g resp="#CB" cert="high" ref="#char204a">et</g> in. l. ij. §. ad hec. C.
+ <lb n="035_116" xml:id="lb_035_116"/>de quadrie. prescrip.
+-<lb n="035_117" xml:id="lb_035_117"/><?oxy_comment_start author="birr" timestamp="20180622T133414+0200" comment="Paulus de Castro
+-
+- GND: 100957196 | VIAF: 100203916"?>paulus de castro<?oxy_comment_end?> <g resp="#CB" cert="high" ref="#chari0303">in</g> l.
++<lb n="035_117" xml:id="lb_035_117"/><persName resp="#CB" key="Paolo, di Castro" ref="cerl:cnp02142991 gnd:100957196 viaf:100203916">paulus de castro</persName> <g resp="#CB" cert="high" ref="#chari0303">in</g> l.
+ <lb n="035_118" xml:id="lb_035_118"/>tale <choice><abbr>pactu<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">pactum</expan></choice> in princi<lb break="no" rendition="#hyphen" n="035_119" xml:id="lb_035_119"/>pio. ff. de pac.</p>
+ <lb n="035_120" xml:id="lb_035_120"/>
+                </note> Y ansi yo vi algunos
+@@ -1748,7 +1731,7 @@
+ <lb n="036_101" xml:id="lb_036_101"/>Dicho. <hi rendition="#sup">d</hi>. ¶ Et <choice><abbr>t<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="low">tenet</expan></choice><lb break="yes" n="036_102" xml:id="lb_036_102"/><persName ref="cerl:cnp01341446 gnd:118803085 viaf:29618397" key="Baldus">bal.</persName> in Rub. C. de c<g ref="#charo0303" resp="#AW" cert="low">on</g><lb break="no" rendition="#noHyphen" n="036_103" xml:id="lb_036_103"/>stitu. pe. ij. co<g resp="#CB" cert="high" ref="#char0142">l</g>. <g resp="#CB" cert="high" ref="#char75f">ver</g>. mo<lb break="no" rendition="#hyphen" n="036_104" xml:id="lb_036_104"/>do hic <g resp="#CB" cert="high" ref="#charq0303">quae</g>ro <g resp="#CB" cert="high" ref="#char204a">et</g> <g resp="#CB" cert="high" ref="#chari0303">in</g> Rub.
+ <lb n="036_105" xml:id="lb_036_105"/>C. <g ref="#charebd1">de</g> fide. <g resp="#CB" cert="high" ref="#chari0303">in</g>strum<g resp="#CB" cert="high" ref="#chare0303">en</g>to<g resp="#CB" cert="high" ref="#char75d">rum</g></p>
+                </note> Mas si el administrador
+-<lb n="036_007" xml:id="lb_036_007"/>di<g ref="#char0292">z</g>e por su libro de cuentas: que cobro de <?oxy_comment_start author="birr" timestamp="20180622T133537+0200" comment="Keine Person, sondern Blankettname."?>Fulano<?oxy_comment_end?>
++<lb n="036_007" xml:id="lb_036_007"/>di<g ref="#char0292">z</g>e por su libro de cuentas: que cobro de Fulano
+ <lb n="036_008" xml:id="lb_036_008"/>tantos marauedis: es duda si se dara credito al
+ <lb n="036_009" xml:id="lb_036_009"/>tal libro: para que sea libre aquel de quien di<g ref="#char0292">z</g>e <g ref="#charq0303">que</g>
+ <lb n="036_010" xml:id="lb_036_010"/>rescebio y cobro t<g resp="#CB" cert="high" ref="#chara0303">an</g>to: digo <g ref="#charq0303">que</g> si el tal administra<lb break="no" rendition="#hyphen" n="036_011" xml:id="lb_036_011"/>dor era <g resp="#CB" cert="high" ref="#charebd1">de</g>l fisco prueua / su libro la paga: avn <g ref="#charq0303">que</g> la
+@@ -1779,7 +1762,7 @@
+ <lb n="036_125" xml:id="lb_036_125"/>ij. §. ad hec. C. <g ref="#charebd1">de</g> qua<lb break="no" rendition="#noHyphen" n="036_126" xml:id="lb_036_126"/>dric. pres.</p>
+                </note> Por tanto sea cauto
+ <lb n="036_022" xml:id="lb_036_022"/>el que paga al procurador de otro / <g ref="#charq0303">que</g> haga el pa<lb break="no" rendition="#hyphen" n="036_023" xml:id="lb_036_023"/>go por ante escriuano / o testigos: y el escriuano
+-<lb n="036_024" xml:id="lb_036_024"/>assiente en la carta de pago: que pago en su <choice><orig>pres<g ref="#chare0303">e</g><lb break="no" rendition="#noHyphen" n="036_025" xml:id="lb_036_025"/>cia</orig><reg resp="#MK" cert="high" xml:id="v2w_k5l_cv">presencia</reg></choice> / y delos testigos. y lo mesmo si alguno paga
++<lb n="036_024" xml:id="lb_036_024"/>assiente en la carta de pago: que pago en su <choice><orig>pres<g ref="#chare0303">e</g><lb break="no" rendition="#noHyphen" n="036_025" xml:id="lb_036_025"/>cia</orig><reg resp="#MK" cert="high" xml:id="v2w_k5l_cv">presen<lb break="no" rendition="#noHyphen" sameAs="#lb_036_025"/>cia</reg></choice> / y delos testigos. y lo mesmo si alguno paga
+ <lb n="036_026" xml:id="lb_036_026"/>al tutor / o curador de otro. <hi rendition="#sup">h</hi>
+                <note xml:id="note_d1e8149" anchored="true"><p xml:id="p_d1e8152" part="N">
+ <lb n="036_128" xml:id="lb_036_128"/>Otro. <hi rendition="#sup">h</hi>. ¶ Lex si n<g ref="#charo0303" resp="#AW" cert="low">on</g>
+@@ -1796,7 +1779,7 @@
+ <lb n="036_030" xml:id="lb_036_030"/>grande cantidad / de que se puede ha<g ref="#char0292">z</g>er escritu<lb break="no" rendition="#hyphen" n="036_031" xml:id="lb_036_031"/>ra publica: <hi rendition="#sup">k</hi>
+                <note xml:id="note_d1e8214" anchored="true"><p xml:id="p_d1e8217" part="N">
+ <lb n="036_138" xml:id="lb_036_138"/>Publica. <hi rendition="#sup">k</hi>. ¶ Per
+-<choice><abbr><lb n="036_139" xml:id="lb_036_139"/>ostiense<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">ostiensem</expan></choice> <g resp="#CB" cert="high" ref="#char204a">et</g> abb. in. c.
++<lb n="036_139" xml:id="lb_036_139"/><choice><abbr>ostiense<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">ostiensem</expan></choice> <g resp="#CB" cert="high" ref="#char204a">et</g> abb. in. c.
+ <lb n="036_140" xml:id="lb_036_140"/>qualiter <g resp="#CB" cert="high" ref="#char204a">et</g> qu<g resp="#CB" cert="high" ref="#chara0303">an</g>do el
+ <lb n="036_141" xml:id="lb_036_141"/>ij. de acusa. <persName ref="cerl:cnp01302817 gnd:118652885 viaf:66498105" key="Bartolus">bar.</persName> in. l.
+ <lb n="036_142" xml:id="lb_036_142"/>fi. in. fi. ff. si cui plus <g resp="#CB" cert="high" ref="#char8bf0301">quam</g>
+@@ -1821,7 +1804,7 @@
+ <lb n="037_012" xml:id="lb_037_012"/>por menudo: ansi como en los gastos que los tu<lb break="no" rendition="#noHyphen" n="037_013" xml:id="lb_037_013"/>tores ha<g ref="#char0292">z</g>en en dar de comer y vestir a sus meno<lb break="no" rendition="#noHyphen" n="037_014" xml:id="lb_037_014"/>res: o el mayordomo / o <choice><orig>desp<g ref="#chare0303">e</g>sero</orig><reg resp="#MK" cert="high" xml:id="kjc_mnn_1v">despensero</reg></choice> ha<g ref="#char0292">z</g>e en dar de
+ <lb n="037_015" xml:id="lb_037_015"/>comer a su señor y a los suyos: o en los gastos <g ref="#charq0303">que</g>
+ <lb n="037_016" xml:id="lb_037_016"/>ha<g ref="#char0292">z</g>en en edificios de fortale<g ref="#char0292">z</g>as y casas / y vnas
+-<lb n="037_017" xml:id="lb_037_017"/>labores de panes / viñas / y ganados y otras ha<lb break="no" rendition="#hyphen" n="037_018" xml:id="lb_037_018"/><g ref="#char0292">z</g>iendas semejantes: delos <g resp="#CB" cert="high" ref="#charq03403">qua</g>les gastos no se pue<lb break="no" rendition="#noHyphen" n="037_019" xml:id="lb_037_019"/>de ha<g ref="#char0292">z</g>er publica escritura: ni se puede <choice><abbr>ꝓuar</abbr><expan resp="#AW" cert="high">prouar</expan></choice> por
++<lb n="037_017" xml:id="lb_037_017"/>labores de panes / viñas / y ganados y otras ha<lb break="no" rendition="#hyphen" n="037_018" xml:id="lb_037_018"/><g ref="#char0292">z</g>iendas semejantes: delos <g resp="#CB" cert="high" ref="#charq03403">qua</g>les gastos no se pue<lb break="no" rendition="#noHyphen" n="037_019" xml:id="lb_037_019"/>de ha<g ref="#char0292">z</g>er publica escritura: ni se puede <choice><abbr><g ref="#chara753">p</g>uar</abbr><expan resp="#AW" cert="high">prouar</expan></choice> por
+ <lb n="037_020" xml:id="lb_037_020"/>testigos la cantidad que se gasto: digo que si los
+ <lb n="037_021" xml:id="lb_037_021"/>tales gastos son virisimiles / o de creer / o paresc<g resp="#CB" cert="high" ref="#chare0303">en</g>
+ <lb n="037_022" xml:id="lb_037_022"/>por vista dela obra: tales y semejantes gastos co<lb break="no" rendition="#hyphen" n="037_023" xml:id="lb_037_023"/>mo estos se prouan por el libro de cuentas: junta<lb break="no" rendition="#noHyphen" n="037_024" xml:id="lb_037_024"/>mente con el juramento del administrador / si es
+@@ -1861,7 +1844,7 @@
+                <note xml:id="note_d1e8487" anchored="true"><p xml:id="p_d1e8490" part="N">
+ <lb n="038_101" xml:id="lb_038_101"/>Juramento.
+ <lb n="038_102" xml:id="lb_038_102"/><hi rendition="#sup">n</hi>. ¶ Lex. fi. C. de ali<lb break="no" rendition="#noHyphen" n="038_103" xml:id="lb_038_103"/>m<g resp="#CB" cert="high" ref="#chare0303">en</g>. pup. <g resp="#CB" cert="high" ref="#char307">pri</g>s. facit sin<lb break="no" rendition="#hyphen" n="038_104" xml:id="lb_038_104"/>gulare dict<g resp="#CB" cert="high" ref="#charu0303">um</g>. <persName ref="cerl:cnp01341446 gnd:118803085 viaf:29618397" key="Baldus">bal.</persName> in.
+-<lb n="038_105" xml:id="lb_038_105"/>l. j. fi. col<g resp="#CB" cert="high" ref="#char0142">l</g>. <g resp="#CB" cert="high" ref="#char75f">ver</g>. <choice><abbr>q̃liter</abbr><expan resp="#CB" cert="high">qualiter</expan></choice> s<g resp="#CB" cert="high" ref="#charu0303">um</g><lb break="no" rendition="#hyphen" n="038_106" xml:id="lb_038_106"/>ptus proben<g resp="#CB" cert="high" ref="#chart0303">tur</g>. C. de
++<lb n="038_105" xml:id="lb_038_105"/>l. j. fi. col<g resp="#CB" cert="high" ref="#char0142">l</g>. <g resp="#CB" cert="high" ref="#char75f">ver</g>. <choice><abbr><g ref="#charq0303">q</g>liter</abbr><expan resp="#CB" cert="high">qualiter</expan></choice> s<g resp="#CB" cert="high" ref="#charu0303">um</g><lb break="no" rendition="#hyphen" n="038_106" xml:id="lb_038_106"/>ptus proben<g resp="#CB" cert="high" ref="#chart0303">tur</g>. C. de
+ <lb n="038_107" xml:id="lb_038_107"/>fruc. <g resp="#CB" cert="high" ref="#char204a">et</g> litis. expen.</p>
+                </note>. ¶ Y
+ <lb n="038_006" xml:id="lb_038_006"/>ansi mesmo <g resp="#CB" cert="high" ref="#charebd1">de</g><g ref="#char0292">z</g>imos que los gastos se pued<g resp="#CB" cert="high" ref="#chare0303">en</g> pro<lb break="no" rendition="#noHyphen" n="038_007" xml:id="lb_038_007"/>uar por vna vista y conoscimi<g resp="#CB" cert="high" ref="#chare0303">en</g>to secreto. De ma<lb break="no" rendition="#noHyphen" n="038_008" xml:id="lb_038_008"/>nera que si el tutor / o administrador dixesse <g ref="#charq0303">que</g> ga<lb break="no" rendition="#noHyphen" n="038_009" xml:id="lb_038_009"/>sto en ha<g ref="#char0292">z</g>er vna casa mill ducados: los que vie<lb break="no" rendition="#hyphen" n="038_010" xml:id="lb_038_010"/>ren la casa y saben quanto cuesta en a<g resp="#CB" cert="high" ref="#charq0303">que</g>lla tierra
+@@ -1910,7 +1893,7 @@
+ <lb n="039_101" xml:id="lb_039_101"/>Re<g ref="#char0292">z</g>a. <hi rendition="#sup">q</hi>. ¶ Lex. inte<lb break="no" rendition="#noHyphen" n="039_102" xml:id="lb_039_102"/>rest. <g resp="#CB" cert="high" ref="#char204a">et</g> ibi <persName ref="cerl:cnp01341446 gnd:118803085 viaf:29618397" key="Baldus">bal.</persName> C. de so<lb break="no" rendition="#noHyphen" n="039_103" xml:id="lb_039_103"/>lu. <g resp="#CB" cert="high" ref="#char204a">et</g> l. cum precibus.
+ <lb n="039_104" xml:id="lb_039_104"/>C. de probati.</p>
+                </note>. ¶ Y si
+-<lb n="039_023" xml:id="lb_039_023"/>por caso el señor escriuiesse al administrador de<lb break="no" rendition="#hyphen" n="039_024" xml:id="lb_039_024"/>sta manera: alla va <?oxy_comment_start author="birr" timestamp="20180622T134020+0200" comment="Keine Person, sondern Blankettname."?>Fulano<?oxy_comment_end?> / dalde entero credito
++<lb n="039_023" xml:id="lb_039_023"/>por caso el señor escriuiesse al administrador de<lb break="no" rendition="#hyphen" n="039_024" xml:id="lb_039_024"/>sta manera: alla va Fulano / dalde entero credito
+ <lb n="039_025" xml:id="lb_039_025"/>en lo que os dixere. Si aquel moço dixo al admi<lb break="no" rendition="#noHyphen" n="039_026" xml:id="lb_039_026"/>nistrador que el señor le m<g resp="#CB" cert="high" ref="#chara0303">an</g>daua que le diesse t<g resp="#CB" cert="high" ref="#chara0303">an </g><lb break="no" rendition="#noHyphen" n="039_027" xml:id="lb_039_027"/>tos mill marauedis: bastaria esta carta para que
+ <lb n="039_028" xml:id="lb_039_028"/>el administrador sea libre si se los dio. <hi rendition="#sup">r</hi>
+                <note xml:id="note_d1e8764" anchored="true"><p xml:id="p_d1e8767" part="N">
+@@ -1988,9 +1971,9 @@
+                </note>. Sino fuesse en caso que conoscidam<g resp="#CB" cert="high" ref="#chare0303">en</g>te el
+ <lb n="041_006" xml:id="lb_041_006"/>señor fuesse vn hombre roto de conciencia y de
+ <lb n="041_007" xml:id="lb_041_007"/>mal trato. y el administrador fuesse hombre de
+-<lb n="041_008" xml:id="lb_041_008"/>buena fama / que estonce los contadores rescibi<lb break="no" rendition="#hyphen" n="041_009" xml:id="lb_041_009"/>ran juram<g resp="#CB" cert="high" ref="#chare0303">en</g>to <g resp="#CB" cert="high" ref="#charebd1">de</g>l administrador / y no del señor. <hi rendition="#sup">⁊</hi>
++<lb n="041_008" xml:id="lb_041_008"/>buena fama / que estonce los contadores rescibi<lb break="no" rendition="#hyphen" n="041_009" xml:id="lb_041_009"/>ran juram<g resp="#CB" cert="high" ref="#chare0303">en</g>to <g resp="#CB" cert="high" ref="#charebd1">de</g>l administrador / y no del señor. <hi rendition="#sup"><g ref="#char204a">⁊</g></hi>
+                <note xml:id="note_d1e9103" anchored="true"><p xml:id="p_d1e9106" part="N">
+-<lb n="041_105" xml:id="lb_041_105"/>Señor. <hi rendition="#sup">⁊</hi> Argu. tex.
++<lb n="041_105" xml:id="lb_041_105"/>Señor. <hi rendition="#sup"><g ref="#char204a">⁊</g></hi> Argu. tex.
+ <lb n="041_106" xml:id="lb_041_106"/>in. c. fi. de iure. iur. et<lb break="yes" n="041_107" xml:id="lb_041_107"/>l. j. ff. eo.</p>
+                </note>
+             </p>
+@@ -2004,7 +1987,7 @@
+ <lb n="041_019" xml:id="lb_041_019"/>administradores pued<g ref="#chare0303">e</g> pagar a otros lo que de<lb break="no" rendition="#noHyphen" n="041_020" xml:id="lb_041_020"/>rechamente les es deuido: pued<g ref="#chare0303">e</g> pagar a si mes<lb break="no" rendition="#noHyphen" n="041_021" xml:id="lb_041_021"/>mos. <hi rendition="#sup">a</hi>
+                <note xml:id="note_d1e9178" anchored="true"><p xml:id="p_d1e9181" part="N">
+ <lb n="041_109" xml:id="lb_041_109"/>Assimesmos <hi rendition="#sup">a</hi>. <persName ref="cerl:cnp01341446 gnd:118803085 viaf:29618397" key="Baldus">Bal.</persName>
+-<lb n="041_110" xml:id="lb_041_110"/>in. l. cu<g resp="#CB" cert="high" ref="#charu0303">m</g> <choice><abbr>ip̃e</abbr><expan resp="#CB" cert="high">ipse</expan></choice>. ij. co<g resp="#CB" cert="high" ref="#char0142">l</g>. <g resp="#CB" cert="high" ref="#char75f">ver</g>.
++<lb n="041_110" xml:id="lb_041_110"/>in. l. cu<g resp="#CB" cert="high" ref="#charu0303">m</g> <choice><abbr>i<g ref="#charp0303">p</g>e</abbr><expan resp="#CB" cert="high">ipse</expan></choice>. ij. co<g resp="#CB" cert="high" ref="#char0142">l</g>. <g resp="#CB" cert="high" ref="#char75f">ver</g>.
+ <lb n="041_111" xml:id="lb_041_111"/><choice><abbr>demu<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">demum+</expan></choice> reuoca<g resp="#CB" cert="high" ref="#chart0303">tur</g> in du<lb break="no" rendition="#noHyphen" n="041_112" xml:id="lb_041_112"/>bi<g resp="#CB" cert="high" ref="#charu0303">um</g>. C. de contrahen.
+ <lb n="041_113" xml:id="lb_041_113"/>emp. l. si procurator<g resp="#CB" cert="high" ref="#chare0303">em</g>
+ <lb n="041_114" xml:id="lb_041_114"/>§. si. ignor<g resp="#CB" cert="high" ref="#chara0303">an</g>tes. ff. m<g resp="#CB" cert="high" ref="#chara0303">an</g><lb break="no" rendition="#noHyphen" n="041_115" xml:id="lb_041_115"/>dati. ang. <g resp="#CB" cert="high" ref="#chari0303">in</g>. l. sed si da<lb n="041_116" xml:id="lb_041_116" break="no" rendition="#noHyphen"/>num. §. peculium. ff.
+@@ -2070,13 +2053,13 @@
+ <lb n="042_021" xml:id="lb_042_021"/>almoneda. <hi rendition="#sup">h</hi>
+                <note xml:id="note_d1e9488" anchored="true"><p xml:id="p_d1e9491" part="N">
+ <lb n="042_128" xml:id="lb_042_128"/>Almoneda. <hi rendition="#sup">h</hi>. ¶ Vt
+-<lb n="042_129" xml:id="lb_042_129"/>aut. <choice><abbr>quibusc<g resp="#CB" cert="high" ref="#charu0303">um</g></abbr><expan resp="#CBN" cert="high">quibuscumque</expan></choice> <g resp="#CB" cert="high" ref="#char204a">et</g> ibi
++<lb n="042_129" xml:id="lb_042_129"/>aut. <choice><abbr>quibusc<g resp="#CB" cert="high" ref="#charu0303">um</g><g ref="#chare8bf">q</g></abbr><expan resp="#CBN" cert="high">quibuscumque</expan></choice> <g resp="#CB" cert="high" ref="#char204a">et</g> ibi
+ <lb n="042_130" xml:id="lb_042_130"/><persName ref="cerl:cnp01302817 gnd:118652885 viaf:66498105" key="Bartolus">bar.</persName> C <g ref="#charebd1">de</g> sacros. eccle.</p>
+                </note> ¶ Saluo en a<g resp="#CB" cert="high" ref="#charq0303">que</g>l <g ref="#charq0303">que</g> es administrador
+ <lb n="042_022" xml:id="lb_042_022"/>de alguna yglesia / o monesterio <g ref="#charq0303">que</g> no puede com<lb break="no" rendition="#noHyphen" n="042_023" xml:id="lb_042_023"/>prar lo por alguna manera. <hi rendition="#sup">i</hi>
+                <note xml:id="note_d1e9512" anchored="true"><p xml:id="p_d1e9515" part="N">
+ <lb n="042_132" xml:id="lb_042_132"/>Manera. <hi rendition="#sup">i</hi>. ¶ Vt. d.
+-<lb n="042_133" xml:id="lb_042_133"/>aut. <choice><abbr>quibusc<g resp="#CB" cert="high" ref="#charu0303">um</g></abbr><expan resp="#CB" cert="high">quibuscumque</expan></choice>.</p>
++<lb n="042_133" xml:id="lb_042_133"/>aut. <choice><abbr>quibusc<g resp="#CB" cert="high" ref="#charu0303">um</g><g ref="#chare8bf">q</g></abbr><expan resp="#CB" cert="high">quibuscumque</expan></choice>.</p>
+                </note>. ¶ Jt<g resp="#CB" cert="high" ref="#chare0303">em</g> puede ha<g ref="#char0292">z</g>er
+ <lb n="042_024" xml:id="lb_042_024"/>y renouar el instrumento / o c<g ref="#charo0303" resp="#AW" cert="low">on</g>tracto del señor <g ref="#charq0303">que</g>
+ <lb n="042_025" xml:id="lb_042_025"/>esta ya roto. <hi rendition="#sup">k</hi>
+@@ -2086,8 +2069,8 @@
+ <lb n="042_137" xml:id="lb_042_137"/>in fi. C. de admi. tu.</p>
+                </note>. ¶ O ent<g resp="#CB" cert="high" ref="#chare0303">en</g>di<g resp="#CB" cert="high" ref="#chare0303">en</g>do instrum<g resp="#CB" cert="high" ref="#chare0303">en</g>to por <g resp="#CB" cert="high" ref="#charq0303">qua</g>l<lb break="no" rendition="#noHyphen" n="042_026" xml:id="lb_042_026"/><g resp="#CB" cert="high" ref="#char307">qui</g>er edificio <g ref="#charebd1">de</g> casa / o fortale<g ref="#char0292">z</g>a / o molino <g ref="#charq0303">que</g> esta ro<lb break="no" rendition="#noHyphen" n="042_027" xml:id="lb_042_027"/>to / o desbaratado / o para caer: y a menester repa<lb break="no" rendition="#noHyphen" n="042_028" xml:id="lb_042_028"/>ro: podra el administrador reparar lo / y reha<g ref="#char0292">z</g>er<lb n="042_029" xml:id="lb_042_029" break="no" rendition="#noHyphen"/>lo: con t<g resp="#CB" cert="high" ref="#chara0303">an</g>to <g ref="#charq0303">que</g> el jue<g ref="#char0292">z</g> lo vea / o haga ver y declarar
+ <lb n="042_030" xml:id="lb_042_030"/><g ref="#charq0303">que</g> tiene necessidad de reparo. <hi rendition="#sup">l</hi>
+-               <note xml:id="note_d1e9592" anchored="true"><p xml:id="p_d1e9595" part="N">
+-<lb n="042_139" xml:id="lb_042_139"/>Reparo. l. <choice><abbr>T<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">Tenet</expan></choice> ang.
++               <note xml:id="note_d1e9592" anchored="true" n="Reparo. l."><p xml:id="p_d1e9595" part="N">
++<lb n="042_139" xml:id="lb_042_139"/><choice><abbr>T<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">Tenet</expan></choice> ang.
+ <lb n="042_140" xml:id="lb_042_140"/>in. d. l. lex <g ref="#charq0303">que</g> tuto. <g resp="#CB" cert="high" ref="#chari0303">in</g> fi.</p>
+                </note>. ¶ Jt<g resp="#CB" cert="high" ref="#chare0303">em</g> puede ena<lb break="no" rendition="#hyphen" n="042_031" xml:id="lb_042_031"/>genar sus bienes <g resp="#CB" cert="high" ref="#char753">pro</g>pios. <hi rendition="#sup">m</hi>
+                <note xml:id="note_d1e9612" anchored="true"><p xml:id="p_d1e9613" part="N">Propios. <hi rendition="#sup">m</hi>. ¶ Jn<lb break="yes" n="042_142" xml:id="lb_042_142"/> rubro et nigro et ibi
+@@ -2105,8 +2088,7 @@
+ <lb n="043_101" xml:id="lb_043_101"/>Donaci<g ref="#charo0303" resp="#AW" cert="low">on</g>. <hi rendition="#sup">o</hi>. ¶ Glo.
+ <lb n="043_102" xml:id="lb_043_102"/><g resp="#CB" cert="high" ref="#char204a">et</g> doc. in. l. c<g ref="#charo0303" resp="#AW" cert="low">on</g>tra iuris
+ <lb n="043_103" xml:id="lb_043_103"/>§. fi. ff. de pac.</p>
+-               </note>. Mas doy por consejo a los tu<lb break="no" rendition="#noHyphen" n="043_004" xml:id="lb_043_004"/>tores y administradores que no remitan ni per<lb break="no" rendition="#noHyphen"/><?oxy_comment_start author="birr" timestamp="20180622T135505+0200" comment="In der Vorschau zur Leseansicht wird &quot;perdonen&quot; zweigeteilt wiedergegeben, mit Zeilenumbruch."?>
+-<?oxy_comment_end?><lb n="043_005" xml:id="lb_043_005"/>donen ni suelten deuda alguna que se deua al se<lb break="no" rendition="#hyphen" n="043_006" xml:id="lb_043_006"/>ñor / puesto que no sea liquida: por que la remis<lb break="no" rendition="#hyphen" n="043_007" xml:id="lb_043_007"/>sion avn que no sea donacion: es manera / o espe<lb break="no" rendition="#noHyphen" n="043_008" xml:id="lb_043_008"/>cie de enagenaci<g ref="#charo0303" resp="#AW" cert="low">on</g>. <hi rendition="#sup">p</hi>
++               </note>. Mas doy por consejo a los tu<lb break="no" rendition="#noHyphen" n="043_004" xml:id="lb_043_004"/>tores y administradores que no remitan ni per<lb break="no" rendition="#noHyphen"/>donen ni suelten deuda alguna que se deua al se<lb break="no" rendition="#hyphen" n="043_006" xml:id="lb_043_006"/>ñor / puesto que no sea liquida: por que la remis<lb break="no" rendition="#hyphen" n="043_007" xml:id="lb_043_007"/>sion avn que no sea donacion: es manera / o espe<lb break="no" rendition="#noHyphen" n="043_008" xml:id="lb_043_008"/>cie de enagenaci<g ref="#charo0303" resp="#AW" cert="low">on</g>. <hi rendition="#sup">p</hi>
+                <note xml:id="note_d1e9688" anchored="true"><p xml:id="p_d1e9691" part="N">
+ <lb n="043_105" xml:id="lb_043_105"/>Enagenaci<g ref="#charo0303" resp="#AW" cert="low">on</g>. <hi rendition="#sup">p</hi>. Lex
+ <lb n="043_106" xml:id="lb_043_106"/><g resp="#CB" cert="high" ref="#char307">pri</g>ma. <g resp="#CB" cert="high" ref="#char75f">ver</g>. <g resp="#CB" cert="high" ref="#char204a">et</g> si tr<g resp="#CB" cert="high" ref="#chara0303">an</g>sigerit<lb break="yes" n="043_107" xml:id="lb_043_107"/><g resp="#CB" cert="high" ref="#char307">qui</g> <g resp="#CB" cert="high" ref="#char75f">ver</g>sicul<g resp="#CB" cert="high" ref="#char770">us</g> est circa <g resp="#CB" cert="high" ref="#char307">pri</g>n<lb break="no" rendition="#noHyphen" n="043_108" xml:id="lb_043_108"/>cipi<g resp="#CB" cert="high" ref="#charu0303">um</g> ff. si <g resp="#CB" cert="high" ref="#char307">qui</g>d in frau.
+@@ -2117,7 +2099,7 @@
+                <note xml:id="note_d1e9723" anchored="true"><p xml:id="p_d1e9726" part="N">
+ <lb n="043_112" xml:id="lb_043_112"/>Jue<g ref="#char0292">z</g>. <hi rendition="#sup">q</hi>. ¶ Lex. ij. i<g resp="#CB" cert="high" ref="#charu0303">un</g><lb break="no" rendition="#noHyphen" n="043_113" xml:id="lb_043_113"/>cta. l. <g resp="#CB" cert="high" ref="#char204a">et</g>si <g resp="#CB" cert="high" ref="#charp0303">prae</g>ses <g resp="#CB" cert="high" ref="#char204a">et</g> l. mi<lb break="no" rendition="#hyphen" n="043_114" xml:id="lb_043_114"/>no<g resp="#CB" cert="high" ref="#char75d">rum</g> <g resp="#CB" cert="high" ref="#char204a">et</g> l. inter <choice><abbr>o<g ref="#chare0303">e</g>s</abbr><expan resp="#CB" cert="high">omnes</expan></choice>. C.
+ <lb n="043_115" xml:id="lb_043_115"/><g resp="#CB" cert="high" ref="#charebd1">de</g> <g resp="#CB" cert="high" ref="#charp0303">prae</g>dis. mino. facit. l.
+-<lb n="043_116" xml:id="lb_043_116"/>tutor <choice><abbr>sc<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">secundum</expan></choice>. §. in solu<g resp="#CB" cert="high" ref="#chare0303">en</g><lb break="no" rendition="#hyphen" n="043_117" xml:id="lb_043_117"/>dis. ff. de admi. tu. l.
++<lb n="043_116" xml:id="lb_043_116"/>tutor <choice><abbr>sc<g ref="#charebd1">d</g><g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">secundum</expan></choice>. §. in solu<g resp="#CB" cert="high" ref="#chare0303">en</g><lb break="no" rendition="#hyphen" n="043_117" xml:id="lb_043_117"/>dis. ff. de admi. tu. l.
+ <lb n="043_118" xml:id="lb_043_118"/>im<g resp="#CB" cert="high" ref="#char751">per</g>atores. ff. <g ref="#charebd1">de</g> pact<g ref="#chara76d">is</g>.</p>
+                </note>. ¶ <choice><abbr>Jte<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">Jtem</expan></choice>
+ <lb n="043_011" xml:id="lb_043_011"/>puede dar al maestro del señor tanta quantidad
+@@ -2190,9 +2172,9 @@
+                </note>. Y para <g ref="#charq0303">que</g> sea obli<lb break="no" rendition="#noHyphen" n="044_010" xml:id="lb_044_010"/>gado el administrador: tiene de prouar el señor
+ <lb n="044_011" xml:id="lb_044_011"/>que el deudor se fue por culpa del administrador
+ <lb n="044_012" xml:id="lb_044_012"/>por que presume el derecho <g ref="#charq0303">que</g> el administrador
+-<lb n="044_013" xml:id="lb_044_013"/>no fue en culpa. <hi rendition="#sup">⁊</hi>
++<lb n="044_013" xml:id="lb_044_013"/>no fue en culpa. <hi rendition="#sup"><g ref="#char204a">⁊</g></hi>
+                <note xml:id="note_d1e10052" anchored="true"><p xml:id="p_d1e10055" part="N">
+-<lb n="044_110" xml:id="lb_044_110"/>Culpa. <hi rendition="#sup">⁊</hi>. ¶ <persName ref="cerl:cnp01341446 gnd:118803085 viaf:29618397" key="Baldus">Bal.</persName> et<lb break="yes" n="044_111" xml:id="lb_044_111"/>ias. in. l. <choice><abbr>periculu<g ref="#char0292">z</g>.</abbr><expan resp="#CB" cert="high">periculum</expan></choice> ff.
++<lb n="044_110" xml:id="lb_044_110"/>Culpa. <hi rendition="#sup"><g ref="#char204a">⁊</g></hi>. ¶ <persName ref="cerl:cnp01341446 gnd:118803085 viaf:29618397" key="Baldus">Bal.</persName> et<lb break="yes" n="044_111" xml:id="lb_044_111"/>ias. in. l. <choice><abbr>periculu<g ref="#char0292">z</g>.</abbr><expan resp="#CB" cert="high">periculum</expan></choice> ff.
+ <lb n="044_112" xml:id="lb_044_112"/>si cer. peta<g resp="#CB" cert="high" ref="#chart0303">tur</g>.</p>
+                </note> Mas si prouare el señor que ve<lb break="no" rendition="#noHyphen" n="044_014" xml:id="lb_044_014"/>nido el tiempo dela paga tenia el deudor de que
+ <lb n="044_015" xml:id="lb_044_015"/>pagar: y dexo el administrador passar tanto ti<g resp="#CB" cert="high" ref="#chare0303">em</g><lb break="no" rendition="#hyphen" n="044_016" xml:id="lb_044_016"/>po que vuo lugar de perder el deudor sus bienes
+@@ -2221,7 +2203,7 @@
+ <lb n="044_126" xml:id="lb_044_126"/>
+                </note>. ¶ Saluo en caso que el tutor / o
+ <lb n="044_031" xml:id="lb_044_031"/>administrador dixo a su madre / o parientes del
+-<lb n="044_032" xml:id="lb_044_032"/>menor / o <g resp="#CB" cert="high" ref="#charebd1">de</g>l señor: si fiaria la tal mercaduria a <?oxy_comment_start author="birr" timestamp="20180622T135919+0200" comment="Wieder keine Person, sondern nur ein Blankettname."?>Fu<pb break="no" rendition="#noHyphen" facs="facs:W0004-0045" n="fol. 21r" xml:id="facs_W0004-0045"/><lb break="no" rendition="#noHyphen" n="045_001" xml:id="lb_045_001"/>lano<?oxy_comment_end?> / o si contrataria con el: y le dixeron que si. <g ref="#charq0303">que</g>
++<lb n="044_032" xml:id="lb_044_032"/>menor / o <g resp="#CB" cert="high" ref="#charebd1">de</g>l señor: si fiaria la tal mercaduria a Fu<pb break="no" rendition="#noHyphen" facs="facs:W0004-0045" n="fol. 21r" xml:id="facs_W0004-0045"/><lb break="no" rendition="#noHyphen" n="045_001" xml:id="lb_045_001"/>lano / o si contrataria con el: y le dixeron que si. <g ref="#charq0303">que</g>
+ <lb n="045_002" xml:id="lb_045_002"/>en tal caso avn <g ref="#charq0303">que</g> el deudor se ausente con la deu<lb break="no" rendition="#hyphen" n="045_003" xml:id="lb_045_003"/>da: no sera el administrador obligado a pagar
+ <lb n="045_004" xml:id="lb_045_004"/>la. <hi rendition="#sup">d</hi>
+                <note xml:id="note_d1e10195" anchored="true"><p xml:id="p_d1e10198" part="N">
+@@ -2274,8 +2256,8 @@
+ <lb n="045_146" xml:id="lb_045_146"/><persName ref="cerl:cnp01302817 gnd:118652885 viaf:66498105" key="Bartolus">bar.</persName> in. l. fi. eo. ti.</p>
+                </note>. ¶ Jtem no puede ha<g ref="#char0292">z</g>er gracia <g ref="#charebd1">de</g> cosa que
+ <lb n="045_030" xml:id="lb_045_030"/>sea del señor. <hi rendition="#sup">l</hi>
+-               <note xml:id="note_d1e10463" anchored="true"><p xml:id="p_d1e10466" part="N">
+-<lb n="045_148" xml:id="lb_045_148"/>Señor. l. ¶ <choice><abbr>T<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">Tenet</expan></choice> <persName ref="cerl:cnp01341446 gnd:118803085 viaf:29618397" key="Baldus">bal.</persName>
++               <note xml:id="note_d1e10463" anchored="true" n="Señor. l."><p xml:id="p_d1e10466" part="N">
++<lb n="045_148" xml:id="lb_045_148"/>¶ <choice><abbr>T<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">Tenet</expan></choice> <persName ref="cerl:cnp01341446 gnd:118803085 viaf:29618397" key="Baldus">bal.</persName>
+ <lb n="045_149" xml:id="lb_045_149"/>in. d. l. preses. iiij. no.
+ <lb n="045_150" xml:id="lb_045_150"/>C. de transactio.</p>
+                </note>. ¶ Jtem no puede dissipar / o mal
+@@ -2330,7 +2312,7 @@
+ <lb n="046_022" xml:id="lb_046_022"/>dio licencia que se vendiessen los bienes del me<lb break="no" rendition="#hyphen" n="046_023" xml:id="lb_046_023"/>nor sin causa justa. <hi rendition="#sup">s</hi>
+                <note xml:id="note_d1e10700" anchored="true"><p xml:id="p_d1e10703" part="N">
+ <lb n="046_124" xml:id="lb_046_124"/>Justa. <hi rendition="#sup">s</hi>. ¶ <choice><abbr>T<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="medium">Tenet</expan></choice> nico<lb break="no" rendition="#noHyphen" n="046_125" xml:id="lb_046_125"/>laus de neapo. in. l. j.
+-<lb n="046_126" xml:id="lb_046_126"/>§. <choice><abbr>vs</abbr><expan resp="#CB" cert="high">usque</expan></choice> a deo paulo
++<lb n="046_126" xml:id="lb_046_126"/>§. <choice><abbr>vs<g ref="#chare8bf">q</g></abbr><expan resp="#CB" cert="high">usque</expan></choice> a deo paulo
+ <lb n="046_127" xml:id="lb_046_127"/>post. <g resp="#CB" cert="high" ref="#char307">pri</g>ncipi<g resp="#CB" cert="high" ref="#charu0303">um</g> ff. <g ref="#charebd1">de</g> tu<lb break="no" rendition="#hyphen" n="046_128" xml:id="lb_046_128"/>te. et ra. distra. nota<g resp="#CB" cert="high" ref="#chart0303">tur</g>
+ <lb n="046_129" xml:id="lb_046_129"/><g resp="#CB" cert="high" ref="#chari0303">in</g>. l. luci<g resp="#CB" cert="high" ref="#char770">us</g>. §. testam<g resp="#CB" cert="high" ref="#chare0303">en</g>to<lb break="yes" n="046_130" xml:id="lb_046_130"/>ff. de admi. tuto. et in
+ <lb n="046_131" xml:id="lb_046_131"/>l. j. vbi <persName ref="cerl:cnp01302817 gnd:118652885 viaf:66498105" key="Bartolus">bar.</persName> C. de ma<lb break="no" rendition="#noHyphen" n="046_132" xml:id="lb_046_132"/>gistra. <g resp="#CB" cert="high" ref="#char2184">con</g>ue. habe<g resp="#CB" cert="high" ref="#chart0303">tur</g> in
+@@ -2422,7 +2404,7 @@
+ <lb n="048_105" xml:id="lb_048_105"/>est ver<g resp="#CB" cert="high" ref="#charu0303">um</g> nisi in tr<g resp="#CB" cert="high" ref="#chara0303">an</g>sa<lb break="no" rendition="#hyphen" n="048_106" xml:id="lb_048_106"/>tione interueniat do<lb n="048_107" xml:id="lb_048_107" break="no" rendition="#noHyphen"/>lus <g resp="#CB" cert="medium" ref="#char8b3">quia</g> si dol<g resp="#CB" cert="high" ref="#char770">us</g> dedisset<lb break="yes" n="048_108" xml:id="lb_048_108"/>causam transactioni
+ <lb n="048_109" xml:id="lb_048_109"/>resc<g resp="#CB" cert="high" ref="#chari0303">in</g>dere<g resp="#CB" cert="high" ref="#chart0303">tur</g> tr<g resp="#CB" cert="high" ref="#chara0303">an</g>sactio<lb break="yes" n="048_110" xml:id="lb_048_110"/>auxilio replicationis
+ <lb n="048_111" xml:id="lb_048_111"/>vel actionis de dolo.
+-<lb n="048_112" xml:id="lb_048_112"/>et <choice><abbr>vr</abbr><expan resp="#CB" cert="medium">videtur</expan></choice>̃ per <choice><abbr>dolu<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">dolum</expan></choice> extor<lb break="no" rendition="#noHyphen" n="048_113" xml:id="lb_048_113"/><g resp="#CB" cert="high" ref="#charq0303">que</g>re tr<g resp="#CB" cert="high" ref="#chara0303">an</g>saction<g resp="#CB" cert="high" ref="#chare0303">em</g> ille <g resp="#CB" cert="high" ref="#char307">qui</g>
++<lb n="048_112" xml:id="lb_048_112"/>et <choice><abbr>vr</abbr><expan resp="#CB" cert="medium">videtur</expan></choice> per <choice><abbr>dolu<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">dolum</expan></choice> extor<lb break="no" rendition="#noHyphen" n="048_113" xml:id="lb_048_113"/><g resp="#CB" cert="high" ref="#charq0303">que</g>re tr<g resp="#CB" cert="high" ref="#chara0303">an</g>saction<g resp="#CB" cert="high" ref="#chare0303">em</g> ille <g resp="#CB" cert="high" ref="#char307">qui</g>
+ <lb/>subtrahit aduersario
+ <lb n="048_115" xml:id="lb_048_115"/><g resp="#Cb" cert="high" ref="#char753">pro</g>bation<g resp="#CB" cert="high" ref="#chare0303">em</g> seu instru<lb break="no" rendition="#hyphen" n="048_116" xml:id="lb_048_116"/>m<g resp="#CB" cert="high" ref="#chare0303">en</g>ta vt. l. supretextu
+ <lb n="048_117" xml:id="lb_048_117"/><g resp="#CB" cert="high" ref="#char204a">et</g> ibi <persName ref="cerl:cnp01341446 gnd:118803085 viaf:29618397" key="Baldus">bal.</persName> ij. ><g resp="#CB" cert="high" ref="#char204a">et</g>. iij. no.
+@@ -2438,9 +2420,9 @@
+ <lb n="048_010" xml:id="lb_048_010"/>de nombrar cada vna delas partes la suya. <hi rendition="#sup">l</hi>
+                <note xml:id="note_d1e11244" anchored="true"><p xml:id="p_d1e11247" part="N">
+ <lb n="048_126" xml:id="lb_048_126"/>Suya. <hi rendition="#sup">l</hi>. ¶ Lex. ij. C
+-<lb n="048_127" xml:id="lb_048_127"/> vsur. <g resp="#CB" cert="high" ref="#char204a">et</g> fruc. lega. et<lb break="yes" n="048_128" xml:id="lb_048_128"/>l. si cui libertas et ibi
++<lb n="048_127" xml:id="lb_048_127"/><g ref="#charebd1">de</g> vsur. <g resp="#CB" cert="high" ref="#char204a">et</g> fruc. lega. et<lb break="yes" n="048_128" xml:id="lb_048_128"/>l. si cui libertas et ibi
+ <lb n="048_129" xml:id="lb_048_129"/><persName ref="cerl:cnp01302817 gnd:118652885 viaf:66498105" key="Bartolus">bar.</persName> ff. <g ref="#charebd1">de</g> <g resp="#CB" cert="high" ref="#char2184">con</g>di. <g resp="#CB" cert="high" ref="#char204a">et</g> dem<g ref="#charo0303" resp="#AW" cert="low">on</g>.
+-<lb n="048_130" xml:id="lb_048_130"/>ang. <g resp="#CB" cert="high" ref="#chari0303">in</g>. l. j. §. marcell<g resp="#CB" cert="high" ref="#char770">us</g><lb break="yes" n="048_131" xml:id="lb_048_131"/>ff. si cui <choice><abbr>plus</abbr><expan resp="#CB" cert="high">plus quam</expan></choice> <g resp="#CB" cert="high" ref="#char751">per</g> l. fal.</p>
++<lb n="048_130" xml:id="lb_048_130"/>ang. <g resp="#CB" cert="high" ref="#chari0303">in</g>. l. j. §. marcell<g resp="#CB" cert="high" ref="#char770">us</g><lb break="yes" n="048_131" xml:id="lb_048_131"/>ff. si cui <choice><abbr>plus<g ref="#chare8bf">q</g></abbr><expan resp="#CB" cert="high">plus quam</expan></choice> <g resp="#CB" cert="high" ref="#char751">per</g> l. fal.</p>
+                </note>. Y si
+ <lb n="048_011" xml:id="lb_048_011"/>alguna delas partes no quisiere nombrar la: el
+ <lb n="048_012" xml:id="lb_048_012"/>jue<g ref="#char0292">z</g> a pedimiento <g ref="#charebd1">de</g>la otra parte compelera que
+@@ -2506,7 +2488,7 @@
+ <lb n="049_109" xml:id="lb_049_109"/>ij. col<g resp="#CB" cert="high" ref="#char0142">l</g>. <g ref="#charebd1">de</g> iure fisci li. x.</p>
+ <lb n="049_110" xml:id="lb_049_110"/>
+                </note>. ¶ Jtem es de notar que la aueriguacion he<lb break="no" rendition="#noHyphen" n="049_029" xml:id="lb_049_029"/>cha por los contadores puestos por el jue<g ref="#char0292">z</g> / ha<g ref="#char0292">z</g>e
+-<lb n="049_030" xml:id="lb_049_030"/>entera fee: quando fueron puestos entre <choice><abbr><g ref="#chara751">ꝑ</g>sonas</abbr><expan resp="#AW" cert="high">personas</expan></choice>
++<lb n="049_030" xml:id="lb_049_030"/>entera fee: quando fueron puestos entre <choice><abbr><g ref="#chara751">p</g>sonas</abbr><expan resp="#AW" cert="high">personas</expan></choice>
+ <lb n="049_031" xml:id="lb_049_031" break="yes"/>priuadas: mas si se hi<g ref="#char0292">z</g>iesse entre personas publi<lb break="no" rendition="#noHyphen" n="049_032" xml:id="lb_049_032"/>cas / como es entre el fisco del rey y sus contado<pb break="no" rendition="#hyphen" facs="facs:W0004-0050" n="fol. 23v" xml:id="facs_W0004-0050"/><lb break="no" rendition="#noHyphen" n="050_001" xml:id="lb_050_001"/>res / o entre yglesias y sus sindicos <g resp="#CB" cert="high" ref="#char204a">e</g> inconomos
+ <lb n="050_002" xml:id="lb_050_002"/>no ha<g ref="#char0292">z</g>en entera fee. <hi rendition="#sup">s</hi>
+                <note xml:id="note_d1e11641" anchored="true"><p xml:id="p_d1e11644" part="N">
+@@ -2529,8 +2511,8 @@
+                </note>
+ <lb n="050_009" xml:id="lb_050_009"/>Ansi como el tutor / o el curador diessen cuenta a
+ <lb n="050_010" xml:id="lb_050_010"/>su menor: mas si el curador tomasse cuenta al tu<lb break="no" rendition="#noHyphen" n="050_011" xml:id="lb_050_011"/>tor sin auctoridad de jue<g ref="#char0292">z</g>: contra la tal cu<g resp="#CB" cert="high" ref="#chare0303">en</g>ta po<lb break="no" rendition="#hyphen" n="050_012" xml:id="lb_050_012"/>dria el menor pedir ser restituydo. <hi rendition="#sup">u</hi>
+-               <note xml:id="note_d1e11746" anchored="true"><p xml:id="p_d1e11749" part="N">
+-<lb n="050_114" xml:id="lb_050_114"/>Restituydo. u. ¶ Lex
++               <note xml:id="note_d1e11746" anchored="true" n="Restituydo. u."><p xml:id="p_d1e11749" part="N">
++<lb n="050_114" xml:id="lb_050_114"/>¶ Lex
+ <lb n="050_115" xml:id="lb_050_115"/>j. C. si aduer. solu.</p>
+                </note>. Y si la diesse
+ <lb n="050_013" xml:id="lb_050_013"/>c<g ref="#charo0303" resp="#AW" cert="low">on</g> auctoridad de jue<g ref="#char0292">z</g> / no podra ser restituydo. <hi rendition="#sup">x</hi>
+@@ -2559,9 +2541,9 @@
+ <lb n="050_126" xml:id="lb_050_126"/>C. de nego. gestis. vi
+ <lb n="050_127" xml:id="lb_050_127"/>de hodie in. l. lxiij. le<lb break="no" rendition="#hyphen" n="050_128" xml:id="lb_050_128"/>g<g resp="#CB" cert="high" ref="#charu0303">um</g> tauri. <g resp="#CB" cert="high" ref="#char204a">et</g> <persName ref="cerl:cnp01302817 gnd:118652885 viaf:66498105" key="Bartolus">bar.</persName> <g resp="#CB" cert="high" ref="#chari0303">in</g>. l. ij.
+ <lb n="050_129" xml:id="lb_050_129"/>de iure. fisci. lib. x.</p>
+-               </note>. Y aquellos passados no se puede pe<lb break="no" rendition="#noHyphen" n="050_031" xml:id="lb_050_031"/>dir c<g ref="#charo0303" resp="#AW" cert="low">on</g>tra ella cosa alguna: por que tiene ya la cu<g resp="#CB" cert="high" ref="#chare0303">en</g><pb break="no" rendition="#noHyphen" facs="facs:W0004-0051" n="fol. 24r" xml:id="facs_W0004-0051"/><lb break="no" rendition="#noHyphen" n="051_001" xml:id="lb_051_001"/>ta por el tr<g resp="#CB" cert="high" ref="#chara0303">an</g>scurso <g resp="#CB" cert="high" ref="#charebd1">de</g>ste ti<g resp="#CB" cert="high" ref="#chare0303">em</g>po fuerça de sent<g resp="#CB" cert="high" ref="#chare0303">en</g>cia. <hi rendition="#sup">⁊</hi>
+-               <note xml:id="note_d1e11920" anchored="true"><p xml:id="p_d1e11923" part="N">
+-<lb n="051_101" xml:id="lb_051_101"/>S<g resp="#CB" cert="high" ref="#chare0303">en</g>t<g resp="#CB" cert="high" ref="#chare0303">en</g>cia. ¶ <persName ref="cerl:cnp01302817 gnd:118652885 viaf:66498105" key="Bartolus">Bar.</persName> <g resp="#CB" cert="high" ref="#chari0303">in</g>. d.
++               </note>. Y aquellos passados no se puede pe<lb break="no" rendition="#noHyphen" n="050_031" xml:id="lb_050_031"/>dir c<g ref="#charo0303" resp="#AW" cert="low">on</g>tra ella cosa alguna: por que tiene ya la cu<g resp="#CB" cert="high" ref="#chare0303">en</g><pb break="no" rendition="#noHyphen" facs="facs:W0004-0051" n="fol. 24r" xml:id="facs_W0004-0051"/><lb break="no" rendition="#noHyphen" n="051_001" xml:id="lb_051_001"/>ta por el tr<g resp="#CB" cert="high" ref="#chara0303">an</g>scurso <g resp="#CB" cert="high" ref="#charebd1">de</g>ste ti<g resp="#CB" cert="high" ref="#chare0303">em</g>po fuerça de sent<g resp="#CB" cert="high" ref="#chare0303">en</g>cia. <hi rendition="#sup"><g ref="#char204a">⁊</g></hi>
++               <note xml:id="note_d1e11920" anchored="true" n="Sentencia."><p xml:id="p_d1e11923" part="N">
++<lb n="051_101" xml:id="lb_051_101"/>¶ <persName ref="cerl:cnp01302817 gnd:118652885 viaf:66498105" key="Bartolus">Bar.</persName> <g resp="#CB" cert="high" ref="#chari0303">in</g>. d.
+ <lb n="051_102" xml:id="lb_051_102"/>l. ij. <g resp="#CB" cert="high" ref="#char75f">ver</g>. ad ali<g resp="#CB" cert="high" ref="#char307">qui</g>d <g resp="#CB" cert="high" ref="#char204a">et</g> ibi
+ <lb n="051_103" xml:id="lb_051_103"/>glo. de. iure. fis. lib. x.</p>
+                </note>.
+@@ -2581,8 +2563,8 @@
+                <note xml:id="note_d1e11996" anchored="true"><p xml:id="p_d1e11997" part="N">Della. <hi rendition="#sup">b</hi>. <persName ref="cerl:cnp01302817 gnd:118652885 viaf:66498105" key="Bartolus">Bar.</persName> <g resp="#CB" cert="high" ref="#char2184">con</g>silio<lb break="yes" n="051_110" xml:id="lb_051_110"/>suo q<g resp="#CB" cert="high" ref="#charebd1">uod</g> incipit cicol<g resp="#CB" cert="high" ref="#char770">us</g>.</p>
+                </note>. ¶ Mas a mi ver este no es bastan<lb break="no" rendition="#hyphen" n="051_011" xml:id="lb_051_011"/>te remedio para <g ref="#charq0303">que</g> el señor cobre los bienes: sal<lb break="no" rendition="#hyphen" n="051_012" xml:id="lb_051_012"/>uo en caso que el tutor / o administrador se los en<lb break="no" rendition="#noHyphen" n="051_013" xml:id="lb_051_013"/>trega de su voluntad: mas si no quiere dar los al<lb break="no" rendition="#noHyphen" n="051_014" xml:id="lb_051_014"/>gunos quieren de<g ref="#char0292">z</g>ir que podra el señor prender
+ <lb n="051_015" xml:id="lb_051_015"/>al administrador y tener lo preso / hasta ser paga<lb n="051_016" xml:id="lb_051_016" break="no" rendition="#noHyphen"/>do: si no es tambien administrador de otro y que
+-<lb n="051_017" xml:id="lb_051_017"/>ansi se vsa en Salam<g resp="#CB" cert="high" ref="#chara0303">an</g>ca y <?oxy_comment_start author="birr" timestamp="20180622T141032+0200" comment="Ortsname: Zamora."?>çamora<?oxy_comment_end?>. <hi rendition="#sup">c</hi>
+-               <note xml:id="note_d1e12027" anchored="true"><p xml:id="p_d1e12028" part="N"><?oxy_comment_start author="birr" timestamp="20180622T141049+0200" comment="dto."?>çamora<?oxy_comment_end?>. <hi rendition="#sup">c</hi>. ¶ Refert
++<lb n="051_017" xml:id="lb_051_017"/>ansi se vsa en <placeName resp="#DG" key="Salamanca" ref="getty:7008561">Salam<g resp="#CB" cert="high" ref="#chara0303">an</g>ca</placeName> y <placeName resp="#CB" key="Zamora" ref="getty:7002850">çamora</placeName>. <hi rendition="#sup">c</hi>
++               <note xml:id="note_d1e12027" anchored="true"><p xml:id="p_d1e12028" part="N"><placeName resp="#CB" key="Zamora" ref="getty:7002850">çamora</placeName>. <hi rendition="#sup">c</hi>. ¶ Refert
+ <lb n="051_112" xml:id="lb_051_112"/><g resp="#CB" cert="high" ref="#char204a">et</g> tenet. lex. stilli. cxij.</p>
+                </note>. Y que si no
+ <lb n="051_018" xml:id="lb_051_018"/>pudo el señor <choice><orig>pr<g ref="#chare0303">e</g>der</orig><reg resp="#MK" cert="high" xml:id="o1r_ktl_cv">prender</reg></choice> lo / podra pedir al jue<g ref="#char0292">z</g> que
+@@ -2599,7 +2581,7 @@
+ <lb n="051_118" xml:id="lb_051_118"/>iiij. <g resp="#CB" cert="high" ref="#char204a">et</g>. v. ti. delas ece<lb break="no" rendition="#hyphen" n="051_119" xml:id="lb_051_119"/>ptiones. lib. ordi.</p>
+                </note>.
+ <lb n="051_027" xml:id="lb_051_027"/>Y si no se hallan bienes en que lo executen: esta<lb break="no" rendition="#hyphen" n="051_028" xml:id="lb_051_028"/>ra preso el administrador hasta que pague / o ha<lb break="no" rendition="#hyphen" n="051_029" xml:id="lb_051_029"/>ga cession de bienes. <hi rendition="#sup">f</hi>
+-               <note xml:id="note_d1e12112" anchored="true"><p xml:id="p_d1e12113" part="N">Bienes. <hi rendition="#sup">f</hi>. ¶ Juxta<choice><abbr><lb break="no" rendition="#noHyphen" n="051_121" xml:id="lb_051_121"/>forma<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">formam</expan></choice> tex. <g resp="#CB" cert="high" ref="#chari0303">in </g>. l. j. <g resp="#CB" cert="high" ref="#char204a">et</g> per
++               <note xml:id="note_d1e12112" anchored="true"><p xml:id="p_d1e12113" part="N">Bienes. <hi rendition="#sup">f</hi>. ¶ Juxta<lb break="no" rendition="#noHyphen" n="051_121" xml:id="lb_051_121"/><choice><abbr>forma<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">formam</expan></choice> tex. <g resp="#CB" cert="high" ref="#chari0303">in </g>. l. j. <g resp="#CB" cert="high" ref="#char204a">et</g> per
+ <lb n="051_122" xml:id="lb_051_122"/>tot<g resp="#CB" cert="high" ref="#charu0303">um</g>. C. <g resp="#CB" cert="high" ref="#char307">qui</g>. bo. ce. po.
+ <lb n="051_123" xml:id="lb_051_123"/>l. v. t. <g ref="#charebd1">de</g>las deudas in
+ <lb n="051_124" xml:id="lb_051_124"/>ordi. meli<g resp="#CB" cert="high" ref="#char770">us</g> <g resp="#CB" cert="high" ref="#chari0303">in</g> pragma.
+@@ -2608,7 +2590,7 @@
+ <lb n="051_031" xml:id="lb_051_031"/>o vniuersidad podra cobrar sus bienes / dela per<pb break="no" rendition="#noHyphen" facs="facs:W0004-0052" n="fol. 24v" xml:id="facs_W0004-0052"/><lb break="no" rendition="#noHyphen" n="052_001" xml:id="lb_052_001"/>sona en quien el administrador los enageno: pi<lb break="no" rendition="#hyphen" n="052_002" xml:id="lb_052_002"/>diendo restitucion in integrum. <hi rendition="#sup">g</hi>
+                <note xml:id="note_d1e12150" anchored="true"><p xml:id="p_d1e12153" part="N">
+ <lb n="052_101" xml:id="lb_052_101"/>Jntegr<g resp="#CB" cert="high" ref="#charu0303">um</g>. <hi rendition="#sup">g</hi>. ¶ Spe<lb break="no" rendition="#noHyphen" n="052_102" xml:id="lb_052_102"/>culator. ti. de restitu.
+-<lb n="052_103" xml:id="lb_052_103"/>in integ. §. ij. <g resp="#CB" cert="high" ref="#char75f">ver</g>. vt <choice><abbr>au<lb break="no" rendition="#noHyphen" n="052_104" xml:id="lb_052_104"/>te<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">autem</expan></choice> <g resp="#CB" cert="high" ref="#char204a">et</g> l. j. C. si aduer.
++<lb n="052_103" xml:id="lb_052_103"/>in integ. §. ij. <g resp="#CB" cert="high" ref="#char75f">ver</g>. vt <choice><abbr>au<lb break="no" rendition="#noHyphen" n="052_104" xml:id="lb_052_104"/>te<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">au<lb break="no" rendition="#noHyphen" sameAs="#lb_052_104"/>tem</expan></choice> <g resp="#CB" cert="high" ref="#char204a">et</g> l. j. C. si aduer.
+ <lb n="052_105" xml:id="lb_052_105"/>sol. resti. postu. <g resp="#CB" cert="high" ref="#char204a ">et</g> l. j.
+ <lb n="052_106" xml:id="lb_052_106"/>C. si aduer. vendi.</p>
+                </note>. ¶ Y por el c<g ref="#charo0303" resp="#AW" cert="low">on</g><lb break="no" rendition="#hyphen" n="052_003" xml:id="lb_052_003"/>trario si el señor fue alcançado: podra el admini<lb break="no" rendition="#noHyphen" n="052_004" xml:id="lb_052_004"/>strador tener en si los bienes del señor / fasta que
+@@ -2637,7 +2619,7 @@
+ <lb n="052_020" xml:id="lb_052_020"/>se presume auer ganado con el officio que tuuie<lb break="no" rendition="#noHyphen" n="052_021" xml:id="lb_052_021"/>ron: lo que despues <g resp="#CB" cert="high" ref="#charebd1">de</g>l officio se halla que tien<g resp="#CB" cert="high" ref="#chare0303">en</g>. <hi rendition="#sup">a</hi>
+                <note xml:id="note_d1e12282" anchored="true"><p xml:id="p_d1e12285" part="N">
+ <lb n="052_118" xml:id="lb_052_118"/>Tienen. <hi rendition="#sup">a</hi>. ¶ Glo. in
+-<lb n="052_119" xml:id="lb_052_119"/>l. facultas <choice><abbr>ałs</abbr><expan resp="#CB" cert="medium">alias</expan></choice> defen<lb break="no" rendition="#hyphen" n="052_120" xml:id="lb_052_120"/>sionis facultas de iu.
++<lb n="052_119" xml:id="lb_052_119"/>l. facultas <choice><abbr>a<g ref="#char0142">l</g>s</abbr><expan resp="#CB" cert="medium">alias</expan></choice> defen<lb break="no" rendition="#hyphen" n="052_120" xml:id="lb_052_120"/>sionis facultas de iu.
+ <lb n="052_121" xml:id="lb_052_121"/>fisci. lib. x. <persName ref="cerl:cnp01341446 gnd:118803085 viaf:29618397" key="Baldus">bal.</persName> in. l. si
+ <lb n="052_122" xml:id="lb_052_122"/>defunct<g resp="#CB" cert="high" ref="#char770">us</g>. C. arbi. tu.
+ <lb n="052_123" xml:id="lb_052_123"/><persName ref="cerl:cnp01302817 gnd:118652885 viaf:66498105" key="Bartolus">bar.</persName> in. l. iij. C. de do<lb break="no" rendition="#hyphen" n="052_124" xml:id="lb_052_124"/>na. in<g resp="#CB" cert="high" ref="#chart0303">ter</g>. vj. <g resp="#CB" cert="high" ref="#char204a">et</g> vxo.</p>
+@@ -2658,7 +2640,7 @@
+ <lb n="052_132" xml:id="lb_052_132"/>Officio. <hi rendition="#sup">c</hi>. ¶ <persName ref="cerl:cnp01341446 gnd:118803085 viaf:29618397" key="Baldus">Bal.</persName> <g resp="#CB" cert="high" ref="#chari0303">in</g>
+ <lb n="052_133" xml:id="lb_052_133"/>di. l. j. <g resp="#CB" cert="high" ref="#char204a">et</g> <g resp="#CB" cert="high" ref="#chari0303">in</g>. l. c<g resp="#CB" cert="high" ref="#charu0303">um</g> oportet
+ <lb n="052_134" xml:id="lb_052_134"/>in <g resp="#CB" cert="high" ref="#char3007">pri</g>ncipio. ij. col<g resp="#CB" cert="high" ref="#char0142">l</g>. <g resp="#CB" cert="high" ref="#char75f">ver</g>.
+-<lb n="052_135" xml:id="lb_052_135"/><g resp="#CB" cert="high" ref="#charq0303">quae</g>ro <g resp="#CB" cert="high" ref="#char307">qui</g>d <g resp="#CB" cert="high" ref="#chari0303">in</g> administra<lb break="no" rendition="#hyphen" n="052_136" xml:id="lb_052_136"/>tore. C. de <choice><abbr>b<g ref="#charo0303" resp="#AW" cert="low">on</g>is.</abbr><expan resp="#CB" cert="high">bonis quae</expan></choice> lib.
++<lb n="052_135" xml:id="lb_052_135"/><g resp="#CB" cert="high" ref="#charq0303">quae</g>ro <g resp="#CB" cert="high" ref="#char307">qui</g>d <g resp="#CB" cert="high" ref="#chari0303">in</g> administra<lb break="no" rendition="#hyphen" n="052_136" xml:id="lb_052_136"/>tore. C. de <choice><abbr>b<g ref="#charo0303" resp="#AW" cert="low">on</g>is<g ref="#chare8bf">q</g>.</abbr><expan resp="#CB" cert="high">bonis quae</expan></choice> lib.
+ <lb n="052_137" xml:id="lb_052_137"/>raphael. ful. post bal.
+ <lb n="052_138" xml:id="lb_052_138"/>in. aut. licenti<g resp="#CB" cert="high" ref="#chara0303">am</g>. C. de
+ <lb n="052_139" xml:id="lb_052_139"/>epis. <g resp="#CB" cert="high" ref="#char204a">et</g> cle. facit <g resp="#CB" cert="high" ref="#char753">pro</g> eis.
+@@ -2686,7 +2668,7 @@
+ <lb n="053_112" xml:id="lb_053_112"/>Administrador.
+ <lb n="053_113" xml:id="lb_053_113"/><hi rendition="#sup">e</hi>. ¶ <persName ref="cerl:cnp01341446 gnd:118803085 viaf:29618397" key="Baldus">Bal.</persName> in. l. cum
+ <lb n="053_114" xml:id="lb_053_114"/>oportet <g resp="#CB" cert="high" ref="#chari0303">in</g> <g resp="#CB" cert="high" ref="#char307">pri</g>ncipio. iij.
+-<lb n="053_115" xml:id="lb_053_115"/>col<g resp="#CB" cert="high" ref="#char0142">l</g>. C. de <choice><abbr>b<g ref="#charo0303" resp="#AW" cert="low">on</g>is.</abbr><expan resp="#CB" cert="high">bonis quae</expan></choice> lib. </p>
++<lb n="053_115" xml:id="lb_053_115"/>col<g resp="#CB" cert="high" ref="#char0142">l</g>. C. de <choice><abbr>b<g ref="#charo0303" resp="#AW" cert="low">on</g>is<g ref="#chare8bf">q</g>.</abbr><expan resp="#CB" cert="high">bonis quae</expan></choice> lib. </p>
+                </note>. Y declare donde vuo los bienes que
+ <lb n="053_016" xml:id="lb_053_016"/>se hall<g resp="#CB" cert="high" ref="#chara0303">an</g> en su poder fenescido el cargo que tuuo.
+ <lb n="053_017" xml:id="lb_053_017"/>¶ Otros di<g ref="#char0292">z</g>en. <hi rendition="#sup">f</hi>
+@@ -2736,7 +2718,7 @@
+ <lb n="054_008" xml:id="lb_054_008"/>del prelado dela yglesia: ni los officiales de seño<lb break="no" rendition="#hyphen" n="054_009" xml:id="lb_054_009"/>res temporales. ¶ De donde concluyen que ha<lb n="054_010" xml:id="lb_054_010" break="no" rendition="#noHyphen"/>blando en prelado todo lo que tiene fenescido su
+ <lb n="054_011" xml:id="lb_054_011"/>officio que el su prelatura se presume auer lo ga<lb break="no" rendition="#hyphen" n="054_012" xml:id="lb_054_012"/>nado y auido del officio dignidad / o prelatura <g ref="#charq0303">que</g>
+ <lb n="054_013" xml:id="lb_054_013"/>tuuo y sera dela yglesia / sino se prouasse <g ref="#charq0303">que</g> lo vuo
+-<lb n="054_014" xml:id="lb_054_014"/>de herencia / o donacion etc̃. ¶ Mas que habl<g resp="#CB" cert="high" ref="#chara0303">an</g><lb break="no" rendition="#hyphen" n="054_015" xml:id="lb_054_015"/>do en otro administrador no a lugar la dicha
++<lb n="054_014" xml:id="lb_054_014"/>de herencia / o donacion et<g ref="#charc0303">c</g>. ¶ Mas que habl<g resp="#CB" cert="high" ref="#chara0303">an</g><lb break="no" rendition="#hyphen" n="054_015" xml:id="lb_054_015"/>do en otro administrador no a lugar la dicha
+ <lb n="054_016" xml:id="lb_054_016"/>presunci<g ref="#charo0303" resp="#AW" cert="low">on</g>. ¶ En verdad la question de suso pro<lb break="no" rendition="#hyphen" n="054_017" xml:id="lb_054_017"/>puesta es dudosa por la auctoridad y fundamen<lb break="no" rendition="#noHyphen" n="054_018" xml:id="lb_054_018"/>tos de los que sobre ella escriuier<g ref="#charo0303" resp="#AW" cert="low">on</g>: mas por que
+ <lb n="054_019" xml:id="lb_054_019"/>paresceria yerro auer la propuesto y no concluy<lb break="no" rendition="#noHyphen" n="054_020" xml:id="lb_054_020"/>do. De manera que justam<g resp="#CB" cert="high" ref="#chare0303">en</g>te sea clara so en mi <lb break="yes" n="054_021" xml:id="lb_054_021"/>enda de mejor juy<g ref="#char0292">z</g>io / conform<g resp="#CB" cert="high" ref="#chara0303">an</g>do me con el pa<lb break="no" rendition="#hyphen" n="054_022" xml:id="lb_054_022"/>rescer de otros que sobre este articulo escriuier<g ref="#charo0303" resp="#AW" cert="low">on</g>
+ <lb n="054_023" xml:id="lb_054_023"/>Digo que los contadores / los jue<g ref="#char0292">z</g>es / y las otras
+@@ -2801,9 +2783,9 @@
+ <lb n="055_136" xml:id="lb_055_136"/>cle. <g resp="#CB" cert="high" ref="#char204a">et</g> per <persName ref="cerl:cnp01302817 gnd:118652885 viaf:66498105" key="Bartolus">bar.</persName> <g resp="#CB" cert="high" ref="#chari0303">in</g>. l. pro<lb break="no" rendition="#hyphen" n="055_137" xml:id="lb_055_137"/>ponebatur. ff. de ma<lb break="no" rendition="#hyphen" n="055_138" xml:id="lb_055_138"/>gistr. con.</p>
+ <lb n="055_139" xml:id="lb_055_139"/>
+                </note>.</p>
+-                <p xml:id="p_saljadncac32" rendition="#r-center" part="N">
+-<lb n="055_030" xml:id="lb_055_030"/>¶ Sigue se la cator<g ref="#char0292">z</g>ena y final
+-<lb n="055_031" xml:id="lb_055_031"/>parte dela presente obra.</p>
++                <p xml:id="p_saljadncac32" part="N">
++<hi rendition="#r-center"><lb n="055_030" xml:id="lb_055_030"/>¶ Sigue se la cator<g ref="#char0292">z</g>ena y final
++<lb n="055_031" xml:id="lb_055_031"/>parte dela presente obra.</hi></p>
+             </div>
+             <div xml:id="div_catorzenaParte" type="part" n="Catorzena parte">
+                 <p xml:id="p_catorzenaParte" part="N">
+@@ -2824,7 +2806,7 @@
+ <lb n="056_106" xml:id="lb_056_106"/>in. l. si quis ex arg<g resp="#CB" cert="high" ref="#chare0303">en</g>ta<lb break="no" rendition="#hyphen" n="056_107" xml:id="lb_056_107"/>rum. §. <g resp="#CB" cert="high" ref="#char751">per</g>tinere. ff. eo.</p>
+                </note>. ¶ Y el instrumento de
+ <lb n="056_011" xml:id="lb_056_011"/>las cuentas se tiene de ha<g ref="#char0292">z</g>er en esta manera. A
+-<lb n="056_012" xml:id="lb_056_012"/>tantos dias de tal mes y año / ante mi el escriua<lb break="no" rendition="#hyphen" n="056_013" xml:id="lb_056_013"/>no publico y testigos deyuso escritos / <?oxy_comment_start author="birr" timestamp="20180622T142047+0200" comment="Hier und im folgenden: Blankettname."?>Fulano<?oxy_comment_end?> / y
++<lb n="056_012" xml:id="lb_056_012"/>tantos dias de tal mes y año / ante mi el escriua<lb break="no" rendition="#hyphen" n="056_013" xml:id="lb_056_013"/>no publico y testigos deyuso escritos / Fulano / y
+ <lb n="056_014" xml:id="lb_056_014"/>Fulano contadores: tomados entre Fulano / y Fu<lb break="no" rendition="#noHyphen" n="056_015" xml:id="lb_056_015"/>lano para ha<g ref="#char0292">z</g>er y aueriguar sus cuentas: las hi<lb break="no" rendition="#noHyphen" n="056_016" xml:id="lb_056_016"/><g ref="#char0292">z</g>ieron y aueriguar<g ref="#charo0303" resp="#AW" cert="low">on</g> en la manera que se sigue.
+ <lb n="056_017" xml:id="lb_056_017"/>Aqui assentara el escriuano el tenor de las cuen<lb break="no" rendition="#hyphen" n="056_018" xml:id="lb_056_018"/>tas segun que se aueriguaron: y luego al pie de<lb break="no" rendition="#hyphen" n="056_019" xml:id="lb_056_019"/>llas assentara. Y assi hechas y aueriguadas las
+ <lb n="056_020" xml:id="lb_056_020"/>dichas cuentas: los dichos contadores estando
+@@ -2850,7 +2832,7 @@
+                <note xml:id="note_d1e13211" anchored="true"><p xml:id="p_d1e13214" part="N">
+ <lb n="057_101" xml:id="lb_057_101"/>Reynos. <hi rendition="#sup">v</hi>. ¶ Vt ha<lb n="057_102" xml:id="lb_057_102" break="no" rendition="#noHyphen"/>be<g resp="#CB" cert="high" ref="#chart0303">tur</g> in <g resp="#CB" cert="high" ref="#charp0303">pra</g>gma. fo. ccxl.</p>
+                </note>. ¶ Las posicio<lb break="no" rendition="#noHyphen" n="057_002" xml:id="lb_057_002"/>nes se pornan desta manera por parte del señor.
+-<lb n="057_003" xml:id="lb_057_003"/>P<g ref="#charo0303" resp="#AW" cert="low">on</g>go por posici<g ref="#charo0303" resp="#AW" cert="low">on</g> y si me fuere negado <g resp="#CB" cert="high" ref="#char753">pro</g>uar en<lb break="no" rendition="#noHyphen" n="057_004" xml:id="lb_057_004"/>ti<g resp="#CB" cert="high" ref="#chare0303">en</g>do / <g ref="#charq0303">que</g> en t<g resp="#CB" cert="high" ref="#chara0303">an</g>tos dias de tal mes y año: <?oxy_comment_start author="birr" timestamp="20180622T142153+0200" comment="Nochmal Blankettname."?>Fulano<?oxy_comment_end?> to<lb break="no" rendition="#noHyphen" n="057_005" xml:id="lb_057_005"/>mo de mi en administracion tales bienes: y <g ref="#charq0303">que</g> en
++<lb n="057_003" xml:id="lb_057_003"/>P<g ref="#charo0303" resp="#AW" cert="low">on</g>go por posici<g ref="#charo0303" resp="#AW" cert="low">on</g> y si me fuere negado <g resp="#CB" cert="high" ref="#char753">pro</g>uar en<lb break="no" rendition="#noHyphen" n="057_004" xml:id="lb_057_004"/>ti<g resp="#CB" cert="high" ref="#chare0303">en</g>do / <g ref="#charq0303">que</g> en t<g resp="#CB" cert="high" ref="#chara0303">an</g>tos dias de tal mes y año: Fulano to<lb break="no" rendition="#noHyphen" n="057_005" xml:id="lb_057_005"/>mo de mi en administracion tales bienes: y <g ref="#charq0303">que</g> en
+ <lb n="057_006" xml:id="lb_057_006"/>cada vn año <g resp="#CB" cert="high" ref="#charebd1">de</g>los <g ref="#charq0303">que</g> tuuo la dicha administraci<g ref="#charo0303" resp="#AW" cert="low">on</g>
+ <lb n="057_007" xml:id="lb_057_007"/>r<g resp="#CB" cert="high" ref="#chare0303">en</g>tar<g ref="#charo0303" resp="#AW" cert="low">on</g> t<g resp="#CB" cert="high" ref="#chara0303">an</g>tos marauedis / o t<g resp="#CB" cert="high" ref="#chara0303">an</g>tas hanegas de p<g resp="#CB" cert="high" ref="#chara0303">an</g>. <hi rendition="#sup">x</hi>
+                <note xml:id="note_d1e13245" anchored="true"><p xml:id="p_d1e13248" part="N">
+@@ -2872,14 +2854,14 @@
+ <lb n="057_112" xml:id="lb_057_112"/>de sancti. epis. §. inco<lb break="no" rendition="#noHyphen" n="057_113" xml:id="lb_057_113"/>nomis. <g resp="#CB" cert="high" ref="#char75f">ver</g>. n<g ref="#charo0303" resp="#AW" cert="low">on</g> enim c<g ref="#charo0303" resp="#AW" cert="low">on</g><lb break="no" rendition="#noHyphen" n="057_114" xml:id="lb_057_114"/>cedimus <g resp="#CB" cert="high" ref="#char204a">et</g> ibi. glo. in
+ <lb n="057_115" xml:id="lb_057_115"/>parte <choice><abbr>repetitione<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">repetitionem</expan></choice> et
+ <lb n="057_116" xml:id="lb_057_116"/>ibi ang. in fi. col. ix.
+-<choice><abbr><lb n="057_117" xml:id="lb_057_117"/>t<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">tenet</expan></choice> spe. in titulo de ap<lb break="no" rendition="#noHyphen" n="057_118" xml:id="lb_057_118"/>pella. §. ij. <g resp="#CB" cert="high" ref="#char75f">ver</g>. iij.</p>
++<lb n="057_117" xml:id="lb_057_117"/><choice><abbr>t<g ref="#char0292">z</g></abbr><expan resp="#CB" cert="high">tenet</expan></choice> spe. in titulo de ap<lb break="no" rendition="#noHyphen" n="057_118" xml:id="lb_057_118"/>pella. §. ij. <g resp="#CB" cert="high" ref="#char75f">ver</g>. iij.</p>
+                </note>. Y dados los pregones a los
+ <lb n="057_014" xml:id="lb_057_014"/>bienes en <g ref="#charq0303">que</g> se hi<g ref="#char0292">z</g>iere la execuci<g ref="#charo0303" resp="#AW" cert="low">on</g> se rematara / y se
+ <lb n="057_015" xml:id="lb_057_015"/>hara pago delo alc<g resp="#CB" cert="high" ref="#chara0303">an</g>çado al señor: d<g resp="#CB" cert="high" ref="#chara0303">an</g>do primero
+ <lb n="057_016" xml:id="lb_057_016"/>fi<g resp="#CB" cert="high" ref="#chara0303">an</g>ça el señor <g ref="#charq0303">que</g> pagara lo <g ref="#charq0303">que</g> rescibiere c<g ref="#charo0303" resp="#AW" cert="low">on</g> el doblo
+-<lb n="057_017" xml:id="lb_057_017"/>si en seg<g resp="#CB" cert="high" ref="#charu0303">un</g>da inst<g resp="#CB" cert="high" ref="#chara0303">an</g>cia fuere la sent<g resp="#CB" cert="high" ref="#chare0303">en</g>cia reuocada. <hi rendition="#sup">⁊</hi>
++<lb n="057_017" xml:id="lb_057_017"/>si en seg<g resp="#CB" cert="high" ref="#charu0303">un</g>da inst<g resp="#CB" cert="high" ref="#chara0303">an</g>cia fuere la sent<g resp="#CB" cert="high" ref="#chare0303">en</g>cia reuocada. <hi rendition="#sup"><g ref="#char204a">⁊</g></hi>
+                <note xml:id="note_d1e13358" anchored="true"><p xml:id="p_d1e13361" part="N">
+-<lb n="057_120" xml:id="lb_057_120"/>Reuocada <hi rendition="#sup">⁊</hi>. ¶ Ha<lb n="057_121" xml:id="lb_057_121" break="no" rendition="#noHyphen"/>be<g resp="#CB" cert="high" ref="#chart0303">tur</g> in. l. fi. ti. <g ref="#charebd1">de</g>las ece<lb break="no" rendition="#noHyphen" n="057_122" xml:id="lb_057_122"/>ptiones. in ordi. <g resp="#CB" cert="high" ref="#char204a">et</g> in
++<lb n="057_120" xml:id="lb_057_120"/>Reuocada <hi rendition="#sup"><g ref="#char204a">⁊</g></hi>. ¶ Ha<lb n="057_121" xml:id="lb_057_121" break="no" rendition="#noHyphen"/>be<g resp="#CB" cert="high" ref="#chart0303">tur</g> in. l. fi. ti. <g ref="#charebd1">de</g>las ece<lb break="no" rendition="#noHyphen" n="057_122" xml:id="lb_057_122"/>ptiones. in ordi. <g resp="#CB" cert="high" ref="#char204a">et</g> in
+ <lb n="057_123" xml:id="lb_057_123"/>pragmati. fol. xlviij.
+ <lb n="057_124" xml:id="lb_057_124"/>et in legibus tauri.
+ <lb n="057_125" xml:id="lb_057_125"/>le. lxiiij.</p>
+@@ -2887,16 +2869,16 @@
+ <lb n="057_018" xml:id="lb_057_018"/>¶ Y si enla seg<g resp="#CB" cert="high" ref="#charu0303">un</g>da inst<g resp="#CB" cert="high" ref="#chara0303">an</g>cia la sent<g resp="#CB" cert="high" ref="#chare0303">en</g>cia se c<g ref="#charo0303" resp="#AW" cert="low">on</g>firma<lb n="057_019" xml:id="lb_057_019" break="no" rendition="#noHyphen"/>re <g resp="#CB" cert="high" ref="#charq0303">que</g>dara pagado el señor <g resp="#CB" cert="high" ref="#charebd1">de</g>lo <g ref="#charq0303">que</g> alc<g resp="#CB" cert="high" ref="#chara0303">an</g>ço al admini<lb break="no" rendition="#hyphen" n="057_020" xml:id="lb_057_020"/>strador: y ansi <g resp="#CB" cert="high" ref="#charq0303">que</g>dara entre ellos la cu<g resp="#CB" cert="high" ref="#chare0303">en</g>ta y <g resp="#CB" cert="high" ref="#charebd1">de</g>bate
+ <lb n="057_021" xml:id="lb_057_021"/><g ref="#charq0303">que</g> tuuier<g ref="#charo0303" resp="#AW" cert="low">on</g> fenescido. ¶ Y esta cuenta se da delos
+ <lb n="057_022" xml:id="lb_057_022"/>bienes t<g resp="#CB" cert="high" ref="#chare0303">em</g>porales a la qual son obligados solam<g resp="#CB" cert="high" ref="#chare0303">en</g><lb break="no" rendition="#noHyphen" n="057_023" xml:id="lb_057_023"/>te los <g ref="#charq0303">que</g> administr<g resp="#CB" cert="high" ref="#chara0303">an</g> bienes de otros. ¶ Otra cu<g resp="#CB" cert="high" ref="#chare0303">en</g><lb break="no" rendition="#noHyphen" n="057_024" xml:id="lb_057_024"/>ta y ra<g ref="#char0292">z</g><g ref="#charo0303" resp="#AW" cert="low">on</g> / todos generalm<g resp="#CB" cert="high" ref="#chare0303">en</g>te somos obligados a
+-<lb n="057_025" xml:id="lb_057_025"/>dar de nuestras obras en la venida de nuestro re<lb break="no" rendition="#noHyphen" n="057_026" xml:id="lb_057_026"/>d<g resp="#CB" cert="high" ref="#chare0303">em</g>ptor Jesu cristo el dia del juy<g ref="#char0292">z</g>io. <hi rendition="#sup">ↄ</hi>
+-               <note xml:id="note_d1e13431" anchored="true"><p xml:id="p_d1e13432" part="N">Juy<g ref="#char0292">z</g>io.  ↄ. ¶ Habe<lb break="no" rendition="#noHyphen" n="057_127" xml:id="lb_057_127"/>tur mathei. xiij. <g resp="#CB" cert="high" ref="#char204a">et</g> ad
++<lb n="057_025" xml:id="lb_057_025"/>dar de nuestras obras en la venida de nuestro re<lb break="no" rendition="#noHyphen" n="057_026" xml:id="lb_057_026"/>d<g resp="#CB" cert="high" ref="#chare0303">em</g>ptor Jesu cristo el dia del juy<g ref="#char0292">z</g>io. <hi rendition="#sup"><g ref="#char2184">ↄ</g></hi>
++               <note xml:id="note_d1e13431" anchored="true" n="Juyzio. ↄ."><p xml:id="p_d1e13432" part="N">¶ Habe<lb break="no" rendition="#noHyphen" n="057_127" xml:id="lb_057_127"/>tur mathei. xiij. <g resp="#CB" cert="high" ref="#char204a">et</g> ad
+ <lb n="057_128" xml:id="lb_057_128"/>corintios. xv.</p>
+                </note>. A el plega <g ref="#charq0303">que</g>
+ <lb n="057_027" xml:id="lb_057_027"/>hagamos en este m<g resp="#CB" cert="high" ref="#charu0303">un</g>do tales obras: y que admi<lb break="no" rendition="#noHyphen" n="057_028" xml:id="lb_057_028"/>nistremos nuestra vida de tal manera <g ref="#charq0303">que</g> demos
+ <lb n="057_029" xml:id="lb_057_029"/>buena cu<g resp="#CB" cert="high" ref="#chare0303">en</g>ta: y tal que merescamos oyr aquella
+ <lb n="057_030" xml:id="lb_057_030"/>dulce bo<g ref="#char0292">z</g>. Venite benedicti patris mei. <g ref="#char204a">et</g><g ref="#charc0303">c</g>. Am<g resp="#CB" cert="high" ref="#chare0303">en</g>.</p>
+-                <p xml:id="p_sdaff6w3rv" rendition="#r-center" part="N">
+-<lb n="057_031" xml:id="lb_057_031"/>Finis.
+-<lb n="057_032" xml:id="lb_057_032"/>Laus inmenso deo.</p>
++                <p xml:id="p_sdaff6w3rv" part="N">
++<hi rendition="#r-center"><lb n="057_031" xml:id="lb_057_031"/>Finis.
++<lb n="057_032" xml:id="lb_057_032"/>Laus inmenso deo.</hi></p>
+             </div>
+         </body>
+ 
+@@ -2951,25 +2933,18 @@
+                     <item xml:id="item_tabla15">
+ <lb n="059_009" xml:id="lb_059_009"/><ref type="summary" xml:id="ref_tabla15" target="#div_catorzenaParte">xiiij.¶ Parte cator<g ref="#char0292">z</g>ena y final que trata si se tiene <g resp="#CB" cert="high" ref="#charebd1">de</g>
+ <lb n="059_010" xml:id="lb_059_010"/>dar copia delas cu<g resp="#CB" cert="high" ref="#chare0303">en</g>tas: y como se tiene de ha<lb break="no" rendition="#hyphen" n="059_011" xml:id="lb_059_011"/><g ref="#char0292">z</g>er el instrum<g resp="#CB" cert="high" ref="#chare0303">en</g>to hechas las cu<g resp="#CB" cert="high" ref="#chare0303">en</g>tas / y las po<lb break="no" rendition="#noHyphen" n="059_012" xml:id="lb_059_012"/>siciones y sentencias.</ref> Folio. xxvj.</item>
+-                    <item xml:id="item_tabla16" rendition="#r-center">
+-<lb n="059_013" xml:id="lb_059_013"/>Fin dela tabla.
++                    <item xml:id="item_tabla16">
++<hi rendition="#r-center"><lb n="059_013" xml:id="lb_059_013"/>Fin dela tabla.</hi>
+                     </item>
+                 </list>
+             </div>
+             <div xml:id="div_privileges" type="privileges" n="Privilegio">
+                 <p xml:id="p_privilegio" part="N">
+ <lb n="059_014" xml:id="lb_059_014"/>¶ Aqui se da fin a la presente
+-<lb n="059_015" xml:id="lb_059_015"/>obra y tratado de cuentas / hecho por el licencia<lb break="no" rendition="#hyphen" n="059_016" xml:id="lb_059_016"/>do <?oxy_comment_start author="birr" timestamp="20180622T143351+0200" comment="Diego del Castillo de Villasante
+-
+-GND-Nummer	130116688 
+-
+-Biografie in der Real Academia de Historia:
+-http://dbe.rah.es/biografias/16551/diego-del-castillo-de-villasante"?>Diego <g resp="#CB" cert="high" ref="#charebd1">de</g>l castillo<?oxy_comment_end?>: natural <g ref="#charebd1">de</g>la cibdad de Mo<lb break="no" rendition="#noHyphen" n="059_017" xml:id="lb_059_017"/>lina. Con priuilegio Real que ninguno lo pueda
++<lb n="059_015" xml:id="lb_059_015"/>obra y tratado de cuentas / hecho por el licencia<lb break="no" rendition="#hyphen" n="059_016" xml:id="lb_059_016"/>do <persName resp="#CB" key="Castillo de Villasante, Diego del" ref="cerl:cnp01232744 gnd:130116688">Diego <g resp="#CB" cert="high" ref="#charebd1">de</g>l castillo</persName>: natural <g ref="#charebd1">de</g>la cibdad de Mo<lb break="no" rendition="#noHyphen" n="059_017" xml:id="lb_059_017"/>lina. Con priuilegio Real que ninguno lo pueda
+ <lb n="059_018" xml:id="lb_059_018"/>vender ni imprimir en estos reynos: saluo la per<lb break="no" rendition="#noHyphen" n="059_019" xml:id="lb_059_019"/>sona / o personas que su poder ouier<g resp="#CB" cert="high" ref="#chare0303">en</g> / por espa<lb break="no" rendition="#hyphen" n="059_020" xml:id="lb_059_020"/>cio de die<g ref="#char0292">z</g> años: segun que por la cedula y priui<lb break="no" rendition="#hyphen" n="059_021" xml:id="lb_059_021"/>legio de sus Magestades paresce. Es impresso
+ <lb n="059_022" xml:id="lb_059_022"/>en la muy noble y mas leal cibdad de Burgos
+-<lb n="059_023" xml:id="lb_059_023"/>por <?oxy_comment_start author="birr" timestamp="20180622T143540+0200" comment="Personenname: Alonso de Melgar
+-
+-VIAF ID: 99778530"?>Alonso de Melgar<?oxy_comment_end?>. Acabose a. xxx. dias del
++<lb n="059_023" xml:id="lb_059_023"/>por <persName resp="#CB" ref="viaf:99778530" key="Melgar, Alonso de">Alonso de Melgar</persName>. Acabose a. xxx. dias del
+ <lb n="059_024" xml:id="lb_059_024"/>mes de Mayo / Año de mill y. D. y. xxij. años.
+                 </p>
+             </div>

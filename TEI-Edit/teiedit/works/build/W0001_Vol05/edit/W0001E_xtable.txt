@@ -1,0 +1,105 @@
+TAGS und Sonderzeichen
+----------------------
++ (6) typ: {
+-P (1594) typ: ^<
+A+1 (626) typ: ^< ^</
+A+2 (218) typ: ^< ^</
+A+3 (22) typ: ^< ^</
+A+4 (10) typ: ^< ^</
+A+5 (4) typ: ^< ^</
+absatz-nummer (3496) typ: ^< ^</
+BZ (1) typ: {
+DUAN (14) typ: ^< ^</
+duolan 2 (931) typ: ^< ^</
+E+1 (4) typ: ^< ^</
+IMAGE (4) typ: ^#(
+INI2 (536) typ: ^< ^</
+INI3 (82) typ: ^< ^</
+INI4 (2) typ: ^< ^</
+INI5 (8) typ: ^< ^</
+INI7 (4) typ: ^< ^</
+kongge (2) typ: ^<
+marginalia (6922) typ: ^< ^</
+negEZ (1788) typ: ^< ^</
+P (5758) typ: ^< ^</
+R (1928) typ: ^< ^</
+shi (60) typ: ^< ^</
+tspb (2) typ: ^< ^</
+Z (1114) typ: ^< ^</
+
+Austauschtabelle
+----------------
+|^#P+^^m^#P-|<hi rend="turned-m">m</hi>|
+|^#P+^^e^#P-|<hi rend="turned-e">e</hi>|
+|^#P+^^3^#P-|<hi rend="turned-a">a</hi>|
+|^^+|^#\[271D\]|
+|^^.|<unclear reason="unclear"/>|
+|^<control/^>{#}^%{#}^<control/^>||
+|\{et\}|^&amp;|
+|\{BZ\}|<unclear reason="BZ" resp="TK"/>|
+|^#{|}siguen|<unclear reason="unclear"/>{=2=}|
+|^_added from BNE||
+|^<{|}DUAN{|}^>|<unclear reason="zeilenueberlauf">|
+|^</{|}DUAN{|}^>|</unclear>|
+|^#S[+-]||
+|^&^#x{|}{4}?{|}{0};|#[{=2=}]|
+|^#\[{|}????{|}\]|#[{=2=}]|
+|^<marginalia^>|<note type="marginalia"><lb/>|
+|^<marginalia rendition="dagger"^>|<note type="marginalia" rend="dagger">|
+|^</marginalia^>|</note>|
+|^<INI{|}{\0}{|}^>|<hi rend="init" n="{=2=}-zeilig">|
+|^</INI[123456789]^>|</hi>|
+|^<{|}A[+-]{\0}{|}^>|<!-- tao:{=2=}^_beg -->|
+|^</{|}A[+-]{\0}{|}^>|<!-- tao:{=2=}^_end -->|
+|^<control/^>|<unclear reason="control"/>|
+|^<kongge{0}/^>|<seg rend="gap" resp="tao:kongge"/>|
+|^<shi^>|<lg><l>|
+|^</shi^>|</l></lg>|
+|^<you^>|<hi rend="tao:you^_beg">|
+|^</you^>|</hi>|
+|^<tspb^>|<p><hi rend="right">|
+|^</tspb^>|</hi></p>|
+|\{{1-2}{\0}\*\}|<milestone rend="asterisk" n="{+2=}"/>|
+|\{+\}|<milestone rend="asterisk^_special"/>|
+|\{t^$\}|<g ref="^#chart0303" resp="^#TK">tur</g>|
+|\{l^$\}|<g ref="^#char0124" resp="^#TK">#.l</g>|
+|\{?KTypogr\}|<unclear reason="KTypogr"/>|
+|^<P^>|<p>|
+|^</P^>|</p>|
+|^<-P^>||
+|^#(IMAGE)|<figure/>|
+|^$unclear|<unclear reason="unclear"/>|
+|_||
+|\{et cetera\}|<g n="et cetera" resp="^#TK"/>|
+|\{secu[nm]dum\}|<g n="secundum"  resp="^#TK"/>|
+|^<W+1^>|<hi rend="tao:W+1">|
+|^</W+1^>|</hi>|
+|^%%|{+1=}|
+|^<W+2^>|<hi rend="tao:W+2">|
+|^</W+2^>|</hi>|
+|^<W-1^>|<hi rend="tao:W-1">|
+|^</W-1^>|</hi>|
+|^<A^>|<hi rend="tao:A">|
+|^</A^>|</hi>|
+|^<huifu^>|<hi rend="tao:huifu:">|
+|^</huifu^>|</hi>|
+|^<Z^>|<hi rend="centered">|
+|^</Z^>|</hi>|
+|^<negEZ^>|<p>|
+|^</negEZ^>|</p>|
+|^<R^>|<hi rend="right" resp="tao:R">|
+|^</R^>|</hi>|
+|^<W^>|<hi rend="right" resp="tao:W">|
+|^</W^>|</hi>|
+|^<zuo^>|<hi resp="tao:zuo">|
+|^</zuo^>|</hi>|
+|^<duolan 2^>|<cb/>|
+|^</duolan 2^>||
+|^<biaoge^>|<table>|
+|^</biaoge^>|</table>|
+|^<absatz-nummer^>{|}{#}{|}{0}[., ]^</absatz-nummer^>{0} |
+|<milestone n="{=2=}" unit="x"/>|
+|^<absatz-nummer^>{|}{#}{|} {|}{#}{|}{0}[., ]^</absatz-nummer^>{0} |
+|<milestone n="{=2=}{=4=}" unit="x"/>|
+|^<E+1^>||
+|^</E+1^>||

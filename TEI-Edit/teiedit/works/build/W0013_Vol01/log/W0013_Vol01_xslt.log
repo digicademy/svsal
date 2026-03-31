@@ -1,0 +1,109 @@
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0013_Vol01\xml\W0013_Vol01_109.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0013_Vol01\xml\W0013_Vol01_110.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0013_Vol01\xsl\W0013_Vol01_109.xsl
+     [xslt] WARN: found choice element with empty child, in line W0013-01-0141-lb-0029 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "utar"
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0013-01-0331-lb-0019 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "au"
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0013-01-0424-lb-0026 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "aut"
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0013_Vol01\xml\W0013_Vol01_110.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0013_Vol01\xml\W0013_Vol01_111.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0013_Vol01\xsl\W0013_Vol01_110.xsl
+     [xslt] INFO: identified 0 *pb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 0 *cb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 0 *cb* as secondary break that were not previously marked as no-break at all.
+
+     [xslt] INFO: identified 0 *cb* as secondary break that were previously marked as primary no-break.
+
+     [xslt] INFO: identified 0 *lb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 0 *lb* as secondary break that were not previously marked as no-break at all.
+
+     [xslt] INFO: identified 9 *lb* as secondary break that were previously marked as primary no-break.
+
+     [xslt] INFO: replaced trailing whitespace in 0 text nodes before primary no-breaks.
+
+     [xslt] INFO: replaced trailing whitespace in 0 text nodes before secondary no-breaks.
+
+     [xslt] Input whitespace: 93791
+
+     [xslt] Output whitespace: 93791
+
+     [xslt] ---------------------------------------------------------
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0013_Vol01\xml\W0013_Vol01_111.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0013_Vol01\xml\W0013_Vol01_112.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0013_Vol01\xsl\W0013_Vol01_111.xsl
+     [xslt] INFO: quality check successfull.
+
+     [xslt] INFO: added 0 choice/*[2]/pb.
+
+     [xslt] INFO: added 0 choice/*[2]/cb.
+
+     [xslt] INFO: added 0 choice/*[2]/lb.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0013_Vol01\xml\W0013_Vol01_112.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0013_Vol01\xml\W0013_Vol01_113.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0013_Vol01\xsl\W0013_Vol01_112.xsl
+Apache resolver library not found, internal resolver will be used
+     [xslt] INFO: added 0 special character tags (tei:g).
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0013_Vol01\xml\W0013_Vol01_113.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0013_Vol01\xml\W0013_Vol01_114.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0013_Vol01\xsl\W0013_Vol01_113.xsl
+     [xslt] Generated temporary lb/@xml:id.
+
+     [xslt] Extracted tei:lb from pages in the main area of the text.
+
+     [xslt] Numbered tei:lb from the main area.
+
+     [xslt] Extracted tei:lb from the marginal area.
+
+     [xslt] Numbered tei:lb from the marginal area.
+
+     [xslt] INFO: Added line numbers to tei:lb/@n.
+
+     [xslt] INFO: Serializing final output...
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0013_Vol01\xml\W0013_Vol01_114.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0013_Vol01\xml\W0013_Vol01_115.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0013_Vol01\xsl\W0013_Vol01_114.xsl
+     [xslt] Error: no key element found for element ref, @target: #Vol02
+
+     [xslt] Error: no key element found for element ref, @target: #W0013-02-0494-d1-03e8
+
+     [xslt] Error: no key element found for element ref, @target: #W0013-02-0539-d1-03eb
+
+     [xslt] Error: no key element found for element ref, @target: #W0013-02-0588-d1-03ec
+
+     [xslt] Error: no key element found for element ref, @target: #W0013-02-0644-d1-03ed
+
+     [xslt] Error: no key element found for element ref, @target: #W0013-02-0739-d1-03f0
+
+     [xslt] Error: no key element found for element ref, @target: #W0013-02-0810-d1-03f1
+
+     [xslt] INFO: quality check successfull.
+

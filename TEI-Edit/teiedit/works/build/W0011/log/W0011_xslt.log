@@ -1,0 +1,152 @@
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0011\xml\W0011_015.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0011\xml\W0011_016.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0011\xsl\W0011_015.xsl
+     [xslt] INFO: repositioned lb W0011-00-0061-lb-2020
+
+     [xslt] INFO: repositioned lb W0011-00-0098-lb-m006
+
+     [xslt] INFO: repositioned lb W0011-00-0195-lb-1034
+
+     [xslt] INFO: repositioned lb W0011-00-0269-lb-1034
+
+     [xslt] INFO: repositioned lb W0011-00-0276-lb-1016
+
+     [xslt] INFO: repositioned lb W0011-00-0389-lb-2015
+
+     [xslt] INFO: repositioned lb W0011-00-0407-lb-m013
+
+     [xslt] INFO: repositioned lb W0011-00-0481-lb-1006
+
+     [xslt] INFO: repositioned lb W0011-00-0568-lb-2021
+
+     [xslt] INFO: repositioned lb W0011-00-0598-lb-1053
+
+     [xslt] INFO: repositioned lb W0011-00-0621-lb-2042
+
+     [xslt] INFO: repositioned lb W0011-00-0838-lb-2047
+
+     [xslt] INFO: repositioned lb W0011-00-0892-lb-2049
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0011-00-0003-lb-0012 )
+
+     [xslt] 
+
+     [xslt] WARN: found choice element with empty child, in line W0011-00-0003-lb-0012 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "'"
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0011-00-0386-lb-1041 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "ca"
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0011-00-0573-lb-2053 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "fa"
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0011-00-0729-lb-m006 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "c≈?"
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0011-00-0941-lb-2035 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "le"
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0011-00-0823-lb-2043 :
+
+     [xslt] 	child::tei:abbr (child 1) has content: "ad ferend≈©"
+
+     [xslt] 	child::tei:expan (child 2) has content: "adferendum"
+
+     [xslt] WARN: amount of whitespace characters differs in input and output doc: 
+
+     [xslt] Input whitespace: 627317
+
+     [xslt] Output whitespace: 627311
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0011\xml\W0011_016.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0011\xml\W0011_017.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0011\xsl\W0011_016.xsl
+     [xslt] INFO: identified 60 *pb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 86 *cb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 60 *cb* as secondary break that were not previously marked as no-break at all.
+
+     [xslt] INFO: identified 0 *cb* as secondary break that were previously marked as primary no-break.
+
+     [xslt] INFO: identified 0 *lb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 0 *lb* as secondary break that were not previously marked as no-break at all.
+
+     [xslt] INFO: identified 149 *lb* as secondary break that were previously marked as primary no-break.
+
+     [xslt] INFO: replaced trailing whitespace in 813 text nodes before primary no-breaks.
+
+     [xslt] INFO: replaced trailing whitespace in 0 text nodes before secondary no-breaks.
+
+     [xslt] Input whitespace: 627311
+
+     [xslt] Output whitespace: 626498
+
+     [xslt] ---------------------------------------------------------
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0011\xml\W0011_017.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0011\xml\W0011_018.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0011\xsl\W0011_017.xsl
+     [xslt] INFO: quality check successfull.
+
+     [xslt] INFO: added 16 choice/*[2]/pb.
+
+     [xslt] INFO: added 38 choice/*[2]/cb.
+
+     [xslt] INFO: added 3979 choice/*[2]/lb.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0011\xml\W0011_018.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0011\xml\W0011_019.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0011\xsl\W0011_018.xsl
+Apache resolver library not found, internal resolver will be used
+     [xslt] INFO: added 1206 special character tags (tei:g).
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0011\xml\W0011_019.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0011\xml\W0011_020.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0011\xsl\W0011_019.xsl
+     [xslt] Generated temporary lb/@xml:id.
+
+     [xslt] Extracted tei:lb from pages in the main area of the text.
+
+     [xslt] Numbered tei:lb from the main area.
+
+     [xslt] Extracted tei:lb from the marginal area.
+
+     [xslt] Numbered tei:lb from the marginal area.
+
+     [xslt] INFO: Added line numbers to tei:lb/@n.
+
+     [xslt] INFO: Serializing final output...
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0011\xml\W0011_020.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0011\xml\W0011_021.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0011\xsl\W0011_020.xsl
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0011\xml\W0011_021.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0011\xml\W0011_022.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0011\xsl\W0011_021.xsl

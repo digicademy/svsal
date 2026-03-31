@@ -1,0 +1,931 @@
+--- xml/W0002_007.xml	2018-06-24 17:47:40.574393824 +0200
++++ edit/W0002_edit-007.xml	2018-06-23 08:55:26.000000000 +0200
+@@ -1,8 +1,10 @@
+ <?xml version="1.0" encoding="UTF-8"?><?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"
+                 ?><?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml"
+-	                schematypens="http://purl.oclc.org/dsdl/schematron"?><TEI xmlns="http://www.tei-c.org/ns/1.0" xml:id="W0002"><teiHeader><fileDesc xmlns:xi="http://www.w3.org/2001/XInclude">
++	                schematypens="http://purl.oclc.org/dsdl/schematron"?>
++<TEI xmlns="http://www.tei-c.org/ns/1.0" xml:id="W0002" xmlns:xi="http://www.w3.org/2001/XInclude">
++    <teiHeader>
++        <fileDesc>
+             
+-            <!-- Titelangaben unserer digitalen Editions-Datei -->
+             <titleStmt>
+                 <title type="short" level="m">Manual de confessores</title>
+                 <title type="main" level="m">Manual de confessores y penitentes</title>
+@@ -60,52 +62,34 @@
+                 </editor>
+             </titleStmt>
+             
+-            <!--Xincludes: editionStmt, publicationStmt, seriesStmt -->
+-            <editionStmt xmlns:sal="http://salamanca.adwmainz.de" xml:id="editionStmt" xml:base="../../../svsal/resources/files/W_Head_general.xml">
+-               <!-- <edition xml:lang="de">Die Transkription der Texte wurde unter Verwendung des
+-                    <ref type="url" target="http://files.salamanca.school/SvSal_txt.rng">"SvSal-Schemas für Werke"</ref> angefertigt. </edition>-->
+-                <edition>[Electronic ed.]</edition>
+-                <respStmt>
+-                    <resp>Erstellt von</resp>
+-                    <persName ref="#AW">Andreas Wagner</persName>
+-                    <persName ref="#IC">Ingo Caesar</persName>
+-                    <orgName>Akademie der Wissenschaften und der Literatur Mainz
+-                        <ref type="url" target="http://www.adwmainz.de"/>
+-                    </orgName>
+-                </respStmt>
+-                <funder>
+-                    <orgName>Akademie der Wissenschaften und der Literatur Mainz</orgName>
+-                    <ref type="url" target="http://www.adwmainz.de"/>
+-                </funder>
+-            </editionStmt>
+-            <publicationStmt xmlns:sal="http://salamanca.adwmainz.de" xml:id="publicationStmt" xml:base="../../../svsal/resources/files/W_Head_general.xml">
+-                <publisher>
+-                    <orgName>Akademie der Wissenschaften und der Literatur, Mainz</orgName>
+-                    <ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>
+-                </publisher>
+-                <distributor>
+-                    <orgName>Akademie der Wissenschaften und der Literatur, Mainz</orgName>, <orgName>Max Planck Institut für europäische Rechtsgeschichte</orgName>, <orgName>Goethe-Universität Frankfurt/Main</orgName>
+-                    <email>info@salamanca.adwmainz.de</email>
+-                </distributor>
+-                <pubPlace role="digitzedEd">
+-                    Frankfurt/Main (<ref type="url" target="http://salamanca.adwmainz.de/">http://salamanca.adwmainz.de/</ref>)
+-                </pubPlace>
+-                <date type="digitizedEd" when="2013">2013</date>
+-<!-- Angaben zum copyright -->
+-                <availability>
+-                    <licence target="http://creativecommons.org/licenses/by-nc-sa/3.0/">
+-                        <p>Dieses Werk bzw. dieser Inhalt wurde digitalisiert durch die Akademie der
+-                    Wissenschaften und der Literatur, Mainz, und steht unter einer Creative
+-                    Commons Lizenz: Namensnennung-NichtKommerziell-KeineBearbeitung 3.0 Unported.</p>
+-                    </licence>
+-                </availability>
+-            </publicationStmt>
+-            <seriesStmt xmlns:sal="http://salamanca.adwmainz.de" xml:id="seriesStmt" xml:base="../../../svsal/resources/files/W_Head_general.xml">
+-                <title level="s" xml:lang="de">Die Schule von Salamanca: eine digitale Quellensammlung und ein Wörterbuch ihrer juristisch-politischen Sprache.</title>
+-                <title level="s" xml:lang="en">The School of Salamanca: A Digital Collection of Sources and a Dictionary of its Juridical-Political Language.</title>
+-            </seriesStmt>
++            <xi:include href="http://files.salamanca.school/W_Head_general.xml" xpointer="editionStmt">
++                <xi:fallback>
++                    <editionStmt>
++                        <p xml:lang="en" xml:id="W0002-00-meta-pa-0001">For information about the digital edition, please 
++                            refer to
++                            <ref target="http://salamanca.adwmainz.de/about">our website</ref>.</p>
++                    </editionStmt>
++                </xi:fallback>
++            </xi:include>
++            <xi:include href="http://files.salamanca.school/W_Head_general.xml" xpointer="publicationStmt">
++                <xi:fallback>
++                    <publicationStmt>
++                        <p xml:lang="en" xml:id="W0002-00-meta-pa-0002">For information about the digital edition, please 
++                            refer to
++                            <ref target="http://salamanca.adwmainz.de/about">our website</ref>.</p>
++                    </publicationStmt>
++                </xi:fallback>
++            </xi:include>
++            <xi:include href="http://files.salamanca.school/W_Head_general.xml" xpointer="seriesStmt">
++                <xi:fallback>
++                    <seriesStmt>
++                        <p xml:lang="en" xml:id="W0002-00-meta-pa-0003">For information about the digital edition, please 
++                            refer to
++                            <ref target="http://salamanca.adwmainz.de/about">our website</ref>.</p>
++                    </seriesStmt>
++                </xi:fallback>
++            </xi:include>
+             
+-            <!-- eindeutige URL-->
+             <notesStmt>
+                 <note xml:id="url">
+                     <ref target="work.html?wid=W0002">.../work.html?wid=W0002</ref>
+@@ -157,757 +141,22 @@
+                     <note xml:id="ownerOfPrimarySource">
+                         <ref type="institution" target="gnd:4313400-2">Universität Salamanca / Bibliothek</ref>
+                         <ref type="catLink" target="http://brumario.usal.es/record=b1857195~S1*spi#.VEdkThaq5OI"/>
+-                        <!--weitere Quellen/Institutionen angeben-->
+                     </note>
+                 </biblStruct>
+             </sourceDesc>
+-        </fileDesc><encodingDesc xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:sal="http://salamanca.adwmainz.de" xml:id="encodingDesc" xml:lang="de" xml:base="../../../svsal/resources/files/W_Head_general.xml">
+-
+-<!-- Allgemeine Prinzipien dieser Edition -->
+-            <projectDesc>
+-                <p>Dieses Dokument wurde im Rahmen des Projekts "Die Schule von Salamanca.
+-            Eine digitale Quellensammlung und ein Wörterbuch ihrer juridisch-politischen Sprache" der
+-            Akademie der Wissenschaften und der Literatur, Mainz, kodiert. Dieses Projekt zielt
+-            neben der Herstellung eines Wörterbuchs auf die freie und leicht zugängliche
+-            Präsentation wichtiger Texte aus dem Diskussionszusammenhang der sog. "Schule von
+-            Salamanca" ab, die hierfür (i.d.R.) aus den Erst-Drucken retrodigitalisiert werden.
+-            Von einer kritischen Überarbeitung und einem Rückgriff auf die Manuskript-Quellen oder
+-            andere Ausgaben wurde abgesehen.</p>
+-            </projectDesc>
+-
+-<!-- Beschreibung editorischer Eingriffe -->
+-            <editorialDecl>
+-                <p>Seiten-, Spalten- und Zeilenumbrüche werden durch die leeren Elemente
+-                &lt;pb/&gt;, &lt;cb/&gt; und &lt;lb/&gt; wiedergegeben, wobei bei Spalten- und
+-                Seitenumbrüchen die Original-Paginierung bzw. die Spalten-Zählung im @n-Attribut
+-                angegeben wird.
+-                Ändert sich die Einteilung in Spalten im Laufe einer Seite wird zu Beginn des
+-                mehrspaltigen Layouts ein &lt;cb type="start"/&gt; bzw. am Ende ein &lt;cb type="end"/&gt;
+-                gesetzt.</p>
+-                <correction>
+-                    <p>Außer den untenstehenden Modifikationen wurden keine Eingriffe in den Text
+-                vorgenommen.</p>
+-                    <p>(Guidelines: "Was the text corrected during or after data capture? If so,
+-                were corrections made silently or are they marked using the tags described in section
+-                '3.4 Simple Editorial Changes"? What principles have been adopted with respect to
+-                omissions, truncations, dubious corrections, alternate readings, false starts,
+-                repetitions, etc.?)</p>
+-                </correction>
+-                <normalization method="silent">
+-                    <p>Schaft-S wurde stillschweigend in s ersetzt.</p>
+-                </normalization>
+-                <normalization method="silent">
+-                    <p>"&amp;" wurde stillschweigend durch "et" ersetzt.</p>
+-                </normalization>
+-                <normalization method="silent">
+-                    <p>Die Verwendung von Leerzeichen (nach Satzzeichen) wurde, so weit
+-                möglich, stillschweigend an moderne Gepflogenheiten angepasst.</p>
+-                </normalization>
+-                <normalization method="silent">
+-                    <p>u/v sowie i/j wurden stillschweigend durch die moderne Schreibweise ersetzt.</p>
+-                </normalization>
+-                <hyphenation eol="none">
+-                    <p>Trennstriche am Zeilenende wurden getilgt. Die entsprechenden Wort-
+-                Trennungen wurden mit @rendition="#hyphen" markiert; im Falle mehrerer
+-                unmittelbar aufeinander folgender Umbrüche (&lt;lb/&gt;+&lt;cb/&gt;+&lt;pb/&gt;)
+-                wurde dieses Attribut im ersten dieser Umbrüche hinterlegt.
+-                Trennungen, die im Quelltext nicht durch einen Trennstrich kenntlich gemacht
+-                worden waren, erhalten im entsprechenden Umbruchs-Element das @rendition-Attribut
+-                "#noHyphen".
+-                Außerdem wurden alle Trennungen, ob im Quelltext markiert oder nicht,
+-                durch das @break="no"-Attribut in allen intervenierenden Umbruchs-Elementen
+-                (nicht jedoch in den &lt;fw&gt;-Elementen, die Kolumnentitel, Bogensignaturen,
+-                Kustoden usw. auszeichnen) markiert.
+-                Es ist darauf zu achten, dass in solchen Fällen kein whitespace, also kein
+-                Leerzeichen, Tab oder auch nur Zeilenumbruch außerhalb der genannten Elemente
+-                interveniert, d.h. Zeilenumbrüche werden in den xml-Dateien innerhalb der
+-                &lt;lb/&gt;+&lt;cb/&gt;+&lt;pb/&gt;-Elemente gesetzt, vorzugsweise direkt
+-                nach dem Elementnamen und vor dem @break-Attribut.</p>
+-                </hyphenation>
+-                <interpretation>
+-                    <p>Wir erfassen mehrbändige Werke als einen xml-Datensatz, der Gruppen
+-                (&lt;group&gt;) von Texten (nämlich den Bänden: &lt;text type="volume"&gt;) enthält.
+-                Dass umfassende &lt;text&gt;-Element hat in diesem Fall den Typ "multivolume_work".
+-                Ggf. wird innerhalb dieser Bände weiter, etwa nach Vorlesungen, "group-iert".</p>
+-                    <p>Die &lt;text&gt;-Blöcke selbst werden wie folgt unterteilt:
+-                Die typographischen Absatz-Unterteilungen werden als 
+-                &lt;p&gt;-Paragraphen wiedergegeben, wobei eventuelle Absatz-Symbole ('¶')
+-                getilgt wurden.</p>
+-                    <p>Darüber hinaus sind in der Vorlage durch Überschriften, Nummerierungen,
+-                Marginalziffern, *-, †-Symbole ö.ä. markierte Übergänge der argumentativen
+-                Sinn-Einheiten des Textes durch &lt;div&gt;s verschiedener Typen und
+-                &lt;milestone/&gt;-Tags festgehalten. (Dabei wurden die Symbole nicht
+-                beibehalten, sondern im @rendition-Attribut des milestone-Tags hinterlegt.
+-                In der Leseansicht unserer Webseite werden sie allerdings durch ein '❧'
+-                wiedergegeben.)</p>
+-                    <p>Siehe auch den nächsten Abschnitt, "refsDecl".</p>
+-                </interpretation>
+-            </editorialDecl>
+-
+-<!-- Beschreibung der Strukturierung und Verlinkung -->
+-            <refsDecl><!-- mehrere refsDecl möglich, als Prosa u.a. -->
+-                <p>Wir erfassen mehrbändige Werke als einen xml-Datensatz, der Gruppen
+-                (&lt;group&gt;) von Texten (nämlich den Bänden: &lt;text type="volume"&gt;) enthält.
+-                Dass umfassende &lt;text&gt;-Element hat in diesem Fall den Typ "multivolume_work".
+-                Diese Gruppierung von &lt;text&gt;-Elementen erstreckt sich bis auf die Ebene der
+-                gebundenen Einzelbände, innerhalb dieser werden strukturelle Einteilungen wie
+-                Vorlesungen, "Bücher" o.ä. nicht mehr durch &lt;text&gt;-, sondern durch
+-                &lt;div&gt;-Elemente wiedergegeben.</p>
+-                <p>Die strukturellen Einheiten (Vorlesungen, Bücher, Kapitel, Quaestiones usw.), die
+-                in der Vorlage i.d.R. durch Überschriften, Nummerierungen usw. m,arkiert sind,
+-                werden so weit wie möglich durch &lt;div&gt;-Elemente verschiedener @Typen
+-                wiedergegeben. Die Benennung dieser Typen orientiert sich an der englischen
+-                Terminologie ("book", "part", "chapter", "question", "foreword" etc. - und lehnt sich
+-                an <ref type="url">http://dfg-viewer.de/strukturdatenset/</ref> an, obwohl auf einige
+-                der dort beschriebenen Elemente verzichtet wird und andere hinzugekommen sind. Details
+-                sind unserem Schema zu entnehmen.).</p>
+-                <p>Die typographischen Absatz-Unterteilungen werden als 
+-                &lt;p&gt;-Paragraphen wiedergegeben, wobei eventuelle Absatz-Symbole ('¶')
+-                getilgt wurden.</p>
+-                <p>Marginalziffern, *-, †-Symbole ö.ä. markierte Übergänge der argumentativen
+-                Sinn-Einheiten des Textes durch &lt;div&gt;s verschiedener Typen und
+-                &lt;milestone/&gt;-Tags festgehalten. (Dabei wurden die Symbole nicht
+-                beibehalten, sondern im @rendition-Attribut des milestone-Tags hinterlegt.
+-                In der Leseansicht unserer Webseite werden sie allerdings durch ein '❧'
+-                wiedergegeben.)</p>
+-            </refsDecl>
+-        <!-- FIXME: Below is just examples from the TEI Guide. -->
+-            <refsDecl>
+-                <cRefPattern matchPattern="([^ ]+) ([0-9]+)\.([0-9]+)\.([0-9]+)" replacementPattern="#xpath(//div1[@n='$1']/div2[@n='$2']/div3[@n='$3']/l[@n='$4']">
+-                    <p>A canonical reference is assembled with
+-                    <list>
+-                            <item xml:id="item_wefcpo">the name of the <label>work</label>: the
+-                            n-attribute of a &lt;div1&gt;,</item>
+-                            <item xml:id="item_cqoewr">a space,</item>
+-                            <item xml:id="item_ncqqiore">the number of the <label>book</label>: the
+-                            n-atttribute of a child &lt;div2&gt;,</item>
+-                            <item xml:id="item_opwqohj">a full stop</item>
+-                            <item xml:id="item_awawe">the number of the <label>poem</label>: the
+-                            n-attribute of a child &lt;div3&gt;,</item>
+-                            <item xml:id="item_sdfdsf">the line number: the n-attribute value of a
+-                            child &lt;l&gt;.
+-                        </item>
+-                        </list>
+-                    </p>
+-                </cRefPattern>
+-                <cRefPattern matchPattern="([^ ]+) ([0-9]+)\.([0-9]+)" replacementPattern="#xpath(//div1[@n='$1']/div2[@n='$2']/div3[@n='$3']">
+-                    <p>Same as above, but without the last component (full
+-                    stop followed by the &lt;l&gt;'s n-attribute.</p>
+-                </cRefPattern>
+-                <cRefPattern matchPattern="([^ ]+) ([0-9]+)" replacementPattern="#xpath(//div1[@n='$1']/div2[@n='$2']">
+-                    <p>Same as above, but without the poem component (full
+-                    stop followed by the &lt;div3&gt;'s n-attribute.</p>
+-                </cRefPattern>
+-            </refsDecl>
+-            <refsDecl>
+-                <refState unit="article" delim=" "/>
+-            <!--            <refState unit="section" delim="."/>
+-                <refState unit="chapter" delim=":"/>
+-                <refState unit="line"/> -->
+-            </refsDecl>
+-            <refsDecl xml:id="biblical">
+-                <cRefPattern matchPattern="(.+) (.+):(.+)" replacementPattern="#xpath1(//div[@n='$1']/div[$2]/div[$3])">
+-                    <p>This pointer pattern extracts and references the <q>book,</q>
+-                        <q>chapter,</q> and <q>verse</q> parts of a biblical reference.</p>
+-                </cRefPattern>
+-                <cRefPattern matchPattern="(.+) (.+)" replacementPattern="#xpath1(//div[@n='$1']/div[$2])">
+-                    <p>This pointer pattern extracts and references the <q>book</q> and <q>chapter</q> parts of a biblical reference.</p>
+-                </cRefPattern>
+-                <cRefPattern matchPattern="(.+)" replacementPattern="#xpath1(//div[@n='$1'])">
+-                    <p>This pointer pattern extracts and references just the <q>book</q>
+-                    part of a biblical reference.</p>
+-                </cRefPattern>
+-            </refsDecl>
++        </fileDesc>
+         
+-<!-- Beschreibung der typographischen Stile, auf die im Dokument referiert wird -->
+-            <styleDefDecl scheme="css"/>
+-            <tagsDecl> <!-- from TEI P5 2.8.0 on: @partial="true" -->
+-                <rendition xml:id="hyphenBefore">content:'-';</rendition>
+-                <rendition xml:id="noHyphen">content:'';</rendition>
+-                <rendition xml:id="asterisk">content:'*';</rendition>
+-                <rendition xml:id="initCaps" scope="first-letter">font-size: xx-large; font-style: initial;</rendition>
+-                <rendition xml:id="it">font-style: italic;</rendition>
+-                <rendition xml:id="rt">font-style: normal;</rendition>
+-                <rendition xml:id="b">font-weight: bold;</rendition>
+-                <rendition xml:id="sc">font-variant: small-caps;</rendition>
+-                <rendition xml:id="sup">vertical-align: sup; font-size: .83em;</rendition>
+-                <rendition xml:id="sub">vertical-align: sub; font-size: .83em;</rendition>
+-                <rendition xml:id="spc">letter-spacing: 3px;</rendition>
+-                <rendition xml:id="r-center">text-align: center;</rendition>
+-                <namespace name="http://www.tei-c.org/ns/1.0">
+-                    <tagUsage gi="lb" rendition="#noHyphen"/>
+-                    <tagUsage gi="milestone" rendition="#asterisk"/>
+-                    <tagUsage gi="lg" rendition="#it"/>
+-                </namespace>
+-            </tagsDecl>
+-
+-<!-- Beschreibung verwendeter Sonderzeichen -->
+-            <appInfo>
+-                <application ident="MUFI" version="4.0">
+-                    <label>MUFI character recommendation v. 4.0</label>
+-                    <ref target="http://hdl.handle.net/1956/10699"/>
+-                </application>
+-                <application ident="Unicode" version="5.1">
+-                    <label>The Unicode Consortium. The Unicode Standard, Version 6.3.0</label>
+-                    <ref target="http://www.unicode.org/versions/Unicode6.3.0/"/>
+-                </application>
+-            </appInfo>
+-            <charDecl xml:id="charDecl" xml:base="Sonderzeichen.xml" xml:lang="">
+-
+-<!-- Characters below 00FF -->
+-
+-                <char xml:id="char0026">
+-                    <desc>AMPERSAND</desc>
+-                    <charProp>
+-                        <unicodeName>entity</unicodeName>
+-                        <value>amp</value>
+-                    </charProp>
+-                    <mapping type="precomposed">&amp;</mapping>
+-                    <mapping type="standardized">&amp;</mapping>
+-                </char>
+-            
+-                <char xml:id="char00b6">
+-                    <desc>PILCROW SIGN</desc>
+-                    <charProp>
+-                        <unicodeName>entity</unicodeName>
+-                        <value>para</value>
+-                    </charProp>
+-                    <mapping type="precomposed">¶</mapping>
+-                    <mapping type="standardized">¶</mapping>
+-                </char>
+-            
+-                <char xml:id="char00df">
+-                    <desc>LATIN SMALL LETTER SHARP S</desc>
+-                    <charProp>
+-                        <unicodeName>entity</unicodeName>
+-                        <value>szlig</value>
+-                    </charProp>
+-                    <mapping type="precomposed">ß</mapping>
+-                    <mapping type="standardized">ss</mapping>
+-                </char>
+-
+-                <char xml:id="char00e6">
+-                    <desc>LATIN SMALL LETTER AE</desc>
+-                    <charProp>
+-                        <unicodeName>entity</unicodeName>
+-                        <value>aelig</value>
+-                    </charProp>
+-                    <mapping type="precomposed">æ</mapping>
+-                    <mapping type="standardized">ae</mapping>
+-                </char>
+-
+-<!-- Other Precomposed Characters -->
+-
+-                <char xml:id="char0111">
+-                    <desc>LATIN SMALL LETTER D WITH STROKE</desc>
+-                    <charProp>
+-                        <unicodeName>entity</unicodeName>
+-                        <value>dstrok</value>
+-                    </charProp>
+-                    <mapping type="precomposed">đ</mapping>
+-                    <mapping type="composed">d̄</mapping>
+-                    <mapping type="standardized">d</mapping>
+-                </char>
+-                <char xml:id="char0142">
+-                    <desc>LATIN SMALL LETTER L WITH STROKE</desc>
+-                    <charProp>
+-                        <unicodeName>entity</unicodeName>
+-                        <value>lstrok</value>
+-                    </charProp>
+-                    <mapping type="precomposed">ł</mapping>
+-                    <mapping type="composed">l̄</mapping>
+-                    <mapping type="standardized">l</mapping>
+-                </char>
+-                <char xml:id="char0153">
+-                    <desc>LATIN SMALL LIGATURE OE</desc>
+-                    <charProp>
+-                        <unicodeName>entity</unicodeName>
+-                        <value>oelig</value>
+-                    </charProp>
+-                    <mapping type="precomposed">œ</mapping>
+-                    <mapping type="standardized">oe</mapping>
+-                </char>
+-                <char xml:id="char017f">
+-                    <desc>LATIN SMALL LETTER LONG S</desc>
+-                    <charProp>
+-                        <unicodeName>entity</unicodeName>
+-                        <value>slong</value>
+-                    </charProp>
+-                    <mapping type="precomposed">ſ</mapping>
+-                    <mapping type="standardized">s</mapping>
+-                </char>
+-                <char xml:id="char01d4">
+-                    <desc>LATIN SMALL LETTER U WITH CARON</desc>
+-                    <mapping type="precomposed">ǔ</mapping>
+-                    <mapping type="standardized">u</mapping>
+-                </char>
+-                <char xml:id="char0250">
+-                    <desc>LATIN SMALL LETTER TURNED A</desc>
+-                    <mapping type="precomposed">ɐ</mapping>
+-                    <mapping type="standardized">a</mapping>
+-                </char>
+-                <char xml:id="char0259">
+-                    <desc>LATIN SMALL LETTER SCHWA</desc>
+-                    <charProp>
+-                        <unicodeName>entity</unicodeName>
+-                        <value>schwa</value>
+-                    </charProp>
+-                    <mapping type="precomposed">ə</mapping>
+-                    <mapping type="standardized">e</mapping>
+-                </char>
+-                <char xml:id="char026f">
+-                    <desc>LATIN SMALL LETTER TURNED M</desc>
+-                    <charProp>
+-                        <localName>entity</localName>
+-                        <value>turnedm</value>
+-                    </charProp>
+-                    <mapping type="precomposed">ɯ</mapping>
+-                    <mapping type="standardized">m</mapping>
+-                </char>
+-                <char xml:id="char0292">
+-                    <desc>LATIN SMALL LETTER EZH</desc>
+-                    <charProp>
+-                        <unicodeName>entity</unicodeName>
+-                        <value>ezh</value>
+-                    </charProp>
+-                    <mapping type="precomposed">ʒ</mapping>
+-                    <mapping type="standardized">z</mapping>
+-                </char>
+-                <char xml:id="char2020">
+-                    <desc>DAGGER</desc>
+-                    <charProp>
+-                        <unicodeName>entity</unicodeName>
+-                        <value>dagger</value>
+-                    </charProp>
+-                    <mapping type="precomposed">†</mapping>
+-                    <mapping type="standardized">+</mapping>
+-                </char>
+-                <char xml:id="char204a">
+-                    <desc>LATIN ABBREVIATION SIGN SMALL ET</desc>
+-                    <charProp>
+-                        <unicodeName>entity</unicodeName>
+-                        <value>et</value>
+-                    </charProp>
+-                    <mapping type="precomposed">⁊</mapping>
+-                    <mapping type="standardized">et</mapping>
+-                </char>
+-                <char xml:id="char211f">
+-                    <desc>RESPONSE</desc>
+-                    <charProp>
+-                        <unicodeName>entity</unicodeName>
+-                        <value>Rslstrok</value>
+-                    </charProp>
+-                    <mapping type="precomposed">℟</mapping>
+-                    <mapping type="standardized">R</mapping>
+-                </char>
+-                <char xml:id="char2184">
+-                    <desc>LATIN ABBREVIATION SIGN SMALL CON</desc>
+-                    <charProp>
+-                        <unicodeName>entity</unicodeName>
+-                        <value>conbase</value>
+-                    </charProp>
+-                    <mapping type="precomposed">ↄ</mapping>
+-                    <mapping type="standardized">con</mapping>
+-                </char>
+-                <char xml:id="chara751">
+-                    <desc>LATIN SMALL LETTER P WITH STROKE THROUGH DESCENDER</desc>
+-                    <charProp>
+-                        <unicodeName>entity</unicodeName>
+-                        <value>pbardes</value>
+-                    </charProp>
+-                    <mapping type="precomposed">ꝑ</mapping>
+-                    <mapping type="standardized">p</mapping>
+-                </char>
+-                <char xml:id="chara753">
+-                    <desc>LATIN SMALL LETTER P WITH FLOURISH</desc>
+-                    <charProp>
+-                        <unicodeName>entity</unicodeName>
+-                        <value>pflour</value>
+-                    </charProp>
+-                    <mapping type="precomposed">ꝓ</mapping>
+-                    <mapping type="standardized">p</mapping>
+-                </char>
+-                <char xml:id="chara759">
+-                    <desc>LATIN SMALL LETTER Q WITH DIAGONAL STROKE</desc>
+-                    <charProp>
+-                        <unicodeName>entity</unicodeName>
+-                        <value>qslstrok</value>
+-                    </charProp>
+-                    <mapping type="precomposed">ꝙ</mapping>
+-                    <mapping type="standardized">q</mapping>
+-                </char>
+-                <char xml:id="chara75d">
+-                    <desc>LATIN SMALL LETTER RUM ROTUNDA</desc>
+-                    <charProp>
+-                        <unicodeName>entity</unicodeName>
+-                        <value>rum</value>
+-                    </charProp>
+-                    <mapping type="precomposed">ꝝ</mapping>
+-                    <mapping type="standardized">rum</mapping>
+-                </char>
+-                <char xml:id="chara75f">
+-                    <desc>LATIN SMALL LETTER V WITH DIAGONAL STROKE</desc>
+-                    <charProp>
+-                        <unicodeName>entity</unicodeName>
+-                        <value>vdiagstrok</value>
+-                    </charProp>
+-                    <mapping type="precomposed">ꝟ</mapping>
+-                    <mapping type="standardized">v</mapping>
+-                </char>
+-                <char xml:id="chara76d">
+-                    <desc>LATIN SMALL LETTER IS</desc>
+-                    <charProp>
+-                        <unicodeName>entity</unicodeName>
+-                        <value>is</value>
+-                    </charProp>
+-                    <mapping type="precomposed">ꝭ</mapping>
+-                    <mapping type="standardized">is</mapping>
+-                </char>
+-
+-                <char xml:id="chara770">
+-                    <desc>MODIFIER LETTER US</desc>
+-                    <charProp>
+-                        <unicodeName>entity</unicodeName>
+-                        <value>usmod</value>
+-                    </charProp>
+-                    <mapping type="precomposed">ꝰ</mapping>
+-                    <mapping type="standardized">us</mapping>
+-                </char>
+-
+-                <char xml:id="chare682">
+-                    <desc>LATIN SMALL LETTER Q WITH DOT ABOVE</desc>
+-                    <charProp>
+-                        <localName>entity</localName>
+-                        <value>qdot</value>
+-                    </charProp>
+-                    <mapping type="MUFI" subtype="PUA">U+E682</mapping>
+-                    <mapping type="composed">q̇</mapping>
+-                    <mapping type="standardized">q</mapping>
+-                    <graphic mimeType="image/png" url="http://www.manuscriptorium.com/apps/gbank/data/mufi-graphic/a759.png"/>
+-                </char>
+-
+-                <char xml:id="chare8b3">
+-                    <desc>LATIN SMALL LETTER Q LIGATED WITH R ROTUNDA</desc>
+-                    <charProp>
+-                        <localName>entity</localName>
+-                        <value>q2app</value>
+-                    </charProp>
+-                    <mapping type="MUFI" subtype="PUA">U+E8B3</mapping>
+-                    <mapping type="precomposed"></mapping>
+-                    <mapping type="standardized">q</mapping>
+-                    <graphic mimeType="image/png" url="http://www.manuscriptorium.com/apps/gbank/data/mufi-graphic/e8b3.png"/>
+-                </char>
+-                <char xml:id="chare8bf">
+-                    <desc>LATIN SMALL LETTER Q LIGATED WITH FINAL ET</desc>
+-                    <charProp>
+-                        <localName>entity</localName>
+-                        <value>q3app</value>
+-                    </charProp>
+-                    <mapping type="MUFI" subtype="PUA">U+E8BF</mapping>
+-                    <mapping type="precomposed"></mapping>
+-                    <mapping type="standardized">q</mapping>
+-                    <graphic mimeType="image/png" url="http://www.manuscriptorium.com/apps/gbank/data/mufi-graphic/e8bf.png"/>
+-                </char>
+-                <char xml:id="charebd1">
+-                    <desc>LATIN SMALL LETTER D ROTUNDA WITH DOT ABOVE</desc>
+-                    <desc>LATIN SMALL LETTER D ROTUNDA + COMBINING DOT ABOVE</desc>
+-                    <charProp>
+-                        <localName>entity</localName>
+-                        <value>drotdot</value>
+-                    </charProp>
+-                    <charProp>
+-                        <localName>combined-entity</localName>
+-                        <value> drotdot = drot + combdot </value>
+-                    </charProp>
+-                    <mapping type="MUFI" subtype="PUA">U+EBD1</mapping>
+-                    <mapping type="MUFI" subtype="Combined">U+EBD1 = A77A + 0307</mapping>
+-                    <mapping type="precomposed"></mapping>
+-                    <mapping type="composed">ꝺ̇</mapping>
+-                    <mapping type="standardized">d</mapping>
+-                    <graphic mimeType="image/png" url="http://www.manuscriptorium.com/apps/gbank/data/mufi-graphic/ebd1.png"/>
+-                </char>
+-                <char xml:id="charf159">
+-                    <desc>LATIN ABBREVIATION SIGN SMALL DE</desc>
+-                    <charProp>
+-                        <localName>entity</localName>
+-                        <value>de</value>
+-                    </charProp>
+-                    <mapping type="MUFI" subtype="PUA">U+F159</mapping>
+-                    <mapping type="precomposed"></mapping>
+-                    <mapping type="standardized">d</mapping>
+-                    <graphic mimeType="image/png" url="http://www.manuscriptorium.com/apps/gbank/data/mufi-graphic/f159.png"/>
+-                </char>
+-
+-<!-- Combining Characters, the first character of the code after "char" is the base letter, then come 4 identifying characters combining mark -->
+-
+-                <char xml:id="chara0303">
+-                    <desc>LATIN SMALL LETTER A WITH TILDE</desc>
+-                    <charProp>
+-                        <unicodeName>entity</unicodeName>
+-                        <value>atilde</value>
+-                    </charProp>
+-                    <charProp>
+-                        <unicodeName>combined-entity</unicodeName>
+-                        <value> atilde = a + combtilde </value>
+-                    </charProp>
+-                    <mapping type="precomposed">ã</mapping>
+-                    <mapping type="composed">ã</mapping>
+-                    <mapping type="standardized">a</mapping>
+-                    <graphic mimeType="image/png" url="http://www.manuscriptorium.com/apps/gbank/data/mufi-graphic/00e3.png"/>
+-                </char>
+-                <char xml:id="charb0307">
+-                    <desc>LATIN SMALL LETTER B WITH DOT ABOVE</desc>
+-                    <mapping type="composed">ḃ</mapping>
+-                    <mapping type="standardized">b</mapping>
+-                </char>
+-                <char xml:id="charc0303">
+-                    <desc>LATIN SMALL LETTER C WITH TILDE</desc>
+-                    <mapping type="composed">c̃</mapping>
+-                    <mapping type="standardized">c</mapping>
+-                </char>
+-                <char xml:id="charc0327">
+-                    <desc>LATIN SMALL LETTER C WITH CEDILLA</desc>
+-                    <charProp>
+-                        <unicodeName>entity</unicodeName>
+-                        <value>ccedil</value>
+-                    </charProp>
+-                    <mapping type="precomposed">ç</mapping>
+-                    <mapping type="composed">ç</mapping>
+-                    <mapping type="standardized">c</mapping>
+-                    <graphic mimeType="image/png" url="http://www.manuscriptorium.com/apps/gbank/data/mufi-graphic/00e7.png"/>
+-                </char>
+-                <char xml:id="chare0303">
+-                    <desc>LATIN SMALL LETTER E WITH TILDE</desc>
+-                    <mapping type="composed">ẽ</mapping>
+-                    <mapping type="standardized">e</mapping>
+-                </char>
+-                <char xml:id="chare0308">
+-                    <desc>LATIN SMALL LETTER E WITH TWO DOTS ABOVE</desc>
+-                    <mapping type="composed">ë</mapping>
+-                    <mapping type="standardized">e</mapping>
+-                </char>
+-                <char xml:id="chare0327">
+-                    <desc>LATIN SMALL LETTER E WITH CEDILLA</desc>
+-                    <mapping type="precomposed">ȩ</mapping>
+-                    <mapping type="composed">ȩ</mapping>
+-                    <mapping type="standardized">e</mapping>
+-                </char>
+-                <char xml:id="chare0328">
+-                    <desc>LATIN SMALL LETTER E WITH OGONEK</desc>
+-                    <mapping type="composed">ę</mapping>
+-                    <mapping type="standardized">e</mapping>
+-                </char>
+-                <char xml:id="chari0303">
+-                    <desc>LATIN SMALL LETTER I WITH TILDE</desc>
+-                    <mapping type="composed">ĩ</mapping>
+-                    <mapping type="standardized">i</mapping>
+-                </char>
+-                <char xml:id="charj0303">
+-                    <desc>LATIN SMALL LETTER J WITH TILDE</desc>
+-                    <mapping type="composed">j̃</mapping>
+-                    <mapping type="standardized">j</mapping>
+-                </char>
+-                <char xml:id="charl0303">
+-                    <desc>LATIN SMALL LETTER L WITH TILDE</desc>
+-                    <mapping type="composed">l̃</mapping>
+-                    <mapping type="standardized">l</mapping>
+-                </char>
+-                <char xml:id="charl0309">
+-                    <desc>LATIN SMALL LETTER L WITH HOOK</desc>
+-                    <charProp>
+-                        <localName>entity</localName>
+-                        <value>lhook</value>
+-                    </charProp>
+-                    <mapping type="composed">l̉</mapping>
+-                    <mapping type="standardized">l</mapping>
+-                </char>
+-                <char xml:id="charm0303">
+-                    <desc>LATIN SMALL LETTER M WITH TILDE</desc>
+-                    <mapping type="composed">m̃</mapping>
+-                    <mapping type="standardized">m</mapping>
+-                </char>
+-                <char xml:id="charn0303">
+-                    <desc>LATIN SMALL LETTER N WITH TILDE</desc>
+-                    <mapping type="composed">ñ</mapping>
+-                    <mapping type="standardized">n</mapping>
+-                </char>
+-                <char xml:id="charo0302">
+-                    <desc>LATIN SMALL LETTER O WITH CIRCUMFLEX</desc>
+-                    <mapping type="composed">ô</mapping>
+-                    <mapping type="standardized">o</mapping>
+-                </char>
+-                <char xml:id="charo0303">
+-                    <desc>LATIN SMALL LETTER O WITH TILDE</desc>
+-                    <mapping type="composed">õ</mapping>
+-                    <mapping type="standardized">o</mapping>
+-                </char>
+-                <char xml:id="charp0301">
+-                    <desc>LATIN SMALL LETTER P WITH ACUTE ACCENT</desc>
+-                    <mapping type="composed">ṕ</mapping>
+-                    <mapping type="standardized">p</mapping>
+-                </char>
+-                <char xml:id="charp0303">
+-                    <desc>LATIN SMALL LETTER P WITH TILDE</desc>
+-                    <mapping type="composed">p̃</mapping>
+-                    <mapping type="standardized">p</mapping>
+-                </char>
+-                <char xml:id="charp0307">
+-                    <desc>LATIN SMALL LETTER P WITH DOT ABOVE</desc>
+-                    <mapping type="composed">ṗ</mapping>
+-                    <mapping type="standardized">p</mapping>
+-                </char>
+-                <char xml:id="charq0301">
+-                    <desc>LATIN SMALL LETTER Q WITH ACUTE ACCENT</desc>
+-                    <mapping type="composed">q́</mapping>
+-                    <mapping type="standardized">q</mapping>
+-                </char>
+-                <char xml:id="charq0303">
+-                    <desc>LATIN SMALL LETTER Q WITH TILDE</desc>
+-                    <mapping type="composed">q̃</mapping>
+-                    <mapping type="standardized">q</mapping>
+-                </char>
+-                <char xml:id="charq0307">
+-                    <desc>LATIN SMALL LETTER Q WITH DOT ABOVE</desc>
+-                    <mapping type="composed">q̇</mapping>
+-                    <mapping type="standardized">q</mapping>
+-                </char>
+-                <char xml:id="charq0308">
+-                    <desc>LATIN SMALL LETTER Q WITH TWO DOTS ABOVE</desc>
+-                    <mapping type="composed">q̈</mapping>
+-                    <mapping type="standardized">q</mapping>
+-                </char>
+-                <char xml:id="charq0366">
+-                    <desc>LATIN SMALL LETTER Q WITH SMALL O ABOVE</desc>
+-                    <mapping type="composed">qͦ</mapping>
+-                    <mapping type="standardized">q</mapping>
+-                </char>
+-                <char xml:id="charr0303">
+-                    <desc>LATIN SMALL LETTER R WITH TILDE</desc>
+-                    <mapping type="composed">r̃</mapping>
+-                    <mapping type="standardized">r</mapping>
+-                </char>
+-                <char xml:id="chars0303">
+-                    <desc>LATIN SMALL LETTER S WITH TILDE</desc>
+-                    <mapping type="composed">s̃</mapping>
+-                    <mapping type="standardized">s</mapping>
+-                </char>
+-                <char xml:id="chart0303">
+-                    <desc>LATIN SMALL LETTER T WITH TILDE</desc>
+-                    <mapping type="composed">t̃</mapping>
+-                    <mapping type="standardized">t</mapping>
+-                </char>
+-                <char xml:id="charu0303">
+-                    <desc>LATIN SMALL LETTER U WITH TILDE</desc>
+-                    <mapping type="composed">ũ</mapping>
+-                    <mapping type="standardized">u</mapping>
+-                </char>
+-                <char xml:id="charx0303">
+-                    <desc>LATIN SMALL LETTER X WITH TILDE</desc>
+-                    <mapping type="composed">x̃</mapping>
+-                    <mapping type="standardized">x</mapping>
+-                </char>
+-
+-<!-- Combining characters where even the base letter is a four-letter codepoint -->
+-                <char xml:id="char01310323">
+-                    <desc>LATIN TURNED SMALL LETTER I</desc>
+-                    <mapping type="precomposed">ı̣</mapping>
+-                    <mapping type="standardized">i</mapping>
+-                </char>
+-                <char xml:id="char21840303">
+-                    <desc>LATIN ABBREVIATION SIGN SMALL CON WITH TILDE</desc>
+-                    <mapping type="composed">ↄ̃</mapping>
+-                    <mapping type="standardized">con</mapping>
+-                </char>
+-                <char xml:id="chara7590303">
+-                    <desc>LATIN SMALL LETTER Q WITH DIAGONAL STROKE AND TILDE</desc>
+-                    <mapping type="composed">ꝙ̃</mapping>
+-                    <mapping type="standardized">q</mapping>
+-                </char>
+-                <char xml:id="chare8bf0301">
+-                    <desc>LATIN SMALL LETTER Q LIGATED WITH FINAL ET AND WITH ACUTE ACCENT</desc>
+-                    <mapping type="composed">́</mapping>
+-                    <mapping type="standardized">q</mapping>
+-                </char>
+-                <char xml:id="chare8bf0308">
+-                    <desc>LATIN SMALL LETTER Q LIGATED WITH FINAL ET AND WITH TWO DOTS ABOVE</desc>
+-                    <mapping type="composed">̈</mapping>
+-                    <mapping type="standardized">q</mapping>
+-                </char>
+-
+-<!-- Other characters, not present in unicode nor MUFI -->
+-                <char xml:id="char-turnedfl">
+-                    <desc>LATIN TURNED SMALL LIGATURE FL</desc>
+-                    <mapping type="standardized">fl.</mapping>
+-                </char>
+-            </charDecl>
+-                
+-<!-- Definition der in den Referenzen verwendeten Präfixe, um intern oder extern zu verweisen -->
+-            <listPrefixDef>
+-                <prefixDef ident="author" matchPattern="([A-z0-9.:#_\-]+)" replacementPattern="http://id.salamanca.school/authors.$1">
+-                    <p>Im Kontext dieser Edition verweisen private URIs mit dem Präfix "author" auf
+-                Personen-Datensätze im Verzeichnis "data/". Die Dateinamen dort setzen sich zusammen
+-                aus der mit dem Buchstaben "A" beginnenden internen ID-Nummer der jeweiligen Person
+-                und der Datei-Endung ".xml". Die Web-Anwendung stellt diese Datensätze unter der
+-                Adresse <ref type="url" target="http://www.salamanca.school/author.html">http://www.salamanca.school/author.html</ref>
+-                dar, der der Parameter "?aid=" und die interne ID-Nummer anzuhängen sind.</p>
+-                </prefixDef>
+-                <prefixDef ident="work" matchPattern="([A-z0-9.:#_\-]+)" replacementPattern="http://id.salamanca.school/works.$1">
+-                    <p>Im Kontext dieser Edition verweisen private URIs mit dem Präfix "work" auf
+-                Werk-Datensätze im Verzeichnis "data/". Die Dateinamen dort setzen sich zusammen
+-                aus der mit dem Buchstaben "W" beginnenden internen ID-Nummer des jeweiligen Werkes
+-                und der Datei-Endung ".xml". Die Web-Anwendung stellt diese Datensätze unter der
+-                Adresse <ref type="url" target="http://www.salamanca.school/work.html">http://www.salamanca.school/work.html</ref>
+-                dar, der der Parameter "?wid=" und die interne ID-Nummer anzuhängen sind.</p>
+-                </prefixDef>
+-                <prefixDef ident="lemma" matchPattern="([A-z0-9.:#_\-]+)" replacementPattern="http://www.salamanca.school/lemma.html?lid=$1">
+-                    <p>Im Kontext dieser Edition verweisen private URIs mit dem Präfix "lemma" auf
+-                    Wörterbuch-Einträge im Verzeichnis "data/". Die Dateinamen dort setzen sich zusammen
+-                    aus der mit dem Buchstaben "L" beginnenden internen ID-Nummer der jeweiligen Person
+-                    und der Datei-Endung ".xml". Die Web-Anwendung stellt diese Datensätze unter der
+-                    Adresse <ref type="url" target="http://www.salamanca.school/lemma.html">http://www.salamanca.school/lemma.html</ref>
+-                    dar, der der Parameter "?lid=" und die interne ID-Nummer anzuhängen sind.</p>
+-                </prefixDef>
+-                <prefixDef ident="facs" matchPattern="(W[0-9]{4})-[0-9]{4}" replacementPattern="http://wwwuser.gwdg.de/~svsal/images/$1/$0.jpg"> <!-- einbändige Werke -->
+-                    <p>Im Kontext dieser Edition verweisen private URIs mit dem Präfix "facs" auf Scan-
+-                        Bilddateien im Sever-Verzeichnis der "Gesellschaft für wissenschaftliche Datenverarbeitung in
+-                        Göttingen (GWDG)" unter "http://wwwuser.gwdg.de/~svsal/images/". Die Dateinamen dort entsprechen
+-                        der internen ID-Nummer des jeweiligen Werkes und der Dateiendung ".jpg". Die Zuordnungen ID-Werk 
+-                        befindet sich ebenfalls unter dem angegebenen Pfad.</p>
+-                </prefixDef>
+-                <prefixDef ident="facs" matchPattern="(W[0-9]{4})-([A-Z])-[0-9]{4}" replacementPattern="http://wwwuser.gwdg.de/~svsal/images/$1/$2/$0.jpg"> <!-- mehrbändige Werke -->
+-                    <p>Im Kontext dieser Edition verweisen private URIs mit dem Präfix "facs" auf Scan-
+-                        Bilddateien im Sever-Verzeichnis der "Gesellschaft für wissenschaftliche Datenverarbeitung in
+-                        Göttingen (GWDG)" unter "http://wwwuser.gwdg.de/~svsal/images/". Die Dateinamen dort entsprechen
+-                        der internen ID-Nummer des jeweiligen Werkes und der Dateiendung ".jpg". Die Zuordnungen ID-Werk 
+-                        befindet sich ebenfalls unter dem angegebenen Pfad.</p>
+-                </prefixDef>
+-<!-- The following prefixes linking our data to external sources are disabled for now,
+-     because the data are not rich enough yet... -->
+-<!--
+-                <prefixDef ident="cerl" matchPattern="([A-z0-9.#_\-]+)" replacementPattern="http://thesaurus.cerl.org/cgi-bin/record.pl?rid=$1">
+-                    <p xml:id="p_ertertwe">Im Kontext dieser Edition verweisen private URIs mit dem Präfix "cerl" auf Personen-
+-                    Datensätze in der öffentlichen Datenbank unter http://thesaurus.cerl.org/.</p>
+-                </prefixDef>
+-                <prefixDef ident="gnd" matchPattern="([A-z0-9.#_\-]+)" replacementPattern="http://thesaurus.cerl.org/cgi-bin/record.pl?rid=$1">
+-                    <p xml:id="p_xcvsdfdwq">Im Kontext dieser Edition verweisen private URIs mit dem Präfix "cerl" auf Personen-
+-                    Datensätze in der öffentlichen Datenbank unter http://thesaurus.cerl.org/.</p>
+-                </prefixDef>
+-                <prefixDef ident="viaf" matchPattern="([A-z0-9.#_\-]+)" replacementPattern="http://viaf.org/viaf/$1">
+-                    <p xml:id="p_lkjoiop">Im Kontext dieser Edition verweisen private URIs mit dem Präfix "viaf" auf Personen-
+-                Datensätze in der öffentlichen Datenbank unter http://viaf.org/viaf/.</p>
+-                </prefixDef>
+-                <prefixDef ident="fhla" matchPattern="([A-z0-9.#_\-]+)" replacementPattern="http://www.larramendi.es/aut/$1">
+-                    <p xml:id="p_lkjoiop">Im Kontext dieser Edition verweisen private URIs mit dem Präfix "fhla" auf Personen-
+-                Datensätze in der öffentlichen Datenbank unter http://www.larramendi.es/aut/.</p>
+-                </prefixDef>
+-
+-                <prefixDef ident="getty" matchPattern="([A-z0-9.#_\-]+)" replacementPattern="http://www.getty.edu/vow/TGNFullDisplay?subjectid=$1">
+-                    <p xml:id="p_q23dfq23">Im Kontext dieser Edition verweisen private URIs mit dem Präfix "getty" auf Personen-
+-                        Datensätze in der öffentlichen Datenbank unter http://www.getty.edu/.</p>
+-                </prefixDef>
+--->
+-            </listPrefixDef>
+-        </encodingDesc><revisionDesc xmlns:xi="http://www.w3.org/2001/XInclude" status="a_raw">
++        <xi:include href="http://files.salamanca.school/W_Head_general.xml" xpointer="encodingDesc">
++            <xi:fallback>
++                <encodingDesc>
++                    <p xml:lang="en" xml:id="W0002-00-meta-pa-0004">For information about the edition principles, please refer to the 
++                        <ref target="https://www.salamanca.school/en/guidelines.html">Edition Guidelines</ref>.</p>
++                </encodingDesc>
++            </xi:fallback>
++        </xi:include>
++        
++        <!-- Hier anpassen: Überarbeitungshistorie dieses Dokuments -->
++        <revisionDesc status="a_raw">
+             <listChange>
+                 <change who="#CR" when="2018-02-08" status="a_raw" xml:id="W0002_change_0011">Added hyperlinks for summary references</change>
+                 <change who="#DG" when="2018-01-22" status="a_raw">
+@@ -917,8 +166,8 @@
+                     </list>
+                 </change>
+                 <change who="#AW" when="2015-08-25" status="a_raw" xml:id="W0002_change_0008">reset status</change>
+-                <change who="#IC" when="2014-11-27" status="e_unrevised" xml:id="W0002_change_0007">revision of teiHeader</change>
+-                <change who="#IC" when="2014-11-12" status="e_unrevised">
++                <change who="#IC" when="2014-11-27" status="a_raw" xml:id="W0002_change_0007">revision of teiHeader</change>
++                <change who="#IC" when="2014-11-12" status="a_raw">
+                     <list>
+                         <item xml:id="W0002_change_0006">@key bei pubPlace für die Facettierung eingetragen</item>
+                         <item xml:id="W0002_change_0005">Wenn wir eine neuere als die Erstausgabe digitalisiert haben, müssen in den Facetten und in den bibl. Angaben die bibl. Daten richtig angezeigt werden. Dazu soll das Impressum der Erastausgabe zusätzlich auf der Seite detais_work.html aufgeführt werden. Deswegen folgendes vorghen.</item>
+@@ -928,12 +177,14 @@
+                         <item xml:id="W0002_change_0002">Schema-Anpassungen für date@type="summaryFirstEd" (Wert anpassen) und date@type="summaryThisEd" (Wert hinzufügen) vornehmen</item>
+                     </list>
+                 </change>
+-                <change who="#AW" when="2014-03-26" status="e_unrevised" xml:id="W0002_change_0001">Überarbeitet nach neuem Schema/Editionsrichtlinien</change>
++                <change who="#AW" when="2014-03-26" status="a_raw" xml:id="W0002_change_0001">Überarbeitet nach neuem Schema/Editionsrichtlinien</change>
+             </listChange>
+-        </revisionDesc></teiHeader><text type="work_monograph" xml:lang="es" xml:id="completeWork">
++        </revisionDesc>
++    </teiHeader>
++    <text type="work_monograph" xml:lang="es" xml:id="completeWork">
+ <front xml:id="W0002-00-0004-fm-03e8">
+-<titlePage xml:id="W0002-00-0004-tp-03e8"><docTitle><titlePart type="main" xml:id="W0002-00-0004-tm-03e8"><hi rendition="#r-center"><pb n="[i]" facs="facs:W0002-0004" xml:id="W0002-00-0004-pb-03e8"/><lb xml:id="W0002-00-0004-lb-0001"/>MANVAL DE CON-
+-<lb xml:id="W0002-00-0004-lb-0002"/>FESSORES Y PENITENTES</hi></titlePart><titlePart type="desc"><hi rendition="#r-center">,
++<titlePage xml:id="W0002-00-0004-tp-03e8"><docTitle xml:id="W0002-00-0004-dt-03e8"><titlePart type="main" xml:id="W0002-00-0004-tm-03e8"><hi rendition="#r-center"><pb n="[i]" facs="facs:W0002-0004" xml:id="W0002-00-0004-pb-03e8"/><lb xml:id="W0002-00-0004-lb-0001"/>MANVAL DE CON-
++<lb xml:id="W0002-00-0004-lb-0002"/>FESSORES Y PENITENTES</hi></titlePart><titlePart type="desc" xml:id="W0002-00-0004-tm-03e9"><hi rendition="#r-center">,
+ <lb xml:id="W0002-00-0004-lb-0003"/>QVE CLARA Y BREVEMENTE CON-
+ <lb xml:id="W0002-00-0004-lb-0004"/>TIENE, LA VNIVERSAL Y PARTICV-
+ <lb xml:id="W0002-00-0004-lb-0005"/>LAR DECISION DE QVASI TODAS LAS DV-
+@@ -1099,7 +350,7 @@
+ <lb xml:id="W0002-00-0008-lb-0033"/><hi rendition="#it">so y facultad, a vos el dicho Doctor Martin de Azpilcueta Comendador de la</hi>
+ <lb xml:id="W0002-00-0008-lb-0034"/><hi rendition="#it">orden de sancta Maria de Roncesualles que podays hazerimprimir las dichas o-</hi>
+ <lb xml:id="W0002-00-0008-lb-0035"/><hi rendition="#it">bras y libros en qual ꝗere ꝑte delos dichos reynos đ su Magestad, y por qualesꝗer</hi>
+-<lb xml:id="W0002-00-0008-lb-0036"/><hi rendition="#it">Impressores ꝗ̈ vos quisieredes delos dichos sus Reynos y Señorios alos quales man</hi>
++<lb xml:id="W0002-00-0008-lb-0036"/><hi rendition="#it">Impressores  vos quisieredes delos dichos sus Reynos y Señorios alos quales man</hi>
+ <lb xml:id="W0002-00-0008-lb-0037"/><hi rendition="#it">damos por las mesmas presentes so incorrimiento de la yra, e indignacion de su</hi>
+ <lb xml:id="W0002-00-0008-lb-0038"/><hi rendition="#it">Magestad y nuestra pena de mil Florînes de oro del que lo contrario hiziere exi-</hi>
+ <pb n="[vi]" facs="facs:W0002-0009" xml:id="W0002-00-0009-pb-03ed"/><lb xml:id="W0002-00-0009-lb-0001"/><hi rendition="#it">gideros y a los reales cofres aplicaderos y perdimiento de los moldes y libros que</hi>
+@@ -41873,7 +41124,7 @@
+ <lb xml:id="W0002-00-0564-lb-m037"/>14. q. 2.</note>
+ , en
+ <lb xml:id="W0002-00-0564-lb-0024"/>buenos textos fundada 
+-<ref type="note-anchor" n="r" target="#W0002-00-0564-nm-187d"><hi rendition="#sup">r</hi></ref><note place="margin" n="r" anchored="true" xml:id="W0002-00-0564-nm-187d"><lb sameAs="#W0002-00-0564-lb-m037" xml:id="W0002-00-0564-lb-s239"/>d. ca. Quāꝗ̈.
++<ref type="note-anchor" n="r" target="#W0002-00-0564-nm-187d"><hi rendition="#sup">r</hi></ref><note place="margin" n="r" anchored="true" xml:id="W0002-00-0564-nm-187d"><lb sameAs="#W0002-00-0564-lb-m037" xml:id="W0002-00-0564-lb-s239"/>d. ca. Quā.
+ <lb xml:id="W0002-00-0564-lb-m039"/>&amp; c. In necessi-
+ <lb xml:id="W0002-00-0564-lb-m040"/>tate. de consec.
+ <lb xml:id="W0002-00-0564-lb-m041"/>d. 4. l. vlt. C. de
+@@ -43776,7 +43027,7 @@
+ <lb xml:id="W0002-00-0587-lb-m039"/>cte sancta. </note>
+ ) lo diximos
+ <lb xml:id="W0002-00-0587-lb-0039"/>alibi. 
+-<ref type="note-anchor" n="[o]" target="#W0002-00-0587-nm-19a3"><hi rendition="#sup">[o]</hi></ref><note place="margin" n="[o]" resp="#DG" cert="high" anchored="true" xml:id="W0002-00-0587-nm-19a3"><lb xml:id="W0002-00-0587-lb-m040"/>o In. d. c. No-
++<ref type="note-anchor" n="[o]" target="#W0002-00-0587-nm-19a3"><hi rendition="#sup">o</hi></ref><note place="margin" n="[o]" resp="#DG" cert="high" anchored="true" xml:id="W0002-00-0587-nm-19a3"><lb xml:id="W0002-00-0587-lb-m040"/>o In. d. c. No-
+ <lb xml:id="W0002-00-0587-lb-m041"/><unclear resp="#TT" xml:id="W0002-00-0587-un-0458"/>e sancta.</note>
+ El. ij. caso, es sobreuenir despues de auer dicho missa alguna
+ <lb xml:id="W0002-00-0587-lb-0040"/>persona notable, como obispo, q̃ por decẽcia deue de oyr cada dia
+@@ -52288,7 +51539,7 @@
+ <lb xml:id="W0002-00-0694-lb-m051"/>exc. &amp;c. pe. de offi. leg. </note>
+ pueden ser absueltos por los obispos, q̃ quier q̃ nie-
+ <lb xml:id="W0002-00-0694-lb-0037"/>guen Inno. Ancha. Card. Pano. y Rauen. 
+-<ref type="note-anchor" n="y" target="#W0002-00-0694-nm-1e4f"><hi rendition="#sup">y</hi></ref><note place="margin" n="y" anchored="true" xml:id="W0002-00-0694-nm-1e4f"><lb sameAs="#W0002-00-0694-lb-m051" xml:id="W0002-00-0694-lb-s61a"/>In. d. c. ꝗ̈uis. </note>
++<ref type="note-anchor" n="y" target="#W0002-00-0694-nm-1e4f"><hi rendition="#sup">y</hi></ref><note place="margin" n="y" anchored="true" xml:id="W0002-00-0694-nm-1e4f"><lb sameAs="#W0002-00-0694-lb-m051" xml:id="W0002-00-0694-lb-s61a"/>In. d. c. uis. </note>
+ como apunto bien Fe-
+ <lb xml:id="W0002-00-0694-lb-0038"/>lino 
+ <ref type="note-anchor" n="z" target="#W0002-00-0694-nm-1e50"><hi rendition="#sup">z</hi></ref><note place="margin" n="z" anchored="true" xml:id="W0002-00-0694-nm-1e50"><lb sameAs="#W0002-00-0694-lb-m051" xml:id="W0002-00-0694-lb-s61c"/>Ibidẽ breuiter sed neruose. &amp; Syl. Absolutio. 4. dub. 4.</note>

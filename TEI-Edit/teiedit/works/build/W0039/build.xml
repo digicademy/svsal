@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="W0039" default="finalize">
+    
+    <property name="diff.dir" value="diff"/>
+    <property name="log.dir" value="log"/>
+    <property name="xml.dir" value="xml"/>
+    <property name="xsl.dir" value="xsl"/>
+    <property name="xslt.log" value="${log.dir}/${ant.project.name}_xslt.log"/>
+    <property name="xslt.processor" value="../../../lib/xsltproc/Saxon-HE-9.8.0-12.jar"/>
+    <property name="xslt.class" value="net.sf.saxon.TransformerFactoryImpl"/>
+    
+    <property name="orig.file" value="../../../../tustep/svsal/v1/teitite/W0039/W0039_v1.xml"/>
+    
+    <target name="initialize">
+        <echo>Initializing W0039.</echo>
+        <mkdir dir="${xml.dir}"/>
+        <mkdir dir="${log.dir}"/>
+        <copy file="${orig.file}" tofile="${xml.dir}/W0039_000.xml"/>
+        <xmlvalidate file="${xml.dir}/W0039_000.xml" lenient="true"/>
+    </target>
+    
+    <target name="cp-000" depends="initialize">
+        <copy file="${xml.dir}/W0039_000.xml" tofile="${xml.dir}/W0039_v1-0.xml"/>
+        <echo>Checkpoint: W0039_v1-0.xml (W0039_000.xml).</echo>
+        <delete file="${xml.dir}/W0039_000.xml"/>
+    </target>
+    <target name="patch-000"> <!-- depends="cp-000" -->
+        <echo>Structural annotation.</echo>
+        <patch originalfile="${xml.dir}/W0039_v1-0.xml" destfile="${xml.dir}/W0039_001.xml" patchfile="${diff.dir}/W0039_000.diff"/>
+        <delete file="${xml.dir}/W0039_000.xml"/>
+    </target>
+    <target name="xslt-001"> 
+        <echo>Added missing pagination (pb/@n).</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0039_001.xml" out="${xml.dir}/W0039_002.xml" style="${xsl.dir}/W0039_001.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+    </target>
+    <target name="xslt-002" depends="xslt-001"> 
+        <echo>Correct hi @rend.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0039_002.xml" out="${xml.dir}/W0039_003.xml" style="${xsl.dir}/W0039_002.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0039_002.xml"/>
+    </target>
+    <target name="xslt-003" depends="xslt-002"> 
+        <echo>Tagged @type(s) to div(s) and @target to ref.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0039_003.xml" out="${xml.dir}/W0039_004.xml" style="${xsl.dir}/W0039_003.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0039_003.xml"/>
+    </target>
+    <target name="xslt-004" depends="xslt-003"> 
+        <echo>Added @xml:ids and @unit to milestones.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0039_004.xml" out="${xml.dir}/W0039_005.xml" style="${xsl.dir}/W0039_004.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0039_004.xml"/>
+    </target>
+    <target name="xslt-005" depends="xslt-004">
+        <echo>Transformation from TEI-tite to TEI-All.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0039_005.xml" out="${xml.dir}/W0039_006.xml" style="${xsl.dir}/W0039_005.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0039_005.xml"/>
+    </target>
+    <target name="xslt-006" depends="xslt-005">
+        <echo>Annotated hyphenated breaks.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0039_006.xml" out="${xml.dir}/W0039_007.xml" style="${xsl.dir}/W0039_006.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0039_006.xml"/>
+    </target>
+    <target name="xslt-007" depends="xslt-006">
+        <echo>Tagged special characters.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0039_007.xml" out="${xml.dir}/W0039_008.xml" style="${xsl.dir}/W0039_007.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0039_007.xml"/>
+    </target>
+    <target name="xslt-008" depends="xslt-007">
+        <echo>Line numbering.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0039_008.xml" out="${xml.dir}/W0039_009.xml" style="${xsl.dir}/W0039_008.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0039_008.xml"/>
+    </target>
+    <target name="xslt-009" depends="xslt-008">
+        <echo>Added @xml:ids.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0039_009.xml" out="${xml.dir}/W0039_010.xml" style="${xsl.dir}/W0039_009.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0039_009.xml"/>
+    </target>
+    <target name="xslt-010" depends="xslt-009">  
+        <echo>Tagged unmarked Hyphenation.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0039_010.xml" out="${xml.dir}/W0039_011.xml" style="${xsl.dir}/W0039_010.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+            <param name="corrListPaths" expression="../corrlist/lists/W0039-la_supposed-hyphenations-from-text.html"/>
+            <param name="lang" expression="la" type="STRING"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0039_010.xml"/>
+    </target>
+    <target name="xslt-011">   <!--depends="xslt-010"-->
+        <echo>teiHeader update for publication.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0039_011.xml" out="${xml.dir}/W0039_012.xml" style="${xsl.dir}/W0039_011.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <!--<delete file="${xml.dir}/W0039_010.xml"/>-->
+    </target>
+    <target name="finalize" depends="xslt-011">
+        <echo>Reached end of pipeline.</echo>
+    </target>
+
+<!--
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++        
+
+******************************************    
+*    REFERENZWERK - - REFERENCE WORK     *
+******************************************
+ 
+09.04.24 CR: teiHeader update W0039_012.xml ready for online publication.
+ 
+ Automatic abbreviations are removed. 
+ No manual correction needed.
+
+ First teiHeader model updated for publication. Sent for test to MAH 12.12.23
+ 
+
+
+Notes:
+
+    * Structural annotation started on 14.01.2020 change #014
+    * <g n="#char0124" resp="#TK_dummy">i</g> tagged as "is" 155 Cases.
+    * sal-tei.sch irrelevant errors: 949
+    
+    * Abbr. List 42416 unil 22.10.21
+    * With Abbr. regex update aprox. 54001 expansions
+    
+      
+      However, before proceeding it is necessary to ask #CB or #JLE about following 15 cases (see marked facsimiles on this folder):
+      
+       W0039-0042
+        ẜʒ 574 :)
+       
+       W0039-0042
+        dʒ 600 :)
+       
+       W0039-0042
+       lʒ over 1000 :)
+       
+       W0039-0042
+       Rñ / rñ over 4200 :)
+       
+       W0039-0044
+       Sʒ / sʒ over 1900 :)
+       
+       W0039-0044
+       hmōi 717 :)
+       
+       W0039-0044
+       Qñ / qñ over 1400 :)
+       
+       W0039-0044
+       Aliqñ / aliqñ 194 :)
+                      
+       W0039-0044
+       hʒ 542 :)
+
+       W0039-0044
+       tñ über 859 :)
+       
+       W0039-0044
+       pʒ 194 :)
+       
+       W0039-0998
+        ꝟo 448 :)
+       
+       W0039-0082
+       plʒ 54 :)
+                      
+       W0039-0005
+       dño 77 :)
+       
+       W0039-0017 :)
+       dr̃  134
+       
+pctā 49  like in W0114
+       
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+    
+</project>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+<word>Vt </word>
+<word>vt </word>
+<word> et </word>
+<word> eſt </word>
+<word> quam </word>
+<word> quod </word>
+<word>quod </word>
+<word>Quod </word>
+<word>Quo </word>
+<word> aliquo </word>
+<word> aliquando </word>
+<word>Et </word>
+<word>Et\n</word>
+<word> Deo </word>
+<word> Dei </word>
+<word> Dei[\. ,\n]</word>
+<!--
+dangerours, can be a spanish word e.g.: costũ\nbre
+<word> \w+ũ$ </word>
+<word> \w+ũ[\. ,\n]</word>-->
+<word> \w+tur[\. ,\n]</word>
+<word> etiam </word>
+<word> etiã </word>
+<word>Ad </word>
+<word> ad </word>
+<word> ac </word>
+<word> quidem </word>
+<word> neque </word>
+<word>Hoc </word>
+<word> hoc </word>
+<word> quibus </word>
+<word>Quid </word>
+<word>Quid</word>
+<word> quid </word>
+<word> vel </word>
+<word> autem </word>
+<word>Autem </word>
+<word>Tunc </word>
+<word> tunc </word>
+<word> habet[\. ,\n]</word>
+<word>debet[\. ,\n]</word>
+<word>unt[\. ,\n]</word>
+<word> Ergo </word>
+<word>Ergo </word>
+<word> ergo </word>
+<word>Itaque</word> 
+<word> aut </word>
+<word>aliud</word>
+<word>Hæc</word>
+<word>ipſius</word>
+<word>Vbi </word>
+<word> vbi </word>
+<word> Vbi\n</word>
+<word>ſubſidiũ</word>
+<word>Chariſterium</word>
+<word>Primum</word>
+<word>fuerit</word>
+<word>Encomium</word>
+<word>Militem</word>
+<word>militem</word>
+<word>Matrimonium</word>
+<word>Matrimonij</word>
+<word>Matrẽ</word>
+<word>Dignitatem</word>
+<word>Annaliũ</word>
+<word>illis</word>
+<word>Epiſcopi[\n \.,]</word>
+<word> eorum </word>
+<word> eadẽ </word>
+<word> appellat</word>
+<word> illi </word>
+<word>eius[\. ,\n]</word>
+<word>Dominus </word>
+<!--Some literal passages-->
+<word>ſitatione Regulariũ</word>
+</root>

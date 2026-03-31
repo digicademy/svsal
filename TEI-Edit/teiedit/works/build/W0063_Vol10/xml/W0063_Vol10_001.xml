@@ -1,0 +1,1456 @@
+<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_tite.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<text xmlns="http://www.tei-c.org/ns/1.0" xmlns:t="http://www.tei-c.org/ns/tite/1.0">
+<front>
+<titlePage>
+<titlePart type="main"><pb n="[1]" xml:id="W0063-J-0001" facs="W0063-J-0001"/><lb/><hi rend="sp">OMNES FERE<lb/>TITVLI TAM IVRIS CI<lb type="nb"/>VILIS, QVAM CANONICI LE</hi><lb type="nb"/>guntur in iſtis ſeptem Partitarum legibus, quod ſe-<lb type="nb"/>quens tabula demõſtrat, non ſine magno labore ædita per Licen-<lb type="nb"/>ciatum Gregorium Lopez à Touar, ipſarum legum gloſſa<lb type="nb"/>toris nepotem, quod quantæ vtilitatis neceſsitatiſ&#xE8BF;&#x0301;<lb/>ſit omnibus vtriuſque Iuris profeſſori<lb type="nb"/>bus clariſsimè patet.</titlePart>
+<figure type="illustration"/>
+<docImprint><lb/><hi rend="sp">SALMANTICAE</hi>,<lb/>In ædibus Dominici à Portonarijs de Vrſinis, Sacræ Ca-<lb type="nb"/>tholicæ Maieſtatis, Tipographi.
+<lb/><docDate when="1576"><hi rend="sp">1576</hi></docDate>.</docImprint>
+<pb n="[2]" xml:id="W0063-J-0002" facs="W0063-J-0002" type="blank"/>
+</titlePage>
+</front>
+<body>
+<div1 type="index">
+<p rend="hx"><pb n="[3]" xml:id="W0063-J-0003" facs="W0063-J-0003"/><lb/><hi rend="sp">OMNES FERE TITVLI<lb/>TAM IVRIS CIVILIS, QVAM</hi><lb/>canonici leguntur in iſtis ſeptem Partitarum legi-<lb type="nb"/>bus, quod ſequens tabula demonſtrat, non ſine magno labore<lb/>edita per Licenciatum Gregorium Lopez à Touar,<lb/>ipſarum legum gloſſatoris nepotem, quod<lb/>quantæ vtilitatis neceſsitatiſ&#xE8BF;&#x0301; ſit<lb/>omnibus vtriuſque Iuris<lb/>profeſſobus clariſ<lb/>ſimè patet.</p>
+<list type="index">
+<item><list type="index">
+<head><t:colShift t:cols="2"/><cb xml:id="W0063-J-0003-cb1"/><lb/>A</head>
+<item><lb/><hi rend="init">A</hi><hi rend="sp">BIGEIS</hi>, vide ex. l. 19. tit. 14. par. 7.</item>
+<item><lb/>Abolitionibus, vide tit. 32. part. 7. &amp;. l. 19. titulo<lb/>1. parti. 7.</item>
+<item><lb/>Acceptilationibus, vide tit. 14. par. 5.</item>
+<item><lb/>Accuſationibus &amp; inſcriptio. vide tit. 1. part. 7.</item>
+<item><lb/>Acquirenda poſſeſsione, vide titu. 30. par. 3. &amp; ex<lb/>l. 27. tit. 2. part. 3.</item>
+<item><lb/>Actionibus empti, vide tit. 5. part. 5.</item>
+<item><lb/>Actionibus hæreditarijs, vide. l. 5. tit. 2. &amp;. l. 10. in<lb/>fine tit. 1. part. 5</item>
+<item><lb/>Actore à tutore ſeu curatore dando, vide. l. 3. titulo quinto. &amp;. l. 96. titulo<lb/>18. part. 3.</item>
+<item><lb/>Ad exhibendum, vide ex. l. 16. tit. 2. par. 3.</item>
+<item><lb/>Ad legem iuliam maieſtatis, vide tit. 2. part. 7.</item>
+<item><lb/>Ad legem Iuliam de adulterijs, vide titulum. 17. par. 7. &amp; ibi in titu. 19. &amp;<lb/>in titu. 21. vide. l. 8. tit. 2. part. 4.</item>
+<item><lb/>Ad legem iuliam de vi publica vel priuata, vide. tit. 10. part. 7.</item>
+<item><lb/>Ad legem corneliam de ſicarijs, vide tit. 8. part. 7.</item>
+<item><lb/>Ad legem flauiam de plagiarijs, vide ex. l. 22. tit. 14. par. 7.</item>
+<item><lb/>Ad legem falcidiam, vide tit. 11. part. 6.</item>
+<item><lb/>Ad legem corneliam de falſis, vide titulum ſeptimum. part. 7. &amp;. l. 2. in fi<lb/>ne tit. 30. par. 7.</item>
+<item><lb/>Ad legem iuliam repetundarum, vide. l. 8. &amp;. l. 11. cum alijs ibi. titulo pri-<lb type="nb"/>mo. parti. 7.</item>
+<item><lb/>Adminiſtratione tutorum, vide. l. 11. &amp;. l. 15. &amp; totum illum titulum. titu.<lb/>16. part. 6. &amp;. l. 4. tit. 5. &amp;. l. 23. tit. 13. part. 5.</item>
+<item><lb/>Adoptionibus, vide tit. 16. part. 4. &amp;. l. 7. &amp;. 8. tit. 7. part. 4.</item>
+<item><lb/>Ad ſenatuſconſultũ velleianum, vide legem tertiam, cum alijs illius titu<lb/>li, tit. 12. part. 5.</item>
+<item><lb/>Ad ſenatus conſultum trebellianum, vide. l. 8. cum alijs. ibi. tit. 11. part. 6.<lb/>&amp;. l. fin. in fine tit. 5. part. 6.</item>
+<item><lb/>Ad ſenatuſconſultum tertullianum, vide ex. l. 12. titulo decimoſexto. cũ<lb/>alijs ibi.</item>
+<item><lb/>Ad ſenatuſconſultum orficianum, vide legem octauam, nonam, &amp; vnde<lb/>cimam. cum ſequentibus. tit. 13. par. 6.</item>
+<item><lb/>Ad ſenatuſconſultum turpillianum, vide. l. 17. cum alijs illius tituli, titu.<lb/>1. part. 7. &amp;. l. 6. tit. 6. part. 7.</item>
+<item><lb/>Ad ſenatuſconſultum macedonianum, vide ex lege quarta &amp; decima. ti-<lb type="nb"/>tulo primo. part. 5.</item>
+<item><lb/>Ad ſilanianum, vide ex. l. 13. tit. 7. part. 6.</item>
+<item><lb/>Aduocatis diuerſorum iudiciorum, vide legem nonam, &amp; decimamter-<lb type="nb"/>tiam. &amp;. 15. tit. 6. part. 3.</item>
+<item><lb/>Aduocatis fiſci, vide. d. tit. 6. part. 3.</item>
+<item><lb/>Alendis liberis, vide ex. l. 3. tit. 19. part. 4.</item>
+<item><lb/>Alienatione iudicij mutan. cauſa facta, vide ex lege triginta. titulo ſecun<lb/>do, &amp;. l. 67. titulo decimo octauo. parti. 3. &amp;. l. 15. titu. 7. parti. 3. &amp;. l. 18.<lb/>tit. fina. part. 7.</item>
+<item><lb/>Alimentis pupillo præſtandis, vide. l. 16. &amp;. l. 19. tit. 16. part. 6.</item>
+<item><lb/>Alluuionibus &amp; paludibus, vide ex. l. 26. tit. 28. par. 3.</item>
+<item><lb/>Annali exceptione, vide. l. 8. 21. &amp;. 30. tit. 29. part. 3.</item>
+<item><lb/>Anonis &amp; tributis, vide. l. 10. tit. 28. &amp;. l. 20. tit. 32. part. 3. &amp;. l. 7. tit. 7. par. 5.<lb/>&amp;. l. 2. tit. 4. part. 3.</item>
+<item><lb/>An ſeruus ex ſuo facto poſt manumiſsionem teneatur, vide. l. 6. in fine<lb/>tit. 11. part. 5.</item>
+<item><lb/>Appellationibus, vide tit. 23. part. 3.</item>
+<item><lb/>Apoſtatis, vide tit. 24. part. 7. &amp; ex. l. 5. tit. 25. part. 7. &amp; ex. l. 20. tit. 6. &amp;. l.<cb xml:id="W0063-J-0003-cb2"/><lb/>63. tit. 5. part. 1.</item>
+<item><lb/>Arbitris, vide ex. l. 23. cum alijs ibi. tit. 4. par. 3.</item>
+<item><lb/>Arbitrium tutelæ, vide ex. l. 15. tit. 16. part. 6.</item>
+<item><lb/>Aſſertione tollenda, vide ex. l. 4. tit. 5. part. 3. &amp;. l. 10. tit. 4. part. 3.</item>
+<item><lb/>Aſſeſſoribus, vide. l. fin. &amp; totum titu. 21. part. 3.</item>
+<item><lb/>Authoritate præſtanda, vide ex. l. 17. tit. 16. part. 6. &amp;. l. 7. tit. 2. &amp;. l. 1. tit. 13.<lb/>part. 3. &amp;. l. 13. poſt medium. tit. 6. part. 6.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>B</head>
+<item><lb/><hi rend="init">B</hi><hi rend="sp">ONIS</hi> libertorum, vide ex. l. 10. tit. 22. part. 4.</item>
+<item><lb/>Bonis maternis, vide ex. l. 8. tit. 29. part. 3. &amp;. l. 24. tit. 13. par<lb/>ti. 5. &amp;. l. 13. tit. 6. part. 6. &amp;. l. 5. tit. 17. part. 4. l. 31. ti. 11. par<lb/>ti. 4. verbo <hi rend="sp">ESI</hi>. &amp;c.</item>
+<item><lb/>Bonis quæ liberis, vide ex. l. 24. ti. 13. par. 5. &amp; ex. l. 6. ti. 17.<lb/>partita quarta.</item>
+<item><lb/>Bonis authoritate iudicis poſsiden. vide tit. 8. part. 3.</item>
+<item><lb/>Bonis eorum qui ſibi mortem conſciuerint, vide tit. 27. part. 7.</item>
+<item><lb/>Bonis proſcriptorum ſeu damnatorũ, vide. l. 5. cum alijs ibi. tit. 31. part. 7.</item>
+<item><lb/>Bonorum poſſeſsio contra tabulas, vide tit. 7. part. 6.</item>
+<item><lb/>Bonorum poſſeſsio ſecundum tabulas vel contra tabulas bonorum poſ-<lb type="nb"/>ſeſsionis.</item>
+<item><lb/>Bonorum poſſeſsio ex teſtamento militis.</item>
+<item><lb/>Vt ex legibus &amp; ſer. atuſconſultis bonorum poſſeſsio.</item>
+<item><lb/>Vnde liberi.</item>
+<item><lb/>Vnde legitimi vel vnde cognati. &amp;c.</item>
+<item><lb/>De iſtis &amp; alijs titulis qui de iure communi loquuntur de iſtis bonorum<lb/>poſſeſsionibus in hoc præſenti indice non curo, quia principaliter nõ<lb/>legunturin legibus partitarum, neque ipſæ leges de talibus bonorum<lb/>poſſeſsionibus curarunt, vt dicit glo. 1. l. 19. tit. 1. part. 6. idem in gloſ. 2.<lb/>in fine. l. 2. tit. 6. part. 6.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>C</head>
+<item><lb/><hi rend="init">C</hi><hi rend="sp">ADVCIS</hi> tollendis, vide tit. 5. &amp; in tit. 3. part. 6. &amp; ex<lb/>l. 33. tit. 9. part. 6.</item>
+<item><lb/>Calumniatoribus, vide. l. 21. &amp;. l. 22. tit. 1. par. 7. l. 20. tit. 14.<lb/>l. 2. tit. 13. l. 3. tit. 16. part. 7.</item>
+<item><lb/>Captiuis &amp; poſtliminio reuerſis, vide tit. 29. part. 2.</item>
+<item><lb/>Carboniano edicto, vide. l. 2. tit. 14. part. 6.</item>
+<item><lb/>Ceſsione bonorum, vide tit. 15. part. 5.</item>
+<item><lb/>Codicillis, vide tit. 12. part. 6. &amp;. l. 7. &amp;. 8. tit. 3. l. fin. tit. 11. part. 6. l. 104. titu.<lb/>18. l. 2. tit. 14. part. 3.</item>
+<item><lb/>Collationibus, vide ex. l. 3. tit. 15. part. 6.</item>
+<item><lb/>Colluſione detegenda, vide. l. 12. 17. &amp;. 19. tit. 1. part. 7. &amp; tit. 32. part. 7. &amp;. l.<lb/>13. tit. 1. part. 7. &amp;. l. 14. tit. 9. part. 4.</item>
+<item><lb/>Comertijs &amp; mercatoribus, vide tit. 7. part. 5.</item>
+<item><lb/>Comminationes vel epiſtolas, vide. l. 22. tit. 22. part. 3. &amp; ibi. l. 3.</item>
+<item><lb/>Commodati, vide tit. 2. part. 5. l. 71. tit. 18. part. 3.</item>
+<item><lb/>Communi diuidundo, vide. l. 10. &amp; totum illum tit. 15. part. 6. &amp;. l. 16. titu.<lb/>22. part. 3. &amp;. l. 55. tit. 5. part. 5.</item>
+<item><lb/>Communiſeruo manu. vide ex. l. 1. tit. 22. part. 4. &amp;. l. 55. tit. 5. part. 5.</item>
+<item><lb/>Communia de manumiſsion. vide titu. 22. part. 4.</item>
+<item><lb/>Communia de vſu capionibus, vide tit. 29. part. 3.</item>
+<item><lb/>Comunia vtriuſ que iudicij, vide. l. 17. &amp;. l. 32. verbo LA NOVENA,<lb/>tit. 2. part. 3. &amp;. l. 16. tit. 11. part. 4. ad finem. l. 49. tit. 5. par. 5. &amp;. l. 3. &amp;. l. 7.<lb/>&amp;. 9. tit. 15. par. 6. &amp;. l. 7. tit. 8. par. 1. l. 19. tit. 5. l. fina. tit. 3. part. 5. l. 43. &amp;. l. 80. tit. 18. part. 3. l. 10. tit. 31. part. 3. l. 38. tit. 9. par. 6. l. 1. tit. 5. part. 4.</item>
+<item><pb n="[4]" xml:id="W0063-J-0004" facs="W0063-J-0004"/><cb xml:id="W0063-J-0004-cb1"/><lb/>Communia delegatis, vide. l. 3. 4. 6. 7. 26. 27. 28. &amp;. 29. &amp; per totum illum<lb/>titulum, in tit. 9. part. 6.</item>
+<item><lb/>Communia de ſucceſsionibus, vide tit. 13. part. 6. &amp; in alijs titulis ibidem.<lb/>&amp; in. l. 30. cum ſequentibus. tit. 1. part. 6. l. 2. tit. 1. part. 2.</item>
+<item><lb/>Communium rerum alienatione, vide legem. 55. cum alijs. ibidem. titu-<lb type="nb"/>lo quinto. partita quinta. &amp; legenona. titulo decimo quinto. partita. 6.<lb/>&amp;. l. 80. in fine. tit. 18. part. 3.</item>
+<item><lb/>Compenſationibus, vide. l. 20. cum ſequentibus. tit. 14. part. 5.</item>
+<item><lb/>Concubinis, vide tit. 14. part. 4.</item>
+<item><lb/>Condictione indebiti, vide ex. l. 28. tit. 14. part. 5.</item>
+<item><lb/>Condictione ob cauſam, vide. l. 41. &amp;. 43. cum alijs. ibi. tit. 14. par. 5 &amp;. l. 9.<lb/>tit. 8. part. 5. l. 10. tit. 33. part. 7.</item>
+<item><lb/>Condictione ob turpem cauſam, vide. l. 47. &amp;. l. 52. cum ſequẽtibus. titu<lb/>lo. 14. parti. 5.</item>
+<item><lb/>Condictione furtiua, vide. l. 20. cum alijs ibi tit. 14. part. 7.</item>
+<item><lb/>Condictione ex lege, vide. l. 17. &amp;. l. 45. tit. 2. part. 3. &amp;. l. 81. tit. 18. part. 3. &amp;<lb/>l. 40. tit. 28. part. 3. l. 21. tit. 14. part. 7.</item>
+<item><lb/>Condictionibus inſertis, vide tit. 4. part. 6. &amp;. l. 1. &amp;. 2. titu. 4. part. 4. &amp;. l.<lb/>21. &amp;. 22. tit. 9. part. 6.</item>
+<item><lb/>Confeſsis, vide tit. 13. part. 3.</item>
+<item><lb/>Confirmando tutore, vide. l. 8. tit. 16. part. 6.</item>
+<item><lb/>Conſortibus eiuſdem litis, vide. l. 10. tit. 5. part. 3.</item>
+<item><lb/>Conſtituta pecunia, vide. l. 3. &amp;. 8. tit. 11. part. 5.</item>
+<item><lb/>Contrahenda emptione, vide titu. 5. parti. 5. &amp;. l. 6. tit. 18. par. 3. l. 18. tit. 16.<lb/>part. 6. l. 8. tit. 13. l. 6. tit. 3. in fine. part. 5.</item>
+<item><lb/>Contrahenda &amp; committenda ſtipulatione, vide. l. 12. &amp; totum illum ti-<lb type="nb"/>tulum. 11. part. 5.</item>
+<item><lb/>Contractibus iudicum, vide. l. 5. tit. 5. part. 5.</item>
+<item><lb/>Creditorem euictionem, pigno. non debere, vide legem. 50. titu. decimo<lb/>tertio. part. 5.</item>
+<item><lb/>Crimine peculatus, vide. l. 14. &amp;. l. 18. tit. 14. part. 7.</item>
+<item><lb/>Crimine ſacrilegij, vide tit. 18. part. 1.</item>
+<item><lb/>Crimine expilatæ hæredit. vide. l. 21. tit. 14. par. 7.</item>
+<item><lb/>Crimine ſtellionatus, vide. l. 10. tit. 13. part. 5. &amp;. l. 7. &amp; fina. titulo decimo<lb/>ſexto. part. 7.</item>
+<item><lb/>Curatore furioſi, vide. l. 13. tit. 16. part. 6.</item>
+<item><lb/>Cuſtodia reorum, vide tit. 29. part. 7. &amp;. l. 16. tit. 1. part. 6.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>D</head>
+<item><lb/><hi rend="init">D</hi><hi rend="sp">EBITOREM</hi> venditionem pignoris, vide ex. l. 48. ti-<lb type="nb"/>tulo. 1. part. 5.</item>
+<item><lb/>Depoſiti, vide tit. 3. part. 5. &amp;. l. 72. tit. 18. part. 3.</item>
+<item><lb/>Dilationibus, vide tit. 15. part. 3.</item>
+<item><lb/><unclear resp="#TL" reason="missing-text"/> pignorum, vide titulum. 13. part. 5. vſque ad. l. 44. l. fin. in fi<lb/>ne. tit. 27. &amp;. l. 70. tit. 18. part. 3.</item>
+<item><lb/>Diuerſis relcriptis, vide gloſſam quintam. 40. 41. 42. &amp;. 44. titulo deci-<lb type="nb"/>mo octauo. part. 3.</item>
+<item><lb/>Diuidenda tutela, vide in tit. 16. part. 6.</item>
+<item><lb/>Diuortio facto apud quem liberi morari. &amp; c. vide legem tertiam. titulo<lb/>19. part. 4.</item>
+<item><lb/>Dolo malo, vide tit. 16. part. 7.</item>
+<item><lb/>Donationibus inter virum &amp; vxorem, vide. l. 4. &amp;. 39. &amp; per totum titu-<lb type="nb"/>lum. 11. part. 4.</item>
+<item><lb/>Donationibus cauſa mortis, vide. l. 11. tit. 4. part. 5.</item>
+<item><lb/>Donationibus ante nuptias, vide. l. 2. tit. 11. part. 4.</item>
+<item><lb/>Donationibus, vide tit. 4. part. 5.</item>
+<item><lb/>Donationibus quæ ſub modo, vide. l. 5. tit. 4. part. 5.</item>
+<item><lb/>Dote cauta non numerata, vide. l. 4. &amp; totum tit. 11. part. 4.</item>
+<item><lb/>Dotis promiſsione, vide. l. 8. tit. 11. part. 4. &amp;. tit. 2. part. 4.</item>
+<item><lb/>Duobus reis, vide. l. 10. tit. 12. part. 5.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>E</head>
+<item><lb/><hi rend="init">E</hi><hi rend="sp">DENDO</hi>, vide. l. 40. &amp; totum illum tit. 2. part. 3.</item>
+<item><lb/>Edicto diui Adriani tollendo, vide. l. 1. &amp; fin. cum alijs. ibi. ti-<lb type="nb"/>tu. 14. part. 6.</item>
+<item><lb/>Edificijs priuatis, vide. l. 22. 25. &amp;. 26. tit. 32. part. 3. &amp;. l. 4. titul. 2.<lb/>part. 1. &amp;. l. fin. tit. 14. part. 3.</item>
+<item><lb/>Edilitijs actionibus, vide. l. 64. &amp;. l. 65. tit. 5. part. 5.</item>
+<item><lb/>Emancipationibus liberorum, vide ex lege. 15. tit. 18. part. 4. &amp;. l. 93. titul.<lb/>18. partita. 3.</item>
+<item><lb/>Emendatione ſeruorum, vide. l. 6. tit. 21. part. 4. &amp;. l. 9. tit. 4. part. 3. &amp;. l. 9.<lb/>tit. 8. parti. 7.</item>
+<item><lb/>Emendatione propin quorum, vide. l. 18. titu. 18. parti. 4. &amp;. l. nona. titulo<lb/>octauo. part. 7.</item>
+<item><lb/>Eo quod certo loco, vide. l. 32. tit. 2. part. 3. l. fin. titu. 1. part. 5. l. 1. tit. 2. part.<lb/>5. l. penult. tit. 11. part. 4.</item>
+<item><cb xml:id="W0063-J-0004-cb2"/><lb/>Epiſcopis &amp; clericis, vide titulũ. 6. part. 1. &amp; precione. l. 8. &amp;. l. 23. &amp;. l. 45. &amp;<lb/>l. 48. 51. 57. &amp;. 62. ibidem. l. 24. &amp;. l. 65. tit. 5. part. 1. l. 22. titu. 11. l. 24. &amp;. 35.<lb/>tit. 16. part. 3. l. 4. l. 28. tit. 4. part. 3. l. 57. &amp;. 65. &amp; per totum illum titolũ<lb/>5. part. 1. l. 2. tit. 14. part. 4. l. 12. tit. 14. part. 3. l. 6. &amp;. l. 11. tit. 7. part. 6. l. 1. &amp;<lb/>2. tit. 19. part. 7. l. 23. tit. 11. part. 4. &amp; ex. l. 2. tit. 10. part. 6.</item>
+<item><lb/>Epiſcopali audientia vide. l. 6. &amp;. 13. tit. 23. l. 4. ad finem. tit. 17. &amp;. l. 4. &amp;. l.<lb/>12. tit. 4. part. 3. l. 18. tit. 14. part. 7. l. 36. &amp;. 48. tit. 6. part. 1. l. 2. tit. 22. l. 4. ti<lb/>tu. 6. part. 7. l. 4. tit. 22. part. 4. l. 9. tit. 16. part. 6. l. 94. tit. 18. parti. 3. l. 5. &amp;<lb/>l. 11. tit. 7. part. 6.</item>
+<item><lb/>Errore calculi, vide. l. 14. tit. 18. part. 3.</item>
+<item><lb/>Errore aduocatorum, vide. l. 8. tit. 6. part. 3.</item>
+<item><lb/>Etiam ob chirographariam pecuniam pignusretin. poſſ. vide. l. 22. tit. 13.<lb/>part. 5.</item>
+<item><lb/>Etiam perprocuratorem cauſam in integrum reſti. vide. l. 10. titulo deci-<lb type="nb"/>moſexto. part. 6.</item>
+<item><lb/>Euictionibus, vide ex. l. 32. tit. 5. part. 5.</item>
+<item><lb/>Eunuchis, vide. l. 13. tit. 8. part. 7.</item>
+<item><lb/>Exceptionibus, vide. l. 8. tit. 3. &amp;. l. 22. tit. 4. part. 3.</item>
+<item><lb/>Excuſationibus veteran orum, vide legem. 35. in fine. &amp;. l. 43. titulo deci-<lb type="nb"/>mo octauo. parti. 3.</item>
+<item><lb/>Excuſationibus tutorum, vide titulum decimum ſeptimum. parti. 6. &amp;. l.<lb/>13. tit. 16. part. 6.</item>
+<item><lb/>Ex delictis defunctorum, vide. l. 25. tit. 1. part. 7.</item>
+<item><lb/>Executione rei iudicatæ, vide tit. 27. part. 3.</item>
+<item><lb/>Exercitoria &amp; inſtitoria actione, vide legem quartam, ſextam &amp; ſeptimã<lb/>titu. 1. par. 5.</item>
+<item><lb/>Exhibendis reis, vide titulum. 29. partita ſeptima. &amp; lege ſeptima, titulo<lb/>8. partita tertia.</item>
+<item><lb/>Ex quibus cauſis infamia irrogatur, vide titulum quintum, &amp; titulum<lb/>ſextum. part. 7.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>F</head>
+<item><lb/><hi rend="init">F</hi><hi rend="sp">ALSA</hi> cauſa adiecta legato, vide ex lege. 19. titulo nono. par<lb/>tita ſexta.</item>
+<item><lb/>Falſa moneta, vide legem. 4. 5. &amp;. 9. titulo. 7. &amp;. l. 20. tit. 6. parti.<lb/>7. &amp;. l. 2. tit. 29. part. 7.</item>
+<item><lb/>Familiæ herciſcundæ, vide tit. 15. part. 6.</item>
+<item><lb/>Famoſis libellis, vide legem octauam. titu. 6. part. 7. &amp;. l. 3. tit. 3. &amp;. l. 3. titu.<lb/>31. parti. 7.</item>
+<item><lb/>Ferijs. vide ex l. 33. tit. 2. part. 3.</item>
+<item><lb/>Fidei commiſsis, vide titulum donum. partita. 6. &amp; lege fina. titulo quin-<lb type="nb"/>to. parti. 6. l. 31. titu. 4. parti. quinta. l. 10. titu. 4. part. 6. l. 7. titu. 2. part. 3.<lb/>l. 6. &amp;. l. fin. tit. 10. part. 6.</item>
+<item><lb/>Fideiuſſoribus minorum, vide. l. 4. tit. 2. part. 5.</item>
+<item><lb/>Fideiuſſoribus, vide tit. 12. part. 5.</item>
+<item><lb/>Fideiuſſoribus tutorum, vide. l. 21. in fine. tit. 16. part. 6.</item>
+<item><lb/>Fide inſtrumentorum, vide titulum. 18. &amp; titulum. 19. part. 3. &amp;. l. 1. tit. 20.<lb/>parti. 3.</item>
+<item><lb/>Filio familias minore, vide legem. 6. titulo. 1. part. 5. cum alijs ibi. &amp; in ti-<lb type="nb"/>tulo. 19. part. 6.</item>
+<item><lb/>Finium regundorum, vide. l. 10. &amp; totum illum titulum. 15. part. 6. &amp;. l. 30.<lb/>titu. 14. part. 7.</item>
+<item><lb/>Formulis &amp; impetrationibus de hoc eſt videndus titulus vigeſsimus<lb/>nonum. part. 3.</item>
+<item><lb/>Fructibus &amp; litium expenſis, vide legem octauam. titulum tertium. l. 39.<lb/>&amp;. 40. titu. 28. l. 3. &amp;. 8. tit. 22. l. 22. tit. 2. part. 3. l. 26. titulo vndecimo. par.<lb/>4. &amp;. l. 4. tit. 14. part. 6.</item>
+<item><lb/>Fundo dotali, vide legem. 16. 17. 18. &amp;. 19. &amp; per totum titulum vndeci-<lb type="nb"/>mum. partit. 4.</item>
+<item><lb/>Furtis &amp; ſeruo corrupto, vide titulum decimum quartum. par. 7. &amp; ibi ex<lb/>lege vigeſsimanona.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>G</head>
+<item><lb/><hi rend="init">G</hi><hi rend="sp">ENERALI</hi> abolitione, vide titulum. 32. partita ſeptima. &amp;. l.<lb/>6. titulo ſexto. part. 7.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>H</head>
+<item><lb/><hi rend="init">H</hi><hi rend="sp">AEREDITATE</hi> vel actione vendita, vide. l. 34<lb/>35. &amp;. l. 50. cum alijs ibi. tit. 5. part. 5. &amp;. l. 64. tit. 18. part.<lb/>3. &amp;. l. 7. in fine. tit. 7. part. 7. &amp; tit. 5. part. 5.</item>
+<item><lb/>Hæredibus tutorum, vide titulum. 16. partita ſexra. &amp;. l.<lb/>21. in fine. titu. 16. part. 6.</item>
+<item><lb/>Hæredibus inſtituendis, vide tit. 3. part. 6.</item>
+<item><lb/>Hæreditarijs actionibus, vide. l. 5. tit. 2. part. 5. l. 7. tit. 6. part. 6. &amp;. l. 16. tit.<lb/>nono. partita ſexta.</item>
+<item><pb n="[5]" xml:id="W0063-J-0005" facs="W0063-J-0005"/><cb xml:id="W0063-J-0005-cb1"/><lb/>Hæreditatibus decurionũ, vide in rubrica de ſucceſsióibus ab inteſtato.</item>
+<item><lb/>Hæreticis &amp; Manichæis, vide titulum vigeſsimum ſextum. partita. 7.</item>
+<item><lb/>His qui potentiorũ nomine, vide in rubrica, ne liceat potentioribus. &amp;c.</item>
+<item><lb/>His qui ſub modo. &amp;c. vide legem. 22. &amp; totum illum titulum. 9. parti. 6.</item>
+<item><lb/>His quæ vi metuſve cauſa fiunt, vide legem quinqua geſsimam ſextam.<lb/>titulo quinto. part. 5. l. 4. tit. 14. part. 7. l. 2. tit. 25. par. 3. l. ſi. tit. 4. part. 5.</item>
+<item><lb/>His qui accuſare non poſſ. vide titulum primum. partita ſeptima.</item>
+<item><lb/>His qui ad eccleſias confuge. vide titulum vndecimum. partita prima. &amp;<lb/>l. 54. cum ſequentibus. titulo ſexto. l. 14. &amp;. 15. titulo. 22. parti. prima.</item>
+<item><lb/>His qui ad ſtatu. confugi. vide legem ſecundam. titulo. 17. part. ſecunda.</item>
+<item><lb/>His quibus vt indig. vide. l. 13. &amp;. 15. cum ſequentibus. tit. 7. partita ſexta.</item>
+<item><lb/>His qui ante apert. tabul. l. 2. cum alijs ibi. titulo ſexto. partita ſexta.</item>
+<item><lb/>His qui per metum iud. non appell. vide legem vigeſsimam ſecundam. in<lb/>fine. &amp;. l. 27. titulo vigeſsimotertio. partita tertia.</item>
+<item><lb/>His qui in eccleſia manu, vide legem primam. titulo. 22. parti. quarta.</item>
+<item><lb/>His qui in priorum. credi. loco. &amp;c. vide legem. 34. titulo. 13. part. quinta.</item>
+<item><lb/>His qui parent. vel liberos occi. vide ex lege. 12. titulo octauo. partita. 7.</item>
+<item><lb/>His qui latrones occultauerunt, vide legem decimamoctauam. ad fin. ti-<lb type="nb"/>tulo decimo quarto. &amp;. l. 14. titu. 29. part. 7.</item>
+<item><lb/>His qui notant. infa. vide titulum quintum. &amp;. 6. partita ſeptima.</item>
+<item><lb/>His qui non poſſ. ad libert. perue. l. 46. titulo quinto. part. quinto.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>I</head>
+<item><lb/><hi rend="init">I</hi><hi rend="sp">MPVBERVM</hi> &amp; alijs ſubſti, vide tit. 5. part. 6.</item>
+<item><lb/>Inceſtis nupt, vide titulum. 13. part. quarta. &amp;. l. 2. tit. 15.<lb/>par. 4. &amp; tit. 3. par. 4. &amp;. tit. 18. par. 7. &amp;. l. 50. ti. 14. p. 5.</item>
+<item><lb/>Infantibus expoſitis, vide legem ſecundam. titulo. 20.<lb/>&amp;. l. nonã. titulo decimoſeptimo. parti. 4.</item>
+<item><lb/>Ingen. &amp; manumiſ. vide titulum. 21. &amp; titulum. 22. part.<lb/>4. &amp;. l. 6. &amp;. l. 24. titu. 29. l. 46. titulo ſecundo. l. 5. titu. 16. part. tertia.</item>
+<item><lb/>In gratis liberis, vide. l. 19. titu. 18. part. quarta.</item>
+<item><lb/>In litem tutore dand. vide titulum. 16. part. 6. &amp;. l. 7. titu. ſecundo. part. 3.</item>
+<item><lb/>In litem. iur. vide. l. 5. cum ſequentibus. tit. 11. par. 3. &amp;. l. 8. tit. 3. par. 5.</item>
+<item><lb/>In integrum reſti. minorum. vide titulum. 25. part. 3. &amp;. l. 26. &amp;. 10. &amp; totũ<lb/>illum titulum. 19. part. 6. l. 59. tit. 18. part. 3. l. 4. tit. 11. part. 5. l. 25. titu. 4.<lb/>partita. 3. l. 4. tit. 14. l. fi. titu. 25. part. 3. l. 1. &amp;. 13. titulo ſexto. part. 6.</item>
+<item><lb/>In integrum reſti. poſtulata. &amp;c. l. 2. ad fin. titu. 25. partita tertia.</item>
+<item><lb/>Iniurijs, vide titulum nonum. partita. 7.</item>
+<item><lb/>Inofficioſis dotibus, vide in rubrica. C. de donationib. &amp; in rubrica. C.<lb/>de in officioſ. teſtament.</item>
+<item><lb/>Inofficioſo teſtamen. vide tit. 8. part. 6. &amp;. l. 11. tit. quarto. partita. 6.</item>
+<item><lb/>Inofficioſis donation. vide legem tertiam. cum alijs ibi. titu. 4. part. 5.</item>
+<item><lb/>In ius vocand. vide titu. 7. part. 3. &amp;. l. 7. cum alijs. titu. ſecundo. part. 3.</item>
+<item><lb/>In quibus cauſ. in integ. reſtit. non eſt neceſſ. vide legem. 8. titu. 29. parti.<lb/>3. &amp;. l. 15. tit. 7. l. 4. titu. 8. part. 6. l. penult. titu. fin. partita ſexta.</item>
+<item><lb/>In quibus cauſ. tutorem habenti, tutor vel curator. &amp;c. l. 13. titulo decimo<lb/>ſexto partita ſexta.</item>
+<item><lb/>In quibus cauſ. ceſſet lengi temporis præſcriptio. vide. titulum. 29. part. 3.</item>
+<item><lb/>In quibus cauſ. pignus, vel hipote. tacite contrahatur, vide legem vegeſsi-<lb type="nb"/>mamquintam. titu. 13. &amp;. l. 9. tit. 3. partita quinta.</item>
+<item><lb/>In quibus cauſ. ſerui pro premio liber. acquir. vide titulum. 27. parti. 2. &amp;<lb/>ex. l. 51. tit. 18. part. 3. l. 3. tit. 1. part. 7. l. 8. 9. &amp;. 10. titulo. 2. part. 3.</item>
+<item><lb/>Inſtitutionibus &amp; ſubſtitu. vide tit. 4. part. 6. &amp;. l. 9. tit. 3. partita ſexta.</item>
+<item><lb/>Inſlitoria actione, vide. l. 4. 6. &amp;. 7. titulo primo. partita quinta.</item>
+<item><lb/>Inter alios acta. vel iudi. alijs non noce. vide legem vigeſsimam. titulo. 22.<lb/>partita tertia.</item>
+<item><lb/>Interdicto matrimonio inter pupillum &amp; tutorem, vide legem ſextam.<lb/>titulo decimoſexto. partita ſexta. &amp; lege ſexta. titulo decimo ſeptimo<lb/>partita ſeptima.</item>
+<item><lb/>Interdictis, vide legem vigeſsimam ſeptimam. &amp;. 28. titulo ſecundo. &amp;<lb/>l. 5. &amp; fi. titulo decimo. partita tertia. cum alijs legibus diuerſorum tu-<lb type="nb"/>torum.</item>
+<item><lb/>In vtilibus ſlipulat. vide legem. 38. cum alijs ibi. titulo vndecimo. parti-<lb type="nb"/>ta quinta.</item>
+<item><lb/>Iudæis, vide titulum. 24. partita ſeptima. &amp; lege. 63. titulo quarto. parti-<lb type="nb"/>ta prima.</item>
+<item><lb/>Iudicijs, vide leges tituli quarti. partita tertia. &amp;. l. 21. titulo. 23. &amp; totum ti<lb/>tulum. 22. partita. 3. l. 3. titulo. 1. partita. 7. l. 2. &amp;. 9. titulo. 23. l. 8. titulo. 2.<lb/>l. 12. titulo. 22. l. 3. titulo. 26. part. 3. l. 9. titu. 6. part. 6. l. 7. titu. 29. parti. 7.<lb/>l. 1. tit. 27. part. 3. l. 20. &amp;. l. 8. tit. 3. partita. 5. l. 13. tit. 6. part. 3. l. 7. &amp;. l. 10. ti-<lb type="nb"/>tu. 8. &amp;. l. 8. titu. 7. part. 3. l. 9. titu. 10. part. 7. l. 2. 19. 20. &amp;. 39. tit. 2. parti. 3.</item>
+<item><lb/>Iure codicillorum, vide titulum. 12. part. 6. l. 7. &amp;. 8. tit. 3. l. fina. tit. 11. part.<lb/>6. l. 104. tit. 18. l. 2. tit. 14. pari. 3.</item>
+<item><lb/>Iure dominij impetran. vide. l. 41. &amp;. 44. tit. 13. parti. 5. l. 42. &amp;. 43. titu. 18.<lb/>part. 2. cum alijs. ibidem.</item>
+<item><lb/>Iure deliberandi, vide titulum. 6. part. 6.</item>
+<item><lb/>Iure dotium, vide titulum. 11. part. 4.</item>
+<item><cb xml:id="W0063-J-0005-cb2"/><lb/>Iure emphiteoti. vide ex. l. 28. &amp;. l. penult. &amp; fina. titu. 8. part. 5. l. 69. titul.<lb/>8. part. 5. l. 69. titulo. 18. partita tertia. l. 22. titulo. 31. part. 3.</item>
+<item><lb/>Iureiurando, vide titu. 11. part. 3.</item>
+<item><lb/>Iureiur. propter calumni. dand. vide. l. 23. titulo vndecimo. partita tertia.<lb/>cum alijs ibi.</item>
+<item><lb/>Iure liberorum. iſta rubrica eſt correcta.</item>
+<item><lb/>Iuris &amp; facti ignor. vide ex. l. 28. titulo. 14. partita. 5. &amp;. l. 8. titulo. 6. l. 1. &amp;<lb/>5. titulo decimotertio. partita tertia. l. fin. tit. 6. par. 6. l. 10. &amp;. 11. titu. ſecũ<lb/>do. partita quarta. l. 15. titulo. 22. l. 32. titulo ſecundo. partita tertia. l. 16.<lb/>20. &amp;. 21. titu. 1. part. 1.</item>
+<item><lb/>Iuriſdictione omnium iudi. vide titulum. 4. part. 3. &amp;. l. 32. tit. 2. l. 12. titulo<lb/>22. partita. 3. l. 57. titu. 6. part. 1. l. fin. titu. 10. part. 3. l. 7. titu. 10. partita. 4.<lb/>cum pluribus alijs.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>L</head>
+<item><lb/><hi rend="init">L</hi><hi rend="sp">ATINA</hi> libert. tollend. vide. l. 1. tit. 22. l. 6. tit. 21. l. 1. ad<lb/>fin. tit. 5. l. 5. tit. 22. par. 4. l. 49. titulo vigeſsimo octauo<lb/>part. 3.</item>
+<item><lb/>Legatis, vide titulum. 9. part. 6.</item>
+<item><lb/>Lege Aquilia, vide tit. 15. part. 7.</item>
+<item><lb/>Lege commiſſoria, vide ex. l. 28. tit. 5. part. 5.</item>
+<item><lb/>Legibus &amp; conſtitutio. princip. vide tit. 1. part. 1.</item>
+<item><lb/>Legitima tutela, vide. l. 10. cum alijs ibi. tit. 16. part. 6.</item>
+<item><lb/>Legitimis hæredibus. vide ti. 13. par. 6.</item>
+<item><lb/>Libellis famoſis, vide. l. 8. titu. 6. &amp;. l. tertia. titulo nono. l. 3. titulo trigeſsi-<lb type="nb"/>moprimo. part. 7.</item>
+<item><lb/>Liberali cauſa, vide. l. 28. &amp;. 29. &amp;. l. 17. &amp;. 39. tit. 2. part. 3. l. 6. tit. 13. l. fina. tit.<lb/>23. l. quarta. titulo quinto. partita tertia. l. 5. titulo decimoquarto. l. 5. ti-<lb type="nb"/>tulo. 16. part. 3.</item>
+<item><lb/>Liberis præteritis, vide tit. 7. par. 6.</item>
+<item><lb/>Libertis &amp; eorum liberis, vide. l. 8. tit. 22. part. 4.</item>
+<item><lb/>Litigioſis, vide. l. 13. tit. 7. par. 3.</item>
+<item><lb/>Litis conteſtatione, vide. l. 3. cum alijs ibi. titu. 10. part. 3.</item>
+<item><lb/>Locato &amp; conduc. vide tit. 8. part. 5.</item>
+<item><lb/>Longi temporis præſcript. vide legem ſextam. 23. &amp; 24. cum alijs ibi titu<lb/>lo. 29. part. 3.</item>
+<item><lb/>Luitione pignoris, vide tit. 13. part. 5.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>M</head>
+<item><lb/><hi rend="init">M</hi><hi rend="sp">ALEFICIS</hi> &amp; mathematicis, vide titu. 23. part. 7.</item>
+<item><lb/>Mandati, vide. l. 25. cum alijs illius tituli. tit. 5. par. 3. &amp;. l. 12.<lb/>&amp;. 20. cum alijs ibi. tit. 12. part. 5.</item>
+<item><lb/>Mandatis princip. vide tit. 1. part. 1. l. 16. in fin. tit. 18. &amp;. l. 1.<lb/>tit. 19. part. 3. l. 7. tit. 9. part. 2.</item>
+<item><lb/>Modo mulctarum, vide. l. 4. tit. 22. part. 3.</item>
+<item><lb/>Monopolis, vide tit. 7. part. 5.</item>
+<item><lb/>Mortis cauſa donationibus, vide legem vndecimam. cum alijs ibi. titu.<lb/>quarto. partita. 5. l. 1. tit. 9. partita. 6. l. fina. tit. 11. partita. 4. l. 32. titu. 16. l.<lb/>105. tit. 18. part. 3.</item>
+<item><lb/>Mulieribus quæ proprijs ſeruis ſe iniunge. vide. l. 2. tit. 19. l. penultima. tit.<lb/>17. partita. 7.</item>
+<item><lb/>Mutatione nominis, vide. l. 2. titu. 7. part. 7. &amp;. l. 8. tit. 28. part. 2.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>N</head>
+<item><lb/><hi rend="init">N</hi><hi rend="sp">ATVRALIBVS</hi> liber. vide tit. 13. &amp; tit. 15. part.<lb/>4. &amp; in. l. 5. tit. 19. par. 4. l. 8. cũ ſequentibus. tit. 13. par.<lb/>6. l. fin. tit. 14. part. 4. l. 5. tit. 5. part. 6. l. 3. tit. 23. part. 4.</item>
+<item><lb/>Neceſſ. ſeruis hæredibus inſti. vide. l. 3. 21. 23. &amp;. 24. tit. 3.<lb/>&amp; l. 7. tit. 4. &amp;. l. 3. tit. 8. part. 6.</item>
+<item><lb/>Ne Chriſtianum mancipium. &amp;c. vide. l. 13. titulo nono<lb/>partita ſexta. l. fi. tit. 21. part. 4. l. 22. tit. 11. part. 5. l. 1. tit. 22. part. 3. l. 6. tit.<lb/>13. part. 3. l. penult. titu. 22. part. 7.</item>
+<item><lb/>Ne de ſtatu defunctorum, vide. l. 25. tit. 29. part. 3.</item>
+<item><lb/>Ne ex delictis defunctorum, vide. l. 25. tit. 1. part. 7. l. 3. titulo demoſexto.<lb/>l. 20. titulo. 14. l. 2. tit. 13. part. 7. l. 7. titulo octauo. partita. 3. l. fina. titulo<lb/>9. part. 7. l. 3. tit. 15. part. 7.</item>
+<item><lb/>Ne filius pro patre, vide. l. 9. tit. 31. part. 7.</item>
+<item><lb/>Ne fideiuſſores doti dentur, vide tit. 11. part: 4.</item>
+<item><lb/>Negotijs geſt. vide. l. 26. cum alijs ibi, titulo duodecimo. part. 5.</item>
+<item><lb/>Ne liceat potentioribus, vide ex. l. 6. &amp;. 8. &amp;. 11. titulo quinto. part. 3. l. 16.<lb/>titu. 7. part. 3.</item>
+<item><lb/>Ne liceat tertio prouocare, vide legem. 25. tit. 23. par. 3.</item>
+<item><lb/>Nemini liceat ſignum ſaluatoris. &amp;c. vide. l. 5. tit. 28. part. 7.</item>
+<item><lb/>Ne quis in ſua cauſa ius ſibi di. vide legein decimam. cum alijs. ibi. titulo<lb/>quarto, partita. 33.</item>
+<item><pb n="[6]" xml:id="W0063-J-0006" facs="W0063-J-0006"/><cb xml:id="W0063-J-0006-cb1"/><lb/>Ne rei dominicæ vel templorum. l. 7. tit. 29. part. 3.</item>
+<item><lb/>Ne ſanctum Baptiſmum iteretur. lex nona. titulo quarto. l. 6. titulo quin<lb/>to. partita prima.</item>
+<item><lb/>Ne vxor pro marito. vide legem nonam. titu. 31. partita ſaptima. l. 25. in fi<lb/>ne titu. 13. part. 5.</item>
+<item><lb/>Non numerata pecunia, vide legem tertiam. &amp;. 9. titulo primo. partita. 5.<lb/>&amp;. l. 33. &amp;. 34. titulo. 14. part. 5. l. 11. titu. 18. l. fina. titulo. 13. partita. 3. l. 27.<lb/>titu. 11. part. 3.</item>
+<item><lb/>Noua vectigalia inſtitui non poſſe, vide legem nonam. titulo. 7. partit. 5.<lb/>l. 2. tit. 1. part. 2.</item>
+<item><lb/>Nouationibus &amp; delegatio. vide legem. 15. cum ſequentibus. titu. 14. par.<lb/>5. l. 61. &amp;. l. 64. tit. 18. part. 3.</item>
+<item><lb/>Noui operis nun. vide. l. 9. cum alijs ibi. titu. 32. partita tertia.</item>
+<item><lb/>Noxalibus actionibus, vide. l. 4. titu. 13. part. 7. &amp;. l. 4. titu. 14. parti. 7. l. 9.<lb/>titu. 2. l. 16. tit. 22. part. 3.</item>
+<item><lb/>Nundinis &amp; mercatoribus, vide tit. 7. part. 5.</item>
+<item><lb/>Nuptijs, vide legem. 6. &amp;. l. 10. &amp; per totum illum tit. 1. part. 4. &amp;. l. 2. titul.<lb/>14. l. 1. tit. 13. l. 7. tit. 2. part. 4.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>O</head>
+<item><lb/><hi rend="init">O</hi><hi rend="sp">BSEQVIIS</hi> patrono præſtan. vide legem octauam &amp;<lb/>nonam, titulo. 22. partita quarta.</item>
+<item><lb/>Officio ciuilium iudicum, vide. l. 7. titulo ſexto. partita. 3.</item>
+<item><lb/>Officio diuerſorum iudicum, vide. l. 3. tit. 7. partita tertia.</item>
+<item><lb/>Officio præfecti vrbis. vide. l. 9. tit. 18. par. 4. &amp;. tit. 4. part. 3</item>
+<item><lb/>Officio prætoris, vide legem octauam. titu. 18. part. 4.</item>
+<item><lb/>Officio quæſtoris, vide legem decimam. titulo. 18. partita quarta.</item>
+<item><lb/>Officio magiſtri militum, vide legem vndecimam. titulo. 18. part. 4. &amp;. l.<lb/>16. titulo. 9. partita. 2. &amp;. l. 3. titulo. 29. partita ſeptima.</item>
+<item><lb/>Officio rectoris prouin. vide legem primam. titu. 17. l. 2. tit. 1. partita. 3.</item>
+<item><lb/>Officio præfecti prætorio Africæ. vide. l. 9. titulo. 18. partita quarta.</item>
+<item><lb/>Officio præfecti pratorio Orientis, vide. l. nonam. titulo. 18. partita. 4.</item>
+<item><lb/>Operis libertorum, vide legem. 8. &amp;. 9. cum alijs ibi. titulo. 22. part. 4.</item>
+<item><lb/>Operis noui nuntiato. vide titulum. 32. part. 3.</item>
+<item><lb/>Operibus publicis. vide legem. 20. cum ſequentibus. titulo. 32. l. ſeptima.<lb/>titu. 29. part. 3. l. 54. titu. 6. part. 1. l. 16. titulo octauo. part. 5.</item>
+<item><lb/>Ordine iudiciorum, vide. l. 4. 5. &amp;. 6. titu. 10. &amp;. l. 10. &amp;. 11. titu. 3. l. 8. titulo<lb/>quarto. part. 3. l. 4. titulo primo partita. 7.</item>
+<item><lb/>Ordine cognitionum, vide legem quartam &amp; quintam. cum ſequenti-<lb type="nb"/>bus. titulo. 10. part. 3. &amp;. l. fina. titulo. 3. partita tertia.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>P</head>
+<item><lb/><hi rend="init">P</hi><hi rend="sp">ACTIS</hi>, vide legem. 29. &amp; per totum illum titu<lb/>lum vndecimum. part. 5.</item>
+<item><lb/>Pactis conuentis tam ſuper dote quam. &amp;c. vide to-<lb type="nb"/>tum titulum. 11. partita. 4.</item>
+<item><lb/>Pactis inter emptorem &amp; venditorem, vide. l. 38. &amp;<lb/>42. cum alijs ibi. titu. 5. part. 5. l. 7. titu. 10. part. 3.</item>
+<item><lb/>Pactis pignorum, vide ex. l. 4. titu. 5. part. 5.</item>
+<item><lb/>Paganis &amp; templis eorum, vide titu. 23. part. 7. &amp;. titu. 25. part. 7. &amp;. l. 2. ti-<lb type="nb"/>tulo. 14. partita prima.</item>
+<item><lb/>Partu pignoris, vide titulum. 13. part. 5.</item>
+<item><lb/>Patria poteſtate, vide titulum. 17. part. 4. &amp;. l. 3. titu. 19. parti. 4. &amp;. l. 9. titu<lb/>lo. 8. part. 7. l. 2. titu. 2. l. 9. titu. 4. part. 3.</item>
+<item><lb/>Patribus qui filios diſtraxer. vide ex. l. 8. titu. 17. part. 4. &amp;. l. tertia. titu-<lb type="nb"/>lo decimotertio. partita quinta.</item>
+<item><lb/>Peculio eius qui libertatem meruit, vide. l. 90. titu. 18. part. 3.</item>
+<item><lb/>Pedaneis iudicibus, vide. l. 18. cum alijs ibi. titu. 4. part. 3.</item>
+<item><lb/>Poena iudicis qui male iudicauit, vide. l. 24. 25. 26. &amp;. 27. titul. 22. parti. 3. l.<lb/>52. titu. 14. part. 5.</item>
+<item><lb/>Pœnis, vide titulum. 31. &amp; tit. 8. part. 7.</item>
+<item><lb/>Per quas perſonas nobis acquiritur, vide legem quintam. titulo. 17. parti.<lb/>4. l. 3. 4. 11. &amp;. 12. cum alijs ibi. tit. 30. par. 3. l. 2. tit. 1. par. 5. &amp;. l. 13. tit. 6. p. 6.</item>
+<item><lb/>Periculo &amp; commodo roi venditæ, vide. l. 23. 24. 32. &amp;. 39. cum alijs ibi. tit.<lb/>5. l. fina. tit. 2. par. 5. l. fi. tit. 23. part. 3.</item>
+<item><lb/>Periculo tutorum, vide in tit. 16. part. 6.</item>
+<item><lb/>Petitione hæreditatis, vide ex. l. 4. tit. 14. part. 6.</item>
+<item><lb/>Pignoratitia actione, vide tit. 13. part. 5. l. 8. tit. 3. l. 3. tit. 2. part. 5. l. 16. titulo<lb/>29. part. 3.</item>
+<item><lb/>Pignoribus &amp; hipothecis, vide tit. 13. part. 5. &amp;. l. 70. tit. 18. part. 3. l. 17. &amp;. l.<lb/>27. tit. 29. l. 46. tit. 2. part. 3.</item>
+<item><lb/>Plus valere quod agitur. &amp;c. vide. l. 40. poſt medium. titulo vndecimo.<lb/>partita quinta.</item>
+<item><lb/>Plus petitionibus, vide. l. 42. cum ſequentibus. tit. 2. part. 3.</item>
+<item><lb/>Poſtliminio reuerſis, vide tit. 29. part. 2.</item>
+<item><lb/>Poſthumis hæredibus inſtit. vide. l. 20. cum ſequentibus. tit. 1. &amp; tit. 3. par.<cb xml:id="W0063-J-0006-cb2"/><lb/>6. vide. l. fin. tit. 23. part. 4.</item>
+<item><lb/>Poſtulando, vide totum tit. 6. part. 3. &amp;. l. 33. tit. 14. part. 5.</item>
+<item><lb/>Præcibus imperatori oſſerend. vide titulum. 24. partita tertia. &amp;. l. 33. tit.<lb/>18. partita tertia.</item>
+<item><lb/>Præcijs &amp; alijs rebus minorum, vide legem. 18. tit. 16. parti. 6. &amp;. l. quarta.<lb/>titu. 5. part. 5.</item>
+<item><lb/>Præſcriptione longi tempo. quæpro libertate. &amp;c. vide. l. 6. &amp;. l. 23. &amp;. 24.<lb/>tit. 29. part. 3.</item>
+<item><lb/>Præſcriptione longi temporis. 10. vel. 20. annorum. vide. l. 18. cum alijs il-<lb type="nb"/>lius tituli. titu. 29. part. 3.</item>
+<item><lb/>Præſcriptione. 30. vel. 40. annorum. vide legem ſextam. cum alijs ibi. ti-<lb type="nb"/>tu. 29. part. 3.</item>
+<item><lb/>Præſcriptis verbis, vide ſupra in rubrica. C. de rerum permu.</item>
+<item><lb/>Prætorio pignore, vide. l. 13. cum alijs ibi. tit. 13. part. 5.</item>
+<item><lb/>Priuilegio dotis, vide tit. 11. part. 4. &amp;. l. 33. tit. 13. part. 5.</item>
+<item><lb/>Priuilegio fiſci, vide. l. 25. 29. &amp;. 33. tit. 13. part. 5.</item>
+<item><lb/>Priuatis carceribus, vide. l. 15. tit. 29. part. 3.</item>
+<item><lb/>Probationibus, vide tit. 14. part. 3.</item>
+<item><lb/>Procuratoribus, vide tit. 5. part. 3.</item>
+<item><lb/>Pro hærede, vide. l. 9. 12. &amp;. 18. cum alijs ibi. tit. 29. parts. 3. l. 54. titulo quin-<lb type="nb"/>to. partita quinta.</item>
+<item><lb/>Pro emptore, vide ex. l. 11. tit. 29. part. 3.</item>
+<item><lb/>Prohibita ſequeſtratione, vide tit. 9. part. 3.</item>
+<item><lb/>Pro quibus cauſis ſerui pro præmio libert. accipi. video. l. 9. tit. 2. par. 3. l. 51.<lb/>tit. 18. part. 3. l. 3. tit. 1. part. 7. vide tit. 27. part. 2.</item>
+<item><lb/>Pro ſocio, vide tit. 10. part. 5.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>Q</head>
+<item><lb/><hi rend="init">Q</hi><hi rend="sp">VANDO</hi> liceat vnicuique ſine intl. ſe vendit. vide<lb/>l. 3. in medio tit. 8. &amp;. l. 2. tit. 29. part. 7.</item>
+<item><lb/>Quando ciuilis actio. &amp;c. vide in rubrica de ordine cogni<lb/>tionum, &amp; in rubrica de ordine iudiciorum. ſupra.</item>
+<item><lb/>Quando libellus principi datus facit litis conteſtationẽ.<lb/>vide. l. fin. tit. 10. part. 3.</item>
+<item><lb/>Quadriennij præſcriptione, vide. l. 53. tit. 5. part. 5. &amp; tit. 29. part. 3.</item>
+<item><lb/>Quando dies legati cedat, vide tit. 9. part. 6.</item>
+<item><lb/>Quando ex facto tutoris, vide ex. l. 3. tit. 1. part. 5. l. 60. titulo. 18. parti. 3. vi.<lb/>titu. 16. part. 6.</item>
+<item><lb/>Quando Imperator inter pupillum &amp; viduam, vide. l. 20. tit. 23. l. 5. tit. 3. l.<lb/>41. tit. 18. part. 3. l. 3. tit. 10. part. 2.</item>
+<item><lb/>Quando liceat ab emptione diſcedere, vide legem ſeptimam. titu. 5. l. 7.<lb/>titu. 7. part. 5.</item>
+<item><lb/>Quando liceat vnicuique ſine iudice ſe vindicare, vide. l. 3. in medio, titu.<lb/>8. l. 2. tit. 29. part. 7.</item>
+<item><lb/>Quando mulier tutelæ officio ſungi poteſt, vide. l. 4. &amp;. 9. tit. 16. part. 6. l.<lb/>31. tit. 11. part. 5. l. 95. tit. i8. part. 3.</item>
+<item><lb/>Quando prouocare non eſt neceſſe, vide tit. 23. part. 3. &amp;. l. 3. &amp;. 4. titul. 26.<lb/>part. 3. l. 15. tit. 11. part. 3. l. 1. 13. 17. 24. &amp;. 25. tit. 22. part. 3.</item>
+<item><lb/>Quando tutores vel curatores eſſe deſinant, vide legem. 21. titulo decimo<lb/>ſexto. part. 6.</item>
+<item><lb/>Quæ in fraudem creditorum, vide legen, ſeptimam. cum alijs ibi. titu. 15.<lb/>partita quinta.</item>
+<item><lb/>Que madmodum teſlamenta aperiantur, vide tit. 2. part. 6. l. 17. tit. 2. l. 103.<lb/>in fin. tit. 18. &amp; ibi. l. 12. part. 3.</item>
+<item><lb/>Que res vendi non poſſunt, vide tit. s. part. 5.</item>
+<item><lb/>Quæ res exportari non debeant, vide. l. 22. tit. 5. part. 5. &amp;. l. 4. tit. 21. parti.<lb/>4. l. 31. tit. 21. part. 2.</item>
+<item><lb/>Quæ res pignori obligari poſſ. vel non, vide. l. 2. &amp;. 4. &amp;. l. 14. cum ſequen<lb/>tibus. tit. 13. part. 5. &amp;. l. 3. tit. 27. part. 3.</item>
+<item><lb/>Quæſtionibus, vide tit. 30. part. 7. l. 5. tit. 13. l. 8. &amp;. 9. tit. 2. l. 13. tit. 16. part. 3.<lb/>l. 3. tit. 1. part. 7. l. 26. tit. 14. part. 7.</item>
+<item><lb/>Quæ ſit longa conſuetudo, vide legem quartam. &amp; totum illum titulum<lb/>ſecundum. part. 1.</item>
+<item><lb/>Qui accuſare non poſſunt, vide titulum primum. part. 7. l. 4. tit. 10. part. 3.<lb/>l. 4. tit. 2. part. 3.</item>
+<item><lb/>Qui admitti ad bonorum poſſeſſ. poſſunt. &amp;c. vide quod dixi ſupra in<lb/>rubrica de bonorum poſſeſsione.</item>
+<item><lb/>Quibus ad libertatem proclamare non licet, vide in. l. 1. in ve. bo LA<lb/>SEXTA. titu. 9. part. 3.</item>
+<item><lb/>Quibus ex cauſis in integ. reſlit. non eſt neceſſa. vide legem nonam. titu.<lb/>19. l. 15. titulo ſeptimo. l. 4. titulo octauc. l. penultima. titu. fin. parti. 6.<lb/>l. 8. titu. 29. part. 3.</item>
+<item><lb/>Quibus cauſis pignus vel hypote. tacitè contraha. vide legem. 25. titul. 13.<lb/>l. 9. tit. 3. part. 5.</item>
+<item><lb/>Quibonis ccdere poſſunt, vide tit. 15. part. 5.</item>
+<item><lb/>Quibus ex cauſis ſerui pro præmio liber. accip. vide. l. 9. tit. 2. part. 3. l. 51. ti<lb/>tu. 18. part. 3. l. 3. tit. 1. part. 7. vide tit. 27. part. 2. vide. l. 3. tit. 22. part. 4.</item>
+<item><pb n="[7]" xml:id="W0063-J-0007" facs="W0063-J-0007"/><cb xml:id="W0063-J-0007-cb1"/><lb/>Quibus ex cauſis maiores. vide legem duodecimam. titu. 7. l. 10. &amp;. 11. tit.<lb/>23. parti. 3.</item>
+<item><lb/>Quibus non obijciatur longi temporis præſcrip. vide ex. l. 28. tit. 29. part.<lb/>3. &amp;. l. 9. tit. 19. part. 6.</item>
+<item><lb/>Quibus res iudicata non noceat, vide. l. 20. &amp;. 21. tit. 22. part. 3.</item>
+<item><lb/>Quibus vt indignis, vide. l. 13. 15. &amp;. 16. cum alijs ibi. titu. 7. l. 23. titu. 1. l. 2. ti<lb/>tu. 12. part. 6. l. fina. tit. 11. l. 7. &amp;. 8. tit. 3. part. 6. l. 32. tit. 9. par. 6. l. 25. ad fi.<lb/>titu. 5. part. 3.</item>
+<item><lb/>Qui dare tutores vel curatores poſſ. vide tit. 16. part. 6.</item>
+<item><lb/>Qui ætate ſe excuſent, vide tit. 17. part. 6.</item>
+<item><lb/>Qui legitimam perſonam ſtandi in iudi. &amp;c. vide. l. 7. &amp;. 9. &amp;. 11. titu. 2. l. 2.<lb/>tit. 25. l. 12. tit. 22. part. 3.</item>
+<item><lb/>Quj morbo ſe excuſant, vide. l. 2. tit. 17. par. 6.</item>
+<item><lb/>Qui non poſſunt ad libertatem perue. vide. l. 46. tit. 5. part. 5.</item>
+<item><lb/>Qui numero liberorum ſe excuſant, vide tit. 17. part. 6.</item>
+<item><lb/>Qui numero tutelarum ſe excuſant vide. l. 2. ad fi. tit. 17. part. 6.</item>
+<item><lb/>Qui potiores in pignoré habeantur, vide. l. 27. cum alijs illius tituli. titul.<lb/>13. part. 5. &amp; in. l. 11. tit. 14. part. 3.</item>
+<item><lb/>Qui pro ſua iuriſdictione. &amp;c. vide. l. 17. &amp;. l. 19. cum alijs ibi. tit. 4. l. 21. tit.<lb/>23. part. 3.</item>
+<item><lb/>Qui petant tutores, vide. l. 12. cum alijs ibi. tit. 16. part. 6.</item>
+<item><lb/>Qui teſtamenta facere poſſunt, vide. l. 13. cum alijs ibi. tit. 1. part. 6. l. 16. ti-<lb type="nb"/>tu. 1. part. 1. l. 32. tit. 16. part. 3.</item>
+<item><lb/>Quod metus cauſa, vide. l. 56. tit. 5. part. 5. l. 15. tit. 2. part. 4. &amp; tit. 10. partit.<lb/>7. l. 4. tit. 14. part. 7. l. 2. tit. 25. part. 3.</item>
+<item><lb/>Quomodo, &amp; quando iudex, vide tit. 22. part. 3. l. 33. tit. 14. part. 5. l. 6. tit. 8.<lb/>l. 6. tit. 16. part. 3. l. 10. tit. 23. part. 3.</item>
+<item><lb/>Quorum appellationes no recipiantur, vide. l. 11. 13. &amp;. 16. titul. 23. partit. 3.<lb/>l. 3. tit. 27. l. 52. in fine. tit. 18. part. 3.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>R</head>
+<item><lb/><hi rend="init">R</hi><hi rend="sp">APTV</hi> virginum, vide tit. 19. &amp; tit. 20. part. 7. l. 2. titu.<lb/>29. &amp;. l. 2. tit. 31. part. 7.</item>
+<item><lb/>Rebus creditis, vide tit. 11. part. 3.</item>
+<item><lb/>Rebus alienis non alienandis, vide. l. 53. &amp;. 54. tit. 5. parti.<lb/>5. l. 10. tit. 33. part. 7.</item>
+<item><lb/>Receptis arbitris, vide. l. 23. cum alijs ibi. tit. 4. part. 3.</item>
+<item><lb/>Rei vendicatione, vide legem ſecundam, &amp; totum illum titulum tertiũ.<lb/>partita. 3. l. 25. 38. 39. &amp;. 40. cum alijs ibi. titu. 28. l. 10. titu. 30. l. 9. titul. 29.<lb/>parti. 3. l. 8. l. 30. l. 27. cum alijs ibi. titulo. 2. parti. 3. l. 5. &amp;. l. fi. tit. 10. parti.<lb/>3. l. 49. &amp;. l. 50. cum alijs ibi. tit. 5. l. 8. tit. 3. l. 19. tit. 5. part. 5. l. 13. titu. 7. par<lb/>ti. 3. l. 7. in fin. tit. 7. l. 9. tit. penult. part. 7.</item>
+<item><lb/>Rei vxoria actione, vide legem. 30. cum alijs illius tituli, titul. vndecimo<lb/>part. 4. l. 23. tit. 13. part. 5.</item>
+<item><lb/>Reiudicata, vide tit. 22. part. 3. l. 1. tit. 27. part. 3.</item>
+<item><lb/>Relationibus, vide. l. 11. tit. 22. &amp;. l. 15. tit. 23. part. 3. &amp; in. l. 5. in medio titul.<lb/>5. partita prima.</item>
+<item><lb/>Religioſis &amp; ſumptibus funerum, vide titulum. 13. part. 1. l. 12. tit. 5. parti. 6.<lb/>l. 14. tit. 28. part. 3.</item>
+<item><lb/>Rem alienam gerentibus, vide. l. 33. tit. 13. part. 5. cum alijs.</item>
+<item><lb/>Remiſsione pignoris, vide. l. 40. tit. 13. part. 5.</item>
+<item><lb/>Bepudianda hæreditate, vide legem vndecimam. 12. &amp;. l. 18. &amp;. l. fi. titu. 6.<lb/>partita ſexta.</item>
+<item><lb/>Repudijs, videtir. 10. part. 4. l. 8. tit. 1. l. 23. tit. 11. part. 4. l. 1. tit. 16. part. 3. l. 5.<lb/>6. &amp;. 7. tit. 8. part. 4.</item>
+<item><lb/>Reputationibus, vide. l. 2. tit. 25. part. 3. &amp;. l. 56. tit. 5. part. 5.</item>
+<item><lb/>Requirendis reis, vide legem ſeptimam. cum alijs ibi. tit. 8. part. 3. &amp; titul.<lb/>29. part. 7.</item>
+<item><lb/>Rerum amotarum, vide. l. 5. tit. 2. part. 3.</item>
+<item><lb/>Rerum permutatione, vide tit. 6. part. 5. l. 66. tit. 18. part. 3.</item>
+<item><lb/>Reſcindenda venditione, vide. l. 56. &amp;. 62. cum alijs ibi. tit. 5. par. 5. &amp;. l. 16.<lb/>in fi. tit. 11. part. 4. l. 2. verbo, ESA MISMA, tit. 25. part. 3. l. 20.<lb/>&amp;. 21. tit. 9. part. 6. l. 25. tit. fin. part. 7. l. 2. tit. 4. part. 4. l. 2. tit. 8. part. 5.</item>
+<item><lb/>Reſtitutio in integrum poſtulata nil nouifiat, vide. l. 2. ad fi. tit. 25. parti.<lb/>3. vide tit. 18. &amp; tit. 19. part. 6.</item>
+<item><lb/>Reſtitutionibus militum, vide. l. 28. tit. 29. part. 3. l. 12. tit. 2. part. 3. l. 49. tit.<lb/>13. part. 5.</item>
+<item><lb/>Resinter alios acta, vide. l. 20. tit. 22. part. 3.</item>
+<item><lb/>Reuocandis his quæ in fraud. credit. &amp;c. vide. l. 7. tit. 15. part. 5.</item>
+<item><lb/>Reuocandis donationibus, vide. l. 8. 5. &amp;. 10. cum alijs ibi. tit. 4. part. 5.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>S</head>
+<item><lb/><hi rend="init">S</hi><hi rend="sp">ACROSANCTIS</hi> eccleſijs, vide legem. 65. titulo<lb/>quarto. l. 51. &amp;. 54. titulo. 6. part. 1. l. 20. titulo fina. partita. 3.<lb/>l. 17. tit. 1. part. 6. l. 63. tit. 18. part. 3. l. 2. tit. 14. part. 2. l. 3. titu. 1.<lb/>part. 5. l. 26. tit. 31. part. 3. l. 26. tit. 29. part. 3.</item>
+<item><cb xml:id="W0063-J-0007-cb2"/><lb/>Satiſdando, vide legem. 21. ad fin. &amp; lege. 14. &amp;. 24. titulo quinto. partita<lb/>tertia.</item>
+<item><lb/>Secundis nuptijs, vide tit. 12. part. 4. &amp;. l. 26. tit. 13. part. 5.</item>
+<item><lb/>Seditioſis, vide legem penultimam. ad fin. tit. 18. partita prima. l. 16. titul.<lb/>23. partit. 3.</item>
+<item><lb/>Senatuſconſultũ Macedonianum, vide. l. 4. 5. &amp;. 6. cum alijs ibi. tit. 1. par<lb/>ti. 5. &amp;. l. 2. tit. 15. l. 30. tit. 13. l. 12. tit. 14. l. penult. tit. 3. part. 5. l. 7. tit. 17. par<lb/>ti. 4. l. 12. in fin. tit. 33. part. 1.</item>
+<item><lb/>Senatuſconſultum Velleianum, vide legem tertiam. cum alijs ibi. titu. 12.<lb/>part. 5. l. 58. &amp;. l. 68. titulo. 18. parti. 3. l. 7. &amp;. l. 17. titulo. 11. part. 4. l. 3. titu<lb/>lo. 7. part. 3.</item>
+<item><lb/>Sententijs quæ ſine certa quantitate proferuntur, vide. l. 5. &amp;. 16. in fine ti<lb/>tu. 22. part. 3.</item>
+<item><lb/>Sententijs præfectorum prætorio, vide. l. fi. titulo. 24. l. 17. &amp;. l. 19. titu. 23.<lb/>partita tertia.</item>
+<item><lb/>Sententijs ex breuiculo recitandis, vide legem quintam. &amp;. 6. &amp;. l. 25. tit.<lb/>22. part. 3.</item>
+<item><lb/>Sententijs &amp; interlocutionibus omnium iudicum, vide titulum vigeſsi-<lb type="nb"/>mum ſecundum. parti. 3. l. 4. in fine. l. 20. in fine tit. 4. l. 3. tit. 26. l. 8. titu<lb/>lo. 10. part. 3.</item>
+<item><lb/>Sententijs quæ pro eo quod intereſt proferuntur, vide. l. 70. tit. 18. part. 3<lb/>&amp; tit. 22. part. 3.</item>
+<item><lb/>Sententiam reſcindi non poſſe. l. 2. &amp;. 3. &amp;. l. 20. titulo vigeſsimo ſecundo<lb/>l. 9. &amp;. l. fina. &amp;. l. 8. titulo. 3. partita tertia. l. 12. tit. 1. part. 7. l. 5. titulo. 24.<lb/>part. tertia.</item>
+<item><lb/>Sententiam paſsis &amp; reſtitutis, vide. l. 1. in fine. &amp;. l. 2. tit. 32. part. 7. l. fina.<lb/>tit. 6. part. 6. l. 1. tit. 25. part. 3.</item>
+<item><lb/>Separationibus bonorum. iſta rubrica legitur ſub rubrica &amp; titu. C. de<lb/>bonis authoritate iudicis poſsidend. &amp; ibi ſun. ll. part. concord.</item>
+<item><lb/>Sepulchro violato, vide ex lege. 12. titulo nono. partita ſeptima. l. 14. &amp; fi.<lb/>titu. 13. partita prima. l. 3. titu. 23. partita ſeptima. l. 9. &amp;. l. 13. titulo duo-<lb type="nb"/>decimo. part. 7.</item>
+<item><lb/>Seruitutibus &amp; aqua, vide legem quartam &amp; quintam. 11. 15. &amp; ſequentes<lb/>&amp; omnes illius tituli. titu. 31. part. 3. l. 18. &amp;. 19. &amp;. 25. cum alijs ibi. titulo<lb/>32. part. 3.</item>
+<item><lb/>Seruo pignoridato manumiſſo. vide. l. 37. tit. 13. part. 5.</item>
+<item><lb/>Suruis fugitiuis. vide. l. 23. cum ſequentibus. tit. 14. part. 7.</item>
+<item><lb/>Si aduerſus rem iudicatam. &amp;c. vide tit. 25. part. 3. l. 16. tit. 11. part. 3. &amp;. l. 8.<lb/>tit. 6. part. 3.</item>
+<item><lb/>Si aduerſus venditionem, vide. l. 5. in medio. &amp;. l. 6. titu. 19. part. 6. l. 16. in<lb/>princi. titu. 11. part. 3.</item>
+<item><lb/>Si aduerſus venditionem pignorum, vide legem. 47. cum alijs ibi. titulo<lb/>13. partr. 5.</item>
+<item><lb/>Si aduerſus donationem, vide tit. 19. part. 6.</item>
+<item><lb/>Si aduerſus libertatem, vide legem ſextam, poſt medium tit. 19. part. 6. l.<lb/>fina. tit. 25. part. 3.</item>
+<item><lb/>Si aduerſus tranſactionem, vide legem quintam, in medio tit. 19. parti. 6.<lb/>l. 2. tit. 25. part. 3.</item>
+<item><lb/>Si aduerſus ſolutionem, vide dictum tit. 19. part. 6.</item>
+<item><lb/>Si aduerſus delictum, vide dictum titulum. 19. &amp; dictum titulum. 25. par-<lb type="nb"/>tita tertia.</item>
+<item><lb/>Si aduerſus vſucapionem, vide ibidem.</item>
+<item><lb/>Si aduerſus creditorem, vide. l. 17. &amp;. l. 27. titulo. 29. partita. 3. l. 3. tit. 1. l. 29.<lb/>titu. 13. part. 5.</item>
+<item><lb/>Si alienares pignori data ſit, vide. l. 8. tit. 13. part. 5.</item>
+<item><lb/>Si à non competente iudice, vide legem. 15. titulo. 22. partita tertia. &amp; ibi<lb/>l. 17. ad finem. &amp;. l. quarta. titulo. 26. par. 3. l. 32. verbo <hi rend="sp">LA NOVE<lb/>NA</hi>. titu. 2. part. 3.</item>
+<item><lb/>Si antiquior creditor pignus vendiderit, vide legem. 34. &amp;. l. 46. titul. 13.<lb/>partita quinta.</item>
+<item><lb/>Si communis res pignori data ſit, vide. ll. tit. 13. part. 5.</item>
+<item><lb/>Si contra ius vel vtilitatem publicam. &amp;c. vide. l. 29. 36. &amp;. 38. 53. &amp;. 57. cum<lb/>alijs ibi. tit. 18. part. 3. l. 6. tit. 16. part. 3.</item>
+<item><lb/>Si certum peratur, vide tit. 1. part. 5. &amp;. l. 70. tit. 18. part. 3.</item>
+<item><lb/>Si de momentanea poſſeſsione fuerit appellatũ, vide legem. 27. tit. 2. &amp;<lb/>titulo. 23. part. 3.</item>
+<item><lb/>Si dos conſtante matrimonio. &amp;c. vide. ll. tit. 11. part. 4.</item>
+<item><lb/>Si ex falſis inſtrumentis. &amp;c. vide totum titu. 26. par. 3. l. 34. in fine titu. 4.<lb/>part. 3. l. 116. tit. 18. l. 13. verbo, <hi rend="sp">E OTROS</hi> l. tit. 22. part. 3.</item>
+<item><lb/>Si ex pluribus tutoribus, vide legem vndecimam. &amp;. l. 17. tit. 16. parti. 6.<lb/>l. 24. tit. 11. part. 3.</item>
+<item><lb/>Si in communi eadem que cauſa in integrum reſtitutio. &amp;c. vide legem<lb/>5. tit. 23. part. 3.</item>
+<item><lb/>Si in cauſa iudicati pign. captum ſit, vide legem. 44. titu. 13. part. 5. l. 52. ti-<lb type="nb"/>tu. 5. part. 5.</item>
+<item><lb/>Si mancipium ita fuerit alienatum vel manumittatur, vide. l. 45. cum ſe-<lb type="nb"/>quentibus. tit. 5. part. 5.</item>
+<item><lb/>Si mancipiumita venie. ne proſtituatur, vide legẽ. 4. tit. 22. par. 4. l. 47.<pb n="[8]" xml:id="W0063-J-0008" facs="W0063-J-0008"/><cb xml:id="W0063-J-0008-cb1"/><lb/>titulo. 5. part. 5.</item>
+<item><lb/>Si in fraudem patroni, vide. l. 10. &amp;. 11. tit. 22. part. 4.</item>
+<item><lb/>Si minor ſe ab hæreditate abſtinuerit, vide. l. 18. &amp;. l. 13. in fine titu. 6. par.<lb/>6. l. 7. tit. 19. part. 6.</item>
+<item><lb/>Si minor ſe maiorem dixerit, vide. l. 6. tit. 19. part. 6. l. 1. in fin. tit. 10. part.<lb/>3. l. 4. tit. 1. part. 5. facit. l. 115. tit. 18. part. 3.</item>
+<item><lb/>Sine cenſu vel reliquis fundum compa. non poſſe. vide. l. 59. tit. 5. part. 5.<lb/>&amp;. l. 22. in medio tit. 31. part. 3.</item>
+<item><lb/>Si pendente appellatione mors interuenerit, vide. l. 28. titu. 23. l. 2. verbo,<lb/><hi rend="sp">E ESTO</hi> tit. 8. part. 3. l. 23. tit. 1. part. 7.</item>
+<item><lb/>Si per vim vel alio modo. &amp;c. vide legem. 3. titu. fin. part. 1. l. 8. &amp;. 9. titul. 2.<lb/>part. 3. l. 3. tit. 1. part. 7.</item>
+<item><lb/>Si pignus pignori datum ſit, vide legem trigeſsimam quintam. &amp;. 36. tit.<lb/>13. partita. 5.</item>
+<item><lb/>Si pignoris conuentionem numeratio. &amp;c. vide in. d. tit. 13.</item>
+<item><lb/>Si propter publicas penſitation. vide legem. 52. titulo quinto. parti. quin<lb/>ta. l. 1. ibi <hi rend="sp">ESTANDO DELANTE</hi>. iuncta ibi. l. 3. titul. 25.<lb/>partita tertia.</item>
+<item><lb/>Si plures vna ſententia condemnati ſint, vide ex lege quarta. titulo. 27.<lb/>partita tertia.</item>
+<item><lb/>Si quacum que præditus poteſtate. &amp;c. vide. l. 6. tit. 7. part. 3.</item>
+<item><lb/>Si quis aliquem teſtari prohibuerit, vide legem. 26. &amp;. l. 27. titulo primo.<lb/>partita ſexta. &amp; legẽ quartã. ad finem titul. 7. l. 2. titulo octauo. parti-<lb type="nb"/>ta ſexta.</item>
+<item><lb/>Si quis alteri vel ſibi. &amp;c. vide. l. 48. &amp;. 49. tit. 5. part. 5.</item>
+<item><lb/>Si quis Imperatorem maledixerit, vide gloſſ. 1. 2. 3. 4. &amp;. 5. titu. 13. part. 2. l.<lb/>6. tit. 2. par. 7.</item>
+<item><lb/>Si rector prouinciæ vel ad eum pertinentes. &amp;c. vide legem ſecundam. ti<lb/>tulo. 14. part. 4.</item>
+<item><lb/>Si reus vel accuſator mortuus fuerit, vide. l. 7. tit. 8. l. 28. tit. 23. part. 3. vide<lb/>l. 7. &amp;. 8. &amp;. l. 23. tit. 1. part. 7.</item>
+<item><lb/>Si quis eam cuius tutor fuerit corruperit. &amp;c. vide legem ſextam. titulo<lb/>decimo ſeptimo. part. 6.</item>
+<item><lb/>Si ſecundo nupſerit mulier, vide. l. 3. tit. 12. part. 4.</item>
+<item><lb/>Si ſæpius in integrum reſtitutio poſtuletur, vide legem ſextam. in medio<lb/>titu. 19. part. 6.</item>
+<item><lb/>Si ſeruus extero. &amp;c. vide. l. 7. tit. 10. part. 3.</item>
+<item><lb/>Si ſeruus exportandus veniat, vide. l. 47. tit. 5. part. 4.</item>
+<item><lb/>Si tutor vel curator reipublicæ cauſa aberit, vide tit. 19. part. 6.</item>
+<item><lb/>Si tutor vel curator interuenerit, vide titulum. 19. par. 6. &amp;. l. 59. titulo. 18.<lb/>partita tertia.</item>
+<item><lb/>Si tutor vel curator non geſsit, vide ibidem, &amp; in lege octaua. titulo vigeſ<lb/>ſimoſecundo. part. 4.</item>
+<item><lb/>Si tutor ex falſis allegationibus excuſatus ſit, vide titulum. 17. par. 6. &amp;. l.<lb/>8. tit. 23. part. 3.</item>
+<item><lb/>Si vendito pignore agatur, vide legem. 48. 49. 50. &amp;. 54. titulo decimoter<lb/>tio. part. 5.</item>
+<item><lb/>Si vnus ex pluribus appellauerit, vide. l. 21. ad fin. titu. 22. l. 5. titulo vigeſ-<lb type="nb"/>ſimotertio. part. 3.</item>
+<item><lb/>Si vt omiſſam hæreditatem vel bonorũ poſſeſsionem. &amp;c. vide. l. 13. l. 18.<lb/>&amp;. l. fin. titu. 6. l. 1. tit. 5. par. 6.</item>
+<item><lb/>Si minor ſe ab hæreditate abſtineat, vide. l. 13. &amp;. l. 18. &amp;. l. fin. tit. 6. l. 10. ti-<lb type="nb"/>tu. 5. part. 6.</item>
+<item><lb/>Soluto matrimonio, vide. l. 16. 18. 20. &amp;. 30. cum alijs ibi. titulo vndecimo<lb/>partita quarta.</item>
+<item><lb/>Solutionibus &amp; liberationibus. vide tit. 14. part. 5. l. 17. tit. 2. l. 81. titul. 18. l.<lb/>29. ad fin. titu. 29. part. 3.</item>
+<item><lb/>Sponſalibus, vide tit. 1. part. 4. l. 1. tit. 11. part. 4.</item>
+<item><lb/>Statuis &amp; imaginibus, vide legem ſecundam. &amp;. 3. tit. 1. part. 1. l. 51. titulo<lb/>18. part. 3.</item>
+<item><lb/>Suis &amp; legitimis, vide titu. 13. parti. 6. l. 9. ad finem titul. 16. partita quarta.<lb/>&amp; ibi. l. 8.</item>
+<item><lb/>Summa trinitate &amp; fide catholica, vide tit. 3. part. 1.</item>
+<item><lb/>Suſpectis tutoribus, vide tit. 18. part. 6.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>T</head>
+<item><lb/><hi rend="init">T</hi><hi rend="sp">ABVLIS</hi> exhibendis, vide titu. 2. part. 6.</item>
+<item><lb/>Temporibus in integrum reſtitu. tam minorum. &amp;c. vi.<lb/>de. l. 8. in medio tit. 19. part. 6.</item>
+<item><lb/>Temporibus &amp; reparationibus appellationum. &amp;c. vi-<lb type="nb"/>de legem decimamtertiam. &amp;. 23. 24. &amp;. l. 8. &amp;. l. 27. ti-<lb type="nb"/>tulo. 23. l. fina. tit. 15. l. 18. tit. 22. part. 3. l. 5. &amp;. l. 39. tit. 16.<lb/>part. 3. l. fin. tit. 26. part. 3. l. 31. tit. 9. part. 6.</item>
+<item><lb/>Teſtamentaria tutela, vide tit. 16. part. 6.</item>
+<item><lb/>Teſtamento militis, vide. l. 4. tit. 1. part. 6. cum alijs ibi. l. 5. 6. 7. &amp;. l. 13. tit.<lb/>5. part. 6.</item>
+<item><lb/>Teſtamentis &amp; quemadmodum teſtamenta ordinentur, vide titulum<cb xml:id="W0063-J-0008-cb2"/><lb/>primum. part. 6.</item>
+<item><lb/>Teſtamentaria manu miſsione, vide ibidem.</item>
+<item><lb/>Teſtibus, vide tit. 16. part. 3.</item>
+<item><lb/>Tranſactionibus, vide legem decimam quartam. 15. &amp;. 102. titulo. decimo<lb/>octauo. part. 3. l. 24. titulo. 4. l. 33. &amp;. 34. titulo. 14. part. 3. l. 30. titulo. 11. l.<lb/>33. titulo. 5. partita. 5. l. 19. titulo. 5. l. 23. l. 9. tit. 11. part. 3. l. 15. titulo. 2. parti.<lb/>4. l. 7. titulo. 8. partita prima. l. 5. titulo. 24. partita. 3. l. 19. &amp;. l. 20. verbo<lb/><hi rend="sp">OTROSI</hi>. titulo. 22. part. 3. l. 12. tit. 1. part. 7. l. 13. cum ſequentib.<lb/>tit. 9. part. 4. l. 34. tit. 14. part. 5.</item>
+<item><lb/>Tutoribus &amp; curatoribus illuſtrium. &amp;c. vide tit. 15. part. 6.</item>
+<item><lb/>Tutoribus &amp; curatoribus qui non ſatis dederunt, vide. l. 9. in medio titu.<lb/>16. &amp;. l. 1. tit. 18. part. 6.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>V</head>
+<item><lb/><hi rend="init">V</hi><hi rend="sp">BI</hi> cauſæ fiſcales, vide legem nonam. titulo ſecundo. l.<lb/>7. titulo octauo. l. 5. titulo quinto. partita. 3. l. 14. titulo<lb/>7. part. 6.</item>
+<item><lb/>Vbi conueniatur qui certo loco dare. &amp;c. vide. l. 32. titu<lb/>2. parti. 3.</item>
+<item><lb/>Vbi de ratiocinis. vi. l. 32. in fi. tit. 2. par. 3. l. 61. tit. 5. par. 1.</item>
+<item><lb/>Vbi de hæreditate agitur, vel vbi hæres. &amp;c. vide. l. fi. tit. 9. part. 6.</item>
+<item><lb/>Vbi de criminibus agi oporteat, vide. l. 15. cum alijs ibi. tit. 1. part. 7.</item>
+<item><lb/>Vbi de poſſeſsio. agi oporteat, vide. l. 15. tit. 1. part. 7.</item>
+<item><lb/>Vbi, &amp; apud quem cognitio in integrum reſtitu. agitanda. l. 8. tit. 19. p. 6.</item>
+<item><lb/>Vbi fidei commiſſum peti oporteat, vide legem finalem. titulo nono.<lb/>part. 6. &amp;. l. 15. tit. 1. part. 7. l. 32. tit. 2. part. 3.</item>
+<item><lb/>Vbi in rem actio exerceri debeat, vide legem. 29. 30. &amp;. 32. titulo ſecũdo.<lb/>partita. 3. &amp;. l. 6. titulo. 8. partita. 3. l. 57. titulo. 6. partita prima. l. fina. in<lb/>principio tit. 9. part. 6.</item>
+<item><lb/>Vbi petantur tutores vel curatores, vide. l. 12. tit. 16. part. 6.</item>
+<item><lb/>Vbi pupillus educari debet, vide. l. 19. tit. 16. part. 6.</item>
+<item><lb/>Vbi quis decuriali. &amp;c. vide. l. 15. ad finem. titulo. 1. par. 7. l. 3. tit. 2. part. 3.</item>
+<item><lb/>Vbi ſenatores vel clariſsimi, vide. l. 32. tit. 2. part. 3. l. 15. tit. 1. part. 7. l. final.<lb/>tit. 14. part. 4.</item>
+<item><lb/>Vectigalia noua inſtitui non poſſe, vide. l. 9. titulo. 7. partita quinta. l. 2.<lb/>titulo. 1. part. 2.</item>
+<item><lb/>Vectigalibus &amp; commiſsis, vide legem quintam. 6. 7. &amp;. 9. titu. 7. parti. 5.<lb/>l. 11. titu. 28. part. 3.</item>
+<item><lb/>Verborum &amp; rerum ſignifica. vide tit. 33. part. 7.</item>
+<item><lb/>Vibenorum raptorum, vide tit. 13. part. 7.</item>
+<item><lb/>Vindicta libertate &amp; apud. &amp;c. vide titulum. 22. partita. 4. &amp;. l. 90. titulo<lb/>18. part. 3.</item>
+<item><lb/>Vnde legitimi. &amp;c. vide tit. 13. part. 6.</item>
+<item><lb/>Vnde vir &amp; vxor, vide. l. 23. ad fin. titu. 11. part. 4. l. 9. tit. 31. part. 7. l. 7. titu.<lb/>13. part. 6. &amp;. ibi. l. 6.</item>
+<item><lb/>Vnde vi, vide legem ſeptimam. cum alijs ibi. titulo decimo. partita. 7. &amp;<lb/>tit. 8. part. 7. l. 20. &amp;. 21. titulo ſecundo. l. 9. titu. 7. part. 3. l. 4. tit. 8. l. 2. tit.<lb/>11. part. 3.</item>
+<item><lb/>Vuſucapione pro emptore, vide. l. 11. tit. 29. part. 3.</item>
+<item><lb/>Vſucapione pro donato. vide in. d. tit. 29. part. 3.</item>
+<item><lb/>Vſucapione pro hærede, vide legem nonam. 12. &amp;. 18. titulo. 29. partit. 3. l.<lb/>54. tit. 5. part. 5.</item>
+<item><lb/>Vſucapione transformanda, vide. l. 9. &amp;. l. 18. tit. 29. part. 3. l. 9. &amp;. l. 12. ibi-<lb type="nb"/>dem. l. 54. tit. 5. part. 5.</item>
+<item><lb/>Vſufructu &amp; habitatione, vide legem. 21. cum alijs ibi. titul. 31. part. 3. l. 36.<lb/>37. 40. &amp;. 42. tit. 28. part. 3. l. 19. &amp;. l. 50. verbo, <hi rend="sp">FINALI</hi>. tit. 5. part. 5. l.<lb/>9. tit. 30. part. 3. l. 8. &amp;. l. 30. tit. 2. l. 9. 12. &amp;. 18. tit. 29. part. 3. l. 54. tit. 5. l. 8. ti-<lb type="nb"/>tu. 3. part. 5. &amp;. l. fi. tit. 10. part. 3. cum multis alijs.</item>
+<item><lb/>Vſuris rei iudicatæ, vide. l. 5. tit. 27. part. 3. l. 7. titulo tertio. l. 2. titulo deci-<lb type="nb"/>mo tertio. part. 3.</item>
+<item><lb/>Vſuris, vide. l. 46. cum ſequentibus. tit. 6. part. 1. l. 9. tit. 13. part. 1. l. 39. titu.<lb/>2. part. 3. l. 5. ad fin. iuncta. l. 8. tit. 3. part. 5.</item>
+<item><lb/>Vſuris pupillaribus, vide in illo tit. 19. part. 6.</item>
+<item><lb/>Vſuris &amp; fructibus legatorum, vide legem. 37. cum alijs ibi. titulo nono<lb/>partita ſexta.</item>
+<item><lb/>Vt in poſſeſsionem legatorum. &amp;c. vide. tit. 9. par. 6.</item>
+<item><lb/>Vt intra certum tempus quæſtio criminalis terminetur, vide. l. 7. ad fin.<lb/>tit. 29. part. 7. l. 9. tit. 6. part. 6. l. 3. tit. 15. part. 3.</item>
+<item><lb/>Vt nemo inuitus agere vel accuſare cogatur, vide legem. 46. titulo ſecun<lb/>do. partita. 3.</item>
+<item><lb/>Vt lite pendente. &amp;c. vide tit. 23. part. 3. &amp; aliqua in titu. 22.</item>
+<item><lb/>Vt omnes iudicestam ciuiles quam militares poſt adminiſt. &amp;c. vide. l. 1.<lb/>tit. 16. part. 3. l. 6. titu. 4. l. 12. tit. 5. l. 1. tit. 20. partita tertia. l. 6. titu. 22. l. 6.<lb/>titu. 18. part. 3.</item>
+<item><lb/>Vt quæ deſunt aduocatis. &amp;c. vide tit. 6. part. 3.</item>
+<item><lb/>Vt nemini liceat ſine iudi. ſe vindic, vide. l. 3. in medio tit. 8. &amp;. l. 2. titulo<lb/>29. partita ſeptima.</item>
+</list>
+</item>
+</list>
+</div1>
+<div1 type="index">
+<p rend="hx"><pb n="[9]" xml:id="W0063-J-0009" facs="W0063-J-0009"/><cb xml:id="W0063-J-0009-cb1"/><lb/>ff. Veteris.</p>
+<list type="index"><item>
+<list type="index">
+<head><lb/>A.</head>
+<item><lb/><hi rend="init">A</hi><hi rend="sp">CTIONIBVS</hi> empti, vid. titul. 5. par. 5. l. 3. tit.<lb/>14. ibi. l. 56. &amp;. l. 65. cum alijs ibi. tit. 18. par. 3.</item>
+<item><lb/>Adoptionibus, vid. tit. 16. par. 4. &amp;. l. 7. &amp;. 8. tit. 7.<lb/>l. 12. &amp; 13. tit. 2. par. 4. &amp;. l. 92. &amp;. 93. titulo. 18. par-<lb type="nb"/>tita. 3. l. 9. &amp;. 10. titulo. 5. partita. 6.</item>
+<item><lb/>Adexhibendum, vid. l. 16. cum ſequentibus. tit. 2.<lb/>par. 3. l. 19. tit. 13. par. 5. l. 18. 35. &amp;. 38. tit. 28. part. 3.<lb/>l. 10. tit. 14. par. 7. l. 2. titu. 31. par. 3. l. 7. tit. 22. par.<lb/>3. columna. 3. verſic. Eſſo miſmo.</item>
+<item><lb/>Ad legem Aquiliam, vid. titulum. 15. par. 7.</item>
+<item><lb/>Ad legem Rodiam de iactu. vid. l. 3. 12. &amp;. 13. tit. 9. par. 5.</item>
+<item><lb/>Ad ſenatus conſult. Macedonian. vid. l. 4. 5. &amp;. 6. cum alijs ibi. titu. 1. par.<lb/>5. l. 2. titu. 15. l. 30. tit. 13. l. 12. titulo. 14. l. penult. titu. 3. part. 5. l. 6. &amp;. 7. tit.<lb/>17. part. 4. l. 12. in fine. titu. 23. par. 1.</item>
+<item><lb/>Ad ſenatus conſult. Velleian. vi. l. 3. &amp;. l. 13. cum alijs abi. tit. 12. par. 5. l. 58.<lb/>&amp;. l. 68. tit. 18. l. 3. titul. 7. partita. 3. l. 7. &amp;. l. 17. tit. 11. par. 4.</item>
+<item><lb/>Edilitio edicto, vid. l. 65. &amp;. 66. titu. 5. l. 4. titu. 6. part. 5. l. 65. titu. 18. part. 3.<lb/>&amp;. l. 56. ibidem. &amp;. l. 4. in fine. tit. 16. par. 4. l. 38. titulo. 9. part. 6. l. 1. &amp;. 2.<lb/>titulo quinto. partita. 4.</item>
+<item><lb/>Aleæ luſu &amp; aleatoribus, vid. l. 6. tit. 14. par. 7. l. 57. titu. 5. part. 1.</item>
+<item><lb/>Alienatione iudicij mutandi cauſa facta, vid. l. 30. tit. 2. l. 47. titulo. 18. l. 15.<lb/>tit. 7. part. 3. l. 18. titu. fi. par. 7.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>C.</head>
+<item><lb/><hi rend="init">C</hi>Alamniatoribus, vide. l. 21. &amp;. 22. titulo. 1. partita. 7. l. 20.<lb/>tit. 14. l. 2. titu. 13. l. 3. titulo. 16. par. 7.</item>
+<item><lb/>Capitis diminutione, vid. ex. l. 18. titu. 1. part. 6. l. fin. tit.<lb/>31. par. 3. l. 34. titu. 34. part. 7.</item>
+<item><lb/>Certi condictione. vid. tit. 1. par. 5. l. 70. tit. 18. par. 3.</item>
+<item><lb/>Communia prædiorum, vid. l. 2. in fine. &amp; ibi. l. 10. cum<lb/>ſequentibus. tit. 3i. par. 3. l. 7. tit. 10. par. 3. l. fin. tit. 14. par. 3. l. 4. titulo. 2.<lb/>par. 1. l. 15. titulo nono. partita. 6.</item>
+<item><lb/>Commodati, vid. titul. 2. part. 5. &amp;. l. 71. tit. 18. par. 3. l. 4. tit. 3. l. 20. tit. 13. par<lb/>tita. 5. l. 7. in fine. tit. 9. par. 6. l. 27. tit. 11. par. 3. l. 4. tit. 4. part. 5. l. 19. tit. 22.<lb/>l. 27. tit. 11. par. 3. l. 30. tit. 14. l. 8. tit. 8. l. fi. tit. 3. par. 5.</item>
+<item><lb/>Communi diuidundo, vid. l. 10. &amp; totum illum titulum. 15. par. 6. l. 16. ti-<lb type="nb"/>tu. 22. par. 3. l. 55. titulo. 5. par. 5.</item>
+<item><lb/>Compenſationibus, vid. l. 20. cum ſequentibus. tit. 14. par. 5.</item>
+<item><lb/>Condictione cauſa data, &amp;c. vid. l. 41. cum pluribus ſequentibus. titulo<lb/>14. partita. 5.</item>
+<item><lb/>Condictione ob turpem cauſam, vid. l. 47. 52. 53. &amp;. 54. cum alijs ibi. titu.<lb/>14. part. 5. l. 27. tit. 22. par. 3.</item>
+<item><lb/>Condictione indebiti, vid. l. 28. cum ſequentibus. tit. 14. par. 5.</item>
+<item><lb/>Condictione ſine cauſa, vid. 41. &amp;. 43. cum alijs ibi. tit. 14. par. 5. l. 19. titu.<lb/>22. par. 3. l. 9. tit. 8. par. 5. l. 10. tit. 33. par. 7.</item>
+<item><lb/>Condictione furtiua, vid. l. 20. cum alijs ibi. tit. 14. par. 7.</item>
+<item><lb/>Condictione ex lege. 17. &amp;. l. 45. titul. 2. par. 3. l. 81. titulo. 18. l. 40. titul. 28.<lb/>partita. 3.</item>
+<item><lb/>Condictione triticaria, vide. l. 3. titulo. 14. l. octaua. in fine. titulo primo.<lb/>partita quinta.</item>
+<item><lb/>Conſtitutionibus Principum, vid. titul. 1. partita. 1. l. 28. &amp;. l. 49. &amp;. l. 2. ti-<lb type="nb"/>tulo. 18. part. 3.</item>
+<item><lb/>Conſtituta pecunia, vid. ex. l. 3. tit. 11. part. 5.</item>
+<item><lb/>Contrahenda emptione &amp; venditione, vid. l. 13. &amp;. l. 15. &amp; totum illum ti-<lb type="nb"/>tul. 5. par. 5. l. 7. tit. 28. par. 3. &amp; ibi. l. 9. 12. &amp;. 37. l. 9. 13. 21. &amp;. 28. titu. 9. par-<lb type="nb"/>tita. 6. l. penult. in proœmio. tit. 1. par. 4. l. 2. tit. 4. par. 4. l. 56. tit. 18. par-<lb type="nb"/>tita. 3. &amp; ibi. l. 35. ad fi. iuncta. l. 65.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>D.</head>
+<item><lb/><hi rend="init">D</hi>Epoſiti, vid. titul. 3. par. 5. &amp;. l. 72. tit. 18. par. 3.</item>
+<item><lb/>Dilationibus, vid. tit. 15. part. 3.</item>
+<item><lb/>Diuortijs, vid. tit. 10. part. 4.</item>
+<item><lb/>Diſtractione pignorum, vid. tit. 13. par. 5. vſque ad. l. 44.<lb/>&amp; fi. in fine. tit. 27. &amp;. l. 7. tit. 18. par. 3.</item>
+<item><lb/>Dolo malo, vid. titul. 16. partita. 7.</item>
+<item><lb/>Donationibus inter virum &amp; vxorem, vid. l. 4. &amp;. l. 39. &amp; per totum titu-<lb type="nb"/>lum. 11. partita. 4.</item>
+<item><lb/>Edendo, vid. l. 40. &amp; totum titul. 2. part. 3. l. fin. titul. 15. partit. 3. l. 112. &amp;. l.<lb/>55. tit. 18. part. 3. l. 9. 10. &amp;. 12. tit. 19. l. 17. in fi. titulo. 2. part. 3. l. 10. titu. 14.<lb/>par. 3. l. 15. tit. 8. par. 5.</item>
+</list>
+</item>
+<item><list type="index">
+<head><cb xml:id="W0063-J-0009-cb2"/><lb/>E.</head>
+<item><lb/><hi rend="init">E</hi>Oper quem factum erit quominus &amp;c. vid. l. 12. cum alijs<lb/>ibi. titulo. 23. par. 3.</item>
+<item><lb/>Eo quod certo loco, vide. l. 32. tit. 2. partita tertia. l. fin. tit.<lb/>1. l. 1. tit. 2. part. 5. l. penul. tit. 11. par. 4.</item>
+<item><lb/>Eo quod metus cauſa, vid. l. 56. tit. 5. par. 5. l. 15. tit. 2. par. 4.<lb/>&amp; totum. tit. 10. par. 7. l. 4. tit. 14. par. 7. l. 2. tit. 25. part. 3.</item>
+<item><lb/>Euictionibus, vid. l. 32. cum ſequentibus. titulo. 5. part. 5. l. 15. tit. 1. par. 7.</item>
+<item><lb/>Exceptione rei vendita, vid. in dict. tit. 5. par. 5.</item>
+<item><lb/>Exercitoria actione, vid. ex. l. 7. &amp; ibi. l. 3. titulo. 1. par. 5. l. 18. &amp;. 19. titu. 5.<lb/>par. 3. l. 77. tit. 18. partita. 3.</item>
+<item><lb/>Ex quibus cauſis maiores, vid. l. 12. titul. 7. par. 3. l. 10. tit. 23. part. 3.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>F.</head>
+<item><lb/><hi rend="init">F</hi>Amiliæ herciſcundæ, vid. titu. 15. par. 6. l. 7. verſi. Otroſi,<lb/>el. 2. &amp;. l. 2. tit. 10. partita. 3. &amp;. l. 17. verſicu. Eſſe miſmo.<lb/>titul. 2. part. 3.</item>
+<item><lb/>Ferijs &amp; dilationibus, vid. l. 33. titu. 2. par. 3.</item>
+<item><lb/>Fide inſtrumentorum, vid. tit. 18. &amp; tit. 19. par. 3. l. 1. tit. 20.<lb/>par. 3. l. 15. titu. 11. par. 3. l. 7. tit. 15. par. 6.</item>
+<item><lb/>Finium regundorum, vid. l. 10. &amp; totum illum tit. 15. par. 6. &amp;. l. 30. tit. 14.<lb/>part. 7. &amp;. l. 39. &amp;. 40. tit. 28. par. 3. l. 7. tit. 17. l. 15. &amp;. l. penult. tit. fin. par.<lb/>3. l. 20. tit. 2. part. 3. l. 8. &amp;. l. 13. tit. 14. par. 3.</item>
+<item><lb/>Fundo dotali, vid. l. 19. &amp; totum illum tit. 11. par. 4.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>H.</head>
+<item><lb/><hi rend="init">H</hi>AEreditate vel actione vendita. vid. l. 64. tit. 18. partit. 3.<lb/>&amp; tit. 5. par. 5.</item>
+<item><lb/>His qui deiecerunt, vel effuderunt, vide. l. 25. titulo. 15.<lb/>partita. 7.</item>
+<item><lb/>His qui notantur infamia, vid. tit. 5. &amp;. 6. par. 7.</item>
+<item><lb/>His qui ſunt ſui, vel alieni iuris, vid. l. 6. titu. 21. &amp; in. l. 4.<lb/>titulo. 22. partita. 4.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>I.</head>
+<item><lb/><hi rend="init">I</hi>N diem adiectionem, vid. l. 40. tit. 5. par. 5.</item>
+<item><lb/>In ius vocan. vid. tit. 7. par. 3. &amp;. l. 7. cum alijs ibi. tit. 2. p. 3.</item>
+<item><lb/>In litem iurando, vide. l. 5. cum alijs ibi. titulo. 11. part. 3. l.<lb/>8. tit. 3. partit. 5. l. 8. verſic. Otroſi. tit. 1. par. 5. l. 19. cum<lb/>ſequentibus. titu. 2. par. 3.</item>
+<item><lb/>Inofficioſo teſtamento, vid. tit. 8. par. 6. l. 11. tit. 4. part. 6.</item>
+<item><lb/>Interrogatorijs actionibus, vid. tit. 10. par. 3. &amp;. l. 11. tit. 11. l. 3. 4. 5. &amp;. 6. titu.<lb/>13. partita. 3.</item>
+<item><lb/>In ius vocati vteant, &amp;c. vid. ex. l. 8. titu. 7. par. 3.</item>
+<item><lb/>In quibus cauſis pignus, vel hypotheca tacite contrahatur, vide. l. 25. &amp;<lb/>26. 28. &amp;. 29. titu. 13. par. 5. l. 9. titulo. 3. partita. 5. l. 5. &amp;. 7. titulo. 8. part. 5.<lb/>l. 1. titulo. 31. partita. 3.</item>
+<item><lb/>Inſtitoria actione, vid. l. 4. 5. 6. &amp;. 7. tit. 1. par. 5.</item>
+<item><lb/>Iudicijs, vid. tit. 4. &amp; tit. 22. 23. &amp;. 27. par. 3. l. 3. tit. 1. par. 7. l. 3. tit. 26. par. 3. l.<lb/>9. tit. 6. par. 6. l. 7. tit. 29. par. 7. l. 8. &amp;. l. 20. tit. 3. par. 5. l. 13. tit. 6. par. 3. l. 7.<lb/>&amp;. 10. titu. 8. l. 8. tit. 7. par. 3. l. 9. tit. 10. part. 7. tit. 2. par. 3.</item>
+<item><lb/>Iudicio finium regundorum, vid. ſupra. in rubr. tit. finium regundorum.</item>
+<item><lb/>Iureiurando, vid. tit. 11. par. 3.</item>
+<item><lb/>Iuris &amp; facti ignorantia, vid. l. 16. 20. &amp;. 21. tit. 1. par. 1. vid. ex. l. 28. titul. 14.<lb/>part. 5. l. 8. tit. 6. l. 1. &amp;. 5. tit. 13. par. 3. l. fin. tit. 6. par. 6. l. 10. &amp;. 11. tit. 2. part.<lb/>4. l. 15. tit. 22. l. 32. tit. 2. par. 3.</item>
+<item><lb/>Iuriſdictione omnium iudicum, vid. tit. 4. par. 3. &amp;. l. 32. titu. 2. l. 12. titu. 22.<lb/>par. 3. l. 57. tit. 6. par. 1. l. fin. tit. 10. par. 3. l. 7. tit. 10. par. 4. cum alijs.</item>
+<item><lb/>Iure doctium, vid. in tit. 11. par. 4.</item>
+<item><lb/>Iuſtitia &amp; iure, vid. tit. 1. partita. 3.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>L.</head>
+<item><lb/><hi rend="init">L</hi>Egibus &amp; conſtitutionibus princip. vid. tit. 1. par. 1.</item>
+<item><lb/>Lege commiſſoria, vid. l. 38. cum ſequentibus. tit. 5. par. 5.</item>
+<item><lb/>Locati &amp; conducti, vid. tit. 8. par. 5.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>M.</head>
+<item><lb/><hi rend="init">M</hi>Andati, vid. l. 25. cum alijs ibi. tit. 5. part. 3. l. 12. &amp;. l. 20. cum alijs<lb/>ibi. tit. 12. part. 5.</item>
+<item><lb/>Minoribus, vid. l. 3. &amp; totum illum titulum. 19. par. 6. &amp; in alijs<lb/>pluribus titulis.</item>
+</list>
+</item>
+<item><list type="index">
+<head><pb n="[10]" xml:id="W0063-J-0010" facs="W0063-J-0010"/><cb xml:id="W0063-J-0010-cb1"/><lb/>N.</head>
+<item><lb/><hi rend="init">N</hi>Aute caupones &amp; ſtabularij, vid. l. 7. titulo decimo quarto.<lb/>partita. 7. &amp;. l. 26. titulo. 8. partita quinta.</item>
+<item><lb/>Negotijs geſtis, vid. l. 26. cum alijs illius tituli. titulo. 12. parti<lb/>ta quinta. l. 7. titulo primo. partita quinta.</item>
+<item><lb/>Noxalibus actionibus, vid. l. 4. titulo. 13. partita. 7. l. 4. tit. 14.<lb/>ibi. &amp;. l. 9. tit. 2. &amp;. l. 16. titulo vigeſimo ſecundo. partita. 3.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>O.</head>
+<item><lb/><hi rend="init">O</hi>Fficio aſſeſſorum, vide titulum. 21. part. 3.</item>
+<item><lb/>Officio eius cui man data eſt iuriſdictio, vid. in tit. 4. par. 3.</item>
+<item><lb/>Officio præfecti vrbis, vide legem. 9. titulo decimo octauo.<lb/>partita. 4. &amp; titu. 4. par. 3.</item>
+<item><lb/>Officio prætoris, vide legem. 8. titulo. 18. partita. 4.</item>
+<item><lb/>Officio præfecti vigilum, vid. l. 20. tit. fina. l. 3. tit. 19. parti. 3.</item>
+<item><lb/>Officio proconſulis &amp; legati, vid. vbi ſuprà. &amp;. l. 1. titulo. 16. &amp;. l. 7. titulo<lb/>18. partita. 3. &amp; in proœmio. titu. 21. part. 3. l. 8. ad fin. titulo. 4. partita. 3.<lb/>&amp;. l. 4. titulo decimo. partita tertia.</item>
+<item><lb/>Officio præſidis, vid. tit. 4. in proœmio. partita. 3. &amp;. l. 13. tit. 14. l. 10. tit. 32.<lb/>par. 3. l. 2. tit. 23. part. 2. l. 1. tit. 17. par. 3. l. 5. tit. 1. par. 7. l. 24. tit. 5. partita. 3.</item>
+<item><lb/>Officio procuratoris cæſaris, vide. l. 15. ad finem. titulo ſexto. partita ſex-<lb type="nb"/>ta. cum alijs diuerſis.</item>
+<item><lb/>Officio queſtoris, vid. l. 10. titulo. 18. partita quarta.</item>
+<item><lb/>Operis ſeruorum, vid. l. 26. tit. 11. partita quarta. &amp;. l. 4. titulo. 14. partit. 6.<lb/>l. 8. &amp;. 9. titulo vigeſimoſecundo. partita. 4.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>P.</head>
+<item><lb/><hi rend="init">P</hi>Actis, vid. l. 29. &amp; per totum titulum. 11. partita. 5.</item>
+<item><lb/>Pactis detalibus, vide titulum. 11. partita. 4.</item>
+<item><lb/>Periculo &amp; commodo rei venditæ, vide. l. 23. 24. 32. &amp;. 39. cũ<lb/>alijs ibi. tit. 5. l. fin. tit. 2. part. 5. l. fi. titu. 23. par. 3.</item>
+<item><lb/>Petitione hæreditatis, vid. ex. l. 4. titu. 14. part. 6.</item>
+<item><lb/>Pignoribus &amp; hypothecis, vid. titulum. 13. part. 5. l. 70. tit. 18. partit. 3. l. 17.<lb/>&amp;. l. 27. tit. 29. l. 46. titulo ſecundo. partita tertia.</item>
+<item><lb/>Pignoraticia actione, vid. tit. 13. partita quinta. l. 8. titulo tertio. l. 3. titulo<lb/>ſecundo. partita quinta.</item>
+<item><lb/>Poſtulando, vide titulum ſextum. partita. 3.</item>
+<item><lb/>Publiciana in rem actione, vid. ex. l. 13. titulo. 11. partita. 3. l. 50. titulo. 5.<lb/>partita. 5. l. 47. titulo vigeſimo octauo. partita tertia.</item>
+<item><lb/>Probationibus, vide titulum decimum quartum. partita. 3.</item>
+<item><lb/>Procuratoribus &amp; defenſſoribus, vid. titul. 5. part. 3.</item>
+<item><lb/>Proſotio, vide titulum. 10. partita quinta.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>Q.</head>
+<item><lb/><hi rend="init">Q</hi>Væ res pignori obligari poſſunt, vel non, vide. l. 2. &amp;. l. 14.<lb/>cum ſequentibus. titulo. 13. partita. 5.</item>
+<item><lb/>Quemadmodum ſeruitutes amittantur, vide legem. 16. ti-<lb type="nb"/>tulo trigeſimo primo. partita. 3.</item>
+<item><lb/>Qui potiores in pign. habeant. vid. l. 27. cum alijs ibi. titu.<lb/>lo. 13. par. 5. l. 11. titulo. 14. l. 9. titulo. 3. partita. 5.</item>
+<item><lb/>Qui ſatis dare cogantur, vide. l. 41. cum ſequentibus. tit. 2. l. 1. titulo. 9. par<lb/>tita. 3. l. 23. titulo. 4. l. 27. titulo. 11. partita. 3.</item>
+<item><lb/>Quibus modis pign. vel hypoth. ſolu. vid. l. 67. tit. 5. l. 3. titu. 14. part. 5.</item>
+<item><lb/>Quibus ex cauſis maiores, vid. l. 12. titu. 7. par. 3.</item>
+<item><lb/>Quibus modis vſusfruct. amit. vid. l. 24. cum ſequen. tit. 31. par. 7.</item>
+<item><lb/>Quod quiſ&#xE8BF;iuris, &amp;c. vide. l. 25. titu. 22. part. 3. &amp;. l. 2. ad fin. cum alijs ibi.<lb/>titu. 11. partita tertia.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>R.</head>
+<item><lb/><hi rend="init">R</hi>Ebus creditis ſicer. pet. vid. tit. 1. par. 5. &amp;. l. 70. titulo deci<lb/>mo octauo. partita tertia.</item>
+<item><lb/>Receptis arbitris, vi. ex. l. 23. cum alijs ibi. tit. 4. p. 3. l. 106.<lb/>l. 56. l. 70. tit. 8. l. 2. tit. 7. l. 17. tit. 22. par. 3. l. 5. in medio.<lb/>titu. 22. l. 43. titulo. 2. l. 4. in fine. titulo. 17. partita. 3.</item>
+<item><lb/>Rei vendicatione, vid. in iſta eadem rubri. in rubricis. C.</item>
+<item><lb/>Religioſis &amp; ſumptibus funerum, vide titulum. 13. partita. 1. l. 12. titulo. 5.<lb/>partita. 6. l. 14. tit. 28. partita tertia.</item>
+<item><lb/>Rerum diuiſione, vid. l. 3. cum ſequentibus. tit. 28. part. 3.</item>
+<item><lb/>Rerum permutatione, vid. tit. 6. par. 5. &amp;. l. 66. titulo. 18. part. 3.</item>
+<item><lb/>Reſcindenda venditione, vid. l. 56. &amp;. 62. cum alijs ibi. titulo. 5. par. 5. l. 16.<lb/>in fine. tit. 11. l. 2. titul. 4. par. 4. l. 2. verſic. Eſſa miſma. tit. 25. par. 3. l. 20.<lb/>&amp;. 21. tit. 9. part. 6. l. 25. tit. fin. par. 7. l. 2. titulo. 8. part. 5.</item>
+<item><lb/>Reſtitutio in integrum, vid. titul. 25. partita. 3. l. 4. titul. 22. l. 2. titulo. 26.<cb xml:id="W0063-J-0010-cb2"/><lb/>partita tertia. l. 10. titul. 23. partita. 3.</item>
+<item><lb/>Ritu nuptiarum, vid. l. 8. cum alijs ibi. tit. 11. par. 4. vid. tit. 22. par. 7.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>S.</head>
+<item><lb/><hi rend="init">S</hi>Enatoribus, vid. l. 4. tit. 4. cum alijs ibi. titu. 4. part. 3. l. 7.<lb/>in fine. tit. 2. par. 4. &amp; in ſumma. &amp; in. l. fi. tit. 13. part. 4.</item>
+<item><lb/>Seruis ex portandis velſi mancipium ita venierit vel ma<lb/>numitatur vel contra, vid. l. 45. &amp;. 47. titu. 5. part. 5.</item>
+<item><lb/>Seruitutibus, vide totum titulum, 31. part. 3. l. 18. 19. &amp;. 25.<lb/>cum alijs ibi. titu. 32. par. 3.</item>
+<item><lb/>Seruitutibus vrbanorum prædiorum, vid. l. 2. &amp;. l. 13. tit. 31. part. 3.</item>
+<item><lb/>Seruitutibus ruſticorum, vid. l. 3. cum alijs ibi. tit. 31. par. 3.</item>
+<item><lb/>Seruo corrupto, vid. l. 25. 27. &amp;. 29. tit. 14. l. 16. tit. 15. part. 7.</item>
+<item><lb/>Seruis fugitiuis, vid. l. 23. cum ſequentibus. tit. 14. par. 7.</item>
+<item><lb/>Sponſalibus, vid. tit. 1. par. 4. &amp;. l. 1. tit. 11. part. 4.</item>
+<item><lb/>Statu hominum, vid. tit. 21. &amp; titu. 23. partita. 4.</item>
+<item><lb/>Si ager vectigal. vel emphyteut. petatur, vid. l. penul. &amp; fi. tit. 8. part. 5.</item>
+<item><lb/>Si certum petatur, vid. tit. 1. par. 5. &amp;. l. 70. tit. 18. part. 3.</item>
+<item><lb/>Si menſor falſum modum dixerit, vid. l. 8. tit. 7. par. 7. l. 19. ad fin. titul. 5.<lb/>l. 7. titulo decimo nono. partita tertia.</item>
+<item><lb/>Si ſeruitus vendicetur, vid. l. 2. 12. &amp;. 13. &amp; per totum illum titulum. 31. par.<lb/>3. &amp; in. l. 7. tit. 10. l. 21. tit. 22. l. 1. &amp;. 11. tit. 30. l. 2. tit. 31. par. 3.</item>
+<item><lb/>Si vſusfructus petatur, vid. in dict. tit. 31. partita tertia.</item>
+<item><lb/>Si qua drupes pauperiem feciſſe dicatur, vi. l. 22. &amp;. l. 7. cum alijs ibidem.<lb/>titulo decimo quinto. partita ſeptima.</item>
+<item><lb/>Si quisius dicenti non obtem perauerit, vid. l. 8. titulo. 7. partita. 3.</item>
+<item><lb/>Si quis cautionibus, vid. l. 33. cum alijs ibi. titu. 11. par. 5. l. 27. titulo. 11. par.<lb/>3. l. 11. titulo. 7. partita. 3. l. 2. titu. 34. par. 7. l. 17. titulo. 11. partita. 3. l. 8. tit.<lb/>2. par. 3. l. 2. in fine. titulo. 22. part. 3.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>T.</head>
+<item><lb/><hi rend="init">T</hi>Eſtibus, vide in titulo decimoſexto. partita. 3.</item>
+<item><lb/>Tranſactionibus, vid. iltam rubricam in eadem rubric. C.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>V.</head>
+<item><lb/><hi rend="init">V</hi>Sufructu &amp; quemadmodum quis vtatur, &amp;c. vi. tit. 31. par. 3.</item>
+<item><lb/>Vſufructu accreſcendo, vid. in. d. tit. 31. &amp; in. l. tit. 6. par. 6.</item>
+<item><lb/>Vſufructu earum rerum, &amp;c. vid. ibidem.</item>
+<item><lb/>Vſu &amp; habitatione, vide in iſta, &amp; eadem rubrica in. C.</item>
+<item><lb/>Vſusfructuarius quemadmodum caueat, vid. l. 20. tit. 31. part. 3.</item>
+<item><lb/>Vſuris, vid. l. 39. titu. 2. part. 3. l. 5. ad fi. &amp;. l. 8. titulo. 3. partita. 5.</item>
+</list>
+</item>
+</list>
+</div1>
+<div1 type="index">
+<p rend="hx"><lb/>Ex. ff. Infortiato.</p>
+<list type="index">
+<item><list type="index">
+<head><lb/>A.</head>
+<item><lb/><hi rend="init">A</hi>Cquirenda hæreditate, vid. l. 11. vſque ad finem il<lb/>lius titul. 6. partita. 6.</item>
+<item><lb/>Actione rerum amotarum, vid. l. 5. titulo. 2. par. 3.<lb/>&amp;. l. 4. titulo decimo quarto. partita. 7.</item>
+<item><lb/>Adimendis legatis, vi. l. 17. &amp;. 21. 37. 39. &amp;. 40. cum<lb/>alijs ibi. tit. 9. &amp;. 13. titu. 7. par. 6.</item>
+<item><lb/>Ad legem falcidiam, vid. tit. 11. partit. 6.</item>
+<item><lb/>Adminiſtratione tutorum, vid. l. 11. &amp;. l. 15. &amp; totũ<lb/>illum tit. 16. par. 6. l. 4. tit. 5. l. 23. titulo. 13. part. 5.</item>
+<item><lb/>Ad ſenatus conſultum ſillanianum, vid. l. 8. cum alijs ibi. titu. 7. partit. 6.</item>
+<item><lb/>Ad ſenatus conſultum trebellian. vid. l. 8. cum alijs ibi. tit. 11. part. 6. &amp;. l.<lb/>fi. in fin. titulo. 5. partita. 6.</item>
+<item><lb/>Ad Tertullianum, vid. l. 12. titul. 16. par. 6. l. 14. tit. 14. partita. 3.</item>
+<item><lb/>Alimentis &amp; cibarijs legatis, vide legem vigeſimamquartam. cum alijs<lb/>ibi. titulo nono. partita ſexta.</item>
+<item><lb/>Annuis legatis, vid. ex. l. 24. tit. 9. part. 6.</item>
+<item><lb/>Authoritate tutorum, vid. l. 17. in medio. tit. 16. l. 13. poſt medium. titu. 6.<lb/>par. 6. &amp;. l. 7. tit. 2. part. 3. l. 14. tit. 5. par. 5.</item>
+<item><lb/>Auro &amp; argento legato. vid. ex. l. 23. titu. 9. part. 6.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>B.</head>
+<item><lb/><hi rend="init">B</hi>Onis libertorum, vid. l. 10. &amp;. 11. tit. 22. l. 1. tit. 4. par. 4. l. 2. tit. 4. l. 5. tit.<lb/>8. l. 2. titul. 7. par. 6. l. 6. titulo. 33. par. 7.</item>
+<item><lb/>Bonorum poſſeſsione contra tabulas, vid. in tit. 7. par. 6.</item>
+<item><pb n="[11]" xml:id="W0063-J-0011" facs="W0063-J-0011"/><cb xml:id="W0063-J-0011-cb1"/><lb/>Bonorum poſſeſſ. ſecundum tabulas, vid. in. d. titulo. 7. partita. 6. &amp;. l. 10.<lb/>tit. 5. l. 8. tit. 6. l. 18. verſic. La tercera. titulo. 1. par. 7.</item>
+<item><lb/>Vide quæ dixi in rubrica iſta in rubricis Codicis.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>C.</head>
+<item><lb/><hi rend="init">C</hi>Arboniano edicto, vid. l. 7. tit. 22. par. 3. l. 2. titu. 14. par. 6.</item>
+<item><lb/>Collatione bonorum, vid. l. 3. cum alijs ibi. tit. 15. partita ſex<lb/>ta. l. prima. verſic. La quinta. titulo nono. partita tertia.<lb/>l. 10. verſic. E cautio. tit. 33. p. 7. l. 1. tit. 11. par. 4.</item>
+<item><lb/>Collatione dotis, vid. l. 3. tit. 15. par. 6. &amp;. l. 1. tit. 11. par. 4.</item>
+<item><lb/>Concubinis, vid. l. 1. &amp;. 2. tit. 14. &amp;. l. 1. tit. 15. par. 4.</item>
+<item><lb/>Condictionibus &amp; demonſtra. vid. l. 1. &amp; per totum illum tit. 4. part. 6. &amp;<lb/>ex. l. 1. tit. 4. part. 4. l. 19. tit. 6. l. 21. tit. 9. par. 6. l. 26. tit. 15. l. 14. &amp;. l. 22. ti-<lb type="nb"/>tul. 11. par. 5. l. fi. titul. 4. par. 4. l. 12. tit. 9. par. 6. l. 5. tit. 2. part. 4.</item>
+<item><lb/>Conditionibus inſtitution. vid. l. 3. cum alijs ibi. titu. 4. partita ſexta. &amp;<lb/>totum titulum quartum. partita. 4. cum alijs legibus de quibus ſuprà<lb/>in rubrica. de condi. &amp; de monſt.</item>
+<item><lb/>Conſirmando tutore, vel curatore, vide. l. 6. 8. &amp;. 14. cum alijs ibi. título<lb/>16. partita. 6.</item>
+<item><lb/>Contraria &amp; vtili actione tutelæ, vid. tit. 16. part. 6.</item>
+<item><lb/>Curatore furioſi, vid. l. 13. cum alijs ibi. titulo. 16. part. 6.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>D.</head>
+<item><lb/><hi rend="init">D</hi>Ote prælegata, vide legem. 13. &amp;. 18. cum alijs ibi. titulo nono. parti.<lb/>da ſexta.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>E.</head>
+<item><lb/><hi rend="init">E</hi>Xcuſationibustut. vid. titulum. 17. partita. 6. l. 13. ad fin. &amp;. l. 14. titulo<lb/>decimoſexto. partita. 6.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>F.</head>
+<item><lb/><hi rend="init">F</hi>Ideiuſſoribus &amp; nominatoribus, &amp;c. vide titulum. 12. part. 5. l. 21. in fi-<lb type="nb"/>ne. titulo decimoſexto. partita ſexta.</item>
+<item><lb/>Fundo inſtructo, &amp;c. vide titulam nonum. partita ſexta.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>G.</head>
+<item><lb/><hi rend="init">G</hi>Radibus afũnitatis, vide legem tertiam. cum alijs ibi. titulo ſexto.<lb/>partita quarta.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>H.</head>
+<item><lb/><hi rend="init">H</hi>AEredibus inſtituendis, vid. titu. 3. part. 6.</item>
+<item><lb/>His qui in teſtamento delentur, vide. l. 28. &amp;. 39. cum alijs<lb/>ibi. titulo. 6. part. 6. l. 111. &amp;. l. 114. titulo. 18. par. 3. l. 4. titu.<lb/>1. par. 1. l. 10. titulo. 4. par. 3. l. fi. titulo. 4. par. 4.</item>
+<item><lb/>His quæ pro non ſcriptis habentur, vide. l. 4. titulo. 3. partita. 6. &amp;. l. 28. in<lb/>proœmio. &amp;. l. 35. tit. 9. par. 6.</item>
+<item><lb/>His quibus vt indignis, vid. l. 13. &amp;. l. 15. cum alijs ibi. tit. 7. par. 6. &amp;. l. 6. tit.<lb/>11. partita. 6. l. fi. titulo ſecundo. partida. 4.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>I.</head>
+<item><lb/><hi rend="init">I</hi>mpenſisin rebus dotalibus factis, vid. l. 32. titulo. 11. part. 4.<lb/>l. 44. tit. 28. part. 3. l. 10. titulo. 33. partita. 7.</item>
+<item><lb/>Iniuſto rupto irrito que facto teſtamento, vid. ex. l. 21. tit. 1.<lb/>&amp;. l. 2. tit. 4. l. 1. ad fin. titul. 8. l. 10. tit. 7. par. 6. l. 1. titu. 3. l.<lb/>18. &amp;. 19. &amp;. 23. titu. 1. p. 6. l. 2. cum alijs ibi. tit. 2. par. 6.</item>
+<item><lb/>Iure deliberandi, vid. titulo. 6. partita. 6.</item>
+<item><lb/>Iure codi illorum, vid. tit. 12. par. 6. l. 7. &amp;. 8. titulo. 3. l. fin. titulo. 11. part. 6.<lb/>l. 104. titu. 18. l. 2. titulo. 14. partita. 3.</item>
+<item><lb/>Iure patronatus, vid. tit. 15. par. 1. &amp;. l. 3. tit. 2. partita. 3. l. 9. in fi. tit. 22. part.<lb/>4. &amp;. l. 15. titulo. 11. partita. 4.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>L.</head>
+<item><lb/><hi rend="init">L</hi>Egitimis tutoribus, vid. l. 9. &amp;. l. 14. tit. 16. part. 6. &amp; ibi. l. 2.</item>
+<item><lb/>Legatis &amp; fideicommiſsis primo, vid. ex. l. 1. tit. 9. part. 6.</item>
+<item><lb/>Legatis. 2. vid. l. 10. cum ſequentibus. tit. 9. par. 6.</item>
+<item><lb/>Legatis. 3. vid. l. 28. cum ſequentibus. tit. 9. par. 6.</item>
+<item><lb/>Legatis præſtandis, vid. l. 35. &amp;. l. fi. cum alijs ibi. tit. 9. par. 6.</item>
+<item><lb/>Liberatione legata, vid. ex. l. 15. &amp;. 16. &amp;. 19. cum alijs ibi. tit. 9. part. 6. l. 40.<lb/>&amp;. 41. tit. 13. par. 5. l. 30. tit. 11. part. 5. l. 14. tit. 18. par. 3.</item>
+<item><cb xml:id="W0063-J-0011-cb2"/><lb/>Liberis agnoſcendis, vid. tit. 19. part. 4. l. 4. titulo. 17. partita. 4. l. 20. titulo<lb/>22. partita. 3. l. 2. ad fin. l. 35. verſic. Otroſi. titul. 2. partita tertia. l. fina. &amp;<lb/>ibi. l. 3. titulo vigeſimoquarto. partita quarta.</item>
+<item><lb/>Liberis &amp; poſthumis, vid. titul. 7. partita. 6. l. 8. titulo. 17. partita. 4. l. 6.<lb/>titul. 2. partita. 4. l. 2. titulo. 8. partita. 4. l. fin. titulo. 23. partita. 4. l. 12.<lb/>titulo. 3. l. fin. titulo. 7. part. 6. l. 1. titulo. 8. part. 6. cum multis alijs.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>M.</head>
+<item><lb/><hi rend="init">M</hi>llitari teſtamento, vide legem tertiam. cum ſequentibus. titulo pri<lb/>mo. partita ſextt.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>O.</head>
+<item><lb/><hi rend="init">O</hi>Bſequijs patrono præſtandis, vid. l. 8. &amp;. 9. titulo. 22. partita. 4<lb/>l. tertia. titulo. 2. partita. 3. l. 1. &amp;. 2. titulo octauo. partita. 6.</item>
+<item><lb/>Operis libertorum, vide in titulo. 22. partita quarta.</item>
+<item><lb/>Optione legata, vide. l. 23. &amp;. 25. titulo nono. partita. 6.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>P.</head>
+<item><lb/><hi rend="init">P</hi>Eculio legato, vide titulum nonum. partita ſexta.</item>
+<item><lb/>Penu legata, vide titulum nonum. partita ſexta.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>Q.</head>
+<item><lb/><hi rend="init">Q</hi>Vando dies legati cedat, vid. l. 21. &amp;. 31. cum alijs ibi. titulo no-<lb type="nb"/>no. l. 1. titulo quarto. l. 19. titulo. 6. partita. 6. l. 1. titulo quar<lb/>to. l. 3. titulo. 23. partita. 4. l. 26. titulo. 5. l. 14. titulo. 11. part. 5.</item>
+<item><lb/>Quando ex facto tutoris, vel curatoris, &amp;c. vide. l. 15. &amp; totum<lb/>titulũ. 16. partita. 6. l. 49. titulo quinto. partita quinta.</item>
+<item><lb/>Quemadmodum teſtamenta aperiantur, vid. tit. 2. partita. 6. &amp;. l. 17. titu.<lb/>2. l. 25. ad fin. titulo. 11. partita. 3. l. 118. &amp;. 103. &amp;. 112. titulo. 18. partita. 3.</item>
+<item><lb/>Qui petant tutores, vid. l. 12. cum alijs ibi. titulo. 16. partita ſexta.</item>
+<item><lb/>Quod falſo tutores, &amp;c. vid. in dict. titulo decimoſexto. partita ſexta.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>R.</head>
+<item><lb/><hi rend="init">R</hi>Ebus eorum qui ſub tutela, vel cura ſunt, vid. l. 18. titulo. 16. par<lb/>tita. 6. &amp;. l. 4. titulo. 5. par. 5. l. 60. &amp;. l. 62. titulo. 18. partita. 3.</item>
+<item><lb/>Rebus dubijs, vide. l. 2. &amp;. l. 12. cum alijs ibi. titulo. 33. partita. 7<lb/>l. 3. &amp;. l. fina. titulo quinto. partita ſexta. l. 9. titulo nono. par-<lb type="nb"/>tita. 6. l. 1. in fi. &amp;. l. 28. ibidem. l. 25. titulo. 11. part. 5.</item>
+<item><lb/>Regula catoniana, vide titulum nonum. partita ſexta.</item>
+<item><lb/>Rerum amotarum, vid. l. 5. titulo. 2. partita. 3. &amp;. l. 4. titulo. 14. partita. 7.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>S.</head>
+<item><lb/><hi rend="init">S</hi>Enatus conſul. ſillan. vid. ex. l. 13. titulo ſeptimo. par. 6.</item>
+<item><lb/>Seruitute legata, vide. l. 15. cum alijs ibi. titu. 9. partita. 6. &amp; in. l.<lb/>6. &amp;. 8. titulo. 31. par. 3.</item>
+<item><lb/>Si cui plus quam per legem falcidiam, vid. titul. 11. part. 6. &amp;. l.<lb/>10. ibi, Cautio. tit. 33. par. 7. l. 41. titulo. 2. partita. 3.</item>
+<item><lb/>Si mulier ventris nomine in poſſeſsionem calumniæ cauſa, &amp;c. vide. l. 17.<lb/>&amp;. 18. titulo vndecimo. partita tertia.</item>
+<item><lb/>Si quis omiſſa cauſa teſtamenti, &amp;c. vid. l. 21. cum alijs illius tituli. titulo<lb/>tertio. partita. 6:</item>
+<item><lb/>Si quis aliquem teſtare prohibuerit, vide. l. 26. &amp;. 27. titulo. 1. l. 4. ad fin.<lb/>titulo. 7. l. 2. titulo. 8. partita. 6.</item>
+<item><lb/>Soluto matrimonio &amp; quemadmodum, &amp;c. vide totum titulum. 11. par-<lb type="nb"/>tita. 4. &amp;. l. 18. titulo. 34. partita. 7. l. 30. tit. 2. partita. 3. verſic. primo. l. 11.<lb/>titulo. 30. part. 3. l. 4. tit. 14. par. 6. l. 6. titulo. 8. partita. 3.</item>
+<item><lb/>Suis &amp; legitimis hæredibus, vid. tit. 13. partita. 6. l. 21. titulo tertio. partita<lb/>ſexta.</item>
+<item><lb/>Supellectile legata, vid. l. 9. &amp;. l. 28. verſi. Eeſſe miſmo, &amp;c. cum alijs ibi.<lb/>titulo nono. partita ſexta.</item>
+<item><lb/>Suſpectis tutoribus, vid. titulum. 18. part. 3.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>T.</head>
+<item><lb/><hi rend="init">T</hi>Eſtamentaria tutela, vid. l. 1. cum ſequentibus. titulo. 16. part.<lb/>6. l. 104. titulo decimooctauo. partita. 3.</item>
+<item><lb/>Teſtamentis, vid. tit. 1. partita. 6.</item>
+<item><lb/>Tritico vino, &amp; oleo legato, vid. l. 18. &amp;. 23. cum alijs ibi. titu-<lb type="nb"/>lo nono. partita. 6.</item>
+<item><lb/>Tutelis, vide titulum decimumſextum. partita ſexta. &amp;. l. quarta. titulo<lb/>vigeſimonono. partita ſecunda.</item>
+<item><pb n="[12]" xml:id="W0063-J-0012" facs="W0063-J-0012"/><cb xml:id="W0063-J-0012-cb1"/><lb/>Tutoribus, &amp; curatoribus datis ab his, &amp;c. vid. l. 12. cum alijs ibi. titul. 16.<lb/>part. 6. l. 35. titulo. 2. part. 3.</item>
+<item><lb/>Tutelis &amp; rationibus diſtrahendis, vid. in. d. titu. 16. partita. 6. &amp; in. l. 6. ti-<lb type="nb"/>tul. 11. part. 3. l. 5. titulo. 14. partita. 7.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>V.</head>
+<item><lb/><hi rend="init">V</hi>Bi pupillus educari debeat, vid. ex. l. 19. tit. 6. par. 6. l. 24.<lb/>titulo. 9. par. 6. l. 1. titulo. 1. partita. 3.</item>
+<item><lb/>Ventre inſpiciendo, vid. in. l. 17. tit. 6. part. 6. l. 8. titul. 14.<lb/>l. 23. titu. 16. l. 3. tit. 23. part. 4.</item>
+<item><lb/>Ventre in poſſeſsionem mittendo, vid. l. 17. tit. 6. part. 6.<lb/>&amp;. l. 7. verſic. Eſto miſmo. tit. 22. part. 3.</item>
+<item><lb/>Vnde legitimi, vid. tit. 13. par. 6.</item>
+<item><lb/>Vnde cognati, vid. ibidem.</item>
+<item><lb/>Vnde vir &amp; vxor, vid. l. 23. ad fin. tit. 11. partita. 4. &amp;. l. 6. &amp;. 7. titulo. 13. par<lb/>tita. 6. l. 9. titulo. 31. partita. 7.</item>
+<item><lb/>Vſu &amp; vſufructu legato, vid. l. 1. 8. 12. &amp;. 20. tit. 31. partita. 3. &amp;. l. 46. cum a-<lb type="nb"/>lijs, ibi. titul. 9. par. 6. l. 47. titulo. 28. par. 3.</item>
+<item><lb/>Vt legatorum ſeu fideicommiſſorum nomine caueatur, vid. l. 10. verſic.<lb/>E cautio. tit. 33. par. 7. &amp; tit. 9. par. 6.</item>
+<item><lb/>Vulgari &amp; pupillari ſubſtitutione, vid. tit. 5. partita. 6. l. 1. in fin. tit. 9. l. 21.<lb/>&amp;. 22. tit. 1. par. 6. l. 6. verſic. Otroſi. &amp;c. tit. 7. part. 6.</item>
+</list>
+</item>
+</list>
+</div1>
+<div1 type="index">
+<p rend="hx"><lb/>Ex. ff. nouo.</p>
+<list type="index">
+<item><list type="index">
+<head><lb/>A.</head>
+<item><lb/><hi rend="init">A</hi>Bigeis, vid. ex. l. 19. tit. 14. par. 7.</item>
+<item><lb/>Acceptilationibus, vid. tit. 14. part. 5.</item>
+<item><lb/>Accuſationibus &amp; inſcriptionibus, vid. tit. 1. p. 7.</item>
+<item><lb/>Acquirenda poſſeſsione, vid. tit. 30. part. 3. l. 16. ad<lb/>fi. &amp;. l. 7. &amp;. 23. tit. 29. p. 3. l. 23. tit. 14. par. 7. l. 27.<lb/>tit. 2. par. 3. l. 49. &amp;. 50. tit. 28. par. 3. l. 5. tit. 15. l. 20.<lb/>titul. fin. part. 7.</item>
+<item><lb/>Acquirendo rerum dominio, vid. tit. 28. part. 3.</item>
+<item><lb/>Actionibus &amp; obligationibus, vid. tit. 2. part. 3. l. 5. cum alijs. tit. 3. part. 5.</item>
+<item><lb/>Ad legem Corneliam de falſis, vid. titul. 7. par. 7. &amp;. l. 26. tit. 11. l. fi. titu. 16.<lb/>partita. 3. l. fin. titu. 6. part. 3.</item>
+<item><lb/>Ad legem Cornel. de ſicarijs, vid. tit. 8. par. 7. l. fin. titu. 16. l. 26. titulo. 11.<lb/>partita. 3. l. 11. tit. 0. par. 7. l. 25. titulo. 22. part. 3.</item>
+<item><lb/>Ad legem flauiam de plagiarijs, vid. l. 22. titu. 14. par. 7.</item>
+<item><lb/>Ad legem Pompeiam de parricidijs, vid. l. 12. cum alijs ibi. titulo octauo.<lb/>partita ſeptima.</item>
+<item><lb/>Ad legem Iuliam maieſtatis, vid. tit. 2. part. 7.</item>
+<item><lb/>Ad legem Iuliam de adulterijs, vid. tit. 17. part. 7. l. 6. &amp;. l. 8. titulo. 9. par-<lb type="nb"/>tita. 4. l. 2. tit. 14. partita. 4. l. 1. &amp;. 2. titulo. 22. partita ſeptima. l. 2. in fin.<lb/>titulo decimonono. partita. 4.</item>
+<item><lb/>Ad legem Iul. de vi publica, vid. tit. 10. par. 7.</item>
+<item><lb/>Ad legem Iul. de vi priuata, vid in. d. tit. 10. partita. 7.</item>
+<item><lb/>Ad legem Iul. repetundarum, vid. l. 8. l. 11. tit. 1. par. 7.</item>
+<item><lb/>Ad legem Iul. de anona. vid. l. 3. titulo primo. partita ſeptima. &amp;. l. 8. &amp;. 9.<lb/>titulo ſecundo. partita tertia.</item>
+<item><lb/>Ad legem Iuliam peculatus, vid. l. 14. 15. &amp;. 18. titulo decimoquarto. par-<lb type="nb"/>tita. 7. l. 8. &amp;. 9. titulo ſeptimo. partita. 7.</item>
+<item><lb/>Ad legem Iul. de ambitu, vid. l. fi. titulo. 7. partita. 5. l. 5. titulo. 10. part. 7.<lb/>l. 26. in fine. tit. 5. partita. 1. l. 2. titulo. 1. part. 2.</item>
+<item><lb/>Ad municipalem, vid. l. 5. &amp;. l. 32. cum alijs ibi. tit. 2. partita. 3. l. 25. titu. 28.<lb/>partita. 3. l. 22. titulo. 4. partita. 1. l. 4. titulo. 30. partita. 3. l. 5. titulo. 2. par<lb/>tita. 1. l. 20. titulo. part. 3. l. 5. titu. 15. p. 4. l. 27. tit. 11. par. 3.</item>
+<item><lb/>Ad ſenatus conſult. turpillianum, vid. l. 17. cum alijs ibi. titulo. 1. part. 7.<lb/>&amp;. l. 6. titulo. 6. partita. 7.</item>
+<item><lb/>An per alium cauſæ appellationis, &amp;c. vid. l. 3. cum alijs ibi. titulo. 23. par<lb/>tita. 3. l. 12. titu. 5. partita. 3.</item>
+<item><lb/>Appellationibus, vid. tit. 23. partita. 3.</item>
+<item><lb/>Appellationibus recipiendis, vid. l. 4. in fine. &amp;. l. 13. tit. 23. part. 3.</item>
+<item><lb/>Apud eum à quo appellatur, &amp;c. vide. l. 26. in fin. cum alijs ibi. titulo. 23.<lb/>partita tertia.</item>
+<item><lb/>Aqua pluuia arcenda, vid. l. 13. cum ſequentibus. titu. 32. partita. 3.</item>
+<item><lb/>Aqua quotidiana, vid. l. 4. 5. 12. &amp;. 15. cum alijs ibi. titulo trigeſimoprimo.<lb/>partita tertia.</item>
+<item><lb/>Aquibus appellare non liceat, vid. l. 13. &amp;. l. 17. cum alijs ibi. titulo vigeſi<lb/>motertio. partita tertia.</item>
+<item><lb/>A qno appellet quis, vid. l. 20. in fi. &amp;. l. 21. tit. 23. par. 3. l. 1. tit. 27. p. 3.</item>
+<item><lb/>Arboribus cedendis, vid. l. 12. titulo. 32. partita. 3. &amp;. l. fi. verſic. Pero ſi. titu<lb/>lo decimo quinto. partita ſeptima.</item>
+<item><lb/>Arborumfurtim cęſarum, vid. l. 28. tit. 15. par. 7.</item>
+</list>
+</item>
+<item><list type="index">
+<head><cb xml:id="W0063-J-0012-cb2"/><lb/>B.</head>
+<item><lb/><hi rend="init">B</hi>Onis authoritate iudicis poſsidendis, vid. titulum. 8. par<lb/>tita. 3. l. 32. ibi. La ſexta. titulo ſecundo. parti. 3. l. 7. peſt<lb/>principium. titulo quarto. partita tertia. &amp;. l. 14. titul.<lb/>30. partita. 3.</item>
+<item><lb/>Bonis damnatorum, vid. l. 5. cum alijs. ibi. titu. 31. part. 7.</item>
+<item><lb/>Bonis eorum qui ſibi mortem conſci. vid. titulum. 27.</item>
+<item><lb/>partita. 7. &amp;. l. 24. titulo. 1. part. 7.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>C.</head>
+<item><lb/><hi rend="init">C</hi>Adaueribus punitorum, vid. l. 11. tit. 31. p. 7. l. 14. tit. 28. par. 3.</item>
+<item><lb/>Caſtrenſi peculio, vid. l. 6. &amp;. 7. cum ſequentibus. titul. 17. par<lb/>tita. 4. l. 2. titulo. 2. part. 3.</item>
+<item><lb/>Cenſibus, vid. l. 69. titulo. 18. par. 3. &amp; tit. 22. par. 1. l</item>
+<item><lb/>Ceſsione bonorum, vid. titul. 15. part. 5. l. 26. 28. &amp;. 29. tit. 13. par<lb/>tita. 5. l. 9. titulo. 3. partita. 5.</item>
+<item><lb/>Cloacis, vid. l. 7. titulo. 32. partita. 3.</item>
+<item><lb/>Colluſione detegenda. vid. l. 12. 13. 17. &amp;. 19. cum alijs ibi. titulo. 1. partit. 7.<lb/>&amp; totum titulum. 32. par. 7. l. 14. titulo. 9. partita. 4.</item>
+<item><lb/>Confeſsis, vid. titul. 13. part. 3. l. 7. titulo ſecundo. partita. 3. l. 17. titulo. 16.<lb/>partita. 6. l. 1. titulo. 27. partita. 3.</item>
+<item><lb/>Crimine expilatæ hæreditatis, vid. l. 21. titulo decimoquarto. partita. 7.<lb/>&amp;. l. 5. titulo ſecundo. partita. 3.</item>
+<item><lb/>Crimine ſtellionatus, vide. l. 7. &amp;. l. fina. titulo decimoſexto. partita. 7. l.<lb/>10. titulo. 13. partita quinta.</item>
+<item><lb/>Cuſtodia reorum, vid. tit. 29. part. 7. &amp;. l. 16. tit. 1. par. 7.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>D.</head>
+<item><lb/><hi rend="init">D</hi>Amno infecto, vid. titul. 15. par. 7.</item>
+<item><lb/>Decurionibus, vid. in rubrica. ff. veteris de ſenatoribus.</item>
+<item><lb/>Diuerſis præſcriptionibus, vid. in tit. 29. par. 3.</item>
+<item><lb/>Dolo malo. vid. titul. 16. par. 7. vid. rubricam de eo quod<lb/>metus cauſa.</item>
+<item><lb/>Donationibus, vid. tit. 4. partita. 5.</item>
+<item><lb/>Donationibus mortis cauſa, vid. l. 11. titu. 4. par. 5. cum alijs ibi.</item>
+<item><lb/>Duobus reis, &amp;c. vid. l. 10. cum ſequentibus. tit. 12. par. 5.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>E.</head>
+<item><lb/><hi rend="init">E</hi>Fractoribus, &amp; expilatoribus, vid. l. 13. titulo. 29. &amp;. l. 21. ti-<lb type="nb"/>tul. 14. partita. 7.</item>
+<item><lb/>Eum qui appellauit, vid. tit. 23. par. 3.</item>
+<item><lb/>Exceptione rei iudicatæ, vid. l. 19. &amp;. 20. cum alijs ibi. titu-<lb type="nb"/>lo vigeſimoſecundo. partita tertia. l. 24. titulo ſecun-<lb type="nb"/>do. part. 3. cum. l. ſequenti. &amp; in. l. 30. ibidem.</item>
+<item><lb/>Exceptionibus, vid. l. 8. &amp;. 9. cum alijs ibi. titulo. 3. l. 20. titulo. 22. &amp;. l. 7. ti-<lb type="nb"/>tulo. 10. part. 3. &amp;. l. 22. tit. 4. par. 3.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>F.</head>
+<item><lb/><hi rend="init">F</hi>Ideicommiſſarijs libertatibus, vid. l. 3. 4. &amp;. 6. ad finem.<lb/>l. 29. &amp;. l. 31. in fi. l. 41. tit. 9. par. 6. l. 13. in fi. &amp;. l. 16. tit. 7.<lb/>part. 6. l. fin. titul. 2. part. 5.</item>
+<item><lb/>Fideiuſſoribus, vid. tit. 12. partita. 5.</item>
+<item><lb/>Fluminibus, vid. l. 3. 4. &amp;. 8. tit. 28. partita. 3.</item>
+<item><lb/>Fonte, vide. l. 6. titulo. 31. partita. 3.</item>
+<item><lb/>Furtis, vide titulum. 14. partita ſeptima.</item>
+<item><lb/>Furti aduerſus nautas caupones &amp; ſtabular. vide. l. 7. titulo decimo quar-<lb type="nb"/>to. partita ſeptima.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>G.</head>
+<item><lb/><hi rend="init">G</hi>Lande legenda, vide legem decimamoctauam. l. 18. titulo vigeſimo<lb/>octauo. partita tertia.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>I.</head>
+<item><lb/><hi rend="init">I</hi>Ncendio ruina naufragio, vid. l. 2. &amp;. 9. cum alijs ibi. tit.<lb/>10. l. prima. cum alijs ibi. titulo duodecimo. partita ſe<lb/>ptima. l. 9. 11. &amp; fin. cum alijs ibi. titulo nono. part. 5.</item>
+<item><lb/>Iniurijs vid. tit. 9. part. 7. l. 12. &amp;. 18. titulo. 18. l. 10. titul. 5.<lb/>part. 3. l. 15. 25. &amp;. 31. titulo. 2. part. 3. l. 9. titulo. 4. partita<lb/>3. l. 2. tit. 5. partita. 3.</item>
+<item><lb/>Itiuere actu que priuato, vid. l. 3. &amp;. 15. cum alijs ibi. tit. 31. part. 3.</item>
+<item><lb/>Iure fiſci, vid. l. 13. 14. &amp;. 6. cum alijs ibi. tit. 7. partita. 6. l. 10. 28. 29. &amp;. 39. in<lb/>principio. tit. 2. part. 3. l. 1. titu. 14. part. 3.</item>
+</list>
+</item>
+<item><list type="index">
+<head><pb n="[13]" xml:id="W0063-J-0013" facs="W0063-J-0013"/><cb xml:id="W0063-J-0013-cb1"/><lb/>L.</head>
+<item><lb/><hi rend="init">L</hi>Egationibus, vid. l. 25. tit. 18. para. 3. l. 9. tit. 25. par. 7.</item>
+<item><lb/>Liberali cauſa, vid. l. 17. 48. 29. &amp;. 39. tit. 2. par. 3. l. 5. tit. 14. par.<lb/>3. l. 5. tit. 16. par. 3.</item>
+<item><lb/>Litigioſis, vid. l. 13. tit. 7. par. 3.</item>
+<item><lb/>Locis &amp; itineribus publicis, vid. in tit. 32. par. 3.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>M.</head>
+<item><lb/><hi rend="init">M</hi>Anumiſsionibus, vid. tit. 22. p. 4.</item>
+<item><lb/>Manumiſsis teſtamento, vid. ibidem. &amp; in. l. 22. ad medium.<lb/>titu. 9. p. 6. &amp; ibi. l. 21. &amp;. l. 31. l. 14. tit. 4. par. 6. l. 2. tit. 4. par.<lb/>4. l. 14. tit. 18. p. 3. l. 30. tit. 11. part. 5.</item>
+<item><lb/>Manumiſsis vindicta, vid. tit. 22. par. 4.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>N.</head>
+<item><lb/><hi rend="init">N</hi>E de ſtatu defunctorum, vid. l. 25. tit. 29. par. 3.</item>
+<item><lb/>Ne quid in flumine publico, vid. l. 18. tit. 32. par. 3.</item>
+<item><lb/>Ne quid in loco publico, vid. l. 23. tit. 32. par. 3. &amp; ibi. l. 3.</item>
+<item><lb/>Ne quid in loco ſacro, vid. tit. 32. p. 3.</item>
+<item><lb/>Ne vis fiat ei qui in poſſeſsionem miſſus eſt, vid. in. l. 2. in fi.<lb/>&amp;. l. 3. &amp;. 5. tit. 8. par. 3.</item>
+<item><lb/>Nil nouari appellatione pendente, vid. l. 14. &amp;. l. 26. &amp;. 27. tit. 23. par. 3.</item>
+<item><lb/>Nouationibus &amp; delegationibus, vid. l. 15. cum ſequentibus. tit. 14. p. 5. l.<lb/>61. &amp;. 64. tit. 18. par. 3.</item>
+<item><lb/>Nundinis &amp; mercatoribus, vid. tit. 7. p. 5. &amp;. l. 42. verſic. ſecundo. titu. 18.<lb/>partita. 3.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>O.</head>
+<item><lb/><hi rend="init">O</hi>Peris noui nuntiatione vid. tit. 32. par. 3. vid. l. 2. &amp;. 3. tit. 22. l. 16.<lb/>tit. 2. l. 37. tit. 28. l. 20. &amp;. l. penul. tit. fin. part. 3. l. 13. ad fi. tit. 9.<lb/>partita. 6.</item>
+<item><lb/>Operibus publicis, vid. l. 21. &amp;. 22. tit. 32. par. 3.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>P.</head>
+<item><lb/><hi rend="init">P</hi>OEnis, vid. tit. 31. &amp; tit. 8. part. 7. l. 3. tit. 23. part. 4. l. 4. &amp;. l. 17. &amp;<lb/>18. tit. 14. par. 7. l. 5. tit. 27. par. 3. l. 16. tit. 23. par. 3. &amp;. l. 2. tit. 23.<lb/>partita. 7.</item>
+<item><lb/>Popularibus actionibus, vid. l. 24. tit. 4. &amp;. l. 20. in fi. tit. 22. l. 10. titu. 11. l. 3.<lb/>tit. 32. par. 3.</item>
+<item><lb/>Portionibus quæ liberis damnatorum, &amp;c. vide. l. 5. ad finem. titulo. 31.<lb/>partita. 7.</item>
+<item><lb/>Precario, vid. tit. 2. &amp; tit. 3. par. 5.</item>
+<item><lb/>Præuaricatoribus, vid. l. 9. 13. &amp;. 15. tit. 6. partita. 3. &amp;. l. 1. titulo ſeptimo.<lb/>partita. 7.</item>
+<item><lb/>Priuatis delictis, vide. l. 25. titulo primo. &amp;. l. 20. cum alijs ibi. titulo. 14.<lb/>partita. 7.</item>
+<item><lb/>Priuilegijs creditorum, vid. l. 11. cum ſequentibus. tit. 14. par. 5. l. 9. tit. 3. l.<lb/>l. 26. 27. &amp;. 28. tit. 13. par. 5. l. 8. tit. 5. par. 6.</item>
+<item><lb/>Pro derelicto, vid. l. 49. tit. 28. par. 3.</item>
+<item><lb/>Pro emptore, vid. ex. l. 11. tit. 29. p. 3.</item>
+<item><lb/>Pro hærede, vid. l. 9. 12. &amp;. 18. cum alijs ibi. titulo. 29. partita. 3. l. 54. titul. 5.<lb/>partita. 5.</item>
+<item><lb/>Pro legato, vid. l. 15. titu. 29. par. 3.</item>
+<item><lb/>Pro ſoluto, vid. l. 3. 12. &amp;. 15. in fine. tit. 29. par. 3.</item>
+<item><lb/>Pro ſuo, vid. l. 14. cum alijs illius tit. tit. 29. par. 3. l. 5. verſic. E ſi por auen-<lb type="nb"/>tura, ibidem.</item>
+<item><lb/>Publicanis &amp; vectigalibus, vide. l. 5. 6. &amp;. 8. titulo. 7. par. 5. l. 4. tit. 2. par. 5.<lb/>l. 1. verſic. Fueras ende. titulo. 16. partita. 3.</item>
+<item><lb/>Publicis iudicijs, vid. l. 1. cum ſequentibus. tit. 7. par. 7. l. 2. in fin. titu. 30.<lb/>ibidem. &amp;. l. 18. titulo. 4. partita. 3. l. 39. titulo ſecundo. partita. 3. l. 4. ti-<lb type="nb"/>tulo. 10. par. 3. l. 4. tit. 1. part. 7. l. 12. titulo. 5. partita. 3.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>Q.</head>
+<item><lb/><hi rend="init">Q</hi>Vando appellandum ſit, vide. l. 14. titulo vigeſimoſecundo.<lb/>partita. 3. &amp; vid. totum titulum. 23. partita. 3.</item>
+<item><lb/>Quæ in fraudem creditorum, vid. l. 7. cum alijs ibi. titulo deci<lb/>moquinto. partita. 5.</item>
+<item><lb/>Quæ ſententiæ ſine appellatione reſcindantur, vid. l. 13. titulo. 22. &amp;. l. 4.<lb/>titulo. 26. partita. 3. &amp; tit. 23. partita. 3.</item>
+<item><lb/>Quæſtionibus, vid. titulum. 30. partita. 7. l. 5. titulo. 13. l. 8. &amp;. 9. titulo. 2. l.<lb/>13. tit. 16. partita. 3. l. 26. titulo. 14. l. 3. titulo. 1. partita. 7.</item>
+<item><lb/>Quibus ad libertatem proclamare non licet, vid. l. 1. verſic. La ſexta. titu.<cb xml:id="W0063-J-0013-cb2"/><lb/>lo nono. partita tertia.</item>
+<item><lb/>Quibus ex cauſis in poſſeſsionem eatur, vid. l. 2. &amp;. 8. titulo octauo. par-<lb type="nb"/>tita tertia. l. 22. titulo quinto. partita tertia.</item>
+<item><lb/>Quis &amp; aquo appelletur, vid. l. 2. &amp;. 21. cum alijs ibi. titulo vigeſimoter-<lb type="nb"/>tio. &amp;. l. 1. titulo. 27. partita. 3.</item>
+<item><lb/>Quod vi aut clam, vide legem. 12. &amp;. 13. cum alijs ibi. titulo decimoquin-<lb type="nb"/>to. partita ſeptima. l. prima. &amp; penult. titulo. 32. partita tertia. l. 11. titu-<lb type="nb"/>7. partita. 3. l. 8. in medio. titulo. 3. partita. 5. l. 2. titulo. 11. partita. 3.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>R.</head>
+<item><lb/><hi rend="init">R</hi>Eceptatoribus, vid. l. 18. cum alijs ibi. tit. 14. par. 7.</item>
+<item><lb/>Regulis iuris, vid. tit. 34. part. 7.</item>
+<item><lb/>Reiudicata, vid. tit. 22. par. 3. &amp;. l. 1. cum alijs ibi. titu. 27. part. 3.</item>
+<item><lb/>Rem litari de hoc agitur in pluribus, titul. 2. partitæ.</item>
+<item><lb/>Requirendis reis, vid. l. 7. titul. 8. partita. 3. &amp; titul. 29. part. 7.</item>
+<item><lb/>Riuis, vid. l. 4. &amp;. 6. titulo trigeſimo primo. partita tertia.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>S.</head>
+<item><lb/><hi rend="init">S</hi>Ententiam paſsis &amp; reſtitutis reſtitutis, vid. l. 1. in fine. &amp;. l. 2. ti<lb/>tulo trigeſimoſecundo. partita. 7. l. fin. titulo ſexto. partita<lb/>6. l. 1. titulo vigeſimo quinto. partita tercera.</item>
+<item><lb/>Sepulchro viclato, vide. l. 12. titulo none. partita ſeptima. &amp;. l.<lb/>decimaquarta. titulo decimotertio. partita prima.</item>
+<item><lb/>Si familiæ furtum feciſſe dicatur, vide. l. 4. titulo. 13. partita. 7.</item>
+<item><lb/>Si pendente appallatione morsinteruenerit, vid. l. 28. titulo vigeſimoter<lb/>tio. partita tertia. l. vigeſimatertia. titulo primo. partita ſeptima. l. 7. ti<lb/>tulo octauo. partita tertia. ibi. E eſto.</item>
+<item><lb/>Si tutor, vel curator, vel magiſtratus, &amp;c. vide titulum. 19. partita ſexta.<lb/>&amp;. l. ſecunda. verſic. Otroſi. titulo vigeſimotertio. partita tertia. l. 59.<lb/>titulo decimooctauo. partita. 3.</item>
+<item><lb/>Solutionibus &amp; liberationibus, vid. titulum. 14. partita. 5. l. 17. titulo. 2.<lb/>l. 81. titulo decimooctauo. &amp;. l. 29. ad finem. titulo. 29. partita. 3.</item>
+<item><lb/>Superficiebus, vid. l. 11. cum alijs. titulo. 31. partita tertia.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>T.</head>
+<item><lb/><hi rend="init">T</hi>Abulis exhibendis, vid. l. 17. cum alijs. titul. 2. partita. 3.</item>
+<item><lb/>Termino moto, vid. l. final. tit. 14. part. 7. &amp;. l. 10. titu. 11. part. 3.</item>
+<item><lb/>Tignoiniuncto, vide. l. 16. titulo ſecundo. l. 38. titulo. 28. l. 2. ti<lb/>tulo trigeſimoprimo. partita tertia. l. 16. titulo. 14. partita. 7.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>V.</head>
+<item><lb/><hi rend="init">V</hi>Acatione, &amp; excuſatione munerum, vide legem octauam.<lb/>titulo vigeſimotertio. l. quadrageſimanona. titulo deci-<lb type="nb"/>mooctauo. partita tercera. l. prima. titulo vigeſimoter-<lb type="nb"/>tio. partita. 7. l. 30. &amp;. 31. titulo quarto. partita tertia.</item>
+<item><lb/>Varijs &amp; extraordinarijs cognitionibus, vide. l. 14. titulo ſexto. partita<lb/>tertia. l. prima. titulo vigeſimoſecundo. partita ſeptima. l. 36. in fi. titu-<lb type="nb"/>lo quinto. partita quinta. l. 24. titulo vigeſimoſecundo. partita. 3.</item>
+<item><lb/>Verborum obligationibus, vid. titulum. 11. partita. 5.</item>
+<item><lb/>Verborum &amp; rerum ſignificatione, vide titulum. 33. partita ſeptima.</item>
+<item><lb/>Via publica &amp; itinere publico reficiendo, vide. l. 7. cum alijs ibi. titu. 29.<lb/>part. 3. &amp; in tit. 31. part. 3.</item>
+<item><lb/>Vibonorum raptorum, vide. l. 2. &amp;. 3. tit. 13. par. 7.</item>
+<item><lb/>Vi &amp; viarmata, vid. l. 10. titulo. 34. par. 7. l. 30. ibi. O mando. titu. 2. par. 3.<lb/>l. fin. cum alijs ibi. titu. 13. par. 7. l. 5. in fin. tit. 15. par. 7. l. 13. &amp;. l. 17. tit. 30.<lb/>par. 3. l. 15. titu. 2. par. 4. l. 27. verbo, Otroſi. tit. 2. part. 3. l. 5. &amp;. l. final. titu<lb/>lo. 10. partita. 3.</item>
+<item><lb/>Vſucapionibus, vid. titulum vigeſimumnonum. partita tertia.</item>
+</list>
+</item>
+</list>
+</div1>
+<div1 type="index">
+<p rend="hx"><lb/>Sequitur Rubrica Titulorum<lb/>Decretalium.</p>
+<list type="index">
+<item><list type="index">
+<head><lb/>A.</head>
+<item><lb/><hi rend="init">A</hi>Vtho. &amp; vſupalij. ex. l. 5. &amp;. 16. titulo. 5. partita prima.</item>
+<item><lb/>Apoſtatis, &amp;c. ex. l. 20. titulo. 6. &amp;. l. 63. titulo quinto. par-<lb type="nb"/>tita. 1. &amp; in tit. 24. part. 7. &amp; ex. l. 5. titulo. 25. partita. 7.</item>
+<item><lb/>Adulterijs, vid. titul. 17. partita ſeptima. &amp; titul. 19. &amp;. 21.<lb/>partita. 7. &amp; ex. l. octaua. titulo. 2. partita quarta.</item>
+<item><pb n="[14]" xml:id="W0063-J-0014" facs="W0063-J-0014"/><cb xml:id="W0063-J-0014-cb1"/><lb/>Alienatione iudicii. mut. cauſ. fact. vid. ex. l. 15. tit. 7. &amp; ex. l. 30. tit. 2. p. 3.</item>
+<item><lb/>Appellationibus, vid. tit. 23. par. 3.</item>
+<item><lb/>Arbitris, vid. ex. l. 23. cum alijs ibi. tit. 4. par. 3.</item>
+<item><lb/>Accuſationibus, vid. tit. 1. part. 7.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>B.</head>
+<item><lb/><hi rend="init">B</hi>Aptiſmo, vid. ex. l. 2. tit. 4. par. 1.</item>
+<item><lb/>Bigamis, vid. ex. l. 5. 35. &amp;. 63. cum alijs ibi. tit. 5. par. 1.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>C.</head>
+<item><lb/><hi rend="init">C</hi>Alumniatoribus, vid. l. 21. &amp;. 22. in fine. tit. 1. par. 7.</item>
+<item><lb/>Capellis monachorum, vid. tit. 12. part. 1. &amp; ex. l. 14. 24. 25. 26.<lb/>&amp;. 27. tit. 7. par. 1.</item>
+<item><lb/>Cauſa poſſeſſ. &amp; propriet. vid. tit. 2. par. 3. &amp;. l. 4. in fi. titul. 2.<lb/>partita. 1.</item>
+<item><lb/>Celebratione iniſſarum, vid. ex. l. 47. tit. 4. par. 1.</item>
+<item><lb/>Cenſibus &amp; exaction. &amp; procuratio. vid. tit. 22. p. 1.</item>
+<item><lb/>Clandeſtin. ſponſal. vid. tit. 3. par. 4.</item>
+<item><lb/>Clericis peregrin. vid. l. 21. titulo. 6. partita. 1. &amp;. l. 2. &amp;. 3. titulo. 24. partita<lb/>prima.</item>
+<item><lb/>Clericis peregrinant, vid. tit. 24. p. 1.</item>
+<item><lb/>Cleri. coniuga. vid. in. l. 41. tit. 6. par. 1.</item>
+<item><lb/>Clericis non reſidentibus, vid. l. 5. titulo. 5. parti. 1. &amp;. l. 15. &amp;. 19. titulo. 16.<lb/>partita. 1.</item>
+<item><lb/>Clericis pugnant. in duelo, vid. l. 63. &amp;. 64. tit. 5. par. 1.</item>
+<item><lb/>Clerico ęgrotante, vid. l. 18. tit. 16. par. 1.</item>
+<item><lb/>Clerico venatore, vid. l. 57. tit. 5. par. 1.</item>
+<item><lb/>Clerico percuſſore, vid. l. 56. &amp;. 63. tit. 5. p. 1.</item>
+<item><lb/>Clerico excommunicato, vel depoſi. miniſt. vid. l. 50. tit. 5. p. 1.</item>
+<item><lb/>Clerico non ordin. miniſtran. vide. l. 29. titulo. 6. &amp;. l. 63. in fine. titulo. 5.<lb/>partita. 1.</item>
+<item><lb/>Cleric. per ſaltum promo. vid. l. 63. in fine. tit. 5. par. 1.</item>
+<item><lb/>Cognatione ſpirituali, vid. tit. 7. p. 4. &amp;. l. 7. tit. 4. p. 1.</item>
+<item><lb/>Cognatione legali, vid. l. 7. tit. 7. par. 4.</item>
+<item><lb/>Cohabitatione clericorum, &amp; mulie. vid. ex. l. 37. 43. &amp;. 44. titulo. 6. par<lb/>tita prima.</item>
+<item><lb/>Colluſione detegenda, vid. l. 12. 17. &amp;. 19. cum alijs. tit. 1. par. 7. vid. titu. 32.<lb/>partita. 7.</item>
+<item><lb/>Commodati, vid. tit. 2. par. 5.</item>
+<item><lb/>Conceſsione præbend. vid. l. 5. in medio. &amp;. l. 60. &amp;. 64. tit. 5. par. 1. &amp;. l. 8.<lb/>tit. 16. par. 1.</item>
+<item><lb/>Conditionibus appoſitis, vid. tit. 4. par. 4.</item>
+<item><lb/>Confeſsis, vid. tit. 13. par. 3.</item>
+<item><lb/>Confirmatione vtili, vel inutili, vid. l. 2. 5. &amp;. 15. &amp;. l. 44. tit. 18. part. 3. &amp;. l.<lb/>4. tit. 20. par. 3.</item>
+<item><lb/>Coniugio leproſorum, vid. ex. l. 7. tit. 2. p. 4.</item>
+<item><lb/>Coniugio ſeruorum, vid. tit. 5. p. 4. &amp;. l. 11. tit. 2. par. 4.</item>
+<item><lb/>Conſanguinitate, &amp; afrinitate, vid. tit. 6. par. 4.</item>
+<item><lb/>Conſecratione eccleſiæ, velaltaris, vid. ex. l. 12. tit. 10. par. 1.</item>
+<item><lb/>Conſtitutionibus, vid. tit. 1. p. 1. &amp;. l. 5. in medio. tit. 5. p. 1.</item>
+<item><lb/>Conſuetudine, vid. tit. 2. p. 1.</item>
+<item><lb/>Conuerſione coniugatorum, vid. ex. l. 2. tit. 10. par. 4. &amp;. l. 7. cum ſequen-<lb type="nb"/>tibus. tit. 2. par. 4.</item>
+<item><lb/>Conuerſione infidelium, vid. ex. l. 19. cum alijs ibi. tit. 2. par. 4. &amp;. l. 3. titu.<lb/>19. par. 4.</item>
+<item><lb/>Corpore vitiatis, vid. ex. l. 25. tit. 6. p. 1. &amp;. l. 63. tit. 5. p. 1.</item>
+<item><lb/>Crimine falſi, vid. l. 57. tit. 6. p. 1.</item>
+<item><lb/>Cuſtodia euchariſtiæ, vid. l. 64. titulo. 4. part. 1. &amp; in. l. 6. titulo. 22. partita<lb/>prima.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>D.</head>
+<item><lb/><hi rend="init">D</hi>Ecimis &amp; primitijs, vid. tit. 19. &amp; tit. 20. part. 1. &amp;. l. 55. tit.<lb/>6. part. 1.</item>
+<item><lb/>Delictis puerorum, vid. ex. l. 9. titu. 1. p. 7. &amp; in. l. 9. titulo<lb/>31. part. 7.</item>
+<item><lb/>Depoſito, vid. tit. 3. p. 5.</item>
+<item><lb/>Deſponſatione impuberum, vid. ex. l. 6. tit. 1. par. 4.</item>
+<item><lb/>Dilationibus, vid. tit. 15. part. 3.</item>
+<item><lb/>Diuortijs, vid. tit. 10. p. 4. &amp; ex. l. 7. tit. 2. par. 4.</item>
+<item><lb/>Dolo &amp; contumacia, vid. l. 8. titulo ſeptimo. partita. 3. &amp; titulum. 16. par-<lb type="nb"/>tita ſeptima.</item>
+<item><lb/>Donationibus, vid. titulum. 4. partita quinta. &amp; ex. l. 8. titulo trigeſimo.<lb/>partita. 3.</item>
+<item><lb/>Donationibus inter virum &amp; vxorem, vid. ex. l. 4. &amp;. 29. titulo. 11. partita<lb/>quarta.</item>
+</list>
+</item>
+<item><list type="index">
+<head><cb xml:id="W0063-J-0014-cb2"/><lb/>E.</head>
+<item><lb/><hi rend="init">E</hi>Ccleſijs ædificand. vid. tit. 10. p. 1.</item>
+<item><lb/>Electione, vid. l. 7. cum ſequentibus. &amp;. l. 17. tit. 5. p. 1. &amp;. l.<lb/>10. &amp;. 11. tit. 14. p. 1.</item>
+<item><lb/>Emptione, &amp; venditione, vid. l. 56. &amp; per totum illum tit.<lb/>5. part. 5.</item>
+<item><lb/>Eo qui mittitur in poſſeſſ. vid. tit. 8. p. 3.</item>
+<item><lb/>Eo qui dixit in matrimonium quam polluit per adulterium, vid. l. 19. ti-<lb type="nb"/>tu. 2. par. 4. &amp;. l. 5. tit. 19. p. 4. &amp;. l. 2. ibi. l. 15. tit. 7. l. 19. in fine. tit. fi. par. 3.</item>
+<item><lb/>Eo qui cognouit conſanguineam vxoris ſuæ, vid. ex. l. 13. tit. 2. p. 4. &amp;. l. 2.<lb/>tit. 3. par. 4. &amp; totum tit. 18. p. 7.</item>
+<item><lb/>Eo qui furtiue ordines ſuſcepit, vid. ex. l. 28. tit. 6. p. 1. &amp;. l. 63. in fine. tit. 1.<lb/>partita. 1.</item>
+<item><lb/>Etate &amp; qualitate, vid. ex. l. 27. tit. 6. par. 1. &amp;. l. 63. &amp;. 64. tit. 5. part. 1. &amp;. l. 3.<lb/>tit. 16. par. 1.</item>
+<item><lb/>Exceptionibus, vid. ex. l. 8. tit. 3. par. 3. &amp;. l. 22. tit. 4. p. 3.</item>
+<item><lb/>Exceſibus prælatorum, vid. ex. l. 13. &amp; ex. l. 57. tit. 5. par. 1. &amp; in. l. 4. tit. 12.<lb/>&amp; in. l. 13. cum ſequen. tit. 22. par. 1.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>F.</head>
+<item><lb/><hi rend="init">F</hi>Erijs, vid. ex. l. 33. tit. 2. p. 3. &amp; tit. 24. par. 1.</item>
+<item><lb/>His qui feudum dare poſſunt, vid. l. 3. tit. 26. par. 4.</item>
+<item><lb/>Feudis, vid. tit. 25. &amp;. 26. par. 4.</item>
+<item><lb/>Qualiter vaſſallus iurare debeat fidelit. domino, vid. l. 2.<lb/>tit. 25. par. 4.</item>
+<item><lb/>In quibus vaſſallus teneatur ſeruire domi. vid. l. 6. tit. 25.<lb/>partita quarta.</item>
+<item><lb/>Vaſſallus qui contra conſlitutionem lotharij, vid. l. 7. tit. 25. par. 4.</item>
+<item><lb/>Natura feudi, vid. l. 3. tit. 26. par. 4.</item>
+<item><lb/>Quis dicatur dux, vid. l. 3. tit. 26. par. 4.</item>
+<item><lb/>Qualiter vaſſallus iurare debeat, vid. l. 4. tit. 26. par. 4.</item>
+<item><lb/>Forma fidelitatis, vid. l. 4. tit. 26. par. 4.</item>
+<item><lb/>Capitibus qui curiam vendiderunt, vid. l. 5. tit. 26. p. 4.</item>
+<item><lb/>Succeſsione feudi, vid. l. 6. tit. 26. par. 4.</item>
+<item><lb/>Natura ſucceſsionis feudi, vid. l. 7. tit. 26. par. 4.</item>
+<item><lb/>Quibus modis feudum amittatur, vid. l. 8. tit. 26. par. 4.</item>
+<item><lb/>Feudo ſine culpa non amittendo, vid. l. 8. tit. 26. part. 4.</item>
+<item><lb/>Quæ fuit prima cauſa beneficij amittendi, vid. l. 8. &amp;. 9. ibidem.</item>
+<item><lb/>Prohibita feudi alienatione per lotha. vid. l. 10. tit. 26. p. 4.</item>
+<item><lb/>Prohibita feudi alienatione per federicum, vid. l. 10. titulo vigeſimoſex-<lb type="nb"/>to. par. 4.</item>
+<item><lb/>Quæ fuit prima cauſa beneficij amittendi, vide. in. l. 10. ad finem. titulo<lb/>26. part. 4.</item>
+<item><lb/>Quo tempore miles, vid. l. 10. in fine. tit. 26. p. 4.</item>
+<item><lb/>Fide inſtrumentorum, vid. tit. 18. &amp; tit. 19. &amp;. 20. par. 3.</item>
+<item><lb/>Fideiuſſoribus, vid. tit. 12. p. 5. &amp;. l. 45. tit. 6. par. 1.</item>
+<item><lb/>Filijs presby terorum, vid. ex. l. 12. tit. 6. p. 1. &amp;. l. 5. tit. 5. p. 1.</item>
+<item><lb/>Foro competenti, vid. l. 57. &amp; per totum tit. 6. p. 1.</item>
+<item><lb/>Frigidis &amp; maleficiatis, vid. tit. 8. p. 4. &amp;. l. 17. tit. 2. p. 7.</item>
+<item><lb/>Furtis, vid. tit. 14. par. 7.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>H.</head>
+<item><lb/><hi rend="init">H</hi>AEreticis, vid. tit. 26. p. 7. &amp;. l. 57. tit. 6. par. 1.</item>
+<item><lb/>His quæ vi metuſve cauſa fiunt, vid. l. 56. tit. 5. par. 5. &amp;. l. 15.<lb/>tit. 2. par. 4. cum multis alijs.</item>
+<item><lb/>His quæ fiunt àprælato ſine conſenſu capituli, vid. ex. l. 7.<lb/>tit. 4. par. 1. &amp; ex. l. 11. tit. 22. p. 1.</item>
+<item><lb/>His quæ fiunt à maiore parte capituli, vid. l. 10. tit. 14. par. 1.</item>
+<item><lb/>His qui filios occiderunt, vid. ex. l. 12. tit. 8. p. 7.</item>
+<item><lb/>Homicidio, vid. tit. 8. par. 7.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>I.</head>
+<item><lb/><hi rend="init">I</hi>Mmunitate eccleſiarum, vid. ex. l. 2. tit. 11. p. 1. &amp;. l. 50. &amp;<lb/>54. cum ſequen. tit. 6. p. 1. &amp; in. l. 14. &amp;. 15. tit. 22. p. 1.</item>
+<item><lb/>Infantibus expoſitis, vid. ex. l. 2. tit. 20. par. 4. &amp;. l. 9. titu.<lb/>17. par. 4.</item>
+<item><lb/>In integrum reſtitutione, vid. tit. 14. p. 1.</item>
+<item><lb/>Iniurijs, vid. tit. 9. part. 4.</item>
+<item><lb/>Inſtitutionibus, vide. l. ſecundã. in fine. &amp; per totum illum titulum. 6.<lb/>partita. 1.</item>
+<item><lb/>Iudæis &amp; Sarracenis &amp; eorum ſeruis, vide titul. 24. par. 7. &amp;. l. 63. titul. 4.<lb/>partita. 1.</item>
+<item><lb/>Iudicijs, vid. ex. l. 57. tit. 6. p. 1. &amp; tit. 2. &amp;. 4. par. 3. l. 13. tit. 6. par. 3. &amp; titul. 7.<lb/>&amp;. 22. ibi.</item>
+<item><pb n="[15]" xml:id="W0063-J-0015" facs="W0063-J-0015"/><cb xml:id="W0063-J-0015-cb1"/><lb/>Iuramento calumniæ, vid. ex. l. 23. tit. 11. p. 3.</item>
+<item><lb/>Iureiurando, vid. tit. 11. p. 3.</item>
+<item><lb/>Iurepatronatus, vid. tit. 15. p. 1.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>L.</head>
+<item><lb/><hi rend="init">L</hi>Ibelli oblatione, vid. ex. l. 40. tit. 2. p. 3.</item>
+<item><lb/>Litis conteſtacione, vid. tit. 10. p. 3.</item>
+<item><lb/>Locato &amp; conducto, vid. tit. 8. p. 5.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>M.</head>
+<item><lb/><hi rend="init">M</hi>Agiſtris, vid. ex. l. 10. titulo. 17. part. 1. &amp; in. l. 7. titulo. 6.</item>
+<item><lb/>partita. 1.</item>
+<item><lb/>Maioritate, &amp; obedientia, vid. tit. 5. &amp;. 6. p. 1.</item>
+<item><lb/>Maledicis, vid. tit. 28. p. 7. &amp;. l. 3. tit. 9. p. 7.</item>
+<item><lb/>Matrimonio contracto contra interdictum eccleſiæ, vi-<lb type="nb"/>de ex. l. 18. tit. 3. p. 4.</item>
+<item><lb/>Mutuis petitionibus, vid. l. 20. ad fi. tit. 4. p. 3.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>N.</head>
+<item><lb/><hi rend="init">N</hi>Atis ex libero ventre, vid. l. 2. tit. 21. part. 4. &amp; titulum. 22.<lb/>ibidem.</item>
+<item><lb/>Neclerici, vel monachi, vid. ex. l. 46. tit. 6. &amp;. l. 18. titu. 7.<lb/>p. 1. l. 3. tit. 12. p. 1.</item>
+<item><lb/>Neprælati vices ſuas, vid. ex. l. 8. tit. 17. p. 1.</item>
+<item><lb/>Ne ſede vacante, vid. ex. l. 4. tit. 12. &amp; titulum. 14. &amp; titul.<lb/>6. partita prima.</item>
+<item><lb/>Noui operis nuntiatione, vid. tit. 32. p. 3.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>O.</head>
+<item><lb/><hi rend="init">O</hi>Bligatis ad ratiocinia, vid. ex. l. 23. tit. 6. p. 1. &amp;. l. 64. in fine.<lb/>tit. 5. par. 1.</item>
+<item><lb/>Obſeruatione ieiuniorum, vid. tit. 23. p. 1.</item>
+<item><lb/>Officio Archidiaconi, vid. ex. l. 4. tit. 6. p. 1.</item>
+<item><lb/>Officio Archipresbyteri, vid. l. 8. tit. 6. p. 1.</item>
+<item><lb/>Officio primicerij, vid. l. 5. tit. 6. p. 1.</item>
+<item><lb/>Officio ſacriſtę, vid. l. 6. tit. 6. p. 1.</item>
+<item><lb/>Officio cuſtodis, vid. l. 6. tit. 6. p. 1.</item>
+<item><lb/>Officio vicarij, vid. in eodem. tit. 6.</item>
+<item><lb/>Officio, &amp; poteſtate. iudi. delegati, vid. tit. 5. &amp; tit. 6. p. 1.</item>
+<item><lb/>Officio legati, vid. tit. 5. p. 1.</item>
+<item><lb/>Officio iudicis ordinarij, vid. tit. 5. p. 1.</item>
+<item><lb/>Officio iudicis, vid. l. 6. tit. 6. p. 3.</item>
+<item><lb/>Ordinatis ab epiſcopo, qui renun. epiſcopa. vid. l. 22. tit. 6. &amp;. l. 63. titul. 5.<lb/>partita. 1.</item>
+<item><lb/>Ordine cognitionum, vid. l. 4. &amp;. 5. cum ſequentibus. tit. 10. p. 3. &amp;. l. fi. ti-<lb type="nb"/>tul. 3. par. 3.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>P.</head>
+<item><lb/><hi rend="init">P</hi>Actis, vid. l. 29. &amp; per totum. tit. 11. p. 5.</item>
+<item><lb/>Parrochis, vid. l. 21. &amp;. 22. &amp;. 32. tit. 4. p. 1.</item>
+<item><lb/>Peculio clericorum, vid. tit. 21. p. 1. &amp; in. l. 53. tit. 6. p. 1.</item>
+<item><lb/>Pœnis, vid. tit. 31. p. 7. &amp;. tit. 8. eadem. p. 7.</item>
+<item><lb/>Pœnitentijs &amp; remiſionibus, vid. ex. l. 17. cum ſeq. tit. 4. p. 1.</item>
+<item><lb/>Pignoribus, vid. tit. 13. par. 5.</item>
+<item><lb/>Plus petitionibus, vid. ex. l. 42. tit. 2. p. 3.</item>
+<item><lb/>Poſtulando, vid. tit. 6. p. 3.</item>
+<item><lb/>Poſtulatione prælatorum, vid. ex. l. 24. tit. 5. p. 1.</item>
+<item><lb/>Præbendis, vid. tit. 16. p. 1.</item>
+<item><lb/>Precarijs, vid. tit. 2. &amp;. 3. par. 5.</item>
+<item><lb/>Presbytero non baptizato, vid. l. 2. &amp;. 10. cum ſequentibus. tit. 4. p. 1.</item>
+<item><lb/>Præſcriptionibus, vid. tit. 29. p. 3.</item>
+<item><lb/>Præſumptionibus, vid. l. 8. &amp; per totum illum. tit. 14. p. 3.</item>
+<item><lb/>Priuilegijs, vid. tit. 11. p. 1.</item>
+<item><lb/>Probationibus, vid. tit. 14. p. 3.</item>
+<item><lb/>Procuratoribus, vid. tit. 5. p. 3.</item>
+<item><lb/>Purgatione canonica, vide. l. 32. in fine. &amp; ibi. l. 33. titulo quinto. partita<lb/>prima.</item>
+<item><cb xml:id="W0063-J-0015-cb2"/><lb/>Purgatione vulgari, vid. l. 63. &amp;. 64. titul. 5. p. 1. &amp;. l. 8. ad finem. titulo. 14.<lb/>partita. 3.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>Q.</head>
+<item><lb/><hi rend="init">Q</hi>Viclerici, velvouentes, vi. ex. l. 42. tit. 6. p. 1. &amp;. l. 63. ad finem.<lb/>tit. 5. p. 1. l. 11. &amp;. 16. tit. 2. p. 4.</item>
+<item><lb/>Qui matrimonium accuſare poſſunt, vid. titu. 9. part. 4.</item>
+<item><lb/>Qui filij ſint legitimi, vid. tit. 13. p. 4. &amp; etiam ex. l. 2. tit. 15. p. 4.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>R.</head>
+<item><lb/><hi rend="init">R</hi>Aptoribus, vid. tit. 13. p. 7. &amp; tit. 20. p. 7.</item>
+<item><lb/>Rebus eccleſiæ non alienandis, vid. tit. 14. p. 1. &amp;. l. 8. titu.<lb/>22. part. 1.</item>
+<item><lb/>Regularibus, &amp; tranſeuntibus ad religionẽ, vid. tit. 7. p. 1.</item>
+<item><lb/>Regulis iuris, vid. tit. 34. p. 7.</item>
+<item><lb/>Religioſis domibus, vid. tit. 12. p. 1.</item>
+<item><lb/>Reuquijs, &amp; veneratione Sanctorum, vid. ex. l. 65. titul. 4. p. 1. &amp; titul. 23.<lb/>partita. 1.</item>
+<item><lb/>Rerum permutatione, vid. ex. l. 64. tit. 5. p. 1.</item>
+<item><lb/>Reſcriptis, vid. ex. l. 36. &amp; ex. l. 46. tit. 18. p. 3. &amp; ex. l. 6. cum ſequentibus.<lb/>tit. 19. par. 3.</item>
+<item><lb/>Reſtitutione ſpoliatorum, vid. l. 27. cum alijs ibi. tit. 2. p. 3. &amp;. l. 5. tit. 10. p. 3.<lb/>&amp;. l. finalem, &amp; totum illum tit. 10. p. 7. l. 39. 40. &amp; 42. tit. 28. p. 3. l. 8. tit.<lb/>3. p. 5. l. 10. tit. 14. p. 3. l. fi. tit. 13. p. 7. ad fi.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>S.</head>
+<item><lb/><hi rend="init">S</hi>Acramentis, vid. totum. tit. 4. p. 1.</item>
+<item><lb/>Sacra vnctione, vid. l. 7. 11. &amp;. 69. tit. 4. p. 1.</item>
+<item><lb/>Secundis nuptijs, vid. tit. 12. p. 4. &amp;. l. 26. tit. 13. p. 5.</item>
+<item><lb/>Sententia &amp; re iudicata, vid. tit. 22. p. 3.</item>
+<item><lb/>Sententia excommunicationis, vid. tit. 9. p. 1.</item>
+<item><lb/>Sepulturis, vid. tit. 13. p. 1.</item>
+<item><lb/>Sequeſtratione poſſeſsionis, &amp; fructuum, vid. tit. 9. p. 3.</item>
+<item><lb/>Seruis non ordinandis, vid. ex. l. 18. tit. 6. p. 1. &amp;. l. 64. tit. 5. p. 1.</item>
+<item><lb/>Simonia, vid. tit. 17. p. 1. &amp;. l. 6. l. 63. &amp;. 64. cum ſequentibus. tit. 5. p. 1.</item>
+<item><lb/>Sindico, vid. l. 13. tit. 2. &amp;. l. 98. tit. 18. p. 3.</item>
+<item><lb/>Solutionibus, vide titulum. 14. p. 5.</item>
+<item><lb/>Sortilegijs, vid. titu. 23. p. 7.</item>
+<item><lb/>Sponſalibus, vid. titu. 1. p. 4.</item>
+<item><lb/>Sponſa duorum, vid. ex. l. 9. tit. 1. &amp; tit. 2. p. 4.</item>
+<item><lb/>Statu monachorum, vid. ex. l. 14. &amp; ex. l. 23. cum alijs ibi. tit. 7. p. 1. &amp; ex<lb/>l. 21. tit. 4. par. 1.</item>
+<item><lb/>Succeſsionibus abinteſtato, vid. tit. 13. p. 6. &amp; ex. l. 4. tit. 21. p. 1.</item>
+<item><lb/>Summa Trinitate, &amp; fide catholica, vid. tit. 3. p. 1.</item>
+<item><lb/>Supplenda negligentia prælatorum, vid. l. 40. titu. 5. &amp; per totum illum<lb/>tit. p. 1. &amp; tit. 6. eadem. p. 1.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>T.</head>
+<item><lb/><hi rend="init">T</hi>Emporibus ordinationum, vid. l. 4. 5. 22. 28. 31. 32. 33. &amp;. 38.<lb/>cum alijs ibi. tit. 5. p. 1.</item>
+<item><lb/>Teſtamẽtis &amp; vltimis volũtatibus, vid. tit. 1. p. 6. &amp;. l. 8.<lb/>tit. 22. p. 1.</item>
+<item><lb/>Teſtibus, &amp; atteſtationibus, vid. tit. 16. p. 3.</item>
+<item><lb/>Teſtibus cogendis, vid. l. 35. cum alijs ibi. tit. 16. p. 3.</item>
+<item><lb/>Torneamentis, vid. l. 10. tit. 13. p. 1.</item>
+<item><lb/>Tranſactionibus, vid. l. fina. tit. 10. p. 4. &amp;. l. 15. tit. 18. p. 3. cum alijs diuerſis<lb/>legibus aliorum titul.</item>
+<item><lb/>Tranſlactione Epiſcopi, vid. l. 35. cum alijs ibi. tit. 6. p. 1.</item>
+<item><lb/>Tregua, &amp; pace, vid. tit. 12. p. 7. &amp;. l. 51. tit. 6. p. 1.</item>
+</list>
+</item>
+<item><list type="index">
+<head><lb/>V.</head>
+<item><lb/><hi rend="init">V</hi>Erborum ſignificatione, vid. tit. 33. p. 7.</item>
+<item><lb/>Vita, &amp; honeſtate clericorum, vid. ex. l. 34. tit. 6. p. 1. &amp;. l.<lb/>36. 39. &amp;. 57. cum alijs ibi. tit. 5. p. 1.</item>
+<item><lb/>Voto, &amp; voti redemptione, vid. tit. 8. p. 1. &amp;. l. 5. tit. 5. p. 1.</item>
+<item><lb/>Vſuris, vid. ex. l. 46. tit. 6. p. 1. &amp;. l. 9. tit. 13. p. 1.</item>
+<item><lb/>Vt eccleſiaſtica beneficia, ſine diminutione confirman-<lb type="nb"/>tur, vid. l. 5. cum ſequentibus. tit. 16. p. 1.</item>
+<item><lb/>Vt lite non conteſtata, &amp;c. vid. l. 2. cum alijs ibi. tit. 16. p. 3.</item>
+</list>
+</item>
+</list>
+<p><t:colShift t:cols="1"/><lb/><hi rend="center"><hi rend="sp">FINIS</hi>.</hi></p>
+</div1>
+</body>
+</text>

@@ -1,0 +1,9 @@
+     [exec] Current OS is Windows 10
+     [exec] Executing 'C:\Users\Cindy Rico Carmona\AppData\Local\Programs\Python\Python37\python.exe' with arguments:
+'D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0004\py\W0004_110.py'
+
+The ' characters around the executable and arguments are
+not part of the command.
+     [exec]   File "D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0004\py\W0004_110.py", line 1
+     [exec] SyntaxError: Non-UTF-8 code starting with '\xfe' in file D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0004\py\W0004_110.py on line 1, but no encoding declared; see http://python.org/dev/peps/pep-0263/ for details
+     [exec] Result: 1

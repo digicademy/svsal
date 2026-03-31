@@ -1,0 +1,11 @@
+     [exec] Current OS is Windows 10
+     [exec] Executing 'C:\Users\cricocar\AppData\Local\Programs\Python\Python39\python.exe' with arguments:
+'D:\Cindy\SVN\trunk\teiedit\works\build\W0043_Vol02\py\W0043_Vol02_011.py'
+
+The ' characters around the executable and arguments are
+not part of the command.
+     [exec]   File "D:\Cindy\SVN\trunk\teiedit\works\build\W0043_Vol02\py\W0043_Vol02_011.py", line 44
+     [exec]     choice = re.findall(r'( )(\w+|\w+<g ref=\"#char00e6\">æ</g>\w+|\w+<g ref=\"#char0153\">œ</g>\w+|\w+<g ref=\"#chare0328\">\u0119</g>\w+|<g ref=\"#char017f\">\u017f</g>+\w+|\w+<g ref=\"#charc0327\">ç</g>\w+)(<lb break=\"no\" rendition=\"#\w+\" )(xml:id=\")([\d\w-]+\"/>)(\w+|\w+<g ref=\"#char00e6\">æ</g>\w+|\w+<g ref=\"#char0153\">œ</g>\w+|\w+<g ref=\"#chare0328\">\u0119</g>\w+|<g ref=\"#char017f\">\u017f</g>+\w+|\w+<g ref=\"#charc0327\">ç</g>\w+)(<g ref=\"#charo0304\">\ufffd</g>|<g ref=\"#charo0303\">õ</g>)(e|es|e<g ref=\"#char017f\">\u017f</g>)([\.,;:\?! ])', text)
+     [exec]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ^
+     [exec] SyntaxError: (unicode error) 'utf-8' codec can't decode byte 0xc5 in position 439: invalid continuation byte
+     [exec] Result: 1

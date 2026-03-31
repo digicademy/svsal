@@ -1,0 +1,82 @@
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0073\xml\W0073_014.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0073\xml\W0073_015.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0073\xsl\W0073_014.xsl
+     [xslt] WARN: found choice element with empty child, in line W0073-00-0186-lb-2050 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "ly"
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0073\xml\W0073_015.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0073\xml\W0073_016.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0073\xsl\W0073_015.xsl
+     [xslt] INFO: identified 21 *pb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 46 *cb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 21 *cb* as secondary break that were not previously marked as no-break at all.
+
+     [xslt] INFO: identified 0 *cb* as secondary break that were previously marked as primary no-break.
+
+     [xslt] INFO: identified 0 *lb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 0 *lb* as secondary break that were not previously marked as no-break at all.
+
+     [xslt] INFO: identified 171 *lb* as secondary break that were previously marked as primary no-break.
+
+     [xslt] INFO: replaced trailing whitespace in 2 text nodes before primary no-breaks.
+
+     [xslt] INFO: replaced trailing whitespace in 0 text nodes before secondary no-breaks.
+
+     [xslt] Input whitespace: 247118
+
+     [xslt] Output whitespace: 247116
+
+     [xslt] ---------------------------------------------------------
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0073\xml\W0073_016.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0073\xml\W0073_017.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0073\xsl\W0073_016.xsl
+     [xslt] INFO: quality check successfull.
+
+     [xslt] INFO: added 10 choice/*[2]/pb.
+
+     [xslt] INFO: added 27 choice/*[2]/cb.
+
+     [xslt] INFO: added 1589 choice/*[2]/lb.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0073\xml\W0073_017.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0073\xml\W0073_018.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0073\xsl\W0073_017.xsl
+Apache resolver library not found, internal resolver will be used
+     [xslt] INFO: added 2 special character tags (tei:g).
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0073\xml\W0073_018.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0073\xml\W0073_019.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0073\xsl\W0073_018.xsl
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0073\xml\W0073_019.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0073\xml\W0073_020.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0073\xsl\W0073_019.xsl
+     [xslt] Generated temporary lb/@xml:id.
+
+     [xslt] Extracted tei:lb from pages in the main area of the text.
+
+     [xslt] Numbered tei:lb from the main area.
+
+     [xslt] INFO: Added line numbers to tei:lb/@n.
+
+     [xslt] INFO: Serializing final output...
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0073\xml\W0073_020.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0073\xml\W0073_021.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0073\xsl\W0073_020.xsl
+     [xslt] INFO: quality check successfull.
+

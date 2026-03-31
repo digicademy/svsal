@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="W0001_Vol04" default="finalize">
+    
+    <property name="diff.dir" value="diff"/>
+    <property name="log.dir" value="log"/>
+    <property name="xml.dir" value="xml"/>
+    <property name="xsl.dir" value="xsl"/>
+    <property name="xslt.log" value="${log.dir}/${ant.project.name}_xslt.log"/>
+    <property name="xslt.processor" value="../../../lib/xsltproc/Saxon-HE-9.8.0-12.jar"/>
+    <property name="xslt.class" value="net.sf.saxon.TransformerFactoryImpl"/>
+    
+    <property name="orig.file" value="../../../../tustep/svsal/v1/teitite/W0001D/W0001D_v1.xml"/>
+    
+    <target name="initialize">
+        <echo>Initializing W0001_Vol04.</echo>
+        <mkdir dir="${xml.dir}"/>
+        <mkdir dir="${log.dir}"/>
+        <copy file="${orig.file}" tofile="${xml.dir}/W0001_Vol04_000.xml"/>
+        <xmlvalidate file="${xml.dir}/W0001_Vol04_000.xml" lenient="true"/>
+    </target>
+    
+    <target name="cp-000" depends="initialize">
+        <copy file="${xml.dir}/W0001_Vol04_000.xml" tofile="${xml.dir}/W0001_Vol04_v1-0.xml"/>
+        <echo>Checkpoint: W0001_Vol04_v1-0.xml (W0001_Vol04_000.xml).</echo>
+        <delete file="${xml.dir}/W0001_Vol04_000.xml"/>
+    </target>
+    
+    <target name="patch-000"> <!-- depends="cp-000" -->
+        <echo>Structural annotation.</echo>
+        <patch originalfile="${xml.dir}/W0001_Vol04_v1-0.xml" destfile="${xml.dir}/W0001_Vol04_001.xml" patchfile="${diff.dir}/W0001_Vol04_000.diff"/>
+        <delete file="${xml.dir}/W0001_Vol04_000.xml"/>
+        <!-- TODO: create diff between W0001_Vol04_v1-0.xml and W0001_Vol04_edit-000.xml (=W0001_Vol04_001.xml) -->
+    </target>
+    <target name="xslt-001"> 
+        <echo>Content and Indexes in nested lists.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0001_Vol04_001.xml" out="${xml.dir}/W0001_Vol04_002.xml" style="${xsl.dir}/W0001_Vol04_001.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+    </target>
+    <target name="xslt-002" depends="xslt-001"> 
+        <echo>Added missing pagination (pb/@n).</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0001_Vol04_002.xml" out="${xml.dir}/W0001_Vol04_003.xml" style="${xsl.dir}/W0001_Vol04_002.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0001_Vol04_002.xml"/>
+    </target>
+    <target name="xslt-003" depends="xslt-002"> 
+        <echo>Added ref in table of contents.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0001_Vol04_003.xml" out="${xml.dir}/W0001_Vol04_004.xml" style="${xsl.dir}/W0001_Vol04_003.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0001_Vol04_003.xml"/>
+    </target>
+    <target name="xslt-004" depends="xslt-003"> 
+        <echo>Added @xml:ids and @unit=section to milestone.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0001_Vol04_004.xml" out="${xml.dir}/W0001_Vol04_005.xml" style="${xsl.dir}/W0001_Vol04_004.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0001_Vol04_004.xml"/>
+    </target>
+    <target name="xslt-005" depends="xslt-004">
+        <echo>Transformation TEI tite to TEI P5.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0001_Vol04_005.xml" out="${xml.dir}/W0001_Vol04_006.xml" style="${xsl.dir}/W0001_Vol04_005.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0001_Vol04_005.xml"/>
+    </target>
+    <target name="xslt-006" depends="xslt-005">
+        <echo>Annotated hyphenated breaks.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0001_Vol04_006.xml" out="${xml.dir}/W0001_Vol04_007.xml" style="${xsl.dir}/W0001_Vol04_006.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0001_Vol04_006.xml"/>
+    </target>
+    <target name="xslt-007" depends="xslt-006">
+        <echo>Annotated hyphenated breaks interrupted by hi and note.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0001_Vol04_007.xml" out="${xml.dir}/W0001_Vol04_008.xml" style="${xsl.dir}/W0001_Vol04_007.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0001_Vol04_007.xml"/>
+    </target>
+    <target name="xslt-008" depends="xslt-007">
+        <echo>Tagged special characters.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0001_Vol04_008.xml" out="${xml.dir}/W0001_Vol04_009.xml" style="${xsl.dir}/W0001_Vol04_008.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0001_Vol04_008.xml"/>
+    </target>
+    <target name="xslt-009" depends="xslt-008">
+        <echo>Line numbering..</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0001_Vol04_009.xml" out="${xml.dir}/W0001_Vol04_010.xml" style="${xsl.dir}/W0001_Vol04_009.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0001_Vol04_009.xml"/>
+    </target>
+    <target name="xslt-010" depends="xslt-009">
+        <echo>Added @xml:ids.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0001_Vol04_010.xml" out="${xml.dir}/W0001_Vol04_011.xml" style="${xsl.dir}/W0001_Vol04_010.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0001_Vol04_010.xml"/>
+    </target>
+    <!-- Although there are passages auf Spanish in main text, no abbreviations were found .-->
+    <target name="xslt-011" depends="xslt-010">  
+        <echo>Expanded abbreviations (la) in main text.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0001_Vol04_011.xml" out="${xml.dir}/W0001_Vol04_012.xml" style="${xsl.dir}/W0001_Vol04_011.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+            <param name="lang" expression="la" type="STRING"/>
+            <param name="mode" expression="main" type="STRING"/>
+            <param name="startAtLineBeginning" expression="TRUE" type="BOOLEAN"/>
+            <param name="changeId" expression="W0001_Vol04_change_017" type="STRING"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0001_Vol04_011.xml"/>
+    </target>
+    <target name="xslt-012" depends="xslt-011"> 
+        <echo>Expanded abbreviations (la) in marginal notes.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0001_Vol04_012.xml" out="${xml.dir}/W0001_Vol04_013.xml" style="${xsl.dir}/W0001_Vol04_011.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+            <param name="lang" expression="la" type="STRING"/>
+            <param name="mode" expression="marginal" type="STRING"/>
+            <param name="startAtLineBeginning" expression="TRUE" type="BOOLEAN"/>
+            <param name="changeId" expression="W0001_Vol04_change_019" type="STRING"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0001_Vol04_012.xml"/>
+    </target>
+    <target name="xslt-013" depends="xslt-012"> 
+        <echo>Tag unmarked breaks.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0001_Vol04_013.xml" out="${xml.dir}/W0001_Vol04_014.xml" style="${xsl.dir}/W0001_Vol04_013.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+            <param name="corrListPaths" expression="../corrlist/lists/W0001_Vol04-la_supposed-hyphenations-from-text.html,../corrlist/lists/W0001_Vol04-marg-la_supposed-hyphenations-from-text.html"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0001_Vol04_013.xml"/>
+    </target>
+    
+    <!-- Manual version incomplete to expand Abbreviations automatically.  -->
+    
+    <target name="patch-014"> <!-- depends="cp-000" -->
+        <echo>Manual corrections (JLE). Manual incomplete version to update Expanded abbreviations.</echo>
+        <patch originalfile="${xml.dir}/W0001_Vol04_014.xml" destfile="${xml.dir}/W0001_Vol04_015.xml" patchfile="${diff.dir}/W0001_Vol04_014.diff"/>
+    </target>
+    
+    <target name="xslt-015">  <!--depends="patch-014"--> 
+        <echo>Expanded abbreviations (la) in main text update.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0001_Vol04_015.xml" out="${xml.dir}/W0001_Vol04_016.xml" style="${xsl.dir}/W0001_Vol04_015.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+            <param name="lang" expression="la" type="STRING"/>
+            <param name="mode" expression="main" type="STRING"/>
+            <param name="startAtLineBeginning" expression="TRUE" type="BOOLEAN"/>
+            <param name="changeId" expression="W0001_Vol04_change_021" type="STRING"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+    </target>
+    <target name="xslt-016" depends="xslt-015"> 
+        <echo>Expanded abbreviations (la) in marginal notes update.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0001_Vol04_016.xml" out="${xml.dir}/W0001_Vol04_017.xml" style="${xsl.dir}/W0001_Vol04_015.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+            <param name="lang" expression="la" type="STRING"/>
+            <param name="mode" expression="marginal" type="STRING"/>
+            <param name="startAtLineBeginning" expression="TRUE" type="BOOLEAN"/>
+            <param name="changeId" expression="W0001_Vol04_change_022" type="STRING"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0001_Vol04_016.xml"/>
+    </target>
+    <target name="xslt-017" depends="xslt-016"> 
+        <echo>Reduced excessive whitespace.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0001_Vol04_017.xml" out="${xml.dir}/W0001_Vol04_018.xml" style="${xsl.dir}/W0001_Vol04_017.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0001_Vol04_017.xml"/>
+    </target>
+    <target name="patch-018"> <!-- depends="xslt-017" -->
+        <echo>First round manual corrections (JLE).</echo>
+        <patch originalfile="${xml.dir}/W0001_Vol04_018.xml" destfile="${xml.dir}/W0001_Vol04_019.xml" patchfile="${diff.dir}/W0001_Vol04_018.diff"/>
+    </target>
+    <target name="patch-019"> <!-- depends="xslt-017" -->
+        <echo>Second round manual corrections (JLE).</echo>
+        <patch originalfile="${xml.dir}/W0001_Vol04_019.xml" destfile="${xml.dir}/W0001_Vol04_020.xml" patchfile="${diff.dir}/W0001_Vol04_019.diff"/>
+    </target>
+    <target name="xslt-020"> <!--depends="patch-018"--> 
+        <echo>Reduced excessive whitespace.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0001_Vol04_020.xml" out="${xml.dir}/W0001_Vol04_021.xml" style="${xsl.dir}/W0001_Vol04_020.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+    </target>
+    <target name="patch-021" depends="xslt-020"> <!-- Manual version post corrections -->
+        <echo>Post-corrections (CR).</echo>
+        <patch originalfile="${xml.dir}/W0001_Vol04_021.xml" destfile="${xml.dir}/W0001_Vol04_022.xml" patchfile="${diff.dir}/W0001_Vol04_021.diff"/>
+    </target>           
+    <target name="xslt-022"> 
+        <echo>Post corrections fixes.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0001_Vol04_022.xml" out="${xml.dir}/W0001_Vol04_023.xml" style="${xsl.dir}/W0001_Vol04_022.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+    </target> 
+    <target name="xslt-023" depends="xslt-022"> 
+        <echo>Fixed order of break attributes.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0001_Vol04_023.xml" out="${xml.dir}/W0001_Vol04_024.xml" style="${xsl.dir}/W0001_Vol04_023.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0001_Vol04_023.xml"/>
+    </target>
+    <target name="xslt-024" depends="xslt-023"> 
+        <echo>Correct choice pairs.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0001_Vol04_024.xml" out="${xml.dir}/W0001_Vol04_025.xml" style="${xsl.dir}/W0001_Vol04_024.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0001_Vol04_024.xml"/>
+    </target>
+    <target name="xslt-025" depends="xslt-024"> 
+        <echo>Tagged special characters after corrections.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0001_Vol04_025.xml" out="${xml.dir}/W0001_Vol04_026.xml" style="${xsl.dir}/W0001_Vol04_025.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0001_Vol04_025.xml"/>
+    </target>
+    <target name="xslt-026" depends="xslt-025"> 
+        <echo>teiHeader update after corrections.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0001_Vol04_026.xml" out="${xml.dir}/W0001_Vol04_027.xml" style="${xsl.dir}/W0001_Vol04_026.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0001_Vol04_026.xml"/>
+    </target>
+    <target name="xslt-027" depends="xslt-026"> 
+        <echo>Numbered lines after corrections.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0001_Vol04_027.xml" out="${xml.dir}/W0001_Vol04_028.xml" style="${xsl.dir}/W0001_Vol04_027.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0001_Vol04_027.xml"/>
+    </target>
+    <target name="xslt-028" depends="xslt-027"> 
+        <echo>Generated @xml:id after corrections.</echo>
+        <record name="${xslt.log}" action="start" loglevel="verbose"/>
+        <xslt force="true" in="${xml.dir}/W0001_Vol04_028.xml" out="${xml.dir}/W0001_Vol04_029.xml" style="${xsl.dir}/W0001_Vol04_028.xsl" classpath="${xslt.processor}">
+            <factory name="${xslt.class}"/>
+        </xslt>
+        <record name="${xslt.log}" action="stop"/>
+        <delete file="${xml.dir}/W0001_Vol04_028.xml"/>
+    </target>
+    <target name="patch-029"> <!-- depends="xslt-028" -->
+        <echo>Online version until 05.07.22.</echo>
+        <patch originalfile="${xml.dir}/W0001_Vol04_029.xml" destfile="${xml.dir}/W0001_Vol04_030.xml" patchfile="${diff.dir}/W0001_Vol04_029.diff"/>
+    </target>
+    <target name="patch-030"> <!-- depends="patch-029" -->
+        <echo>Corrected pb[@type="blank"] position in div (CR).</echo>
+        <patch originalfile="${xml.dir}/W0001_Vol04_030.xml" destfile="${xml.dir}/W0001_Vol04_031.xml" patchfile="${diff.dir}/W0001_Vol04_030.diff"/>
+    </target>
+    <target name="finalize" depends="patch-030">
+        <echo>Reached end of pipeline.</echo>
+    </target>
+  
+<!--
+
+   NOTES:
+
+    * 348 sal-tei.sch errors 05.07.22
+
+    -->
+</project>

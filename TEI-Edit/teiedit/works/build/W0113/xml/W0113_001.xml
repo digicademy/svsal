@@ -1,0 +1,2886 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_tite.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_tite.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<text xmlns="http://www.tei-c.org/ns/1.0" xmlns:t="http://www.tei-c.org/ns/tite/1.0">
+<front>
+<titlePage>
+<titlePart type="main">
+<pb facs="W0113-0005" n="fol. [i]r"/>
+<lb/><hi rend="center">¶ <t:b>Prouechoſo trata</t:b><lb type="nb"/>do de cambios/ y contrataciones de merca=<lb type="nb"/>deres/ y reprouacion de vſura. Hecho
+<lb/>por el licẽciado Criſtoual  Uillalõ
+<lb/>Graduado en ſancta theologia
+<lb/>Dirigido al muy Illuſtre
+<lb/>y Reuerẽdiſſimo ſeñor
+<lb/>don Franciſco de na<lb type="nb"/>uarra. Obp̃o de
+<lb/>Libdad rodri<lb type="nb"/>go. Prior de
+<lb/>ronces va=<lb type="nb"/>lles: y. del
+<lb/>cõſejo 
+<lb/>la ſct̃a
+<lb/>inqui<lb type="nb"/>ſiciõ.</hi></titlePart>
+<titlePart type="desc">
+<hi rend="center"><lb/>Prouechoſo para conoſcer los
+<lb/>tratantes en que pecan.
+<lb/>y neceſſario para los
+<lb/>confeſſores ſabe
+<lb/>llos juzgar.</hi></titlePart>
+<titlePart type="desc">
+<hi rend="center"><lb/>Uiſto por los ſeñores ynquiſidores.
+<lb/>Año de. M. D. xl j.</hi></titlePart></titlePage>
+<div1 type="dedication">
+<p rend="hx">
+<pb facs="W0113-0006" n="fol. [i]v"/>
+<lb/><t:b>Al muy ylluſtre y reuerẽ</t:b><lb type="nb"/>diſſimo ſeñor dõ frãciſco de Aauarra prior de rõces
+<lb/>ualles y obiſpo de ciudad rodrigo/ y del conſejo de
+<lb/>la ſancta inquiſiciõ. Ellicenciado Uillalon le offre<lb type="nb"/>ſce el preſente tractado/ y le deſſea eternal ſalud.:</p>
+<p>
+<lb/><hi rend="init">L</hi>A ſimplicidad de mi buena intenciõ Re=<lb type="nb"/>uerẽdiſſimo y muy ylluſtre ſeñor me fuer<lb type="nb"/>ça a cometer hazañas q̃atodo el mũdo pa
+<lb/>recerã temeridad. Dos coſas hago las q̈
+<lb/>les corrẽ ala ygual: atreuerme a eſcreuir/ y moſtrar
+<lb/>tanta confiança de mi que vueſtra ſeñoria lo aya de
+<lb/>ver. De la ṗmera culpa me eſcuſa la importunidad
+<lb/>de vn grande amigo mio mer cader que me pidio cõ
+<lb/>grande inſtancia que le eſcriuieſſe alguna coſa en la
+<lb/>materia de cambios y vſuras/ y por hablar con el lo
+<lb/>trate en lengua familiar. Trabaje como cumpliẽdo
+<lb/>con el ſe hizieſſe algun prouicho al comũ: por ver la
+<lb/>gran neceſſidad que tienen los hombres de rienda
+<lb/>enel negociar el dia de oy: y principal mente por ad=<lb type="nb"/>uertir alos confeſſores en cuyas manos caen los ta<lb type="nb"/>les: que por no tener doctrina y experiẽcia en eſto los
+<lb/>dexã paſſar/ y les dan mas licẽcia q̃ es razon: yo lo
+<lb/>he procurado trabajar cõ todo mi eſtudio y cuyda=<lb type="nb"/>do/ y para ſalir a luz tiene neceſſidad de amparo. El
+<lb/>ſer yo tan antiguo ſeruidor y criado de vr̃a ſeñoria
+<lb/>me haze confiar en ſu fauor. Suplico a vueſtra ſeño<lb type="nb"/>ria lo acepte y ſupla las faltas con ſu acoſtumbrada
+<lb/>benignidad. Lo qnal todo ſometo ala correctiõ de la
+<lb/>madre ſancta ygleſia/ y de vueſtra reuerẽdiſſima ſe=<lb type="nb"/>ñoria. Luya muy ylluſtre perſona nueſtro ſeñor cõ=<lb type="nb"/>ſerue para mayor dignidad/ y augmento de ſu ſan=<lb type="nb"/>cta fee en ſu ygleſia Amen.</p>
+</div1>
+</front>
+<body>
+<div1 type="part" n="1" xml:id="p1">
+<p rend="hx">
+<pb facs="W0113-0007" n="fol. ijr"/>
+<lb/>¶ <t:b>Sigue ſe vn prouecho</t:b>
+<lb/>ſo tr atado de contrataciones de cambios/ y mer=<lb type="nb"/>cadurias. Hecho por el licenciado villalon a inſtan<lb type="nb"/>cia de vn ainigo ſuyo que con grãde affecto le pidio
+<lb/>que eſcriuieſſe en eſta mater ia ſu pareſcer<t:ornament/></p>
+<div2>
+<p rend="hx">
+<lb/><t:b>Capitulo primeroq̃ trata</t:b>
+<lb/>la difiniciõ de vſura: y q̈ntas maneras de vſura ay.</p>
+<p>
+<lb/><hi rend="init">Q</hi>Uuãto a lo ṗmero pues emos tratar de<note rend="noRef" type="margin">
+<lb/>¶ Nota. j.</note>
+<lb/>vſura declarãdo como ſe cometa en q̈leſ<unclear resp="#TL"/>q
+<lb/>er cãbios y cõtrataciones en q̃ ſe pueda o=<lb type="nb"/>frecer: antes q̃ tratemos de cãbio juſta co=<lb type="nb"/>ſa ſera q̃ ſepamos/ vſura q̃ coſa es/ y por q̃ todas aq̃=<lb type="nb"/>llas coſas  q̃ los doctores tratã en las eſcuelas tie=<lb type="nb"/>nẽ ciertos vocablos y terminos ꝓpios y anejos a ſu
+<lb/>manera de dezir para ſe declarar: los q̈les es grã
+<lb/>dificultad traer los al caſtellano con aquella meſma
+<lb/>fuerça y ſignificacion que ſuenan enel latin: por tãto
+<lb/>ſupla en qualquiera coſa las faltas el chriſtiano le=<lb type="nb"/>ctor: porque deſechados a parte los vanos argumẽ
+<lb/>tos de ſophiſtas ſolamente quiero tratar en lengua
+<lb/>caſtellana aquellas cõcluſiones y verdades q̃ mas
+<lb/>aſeguran nueſtra ſalud y ſaluacion.</p>
+<p>
+<lb/>¶ Digo pues que vſura es: lleuar alguna coſa por
+<lb/>intereſſe y ganancia de qualeſquier dineros preſta=<note rend="noRef" type="margin">
+<lb/>¶ Nota. ij.</note><lb type="nb"/>dos/ de mas ⁊ allende dela ſuerte principal q̃ el tal
+<lb/>preſto. y por que por eremplo nos entẽderemos en
+<lb/>todo mejordigo. Queſi yo preſto a pedro cient du
+<lb/>cados contal condicion que de aqui a cierto tiempo
+<lb/>me buelua mis cient ducados: y por que los preſte
+<lb/>me de mas vno/ o dos: o como mas nos concerta=<lb type="nb"/>mos: lo tal ſera vſura conforme a nueſtra difinicion.
+<pb facs="W0113-0008" n="fol. [ij]v"/>
+<lb/>¶ Es aqui de notar que vſura ſe puede cometer de<note rend="noRef" type="margin">
+<lb/>Nota. iij.</note>
+<lb/>vna de dos maneras o real/ o mẽtal. Lareal es lle=<lb type="nb"/>uar realmente dos/ o tres ducados por ciento. Y la
+<lb/>mental es penſarlos lleuar. Lomo ſi pedro me de=<lb type="nb"/>mandaſſe preſtados cient ducados: ⁊ yo ſe los dieſſe
+<lb/>ſin alguna conueniencia ni condicion: pero ſi me
+<lb/>quedaſſe en mi coraçon vn penſamiento: que quan=<lb type="nb"/>do me los buelua me dara algo mas: eſta manera cõ
+<lb/>que ſe los preſto ſe llama vſura mental. De la qual ſi
+<lb/>a caſo no reſcibio algun intereſſe/ deue el tal vſure=<lb type="nb"/>ro hazer penitencia como de peccado mortal/ aun
+<lb/>que no reſtitucion/ como adelante ſe dira enel ca=<lb type="nb"/>pitulo. xxvj.<note rend="noRef" type="margin">
+<lb/>Nota. iiij.</note></p>
+<p>
+<lb/>¶ Agora poneſſe eſta concluſion: la qual es infali=<lb type="nb"/>ble en ſi. Que no es licito el vſurar ſegun ley diuina/
+<lb/>humana/ ni natural. Y quanto a lo primero quiero
+<lb/>moſtrar por auctoridad que la vſura ſea reprouada
+<lb/>por ley de Dios (En los libros que la dio a los hijos
+<lb/>de yſrrael). Dize en el erodo: ſi preſtares algun di=<note rend="noRef" type="margin">
+<lb/>Exod. xxij.</note><lb type="nb"/>nero a tu proximo y vezino en tu pueblo/ no lleues
+<lb/>por ello alguna vſura ni intereſſe: y ſi en prendas le
+<lb/>tomares el ſayo/ o capa boluer ſe la has ante que ſe
+<lb/>ponga el ſol. Y en el leuitico dize. Si tu proximo/ y<note rend="noRef" type="margin">
+<lb/>Leuit. xxv.</note>
+<lb/>hermano viniere a ti afligido/ miſerable/ y enfermo:
+<lb/>allega le a ti y ſocorre le ſin lleuar le por el bien que le
+<lb/>hizieres alguna vſura/ ni inter eſſe: ni le demandes
+<lb/>mas de aquello que reſcibio deti. Y en el Deuter ono
+<lb/>mio dize. No daras a tu proximo/ y hermano el dine
+<lb/>ro a vſura/ ni el trigo/ ni otra coſa algũa: por q̃ dios te
+<lb/>bẽdiga en todas tus obras en la tierra de tu poſſeſſiõ
+<lb/>De manera q̃ ſi el cõtrario hiziers ſeras maldito de
+<lb/>tu dios jũto con toda tu haziẽda y poſſeſſiõ. Y anſſi
+<lb/>teniẽdo en mucho ſer vedada  dios todos los ſantos
+<pb facs="W0113-0009" n="fol. iijr"/>
+<lb/>prophetas dela vieja ley põderaron con grã ſoleni=<lb type="nb"/>dad ſer peccado: y como a peccado que mataua le
+<lb/>mãdauan huyr. Aſi aq̃l gran propheta ezechiel aui=<lb type="nb"/>ſando al pueblo los pecados de que ſe hauiã de a
+<lb/>partar para no ofender a dios les dezia: ſi voſotr os<note rend="noRef" type="margin">
+<lb/>Ezech. ca:
+<lb/>xviij.</note>
+<lb/>hermanos guardaredes toda juſticia: y no tomare=<lb type="nb"/>des la muger de vr̃o proximo: y partieredes el pan
+<lb/>cõ vr̃o hermano/ y le preſtaredes los dineros ſin vſu
+<lb/>ra: eſte tal juſto es y le bẽdizira dios. Y anſi pregũta
+<lb/>dauid a dios y dize le. Señor quiẽ morara en tu caſa/<note rend="noRef" type="margin">
+<lb/>Pſal'. xiiij.</note>
+<lb/>y quien ſubira a tu ſancto mõte de tu bienauenturan
+<lb/>ça/ y reſponde le dios (o el meſmo ſe reſponde por in
+<lb/>ſpiraciondiuina) Solamẽte entrara aq̃l que ſin ma
+<lb/>cula obrare juſticia y nũca cõ el prorimo tratare en=<lb type="nb"/>gaño ni mentira: y aq̃l que nũca preſto a ſu proximo
+<lb/>el dinero por vſura. Y anſi teniendo el buen rey Da
+<lb/>uid por gran peccado la vſura/ llorando las malda=<lb type="nb"/>des y peccados de ſu pueblo dezia. Señor apreſſura
+<lb/>te aproueher en ſu remedio: porque vi toda la ciu=<note rend="noRef" type="margin">
+<lb/>Pſal'. liiij.</note><lb type="nb"/>dad llena de maldad/ y cõtienda: y nũca por ſus pla
+<lb/>ças les falto engaño y vſura: por lo qual de dia y de
+<lb/>noche ſerã cercados ſus mur os de trabajo diſſenſſi<lb type="nb"/>ones/ ⁊ injuſticia. Tema pues todo chriſtiano ſenten
+<lb/>cia de tãto eſpanto/ ⁊ ya q̃ noaborreſciere por ſer pe=<lb type="nb"/>cado el vſurar: lo qual le hauia de ſobrar para la hu
+<lb/>yr: y poner ſu vida propia a peligro de morir mil ve<lb type="nb"/>zes antes q̃ ofender vna vez a dios. Y ya que ſea tã
+<lb/>malo/ ta n pecador que no lo dexe de hazer por el a=<lb type="nb"/>mor de la virtud y por ſer peccado mortal: huyalo
+<lb/>por temor dela pena/ que en fu ſentẽcia dize dios por
+<lb/>boca de dauid (que demas de fer el tal maldito) nun=<lb type="nb"/>ca faltara trabajo ni diſſenſſiõ enel pueblo donde ſe
+<lb/>permitiere y acoſtumbrare el vſurar. E ya que no
+<lb/>quieran hauer piedad/ y miſericordia de ſi meſmos/
+<pb facs="W0113-0010" n="fol. [iij]v"/>
+<lb/>ayan la del comun pues tanto ſe ofende dios cõ los
+<lb/>vſureros q̃ por ellos quiere caſtigar toda la ciudad
+<lb/>Duelã ſe los deſuenturados de tanto pobre bueno:
+<lb/>y religioſos ſanct os recogidos en los moneſterios:
+<lb/>los quales ni nunca vſaron/ ni lo echaron de ver: y
+<lb/>por caſtigar dios eſte tan abominable peccado enel
+<lb/>comun como dize Daniel padecen neceſidades y
+<lb/>miſerias que ni llueue dios/ ni permite que hagan
+<lb/>los tiempos ſu natural: y anſi padeſce eljuſto lo que
+<lb/>nunca peco: lo qual todo lleua el malauẽturado vſu
+<lb/>rero ſobre ſi<t:ornament/></p></div2>
+<div2><p rend="hx">
+<lb/><t:b>Capitulo ſegundo enel q̈l</t:b>
+<lb/>ſe ponen las razones naturales con que los philo=<lb type="nb"/>ſophos reprueuan la vſura.</p>
+<p>
+<lb/><hi rend="init">A</hi>Gora pues emos moſtrado como por to<note rend="noRef" type="margin"><lb/>¶ Nota. j.</note><lb type="nb"/>da la ley/ y preceptos de dios la vfura ſea
+<lb/>mala y re ꝓuada: q̃da nos moſtrar como
+<lb/>la ley de naturale za philoſophos y natu=<lb type="nb"/>rales la cõdenarõ por coſa muy cõtraria/ y repugnã
+<lb/>te a natural razon. Para en prueua delo q̈les de no
+<lb/>tar: q̃ en todas las coſas deſta vida ay vſo y proprie<note rend="noRef" type="margin">
+<lb/>S. tho. en la.
+<lb/>ſecũda ſecun.
+<lb/>q. rrv iij. arti.
+<lb/>j. ſcotho. enel.
+<lb/>iiij. delas ſen.
+<lb/>diſtin. xv. q.
+<lb/>ij. ar. ij.</note>
+<lb/>dad: la propriedad es el ſeñorio y dominio q̃ enellas
+<lb/>tenemos: y el vſo es aq̃llo q̃ llamamos auer proue=<lb type="nb"/>cho llas: y anſi en las coſas q̃ ſe alq̇lan o preſtã: ſo
+<lb/>lamẽte ſe alq̇la el vſo y prouecho: q̃dãdo enel ſeñor
+<lb/>la propriedad y ſeñorio. Aſi como ſi dayspreſtada
+<lb/>o alqui lada vna caſa: o vn cauallo: la propriedad y
+<lb/>dominio queda en vos: porque ſiẽpre queda vueſtro
+<lb/>y a mi ſolamẽte me alquilays el vſo/ o la licencia de
+<lb/>poderme del aprouechar para en mi neceſſidad. Pe
+<lb/>ro es agora de notar/ q̃ eſte vſo y prouecho eſta en las
+<lb/>coſas en vna de dos maneras. Unas ſon de tal qua
+<pb facs="W0113-0011" n="fol. iiijr"/>
+<lb/>lidad que aprouechando os dellas y vſando las ſe
+<lb/>conſumen y gaſtan/ como es el azeyte/ vino miel/ pã
+<lb/>y aſſi de otra coſa qualquiera ſemejãte que ſea de co
+<lb/>mer: las quales ſi me las preſtays para que me apro
+<lb type="nb"/>ueche y vſe llas/ days me las para que las gaſte
+<lb/>las coma/ las conſuma y deſhaga: y deſta calidad es
+<lb/>el dinero: q̃ no es otra coſa ſu prouecho ſi no hauerle
+<lb/>de cc̃ſumir. Otras coſas ſon de tal calidad q̃ aun q̃
+<lb/>os a ꝓuechays llas y las vſays no ſe gaſtã/ pero q̃dã
+<lb/>enteras: como es el cauallo/ los libros/ y la caſa. ⁊c.
+<lb/>¶ Agora digo por concluſiõ natural: que por el vſo<note rend="noRef" type="margin">
+<lb/>¶ Nota. ij.</note>
+<lb/>y prouecho de aquellas coſas que vſando las ſe ga
+<lb/>ſtan y conſumen/ no es licito lleuar dellas intereſſe=<lb type="nb"/>quando ſe alquilan/ o ſe preſtan. Larazon natural
+<lb/>deſto es: por la coſa que no tiene ſer y que no es/ no
+<lb/>es licito lleuar intereſſe: pues como alquilandos yo
+<lb/>el vino/ el trigo/ y el dinero/ os alquilo ſolamente el
+<lb/>vſo del: y para hauerlo de vſar y aprouecharos de=<lb type="nb"/>llo lo haueys  gaſtar/ deſhazer/ y conſumir: ſigue ſe
+<lb/>que ya el vſo no ſera ni terna ſer: y anſſi dandos por
+<lb/>el algun intereſſe: daros he diner os por la coſa que
+<lb/>no es enel mundo/ ni tiene ſer: lo qual no aconteſce
+<lb/>anſſi eñl cauallo/ o caſa q̃ me alquilays: por q̃ vſando
+<lb/>las y aprouechãdos llas no ſe pier dẽ/ mas q̃dan en
+<lb/>ſu ſer. Y anſſi digo q̃ lleuando me l dinero intereſſe/
+<lb/>como ſi lo hurtaſſes quedas obligado a reſtitucion.
+<lb/>¶ Tãbien ſe ſigue de lleuar del dinero intereſſe q̃ ſe<note rend="noRef" type="margin">
+<lb/>Nota. iij:</note>
+<lb/>paga dos vezes la meſma coſa. Porq̃ boluiẽdo los
+<lb/>dine ros q̃ preſtaſtes os pagã vna vez. Y dãdos el in
+<lb/>teres por el vſo y a ꝓuechamiẽto l os pagã otra vez
+<lb/>porq̃ eñl dinero p̃ſtado el vſo y ꝓuecho l noſe diſtin
+<lb/>gue/ ni es coſa diuerſa lo q̃ el es: por q̃ ſon la meſma
+<lb/>coſa: y no ſõ dos: de manera q̃ boluiẽdos los dineros
+<lb/>q̃ p̃ſtaſtes pagã vna vez: y pagãdo por el vſo interes
+<pb facs="W0113-0012" n="fol. [iiij]v"/>
+<lb/>que es el meſmo dinero) pagan otra vez que ſon dos
+<lb/>lo qual deueys reſtituyr.</p>
+<p>
+<lb/>¶ Ariſtotil es hablando de la vſura enel primero li<note rend="noRef" type="margin">
+<lb/>Nota. iiij.</note>
+<lb/>bro dela politica dize que dela vſura ſe ſigue vn grã
+<lb/>de inconueniente contra razon natural: el qual es q̃
+<lb/>ſe haria del medio fin. Para entẽdimiento lo qual
+<lb/>es de notar: que naturale za nueſtra madre como
+<lb/>bien regida y gouernada por di os crio y diſpenſo to
+<lb/>das las coſas: cada qual para aquel fin que neſceſſa
+<lb/>riamente hauia de ſer. Diſpuſo que la ſalud fueſſe
+<lb/>vna coſa muy deſſeada y amada de todos los hom
+<lb/>bres: y para alcançar eſte bien tã deſſeado de todos
+<lb/>ordeno diuerſos medios/ como las medicinas/ pur
+<lb/>ga y ſangria: lo qual todo fue ordenado pormedio
+<lb/>para hauer la ſalud que es el fin. Pues es orden y
+<lb/>ley natural que cada coſa deſtasſe ame y ſe ſſee pa
+<lb/>ra aquello que fue ordenada en ſu creacion: de ma=<lb type="nb"/>nera que el medio ſea medio/ y ſea amado y ſſeado
+<lb/>como a medio: y el fin por fin. Y anſſi ſera cõtra ordẽ
+<lb/>y ley de naturaleza ſi deſtas coſas ſe vſaſſe al reues:
+<lb/>de tal manera que amaſſemos y deſſeaſemos la pur
+<lb/>ga no mas de por ſi/ y no ender eçando la tomar por
+<lb/>alcançar la ſalud que es el fin: y enton ces lo tal noſe
+<lb/>diria vſo: pero dezirſe ya propiamente abuſo: lo q̈l
+<lb/>es/ quando dela coſa ſe vſa al reues de para lo que
+<lb/>fue. Gran locura ſeria ſi eſtando vn hombre ſano to
+<lb/>maſſe vna purga/ y ſe ſangraſſe/ y ſi le pregũtaſſen ſe
+<lb/>ñoraque fin os pur gays. Locura ſeria reſponder:
+<lb/>que por ningun otro fin ſino por ſe purgar/ y no por
+<lb/>alcançar ſalud pues el eſta tan bueno que no ſiente
+<lb/>mala diſpuſicion. De manera que es gran locura
+<lb/>y coſa monſtruoſa y peccado eſte abuſo enla philo=<lb type="nb"/>ſophia natural: cada y quando que ſe vſare del me=<lb type="nb"/>dio por fin. Lo qual enla bienauenturança lo vera
+<pb facs="W0113-0013" n="fol. vr"/>
+<lb/>mas claramẽte quien enello quiſiere mirar: por q̃
+<lb/>ſeria peccado mortal tomar por principal intento y
+<lb/>por fin qualquiera coſa que fueſſe medio para al=<lb type="nb"/>cançar el verdadero fin que es Dios. Pues deſta
+<lb/>manera es agora de notar: que la moneda fue orde
+<lb/>nada ⁊ inuentada por medio: por el qual ſe trataſſen
+<lb/>todas las coſas del vniuerſo/ y ſe truxeſſen a con=<lb type="nb"/>uerſacion para las poſſeer y gozar. Para que ſi ca
+<lb/>receys de ropas/ camas/ alhajas: y otros arreos
+<lb/>y poſſeſſiones que ſe vſan en el mundo para engran
+<lb/>deſcuniento de vueſtra perſona: dize Ariſtotiles
+<lb/>que natur almente fue inuentada la moneda para
+<lb/>adquirir eſtas coſas: porque ſolamente compran=<lb type="nb"/>do las/ las podeys con el dinero hauer. De mane=<lb type="nb"/>ra que el poſſeer todas las coſas criadas es el fin: y
+<lb/>el dinero cõ que le alcançan es el medio. Delo qual
+<lb/>to do ſe ſigue claramente que el dinero no puede ſer
+<lb/>elfin de ganãcia: y aſſi por ello no ſe puede lleuar in=<note rend="noRef" type="margin">
+<lb/>Nota  dõ
+<lb/>de viene
+<lb/>eſte boca=<lb type="nb"/>blo vſura.</note><lb type="nb"/>tereſſe: por q̃ vſays de lo que es medio como de fin
+<lb/>lo qual es llamado en la philoſophia abuſar: y de
+<lb/>aqui viene corrupto el vocablo vſurar/ que ſegũ na
+<lb/>tural razon no ſe puede ſufrir.</p>
+<p>
+<lb/>¶ Tambien es de notar que el dinero no engen=<note rend="noRef" type="margin">
+<lb/>Nota. v.</note><lb type="nb"/>dra de ſi algun fructo como hazen todas las natu
+<lb/>ralesſimientes: pero produze de ſi ganancia medi=<lb type="nb"/>ante la buena in duſtria de aquel que lo trata. Pu=<lb type="nb"/>es coſa injuſta es que alguno goze intereſſe de indu
+<lb/>ſtria y trabajo ageno. Porque ſi dizes que le lle=<lb type="nb"/>uas parte dela ganancia que produzen de ſi los di=<lb type="nb"/>neros/ engañaſte: porque nunca los dineros paren
+<lb/>ni engendran dineros ſino por buena induſtria/ y
+<lb/>trabajo del hombre: el qual no puedes tugozar ſino
+<lb/>trabajas con el<t:ornament/></p>
+<p>
+<pb facs="W0113-0014" n="fol. [v]v"/>
+<lb/>¶ Del natural y condicion del hombre ſe ſigue no<note rend="noRef" type="margin">
+<lb/>Nota. vj.</note>
+<lb/>ſer licita la vſura: por que de ſu natural fue criado
+<lb/>el hombre para compañia y amiſtad: y de aqui es o=<lb type="nb"/>bligado a ſocorrer a ſu prorimo/ amigo y hermano
+<lb/>en ſu neceſidad: ſin daño ſuyo proprio. P or lo qual
+<lb/>es obligado a remediar le con din er os ſin algun
+<lb/>intereſſe: por que dando ſe los con intereſſe mas da
+<lb/>ño y neceſſidad le añade que tenia antes: porque le
+<lb/>obliga a may or deuda que tenia haſta alli<t:ornament/></p>
+<p>
+<lb/>¶ Y anſſi por la meſma ley de naturaleza es obliga=<note rend="noRef" type="margin">
+<lb/>Nota. vij.</note><lb type="nb"/>do cada qual a vſar  miſericordia y liber al idad cõ
+<lb/>ſu prorimo quando le vee en neceſſidad: por que ſi
+<lb/>dios y naturaleza obliga al hombre rico a remediar
+<lb/>al neceſſitado a que le de limoſna delo que tiene: lo
+<lb/>q̈l es dar gracioſamẽte los dineros ſin obligacion a
+<lb/>los boluer: quãto mas ſera obligado el ricoa p̃ſtar al
+<lb/>pobre ſin intereſſe auiẽdo le obligaciõ  ſe lo boluer.</p></div2>
+<div2><p rend="hx">
+<lb/><t:b>Capitulo. iij. enel q̈l ſe pru</t:b>
+<lb/>eua ſer la vſura reprouada por ley humana: y coſtũ=<lb type="nb"/>bre de principes antiguamente pueſta y guar dada/
+<lb/>aun que al preſente corrompida.</p>
+<p>
+<lb/><hi rend="init">L</hi>Ues eſta moſtrado como la vſura ſea re=<note rend="noRef" type="margin">
+<lb/>¶ Nota. pri=<lb type="nb"/>mo.</note><lb type="nb"/>ꝓuada por ley diuina y natural: veamos
+<lb/>ogora como tãbien ſea reprouada por ley
+<lb/>humana. Titulo ay de vſuras particular
+<lb/>eñl recho ceuil: eñl q̈l viedã los emꝑadores cõ grã
+<lb/>des penas q̃ ningũo vſure cõſus dineros: ſo pena  ꝑ
+<lb/>der ſu hezienda y ſer auido por infame. Alo q̈lles
+<lb/>mouio muchas y diuerſas razones: eſtimãdo a los
+<lb/>vſur eros por publicos ladrones robadores  lo age
+<lb/>no: y por q̃ aboreciã q̃ ẽ ſus ciudades ouieſſe gẽte o
+<lb/>cioſa porq̃ redũdaua en infamia la republica. Y tã=<pb facs="W0113-0015" n="fol. vjr"/><lb type="nb"/>biẽ los põtifices deſde la primitiua igleſia tienen he=<lb type="nb"/>cho Lanon: enel q̈l priuã al vſurero delos ſacramẽ
+<lb/>tos dela y gleſia: y mandã q̃ no ſe le de ſepultura ſa=<lb type="nb"/>grada/ ni les recibã ofrẽda. Pregũtar me ha algũo
+<lb/>por q̃ ya no ſe guarda eſte Lanõ del põtifice: pues ſe
+<lb/>hã con todos cõ tãta diſſimulaciõ. Digo q̃ eſta ya tã
+<lb/>corrõpida la ſimpleza xp̃iana: y tan oluidada aq̃lla
+<lb/>primerar eligiõ y ſanctidad en q̃ la y gleſia ſe fundo: y
+<lb/>ha llegado a tal eſtado nr̃a malicia/ q̃ ya caſi ſe nos
+<lb/>ha ſaparecido como niebla/ o ſombra la ſinceridad
+<lb/>dela ley y p̃ceptos xp̃ianos. Y q̃ ya como vieja carga
+<lb/>da de muchos años aq̃lla rectitud ⁊ integridad que
+<lb/>hauia en aq̃llos padres primer os ya como canſada
+<lb/>eſta adormida q̃ ya ni la echamos  ver/ ni nos echa
+<lb/>de ver. De tal manera q̃ ſi reſuſcitaſſen agora aq̃llos
+<lb/>ṗmeros fundadoresde nr̃a religiõ q̃ con lumbre del
+<lb/>ſpiritu ſancto hizierõ canones en los q̈les nos orde=<lb type="nb"/>narõ el biuir/ o no nos conocerã/ o nos juzgarã por
+<lb/>de eſtraña ſecta y naciõ. Por q̃ antes hazemos nr̃as
+<lb/>vidas regla de ſu ley/ q̃ a ſus preceptos regla de nr̃as
+<lb/>coſtũbres: y anſi hazemos con diuerſos entẽdimien
+<lb/>tos que la ley diga qualquiera coſa cõ la qual poda
+<lb/>mos excuſar y ſaluar nueſtro mal biuir.</p>
+<p>
+<lb/>¶ Segun ꝑeſce por las lecturas antiguas la vſura<note rend="noRef" type="margin">
+<lb/>¶ Nota. ij.</note>
+<lb/>fue inuẽtada entre los egypcios (a lo menos de mi o
+<lb/>piniõ anſi es) por q̃ ſegũ yo he leydo hallo ſer la gẽte
+<lb/>mas antigua en vſo de cõuerſacion y cõtratacion 
+<lb/>cõpañia: y tambiẽ por q̃ no hallo memoria lla mas
+<lb/>antigua q̃ los egipcios. Por q̃ Diodoro ſiculo dize
+<lb/>efil. j. li. de ſu hyſtoria: q̃ el ṗmer rey de egipto fue vul
+<lb/>cano: y el. ij. Saturno: y el. iij. Oſiris/ o Dioniſio q̃ es
+<lb/>el meſmo. Deſte oſiris ſe lee auer ſido valer oſo ṗnci=<lb type="nb"/>pe ĩuẽtor  muchas coſas neceſſarias ala vida huma
+<lb/>na. Fue muy bellicoſo dado al exer cicio las armas
+<pb facs="W0113-0016" n="fol. [vj]v"/>
+<lb/>y eſte encomẽdãdo ſu reyno a ſu muger ceres ſe fue
+<lb/>a cõquiſtar eſtrañas prouincias. Lõquiſto los ethi
+<lb/>opes delos quales fue muy amado: porq̃ los enſeño
+<lb/>la agricultura: y edifico alli muchas y muy buenas
+<lb/>ciudades: fue el primero q̃ inſtituyo tributo: para el
+<lb/>cũplimiento del qual ſe comẽço a vſar la vſura por
+<lb/>faltarles alos ſubditos cõ que le ſeruir: y el los agra
+<lb/>uiaua por la paga por la neceſſidad de ſus guerras.
+<lb/>Entre los egypcios ſe vſo mucho tp̃o porque luego
+<lb/>ſe fueron corrõpiendo en ſus coſtumbres: y duro ha
+<lb/>ſta Mephar es pharaõ quarto rey de egypto q̃ fue
+<lb/>en tiempo de joſepho: el qual ſiendo enemigo deſte
+<lb/>infernal abuſo hizo juſticia de vn egipcio: por que a
+<lb/>cabando el rey de hazer liberalidad con el de le per
+<lb/>donar vna gran cantidad de moneda: acõtecio que
+<lb/>ſaliẽdo eſte egipcio de palacio ſe encõtro en la calle
+<lb/>con otro que era ſu compañero enel ſeruicio l rey
+<lb/>al qual demandando le cierta deuda que le deuia 
+<lb/>vſura porq̃ luego no ſela dio le quiſo ahogar: y co=<lb type="nb"/>mo el rey lo ſupo mdignado de ſu crueldad y ti=<lb type="nb"/>ranta le man do atar los pies a la cola de vn potro
+<lb/>y que fueſſe ſoltado por vn campo pedregoſo: el q̈l
+<lb/>en breue tiempo le deſpedaço: ⁊ ninguno vſo de ay
+<lb/>adelãte el vſurar. Aqui lo aprẽdierõ los hijos de yſ
+<lb/>rael a los q̈les ſpues Moyſẽ lo vedo por ley  dios
+<lb/>¶ Aborrecierõ en tãta mãera los ethiopeseſte mal<note rend="noRef" type="margin">
+<lb/>¶ Nota. iij.</note>
+<lb/>vſo q̃ en ſabiendo q̃ alguno q̃ria recõpenſa por el be
+<lb/>neficio hecho le deſterrauã dela prouincia: por que
+<lb/>q̃rian q̃ cada q̈l ſe conoſcieſſe ſer al otro deudor por
+<lb/>ley de naturaleza en tp̃o  neceſſidad: y no pẽſeys q̃
+<lb/>era acer ca llos pequeña pena ⁊ infamia eſta: por q̃
+<lb/>era la mayor y mas graue que ſe le podia dar: y por
+<lb/>que lo veays os quiero dezir lo que cuenta Diodo<note rend="noRef" type="margin">
+<lb/>¶ Diodo. li=<lb type="nb"/>bro quarto.</note>
+<lb/>ro ſiculo en ſu hyſtoria. Que vna muger ethiope lla
+<pb facs="W0113-0017" n="fol. vijr"/>
+<lb/>mada Apicia tenia vn hijo q̃ mucho amaua: y acon=<lb type="nb"/>teſcio que fue condenado a muerte por losjue zes de
+<lb/>ſu prouincia por cierto delito que cometio. Y acoſtũ=<lb type="nb"/>brauan en condenãdo los embiar los a ſu caſa para
+<lb/>que ellos alla ſe mataſſen con el genero de muerte q̃
+<lb/>a ellos mas les pluguieſſe. Y como eſte mancebo vi=<lb type="nb"/>nieſſe muy triſte a caſa por que le era forçado morir/
+<lb/>la madre ſe dolio mucho l: y eſtando ambos en eſte
+<lb/>dolor/ el hijo de perder ſu vida/ y la madre de perder
+<lb/>ſu hijo que tanto amaua: determino ſe el mancebo 
+<lb/>ſe deſterrar de Ethiopia antes q̃ morir. Y la madre
+<lb/>por no padecer tan grande infamia ſe lo defendio. Y
+<lb/>como no le pudieſſe ꝑſuadir a q̃ no ſe deſterraſſe dur=<lb type="nb"/>miẽdo el mãcebo vna noche le ahogo cõ ſu meſma
+<lb/>cinta q̃ ella traya ceñida. Diziẽdo q̃ le q̃ria antes ver
+<lb/>priuado de la vida y a ella de ſu cõſolaciõ y conuer=<lb type="nb"/>ſacion/ q̃ padecer perpetua infamia por el deſtierro.
+<lb/>¶ Leeſe en plutharco en la vida  Lucio luculo: q̃<note rend="noRef" type="margin">
+<lb/>Nota. iiij.</note>
+<lb/>ſiẽdo mithridates rey  la Aſſia menor fue embiado
+<lb/>por cõſul lucio ſila a la cõquiſtar: a la q̈l como la vuo
+<lb/>ganado agrauio cõ vexaciones de tributos q̃ ſin grã
+<lb/>jactura  ſus haziẽdas no los podiã cũplir: y de mas
+<lb/>deſto apoſento vn ſoldado en cada caſa/ en la q̈l le a=<lb type="nb"/>uiã de dar de comer: y mas vna ropa con q̃ y<unclear resp="#TL"></unclear> fuera
+<lb/>quãdo quiſieſſe ſalir por la cibdad. Tenia los tan a
+<lb/>premiados eſta carga/ que tenian ya todas ſus haziẽ
+<lb/>das caſi rematadas en poder delos Cheroneſes por
+<lb/>la carga de las vſuras: y aun las perſonas de mu=<lb type="nb"/>chos pueſtas por los intereſſesen ſeruidumbre. Y ro
+<lb/>ma acordo de embiar a llamar a Lucio ſila: y nom=<lb type="nb"/>bro por conſul de aquella prouincia a Lucio luculo
+<lb/>que fue entonces alla. El qual llegado alço todas a=<lb type="nb"/>quellas veraciones de los Aſianos: y como ſupo la
+<lb/>tirania de los Cheroneſes mãdo jũtar todos aq̃llos
+<pb facs="W0113-0018" n="fol. [vij]v"/>
+<lb/>vſureros y tomo les todas las obligaciones/ y ha=<lb type="nb"/>llo que en todas hauia doblado el intereſſe al princ i
+<lb/>pal: y hizo hazer vn grã fuego y ante todos las que=<lb type="nb"/>mo y hizo libre a toda Aſia de aquella vexacion/ ⁊
+<lb/>hizo vn edicto en q̃ ſo pena de muerte vedaua el vſu
+<lb/>rar/ y por aquella libertad le fue muy acepta la pro=<lb type="nb"/>uincia.</p>
+<p>
+<lb/>¶ De opiniõ de plinio es en ſu hyſtoria natural: que<note rend="noRef" type="margin">
+<lb/>¶ Nota. v.</note>
+<lb/>la vſura naſcio  la cobdicia de la moneda y oro. De
+<lb/>manera que ſe puede con el dezir que deſde que ſe
+<lb/>trata el oro y Jonos haziendo moneda hundio con
+<lb/>cuños el metal començo la vſura y logr eros. Y anſſi
+<lb/>pareſcio que de vſar mal de la moneda ſe dize abuſo<note rend="noRef" type="margin">
+<lb/>Plinio libro
+<lb/>xxxiij. cap. iij.</note>
+<lb/>o vſura: como dirimos en el capitulo ſegundo/ nota
+<lb/>ble quarto. Eſto baſte quanto a ſaber como la vſura
+<lb/>fue repro bada por la antiguedad<t:ornament/></p></div2>
+<div2><p rend="hx">
+<lb/><t:b>Capitulo. iiij. que clara</t:b>
+<lb/>que coſaſea cãbio y cambiador cõforme a las leyes
+<lb/>y de donde deſcienda eſte bocablo logrero<t:ornament/></p>
+<p>
+<lb/><hi rend="init"><unclear resp="#TL"/></hi>Apues ha plazido a dios q̃ mediãte ſu fa<note rend="noRef" type="margin">
+<lb/>¶ Nota. j.</note>
+<lb/>uor ayamos moſtrado la verdad de nr̃a
+<lb/>cõcluſiõ q̃ por ley diuina/ humana y natu
+<lb/>ral ſea la vſura re ꝓbada: q̃da agora q̃ de
+<lb/>cẽdamos a particular en eſta materia: por q̃ cada q̈l
+<lb/>ſepa quãto ofenda en eſte caſo a dios/ y quãto alo pri
+<lb/>mero q̇ero q̃ tratemos l cãbiador: el q̈l luego me pa
+<lb/>rece que dira. Yo ſeñor ſoy cãbiador de officio: tray
+<lb/>go grã coſta en las ferias y corte de caſa/ y familia cõ
+<lb/>forme a lo q̃ requiere mi eſtado y officio. Por lo q̈l
+<lb/>viniendo a mi vn hombre neceſſitado demandãdo
+<lb/>me preſtados cient ducados para ſe remediar y ga=<lb type="nb"/>nar de comer en ſu mer caduria juſta coſa pareſce q̃
+<pb facs="W0113-0019" n="fol. viijr"/>
+<lb/>preſtãdo ſe los yo que me de por la buena obra que
+<lb/>le hago algun inter eſſe. O deſuenturada nueſtra ſu
+<lb/>erte y miſ er able nueſtro ſer: quan mal ſuena en rp̃ia
+<lb/>no que ha profeſſado la ley de jeſu chriſto: palabra 
+<lb/>tãta blaſfemia. Dizes: traygo grã caſa en mi cambio
+<lb/>y officio conforme a mi eſtado. Di chriſtiano/ deſuẽ=<lb type="nb"/>turado de ti/ que eſtado es el tuyo? O quã leros eſta
+<lb/>de ay jeſu chriſto tu maeſtro a quien profeſſaſte en el
+<lb/>baptiſmo ſeguir y renunciar las põpas y titulillos
+<lb/>de ſathanas. Pero quiero agora dexar eſtado de
+<lb/>perfection: en el qual no ſe ſufre familia/ riquezas ni
+<lb/>eſtado/ ni lo de mas: y quiero te hazer ſaber que co=<lb type="nb"/>ſa es cambiador ſegun las ley es delos principes/ y
+<lb/>emperadores. Deues ſaber que los principes en
+<lb/>ſus leyes ceuiles para el gouierno de ſus reynos/<note rend="noRef" type="margin">
+<lb/>Due coſa ſea
+<lb/>cambiador.</note>
+<lb/>coſtumbres y neceſidad: inſtituyeron el officio de cã
+<lb/>biador ſolamente para conoſcer las monedas de ſu
+<lb/>reyno con experiencia de las monedas  los reynos
+<lb/>eſtraños: porque ninguno ſea engañado al tiempo 
+<lb/>las reſcebir: y juntamente con eſto para que ſi vos
+<lb/>teneys vn ducado o otra pieça mayor/ y teneys nece
+<lb/>ſſidad de vn real/ o de otra moneda menor es anexo
+<lb/>al officio daros las monedas peqneñas y menudas
+<lb/>en trueque dela mayor: y ſi alguno tiene mucha mo
+<lb/>neda menuda y tiene neceſſidad  la lleuar para ſus
+<lb/>expenſas a otra ciudad: y por que le haze carga quie
+<lb/>re la reduzir y cojer en menos vulto y peſo: el cam=<lb type="nb"/>biador de ſu officio lo deue de hazer: y por el traba=<lb type="nb"/>jo deſtas coſas para ſu mãtenimiẽto y coſta ſe le per
+<lb/>mite al cambiador lleuar algun razonable intereſſe.
+<lb/>Nota pues quan lexos eſta el officio del cambio/ ſe=<lb type="nb"/>gun las antiguas leyes/ l que agora ſe vſa en las fe=<lb type="nb"/>rias: que como veremos adelante por exẽplos/ mas
+<lb/>es negociar y aun vſurar que cambiar pues no es
+<pb facs="W0113-0020" n="fol. [viij]v"/>
+<lb/>otra coſa cãbiar ſino lo que emos dicho aqui. Y an=<lb type="nb"/>ſſi digo que ſi eſtando ſentado a tu banco viene a ti al
+<lb/>gun mercader/ o otra perſona qualquiera/ y pueſto
+<lb/>en neceſſidad te demanda preſtados algunos dine=<lb type="nb"/>ros: ſi la neceſſidad es eſtremada/ de opiniõ de todos
+<lb/>los doctores es q̃ ſo pena de pecado mortal ſe los de
+<lb/>ues p̃ſtar: y aun dar ſe los en limoſna por amor  di=<lb type="nb"/>os. Eſi la neceſſidad es q̈lquiera por ningũa via/ por
+<lb/>grãde/ ni por pequeña neceſſidad le as  lleuar iteres
+<lb/>Y ſi me pregũtas qual ſe dira eſtremada neceſſidad:<note rend="noRef" type="margin">
+<lb/>S. tho. in ſe=<lb type="nb"/>cũ. ſecũde. q.
+<lb/>xxxiij. art. v.</note>
+<lb/>digo con ſancto thomas. Que ſola aquella es en la
+<lb/>qual peligra el que la padeſce de tal manera que no
+<lb/>ſe puede ſuſtentar. Mira bien que en tu mano eſta
+<lb/>querer ofender a dios en no ſe los preſtar: pero ya q̃
+<lb/>ſe los preſtes ha de ſer ſin algũ intereſſe. Eſi tu andã=<lb type="nb"/>do en las ferias y corte te deſdeñas/ y menoſprecias
+<lb/>detrocar monedas y conocer las: y aun te injurias
+<lb/>ſi alguno llega a dezir te que lo quieras hazer/ o ſeme
+<lb/>jante coſa que baxe algo la grandeza  tu vſurar/ no
+<lb/>te llamas cãbiador/ ſino vſurero pues lo vſas an
+<lb/>ſſi: y agora preciando te de tu officio habla ſin rode=<lb type="nb"/>os: y pues a las ferias/ y corte no vas ſino a preſtar
+<lb/>pregunta me: ſi por la familia y eſtado qne traes para
+<lb/>en tu officio de preſtar: ſi es licito: por la coſta lleuar
+<lb/>algun intereſſe. A lo qual abſoluta mente te reſpon=<lb type="nb"/>do: que no es licito lleuar vn marauedi: mas que ſo=<lb type="nb"/>ys obligados a entera reſtitucion<t:ornament/></p>
+<p>
+<lb/>¶ Dezis que tratays vnos pagando aqui dineros
+<lb/>por mer cadurias que de otras partes traen: y por o<note rend="noRef" type="margin">
+<lb/>¶ Nota. ij.</note>
+<lb/>tros los embiays a diuerſas prouincias y reynos/
+<lb/>para que alla ſe compren y ſe traygan aca para pro=<lb type="nb"/>uiſion. Eque de otra manera no ſe podra tratar en
+<lb/>aquella mer caduria tan facil mente: porque ſera me
+<pb facs="W0113-0021" n="fol. ixr"/>
+<lb/>neſter embiar perſonas propias a lleuar el dinero/ o
+<lb/>traer lo/ o comprar dello la mer caduria y embiar la
+<lb/>de vn reyno a otro a ſu dueño: y que aqui auria mu=<lb type="nb"/>cho trabajo y peligro. Y principal mente por que de
+<lb/>vn reyno a otro no ſe puede ſacar dinero: por lo qual
+<lb/>ceſſarian las contrataciones: y no ſe gozarian las
+<lb/>mercadurias neceſſarias de vnas prouincias y rey=<lb type="nb"/>nos en otros. O infelices de voſotros que de vu=<lb type="nb"/>eſtra cobdicia/ y auaricia/ y ſoberuia ha naſcido eſſa
+<lb/>neceſſidad que fingis: porque enla verdad ningũa ne
+<lb/>ceſſidad tiene la republica de voſotros: antes le ſoys
+<lb/>total perdida y deſtruy cion: pues en aquellos tiem=<lb type="nb"/>pos glorioſos quando no ſe vſaua eſta diſolucion bi
+<lb/>uian los hombres mas ricos/ mas contentos/ y mas
+<lb/>deſcanſados comiendo aquello que o heredaron/ o
+<lb/>ganauan de ſu ſudor. Mas agora que os entremeti=<lb type="nb"/>ſtes en offenſa de Dios y daño del comun/ gente por
+<lb/>de mas/ days ocaſion a que todos los hombres bi=<lb type="nb"/>uan ocioſos y no quieran trabajar ni grangear: con
+<lb/>fiando que voſotros por ſus inter eſſes los remedia
+<lb/>reys ſus neceſſi dades cada y quando que con ſus
+<lb/>prendas/ o cauciones vayan a vos. Edeſpues por
+<lb/>las cargas y acumulaciones delos intereſſes y vſu=<lb type="nb"/>ras los neceſſitaysa que os vendan y rematen ſus
+<lb/>haziendas: y aſſi los deſolays y deſtruys chupando
+<lb/>los y reſumiendo lo todo en vos. Edeſta manera a=<lb type="nb"/>pocays y deſmenuys la nobleza de la republica ne=<lb type="nb"/>ceſſitando los a todos con vueſtras vſuras: por las
+<lb/>quales ſe ponen en ſumptuoſidades y exceſſos de=<lb type="nb"/>maſiados confiando q̃por ſus intereſſes voſotros
+<lb/>ſe los ſuſtẽtareys. Eno ſienten los deſuenturados el
+<lb/>veneno  vueſtra maldad haſta que ſe veẽ comidos
+<lb/>y que para pagaros es neceſſario vẽder ſus mayo=<lb type="nb"/>razgos y rentas que ſus padres les dexaron Eya que
+<pb facs="W0113-0022" n="fol. [ix]v"/>
+<lb/>los hombres (que no Dios) os ſufrieſſen lleuar algũ
+<lb/>inter eſſe para ayuda de vueſtra coſta y ſuperfluo bi
+<lb/>uir/ no es razon que os ſufran tanto exceſſo/ ni tanta
+<lb/>diſſolucion que os ayan de ſufrir lleuar para tanto
+<lb/>moço/ tanta diuerſidad de atauios/ en tanta abundã
+<lb/>cia de ſedas y paños tã finos. E para aquellos ſuper
+<lb/>fluos y demaſiados comeres de tantos ſaynetes de
+<lb/>guiſados y potajes: para tantas gallinas/ capones/ y
+<lb/>perdizes y vinos tan preciados: y para tan opulen=<lb type="nb"/>tos y explendidos vanquetes: y para tan largos jue
+<lb/>gos. Quien ha de poder ſufrir vueſtra tirania y cru=<lb type="nb"/>eldad. Que ſegun mueſtra la multipli caci on y aug=<lb type="nb"/>mento de vueſtras haziendas: que en tres o quatro
+<lb/>años creceys/ days ocaſiõ a que todos los hombres
+<lb/>preſuman que abſoluta mente robays<t:ornament/></p>
+<p>
+<lb/>¶ Pues de aqui a delante en quanto dixeremos te<note rend="noRef" type="margin">
+<lb/>¶ Nota. iij.</note>
+<lb/>llamaremos de tu nombre propio por no te injuriar:
+<lb/>y ſera de aquel comun que vſa el vulgo por nos entẽ
+<lb/>der mejor. Porque el vulgar caſtellano llaina a los
+<lb/>ſemejantes  tu officio: logreros: el qual vocablo deſ
+<lb/>ciende de vn verbo en latin que ſe dize: lucror: que
+<lb/>quiere dezir ganar: y porque trae en ſi vna cierta pro<note rend="noRef" type="margin">
+<lb/>Que coſa ſea
+<lb/>logrero.</note>
+<lb/>piedad de mala ganancia aplica lo el caſtellano a la
+<lb/>ganancia del vſurar. E anſſi queriendo le llamar lo=<lb type="nb"/>crero de ſu deriuaciõ/ corrompe le y llama le logrero
+<lb/>el qual nombre te viene por tu officio propio a ti.</p></div2>
+<div2><p rend="hx">
+<lb/><t:b>Capitulo quinto que tra</t:b>
+<lb/>ta el origen y naſcimiento del cambio que los merca
+<lb/>deres llaman real: y de tres maneras de cambios
+<lb/>reales que ay<t:ornament/></p>
+<p>
+<pb facs="W0113-0023" n="fol. xr"/>
+<lb/><hi rend="init">L</hi>Oos cãbios primer os de que quiero tra=<note rend="noRef" type="margin">
+<lb/>¶ Nota. j.</note><lb type="nb"/>tar es l que los mer cader es llaman real:
+<lb/>y en q̃ me parece que comẽço a torcer ſe el
+<lb/>nõbre de cãbiador apropiando le a mane=<lb type="nb"/>ras de negocios varios y delicados diferentes de ſu
+<lb/>propia ſignificacion: al qual cambio llaman real/ o
+<lb/>porque lo han querido llamar anſi: o por que es tan
+<lb/>trillada manera y comun de cãbiar que toman el nõ
+<lb/>bre del camino real por ſer mas comun. Y es deſta ma
+<lb/>nera: que acoſtumbran los cambiadores y mercade=<lb type="nb"/>res dar dineros enla parte donde ellos eſtan/ o morã
+<lb/>para que ſe los den en otra parte a ſus factores y ha=<lb type="nb"/>zedores y amigos/ o a otras diuerſas perſonas en el
+<lb/>reyno/ o fuera del: con aquella vẽtaja ⁊ intereſſe que
+<lb/>ellos entre ſi ſe conciertan por medio de vn corredor
+<lb/>Y eſta manerade biuir (agora la llamemos de negoci
+<lb/>ar/ o cambiar) ſegun todos los ſabios que en eſte ca=<lb type="nb"/>ſo hablan/ y ſegun mi parecer/ naſcio y tuuo origẽ en
+<lb/>dos coſas: la vna es el particular prouecho de ſe au=<lb type="nb"/>gmentar cada qual en hazienda y poſſeſſion: y la o=<lb type="nb"/>tra es el prouecho y nobleza del comun: porque vna
+<lb/>republica ſe comunique cõ otra en aquellas buenas
+<lb/>coſas de que ſon abundantes en particular. De ma
+<lb/>nera que ſi vna prouincia carece de alguna coſa que
+<lb/>para biuir mas a contento/ o mas facilmente tiene ne
+<lb/>ceſſidad: ſi la quiere traer de otra prouincia donde la
+<lb/>ay mas abundante es meneſter yr la alla a comprar:
+<lb/>porq̃ como diximos enel capitulo ſegũdo notab. iiij.
+<lb/>los dineros no fuerõ inuẽtados ſino para ſolo fin de
+<lb/>poſſeer eſtas coſas q̃ para el exer cicio dela vida nos
+<lb/>crio Dios. De manera q̃ como ſe lleuã mer cadurias
+<lb/>de vn reyno a otro/ y de vna prouincia a otra: como
+<lb/>ſedas/ brocados/ paños/ tapicerias/ lienços: y otras
+<pb facs="W0113-0024" n="fol. [x]v"/>
+<lb/>ſemejantes coſas: y como no ſe conſienten ſacar las
+<lb/>monedas de vnos reynos a otros: ni tãpoco tienẽ 
+<lb/>la vna parte ala otra el meſmo valor: porq̃ en cada re
+<lb/>yno ay ſu moneda valuada ala volũtad del rey quã=<lb type="nb"/>do le plaze la muda ſubiẽdo la/ o baxãdo la cõforme
+<lb/>a ſu neceſſidad. Por eſtas cauſas hã venido los mer
+<lb/>caderes a vſar<unclear resp="#TL"/> induſtria para ſe pagar vnos a otros
+<lb/>en diuerſas prouincias y reynos ꝑa augmẽtar mas
+<lb/>ſus mer cadurias en ſu cõtratacion. E aſſi agora ay
+<lb/>gran comunicacion y vnion enlas mer cadurias y ne
+<lb/>gocios en todos los reynos y prouincias del mundo
+<lb/>los vnos con los otros: y con mucha facilidad ſe cõ=<lb type="nb"/>munican por via deſtas induſtrias y agudezas todas
+<lb/>aquellas coſas preciadas y eſtimadas de q̃ los vnos
+<lb/>abũdan y faltã alos otros: anſſi todos las poſſeẽ con
+<lb/>menos coſta y trabajo y lasgozã cõ grã gl'ia y plazer
+<lb/>¶ Pues porque mejor nos entendamos decendiẽ=<note rend="noRef" type="margin">
+<lb/>¶ Nota. ij.</note><lb type="nb"/>do a exemplo es de ſaber q̃ ay enel comũ vſo tres ma
+<lb/>neras de cãbio real. El vno es el q̃ puſimos enel capi
+<lb/>tulo. iiij. q̃ ſe llama cãbio minuto: y es quãdo el cãbia
+<lb/>dor da las monedas pequeñas por la mayor/ o la ma=<lb type="nb"/>y or por la menor ſegũ la neceſſidad. El ſegũdo cãbio
+<lb/>es en eſta manera: q̃ ſi yo ſoy vn mer cader de heſpa=<lb type="nb"/>ña y tengo dos mill ducados en flandes/ o en francia
+<lb/>delos quales tengo neceſſidad aqui: voy a vn merca
+<lb/>der que los tiene aqui y digo le que me los de y que
+<lb/>ſe los hare pagar alla: y concierto me con el por vn
+<lb/>tanto que le dare por cada ducado que me de aqui
+<lb/>como nos concierta vn corredor. El qual concierto
+<lb/>hecho me da los dos mill ducados ⁊ yo le doy las po
+<lb/>liçes y cedulas de cambio rubricadas ſegũ lo acoſtũ
+<lb/>bro hazer: las quales el embia en aquellas partes a
+<lb/>ſu factor y luego ſe las paga mi hombre alla. Juſta co
+<lb/>ſa es que/ pues yo tenia neceſſidad deſtos dos mill
+<pb facs="W0113-0025" n="fol. xjr"/>
+<lb/>ducados aca: y para traer los de alla ſe hauia de ha
+<lb/>zer coſta del portador: y peligro de los robar/ y aun
+<lb/>peligro dela vida porque no ſe pueden facar diner os
+<lb/>de vn reyno a otro ſo penade muerte. Juſta coſa es
+<lb/>que yo de a eſte mer cader que me los da aqui vn tan
+<lb/>to porque el me eſcuſa de todos eſtos peligros y tra=<lb type="nb"/>bajos y coſtas. ¶ El ter cero cambio es anſſi. Que
+<lb/>yo ſoy vn mer cader que biuo en heſpaña/ y tengo
+<lb/>aqui dos mill ducados: los quales tengo gran neceſ
+<lb/>ſidad delos embiar en flandes/ o en francia por que
+<lb/>los deuo y no los tengo alla: y pues para embiar los
+<lb/>alla deuo de hazer vna poſta/ o eſta feta con coſtas y
+<lb/>peligro dela vida: y de mas deſto por que de vn dia
+<lb/>aotro bara/ o ſuben las monedas alla: porque las ſue
+<lb/>len valuar cada dia conforme ala plaza. Pues por
+<lb/>eſcuſar eſtas coſtas y peligros me voy a vn merca=<lb type="nb"/>der que tiene dineros en francia/ o flandes al qual ſe
+<lb/>los doy aqui: y ſe me obliga de los dar alla a mi fa=<lb type="nb"/>ctor por virtud de ſus polices y cedulas de camblo
+<lb/>que me da. Dela meſma manera es juſta coſa que yo
+<lb/>de a eſte mercader algun tãto porque me pone eſtos
+<lb/>dos mill ducados en aquellas partes para el cum=<lb type="nb"/>plimiento de mi neceſſidad: y me eſcuſa de todos aq̃
+<lb/>llos peligros y coſtas a que me hauia yo de poner:
+<lb/>preſupueſta la ſeguridad que tengo del que no me
+<lb/>faltara. Solas eſtas tres maneras ay de cambios re
+<lb/>ales: las quales yo tengo por licitas y muy buenas
+<lb/>como las tengo pueſtas aqui. Pero yaha depra=<lb type="nb"/>uado la cobdicia delos hombres la bondad deſtos
+<lb/>contratos: porque han fundado en ellos tantas agu=<lb type="nb"/>dezas y ſubtilezas que ya lo tienen todo enmaraña=<lb type="nb"/>do por ſus ganancias ⁊ yntereſſes con diuerſidades
+<lb/>de negocios en tanta multiplicacion/ que yatodo bo
+<lb/>rrado caſi no ſe ſabe juzgar qual ſea cãbio real/ ni ſe
+<pb facs="W0113-0026" n="fol. [xj]v"/>
+<lb/>halla ſimiente del. Eporque tenga algun effecto nue
+<lb/>tra buena intencion trabajaremos poner los caſos q̃
+<lb/>en cada manera de cambios ſe no s pudieren offreſ=<lb type="nb"/>cer: porque no quede nada portocar.</p></div2>
+<div2><p rend="hx">
+<lb/><t:b>Capitulo ſexto que trata</t:b>
+<lb/>de los mercaderes que para embiar apagar ſus mer
+<lb/>cadurias a eſtrañas tierras cambian los dineros
+<lb/>con ventaja<t:ornament/></p>
+<p>
+<lb/><hi rend="init"><unclear resp="#TL"/></hi>Qes como tengo dicho ha venido a tal eſ
+<lb/>tado la cobdicia de los hombres que ya ca
+<lb/>ſi no ay juyzio que ſepa hablar nidiſcerner<note rend="noRef" type="margin">
+<lb/>Nota. j.</note>
+<lb/>qual ſea cambio real: porque por ſus ganã
+<lb/>cias ⁊ intereſſes lo tiene todo confundido y enmara
+<lb/>ñado: de tal manera que para ſe ſatiſfazer no quieren
+<lb/>otro juez de ſus contrataciones: las quales cõ el me=<lb type="nb"/>nor color que tengan de cambio real las ſaluan y las
+<lb/>defienden ſin querer a ninguno otro oyr. E por que
+<lb/>ninguno pretenda ignorancia procuraremos decen
+<lb/>dir cõ ellos a particular: y luego pornemos aquellos
+<lb/>caſos en que el cambio real ſe vien e a corromper.</p>
+<p>
+<lb/>Paſſa primeramente anſſi. Que acoſtumbran los
+<lb/>mercaderes que de eſtrañas tierras traen mercaduri=<lb type="nb"/>as a eſta en q̃ vienen vna manera de contratacion
+<lb/>que no ay ninguno que no la vſe. Y es/ que en qual=<lb type="nb"/>quiera tiempo que tiene neceſſidad de embiar dine=<lb type="nb"/>ros a aquellas partes a ſus factores para cõplir ſus
+<lb/>udas los procurarã cãbiar aq̇ cõ otros mer caderes
+<lb/>cõ vẽtaja ⁊ intereſſe. Eñſta manera. Yo ſoy vn merca
+<lb/>der q̃ trato en mercadurias  flãdes/ tapicerias y liẽ=<lb type="nb"/>ços y otras coſas ſemejãtes q̃ ſe vſan traer de alla: y
+<lb/>porq̃ alla mi factor ha de pagar y cũplir los dineros
+<lb/>q̃ de aca yo le embio. En fin tẽgo neceſſidad de le em=<pb facs="W0113-0027" n="fol. xijr"/><lb type="nb"/>biar en feria de octubre dos mill ducados: y dõde yo
+<lb/>auria (guardãdo la regla del cãbio licito y bueno de
+<lb/>q̃ emos hablado Lap. v. not. ij.) de dar diner os aquiẽ
+<lb/>los hizieſſe pagar en flandes al dicho mi amigo/ o fa=<lb type="nb"/>ctor/ pues me ex cuſan el peligro y trabajo q̃ auria en
+<lb/>lleuar los: no lo hago anſſi: y digo anſſi. Yo hallo q̃ en
+<lb/>tre mercaderes me los dã a dõde los quiero y me dã
+<lb/>prouecho a mi. Porq̃ y o me ꝓcuro auiſar como eſta
+<lb/>la plaça en flãdes: y ſe q̃ vale la corona trezietos y cin
+<lb/>cuẽtamr̃is/ o treziẽtos y cincuẽta y cinco: doy ſe los a
+<lb/>aq̃l mercador y cõcertamonos por medio  vn corre
+<lb/>dor q̃ yo le  aqui treziẽtos y quarẽta y cinco/ o treziẽ
+<lb/>tos y cinquẽta. De manera q̃ me ꝑeſce q̃ porq̃ anſſi es
+<lb/>vſo y coſtũbre de negociar q̃ ſeria yo harto necio ſiq̃=<lb type="nb"/>riendo me ellos dar ganancia la dieſſe yo a ellos.<note rend="noRef" type="margin">
+<lb/>Nota. ij.</note></p>
+<p>
+<lb/>¶ Eſtos mercader es q̃ anſſi cãbiã ſus mer cadurias
+<lb/>dizẽ ſer les licito eſte gñero de contratacion porq̃ eſto
+<lb/>no lo hazẽ ellos por coſtũbre y como principal officio
+<lb/>ſino ſolamẽte quãdo quierẽ embiar los dineros lo q̃
+<lb/>hã vẽdido a cuyas er ã las mer cadurias: o quãdo hã
+<lb/>de embiar dinero a algũa parte para cõprar las  rey
+<lb/>nos eſtraños. E par eſce les q̃ no empleãdo ſus dine=<lb type="nb"/>ros ſino en traer las dichas mer cadurias y no gene=<lb type="nb"/>ralmente en cambios en que podrian mas ganar les
+<lb/>par eſce que por eſta cauſa ellos los pueden en eſta
+<lb/>manera cambiar. E tambien porque ſiempre dan ſus
+<lb/>dineros a mer caderes como ellos que los tienen ne=<lb type="nb"/>ceſſidad aqui en heſpaña para ſus contrataciones/
+<lb/>y mercadurias los quales kaltarian en ſus creditos
+<lb/>no hallando dineros a cambiar anſſi. Epor hauer
+<lb/>eſtas maneras de cõtrataciõ cũplen ſus neceſſidades
+<lb/>y eſtã en pie. Etãbien por q̃ aun q̃ lo reſcibã con algũ
+<lb/>intereſſe y perdida ſuya para flãdes lo empleã ellos
+<lb/>aqui en mercaduria enla q̈l ganã mucho mas ſin cõ=<pb facs="W0113-0028" n="fol. [xij]v"/><lb type="nb"/>paracion delo que monta el inter eſſe: o bueluẽ a cam
+<lb/>biar con mayores ventajas que en el recibo perdio:
+<lb/>y tambien porque enel cambio de flandesſe ofreſce
+<lb/>perder por la mudança que ala contina ay en la mo=<lb type="nb"/>neda acercadel valor: y tambien dizen que lo hazen
+<lb/>por el prouecho que hazen y traen a ſu republica en
+<lb/>proueher la de mercadurias que la ennobleſcen: ſin
+<lb/>las quales contrataciones y maneras de negociar
+<lb/>ceſſariã muchas coſas vtiles y neceſſarias a la repu
+<lb/>blica: alo menos que ceſſaria eſta hurdimbre de co=<lb type="nb"/>municacion y expedicion de negocios: y que vernia
+<lb/>mas a eſtado q̃ no auria quien puſieſſe en aq̃llas par
+<lb/>es vn ducado ſin q̃ le coſtaſſe el medio a poner alla.</p>
+<p>
+<lb/>¶ Atodo eſto digo que a ninguno es licito lleuar in<note rend="noRef" type="margin">
+<lb/>Nota. iij.</note>
+<lb/>tereſſe por diner os quanto quiera que remedien grã
+<lb/>neceſſidad ajena con ellos: antes emos dicho en el
+<lb/>capitulo quarto. not. primo: que tanto quãto mayor
+<lb/>neceſſidad ſe offreſciere enel proximo/ tanto mas ſo=<lb type="nb"/>mos abligados ala ſocorer ſin intereſſe. Y anſſi aun
+<lb/>que aquela quien/ yo los preſto/ o doy para que me
+<lb/>los embie en alguna parte/ aun que ſepa yo que los
+<lb/>cambia mal a otro con quien tenga el contratacion:
+<lb/>portanto no deuo yo de lleuar le inter eſſe y peccar:
+<lb/>porque eſto no me eſcuſa que yo no cometa vſura cõ
+<lb/>el. Y digo que ſi en el tal cambio el tal mer cader ſola
+<lb/>mente es ſu intencion que embiando ſus dineros pa
+<lb/>ra flandes lleguen enteros alla aſſegurando la canti
+<lb/>dad de ſu moneda con aquel genero de contrataciõ
+<lb/>por la mudança que enlas monedas de vn dia a otro
+<lb/>alla ay. Digo que deſta manera ſera licito hazer pre=<lb type="nb"/>cios en las monedas que anſſi ha de cambiar por lo
+<lb/>que adelante enel valor dellas ſe ſuele ſeguir: y aun
+<lb/>me par eſce que aun le deue el que da los diner os ha
+<lb/>zer de tal arte el cambio que dexe al que los toma al=<pb facs="W0113-0029" n="fol. xiijr"/><lb type="nb"/>guna ventaja a reſpecto del peligro y trabajo q̃ ha de
+<lb/>padeſcer en ſe los embiar a flãdescomo emos dicho
+<lb/>ya. Y porque al fin la intencion del tal mer cader que
+<lb/>anſſi cambia ſus dineros con neceſſidad de los embi
+<lb/>ar: ſu intencion es ſola ganar con ellos alguna venta
+<lb/>ja que en los tales cambios tienen ala contina mas ci
+<lb/>erta que dubdoſa: porque muchas mas vezes ganan
+<lb/>que pierden ſin comparacion. Por tanto digo que
+<lb/>tengo al tal cambio y manera de negociar por mala
+<lb/>y vſuraria y en offenſa l proximo y de dios porque
+<lb/>ſi ellos ſolamente pretendieſſen proueher en flandes
+<lb/>ſu neceſſidad ſin querer con los dineros ganar/ otros
+<lb/>muchos medios auria como los embiar alla ſin cam
+<lb/>biarlos anſſi. El medio y manera mejor que yo hallo
+<lb/>es buſcar mer caderes que dando les en feria dos
+<lb/>mill ducados los pongan llanos y enteros en flan=<lb type="nb"/>des/ o donde quiſieres: que ſe hallaran infinitos que
+<lb/>lo hagan fin faltar vn marauedi/ quanto quiera q̃ no
+<lb/>aya baxas ni ſubidas en las mudanças y valuacio=<lb type="nb"/>nes delas monedas alla. Y baſte te ganar cõ la merca
+<lb/>duria que de alla traes doze por ciento ſin que junta
+<lb/>mente con el dinero que la has de pagar ganes otros
+<lb/>tantos: porq lo tal es muy malo ⁊ infernal. Y quando
+<lb/>dizes que es ya vſo y coſtumbre de tratar y cambiar
+<lb/>anſſi para embiar dineros a aquellas partes: y que
+<lb/>ſi eſta manera de negociar ceſſaſſe faltaria y ceſſaria
+<lb/>toda la contratacion y expedicion de negocios. Reſ
+<lb/>pondo que ſomos obligados ala mala coſtumbre a
+<lb/>quebrar la el pie por que con ella no ſe offenda Dios
+<lb/>porque antes y muy mejor paſſaremos ſin tapiceria
+<lb/>de flandes que ſin el. Y ſi ceſſando eſtos malos cam=<lb type="nb"/>bios ceſſaſſe la facilidad de poner dineros y pagar
+<lb/>en diuerſas prouincias creo que enton ces ſeria me=<lb type="nb"/>jor: porque tratando moderadamente en las mer ca=<pb facs="W0113-0030" n="fol. [xiij]v"/><lb type="nb"/>durias no biuiriamos con tanta diſolucion a cerca
+<lb/>delos aparatos y trajes tan deſordenados. Quan=<lb type="nb"/>to mas que todos quantos mer caderes ay en Caſti
+<lb/>lla deſte genero de contratacion dizen: que en todo
+<lb/>el tiempo durante la feria ſe hallaran en ella infinitos
+<lb/>mercaderes que reſciban aqui mill y dos mill coro=<lb type="nb"/>nas/ o ducados y daran los meſmos enteros en flan
+<lb/>des/ o en otra qualquier parte ſin alguna falta/ o inte=<lb type="nb"/>reſſe. Y por me ſatiſſazer y no eſcreuir mentiras me
+<lb/>quiſe informar quanto de mi parte fue y de muchos
+<lb/>mercaderes ſupe ſer eſta la verdad: y que ſu cobdicia
+<lb/>deſordenada ha dado tãto lugar a ſalir ſe en eſtas cõ
+<lb/>trataciones tan fuera de razon. Y de aqui ha venido
+<lb/>que viendo los mer caderes que tan facil mente el di
+<lb/>nero gana dinero/ que ya vſan tomar infinitos dine=<lb type="nb"/>ros a cambio ſin necefſidad para dar los a mer cade=<lb type="nb"/>res neceſſitados con mayor intereſſe para diuerſas
+<lb/>partes fuera del reyno de donde hueluen con muy
+<lb/>may or. Eſte genero de cambio ſe vſa comunmente a
+<lb/>gora entre mercaderes: y cõ eſteſe hazen en breue tiẽ
+<lb/>po grandes ⁊ muy caudaloſas haziendas: y preſu=<lb type="nb"/>miendo ellos que ſon los mejores los vſan precian=<lb type="nb"/>do ſe dellos: y en verdad que no ballo en ellos nin=<lb type="nb"/>guna ſeguridad con que le podados conſentir.</p></div2>
+<div2><p rend="hx">
+<lb/><t:b>Capitulo ſeptimo en el q̈l</t:b>
+<lb/>ſe ponen los cambios que ſe vſan hazer para ſeuilla
+<lb/>entre los cambiadores y mercaderes: y pa portugal.</p>
+<p>
+<lb/><hi rend="init"><unclear resp="#TL"/></hi>Orrompe ſe tambien el cambio real en el<note rend="noRef" type="margin">
+<lb/>Nota. j.</note>
+<lb/>cambio que vſan hazer para ſeuilla. Lã=<lb type="nb"/>bia ſe entremer caderes y cambiadores pa
+<lb/>ra ſeuilla deſta manera. Yo doy aqui en fe
+<lb/>ria a pedro mercader: el qual tẽgo bien peſquiſado q̃
+<pb facs="W0113-0031" n="fol. xiiijr"/>
+<lb/>ſea buena dita y abonada: y ſi no lo es buſco ſeguro
+<lb/>demãdando buenas fianças: y anſſi doy le mill duca
+<lb/>dos q̃ me demanda en feria para que me los pague
+<lb/>en ſeuilla: y concertamo nos que me de alla vno/ o
+<lb/>dos/ o tres ducados por ciento por aquel tiempo que
+<lb/>me los demando/ ſegun como nos concertare el cor
+<lb/>redor: y ſegũ ay pocos/ o muchos dineros entre los
+<lb/>mercaderes en la feria al tiempo que hago el cam=<lb type="nb"/>bio: y conforme al tiempo que me los ha de pagar en
+<lb/>ſeuilla: porque no me contento de ganar dinero con
+<lb/>dinero/ pero quiero ganar tambien con el tiempo.</p>
+<p>
+<lb/>Deſta manera que quando yo hago eſte cambio es
+<lb/>en feria de mayo que ſon los pagamentos en fin de
+<lb/>julio/ que es quando yo doy los dineros: y me conci
+<lb/>erto con el dſcho pedro mercader que me los de en
+<lb/>ſeuilla para en fin  ſetiembre que ſon dos meſes: cõ
+<lb/>que me de de ganancia por cada cient ducados que
+<lb/>le doy vno y medio de prouecho: y mas/ o menos ſe=<lb type="nb"/>gun ay muchos/ o pocos dineros en la feria. Hecho
+<lb/>eſte concierto y pacto doy le los mill ducados a pe=<lb type="nb"/>dro mercader: y el me da vnas cedu las de cambio:
+<lb/>en las quales el eſcriue a otro mercader amigo ſu=<lb type="nb"/>yo q̃ reſide en ſe uilla para q̃ me pague a vn mi factor
+<lb/>y hazedor  mis negocios q̃ yo tengo alla: en la qual
+<lb/>pone ſu nõbre propio como yo ſe le nombro: y man=<lb type="nb"/>da que le den alla por mi los dichos mill ducados: y
+<lb/>mas los l inter eſſe ⁊ anſſi yo embio eſta cedula a mi
+<lb/>factor que tengo en ſeuilla que haze mis negocios: y
+<lb/>eſcriuo le que cobre l dicho mercader a quiẽ pedro
+<lb/>deſde aca dirigio alla ſu cedula aquel dinero por mi
+<lb/>y me lo embie a medina/ o a villalon por cambio por
+<lb/>la mas ganancia q̃ pudiere. El q̈l anſſi lo haze y tiene
+<lb/>todos los reſpectos y formas poſſibles ꝑa me embiar
+<lb/>aq̃llos dineros cõ la mayor ventaja aca: y embia me
+<pb facs="W0113-0032" n="fol. [xiiij]v"/>
+<lb/>vna cedula de cambio para que cobre yo dela perſo=<lb type="nb"/>na a quien ella viene dirigida mis dineros/ que ſon
+<lb/>los mill que yo dy a qui/ y el intereſſe con que yo los
+<lb/>embie a ſeuilla/ y mas lo que el dicho mi hazedor de
+<lb/>feuilla concerto con la perſona a quien ſe los dio a cã
+<lb/>bio que me fueſſe pagado de inter eſſe por los dichos
+<lb/>ciento y tres ducados que por mi cobro. Y embia me
+<lb/>cedulas de cambio como yo embie a el con las qua=<lb type="nb"/>les yo cobro losdichos dineros las perſonas a qui
+<lb/>en vienen dirigidas al plazo que alla concerto/ q̃ ſue
+<lb/>le ſer la primera feria en que ſe puede pagar por el co
+<lb/>mun. Los quales dineros con los dichos dos inte=<lb type="nb"/>reſſes ſer an acreſ centados en eſpacio de cinco meſes
+<lb/>mas/ o menos ſegun han paſſado los conciertos: de
+<lb/>manera que quando los torno a cobrar bueluen a
+<lb/>mi poder por lo ordinario ciento y cinco/ o ciento y
+<lb/>ſeys. Y anfſi de la meſma manera ſe puede conſiderar
+<lb/>fi fueſſen mill ducados/ y dos mill los del cambio
+<lb/>multiplicados los intereſſes quantos vernian a ſer
+<lb/>los que ſe hizieſſen al cabodel año: conſider ando tã=<lb type="nb"/>bien que de contino creſce la vſura pues creſce la cã
+<lb/>tidad dela moneda con el nueuo intereſſe: porque de
+<lb/>contino que ſe augmenta el intereſſe con el principal
+<lb/>ſe concierta nueuo intereſſe del inter eſſe que ſe lleuo.
+<lb/>De manera que ſi yo hize cambio de mill ducados
+<lb/>eſte año en feria para ſeuilla: los quales en torno y
+<lb/>retorno en todo el año ſe han hecho mill y cincuenta
+<lb/>luego que comienço a cambiar al otro año lleuare in
+<lb/>tereſſe de mill y cincuenta: y al tercero año lleuare in
+<lb/>tereſſe  mill y ciẽto: y aſſi procediẽdo en infinita mul
+<lb/>tiplicaciõ. De manera q̃ facilmẽte ſe puede cõjeturar
+<lb/>lo q̃ valdria mi haziẽda dẽtro  ſeys/ o ocho/ o veynte
+<lb/>años q̃ la puſe eñſta cõtrataciõ: la q̈l a mi pareſcer es
+<pb facs="W0113-0033" n="fol. xvr"/>
+<lb/>infernal: y la condeno a total reſtitucion: por que ſin
+<lb/>algũ peligro lleua intereſſe por tiempo y por dineros
+<lb/>¶ Para liſboa en portugal es caſi el cãbio dela meſ=<lb type="nb"/>ma manera q̃ para ſeuilla: enel qual aun q̃ aya algũa<note rend="noRef" type="margin">
+<lb/>¶ Nota. ij.</note>
+<lb/>mudança en las cir cunſtancias de mas delas dichas
+<lb/>en fin no mudan la inten cion del ganar dinero cõ di=<lb type="nb"/>nero/ ni la obra/ ni dexan de ganar mas o menos inte
+<lb/>reſſe a reſpecto del mas/ o menos tiempo en que el cã
+<lb/>bio ſe concerto. Edigo q̃ quanto quiera que todos tẽ
+<lb/>gan eſte cambio por real/ yo no le puedo llamar anſſi
+<lb/>ſino peor que ſeco y malino.</p></div2>
+<div2><p rend="hx">
+<lb/><t:b>Capitulo. viij. enel q̈l ſe po</t:b>
+<lb/>nen los cambios que comũ mente ſe vſan hazer en=<lb type="nb"/>tre cambiadores y mercaderes para valencia eſtã
+<lb/>do en feria.</p>
+<p>
+<lb/><hi rend="init"><unclear resp="#TL"/></hi>Orrompe ſe tambien el cambio real en el
+<lb/>cambio que vſan hazer para valen cia: por
+<lb/>q̃ para valencia no ſe cãbia por ducados/<note rend="noRef" type="margin">
+<lb/>¶ Nota. j.</note>
+<lb/>ſino por caſtellanos: y vale vn caſtellano
+<lb/>quatro cientos y ochẽta y cinco marauedis. Pues
+<lb/>paſſa aſſi q̃ yo doy eſtando en feria a pedro merca=<lb type="nb"/>der tantos marauedis quantos valen cient caſtella=<lb type="nb"/>nos/ con condiciõ q̃ en valẽcia me haga pagar la meſ
+<lb/>ma cãtidad q̃ valẽ los ciẽt caſtellanos q̃ yo aqui le doy
+<lb/>y ningũa coſa le lleuo de intereſſe porq̃ eſꝑo q̃ ſera ba
+<lb/>ſtãte la ganãcia q̃ me verna quando me los torne mi
+<lb/>hazedor alla en valẽcia a cãbiar ꝑa caſtilla: por q̃ cõti
+<lb/>na mẽte ſuelẽ boluer  valẽcia a. iiij. o. v. ducados mas
+<lb/>caro  ganãcia q̃ ſuelẽ boluer  ſeuilla: la cauſa porq̃
+<lb/> valẽcia bueluẽ mas caros q̃  ſeuilla es porq̃ ala cõ
+<lb/>tina ay menos dinero entre los mer cader es en valẽ=<lb type="nb"/>cia q̃ en ſeuilla. Por lo q̈l ſi de ſeuilla me embiã el di=<lb type="nb"/>nero por cãbio por tres de ganancia por ciẽto/ me lo
+<pb facs="W0113-0034" n="fol. [xv]v"/>
+<lb/>embian de valencia por ſeys. De manera que porel
+<lb/>dinero que doy a cambio para valencia en caſtilla no
+<lb/>lleuo ningũ inter eſſe y ſe me paga alla lo meſmo que
+<lb/>yo aca di: porque el inter eſſe que me viene por mano
+<lb/>de mi hazedor que por mi cobra alla es mas que el 
+<lb/>ſeuilla como es declarado. De manera que ay poca
+<lb/>diferen cia dela ganancia que hago en cambiar para
+<lb/>ſeuilla ala de valencia. Sola mente difieren los cam=<lb type="nb"/>bios en que el que yo hago para ſeuilla cometo enla
+<lb/>y da y venida vſura: y enel de valencia no la cometo
+<lb/>ala y da/ aun que ſe cometa ala buelta. Bien ſe po=<lb type="nb"/>dria dezir que enla y da de valencia ay alo menos vſu
+<lb/>ra mental: pues ſe embia aquel dinero con intencion
+<lb/>que aun que agora no me den ganancia/ a la buelta
+<lb/>me la daran doblada: la qual ganancia viene deſpu=<lb type="nb"/>es aſer ygual con y da y buelta de ſeuilla que es vſu=<lb type="nb"/>ra real. Y anſſi deſpues que yo he embiado los di=<lb type="nb"/>chos cient caſtellanos de feria a valencia por cam=<lb type="nb"/>bio con la eſperança ſobredicha tomo cedulas dellos
+<lb/>como delos de ſeuilla y embio lasa mi hazedor a va
+<lb/>lencia: y eſcriuo le que los cobre dela perſona a quiẽ
+<lb/>las cedulas van dirigidas: y que deſpuesde cobra=<lb type="nb"/>dos me los torne a embiar por cambio: lo qual haze
+<lb/>anſſi. Y viene a hauer creſcido cinco/ o ſeys/ o mas ſe
+<lb/>gun los conciertos que ha hauido: y torno yo deſpu=<lb type="nb"/>es a cambiar los para valencia/ o para otras partes
+<lb/>a donde pienſo que ſacare dellos mas prouecho: y
+<lb/>anſſi va multiplicando la ganancia.</p>
+<p>
+<lb/>¶ La meſma manera de ca mbiar ſe tiene en caſtilla
+<lb/>para çaragoça y Bar celona como enlo de Ualen=<note rend="noRef" type="margin">
+<lb/>¶ Nota. ij</note><lb type="nb"/>cia: ſolo ay entre eſtos cambios diferencia: que para
+<lb/>valencia ſe cambia por caſtellanos: y para çaragoça
+<lb/>y bar celona por ducados: pero enlo que toca al pũto
+<lb/>la vſura todos tienẽ la meſma calidad y dificultad.
+<pb facs="W0113-0035" n="fol. xvjr"/>
+<lb/>¶ Y es de notar que quando doy a cambio mis dine<note rend="noRef" type="margin">
+<lb/>Nota. iij.</note>
+<lb/>ros para valencia çaragoça/ o Barcelona como no
+<lb/>me han de dar intereſſe ninguno para ningũo deſtos
+<lb/>tres lugares por la yda ſolamente, trabajo dar ſe los
+<lb/>por poco tiempo: porque lo mas preſto que fuere po=<lb type="nb"/>ſible me los pongan alla por que mas preſto me los
+<lb/>torne a cambiar mi factor y luego hagã buelta: por
+<lb/>lo qual haura lugar enel año de ganarſe cõ ellos mas
+<lb/>intereſſe: y enlos de ſeuilla no hago cuenta del tiem=<lb type="nb"/>po: porque en fin me hã de dar vn tãto por cada mes
+<lb/>que me los tienen alla.</p>
+<p>
+<lb/>¶ Dizen los mer caderes: que les pareſce ſer licitos<note rend="noRef" type="margin">
+<lb/>¶ Nota. iiij.</note>
+<lb/>eſtos cambios ſobredichos por que cambian entre
+<lb/>ellos: y que ninguno dellos es perſona neceſſitada: y
+<lb/>que los que toman entre ellos dineros a cambio con
+<lb/>perdida: lo toman porque con el ganan ellos tambiẽ
+<lb/>en otras coſas/ tratos y mercadurias: y que pues ga
+<lb/>nã ellos cõ dinero ageno no es mucho q̃ den a quiẽ ſe
+<lb/>lo da a cãbio algũa ganãcia/ cõ tal q̃ no ſea erceſſiua
+<lb/>mas q̃ ſea tẽplada en lo q̃ comun mente ſe vſa lleuar
+<lb/>entre los mer caderes. Todas eſtas me parecẽ razo=<lb type="nb"/>nes y ercuſas infernales: y que el demonio ſe las o=<lb type="nb"/>frece para dar les animo para pecar. Lomo ſi fueſſe
+<lb/>menos vſura dar a cambio y lleuar dinero por dine=<lb type="nb"/>ro entre ſi que a otros: ni a vnos mas neceſſitados
+<lb/>que a otros. Pueſto caſo que mas graue vſura ſe co
+<lb/>metera lleuando intereſſe a vno que tiene gran nece
+<lb/>ſſidad antes que a otro que la tenga menos. Pero
+<lb/>en fin todos eſtos cometen vſura: por que aun que ſu
+<lb/>cõpañero a quiẽ los dan a cãbio gana cõ ſus dineros
+<lb/>ue ſe la ganãcia a ſubuena induſtria y trabajo y no
+<lb/>a ſus dineros. Eſtos q̃ haſta aqui emos dicho ſe llamã
+<lb/>entre los mer caderes cãbios reales: los q̈les a mi pare
+<pb facs="W0113-0036" n="fol. [xvj]v"/>
+<lb/>cer tienen vſurpado el nõbre no ſiendo tales enla ver
+<lb/>dad: ſi no quiſieſſemos zir que por llamar ſe reales
+<lb/>no por eſſo ſon de mas bondad/ ni ſon mas licitos en
+<lb/>la contratacion/ como lo emos moſtrado haſta aqui.</p></div2>
+<div2><p rend="hx">
+<lb/><t:b>Capitulo nono en el qual</t:b>
+<lb/>ſe ponen otras manerasde cambios que entre los
+<lb/>mer caderes ſe llaman cambios ſecos de proteſto<t:ornament/></p>
+<p>
+<lb/><hi rend="init">A</hi>y vna manera de cãbios q̃ llamã los mer<note rend="noRef" type="margin">
+<lb/>¶ Nota: j.</note>
+<lb/>cader es cãbios ſecos (porq̃ los q̃ haſta aq̇
+<lb/>emos dicho los llamã reales) aun q̃ todos
+<lb/>me parece q̃ ſon ſecos. Digo q̃ eſta manera
+<lb/>q̃ entre los mer caderes tratãtes y ricos es llamada
+<lb/>cãbio ſeco es tenida entre ellos por vergonçoſa y de
+<lb/>mala conciẽcia: y aborr eſcido quiẽ trata en ella: y los
+<lb/>q̃ la hazẽ ſon algunos menos ricos y mas deſalma=<lb type="nb"/>dos y cobdicioſos que los otr os: los quales por a=<lb type="nb"/>creſcentar mas preſto ſu hazienda vſan eſta manera
+<lb/>de cambiar. Lo primero es de notar que caſi ala con
+<lb/>tina dan ſus dineros a mer caderes pobres que ſabẽ
+<lb/>que ni en ſeuilla/ ni en valencia/ ni en otras partes no
+<lb/>tienẽ credito ni avn aqui ni en las ferias: ni enlas di=<lb type="nb"/>chas partes ay quien por ellos pague. Y por que les
+<lb/>parece que es verguença y gran diſſolucion dar dine
+<lb/>ro por intereſſe enel meſmo lugar vſan de vn cambio
+<lb/>fingido qual es el que ſe ſigue<t:ornament/></p>
+<p>
+<lb/>¶ Yo doy a vn mer cader ſtos pobres ſobre dichos<note rend="noRef" type="margin">
+<lb/>Nota. ij:</note>
+<lb/>llamado pedro mis diner os: y primera mente tomo
+<lb/>del buenas fianças o prendas: y doy le ciẽt ducados
+<lb/>a cãbio para ſeuilla/ o valẽcia: y porque ſe que tiene
+<lb/>gran neceſſidad delos dineros y que me dara quãto
+<lb/>intereſſe yo quiſiere por ellos: ſi otro poderoſo merca
+<lb/>der me daria por ellos dos por ciẽto hago que pedro
+<pb facs="W0113-0037" n="fol. xvijr"/>
+<lb/>me de a tres/ o quatro. Y ſi es para valencia y con q̈l
+<lb/>quiera otro mercader poderoſo ſe los daria por pla
+<lb/>zo de dos meſes ſin intereſſe ningũo/ a eſte pedro po
+<lb/>bre mer cader ſe los doy con condiciõ que me los ha
+<lb/>ga pagar dentro de vn mes: y aun que me de intereſ
+<lb/>ſe por ellos/ no ſiendo coſtumbre de le dar en cam=<lb type="nb"/>bios de valencia como emos dicho. Delo qual ſe le
+<lb/>ſigue a eſte dos daños: el vno dar inter eſſe contra la
+<lb/>coſtumbre: y el otro que por pagarme los dineros en
+<lb/>valencia enel breue plazo que le di viene mas preſto
+<lb/>el tiẽpo de pagar el recambio que alla ſe haze en va=<lb type="nb"/>lẽcia que ſifuera por tiempo largo. De manera que
+<lb/>como en aquel tiempo tomaron a cambio los mer ca
+<lb/>deres ricos y de credito dineros para pagar enla fe=<lb type="nb"/>ria de medina de rio ſeco que viene deſpues dela de
+<lb/>mayo de medina l campo: porque ſe los di yo a eſte
+<lb/>mercader pobre para mas breue tiempo ſale me los
+<lb/>a pagar dentro en feria de mayo con ſus intereſſes.
+<lb/>De manera que por ſer eſte pobre y no tener credito
+<lb/>y aun por no lo ſaber negociar pierde mas q̃ los otros
+<lb/>mer caderes de credito: pierde mastiempo dende fe
+<lb/>ria de mayo ala feria de agoſto: y ſi no tiene diner os
+<lb/>para pagarme y los ha de tomar a cambio le cõtarã
+<lb/>de vna feria a otra tres o quatro por ciento: y porque
+<lb/>es pobre y ſin credito me da el intereſſe y pone el pla
+<lb/>zo del pagar ſegun yo lo quiero. Y porque eſte con=<lb type="nb"/>trato me par eſce muy vergõçoſo hago q̃ todo aque=<lb type="nb"/>llo que le lleuo de intereſſe me lo de luego del princi=<lb type="nb"/>pal que yo le doy: porque no paſſe eſcriptura algũa
+<lb/>dello ni la juſticia lo pueda ſaber. Y para eſtos cam=<lb type="nb"/>bios ay particular es corredores a parte: porque los
+<lb/>corredores que ſe precian de hombres  biẽ no quie
+<lb/>ren entender enellos: y anſſi le doy a pedro merca=<lb type="nb"/>der los cient ducados y me haze la cedula dellos y
+<pb facs="W0113-0038" n="fol. [xvij]v"/>
+<lb/>l inter eſſe q̃ ſuene ſer razonable/ y va la cedula l cã
+<lb/>bio dirigida a vna ꝑſona q̃ yo en toda valẽcia le q̇era
+<lb/>nõbrar la qual ni pedro nũca vio/ ni nũca conoſcio/
+<lb/>por lo qual yo ſe cierto q̃ ni la cedula ſera cũplida/ ni
+<lb/>pagada y eſta cedula embio la yo a mi factor a valen
+<lb/>cia/ el qual la preſenta a quiẽ va dirigida/ y como no
+<lb/>la paga por no conoſcer a pedro q̃ enel los libro ha=<lb type="nb"/>ze le mi factor vn proteſto con vn eſcriuano/ y junta=<lb type="nb"/>mente haze ſe peſquiſa a como vienen dineros entõ=<lb type="nb"/>ces aca en cambio por mes/ para lo qual mi hazedor
+<lb/>tiene corredores de manga y amigos q̃ jur ã auer he
+<lb/>cho cambios ala ſazon de mas cantidad/ a tres y me
+<lb/>dio y quatr o por ciento/ y tomado por teſtimonio to
+<lb/>do eſto ante vn juez embian me aca proteſto ⁊ infor=<lb type="nb"/>macion/ por el qual yo cobro de pedro mis dineros
+<lb/>y paga me aquel intereſſe que vino por teſtimonio 
+<lb/>valencia que ſe cambiauan entonces dineros para
+<lb/>aca.</p>
+<p>
+<lb/>¶ Y porque ay algunos mer caderes que les par eſ=<note rend="noRef" type="margin">
+<lb type="nb"/>Nota. iij.</note><lb type="nb"/>ce ſer eſte cãbio muy deſhoneſto ⁊ infame/ porno ve
+<lb/>nir a tanta publicacion de juez y teſtigos vſan deſta
+<lb/>cautela. Que ſi yo ſe los di los dineros a pedro a eſte
+<lb/>cambio de valencia ſcribo vna carta a mi hazedor q̃
+<lb/>tengo alla eneſta manera. Pedro os eſcribira por ce
+<lb/>dula de cãbio q̃ pagueys a vos meſmo ciẽt ducados
+<lb/>pagar los eys/ y tomar los eys a cambio ſobre el/ y
+<lb/>anſſi luego mi hazedor toma los cient ducados a cã=<lb type="nb"/>bio de algũo/ y eſcribe a pedro pobre mer cader por
+<lb/>ſu cedula de cambio aqui que me los pague a mi cõ
+<lb/>aquel inter eſſe que a el alla le coſtar on a cambiar/ y
+<lb/>anſſi me los paga luego pedro con aquel intereſſe q̃
+<lb/>puede ſer que ſean quatro por cinnto/ y alas vezes
+<lb/>mas/ como mifactor quiere alla cargar. Anſſi ay mu
+<pb facs="W0113-0039" n="fol. xviijr"/>
+<lb/>chos mer cader es en caſtilla que tratan con eſte ge=<lb type="nb"/>nero de tomar a cambio/ los quales por ſer deſor=<lb type="nb"/>denados y tiranos los inter eſſes ſe pierden muy pre
+<lb/>ſto y ſe alçan/ y deſtruyen a ſus fiadores/ por lo qual
+<lb/>con gran difficultad ballã quien los fie en eſte gene=<lb type="nb"/>ro de contr atacion/ eſte cambio es infernal y de grã
+<lb/>tirania/ obligado a reſtitucion.</p>
+<p>
+<lb/>¶ Los mer caderes que deſta manera dan a cam=<note rend="noRef" type="margin">
+<lb/>Nota. iiij.</note><lb type="nb"/>bio tienen por excuſa y razon para defender que ſea
+<lb/>licito eſte cambio dezir. Que por el peligro que ſe
+<lb/>les offreſce en ſus haziendas y monedas en ſe alçar
+<lb/>eſtos pobres mer caderes y perder ſe todo ſu princi=<lb type="nb"/>pal/ porque dizen que ſiempre hazen eſte cambio cõ
+<lb/>mer caderes que eſtan muy neceſſitados/ tanto que
+<lb/>ſi no los ayudaſſen con eſta moneda ſe alçarian/ y ſe
+<lb/>yrian a las car celes donde les era forçado comer per
+<lb/>petumente de limoſnas/ por que ſe les venderia ſu
+<lb/>hazienda hijos/ y muger. Anſſi dizen que les par eſ=<lb type="nb"/>ce ſer licito lleuar les eſte intereſſe pues de mas de
+<lb/>remediar les ſus nec eſſidades eſtremadas/ ponen
+<lb/>ſus dineros en ellos a peligro de ſe perder. A los
+<lb/>quales yo reſpondo anſſi. Que eſte peligro no los ex
+<lb/>cuſa/ por que no eſta anero eſte peligro a la merca=<lb type="nb"/>duria y diner os que le dio/ ſino a la perſona que ſe al
+<lb/>ça y lo ha de tratar. Anteste digo (y mira lo bien)
+<lb/>que eſſe peligro que ſoſpechas/ y qualquiera otro
+<lb/>mayor/ ſolamente te podria acobardar para no pre=<lb type="nb"/>ſtar tus diner os a eſſe mer cader/ y anſſi podrias por
+<lb/>entonces dexar ſe los de preſtar/ y aun podria ſer
+<lb/>q̃ le hizieſſes mas prouecho en no ſe los p̃ſtar/ y ſi me
+<lb/>dizes q̃ te he obligado a preſtar lo por eſtar en eſtre
+<lb/>mada neceſſidad. Mira bien que entõces er es mas
+<lb/>obligado a ſe los preſtar ſim inter eſſe. Quãto mas q̃
+<pb facs="W0113-0040" n="fol. [xviij]v"/>
+<lb/>no puedes con razon dezir que por diez ducados q̃
+<lb/>le lleuas de inter eſſe aſſeguras los ciẽto l principal:
+<lb/>antes me pareſ ce que pones en ventura mas dine=<lb type="nb"/>ros que haſta aqui: pues pones en ſu confiança con
+<lb/>los ciento principales los diez del inter eſſe. Quãto
+<lb/>mas que no ſe hazen agora los negocios entre los
+<lb/>mer caderes tan a mal recaudo que ſe auẽture a per
+<lb/>der mucho: que agora juntamente cõ prendas de pla
+<lb/>ta y oro y obligacion demandã ſeguro fiador que co
+<lb/>rreſponda (como dizen) dia adiado enel tiempo la
+<lb/>obligaciõ. Anſſi que ſi ſe les alça el pobre/ el rico les
+<lb/>quedapor fiador obligado a pagar.</p></div2>
+<div2><p rend="hx">
+<lb/><t:b>Captulo decimo eñl qual</t:b>
+<lb/>ſe pone vna manera de cambios que entre mer cade
+<lb/>res y cãbiadores es llamada cambios arbitros eſtã
+<lb/>do en feria.</p>
+<p>
+<lb/><hi rend="init">O</hi>Tra manera de cambios ſe vſa entre
+<lb/>mer cader es y cambiadores la qual ſe
+<lb/>llama entre ellos cambios arbitros. Y
+<lb/>para entender eſta manera de cambios
+<lb/>es de notar: que todos los mer cader es
+<lb/>tratantes ſe cartean ala cõtina entreſi: y en cada car
+<lb/>ta que ſe eſcriuen de qualquier lugar donde eſten ſe
+<lb/>hazen los vnos alos otros ſaber todos los precios
+<lb/>en que al preſente ſe cambia el dinero para qualqui=<lb type="nb"/>er lugar deſde alli. De manera que el que quiere ſer
+<lb/>buen mer cader ha de tener amigos y hazedores en
+<lb/>valencia y en ſeuilla y en liſboa/ y en bar celona/ y en
+<lb/>francia/ y anſſi en todos los lugar es donde aya cam
+<lb/>bios de dinero: los quales decontino que le eſcriuã
+<lb/>le auiſſen delos precios en que ſe cambian al preſen=<lb type="nb"/>te para cada otra parte. y aſſi los mer caderes de cre
+<pb facs="W0113-0041" n="fol. xixr"/>
+<lb/>dito como ſon auiſados que en ſeuilla ay mucho di=<lb type="nb"/>nero eſcriben a ſu haze dor en ſeuilla que tomen di=<lb type="nb"/>neros a cãbio ſobre ellos alla al menos intereſſe que
+<lb/>pudieren y que ſe lo cambien para aqui/ y anſſi deſta
+<lb/>maner a ellos toman diner os a cãbio aca para ſeui=<lb type="nb"/>lla don de ellos eſcriuen a ſu hazedor que los tome
+<lb/>alla a cãbio en ſu nombre y los pague alla por el: de
+<lb/>maner a que como en ſeuilla ay mucho dinero pien=<lb type="nb"/>ſa que le coſtar a poco intereſſe: y aquel dinero que
+<lb/>el aqui tomo a cãbio lo da a cãbio a otras perſonas
+<lb/>que le dã inter eſſe por ello: y eſcribe a ſu hazedor q̃
+<lb/>por el cobra y paga en valencia que lo cobre y ſe lo
+<lb/>embie por cambio de la manera que he dicho que ſe
+<lb/>hazen los cambios de valẽcia. y eſto lo haze porque
+<lb/>co mo es auiſado que el dinero vale mucho por que
+<lb/>ay poco dello en valencia tiene eſperança que le ver
+<lb/>na mucho mas intereſſe dello de lo que pierde en el
+<lb/>dinero que tomo a cambio para ſeuilla. De man e=<lb type="nb"/>ra que para hazer eſto ha men eſter el mercader a=<lb type="nb"/>prouechar ſe del credito: por que ſin el ni le darian
+<lb/>dineros a cambio/ ni en ſeuilla pagariã dineros por
+<lb/>el/ ni en otra parte algũa: y anſſi no le dando a cam=<lb type="nb"/>bio/ ni pagando en otras partes por el ceſſa eſte gene
+<lb/>ro de contratacion. Eſuccede deſta manerade cam=<lb type="nb"/>bios que algunas vezes por no ſer bien auiſado el
+<lb/>mer cader de ſu hazedor: o porque mientra viene el
+<lb/>auiſo y de aca ſe haze el recaudo/ vienen en aquella
+<lb/>tierra dineros/ o faltan mas/ ſuccede que en eſta ma
+<lb/>nera  cambio penſando ganar pierde: y puedeper=<lb type="nb"/>der tantas vezes y tanta cantidad que no tiene con
+<lb/>que pagar lo que dene: y anſſi pierde el credito y es
+<lb/>le forçado alçar ſe. De manera que ſi los tales no ha
+<lb/>llarã dineros a cambio/ ni los tomaran/ ni entendie=<lb type="nb"/>ran en eſte genero de infernal contratacion: por la
+<pb facs="W0113-0042" n="fol. [xix]v"/>
+<lb/>qual permite Diosque ſe ayan de perder ſus ha ziẽ
+<lb/>das aqui: y poner en peligro las animas para alla.
+<lb/>Es gran daño el que ſucede deſte cambio: porque cõ
+<lb/>el ſe hazen ala contina ricos en gran manera vnos/
+<lb/>y ſe alçan y pier den otros: porque los que ſe alçan
+<lb/>mientra tienen credito ſiempre pagan lo que deuen
+<lb/>con dineros que toman a cambio padeſciendo de cõ
+<lb/>tino may ores inter eſſes: por lo qual la deuda ſe haze
+<lb/>may or haſta que pierden el credito y no pueden pa=<lb type="nb"/>gar: la intencion de todos eſtos es ganar con dine=<lb type="nb"/>ros dinero por lo qual no ſe puede ſaluar/ aun que
+<lb/>ellos dizen que tienen ventura por que en eſte cam=<lb type="nb"/>bio corre peligro de perder ſus haziendas/ por que
+<lb/>ſe les puede alçar el mer cader. No me par eſce que
+<lb/>les baſta eſte peligro: por que no dera tampoco vn la
+<lb/>dron de pecar ſaliendo a vn camino a robar/ o entrã
+<lb/>do en caſa agena aun que pone la vida a peligro de=<lb type="nb"/>la perder: lo qual es mas auentur ar que la hazien=<lb type="nb"/>da que auentura el mercader. Por lo qual afirmo q̃
+<lb/>ambos ſon obligados a reſtituciõ/ anſſi el mercader
+<lb/>como el ladron.</p></div2>
+<div2><p rend="hx">
+<lb/><t:b>Capitulo. xj. enel qual ſe</t:b>
+<lb/>pone la manera/ que vſan los mercaderes y cambi=<lb type="nb"/>adores cambiar para leon de francia.</p>
+<p>
+<lb/><hi rend="init">H</hi>Coſtumbran los cambiadores y merca=<lb type="nb"/>deres cambiar para leon de francia en
+<lb/>eſta manera. Que doy yo aquitreziẽtos
+<lb/>y quarenta y cinco marauedis: o trezien
+<lb/>tos y cinquenta/ o trezientos y cinquẽta
+<lb/>y cinco: y mas/ o menos ſegun que ay mucho o poco
+<lb/>dinero y ſegũ las maneras q̃ ſaben de ſi ay mucho o
+<lb/>poco dinero en leõ: para q̃ alla me den vn eſcudo/ q̃
+<lb/>es vna corona que ſe llama de mar cos. Y eſte eſcudo
+<pb facs="W0113-0043" n="fol. xxr"/>
+<lb/>de marcos vale cierta poca coſa menos que vna co=<lb type="nb"/>rona del ſol. Y eſta moneda no la ay ſino que los mer
+<lb/>caderes anſſi lo han inuentado que ſe cambie en aq̃=<lb type="nb"/>lla moneda: en lo qual deue hauer algun prouecho
+<lb/>en cãbiar ſe anſſi. De manera q̃ para hauer yo vna
+<lb/>corona ſtas en leõ algũas vezes pierdo y algũas ve
+<lb/>zes gano: y lo q̃ pier do es por cauſa la ganãcia q̃ eſ=<lb type="nb"/>pero  quãdo me los tornarã a embiar por cãbio el
+<lb/>factor q̃ tengo alla en leon. Al qual yo embio la ce=<lb type="nb"/>dula de cambio que tomo enla manera que en los o=<lb type="nb"/>tros cambios ya dichos hago: y el los cambia alla
+<lb/>por mi/ y da vno de aquellos eſ cudos de mar cos: y
+<lb/>porque no le ay/ da la valor por mi del en moneda 
+<lb/>francia: y concierta ſe para que el que le toma me ha
+<lb/>ga pagar aca por aquel eſ cudo trezientos y ſeſenta/
+<lb/>trezientos y cinquenta y cinco/ o treyientos y cincu=<lb type="nb"/>enta marauedis/ y a vezes trezientos y quarenta y
+<lb/>ocho ſegun que ay en leon neceſſidad/ o ſobra de di/
+<lb/>neros. De manera que en eſte cambio algũas vezes
+<lb/>fe pierde/ aun que ſon mas vezes las que ſe gana.
+<lb/>Pero ſiempre que pier do algo para alla lo auentu=<lb type="nb"/>ro porque eſpero ganar enel recambio aca/ y ſi pier=<lb type="nb"/>do algo aca es porque eſpero gan ar eñl recãbio alla
+<lb/>¶ Mi intencion es dañada eneſte cambio/ por que
+<lb/>tambien quiero ganar pur amente dinero con dine=<lb type="nb"/>ros como enlos otros ſin auenturar peligro que los
+<lb/>pueda excuſar/ por que la concluſion deſte cambio
+<lb/>es cobrar yo mi eſcudo con gonancia/ o con perdida
+<lb/>y ſiempre fe endereça la ganancia aca quan do torno
+<lb/>yo a cambiar. Eſi vna vez no gano/ acierto en otra/
+<lb/>y acoſtumbrãdo adelante el cambiar como enlos o=<lb type="nb"/>tros cambios en breue tiempoſucceden las ganan ci
+<lb/>as y haziendas caudaloſas.</p></div2>
+<div2><p rend="hx">
+<pb facs="W0113-0044" n="fol. [xx]v"/>
+<lb/><t:b>Capitulo. xij. enel qual ſe</t:b>
+<lb/>pone la manera q̃ vſan los cambiadores y mercade=<lb type="nb"/>res cambiar para la ytalia.</p>
+<p>
+<lb/><hi rend="init">P</hi>Ara ytalia es cambio dela meſma manera
+<lb/>q̃ para leon: ſolam ente difieren en q̃ cambi
+<lb/>an para ytalia en ducados deſta manera.
+<lb/>Que doy aqui trezientos y ſeſenta y cinco
+<lb/>marauedis/ o trezientos y ſeſenta/ o trezientos y ſe=<lb type="nb"/>ſenta y ſeys/ o trezientos y ochenta marauedis por
+<lb/>hauer enla ytalia vn ducado/ y los hago cobrar y cã
+<lb/>biar alla como los otros cãbios ya dichos: y mi ha=<lb type="nb"/>zedor qne tengo alla da alla vn ducado de oro/ o lo
+<lb/>que vale: y concierta que la perſona a quiẽ lo da me
+<lb/>haga pagar aqui trezientos y ochenta/ o trezientos
+<lb/>y nouenta o quatrozientos marauedis por cada du
+<lb/>cado: y algunas vezes me dan aqui trezientos y ſe=<lb type="nb"/>ſenta y cinco marauedis ſegun la poca/ o mucha mo
+<lb/>neda que enla ytalia ay al tiempo de hazer el cãbio.
+<lb/>Pero las mas vezes ſe gana/ porque ſi alguna per=<lb type="nb"/>dida viene  alla/ aca ſe gana enel recambiar que yo
+<lb/>aca hago. En eſte cãbio doy el meſmo juyzio y ſentẽ=<lb type="nb"/>cia que di enlos cambios ſemejantes que emos pu=<lb type="nb"/>eſto antes deſte: por que todos eſtos eſtan en la meſ=<lb type="nb"/>ma dificultad y razon.</p></div2>
+<div2><p rend="hx">
+<lb/><t:b>Capitulo. xiij. en que ſe po</t:b>
+<lb/>nen algunas diferencias de prouechos q̃ tienen los
+<lb/>cãbiadores enel pagar dela moneda y tiempo.</p>
+<p>
+<lb/><hi rend="init">T</hi>Ambien es de notar algũos prouechos
+<lb/>que tienen los mer caderes y cambiado
+<lb/>res enel pagar los din eros que dã a cã<note rend="noRef" type="margin">
+<lb/>Nota. j.</note>
+<lb/>bio: el primer prouecho es que el mer=<lb type="nb"/>cader quando da a cãbioſiempre lo li=<pb facs="W0113-0045" n="fol. xxjr"/><lb type="nb"/>bra en vn cãbio delos q̃ andan en ferias/ en tal mane
+<lb/>ra que ſi el que toma a cambio le quiere ſacar en di=<lb type="nb"/>neros/ que dizen al tanto/ le cueſtan ſeys del millar:
+<lb/>lo qual pagan por vna coſtumbre ya introduzida en
+<lb/>tre cambiadotes: que ſi ellos deuen a vno librançay
+<lb/>el que cobra quiere dinero al contado dera al cam=<lb type="nb"/>bio ſeyspor cada millar: y ſi algũo tiene en ſu poder
+<lb/>del cambiador dinero contado/ y deue a alguno di=<lb type="nb"/>neros en librança libra le en aquel cambiador que ti
+<lb/>ene ſu dinero y el cambiador paga ala perſona cuyo
+<lb/>es el dinero por cada mull marauedis cinco porque
+<lb/>no lo ſaco de contado: y deſta manera  librança ſon
+<lb/>pagados todos los que venden mercaderia: y ellos
+<lb/>van pagados por la coſtumbre.<note rend="noRef" type="margin">
+<lb/>Nota. ij.</note></p>
+<p>
+<lb/>¶ A eſto me pareſce que todaseſtas coſtunibres q̃
+<lb/>han introduzido los mercader es y cambiadores en
+<lb/>las quales lleuan intereſſes me par eſcen no ſer ſegu
+<lb/>ras/ mas antes ſon muy peligroſas/ por los muchos
+<lb/>daños q̃ ſe recreſcẽ a muchos en particular/ y a nin=<lb type="nb"/>guno viene prouecho ſino alos q̃ anſſi lo vſan. Por
+<lb/>que ſi vn mer cader eſtrangero vendio cient quinta=<lb type="nb"/>les de açucar enla feria/ pongo por caſo a precio de
+<lb/>diez ducados el quintal: que mas ha de auer ſino q̃
+<lb/>el mer cader que las compra en reſcibiendo la mer ca
+<lb/>duria lleue al mer cader a fu caſa y le pague a ſu con=<lb type="nb"/>tento el valor dela mer caduria que le dio. Que ju=<lb type="nb"/>ſticia/ o razon quiere/ o ſufre/ que por que tu tienes
+<lb/>tus dineros (con que eneſtaferia has de tratar) en po
+<lb/>der de vn cambiador por dar le prouechos en las pa
+<lb/>gas/ o porque lospuedes tu tener de alli que libres
+<lb/>aquella paga enel cambiador donde le ſonſacan ſe=<lb type="nb"/>ys marauedis del millar: yo bien ſe que ſi va paga=<lb type="nb"/>do eſte tal/ no va contento en ſu intenciõ: por que aun
+<lb/>que tu quiras bazer mas coſtumbres por tu proue=<pb facs="W0113-0046" n="fol. [xxj]v"/><lb type="nb"/>cho no has de fraudar al pobre mer cader por te ha=<lb type="nb"/>zer a ti bien: que al fin todo el prouecho redunda en
+<lb/>ti: por que tu ponestus diner os alli y le das aque=<lb type="nb"/>llos ſeys del millar porque pagando en librança lle=<lb type="nb"/>uas tu los cinco: y de mas deſto aprouechas te  cre
+<lb/>dito/ que muchas vezes pagan mas dineros por ti
+<lb/>que tu puſiſte alli: y muchas vezes te abiuan para cõ
+<lb/>tratar: y aceptan las libranças de tus mer cadurias
+<lb/>con eſperança que venida la feria lleuaras alli tus
+<lb/>dineros y contratacion. En fin todas eſtas ſon infer=<lb type="nb"/>nales maner as de biuir aqui para morir perpetua=<lb type="nb"/>mente alla. Mejor ſeria que cada vno trataſſẽ y cõ=<lb type="nb"/>praſſe lo quepuede pagar: y quando compraſſes pa
+<lb/>gaſſes ſin hazer carga al mercader: que es gran in=<lb type="nb"/>gratitud/ que ſobre dar te ſu hazienda en el precio q̃
+<lb/>te la quiſo dar para que puedas ganar de comer le
+<lb/>hazes la paga dõde le es neceſſario per der de ſu cau
+<lb/>dal. Yo de mi digo que penſaria hazer gran deſcorte
+<lb/>ſia y mala criança a aquel mercader con quien trato
+<lb/>y por ſolo no vſar con el de ceuilidad/ apocamiento
+<lb/>⁊ ingratitud no ſe los libraria alli. Y ſi yo no tuuieſſe
+<lb/>diner os para pagar deuo de conciencia chriſtiana y
+<lb/>de buena criança yr al cambiador y ſacar los dine=<lb type="nb"/>ros como yo quiſieſſe y me entendieſſe alla y hoſpe=<lb type="nb"/>dando en mi caſa al mer cader pagar le en contado
+<lb/>aſu contento la mer caduria que me dio. Edeſto ſe ſi
+<lb/>guia que haria lo que deuo a chriſtiano: y aun otra
+<lb/>vez quando el mer cader vinieſſe aqui dar me haſu
+<lb/>mer caduria en p̃cio menor/ ẽ q̃ pueda yo mas ganar
+<lb/>¶ Ay tambien diferẽcia entre oro y moneda. Que<note rend="noRef" type="margin">
+<lb/>Nota. iij.</note>
+<lb/>ſi yo tengo mil ducados en oro y los quiero dar a vn
+<lb/>cãbiador/ o a otro que los ay a meneſter me dara (de
+<lb/>mas dela diferencia que ay de contado a librança)
+<lb/>mill y cinco/ o mill y ſeys/ o mas/ o menos ſegun ay
+<pb facs="W0113-0047" n="fol. xxijr"/>
+<lb/>mucho dinero/ o poco enla feria: y ſegun me concier
+<lb/>to enla ſobredicha librança/ la qual me ſir ue tanto co
+<lb/>mo ſi los reſcibieſſe en dineros contados/ porque cõ
+<lb/>ellos pago todos los negocios que enla feria hago y
+<lb/>cambios y las mer cadurias que compro.</p>
+<p>
+<lb/>¶ Eſte caſo claro eſta/ pues ſin ningun peligro/ ni li=<lb type="nb"/>ſion lleuo por toda aquella feria aquellos ſeys du=<lb type="nb"/>cados por los mil/ principalmente auiendo dellos 
+<lb/>pagar todo lo que yo cõprare en la feria/ y todo lo q̃
+<lb/>yo diere a cãbio. Pareſce me que de mas de ſer in=<lb type="nb"/>fernal vſura lo tal/ es cruel tirania.</p>
+<p>
+<lb/>¶ Es de notar que lo que digo arriba/ que ay dife=<note rend="noRef" type="margin">
+<lb/>Nota. iiij.</note><lb type="nb"/>rencia de ducados de oro a librança/ lo que dicho tẽ
+<lb/>go es enlos pagament os delas ferias/ o ocho dias
+<lb/>antes. Eay deſpues otra coſa/ que ſi yo tengo mill du
+<lb/>cados quinze dias antes delos pagamentos dela fe
+<lb/>ria/ o veynte dias/ o treynta/ o mes y medio/ o menos
+<lb/>conforme al tiempo que ay haſta los pagamentos en
+<lb/>que me han de ſer pagados los dichos mill duca=<lb type="nb"/>dos/ quando anſſi los doy lleuo mas de los dichos
+<lb/>cinco/ o ſeys ducados por el millar/ otros tantos/ o
+<lb/>mas/ o menos ſegun me concierto con el que me los
+<lb/>toma y nos parefce que mereſce la dilacion del tiem
+<lb/>po en que me los ha de pagar. Deſta manera yo ten
+<lb/>go mil ducados de oro/ ocho dias antes delos paga
+<lb/>mentos dela feria hallo quien me dara por ellos mil
+<lb/>y ocho en librança. E ſi los tengo los dichos mill
+<lb/>ducados veynte dias antes delos pagamentos/ o en
+<lb/>vn mes antes hallare quien me de por ellos mill y
+<lb/>diez y ſeys: y aun mill y veynte al tiempo delos paga
+<lb/>mentos. Y eſta manera de aprouechar ſe anſſi el oro
+<lb/>como el tp̃o lo vſan mas los cãbiadores q̃ otros mer
+<lb/>caderes. Etãbien los cõciertos ſtos prouechos los
+<lb/>hazẽ por mano de corredores como los otros cãbios
+<pb facs="W0113-0048" n="fol. [xxij]v"/>
+<lb/>¶ E anſſi lo que los mer cader es dã a cambio lo pa<note rend="noRef" type="margin">
+<lb/>Nota. v.</note>
+<lb/>gan en librança: y lo que ellos reſciben de los cam=<lb type="nb"/>bios que de fuera les ſon embiados reſciben por el
+<lb/>contado en oro: por los  ſeuilla ſeys al millar: y por
+<lb/>los de valencia y leon ſiete: y por los de flandes cin=<lb type="nb"/>co: y los de roma ſe pagan en dineros al contado/ q̃
+<lb/>es tanto como ſi ſe los dieſſen en librança y cin co al
+<lb/>millar. Etodos eſtos ſon prouechos que vienen de
+<lb/>masdel prouecho principal que es tanto por ciento
+<lb/>alos que dan a cambio: y todos ſon daños los que
+<lb/>han tomado a cambio. Todas eſtas ſon maneras
+<lb/>municion y artilleria para yr mas facilmente las al=<lb type="nb"/>mas al infierno: porque todo eſto es tir ana vſura. E
+<lb/>añado ſobre vſura tirana porque me pa reſce q̃ eſto
+<lb/>es viura doble con gran crueldad.</p>
+<p>
+<lb/>¶ Ni los excuſa a eſtos de pecado dezir que tratan<note rend="noRef" type="margin">
+<lb/>Nota. vj.</note>
+<lb/>eſtos cambios entre ſi y que todos eſtos entre quiẽ
+<lb/>los vſan ſon mer caderes como ellos/ y que es ma=<lb type="nb"/>nera y arte de negociar/ y que anſſi como los vnos
+<lb/>ganan con los otros/ anſſi los otros ganã cõ otros.
+<lb/>Eſto no los excuſa pues tiranamente ſe lleuan dine=<lb type="nb"/>ros por dineros en ſu neceſſidad: y ſe tir anizã de tal
+<lb/>ſuerte que facilmente ſuben a grandes riquezas: y tã
+<lb/>exceſſibas que no ſe puede preſumir que ſe ayan ga=<lb type="nb"/>nado con buena intencion.</p></div2>
+<div2><p rend="hx">
+<lb/><t:b>¶ Capitulo. xiiij. que tra</t:b>
+<lb/>ta delos hazedores que hazen las correſponſiones
+<lb/>en diuerſas partes por cambiadores y mer caderes
+<lb/>y delo que entre ellos llaman eſtar de creer.</p>
+<p>
+<lb/><hi rend="init">Q</hi>Omo los mer caderes principales ſon co<note rend="noRef" type="margin">
+<lb/>¶ Nota. j.</note>
+<lb/>noſcidos y tienẽ credito en todas partes/
+<lb/>aſſi tienẽ ſus amigos y hazedores en cada
+<lb/>vna de aquellas ꝑtes. De manera que
+<lb/>los de aqui los tienen en todas las dichas partes:
+<lb/>y los de aquellas partes los tienen aqui/ y anſſi
+<pb facs="W0113-0049" n="fol. xxiijr"/>
+<lb/>como los de fuera hazen los negocios delos de aqui
+<lb/>enlos dichos cambios: anſſi los de aqui hazẽ los ne
+<lb/>gocios delos defuera: y eſtos negocios ſon cobrar
+<lb/>y pagar los vnos por los otros lo que les es dellos
+<lb/>embiado a pagar/ o reſcebir: y los que cobrã embiã
+<lb/>los dineros por cambio cõ la ganãcia a cuyos ſon.</p>
+<p>
+<lb/>E losque pagan toman dinero a cambio y eſcriuen
+<lb/>ala perſona por quien lo pago y tomo que lo pague
+<lb/>alla donde eſta a quien eſcriue el que ſe le dio a cam=<lb type="nb"/>bio y mas la perdida que houo en tomarlo a cãbio.
+<lb/>Por el qual trabajo induſtria y diligencia ſe dan ſa=<lb type="nb"/>larios los vnos alos otros por todos eſtos negocios
+<lb/>a reſpecto de cada mill ducados que negocian dan
+<lb/>dos. De manera que ay mer caderes que ſolamente
+<lb/>por hazer negocios de otros de cambios ganã mas
+<lb/>de dos mill ducados al año: y a eſtas ganancias lla=<lb type="nb"/>man ellos entre ſi reſponſiones: y tienen lo ellos por
+<lb/>muy licito lleuarlo. ¶ Yo digo que ni es licito/ ni ſe
+<lb/>pueden los tales ſalarios cõ juſto titulo poſſeer: por
+<lb/>que ſi no es licito lo que negocian nilicita la manera
+<lb/>de negociar/ menos lo ſera el ſalario que lleuarẽ por
+<lb/>hazer el tal negocio pues es en offenſa de Dios. por
+<lb/>lo qual ſoy de opiniõ que lo deue el tal reſtituyr a aq̃l
+<lb/>de quien lo lleuo.</p>
+<p>
+<lb/>¶ Y es mas de notar a eſte propoſito. Que todos
+<lb/>los mer cader es que cambian por otros dan los di=<lb type="nb"/>neros a cambio alas perſonas que les par eſcen ſegu<note rend="noRef" type="margin">
+<lb/>¶ Nota. ij.</note>
+<lb/>ras/ como emos ya dicho: y ſi deſpues aquella per=<note rend="noRef" type="margin">
+<lb/>Eſtar de cre
+<lb/>er.</note><lb type="nb"/>ſona a quiẽ dio el dinero a cambio ſe alça/ o quiebra
+<lb/>de manera q̃ no puede pagar no es a daño del que le
+<lb/>da el dinero/ ſino a daño de la perſona cuyo es el di=<lb type="nb"/>nero. E por eſta canſa ay algunos mer caderes que
+<lb/>no quieren correr rieſgo/ ni cõfiar de ſus hazedores
+<lb/>q̃ tienen en otras partes: porq̃ pienſan/ o q̃ no ſabran
+<pb facs="W0113-0050" n="fol. [xxiij]v"/>
+<lb/>dar ſu dinero a cambio/ o que no querr ã darlo a bue
+<lb/>nas ditas de perſonas ſeguras que no ſe alcẽ: y por
+<lb/>eſta cauſa ſe cõciertan entre ſi eneſta manera: yo em
+<lb/>bio dineros por cambio a vn mi hazedor: y eſcriuo
+<lb/>q̃ me los torne a embiar por cãbio: pero que quiero
+<lb/>que me eſte del creer: que es que quiero que me ſea
+<lb/>obligado por aquella perſona a quien diere el dine=<lb type="nb"/>ro a cãbio/ q̃ ſi no me ſale ſeguro a pagarme lo aqui
+<lb/>que el mi hazedor me lo pagara: y para que ſea con=<lb type="nb"/>tento de hazer eſto porque quando no mo eſta l cre
+<lb/>er le doy dos al millar delo que por mi cõbia/ y eſtan
+<lb/>do me del cr eer le doy quatro. De manera que buſ=<lb type="nb"/>co aqui de dar mi dinero a buenas ditas: y por que
+<lb/>no conozco los de ſe uilla que han de tomar mi dine
+<lb/>ro a cambio/ ni puedo eſcreuir: por eſta cauſa dizien
+<lb/>do a mi hazedor daldo a tal y a tal perſona: por no co
+<lb/>rrer rieſgo de peligro de mi dinero he inuẽtado eſto
+<lb/>lo qual ſe vſa entre todos los mercaderes. ¶ Eſta
+<lb/>maner a de reſponſiones a eſtar del creer he pueſto
+<lb/>aqui porque ſe vea quan aſſegurados hazen los ne=<lb type="nb"/>gocios eſtos hombres: y quã a poco peligro de rieſ=<lb type="nb"/>go tratan eſta infernal vſura. De manera q̃ por aqui
+<lb/>ſe vera quan poca excuſa les queda para reſponder
+<lb/>aſu diſſolucion.</p>
+<p>
+<lb/>¶ Las maner as ſobredichas delos cambios ſon to<note rend="noRef" type="margin">
+<lb/>Nota. iij.</note>
+<lb/>das de aqui alas dichas partes. Y delas dichas par
+<lb/>tes aqui. Tambien ay otras muchas differencias 
+<lb/>cãbios q̃ ſe vſan las vnas ꝑtes alas otras: y las o=<lb type="nb"/>tras alas otras y muchas differẽcias  monedas: las
+<lb/>ꝗ̈les yo no pude alcãçar por baſtãte peſquiſa q̃ hize
+<lb/>entre mer caderes: porq̃ par a ſaberlas es meneſter
+<lb/>ſer bien pratico y auerlas vſado: porque aun que los
+<lb/>mer caderes de aqui no las vſan/ las tratan en otras
+<lb/>partes por ellos y por ſu mandado: y les viene por
+<pb facs="W0113-0051" n="fol. xxiiijr"/>
+<lb/>aquellas maneras el prouecho y ganancia: y aun q̃
+<lb/>la manera  cambiar y maneras de cãbiar de otras
+<lb/>partes difieran delas maneras deſta no difierẽ ellos
+<lb/>en la intencion/ porque en fin todos pretendẽ ganar
+<lb/>dinero con tiẽpo y dinero. Y es mucho de notar vn
+<lb/>genero de tir ania cruel/ del qual vſan muchos cam
+<lb/>biadores y mer caderes muy ricos y muy acredita=<lb type="nb"/>dos para hazer todos los negocios de vna feria por
+<lb/>ſu mano/ que lnego que entran en la feria tomã a cã=<lb type="nb"/>bio toda quanta moneda viene a ella/ y anſſi hazen
+<lb/>ellos ſolos todos los negocios/ y lleuanſe todos los
+<lb/>intereſſes/ y tambien porque ellos ſolos tienen el di=<lb type="nb"/>nero y no ay mas ponẽ los precios en los inter eſſes
+<lb/>como quieren/ y encarecen la plaça a ſu voluntad.
+<lb/>lo qual es infernal.</p></div2>
+<div2><p rend="hx">
+<lb/><t:b>Capitulo. xv. que trata de</t:b>
+<lb/>los coredores de cambios/ y delo que deſu conciẽ=<lb type="nb"/>cia ſe deue ſentir.</p>
+<p>
+<lb/><hi rend="init">E</hi>N genero de hombres ha entremetido el
+<lb/>demonio eneſta infernal cõtratacon por
+<lb/>ſus miniſtros por tramadores deſte abo=<lb type="nb"/>minable exercicio/ a los quales llamã cor
+<lb/>redores/ y no ſe ſi el agmento de ſu multitud ha veni=<lb type="nb"/>do de ſu cobdicia/ o de ſu occioſidad/ o la demaſia
+<lb/>delos cambios y vſur as que ſon ſin cuento/ para las
+<lb/>quales cr eo que el demonio alquilo tanta multitud
+<lb/>a xornal/ y por remediar ſi pudi eſſe que no fueſſe ade
+<lb/>lante ſuper dicion quiero dar en ſu eſtado mi pareſ=<lb type="nb"/>cer. El qual es que ellos biuen mal/ porque exercitã
+<lb/>ſemejãte officio que el delas alcaguetas que vendẽ
+<lb/>ſangre de vir gin esy honrra de caſados/ incitando
+<lb/>las a offender con inceſtos y adulterios a dios/ ſon
+<pb facs="W0113-0052" n="fol. [xxiiij]v"/>
+<lb/>ter ceros y alcaguetes para que los cambios y mer=<lb type="nb"/>caderes den a vſura ſus din eros/ y relan cẽ ſus mer
+<lb/>cadurias/ los quales ſon tratos infernales y en offen
+<lb/>ſa de dios. Por lo qual les aconſejo que todo lo que
+<lb/>han ganado <unclear resp="#TL"></unclear>ſte trato lo trabajen reſtituyr a aque=<lb type="nb"/>llas perſonas de quien lo recibieron/ y hagan peni=<lb type="nb"/>tencia y demanden a dios perdon/ por que ſiendo el
+<lb/>trato malo ⁊ ilicito todos lo ſeran quantos entendie
+<lb/>ren enel/ y principalmente ellos q̃ tanta parte ſon.</p></div2>
+<div2><p rend="hx">
+<lb/><t:b>Capitulo. xvj. enel qual</t:b>
+<lb/>ſe tratan cambios que ſe hazen comunmẽte cõ prin=<lb type="nb"/>cipes y ſeñores.</p>
+<p>
+<lb/><hi rend="init">A</hi>Ambien ay algunos mercaderes/ y eſ
+<lb/>pecialmẽte alemanes y generoſos/ que
+<lb/>dan a cambio a ſeñores y principes/ cõ
+<lb/>los quales hazen grandes partidos a
+<lb/>tanto por ciento ſin mas condiciones. y
+<lb/>los dineros que anſſi dan a cambio porq̃ ſon en grã
+<lb/>canti dad aconteſce que no los tiene todas vezes el
+<lb/>mer cader que los da y tomalos a cambio de otros
+<lb/>mer caderes para dar los a los principes/ porque cõ
+<lb/>el credito que tienen pagan mucho menos de inter eſ
+<lb/>fe delo que ellos deſpues lleuã alos pricipes. De ma
+<lb/>nera que para dar a cambio toman a cambio/ y lo q̃
+<lb/>lle uan alos principes de intereſſe es mucho mas de
+<lb/>lo que vſan lleuar a otros mer caderes. y anſſi cõ in
+<lb/>tereſſes de principes han enrriq̃ſcido muchos mer=<lb type="nb"/>caderes/ y delo que anſſi dan a cambio a los princi=<lb type="nb"/>pes tomã terminos y plazos para auer los  cobrar
+<lb/>dentro de ciertos tiempos delas rentas y ſeruicios
+<lb/>delos dichos principes y ſeñores como ſe conciertã/
+<lb/>y haſta en tanto que ſean pagados lleuã como dicho
+<pb facs="W0113-0053" n="fol. xxvr"/>
+<lb/>es tanto por ciento como tãbien ſe conciertan. Tã=<lb type="nb"/>bien ay otros mer caderes que por hazer plazer a ca
+<lb/>ualler ostoman diner os a cambio en ſu meſmo nom
+<lb/>bre para los dar a ellos a cambio lo que han mene=<lb type="nb"/>ſter/ porque lleuan mayores intereſſes los cambios
+<lb/>alos caualleros que alos mer caderes. Todo eſto
+<lb/>es vſura pura infernal.</p></div2>
+<div2><p rend="hx">
+<lb/><t:b>¶ Capitulo. xvij. que tra</t:b>
+<lb/>ta de cambios deferia a feria.</p>
+<p>
+<lb/><hi rend="init">H</hi>Y otra manera de cambiar: la qual vſan
+<lb/>mas algunos delos cambiadores de aca
+<lb/>que no los mer caderes eſtrangeros. Y es
+<lb/>que preſtan cien ducados eſta feria de
+<lb/>mayo para que enla de agoſto les bueluan ciento y
+<lb/>quatro/ o ciẽto y cinco/ o mas/ o menos fegũ ay mas
+<lb/>o men os dineros enlã feria y ſe conciertan por me=<lb type="nb"/>dio delos corredores/ y por ſi meſmos. ¶ E vſan co
+<lb/>munmente entre ſi que quando les ſobra en la feria
+<lb/>dineros y no hallan a quien losdar a cambio por no
+<lb/>perder tiempo fuera de ſu cobdicia y mala intenciõ
+<lb/>acoſtumbran ſe los a preſtar deſta manera. Que ſi
+<lb/>a mi me ſobran eſta feria quatro mill ducados que
+<lb/>ſoy cambio porque no halle a quiẽ los cambiar pre=<lb type="nb"/>ſto los a otro mer cader/ o cambio como yo deſde aq̇
+<lb/>a otra feria con condicion que me bueluamis qua=<lb type="nb"/>tro mill ducados alli y me preſte otros tantos enton
+<lb/>ces por otro tanto tiempo como tuuo los mios.</p></div2>
+<div2><p rend="hx">
+<lb/><t:b>Capitulo. xviij. que trata</t:b>
+<lb/>delos banqueros que hazen cambios en las coſas
+<lb/>curiales para roma.</p>
+<p>
+<pb facs="W0113-0054" n="fol. [xxv]v"/>
+<lb/><hi rend="init">H</hi>Y vna manera de mer caderes que comũ<note rend="noRef" type="margin">
+<lb/>Nota. j.</note>
+<lb/>mente ſe dizen ban cos: enlos quales ſe
+<lb/>deſpachan coſas curiales y ſe hazen cã=<lb type="nb"/>bios para roma ſta manera. Yoſoy vn
+<lb/>eccleſiaſtico q̃ tengo ciertos beneficios
+<lb/>en letigio en curia/ o tengo alla otra calidad de nego=<lb type="nb"/>cios de deſpachar. E tengo alla vn procurador/ obli=<lb type="nb"/>gante por mi: para la qual cauſa tengo neceſſidad de
+<lb/>embiar le cien ducados y no tengo con quien ſe los
+<lb/>embiar ſino hago vn correo particular/ o eſtafeta. E
+<lb/>por eſcuſar eſtos trabajos voyme a vn bãco deſtos
+<lb/>el qual dando le los dichos cien ducados ſe obliga
+<lb/>delos hazer pagar por mi en roma a mi procurador:
+<lb/>y doyle por cada ducado medio real/ o como nos cõ
+<lb/>certamos. Pareſce me ami que es licito lleuar eſte
+<lb/>intereſſe por el trabajo y cuy dado que toma por mi:
+<lb/>y por las coſtas delos correos y eſtafetas que lleuã
+<lb/>aquellas polices y cedulas de cambio: y porque no
+<lb/>ſe pueden ſacar dineros del reyno y el banco tiene in
+<lb/>duſtria como los pagar alla: y por las coſtas que ha
+<lb/>zen los hazedores y correſpondientes que eſtan en
+<lb/>roma/ que como he dicho les dan los mer caderes ſu
+<lb/>intereſſe/ a tanto del millar. E tambiẽ por los criados
+<lb/>que tiene el banco aqui que me hãde ſeruir. Digo q̃
+<lb/>les es licito lleuar me vn razonable inter eſſe.</p>
+<p>
+<lb/>¶ Pero eſtos banquer os tambiẽ vſan hazer vn ge=<lb type="nb"/>nero de cambio deſta manera para ganar con los di<note rend="noRef" type="margin">
+<lb/>Nota. ij.</note>
+<lb/>ner os que yo les doy. Aconteſce que el Emperador
+<lb/>nueſtro ſeñor ha proueydo  vn obiſpado a vn ſeñor/
+<lb/>el qual tiene neceſſidad de tener en roma tres mill du
+<lb/>cados para el deſpacho delas bullas de aqui a vn
+<lb/>mes. Y eſte obiſpo viene a mi que ſoy vn bãco deſtos
+<lb/>y hallãdo ſe con los tres mill ducados/ o porque los
+<pb facs="W0113-0055" n="fol. xxvjr"/>
+<lb/>buſco a cãbio que le cueſtã buen intereſſe/ da me los
+<lb/>con condicion q̃ yo ſe los de en roma dẽtro deſte mes
+<lb/>a ſu hazedor: y da me por eſte ſeguro treinta ducados
+<lb/>o mas ſegun que nos concertamos. E luego doy le
+<lb/>ſus polices conforme ala coſtumbre. E yo voy luego
+<lb/>a buſcar vn mer cader que tenga neceſſidad de tres
+<lb/>mill ducados a cãbio dela ytalia ya dicho enel capi=<lb type="nb"/>tulo. xj. y da me treynta/ o quarenta ducados de
+<lb/>cãbio: y queda q̃ me los pagara en roma  aqui a vn
+<lb/>mes al hazedor de aquel obiſpo q̃ me los dio. Dema
+<lb/>nera q̃ facilmẽte ſin poner nada de mi caſa gano yo q̃
+<lb/>ſoy bãco dentro de vn mes ſeſenta/ o ſetẽta ducados
+<lb/>cõ los dineros agenos/ treynta q̃ me dio el obiſpo/ y
+<lb/>quarẽta que me dio el mer cader: y cũplo con el obiſ=<lb type="nb"/>po ſin poner  mi parte coſta de vn marauedi. Lo ꝗ̈l
+<lb/>me dizen eſtos banquer os que por no lo ſaber nego=<lb type="nb"/>ciar los eccleſiaſticos les lleua el bãco intereſſes por<note rend="noRef" type="margin">
+<lb/>¶ Nota. iij.</note>
+<lb/>los dineros q̃ les damos que põgan en roma: por q̃
+<lb/>ala contina hallariamos los eccleſiaſticos mer cade
+<lb/>res de mucho credito a quien ſin darles ningun inte
+<lb/>reſſe nos embiarian nueſtros din er os a roma: por q̃
+<lb/>tienẽ ya tãtos gener os de contrataciones entre ſi los
+<lb/>bancos de aca y los de alla que por quedar aca el di
+<lb/>nero en ſu poder para negociar en ſus mer cadurias
+<lb/>y cambios/ aqui nos lo pornan alla ſin algũ inter eſſe
+<lb/>pues que ellos le ſuelen dar entre ſi.¶ No obſtante
+<lb/>eſto reſpondo a eſte caſo. Que eſte banco juſtamen=<note rend="noRef" type="margin">
+<lb/>Reſpueſta.</note><lb type="nb"/>te me lleua a mi el razonable intereſſe en que menos
+<lb/>me concierto con el por el ducado que me porna alla
+<lb/>por reſpecto delas coſtas ſobredichas: y el banco de
+<lb/>ue deſpues de mir ar como trata ſus negocios: por
+<lb/>que a ſu cargo eſta el emplear bien/ o mal los dine=<lb type="nb"/>ros/ que yo le doy.</p>
+<p>
+<pb facs="W0113-0056" n="fol. [xxvj]v"/>
+<lb/>¶ Aconteſce tambien que ſiendo yo banco viene a<note rend="noRef" type="margin">
+<lb/>Nota. iiij.</note>
+<lb/>mi eſte obiſpo y porq̃ no tiene aqui los tres mill du=<lb type="nb"/>cados ni alla quien ſe los de/ demanda me que le de
+<lb/>vn credito de tres mill ducados para que alla en ro
+<lb/>ma ſe los den a ſu procuradordentro de vn mes: los
+<lb/>quales queda de me pagar luego que venga ſu deſ=<lb type="nb"/>pacho aqui: en cuyo empeño quiere que eſten las bu
+<lb/>las en mi poder. Epor eſta buena obra que le hago
+<lb/>dame diez o doze ducados del millar/ o mas/ o me=<lb type="nb"/>nos ſegun nos concerta mos ambos a dos: y luego
+<lb/>eſ criue alla a mi hazedor que ſe los de a ſu procura=<lb type="nb"/>dor y tome las bulas en ſi y las embie empeñadas a
+<lb/>nueſtro poder. Digo que eneſte caſo le puede lleuar
+<lb/>al obiſpo eſte inter eſſe licitamente por los trabajos
+<lb/>que yo tomo a mi coſta de hazer para ſe los pagar a
+<lb/>lla: y tambien por que puede ſer que mi hazedor no
+<lb/>tenga diner os mios alla/ y ſera neceſſario tomar los
+<lb/>a cambio por mi enlo qual muchas vezes aconteſce
+<lb/>que me cueſtan a mi mas caros en roma a tomar a
+<lb/>cambio cada ducado que me dan a mi aqui por po=<lb type="nb"/>ner los alla.</p></div2>
+<div2><p rend="hx">
+<lb/><t:b>Capitulo. xjx. que trata </t:b>
+<lb/>los mercaderes que venden ſus paños y ſedas m as
+<lb/>caras al fiado que al contado.</p>
+<p>
+<lb/><hi rend="init">U</hi>San mas los mer caderes vnos con o=<lb type="nb"/>tros quandoſe vendẽ mercadurias que
+<lb/>ſi el que compra la quiere fiada el que ſe
+<lb/>la vende le lleua mas de lo que vale ſi la<note rend="noRef" type="margin">
+<lb/>Nota. j.</note>
+<lb/>pagaſſe luego al contado. Y el precio en que la ven=<lb type="nb"/>de mas es conforme al tiempo y plazo que le da de
+<lb/>pagar la. Digo que ſi vende vna vara de raſo fiada
+<lb/>deſde vna feria haſta otra le lleua medio real mas
+<pb facs="W0113-0057" n="fol. xxvijr"/>
+<lb/>por vara lo que le lleuaria al dinero contado: y ſi le
+<lb/>da plazo dos ferias le lleua doblado que es vn real:
+<lb/>y eſto aconteſce entre dos mer caderes vendiendo el
+<lb/>vno al otro.</p>
+<p>
+<lb/>¶ Tambiẽ aconteſce q̃ lleuan mucho mas alos ca=<note rend="noRef" type="margin">
+<lb/>Nota. ij.</note><lb type="nb"/>ualler os y a qualquiera otra gente del pueblo/ y los
+<lb/>cargã mas q̃ alos mer caderes las mer cadurias y el
+<lb/>tiempo: y dizẽ que lo hazẽ eſto con eſtrangeros porq̃
+<lb/>muchas vezes no cũplen de pagar el plazo que pro=<lb type="nb"/>meten: y anſſi quieren los mer caderes que los ven=<lb type="nb"/>den ſus mer cadurias que los recõpenſen el tiempo
+<lb/>que dexã de pagar cõ lo que le cargan mas la mer ca
+<lb/>duria delo que la darian al contado.</p>
+<p>
+<lb/>¶ Tambien ay muchos cambios y mer caderes/ q̃<note rend="noRef" type="margin">
+<lb/>¶ Nota. iij.</note>
+<lb/>pagan libranças en mer caderias que tienẽ para eſto
+<lb/>y aun preſtan dineros que les piden algũos muy ne
+<lb/>ceſſitados a cambio deſta manera. Que viene a mi
+<lb/>vno con ne ceſſidad que le preſte cient ducãdos: y di=<lb type="nb"/>go que le preſtare lo que el quiere por cierto tiempo
+<lb/>con tal condicion que hade tomar cincuenta duca=<lb type="nb"/>dos en dinero/ y veinte y cinco varas de ter ciopelo:
+<lb/>enlo qual ſe auentaja mas que lo que le pueden dar
+<lb/>de inter eſſe: y tambien acoſtũbran dar pieças de pla=<lb type="nb"/>ta cargãdo les la hechura: y deſpues echã les vnos
+<lb/>ter cer os que al contado ſe lo tornẽ a comprar.<note rend="noRef" type="margin">
+<lb/>Nota. iiij.</note></p>
+<p>
+<lb/>¶ Para reſpueſta deſte caſo y materia es de notar:
+<lb/>que todas las coſas que ſe venden eneſte mũdo a titu<note rend="noRef" type="margin">
+<lb/>Scotus in.
+<lb/>iiij. ſen ẽ. diſ.
+<lb/>xv. quſt. ij. ar=<lb type="nb"/>ti. ij.</note>
+<lb/>lo de mer cadurias tienen dos precios/ el vno ſe lla=<lb type="nb"/>ma el razonable/ comun y conuenible: y el otro es el
+<lb/>precio mas ſubido y eſtremado: como vemos q̃ vna<note rend="noRef" type="margin">
+<lb/>Joha. maio.
+<lb/>in. iiij. ſentẽ.
+<lb/>diſtin. xv. quſt
+<lb/>j. ad. vj argu
+<lb/>vide claua. in
+<lb/>p. ẽptio. § vij.</note>
+<lb/>vara de ter ciopelo de heſpaña ſu precio mas ſubido
+<lb/>y eſtremado es a dos ducados: y ſufre ſe no per dien
+<lb/>do el mer cader dar lo a como mas puede deſde diez
+<lb/>y ocho reales haſta veinte y dos: y como digo no per
+<pb facs="W0113-0058" n="fol. [xxvij]v"/>
+<lb/>der. Deſta meſma manera es en los paños  ſegouia
+<lb/>y de valencia y de flandes/ londres/ y perpiñan: y ſe=<lb type="nb"/>das de genoua/ y paños de florẽcia q̃ todos tienẽ vn
+<lb/>precio mas ſubido y eſtremado en ſu valor: y otro q̃
+<lb/>ſin perder el mer cader delas coſtas y  aq̃l precio en
+<lb/>q̃ le eſta puede barar vn real por vara o dos. Agora
+<lb/>cõ eſte p̃ſupueſto digo q̃ enla mano l mer cader eſta
+<lb/>dar ſu paño fiado/ o a luego pagar en mas/ o menos:
+<lb/>cõ tal condicion q̃ lo vno ni lo otro no paſſe de aquel
+<lb/>precio mas ſubido/ y en q̃ eſta el eſtremo la equidad
+<lb/>Pero dentro de aq̃l precio bien puede el mer cader
+<lb/>ſin pecado ni offenſa del proximo lleuarme a mi por
+<lb/>aq̃lla ſeda fiada a veinte y dos reales/ o veinte y vno
+<lb/>y a pedro por q̃ ſe lo pago luego lleuar a vemte/ o a
+<lb/>como menos querra. Pero ſi por fiar lo por algun tiẽ
+<lb/>po lo relança y carga a precio diſcõueniente y q̃ paſſa
+<lb/>l ſubido y comũ coſtũbre y razon digo q̃ lo tal es pe
+<lb/>cado y es obligado a lo reſtituyr a aq̃l a quiẽ lolleuo.</p></div2>
+<div2><p rend="hx">
+<lb/><t:b>Capitulo. xx. que trata l</t:b>
+<lb/>inter eſſe que ſe lleua reſpecto del daño en q̃ incurrio
+<lb/>el q̃ preſto: o refpecto delo q̃ dexo o impide de ganar
+<lb/>por lo preſtar.</p>
+<p>
+<lb/><hi rend="init">D</hi>Udan muchos ſi por el daño en q̃ puedẽ
+<lb/>incur rir por preſtar a algun neceſſitado
+<lb/>ſus dineros: y reſpecto de la ganancia q̃<note rend="noRef" type="margin">
+<lb/>Nota. j.</note>
+<lb/>dexa de ganar conſu hazienda por lo pre
+<lb/>ſtar: ſi puede lleuar algun inter eſſe. Co=<lb type="nb"/>mo ſi pedro vinieſſe a mi neceſſitado/ o que tenga co
+<lb/>ſtumbre de cambiar y me pide cient ducado s preſta
+<lb/>dos: con los quales yo acoſtumbro y puedo ganar a
+<lb/>mi mer caduria y officio en cada año diez: y preſtãdo
+<lb/>ſe los para ſu ſocorro por no me pagar quando es o=<lb type="nb"/>bligado me executa mi acreedora quien los deuo yo
+<pb facs="W0113-0059" n="fol. xxviijr"/>
+<lb/>y me haze de daño otros diez/ porq̃ tengo yo de cum
+<lb/>plir cõ el y por no cũplir cõ migo pedro falto yo. Es
+<lb/>la duda/ ſi le puedo yo lleuar a pedro eſtos veinte du
+<lb/>cados por eſtos reſpectos ſin offender a Dios.</p>
+<p>
+<lb/>¶ Para reſpueſta delo qual es de notar q̃ ſe puede<note rend="noRef" type="margin">
+<lb/>Nota. ij.</note>
+<lb/>lleuar licitamente algũ inter eſſe por reſpecto del da=<lb type="nb"/>ño q̃ ſe offreſce cõſeys cõdiciones/ delas q̈les ſi algu
+<lb/>na faltaſſe ſeria peligro auerle de lleuar. La primera
+<lb/>condiciõ es/ q̃ no lleue masdel valor del daño en q̃
+<lb/>incurrio/ o ganãcia q̃ le eſtoruo a ganar a juyzio de<note rend="noRef" type="margin">
+<lb/>S. tho. in. ij.
+<lb/>ij. queſt xvj.
+<lb/>arti. iiij.</note>
+<lb/>buen varon y ſabio en ſu arte y mer caduria. Por q̃
+<lb/>ſi por culpa y negligẽcia propia ſe pierde algo no ſera
+<lb/>obligado el q̃ toma los dineros a pagar lo a quiẽ los<note rend="noRef" type="margin">
+<lb/>Hoſti. ca. ſa=<lb type="nb"/>lubriter de
+<lb/>vſuris: ⁊ pa=<lb type="nb"/>nor. ca. cõque
+<lb/>ſtus:</note>
+<lb/>cient ducados le preſto. La ſegũda condiciõ es: q̃ no
+<lb/>ſe offrezca dar los cient ducadospreſtados a algũo q̃
+<lb/>eſte en eſtremada neceſſidad/ porq̃ en tal caſo es obli
+<lb/>gado cada qual a ſocorr er a ſu proximo ſin inter eſſe/<note rend="noRef" type="margin">
+<lb/>Joha. maio.
+<lb/>in. iiij. ſen. d.
+<lb/>xv. queſt. xxx</note>
+<lb/>quãdo quiera q̃ ſe offrezca qualquiera daño tẽporal
+<lb/>enla propria hazienda del q̃ los preſto. La tercera cõ
+<lb/>diciõ es: q̃ inuẽciblemẽte conozca yo de mi q̃ querria
+<lb/>yo mas q̃ me dieſſen mis ciẽt ducados q̃ yo preſte/ q̃
+<lb/>no q̃ cay endo enel daño me de pedro los diez duca=<lb type="nb"/>dos de inter eſſe/ o veinte mas. La quarta condicion
+<lb/>es/ q̃ enla contrataciõ aſſegure mi hõrra y fama/  tal
+<lb/>manera q̃ lleuãdo algun inter eſſe por el dinero/ o lo
+<lb/>q̃ ceſſo de ganar no me ſoſpechẽ ſer vſurero/ porq̃ ſoy
+<lb/>obligado ſo pena  pecado mortal a perder qualqui
+<lb/>era parte de mis bienes tẽporales por no perder mi
+<lb/>buena fama y opiniõ. La quinta cõdiciõ es/ q̃ prime
+<lb/>ro vẽga el daño q̃ ſe pague el intereſſe/ porq̃ ſe puede
+<lb/>juzgar ſu valor. La ſexta condiciõ es/ q̃ nunca ſe lle=<lb type="nb"/>ue el inter eſſe total del daño taſſado. quiero dezir q̃
+<lb/>ſi yo demãde a pedro ſus martillos/ ſierra/ maço/ y he
+<lb/>ramiẽtas cõ q̃ acoſtũbra ganar en ſu officio  comer
+<pb facs="W0113-0060" n="fol. [xxviij]v"/>
+<lb/>trabajãdo y por preſtarme los le eſtoruo y hago le da
+<lb/>ño q̃ no gane quatro reales cada dia como trabajãdo
+<lb/>ſuele ganar/ digo q̃ aun juzgado por hõbres ſabios
+<lb/>en ſu arte q̃ los acoſtũbra ganar/ no losdeue lleuar to
+<lb/>dos q̈tro reales/ pero q̃ baſtara lleuar los dos/ o tres
+<lb/>y no mas por reſpecto del eſtoruo haziẽdo deſcargo
+<lb/>de q̃ holgo/ porq̃ no ſe le ha de dar tãto holgãdo co=<lb type="nb"/>mo ganara ſi trabajara todo el dia en el officio como
+<lb/>ſuele trabajar.</p>
+<p>
+<lb/>¶ Agora pues veniẽdo a reſponder al caſſo princi=<note rend="noRef" type="margin">
+<lb/>Nota. iij.</note><lb type="nb"/>pal de dõde la duda reſulto/ digo q̃ de mi opiniõ/ y de
+<lb/>opiniõ comũ es/ q̃ deuo de aguar dar a q̃ ſe offrezca
+<lb/>el daño en q̃ por no pagar aq̃llos cien ducados ſe pu
+<lb/>ede recreſcer/ y q̃ entõces podre juſtamẽte lleuar aq̃
+<lb/>llo q̃ par eſ ciere auer ſido el daño en q̃ incurrio. y por
+<lb/>el ſemejãte enlo q̃ me eſtoruo de ganar teniẽdo reſpe
+<lb/>cto a q̃ yo no puſe induſtria ni trabajo/ por lo qual no
+<lb/>le deuo lleuar todo aquello q̃ me eſtoruo ganar pero
+<lb/>dexar lo a juyzio de algun buen varõ q̃ me taſſe lo q̃
+<lb/>puedo mereſcer pues yo holgue/ y el daño no le uo
+<lb/>lleuar/ antes de in currir enel. porq̃ ſta manera ſi yo
+<lb/>lleuaſſe diez ducados por el daño q̃ podia venir an=<lb type="nb"/>tes q̃ vinieſſe/ daria ſe ocaſiõ a que todos preſtaſſen
+<lb/>dineros por intereſſea vſura/ y dixeſſen q̃ lo lleuauã
+<lb/>por el daño que ſe les puede offreſcer por no tener
+<lb/>los din er os que preſto.</p>
+<p>
+<lb/>¶ Aconteſce tãbien q̃ pedro me demanda cient du=<lb type="nb"/>cados preſtados cõ condicion que ſi no me los paga<note rend="noRef" type="margin">
+<lb/>Nota. iiij.</note>
+<lb/>re deſde aqui a vn año que me pague diez ducados
+<lb/>mas por pena q̃ pone ſobre ſi. Es la duda ſi le podre
+<lb/>ſin pecado lleuar los diez ducados ſi no me pagare
+<lb/>enel tiẽpo q̃ ſe obligo. Digo que ſi yo deſſeo y eſtimo
+<lb/>mas que pedro me pague los cient ducados/ q̃ no q̃
+<lb/>venga a faltar por lleuar le aquel inter eſſe/ bien le pu
+<pb facs="W0113-0061" n="fol. xxjxr"/>
+<lb/>edo lleuar aquellos diez ducados/ por que entõces
+<lb/>no ſe los lleuo como ganancia ⁊ inter eſſe por razõ de
+<lb/>lo q̃ le preſte/ ſino como pena q̃ puſo ſobre ſi/ la qual
+<lb/>libremẽte pudo poner/ y aſſi era obligado ala cũplir.
+<lb/>pero ſi yo ſo y acoſtũbrado a lleuar vſuras/ y deſſeo
+<lb/>y eſtimo mas q̃ no cũpla al tp̃o porq̃ faltãdo le lleue
+<lb/>los diez ducados mas/ ſere obligado a los reſtituyr:
+<lb/>porq̃ ya pareſce q̃ ſe los lleuo por razõ ⁊ intereſſe l
+<lb/>preſtamo principal/ y anſſi ſoy obligado a reſtituciõ.</p></div2>
+<div2><p rend="hx">
+<lb/><t:b>Capitulo. xxj. en el qual ſe</t:b>
+<lb/>ponẽ los cõtratos dichos de cõpañia anſſi de mer ca
+<lb/>deres/ o de qualeſquier otras perſonas.</p>
+<p>
+<lb/><hi rend="init">H</hi>Conteſce auer ala cõtina cõpañias entre
+<lb/>mer cader es anſſi en particular de algũas<note rend="noRef" type="margin">
+<lb/>Nota. j.</note>
+<lb/>particulares mer cadurias/ y tãbien ay o=<lb type="nb"/>tras q̃ la tienẽ de todas quãtas cõpraren
+<lb/>y vendierẽ en comũ: delas quales en cada año/ o en
+<lb/>cierto tiẽpo parten la ganãcia/ o perdida por ygual.
+<lb/>Eſte cõtrato es muy licito/ y muy bueno y muy comũ
+<lb/>guar dãdo juſticia entre ſi. Pero acõteſce q̃ yo tengo
+<lb/>mill ducados en mi arca porq̃ no ſe tratar en officio
+<lb/>ni grãjear los eſtã ſe alli/ y voy me cõ ellos a vn mer
+<lb/>cader/ o cãbiador y digo q̃ me los emplee en ſu cõtra
+<lb/>taciõ enla qual el por ſer rico y poderoſo y de mucho
+<lb/>credito trata cõ veinte o treinta mill: y digo le q̃ ſe los
+<lb/>doy a cõpañia de perdida o ganãcia: y q̃ ſi al cabo l
+<lb/>año hallare q̃ gana me de ã reſpecto delo q̃ gano: y ſi
+<lb/>perdiere me lo ſaq̃ del principal. y al cabo de vn año
+<lb/>dame cient ducados ſin llegar comigo a cuentas/ ni
+<lb/>ſin yo ſaber ſi gano/ ni ſi perdio. y deſta manera ſe le
+<lb/>introduze vna coſtũbre q̃por diez y veinte años me
+<lb/>lo da anſſi enla meſma cãtidad.¶ Ay otros q̃ quãdo
+<lb/>dã ſus diner os al mer cader taſſan vna cãtidad  mo
+<pb facs="W0113-0062" n="fol. [xxjx]v"/>
+<lb/>neda haſta la qual dizẽ q̃ quieren perder/ o ganar. di
+<lb/>zẽ anſſi/ yo no quiero de vos cuẽtas ſi ganays o per=<lb type="nb"/>deys/ pero quiero q̃ ſi hallaredes q̃ ganays enel año
+<lb/>me deys ſiete ducados por ciento/ y ſi en vr̃a cõciẽcia
+<lb/>hallaredes q̃ perdeys me ſaqueys de cada ciento ſie
+<lb/>te ducados del principal.</p>
+<p>
+<lb/>¶ Eſtos tales contratos y ſemejantes ſe dizen entre<note rend="noRef" type="margin">
+<lb/>Nota. ij</note>
+<lb/>mer caderes contratos de cõpañia para el entẽdimiẽ
+<lb/>to delo qual es de notar q̃ en todo tal cõtrato para q̃
+<lb/>ſea licito y de buena cõpañia ſe requiere y es neceſſa
+<lb/>rio q̃ entre los cõpañeros aya ygualdad de juſticia.
+<lb/>y ha de guar dar ſe eſta juſticia ⁊ ygualdad enel dine
+<lb/>ro induſtria y trabajo/ y deſpues enla ganancia y per
+<lb/>dida la qual tambiẽ deue ſer partida por ygual entre
+<lb/>ambos a dos. De manera q̃ ſi ſe juntã dos cõpañer os
+<lb/>para vna contrataciõ y el vno pone ſu perſona q̃ es
+<lb/>ſu induſtria y trabajo y mas cient ducados/ dela meſ
+<lb/>ma manera el otro deue poner por ygual/ ⁊ anſſi per
+<lb/>der y ganar enla meſma proporciõ. Pero ſi el vno ti
+<lb/>ene cient ducados/ y no tiene induſtria por q̃ no ſabe
+<lb/>officio/ y el otro no tiene deneros pero tiene induſtria
+<lb/>porque ſabe biẽ vn officio/ digo q̃ eſtos dos pueden
+<lb/>hazer buena cõpañia/ porq̃ los diner os del vno cõ la
+<lb/>induſtria del otro hazẽ juſticia ⁊ ygualdad/ y anſſi en
+<lb/>la ganãcia lleuã igualmẽte/ y por el ſemejãte ſera igu
+<lb/>al el daño que el vno perdera los dineros y el otro el
+<lb/>trabajo q̃ auẽturo. Pero ſi vn mer cader tiene doziẽ
+<lb/>tos ducados en trato de ſu mer caduria en ſu officio
+<lb/>trabajo ⁊ induſtria/ y tu tienes ciẽ ducados y no ſabes
+<lb/>cõtratar ni mer cãdear y das ſe los en compañia de
+<lb/>aquel mer cader/ entonces deues mucho mirar que
+<lb/>la ganancia ſe ha de hazer quatro partes/ y las tres
+<lb/>ha de lleuar el mer cader/ las dos porque tiene dobla
+<lb/>dos dineros que tu/ y la ter cera por ſu induſtria y tra
+<pb facs="W0113-0063" n="fol. xxxr"/>
+<lb/>bajo y tu no lleuas mas dela quarta parte por cient
+<lb/>ducados que puſſiſte enla contratacion.</p>
+<p>
+<lb/>¶ Pues agora reſpondiendo al propoſito del caſo<note rend="noRef" type="margin">
+<lb/>Nota. iij.</note>
+<lb/>propueſto/ digo que me pareſce ami que ſi tu pones
+<lb/>en cõpañia y poder de vn mer cader rico y poderoſo
+<lb/>que trata con veinte mill ducados/ o ſu credito ⁊ in=<lb type="nb"/>duſtria y moneda mõta treinta mill ducados/ y tu po
+<lb/>nes en ſu poder ciento/ o mill en compañia de perdi
+<lb/>da o ganancia/ que eres obligado a ſaber lo que enel
+<lb/>año ſe gano por no lleuar mas delo juſto auiendo reſ
+<lb/>pecto ala grande hazienda del mercader: la qual es
+<lb/>de tan grande eſtima que ſi por menudo ouieſſemos
+<lb/>de conſiderar lo q̃ te puede caber ſeria poco/ o muy
+<lb/>menos lo que tu taſſas/ o delo que el te dio. Por lo
+<lb/>qual a mi par eſcer no esſeguro ala conciẽcia poner
+<lb/>los dineros en caſa de vn mer cader taſſando las per
+<lb/>didas ni ganancias en ſiete ni en diez: y que ya q̃ los
+<lb/>des a cõpañia ſea ſolamente dexando los ala ventu=<lb type="nb"/>ra dela perdida y ganancia: y aparejarte para aque
+<lb/>llo que en ſu conciencia el mer cader quiſiere hazer:
+<lb/>y por mas ſeguridad dela conciencia: es mi opinion
+<lb/>que nunca vſes poner tus dineros en eſtas maneras
+<lb/>de compañias: porque es dificultoſo ſaber quãdo ca
+<lb/>be lleuar el inter eſſe dela ganancia y quando no: y tã
+<lb/>bien porque ſiempre pones tus dineros en cõpañia
+<lb/>de mer caderesdonde tienes ſegura la ganancia y ca
+<lb/>ſi nunca ſoſpechas la perdida. Por lo qual eſte con
+<lb/>trato tiene mas parenteſco con logro y vſura que cõ
+<lb/>buena cõpañia y cõtrato que ſe puede ſuffrir.</p>
+<p>
+<lb/>¶ E ſobre todo eſto deues mucho mirar que qnãdo<note rend="noRef" type="margin">
+<lb/>Nota. iiij.</note>
+<lb/>pones tus dineros en caſa de algun mercader en cõ
+<lb/>pañia de alguna contratacion que deues mirar que
+<lb/>la tal contratacion ſea licita y buena: porque ſi el mer
+<lb/>cader a quien los das es hombre que ſuele relançar
+<pb facs="W0113-0064" n="fol. [xxx]v"/>
+<lb/>ſus mer cadurias y vſar mal dellas/ todo quanto inte
+<lb/>reſſe lleuar es de alli deues reſtituyr de obligacion.
+<lb/>Por lo qual te auiſo mucho que aſſegur es ſiempre
+<lb/>lo mas que pudier es tu conciẽcia: y no te deſcuy des
+<lb/>por cobdicia de ganar vn miſer able inter eſſe con tus
+<lb/>dineros: por que mas vale que huelguen en el ar ca
+<lb/>todos los dias de tu vida que no poner los en poder
+<lb/>de mer caderes en cuya compañia y contratacion es
+<lb/>difficultoſo entender ſin offenſa de Dios.</p>
+<p>
+<lb/>¶ En eſte propoſito quiero auiſar acer ca de vna opi<note rend="noRef" type="margin">
+<lb/>Nota. v.</note>
+<lb/>nion que tiene el vulgo: porque dize que la hazienda
+<lb/>y diner os del menor huerfano que eslicito ponerlos<note rend="noRef" type="margin">
+<lb/>Dineros de
+<lb/>menores.</note>
+<lb/>a ganancia de vſura en vn cambio/ o mer cader: los
+<lb/>quales en cada vn año den por ganancia algun inte=<lb type="nb"/>reſſe. Alo qual digo: que pueſto que las ley es ciuiles
+<lb/>lo permitan (que no lo permite Dios) ni tengo por
+<lb/>ſegura la conciencia del curador que diere a ſus me
+<lb/>nores de comer de dineros ganados a vſura: mas q̃
+<lb/>es obligado alo reſtituyr: y poner la hazienda de ſus
+<lb/>menores en trato donde ſin cargo de conciencia ſe
+<lb/>pueda mejorar. Y enla meſma calidad pongo losdi
+<lb/>neros dela dote dela muger: los quales quanto qui
+<lb/>era que nunca ſe paguen/ o que por ſer biuda ſe pue
+<lb/>dan gaſtar y p erder. digo que en ninguna manera ſe
+<lb/>ſuffre ni es licito lleuar por ellos vſura/ ni intereſſe.
+<lb/>Uerdad es que ſi vn padre caſa vna hija y le manda
+<lb/>mill ducados en dote: ſi a caſo por no ſe lo poder lue
+<lb/>go dar para que el marido trate y tenga de que man
+<lb/>tener a ſi y aſu muger: puede auer vn concierto con
+<lb/>el meſino padre en que ſe obligue los dar cada año
+<lb/>la coſta del comer/ la q̈l ſe taſſa por juyzio de buenos
+<lb/>varones en ciẽ ducados: los q̈les ſe obliga delosdar
+<lb/>cada año para alimentos haſta que pague la dote.
+<pb facs="W0113-0065" n="fol. xxxjr"/>
+<lb/>E anſſi por eſte reſpecto ſolo los puede lleuar el ma=<lb type="nb"/>rido para mantener a ſu muger haſta que le den con
+<lb/>que lo pueda ganar.</p>
+<p>
+<lb/>¶ Dubda ſe ſi vna viuda puſieſſe en compañia de
+<lb/>vn mer cader cien ducados: ⁊ hizieſſen en vn cõtrato<note rend="noRef" type="margin">
+<lb/>Nota. vj.</note>
+<lb/>que le dieſſe la parte de ganancia y no le lleuaſſe per
+<lb/>dida. Pero que ella hizieſſe eſte contrato porque el<note rend="noRef" type="margin">
+<lb/>Ber. in ſuis
+<lb/>contratibus.</note>
+<lb/>mer cader no la engañaſſe fingendo la perdida: con
+<lb/>intencion guardada en ſi de reſtituyr le ia per dida
+<lb/>cada y quando par eſcieſſe hauerla. Dubda ſe ſi es
+<lb/>eſta juſta compañia. Reſponde ſe que es juſta com=<lb type="nb"/>pañia: pero que peca mortalmente en hazer cõtrato
+<lb/>infame a ſu honrra: y que es obligada a deſcubryr ſu
+<lb/>intencion por que los herederos no ſuccedan en el
+<lb/>meſmo engaño del contrato deſpues dela muerte de
+<lb/>ſu madre.</p>
+<p>
+<lb/>¶ Ha venido a tal eſtremo la cobdicia humana q̃<note rend="noRef" type="margin">
+<lb/>Nota. vij.</note>
+<lb/>ya los hombres no pueden encubrir la ſediente aua
+<lb/>ricia con que procuran hartar ſu inſaciable coraçon
+<lb/>Que ya no ay Chriſtiano que no trabaje por llegar
+<lb/>din eros con ſumma curioſidad acortando ſus eſ=<lb type="nb"/>penſas/ poniendo en dieta ſus eſtomagos y en peli=<lb type="nb"/>gros ſus vidas/ y luego que los tienen juntoslleuan
+<lb/>los alos cambios y caras de mer cader es dando ſe
+<lb/>los a compañia para en ſu cõtratacion deſcõfiando
+<lb/>de ſu propria induſtria/ y aun de Dios: no mir ando
+<lb/>que es Dios tan liberal/ que aun que pecadoresel=<lb type="nb"/>los/ quãdo fueſſen gaſtados aquellos les puede dar
+<lb/>mas. Lo qual es poca fee: y aun ſouerbia intencion
+<lb/>por hazerſe ricos eſtimados: y tambien por poder ſe
+<lb/>dar mejor ala occioſidad. E lo que peor es/ que eñſta
+<lb/>deſordenada cobdicia caen muchos var ones eccle
+<lb/>ſiaſticos y ſacerdotes que deuen dar buen exemplo
+<lb/>con ſus vidas al reſto dela chriſtiandad. E aun pue=<pb facs="W0113-0066" n="fol. [xxxj]v"/><lb type="nb"/>de ſer que lo hagan algunas religioſas monjas/ di=<lb type="nb"/>ziendo que lo hazen por aſſegurar el ſocorro de ſus
+<lb/>cotidianas neceſſidades: por que no tienen en qual=<lb type="nb"/>quiera tiempo que lo han meneſter para la ſaya/ ca
+<lb/>miſas/ y chapines: porque ſus cafas y conuentos no
+<lb/>les dan mas del comer. E anſſi podria ſer que dixeſ=<lb type="nb"/>ſen que de limoſnas que ſus parientes les han dado
+<lb/>quieren eneſta manera de compañia y contrataciõ
+<lb/>conuenir vna templada y razanable cantidad con q̃
+<lb/>vn mer cader les deua acudir en cada vn año para
+<lb/>el ſocorro deſta ſu neceſſidad. Alos quales/ digo a
+<lb/>todos/ que ſe mir en bien que no lo deuen hazer: por
+<lb/>que al fin es paliar/ encubrir/ y ſolapar debaro deſte
+<lb/>cõtrato ſus intenciones vſurarias/ y auariẽtas. Ean
+<lb/>ſi digo que lo tal es mas graue peccado en los religi
+<lb/>oſos ſin comparacion: por que ſi dizen que es com=<lb type="nb"/>pañia/ digan me quien hizo al ſa cerdote y religioſo
+<lb/>mercader/ porque no me puede negar que el que tie
+<lb/>ne compañia con vn ladr on no ſe llame tambi en la=<lb type="nb"/>dron. Pues pregunto le que conueniencia tiene la
+<lb/>luz con las tinieblas/ el demonio cõ Dios: y el ſacer=<lb type="nb"/>dote y religioſo con mercader. Sant Hy eronimo a
+<lb/>uiſa alos hombres que como de peſtilencia huyan
+<lb/>del clerigo negociador. Algunos deſtos que acoſtũ
+<lb/>bran biuir eneſta mane ra dizen para eſcuſar ſu cul=<lb type="nb"/>pa: que hazen contrato con el tal mercader de tal ma
+<lb/>nera que les ſalga lo que les dieren como a compra
+<lb/>de a reſpecto de veynte/ o treynta el millar. Lo qual
+<lb/>no me par eſce contrato ſeguro: porque en fin ſe lleua
+<lb/>en cada vn año aquella cantidad del mercader a ma
+<lb/>nera de intereſſe eſtando ſiempre la ſuerte principal
+<lb/>en pie/ aun que no niego ſer licito el contrato del cen
+<lb/>ſo al quitar. Por lo qual cumple que cada qual
+<pb facs="W0113-0067" n="fol. xxxijr"/>
+<lb/>aſſegure lo mas que pudiere la conciencia en la vi=<lb type="nb"/>da ſi quiere bien morir.</p></div2>
+<div2><p rend="hx">
+<lb/><t:b>¶ Captulo veynte y dos</t:b>
+<lb/>que trata de vn genero de hombres que comunmen
+<lb/>te llaman en las republicas negociadores y de rega=<lb type="nb"/>tones.</p>
+<p>
+<lb/><hi rend="init">R</hi>Azon es que hablemos de vna diferen=<lb type="nb"/>cia de hombres que enla republica tratan
+<lb/>en diuerſas mer cadurias anſſi de comer/
+<lb/>como del neceſſario atauio/ trayẽdo las
+<lb/>diuerſas prouincias donde abundã para el prouehi
+<lb/>miento de ſu propria tierra y pueblo por que alli fal=<lb type="nb"/>tan. Ea eſtos llaman comunmente todos los docto<note rend="noRef" type="margin">
+<lb/>¶ Nota. j.</note>
+<lb/>res negociadores: y el trato ſe llama en latin/ ars ne
+<lb/>gociatiua. Para lo qual esde notar que ay hom=<lb type="nb"/>bres que van a flandes y a francia y a ynglaterra/ o
+<lb/>tienen alla hazedores/ los quales por ſus auiſos y
+<lb/>cartas los embian ſus mercadurias aqui de diuer=<lb type="nb"/>ſas calidades delas quales ay en abundancia en aq̃
+<lb/>llas regiones. Como paños/ lienços/ tapizes/ y otras
+<lb/>muchas alhajas de ſeruicio  caſa y familia: y otras
+<lb/>muchas vaſijas de diuerſo metal: delas quales fal=<lb type="nb"/>tan aqui en ſu tierra para ſu abundante prouiſion.</p>
+<p>
+<lb/>Tãbien ay otros q̃ negociã en traer baſtimẽto a ſus
+<lb/>pueblos de prouiſiones de comer: como trigo/ azey
+<lb/>te/ miel/ q̃ſo/ manteca/ tocino/ gallinas/ perdizes/ capo
+<lb/>nes: y otras muchas coſas en ſemejãte manera. Ago
+<lb/>ra es  notar q̃ eſtos officiales ſe hã en dos maneras
+<pb facs="W0113-0068" n="fol. [xxxij]v"/>
+<lb/>Ay vnos que vſan traer eſtas coſas para proueer en
+<lb/>la neceſſïdad y falta de ſu pueblo procurãdo de auer
+<lb/>las y comprar las en varatos y razonables precios
+<lb/>con intencion delas vender a ſus ciudadanos: y ba=<lb type="nb"/>ſtecerlos de aquellas coſas en buen precio como las
+<lb/>puedã todos comer y gozar. Y eſtos tales hombres
+<lb/>ſon muy neceſſarios ala republica por ſer de mucho
+<lb/>prouecho con ſu contratacion: porque con la proui=<lb type="nb"/>ſion deſtas coſas ennobleſcen ſu ciudad: por que la
+<lb/>prouehen en cumplimiento de muchas coſas neceſ=<lb type="nb"/>ſarias. Eanſſi hazen que con aquella abundante pro
+<lb/>uiſion varaten las mercadurias y las gozen todos
+<lb/>en razonable y tẽplado valor. E ſi las conſeruan por
+<lb/>alguntiempo/ es con intenciõ que la meſma equidad
+<lb/> precio ſe halle en todo tiẽpo para qualquiera eſta
+<lb/>do y condicion de hombres que las quiſieren hauer
+<lb/>E para eſto las curan y adereçan. Alas vnas echan
+<lb/>en ſal/ alas otras en eſgabeches: y alas otras en ado
+<lb/>bos y conſeruas: de manera que en cada dia valen
+<lb/>mas mejorando las con adereços con que ſe puedã<note rend="noRef" type="margin">
+<lb/>Scot. im. iiij.
+<lb/>ſent. diſtin.
+<lb/>xv. queſt. ij.
+<lb/>arti. ii.</note>
+<lb/>incorruptas tener. A eſtos tales dize Scoto: que les
+<lb/>es muy licito y juſto ganar algun razonable inter eſ=<lb type="nb"/>ſe en ſus mer cadurias por reſpecto de aquellos peli
+<lb/>gros y daños a que ſe ponẽ de noche y de dia de ſus
+<lb/>perſonas y haziendas por el mar y tierr a. E de mas
+<lb/>deſto dize q̃ la republica los deue galar donar agra=<lb type="nb"/>deſciendo los ſu buentrabajo induſtria y diligẽcia
+<lb/>anſſi enlos precios delas mer cadurias/ como enlos
+<lb/>precios de ſus coſtas/ guardãdo les los preuilegios
+<lb/>de ſus erenciones.</p>
+<p>
+<lb/>¶ Otros hombres ay los quales nunca compran
+<lb/>eſtas mer cadurias por aprouechar a la republica
+<lb/>buſcando las varatas para guardar las para tiem=<lb type="nb"/>pos de falta y neceſſidad para darſe las al pueblo.
+<pb facs="W0113-0069" n="fol. xxxiijr"/>
+<lb/>Pero buſcan los baratos para guar dar los para tiẽ
+<lb/>pos de falta por ſe las reuẽder caras y muy ſubidas
+<lb/>y para eſto aconteſce que eſtan muy auiſados a que
+<lb/>luego que llegan las tales mercaderias alas plaças
+<lb/>alhondigas/ y lugar es publicos donde ſe deſcargan
+<lb/>para hazer regiſtro y auer las de vender/ los tales
+<lb/>las compran todas por junto/ no dando lugar a que
+<lb/>alguno ſe pueda proueer dellas en particular: porq̃
+<lb/>paſſado el tiempo de ſu cogeta/ auiendo falta venda
+<lb/>el a doblado precio: y aconteſce que aguardãdo eſte
+<lb/>tal a eſta neceſſidad las detiene quatro y cinco años
+<lb/>haſta que ſe le offreſce oportunidad de effectuar ſu ti
+<lb/>rano deſſeo/ y como hambriẽto lobo ſatiſtaga ſu cob
+<lb/>dicia/ peſſando le enel entre tanto por que los años
+<lb/>vienen proſperos ⁊ abundantes de aquella prouiſiõ
+<lb/>y el deſuenturado aguar dando aquella falta y ſteri=<lb type="nb"/>lidad ni grangea la hazienda/ ni la mejora/ ni la ade=<lb type="nb"/>reça: mas tiene lo con aquel deſcuydo con que eſpe=<lb type="nb"/>ra la neceſſidad: confiando que ſi viene qual el la deſ
+<lb/>ſea/ que quãto quiera que eſte podrido y dañado ſe
+<lb/>lo compraran en aquel precio y careza que el la qui=<lb type="nb"/>ſiere vender. Eſtos tales ſon malinos infieles y  ma
+<lb/>la intencion: porque ſiempre eſperan tomar ſu repu=<lb type="nb"/>blica por hambre para auer la de deſtruyr. Ea eſtos
+<lb/>llama Scoto regatones blaſfemando dellos: exortã
+<lb/>do alas republicas/ y alos gouernadores llas q̃ los
+<lb/>echen y alancen de ſi como a peſtilencia infernal. E<note rend="noRef" type="margin">
+<lb/>Scotꝰ. vbi ſu.</note>
+<lb/>anſſi qualquiera inter eſſe que deſtas mercadurias
+<lb/>los tales ſacaren deuen reſtituyr en prouecho del
+<lb/>comun.</p></div2>
+<div2><p rend="hx">
+<pb facs="W0113-0070" n="fol. [xxxiij]v"/>
+<lb/><t:b>¶ Capitulo. xxiij. en el q̈l</t:b>
+<lb/>ſe ponen contrataciones que comunmẽte ſe vſan en
+<lb/>tre mer caderes del trigo.</p>
+<p>
+<lb/><hi rend="init">A</hi>Ambien conuiene que tratemos delas
+<lb/>contrationes del trigo: para lo qual ſe
+<lb/>deue proſuponer. Que es comun acon
+<lb/>teſcimiento en eſta tierra valer ei trigo<note rend="noRef" type="margin">
+<lb/>Nota. j.</note>
+<lb/>mas barato q̃ en todo el año enel mes
+<lb/>de agoſto: y mas caro enel mes de abril y mayo. Cõ
+<lb/>eſte preſupueſto pongo por caſo/ que yo acoſtumbro
+<lb/>comprar trigo por agoſto para lo vender al mayo: 
+<lb/>uo mirar/ porque no offenda ala republica nia Di=<lb type="nb"/>os/ que ſea con intencion delo guardar para remedi
+<lb/>ar y proueer la neceſſidad y falta q̃ ſe le puede offreſ=<lb type="nb"/>cer ala republica en aquel mes: granjeando lo con
+<lb/>toda induſtria y cuydado/ limpiando lo y echando
+<lb/>lo al ſol: poniendo lo en limpios graneros/ y guardã
+<lb/>do lo del poluo y coco: y buſcãdo lo de diuerſas par
+<lb/>tes y prouincias para remediar la neceſſidad de mi
+<lb/>republica. Entonces de comun opiniõ de ſabios biẽ
+<lb/>puedo lleuar algun tanto por mi induſtria y trabajo
+<lb/>que padezco enlo conſeruar. Pero ſi mi intencion
+<lb/>es ſolamẽte poraguardar ala falta y careza por auer
+<lb/>grandes ganancias con ello/ cogiendo quanto pue=<lb type="nb"/>do auer enlas heras el agoſto con intencion que aya
+<lb/>menos enla tierra para adelante: barriendo lo todo
+<lb/>en mistroxes y graneros/ por tomar la republica
+<lb/>por hambre: peſando me ſi los años ſon fertiles por
+<lb/>que enellos ay tanta prouiſion. No lo curando/ ni
+<lb/>limpiando lo del guſano y coco paro la cõſeruar ſin
+<lb/>daño: confiando que ſi el año viene ſeco y eſteril co=<lb type="nb"/>mo lo deſſeo/ que aun que por eſte lo vendere a mi
+<pb facs="W0113-0071" n="fol. xxxiiijr"/>
+<lb/>plazer. Deſta manera eſte tal es infernal peccado. y
+<lb/>digno el que lo haze del infierno: y deſer relançado
+<lb/>dela republica porſu diſſipador.</p>
+<p>
+<lb/>¶ Pues ſi aconteſcieſſe que yo tuuieſſe cient cargas
+<lb/>de trigo enel mes de agoſto enel qual vale la carga a<note rend="noRef" type="margin">
+<lb/>Nota. ij</note>
+<lb/>ducado con intencion de guar darlas para el mayo
+<lb/>para proueer la neceſſidad dela republica. y me im=<lb type="nb"/>portunaſſe vn mercader que ſe las vendieſſe que me
+<lb/>las queria luego pagar. Es la duda ſi porque me im
+<lb/>pide de ganar lo que ſubiria el mayo/ ſi podre lleuar
+<lb/>le agora a catorze reales por la carga: o alo menos ſi
+<lb/>le puedo lleuar algo mas precio que a como agora
+<lb/>en agoſto que ſe lo doy paſſa. Digo yo de mi pareſ=<lb type="nb"/>cer. que pues ya yo no tengo aquel trabajo que ſe
+<lb/>deuria tener enlo conſeruar y curar que no puedo
+<lb/>lleuar ni deuria mas del precio que entonces paſſa
+<lb/>comun: y que ſi algo mas lleuaſſe fueſſe tan poco q̃
+<lb/>no moſtraſſe vender ſe lo tanto por el precio/ como
+<lb/>por la importunacion.</p>
+<p>
+<lb/>¶ Seria duda: preſupueſto que yo tengo en agoſto
+<lb/>cient cargas de trigo guar dadas para vender el ma<note rend="noRef" type="margin">
+<lb/>Nota. iij.</note>
+<lb/>yo: ſi vinieſſe a mi vn mercader y me las demandaſ=<lb type="nb"/>ſe preſtadas valiendo agora la carga a ducado. ⁊ yo
+<lb/>ſe las preſtaſſe haſta el mayo con condicion que en
+<lb/>dinero me las pagaſſe como valieſſe entonces. y vi=<lb type="nb"/>nieſſe a valer alli a ducado y medio en mayo. Es la
+<lb/>duda ſi le podria lleuar el ducado y medio de cada
+<lb/>carga ſinſer obligado a reſtitucion. ¶ Digo que
+<lb/>ninguno puede dar trigo fiado para que le ſea pa=<lb type="nb"/>gado a mayor precio que valia quando ſe lo entre=<lb type="nb"/>go porque por reſpecto de ſe lo fiar pareſce que le lle=<lb type="nb"/>ua aquelinter eſſe/ pues el que lo vende no padeſce el
+<lb/>peligro rieſgo y trabajo que ſe puede offreſcer enlo
+<lb/>guardar.</p>
+<p>
+<pb facs="W0113-0072" n="fol. [xxxiiij]v"/>
+<lb/>¶ Y lo meſmo ſera ſi enel mes de agoſto me deman-<note rend="noRef" type="margin"><lb/>Nota. iiij.</note><lb type="nb"/>daſſe pedro cientducados preſtados haſta el mayo
+<lb/>⁊ yo ſe los preſtaſſe con condiciõ que me de cient car
+<lb/>gas de trigo alli en aquel mes. Digo que eſte contra
+<lb/>to es malo: porque reſcibo entonces el prouecho ſe=<lb type="nb"/>guro ſin auer padeſcido yo algun trabajo enlo guar
+<lb/>dar/ limpiar y conſeruar haſta alli. y anſſi es mi conſe
+<lb/>jo que preſtando le enel mes de agoſto eſtas eiẽt car=<lb type="nb"/>gas de trigo que valen cientducados entonces/ que
+<lb/>enel mes de mayo no le reſciba mas de aquellos ciẽ
+<lb/>ducados que le preſto: por que todo lo demas ſera
+<lb/>vſura. y conforme alo que juzgamos eneſtos caſos y
+<lb/>contratos puede juzgar el auiſado Chriſtiano como
+<lb/>ſe deue auer en los de mas que ſe le pudieren offr eſ=<lb type="nb"/>cer por eſcuſar prolixidad.</p></div2>
+<div2><p rend="hx">
+<lb/><t:b>¶ Capitulo. xxiiij. que tra</t:b>
+<lb/>ta delos frutos y rentas que ſe lleuan delas prendas
+<lb/>y delos cenſos al quitar.</p>
+<p>
+<lb/><hi rend="init">H</hi>Conteſce muchas vezes que algun hõ-<note rend="noRef" type="margin"><lb/>Nota. j.</note><lb type="nb"/>bre va a otro cõneceſſidad a pedir le ciẽt
+<lb/>ducados preſtados. y conciertaſe con el
+<lb/>que tome en prendas vna heredad/ o ha=<lb type="nb"/>zienda que le renta en cada año ſeys car
+<lb/>gas de pan/ o quatro mill marauedis. Es la duda ſi
+<lb/>eſte que anſſi preſta los dichos cientducados podra
+<lb/>licitamente gozar las ſeys cargas de pan/ o maraue
+<lb/>dis que renta aquella hazienda haſta que ſe los pa=<lb type="nb"/>gue el deudor. A eſte caſo reſpondo. que no ſolamẽ
+<lb/>te no es licito gozar delas rentas y frutos auidos de
+<lb/>las prendas. pero aun digo que no es licito tomar
+<lb/>prendas a alguno/ quãto quiera que diga el comun
+<lb/>que ſe puedan tomar por aſſegurar cada qual ſu ha=<pb facs="W0113-0073" n="fol. xxxvr"/><lb type="nb"/>ziendá que anſſi preſto. Porq̃ enel exodo leemos. ſi
+<lb/>tomaſte prẽda a tu proximo buelue ſe la antes q̃ ſe põ-<note rend="noRef" type="margin">
+<lb type="nb"/>Exod. c. xxij.</note>
+<lb/>ga el ſol. y ſi me dixeren que yo no entiendo bien eſta
+<lb/>auctoridad. Alo menos nunca yo les concedere/ q̃
+<lb/>puedan gozar delos frutos delas prendas ſi valẽ al=<lb type="nb"/>gun intereſſe. eſto digo porque ſi me dieſſen a mi vna
+<lb/>taça de plata en prenda de diez ducados q̃ preſte/ biẽ
+<lb/>podria yo vſar della para beuer. porque por el vſo =<lb type="nb"/>lla no ſe conſume/ ni ſe gaſta lo qual es dezir q̃ en ella
+<lb/>es diuerſo el vſo dela propriedad: ni por el vſo pier=<lb type="nb"/>de ſu valor/ y anſſi no vale algũ inter eſſe. pero de vna
+<lb/>viña/ o tierra/ caſa/ o capa que ſon coſas q̃ ſus frutos
+<lb/>y vſo valen inter eſſe affir mo q̃ por prenda no ſe pue=<lb type="nb"/>den lleuar ni gozar. Mas antes digo q̃ es obligado
+<lb/>a deſcontar y reſcebir en parte de pago los frutos q̃
+<lb/>aya reſcebido de aquella hazienda en todo aquel tiẽ
+<lb/>po que por prẽda la ha tenido: y aun todos aquellos
+<lb/>frutos que por ſu culpa y negligencia ſe han dexado
+<lb/>de cojer por culpa y deſcuydo del que tiene la poſſeſ
+<lb/>ſion/ porno granjear y bien parar la hazienda: y tan
+<lb/>bien deue el ſeñor dela hazienda tomar en cuẽta qua
+<lb/>leſquier eſpenſas y coſtas que el poſſeedor aya he=<lb type="nb"/>cho en prouecho y granjeria dela hazienda. Eſi eſto
+<lb/>no hiziere es obligado alo reſtituyr. porque lo lleua
+<lb/>como inter eſſe delos diner os que anſſi le preſto. lo q̈l
+<lb/>es propriamente vſurar. De manera que ſi lo tuuo tã
+<lb/>to tiempo en empeño que computada la renta de ca
+<lb/>da año por hauer ſido muchos años ſobrepuja lo rẽ
+<lb/>tado ala uda ſera obligado a boluer todo lo de mas
+<lb/>que ouiere lleuado al ſeñor dela heredad.</p>
+<p>
+<lb/>¶ Aconteſce que algunos eſtando en neceſſidad <note rend="noRef" type="margin">
+<lb/>Nota. ij.</note>
+<lb/>cient ducados buſcan quien ſe los de. y obligan ſe 
+<lb/>les dar en cada vn año cinco/ o ſeys cargas detrigo/
+<lb/>o quatro mill marauedis: delos quales hazen car=<pb facs="W0113-0074" n="fol. [xxxv]v"/><lb type="nb"/>ta de venta: en que dizen que le venden quatro mill
+<lb/>marauedis de cenſo/ o ſeys car gas de pan en cada
+<lb/>vn año: con condicion y facultad que en qualquiera
+<lb/>tiempo que le boluiere ſus cient ducados ſalga dela<note rend="noRef" type="margin">
+<lb/>Martin qui
+<lb/>ti in eſtra. inci
+<lb/>piẽti. regimi
+<lb/>ne vninerſa=<lb type="nb"/>lis eccle. ſub
+<lb/>titu. de empti
+<lb/>one. ⁊ yendi</note>
+<lb/>obligacion. y eſte llaman cenſo al quitar/ con facul=<lb type="nb"/>tad al redemir. Alo qual digo que eſta determinado
+<lb/>por el pontifice Martin quinto en vna extrauagante
+<lb/>reſpondiendo a eſta queſtiõ expreſſa que le fue pueſta
+<lb/>ala qual reſponde: que auiendo lo comunicado con
+<lb/>religioſos y ſabios cardenales y cõ otros notables
+<lb/>doctores determinaron. que eſte cõtrato no era vſu=<lb type="nb"/>rarto/ quãto quiera que ouieſſe fraude y engaño de
+<lb/>parte del que compra por no dar el juſto valor. Por
+<lb/>que quãdo el que compra no dieſſe lo que juſtamẽte
+<lb/>vale ſeria obligado a reſtituyr al que vende/ o a ſus
+<lb/>herederos la equiualencia del engaño: y no como
+<lb/>vſurero/ porq̃ no lo es: ſino como aquel que engaña
+<lb/>al vendedor enel juſto precio por tomar le en neceſſi=<lb type="nb"/>dad/ o por otra cauſa alguna y anſſi digo que el tal cõ
+<lb/>trato delos tales cenſos que anſſi ſe compran al qui=<lb type="nb"/>tar no ſe podra dezir por alguna manera empeño ni
+<lb/>vſura: pero dezir ſe ha venta real con clauſula de re=<lb type="nb"/>tro vendendo: lo qual esdezir/ con facultad delo po
+<lb/>der comprar cada y quãdo quiſiere el vendedor: co
+<lb/>mo hazian los hijos de yſrrael que vendian haſta el
+<lb/>año del jubileo/ enel qual todas las coſas vendidas
+<lb/>boluian a ſuprimero ſeñor/ o alo menos quedaua
+<lb/>en ſu libertad poder lo demandar. Anſſi eneſte con=<lb type="nb"/>trato ſe vende realmente eſte pan/ o marauedis por
+<lb/>eſta cantidad que conciertan entre ſi los dos: con cõ
+<lb/>dicion que en qualquiera tiempo que bueluan al cõ
+<lb/>prador ſusdineros le de ſu haziẽda y heredad: lo q̈l
+<lb/>llamã los dotores tornar ſe lo a vẽder al ṗmer ſeñor.
+<lb/>¶ Pareſceme a mi q̃ en aquel tiẽpo q̃ el buẽ põtifice<note rend="noRef" type="margin">
+<lb/>¶ Nota. iij.</note>
+<lb/>Martin ordeno eſta extrauagãte ſe tuuo reſpecto a
+<pb facs="W0113-0075" n="fol. xxxvjr"/>
+<lb/>la neceſſidad l tp̃o. pero agora por el grãdaño y per
+<lb/>diciõ q̃  conſentir ſe eſtos cenſos ha redũdado enla
+<lb/>republica me pareſce q̃ ſe deuriã vedar: por la diſolu
+<lb/>cion en q̃ ha venido el mũdo. que luego q̃ eſtos mer=<lb type="nb"/>caderes y pod er oſos tratãtes tienen mill ducados
+<lb/>procurã buſcar labradores y hõbres neceſſitadosq̃
+<lb/>ſe les quierã acenſuar: por lo qual no ay labrador en
+<lb/>todo el reyno que no eſte empeñado y perdido y acẽ
+<lb/>ſuado haſta no tener q̃ comer: por que como hallan
+<lb/>quien los remedia de preſente ſu neceſſidad venden
+<lb/>ſe a ſi meſmos no mirando lo que eſta por venir.</p></div2>
+<div2><p rend="hx">
+<lb/><t:b>¶ Capitulo. xxv. que trata</t:b>
+<lb/>de vn genero de cõtrataciõ q̃ en heſpaña ſe dize mer=<lb type="nb"/>chaneria/ y los q̃ la tratã merchanes/ y de alpar ceria</p>
+<p>
+<lb/><hi rend="init">M</hi>Erchaneria enla manera q̃ agora la vſã
+<lb/>los hõbres es vn gñero de contrataciõ
+<lb/>el q̈l aun q̃ pareſce q̃ ſe funda en proue=<lb type="nb"/>er la republica de muchas coſas las q̈
+<lb/>les careſce principalmẽte  puercosbu<note rend="noRef" type="margin">
+<lb/>Nota. j.</note>
+<lb/>eyes/ y mulas para arar y beſtias para trabajar. tra=<lb type="nb"/>tã la agora los hõbres cõtãta diſſoluciõ y corruptela
+<lb/>q̃ la hazẽ tirana a eſpecie de vſura. porq̃ los tales fun
+<lb/>dã ſu intencion principal en no querer vẽder ningu=<lb type="nb"/>na coſa para q̃ luego ſe la paguẽ por ganar auentaja=<lb type="nb"/>da mẽte con el tiẽpo por la diſſoluciõ dela paga/ dãdo
+<lb/>lo fiado ſiẽpre a hõbres neceſſitados. y anſſi hallar eis
+<lb/>q̃ nũca los tales tratã ſino cõ pobres y meneſteroſſos
+<lb/>y con aquellos/ que aun en ningun tiempo puedan
+<lb/>pagar mas que fiada la mercaduria doble al precio
+<lb/>principal con el ſeys tanto el inter eſſe que de cada
+<lb/>año le lleuan por no pagar y anſſi van a vender ſus
+<lb/>mer cadurias alas aldeas/ ylugar es pequeños a los
+<lb/>labradores que no lo pueden pagar luego por eſtar
+<lb/>gaſtados/ yamedrẽtados/ con los alcãces y fatigas
+<pb facs="W0113-0076" n="fol. [xxxvj]v"/>
+<lb/>delos plazos y citacion es/ con los inter eſſes y cen=<lb type="nb"/>ſos que los tales malauenturados les han echado
+<lb/>en diuerſos tiempos: y por fuerça/ y como de temor
+<lb/>los neceſſitan a que ſobre el puerco que aun no han
+<lb/>pagado tomen otro/ o el buey/ aſno/ o mula a ſu peſar
+<lb/>y anſfi cargadosde deuda ſobre deuda/ ⁊ inter eſſe ſo
+<lb/>bre intereſſe ſe pierde quanto tienẽ/ y ſe acenſuan ſus
+<lb/>tierras y poſſeſſiones haſta no les quedar hazienda
+<lb/>con que biuir. eſtiende ſe a tanto ſu tirania/ por ſer tã
+<lb/>vniuerſales tiranos que por cojer deboxo de ſu yu=<lb type="nb"/>go a ricos y pobres vſan de vna vniuerſal cautela la
+<lb/>qual es. Pregonar publicamente ſu mercaduria a
+<lb/>vn cierto precio auentajado en cantidad: y dizen q̃
+<lb/>aquel ha de ſer ygual a todos lleuãdo lo fiado/ o pa=<lb type="nb"/>gando lo luego. Deſta manera. Que vſan traer a
+<lb/>eſte pueblo vn hato de quinientos puer cos: y dizen
+<lb/>que daran cada puer co a qualquiera que le quiſie=<lb type="nb"/>re a quatro ducados/ agora le tomen fiado por tiem
+<lb/>po/ agora le quierã luego pagar. y por eſta ygualdad
+<lb/>de precio les par eſce alos tales merchanes ſer juſto
+<lb/>el contrato y que no hazen injuſticia a los que le lle=<lb type="nb"/>uan fiado pues al meſmo precio le lleua el que luego
+<lb/>le pago o le pudo pagar: antes mueſtrã hazer le gran
+<lb/>corteſia en querer ſe le fiar. y anſſi como a todos les
+<lb/>pareſceſer mas barato no le pagando luego/ aun q̃
+<lb/>ſean ricos y le puedan luego pagar/ huelgan de go=<lb type="nb"/>zar del tiempo y tomarle fiado ſubjetando ſe ala plu
+<lb/>ma y obligacion. Son eſtas vias infernales de peca
+<lb/>dos muy graues y eſtan obligados a reſtitucion. por
+<lb/>que deſta manera deſtruy en y roban las haziendas
+<lb/>delos miſeros labradores y los conſumen y reſuel=<lb type="nb"/>uen en ſi con las cargas cẽſos ⁊ inter eſſes que de ca=<lb type="nb"/>da dia les echã a cueſtas haſta dexar los perdidos a
+<lb/>pedir por Dios vendiẽdo les eltp̃o cõ la neceſſidad
+<pb facs="W0113-0077" n="fol. xxxvijr"/>
+<lb/>¶ Uſan tambien de otras infinitas agudezas y dia<note rend="noRef" type="margin">
+<lb/>Nota. ij.</note>
+<lb/>bolicas cautelas para la execucion deſte infernal tra
+<lb/>to. Que acoſtumbran yr ala feria/ o mercado donde
+<lb/>ay muchos hatos de mulas y bueyes dediuerſos ſe
+<lb/>ñores que las vienen a vender como fuere ſu poſibi=<lb type="nb"/>lidad. y paſſeando ſe lostales mer chanes por el mer
+<lb/>cado llega a ellos vno deſtos neceſſitados labrado=<lb type="nb"/>res (que todos ſe conocen entre ſi) y dize que tiene ne
+<lb/>ceſſidad de vna mula/ o buey para ſu labrança y que
+<lb/>no tiene dineros. y luego el merchan dize que vaya
+<lb/>alos corrales donde eſtan los bueyes y mulas de di
+<lb/>uerſos ſeñores y eſcoja la que quiſiere/ que aun que
+<lb/>no ſean ſuyas el ſe la vendera fiada por el tiempo q̃
+<lb/>quiſiere. luego el labrador va al coral y eſcoje la be
+<lb/>ſtia que quiere y el merchan ſe la vende ſin ſer ſuya y
+<lb/>fia ſe la conoſcidamente enel doblo de lo que le pue=<lb type="nb"/>dedeſpues coſtar del dueño al contado. y deſpues q̃
+<lb/>eſta hecha la obligacion entre ellos dos dela fiança
+<lb/>y tiempo y precio va el merchan a comprar ſe la del
+<lb/>dueño por lo menos q̇ue puede. eſto es gran pecado
+<lb/>mortal/ tirania y abſoluto robo: porque los tales ſin
+<lb/>tener en ſu poder alguna mercaderia enla qual auẽ=<lb type="nb"/>turen algun peligro ni induſtria/ o trabajo o granje=<lb type="nb"/>ria para la mejora della tratan y relançan las tales
+<lb/>beſtias y otros generos de mercadurias en auenta=<lb type="nb"/>jados y demaſiados precios por cauſa dela fiança y
+<lb/>eſpera que hazen enel tiempo dela neceſſidad de aq̃l
+<lb/>proximo. Lostales ſon obligados a reſtitucion en a
+<lb/>quellas perſonas a quien lo tal lleuã. y de masdeſto
+<lb/>deuẽ ſer echados la republica por deſſoladores y 
+<lb/>ſtruy dores los pobres miſerables: y aun uẽ ſer les<note rend="noRef" type="margin">
+<lb/>¶ Nota. iij.</note>
+<lb/>q̇tadas las vidas por plïcos y vniuer ſales robadores
+<lb/>¶ Ay muchas perſonas en caſtilla: y principalmẽte
+<lb/>las ay enel andaluzia: las quales biuen de vn genero
+<pb facs="W0113-0078" n="fol. [xxxvij]v"/>
+<lb/>de cõtratacion eneſta manera. que tienẽ vn hato de
+<lb/>bueyes/ yeguas/ y mulas: y en ciertos meſes del a ño
+<lb/>las acenſuã a labradores neceſſitados para arar ſus
+<lb/>tierras y eredades y hazer ſu agoſto: por el q̈ltiẽpo<note rend="noRef" type="margin">
+<lb/>Alparceria.</note>
+<lb/>y trabajo dan los labradores a ſus dueños por las ta
+<lb/>les beſtias dos o tres hanegas de pã/ o mas o menos
+<lb/>como ſe conciertã entre ſi. la qual manerade contra
+<lb/>taciõ llamã en muchas partes alparceria: y põgo la
+<lb/>aqui porq̃ me preguntaron q̃ me par eſcia de ſu juſti=<lb type="nb"/>cia. Alos quales reſpondo q̃ de mi pareſcer el cõtra
+<lb/>to es bueno porq̃ enel ſe alquila la tal beſtia por aq̃l
+<lb/>tiẽpo para aq̃l trabajo por aq̃l precio/ como ſi fueſſe
+<lb/>vn cauallo para andar vn camino. Cõ tal condicion
+<lb/>q̃ por la neceſſidad  aq̃l labrador no ſe le alq̇le dema
+<lb/>ſiada mente. y tãbien ſe vſa enel andaluzia alparçar
+<lb/>puercas con hombres q̃ tienen los machos: cõ cõdi
+<lb/>cion que de ſeys o de diez q̃ a ſu tiẽpo parã le de vno
+<lb/>y mas ſuspner cas: el qual contrato me pareſce bue
+<lb/>no y de compañia.</p></div2>
+<div2><p rend="hx">
+<lb/><t:b>Capitulo. xxvj. que trata</t:b>
+<lb/>la reſtituciõ del vſurero: a quiẽ y como ſe ue hazer</p>
+<p>
+<lb/><hi rend="init">P</hi>Ues emos largo contado los contratos
+<lb/>vſurarios y q̃ traen ſoſpecha para la con=<lb type="nb"/>ciencia en todas aquellas eſpecies y mane
+<lb/>ras que ſenos han podido offreſcer: reſta<note rend="noRef" type="margin">
+<lb/>Nota. j.</note>
+<lb/>agora que tratemos de ſu reſtitucion/ a quiẽ y como
+<lb/>ſe deue hazer. ¶ Todos los doctores quãtos hablã
+<lb/>eneſta materia ponen vna muy aueriguada conclu=<lb type="nb"/>ſion/ en q̃ dizen q̃ no ſolamẽte ſon obligados los meſ
+<lb/>mos vſureros a reſtituyr los dineros y haziendas y
+<lb/>los frutos auidosde alli en vſuras: pero q̃ aun ſus
+<lb/>hijos y herederos haſta la quarta generaciõ: y aũ ſi
+<lb/>aquellos bienes ſuceden enlos eſtraños los deuẽ re
+<pb facs="W0113-0079" n="fol. xxxviijr"/>
+<lb/>ſtituyr: la razõ deſto es: porq̃ todos eſtos lo po ſſe en
+<lb/>cõ malo ⁊ injuſto titulo y mala fee: como lo emos mo
+<lb/>trado haſta aqui. y dizẽ q̃ eſta reſtituciõ ſe deue hazer
+<lb/>alas perſonas de quiẽ lo lleuarõ: y en ſu falta a ſus hi
+<lb/>jos y herederos/ aun q̃ ſeã fuera de ſu generaciõ. ſi a
+<lb/>caſo ſuccede enellos algũ acreedor o fiſco. y no ſola
+<lb/>mente ſe les deue reſtituyr todo aq̃llo q̃ ſe les lleuo de
+<lb/>mas y allende dela parte principal q̃ le preſto: pero
+<lb/>aun deue le ſatiſfazer qualeſquiera daños y peligros
+<lb/>en q̃ incurrio por falta  aq̃llos diner os q̃ le lleuo por
+<lb/>razõ del preſtamo ⁊ inter eſſe. Y ſanto thomas hablã
+<lb/>do eneſte propoſito dize. q̃ no puedes hazer limoſna<note rend="noRef" type="margin">
+<lb/>Diuustho. in
+<lb/>ij. ij. q. xxxij.
+<lb/>ari. vij.</note>
+<lb/>las coſas y dineros auidos  vſura: porq̃ diſpones
+<lb/> haziẽda ajena fuera la volũtad  ſu verdadero. ſ.
+<lb/>¶ Pero diras me: yo he tratado en cincuẽta años q̃<note rend="noRef" type="margin">
+<lb/>Nota. ij.</note>
+<lb/>tẽgo eſte officio cõ innumerables hõbres. y deſtos co
+<lb/>nozco algunos/ y a muchos no/ como tẽgo de hazer
+<lb/>eſta reſtitucion. digo que er es obligado quanto a lo
+<lb/>primero a ceſſar eñl officio y moſtrar querer tomar
+<lb/>nueua vida en comẽdãdo te mucho a Dios. y luego
+<lb/>teniẽdo eſperãça enel ayudara y alũbrara el medio
+<lb/>y carrera por dõde te remedies tu. y para eſto deues
+<lb/>cõ gran diligẽcia eſcudriñar tu conciẽcia poniẽdo to
+<lb/>do tu penſamiẽto y cuydado en eſta tu buena deter=<lb type="nb"/>minaciõ Eſforçado cõ Dios piẽſa todos aq̃llos q̃ en
+<lb/>tu memoria touier es cõ los q̈les trataſte en tu officio
+<lb/>⁊ yo fiador q̃ te acordara Dios quãtos tu querras.
+<lb/>y cõfio q̃ proueera tãto Dios enello q̃ te oſo dezir/ q̃
+<lb/>te baſtaria cũplir cõ aq̃llos q̃ dios te acordaſſe para tu
+<lb/>ſatiſfaciõ: y ſi cõ eſtos no te ſatiſfizier es da gr̃as a Di
+<lb/>os q̃por tu biẽ es: y veta a tus libros  caxa y cãbio pu
+<lb/>es los tienes cõſeruados en tu eſcriptorio de todo el
+<lb/>tp̃o q̃ andas enla contrataciõ y por alli te ſatiſfaras.
+<pb facs="W0113-0080" n="fol. [xxxviij]v"/>
+<lb/>y luẽgo procura auer todas aquellas perſonas y da
+<lb/>les ſus dineros/ o embia ſe los a qualquier lugar q̃
+<lb/>eſten. y de aquellos que no pudieres auer/ ni a ſus he
+<lb/>rederos/ bien puedes hazer limoſna a perſonas que
+<lb/>lo tengan neceſfidad. hecha primero la diligencia
+<lb/>que en buſcar los ſe pudiere hazer. La qual hecha
+<lb/>baſtante mente no es depreſumir que permita Dios
+<lb/>que por todos los dineros del mundo que deua/ ſe
+<lb/>pierda perpetuamente vn hombre que tanto le coſto
+<lb/>como morir porel. y eſto con tal condicion que haga
+<lb/>de ſu parte todo lo que en ſi es. por que es de creer q̃
+<lb/>no condena Dios tanto al hombre por el dinero q̃
+<lb/>deuieſſe como por no hazer lo que en ſifue tocante
+<lb/>ala reſtitucion. Pero auiſo te que ſi te deſcuydas
+<lb/>por auaricia/ diziendo que te es gran baxeza deſha=<lb type="nb"/>zerte de toda la hazienda que has ganado anſſi/ la
+<lb/>qual ſi por enter o vuieſfes de reſtituyr/ quedarias a
+<lb/>pedir por Dios. Conſidera pecador de ti que naſci=<lb type="nb"/>ſte deſnudo/ y que por biuir veſtido aqui ala aparen
+<lb/>cia del mundo ſeys años/ o diez no deues querer mo
+<lb/>rir deſnudo perpetuamente enel otro mundo donde
+<lb/>es perpetuo el morir/ o biuir. Dizen me muchos de=<lb type="nb"/>ſtos hombres/ que andan buſcando ſabios letrados
+<lb/>que conforme a ſus letras les den vna facil manera
+<lb/>de reſtitucion. alos quales yo digo que antes andan
+<lb/>buſcando hombres que les den induſtria y manera
+<lb/>como quedando ſe con la hazienda puedan reſtitu=<lb type="nb"/>yr. Enlo qual los deſengaño ante los hombres y an
+<lb/>te Dios. que en todos los doctoresſagrados antigu
+<lb/>os ni modernos no ſe hallara otra coſa de la que yo
+<lb/>he dicho aqui/ ni ninguno que oy biua puede dezir
+<lb/>otra coſa con verdad.</p></div2>
+<div2><p rend="hx">
+<pb facs="W0113-0081" n="fol. xxjxr"/>
+<lb/><t:b>¶ Capitulo. xxvij. en el</t:b>
+<lb/>qual ſe trata: ſi ſatiſfaze el vſurero offreſciẽdo los di=<lb type="nb"/>neros a quiẽ los deue reſtituyr/ ſi el no los q̇ſo tomar</p>
+<p>
+<lb/><hi rend="init">M</hi>Ueuen losdoctores vna quiſtiõ eneſta
+<lb/>materia de mucho prouecho. Pregun
+<lb/>tan ſi es baſtante ſatiſfacion offreſcer
+<lb/>me yo a vno de quiẽ he lleuado vſuras<note rend="noRef" type="margin">
+<lb/>Nota. j.</note>
+<lb/>diziendo q̃ ſe las quiero reſtituyr/ ſi eſta=<lb type="nb"/>ria yo entonces ſatiſfecho y perdonado/ diziẽdo me
+<lb/>aquel/ que me hazia dello expreſſa y mera donacion
+<lb/>Eſto ſuele aconteſcer en muchos que no teniendo vo
+<lb/>luntad de reſtituyr ruega a aquellos a quien deuen
+<lb/>algo que les perdonen la deuda: los quales deſpu=<lb type="nb"/>es eſtan ſatiſfechos diziẽdo que ſon abſueltos de ſus
+<lb/>acreedores: y que en ſu conciencia no deuen mas. A
+<lb/>lo qual reſponden todos los doctores anſſi. Que es
+<lb/>neceſſario que eſte vſurero que ſe offreſce a reſtituyr
+<lb/>mueſtre delante el dinero que hadedar en la reſtitu
+<lb/>cion: de tal manera que aquel a quien ſe ha de hazer
+<lb/>tenga libertad para poder lo tomar: por que en eſto
+<lb/>mueſtra la voluntad que tiene delo reſtituyr. ⁊ ſi en=<lb type="nb"/>tonces le haze donacion delos dineros y no los qui
+<lb/>ere reſcebir es libre el vſurero de aquella deuda: y
+<lb/>entonces no es obligado a mas. Pero ſi ſolamente
+<lb/>ſe offre ſce de palabras diziendo que lo quiere reſti=<lb type="nb"/>tuyr ſin nunca ſe lo moſtrar (quanto quiera que ten=<lb type="nb"/>ga voluntad efficaz de ſe lo dar) y el otro dixeſſe entõ
+<lb/>ces que ſe lo perdonaua y q̃ le hazia dello donacion.
+<lb/>digo que eneſte caſo el vſurero no es abſuelto de la
+<lb/>deuda. Porque ni ſu acreedor vee los dineros que
+<lb/>le offreſcẽ: ni aun cree que aun que los quiera ſe los
+<lb/>dara: porque ſiempre ſoſpecha q̃ ſe los offreſce por cũ<pb facs="W0113-0082" n="fol. [xxjx]v"/><lb type="nb"/>plir con el: y q̃ no tiene voluntad de ſe los dar/ mas
+<lb/>que estentacion que ha ze enel. Y el abbad panor-<note rend="noRef" type="margin"><lb/>Abb. in. ca. cõ<lb/>ſuluit. de vſu<lb/>ris.</note><lb type="nb"/>mitano dize. Que aun que al vſur ero ſe le haga li=<lb type="nb"/>bre donacion delos dineros que gano a vſura ſi a ca
+<lb/>ſo no tiene el tal vſurero voluntad efficaz de reſtitu=<lb type="nb"/>yr: que no ſe le perdona quanto ala culpa ſino reſtitu
+<lb/>ye de coraęon. Pudieramos multiplicar eſta mate=<lb type="nb"/>ria en infinito: y hazer vn largo proceſſo ſi de todo o=<lb type="nb"/>uieramos de hablar en particular. Pero no he que
+<lb/>rido eſcreuir ſino lo neceſſario para nueſtra ſalud y<note rend="noRef" type="margin">
+<lb/>Nota. ij.</note>
+<lb/>lo que ſuffre nueſtra lengua caſtellana en ſu dezir.</p>
+<p>
+<lb/>¶ Pues reſumiendo nos/ digo que es obligado el
+<lb/>vſurero a reſtituyr ala parte de quien lleuo las vſu=<lb type="nb"/>ras/ o a ſus hijos y herederos/ o a qualquiera otro
+<lb/>ſu ſucceſſor/ no ſolamente qualeſquiera coſas y ma=<lb type="nb"/>rauedis que le aya lleuado por inter eſſe: pero lo que
+<lb/>mas es y mas ponderar: que le deue ſauſfazer qua
+<lb/>les quiera daños en que incurrio por faltar le aque=<lb type="nb"/>llo que le lleuo. y que no obſtante que por ruegos le
+<lb/>perdone lo que le ue/ aun que le haga dello libre do
+<lb/>nacion ſino tiene efficaz voluntad  reſtituyr. En ver<lb type="nb"/>dad condiciones ſon eſtas a que obligan los docto=<lb type="nb"/>res a los vſureros en la reſtitucion tan eſmeradas/
+<lb/>tan admirables y tan difficultoſas para quien las ha
+<lb/>de cũplir que no puedo ſino llorar ſus almas de los
+<lb/>mezquinos vſureros: alas quales veo en infalible o
+<lb/>portunidad de ſe perder. Ueo la facilidad y el deſcu
+<lb/>y do con que los hombres ſe çapuzan y ſe relançan
+<lb/>en eſtas tan abominables contrataciones/ tan ſin mi
+<lb/>rar el mandamiento de Dios. y veo que de cada dia
+<lb/>ſe augmentan y añaden mas y de cada dia ſe encien
+<lb/>de la quadrilla y numero en tanta multitud q̃ pareſ=<lb type="nb"/>ce peſtilẽcial contagiõ. y veo tã maſiados los intere
+<lb/>ſes: y tã ningũo q̃ aun pienſe enlo reſtituyr/ q̃no pue=<pb facs="W0113-0083" n="fol. xlr"/><lb type="nb"/>do ſino vnã y mill vezes llorar. Doy bozes a Dios: y
+<lb/>como ſoy pecador no me quiere oyr. Pues ayan los
+<lb/>hõbres laſtima y piedad de ſi/ y miren quanto les va
+<lb/>q̃ infalible mente ſe van al infierno ſin algũa redẽciõ
+<lb/>Deſpierten no duermã tanto q̃ no haze Dios ſino bo
+<lb/>zear: deſpertad/ deſpertad los que dormis: abrid los
+<lb/>ojos ſomnolientos y ved vueſtra condenaciõ. haſta
+<lb/>en quando haueys de dormir. ſon palabras eſtas/ o
+<lb/>es alguna fabula/ o hyſtoria tan antigua que no ſe a li
+<lb/>cito fingir. Leã los prophetas y ſanctos patriar chas
+<lb/>y el euãgelio de nueſtra fee: y en todos lugar es halla
+<lb/>ran bozes y auiſos de Dios. Lean las abominacio=<lb type="nb"/>nes dela vſura prometiendo. Dios el caſtigo ſobreto
+<lb/>do el comũ. Pues o vſure ros ſino os doliere el mal
+<lb/>vueſtro duelaosel de todo el mundo: y conuertios a
+<lb/>Dios porq̃ dize q̃ por vueſtro pecado ha de caſtigar
+<lb/>toda la cibdad. Aqui os emos eſcripto la grauedad
+<lb/>del pecado y quanto le abomine Dios: y como os a=<lb type="nb"/>ueys de apartar del. Plega a Dios q̃ el osde gr̃a cõ
+<lb/>la q̈l vengays enla verdad y os ſalueys. Amen.</p>
+<p>
+<lb/>¶ Pues deſde aqui adelante tengan vn grande aui<note rend="noRef" type="margin">
+<lb/>Nota. ij.</note>
+<lb/>ſo los confeſſores: el qual plaziendo a nueſtro ſeñor/
+<lb/>ſera vn vnico remedio deſte mal. Que quando ven=<lb type="nb"/>ga alguno deſtos penitentes a ſus pies y moſtraren
+<lb/>hauer entendido en algun caſo deſta contratacion:
+<lb/>pregunten le luego quanto tiempo ha que trata enel:
+<lb/>y quantas vezes durante eſte tiempo ſe confeſſo: y ſi
+<lb/>dixeren dos/ o tres y perſeuera agora enel deſpidale
+<lb/>ſin abſolucion. por que mal ſe puede preſumir que
+<lb/>por aquella abſolucion ſe enmẽdara/ pues haſta alli
+<lb/>no ſe enmendo. y digale q̃ apruebe en la enmienda
+<lb/>vn año/ o medio y que le abſoluera. por que de otra
+<lb/>manera no le aprouecha abſolucion. Y plazera
+<lb/>a nueſtro ſeñor que por ſu gracia/ y por embiar
+<pb facs="W0113-0084" n="fol. [xl]v"/>
+<lb/>le deſconſolado ſe enmendara: por que ſe remedie tã
+<lb/>gran mal el qual plega a Dios que no reſulte en da=<lb type="nb"/>ño y caſtigo vniuerſal/ como hemos viſto q̃ ha baſta
+<lb/>do ſtruyr muchas inſignes ciudades y republicas
+<lb/>dela ytalia dõde reynaua eſte peccado con gran no=<lb type="nb"/>tabilidad haſta aqui.</p>
+<p>
+<lb/><t:b>¶ Fin dela primera parte.</t:b></p></div2></div1>
+<div1 type="part" n="2" xml:id="p2">
+<p>
+<lb/><hi rend="init"><unclear resp="#TL"/></hi>A que enla primera parte no aya ſatiſfe
+<lb/>cho a tu deſſeo amado amigo mio: alo
+<lb/>menos cõſuela me hauer cumplido cõ
+<lb/>te obedeſcer. ſemejando alos niños que
+<lb/>queriendo executar todo lo que les es
+<lb/>mandado quãto quiera que ſea impoſſible lo acome
+<lb/>ten con la vſada obediencia: enlo qual deſcubren ſu
+<lb/>inocente ſimpleza que haze ſu intencion no ſolamen
+<lb/>te ſin culpa pero mereſcedora de agradeſcimiento.
+<lb/>Uenidos pues ala ſegunda parte de nueſtro propo=<lb type="nb"/>ſito/ enla qual nos offreſcimos de eſcreuir la poca li=<lb type="nb"/>cencia que tengan los hombres de ſacar dineros a
+<lb/>vſura. lo mas breue que yo pueda (por no te enojar
+<lb/>con larga eſcriptura) cumplire en mi promeſſa con
+<lb/>el ay uda de nueſtro ſeñor Dios.</p>
+<p>
+<lb/><hi rend="init">A</hi>Quel padre delos philoſophos Platon
+<lb/>enlos libros de republica hizo vna ley: la
+<lb/>qual a mi pareſcer es firme fundamento
+<lb/>de mi intencion. Mando que ninguno ſa
+<lb/>caſſe agua de pozo ageno haſta que cabando enel cẽ
+<lb/>tro de ſu propriedad vieſſe por eſperiencia que no ha
+<lb/>uia agua en ſu poſſeſſion. Pareſcio me proueher
+<lb/>mucho el buen philoſopho en eſta ley: porq̃ deſpues
+<pb facs="W0113-0085" n="fol. xljr"/>
+<lb/>de proueer a cada vno dela neceſſaria prouiſion qui=<lb type="nb"/>tauale la ocaſiõ de ſer vicioſo por la ocioſidad. y quã
+<lb/>do ya fueſſepor eſperiencia cierto que en ſu heredad
+<lb/>no auia agua. juſta coſa era que al neceſſitado fauore
+<lb/>cieſſe el que touieſſe facultad. Por la meſma ley ⁊ ra
+<lb/>zon pareſce que veo tomar dineros a vſura por inte
+<lb/>reſſe: y llegar a ſacar los de arcas y pozos ajenos/ ſi
+<lb/>primero con gran diligencia no ſe ouieren eſcudriña
+<lb/>do las proprias/ cumpliendolo neceſſario haſta que
+<lb/>conſumido todo no tenga coſa propria que gaſtar pe
+<lb/>ro agora como eneſtos miſerables tiẽpos todos los
+<lb/>hombres ſe ocupan y abundan  deleytes y laciutas
+<lb/>y gaſtos deſordenados/ muy menos gozan y ſe apro=<lb type="nb"/>uechan de ſus poſſeſſiones: mas antes para ſuplir
+<lb/>ſus gaſtos demaſſiados ſin neceſſidad alguna buſcã
+<lb/>preſtado lo ageno. Por lo qual pareſce claramente
+<lb/>que del erceſſo demaſiado de ſus vicios y ſoberuia
+<lb/>viene ſacar los hombres dineros a vſura para com
+<lb/>prar/ o auer alguna coſa que les engrandezca/ y en=<lb type="nb"/>ſanche ſu generoſidad y ambicion: y ninguno lo ſa=<lb type="nb"/>ca para cumplir lo neceſſario a ſu mejor vida y coſtũ
+<lb/>bres. Quiero porque veas eſto por erperiencia decẽ
+<lb/>dir a particular. Qualquiera que ſaca dinerosa vſu
+<lb/>ra o es rico/ o pobre. Si es rico quiero primero ha=<lb type="nb"/>blar con el. Dime miſerable hombre para que rode=<lb type="nb"/>as los cambios y tiendas ajenas acompañado de co
+<lb/>redores y perſonas a buſcar preſtados dineros por
+<lb/>intereſſe/ pues de tu meſma tienda te puedes preſtar
+<lb/>a ti. taças/ jarros/ copas/ cãdeleros/ y otra multitud
+<lb/>de vaſijas/ y alhajas q̃ tienes: las quales ha treinta
+<lb/>años que te ſobran en caſa/ que pudo ſer que nunca
+<lb/>te fueron neceſſarias ſino vn dia de vn bãquete que
+<lb/>quiſiſte cumplir con tu generoſidad. Ya pareſce que
+<pb facs="W0113-0086" n="fol. [xlj]v"/>
+<lb/>todas coſas por lo mucho que ha que eſtan en tu ca=<lb type="nb"/>ſa y aparador affean la ſumptuoſidad de tu perſona
+<lb/>como ſi eſtuuieſſen cubiertasde mobo: vende las pu
+<lb/>es con ellas ſupliras mejor tu falta que cõ las empe=<lb type="nb"/>ñar. Los principes ricos y poderoſos todas ſus ri=<lb type="nb"/>quezas y poder endereçan y guardan la celebridad
+<lb/>y honrra de fieſtas y dias ſeñalados que ſe offreſcen
+<lb/>enel año: penſando emplear las biẽ quando cõ ellos
+<lb/>engrandeſcen ſu eſtado con aquella mageſtad. y tu
+<lb/>puedes ſuffrir biuir afr entado enlos tales dias hon=<lb type="nb"/>rrando con tus joyas al vſurero pudiẽdo te hõrrar
+<lb/>a ti: y aun de mas deſto lo que peores que no viene fi
+<lb/>eſta notable enel año enla qual todos tus amigos y
+<lb/>vezinos ſe quieran holgar que a ti no te peſſe por ve=<lb type="nb"/>nir por que las paſcuas y fieſtas principales/ como
+<lb/>carnes tollendas y ſant juan ſon muy aboreſcidas
+<lb/>delosdeudores: por que entonces haze el vſurero
+<lb/>la execucion. Pues deſuenturado y miſerable de ti
+<lb/>gana honrra con el logrero y vende tu hazienda co=<lb type="nb"/>mo proprio ſeñor/ que ſiempre te valdra a ti mas: por
+<lb/>que quando ouieres pagado las coſtas vſuras y prin
+<lb/>cipal no te quedara vn marauedi: y vendiendo la tu
+<lb/>ſupliras tu falta y aun quedar te han din erosque ga
+<lb/>ſtar. Dime miſerable/ eſtas taças/ jarros y alhajas/ y
+<lb/>tanta ſuperfluydad tu para que las compraſte: o tu
+<lb/>anteceſſor para que las compro. Neceſſariamente
+<lb/>me has de dezir/ que ſe compraron para te honrrar.
+<lb/>Puesnecio ignorante de ti eſtando empeñadas en
+<lb/>caſa del logrero como te honrran a ti. Que gran
+<lb/>locura y ceguedad: que tengas verguença delas vẽ
+<lb/>der y remediar con ellas tu falta: y no que te injuries
+<lb/>de que ſe ſepa entre tus enemigos que tu hazienda
+<lb/>y joyas eſten por prendas en caſa del logrero: y q̃ ſe
+<pb facs="W0113-0087" n="fol. [xlij]r"/>
+<lb/>vendan publicamente el dia dela erecucion pregonã
+<lb/>do tu neceſſidad y lo poco en q̃ el logrero te eſtimo/
+<lb/>pues llegado el plazo te las puſo en publica almone
+<lb/>da/ y ſi no te las vende carga de cada dia vſuras por
+<lb/>inter eſſe haſta te las cõſumir y rematar. ya pues te
+<lb/>han honrrado tanto tiẽpo vende las pues no ſe hizie
+<lb/>ron para te injuriar. Aq̃l ſabio griego Pericles te=<lb type="nb"/>niẽdo neceſſidad de dineros para vna guerra tuuo
+<lb/>por coſa ſancta vender los veſtidos joyas y ornamẽ
+<lb/>tos dela dioſa venus/ q̃ montaron quarẽta talentos
+<lb/>de oro puro diziẽdo/ q̃ ſi venia victorioſo  alla el los
+<lb/>cõpraria para la dioſa mejores. Anſſi tu como cerca
+<lb/>do dela neceſſidad no quieras reſcebir el ſocorro del
+<lb/>enemigo logrero: porq̃ no ſeas forçado a traer en ſer
+<lb/>uidumbre toda tu haziẽda/ pero enajena de ti y vẽde
+<lb/>tus ſuperfluydades/ taças/ jarras/ alhajas y ropas
+<lb/>que tienes en demaſia y ſobra/ y anſſi libertaras ſer
+<lb/>uidumbre a tus hijos/ muger/ y perſona: y boluiẽdo
+<lb/>en algũ tiempo en proſperidad remediaras eſta miſe
+<lb/>ria y compraras todas eſtas joyas y mas/ y gozar las
+<lb/>has alegre y cõ plazer. Los romanos por vna peſti=<lb type="nb"/>lencia offreſcieron al dios apollo enel templo de del
+<lb/>phos todos los çar cillos y anillos axorcas y arreo
+<lb/>de ſus mugeres/ y quantas otras joyas de oro teniã
+<lb/>para el atauio de ſus perſonas para aplacar la dey
+<lb/>dad que eſtaua dellos offendida. Puesporque tu
+<lb/>muger no vendera ſu arreo por libertar te a ti y a ſi
+<lb/>meſma de vil ſeruidumbre del acreedor. Las muge
+<lb/>res delos carthaginenſes ſe rayer on las cabeças pa
+<lb/>ra hazer ſogas  ſus cabellos/ porq̃ no teniã cañamo
+<lb/>ni eſparto de que hazer inſtrumentos bellicos q̃ les
+<lb/>faltauan en vna guerra para ſe defender de ſus ene=<lb type="nb"/>migos/ y agora para te defender  afrẽta y verguẽça
+<pb facs="W0113-0088" n="fol. [xlij]v"/>
+<lb/>la pobreza q̃ es vn enemigo caudal: y del vſurero q̃
+<lb/>es vn coſſario tirano no ternas por mejor deſpojar/ y
+<lb/>raer las ſuper fluydadesde joyas y arreos de tu mu
+<lb/>ger y vendiendo lo cumplir tu neceſſidad ſaliendo 
+<lb/>injuria libertando te de deuda. En epheſo fue edifica
+<lb/>do vn templo memorable de diana de coſta y miſſion
+<lb/>de toda la prouincia/ y a eſte llamauan. Aſilum/ que
+<lb/>es lugar priuilegiado dõde cada q̈l eſtaua defendido
+<lb/> ſu acreedor. pues agora a ti y aq̈lquiera  noſotros
+<lb/>le es facil edificar vn muy priuilegiado templo enel
+<lb/>qual nos defendamos de todas las neceſſidades/ ſi
+<lb/>vendiendo las coſas que en nueſtras caſas tenemos
+<lb/>ſuperfluas quedamos libres con las neceſſarias pa=<lb type="nb"/>gando nueſtrasdeudas. Eſtando los athenienſes en
+<lb/>vna gran neceſſidad cercados de ſus enemigos fue=<lb type="nb"/>ron a conſultar el remedio a delphos con Apo llo.
+<lb/>y el oraculo del dios les dixo: que ſe aprouechaſſen
+<lb/>de vn muro de madera. y riendo ſe los athenienſes
+<lb/>menoſpreciando el oraculo. porque aun teniendo vn
+<lb/>muro inuiolable de piedra dudauan ſu ſalud: quã=<lb type="nb"/>to mas con muro de madera. y vn ſabio griego les di
+<lb/>xo que el dios queria dezir: que acorrieſſen alos na=<lb type="nb"/>uios para ſaluar ſus vidas. y anſſi ſſamparadas ſus
+<lb/>caſas poſſeſſiones y haziendas ſe fueron en nauios
+<lb/>por el mar huy endo. Anſſi noſotros cercados de nu
+<lb/>eſtras neceſfidades y deudas acorramos alas joyas
+<lb/>arreos y alhajas ſuperfluas que ſolamente hazen a
+<lb/>nueſtra ſumptuoſidad: y vendiendo las hagamos na
+<lb/>uios con que eſcapar dellas: porque cumpliẽdo nu=<lb type="nb"/>eſtras faltas con nueſtra hazienda libertaremos de
+<lb/>mano de nueſtros enemigos nueſtras perſonas. En
+<lb/>concluſion todo eſto he dicho para perſuadir te que
+<lb/>ſi eres rico huyas de tratar con el logrero/ aun que
+<pb facs="W0113-0089" n="fol. [xliij]r"/>
+<lb/>auentures deſhazerte de tu hazienda: porque no ay
+<lb/>peor genero de ſeruidũbre que ſubjetar ſu libertad
+<lb/>a tan vil hombre: y mas captiuo ſieruo que ay en el
+<lb/>mundo. En tanta manera deue vn hombre virtuoſo
+<lb/>huyr eſta ſeruidumbre: que antes ternia por menor
+<lb/>mal ſer captiuo a coſo por muchos años de vn infiel
+<lb/>principe turco/ que vn dia ſer deudor de vn vil logre
+<lb/>ro. Porque ſi el vno es tu enemigo eſtrangero/ aun
+<lb/>te podra tratar bien por ſer principe y de animo gene
+<lb/>roſo: y el logrero como vil reprouado de Dios y de
+<lb/>los hombres por vicioſſo ala contina te atormenta cõ
+<lb/>vexaciones de alcances ⁊ intereſſes haſta ver tu per
+<lb/>dicion. Y ſi el vno te tiene preſa la perſona que no va
+<lb/>yas de ſu tierra. eſte otro de mas de tener te con priſi
+<lb/>ones encerrado en vna car cel prende te y aflige te el
+<lb/>animo con eſtorſiones y obligaciones que te neceſſi=<lb type="nb"/>tan muchas vezes a penſar y hazer bajezas y vilezas
+<lb/>que entorpecen y apocan tu ſer. lo qual no haze el in
+<lb/>fiel porque ſiempre dexa tu anima en libertad de po=<lb type="nb"/>der obrar virtud. En fin ſi al vno te ſubjeto fortuna/
+<lb/>al otro te ſubjeto vicio. Por lo qual ſi algo poſſees
+<lb/>no tomes a vſura. que pues tienes de que te aproue
+<lb/>char no te puedes dezir neceſſitado/ porque el que al
+<lb/>go tiene no ſe puede dezir del todo meneſteroſo/ ſino
+<lb/>quieres y gualar tu neceſſidad con tu ſoberuia/ y
+<lb/>cobdicia.</p>
+<p>
+<lb/>¶ Pues vengamos agora a hablar con el pobre/
+<lb/>pues emos hablado con el rico. Si eres pobre y no
+<lb/>tienes hazienda/ dime miſerable quien te neceſſita a
+<lb/>vſurar/ pues te pones en trabajo que no puedes cũ=<lb type="nb"/>plir. Caton el ſabio reprehendiendo a vn viejo vicio
+<lb/>ſo le dixo. Dime viejo porque añades alos trabajos
+<lb/>dela vejez las moleſtias/ y peſadumbres del vicio.
+<pb facs="W0113-0090" n="fol. [xliij]v"/>
+<lb/>Deſta manera ſe te puede dezir a ti/ porque alas im=<lb type="nb"/>portunidades y deſcontentos la pobreza/ di pobre
+<lb/>porque añades las perſecuciones y miſerias que ſe
+<lb/>ſiguen de tener por acreedor al logrero. Porque pi=<lb type="nb"/>erdes tan de voluntad la ventaja que tienes alos ri=<lb type="nb"/>cos en ſer libre. Paradoxa es de los antiguos/ que
+<lb/>el rico es eſclauo por auaricia de ſus riquezas. y a to
+<lb/>dos es ſubjeto con temor de perderlas. y no ay rey
+<lb/>mas libre que el buẽ pobre por no tener que perder.
+<lb/>Entre los griegos auia vn refran muy comũ en eſte
+<lb/>propoſito/ que ſolian dezir. No puedes lleuar la ca=<lb type="nb"/>bra acueſtas/ y echas encima el buey. Como ſi dixeſ
+<lb/>ſen. No puedes ſuffrir la pobreza y echas te acueſtas
+<lb/>las moleſtias y perſecuciones del logrero/ que aun
+<lb/>alos ricos es incomportable de ſuffrir. Pero diras
+<lb/>me que te de remedio para huyr de tan gran mal. di=<lb type="nb"/>go que naturaleza te le dio ſi le quiſieſſes ſeguir.</p>
+<p>
+<lb/>Manos tienes y pies y ojos y voz/ y pues er es hom
+<lb/>bre tambien tienes razon/ enſeña letras/ doctrina ni=<lb type="nb"/>ños moſtrando los a leer y a eſcreuir/ aprende el offi
+<lb/>cio de ſaſtre/ calcetero/ çapatero/ y otros mill offici=<lb type="nb"/>os mecanicos que naturaleza nueſtra madre nosen
+<lb/>ſeño que con la induſtria humana fauoreſcẽ al biuir
+<lb/>Pero dezir me has Oſeñor que diran/ que mis an
+<lb/>teceſſores nunca trabajar on/ ni biuieron de officios
+<lb/> manos. Que diran ſino que injurio mi linare y me
+<lb/>noſcabo la bõdad y nobleza de mis mayores. Por
+<lb/>que mis abuelos todos ſe emplearon en guarnicio=<lb type="nb"/>nes y corte lleuando gajes de rey/ vn mi viſabuelo
+<lb/>murio en ſalſas/ y vn abuelo mio enlos yelues/ y mi
+<lb/>padre en perpiñan/ y vn mi hermano baſtardo hizo
+<lb/>grãdes brauezas enla ytalia y en milã antes que mu
+<lb/>rieſſe por defender vn beſtion. Alos quales yo reſpõ
+<pb facs="W0113-0091" n="fol. [xliiij]r"/>
+<lb/>do que blaſfemo de tu ſoberuia y vanidad: por que
+<lb/>menos injuria me pareſce que reſcebiras ganando
+<lb/>de comer de tu ſudor/ que no reſcibes de lançar te el
+<lb/>logrero enla carcel en no le queriẽdo pagar. Ni creo
+<lb/>que ninguna baxeza ni humildad  eſtado te ſera nũ
+<lb/>ca tan importuna ni moleſta como es oyr eſta agria
+<lb/>palabra y dura alas orejas quãdo ellogrero dize/ pa
+<lb/>ga me. Quexas te tu y todos los de tu condicion de
+<lb/>los logrerosdiziendo: que es gente pecadora en dar
+<lb/>losdineros por logro ⁊ intereſſe. Por cierto voſo=<lb type="nb"/>tros osquexays conjuſta razõ: porque en todos tiẽ=<lb type="nb"/>pos deuen fauoreſcer al meneſteroſo por amorde
+<lb/>Dios. Pero no osdoy a voſotros menos culpa por
+<lb/>ſe lo demandar podiendo lo excuſar: por que ſi bien
+<lb/>miramos ningũo de voſotros ni rico ni pobre lo buſ
+<lb/>ca que no ſea por ſoberuia y ambiciõ: los quales dos
+<lb/>vicios quitadosde medio no auria quiẽ quiſieſſe vſu
+<lb/>rar. Auia en roma vn famoſo logrero el qual ſe lla=<lb type="nb"/>maua Muſion: y vn dia topando le enla ciudad vn
+<lb/>cauallero llamado Rutilo que muchas vezes ſaca=<lb type="nb"/>ua del dineros a vſura dixo le. Dime Muſiõ/ aquel
+<lb/>celeſtial jupiter a quien todos procuramos immitar
+<lb/>en piedad dio nunca dinerosa vſura. Reſpondio
+<lb/>Muſion reyendo ſe. Ninunca jupiter a vſura los to
+<lb/>mo. Dando a entender/ que eſtos dos males eſtauã
+<lb/>ala y gual. Quan gran locura hazemos en traer por
+<lb/>exemplo deſtas nueſtras vanidades a Dios podien=<lb type="nb"/>do baſtantemente traer exemplo los brutos anima
+<lb/>les para nos corregir: tomemos por exemplo las hor
+<lb/>migas: alas quales ni naturaleza dio manos/ ni voz
+<lb/>ni razon con que pudieſſe conſiderar/ ni arte con q̃
+<lb/>ſe pudieſſe enrriqueſcer: pero dio le induſtria admi=<lb type="nb"/>rable paraſe mantener: y quando humilmente ſe re=<pb facs="W0113-0092" n="fol. [xliiij]v"/><lb type="nb"/>core enel centro dela tierra biue ſin enemigo que la
+<lb/>pueda dañar: y el dia que con ſoberuia cobra alas
+<lb/>cria enemigo que la quite el biuir. Suelen los hom=<lb type="nb"/>bres con ſu buena induſtria/ ingenio y entendimien=<lb type="nb"/>to enſeñar admirables coſas alos perros y cauallos
+<lb/>papagayos/ per dizes y pegas: pues porque no te do
+<lb/>ctrinas ⁊ induſtrias a ti meſmo deſpertando q̃ eſtas
+<lb/>mas dormido que vn topo: mas ſomnoliento que la
+<lb/>lechuza. y mas groſſer o y toſco que vna flaca per diz
+<lb/>y que otro qualquiera animal bruto: y ſi en tus neceſ
+<lb/>ſidades no te quiſieres aprouechar de tu trabajo ⁊
+<lb/>induſtria/ baylando/ cantando/ y dançando te pue=<lb type="nb"/>des remediar ſi del todo no amas el ocio. Aquel hy
+<lb/>pias eleo el thebano que en vna olimpiada ſe glorio
+<lb/>ſaber todos los officios diziendo que quanto traya
+<lb/>veſtido el lo auia terido/ cortado/ y coſido: haſta los
+<lb/>libros en que eſtudiaua ſe precio ante todos los phi=<lb type="nb"/>loſophos que alli ſe hallar on auer los el compueſto
+<lb/>y eſcripto y enquadernado: y marauillãdo ſe todos
+<lb/>dixo. De q̃ os marauillays hõbres pues todos los
+<lb/>officios fuerõ inuentados por los hõbres/ ꝑa el vſo y
+<lb/>ꝓuecho los hõbres no es marauilla q̃ losſepa todos
+<lb/>vn hõbre: porq̃ en verdad por ſu negligẽcia/ ocio y ſ
+<lb/>cuydo los xã todos  ſaber. Pues aq̃l philoſopho
+<lb/>cleãthes q̃ ſolia muchas vezes moler trigo en vna ata
+<lb/>hona: preguntando le vndia en Athenas el rey An
+<lb/>tigono Cleãtes mueles ya. reſpondio: ſi muelo buẽ
+<lb/>rey por cauſa de me ſuſtentar. Mira que por ſe man
+<lb/>tener dela induſtria de ſu perſona y no dexar la phi
+<lb/>loſophia deſtraya muchas vezes los pulgares a la
+<lb/>atahona/ dexando por entõcesde eſcreuir los altos
+<lb/>y muy delicados ſecretos los dioſes/ cielo eſtrellas
+<lb/>y planetas. Coſa es digna de reyr nos de nueſtra lo=<pb facs="W0113-0093" n="fol. [xlv]r"/><lb type="nb"/>cura y ſouerbia: y principalmente hablo con los po
+<lb/>bres. que eſtos philoſophos gentil es de ſpiritu gene
+<lb/>roſo y leuantado enla alteza dela philoſophica con
+<lb/>ſideracion no ſe deſdeñauã (mas antes ſe preſciauã)
+<lb/>de ſaber y ſe exercitar en todas las ſciencias y artes
+<lb/>penſando que naturaleza ſe las auia enſeñado para
+<lb/>ſu remedio y perfecion: y que noſotros lo eſtimemos
+<lb/>por vileza y ſeruidumbre ſaber las: y erer citar las ſiẽ
+<lb/>do chriſtianos lo tengamos por caſo de menoſualer:
+<lb/>y por honrra y nobleza nos empleamos en coſas q̃
+<lb/>contradizen totalmente la ley de Dios.</p>
+<p>
+<lb/>¶ Pues menos me pareſce ni es de creer que la po
+<lb/>breza y humildad inuentaſſe/ o fueſſe cauſa dela vſu=<lb type="nb"/>ra: porq̃pocas vezesſe preſta a logro al pobre. Antes
+<lb/>creo como aueys viſto que la inuento la ſouerbia de
+<lb/>los hombres y la preſuncion y ſumptuoſidad: porq̃ ſi
+<lb/>nos contentaſſemos con lo neceſſario a nueſtra vida
+<lb/>no auria enel logro tanta diſſoluciõ: ni aun auria pa=<lb type="nb"/>ra que vſurar. Pero los muchos leytes y laſciuia
+<lb/>y la ambicion y ſouerbia de preſumir todos ala y gu
+<lb/>al: y aun adelantar nos vnos a otros ha ſido cauſa
+<lb/>y verdadera ocaſion de auer tantos y tan tiranos lo
+<lb/>gros. Como vemos por el ſemejante eſtos meſmos
+<lb/>vicios auer ſido ocaſion de auer tantos mer caderes
+<lb/>de paños y de ſedas finas/ tantos teredores/ tantos
+<lb/>ſaſtres/ tantos plateros: y en fin tantos officiales de
+<lb/>cada coſa: y principalmente de aquellas coſas que
+<lb/>arrean y pulen las perſonas y las leuantan a mayor
+<lb/>eſtima y preſumpciõ: y aun eſta multitud de officia=<lb type="nb"/>les no nos la pueden abaſtar. y aſſi por la meſma cau
+<lb/>ſa me pareſce que el premio/ ocupa de auer tantos lo
+<lb/>greros no ſe deue al ſimple mantenimiento de pan
+<lb/>y vino: porque el deſſeo ni falta de tener eſto no nos
+<pb facs="W0113-0094" n="fol. [xlv]v"/>
+<lb/>neceſſita a vſurar. Pero la culpa tienen los inſacia
+<lb/>bles deſſeos de huertas/ caſas ricas tapicerias/ ca=<lb type="nb"/>mas/ vaſos/ y aparador: y otras muchas ſunptuoſas
+<lb/>alhajas de caſa. porque eſtas hãdado ocaſion a nos
+<lb/>enſoberuecer y leuantar a vanagloria de eſtima: y
+<lb/>aque luego vamos a buſcar logreros que nos den
+<lb/>dinero para comprar y cumplir eſte nueſtro ſober=<lb type="nb"/>bio y ambicioſo apetito. Eaqui viene luego ſu per=<lb type="nb"/>dicion/ porque aquellos miſerables que comiençan
+<lb/>a caer enlas manos crueles ſtos tiranos logreros
+<lb/>jamas ſe pueden dellas libertar/ por que de cada dia
+<lb/>ſe van mas adeudando/ y anſſi ſe van mas ſometien=<lb type="nb"/>do de nueuo a ſu miſerable ſeruidumbre y ſubjetion
+<lb/>haſta que muere perdida/ y deſtruyda la hazienda y
+<lb/>deſterrada la perſona perpetuamente de ſu tierra/ ſo
+<lb/>ſiego y propriedad.</p>
+<p>
+<lb/>¶ Pues concluyendo amigo mio/ creo que delo q̃
+<lb/>ya he dicho collegiras baſtantemente mi intencion:
+<lb/>reſcibe de mitrabajo la voluntad la qual eſta endere
+<lb/>çada en te perſuadir y enſeñar ſiempre como biuas
+<lb/>mejor. Plega a nueſtro ſeñor Dios que nueſtra bue
+<lb/>na amiſtad ſea para el prouecho de nueſtra ſaluaciõ/
+<lb/>y que a ambos nos de aqui gracia con que le poda=<lb type="nb"/>mos ſeruir/ y deſpues nos de la gloria alla. Amen.</p>
+<p><hi rend="center"><t:b>¶ Finis.</t:b></hi></p></div1>
+</body>
+<back>
+<div1 type="contents">
+<p rend="hx">
+<pb facs="W0113-0095" n="fol. [xlvj]r"/>
+<lb/><t:b>¶ Tabla de los capitulos</t:b>
+<lb/>y materias de que ſe trata eneſte preſente libro.</p>
+<list type="contents">
+<item>
+<list type="contents" n="1">
+<item>
+<lb/><ref>¶ Capitulo primero/ que trata la diffinicion de vſu
+<lb/>ra y quantas manerasde vſura ay.<seg rend="gap"/>fol. ij.</ref></item>
+<item>
+<lb/><ref>¶ Capitulo. ij. enel qual ſe ponen razones natura=<lb type="nb"/>les por donde ſe reprueua la vſura.<seg rend="gap"/>fol. iij.</ref></item>
+<item>
+<lb/><ref>¶ Capitulo. iij. en que ſe mueſtra ſer reprobada la
+<lb/>vſura por ley es y coſtumbres antiguas.<seg rend="gap"/>fol. v.</ref></item>
+<item>
+<lb/><ref>¶ Capitulo. iiij. que declara qual ſea el officio del
+<lb/>cambiador y logrero.<seg rend="gap"/>fol. vij.</ref></item>
+<item>
+<lb/><ref>¶ Capitulo. v. que trata de tres maneras de cambi
+<lb/>os reales.<seg rend="gap"/>fol. jx.</ref></item>
+<item>
+<lb/><ref>¶ Capitulo. vj. que trata delos mercaderes que em
+<lb/>biando a pagar en eſtrañas tietras ſus mer cadurias
+<lb/>embian los dineros con ventaja.<seg rend="gap"/>fol. xj.</ref></item>
+<item>
+<lb/><ref>¶ Capitulo. vij. que trata del cambio para ſeuilla:
+<lb/>y portugal.<seg rend="gap"/>fol. xiij.</ref></item>
+<item>
+<lb/><ref>¶ Capitulo. viij. que trata del cambio para valen=<lb type="nb"/>cia.<seg rend="gap"/>fol. xv.</ref></item>
+<item>
+<lb/><ref>¶ Capitulo. jx. que trata del cambio ſeco de prote=<lb type="nb"/>ſto.<seg rend="gap"/>fol. xvj.</ref></item>
+<item>
+<lb/><ref>¶ Capitulo. x. que trata de cambios dichos arbi=<lb type="nb"/>tros.<seg rend="gap"/>fol. xviij.</ref></item>
+<item>
+<lb/><ref>¶ Capitulo. xj. que trata de cambios para leõen frã
+<lb/>cia.<seg rend="gap"/>fol. xjx.</ref></item>
+<item>
+<lb/><ref>¶ Capitulo. xij. que trata de cambios para la yta=<lb type="nb"/>lia.<seg rend="gap"/>fol. rx.</ref></item>
+<item>
+<lb/><ref>¶ Capitulo. xiij. que trata losprouehos que tienẽ
+<lb/>los cambiadores enel pagar.<seg rend="gap"/>fol. xx.</ref></item>
+<item>
+<pb facs="W0113-0096" n="fol. [xlvj]v"/>
+<lb/><ref>¶ Capitulo. xiiij. que trata los hazedores y coreſ=<lb type="nb"/>pondientes/ y del eſtar del creer.<seg rend="gap"/>fol. xxij.</ref></item>
+<item>
+<lb/><ref>¶ Capitulo. xv. que trata delos corredoresde cam
+<lb/>bios.<seg rend="gap"/>fol. xxiiij.</ref></item>
+<item>
+<lb/><ref>¶ Capitulo. xvj. que trata delos cambios que ſe ha
+<lb/>zen con principes y ſeñores.<seg rend="gap"/>fol. xxiiij.</ref></item>
+<item>
+<lb/><ref>¶ Capitulo. xvij. que trata de cambios de feria a fe=<lb type="nb"/>ria.<seg rend="gap"/>fol. xxv.</ref></item>
+<item>
+<lb/><ref>¶ Capitulo. xviij. que trata de los banqueros que
+<lb/>hazen negocios para roma.<seg rend="gap"/>fol. xxv.</ref></item>
+<item>
+<lb/><ref>¶ Capitulo. xjx. que trata delos mercaderes que vẽ
+<lb/>den mas caras las mer cadurias fiadas que al conta
+<lb/>do.<seg rend="gap"/>fol. xxvj.</ref></item>
+<item>
+<lb/><ref>¶ Capitulo. xx. que trata del intereſſe que ſe lleua re
+<lb/>ſpecto del daño en que incurrio.<seg rend="gap"/>fol. xxvij.</ref></item>
+<item>
+<lb/><ref>¶ Capitulo. xxj. que trata de los contratos de com=<lb type="nb"/>pañia.<seg rend="gap"/>fol. xxjx.</ref></item>
+<item>
+<lb/><ref>¶ Capitulo. xxij. q̃ trata delos regatones.<seg rend="gap"/>fol. xxxij.</ref></item>
+<item>
+<lb/><ref>¶ Captulo. xxiij. que trata de cõtrataciones del tri=<lb type="nb"/>go.<seg rend="gap"/>fol. xxxiij.</ref></item>
+<item>
+<lb/><ref>¶ Capitulo. xxiiij. que trata delas prendas y cenſos
+<lb/>al quitar.<seg rend="gap"/>fol. xxxiiij.</ref></item>
+<item>
+<lb/><ref>¶ Capitulo. xxv. que trata la merchaneria/ y alpar
+<lb/>ceria.<seg rend="gap"/>fol. xxxvj.</ref></item>
+<item>
+<lb/><ref>¶ Capitulo. xxvj. que trata dela reſtitucion del vſu=<lb type="nb"/>rero a quien y como ſe deue hazer.<seg rend="gap"/>fol. xxxvij.</ref></item>
+<item>
+<lb/><ref>¶ Capitulo. xxvij. que trata ſi ſatiſfaze el vſurero cõ
+<lb/>offreſcer los dimeros al acreedor/ y queſe requiere
+<lb/>para baſtantemente reſtituyr.<seg rend="gap"/>fol. xxxjx.</ref></item>
+</list></item>
+<item>
+<list type="contents" n="2">
+<head>
+<lb/>En la ſegunda parte.</head>
+<item>
+<ref target="#p2"><lb/>¶ Que no ſea licito tomar diner os a vſurade ningũ
+<lb/>cambio tratante ni mercader ſegun perſuaſion mo
+<lb/>ral.<seg rend="gap"/>fol. xl.</ref></item>
+</list></item></list></div1>
+<div1 type="colophon">
+<p>
+<pb facs="W0113-0097" n="fol. [xlvij]r"/>
+<lb/><hi rend="center">¶ Agloria/ y alabança  nueſtro ſeñor/ feneſce el
+<lb/>preſente libro contra la vſura: hecho por el licẽ
+<lb/>ciado Uillalon: y mpreſſo en la muy no=<lb type="nb"/>ble villa de Ualladolid/ cerca las
+<lb/>eſcuelas mayores/ por Fran=<lb type="nb"/>ciſco Fernandez  cordoua
+<t:ornament/><lb/>ympreſſor/ acaboſſe en.<t:ornament/>
+<lb/>xx. dias del mes de
+<lb/>deziembre:
+<lb/>Año l naſcimiẽto de nueſtro ſaluador
+<lb/> mill ⁊ qninientos y quarenta y vno.</hi></p>
+<p>
+<lb/>¶ Laus Deo/ ⁊ matri eius.</p><t:ornament/></div1>
+</back>
+</text>

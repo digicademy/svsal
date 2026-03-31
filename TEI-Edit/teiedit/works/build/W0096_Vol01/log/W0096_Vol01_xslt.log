@@ -1,0 +1,194 @@
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0096_Vol01\xml\W0096_Vol01_014.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0096_Vol01\xml\W0096_Vol01_015.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0096_Vol01\xsl\W0096_Vol01_014.xsl
+     [xslt] INFO: repositioned lb W0096-01-0114-lb-1004
+
+     [xslt] INFO: repositioned lb W0096-01-0224-lb-1026
+
+     [xslt] INFO: repositioned lb W0096-01-0292-lb-2006
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0096-01-0470-lb-2030 )
+
+     [xslt] 
+
+     [xslt] WARN: found choice element with empty child, in line W0096-01-0088-lb-2030 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "t"
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0096-01-0050-lb-2018 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "Agellio"
+
+     [xslt] 	child::tei:corr (child 2) has content: "A. Gellio"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0096-01-0431-lb-1006 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "iuſt i"
+
+     [xslt] 	child::tei:corr (child 2) has content: "iuſtum"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0096-01-0452-lb-1002 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "libe lo"
+
+     [xslt] 	child::tei:corr (child 2) has content: "libello"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0096-01-0453-lb-1001 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "violent â"
+
+     [xslt] 	child::tei:corr (child 2) has content: "violentiâ"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0096-01-0556-lb-2039 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "hab utes"
+
+     [xslt] 	child::tei:corr (child 2) has content: "habentes"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0096-01-0758-lb-2025 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "tan en"
+
+     [xslt] 	child::tei:corr (child 2) has content: "tamen"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0096-01-0765-lb-1026 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "opt mè"
+
+     [xslt] 	child::tei:corr (child 2) has content: "optimè"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0096-01-0774-lb-2017 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "adm ttit"
+
+     [xslt] 	child::tei:corr (child 2) has content: "admittit"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0096-01-0774-lb-2036 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "iuſt ficabitur"
+
+     [xslt] 	child::tei:corr (child 2) has content: "iuſtificabitur"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0096-01-0774-lb-2044 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "Occident lium"
+
+     [xslt] 	child::tei:corr (child 2) has content: "Occidentalium"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0096-01-0803-lb-2041 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "h ſtoria"
+
+     [xslt] 	child::tei:corr (child 2) has content: "hiſtoria"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0096-01-0831-lb-2039 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "p omulgationem"
+
+     [xslt] 	child::tei:corr (child 2) has content: "promulgationem"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0096-01-0840-lb-2029 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "pr mo"
+
+     [xslt] 	child::tei:corr (child 2) has content: "primo"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0096-01-0847-lb-2039 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "fum gans"
+
+     [xslt] 	child::tei:corr (child 2) has content: "fumigans"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0096-01-0856-lb-1024 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "præ itiſſe"
+
+     [xslt] 	child::tei:corr (child 2) has content: "prævidiſſe"
+
+     [xslt] WARN: amount of whitespace characters differs in input and output doc: 
+
+     [xslt] Input whitespace: 462917
+
+     [xslt] Output whitespace: 462908
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0096_Vol01\xml\W0096_Vol01_015.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0096_Vol01\xml\W0096_Vol01_016.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0096_Vol01\xsl\W0096_Vol01_015.xsl
+     [xslt] INFO: identified 17 *pb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 21 *cb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 17 *cb* as secondary break that were not previously marked as no-break at all.
+
+     [xslt] INFO: identified 0 *cb* as secondary break that were previously marked as primary no-break.
+
+     [xslt] INFO: identified 0 *lb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 0 *lb* as secondary break that were not previously marked as no-break at all.
+
+     [xslt] INFO: identified 40 *lb* as secondary break that were previously marked as primary no-break.
+
+     [xslt] INFO: replaced trailing whitespace in 18 text nodes before primary no-breaks.
+
+     [xslt] INFO: replaced trailing whitespace in 0 text nodes before secondary no-breaks.
+
+     [xslt] Input whitespace: 462908
+
+     [xslt] Output whitespace: 462890
+
+     [xslt] ---------------------------------------------------------
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0096_Vol01\xml\W0096_Vol01_016.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0096_Vol01\xml\W0096_Vol01_017.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0096_Vol01\xsl\W0096_Vol01_016.xsl
+     [xslt] INFO: quality check successfull.
+
+     [xslt] INFO: added 12 choice/*[2]/pb.
+
+     [xslt] INFO: added 33 choice/*[2]/cb.
+
+     [xslt] INFO: added 1992 choice/*[2]/lb.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0096_Vol01\xml\W0096_Vol01_017.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0096_Vol01\xml\W0096_Vol01_018.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0096_Vol01\xsl\W0096_Vol01_017.xsl
+Apache resolver library not found, internal resolver will be used
+     [xslt] INFO: added 6604 special character tags (tei:g).
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0096_Vol01\xml\W0096_Vol01_018.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0096_Vol01\xml\W0096_Vol01_019.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0096_Vol01\xsl\W0096_Vol01_018.xsl
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0096_Vol01\xml\W0096_Vol01_019.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0096_Vol01\xml\W0096_Vol01_020.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0096_Vol01\xsl\W0096_Vol01_019.xsl
+     [xslt] Generated temporary lb/@xml:id.
+
+     [xslt] Extracted tei:lb from pages in the main area of the text.
+
+     [xslt] Numbered tei:lb from the main area.
+
+     [xslt] INFO: Added line numbers to tei:lb/@n.
+
+     [xslt] INFO: Serializing final output...
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0096_Vol01\xml\W0096_Vol01_020.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0096_Vol01\xml\W0096_Vol01_021.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0096_Vol01\xsl\W0096_Vol01_020.xsl
+     [xslt] Error: no key element found for element ref, @target: #W0096-01-0065-mi-048c
+
+     [xslt] Error: no key element found for element ref, @target: #W0096-01-0114-mi-055e
+
+     [xslt] Error: no key element found for element ref, @target: #W0096-01-0363-mi-0aef
+
+     [xslt] INFO: quality check successfull.
+

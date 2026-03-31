@@ -1,0 +1,57 @@
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing /home/marie-astrid/Documents/Salamanca/trunk/teiedit/works/build/W0105_Vol01/xml/W0105_005.xml to /home/marie-astrid/Documents/Salamanca/trunk/teiedit/works/build/W0105_Vol01/xml/W0105_006.xml
+     [xslt] Loading stylesheet W0105_005.xsl
+     [xslt] Annotated 251 pb elements as break=no and rendition=#hyphen.
+     [xslt] Annotated 418 cb elements as break=no and rendition=#hyphen.
+     [xslt] Annotated 250 cb elements as break=no.
+     [xslt] Annotated 53604 lb elements as break=no and rendition=#hyphen.
+     [xslt] Annotated 669 lb elements as break=no.
+     [xslt] Removed 54272 hyphens (and, potentially, newlines) from line endings.
+     [xslt] Removed 3 text nodes containing only newlines.
+     [xslt] Error: the number of break elements marked as hyphenating is not equal to the number of resolved hyphens!
+     [xslt] /home/marie-astrid/Documents/Salamanca/trunk/teiedit/works/build/W0105_Vol01/xsl/W0105_005.xsl:274:46: Fatal Error! Processing terminated by xsl:message at line 274 in W0105_005.xsl
+     [xslt] Failed to process /home/marie-astrid/Documents/Salamanca/trunk/teiedit/works/build/W0105_Vol01/xml/W0105_005.xml
+xslt-005:  duration 19 seconds
+
+BUILD FAILED
+
+/home/marie-astrid/Documents/Salamanca/trunk/teiedit/works/build/W0105_Vol01/build.xml:87: Fatal error during transformation using /home/marie-astrid/Documents/Salamanca/trunk/teiedit/works/build/W0105_Vol01/xsl/W0105_005.xsl: Processing terminated by xsl:message at line 274 in W0105_005.xsl; SystemID: file:/home/marie-astrid/Documents/Salamanca/trunk/teiedit/works/build/W0105_Vol01/xsl/W0105_005.xsl; Line#: 274; Column#: 46
+	at org.apache.tools.ant.taskdefs.XSLTProcess.handleTransformationError(XSLTProcess.java:1439)
+	at org.apache.tools.ant.taskdefs.XSLTProcess.process(XSLTProcess.java:884)
+	at org.apache.tools.ant.taskdefs.XSLTProcess.execute(XSLTProcess.java:408)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:299)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:578)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:99)
+	at org.apache.tools.ant.Task.perform(Task.java:350)
+	at org.apache.tools.ant.Target.execute(Target.java:449)
+	at org.apache.tools.ant.Target.performTasks(Target.java:470)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1401)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1374)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1264)
+	at org.apache.tools.ant.Main.runBuild(Main.java:818)
+	at org.apache.tools.ant.Main.startAnt(Main.java:223)
+	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:284)
+	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:101)
+Caused by: Fatal error during transformation using /home/marie-astrid/Documents/Salamanca/trunk/teiedit/works/build/W0105_Vol01/xsl/W0105_005.xsl: Processing terminated by xsl:message at line 274 in W0105_005.xsl; SystemID: file:/home/marie-astrid/Documents/Salamanca/trunk/teiedit/works/build/W0105_Vol01/xsl/W0105_005.xsl; Line#: 274; Column#: 46
+	at org.apache.tools.ant.taskdefs.optional.TraXLiaison.fatalError(TraXLiaison.java:535)
+	at net.sf.saxon.lib.DelegatingErrorListener.fatalError(DelegatingErrorListener.java:46)
+	at net.sf.saxon.Controller.reportFatalError(Controller.java:1006)
+	at net.sf.saxon.Controller.transform(Controller.java:1976)
+	at net.sf.saxon.s9api.XsltTransformer.transform(XsltTransformer.java:596)
+	at net.sf.saxon.jaxp.TransformerImpl.transform(TransformerImpl.java:73)
+	at org.apache.tools.ant.taskdefs.optional.TraXLiaison.transform(TraXLiaison.java:201)
+	at org.apache.tools.ant.taskdefs.XSLTProcess.process(XSLTProcess.java:874)
+	... 16 more
+Caused by: net.sf.saxon.expr.instruct.TerminationException: Processing terminated by xsl:message at line 274 in W0105_005.xsl
+	at net.sf.saxon.expr.instruct.Message.processLeavingTail(Message.java:229)
+	at net.sf.saxon.expr.instruct.Choose.processLeavingTail(Choose.java:879)
+	at net.sf.saxon.expr.instruct.Block.processLeavingTail(Block.java:687)
+	at net.sf.saxon.expr.LetExpression.processLeavingTail(LetExpression.java:709)
+	at net.sf.saxon.expr.instruct.Block.processLeavingTail(Block.java:687)
+	at net.sf.saxon.expr.instruct.TemplateRule.applyLeavingTail(TemplateRule.java:347)
+	at net.sf.saxon.trans.Mode.applyTemplates(Mode.java:505)
+	at net.sf.saxon.Controller.transformDocument(Controller.java:2402)
+	at net.sf.saxon.Controller.transform(Controller.java:1970)
+	... 20 more

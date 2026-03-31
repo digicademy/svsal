@@ -1,0 +1,32 @@
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\SVN\trunk\teiedit\works\build\W0013_Vol02\xml\W0013_Vol02_117.xml to D:\SVN\trunk\teiedit\works\build\W0013_Vol02\xml\W0013_Vol02_118.xml
+     [xslt] Loading stylesheet D:\SVN\trunk\teiedit\works\build\W0013_Vol02\xsl\W0013_Vol02_117.xsl
+Apache resolver library not found, internal resolver will be used
+     [xslt] INFO: added 0 special character tags (tei:g).
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\SVN\trunk\teiedit\works\build\W0013_Vol02\xml\W0013_Vol02_118.xml to D:\SVN\trunk\teiedit\works\build\W0013_Vol02\xml\W0013_Vol02_119.xml
+     [xslt] Loading stylesheet D:\SVN\trunk\teiedit\works\build\W0013_Vol02\xsl\W0013_Vol02_118.xsl
+     [xslt] Generated temporary lb/@xml:id.
+
+     [xslt] Extracted tei:lb from pages in the main area of the text.
+
+     [xslt] Numbered tei:lb from the main area.
+
+     [xslt] Extracted tei:lb from the marginal area.
+
+     [xslt] Numbered tei:lb from the marginal area.
+
+     [xslt] INFO: Added line numbers to tei:lb/@n.
+
+     [xslt] INFO: Serializing final output...
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\SVN\trunk\teiedit\works\build\W0013_Vol02\xml\W0013_Vol02_119.xml to D:\SVN\trunk\teiedit\works\build\W0013_Vol02\xml\W0013_Vol02_120.xml
+     [xslt] Loading stylesheet D:\SVN\trunk\teiedit\works\build\W0013_Vol02\xsl\W0013_Vol02_119.xsl
+     [xslt] INFO: quality check successfull.
+

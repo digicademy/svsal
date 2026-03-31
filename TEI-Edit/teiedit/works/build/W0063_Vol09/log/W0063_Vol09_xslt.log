@@ -1,0 +1,121 @@
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol09\xml\W0063_Vol09_001.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol09\xml\W0063_Vol09_002.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol09\xsl\W0063_Vol09_001.xsl
+Apache resolver library not found, internal resolver will be used
+     [xslt] -----------------------------------------------------------
+
+     [xslt] WARN: different amounts of input and output pb/cb: 
+
+     [xslt] Input pb: 160 | cb: 347
+
+     [xslt] Output pb: 160 | cb: 349
+
+     [xslt] -----------------------------------------------------------
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol09\xml\W0063_Vol09_002.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol09\xml\W0063_Vol09_003.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol09\xsl\W0063_Vol09_002.xsl
+     [xslt] Warning: amount of non-whitespace characters differs in input and output doc: 
+
+     [xslt] Input characters: 1091919
+
+     [xslt] Output characters: 1088635
+
+     [xslt] 
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol09\xml\W0063_Vol09_003.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol09\xml\W0063_Vol09_004.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol09\xsl\W0063_Vol09_003.xsl
+Apache resolver library not found, internal resolver will be used
+     [xslt] INFO: added 47676 special character tags (tei:g).
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol09\xml\W0063_Vol09_004.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol09\xml\W0063_Vol09_005.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol09\xsl\W0063_Vol09_004.xsl
+     [xslt] Generated temporary lb/@xml:id.
+
+     [xslt] Extracted tei:lb from pages in the main area of the text.
+
+     [xslt] Numbered tei:lb from the main area.
+
+     [xslt] INFO: Added line numbers to tei:lb/@n.
+
+     [xslt] INFO: Serializing final output...
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol09\xml\W0063_Vol09_005.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol09\xml\W0063_Vol09_006.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol09\xsl\W0063_Vol09_005.xsl
+     [xslt] Error: no key element found for element ref, @target: #W0063-01-0009-d2-051c
+
+     [xslt] Error: no key element found for element ref, @target: #W0063-01-0020-d2-0533
+
+     [xslt] Error: no key element found for element ref, @target: #W0063-01-0026-d2-053e
+
+     [xslt] Error: no key element found for element ref, @target: #W0063-01-0029-d2-0543
+
+     [xslt] Error: no key element found for element ref, @target: #W0063-01-0064-d2-058e
+
+     [xslt] Error: no key element found for element ref, @target: #W0063-01-0104-d2-05d2
+
+     [xslt] Error: no key element found for element ref, @target: #W0063-01-0140-d2-0612
+
+     [xslt] Error: no key element found for element ref, @target: #W0063-01-0158-d2-0634
+
+     [xslt] Error: no key element found for element ref, @target: #W0063-01-0163-d2-063f
+
+     [xslt] Error: no key element found for element ref, @target: #W0063-01-0189-d2-0667
+
+     [xslt] Error: no key element found for element ref, @target: #W0063-01-0199-d2-067d
+
+     [xslt] Error: no key element found for element ref, @target: #W0063-01-0204-d2-0684
+
+     [xslt] Error: no key element found for element ref, @target: #W0063-01-0208-d2-068b
+
+     [xslt] Error: no key element found for element ref, @target: #W0063-01-0218-d2-069c
+
+     [xslt] Error: no key element found for element ref, @target: #W0063-01-0226-d2-06aa
+
+     [xslt] Error: no key element found for element ref, @target: #W0063-01-0238-d2-06bb
+
+     [xslt] Error: no key element found for element ref, @target: #W0063-01-0250-d2-06d0
+
+     [xslt] Error: no key element found for element ref, @target: #W0063-01-0261-d2-06e7
+
+     [xslt] Error: no key element found for element ref, @target: #W0063-01-0266-d2-06f5
+
+     [xslt] Error: no key element found for element ref, @target: #W0063-01-0270-d2-0701
+
+     [xslt] Error: no key element found for element ref, @target: #W0063-01-0282-d2-071d
+
+     [xslt] Error: no key element found for element ref, @target: #W0063-01-0285-d2-0727
+
+     [xslt] Error: no key element found for element ref, @target: #W0063-01-0294-d2-073c
+
+     [xslt] Error: no key element found for element ref, @target: #W0063-01-0301-d2-074b
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol09\xml\W0063_Vol09_006.xml to D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol09\xml\W0063_Vol09_007.xml
+     [xslt] Loading stylesheet D:\Cindy\SVN\trunk\teiedit\works\build\W0063_Vol09\xsl\W0063_Vol09_006.xsl
+Apache resolver library not found, internal resolver will be used
+     [xslt] INFO: tagged 2 pb as break=no and rendition=#noHyphen
+
+     [xslt] INFO: tagged 3 cb as break=no and rendition=#noHyphen
+
+     [xslt] INFO: tagged 537 lb as break=no and rendition=#noHyphen
+
+     [xslt] INFO: tagged 542 breaks in total as break=no and rendition=#noHyphen
+
+     [xslt] ------------------------------------------------------
+
+     [xslt] INFO: quality check successfull.
+

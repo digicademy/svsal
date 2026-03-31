@@ -1,0 +1,1288 @@
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0001_Vol03\xml\W0001_Vol03_015.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0001_Vol03\xml\W0001_Vol03_016.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0001_Vol03\xsl\W0001_Vol03_015.xsl
+     [xslt] INFO: repositioned lb W0001-03-0074-lb-2028
+
+     [xslt] INFO: repositioned lb W0001-03-0210-lb-1015
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0019-lb-1063 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0020-lb-m005 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0022-lb-2060 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0086-lb-1001 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0095-lb-m031 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0104-lb-m001 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0113-lb-1046 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0115-lb-m025 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0122-lb-2061 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0124-lb-2010 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0131-lb-m005 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0138-lb-m029 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0145-lb-m005 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0148-lb-2033 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0152-lb-m035 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0154-lb-m033 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0155-lb-1019 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0155-lb-m038 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0157-lb-m008 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0157-lb-m014 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0162-lb-m008 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0163-lb-m004 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0169-lb-m033 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0172-lb-m007 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0173-lb-2003 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0189-lb-m018 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0190-lb-m015 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0195-lb-m007 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0199-lb-m032 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0200-lb-m004 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0201-lb-m003 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0208-lb-2027 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0209-lb-1065 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0210-lb-1011 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0213-lb-m005 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0214-lb-m004 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0216-lb-1017 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0216-lb-m017 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0217-lb-m031 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0217-lb-m032 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0218-lb-m009 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0218-lb-1046 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0222-lb-2014 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0222-lb-2039 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0224-lb-1021 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0225-lb-1051 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0227-lb-m020 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0228-lb-m042 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0229-lb-m014 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0229-lb-2029 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0235-lb-m003 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0237-lb-m013 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0238-lb-m001 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0239-lb-m001 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0242-lb-m027 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0245-lb-2042 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0248-lb-m001 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0253-lb-2053 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0258-lb-m027 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0260-lb-m022 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0262-lb-m017 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0262-lb-m030 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0263-lb-1050 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0264-lb-m039 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0265-lb-m028 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0266-lb-m036 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0267-lb-1016 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0270-lb-m010 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0272-lb-m020 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0273-lb-m035 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0285-lb-m006 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0285-lb-2011 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0286-lb-m002 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0291-lb-m029 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0292-lb-m023 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0301-lb-m014 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0301-lb-m018 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0306-lb-m022 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0307-lb-m004 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0307-lb-2031 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0308-lb-2025 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0310-lb-m003 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0310-lb-m014 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0318-lb-m016 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0319-lb-m018 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0321-lb-m011 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0332-lb-m034 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0335-lb-m009 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0342-lb-m024 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0349-lb-1024 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0352-lb-m035 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0352-lb-m042 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0352-lb-m043 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0352-lb-m044 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0354-lb-m013 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0354-lb-m026 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0354-lb-m051 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0355-lb-m012 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0357-lb-m009 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0360-lb-m058 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0365-lb-m045 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0367-lb-m011 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0369-lb-m006 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0371-lb-m020 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0380-lb-m020 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0382-lb-1002 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0382-lb-m004 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0382-lb-m064 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0385-lb-m020 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0385-lb-2042 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0385-lb-m037 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0386-lb-m008 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0390-lb-m007 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0390-lb-m008 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0390-lb-m029 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0390-lb-m037 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0391-lb-m003 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0391-lb-2009 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0391-lb-m036 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0392-lb-m025 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0393-lb-m013 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0393-lb-2007 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0395-lb-1002 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0397-lb-m020 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0404-lb-m001 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0404-lb-m007 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0404-lb-m009 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0404-lb-m054 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0405-lb-m017 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0407-lb-2056 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0409-lb-1041 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0409-lb-2017 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0412-lb-1018 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0412-lb-1056 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0412-lb-2010 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0417-lb-m019 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0417-lb-m020 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0423-lb-m016 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0424-lb-1001 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0424-lb-m010 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0426-lb-m017 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0426-lb-m038 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0428-lb-m016 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0428-lb-m020 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0428-lb-m023 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0433-lb-m016 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0437-lb-m026 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0437-lb-m029 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0442-lb-m024 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0443-lb-m014 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0448-lb-m015 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0448-lb-m016 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0448-lb-2050 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0449-lb-2008 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0452-lb-1023 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0454-lb-m008 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0455-lb-m030 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0462-lb-1003 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0462-lb-1008 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0467-lb-1053 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0467-lb-m015 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0481-lb-0045 )
+
+     [xslt] WARN: found choice element which seems not to be separated from preceding or following text - resolve this manually! (in line W0001-03-0485-lb-0014 )
+
+     [xslt] 
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0086-lb-1001 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "cum "
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0095-lb-m031 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0104-lb-m001 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0110-lb-1020 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "que"
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0113-lb-1046 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0115-lb-m025 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: ","
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0122-lb-2061 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "."
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0122-lb-2062 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "["
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0131-lb-m005 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0145-lb-m005 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0152-lb-m035 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0155-lb-1019 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "in "
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0155-lb-m038 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ","
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0157-lb-m008 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "."
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0157-lb-m014 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0162-lb-m008 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ","
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0163-lb-m004 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ","
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0189-lb-m018 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0190-lb-m015 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0195-lb-m007 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "ex "
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0200-lb-m004 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "."
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0201-lb-m003 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: ","
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0209-lb-1065 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "no"
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0210-lb-1011 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "defendebant"
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0213-lb-m005 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0214-lb-m004 :
+
+     [xslt] 	child::tei:sic (child 1) has content: " à"
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0216-lb-m017 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0217-lb-m031 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "."
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0217-lb-m032 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: ","
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0225-lb-1051 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0227-lb-m020 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "."
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0228-lb-m042 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0229-lb-m014 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0237-lb-m013 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0238-lb-m001 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0242-lb-m027 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0248-lb-m001 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0260-lb-m022 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "."
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0262-lb-m017 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0262-lb-m030 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "."
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0264-lb-m039 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0266-lb-m036 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0270-lb-m010 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0272-lb-m020 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0273-lb-m035 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "."
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0283-lb-2053 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "."
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0285-lb-m006 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0286-lb-m002 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "."
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0291-lb-m029 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0292-lb-m023 :
+
+     [xslt] 	child::tei:sic (child 1) has content: " &amp;"
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0301-lb-m014 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0306-lb-m022 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0310-lb-m003 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0316-lb-1020 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "ci"
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0318-lb-m016 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0319-lb-m018 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0321-lb-m011 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0335-lb-m009 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0342-lb-m024 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0352-lb-m042 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0352-lb-m043 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0352-lb-m044 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0354-lb-m013 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0354-lb-m026 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "à "
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0354-lb-m051 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0355-lb-m012 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0357-lb-m009 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0365-lb-m045 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "do "
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0382-lb-1002 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ";"
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0382-lb-m004 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0382-lb-m064 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0385-lb-m020 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0386-lb-m008 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0390-lb-m008 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0390-lb-m029 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0391-lb-m003 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0391-lb-m036 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0393-lb-m013 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0393-lb-2007 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ","
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0395-lb-1002 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0397-lb-m020 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0404-lb-m001 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0404-lb-m007 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0409-lb-2017 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ","
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0417-lb-m019 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0424-lb-1001 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ","
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0426-lb-m017 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0428-lb-m016 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "."
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0428-lb-m020 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0428-lb-m023 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0437-lb-m026 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0442-lb-m024 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "."
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0443-lb-m014 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0448-lb-m015 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0448-lb-m016 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0448-lb-m025 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ","
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0452-lb-1023 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0454-lb-m008 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "."
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0455-lb-m030 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0462-lb-1003 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0462-lb-1008 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0467-lb-1053 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0467-lb-m015 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0481-lb-0045 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with empty child, in line W0001-03-0485-lb-0014 :
+
+     [xslt] 	child::tei:sic (child 1) has content: ""
+
+     [xslt] 	child::tei:corr (child 2) has content: "."
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0019-lb-1063 :
+
+     [xslt] 	child::tei:abbr (child 1) has content: ". v."
+
+     [xslt] 	child::tei:expan (child 2) has content: ", Verbi"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0022-lb-2060 :
+
+     [xslt] 	child::tei:abbr (child 1) has content: ". v."
+
+     [xslt] 	child::tei:expan (child 2) has content: ", Verbi"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0030-lb-1021 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "quęab"
+
+     [xslt] 	child::tei:corr (child 2) has content: "quæ ab"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0050-lb-m003 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "opin one"
+
+     [xslt] 	child::tei:corr (child 2) has content: "opinione"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0061-lb-2046 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "Fueras y"
+
+     [xslt] 	child::tei:corr (child 2) has content: "Fuera"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0062-lb-m037 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "proponi ur"
+
+     [xslt] 	child::tei:corr (child 2) has content: "proponitur"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0070-lb-2014 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "d'otra"
+
+     [xslt] 	child::tei:corr (child 2) has content: "de otra"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0086-lb-1001 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "cum "
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0117-lb-m009 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "excommuni"
+
+     [xslt] 	child::tei:corr (child 2) has content: "ex communi"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0124-lb-2010 :
+
+     [xslt] 	child::tei:abbr (child 1) has content: " v."
+
+     [xslt] 	child::tei:expan (child 2) has content: ", verbi"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0148-lb-2033 :
+
+     [xslt] 	child::tei:abbr (child 1) has content: ". v."
+
+     [xslt] 	child::tei:expan (child 2) has content: ", verbi"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0150-lb-m027 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "Bertuas"
+
+     [xslt] 	child::tei:corr (child 2) has content: "Per tuas"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0153-lb-2027 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "de monstrata"
+
+     [xslt] 	child::tei:corr (child 2) has content: "demonstrata"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0155-lb-1019 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "in "
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0173-lb-2003 :
+
+     [xslt] 	child::tei:abbr (child 1) has content: ". v."
+
+     [xslt] 	child::tei:expan (child 2) has content: ", verbi"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0195-lb-m007 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "ex "
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0214-lb-m004 :
+
+     [xslt] 	child::tei:sic (child 1) has content: " à"
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0216-lb-1017 :
+
+     [xslt] 	child::tei:sic (child 1) has content: " E."
+
+     [xslt] 	child::tei:corr (child 2) has content: ", Exempli"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0245-lb-2042 :
+
+     [xslt] 	child::tei:abbr (child 1) has content: ". v."
+
+     [xslt] 	child::tei:expan (child 2) has content: ", verbi"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0259-lb-m012 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "appli e "
+
+     [xslt] 	child::tei:corr (child 2) has content: "applicet"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0263-lb-1050 :
+
+     [xslt] 	child::tei:abbr (child 1) has content: ". v."
+
+     [xslt] 	child::tei:expan (child 2) has content: ", verbi"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0267-lb-1016 :
+
+     [xslt] 	child::tei:abbr (child 1) has content: ". v."
+
+     [xslt] 	child::tei:expan (child 2) has content: ", verbi"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0285-lb-2011 :
+
+     [xslt] 	child::tei:abbr (child 1) has content: ". v."
+
+     [xslt] 	child::tei:expan (child 2) has content: ", verbi"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0292-lb-m023 :
+
+     [xslt] 	child::tei:sic (child 1) has content: " &amp;"
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0307-lb-2031 :
+
+     [xslt] 	child::tei:abbr (child 1) has content: ". v."
+
+     [xslt] 	child::tei:expan (child 2) has content: ", verbi"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0308-lb-2025 :
+
+     [xslt] 	child::tei:abbr (child 1) has content: ". v."
+
+     [xslt] 	child::tei:expan (child 2) has content: ", verbi"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0316-lb-1016 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "latiera"
+
+     [xslt] 	child::tei:corr (child 2) has content: "la tierra"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0354-lb-m026 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "à "
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0365-lb-m045 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "do "
+
+     [xslt] 	child::tei:corr (child 2) has content: ""
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0375-lb-m004 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "prohibe t"
+
+     [xslt] 	child::tei:corr (child 2) has content: "prohibetur"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0395-lb-m009 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "tol. randa"
+
+     [xslt] 	child::tei:corr (child 2) has content: "toleranda"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0430-lb-m013 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "a siectum"
+
+     [xslt] 	child::tei:corr (child 2) has content: "adiectum"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0448-lb-2050 :
+
+     [xslt] 	child::tei:abbr (child 1) has content: ". v."
+
+     [xslt] 	child::tei:expan (child 2) has content: ", verbi"
+
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0001-03-0465-lb-m008 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "Cou seruatoribus"
+
+     [xslt] 	child::tei:corr (child 2) has content: "Conseruatoribus"
+
+     [xslt] WARN: amount of whitespace characters differs in input and output doc: 
+
+     [xslt] Input whitespace: 418277
+
+     [xslt] Output whitespace: 418260
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0001_Vol03\xml\W0001_Vol03_016.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0001_Vol03\xml\W0001_Vol03_017.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0001_Vol03\xsl\W0001_Vol03_016.xsl
+     [xslt] INFO: identified 0 *pb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 0 *cb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 0 *cb* as secondary break that were not previously marked as no-break at all.
+
+     [xslt] INFO: identified 0 *cb* as secondary break that were previously marked as primary no-break.
+
+     [xslt] INFO: identified 0 *lb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 0 *lb* as secondary break that were not previously marked as no-break at all.
+
+     [xslt] INFO: identified 0 *lb* as secondary break that were previously marked as primary no-break.
+
+     [xslt] INFO: replaced trailing whitespace in 27 text nodes before primary no-breaks.
+
+     [xslt] INFO: replaced trailing whitespace in 0 text nodes before secondary no-breaks.
+
+     [xslt] Input whitespace: 418260
+
+     [xslt] Output whitespace: 418233
+
+     [xslt] ---------------------------------------------------------
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0001_Vol03\xml\W0001_Vol03_017.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0001_Vol03\xml\W0001_Vol03_018.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0001_Vol03\xsl\W0001_Vol03_017.xsl
+     [xslt] INFO: quality check successfull.
+
+     [xslt] INFO: added 1 choice/*[2]/pb.
+
+     [xslt] INFO: added 4 choice/*[2]/cb.
+
+     [xslt] INFO: added 117 choice/*[2]/lb.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0001_Vol03\xml\W0001_Vol03_018.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0001_Vol03\xml\W0001_Vol03_019.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0001_Vol03\xsl\W0001_Vol03_018.xsl
+Apache resolver library not found, internal resolver will be used
+     [xslt] INFO: added 226 special character tags (tei:g).
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0001_Vol03\xml\W0001_Vol03_019.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0001_Vol03\xml\W0001_Vol03_020.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0001_Vol03\xsl\W0001_Vol03_019.xsl
+     [xslt] WARN: amount of whitespace characters differs in input and output doc: 
+
+     [xslt] Input whitespace: 418233
+
+     [xslt] Output whitespace: 417932
+
+     [xslt] 
+
+     [xslt] INFO: quality check successfull.
+
+   [delete] Deleting: D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0001_Vol03\xml\W0001_Vol03_019.xml
+xslt-019:  duration 8 seconds
+
+xslt-020:
+     [echo] Line numbering.
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0001_Vol03\xml\W0001_Vol03_020.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0001_Vol03\xml\W0001_Vol03_021.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0001_Vol03\xsl\W0001_Vol03_020.xsl
+     [xslt] Generated temporary lb/@xml:id.
+
+     [xslt] Extracted tei:lb from pages in the main area of the text.
+
+     [xslt] Numbered tei:lb from the main area.
+
+     [xslt] Extracted tei:lb from the marginal area.
+
+     [xslt] Numbered tei:lb from the marginal area.
+
+     [xslt] INFO: Added line numbers to tei:lb/@n.
+
+     [xslt] INFO: Serializing final output...
+
+     [xslt] INFO: quality check successfull.
+
+   [delete] Deleting: D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0001_Vol03\xml\W0001_Vol03_020.xml
+xslt-020:  duration 6 minutes 47 seconds
+
+xslt-021:
+     [echo] Generated @xml:id after corrections.
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0001_Vol03\xml\W0001_Vol03_021.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0001_Vol03\xml\W0001_Vol03_022.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0001_Vol03\xsl\W0001_Vol03_021.xsl
+     [xslt] INFO: quality check successfull.
+
+   [delete] Deleting: D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0001_Vol03\xml\W0001_Vol03_021.xml
+xslt-021:  duration 6 minutes 26 seconds
+
+xslt-022:
+     [echo] teiHeader update after corrections.
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0001_Vol03\xml\W0001_Vol03_022.xml to D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0001_Vol03\xml\W0001_Vol03_023.xml
+     [xslt] Loading stylesheet D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0001_Vol03\xsl\W0001_Vol03_022.xsl
+   [delete] Deleting: D:\EscuelaSalamanca\SVN\04-39\trunk\teiedit\works\build\W0001_Vol03\xml\W0001_Vol03_022.xml
+xslt-022:  duration 4 seconds
+
+finalize:
+     [echo] Reached end of pipeline.
+finalize:  duration 0 seconds
+
+BUILD SUCCESSFUL

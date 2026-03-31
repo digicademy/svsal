@@ -1,0 +1,49 @@
+     [java] Executing 'C:\Users\cricocar\AppData\Local\Programs\Oxygen XML Editor 26\jre\bin\java.exe' with arguments:
+'-Xmx3000m'
+'-classpath'
+'D:\Cindy\SVN\trunk\teiedit\lib\xsltproc\Saxon-HE-9.8.0-12.jar'
+'net.sf.saxon.Query'
+'-q:../../xql/corrList_1_marginals.xql'
+'-s:../../../build/W0043_Vol02/xml/W0043_Vol02_012.xml'
+'-o:../../../build/W0043_Vol02/corrlist/marginals/W0043_Vol02-marg-la_all-wordforms.html'
+'-traceout:#err'
+'-t'
+'language=la'
+
+The ' characters around the executable and arguments are
+not part of the command.
+     [java] Saxon-HE 9.8.0.12J from Saxonica
+     [java] Java version 17.0.8
+     [java] Analyzing query from ../../xql/corrList_1_marginals.xql
+     [java] Analysis time: 538.9237 milliseconds
+     [java] Processing file:/D:/Cindy/SVN/trunk/teiedit/works/corr/build/marginals/../../../build/W0043_Vol02/xml/W0043_Vol02_012.xml
+     [java] Using parser com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl$JAXPSAXParser
+     [java] Building tree for file:/D:/Cindy/SVN/trunk/teiedit/works/corr/build/marginals/../../../build/W0043_Vol02/xml/W0043_Vol02_012.xml using class net.sf.saxon.tree.tiny.TinyBuilder
+     [java] Tree built in 456.9595ms
+     [java] Tree size: 382971 nodes, 2604123 characters, 243367 attributes
+     [java] Type error on line 266 column 90 of corrList_1_marginals.xql:
+     [java]   XPTY0004: A sequence of more than one item is not allowed as the 4th argument of
+     [java]   fn:concat() (@xml:id, @xml:id) 
+     [java] Query failed with type error: A sequence of more than one item is not allowed as the 4th argument of fn:concat() (@xml:id, @xml:id) 
+corr-all:  duration 25 seconds
+
+BUILD FAILED
+
+D:\Cindy\SVN\trunk\teiedit\works\corr\build\marginals\build.xml:54: Java returned: 2
+	at org.apache.tools.ant.taskdefs.Java.execute(Java.java:113)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:292)
+	at jdk.internal.reflect.GeneratedMethodAccessor6.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:99)
+	at org.apache.tools.ant.Task.perform(Task.java:350)
+	at org.apache.tools.ant.Target.execute(Target.java:449)
+	at org.apache.tools.ant.Target.performTasks(Target.java:470)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1401)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1374)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1264)
+	at org.apache.tools.ant.Main.runBuild(Main.java:827)
+	at org.apache.tools.ant.Main.startAnt(Main.java:223)
+	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:284)
+	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:101)

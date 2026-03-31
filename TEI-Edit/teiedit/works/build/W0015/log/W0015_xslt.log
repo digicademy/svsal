@@ -1,0 +1,79 @@
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\SVN\trunk\teiedit\works\build\W0015\xml\W0015_111.xml to D:\SVN\trunk\teiedit\works\build\W0015\xml\W0015_112.xml
+     [xslt] Loading stylesheet D:\SVN\trunk\teiedit\works\build\W0015\xsl\W0015_111.xsl
+     [xslt] WARN: found choice element with at least one child that has a whitespace-containing text node, in line W0015-00-0004-lb-0009 :
+
+     [xslt] 	child::tei:sic (child 1) has content: "ataui rse"
+
+     [xslt] 	child::tei:corr (child 2) has content: "atauiarse"
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\SVN\trunk\teiedit\works\build\W0015\xml\W0015_112.xml to D:\SVN\trunk\teiedit\works\build\W0015\xml\W0015_113.xml
+     [xslt] Loading stylesheet D:\SVN\trunk\teiedit\works\build\W0015\xsl\W0015_112.xsl
+     [xslt] INFO: identified 0 *pb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 0 *cb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 0 *cb* as secondary break that were not previously marked as no-break at all.
+
+     [xslt] INFO: identified 0 *cb* as secondary break that were previously marked as primary no-break.
+
+     [xslt] INFO: identified 0 *lb* as primary no-break that were not previously marked as such.
+
+     [xslt] INFO: identified 0 *lb* as secondary break that were not previously marked as no-break at all.
+
+     [xslt] INFO: identified 12 *lb* as secondary break that were previously marked as primary no-break.
+
+     [xslt] INFO: replaced trailing whitespace in 0 text nodes before primary no-breaks.
+
+     [xslt] INFO: replaced trailing whitespace in 0 text nodes before secondary no-breaks.
+
+     [xslt] Input whitespace: 9946
+
+     [xslt] Output whitespace: 9946
+
+     [xslt] ---------------------------------------------------------
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\SVN\trunk\teiedit\works\build\W0015\xml\W0015_113.xml to D:\SVN\trunk\teiedit\works\build\W0015\xml\W0015_114.xml
+     [xslt] Loading stylesheet D:\SVN\trunk\teiedit\works\build\W0015\xsl\W0015_113.xsl
+     [xslt] INFO: quality check successfull.
+
+     [xslt] INFO: added 2 choice/*[2]/pb.
+
+     [xslt] INFO: added 0 choice/*[2]/cb.
+
+     [xslt] INFO: added 21 choice/*[2]/lb.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\SVN\trunk\teiedit\works\build\W0015\xml\W0015_114.xml to D:\SVN\trunk\teiedit\works\build\W0015\xml\W0015_115.xml
+     [xslt] Loading stylesheet D:\SVN\trunk\teiedit\works\build\W0015\xsl\W0015_114.xsl
+Apache resolver library not found, internal resolver will be used
+     [xslt] INFO: added 240 special character tags (tei:g).
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\SVN\trunk\teiedit\works\build\W0015\xml\W0015_115.xml to D:\SVN\trunk\teiedit\works\build\W0015\xml\W0015_116.xml
+     [xslt] Loading stylesheet D:\SVN\trunk\teiedit\works\build\W0015\xsl\W0015_115.xsl
+     [xslt] Generated temporary lb/@xml:id.
+
+     [xslt] Extracted tei:lb from pages in the main area of the text.
+
+     [xslt] Numbered tei:lb from the main area.
+
+     [xslt] INFO: Added line numbers to tei:lb/@n.
+
+     [xslt] INFO: Serializing final output...
+
+     [xslt] INFO: quality check successfull.
+
+     [xslt] Using class org.apache.tools.ant.taskdefs.optional.TraXLiaison
+     [xslt] Processing D:\SVN\trunk\teiedit\works\build\W0015\xml\W0015_116.xml to D:\SVN\trunk\teiedit\works\build\W0015\xml\W0015_117.xml
+     [xslt] Loading stylesheet D:\SVN\trunk\teiedit\works\build\W0015\xsl\W0015_116.xsl
+     [xslt] INFO: quality check successfull.
+

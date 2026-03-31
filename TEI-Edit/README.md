@@ -1,5 +1,3 @@
-# svsal-teiedit
-
 # The School of Salamanca Text Editing Pipeline.
 
 ## What is this?
@@ -18,6 +16,21 @@ See also: The School of Salamanca Text Workflow: From the early modern print to 
 https://blog.salamanca.school/de/2022/04/27/the-school-of-salamanca-text-workflow-from-the-early-modern-print-to-tei-all/
 
 Our Edition Guidelines: https://www.salamanca.school/en/guidelines.html
+
+Update 17.06.2025
+
+Upload **Siete Partidas** first two volumes. 
+
+**Pipelines**:
+
+TEI: teiedit/works/build/W0063_Vol01
+
+López/de Castilla, Primera Partida (2024-04-09 [1555]), in: The School of Salamanca. A Digital Collection of Sources <https://id.salamanca.school/texts/W0063:vol1>
+
+TEI: teiedit/works/build/W0063_Vol02
+
+López/de Castilla, Segvnda Partida (2024-09-12 [1555]), in: The School of Salamanca. A Digital Collection of Sources <https://id.salamanca.school/texts/W0063:vol2>
+  
 
 ## What is in the folders?
 

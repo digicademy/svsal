@@ -1,0 +1,426 @@
+--- xml/W0015_v5-0.xml	2018-07-06 10:13:59.380984500 +0200
++++ xml/W0015_101.xml	2018-07-09 15:35:03.478692400 +0200
+@@ -33,6 +33,12 @@
+                         <surname>Duve</surname>, <forename>Thomas</forename>
+                     </persName>
+                 </editor>
++                <editor xml:id="JLE" ref="orcid:0000-0002-9256-8490">
++                    <persName>
++                        <surname>Egío García</surname>, <forename>José Luis</forename>
++                    </persName>
++                </editor>
++
+                 <editor xml:id="DG">
+                     <persName ref="orcid:0000-0002-0273-3844">
+                         <surname>Glück</surname>, <forename>David</forename>
+@@ -43,11 +49,6 @@
+                         <surname>Lutz-Bachmann</surname>, <forename>Matthias</forename>
+                     </persName>
+                 </editor>
+-                <editor xml:id="AS">
+-                    <persName ref="gnd:13605708X">
+-                        <surname>Spindler</surname>, <forename>Anselm</forename>
+-                    </persName>
+-                </editor>
+                 <editor xml:id="AW">
+                     <persName ref="gnd:108835820">
+                         <surname>Wagner</surname>, <forename>Andreas</forename>
+@@ -58,24 +59,27 @@
+             <xi:include href="../../../salamanca/resources/files/W_Head_general.xml" xpointer="editionStmt">
+                 <xi:fallback>
+                     <editionStmt>
+-                        <p xml:id="p_editionStmt">Für Angaben zur digitalen Edition siehe
+-                            <ref target="http://salamanca.adwmainz.de/about">unsere Webseite</ref>.</p>
++                        <p xml:lang="en" xml:id="W0015-00-meta-pa-0001">For information about the digital edition, please 
++                            refer to
++                            <ref target="https://www.salamanca.school">our website</ref>.</p>
+                     </editionStmt>
+                 </xi:fallback>
+             </xi:include>
+             <xi:include href="../../../salamanca/resources/files/W_Head_general.xml" xpointer="publicationStmt">
+                 <xi:fallback>
+                     <publicationStmt>
+-                        <p xml:id="p_publicationStmt">Für Angaben zur digitalen Edition siehe
+-                            <ref target="http://salamanca.adwmainz.de/about">unsere Webseite</ref>.</p>
++                        <p xml:lang="en" xml:id="W0015-00-meta-pa-0002">For information about the digital edition, please 
++                            refer to
++                            <ref target="https://www.salamanca.school">our website</ref>.</p>
+                     </publicationStmt>
+                 </xi:fallback>
+             </xi:include>
+             <xi:include href="../../../salamanca/resources/files/W_Head_general.xml" xpointer="seriesStmt">
+                 <xi:fallback>
+                     <seriesStmt>
+-                        <p xml:id="p_seriesStmt">Für Angaben zur digitalen Edition siehe
+-                            <ref target="http://salamanca.adwmainz.de/about">unsere Webseite</ref>.</p>
++                        <p xml:lang="en" xml:id="W0015-00-meta-pa-0003">For information about the digital edition, please 
++                            refer to
++                            <ref target="https://www.salamanca.school">our website</ref>.</p>
+                     </seriesStmt>
+                 </xi:fallback>
+             </xi:include>
+@@ -114,7 +118,8 @@
+                     </monogr>
+                     <note xml:id="ownerOfPrimarySource">
+                         <ref type="institution" target="gnd:4313400-2" xml:lang="es">Bibliotecas de la Universidad de Salamanca</ref>
+-                        <ref type="catLink" target="http://brumario.usal.es/record=b1699003~S6*spi"/>
++                        <ref type="catLink" target="http://brumario.usal.es/record=b1699003~S6*spi" subtype="main"/>
++                        <ref type="catLink" target="http://hdl.handle.net/10366/19465" corresp="#facs:W0015-0037 #facs:W0015-0038" subtype="additional"/>
+                     </note>
+                 </biblStruct>
+             </sourceDesc>
+@@ -123,29 +128,33 @@
+         <xi:include href="../../../salamanca/resources/files/W_Head_general.xml" xpointer="encodingDesc">
+             <xi:fallback>
+                 <encodingDesc>
+-                    <p xml:id="p_encodingDesc">Für Angaben zu unseren Editionsprinzipien siehe <ref target="http://salamanca.adwmainz.de/edition">unsere Webseite</ref>.</p>
++                    <p xml:lang="en" xml:id="W0015-00-meta-pa-0004">For information about the edition principles, please refer to the 
++                        <ref target="https://www.salamanca.school/en/guidelines.html">Edition Guidelines</ref>.</p>
+                 </encodingDesc>
+             </xi:fallback>
+         </xi:include>
+         
+         <revisionDesc status="g_enriched_approved">
+             <listChange ordered="true">
+-                <change who="#AW" when="2018-06-20" status="g_enriched_approved">Some corrections.</change>
+-                <change who="#AW" when="2018-05-16" status="g_enriched_approved">Add formats to notesStmt.</change>
+-                <change who="#AW" when="2018-05-09" status="g_enriched_approved">Fixes in special characters.</change>
+-                <change who="#DG" when="2018-05-08" status="g_enriched_approved">Update @xml:id within TEI/text.</change>
+-                <change who="#DG" when="2018-05-07" status="f_enriched">Update status labels; 
++                <change who="#DG" when="2018-07-09" status="g_enriched_approved" xml:lang="en">Further annotated title page.</change>
++                <change who="#DG" when="2018-07-06" status="g_enriched_approved" xml:lang="en">Technical fixes with special characters.</change>
++                <change who="#JLE #DG" when="2018-07-06" status="g_enriched_approved" xml:lang="en">Transcribed, annotated, and inserted missing pages [38] and [39].</change>
++                <change who="#AW" when="2018-06-20" status="g_enriched_approved" xml:lang="en">Some corrections.</change>
++                <change who="#AW" when="2018-05-16" status="g_enriched_approved" xml:lang="en">Add formats to notesStmt.</change>
++                <change who="#AW" when="2018-05-09" status="g_enriched_approved" xml:lang="en">Fixes in special characters.</change>
++                <change who="#DG" when="2018-05-08" status="g_enriched_approved" xml:lang="en">Update @xml:id within TEI/text.</change>
++                <change who="#DG" when="2018-05-07" status="f_enriched" xml:lang="en">Update status labels; 
+                                                                         annotate title page; 
+                                                                         annotate cross-references in first table of contents;
+                                                                         state original (Spanish) name of digitization institution.</change>
+-                <change who="#AW" when="2018-05-02" status="f_enriched">Add #DG to editors.</change>
+-                <change who="#AW" when="2018-02-22" status="f_enriched">Fixed linebreaks and a few special z-characters.</change>
+-                <change who="#AW" when="2018-02-21" status="f_enriched">Anpassung des Revisions-Status</change>
+-                <change who="#CB" when="2018-02-10" status="e_emended_unenriched">Korrekturen, Expansionen</change>
+-                <change who="#IC" when="2015-09-29" status="c_hyph_proposed">Anpassung der Paginierung im  n-Attribut</change>
+-                <change who="#AW" when="2015-07-02" status="c_hyph_proposed">Import des Trierer Haupttextes, Auflösung von Unsicherheitsmarkierungen, Struktur-Markup, Transformation in Sal-TEI</change>
+-                <change who="#IC" when="2014-11-27" status="e_emended_unenriched">revision of teiHeader</change>
+-                <change who="#IC" when="2014-11-18" status="e_emended_unenriched">titleStmt und sourceDesc angepassrt</change>
++                <change who="#AW" when="2018-05-02" status="f_enriched" xml:lang="en">Add #DG to editors.</change>
++                <change who="#AW" when="2018-02-22" status="f_enriched" xml:lang="en">Fixed linebreaks and a few special z-characters.</change>
++                <change who="#AW" when="2018-02-21" status="f_enriched" xml:lang="de">Anpassung des Revisions-Status</change>
++                <change who="#CB" when="2018-02-10" status="e_emended_unenriched" xml:lang="de">Korrekturen, Expansionen</change>
++                <change who="#IC" when="2015-09-29" status="c_hyph_proposed" xml:lang="de">Anpassung der Paginierung im n-Attribut</change>
++                <change who="#AW" when="2015-07-02" status="c_hyph_proposed" xml:lang="de">Import des Trierer Haupttextes, Auflösung von Unsicherheitsmarkierungen, Struktur-Markup, Transformation in Sal-TEI</change>
++                <change who="#IC" when="2014-11-27" status="e_emended_unenriched" xml:lang="en">revision of teiHeader</change>
++                <change who="#IC" when="2014-11-18" status="e_emended_unenriched" xml:lang="de">titleStmt und sourceDesc angepassrt</change>
+             </listChange>
+         </revisionDesc>
+     </teiHeader>
+@@ -164,9 +173,9 @@
+ <lb xml:id="W0015-00-0000-lb-0008"/>
+                 <figure/>
+                 <docImprint>
+-<lb xml:id="W0015-00-0000-lb-0009"/>¶ Jmpresso en <placeName ref="getty:7008643 gnd:4051658-1" xml:id="W0015-00-0000-pl-03e9">Santiago</placeName>.
+-<lb xml:id="W0015-00-0000-lb-0010"/><docDate when="1562">1562</docDate>.
+-<lb xml:id="W0015-00-0000-lb-0011"/>¶ Con licencia.</docImprint>
++<lb xml:id="W0015-00-0000-lb-0009"/><hi rendition="#r-center">¶ Jmpresso en <placeName ref="getty:7008643 gnd:4051658-1" xml:id="W0015-00-0000-pl-03e9">Santiago</placeName>.</hi>
++<lb xml:id="W0015-00-0000-lb-0010"/><docDate when="1562"><hi rendition="#r-center">1562.</hi></docDate></docImprint>
++<lb xml:id="W0015-00-0000-lb-0011"/><imprimatur><hi rendition="#r-center">¶ Con licencia.</hi></imprimatur>
+             </titlePage>
+             <div type="preface" n="Epistola" xml:id="W0015-00-0001-d1-03e8">
+                 <head rendition="#r-center" xml:id="W0015-00-0001-he-03e8">
+@@ -185,7 +194,7 @@
+ <lb xml:id="W0015-00-0001-lb-0010"/>que de<g resp="#CB" cert="high" ref="#char0292">z</g>ir. Lo que es mene<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0001-lb-0011"/>ster para seruir a nuestro se<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0001-lb-0012"/>ñor, yo se que el ha hecho
+ <lb xml:id="W0015-00-0001-lb-0013"/>gracia a V. M. lo t<g ref="#chare0303" resp="#AW" cert="low">en</g>ga ent<g ref="#chare0303" resp="#AW" cert="low">en</g>dido: y assi son escusa<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0001-lb-0014"/>das muchas ra<g resp="#CB" cert="high" ref="#char0292">z</g>ones, no es menester mas de po<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0001-lb-0015"/>ner las manos enla obra, y ha<g resp="#CB" cert="high" ref="#char0292">z</g>er lo <g resp="#CB" cert="high" ref="#charq0303">que</g> Dios nos
+ <lb xml:id="W0015-00-0001-lb-0016"/>ha dado a entender, para nuestra consolacion y
+-<lb xml:id="W0015-00-0001-lb-0017"/>contentami<g ref="#chare0303" resp="#AW" cert="low">en</g>to. Sermones alla los ay, <g resp="#CB" cert="high" ref="#char204A">y</g> alo <g resp="#CB" cert="high" ref="#charq0303">que</g> yo
++<lb xml:id="W0015-00-0001-lb-0017"/>contentami<g ref="#chare0303" resp="#AW" cert="low">en</g>to. Sermones alla los ay, <g resp="#CB" cert="high" ref="#char204a">y</g> alo <g resp="#CB" cert="high" ref="#charq0303">que</g> yo
+ <lb xml:id="W0015-00-0001-lb-0018"/>pienso, no son los peores del m<g resp="#CB" cert="high" ref="#charu0303">un</g>do. Vn pedaço
+ <lb xml:id="W0015-00-0001-lb-0019"/>de mis lectiones puedo embiar a V. M. En las
+ <lb xml:id="W0015-00-0001-lb-0020"/>postreras tratauamos dela differ<g ref="#chare0303" resp="#AW" cert="low">en</g>cia de los peca<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0001-lb-0021"/>dos mortales, y veniales, que a la verdad impor<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0001-lb-0022"/>taua a todos entenderla: porque cierto ay gentes
+@@ -246,7 +255,7 @@
+ <lb xml:id="W0015-00-0005-lb-0005"/>por aueriguado que antes auria vno de passar la
+ <lb xml:id="W0015-00-0005-lb-0006"/>muerte, y perder la honrra, y la vida, que ha<g resp="#CB" cert="high" ref="#char0292">z</g>er
+ <lb xml:id="W0015-00-0005-lb-0007"/>vn venial. De<g resp="#CB" cert="high" ref="#char0292">z</g>iamos mas, que quien rotamen<lb break="no" rendition="#hyphen" xml:id="W0015-00-0005-lb-0008"/>te passa los veni<unclear cert="medium" resp="#AW" reason="damage" xml:id="W0015-00-0005-un-03e8">a</unclear>les, sin tener ninguna cuenta
+-<lb xml:id="W0015-00-0005-lb-0009"/>dellos, sera gr<g resp="#CB" cert="high" ref="#chara0303">an</g> marauilla guardarse delos mor<lb break="no" rendition="#hyphen" xml:id="W0015-00-0005-lb-0010"/>tales (aunque teng<g resp="#CB" cert="high" ref="#chara0303">an</g> proposito de ha<g resp="#CB" cert="high" ref="#char0292">z</g>erlo.) Por<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0005-lb-0011"/>que los veniales abren camino para los morta<lb break="no" rendition="#hyphen" xml:id="W0015-00-0005-lb-0012"/>les, y <choice><sic>en</sic><corr resp="#JLE" cert="high" xml:id="yvs_qd3_f2b">es</corr></choice> cosa <g resp="#CB" cert="high" ref="#charEBD1">de</g> mirar enello. De<g resp="#CB" cert="high" ref="#char0292">z</g>iamos mas que
++<lb xml:id="W0015-00-0005-lb-0009"/>dellos, sera gr<g resp="#CB" cert="high" ref="#chara0303">an</g> marauilla guardarse delos mor<lb break="no" rendition="#hyphen" xml:id="W0015-00-0005-lb-0010"/>tales (aunque teng<g resp="#CB" cert="high" ref="#chara0303">an</g> proposito de ha<g resp="#CB" cert="high" ref="#char0292">z</g>erlo.) Por<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0005-lb-0011"/>que los veniales abren camino para los morta<lb break="no" rendition="#hyphen" xml:id="W0015-00-0005-lb-0012"/>les, y <choice><sic>en</sic><corr resp="#JLE" cert="high" xml:id="yvs_qd3_f2b">es</corr></choice> cosa <g resp="#CB" cert="high" ref="#charebd1">de</g> mirar enello. De<g resp="#CB" cert="high" ref="#char0292">z</g>iamos mas que
+ <lb xml:id="W0015-00-0005-lb-0013"/>los veniales son de dos maneras. Vnos ay que
+ <lb xml:id="W0015-00-0005-lb-0014"/>no pueden ser mas que veniales, como palabras
+ <lb xml:id="W0015-00-0005-lb-0015"/>occiosas, comer <choice><sic>regladamente</sic><corr resp="#JLE" cert="high" xml:id="iq5_td3_f2b">regaladamente</corr></choice>. Otros ay que son
+@@ -256,14 +265,14 @@
+ <lb xml:id="W0015-00-0005-lb-0021"/>descuydo, o por porfia aura hecho vn par de ju<lb break="no" rendition="#hyphen" xml:id="W0015-00-0005-lb-0022"/>ramentos falsos, que son mortales. Deste linage
+ <lb xml:id="W0015-00-0005-lb-0023"/>son palabras occiosas aunque sean liuianas, que
+ <lb xml:id="W0015-00-0005-lb-0024"/>son peccados veniales, pero peligrosos: porque
+-<lb xml:id="W0015-00-0005-lb-0025"/>a desm<g resp="#CB" cert="high" ref="#chara0303">an</g>dar se vn poco dan en las honrras <g resp="#CB" cert="high" ref="#char204A">y</g> vi<lb break="no" rendition="#hyphen" xml:id="W0015-00-0005-lb-0026"/>das agenas: y pueden se ha<g resp="#CB" cert="high" ref="#char0292">z</g>er mortales. Assi que
++<lb xml:id="W0015-00-0005-lb-0025"/>a desm<g resp="#CB" cert="high" ref="#chara0303">an</g>dar se vn poco dan en las honrras <g resp="#CB" cert="high" ref="#char204a">y</g> vi<lb break="no" rendition="#hyphen" xml:id="W0015-00-0005-lb-0026"/>das agenas: y pueden se ha<g resp="#CB" cert="high" ref="#char0292">z</g>er mortales. Assi que
+ <lb xml:id="W0015-00-0005-lb-0027"/>aun<g resp="#CB" cert="high" ref="#charq0303">que</g> de todos los veniales nos auemos de des<pb break="no" rendition="#hyphen" facs="facs:W0015-0006" n="[7]" xml:id="W0015-00-0006-pb-03ee"/><lb break="no" rendition="#noHyphen" xml:id="W0015-00-0006-lb-0001"/>uiar: pero mucho mas destos que son pari<g ref="#chare0303" resp="#AW" cert="low">en</g>tes de<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0006-lb-0002"/>los mortales. Tambien de<g resp="#CB" cert="high" ref="#char0292">z</g>iamos que no aue<lb break="no" rendition="#hyphen" xml:id="W0015-00-0006-lb-0003"/>mos de pensar que en todo quanto nos holga<lb break="no" rendition="#hyphen" xml:id="W0015-00-0006-lb-0004"/>mos, luego ha de ser peccado: que licencia ay
+ <lb xml:id="W0015-00-0006-lb-0005"/>para reyr y baylar, y para jugar, y dancar, y hol<lb break="no" rendition="#hyphen" xml:id="W0015-00-0006-lb-0006"/>gar, con que sea sin perjuy<g resp="#CB" cert="high" ref="#char0292">z</g>io de proximos, y ten<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0006-lb-0007"/>ga ta<damage agent="ink"><supplied resp="#AW" cert="high" reason="damage" xml:id="s0606d715-19c6-451a-8418-77208967f272">ss</supplied></damage>a: que no han de ser las burlas tantas co<lb break="no" rendition="#hyphen" xml:id="W0015-00-0006-lb-0008"/>mo las veras. Lo vltimo que de<g resp="#CB" cert="high" ref="#char0292">z</g>iamos, que si
+ <lb xml:id="W0015-00-0006-lb-0009"/>vno se determinasse a no ha<g resp="#CB" cert="high" ref="#char0292">z</g>er cosa que pensasse
+ <lb xml:id="W0015-00-0006-lb-0010"/>ser mor<damage agent="ink"><supplied resp="#AW" cert="high" reason="damage" xml:id="s886892c6-33b7-4f05-97e1-e9fcc6a0f2bb">t</supplied></damage>al, y le hi<g resp="#CB" cert="high" ref="#char0292">z</g>iesse dios merced de salir con
+-<lb xml:id="W0015-00-0006-lb-0011"/>ello, como sin duda ha<g resp="#CB" cert="high" ref="#char0292">z</g>en algunos (<g resp="#CB" cert="high" ref="#char204A">y</g> aun mu<lb break="no" rendition="#hyphen" xml:id="W0015-00-0006-lb-0012"/>chos) que se podia creer piadosamente que no
++<lb xml:id="W0015-00-0006-lb-0011"/>ello, como sin duda ha<g resp="#CB" cert="high" ref="#char0292">z</g>en algunos (<g resp="#CB" cert="high" ref="#char204a">y</g> aun mu<lb break="no" rendition="#hyphen" xml:id="W0015-00-0006-lb-0012"/>chos) que se podia creer piadosamente que no
+ <lb xml:id="W0015-00-0006-lb-0013"/>yuan a purgatorio: aunque tuuiessen muchos ve<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0006-lb-0014"/>niales, no porque por los veniales no aya pur<lb break="no" rendition="#hyphen" xml:id="W0015-00-0006-lb-0015"/>gatorio: sino porque quien passa la vida sin pec<lb break="no" rendition="#hyphen" xml:id="W0015-00-0006-lb-0016"/>cados mortales, y esta siempre en gracia de dios:
+-<lb xml:id="W0015-00-0006-lb-0017"/>las buenas obras, <g resp="#CB" cert="high" ref="#char204A">y</g> los sacramentos, <g resp="#CB" cert="high" ref="#char204A">y</g> las in<lb break="no" rendition="#hyphen" xml:id="W0015-00-0006-lb-0018"/>dulgencias de la yglesia, se deue creer que basta
++<lb xml:id="W0015-00-0006-lb-0017"/>las buenas obras, <g resp="#CB" cert="high" ref="#char204a">y</g> los sacramentos, <g resp="#CB" cert="high" ref="#char204a">y</g> las in<lb break="no" rendition="#hyphen" xml:id="W0015-00-0006-lb-0018"/>dulgencias de la yglesia, se deue creer que basta
+ <lb xml:id="W0015-00-0006-lb-0019"/>para satisfacion delos peccados veniales, por
+ <lb xml:id="W0015-00-0006-lb-0020"/>mas que sean. Porque mire cada vno que nos
+ <lb xml:id="W0015-00-0006-lb-0021"/>va en guardar nos delos peccados mortales.</p>
+@@ -391,7 +400,7 @@
+ <lb xml:id="W0015-00-0010-lb-0007"/>a la diestra de dios padre.</item>
+                     <item xml:id="W0015-00-0010-it-0409">
+ <lb xml:id="W0015-00-0010-lb-0008"/>¶ El cator<g resp="#CB" cert="high" ref="#char0292">z</g>eno: que verna a ju<g resp="#CB" cert="high" ref="#char0292">z</g>gar los biuos y
+-<lb xml:id="W0015-00-0010-lb-0009"/>los muertos: a los buenos para dar les gloria: <g resp="#CB" cert="high" ref="#char204A">y</g>
++<lb xml:id="W0015-00-0010-lb-0009"/>los muertos: a los buenos para dar les gloria: <g resp="#CB" cert="high" ref="#char204a">y</g>
+ <lb xml:id="W0015-00-0010-lb-0010"/>a los malos para darles pena.</item>
+                 </list>
+                 <list type="bulleted" xml:id="W0015-00-0010-li-03ea">
+@@ -415,12 +424,12 @@
+                     <item xml:id="W0015-00-0010-it-0411">
+ <lb xml:id="W0015-00-0010-lb-0020"/>¶ El octauo: No leu<g resp="#CB" cert="high" ref="#chara0303">an</g>tar falso testimonio.</item>
+                     <item xml:id="W0015-00-0010-it-0412">
+-<lb xml:id="W0015-00-0010-lb-0021"/>¶ El noueno: no cobdiciar la muger <g resp="#CB" cert="high" ref="#charEBD1">de</g> tu <g resp="#CB" cert="high" ref="#charA753">pro</g>ximo</item>
++<lb xml:id="W0015-00-0010-lb-0021"/>¶ El noueno: no cobdiciar la muger <g resp="#CB" cert="high" ref="#charebd1">de</g> tu <g resp="#CB" cert="high" ref="#chara753">pro</g>ximo</item>
+                     <item xml:id="W0015-00-0010-it-0413">
+ <lb xml:id="W0015-00-0010-lb-0022"/>¶ El decimo: No cobdiciar las cosas agenas.</item>
+                     <item xml:id="W0015-00-0010-it-0414">
+ <lb xml:id="W0015-00-0010-lb-0023"/>¶ Todos estos die<g resp="#CB" cert="high" ref="#char0292">z</g> mandamientos se encierr<g resp="#CB" cert="high" ref="#chara0303">an</g>
+-<lb xml:id="W0015-00-0010-lb-0024"/>en dos, que son Amar a dios sobre todas las co<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0010-lb-0025"/>sas: <g resp="#CB" cert="high" ref="#char204A">y</g> a tu proximo, como a ti mismo.</item>
++<lb xml:id="W0015-00-0010-lb-0024"/>en dos, que son Amar a dios sobre todas las co<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0010-lb-0025"/>sas: <g resp="#CB" cert="high" ref="#char204a">y</g> a tu proximo, como a ti mismo.</item>
+                 </list>
+                 <list type="bulleted" xml:id="W0015-00-0010-li-03eb">
+                     <head xml:id="W0015-00-0010-he-03ef">
+@@ -494,7 +503,7 @@
+                 <p xml:id="W0015-00-0012-pa-03f0">
+ <lb xml:id="W0015-00-0012-lb-0011"/><hi rendition="#initCaps">P</hi>Eccado mortal, es, querer, o ha<g resp="#CB" cert="high" ref="#char0292">z</g>er, o de<g resp="#CB" cert="high" ref="#char0292">z</g>ir
+ <lb xml:id="W0015-00-0012-lb-0012"/>alguna cosa contra la ley de Dios. Dixo se
+-<lb xml:id="W0015-00-0012-lb-0013"/>mortal: por que condenna al alma <g resp="#CB" cert="high" ref="#char204A">y</g> al cuerpo a
++<lb xml:id="W0015-00-0012-lb-0013"/>mortal: por que condenna al alma <g resp="#CB" cert="high" ref="#char204a">y</g> al cuerpo a
+ <lb xml:id="W0015-00-0012-lb-0014"/>muerte eterna, si muere el hombre sin ha<g resp="#CB" cert="high" ref="#char0292">z</g>er peni<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0012-lb-0015"/>tencia. Por el pecado mortal se pierde dios. La
+ <lb xml:id="W0015-00-0012-lb-0016"/>gloria del cielo. El cuerpo y el alma, redemidos
+ <lb xml:id="W0015-00-0012-lb-0017"/>por la sangre de Jesuchristo: la c<g resp="#CB" cert="high" ref="#charo0303">om</g>munion, y los
+@@ -940,7 +949,7 @@
+ <lb xml:id="W0015-00-0025-lb-0019"/>Si dio o recibio algun sacramento en peccado
+ <lb xml:id="W0015-00-0025-lb-0020"/>mortal, de que no tenia contricion. Si est<g resp="#CB" cert="high" ref="#chara0303">an</g>do des<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0025-lb-0021"/>comulgado, se enxirio a los officios diuinos, co<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0025-lb-0022"/>mo la missa, a las horas, o a la processi<g resp="#CB" cert="high" ref="#charo0303">on</g>. Si par<lb break="no" rendition="#hyphen" xml:id="W0015-00-0025-lb-0023"/>ticipo en cosa diuinas con algun descomulgado
+ <lb xml:id="W0015-00-0025-lb-0024"/>enla missa, enlas horas, y en la procession: y en
+-<lb xml:id="W0015-00-0025-lb-0025"/>otras cosas fuera delos casos que se permiten en<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0025-lb-0026"/>el derecho. Si est<g resp="#CB" cert="high" ref="#chara0303">an</g>do descomulgado de descomu<lb break="no" rendition="#hyphen" xml:id="W0015-00-0025-lb-0027"/>nion menor, recibio algun sacram<g ref="#chare0303" resp="#AW" cert="low">en</g>to, peco mor<pb break="no" rendition="#hyphen" facs="facs:W0015-0026" n="[27]" xml:id="W0015-00-0026-pb-0402"/><lb break="no" rendition="#noHyphen" xml:id="W0015-00-0026-lb-0001"/>talmente. Si estando suspenso, irregular, o en<lb break="no" rendition="#hyphen" xml:id="W0015-00-0026-lb-0002"/>tredicho, se inxirio a las cosas de que estaua su<lb break="no" rendition="#hyphen" xml:id="W0015-00-0026-lb-0003"/>spenso, <g resp="#CB" cert="high" ref="#char204A">y</g> irregular, o entredicho. Si teniendo
++<lb xml:id="W0015-00-0025-lb-0025"/>otras cosas fuera delos casos que se permiten en<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0025-lb-0026"/>el derecho. Si est<g resp="#CB" cert="high" ref="#chara0303">an</g>do descomulgado de descomu<lb break="no" rendition="#hyphen" xml:id="W0015-00-0025-lb-0027"/>nion menor, recibio algun sacram<g ref="#chare0303" resp="#AW" cert="low">en</g>to, peco mor<pb break="no" rendition="#hyphen" facs="facs:W0015-0026" n="[27]" xml:id="W0015-00-0026-pb-0402"/><lb break="no" rendition="#noHyphen" xml:id="W0015-00-0026-lb-0001"/>talmente. Si estando suspenso, irregular, o en<lb break="no" rendition="#hyphen" xml:id="W0015-00-0026-lb-0002"/>tredicho, se inxirio a las cosas de que estaua su<lb break="no" rendition="#hyphen" xml:id="W0015-00-0026-lb-0003"/>spenso, <g resp="#CB" cert="high" ref="#char204a">y</g> irregular, o entredicho. Si teniendo
+ <lb xml:id="W0015-00-0026-lb-0004"/>obligacion a re<g resp="#AW" cert="high" ref="#char0292">z</g>ar las horas, no lo hi<g resp="#AW" cert="high" ref="#char0292">z</g>o, o si las
+ <lb xml:id="W0015-00-0026-lb-0005"/>dixo, y aparto de proposito la atencion, mayor<lb break="no" rendition="#hyphen" xml:id="W0015-00-0026-lb-0006"/>mente si fue parte notable, o si las dixo tan a
+ <lb xml:id="W0015-00-0026-lb-0007"/>prissa que no pronuncio enteramente las lectio<lb break="no" rendition="#hyphen" xml:id="W0015-00-0026-lb-0008"/>nes, mas del principio y sin del verso: porque
+@@ -1031,7 +1040,7 @@
+                             <head rendition="#r-center" xml:id="W0015-00-0029-he-0419">
+ <lb xml:id="W0015-00-0029-lb-0004"/>Quarta, obseruancia.</head>
+                             <p xml:id="W0015-00-0029-pa-0413">
+-<lb xml:id="W0015-00-0029-lb-0005"/>¶ Si a los principes, <g resp="#CB" cert="high" ref="#char204A">y</g> a las personas que estan
++<lb xml:id="W0015-00-0029-lb-0005"/>¶ Si a los principes, <g resp="#CB" cert="high" ref="#char204a">y</g> a las personas que estan
+ <lb xml:id="W0015-00-0029-lb-0006"/>puestas en dignidad, no les cato la honrra y re<lb break="no" rendition="#hyphen" xml:id="W0015-00-0029-lb-0007"/>uerencia, y subjection deuida de palabra y obra.</p>
+                         </div>
+                         <div type="section" xml:id="W0015-00-0029-d4-040a">
+@@ -1060,7 +1069,7 @@
+ <pb facs="facs:W0015-0030" n="[31]" xml:id="W0015-00-0030-pb-0406"/>
+ <lb xml:id="W0015-00-0030-lb-0001"/>parir, ni empreñarse, o los dio a alguna persona.
+ <lb xml:id="W0015-00-0030-lb-0002"/>Si hi<g resp="#AW" cert="high" ref="#char0292">z</g>o que alguna cosa destas se hi<g resp="#AW" cert="high" ref="#char0292">z</g>iesse, o dio
+-<lb xml:id="W0015-00-0030-lb-0003"/>para ello consejo, ayuda o fauor: <g resp="#CB" cert="high" ref="#char204A">y</g> aun sino lo e<lb break="no" rendition="#hyphen" xml:id="W0015-00-0030-lb-0004"/>storuo pudiendo: pecco. Si manco a alguno: o lo<lb xml:id="W0015-00-0030-lb-0005"/>hi<g resp="#AW" cert="high" ref="#char0292">z</g>o mancar. Si llago Si aprisiono: o encarcelo:
++<lb xml:id="W0015-00-0030-lb-0003"/>para ello consejo, ayuda o fauor: <g resp="#CB" cert="high" ref="#char204a">y</g> aun sino lo e<lb break="no" rendition="#hyphen" xml:id="W0015-00-0030-lb-0004"/>storuo pudiendo: pecco. Si manco a alguno: o lo<lb xml:id="W0015-00-0030-lb-0005"/>hi<g resp="#AW" cert="high" ref="#char0292">z</g>o mancar. Si llago Si aprisiono: o encarcelo:
+ <lb xml:id="W0015-00-0030-lb-0006"/>o atormento con qualquier afliction corporal. Si
+ <lb xml:id="W0015-00-0030-lb-0007"/>desterro, o hi<g resp="#AW" cert="high" ref="#char0292">z</g>o desterrar: o ha<g resp="#AW" cert="high" ref="#char0292">z</g>er alguna de estas
+ <lb xml:id="W0015-00-0030-lb-0008"/>cosas contra ra<g resp="#AW" cert="high" ref="#char0292">z</g>on, o orden de justicia. Y en con<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0030-lb-0009"/>clusion, si con voluntad deliberada desseo <g resp="#CB" cert="high" ref="#charq0303">que</g> algu<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0030-lb-0010"/>na destas cosas acaesciesse en alg<g resp="#CB" cert="high" ref="#charu0303">un</g>o. Aqui se pue<lb break="no" rendition="#hyphen" xml:id="W0015-00-0030-lb-0011"/>de redu<g resp="#AW" cert="high" ref="#char0292">z</g>ir el odio, ira, enemistad y guerra. Si a<lb break="no" rendition="#hyphen" xml:id="W0015-00-0030-lb-0012"/>borrescio a alguno. Si desseo a alguno mal de cu<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0030-lb-0013"/>erpo, o alma, de honrra, fama: o ha<g resp="#AW" cert="high" ref="#char0292">z</g>ienda. Si se
+@@ -1130,7 +1139,7 @@
+ <lb xml:id="W0015-00-0031-lb-0026"/>puede ser en dos maneras.</p>
+                             <p xml:id="W0015-00-0032-pa-041e">
+ <pb facs="facs:W0015-0032" n="[33]" xml:id="W0015-00-0032-pb-0408"/>
+-<lb xml:id="W0015-00-0032-lb-0001"/>¶ Primera: Quando vno <g resp="#CB" cert="high" ref="#charA753">pro</g>cura venir en pollu<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0032-lb-0002"/>cion, o se huelga quando le viene consigo solo: y
++<lb xml:id="W0015-00-0032-lb-0001"/>¶ Primera: Quando vno <g resp="#CB" cert="high" ref="#chara753">pro</g>cura venir en pollu<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0032-lb-0002"/>cion, o se huelga quando le viene consigo solo: y
+ <lb xml:id="W0015-00-0032-lb-0003"/>esto es peccado mortal, que se llama Molicies.</p>
+                             <p xml:id="W0015-00-0032-pa-041f">
+ <lb xml:id="W0015-00-0032-lb-0004"/>¶ Segunda manera de peccado contra naturale<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0032-lb-0005"/><g resp="#AW" cert="high" ref="#char0292">z</g>a es. Quando vn hombre pecca con otro: y aun<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0032-lb-0006"/>que sea con su muger propria, o agena, fuera de<lb xml:id="W0015-00-0032-lb-0007"/>su vaso, de qualquier manera que sea: Como en<lb break="no" rendition="#hyphen" xml:id="W0015-00-0032-lb-0008"/>tre las piernas, y esto se llama Sodomia.</p>
+@@ -1141,7 +1150,7 @@
+                             <p xml:id="W0015-00-0032-pa-0421">
+ <lb xml:id="W0015-00-0032-lb-0012"/>¶ Tambien es peccado besar o tocar en partes
+ <lb xml:id="W0015-00-0032-lb-0013"/>deshonestas a las mugeres: y lo mesmo si la abra<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0032-lb-0014"/>ça, o tocan en las manos o pechos, o qualquier
+-<lb xml:id="W0015-00-0032-lb-0015"/>parte de su cuerpo, c<g resp="#CB" cert="high" ref="#charo03093">on</g> delectacion carnal: o para
++<lb xml:id="W0015-00-0032-lb-0015"/>parte de su cuerpo, c<g resp="#CB" cert="high" ref="#charo0303">on</g> delectacion carnal: o para
+ <lb xml:id="W0015-00-0032-lb-0016"/>prouocarse a ella: y esto entiende se entre los que
+ <lb xml:id="W0015-00-0032-lb-0017"/>no son casados, ni desposados: porque entre ma<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0032-lb-0018"/>rido y muger, y esposo, y esposa, licitos son los
+ <lb xml:id="W0015-00-0032-lb-0019"/>dichos tactos. Saluo quando se ha<g resp="#AW" cert="high" ref="#char0292">z</g>en con peli<lb break="no" rendition="#hyphen" xml:id="W0015-00-0032-lb-0020"/>gro de venir a polucion fuera del acto matrimo<lb break="no" rendition="#hyphen" xml:id="W0015-00-0032-lb-0021"/>nial: porque entonces seria peccado mortal, sino
+@@ -1165,7 +1174,7 @@
+ <lb xml:id="W0015-00-0033-lb-0010"/>es pobre: el qual a consejo del confessor la podia
+ <lb xml:id="W0015-00-0033-lb-0011"/>aplicar a si, hecha diligencia sufficiente. Y lo mes<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0033-lb-0012"/>mo si tomo algo delo que se perdio en la mar, en<lb xml:id="W0015-00-0033-lb-0013"/>tormenta o naufragio: y lo guardo para si. Y lo<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0033-lb-0014"/>mesmo quando alguno ha<g resp="#AW" cert="high" ref="#char0292">z</g>e c<g resp="#CB" cert="high" ref="#charo0303">on</g>tratos vsurarios,
+ <lb xml:id="W0015-00-0033-lb-0015"/>o si impone nueuas alcaualas, o si las demanda
+-<lb xml:id="W0015-00-0033-lb-0016"/>alas personas ecclesiasticas contra sus priuile<lb break="no" rendition="#hyphen" xml:id="W0015-00-0033-lb-0017"/>gios. Y lo mesmo si compro o vendio algo, ha<g resp="#AW" cert="high" ref="#char0292">z</g>i<g ref="#chare0303" resp="#AW" cert="low">en</g><lb break="no" rendition="#noHyphen" xml:id="W0015-00-0033-lb-0018"/>do engaño enel precio o valor <g resp="#CB" cert="high" ref="#charEBD1">de</g>la cosa, o enel nu<lb break="no" rendition="#hyphen" xml:id="W0015-00-0033-lb-0019"/>mero: porque todos estos engaños son peccados
++<lb xml:id="W0015-00-0033-lb-0016"/>alas personas ecclesiasticas contra sus priuile<lb break="no" rendition="#hyphen" xml:id="W0015-00-0033-lb-0017"/>gios. Y lo mesmo si compro o vendio algo, ha<g resp="#AW" cert="high" ref="#char0292">z</g>i<g ref="#chare0303" resp="#AW" cert="low">en</g><lb break="no" rendition="#noHyphen" xml:id="W0015-00-0033-lb-0018"/>do engaño enel precio o valor <g resp="#CB" cert="high" ref="#charebd1">de</g>la cosa, o enel nu<lb break="no" rendition="#hyphen" xml:id="W0015-00-0033-lb-0019"/>mero: porque todos estos engaños son peccados
+ <lb xml:id="W0015-00-0033-lb-0020"/>mortales. Assi mismo, si tomo por fuerça alguna
+ <lb xml:id="W0015-00-0033-lb-0021"/>cosa agena, o suya propria (que la tenia otro en<lb xml:id="W0015-00-0033-lb-0022"/>su poder: aunque injustamente la tuuiesse) sin au<lb break="no" rendition="#hyphen" xml:id="W0015-00-0033-lb-0023"/>toridad de justicia.</p>
+                         <p xml:id="W0015-00-0033-pa-0424">
+@@ -1211,22 +1220,60 @@
+ <lb xml:id="W0015-00-0035-lb-0025"/><g resp="#CB" cert="high" ref="#charq0303">que</g> no lo s<g resp="#CB" cert="high" ref="#charo0303">on</g>: o milagros falsos para ganar dineros.
+ <lb xml:id="W0015-00-0035-lb-0026"/>Si di<g resp="#AW" cert="high" ref="#char0292">z</g>e palabras iac <g resp="#CB" cert="high" ref="#chara0303">an</g>ciosas, alab<g resp="#CB" cert="high" ref="#chara0303">an</g>do se a si mis<pb break="no" rendition="#hyphen" facs="facs:W0015-0036" n="[37]" xml:id="W0015-00-0036-pb-040c"/><lb break="no" rendition="#noHyphen" xml:id="W0015-00-0036-lb-0001"/>mo de cosas <g resp="#CB" cert="high" ref="#charq0303">que</g> no tiene, o paresce <g resp="#CB" cert="high" ref="#charq0303">que</g> no est<g resp="#CB" cert="high" ref="#chara0303">an</g> enel, es
+ <lb xml:id="W0015-00-0036-lb-0002"/>pecado. Qu<g resp="#CB" cert="high" ref="#chara0303">an</g>do se iacta de cosas <g resp="#CB" cert="high" ref="#charq0303">que</g> son en offensa
+-<lb xml:id="W0015-00-0036-lb-0003"/>de dios y perjuy<g resp="#AW" cert="high" ref="#char0292">z</g>io del <g resp="#CB" cert="high" ref="#charA753">pro</g>ximo. Assi como si vno
+-<lb xml:id="W0015-00-0036-lb-0004"/>se alabasse <g resp="#CB" cert="high" ref="#charEBD1">de</g> auer pecado, o se alabasse para enga<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0036-lb-0005"/>ñar al <g resp="#CB" cert="high" ref="#charA753">pro</g>ximo, o indu<g resp="#AW" cert="high" ref="#char0292">z</g>ir a otra <g resp="#CB" cert="high" ref="#charA751">per</g>sona a pecar. Si
+-<lb xml:id="W0015-00-0036-lb-0006"/>di<g resp="#AW" cert="high" ref="#char0292">z</g>e algo para infamar a alg<g resp="#CB" cert="high" ref="#charu0303">un</g>a <g resp="#CB" cert="high" ref="#charA751">per</g>sona c<g resp="#CB" cert="high" ref="#charo0303">on</g> int<g ref="#chare0303" resp="#AW" cert="low">en</g>ci<g resp="#CB" cert="high" ref="#charo0303">on</g>
+-<lb xml:id="W0015-00-0036-lb-0007"/><g resp="#CB" cert="high" ref="#charEBD1">de</g>la infamar: o si oye mal <g resp="#CB" cert="high" ref="#charEBD1">de</g> otro, holg<g resp="#CB" cert="high" ref="#chara0303">an</g>dose dello.
++<lb xml:id="W0015-00-0036-lb-0003"/>de dios y perjuy<g resp="#AW" cert="high" ref="#char0292">z</g>io del <g resp="#CB" cert="high" ref="#chara753">pro</g>ximo. Assi como si vno
++<lb xml:id="W0015-00-0036-lb-0004"/>se alabasse <g resp="#CB" cert="high" ref="#charebd1">de</g> auer pecado, o se alabasse para enga<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0036-lb-0005"/>ñar al <g resp="#CB" cert="high" ref="#chara753">pro</g>ximo, o indu<g resp="#AW" cert="high" ref="#char0292">z</g>ir a otra <g resp="#CB" cert="high" ref="#chara751">per</g>sona a pecar. Si
++<lb xml:id="W0015-00-0036-lb-0006"/>di<g resp="#AW" cert="high" ref="#char0292">z</g>e algo para infamar a alg<g resp="#CB" cert="high" ref="#charu0303">un</g>a <g resp="#CB" cert="high" ref="#chara751">per</g>sona c<g resp="#CB" cert="high" ref="#charo0303">on</g> int<g ref="#chare0303" resp="#AW" cert="low">en</g>ci<g resp="#CB" cert="high" ref="#charo0303">on</g>
++<lb xml:id="W0015-00-0036-lb-0007"/><g resp="#CB" cert="high" ref="#charebd1">de</g>la infamar: o si oye mal <g resp="#CB" cert="high" ref="#charebd1">de</g> otro, holg<g resp="#CB" cert="high" ref="#chara0303">an</g>dose dello.
+ <lb xml:id="W0015-00-0036-lb-0008"/>¶ Si alguno fauoresce al <g resp="#CB" cert="high" ref="#charq0303">que</g> murmura de otro, o
+ <lb xml:id="W0015-00-0036-lb-0009"/>si indu<g resp="#AW" cert="high" ref="#char0292">z</g>e a de<g resp="#AW" cert="high" ref="#char0292">z</g>ir mal, por<g resp="#CB" cert="high" ref="#charq0303">que</g> estaua mal c<g resp="#CB" cert="high" ref="#charo0303">on</g> alguno,
+ <lb xml:id="W0015-00-0036-lb-0010"/>y huelga de todo el mal <g resp="#CB" cert="high" ref="#charq0303">que</g> del se di<g resp="#AW" cert="high" ref="#char0292">z</g>e, y de la infa<lb break="no" rendition="#hyphen" xml:id="W0015-00-0036-lb-0011"/>mia <g resp="#CB" cert="high" ref="#charq0303">que</g> se le sigue: todo esto es pecado mortal, qu<g resp="#CB" cert="high" ref="#chara0303">an</g><lb break="no" rendition="#hyphen" xml:id="W0015-00-0036-lb-0012"/>do la murmuracion es en cosa notable, mas si es<lb xml:id="W0015-00-0036-lb-0013"/>de poca importancia es peccado venial. Y t<g resp="#CB" cert="high" ref="#chara0303">am</g>bien
+ <lb xml:id="W0015-00-0036-lb-0014"/>es peccado mortal, si vno di<g resp="#AW" cert="high" ref="#char0292">z</g>e algo por d<g resp="#CB" cert="high" ref="#charo0303">on</g>de que<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0036-lb-0015"/>da infamada alguna persona: aun<g resp="#CB" cert="high" ref="#charq0303">que</g> no lo diga c<g resp="#CB" cert="high" ref="#charo0303">on</g>
+ <lb xml:id="W0015-00-0036-lb-0016"/>int<g ref="#chare0303" resp="#AW" cert="low">en</g>cion dela infamar. T<g resp="#CB" cert="high" ref="#chara0303">am</g>bi<g ref="#chare0303" resp="#AW" cert="low">en</g> es peccado mortal
+-<lb xml:id="W0015-00-0036-lb-0017"/>contar vno ligeramente los peccados <g resp="#CB" cert="high" ref="#charq0303">que</g> sabe por<lb xml:id="W0015-00-0036-lb-0018"/>oydas de otro alguno. T<g resp="#CB" cert="high" ref="#chara0303">am</g>bien es peccado mor<lb break="no" rendition="#hyphen" xml:id="W0015-00-0036-lb-0019"/>tal, si vee infamar sin ra<g resp="#AW" cert="high" ref="#char0292">z</g>on a su <g resp="#CB" cert="high" ref="#charA753">pro</g>ximo, y no buel<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0036-lb-0020"/>ue por el y su fama, pudi<g ref="#chare0303" resp="#AW" cert="low">en</g>do lo ha<g resp="#AW" cert="high" ref="#char0292">z</g>er: de manera
++<lb xml:id="W0015-00-0036-lb-0017"/>contar vno ligeramente los peccados <g resp="#CB" cert="high" ref="#charq0303">que</g> sabe por<lb xml:id="W0015-00-0036-lb-0018"/>oydas de otro alguno. T<g resp="#CB" cert="high" ref="#chara0303">am</g>bien es peccado mor<lb break="no" rendition="#hyphen" xml:id="W0015-00-0036-lb-0019"/>tal, si vee infamar sin ra<g resp="#AW" cert="high" ref="#char0292">z</g>on a su <g resp="#CB" cert="high" ref="#chara753">pro</g>ximo, y no buel<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0036-lb-0020"/>ue por el y su fama, pudi<g ref="#chare0303" resp="#AW" cert="low">en</g>do lo ha<g resp="#AW" cert="high" ref="#char0292">z</g>er: de manera
+ <lb xml:id="W0015-00-0036-lb-0021"/><g resp="#CB" cert="high" ref="#charq0303">que</g> por su callar queda confirmada la infamia del
+ <lb xml:id="W0015-00-0036-lb-0022"/>otro. Y esto mayorm<g ref="#chare0303" resp="#AW" cert="low">en</g>te ha lugar en los prelados,
+ <lb xml:id="W0015-00-0036-lb-0023"/>padres y señores: que consi<g ref="#chare0303" resp="#AW" cert="low">en</g>ten las murmuracio<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0036-lb-0024"/>nes de sus subduos. Si diro a otro ladron, o le
+ <lb xml:id="W0015-00-0036-lb-0025"/>llamo tuerto, coxo, o qualquier otro defecto del
+ <lb xml:id="W0015-00-0036-lb-0026"/>cuerpo, o del anima, con int<g ref="#chare0303" resp="#AW" cert="low">en</g>cion de le injuriar,
+-<lb xml:id="W0015-00-0036-lb-0027"/>es peccado mortal: y lo mismo si lo di<g resp="#AW" cert="high" ref="#char0292">z</g>e de tal ma<pb break="no" rendition="#noHyphen" facs="facs:W0015-0037" n="[38]" xml:id="W0015-00-0037-pb-040d"/><lb break="no" rendition="#noHyphen" xml:id="W0015-00-0037-lb-0001"/>gaño, o tr<g resp="#CB" cert="high" ref="#chara0303">am</g>pa contra el proximo para auer sus co<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0037-lb-0002"/>sas, o si tiene proposito de andar en tractos <g resp="#CB" cert="high" ref="#charq0303">que</g> a el<lb xml:id="W0015-00-0037-lb-0003"/>tanto se le da <g resp="#CB" cert="high" ref="#charq0303">que</g> sean justos como injustos: de ma<lb break="no" rendition="#hyphen" xml:id="W0015-00-0037-lb-0004"/>nera <g resp="#CB" cert="high" ref="#charq0303">que</g> no mira mas de su prouecho, ora sea licito
++<lb xml:id="W0015-00-0036-lb-0027"/>es peccado mortal: y lo mismo si lo di<g resp="#AW" cert="high" ref="#char0292">z</g>e de tal ma<pb xml:id="asdlkjasd" facs="facs:W0015-0037" n="[38]" break="no" rendition="#noHyphen"/><lb break="no" rendition="#noHyphen"/>nera que el otro queda muy injuriado: aun<g ref="#charq0303">que</g> no 
++<lb/>lo dixesse con tal intencion: y lo mismo, si mando a
++<lb/>otro <g ref="#charq0303">que</g> lo hiziesse, o si dio c<g ref="#charo0303">on</g>sejo para ello, o c<g ref="#charo0304">on</g>sen<lb break="no" rendition="#noHyphen"/>timi<g ref="#chare0303">en</g>to, o si holgo <g ref="#charq0303">que</g> otro lo hiziesse, mas si dixo
++<lb/>alguna iniuria  pequeña, es pecado venial. Reñir
++<lb/>con otros de propósito, dizi<g ref="#chare0303">en</g>do palabras injurio<lb break="no" rendition="#noHyphen"/>sas: tambien es peccado mortal. Si amenazo a o<lb break="no" rendition="#hyphen"/>tro, ha se de ver con <g ref="#charq0303">que</g> palabras y con <g ref="#charq0303">que</g> intención,
++<lb/>para ver si es peccado mortal: especialm<g ref="#chare0303">en</g>te en co<lb break="no" rendition="#noHyphen"/>sas dela fe, o de buenas cost<g ref="#charu0303">um</g>bres, o quando es
++<lb/>con gran instancia y dureza c<g ref="#charo0303">on</g>tra la verdad: pero
++<lb/>arguy<g ref="#chare0303">en</g>do por causa de exercicio, seria otra cosa,
++<lb/>y no peccado mortal. Tambien es malo ser uno
++<lb/>rencilloso,oponiendo se contra todos en sus pla<lb break="no" rendition="#noHyphen"/>ticas: de manera que a todos sea penoso. Tambi<g ref="#chare0304">en</g>
++<lb/>es peccado mortal sembrar discordia y discensio<lb break="no" rendition="#noHyphen"/>nes entre algunas personas, o sustentarlas con
++<lb/>intencion delas sembrar, o c<g ref="#charo0303">on</g>servar.  Mayormen<lb break="no" rendition="#noHyphen"/>te ha lugar esto enlos <g ref="#chare0304">que</g> quieren ser cabeças de v<g ref="#chara0304">an</g><lb break="no" rendition="#noHyphen"/>dos, o seguirlas. Y lo mesmo es qu<g ref="#chara0304">an</g>do dize o ha<lb break="no" rendition="#hyphen"/>ze algo por donde se sigan discordias, si son lige<lb break="no" rendition="#noHyphen"/>ras, o de poco peso: es peccado venial. Si burlo
++<lb/>de alguno con int<g ref="#chare0304">en</g>cion de lo afr<g ref="#chare0304">en</g>tar: o de tal suer<lb break="no" rendition="#noHyphen"/>te que el otro quedasse afrentado: aunque no lo hi<lb break="no" rendition="#noHyphen"/>ziesse con a<g ref="#charq0303">que</g>lla int<g ref="#chare0303">en</g>cion. Esto ha lugar qu<g ref="#chara0303">an</g>do la
++<lb/>burla no para hasta hazerle decir, o hazer descon<lb break="no" rendition="#noHyphen"/>ciertos: y lo mesmo se haze a los mochachos dar<pb xml:id="zrkldfdsfliuf" break="no" rendition="#noHyphen" facs="facs:W0015-0038" n="[39]"/><lb break="no" rendition="#noHyphen"/>se de puñadas. Pero burlar de otros livianam<g ref="#chare0303">en</g>te
++<lb/>por passati<g ref="#chare0304">em</g>po: no es peccado mortal. Maldezir
++<lb/>a otro: diziendole alg<g ref="#charu0303">un</g> mal, ora sea de anima, ora
++<lb/>sea de cuerpo, o de bienes temporales o de fama:
++<lb/>es peccado  mortal. Si alguno maldize el dia en <g ref="#charq0303">que</g>
++<lb/>nascio u otro dia, o el tiempo <g ref="#charq0303">que</g> corre detest<g ref="#chara0303">an</g>do, o
++<lb/>aborresci<g ref="#chare0303">en</g>do deliberadamente su nascimiento: es
++<lb/>peccado mortal. Pero si le maldize avi<g ref="#chare0303">en</g>do respe<lb break="no" rendition="#noHyphen"/>cto a las miserias <g ref="#charq0303">que</g> padesce, o a las travessuras
++<lb/>que haze: delas quales se escusara sino nasciera,
++<lb/>no es peccado. Tambien no es peccado mortal si
++<lb/>las tales maldiciones se dizen para esp<g ref="#chara0303">an</g>tar, o cor<lb break="no" rendition="#noHyphen"/>regir de una manera de cost<g ref="#charu0303">um</g>bre: no es peccado
++<lb/>mortal: qu<g ref="#chara0304">an</g>do por solo aver sido causa de algun
++<lb/>mal, maldize a su nascimiento. Hablar palabras
++<lb/>deshonestas, malo es: pero no es pecado mortal:
++<lb/>sino quando alguno dize, o cuenta cosas luxurio<lb break="no" rendition="#noHyphen"/>sas, para provocarse a si o a otro a delectacion: o
++<lb/>quando alguno siente en si carnal delectacion, la
++<lb/>qual consiste de cosas desonestas: y no por esso de<lb break="no" rendition="#noHyphen"/>xa de hablar las tales cosas. Estos dos casos
++<lb/>es peccado mortal.</p></div>
++
++<div type="section" xml:id="jduetlkfsdasd">              
++<head xml:id="fsdfelskdfsdf"><lb/>¶ El nono mandamiento es.
++<lb/>No dessearas las cosas agenas.</head>                       
++<p xml:id="uenfvldfas">
++<lb/>¶ Peccado mortal es, quando vno desea tener
++<lb/>por maneras injustas lo ageno, o si haze alg<g ref="#charu0303">un</g> en<pb break="no" rendition="#hyphen" facs="facs:W0015-0039" n="[40]" xml:id="W0015-00-0037-pb-040d"/><lb break="no" rendition="#hyphen" xml:id="W0015-00-0037-lb-0001"/>gaño, o tr<g resp="#CB" cert="high" ref="#chara0303">am</g>pa contra el proximo para auer sus co<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0037-lb-0002"/>sas, o si tiene proposito de andar en tractos <g resp="#CB" cert="high" ref="#charq0303">que</g> a el
++<lb xml:id="W0015-00-0037-lb-0003"/>tanto se le da <g resp="#CB" cert="high" ref="#charq0303">que</g> sean justos como injustos: de ma<lb break="no" rendition="#hyphen" xml:id="W0015-00-0037-lb-0004"/>nera <g resp="#CB" cert="high" ref="#charq0303">que</g> no mira mas de su prouecho, ora sea licito
+ <lb xml:id="W0015-00-0037-lb-0005"/>ora no. O si alguno es medianero, o da c<g resp="#CB" cert="high" ref="#charo0303">on</g>sejo pa<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0037-lb-0006"/>ra lo sobredicho: es peccado mortal.</p>
+                     </div>
+                     <div type="section" xml:id="W0015-00-0037-d3-0417">
+@@ -1241,7 +1288,7 @@
+ <lb xml:id="W0015-00-0037-lb-0015"/>cosas, o si hi<g resp="#AW" cert="high" ref="#char0292">z</g>o señas para prouocar a alg<g resp="#CB" cert="high" ref="#charu0303">un</g>a mu<lb break="no" rendition="#hyphen" xml:id="W0015-00-0037-lb-0016"/>ger a peccar, todo lo dicho es peccado mortal: y
+ <lb xml:id="W0015-00-0037-lb-0017"/>si ha<g resp="#AW" cert="high" ref="#char0292">z</g>e enla yglesia lo sobredicho, es mas graue
+ <lb xml:id="W0015-00-0037-lb-0018"/>por ra<g resp="#AW" cert="high" ref="#char0292">z</g><g resp="#CB" cert="high" ref="#charo0303">on</g> del lugar sagrado: y mucho peor si se ha<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0037-lb-0019"/><g resp="#AW" cert="high" ref="#char0292">z</g>e enla missa. ¶ Aqui se pueden de<g resp="#AW" cert="high" ref="#char0292">z</g>ir todos los
+-<lb xml:id="W0015-00-0037-lb-0020"/>actos, obras y astucias, sotile<g resp="#AW" cert="high" ref="#char0292">z</g>as <g resp="#CB" cert="high" ref="#char204A">y</g> inu<g ref="#chare0303" resp="#AW" cert="low">en</g>ciones <g resp="#CB" cert="high" ref="#charEBD1">de</g>
++<lb xml:id="W0015-00-0037-lb-0020"/>actos, obras y astucias, sotile<g resp="#AW" cert="high" ref="#char0292">z</g>as <g resp="#CB" cert="high" ref="#char204a">y</g> inu<g ref="#chare0303" resp="#AW" cert="low">en</g>ciones <g resp="#CB" cert="high" ref="#charebd1">de</g>
+ <lb xml:id="W0015-00-0037-lb-0021"/>los <g resp="#CB" cert="high" ref="#charq0303">que</g> tratan del amor libidinoso, los quales ellos
+ <lb xml:id="W0015-00-0037-lb-0022"/>vsan y saben mejor, si lo quisieren de<g resp="#AW" cert="high" ref="#char0292">z</g>ir: y todos
+ <lb xml:id="W0015-00-0037-lb-0023"/>ellos son de si pecado mortal. qu<g resp="#CB" cert="high" ref="#chara0303">an</g>do se endereca
+@@ -1252,11 +1299,11 @@
+                         <p xml:id="W0015-00-0037-pa-0429">
+ <lb xml:id="W0015-00-0037-lb-0025"/>¶ Acabado de confessar sus peccados, cer<lb break="no" rendition="#hyphen" xml:id="W0015-00-0037-lb-0026"/>cara la confession: di<g resp="#AW" cert="high" ref="#char0292">z</g>iendo assi.</p>
+                         <p xml:id="W0015-00-0038-pa-042a">
+-<pb facs="facs:W0015-0038" n="[39]" xml:id="W0015-00-0038-pb-040e"/>
+-<lb xml:id="W0015-00-0038-lb-0001"/>¶ De todos estos peccados c<g resp="#CB" cert="high" ref="#charo0303">on</g>fessados, y <g resp="#CB" cert="high" ref="#charEBD1">de</g> otros
++<pb facs="facs:W0015-0040" n="[41]" xml:id="W0015-00-0038-pb-040e"/>
++<lb xml:id="W0015-00-0038-lb-0001"/>¶ De todos estos peccados c<g resp="#CB" cert="high" ref="#charo0303">on</g>fessados, y <g resp="#CB" cert="high" ref="#charebd1">de</g> otros
+ <lb xml:id="W0015-00-0038-lb-0002"/>muchos <g resp="#CB" cert="high" ref="#charq0303">que</g> por falta y descuydo de mi conciencia
+ <lb xml:id="W0015-00-0038-lb-0003"/>se me aur<g resp="#CB" cert="high" ref="#chara0303">an</g> oluidado, ora mortales o veniales: t<g resp="#CB" cert="high" ref="#chara0303">an</g><lb break="no" rendition="#hyphen" xml:id="W0015-00-0038-lb-0004"/>tas qu<g resp="#CB" cert="high" ref="#chara0303">an</g>tas ve<g resp="#AW" cert="high" ref="#char0292">z</g>es yo aure off<g ref="#chare0303" resp="#AW" cert="low">en</g>dido a <choice><abbr>n<g ref="#charr0303" resp="#AW" cert="high">r</g>o</abbr><expan resp="#CB" cert="high" xml:id="W0015-00-0038-ex-03e9">nuestro</expan></choice> señor, me
+-<lb xml:id="W0015-00-0038-lb-0005"/>acuso grauem<g ref="#chare0303" resp="#AW" cert="low">en</g>te <g resp="#CB" cert="high" ref="#charEBD1">de</g>llos, y le dem<g resp="#CB" cert="high" ref="#chara0303">an</g>do <g resp="#CB" cert="high" ref="#charA751">per</g>don: <g resp="#CB" cert="high" ref="#char204A">y</g> a vos
++<lb xml:id="W0015-00-0038-lb-0005"/>acuso grauem<g ref="#chare0303" resp="#AW" cert="low">en</g>te <g resp="#CB" cert="high" ref="#charebd1">de</g>llos, y le dem<g resp="#CB" cert="high" ref="#chara0303">an</g>do <g resp="#CB" cert="high" ref="#chara751">per</g>don: <g resp="#CB" cert="high" ref="#char204a">y</g> a vos
+ <lb xml:id="W0015-00-0038-lb-0006"/>padre me absoluays y me deys penit<g ref="#chare0303" resp="#AW" cert="low">en</g>cia dellos.</p>
+                     </div>
+ 
+@@ -1278,7 +1325,7 @@
+ <lb xml:id="W0015-00-0038-lb-0025"/>hurtar en lugar sagrado. Es circ<g resp="#CB" cert="high" ref="#charu0303">un</g>stancia de este
+ <lb xml:id="W0015-00-0038-lb-0026"/>hurto: y <g resp="#CB" cert="high" ref="#charq0303">que</g> trae malicia contra distincio precepto.
+ <lb xml:id="W0015-00-0038-lb-0027"/>Otro exemplo. Herir a persona ecclesiastica, son
+-<pb facs="facs:W0015-0039" n="[40]" xml:id="W0015-00-0039-pb-040f"/>
++<pb facs="facs:W0015-0041" n="[42]" xml:id="W0015-00-0039-pb-040f"/>
+ <lb xml:id="W0015-00-0039-lb-0001"/>dos malicias. La vna del acto (que es herir.) La
+ <lb xml:id="W0015-00-0039-lb-0002"/>otra dela circunst<g resp="#CB" cert="high" ref="#chara0303">an</g>cia dela persona ecclestastica.</p>
+                         <p xml:id="W0015-00-0039-pa-042c">
+@@ -1297,7 +1344,7 @@
+ <lb xml:id="W0015-00-0039-lb-0019"/>pensami<g ref="#chare0303" resp="#AW" cert="low">en</g>to: con int<g ref="#chare0303" resp="#AW" cert="low">en</g>cion de ha<g resp="#AW" cert="high" ref="#char0292">z</g>er los tales actos
+ <lb xml:id="W0015-00-0039-lb-0020"/>enla yglesia. ¶ Lo segundo, para <g resp="#CB" cert="high" ref="#charq0303">que</g> las personas
+ <lb xml:id="W0015-00-0039-lb-0021"/>ecclesiasticas sean libres: por lo qual el herir dela
+-<lb xml:id="W0015-00-0039-lb-0022"/>persona ecclesiastica, y hurtar dela yglesia, el sa<lb break="no" rendition="#hyphen" xml:id="W0015-00-0039-lb-0023"/>car hombre por fuerça dela yglesia: el cometer lu<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0039-lb-0024"/>xuria enla yglesia, son circ<g resp="#CB+" cert="high" ref="#charu0303">un</g>st<g resp="#CB" cert="high" ref="#chara0303">an</g>cias <g resp="#CB" cert="high" ref="#charq0303">que</g> son necessa<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0039-lb-0025"/>rias a confessar. Lo mismo digo: <g resp="#CB" cert="high" ref="#charq0303">que</g> el peccado he<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0039-lb-0026"/>cho enel dia dela fiesta (segun la opinion de algu<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0039-lb-0027"/>nos doctores) no es circunst<g resp="#CB" cert="high" ref="#chara0303">an</g>cia necessaria de c<g resp="#CB" cert="high" ref="#charo0303">on</g><pb break="no" rendition="#noHyphen" facs="facs:W0015-0040" n="[41]" xml:id="W0015-00-0040-pb-0410"/><lb break="no" rendition="#noHyphen" xml:id="W0015-00-0040-lb-0001"/>fessar: por la mesma ra<g resp="#AW" cert="high" ref="#char0292">z</g>on sobredicha. Por<g resp="#CB" cert="high" ref="#charq0303">que</g> no
++<lb xml:id="W0015-00-0039-lb-0022"/>persona ecclesiastica, y hurtar dela yglesia, el sa<lb break="no" rendition="#hyphen" xml:id="W0015-00-0039-lb-0023"/>car hombre por fuerça dela yglesia: el cometer lu<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0039-lb-0024"/>xuria enla yglesia, son circ<g resp="#CB+" cert="high" ref="#charu0303">un</g>st<g resp="#CB" cert="high" ref="#chara0303">an</g>cias <g resp="#CB" cert="high" ref="#charq0303">que</g> son necessa<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0039-lb-0025"/>rias a confessar. Lo mismo digo: <g resp="#CB" cert="high" ref="#charq0303">que</g> el peccado he<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0039-lb-0026"/>cho enel dia dela fiesta (segun la opinion de algu<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0039-lb-0027"/>nos doctores) no es circunst<g resp="#CB" cert="high" ref="#chara0303">an</g>cia necessaria de c<g resp="#CB" cert="high" ref="#charo0303">on</g><pb break="no" rendition="#noHyphen" facs="facs:W0015-0042" n="[43]" xml:id="W0015-00-0040-pb-0410"/><lb break="no" rendition="#noHyphen" xml:id="W0015-00-0040-lb-0001"/>fessar: por la mesma ra<g resp="#AW" cert="high" ref="#char0292">z</g>on sobredicha. Por<g resp="#CB" cert="high" ref="#charq0303">que</g> no
+ <lb xml:id="W0015-00-0040-lb-0002"/>todo peccado contradi<g resp="#AW" cert="high" ref="#char0292">z</g>e a la sanctidad y c<g resp="#CB" cert="high" ref="#charo0303">on</g>sagra<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0040-lb-0003"/>cion dela fiesta a<g resp="#CB" cert="high" ref="#charq0303">que</g> esta deputada: segun la opini<g resp="#CB" cert="high" ref="#charo0303">on</g>
+ <lb xml:id="W0015-00-0040-lb-0004"/>de algunos sanctos doctores. La fiesta se sanctifi<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0040-lb-0005"/>co c<g resp="#CB" cert="high" ref="#charo0303">on</g>tra las obras seruiles, <g resp="#CB" cert="high" ref="#charq0303">que</g> son obras mecani<lb break="no" rendition="#hyphen" xml:id="W0015-00-0040-lb-0006"/>cas: y por t<g resp="#CB" cert="high" ref="#chara0303">an</g>to obrar obra mecanica, y seruil, quie<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0040-lb-0007"/>bra la fiesta, y no el pecado de la luxuria, o otros 
+ <lb xml:id="W0015-00-0040-lb-0008"/>pecados. Assi <g resp="#CB" cert="high" ref="#charq0303">que</g> las circ<g resp="#CB" cert="high" ref="#charu0303">un</g>st<g resp="#CB" cert="high" ref="#chara0303">an</g>cias se h<g resp="#CB" cert="high" ref="#chara0303">an</g> de c<g resp="#CB" cert="high" ref="#charo0303">on</g>fessar
+@@ -1310,7 +1357,7 @@
+ <lb xml:id="W0015-00-0040-lb-0021"/>primero: el luxuriar. Lo seg<g resp="#CB" cert="high" ref="#charu0303">un</g>do: con muger casa<lb break="no" rendition="#hyphen" xml:id="W0015-00-0040-lb-0022"/>da. Lo tercero: la intencion de hurtarle sus dine<lb break="no" rendition="#hyphen" xml:id="W0015-00-0040-lb-0023"/>ros. Lo quarto: que hi<g resp="#AW" cert="high" ref="#char0292">z</g>o a<g resp="#CB" cert="high" ref="#charq0303">que</g>l acto de luxuria enla
+ <lb xml:id="W0015-00-0040-lb-0024"/>yglesia. Y si quiso ha<g resp="#AW" cert="high" ref="#char0292">z</g>er el hurto enla yglesia: tam<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0040-lb-0025"/>bien lo ha de confessar, por el sacrilegio distincto
+ <lb xml:id="W0015-00-0040-lb-0026"/>que se comete en el hurto en la yglesia, o lo quiso
+-<lb xml:id="W0015-00-0040-lb-0027"/>cometer en la yglesia: porque todas estas circun<pb break="no" rendition="#hyphen" facs="facs:W0015-0041" n="[42]" xml:id="W0015-00-0041-pb-0411"/><lb break="no" rendition="#noHyphen" xml:id="W0015-00-0041-lb-0001"/>stancias: y cada vna dellas por si, son c<g resp="#CB" cert="high" ref="#charo0303">on</g>tra distin<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0041-lb-0002"/>ctos preceptos de dios. Ay otra manera de circ<g resp="#CB" cert="high" ref="#charu0303">un</g><lb break="no" rendition="#noHyphen" xml:id="W0015-00-0041-lb-0003"/>stancias, <g resp="#CB" cert="high" ref="#charq0303">que</g> di<g resp="#AW" cert="high" ref="#char0292">z</g>en malicia: pero no distincta dela
++<lb xml:id="W0015-00-0040-lb-0027"/>cometer en la yglesia: porque todas estas circun<pb break="no" rendition="#hyphen" facs="facs:W0015-0043" n="[44]" xml:id="W0015-00-0041-pb-0411"/><lb break="no" rendition="#noHyphen" xml:id="W0015-00-0041-lb-0001"/>stancias: y cada vna dellas por si, son c<g resp="#CB" cert="high" ref="#charo0303">on</g>tra distin<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0041-lb-0002"/>ctos preceptos de dios. Ay otra manera de circ<g resp="#CB" cert="high" ref="#charu0303">un</g><lb break="no" rendition="#noHyphen" xml:id="W0015-00-0041-lb-0003"/>stancias, <g resp="#CB" cert="high" ref="#charq0303">que</g> di<g resp="#AW" cert="high" ref="#char0292">z</g>en malicia: pero no distincta dela
+ <lb xml:id="W0015-00-0041-lb-0004"/>obra princ<unclear cert="high" resp="#AW" reason="damage" xml:id="W0015-00-0041-un-03ea">i</unclear>pal: antes se embeu<g ref="#chare0303" resp="#AW" cert="low">en</g> enla malicia del
+ <lb xml:id="W0015-00-0041-lb-0005"/>acto. Estas circunstancias aun<g resp="#CB" cert="high" ref="#charq0303">que</g> añaden a la gra<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0041-lb-0006"/>uedad del acto: pero no tra<g ref="#chare0303" resp="#AW" cert="low">en</g> obligacion de c<g resp="#CB" cert="high" ref="#charo0303">on</g>fes<lb break="no" rendition="#hyphen" xml:id="W0015-00-0041-lb-0007"/>sarse. Ex<g ref="#chare0303" resp="#AW" cert="high">em</g>plo. Enla fornicacion (conuiene saber)
+ <lb xml:id="W0015-00-0041-lb-0008"/>Soltero con soltera, no si<g ref="#chare0303" resp="#AW" cert="low">en</g>do virgen. Los actos
+@@ -1323,20 +1370,20 @@
+ <lb xml:id="W0015-00-0041-lb-0020"/>grado. Por<g resp="#CB" cert="high" ref="#charq0303">que</g> segun los doctores, padre y madre
+ <lb xml:id="W0015-00-0041-lb-0021"/>son prohibidos por especial prohibicion de con<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0041-lb-0022"/>sanguinidad. Y por t<g resp="#CB" cert="high" ref="#chara0303">an</g>to tener parte con hija o c<g resp="#CB" cert="high" ref="#charo0303">on</g>
+ <lb xml:id="W0015-00-0041-lb-0023"/>madre, y a todo mas c<g resp="#CB" cert="high" ref="#charo0303">on</g> hermana, paresce ser ne<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0041-lb-0024"/>cessario expressarse enla confessi<g resp="#CB" cert="high" ref="#charo0303">on</g>. Assi mesmo te<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0041-lb-0025"/>ner pensami<g ref="#chare0303" resp="#AW" cert="low">en</g>tos su<g resp="#AW" cert="high" ref="#char0292">z</g>ios: y aun<g resp="#CB" cert="high" ref="#charq0303">que</g> sean acompaña<lb break="no" rendition="#hyphen" xml:id="W0015-00-0041-lb-0026"/>dos c<g resp="#CB" cert="high" ref="#charo0303">on</g> platica enla yglesia, no para cometerse en<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0041-lb-0027"/>la yglesia: sino para fuera, como a ve<g resp="#AW" cert="high" ref="#char0292">z</g>es ac<g resp="#CB" cert="high" ref="#charo0303">on</g>tesce,
+-<pb facs="facs:W0015-0042" n="[43]" xml:id="W0015-00-0042-pb-0412"/>
++<pb facs="facs:W0015-0044" n="[45]" xml:id="W0015-00-0042-pb-0412"/>
+ <lb xml:id="W0015-00-0042-lb-0001"/>que vno requiere a alguna muger enla yglesia pa<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0042-lb-0002"/>ra cometer su peccado fuera della. Esto tal aun<g resp="#CB" cert="high" ref="#charq0303">que</g>
+ <lb xml:id="W0015-00-0042-lb-0003"/>sea muy graue peccado de Luxuria: pero no para
+ <lb xml:id="W0015-00-0042-lb-0004"/>que mude a otro especie de luxuria: pues aun<g resp="#CB" cert="high" ref="#charq0303">que</g> el
+ <lb xml:id="W0015-00-0042-lb-0005"/>tal obiecto delas tales platicas es luxuria, no pa<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0042-lb-0006"/>ra cometerse enla yglesia, ni menos va contra la
+ <lb xml:id="W0015-00-0042-lb-0007"/>sanctidad a <g resp="#CB" cert="high" ref="#charq0303">que</g> la yglesia principalmente se consa<lb break="no" rendition="#hyphen" xml:id="W0015-00-0042-lb-0008"/>gro: que es para <g resp="#CB" cert="high" ref="#charq0303">que</g> enella no se derrame simi<g ref="#chare0303" resp="#AW" cert="low">en</g>te o
+ <lb xml:id="W0015-00-0042-lb-0009"/>sangre. Estos traygo por exemplo <g resp="#CB" cert="high" ref="#charq0303">que</g>
+-                            son mas gra<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0042-lb-0010"/>ues: por<g resp="#CB" cert="high" ref="#charq0303">que</g> por ellos enti<g ref="#chare0303" resp="#AW" cert="low">en</g>d<g resp="#CB" cert="high" ref="#chara0303">an</g> lo <g resp="#CB" cert="high" ref="#charq0303">que</g> es de menos gra<lb break="no" rendition="#hyphen" xml:id="W0015-00-0042-lb-0011"/>uedad. La dubda es en <g resp="#CB" cert="medium" ref="#charq0303">que</g> circunstancia cae la cir<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0042-lb-0012"/>cunstancia de numero delos peccados y la circ<g resp="#CB" cert="high" ref="#charu0303">un</g><lb break="no" rendition="#noHyphen" xml:id="W0015-00-0042-lb-0013"/>stancia. Quid. La cantidad del peccado comun<lb break="no" rendition="#hyphen" xml:id="W0015-00-0042-lb-0014"/>mente tienen los doctores, ser debaxo delas pri<lb break="no" rendition="#hyphen" xml:id="W0015-00-0042-lb-0015"/>meras circunstancias <g resp="#CB" cert="high" ref="#charq0303 que">que</g> traen obligacion a se c<g resp="#CB" cert="high" ref="#charo0303">on</g><lb break="no" rendition="#hyphen" xml:id="W0015-00-0042-lb-0016"/>fessar distinctam<g ref="#chare0303" resp="#AW" cert="low">en</g>te: de manera <g resp="#CB" cert="high" ref="#charq0303">que</g> si dos ve<g resp="#AW" cert="high" ref="#char0292">z</g>es er<lb break="no" rendition="#hyphen" xml:id="W0015-00-0042-lb-0017"/>ro o cometio
++                            son mas gra<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0042-lb-0010"/>ues: por<g resp="#CB" cert="high" ref="#charq0303">que</g> por ellos enti<g ref="#chare0303" resp="#AW" cert="low">en</g>d<g resp="#CB" cert="high" ref="#chara0303">an</g> lo <g resp="#CB" cert="high" ref="#charq0303">que</g> es de menos gra<lb break="no" rendition="#hyphen" xml:id="W0015-00-0042-lb-0011"/>uedad. La dubda es en <g resp="#CB" cert="medium" ref="#charq0303">que</g> circunstancia cae la cir<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0042-lb-0012"/>cunstancia de numero delos peccados y la circ<g resp="#CB" cert="high" ref="#charu0303">un</g><lb break="no" rendition="#noHyphen" xml:id="W0015-00-0042-lb-0013"/>stancia. Quid. La cantidad del peccado comun<lb break="no" rendition="#hyphen" xml:id="W0015-00-0042-lb-0014"/>mente tienen los doctores, ser debaxo delas pri<lb break="no" rendition="#hyphen" xml:id="W0015-00-0042-lb-0015"/>meras circunstancias <g resp="#CB" cert="high" ref="#charq0303">que</g> traen obligacion a se c<g resp="#CB" cert="high" ref="#charo0303">on</g><lb break="no" rendition="#hyphen" xml:id="W0015-00-0042-lb-0016"/>fessar distinctam<g ref="#chare0303" resp="#AW" cert="low">en</g>te: de manera <g resp="#CB" cert="high" ref="#charq0303">que</g> si dos ve<g resp="#AW" cert="high" ref="#char0292">z</g>es er<lb break="no" rendition="#hyphen" xml:id="W0015-00-0042-lb-0017"/>ro o cometio
+                             peccado de luxuria, no basta de<g resp="#AW" cert="high" ref="#char0292">z</g>ir.
+ <lb xml:id="W0015-00-0042-lb-0018"/>He cometido peccado de luxuria muchas ve<g resp="#AW" cert="high" ref="#char0292">z</g>es
+ <lb xml:id="W0015-00-0042-lb-0019"/>sino que ha de expressar distinctamente como las
+ <lb xml:id="W0015-00-0042-lb-0020"/>otras circunstancias: di<g resp="#AW" cert="high" ref="#char0292">z</g>iendo el numero deter<lb break="no" rendition="#hyphen" xml:id="W0015-00-0042-lb-0021"/>minado, t<g resp="#CB" cert="high" ref="#chara0303">an</g>tas ve<g resp="#AW" cert="high" ref="#char0292">z</g>es. Lo mismo digo de los pec<lb break="no" rendition="#hyphen" xml:id="W0015-00-0042-lb-0022"/>cados del pensami<g ref="#chare0303" resp="#AW" cert="low">en</g>to, que no puso por obra: por<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0042-lb-0023"/>que los pensami<g ref="#chare0303" resp="#AW" cert="low">en</g>tos que van con la obra, son vn
+ <lb xml:id="W0015-00-0042-lb-0024"/>mesmo peccado, y ent<g resp="#CB" cert="high" ref="#charo0303">on</g>ces basta c<g resp="#CB" cert="high" ref="#charo0303">on</g>fessar la obra:
+-<lb xml:id="W0015-00-0042-lb-0025"/>aun<g resp="#CB" cert="high" ref="#charq0303">que</g> no bastaria silos pensamtentos son distin<lb break="no" rendition="#hyphen" xml:id="W0015-00-0042-lb-0026"/>cto ti<g ref="#chare0303" resp="#AW" cert="high">em</g>po, que entonces por si sehan de confessar<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0042-lb-0027"/>los tales pensamientos. Y esto <g resp="#CB" cert="high" ref="#charq0303">que</g> digo del c<g resp="#CB" cert="high" ref="#charo0303">on</g>fessar <pb facs="facs:W0015-0043" n="[44]" xml:id="W0015-00-0043-pb-0413"/>
++<lb xml:id="W0015-00-0042-lb-0025"/>aun<g resp="#CB" cert="high" ref="#charq0303">que</g> no bastaria silos pensamtentos son distin<lb break="no" rendition="#hyphen" xml:id="W0015-00-0042-lb-0026"/>cto ti<g ref="#chare0303" resp="#AW" cert="high">em</g>po, que entonces por si sehan de confessar<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0042-lb-0027"/>los tales pensamientos. Y esto <g resp="#CB" cert="high" ref="#charq0303">que</g> digo del c<g resp="#CB" cert="high" ref="#charo0303">on</g>fessar <pb facs="facs:W0015-0045" n="[46]" xml:id="W0015-00-0043-pb-0413"/>
+ <lb xml:id="W0015-00-0043-lb-0001"/>quantas ve<g resp="#AW" cert="high" ref="#char0292">z</g>es no se ha de entender tan rigurosa<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0043-lb-0002"/>mente como suena, mas de quanto hecha la dili<lb break="no" rendition="#hyphen" xml:id="W0015-00-0043-lb-0003"/>gencia delos peccados, y del numero dellos, assi
+ <lb xml:id="W0015-00-0043-lb-0004"/>dela obra como delas circunstancias <g resp="#CB" cert="high" ref="#charq0303">que</g> deximos
+ <lb xml:id="W0015-00-0043-lb-0005"/>ser necessarias de c<g resp="#CB" cert="high" ref="#charo0303">on</g>fessar, el numero de que esta
+@@ -1349,10 +1396,10 @@
+ <lb xml:id="W0015-00-0043-lb-0019"/>con parientes, y tantos con parienta, y t<g resp="#CB" cert="high" ref="#chara0303">an</g>tos con<lb xml:id="W0015-00-0043-lb-0020"/>soltera: y assi de las otras especies de peccados.</p>
+                         <p xml:id="W0015-00-0043-pa-042d">
+                            
+-<lb xml:id="W0015-00-0043-lb-0021"/>Y en esto ha de tener mucha cautela el penitente<lb xml:id="W0015-00-0043-lb-0022"/>al tiempo que piensa sus peccados, de los redu<lb break="no" rendition="#hyphen" xml:id="W0015-00-0043-lb-0023"/><g resp="#AW" cert="high" ref="#char0292">z</g>ir a vna breue suma: los pecados <g resp="#CB" cert="high" ref="#charEBD1">de</g> cada especie.
++<lb xml:id="W0015-00-0043-lb-0021"/>Y en esto ha de tener mucha cautela el penitente<lb xml:id="W0015-00-0043-lb-0022"/>al tiempo que piensa sus peccados, de los redu<lb break="no" rendition="#hyphen" xml:id="W0015-00-0043-lb-0023"/><g resp="#AW" cert="high" ref="#char0292">z</g>ir a vna breue suma: los pecados <g resp="#CB" cert="high" ref="#charebd1">de</g> cada especie.
+ <lb xml:id="W0015-00-0043-lb-0024"/>Exemplo. Piensa en los peccados de luxuria, a<lb xml:id="W0015-00-0043-lb-0025"/>parte los peccados que son cerca de soltera. Los
+ <lb xml:id="W0015-00-0043-lb-0026"/>de pensamiento a vna parte. Los de obra a otra
+-<lb xml:id="W0015-00-0043-lb-0027"/>parte: y sacar en suma quantos son los peccados <pb facs="facs:W0015-0044" n="[45]" xml:id="W0015-00-0044-pb-0414"/>
++<lb xml:id="W0015-00-0043-lb-0027"/>parte: y sacar en suma quantos son los peccados <pb facs="facs:W0015-0046" n="[47]" xml:id="W0015-00-0044-pb-0414"/>
+                            
+ <lb xml:id="W0015-00-0044-lb-0001"/>de p<g ref="#chare0303" resp="#AW" cert="low">en</g>samiento <g resp="#CB" cert="high" ref="#charq0303">que</g> has cometido con tantas muge<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0044-lb-0002"/>res solteras. Y si hallares <g resp="#CB" cert="high" ref="#charq0303">que</g> los tales pecados de
+ <lb xml:id="W0015-00-0044-lb-0003"/>p<g ref="#chare0303" resp="#AW" cert="low">en</g>sami<g ref="#chare0303" resp="#AW" cert="low">en</g>to tienes memorados en numero cierto,
+@@ -1369,7 +1416,7 @@
+ <lb xml:id="W0015-00-0044-lb-0024"/>de<g resp="#AW" cert="high" ref="#char0292">z</g>ir cinco o veynte ducados, o t<g resp="#CB" cert="high" ref="#chara0303">an</g>ta c<g resp="#CB" cert="high" ref="#chara0303">an</g>tidad. Ay
+ <lb xml:id="W0015-00-0044-lb-0025"/>otro genero de circ<g resp="#CB" cert="high" ref="#charu0303">un</g>stancias, <g resp="#CB" cert="high" ref="#charq0303">que</g> ni mud<g resp="#CB" cert="high" ref="#chara0303">an</g>, ni agra<lb break="no" rendition="#noHyphen" xml:id="W0015-00-0044-lb-0026"/>uan la malicia del peccado. Di<g resp="#AW" cert="high" ref="#char0292">z</g>e <g resp="#CB" cert="high" ref="#charq0303">que</g> ha quebrado
+ <lb xml:id="W0015-00-0044-lb-0027"/>el ayuno, no ha<g resp="#AW" cert="high" ref="#char0292">z</g>e al caso <g resp="#CB" cert="high" ref="#charq0303">que</g> sea c<g resp="#CB" cert="high" ref="#charo0303">on </g>trucha o baruo.
+-<pb facs="facs:W0015-0045" n="[46]" xml:id="W0015-00-0045-pb-0415"/>
++<pb facs="facs:W0015-0047" n="[48]" xml:id="W0015-00-0045-pb-0415"/>
+ <lb xml:id="W0015-00-0045-lb-0001"/>Otro exemplo. Si ha quebrado la fiesta, no ha<g resp="#AW" cert="high" ref="#char0292">z</g>e
+ <lb xml:id="W0015-00-0045-lb-0002"/>mas al caso, <g resp="#CB" cert="high" ref="#charq0303">que</g> sea de sant Lor<g ref="#chare0303" resp="#AW" cert="low">en</g>co, que de vn apo<lb break="no" rendition="#hyphen" xml:id="W0015-00-0045-lb-0003"/>stol. O si se hirio, no ha<g resp="#AW" cert="high" ref="#char0292">z</g>e mas <g resp="#CB" cert="high" ref="#charq0303">que</g> sea con el pie y<g resp="#AW" cert="high" ref="#char0292">z</g><lb break="no" rendition="#hyphen" xml:id="W0015-00-0045-lb-0004"/>quierdo que c<g resp="#CB" cert="high" ref="#charo0303">on</g> el derecho: c<g resp="#CB" cert="high" ref="#charo0303">on</g> tal <g resp="#CB" cert="high" ref="#charq0303">que</g> el golpe sea tal
+ <lb xml:id="W0015-00-0045-lb-0005"/>con el vno como con el otro. Si cometio luxuria:
+@@ -1398,4 +1445,4 @@
+ 
+         </body>
+     </text>
+-</TEI>
+\ No newline at end of file
++</TEI>

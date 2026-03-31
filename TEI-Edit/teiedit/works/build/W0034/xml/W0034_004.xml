@@ -1,0 +1,757 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?><?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml"
+	schematypens="http://purl.oclc.org/dsdl/schematron"?><TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:tei="http://www.tei-c.org/ns/1.0" xml:id="W0034">
+  <teiHeader>
+        <fileDesc>
+            
+            <titleStmt>
+                <title type="short" level="m">Treinta proposiciones</title>
+                <title type="main" level="m">Aqui se co[n]tiene[n] treynta proposiciones muy juridicas: en las quales sumaria y succintamente se toca[n] muchas cosas pertenecie[n]tes al derecho q[ue] la yglesia y los principes christianos tienen / o puede[n] tener sobre los infieles de qual quier especie que sean</title>
+                <author>
+                    <persName ref="author:A0018 cerl:cnp01316779 viaf:46758461 gnd:118726625" key="Las Casas, Bartolomé de">
+                        <forename>Bartolomé</forename>
+                        <nameLink>de</nameLink>
+                        <surname>Las Casas</surname>
+                    </persName>
+                </author>
+                <editor xml:id="CB">
+                    <persName ref="gnd:138962987">
+                        <surname>Birr</surname>, <forename>Christiane</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="CC">
+                    <persName ref="orcid:0000-0003-1240-649X" full="yes">
+                        <surname full="yes">Cárdenas Velásquez</surname>, <forename full="yes">Luisa Carolina</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="DG">
+                    <persName ref="orcid:0000-0002-0273-3844">
+                        <surname>Glück</surname>, <forename>David</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="CR">
+                    <persName ref="orcid:0000-0001-5095-1793" full="yes">
+                        <surname full="yes">Rico Carmona</surname>, <forename full="yes">Cindy</forename>
+                    </persName>
+                </editor>
+                <editor xml:id="AW">
+                    <persName ref="orcid:0000-0003-1835-1653 gnd:108835820">
+                        <surname>Wagner</surname>, <forename>Andreas</forename>
+                    </persName>
+                </editor>
+            </titleStmt>
+            
+            <publicationStmt xml:id="publicationStmt">
+            	<xi:include href="../meta/W_Head_general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:fileDesc/tei:publicationStmt/*)">
+            		<xi:fallback><publisher><ref target="https://www.salamanca.school" xml:lang="en">For information about the digital edition, please 
+            					refer to our website.</ref></publisher>
+            		</xi:fallback>
+            	</xi:include>
+            	<date type="digitizedEd" n="unpublished"/>
+            	<idno/>
+            </publicationStmt>
+            <seriesStmt>
+                <xi:include href="../meta/W_Head_general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:fileDesc/tei:seriesStmt/*)">
+                    <xi:fallback>
+                       <title xml:lang="en"><ref target="https://www.salamanca.school" xml:lang="en">The School of Salamanca. A Digital Collection of Sources</ref></title>
+                    </xi:fallback>
+                </xi:include>
+                <biblScope unit="volume" n="unpublished"/>
+            </seriesStmt>
+            
+            <sourceDesc>
+                <biblStruct>
+                    <monogr>
+                        <author>
+                            <persName ref="author:A0018 cerl:cnp01316779 viaf:46758461 gnd:118726625" key="Las Casas, Bartolomé de">
+                                <forename>Bartolomé</forename>
+                                <nameLink>de</nameLink>
+                                <surname>Las Casas</surname>
+                            </persName>
+                        </author>
+                        <title type="short" level="m">Treinta proposiciones</title>
+                        <title type="main" level="m">Aqui se co[n]tiene[n] treynta proposiciones muy juridicas: en las quales sumaria y succintamente se toca[n] muchas cosas pertenecie[n]tes al derecho q[ue] la yglesia y los principes christianos tienen / o puede[n] tener sobre los infieles de qual quier especie que sean</title>
+                        <title type="245a" level="m">Aqui se co[n]tiene[n] treynta proposiciones muy juridicas: en las quales sumaria y succintamente se toca[n] muchas cosas pertenecie[n]tes al derecho q[ue] la yglesia y los principes christianos tienen / o puede[n] tener sobre los infieles de qual quier especie que sean</title>
+                        <imprint>
+                            <pubPlace role="firstEd" ref="getty:7008676" key="Sevilla">[Sevilla]</pubPlace>
+                            <date type="firstEd" when="1552">1552</date>
+                            <publisher n="firstEd">
+                                <persName ref="cerl:cni00036706" key="Trugillo, Sebastián"> <!--not in GND-->
+                                    <forename>Sebastián</forename> 
+                                    <surname>Trugillo</surname>
+                                </persName>
+                            </publisher>
+                        </imprint>
+                        <extent xml:lang="en">[20] p.</extent>
+                    </monogr>
+                </biblStruct>
+                <msDesc type="main">
+                    <msIdentifier>
+                        <repository ref="gnd:4313400-2" xml:lang="es">Bibliotecas de la Universidad de Salamanca</repository>
+                        <idno type="catlink">http://brumario.usal.es/record=b1417287~S1*spi</idno>
+                    </msIdentifier>
+                    <physDesc>
+                        <typeDesc>
+                            <typeNote n="antiqua" xml:lang="en">Antiqua typeface</typeNote>
+                        </typeDesc>
+                    </physDesc>
+                </msDesc>
+            </sourceDesc>
+        </fileDesc>
+        
+        <profileDesc>
+           <langUsage>
+              <language ident="es" n="main" xml:lang="en">Spanish</language>
+           </langUsage>
+        </profileDesc>
+        
+        <encodingDesc>
+            <xi:include href="../meta/W_Head_general.xml" xpointer="projectDesc">
+                <xi:fallback><projectDesc><p xml:id="d1e222"><ref target="https://www.salamanca.school" xml:lang="en">For information about the project, please 
+                               refer to our website.</ref></p></projectDesc>
+                </xi:fallback>
+            </xi:include>
+            <editorialDecl>
+                <xi:include href="../meta/W_Head_general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:encodingDesc/tei:editorialDecl/tei:p)">
+                    <xi:fallback><p xml:id="d1e233"><ref target="https://www.salamanca.school" xml:lang="en">For information about the digital edition, please 
+                                refer to our website.</ref></p>
+                    </xi:fallback>
+                </xi:include>
+            </editorialDecl>
+            <xi:include href="../meta/W_Head_general.xml" xpointer="xmlns(tei=http://www.tei-c.org/ns/1.0)xpointer(//tei:encodingDesc/tei:editorialDecl/following-sibling::*)">
+                <xi:fallback/>
+            </xi:include>
+            <xi:include href="../meta/Sonderzeichen.xml" xpointer="charDecl">
+                <xi:fallback><charDecl><char xml:lang="en"><note xml:id="meta-no-0001">The definition of 
+                     non-standard characters could not be embedded, but it is available on the 
+                     <ref target="https://files.salamanca.school/Sonderzeichen.xml">project website</ref>.</note></char></charDecl>
+                </xi:fallback>
+            </xi:include>
+			<appInfo>
+                <application ident="auto-markup" version="1" xml:id="auto">
+                    <desc>Automatically generated markup.</desc>
+                </application>
+            </appInfo>
+        </encodingDesc>
+        
+        <revisionDesc status="a_raw">
+            <listChange ordered="true">
+                <change who="#CR #auto" when="2018-11-28" status="a_raw" xml:id="W0034_change_03" xml:lang="en">Added @xml:id and line numbering.</change>
+                <change who="#CR #auto" when="2018-11-28" status="a_raw" xml:lang="en" xml:id="W0034_change_003">Tagged special characters.</change>
+                <change who="#DG" when="2018-11-28" status="c_hyph_proposed" xml:lang="en">Revised metadata and title page.</change>
+                <change who="#DG" when="2018-11-27" status="c_hyph_proposed" xml:lang="en">Annotated title page and line/page breaks further.</change>
+                <change who="#CR" when="2018-11-26" status="a_raw" xml:lang="en">Transformation from transcription to TEI, structural annotation</change>
+                <change who="#CB #CC" when="2018-11-23" status="a_raw" xml:lang="en">Transcription</change>
+                <change who="#DG" when="2018-09-26" status="a_raw" xml:lang="en">Revision of teiHeader and status reset; set language to "es".</change>
+                <change who="#AW" when="2017-07-30" status="a_raw">Create template/file for metadata</change>
+                <change who="#CB" when="2012" status="a_raw" xml:lang="en">Identification of basic bibliographic data.</change>
+            </listChange>
+        </revisionDesc>
+    </teiHeader>
+     
+<text type="work_monograph" xml:lang="es" xml:id="completeWork">   
+<front xml:id="W0034-00-0001-fm-03e8">
+<titlePage xml:id="W0034-00-0001-tp-03e8">
+<pb n="[i]" facs="W0034-0001" xml:id="W0034-00-0001-pb-03e8"/>
+<docTitle xml:id="W0034-00-0001-dt-03e8"><titlePart type="desc" xml:id="W0034-00-0001-tt-03e8"><lb xml:id="W0034-00-0001-lb-0001"/><g ref="#char00b6">¶</g> Aqui <g ref="#char017f">ſ</g>e c<g ref="#charo0303">õ</g>ntien<g ref="#chare0303">ẽ</g> </titlePart><titlePart type="main" xml:id="W0034-00-0001-tt-03e9">tre
+<lb xml:id="W0034-00-0001-lb-0002"/>ynta propo<g ref="#char017f">ſ</g>iciones muy juridicas</titlePart><titlePart type="desc" xml:id="W0034-00-0001-tt-03ea">: en
+<lb xml:id="W0034-00-0001-lb-0003"/>las quales <g ref="#char017f">ſ</g>umaria y <g ref="#char017f">ſ</g>uccintamente <g ref="#char017f">ſ</g>e
+<lb xml:id="W0034-00-0001-lb-0004"/>toc<g ref="#chara0303">ã</g> muchas co<g ref="#char017f">ſ</g>as perteneci<g ref="#chare0303">ẽ</g>tes al de
+<lb xml:id="W0034-00-0001-lb-0005"/>recho <g ref="#charq0303">q̃</g> la ygle<g ref="#char017f">ſ</g>ia y los principes chri<lb rendition="#hyphen" break="no" xml:id="W0034-00-0001-lb-0006"/><g ref="#char017f">ſ</g>tianos tienen / o pued<g ref="#chare0303">ẽ</g> tener <g ref="#char017f">ſ</g>obre los 
+<lb xml:id="W0034-00-0001-lb-0007"/>infieles de qual quier e<g ref="#char017f">ſ</g>pecie que <g ref="#char017f">ſ</g>ean.
+<lb xml:id="W0034-00-0001-lb-0008"/>Mayormente <g ref="#char017f">ſ</g>e a<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>igna el verdadero
+<lb xml:id="W0034-00-0001-lb-0009"/>y forti<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>imo fundamento en que <g ref="#char017f">ſ</g>e a<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>i
+<lb xml:id="W0034-00-0001-lb-0010"/>enta y e<g ref="#char017f">ſ</g>triba: el titulo y <g ref="#char017f">ſ</g>e<g ref="#charn0303">ñ</g>orio <g ref="#char017f">ſ</g>upre<lb rendition="#hyphen" break="no" xml:id="W0034-00-0001-lb-0011"/>mo y vniuer<g ref="#char017f">ſ</g>al que los Reyes <g ref="#charebd1">ꝺ̇</g> Ca<g ref="#char017f">ſ</g>ti<lb rendition="#noHyphen" break="no" xml:id="W0034-00-0001-lb-0012"/>lla y Leon tienen al orbe de las que lla
+<lb xml:id="W0034-00-0001-lb-0013"/>mamos occid<g ref="#chare0303">ẽ</g>tales Indias. Por el <g ref="#charq0303">q̃</g>l
+<lb xml:id="W0034-00-0001-lb-0014"/><g ref="#char017f">ſ</g>on con<g ref="#char017f">ſ</g>tituydos vniuer<g ref="#char017f">ſ</g>ales <g ref="#char017f">ſ</g>e<g ref="#charn0303">ñ</g>ores ygle<g ref="#char017f">ſ</g>ia
+<lb xml:id="W0034-00-0001-lb-0015"/>Emperadores enellas <g ref="#char017f">ſ</g>obre muchos re
+<lb xml:id="W0034-00-0001-lb-0016"/>yes. Apunt<g ref="#chara0303">ã</g> <g ref="#char017f">ſ</g>e tambien otras co<g ref="#char017f">ſ</g>as c<g ref="#charo0303">õ</g>
+<lb xml:id="W0034-00-0001-lb-0017"/>cernientes al hecho acaecido en a<g ref="#charq0303">q̃</g>l or
+<lb xml:id="W0034-00-0001-lb-0018"/>be notabili<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>imas: y dignas <g ref="#charebd1">ꝺ̇</g> <g ref="#char017f">ſ</g>er vi<g ref="#char017f">ſ</g>tas
+<lb xml:id="W0034-00-0001-lb-0019"/>y <g ref="#char017f">ſ</g>abidas.</titlePart></docTitle><byline> Colijo las dichas treynta <g ref="#chara753">ꝓ</g>
+<lb xml:id="W0034-00-0001-lb-0020"/>po<g ref="#char017f">ſ</g>iciones El obispo d<g ref="#charo0303">õ</g> Fray Bartho
+<lb xml:id="W0034-00-0001-lb-0021"/>lome de las Ca<g ref="#char017f">ſ</g>as / o Ca<g ref="#char017f">ſ</g>aus: Obi<g ref="#char017f">ſ</g>po
+<lb xml:id="W0034-00-0001-lb-0022"/><g ref="#charq0303">q̃</g> fue <g ref="#charebd1">ꝺ̇</g>la ciudad Real de Chiapa:</byline> <imprimatur>cier
+<lb xml:id="W0034-00-0001-lb-0023"/>to Reyno delos dela nueua Espa<g ref="#charn0303">ñ</g>a.</imprimatur>
+<docImprint><lb xml:id="W0034-00-0001-lb-0024"/><docDate when="1552"><hi rendition="#r-center">A<g ref="#charn0303">ñ</g>o. 1552.</hi></docDate></docImprint></titlePage>
+<div type="foreword" n="Prefacio" xml:id="W0034-00-0002-d1-03e8">
+<head xml:id="W0034-00-0002-he-03e8">
+<pb n="[ii]" facs="W0034-0002" xml:id="W0034-00-0002-pb-03e9"/>
+<lb xml:id="W0034-00-0002-lb-0001"/><g ref="#char00b6">¶</g> Argum<g ref="#chare0303">ẽ</g>nto dela cau<g ref="#char017f">ſ</g>a delas
+<lb xml:id="W0034-00-0002-lb-0002"/><g ref="#char017f">ſ</g>iguientes propo<g ref="#char017f">ſ</g>iciones.</head>
+<p xml:id="W0034-00-0002-pa-03ea">
+<lb xml:id="W0034-00-0002-lb-0003"/><hi rendition="#initCaps">E</hi>l obi<g ref="#char017f">ſ</g>po don fray Bartholome delas
+<lb xml:id="W0034-00-0002-lb-0004"/>ca<g ref="#char017f">ſ</g>as / o ca<g ref="#char017f">ſ</g>us <g ref="#char017f">ſ</g>iendo obi<g ref="#char017f">ſ</g>po dela ciu<lb break="no" rendition="#hyphen" xml:id="W0034-00-0002-lb-0005"/>dad real de Chiapa <g ref="#charq0303">q̃</g> es vn reyno dela
+<lb xml:id="W0034-00-0002-lb-0006"/>nueua e<g ref="#char017f">ſ</g>pa<g ref="#charn0303">ñ</g>a: como cono<g ref="#char017f">ſ</g>cie<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>e por ex<lb break="no" rendition="#hyphen" xml:id="W0034-00-0002-lb-0007"/>peri<g ref="#chare0303">ẽ</g>cia de cincuenta a<g ref="#charn0303">ñ</g>os las nece<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>i<lb break="no" rendition="#hyphen" xml:id="W0034-00-0002-lb-0008"/>dades e<g ref="#char017f">ſ</g>pirituales <g ref="#charq0303">q̃</g> los E<g ref="#char017f">ſ</g>pa<g ref="#charn0303">ñ</g>oles an
+<lb xml:id="W0034-00-0002-lb-0009"/>incurrido enlas Indias: delas quales
+<lb xml:id="W0034-00-0002-lb-0010"/>no e<g ref="#char017f">ſ</g>tau<g ref="#chara0303">ã</g> libres los <g ref="#charq0303">q̃</g> biui<g ref="#chara0303">ã</g> en a<g ref="#charq0303">q̃</g>l obi<g ref="#char017f">ſ</g>pado: antes eran
+<lb xml:id="W0034-00-0002-lb-0011"/>delos mas nece<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>itados de tener lumbre de <g ref="#char017f">ſ</g>us errores
+<lb xml:id="W0034-00-0002-lb-0012"/>y peccados: y <g ref="#charq0303">q̃</g> le inc<g ref="#charu0303">ũ</g>bia por su officio pa<g ref="#char017f">ſ</g>toral darles
+<lb xml:id="W0034-00-0002-lb-0013"/>Remedio para <g ref="#char017f">ſ</g>u ceguedad y peligro (lo quoal no <g ref="#char017f">ſ</g>uele
+<lb xml:id="W0034-00-0002-lb-0014"/>darse por otra via de<g ref="#char017f">ſ</g>pues dela predicaci<g ref="#charo0303">õ</g> y Doctrina
+<lb xml:id="W0034-00-0002-lb-0015"/><g ref="#char017f">ſ</g>ino por las confe<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>iones) por e<g ref="#char017f">ſ</g>ta causa ordeno vna bre
+<lb xml:id="W0034-00-0002-lb-0016"/>ue informaci<g ref="#charo0303">õ</g> como confe<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>ionario a<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>ignando ciertas
+<lb xml:id="W0034-00-0002-lb-0017"/>reglas por las quales enel foro dela conciencia se guia<g ref="#char017f">ſ</g>
+<lb xml:id="W0034-00-0002-lb-0018"/><g ref="#char017f">ſ</g>en / o rige<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>en los confe<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>ores. Traydo e<g ref="#char017f">ſ</g>te confe<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>iona
+<lb xml:id="W0034-00-0002-lb-0019"/>rio a e<g ref="#char017f">ſ</g>tos Reynos de ca<g ref="#char017f">ſ</g>tilla y vi<g ref="#char017f">ſ</g>to y reui<g ref="#char017f">ſ</g>to y exami
+<lb xml:id="W0034-00-0002-lb-0020"/>nado: fue aprouado y firmado por <g ref="#char017f">ſ</g>eys mae<g ref="#char017f">ſ</g>tros <g ref="#char017f">ſ</g>e<g ref="#charn0303">ñ</g>ala
+<lb xml:id="W0034-00-0002-lb-0021"/>dos en theologia. Pero algunos emulos dela verdad:
+<lb xml:id="W0034-00-0002-lb-0022"/>ygnor<g ref="#chara0303">ã</g>tes del hecho y del derecho delas co<g ref="#char017f">ſ</g>as pa<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>adas
+<lb xml:id="W0034-00-0002-lb-0023"/>enlas Indias: que pretendi<g ref="#chara0303">ã</g> poner e<g ref="#char017f">ſ</g>cu<g ref="#char017f">ſ</g>as y colores a
+<lb xml:id="W0034-00-0002-lb-0024"/>obras nefandi<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>imas / queri<g ref="#chare0303">ẽ</g>ndo lo calumniar: tomaron
+<lb xml:id="W0034-00-0002-lb-0025"/>por oca<g ref="#char017f">ſ</g>ion para fundar<g ref="#char017f">ſ</g>e vna delas reglas dichas im<lb break="no" rendition="#hyphen" xml:id="W0034-00-0002-lb-0026"/>poniendo le <g ref="#charq0303">q̃</g> c<g ref="#charo0303">õ</g>tenia negar el titulo / o se<g ref="#charn0303">ñ</g>orio <g ref="#charebd1">ꝺ̇</g> aquel
+<lb xml:id="W0034-00-0002-lb-0027"/>orbe <g ref="#charq0303">q̃</g> enel tienen los Reyes de Castilla. Por<g ref="#charq0303">q̃</g> afirma
+<lb xml:id="W0034-00-0002-lb-0028"/><g ref="#charq0303">q̃</g> todo lo <g ref="#charq0303">q̃</g> enlas yndias <g ref="#char017f">ſ</g>e ha hecho por los E<g ref="#char017f">ſ</g>pa<g ref="#charn0303">ñ</g>oles
+<lb xml:id="W0034-00-0002-lb-0029"/>nullo <g ref="#char204a">⁊</g> de ningun valor de derecho aya <g ref="#char017f">ſ</g>ido como co<g ref="#char017f">ſ</g>a 
+<lb xml:id="W0034-00-0002-lb-0030"/>hecha <g ref="#char017f">ſ</g>in autoridad de principe y contra toda natural
+<lb xml:id="W0034-00-0002-lb-0031"/>ju<g ref="#char017f">ſ</g>ticia. De<g ref="#char017f">ſ</g>ta oca<g ref="#char017f">ſ</g>ion tuuieron las <g ref="#char017f">ſ</g>iguientes propo<g ref="#char017f">ſ</g>i
+<lb xml:id="W0034-00-0002-lb-0032"/>ciones <g ref="#char017f">ſ</g>u origen y principio.</p>
+</div>
+<div type="preface" n="Prologo" xml:id="W0034-00-0003-d1-03e9">
+<head xml:id="W0034-00-0003-he-03e9">
+<pb n="[iii]" facs="W0034-0003" xml:id="W0034-00-0003-pb-03ea"/>
+<lb xml:id="W0034-00-0003-lb-0001"/><g ref="#char00b6">¶</g> Prologo <g ref="#charebd1">ꝺ̇</g>l obispo d<g ref="#charo0303">õ</g> Fray
+<lb xml:id="W0034-00-0003-lb-0002"/>Bartholome de las Ca<g ref="#char017f">ſ</g>as / o Ca<g ref="#char017f">ſ</g>aus Alos muy
+<lb xml:id="W0034-00-0003-lb-0003"/>poderosos y chri<g ref="#char017f">ſ</g>tiani<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>imos <g ref="#char017f">ſ</g>e<g ref="#charn0303">ñ</g>ores
+<lb xml:id="W0034-00-0003-lb-0004"/>el C<g ref="#charo0303">õ</g><g ref="#char017f">ſ</g>ejo real delas Indias.</head>
+<p xml:id="W0034-00-0003-pa-03eb">
+<lb xml:id="W0034-00-0003-lb-0005"/><hi rendition="#initCaps">U</hi>uestra alteza m<g ref="#chara0303">ã</g>ndo llamarme a e<g ref="#char017f">ſ</g>te Real c<g ref="#charo0303">õ</g> 
+<lb xml:id="W0034-00-0003-lb-0006"/><g ref="#char017f">ſ</g>ejo de las Indias: <g ref="#char017f">ſ</g>obre vn confe<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>ionario
+<lb xml:id="W0034-00-0003-lb-0007"/>que yo hize: por el qual <g ref="#char017f">ſ</g>e regie<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>en los con<lb break="no" rendition="#hyphen" xml:id="W0034-00-0003-lb-0008"/>fe<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>ores en las confe<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>iones de espa<g ref="#charn0303">ñ</g>oles en 
+<lb xml:id="W0034-00-0003-lb-0009"/>mi Obi<g ref="#char017f">ſ</g>pado: delqual diz que re<g ref="#char017f">ſ</g>ultan algu 
+<lb xml:id="W0034-00-0003-lb-0010"/>nas propo<g ref="#char017f">ſ</g>iciones <g ref="#char017f">ſ</g>egun el entendimienco [typographical error: entendimiento] que le dan
+<lb xml:id="W0034-00-0003-lb-0011"/>algunos: delas quales <g ref="#char017f">ſ</g>e podra inferir quelos [typographical error: que los] reyes de 
+<lb xml:id="W0034-00-0003-lb-0012"/>Ca<g ref="#char017f">ſ</g>tilla no tienen titulo / ono [typographical error: o no] buen titulo al imperio y
+<lb xml:id="W0034-00-0003-lb-0013"/><g ref="#char017f">ſ</g>e<g ref="#charn0303">ñ</g>orio de que vsan en aquel Orbe. Y parecio a vue<g ref="#char017f">ſ</g>tra
+<lb xml:id="W0034-00-0003-lb-0014"/>alteza que yo deuia declarar por e<g ref="#char017f">ſ</g>crito lo <g ref="#charq0303">q̃</g> dello <g ref="#char017f">ſ</g>ien 
+<lb xml:id="W0034-00-0003-lb-0015"/>to / pues muchas vezes eneste Real con<g ref="#char017f">ſ</g>ejo he hablado 
+<lb xml:id="W0034-00-0003-lb-0016"/>en fauor dello. E porque e<g ref="#char017f">ſ</g>ta es materia de gr<g ref="#chara0303">ã</g> calidad 
+<lb xml:id="W0034-00-0003-lb-0017"/><g ref="#char204a">⁊</g> import<g ref="#chara0303">ã</g>cia y para dar cu<g ref="#chare0303">ẽ</g>ta della requiere largo tra- 
+<lb xml:id="W0034-00-0003-lb-0018"/>tado: pues a de venir a manos de varones doctos y per 
+<lb xml:id="W0034-00-0003-lb-0019"/><g ref="#char017f">ſ</g>onas excelentes <g ref="#char204a">⁊</g> yo lo he comen<g ref="#charc0327">ç</g>ado a collegir delo <g ref="#charq0303">q̃</g> 
+<lb xml:id="W0034-00-0003-lb-0020"/>ha alg<g ref="#charu0303">ũ</g>os a<g ref="#charn0303">ñ</g>os <g ref="#charq0303">q̃</g> he pen<g ref="#char017f">ſ</g>ado y e<g ref="#char017f">ſ</g>tudiado: pero porque 
+<lb xml:id="W0034-00-0003-lb-0021"/>vue<g ref="#char017f">ſ</g>tra Alteza me da prie<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>a por lo <g ref="#chare0303">ẽ</g>biar a su magestad: 
+<lb xml:id="W0034-00-0003-lb-0022"/>pareciome mucho abreuiando hazer de todo lo <g ref="#charq0303">q̃</g> <g ref="#char017f">ſ</g>egun 
+<lb xml:id="W0034-00-0003-lb-0023"/>dios y <g ref="#char017f">ſ</g>u ley cerca de<g ref="#char017f">ſ</g>te articulo alcan<g ref="#charc0327">ç</g>o: por las <g ref="#char017f">ſ</g>igui<g ref="#chare0303">ẽ</g> 
+<lb xml:id="W0034-00-0003-lb-0024"/>tes propo<g ref="#char017f">ſ</g>iciones <g ref="#char017f">ſ</g>in prouallas el <g ref="#char017f">ſ</g>umario pre<g ref="#char017f">ſ</g>ente. La 
+<lb xml:id="W0034-00-0003-lb-0025"/>prueua dellas c<g ref="#charo0303">õ</g> lo demas <g ref="#char017f">ſ</g>e quedara <g ref="#chara751">ꝑ</g>a enel dicho tra- 
+<lb xml:id="W0034-00-0003-lb-0026"/>tado <g ref="#charq0303">q̃</g> en breues dias <g ref="#char017f">ſ</g>i plaze a Dios vue<g ref="#char017f">ſ</g>tra alteza ve- 
+<lb xml:id="W0034-00-0003-lb-0027"/>ra ene<g ref="#char017f">ſ</g>te real c<g ref="#charo0303">õ</g><g ref="#char017f">ſ</g>ejo pre<g ref="#char017f">ſ</g>entado. Y porque nece<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>ariam<g ref="#chare0303">ẽ</g>
+<lb xml:id="W0034-00-0003-lb-0028"/>te tractando de<g ref="#char017f">ſ</g>to <g ref="#char017f">ſ</g>e han de tocar co<g ref="#char017f">ſ</g>as a nue<g ref="#char017f">ſ</g>tra <g ref="#char017f">ſ</g>ancta 
+<lb xml:id="W0034-00-0003-lb-0029"/>fee concerni<g ref="#chare0303">ẽ</g>tes: porende todo lo <g ref="#charq0303">q̃</g> dixere y cada parte 
+<lb xml:id="W0034-00-0003-lb-0030"/>dello <g ref="#char017f">ſ</g>omero ala correction dela <g ref="#char017f">ſ</g>ancta romana ygle<g ref="#char017f">ſ</g>ia.</p></div>
+</front>
+<body xml:id="W0034-00-0004-tb-03e8">
+<div type="section" n="Proposicion 1" xml:id="W0034-00-0004-d1-03ea">
+<head xml:id="W0034-00-0004-he-03ea">
+<pb n="[1]" facs="W0034-0004" xml:id="W0034-00-0004-pb-03eb"/>
+<lb xml:id="W0034-00-0004-lb-0001"/><g ref="#char00b6">¶</g> Propo<g ref="#char017f">ſ</g>icion. i.</head>
+<p xml:id="W0034-00-0004-pa-03ec">
+<lb xml:id="W0034-00-0004-lb-0002"/><hi rendition="#initCaps">E</hi>L romano p<g ref="#charo0303">õ</g>tifice canonicam<g ref="#chare0303">ẽ</g>te elegido vicario
+<lb xml:id="W0034-00-0004-lb-0003"/>de Je<g ref="#char017f">ſ</g>u x<g ref="#charp0303">p̃</g>o <g ref="#char017f">ſ</g>uce<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>or de <g ref="#char017f">ſ</g>ant Pedro: tiene auctori<lb break="no" rendition="#hyphen" xml:id="W0034-00-0004-lb-0004"/>dad y poder <g ref="#charebd1">ꝺ̇</g>l mi<g ref="#char017f">ſ</g>mo je<g ref="#char017f">ſ</g>u x<g ref="#charp0303">p̃</g>o hijo de dios <g ref="#char017f">ſ</g>obre todos
+<lb xml:id="W0034-00-0004-lb-0005"/>los hombres del mundo / fieles/ o infieles: qu<g ref="#chara0303">ã</g>to viere <g ref="#charq0303">q̃</g>
+<lb xml:id="W0034-00-0004-lb-0006"/>es mene<g ref="#char017f">ſ</g>ter para guiar y endere<g ref="#charc0327">ç</g>ar los hombres  al fin
+<lb xml:id="W0034-00-0004-lb-0007"/>dela vida eterna <g ref="#char204a">⁊</g> quitar los impedimentosdel: pue<g ref="#char017f">ſ</g>to
+<lb xml:id="W0034-00-0004-lb-0008"/>que de vna manera v<g ref="#char017f">ſ</g>a y deue v<g ref="#char017f">ſ</g>ar del tal poder con los 
+<lb xml:id="W0034-00-0004-lb-0009"/>infierles que nunca entraron  por el <g ref="#char017f">ſ</g>ancto bapti<g ref="#char017f">ſ</g>mo enla
+<lb xml:id="W0034-00-0004-lb-0010"/><g ref="#char017f">ſ</g>ancta ygle<g ref="#char017f">ſ</g>ia: mayorm<g ref="#chare0303">ẽ</g>te los <g ref="#charq0303">q̃</g> nunca oyeron nueuas
+<lb xml:id="W0034-00-0004-lb-0011"/>de Chri<g ref="#char017f">ſ</g>to: ni de <g ref="#char017f">ſ</g>u fee: y de otra con los fieles que <g ref="#char017f">ſ</g>on /
+<lb xml:id="W0034-00-0004-lb-0012"/>o que algun tiempo fueron fieles.</p>
+</div>
+<div type="section" n="Proposicion 2" xml:id="W0034-00-0004-d1-03eb">
+<head xml:id="W0034-00-0004-he-03eb"><lb xml:id="W0034-00-0004-lb-0013"/><g ref="#char00b6">¶</g> Propo<g ref="#char017f">ſ</g>icion. ii.</head>
+<p xml:id="W0034-00-0004-pa-03ed">
+<lb xml:id="W0034-00-0004-lb-0014"/><hi rendition="#initCaps">S</hi>An Pedro y <g ref="#char017f">ſ</g>us  <g ref="#char017f">ſ</g>uce-sso-res tuuo y tien<g ref="#chare0303">ẽ</g> obligaci<g ref="#charo0303">õ</g>
+<lb xml:id="W0034-00-0004-lb-0015"/>nece<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>aria por precepto diuino de procurar c<g ref="#charo0303">õ</g> <g ref="#char017f">ſ</g>um
+<lb xml:id="W0034-00-0004-lb-0016"/>ma diligencia <g ref="#charq0303">q̃</g> el euanglio y fee de Je<g ref="#char017f">ſ</g>u x<g ref="#charp0303">p̃</g>o <g ref="#char017f">ſ</g>e predi<lb break="no" rendition="#hyphen" xml:id="W0034-00-0004-lb-0017"/>que por todo el m<g ref="#charu0303">ũ</g>do a todos los infieles del: de quien
+<lb xml:id="W0034-00-0004-lb-0018"/><g ref="#char017f">ſ</g>e tenga probable opinion que no re<g ref="#char017f">ſ</g>i<g ref="#char017f">ſ</g>tiran la promul<lb break="no" rendition="#hyphen" xml:id="W0034-00-0004-lb-0019"/>gacion euangelica y doctrina Chri<g ref="#char017f">ſ</g>tiana.</p></div>
+<div type="section" n="Proposicion 3" xml:id="W0034-00-0004-d1-03ec">
+<head xml:id="W0034-00-0004-he-03ec"><g ref="#char00b6">¶</g> Propo<g ref="#char017f">ſ</g>icion. iii.</head>
+<p xml:id="W0034-00-0004-pa-03ee">
+<lb xml:id="W0034-00-0004-lb-0020"/><hi rendition="#initCaps">P</hi>Uede y deue el Romano y <g ref="#char017f">ſ</g>ummo pontifice por a
+<lb xml:id="W0034-00-0004-lb-0021"/>utoridad <g ref="#charebd1">ꝺ̇</g> <g ref="#char017f">ſ</g>u apo<g ref="#char017f">ſ</g>tolico officio: n<g ref="#charo0303">õ</g>brar y <g ref="#char017f">ſ</g>e<g ref="#charn0303">ñ</g>alar
+<lb xml:id="W0034-00-0004-lb-0022"/>los nece<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>arios y conuenientes Idoneos min<g ref="#char017f">ſ</g>tros <g ref="#charebd1">ꝺ̇</g> to
+<lb xml:id="W0034-00-0004-lb-0023"/>dos los e<g ref="#char017f">ſ</g>tados dela chri<g ref="#char017f">ſ</g>tiandad: para la c<g ref="#charo0303">õ</g><g ref="#char017f">ſ</g>ecucion <g ref="#charebd1">ꝺ̇</g>l
+<lb xml:id="W0034-00-0004-lb-0024"/>dicho fin: y ponelles nece<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>idad <g ref="#charebd1">ꝺ̇</g> precepto que acepten
+<lb xml:id="W0034-00-0004-lb-0025"/>y exerciten el cargo / cuydado/ <g ref="#char204a">⁊</g> officio que para effecto
+<pb n="[2]" facs="W0034-0005" xml:id="W0034-00-0005-pb-03ec"/>
+<lb xml:id="W0034-00-0005-lb-0001"/>de<g ref="#char017f">ſ</g>to les impu<g ref="#char017f">ſ</g>iere y ellos <g ref="#char017f">ſ</g>on obligados alo aceptar y 
+<lb xml:id="W0034-00-0005-lb-0002"/>obedecelle como al mi<g ref="#char017f">ſ</g>mo Je<g ref="#char017f">ſ</g>u Chri<g ref="#char017f">ſ</g>to.</p></div>
+<div type="section" n="Proposicion 4" xml:id="W0034-00-0005-d1-03ed">
+<head xml:id="W0034-00-0005-he-03ed"><lb xml:id="W0034-00-0005-lb-0003"/><g ref="#char00b6">¶</g> Propo<g ref="#char017f">ſ</g>icion. iiii.</head>
+<p xml:id="W0034-00-0005-pa-03ef">
+<lb xml:id="W0034-00-0005-lb-0004"/><hi rendition="#initCaps">E</hi>Ntre los otros mini<g ref="#char017f">ſ</g>tros os para la dilitacion y c<g ref="#charo0303">õ</g><lb break="no" rendition="#hyphen" xml:id="W0034-00-0005-lb-0005"/><g ref="#char017f">ſ</g>eruaci<g ref="#charo0303">õ</g> de la fee y religion chri<g ref="#char017f">ſ</g>tiana y conuer<g ref="#char017f">ſ</g>i<g ref="#charo0303">õ</g>
+<lb xml:id="W0034-00-0005-lb-0006"/>delos infieles / <g ref="#char017f">ſ</g>on muy nece<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>arios los Reyes chri<g ref="#char017f">ſ</g>tia
+<lb xml:id="W0034-00-0005-lb-0007"/>nos enla yglesia: para que con <g ref="#char017f">ſ</g>u bra<g ref="#charc0327">ç</g>o y fuer<g ref="#charc0327">ç</g>as reales
+<lb xml:id="W0034-00-0005-lb-0008"/>y riquezas temporales ayuden / amparen/ con<g ref="#char017f">ſ</g>eruen y 
+<lb xml:id="W0034-00-0005-lb-0009"/>defiendan los mini<g ref="#char017f">ſ</g>tros eccle<g ref="#char017f">ſ</g>ia<g ref="#char017f">ſ</g>ticos y e<g ref="#char017f">ſ</g>pirituales y 
+<lb xml:id="W0034-00-0005-lb-0010"/><g ref="#char017f">ſ</g>e pueda  commodam<g ref="#chare0303">ẽ</g>te pro<g ref="#char017f">ſ</g>eguir <g ref="#char204a">⁊</g> c<g ref="#charo0303">õ</g><g ref="#char017f">ſ</g>eguir <g ref="#char204a">⁊</g> no e<g ref="#char017f">ſ</g>tor
+<lb xml:id="W0034-00-0005-lb-0011"/>nar / o impedir al <g ref="#char017f">ſ</g>u<g ref="#char017f">ſ</g>o dicho fin.</p></div>
+<div type="section" n="Proposicion 5" xml:id="W0034-00-0005-d1-03ee">
+<head xml:id="W0034-00-0005-he-03ee"><g ref="#char00b6">¶</g> Propo<g ref="#char017f">ſ</g>icion. v.</head>
+<p xml:id="W0034-00-0005-pa-03f0">
+<lb xml:id="W0034-00-0005-lb-0012"/><hi rendition="#initCaps">E</hi>L <g ref="#char017f">ſ</g>ummo pontifice por la auctoridad <g ref="#charq0303">q̃</g> tiene en la 
+<lb xml:id="W0034-00-0005-lb-0013"/>tierra de Je<g ref="#char017f">ſ</g>u Chri<g ref="#char017f">ſ</g>to: puede imponer nece<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>idad 
+<lb xml:id="W0034-00-0005-lb-0014"/>de precepto a los Principes y Reyes Chri<g ref="#char017f">ſ</g>tianos y a 
+<lb xml:id="W0034-00-0005-lb-0015"/>cada vno dellos por <g ref="#char017f">ſ</g>i <g ref="#char017f">ſ</g>olo <g ref="#char017f">ſ</g>i viere que es nece<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>ario / o
+<lb xml:id="W0034-00-0005-lb-0016"/>mucho conueniente para con<g ref="#char017f">ſ</g>eguir / o para <g ref="#charq0303">q̃</g>no [error: <g ref="#charq0303">q̃</g> no] <g ref="#char017f">ſ</g>e impi
+<lb xml:id="W0034-00-0005-lb-0017"/>da el dicho fin: que a <g ref="#char017f">ſ</g>us propias exp<g ref="#chare0303">ẽ</g><g ref="#char017f">ſ</g>as / o por <g ref="#char017f">ſ</g>us per<lb break="no" rendition="#hyphen" xml:id="W0034-00-0005-lb-0018"/><g ref="#char017f">ſ</g>onas reales / o por <g ref="#char017f">ſ</g>us ydoneos mini<g ref="#char017f">ſ</g>tros: vayan / o en 
+<lb xml:id="W0034-00-0005-lb-0019"/>tiendan con effecto enla expedicion del <g ref="#char017f">ſ</g>u<g ref="#char017f">ſ</g>o dicho chri<lb break="no" rendition="#hyphen" xml:id="W0034-00-0005-lb-0020"/><g ref="#char017f">ſ</g>tiano fin: para lo qual puede tambi<g ref="#chare0303">ẽ</g> imponer <g ref="#char017f">ſ</g>ub<g ref="#char017f">ſ</g>idio
+<lb xml:id="W0034-00-0005-lb-0021"/>en toda la chri<g ref="#char017f">ſ</g>tiandad /  el <g ref="#charq0303">q̃</g> bien vi<g ref="#char017f">ſ</g>to le fuere: confor<lb break="no" rendition="#hyphen" xml:id="W0034-00-0005-lb-0022"/>me ala nece<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>idad / o conueni<g ref="#chare0303">ẽ</g>cia del negocio <g ref="#charq0303">q̃</g> ocurrie
+<lb xml:id="W0034-00-0005-lb-0023"/>re de hazer y alas facultades de cada Reyno.</p></div>
+<div type="section" n="Proposicion 6" xml:id="W0034-00-0005-d1-03ef">
+<head xml:id="W0034-00-0005-he-03ef"><lb xml:id="W0034-00-0005-lb-0024"/><g ref="#char00b6">¶</g> Propo<g ref="#char017f">ſ</g>icion. vi.</head>
+<p xml:id="W0034-00-0006-pa-03f1">
+<pb n="[3]" facs="W0034-0006" xml:id="W0034-00-0006-pb-03ed"/>
+<lb xml:id="W0034-00-0006-lb-0001"/><hi rendition="#initCaps">N</hi>Ingun Rey / o principe chri<g ref="#char017f">ſ</g>tiano / <g ref="#char017f">ſ</g>e puede ocu- 
+<lb xml:id="W0034-00-0006-lb-0002"/>par enla tal expedicion (fuera del ca<g ref="#char017f">ſ</g>o de extrema 
+<lb xml:id="W0034-00-0006-lb-0003"/>nece<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>idad) <g ref="#char017f">ſ</g>in expre<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>a / o tacita licencia y auctoridad 
+<lb xml:id="W0034-00-0006-lb-0004"/>del <g ref="#char017f">ſ</g>ummo <g ref="#char017f">ſ</g>acerdote vicario de je<g ref="#char017f">ſ</g>u Chri<g ref="#char017f">ſ</g>to. Y <g ref="#char017f">ſ</g>i la nece 
+<lb xml:id="W0034-00-0006-lb-0005"/><g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>idad es fuera del propio reyno y el papa cometiere / o 
+<lb xml:id="W0034-00-0006-lb-0006"/>mandare el negocio a vn solo principe: los de mas no <g ref="#char017f">ſ</g>e 
+<lb xml:id="W0034-00-0006-lb-0007"/>pueden en co<g ref="#char017f">ſ</g>a alguna: tocante a ello entremeter.</p></div>
+<div type="section" n="Proposicion 7" xml:id="W0034-00-0006-d1-03f0">
+<head xml:id="W0034-00-0006-he-03f0"><g ref="#char00b6">¶</g> Propo<g ref="#char017f">ſ</g>icion. vii.</head>
+<p xml:id="W0034-00-0006-pa-03f2">
+<lb xml:id="W0034-00-0006-lb-0008"/><hi rendition="#initCaps">S</hi>Apienti<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>ima / prouida / <g ref="#char204a">⁊</g> ju<g ref="#char017f">ſ</g>tamente el Vicario de 
+<lb xml:id="W0034-00-0006-lb-0009"/>chri<g ref="#char017f">ſ</g>to por auctoridad diuina para euitar confu<g ref="#char017f">ſ</g>i- 
+<lb xml:id="W0034-00-0006-lb-0010"/>on: diuidio <g ref="#char204a">⁊</g> puede diuidir entre los principes Chri<g ref="#char017f">ſ</g> 
+<lb xml:id="W0034-00-0006-lb-0011"/>tianos: los Reynos <g ref="#char204a">⁊</g> prouincias de todos los infieles 
+<lb xml:id="W0034-00-0006-lb-0012"/>de qualquiera infidelidad / o <g ref="#char017f">ſ</g>ecta que sean: encomen<lb break="no" rendition="#hyphen" xml:id="W0034-00-0006-lb-0013"/>dandoles <g ref="#char204a">⁊</g> cometi<g ref="#chare0303">ẽ</g>doles la dilatacion dela <g ref="#char017f">ſ</g>ancta fee:
+<lb xml:id="W0034-00-0006-lb-0014"/>ampliaci<g ref="#charo0303">õ</g> dela vniuer<g ref="#char017f">ſ</g>al ygle<g ref="#char017f">ſ</g>ia <g ref="#char204a">⁊</g> religion chri<g ref="#char017f">ſ</g>tiana:
+<lb xml:id="W0034-00-0006-lb-0015"/>conuer<g ref="#char017f">ſ</g>ion <g ref="#char204a">⁊</g> <g ref="#char017f">ſ</g>alud delas animas dellos como vltima<lb break="no" rendition="#hyphen" xml:id="W0034-00-0006-lb-0016"/>do fin.</p></div>
+<div type="section" n="Proposicion 8" xml:id="W0034-00-0006-d1-03f1">
+<head xml:id="W0034-00-0006-he-03f1"><lb xml:id="W0034-00-0006-lb-0017"/><g ref="#char00b6">¶</g> Propo<g ref="#char017f">ſ</g>icion. viii.</head>
+<p xml:id="W0034-00-0006-pa-03f3">
+<lb xml:id="W0034-00-0006-lb-0018"/><hi rendition="#initCaps">E</hi>Sta tal diui<g ref="#char017f">ſ</g>ion / comi<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>i<g ref="#charo0303">õ</g> / o conce<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>i<g ref="#charo0303">õ</g> no la hizo 
+<lb xml:id="W0034-00-0006-lb-0019"/>ni haze ni la deue hazer el <g ref="#char017f">ſ</g>ummo pontifice princi 
+<lb xml:id="W0034-00-0006-lb-0020"/>pal <g ref="#char204a">⁊</g> finalmente por conceder gracia ni augmentar c<g ref="#charo0303">õ</g> 
+<lb xml:id="W0034-00-0006-lb-0021"/>honrra <g ref="#char204a">⁊</g> mas titulos <g ref="#char204a">⁊</g> riquezas los e<g ref="#char017f">ſ</g>tados a los prin 
+<lb xml:id="W0034-00-0006-lb-0022"/>cipes chri<g ref="#char017f">ſ</g>tianos: <g ref="#char017f">ſ</g>ino principal <g ref="#char204a">⁊</g> finalmente / por la dila 
+<lb xml:id="W0034-00-0006-lb-0023"/>tacion del diuino culto / honor de dios y conuer<g ref="#char017f">ſ</g>ion <g ref="#char204a">⁊</g> 
+<lb xml:id="W0034-00-0006-lb-0024"/>saluacion delos infieles / que es el intento <g ref="#char204a">⁊</g> final inten 
+<lb xml:id="W0034-00-0006-lb-0025"/>cion del rey delos Reyes <g ref="#char204a">⁊</g> se<g ref="#charn0303">ñ</g>or <g ref="#charebd1">ꝺ̇</g>los se<g ref="#charn0303">ñ</g>ores je<g ref="#char017f">ſ</g>u chri 
+<lb xml:id="W0034-00-0006-lb-0026"/><g ref="#char017f">ſ</g>to: antes <g ref="#char017f">ſ</g>e les impone carga <g ref="#char204a">⁊</g> officio peligro<g ref="#char017f">ſ</g>i<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>imo 
+<lb xml:id="W0034-00-0006-lb-0027"/>del qual han de dar e<g ref="#char017f">ſ</g>trechi<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>ima quenta enel fin de <g ref="#char017f">ſ</g>us 
+<pb n="[4]" facs="W0034-0007" xml:id="W0034-00-0007-pb-03ee"/>
+<lb xml:id="W0034-00-0007-lb-0001"/>dias ante el juyzio diuino. Por manera <g ref="#charq0303">q̃</g> mas es la di<lb break="no" rendition="#hyphen" xml:id="W0034-00-0007-lb-0002"/>cha diui<g ref="#char017f">ſ</g>ion y encomi<g ref="#chare0303">ẽ</g>da para el bien y vtilidad delos 
+<lb xml:id="W0034-00-0007-lb-0003"/>infieles: que no delos chri<g ref="#char017f">ſ</g>tianos principes.</p>
+</div>
+<div type="section" n="Proposicion 9" xml:id="W0034-00-0007-d1-03f2">
+<head xml:id="W0034-00-0007-he-03f2"><lb xml:id="W0034-00-0007-lb-0004"/><g ref="#char00b6">¶</g> Propo<g ref="#char017f">ſ</g>icion. ix.</head>
+<p xml:id="W0034-00-0007-pa-03f4">
+<lb xml:id="W0034-00-0007-lb-0005"/><hi rendition="#initCaps">I</hi>U<g ref="#char017f">ſ</g>ta y digna co<g ref="#char017f">ſ</g>a es <g ref="#charq0303">q̃</g> aun  que el premio principal 
+<lb xml:id="W0034-00-0007-lb-0006"/>delos Reyes chri<g ref="#char017f">ſ</g>tianos por los <g ref="#char017f">ſ</g>eruicios que ha 
+<lb xml:id="W0034-00-0007-lb-0007"/>zen a Dios y bien a <g ref="#char017f">ſ</g>u madre la vniuer<g ref="#char017f">ſ</g>al ygle<g ref="#char017f">ſ</g>ia c<g ref="#charo0303">õ</g> <g ref="#char017f">ſ</g>us 
+<lb xml:id="W0034-00-0007-lb-0008"/>reales per<g ref="#char017f">ſ</g>onas: no con<g ref="#char017f">ſ</g>i<g ref="#char017f">ſ</g>ta ni ellos lo deu<g ref="#chara0303">ã</g> decudiciar 
+<lb xml:id="W0034-00-0007-lb-0009"/>ene<g ref="#char017f">ſ</g>tas co<g ref="#char017f">ſ</g>as mundanas y terrenas: porque todas ellas 
+<lb xml:id="W0034-00-0007-lb-0010"/><g ref="#char017f">ſ</g>on de poca entidad y tran<g ref="#char017f">ſ</g>itorias: <g ref="#char017f">ſ</g>ino el verdadero y 
+<lb xml:id="W0034-00-0007-lb-0011"/>vltimado Reynar con Chri<g ref="#char017f">ſ</g>to / cuyo lugar y tenencia 
+<lb xml:id="W0034-00-0007-lb-0012"/>qu<g ref="#chara0303">ã</g>to toca a lo temporal tienen enla tierra: pero que el 
+<lb xml:id="W0034-00-0007-lb-0013"/><g ref="#char017f">ſ</g>ummo pontifice les conceda y haga donacion remune 
+<lb xml:id="W0034-00-0007-lb-0014"/>ratoria enlos mi<g ref="#char017f">ſ</g>mos Reynos que para el dicho repe- 
+<lb xml:id="W0034-00-0007-lb-0015"/>tido fin le encomienda: ju<g ref="#char017f">ſ</g>ta co<g ref="#char017f">ſ</g>a es: empero <g ref="#char017f">ſ</g>in da<g ref="#charn0303">ñ</g>o
+<lb xml:id="W0034-00-0007-lb-0016"/>y perjuyzio notable del derecho ageno delos Reyes y 
+<lb xml:id="W0034-00-0007-lb-0017"/>Principes <g ref="#char204a">⁊</g> <g ref="#char017f">ſ</g>ingulares per<g ref="#char017f">ſ</g>onas delos infieles.</p></div>
+<div type="section" n="Proposicion 10" xml:id="W0034-00-0007-d1-03f3">
+<head xml:id="W0034-00-0007-he-03f3"><lb xml:id="W0034-00-0007-lb-0018"/><g ref="#char00b6">¶</g> Propo<g ref="#char017f">ſ</g>icion. x.</head>
+<p xml:id="W0034-00-0007-pa-03f5">
+<lb xml:id="W0034-00-0007-lb-0019"/><hi rendition="#initCaps">E</hi>Ntre los infieles que tienen Reynos apartados
+<lb xml:id="W0034-00-0007-lb-0020"/>que nunca oyeron nueuas de Chri<g ref="#char017f">ſ</g>to ni re<g ref="#char017f">ſ</g>cibie<lb break="no" rendition="#hyphen" xml:id="W0034-00-0007-lb-0021"/>ron la fee/ ay verdaderos <g ref="#char017f">ſ</g>e<g ref="#charn0303">ñ</g>ores Reyes y Principes:
+<lb xml:id="W0034-00-0007-lb-0022"/>y el <g ref="#char017f">ſ</g>e<g ref="#charn0303">ñ</g>orio y dignidad  y priminencia realles compe<lb break="no" rendition="#hyphen" xml:id="W0034-00-0007-lb-0023"/>te de derecho natural y de derecho delas g<g ref="#chare0303">ẽ</g>tes: en <g ref="#charq0303">q̃</g>nto
+<lb xml:id="W0034-00-0007-lb-0024"/>el tal <g ref="#char017f">ſ</g>e<g ref="#charn0303">ñ</g>orio <g ref="#char017f">ſ</g>e endere<g ref="#charc0327">ç</g>a al regimi<g ref="#chare0303">ẽ</g>to y gouernaci<g ref="#charo0303">õ</g> de 
+<lb xml:id="W0034-00-0007-lb-0025"/>los reynos / c<g ref="#charo0303">õ</g>firmado por el derecho diuino eu<g ref="#chara0303">ã</g>gelico
+<lb xml:id="W0034-00-0007-lb-0026"/>Lo mi<g ref="#char017f">ſ</g>mi alas <g ref="#chara751">ꝑ</g><g ref="#char017f">ſ</g>onas <g ref="#char017f">ſ</g>ingulares en <g ref="#char017f">ſ</g>e<g ref="#charn0303">ñ</g>orio <g ref="#charebd1">ꝺ̇</g>las co<g ref="#char017f">ſ</g>as 
+<pb n="[5]" facs="W0034-0008" xml:id="W0034-00-0008-pb-03ef"/>
+<lb xml:id="W0034-00-0008-lb-0001"/>inferiores: y por tanto enel aduenimiento de Je<g ref="#char017f">ſ</g>u chri 
+<lb xml:id="W0034-00-0008-lb-0002"/><g ref="#char017f">ſ</g>to <g ref="#charebd1">ꝺ̇</g>los tales <g ref="#char017f">ſ</g>e<g ref="#charn0303">ñ</g>orios / honrras / preminencias reales 
+<lb xml:id="W0034-00-0008-lb-0003"/>y lo demas: no fueron priuados en vniuer<g ref="#char017f">ſ</g>al ni en par<lb break="no" rendition="#hyphen" xml:id="W0034-00-0008-lb-0004"/>ticular <foreign xml:lang="la">ip<g ref="#char017f">ſ</g>o facto nec ip<g ref="#char017f">ſ</g>o iure.</foreign></p>
+</div>
+<div type="section" n="Proposicion 11" xml:id="W0034-00-0008-d1-03f4">
+<head xml:id="W0034-00-0008-he-03f4"><lb xml:id="W0034-00-0008-lb-0005"/><g ref="#char00b6">¶</g> Propo<g ref="#char017f">ſ</g>icion. xi.</head>
+<p xml:id="W0034-00-0008-pa-03f6">
+<lb xml:id="W0034-00-0008-lb-0006"/><hi rendition="#initCaps">L</hi>A opinion contradictoria dela precedente propo<g ref="#char017f">ſ</g>i 
+<lb xml:id="W0034-00-0008-lb-0007"/>cion es erronea y pernicio<g ref="#char017f">ſ</g>i<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>ima: y quien con per 
+<lb xml:id="W0034-00-0008-lb-0008"/>tinacia le defendiere incurrira formal eregia. Es a<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>i 
+<lb xml:id="W0034-00-0008-lb-0009"/>mi<g ref="#char017f">ſ</g>mo impii<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>ima / iniqui<g ref="#char017f">ſ</g>ima / y cau<g ref="#char017f">ſ</g>atiua de ynumera 
+<lb xml:id="W0034-00-0008-lb-0010"/>bles robos / viol<g ref="#chare0303">ẽ</g>cias y tiranias / e<g ref="#char017f">ſ</g>tragos y latrocinios /
+<lb xml:id="W0034-00-0008-lb-0011"/>da<g ref="#charn0303">ñ</g>os yrreparables y peccados graui-ssimos: infamia: 
+<lb xml:id="W0034-00-0008-lb-0012"/>hedor : y aborre<g ref="#char017f">ſ</g>cimiento del nombre de Chri<g ref="#char017f">ſ</g>to y dela 
+<lb xml:id="W0034-00-0008-lb-0013"/>religion chri<g ref="#char017f">ſ</g>tiana: y efficaci<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>imo impedim<g ref="#chare0303">ẽ</g>to de nr<g ref="#chara0303">ã</g> 
+<lb xml:id="W0034-00-0008-lb-0014"/>catholica fee: muerte / perdicion y jactura de la mayor 
+<lb xml:id="W0034-00-0008-lb-0015"/>parte del linaje humano: damnacion certi<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>imoa de infi<lb break="no" rendition="#hyphen" xml:id="W0034-00-0008-lb-0016"/>nitas animas: y finalmente de la piedad man<g ref="#char017f">ſ</g>edumbre 
+<lb xml:id="W0034-00-0008-lb-0017"/>y co<g ref="#char017f">ſ</g>tumbre Eu<g ref="#chara0303">ã</g>ngelica y chri<g ref="#char017f">ſ</g>tiana: cruel y capital ene 
+<lb xml:id="W0034-00-0008-lb-0018"/>miga.</p></div>
+<div type="section" n="Proposicion 12" xml:id="W0034-00-0008-d1-03f5">
+<head xml:id="W0034-00-0008-he-03f5"><lb xml:id="W0034-00-0008-lb-0019"/><g ref="#char00b6">¶</g> Propo<g ref="#char017f">ſ</g>icion. xii.</head>
+<p xml:id="W0034-00-0008-pa-03f7">
+<lb xml:id="W0034-00-0008-lb-0020"/><hi rendition="#initCaps">P</hi>Or ningun peccado de ydolatria ni de otro algu<lb break="no" rendition="#hyphen" xml:id="W0034-00-0008-lb-0021"/>no por graue y nephando que <g ref="#char017f">ſ</g>ea: no <g ref="#char017f">ſ</g>on priuados 
+<lb xml:id="W0034-00-0008-lb-0022"/>los dichos infieles <g ref="#char017f">ſ</g>e<g ref="#charn0303">ñ</g>ores ni <g ref="#char017f">ſ</g>ubditos de <g ref="#char017f">ſ</g>us <g ref="#char017f">ſ</g>e<g ref="#charn0303">ñ</g>orios 
+<lb xml:id="W0034-00-0008-lb-0023"/>dignidades ni otros algunos bienes <foreign xml:lang="la">ip<g ref="#char017f">ſ</g>o facto vel ip<g ref="#char017f">ſ</g>o iure.</foreign></p></div>
+<div type="section" n="Proposicion 13" xml:id="W0034-00-0008-d1-03f6">
+<head xml:id="W0034-00-0008-he-03f6"><lb xml:id="W0034-00-0008-lb-0024"/><g ref="#char00b6">¶</g> Propo<g ref="#char017f">ſ</g>icion. xiii.</head>
+<p xml:id="W0034-00-0009-pa-03f8">
+<pb n="[6]" facs="W0034-0009" xml:id="W0034-00-0009-pb-03f0"/>
+<lb xml:id="W0034-00-0009-lb-0001"/><hi rendition="#initCaps">P</hi>or razon preci<g ref="#char017f">ſ</g>a del pecado dela ydolatria ni de 
+<lb xml:id="W0034-00-0009-lb-0002"/>otro <g ref="#charq0303">q̃</g>lquier peccado por enorme / gr<g ref="#chara0303">ã</g>de y neph<g ref="#chara0303">ã</g> 
+<lb xml:id="W0034-00-0009-lb-0003"/>do <g ref="#charq0303">q̃</g> sea cometido / en todo el tiempo de <g ref="#char017f">ſ</g> infidelidad 
+<lb xml:id="W0034-00-0009-lb-0004"/>antes que recib<g ref="#chara0303">ã</g> de <g ref="#char017f">ſ</g>u propia y libre voluntad el <g ref="#char017f">ſ</g>ancto 
+<lb xml:id="W0034-00-0009-lb-0005"/>bapti<g ref="#char017f">ſ</g>mo: los infieles mayormente aquellos cuya infi- 
+<lb xml:id="W0034-00-0009-lb-0006"/>delidad es <g ref="#char017f">ſ</g>egun pura negacion: no pued<g ref="#chare0303">ẽ</g> <g ref="#char017f">ſ</g>er punidos 
+<lb xml:id="W0034-00-0009-lb-0007"/>por ningun juez del mundo / <g ref="#char017f">ſ</g>ino fue<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>e <g ref="#charebd1">ꝺ̇</g> aquellos que 
+<lb xml:id="W0034-00-0009-lb-0008"/>directamente impidie<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>en la predicacion <g ref="#charebd1">ꝺ̇</g>la fee y amo 
+<lb xml:id="W0034-00-0009-lb-0009"/>ne<g ref="#char017f">ſ</g>tados <g ref="#char017f">ſ</g>ufficientemente no de<g ref="#char017f">ſ</g>i<g ref="#char017f">ſ</g>tie<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>en dellos por ma 
+<lb xml:id="W0034-00-0009-lb-0010"/>licia.</p></div>
+<div type="section" n="Proposicion 14" xml:id="W0034-00-0009-d1-03f7">
+<head xml:id="W0034-00-0009-he-03f7"><lb xml:id="W0034-00-0009-lb-0011"/><g ref="#char00b6">¶</g> Propo<g ref="#char017f">ſ</g>icion. xiiii.</head>
+<p xml:id="W0034-00-0009-pa-03f9">
+<lb xml:id="W0034-00-0009-lb-0012"/><hi rendition="#initCaps">N</hi>Ece<g ref="#char017f">ſ</g>ario fue y obligacion tuuo de precepto diui- 
+<lb xml:id="W0034-00-0009-lb-0013"/>no el <g ref="#char017f">ſ</g>ummo pontifice alex<g ref="#chara0303">ã</g>dro <g ref="#char017f">ſ</g>exto: <g ref="#char017f">ſ</g>o cuyo pon 
+<lb xml:id="W0034-00-0009-lb-0014"/>tificado fue de<g ref="#char017f">ſ</g>cubierto el nueuo orbe grandi<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>imo de 
+<lb xml:id="W0034-00-0009-lb-0015"/>las que llamamos occidentales yndias: <g ref="#charebd1">ꝺ̇</g> elegir vn rey 
+<lb xml:id="W0034-00-0009-lb-0016"/>chri<g ref="#char017f">ſ</g>tiano aquien impu<g ref="#char017f">ſ</g>ie<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>e officio de proueer y tener 
+<lb xml:id="W0034-00-0009-lb-0017"/>la <g ref="#char017f">ſ</g>olicitud / diligencia <g ref="#char204a">⁊</g> cuydado <g ref="#charebd1">ꝺ̇</g>la promulgaci<g ref="#charo0303">õ</g> del 
+<lb xml:id="W0034-00-0009-lb-0018"/>Eu<g ref="#chara0303">ã</g>gelio <g ref="#char204a">⁊</g> ley de x<g ref="#charp0303">p̃</g>o / y fundacion y <g ref="#chara0303">ã</g>pliaci<g ref="#charo0303">õ</g> del culto 
+<lb xml:id="W0034-00-0009-lb-0019"/>diuino y vniuer<g ref="#char017f">ſ</g>al ygle<g ref="#char017f">ſ</g>ia por todos los reynos <g ref="#charebd1">ꝺ̇</g>llas: 
+<lb xml:id="W0034-00-0009-lb-0020"/><g ref="#char204a">⁊</g> de la conuer<g ref="#char017f">ſ</g>i<g ref="#charo0303">õ</g> y saluaci<g ref="#charo0303">õ</g> de los vezinos naturales y 
+<lb xml:id="W0034-00-0009-lb-0021"/>moradores <g ref="#charq0303">q̃</g> enellos biuian y de todo lo demas nece<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>a 
+<lb xml:id="W0034-00-0009-lb-0022"/>rio y conueniente al dicho fin: y en remuneracion del 
+<lb xml:id="W0034-00-0009-lb-0023"/>tal officio y cuydado donalle la dignidad y corona im 
+<lb xml:id="W0034-00-0009-lb-0024"/>perial y <g ref="#char017f">ſ</g>oberano <g ref="#char017f">ſ</g>e<g ref="#charn0303">ñ</g>orio dellas.</p></div>
+<div type="section" n="Proposicion 15" xml:id="W0034-00-0009-d1-03f8">
+<head xml:id="W0034-00-0009-he-03f8"><lb xml:id="W0034-00-0009-lb-0025"/><figure type="inline"/>Propo<g ref="#char017f">ſ</g>icion. xv.</head> 
+<p xml:id="W0034-00-0009-pa-03fa">
+<lb xml:id="W0034-00-0009-lb-0026"/><hi rendition="#initCaps">S</hi>Ingulares prerogatiuas mas que enlos otros 
+<lb xml:id="W0034-00-0009-lb-0027"/>chri<g ref="#char017f">ſ</g>tianos principes: concurrieron enlos reyes <g ref="#charebd1">ꝺ̇</g>
+<lb xml:id="W0034-00-0009-lb-0028"/>ca<g ref="#char017f">ſ</g>tilla y leon don Fernando y do<g ref="#charn0303">ñ</g>a Y<g ref="#char017f">ſ</g>bel catholicos 
+<pb n="[7]" facs="W0034-0010" xml:id="W0034-00-0010-pb-03f1"/>
+<lb xml:id="W0034-00-0010-lb-0001"/>Principes: para <g ref="#charq0303">q̃</g> el Vicario de Chri<g ref="#char017f">ſ</g>to mas a ellos <g ref="#charq0303">q̃</g> a 
+<lb xml:id="W0034-00-0010-lb-0002"/>otros <g ref="#charebd1">ꝺ̇</g> toda la x<g ref="#charp0303">p̃</g>iandad: cometie<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>e el dicho cuydado
+<lb xml:id="W0034-00-0010-lb-0003"/><g ref="#char204a">⁊</g> officio. Que no fue otra co<g ref="#char017f">ſ</g>a <g ref="#char017f">ſ</g>ino por auctoridad di<lb break="no" rendition="#hyphen" xml:id="W0034-00-0010-lb-0004"/>uina in<g ref="#char017f">ſ</g>tituyllos <g ref="#char204a">⁊</g> inue<g ref="#char017f">ſ</g>tillos de la mas alta dignidad
+<lb xml:id="W0034-00-0010-lb-0005"/>que Reyes jamas tuuieron <g ref="#char017f">ſ</g>obre la tierra ( conuiene a 
+<lb xml:id="W0034-00-0010-lb-0006"/><g ref="#char017f">ſ</g>aber) de apo<g ref="#char017f">ſ</g>toles architectonicos delas yndias. En<lb break="no" rendition="#hyphen" xml:id="W0034-00-0010-lb-0007"/>tre otras excelencias tuuieron dos <g ref="#charq0303">q̃</g> <g ref="#char017f">ſ</g>on e<g ref="#char017f">ſ</g>tas. La vna
+<lb xml:id="W0034-00-0010-lb-0008"/>que allende de heredar de <g ref="#char017f">ſ</g>us progenitores el recobra<lb break="no" rendition="#hyphen" xml:id="W0034-00-0010-lb-0009"/>mi<g ref="#chare0303">ẽ</g>to de todos e<g ref="#char017f">ſ</g>tos Reynos de E<g ref="#char017f">ſ</g>pa<g ref="#charn0303">ñ</g>a delas manos 
+<lb xml:id="W0034-00-0010-lb-0010"/>delos tiranos enemigos de nue<g ref="#char017f">ſ</g>tra <g ref="#char017f">ſ</g>ancta fee catholica
+<lb xml:id="W0034-00-0010-lb-0011"/>mahometicos: con mucho derramamiento <g ref="#charebd1">ꝺ̇</g> <g ref="#char017f">ſ</g>u real <g ref="#char017f">ſ</g>an
+<lb xml:id="W0034-00-0010-lb-0012"/>gre / ellos mi<g ref="#char017f">ſ</g>mos con <g ref="#char017f">ſ</g>us propias reales per<g ref="#char017f">ſ</g>onas con
+<lb xml:id="W0034-00-0010-lb-0013"/>incomparables trabajos recobraron el gran Reyno de 
+<lb xml:id="W0034-00-0010-lb-0014"/>Granada y lo re<g ref="#char017f">ſ</g>tituyeron finalmente a Chri<g ref="#char017f">ſ</g>to y ala
+<lb xml:id="W0034-00-0010-lb-0015"/>vniuer<g ref="#char017f">ſ</g>al ygle<g ref="#char017f">ſ</g>ia. Otra fue que a <g ref="#char017f">ſ</g>us propias expen<g ref="#char017f">ſ</g>as
+<lb xml:id="W0034-00-0010-lb-0016"/>y por <g ref="#char017f">ſ</g>u fauor / expedicion y mandado: tomando por me
+<lb xml:id="W0034-00-0010-lb-0017"/>dio al Egregio varon Don Chri<g ref="#char017f">ſ</g>toual Colon a quien
+<lb xml:id="W0034-00-0010-lb-0018"/>honrraron y <g ref="#char017f">ſ</g>ublimaron con titulo de primero almiran
+<lb xml:id="W0034-00-0010-lb-0019"/>te dellas: <g ref="#char017f">ſ</g>e de<g ref="#char017f">ſ</g>cubrier<g ref="#charo0303">õ</g> aquellas tan amplas y tan e<g ref="#char017f">ſ</g>ten
+<lb xml:id="W0034-00-0010-lb-0020"/>didas Indias.</p></div>
+<div type="section" n="Proposicion 16" xml:id="W0034-00-0010-d1-03f9">
+<head xml:id="W0034-00-0010-he-03f9"><lb xml:id="W0034-00-0010-lb-0021"/><g ref="#char00b6">¶</g> Propo<g ref="#char017f">ſ</g>icion. xvi.</head> 
+<p xml:id="W0034-00-0010-pa-03fb">
+<lb xml:id="W0034-00-0010-lb-0022"/><hi rendition="#initCaps">P</hi>Udo prouida / licita y ju<g ref="#char017f">ſ</g>tamente el Romano pon
+<lb xml:id="W0034-00-0010-lb-0023"/>tifice vicario de Je<g ref="#char017f">ſ</g>u Chri<g ref="#char017f">ſ</g>to por auctoridad diui
+<lb xml:id="W0034-00-0010-lb-0024"/>na cuyos <g ref="#char017f">ſ</g>on todos los reynos <g ref="#charebd1">ꝺ̇</g>los cielos <g ref="#char204a">⁊</g> <g ref="#charebd1">ꝺ̇</g>la tierra:
+<lb xml:id="W0034-00-0010-lb-0025"/>inue<g ref="#char017f">ſ</g>tir alos Reyes de Ca<g ref="#char017f">ſ</g>tilla y Le<g ref="#charo0303">õ</g> del <g ref="#char017f">ſ</g>uppremo <g ref="#char204a">⁊</g> 
+<lb xml:id="W0034-00-0010-lb-0026"/><g ref="#char017f">ſ</g>oberano Imperio <g ref="#char204a">⁊</g> <g ref="#char017f">ſ</g>e<g ref="#charn0303">ñ</g>orio de todo aquel orbe vniuer
+<lb xml:id="W0034-00-0010-lb-0027"/><g ref="#char017f">ſ</g>o delas Indias: c<g ref="#charo0303">õ</g><g ref="#char017f">ſ</g>tituyendo los Emperadores <g ref="#char017f">ſ</g>obre
+<lb xml:id="W0034-00-0010-lb-0028"/>muchos Reyes: tomando <g ref="#char017f">ſ</g>us catholicas per<g ref="#char017f">ſ</g>onas exce
+<lb xml:id="W0034-00-0010-lb-0029"/>l<g ref="#chare0303">ẽ</g>cia y dignidad real / y an<g ref="#char017f">ſ</g>i eligiendo <g ref="#char017f">ſ</g>u real indu<g ref="#char017f">ſ</g>tria
+<lb xml:id="W0034-00-0010-lb-0030"/>por medio conuenienti<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>imo y aun nece<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>ario ordena<pb n="[8]" break="no" rendition="#hyphen" facs="W0034-0011" xml:id="W0034-00-0011-pb-03f2"/><lb break="no" xml:id="W0034-00-0011-lb-0001"/>
+<lb xml:id="W0034-00-0011-lb-0002"/>do para la con<g ref="#char017f">ſ</g>ecucion del <g ref="#char017f">ſ</g>u<g ref="#char017f">ſ</g>o dicho Chri<g ref="#char017f">ſ</g>tiano fin.</p>
+<p xml:id="W0034-00-0011-pa-03fc">
+<lb xml:id="W0034-00-0011-lb-0003"/>Dela ma<g ref="#charn0303">ñ</g>ra que la <g ref="#char017f">ſ</g>ede apo<g ref="#char017f">ſ</g>tolica acepto y approuo la
+<lb xml:id="W0034-00-0011-lb-0004"/>dignidad imperial que hallo entre los infieles en el m<g ref="#charu0303">ũ</g>
+<lb xml:id="W0034-00-0011-lb-0005"/>do / no las tiranias por donde los romanos la auian ad
+<lb xml:id="W0034-00-0011-lb-0006"/>quirido: para que el Emperador fue<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>e abogado y de<lb break="no" rendition="#hyphen" xml:id="W0034-00-0011-lb-0007"/>fen<g ref="#char017f">ſ</g>or dela vniuer<g ref="#char017f">ſ</g>al ygle<g ref="#char017f">ſ</g>ia  adoptando lo por hijo. La
+<lb xml:id="W0034-00-0011-lb-0008"/>qual dignidad <g ref="#char017f">ſ</g>i viera el Vicario de chri<g ref="#char017f">ſ</g>to que no con 
+<lb xml:id="W0034-00-0011-lb-0009"/>uenia para el bien e<g ref="#char017f">ſ</g>piritual dela chri<g ref="#char017f">ſ</g>tiandad pudiera 
+<lb xml:id="W0034-00-0011-lb-0010"/><g ref="#char017f">ſ</g>in ning<g ref="#charu0303">ũ</g>a dubta por la mi<g ref="#char017f">ſ</g>ma auctoridad diuina que
+<lb xml:id="W0034-00-0011-lb-0011"/>tiene y v<g ref="#char017f">ſ</g>a en la tierra:  annihilalla y con<g ref="#char017f">ſ</g>umilla: y cria 
+<lb xml:id="W0034-00-0011-lb-0012"/>lla / o in<g ref="#char017f">ſ</g>tituylla de nueuo <g ref="#char017f">ſ</g>ino la ouiera / como tuuo po
+<lb xml:id="W0034-00-0011-lb-0013"/>der de tran<g ref="#char017f">ſ</g>ferilla delos griegos alos germanos. Por 
+<lb xml:id="W0034-00-0011-lb-0014"/>la mi<g ref="#char017f">ſ</g>ma raz<g ref="#charo0303">õ</g> pudo prohibir la <g ref="#char017f">ſ</g>ede apo<g ref="#char017f">ſ</g>tolica a todos
+<lb xml:id="W0034-00-0011-lb-0015"/>los otros Reyes Chri<g ref="#char017f">ſ</g>tianos <g ref="#char017f">ſ</g>o pena de excomunion 
+<lb xml:id="W0034-00-0011-lb-0016"/>que ni vayan ni embien alas dichas Indias <g ref="#char017f">ſ</g>in licen<lb break="no" rendition="#hyphen" xml:id="W0034-00-0011-lb-0017"/>cia y auctoridad delos Reyes de Ca<g ref="#char017f">ſ</g>tilla: y <g ref="#char017f">ſ</g>i el contra
+<lb xml:id="W0034-00-0011-lb-0018"/>rio hazen peccan mortalmente <g ref="#char204a">⁊</g> incurren enla excomu
+<lb xml:id="W0034-00-0011-lb-0019"/>nion.</p></div>
+<div type="section" n="Proposicion 17" xml:id="W0034-00-0011-d1-03fa">
+<head xml:id="W0034-00-0011-he-03fa"><lb xml:id="W0034-00-0011-lb-0020"/><figure type="inline"/>Propo<g ref="#char017f">ſ</g>icion. xvii.</head>
+<p xml:id="W0034-00-0011-pa-03fd">
+<lb xml:id="W0034-00-0011-lb-0021"/><hi rendition="#initCaps">L</hi>Os Reyes de Ca<g ref="#char017f">ſ</g>tilla y leon <g ref="#char017f">ſ</g>on verdaderon prin
+<lb xml:id="W0034-00-0011-lb-0022"/>cipes <g ref="#char017f">ſ</g>oberanos <g ref="#char204a">⁊</g> vniuer<g ref="#char017f">ſ</g>ales Se<g ref="#charn0303">ñ</g>ores y empera
+<lb xml:id="W0034-00-0011-lb-0023"/>dores <g ref="#char017f">ſ</g>obre muchos Reyes <g ref="#char204a">⁊</g> aquien pertene<g ref="#char017f">ſ</g>ce de de<lb break="no" rendition="#hyphen" xml:id="W0034-00-0011-lb-0024"/>recho todo aquel Imperio alto <g ref="#char204a">⁊</g> vniuer<g ref="#char017f">ſ</g>al juri<g ref="#char017f">ſ</g>dicion
+<lb xml:id="W0034-00-0011-lb-0025"/><g ref="#char017f">ſ</g>obre todas las Indias: por la auctoridad / conce<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>ion y 
+<lb xml:id="W0034-00-0011-lb-0026"/>donacion dela dicha <g ref="#char017f">ſ</g>ancta <g ref="#char017f">ſ</g>ede apo<g ref="#char017f">ſ</g>tolica. Y a<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>i por
+<lb xml:id="W0034-00-0011-lb-0027"/>auctoridad diuina. Y e<g ref="#char017f">ſ</g>te es y no otro el fundamento 
+<lb xml:id="W0034-00-0011-lb-0028"/>juridico y <g ref="#char017f">ſ</g>ub<g ref="#char017f">ſ</g>tancial donde e<g ref="#char017f">ſ</g>ta fundado y a<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>entado
+<lb xml:id="W0034-00-0011-lb-0029"/>todo <g ref="#char017f">ſ</g>u titulo.</p></div>
+<div type="section" n="Proposicion 18" xml:id="W0034-00-0011-d1-03fb">
+<head xml:id="W0034-00-0011-he-03fb"><lb xml:id="W0034-00-0011-lb-0030"/><figure type="inline"/>Propo<g ref="#char017f">ſ</g>icion. xviii.</head>
+<p xml:id="W0034-00-0012-pa-03fe">
+<pb n="[9]" facs="W0034-0012" xml:id="W0034-00-0012-pb-03f3"/>
+<lb xml:id="W0034-00-0012-lb-0001"/><hi rendition="#initCaps">A</hi>Un e<g ref="#char017f">ſ</g>te <g ref="#char017f">ſ</g>oberano imperial y vniuer<g ref="#char017f">ſ</g>al principado
+<lb xml:id="W0034-00-0012-lb-0002"/>y <g ref="#char017f">ſ</g>e<g ref="#charn0303">ñ</g>orio delos Reyes de ca<g ref="#char017f">ſ</g>tilla enlas yndias: <g ref="#char017f">ſ</g>e
+<lb xml:id="W0034-00-0012-lb-0003"/>compadece tener los Reyes y <g ref="#char017f">ſ</g>e<g ref="#charn0303">ñ</g>ores naturales dellas
+<lb xml:id="W0034-00-0012-lb-0004"/><g ref="#char017f">ſ</g>u admini<g ref="#char017f">ſ</g>tracion / principado / juri<g ref="#char017f">ſ</g>dici<g ref="#charo0303">õ</g> / derechos y 
+<lb xml:id="W0034-00-0012-lb-0005"/>dominio <g ref="#char017f">ſ</g>obre <g ref="#char017f">ſ</g>us <g ref="#char017f">ſ</g>ubditos pueblos / o <g ref="#charq0303">q̃</g> politica / o real
+<lb xml:id="W0034-00-0012-lb-0006"/>mente <g ref="#char017f">ſ</g>e rijan: como <g ref="#char017f">ſ</g>e compadecia el <g ref="#char017f">ſ</g>e<g ref="#charn0303">ñ</g>orio vniuer<g ref="#char017f">ſ</g>al
+<lb xml:id="W0034-00-0012-lb-0007"/>y <g ref="#char017f">ſ</g>uppremo delos Emperadores que <g ref="#char017f">ſ</g>obre los Reyes 
+<lb xml:id="W0034-00-0012-lb-0008"/>antiguamente tenian.</p></div>
+<div type="section" n="Proposicion 19" xml:id="W0034-00-0012-d1-03fc">
+<head xml:id="W0034-00-0012-he-03fc"><lb xml:id="W0034-00-0012-lb-0009"/><g ref="#char00b6">¶</g> Propo<g ref="#char017f">ſ</g>icion. xix.</head>
+<p xml:id="W0034-00-0012-pa-03ff">
+<lb xml:id="W0034-00-0012-lb-0010"/><hi rendition="#initCaps">T</hi>Odos los Reyes y <g ref="#char017f">ſ</g>e<g ref="#charn0303">ñ</g>ores naturales / ciudades / 
+<lb xml:id="W0034-00-0012-lb-0011"/>comunidades y pueblos de a<g ref="#charq0303">q̃</g>llas yndias <g ref="#char017f">ſ</g>on obli
+<lb xml:id="W0034-00-0012-lb-0012"/>gados a reconocer alos Reyes de Ca<g ref="#char017f">ſ</g>tilla por vniuer<lb break="no" rendition="#hyphen" xml:id="W0034-00-0012-lb-0013"/><g ref="#char017f">ſ</g>ales y <g ref="#char017f">ſ</g>oberanos <g ref="#char017f">ſ</g>e<g ref="#charn0303">ñ</g>ores y Emperadores dela manera
+<lb xml:id="W0034-00-0012-lb-0014"/>dicha: de<g ref="#char017f">ſ</g>pues de auer recebido de <g ref="#char017f">ſ</g>u propia y libre vo
+<lb xml:id="W0034-00-0012-lb-0015"/>luntad nue<g ref="#char017f">ſ</g>tra <g ref="#char017f">ſ</g>ancta fee y el <g ref="#char017f">ſ</g>acro bapti<g ref="#char017f">ſ</g>mo: y <g ref="#char017f">ſ</g>i antes <g ref="#charq0303">q̃</g>
+<lb xml:id="W0034-00-0012-lb-0016"/>lo re<g ref="#char017f">ſ</g>ciban no lo hazen ni quieren hazer no pueden <g ref="#char017f">ſ</g>er
+<lb xml:id="W0034-00-0012-lb-0017"/>por algun juez / o ju<g ref="#char017f">ſ</g>ticia punidos.</p></div>
+<div type="section" n="Proposicion 20" xml:id="W0034-00-0012-d1-03fd">
+<head xml:id="W0034-00-0012-he-03fd"><lb xml:id="W0034-00-0012-lb-0018"/><g ref="#char00b6">¶</g> Propo<g ref="#char017f">ſ</g>icion. xx.</head>
+<p xml:id="W0034-00-0012-pa-0400">
+<lb xml:id="W0034-00-0012-lb-0019"/><hi rendition="#initCaps">S</hi>On obligados los Reyes de ca<g ref="#char017f">ſ</g>tilla por precepto 
+<lb xml:id="W0034-00-0012-lb-0020"/>formal dela apo<g ref="#char017f">ſ</g>tolica <g ref="#char017f">ſ</g>illa: y tambien por derecho
+<lb xml:id="W0034-00-0012-lb-0021"/>diuino: a con<g ref="#char017f">ſ</g>umma dilig<g ref="#chare0303">ẽ</g>cia procurar y proueer e em
+<lb xml:id="W0034-00-0012-lb-0022"/>biar mini<g ref="#char017f">ſ</g>tros ydoneos que prediquen la fee por todo 
+<lb xml:id="W0034-00-0012-lb-0023"/>aquel orbe / llamando y combidando a las gentes del / <g ref="#charq0303">q̃</g>
+<lb xml:id="W0034-00-0012-lb-0024"/>vengan alas bodas y cena de Chri<g ref="#char017f">ſ</g>to y a todo lo demas
+<lb xml:id="W0034-00-0012-lb-0025"/>que enla <g ref="#char017f">ſ</g>eg<g ref="#charu0303">ũ</g>da propo<g ref="#char017f">ſ</g>icion e<g ref="#char017f">ſ</g>ta dicho para con<g ref="#char017f">ſ</g>eguir 
+<lb xml:id="W0034-00-0012-lb-0026"/>e<g ref="#char017f">ſ</g>te fin.</p></div>
+<div type="section" n="Proposicion 21" xml:id="W0034-00-0013-d1-03fe">
+<head xml:id="W0034-00-0012-he-03fe"><g ref="#char00b6">¶</g> Propo<g ref="#char017f">ſ</g>icion. xxi.</head>
+<p xml:id="W0034-00-0013-pa-0401">
+<pb n="[10]" facs="W0034-0013" xml:id="W0034-00-0013-pb-03f4"/>
+<lb xml:id="W0034-00-0013-lb-0001"/><hi rendition="#initCaps">T</hi>Ienen los Reyes de Ca<g ref="#char017f">ſ</g>tilla el mi<g ref="#char017f">ſ</g>mo poder y ju<lb break="no" rendition="#hyphen" xml:id="W0034-00-0013-lb-0002"/>ri<g ref="#char017f">ſ</g>dicion <g ref="#char017f">ſ</g>obre aquellos infieles avn antes que <g ref="#char017f">ſ</g>e 
+<lb xml:id="W0034-00-0013-lb-0003"/>conuiertan que tener el romano pontifice <g ref="#char017f">ſ</g>obre ellos
+<lb xml:id="W0034-00-0013-lb-0004"/>la .i. propo<g ref="#char017f">ſ</g>icion dize: tanto quanto fuere mene<g ref="#char017f">ſ</g>ter <g ref="#char017f">ſ</g>e 
+<lb xml:id="W0034-00-0013-lb-0005"/>gun las reglas <g ref="#charebd1">ꝺ̇</g>la recta razon para la promocion y pro 
+<lb xml:id="W0034-00-0013-lb-0006"/><g ref="#char017f">ſ</g>ecucion de aquel fin y para quitar los ob<g ref="#char017f">ſ</g>taculos qua- 
+<lb xml:id="W0034-00-0013-lb-0007"/>les quiera que <g ref="#char017f">ſ</g>ean que lo puedan impedir.</p></div>
+<div type="section" n="Proposicion 22" xml:id="W0034-00-0013-d1-03ff">
+<head xml:id="W0034-00-0013-he-03ff"><lb xml:id="W0034-00-0013-lb-0008"/><g ref="#char00b6">¶</g> Propo<g ref="#char017f">ſ</g>icion. xxii.</head>
+<p xml:id="W0034-00-0013-pa-0402">
+<lb xml:id="W0034-00-0013-lb-0009"/><hi rendition="#initCaps">L</hi>Os reyes de ca<g ref="#char017f">ſ</g>tilla <g ref="#char017f">ſ</g>on obligados de derecho di 
+<lb xml:id="W0034-00-0013-lb-0010"/>uino a procurar que la fee de je<g ref="#char017f">ſ</g>u chri<g ref="#char017f">ſ</g>to <g ref="#char017f">ſ</g>e predi<g ref="#charq0303">q̃</g> 
+<lb xml:id="W0034-00-0013-lb-0011"/>por la forma <g ref="#charq0303">q̃</g> el hifo de dios dexo en <g ref="#char017f">ſ</g>u ygle<g ref="#char017f">ſ</g>ia e<g ref="#char017f">ſ</g>tatuy- 
+<lb xml:id="W0034-00-0013-lb-0012"/>da / y <g ref="#char017f">ſ</g>us apo<g ref="#char017f">ſ</g>toles con efecto <g ref="#char204a">⁊</g> <g ref="#char017f">ſ</g>in alguna falta / o men<lb break="no" rendition="#hyphen" xml:id="W0034-00-0013-lb-0013"/>gua la pro<g ref="#char017f">ſ</g>iguieron: y la vniuer<g ref="#char017f">ſ</g>al ygle<g ref="#char017f">ſ</g>ia tuuo <g ref="#char017f">ſ</g>iempre 
+<lb xml:id="W0034-00-0013-lb-0014"/>de co<g ref="#char017f">ſ</g>tumbre / y tambien en <g ref="#char017f">ſ</g>us decretos tiene ordena- 
+<lb xml:id="W0034-00-0013-lb-0015"/>do y con<g ref="#char017f">ſ</g>tituydo: y los <g ref="#char017f">ſ</g>anctos doctores la per<g ref="#char017f">ſ</g>uaden y 
+<lb xml:id="W0034-00-0013-lb-0016"/>engrandecen en <g ref="#char017f">ſ</g>us libros. Conuiene a <g ref="#char017f">ſ</g>aber: pacifica 
+<lb xml:id="W0034-00-0013-lb-0017"/>y amoro<g ref="#char017f">ſ</g>a y dulce charitatiua y allectiuamente: por m<g ref="#chara0303">ã</g> 
+<lb xml:id="W0034-00-0013-lb-0018"/><g ref="#char017f">ſ</g>edumbre y humildad y buenos exemplos: c<g ref="#charo0303">õ</g>hindando 
+<lb xml:id="W0034-00-0013-lb-0019"/>los infieles y mayormente los yndios que de <g ref="#char017f">ſ</g>u natura 
+<lb xml:id="W0034-00-0013-lb-0020"/><g ref="#char017f">ſ</g>on man<g ref="#char017f">ſ</g>i<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>imos y humillimos y pacificos: dandoles 
+<lb xml:id="W0034-00-0013-lb-0021"/>antes dones y dadiuas delo nue<g ref="#char017f">ſ</g>tro: que tomandoles 
+<lb xml:id="W0034-00-0013-lb-0022"/>nada delo <g ref="#char017f">ſ</g>uyo. Y a<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>i ternan por bueno y <g ref="#char017f">ſ</g>uaue <g ref="#char204a">⁊</g> ju<g ref="#char017f">ſ</g>to 
+<lb xml:id="W0034-00-0013-lb-0023"/>dios al dios delos chri<g ref="#char017f">ſ</g>tianos y de<g ref="#char017f">ſ</g>te modo querr<g ref="#chara0303">ã</g> <g ref="#char017f">ſ</g>er 
+<lb xml:id="W0034-00-0013-lb-0024"/><g ref="#char017f">ſ</g>uyos y recebir <g ref="#char017f">ſ</g>u fee Catholica y <g ref="#char017f">ſ</g>ancta doctrina.</p></div>
+<div type="section" n="Proposicion 23" xml:id="W0034-00-0013-d1-0400">
+<head xml:id="W0034-00-0013-he-0400"><lb xml:id="W0034-00-0013-lb-0025"/><g ref="#char00b6">¶</g> Propo<g ref="#char017f">ſ</g>icion. xxiii.</head>
+<p xml:id="W0034-00-0013-pa-0403">
+<lb xml:id="W0034-00-0013-lb-0026"/><hi rendition="#initCaps">S</hi>O juzgallos primero por guerra es forma <g ref="#char204a">⁊</g> via c<g ref="#charo0303">õ</g> 
+<lb xml:id="W0034-00-0013-lb-0027"/>traria dela ley y yugo suaue y carga ligera y man-  
+<pb n="[11]" facs="W0034-0014" xml:id="W0034-00-0014-pb-03f5"/>
+<lb xml:id="W0034-00-0014-lb-0001"/><g ref="#char017f">ſ</g>edumbre de Je<g ref="#char017f">ſ</g>u chri<g ref="#char017f">ſ</g>to: es la propia <g ref="#charq0303">q̃</g> lleuo mahoma 
+<lb xml:id="W0034-00-0014-lb-0002"/>y lleuaron los Romanos con <g ref="#charq0303">q̃</g> inquietar<g ref="#charo0303">õ</g> y robaron 
+<lb xml:id="W0034-00-0014-lb-0003"/>el m<g ref="#charu0303">ũ</g>do: es la <g ref="#charq0303">q̃</g> tienen oy los turcos <g ref="#char204a">⁊</g> moros y <g ref="#charq0303">q̃</g> comi- 
+<lb xml:id="W0034-00-0014-lb-0004"/>en<g ref="#charc0327">ç</g>a a tener el xarife: <g ref="#char204a">⁊</g> por tanto es iniqui<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>ima tirani- 
+<lb xml:id="W0034-00-0014-lb-0005"/>ca infamatiua del n<g ref="#charo0303">õ</g>bre melifluo de Chri<g ref="#char017f">ſ</g>to: cau<g ref="#char017f">ſ</g>atiua 
+<lb xml:id="W0034-00-0014-lb-0006"/>de inifinitas nueuas bla<g ref="#char017f">ſ</g>femias c<g ref="#charo0303">õ</g>tra el verdadero dios 
+<lb xml:id="W0034-00-0014-lb-0007"/><g ref="#char204a">⁊</g> contra la religion chri<g ref="#char017f">ſ</g>tiana: como tenemos longi<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>i 
+<lb xml:id="W0034-00-0014-lb-0008"/>ma experi<g ref="#chare0303">ẽ</g>cia <g ref="#charq0303">q̃</g> se ha hecho <g ref="#char204a">⁊</g> oy se haze enlas Indias. 
+<lb xml:id="W0034-00-0014-lb-0009"/>Porque e<g ref="#char017f">ſ</g>tima de Dios <g ref="#char017f">ſ</g>er el mas cruel <g ref="#char204a">⁊</g> mas injusto 
+<lb xml:id="W0034-00-0014-lb-0010"/><g ref="#char204a">⁊</g> <g ref="#char017f">ſ</g>in piedad <g ref="#charq0303">q̃</g> ay enlos dioses: <g ref="#char204a">⁊</g> por con<g ref="#char017f">ſ</g>igui<g ref="#chare0303">ẽ</g>te: es im- 
+<lb xml:id="W0034-00-0014-lb-0011"/>peditiua dela c<g ref="#charo0303">õ</g>uersion de quale<g ref="#char017f">ſ</g>quiera infieles: y que 
+<lb xml:id="W0034-00-0014-lb-0012"/>ha engendrado impo<g ref="#char017f">ſ</g>ibilidad de <g ref="#charq0303">q̃</g> jamas <g ref="#char017f">ſ</g>ean chri<g ref="#char017f">ſ</g>tia 
+<lb xml:id="W0034-00-0014-lb-0013"/>nos en aquel orbe g<g ref="#chare0303">ẽ</g>tes infinitas: allende de todos los 
+<lb xml:id="W0034-00-0014-lb-0014"/>yrreparables <g ref="#char204a">⁊</g> lamentables males y da<g ref="#charn0303">ñ</g>os pue<g ref="#char017f">ſ</g>tos <g ref="#chare0303">ẽ</g>la 
+<lb xml:id="W0034-00-0014-lb-0015"/><g ref="#chara753">ꝓ</g>po<g ref="#char017f">ſ</g>ici<g ref="#charo0303">õ</g> vndecima: de <g ref="#charq0303">q̃</g> es e<g ref="#char017f">ſ</g>ta infernal via pleni<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>ima.</p></div>
+<div type="section" n="Proposicion 24" xml:id="W0034-00-0014-d1-0401">
+<head xml:id="W0034-00-0014-he-0401"><lb xml:id="W0034-00-0014-lb-0016"/><g ref="#char00b6">¶</g> Propo<g ref="#char017f">ſ</g>icion. xxiiii.</head>
+<p xml:id="W0034-00-0014-pa-0404">
+<lb xml:id="W0034-00-0014-lb-0017"/><hi rendition="#initCaps">Q</hi>Uien e<g ref="#char017f">ſ</g>ta via o<g ref="#char017f">ſ</g>a per<g ref="#char017f">ſ</g>uadir gr<g ref="#chara0303">ã</g> velamen es el <g ref="#char017f">ſ</g>uyo 
+<lb xml:id="W0034-00-0014-lb-0018"/>cerca <g ref="#charebd1">ꝺ̇</g>la ley diuina: mayor es <g ref="#char017f">ſ</g>u audacia y temeri 
+<lb xml:id="W0034-00-0014-lb-0019"/>dad <g ref="#charq0303">q̃</g> podria tener / el que de<g ref="#char017f">ſ</g>nudo en carnes / <g ref="#char017f">ſ</g>e pu<g ref="#char017f">ſ</g>ie<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>e
+<lb xml:id="W0034-00-0014-lb-0020"/>voluntariam<g ref="#chare0303">ẽ</g>te a luchar c<g ref="#charo0303">õ</g> cient brauos Leones y fie<lb break="no" rendition="#hyphen" xml:id="W0034-00-0014-lb-0021"/>ros Tigres: mal ha entendido las differencias delos in 
+<lb xml:id="W0034-00-0014-lb-0022"/>fieles <g ref="#charq0303">q̃</g> ene<g ref="#char017f">ſ</g>ta materia <g ref="#char017f">ſ</g>e han <g ref="#charebd1">ꝺ̇</g> supponer / para determi 
+<lb xml:id="W0034-00-0014-lb-0023"/>nar contra <g ref="#charq0303">q̃</g>en <g ref="#char017f">ſ</g>e han de hazer conqui<g ref="#char017f">ſ</g>tas. Ho lo apren 
+<lb xml:id="W0034-00-0014-lb-0024"/>dio delos preceptos dela charidad <g ref="#charq0303">q̃</g> tanto nos dexo en 
+<lb xml:id="W0034-00-0014-lb-0025"/>cargada y m<g ref="#chara0303">ã</g>dada Chri<g ref="#char017f">ſ</g>to: y no se deue auer de<g ref="#char017f">ſ</g>uelado 
+<lb xml:id="W0034-00-0014-lb-0026"/>mucho enla cu<g ref="#chare0303">ẽ</g>ta e<g ref="#char017f">ſ</g>trecha y duro juyzio <g ref="#charq0303">q̃</g> le ha <g ref="#charebd1">ꝺ̇</g> venir 
+<lb xml:id="W0034-00-0014-lb-0027"/>por los inexpiables pecados de <g ref="#charq0303">q̃</g> es causa efficaci<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>ima.</p></div>
+<div type="section" n="Proposicion 25" xml:id="W0034-00-0014-d1-0402">
+<head xml:id="W0034-00-0014-he-0402"><lb xml:id="W0034-00-0014-lb-0028"/><g ref="#char00b6">¶</g> Propo<g ref="#char017f">ſ</g>icion. xxv.</head>
+<p xml:id="W0034-00-0014-pa-0405">
+<lb xml:id="W0034-00-0014-lb-0029"/><hi rendition="#initCaps">S</hi>Iempre <g ref="#char017f">ſ</g> h<g ref="#chara0303">ã</g> prohibido las guerras por los reyes 
+<lb xml:id="W0034-00-0014-lb-0030"/>de ca<g ref="#char017f">ſ</g>tilla c<g ref="#charo0303">õ</g>tra los yndios delas yndias: desdel in 
+<lb xml:id="W0034-00-0014-lb-0031"/>cipio <g ref="#charq0303">q̃</g> por el almirante primero dellas fueron de<g ref="#char017f">ſ</g>cubri 
+<lb xml:id="W0034-00-0014-lb-0032"/>das: y nunca jamas guardaron ni cumplieron los espa 
+<pb n="[12]" facs="W0034-0015" xml:id="W0034-00-0015-pb-03f6"/><lb xml:id="W0034-00-0015-lb-0001"/><g ref="#charn0303">ñ</g>oles instruycion / ni prouision / ni cedula / ni mandami 
+<lb xml:id="W0034-00-0015-lb-0002"/>ento vno ni ninguno <g ref="#charq0303">q̃</g> los reyes les die<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>en: y <g ref="#char017f">ſ</g>i alguna 
+<lb xml:id="W0034-00-0015-lb-0003"/>carta / o prouisi<g ref="#charo0303">õ</g> real alguna vez <g ref="#char017f">ſ</g>ono y toco en cau<g ref="#char017f">ſ</g>a de 
+<lb xml:id="W0034-00-0015-lb-0004"/>guerra: fue porlas fal<g ref="#char017f">ſ</g>i<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>imas <g ref="#char204a">⁊</g> iniquas informaciones 
+<lb xml:id="W0034-00-0015-lb-0005"/><g ref="#char017f">ſ</g>ubrepticias <g ref="#charq0303">q̃</g> los tiranos por robar y hazer e<g ref="#char017f">ſ</g>clauos y 
+<lb xml:id="W0034-00-0015-lb-0006"/>hazer <g ref="#char017f">ſ</g>e ricos dela <g ref="#char017f">ſ</g>angre delos yndios alos Reyes ha 
+<lb xml:id="W0034-00-0015-lb-0007"/>zian. Lo qual aduertido por los Reyes muchas vezes 
+<lb xml:id="W0034-00-0015-lb-0008"/>las renouaron y <g ref="#char017f">ſ</g>obre lo contrario luego mandauan y 
+<lb xml:id="W0034-00-0015-lb-0009"/>proueyan.</p></div>
+<div type="section" n="Proposicion 26" xml:id="W0034-00-0015-d1-0403"> 
+<head xml:id="W0034-00-0015-he-0403"><lb xml:id="W0034-00-0015-lb-0010"/><g ref="#char00b6">¶</g> Propo<g ref="#char017f">ſ</g>icion. xxvi.</head>
+<p xml:id="W0034-00-0015-pa-0406">
+<lb xml:id="W0034-00-0015-lb-0011"/><hi rendition="#initCaps">C</hi>Omo <g ref="#char017f">ſ</g>iempre falto auctoridad <g ref="#charebd1">ꝺ̇</g>l principe y cau<g ref="#char017f">ſ</g>a 
+<lb xml:id="W0034-00-0015-lb-0012"/>ju<g ref="#char017f">ſ</g>ta para mouer guerra alos Indios innocentes 
+<lb xml:id="W0034-00-0015-lb-0013"/><g ref="#charq0303">q̃</g> estau<g ref="#chara0303">ã</g> en <g ref="#char017f">ſ</g>us tierras y ca<g ref="#char017f">ſ</g>as <g ref="#char017f">ſ</g>eguros <g ref="#char204a">⁊</g> pacificos: afir 
+<lb xml:id="W0034-00-0015-lb-0014"/>mamos <g ref="#charq0303">q̃</g> fueron / <g ref="#char017f">ſ</g>on / y <g ref="#char017f">ſ</g>eran <g ref="#char017f">ſ</g>iempre (no aui<g ref="#chare0303">ẽ</g>do cau<g ref="#char017f">ſ</g>a 
+<lb xml:id="W0034-00-0015-lb-0015"/>nueua) nullas y de ningung valor de derecho: inju<g ref="#char017f">ſ</g>tas / 
+<lb xml:id="W0034-00-0015-lb-0016"/>iniquas / tiranicas <g ref="#char204a">⁊</g> por todas las leyes condenadas 
+<lb xml:id="W0034-00-0015-lb-0017"/>desde <g ref="#charq0303">q̃</g> las Indias <g ref="#char017f">ſ</g>e de<g ref="#char017f">ſ</g>cubrieron ha<g ref="#char017f">ſ</g>ta oy enellas las 
+<lb xml:id="W0034-00-0015-lb-0018"/>conqui<g ref="#char017f">ſ</g>tas. Y <g ref="#char017f">ſ</g>olo deue ba<g ref="#char017f">ſ</g>tar por prou<g ref="#chara0303">ã</g><g ref="#charc0327">ç</g>a las re<g ref="#char017f">ſ</g>iden- 
+<lb xml:id="W0034-00-0015-lb-0019"/>cias <g ref="#charq0303">q̃</g> <g ref="#char017f">ſ</g>e han tomado a todos los Gouernadores y los 
+<lb xml:id="W0034-00-0015-lb-0020"/>proce<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>os <g ref="#charq0303">q̃</g> c<g ref="#charo0303">õ</g>tra ellos <g ref="#char204a">⁊</g> otros muchos e<g ref="#char017f">ſ</g>tan enel archi 
+<lb xml:id="W0034-00-0015-lb-0021"/>uo de<g ref="#char017f">ſ</g>te real c<g ref="#charo0303">õ</g><g ref="#char017f">ſ</g>ejo / y los <g ref="#charq0303">q̃</g> cada ora alla y aca de nueuo 
+<lb xml:id="W0034-00-0015-lb-0022"/>con facilidad <g ref="#char017f">ſ</g>e pueden hazer: porque e<g ref="#char017f">ſ</g>to clama ya to 
+<lb xml:id="W0034-00-0015-lb-0023"/>do el Mundo.</p></div>
+<div type="section" n="Proposicion 27" xml:id="W0034-00-0015-d1-0404"> 
+<head xml:id="W0034-00-0015-he-0404"><lb xml:id="W0034-00-0015-lb-0024"/><g ref="#char00b6">¶</g> Propo<g ref="#char017f">ſ</g>icion. xxvii.</head>
+<p xml:id="W0034-00-0015-pa-0407">
+<lb xml:id="W0034-00-0015-lb-0025"/><hi rendition="#initCaps">L</hi>Os Reyes de Ca<g ref="#char017f">ſ</g>tilla <g ref="#char017f">ſ</g>on obligados de derecho 
+<lb xml:id="W0034-00-0015-lb-0026"/>diuino a poner tal gouernacion y regimiento en 
+<lb xml:id="W0034-00-0015-lb-0027"/>aquellas gentes naturales delas Indias: con<g ref="#char017f">ſ</g>eruadas 
+<lb xml:id="W0034-00-0015-lb-0028"/><g ref="#char017f">ſ</g>us ju<g ref="#char017f">ſ</g>tas leyes y buenas co<g ref="#char017f">ſ</g>tumbres que tenian algu<lb break="no" rendition="#hyphen" xml:id="W0034-00-0015-lb-0029"/>nas: y quitadas las malas que no eran muchas / y <g ref="#char017f">ſ</g>upli<pb n="[13]" facs="W0034-0016" break="no" rendition="#hyphen" xml:id="W0034-00-0016-pb-03f7"/><lb break="no" xml:id="W0034-00-0016-lb-0001"/>dos los defectos que tuuieren en <g ref="#char017f">ſ</g>u policia: todo lo <g ref="#charq0303">q̃</g>l 
+<lb xml:id="W0034-00-0016-lb-0002"/><g ref="#char017f">ſ</g>e quita y <g ref="#char017f">ſ</g>uple principalmente con la predicacion y re- 
+<lb xml:id="W0034-00-0016-lb-0003"/>ception dela fee: que po<g ref="#char017f">ſ</g>pue<g ref="#char017f">ſ</g>ta y muy ala po<g ref="#char017f">ſ</g>tre <g ref="#char017f">ſ</g>u pro<lb break="no" rendition="#hyphen" xml:id="W0034-00-0016-lb-0004"/>pia vtilidad real / rentas y temporal intere<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>e: a<g ref="#charq0303">q̃</g>llas gen 
+<lb xml:id="W0034-00-0016-lb-0005"/>tes sean ayudadas y no impedidas en lo tocante alo e<g ref="#char017f">ſ</g> 
+<lb xml:id="W0034-00-0016-lb-0006"/>piritual y en <g ref="#char017f">ſ</g>u c<g ref="#charo0303">õ</g>uer<g ref="#char017f">ſ</g>ion y recebimiento de nue<g ref="#char017f">ſ</g>tra ca- 
+<lb xml:id="W0034-00-0016-lb-0007"/>tholica fee / y enel exercicio de los <g ref="#char017f">ſ</g>anctos <g ref="#char017f">ſ</g>acramentos 
+<lb xml:id="W0034-00-0016-lb-0008"/>dela ygle<g ref="#char017f">ſ</g>ia: y tambien con<g ref="#char017f">ſ</g>eruados en <g ref="#char017f">ſ</g>us derechos y 
+<lb xml:id="W0034-00-0016-lb-0009"/>ju<g ref="#char017f">ſ</g>ticia. Y <g ref="#char017f">ſ</g>obre e<g ref="#char017f">ſ</g>to principalm<g ref="#chare0303">ẽ</g>te augm<g ref="#chare0303">ẽ</g>tadas y pro<g ref="#char017f">ſ</g><lb break="no" rendition="#hyphen" xml:id="W0034-00-0016-lb-0010"/>peradas enla vida corporal y enlo demas que a <g ref="#char017f">ſ</g>u bien 
+<lb xml:id="W0034-00-0016-lb-0011"/>t<g ref="#chare0303">ẽ</g>poral pertenece. Porque e<g ref="#char017f">ſ</g>te es el fin / o la cau<g ref="#char017f">ſ</g>a final 
+<lb xml:id="W0034-00-0016-lb-0012"/>porque alos Reyes de Castilla y Leon no teniendo an 
+<lb xml:id="W0034-00-0016-lb-0013"/>tes nada enellas les fueron por la ygle<g ref="#char017f">ſ</g>ia concedidas.</p></div>  
+<div type="section" n="Proposicion 28" xml:id="W0034-00-0016-d1-0405">
+<head xml:id="W0034-00-0016-he-0405"><lb xml:id="W0034-00-0016-lb-0014"/><g ref="#char00b6">¶</g> Propo<g ref="#char017f">ſ</g>icion. xxviii.</head>
+<p xml:id="W0034-00-0016-pa-0408">
+<lb xml:id="W0034-00-0016-lb-0015"/><hi rendition="#initCaps">N</hi>Ing<g ref="#charu0303">ũ</g>a otra pe<g ref="#char017f">ſ</g>til<g ref="#chare0303">ẽ</g>cia pudo el diablo inu<g ref="#chare0303">ẽ</g>tar <g ref="#chara751">ꝑ</g>a <g ref="#charebd1">ꝺ̇</g> 
+<lb xml:id="W0034-00-0016-lb-0016"/>struyr todo a<g ref="#charq0303">q̃</g>l orbe / c<g ref="#charo0303">õ</g><g ref="#char017f">ſ</g>umir y matar todas a<g ref="#charq0303">q̃</g>llas 
+<lb xml:id="W0034-00-0016-lb-0017"/>g<g ref="#chare0303">ẽ</g>tes <g ref="#charebd1">ꝺ̇</g>l: y <g ref="#charebd1">ꝺ̇</g><g ref="#char017f">ſ</g>poblar como ha de<g ref="#char017f">ſ</g>poblado t<g ref="#chara0303">ã</g> gr<g ref="#chara0303">ã</g>des y t<g ref="#chara0303">ã</g> 
+<lb xml:id="W0034-00-0016-lb-0018"/>poblados reynos: y e<g ref="#char017f">ſ</g>ta <g ref="#char017f">ſ</g>ola ba<g ref="#char017f">ſ</g>taua <g ref="#chara751">ꝑ</g>a de<g ref="#char017f">ſ</g>poblar el m<g ref="#charu0303">ũ</g> 
+<lb xml:id="W0034-00-0016-lb-0019"/>do: como fue la inu<g ref="#chare0303">ẽ</g>ci<g ref="#charo0303">õ</g> del repartimi<g ref="#chare0303">ẽ</g>to y encomi<g ref="#chare0303">ẽ</g>das 
+<lb xml:id="W0034-00-0016-lb-0020"/>de a<g ref="#charq0303">q̃</g>llas gentes que repartieron y las encomendaron 
+<lb xml:id="W0034-00-0016-lb-0021"/>alos e<g ref="#char017f">ſ</g>pa<g ref="#charn0303">ñ</g>oles: como <g ref="#char017f">ſ</g>i las encom<g ref="#chare0303">ẽ</g>dar<g ref="#chara0303">ã</g> a todos los dia 
+<lb xml:id="W0034-00-0016-lb-0022"/>blos / o como atajos de ganados entregados a hambri<g ref="#chare0303">ẽ</g> 
+<lb xml:id="W0034-00-0016-lb-0023"/>tos lobos. Por e<g ref="#char017f">ſ</g>ta encomi<g ref="#chare0303">ẽ</g>da / o repartimiento <g ref="#charq0303">q̃</g> fue 
+<lb xml:id="W0034-00-0016-lb-0024"/>la mas cruel e<g ref="#char017f">ſ</g>pecie de tirania y mas digna de fuego in 
+<lb xml:id="W0034-00-0016-lb-0025"/>fernal <g ref="#charq0303">q̃</g> pudo <g ref="#char017f">ſ</g>er ymaginada: todas a<g ref="#charq0303">q̃</g>llas gentes <g ref="#char017f">ſ</g>on 
+<lb xml:id="W0034-00-0016-lb-0026"/>impedidas de re<g ref="#char017f">ſ</g>cebir la fee y religion chri<g ref="#char017f">ſ</g>tiana: por 
+<lb xml:id="W0034-00-0016-lb-0027"/>occupallos noches y dias los e<g ref="#char017f">ſ</g>pa<g ref="#charn0303">ñ</g>oles <g ref="#char017f">ſ</g>us infelices ti 
+<lb xml:id="W0034-00-0016-lb-0028"/>ranos com<g ref="#chare0303">ẽ</g>deros enlas minas / y trabajos per<g ref="#char017f">ſ</g>onales / 
+<lb xml:id="W0034-00-0016-lb-0029"/>y tributos increybles: y c<g ref="#charo0303">õ</g> echalles cargas acue<g ref="#char017f">ſ</g>tas <g ref="#charq0303">q̃</g> las 
+<lb xml:id="W0034-00-0016-lb-0030"/>lleuen ci<g ref="#chare0303">ẽ</g>to y dozi<g ref="#chare0303">ẽ</g>tas leguas como y peores que <g ref="#char017f">ſ</g>i fue 
+<lb xml:id="W0034-00-0016-lb-0031"/><g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>en be<g ref="#char017f">ſ</g>tias: y c<g ref="#charo0303">õ</g> per<g ref="#char017f">ſ</g>eguir y echar delos pueblos delos 
+<lb xml:id="W0034-00-0016-lb-0032"/>yndios alos religiosos Predicadores dela fee que les 
+<lb xml:id="W0034-00-0016-lb-0033"/>doctrinan y dan cono<g ref="#char017f">ſ</g>cimiento de Dios: por no tener 
+<pb n="[14]" facs="W0034-0017" xml:id="W0034-00-0017-pb-03f8"/><lb xml:id="W0034-00-0017-lb-0001"/>te<g ref="#char017f">ſ</g>tigos de <g ref="#char017f">ſ</g>us violencias / crueldades / latrocinios con 
+<lb xml:id="W0034-00-0017-lb-0002"/>tinuos y homicidios. Por e<g ref="#char017f">ſ</g>tas encomiendas y repar 
+<lb xml:id="W0034-00-0017-lb-0003"/>timiento han padecido y padecen continuos tormentos. 
+<lb xml:id="W0034-00-0017-lb-0004"/>Robos / inju<g ref="#char017f">ſ</g>ticias en <g ref="#char017f">ſ</g>us per<g ref="#char017f">ſ</g>onas y en fijos <g ref="#char204a">⁊</g> mugeres 
+<lb xml:id="W0034-00-0017-lb-0005"/>y bienos los indios. Por e<g ref="#char017f">ſ</g>tas encomiendas y reparti 
+<lb xml:id="W0034-00-0017-lb-0006"/>miento han perecido en obra de quar<g ref="#chare0303">ẽ</g>ta y seys a<g ref="#charn0303">ñ</g>os yo 
+<lb xml:id="W0034-00-0017-lb-0007"/>presente: <g ref="#char017f">ſ</g>obre quinze cuentos de animas <g ref="#char017f">ſ</g>in fee y <g ref="#char017f">ſ</g>in <g ref="#char017f">ſ</g>a 
+<lb xml:id="W0034-00-0017-lb-0008"/>cramentos / y han de<g ref="#char017f">ſ</g>poblado mas de tres mil leguas <g ref="#charebd1">ꝺ̇</g> 
+<lb xml:id="W0034-00-0017-lb-0009"/>tierra. E yo: digo pre<g ref="#char017f">ſ</g>ente: y mientras e<g ref="#char017f">ſ</g>tas encomien<lb break="no" rendition="#hyphen" xml:id="W0034-00-0017-lb-0010"/>das duraren: yo pido a dios que <g ref="#char017f">ſ</g>ea te<g ref="#char017f">ſ</g>tigo y juez de<g ref="#char017f">ſ</g>to 
+<lb xml:id="W0034-00-0017-lb-0011"/>que digo: que no ba<g ref="#char017f">ſ</g>tara el poder de los reyes aun que 
+<lb xml:id="W0034-00-0017-lb-0012"/>e<g ref="#char017f">ſ</g>tuuie<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>en pre<g ref="#char017f">ſ</g>entes: a que no perezcan y <g ref="#char017f">ſ</g>e acaben y c<g ref="#charo0303">õ</g> 
+<lb xml:id="W0034-00-0017-lb-0013"/><g ref="#char017f">ſ</g>uman todos los indios: como por e<g ref="#char017f">ſ</g>ta via <g ref="#char017f">ſ</g>e acabarian 
+<lb xml:id="W0034-00-0017-lb-0014"/>mil mundos <g ref="#char017f">ſ</g>in tener remedio.</p></div>
+<div type="section" n="Proposicion 29" xml:id="W0034-00-0017-d1-0406"> 
+<head xml:id="W0034-00-0017-he-0406"><lb xml:id="W0034-00-0017-lb-0015"/><g ref="#char00b6">¶</g> Propo<g ref="#char017f">ſ</g>icion. xxix.</head>
+<p xml:id="W0034-00-0017-pa-0409">
+<lb xml:id="W0034-00-0017-lb-0016"/><hi rendition="#initCaps">L</hi>As dichas encomiendas y repartimiento de hom<lb break="no" rendition="#hyphen" xml:id="W0034-00-0017-lb-0017"/>bres que <g ref="#char017f">ſ</g>e haze y ha hecho <g ref="#char017f">ſ</g>egun dixe como <g ref="#char017f">ſ</g>i fue- 
+<lb xml:id="W0034-00-0017-lb-0018"/>ran be<g ref="#char017f">ſ</g>tias: nunca fue mandado hazer de<g ref="#char017f">ſ</g>de <g ref="#char017f">ſ</g>u tiranico 
+<lb xml:id="W0034-00-0017-lb-0019"/>principio por los reyes de ca<g ref="#char017f">ſ</g>tilla: ni tal pensami<g ref="#chare0303">ẽ</g>to tu<lb break="no" rendition="#hyphen" xml:id="W0034-00-0017-lb-0020"/>uier<g ref="#charo0303">õ</g>. Porque no le c<g ref="#charo0303">õ</g>padece tal gouernaci<g ref="#charo0303">õ</g> iniquia /
+<lb xml:id="W0034-00-0017-lb-0021"/>tiranica / va<g ref="#char017f">ſ</g>latiua / y <g ref="#charebd1">ꝺ̇</g><g ref="#char017f">ſ</g>poblatiua de t<g ref="#chara0303">ã</g> gr<g ref="#chara0303">ã</g>des reynos:
+<lb xml:id="W0034-00-0017-lb-0022"/>poniendo atodo vn mundo en a<g ref="#char017f">ſ</g>perrima y c<g ref="#charo0303">õ</g>tinua/ hor 
+<lb xml:id="W0034-00-0017-lb-0023"/>rible y mortifera <g ref="#char017f">ſ</g>eruidumbre: con la retitud y ju<g ref="#char017f">ſ</g>ticia 
+<lb xml:id="W0034-00-0017-lb-0024"/>de ningunos <g ref="#charq0303">q̃</g> <g ref="#char017f">ſ</g>ean catholicos Chri<g ref="#char017f">ſ</g>tianos ni aun que 
+<lb xml:id="W0034-00-0017-lb-0025"/>fue<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>en gentiles infieles: con <g ref="#charq0303">q̃</g> tuuie<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>en alguna razon  
+<lb xml:id="W0034-00-0017-lb-0026"/>de reyes. La reyna do<g ref="#charn0303">ñ</g>a Y<g ref="#char017f">ſ</g>abel de imnmortal memoria <g ref="#charq0303">q̃</g>
+<lb xml:id="W0034-00-0017-lb-0027"/>de<g ref="#char017f">ſ</g>to tracto la primera: luego an<g ref="#char017f">ſ</g>i como por <g ref="#char017f">ſ</g>u m<g ref="#chara0303">ã</g>dado 
+<lb xml:id="W0034-00-0017-lb-0028"/>y fauor <g ref="#char017f">ſ</g>e de<g ref="#char017f">ſ</g>cubrieron las indias / al primero <g ref="#charq0303">q̃</g> embio 
+<lb xml:id="W0034-00-0017-lb-0029"/>por gouernador que fue el dicho Almirante: y el <g ref="#char017f">ſ</g>egun 
+<lb xml:id="W0034-00-0017-lb-0030"/>do que <g ref="#char017f">ſ</g>e llamo d<g ref="#charo0303">õ</g> Fr<g ref="#chara0303">ã</g>ci<g ref="#char017f">ſ</g>co de Bouadilla: y el tercero 
+<lb xml:id="W0034-00-0017-lb-0031"/>que fue vn com<g ref="#chare0303">ẽ</g>dador de lares: m<g ref="#chara0303">ã</g>do eficaci<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>imam<g ref="#chare0303">ẽ</g>te
+<pb n="[15]" facs="W0034-0018" xml:id="W0034-00-0018-pb-03f9"/><lb xml:id="W0034-00-0018-lb-0001"/>que con<g ref="#char017f">ſ</g>erua<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>en los yndios en toda <g ref="#char017f">ſ</g>u paz / ju<g ref="#char017f">ſ</g>ticia y li
+<lb xml:id="W0034-00-0018-lb-0002"/>bertad. Lo qual porque el dicho almir<g ref="#chara0303">ã</g>te dio <g ref="#char017f">ſ</g>olos tre
+<lb xml:id="W0034-00-0018-lb-0003"/>zientos yndios a e<g ref="#char017f">ſ</g>pa<g ref="#charn0303">ñ</g>oles los quales auian bien <g ref="#char017f">ſ</g>erui
+<lb xml:id="W0034-00-0018-lb-0004"/>do alos reyes y dellos yo que e<g ref="#char017f">ſ</g>to digo tuue vno: qui<g ref="#char017f">ſ</g>o
+<lb xml:id="W0034-00-0018-lb-0005"/>hundir y de<g ref="#char017f">ſ</g>truyr al almirante diziendo: <g ref="#charq0303">q̃</g> <g ref="#charq0303">q̃</g> poder te<lb break="no" rendition="#hyphen" xml:id="W0034-00-0018-lb-0006"/>nia el <g ref="#char017f">ſ</g>uyo para dar a nadie <g ref="#char017f">ſ</g>us va<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>allos. Los quales
+<lb xml:id="W0034-00-0018-lb-0007"/>luego e<g ref="#char017f">ſ</g>tando la corte en granada quando lo Lanja 
+<lb xml:id="W0034-00-0018-lb-0008"/>ron / o Alpuxarras todos mando <g ref="#charq0303">q̃</g> fue<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>en a <g ref="#char017f">ſ</g>us tierras
+<lb xml:id="W0034-00-0018-lb-0009"/>libres re<g ref="#char017f">ſ</g>tituydos. Que dixera la <g ref="#char017f">ſ</g>ereni<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>ima y chri<g ref="#char017f">ſ</g>tia
+<lb xml:id="W0034-00-0018-lb-0010"/>ni<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>ima reyna <g ref="#char017f">ſ</g>e<g ref="#charn0303">ñ</g>ores: <g ref="#char017f">ſ</g>i <g ref="#char017f">ſ</g>upiera auer repartido alos ti
+<lb xml:id="W0034-00-0018-lb-0011"/>ranos crueles como <g ref="#char017f">ſ</g>i fueran carneros todos <g ref="#char017f">ſ</g>in <g ref="#char017f">ſ</g>acar 
+<lb xml:id="W0034-00-0018-lb-0012"/>grandes ni chicos los vniuer<g ref="#char017f">ſ</g>os vezinos y moradores
+<lb xml:id="W0034-00-0018-lb-0013"/>de aquel <g ref="#char017f">ſ</g>u otro mundo y por el tal repartimiento auer 
+<lb xml:id="W0034-00-0018-lb-0014"/>pere<g ref="#char017f">ſ</g>cido (como dixe) quinze cuentos de animas como 
+<lb xml:id="W0034-00-0018-lb-0015"/>vue<g ref="#char017f">ſ</g>tra alteza <g ref="#char017f">ſ</g>e<g ref="#charn0303">ñ</g>ores los aueys vi<g ref="#char017f">ſ</g>to: e<g ref="#char017f">ſ</g>toy por dezir que
+<lb xml:id="W0034-00-0018-lb-0016"/>pu<g ref="#char017f">ſ</g>iera fuego a ca<g ref="#char017f">ſ</g>tilla. De<g ref="#char017f">ſ</g>pues confirmo y refirmo lo
+<lb xml:id="W0034-00-0018-lb-0017"/>mi<g ref="#char017f">ſ</g>mo al dicho <g ref="#char017f">ſ</g>egundo gouernador Bouadilla: y de<g ref="#char017f">ſ</g><lb break="no" rendition="#hyphen" xml:id="W0034-00-0018-lb-0018"/>pues al tercero comendador de lares: el qual el a<g ref="#charn0303">ñ</g>o de <g ref="#charq0303">q̃</g><lb break="no" rendition="#hyphen" xml:id="W0034-00-0018-lb-0019"/>nientos y tres <g ref="#char017f">ſ</g>iendo yo pre<g ref="#char017f">ſ</g>ente yntroduxo contra vo<lb break="no" rendition="#hyphen" xml:id="W0034-00-0018-lb-0020"/>luntad y <g ref="#char017f">ſ</g>ciencia y contra los m<g ref="#chara0303">ã</g>damientos de la dicha 
+<lb xml:id="W0034-00-0018-lb-0021"/><g ref="#char017f">ſ</g>e<g ref="#charn0303">ñ</g>ora reyna e<g ref="#char017f">ſ</g>ta infernal pe<g ref="#char017f">ſ</g>til<g ref="#chare0303">ẽ</g>cia. Y vltimadam<g ref="#chare0303">ẽ</g>te to<lb break="no" rendition="#hyphen" xml:id="W0034-00-0018-lb-0022"/>do lo que auia mandado y proueydo: lo mando y recon
+<lb xml:id="W0034-00-0018-lb-0023"/>firmo en <g ref="#char017f">ſ</g>u vltimo te<g ref="#char017f">ſ</g>tamento. Venido el Rey catholi<lb break="no" rendition="#hyphen" xml:id="W0034-00-0018-lb-0024"/>co de Napoles el a<g ref="#charn0303">ñ</g>o de <g ref="#char017f">ſ</g>iete qui<g ref="#char017f">ſ</g>o emendar tanto mal
+<lb xml:id="W0034-00-0018-lb-0025"/>como pare<g ref="#char017f">ſ</g>ce algo enla in<g ref="#char017f">ſ</g>trucion que mando dar a pe<lb break="no" rendition="#hyphen" xml:id="W0034-00-0018-lb-0026"/>drarias que fue el primero conqui<g ref="#char017f">ſ</g>tador dela gr<g ref="#chara0303">ã</g> tier<lb break="no" rendition="#hyphen" xml:id="W0034-00-0018-lb-0027"/>ra firme: pero como tuuo pocos que le die<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>en lumbre y 
+<lb xml:id="W0034-00-0018-lb-0028"/>dixe<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>en verdad a <g ref="#char017f">ſ</g>u alteza aprouecho poco lo que fizo.
+<lb xml:id="W0034-00-0018-lb-0029"/>Ultimamente <g ref="#char017f">ſ</g>u Mage<g ref="#char017f">ſ</g>tad e<g ref="#char017f">ſ</g>tando ene<g ref="#char017f">ſ</g>ta villa de Va<lb break="no" rendition="#hyphen" xml:id="W0034-00-0018-lb-0030"/>lladolid enel A<g ref="#charn0303">ñ</g>o de quinientos y veynte y tres por el
+<lb xml:id="W0034-00-0018-lb-0031"/>mes de Junio teniendo informacion como el dicho re<pb n="[16]" facs="W0034-0019" break="no" rendition="#hyphen" xml:id="W0034-00-0019-pb-03fa"/><lb break="no" xml:id="W0034-00-0019-lb-0001"/>partimiento era inju<g ref="#char017f">ſ</g>to y tiranico: y <g ref="#char017f">ſ</g>er cau<g ref="#char017f">ſ</g>a de pere<g ref="#char017f">ſ</g><lb break="no" rendition="#hyphen" xml:id="W0034-00-0019-lb-0002"/>cer todas aquellas infinitas naciones auiendo precedi
+<lb xml:id="W0034-00-0019-lb-0003"/>do por <g ref="#char017f">ſ</g>u mandand ayuntamientos de letrados de <g ref="#char017f">ſ</g>us 
+<lb xml:id="W0034-00-0019-lb-0004"/>con<g ref="#char017f">ſ</g>ejos y de Theologos y de per<g ref="#char017f">ſ</g>onas de muchas le<lb break="no" rendition="#hyphen" xml:id="W0034-00-0019-lb-0005"/>tras y de buena y <g ref="#char017f">ſ</g>anta vida: como <g ref="#char017f">ſ</g>u Mage<g ref="#char017f">ſ</g>tad mi<g ref="#char017f">ſ</g>mo 
+<lb xml:id="W0034-00-0019-lb-0006"/>refiere: alos quales parecio que con buena conciencia 
+<lb xml:id="W0034-00-0019-lb-0007"/>pues dios nue<g ref="#char017f">ſ</g>tro <g ref="#char017f">ſ</g>e<g ref="#charn0303">ñ</g>or crio los dichos yndios libres 
+<lb xml:id="W0034-00-0019-lb-0008"/>y no <g ref="#char017f">ſ</g>ubjectos: <g ref="#char017f">ſ</g>u Mage<g ref="#char017f">ſ</g>tad no podia mandar los en<lb break="no" rendition="#hyphen" xml:id="W0034-00-0019-lb-0009"/>comendar ni fazer repartimi<g ref="#chare0303">ẽ</g>to dellos a los Chri<g ref="#char017f">ſ</g>tia<lb break="no" rendition="#hyphen" xml:id="W0034-00-0019-lb-0010"/>nos (Estos <g ref="#char017f">ſ</g>on palabras formales de <g ref="#char017f">ſ</g>u Mage<g ref="#char017f">ſ</g>tad) en
+<lb xml:id="W0034-00-0019-lb-0011"/>vna in<g ref="#char017f">ſ</g>trucion que embio a Hernando Cortes que po
+<lb xml:id="W0034-00-0019-lb-0012"/>co auia qze era entrado enla nueua e<g ref="#char017f">ſ</g>pa<g ref="#charn0303">ñ</g>a por las mi<g ref="#char017f">ſ</g>
+<lb xml:id="W0034-00-0019-lb-0013"/>mas tiranicas conqui<g ref="#char017f">ſ</g>tas: en la qual le mando que no
+<lb xml:id="W0034-00-0019-lb-0014"/>fizie<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>e encomienda ni repartimiento ni depo<g ref="#char017f">ſ</g>ito algu
+<lb xml:id="W0034-00-0019-lb-0015"/>no de yndios en E<g ref="#char017f">ſ</g>pa<g ref="#charn0303">ñ</g>oles: <g ref="#char017f">ſ</g>ino que lo dexa<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>en biuir 
+<lb xml:id="W0034-00-0019-lb-0016"/>libremente como <g ref="#char017f">ſ</g>us va<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>allos ene<g ref="#char017f">ſ</g>tos Reynos de Ca<lb break="no" rendition="#hyphen" xml:id="W0034-00-0019-lb-0017"/><g ref="#char017f">ſ</g>tilla biuen: y <g ref="#char017f">ſ</g>i quando aquella in<g ref="#char017f">ſ</g>trucion llega<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>e oui
+<lb xml:id="W0034-00-0019-lb-0018"/>e<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>e hecho algun repartimiento / o encomienda: luego 
+<lb xml:id="W0034-00-0019-lb-0019"/>la reuoca<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>e  y los pu<g ref="#char017f">ſ</g>ie<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>e en <g ref="#char017f">ſ</g>u libertad. <g ref="#char204a">⁊</g>c. (Todas e<g ref="#char017f">ſ</g><lb break="no" rendition="#hyphen" xml:id="W0034-00-0019-lb-0020"/>tas <g ref="#char017f">ſ</g>on palabras de <g ref="#char017f">ſ</g>u Mage<g ref="#char017f">ſ</g>tad como en la dicha in<lb break="no" rendition="#hyphen" xml:id="W0034-00-0019-lb-0021"/><g ref="#char017f">ſ</g>trucion Real pare<g ref="#char017f">ſ</g>ce) El qual no cumplio nada por lo
+<lb xml:id="W0034-00-0019-lb-0022"/>mucho que a elle yua enello. E<g ref="#char017f">ſ</g>ta fue tambien final con 
+<lb xml:id="W0034-00-0019-lb-0023"/>clu<g ref="#char017f">ſ</g>ion de todo el Con<g ref="#char017f">ſ</g>ejo Real y ayuntamientos que
+<lb xml:id="W0034-00-0019-lb-0024"/><g ref="#char017f">ſ</g>e hizieron por mandado de <g ref="#char017f">ſ</g>u Mage<g ref="#char017f">ſ</g>tad quando pa<g ref="#char017f">ſ</g><lb break="no" rendition="#hyphen" xml:id="W0034-00-0019-lb-0025"/><g ref="#char017f">ſ</g>aua a Italia de<g ref="#char017f">ſ</g>tos Reynos el A<g ref="#charn0303">ñ</g>o de veynte y nueue 
+<lb xml:id="W0034-00-0019-lb-0026"/>en tiempo que don Juan Tauera era pre<g ref="#char017f">ſ</g>idente: y de to
+<lb xml:id="W0034-00-0019-lb-0027"/>do nunca <g ref="#char017f">ſ</g>e cumplio nada. Y a<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>i como <g ref="#char017f">ſ</g>u Mage<g ref="#char017f">ſ</g>tad ha
+<lb xml:id="W0034-00-0019-lb-0028"/>hecho tan frequentes au<g ref="#char017f">ſ</g>encias y por <g ref="#char017f">ſ</g>us muchos nego
+<lb xml:id="W0034-00-0019-lb-0029"/>cios externos: no ha acabado de tener noticia delas mi
+<lb xml:id="W0034-00-0019-lb-0030"/><g ref="#char017f">ſ</g>erias y calamidades delos Indios y la maldad y p<g ref="#charo0303">õ</g><g ref="#charc0327">ç</g>o
+<lb xml:id="W0034-00-0019-lb-0031"/><g ref="#charn0303">ñ</g>a va<g ref="#char017f">ſ</g>tatiua de reynos <g ref="#charq0303">q̃</g> contienen en<g ref="#char017f">ſ</g>i e<g ref="#char017f">ſ</g>te repartimien
+<lb xml:id="W0034-00-0019-lb-0032"/>to: y como todo qu<g ref="#chara0303">ã</g>to alla tiene <g ref="#char017f">ſ</g>ele pierde: y <g ref="#char017f">ſ</g>e ha enue
+<pb n="[17]" facs="W0034-0020" xml:id="W0034-00-0020-pb-03fb"/><lb xml:id="W0034-00-0020-lb-0001"/>gecido y tupido e<g ref="#char017f">ſ</g>ta tiranica ceguedad ha<g ref="#char017f">ſ</g>ta agora. Y 
+<lb xml:id="W0034-00-0020-lb-0002"/>Dios <g ref="#char017f">ſ</g>abe <g ref="#char017f">ſ</g>i <g ref="#char017f">ſ</g>era ba<g ref="#char017f">ſ</g>t<g ref="#chara0303">ã</g>te como es obligado a e<g ref="#char017f">ſ</g>tirparla
+<lb xml:id="W0034-00-0020-lb-0003"/>algun dia.</p></div>
+<div type="section" n="Proposicion 30" xml:id="W0034-00-0020-d1-0407">
+<head xml:id="W0034-00-0020-he-0407"><lb xml:id="W0034-00-0020-lb-0004"/>Propo<g ref="#char017f">ſ</g>icion. xxx. y vltima.</head>
+<p xml:id="W0034-00-0020-pa-040a">
+<lb xml:id="W0034-00-0020-lb-0005"/><hi rendition="#initCaps">D</hi>E todo lo <g ref="#char017f">ſ</g>u<g ref="#char017f">ſ</g>o dicho en fuer<g ref="#charc0327">ç</g>a de c<g ref="#charo0303">õ</g><g ref="#char017f">ſ</g>equencia nece 
+<lb xml:id="W0034-00-0020-lb-0006"/><g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>aria <g ref="#char017f">ſ</g>e <g ref="#char017f">ſ</g>igue: <g ref="#charq0303">q̃</g> <g ref="#char017f">ſ</g>in perjuyzio del titulo y <g ref="#char017f">ſ</g>e<g ref="#charn0303">ñ</g>orio 
+<lb xml:id="W0034-00-0020-lb-0007"/><g ref="#char017f">ſ</g>oberano y real <g ref="#charq0303">q̃</g> alos Reyes de Ca<g ref="#char017f">ſ</g>tilla pertenece <g ref="#char017f">ſ</g>o<lb break="no" rendition="#hyphen" xml:id="W0034-00-0020-lb-0008"/>bre aquel orbe delas Indias: todo lo <g ref="#charq0303">q̃</g> enellas <g ref="#char017f">ſ</g>e ha he<lb break="no" rendition="#hyphen" xml:id="W0034-00-0020-lb-0009"/>cho: an<g ref="#char017f">ſ</g>i enlo delas inju<g ref="#char017f">ſ</g>tas y tiranicas conqui<g ref="#char017f">ſ</g>tas: co<lb break="no" rendition="#hyphen" xml:id="W0034-00-0020-lb-0010"/>mo en lo delos repartimi<g ref="#chare0303">ẽ</g>tos y encomiendas: ha <g ref="#char017f">ſ</g>ido nul 
+<lb xml:id="W0034-00-0020-lb-0011"/>lo / ninguno y de ning<g ref="#charu0303">ũ</g> valor ni fuer<g ref="#charc0327">ç</g>a de derecho: por 
+<lb xml:id="W0034-00-0020-lb-0012"/>auer lo fecho todo tiranos puros <g ref="#char017f">ſ</g>in cau<g ref="#char017f">ſ</g>a ju<g ref="#char017f">ſ</g>ta ni raz<g ref="#charo0303">õ</g> 
+<lb xml:id="W0034-00-0020-lb-0013"/>ni auctoridad de <g ref="#char017f">ſ</g>u principe y rey natural: antes c<g ref="#charo0303">õ</g>tra 
+<lb xml:id="W0034-00-0020-lb-0014"/>expre<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>os m<g ref="#chara0303">ã</g>damientos <g ref="#char017f">ſ</g>uyos: como con<g ref="#char017f">ſ</g>ta ene<g ref="#char017f">ſ</g>te real 
+<lb xml:id="W0034-00-0020-lb-0015"/>con<g ref="#char017f">ſ</g>ejo no auer<g ref="#char017f">ſ</g>e guardado vno ni ninguno enlo tocan 
+<lb xml:id="W0034-00-0020-lb-0016"/>te a e<g ref="#char017f">ſ</g>to. Y es tan notorio <g ref="#charq0303">q̃</g> ninguna per<g ref="#char017f">ſ</g>ona de qu<g ref="#chara0303">ã</g>tos 
+<lb xml:id="W0034-00-0020-lb-0017"/>ay enlas Indias lo ygnora. Y an<g ref="#char017f">ſ</g>i entiendo la <g ref="#char017f">ſ</g>eptima 
+<lb xml:id="W0034-00-0020-lb-0018"/>regla <g ref="#charebd1">ꝺ̇</g> mi c<g ref="#charo0303">õ</g>fe<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>ionario <g ref="#charq0303">q̃</g> han calumniado los <g ref="#charq0303">q̃</g> parte 
+<lb xml:id="W0034-00-0020-lb-0019"/>o arte tienen / o e<g ref="#char017f">ſ</g>per<g ref="#chara0303">ã</g> delos robos y tiranias y de<g ref="#char017f">ſ</g>truy 
+<lb xml:id="W0034-00-0020-lb-0020"/>ciones y perdimi<g ref="#chare0303">ẽ</g>to de animas delos indios <g ref="#charq0303">q̃</g>le<g ref="#char017f">ſ</g>quie- 
+<lb xml:id="W0034-00-0020-lb-0021"/>ra <g ref="#charq0303">q̃</g> ene<g ref="#char017f">ſ</g>tos reynos <g ref="#char017f">ſ</g>ean.</p> 
+<p xml:id="W0034-00-0020-pa-040b">
+<lb xml:id="W0034-00-0020-lb-0022"/>E<g ref="#char017f">ſ</g>to es <g ref="#char017f">ſ</g>e<g ref="#charn0303">ñ</g>ores muy inclitos todo lo <g ref="#charq0303">q̃</g> ye en quaren 
+<lb xml:id="W0034-00-0020-lb-0023"/>ta y nueue a<g ref="#charn0303">ñ</g>os <g ref="#charq0303">q̃</g> ha que veo enlas indias el mal hecho 
+<lb xml:id="W0034-00-0020-lb-0024"/>y treynta y quatro <g ref="#charq0303">q̃</g> e<g ref="#char017f">ſ</g>tudio el derecho: <g ref="#char017f">ſ</g>iento. La pro<lb break="no" rendition="#hyphen" xml:id="W0034-00-0020-lb-0025"/>uan<g ref="#charc0327">ç</g>a y corroboraci<g ref="#charo0303">õ</g> delas <g ref="#char017f">ſ</g>u<g ref="#char017f">ſ</g>o dichas treynta propo<lb break="no" rendition="#hyphen" xml:id="W0034-00-0020-lb-0026"/><g ref="#char017f">ſ</g>iciones: yo la dare pre<g ref="#char017f">ſ</g>to en rom<g ref="#chara0303">ã</g>ce y en latin a vue<g ref="#char017f">ſ</g>tra 
+<lb xml:id="W0034-00-0020-lb-0027"/>alteza: donde parecera fundado / prouado y corrobora<lb break="no" rendition="#hyphen" xml:id="W0034-00-0020-lb-0028"/>do el titulo <g ref="#charq0303">q̃</g> los Reyes de Ca<g ref="#char017f">ſ</g>tilla y Leon tienen al 
+<lb xml:id="W0034-00-0020-lb-0029"/>imperio vniuer<g ref="#char017f">ſ</g>al y <g ref="#char017f">ſ</g>oberano <g ref="#charebd1">ꝺ̇</g>l orbe nueuo delas ocea 
+<lb xml:id="W0034-00-0020-lb-0030"/>nas indias. Enlo qual e<g ref="#char017f">ſ</g>pero hazer a <g ref="#char017f">ſ</g>u Mage<g ref="#char017f">ſ</g>tad y a 
+<lb xml:id="W0034-00-0020-lb-0031"/>los reyes venideros ene<g ref="#char017f">ſ</g>tos reynos vn no peque<g ref="#charn0303">ñ</g>o <g ref="#char017f">ſ</g>er
+<lb xml:id="W0034-00-0020-lb-0032"/>uicio.</p>
+<p xml:id="W0034-00-0020-pa-040c"><lb xml:id="W0034-00-0020-lb-0033"/>Impre<g ref="#char017f">ſ</g><g ref="#char017f">ſ</g>o en <g ref="#char017f">ſ</g>euilla en ca<g ref="#char017f">ſ</g>a de sebasti<g ref="#chara0303">ã</g> trugillo.</p></div>
+</body>  
+</text>
+</TEI>

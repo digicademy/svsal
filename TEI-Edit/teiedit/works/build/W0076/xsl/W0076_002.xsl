@@ -34,8 +34,6 @@
          ##########
         | READ ME: |
          ##########
-
-        See: https://github.com/CindyRicoCarmona/Expand_abbreviations_with_regex
         
         Expanding spanish abbreviations depending on their word structure. For example, a combination of a special characters and their endings or morphemes.
         

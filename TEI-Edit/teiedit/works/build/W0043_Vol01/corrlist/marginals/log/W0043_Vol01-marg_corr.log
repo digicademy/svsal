@@ -1,0 +1,194 @@
+     [java] Executing 'C:\Program Files (x86)\Java\jdk-16.0.2\bin\java.exe' with arguments:
+'-Xmx3000m'
+'-classpath'
+'D:\SVN\trunk\teiedit\lib\xsltproc\Saxon-HE-9.8.0-12.jar'
+'net.sf.saxon.Query'
+'-q:../../xql/corrList_1_marginals.xql'
+'-s:../../../build/W0043_Vol01/xml/W0043_Vol01_010.xml'
+'-o:../../../build/W0043_Vol01/corrlist/marginals/W0043_Vol01-marg-la_all-wordforms.html'
+'-traceout:#err'
+'-t'
+'language=la'
+
+The ' characters around the executable and arguments are
+not part of the command.
+     [java] Saxon-HE 9.8.0.12J from Saxonica
+     [java] Java version 16.0.2
+     [java] Analyzing query from ../../xql/corrList_1_marginals.xql
+     [java] Analysis time: 561.1899 milliseconds
+     [java] Processing file:/D:/SVN/trunk/teiedit/works/corr/build/marginals/../../../build/W0043_Vol01/xml/W0043_Vol01_010.xml
+     [java] Using parser com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl$JAXPSAXParser
+     [java] Building tree for file:/D:/SVN/trunk/teiedit/works/corr/build/marginals/../../../build/W0043_Vol01/xml/W0043_Vol01_010.xml using class net.sf.saxon.tree.tiny.TinyBuilder
+     [java] Tree built in 401.2708ms
+     [java] Tree size: 542920 nodes, 2280731 characters, 282991 attributes
+     [java] Execution time: 1m 19.385493s (79385.4938ms)
+     [java] Memory used: 1298359200
+     [java] Executing 'C:\Program Files (x86)\Java\jdk-16.0.2\bin\java.exe' with arguments:
+'-Xmx3000m'
+'-classpath'
+'D:\SVN\trunk\teiedit\lib\xsltproc\Saxon-HE-9.8.0-12.jar'
+'net.sf.saxon.Query'
+'-q:../../xql/corrList_2_ok.xql'
+'-s:../../../build/W0043_Vol01/corrlist/marginals/W0043_Vol01-marg-la_all-wordforms.html'
+'-o:../../../build/W0043_Vol01/corrlist/marginals/W0043_Vol01-marg-la_wordforms-ok.html'
+'-traceout:#err'
+'-t'
+
+The ' characters around the executable and arguments are
+not part of the command.
+     [java] Saxon-HE 9.8.0.12J from Saxonica
+     [java] Java version 16.0.2
+     [java] Analyzing query from ../../xql/corrList_2_ok.xql
+     [java] Analysis time: 398.8272 milliseconds
+     [java] Processing file:/D:/SVN/trunk/teiedit/works/corr/build/marginals/../../../build/W0043_Vol01/corrlist/marginals/W0043_Vol01-marg-la_all-wordforms.html
+     [java] Using parser com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl$JAXPSAXParser
+     [java] Building tree for file:/D:/SVN/trunk/teiedit/works/corr/build/marginals/../../../build/W0043_Vol01/corrlist/marginals/W0043_Vol01-marg-la_all-wordforms.html using class net.sf.saxon.tree.tiny.TinyBuilder
+     [java] Tree built in 225.4775ms
+     [java] Tree size: 277809 nodes, 562448 characters, 93979 attributes
+     [java] Execution time: 231.1916ms
+     [java] Memory used: 80814592
+     [java] Executing 'C:\Program Files (x86)\Java\jdk-16.0.2\bin\java.exe' with arguments:
+'-Xmx3000m'
+'-classpath'
+'D:\SVN\trunk\teiedit\lib\xsltproc\Saxon-HE-9.8.0-12.jar'
+'net.sf.saxon.Query'
+'-q:../../xql/corrList_2_comp-hyph-dict.xql'
+'-s:../../../build/W0043_Vol01/corrlist/marginals/W0043_Vol01-marg-la_all-wordforms.html'
+'-o:../../../build/W0043_Vol01/corrlist/marginals/W0043_Vol01-marg-la_supposed-hyphenations-from-dict.html'
+'-traceout:#err'
+'-t'
+
+The ' characters around the executable and arguments are
+not part of the command.
+     [java] Saxon-HE 9.8.0.12J from Saxonica
+     [java] Java version 16.0.2
+     [java] Analyzing query from ../../xql/corrList_2_comp-hyph-dict.xql
+     [java] Analysis time: 371.2821 milliseconds
+     [java] Processing file:/D:/SVN/trunk/teiedit/works/corr/build/marginals/../../../build/W0043_Vol01/corrlist/marginals/W0043_Vol01-marg-la_all-wordforms.html
+     [java] Using parser com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl$JAXPSAXParser
+     [java] Building tree for file:/D:/SVN/trunk/teiedit/works/corr/build/marginals/../../../build/W0043_Vol01/corrlist/marginals/W0043_Vol01-marg-la_all-wordforms.html using class net.sf.saxon.tree.tiny.TinyBuilder
+     [java] Tree built in 220.3968ms
+     [java] Tree size: 277809 nodes, 562448 characters, 93979 attributes
+     [java] Execution time: 40.4495ms
+     [java] Memory used: 48180720
+     [java] Executing 'C:\Program Files (x86)\Java\jdk-16.0.2\bin\java.exe' with arguments:
+'-Xmx3000m'
+'-classpath'
+'D:\SVN\trunk\teiedit\lib\xsltproc\Saxon-HE-9.8.0-12.jar'
+'net.sf.saxon.Query'
+'-q:../../xql/corrList_2_comp-hyph-text.xql'
+'-s:../../../build/W0043_Vol01/corrlist/marginals/W0043_Vol01-marg-la_all-wordforms.html'
+'-o:../../../build/W0043_Vol01/corrlist/marginals/W0043_Vol01-marg-la_supposed-hyphenations-from-text.html'
+'-traceout:#err'
+'-t'
+
+The ' characters around the executable and arguments are
+not part of the command.
+     [java] Saxon-HE 9.8.0.12J from Saxonica
+     [java] Java version 16.0.2
+     [java] Analyzing query from ../../xql/corrList_2_comp-hyph-text.xql
+     [java] Analysis time: 406.2532 milliseconds
+     [java] Processing file:/D:/SVN/trunk/teiedit/works/corr/build/marginals/../../../build/W0043_Vol01/corrlist/marginals/W0043_Vol01-marg-la_all-wordforms.html
+     [java] Using parser com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl$JAXPSAXParser
+     [java] Building tree for file:/D:/SVN/trunk/teiedit/works/corr/build/marginals/../../../build/W0043_Vol01/corrlist/marginals/W0043_Vol01-marg-la_all-wordforms.html using class net.sf.saxon.tree.tiny.TinyBuilder
+     [java] Tree built in 231.9246ms
+     [java] Tree size: 277809 nodes, 562448 characters, 93979 attributes
+     [java] Execution time: 64.2553ms
+     [java] Memory used: 49867776
+     [java] Executing 'C:\Program Files (x86)\Java\jdk-16.0.2\bin\java.exe' with arguments:
+'-Xmx3000m'
+'-classpath'
+'D:\SVN\trunk\teiedit\lib\xsltproc\Saxon-HE-9.8.0-12.jar'
+'net.sf.saxon.Query'
+'-q:../../xql/corrList_2_words-not-found.xql'
+'-s:../../../build/W0043_Vol01/corrlist/marginals/W0043_Vol01-marg-la_all-wordforms.html'
+'-o:../../../build/W0043_Vol01/corrlist/marginals/W0043_Vol01-marg-la_wordforms-not-in-dict.html'
+'-traceout:#err'
+'-t'
+
+The ' characters around the executable and arguments are
+not part of the command.
+     [java] Saxon-HE 9.8.0.12J from Saxonica
+     [java] Java version 16.0.2
+     [java] Analyzing query from ../../xql/corrList_2_words-not-found.xql
+     [java] Analysis time: 383.7043 milliseconds
+     [java] Processing file:/D:/SVN/trunk/teiedit/works/corr/build/marginals/../../../build/W0043_Vol01/corrlist/marginals/W0043_Vol01-marg-la_all-wordforms.html
+     [java] Using parser com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl$JAXPSAXParser
+     [java] Building tree for file:/D:/SVN/trunk/teiedit/works/corr/build/marginals/../../../build/W0043_Vol01/corrlist/marginals/W0043_Vol01-marg-la_all-wordforms.html using class net.sf.saxon.tree.tiny.TinyBuilder
+     [java] Tree built in 194.4099ms
+     [java] Tree size: 277809 nodes, 562448 characters, 93979 attributes
+     [java] Execution time: 106.6498ms
+     [java] Memory used: 52360704
+     [java] Executing 'C:\Program Files (x86)\Java\jdk-16.0.2\bin\java.exe' with arguments:
+'-Xmx3000m'
+'-classpath'
+'D:\SVN\trunk\teiedit\lib\xsltproc\Saxon-HE-9.8.0-12.jar'
+'net.sf.saxon.Query'
+'-q:../../xql/corrList_2_comp-hyph-nohyph.xql'
+'-s:../../../build/W0043_Vol01/corrlist/marginals/W0043_Vol01-marg-la_all-wordforms.html'
+'-o:../../../build/W0043_Vol01/corrlist/marginals/W0043_Vol01-marg-la_unclear-hyphenations_in-dict.html'
+'-traceout:#err'
+'-t'
+
+The ' characters around the executable and arguments are
+not part of the command.
+     [java] Saxon-HE 9.8.0.12J from Saxonica
+     [java] Java version 16.0.2
+     [java] Analyzing query from ../../xql/corrList_2_comp-hyph-nohyph.xql
+     [java] Analysis time: 369.0112 milliseconds
+     [java] Processing file:/D:/SVN/trunk/teiedit/works/corr/build/marginals/../../../build/W0043_Vol01/corrlist/marginals/W0043_Vol01-marg-la_all-wordforms.html
+     [java] Using parser com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl$JAXPSAXParser
+     [java] Building tree for file:/D:/SVN/trunk/teiedit/works/corr/build/marginals/../../../build/W0043_Vol01/corrlist/marginals/W0043_Vol01-marg-la_all-wordforms.html using class net.sf.saxon.tree.tiny.TinyBuilder
+     [java] Tree built in 204.6404ms
+     [java] Tree size: 277809 nodes, 562448 characters, 93979 attributes
+     [java] Execution time: 49.6648ms
+     [java] Memory used: 47518208
+     [java] Executing 'C:\Program Files (x86)\Java\jdk-16.0.2\bin\java.exe' with arguments:
+'-Xmx3000m'
+'-classpath'
+'D:\SVN\trunk\teiedit\lib\xsltproc\Saxon-HE-9.8.0-12.jar'
+'net.sf.saxon.Query'
+'-q:../../xql/corrList_2_comp-not-found.xql'
+'-s:../../../build/W0043_Vol01/corrlist/marginals/W0043_Vol01-marg-la_all-wordforms.html'
+'-o:../../../build/W0043_Vol01/corrlist/marginals/W0043_Vol01-marg-la_unclear-hyphenations_not-in-dict.html'
+'-traceout:#err'
+'-t'
+
+The ' characters around the executable and arguments are
+not part of the command.
+     [java] Saxon-HE 9.8.0.12J from Saxonica
+     [java] Java version 16.0.2
+     [java] Analyzing query from ../../xql/corrList_2_comp-not-found.xql
+     [java] Analysis time: 373.7935 milliseconds
+     [java] Processing file:/D:/SVN/trunk/teiedit/works/corr/build/marginals/../../../build/W0043_Vol01/corrlist/marginals/W0043_Vol01-marg-la_all-wordforms.html
+     [java] Using parser com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl$JAXPSAXParser
+     [java] Building tree for file:/D:/SVN/trunk/teiedit/works/corr/build/marginals/../../../build/W0043_Vol01/corrlist/marginals/W0043_Vol01-marg-la_all-wordforms.html using class net.sf.saxon.tree.tiny.TinyBuilder
+     [java] Tree built in 223.5246ms
+     [java] Tree size: 277809 nodes, 562448 characters, 93979 attributes
+     [java] Execution time: 99.0618ms
+     [java] Memory used: 52810752
+     [java] Executing 'C:\Program Files (x86)\Java\jdk-16.0.2\bin\java.exe' with arguments:
+'-Xmx3000m'
+'-classpath'
+'D:\SVN\trunk\teiedit\lib\xsltproc\Saxon-HE-9.8.0-12.jar'
+'net.sf.saxon.Query'
+'-q:../../xql/corrList_2_words-not-found_sorted.xql'
+'-s:../../../build/W0043_Vol01/corrlist/marginals/W0043_Vol01-marg-la_all-wordforms.html'
+'-o:../../../build/W0043_Vol01/corrlist/marginals/W0043_Vol01-marg-la_wordforms-not-in-dict_sorted.html'
+'-traceout:#err'
+'-t'
+'editText=special-chars-only'
+
+The ' characters around the executable and arguments are
+not part of the command.
+     [java] Saxon-HE 9.8.0.12J from Saxonica
+     [java] Java version 16.0.2
+     [java] Analyzing query from ../../xql/corrList_2_words-not-found_sorted.xql
+     [java] Analysis time: 394.0329 milliseconds
+     [java] Processing file:/D:/SVN/trunk/teiedit/works/corr/build/marginals/../../../build/W0043_Vol01/corrlist/marginals/W0043_Vol01-marg-la_all-wordforms.html
+     [java] Using parser com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl$JAXPSAXParser
+     [java] Building tree for file:/D:/SVN/trunk/teiedit/works/corr/build/marginals/../../../build/W0043_Vol01/corrlist/marginals/W0043_Vol01-marg-la_all-wordforms.html using class net.sf.saxon.tree.tiny.TinyBuilder
+     [java] Tree built in 192.754ms
+     [java] Tree size: 277809 nodes, 562448 characters, 93979 attributes
+     [java] Execution time: 109.9545ms
+     [java] Memory used: 61609472
