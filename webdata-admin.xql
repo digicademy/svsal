@@ -21,7 +21,7 @@ import module namespace admin       = "https://www.salamanca.school/xquery/admin
 import module namespace txt         = "https://www.salamanca.school/factory/works/txt"  at "modules/factory/works/txt.xqm";
 import module namespace nlp         = "https://www.salamanca.school/factory/works/nlp"  at "modules/factory/works/nlp.xqm";
 
-declare option exist:timeout "166400000"; (: in miliseconds, 25.000.000 ~ 7h, 43.000.000 ~ 12h :)
+declare option exist:timeout "258000000"; (: 3d, in miliseconds, 25.000.000 ~ 7h, 43.000.000 ~ 12h :)
 declare option exist:output-size-limit "5000000"; (: max number of nodes in memory :)
 
 declare option output:media-type "text/html";
