@@ -46,7 +46,7 @@ import module namespace txt         = "https://www.salamanca.school/factory/work
 import module namespace iiif        = "https://www.salamanca.school/factory/works/iiif"   at "xmldb:exist:///db/apps/salamanca/modules/factory/works/iiif.xqm";
 import module namespace nlp         = "https://www.salamanca.school/factory/works/nlp"    at "xmldb:exist:///db/apps/salamanca/modules/factory/works/nlp.xqm";
 
-declare option exist:timeout "166400000"; (: in miliseconds, 25.000.000 ~ 7h, 43.000.000 ~ 12h :)
+declare option exist:timeout "258000000"; (: 3d, in miliseconds, 25.000.000 ~ 7h, 43.000.000 ~ 12h :)
 declare option exist:output-size-limit "5000000"; (: max number of nodes in memory :)
 
 (:
