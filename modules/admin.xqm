@@ -46,7 +46,7 @@ import module namespace txt         = "https://www.salamanca.school/factory/work
 import module namespace iiif        = "https://www.salamanca.school/factory/works/iiif"   at "xmldb:exist:///db/apps/salamanca/modules/factory/works/iiif.xqm";
 import module namespace nlp         = "https://www.salamanca.school/factory/works/nlp"    at "xmldb:exist:///db/apps/salamanca/modules/factory/works/nlp.xqm";
 
-declare option exist:timeout "258000000"; (: 3d, in miliseconds, 25.000.000 ~ 7h, 43.000.000 ~ 12h :)
+declare option exist:timeout "516000000"; (: 6d, in miliseconds, 25.000.000 ~ 7h, 43.000.000 ~ 12h :)
 declare option exist:output-size-limit "5000000"; (: max number of nodes in memory :)
 
 (:
@@ -658,9 +658,9 @@ declare function admin:needsCorpusStatsString($node as node(), $model as map(*))
         else true()
     return
         if ($needsCorpusStats) then
-            <td title="Most current source from: {string($worksModTime)}"><a href="webdata-admin.xql?format=stats-corpus"><b>Create corpus stats</b></a></td>
+            <td title="Most current source from: {string($worksModTime)}"><a href="webdata-admin.xql?format=stats-corpus"><b>Create corpus stats</b></a> <small><a href="webdata-admin.xql?format=stats-corpus-all"><b>Create stats for all works and corpus!</b></a></small></td>
         else
-            <td title="{concat('Stats created on: ', string(xmldb:last-modified($config:stats-root, 'corpus-stats.json')), ', most current source from: ', string($worksModTime), '.')}">Creating corpus stats unnecessary. <small><a href="webdata-admin.xql?format=stats-corpus">Create corpus stats anyway!</a></small></td>
+            <td title="{concat('Stats created on: ', string(xmldb:last-modified($config:stats-root, 'corpus-stats.json')), ', most current source from: ', string($worksModTime), '.')}">Creating corpus stats unnecessary. <small><a href="webdata-admin.xql?format=stats-corpus">Create corpus stats anyway!</a></small> <small><a href="webdata-admin.xql?format=stats-corpus-all">Create stats for all works and corpus!</a></small></td>
 };
 
 declare function admin:needsCorpusNLPString($node as node(), $model as map(*)) {
@@ -2794,33 +2794,46 @@ declare function admin:createDetails($currentResourceId as xs:string) {
 ~ Creates and stores statistics.
 :)
 declare function admin:createStats($wid as xs:string) {
-    if (not($wid = sutil:getPublishedWorkIds())) then
-        ("Problem: wid " || $wid || " is not in the list of published WorkIDs.")
-    else
-        let $start-time := util:system-time()
-        let $debug := console:log("[ADMIN] Stats: Creating stats for " || $wid || " ...")
-        let $log  := if ($config:debug = ('info', 'trace')) then util:log('info', "[ADMIN] Stats: Creating stats for " || $wid || " ...") else ()
-        let $params := 
-            <output:serialization-parameters xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
-                <output:method value="json"/>
-            </output:serialization-parameters>
+    let $debug := console:log("[ADMIN] Stats: Creating stats for '" || $wid || "' ...")
+    let $works := if ($wid = '*') then
+                        sutil:getPublishedWorkIds()
+                    else
+                        filter($wid, function($a) {$a = sutil:getPublishedWorkIds()})
+    let $worksProc :=
+        if (not(count($works) gt 0)) then
+            map { "problem": "No works to process. wid parameter was: '" || $wid || "'." }
+        else
+            for $w in $works
+                let $debug := console:log("[ADMIN] Stats: Creating stats for " || $w || " ...")
+                let $start-time := util:system-time()
+                let $log  := if ($config:debug = ('info', 'trace')) then util:log('info', "[ADMIN] Stats: Creating stats for " || $w || " ...") else ()
+                let $params := 
+                    <output:serialization-parameters xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
+                        <output:method value="json"/>
+                    </output:serialization-parameters>
+            
+                let $workStats := stats:makeWorkStats($w)
+        
+                let $cleanCollectionStatus := admin:cleanCollection($w, "stats")
+                let $cleanDirectoryStatus := admin:cleanDirectory($w, "stats")
+                let $save   := admin:saveFile('dummy', $w || '-stats.json', serialize($workStats, $params), 'stats')
+                let $export := admin:exportJSONFile($w, $w || '-stats.json', $workStats, 'stats')
     
-        let $workStats := stats:makeWorkStats($wid)
-
-        let $cleanCollectionStatus := admin:cleanCollection($wid, "stats")
-        let $cleanDirectoryStatus := admin:cleanDirectory($wid, "stats")
-        let $save   := admin:saveFile('dummy', $wid || '-stats.json', serialize($workStats, $params), 'stats')
-        let $export := admin:exportJSONFile($wid, $wid || '-stats.json', $workStats, 'stats')
-
-        let $runtime-ms := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000
-        let $runtimeString :=
-            if ($runtime-ms < (1000 * 60)) then format-number($runtime-ms div 1000, "#.##") || " Sek."
-            else if ($runtime-ms < (1000 * 60 * 60))  then format-number($runtime-ms div (1000 * 60), "#.##") || " Min."
-            else format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
-        let $log   := util:log('info', '[ADMIN] Extracted stats for ' || $wid || ' in ' || $runtimeString || '.')
-        let $debug := console:log('Extracted stats for ' || $wid || ' in ' || $runtimeString || '. Saved at ' || $save || ' and exported to ' || $export || '.')
-
-        return $workStats
+                let $runtime-ms := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000
+                let $runtimeString :=
+                    if ($runtime-ms < (1000 * 60)) then format-number($runtime-ms div 1000, "#.##") || " Sek."
+                    else if ($runtime-ms < (1000 * 60 * 60))  then format-number($runtime-ms div (1000 * 60), "#.##") || " Min."
+                    else format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
+                let $log   := util:log('info', '[ADMIN] Extracted stats for ' || $w || ' in ' || $runtimeString || '.')
+                let $debug := console:log('Extracted stats for ' || $w || ' in ' || $runtimeString || '. Saved at ' || $save || ' and exported to ' || $export || '.')
+                return map {
+                        $w: map {
+                            "save": $save,
+                            "export": $export,
+                            "time": $runtime-ms
+                        }
+                    }
+    return map:merge($worksProc)
 };
 
 declare function admin:createStatsCorpus() {
@@ -2835,6 +2848,21 @@ declare function admin:createStatsCorpus() {
         </output:serialization-parameters>
 
     let $works := xmldb:get-child-resources($config:stats-root)
+
+    (: Image-only works are not included in the individual work stats, so we need to count their images here, based on iiif manifests :)
+    let $manifests := xmldb:get-child-resources($config:iiif-root)
+    let $manifest-ids := distinct-values(for $m in $manifests return substring($m, 0, 6))
+    let $notext-ids := for $m in $manifest-ids where sutil:WRKvalidateId($m) = 1 return $m
+    let $notext-mfs := for $res in $manifests
+                            where substring($res, 0, 6) = $notext-ids
+                            return $res
+    let $notext-mf-contents := for $fn in $notext-mfs
+                                return json-doc($config:iiif-root || "/" || $fn)
+    let $notext-image-counts := for $mf in $notext-mf-contents
+                                    where map:contains($mf, "sequences") and map:contains($mf?sequences(1), "canvases")
+                                    return array:size($mf?sequences(1)?canvases)
+    let $notext-images := sum($notext-image-counts)
+    let $debug := console:log("Found " || xs:string($notext-images) || " images in works without transcriptions (and stats files).")
 
     (: Collect all work stats and calculate aggregations :)
     let $all-contents := for $fn in $works
@@ -2859,7 +2887,8 @@ declare function admin:createStatsCorpus() {
                 "unmarked_hyph": sum(for $c in $all-contents return $c?normalizations_count?unmarked_hyph)
             },
             "facs_count": map {
-                "full_text": sum(for $c in $all-contents return $c?facs_count?full_text)
+                "full_text": sum(for $c in $all-contents return $c?facs_count?full_text),
+                "images": $notext-images
             },
             "mf_lemmata":   let $all-lemmata := array:flatten(for $c in $all-contents return $c?mf_lemmata)
                             let $maps := for $i in $all-lemmata

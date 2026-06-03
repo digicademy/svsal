@@ -21,7 +21,7 @@ import module namespace admin       = "https://www.salamanca.school/xquery/admin
 import module namespace txt         = "https://www.salamanca.school/factory/works/txt"  at "modules/factory/works/txt.xqm";
 import module namespace nlp         = "https://www.salamanca.school/factory/works/nlp"  at "modules/factory/works/nlp.xqm";
 
-declare option exist:timeout "258000000"; (: 3d, in miliseconds, 25.000.000 ~ 7h, 43.000.000 ~ 12h :)
+declare option exist:timeout "516000000"; (: 6d, in miliseconds, 25.000.000 ~ 7h, 43.000.000 ~ 12h :)
 declare option exist:output-size-limit "5000000"; (: max number of nodes in memory :)
 
 declare option output:media-type "text/html";
@@ -77,6 +77,11 @@ let $output :=
             fn:serialize(admin:createStats($rid), map{"method":"json", "indent": true(), "encoding":"utf-8"})
         case 'stats-corpus' return
             fn:serialize(admin:createStatsCorpus(), map{"method":"json", "indent": true(), "encoding":"utf-8"})
+        case 'stats-corpus-all' return
+            (
+                fn:serialize(admin:createStats('*'), map{"method":"json", "indent": true(), "encoding":"utf-8"}),
+                fn:serialize(admin:createStatsCorpus(), map{"method":"json", "indent": true(), "encoding":"utf-8"})
+            )
         case 'tei-corpus' return
             admin:createTeiCorpus('admin')
         case 'txt-corpus' return
