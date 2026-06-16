@@ -29,7 +29,7 @@ import module namespace txt    = "https://www.salamanca.school/factory/works/txt
 
 (: SETTINGS :)
 
-declare option exist:timeout "258000000"; (: 3d, in miliseconds, 25.000.000 ~ 7h, 43.000.000 ~ 12h :)
+declare option exist:timeout "516000000"; (: 6d, in miliseconds, 25.000.000 ~ 7h, 43.000.000 ~ 12h :)
 declare option exist:output-size-limit "5000000"; (: max number of nodes in memory :)
 
 declare variable $index:citeIDConnector := '.';
@@ -1247,18 +1247,21 @@ declare function index:milestone($node as element(tei:milestone), $mode as xs:st
             let $currentSection := sutil:copy(index:getCitableParent($node))
             let $currentNode := $currentSection/id($node/@xml:id)/self::tei:milestone
             return
-                if ($node/@n[matches(., '[a-zA-Z0-9]')]) then 
+                if ($node/@n[matches(., '[a-zA-Z0-9]{1,2}')]) then 
                     let $similarMs :=
                         $currentSection//tei:milestone[@unit eq $currentNode/@unit 
                                                        and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))]
                     let $position :=
                         if (count($similarMs) gt 1) then
                             (: put 'N' between @n and position, so as to avoid collisions :)
-                            'N' || string(count($currentNode/preceding::tei:milestone intersect $similarMs) + 1)
+                            'N' || string(count($currentNode/preceding::tei:milestone[@unit eq $currentNode/@unit 
+                                                       and upper-case(replace(@n, '[^a-zA-Z0-9]', '')) eq upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', ''))]
+                                                intersect $similarMs) + 1)
                         else ()
                     return $currentNode/@unit || upper-case(replace($currentNode/@n, '[^a-zA-Z0-9]', '')) || $position
-                else $currentNode/@unit || string(count($currentNode/preceding::tei:milestone[@unit eq $node/@unit] intersect $currentSection//tei:milestone[@unit eq $currentNode/@unit]) + 1)
-        
+                else
+                    $currentNode/@unit || string(count($currentNode/preceding::tei:milestone[@unit eq $node/@unit] intersect $currentSection//tei:milestone[@unit eq $currentNode/@unit]) + 1)
+
         case 'label' return
             if (index:isLabelNode($node)) then
                 (: TODO: ATM milestone/@unit = ('article', 'section') resolves to the same abbrs as div/@type = ('article', 'section') :)
