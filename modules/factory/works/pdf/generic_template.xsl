@@ -167,24 +167,21 @@
                         <fo:page-number font-style="normal"/>
                     </fo:block>
                 </fo:static-content>
+
                 <!-- Defining content flow for the body region of "front"-->
                 <!-- Creating a table. Originally the table design was intended for marginal notes (
                     main text in the left column, marginal notes in the right column. Now as marginal notes are 
                     printed as end notes we have just one column for the main text. -->
                 <fo:flow flow-name="xsl-region-body">
                     <fo:block>
-
                         <fo:table>
                             <fo:table-body>
- 
-                                <xsl:apply-templates select="//tei:front"/>
-
+                                 <xsl:apply-templates select="//tei:front"/>
                             </fo:table-body>
                         </fo:table>
-                    
                     </fo:block>
-
                 </fo:flow>
+
             </fo:page-sequence>
 
             <!--Content for the main part ("body")-->
@@ -213,6 +210,7 @@
                         <fo:page-number font-style="normal"/>
                     </fo:block>
                 </fo:static-content>
+
                 <!-- Defining content flow for the body region of the main part ("body")-->
                 <!-- Creating a table. Originally the table design was intended for marginal notes (
                     main text in the left column, marginal notes in the right column. Now as marginal notes are 
@@ -227,6 +225,7 @@
                         </fo:table>
                     </fo:block>
                 </fo:flow>
+
             </fo:page-sequence>
             </xsl:when>
             <!--Pagination starts with <body> in case <front> does not contain <div> -->
@@ -256,6 +255,7 @@
                         <fo:page-number font-style="normal"/>
                     </fo:block>
                 </fo:static-content>
+
                 <!-- Defining content flow for the body region of the main part ("body")-->
                 <!-- Creating a table. Originally the table design was intended for marginal notes (
                     main text in the left column, marginal notes in the right column. Now as marginal notes are 
@@ -270,6 +270,7 @@
                         </fo:table>
                     </fo:block>
                 </fo:flow>
+
             </fo:page-sequence>
             </xsl:otherwise>
             </xsl:choose>
@@ -300,13 +301,14 @@
                         <fo:page-number font-style="normal"/>
                     </fo:block>
                 </fo:static-content>
+
                 <!-- Defining content flow for the body region of the last part ("back")-->
                 <!-- Creating a table. Originally the table design was intended for marginal notes (
                     main text in the left column, marginal notes in the right column. Now as marginal notes are 
                     printed as end notes we have just one column for the main text. -->
                 <fo:flow flow-name="xsl-region-body">
                     <fo:block>
-                   <!--     <fo:table border-style="solid" border-width="0.1mm">-->
+                    <!--    <fo:table border-style="solid" border-width="0.1mm">-->
                         <fo:table>
                             <fo:table-body>
                                 <xsl:apply-templates select="//tei:back"/>
@@ -314,6 +316,7 @@
                         </fo:table>
                     </fo:block>
                 </fo:flow>
+
             </fo:page-sequence>
                </xsl:if>
 
@@ -344,21 +347,20 @@
                 <fo:flow flow-name="xsl-region-body">
                     <fo:block>
                         <fo:table>
-
                             <fo:table-body>
-            <fo:table-row>
-
-                <fo:table-cell padding-top="5mm" padding-bottom="5mm">
-                    <fo:block text-align="center" font-size="12pt" text-indent="0pt" font-weight="bold" keep-with-next="always">
-                    <fo:inline>NOTAE</fo:inline>
-                    </fo:block>
-                </fo:table-cell>
-            </fo:table-row>
-                <xsl:apply-templates select="//tei:text//tei:note" mode="make-endnotes"/>
+                                <fo:table-row>
+                                    <fo:table-cell padding-top="5mm" padding-bottom="5mm">
+                                        <fo:block text-align="center" font-size="12pt" text-indent="0pt" font-weight="bold" keep-with-next="always">
+                                            <fo:inline>NOTAE</fo:inline>
+                                        </fo:block>
+                                    </fo:table-cell>
+                                </fo:table-row>
+                                <xsl:apply-templates select="//tei:text//tei:note" mode="make-endnotes"/>
                             </fo:table-body>
                         </fo:table>
                     </fo:block>
                 </fo:flow>
+
             </fo:page-sequence>
                </xsl:if>
 

@@ -74,7 +74,7 @@ function admin:loadListOfWorks($node as node(), $model as map(*)) as map(*) {
                      'author': $author,
                      'titleShort': $titleShort,
                      'parent': $parent}
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] loaded " || count($result) || " works.") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] loaded " || count($result) || " works.") else ()
     return map { 'listOfWorks': $result }     
 };
 
@@ -96,7 +96,7 @@ function admin:loadListOfLemmata($node as node(), $model as map(*)) as map(*) {
                 map {'lid': $lid,
                      'author': $author,
                      'titleShort': $titleShort}
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] loaded " || count($result) || " lemmata.") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] loaded " || count($result) || " lemmata.") else ()
     return map { 'listOfLemmata': $result }     
 };
 
@@ -118,7 +118,7 @@ function admin:loadListOfWorkingpapers($node as node(), $model as map(*)) as map
                 map {'wpid': $wpid,
                      'author': $author,
                      'titleShort': $titleShort}
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] loaded " || count($result) || " working papers.") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] loaded " || count($result) || " working papers.") else ()
     return map { 'listOfWorkingpapers': $result }     
 };
 
@@ -660,7 +660,7 @@ declare function admin:needsCorpusStatsString($node as node(), $model as map(*))
         if ($needsCorpusStats) then
             <td title="Most current source from: {string($worksModTime)}"><a href="webdata-admin.xql?format=stats-corpus"><b>Create corpus stats</b></a> <small><a href="webdata-admin.xql?format=stats-corpus-all"><b>Create stats for all works and corpus!</b></a></small></td>
         else
-            <td title="{concat('Stats created on: ', string(xmldb:last-modified($config:stats-root, 'corpus-stats.json')), ', most current source from: ', string($worksModTime), '.')}">Creating corpus stats unnecessary. <small><a href="webdata-admin.xql?format=stats-corpus">Create corpus stats anyway!</a></small> <small><a href="webdata-admin.xql?format=stats-corpus-all">Create stats for all works and corpus!</a></small></td>
+            <td title="{concat('Stats created on: ', string(xmldb:last-modified($config:stats-root, 'corpus-stats.json')), ', most current source from: ', string($worksModTime), '.')}">Creating corpus stats unnecessary. <small><a href="webdata-admin.xql?format=stats-corpus">Create corpus stats anyway!</a></small> <small> <a href="webdata-admin.xql?format=stats-corpus-all"> Create stats for all works and corpus!</a></small></td>
 };
 
 declare function admin:needsCorpusNLPString($node as node(), $model as map(*)) {
@@ -1144,21 +1144,21 @@ declare function admin:exportJSONFile($wid as xs:string, $filename as xs:string,
 };
 
 declare function admin:buildFacets ($node as node(), $model as map (*), $lang as xs:string?) {
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Building facets for list view (version with Javascript)...") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] Building facets for list view (version with Javascript)...") else ()
     let $result := for $l in ("de", "en", "es")
                     let $content      := app:WRKfinalFacets($node, $model, $l)
                     let $filename     := 'works_' || $l || '.json'
-                    let $debug        := console:log("[ADMIN] Saving (Js) " || $l || " facets file in the database...")
+                    let $debug        := console:log("[Admin] Saving (Js) " || $l || " facets file in the database...")
                     let $storeStatus  := admin:saveTextFile("dummy", $filename, fn:serialize($content, map{"method":"json", "indent": true(), "encoding":"utf-8"}), "workslist")
-                    let $debug        := console:log("[ADMIN] Exporting (Js) " || $l || " facets json file...")
+                    let $debug        := console:log("[Admin] Exporting (Js) " || $l || " facets json file...")
                     let $exportStatus := admin:exportJSONFile($filename, $content, 'workslist')
                     return <div>Saved {$l} works list to {$storeStatus} and exported it to {$exportStatus}.</div>
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] finalFacets (Js) done!") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] finalFacets (Js) done!") else ()
     return $result
 };
 
 (: declare function admin:buildFacetsNoJs ($node as node(), $model as map (*), $lang as xs:string?) {
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Building facets for list view (versions without Javascript)...") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] Building facets for list view (versions without Javascript)...") else ()
     let $facets := map { "surname" :    map { "de" : app:WRKcreateListSurname($node, $model, 'de'),
                                               "en" : app:WRKcreateListSurname($node, $model, 'en'),
                                               "es" : app:WRKcreateListSurname($node, $model, 'es')
@@ -1184,13 +1184,13 @@ declare function admin:buildFacets ($node as node(), $model as map (*), $lang as
                                            }
                         return map:for-each($facets, function ($k, $v) {
                              let $filename     := 'worksNoJs_' || $l || '_' || $k || '.html'
-                             let $debug        := console:log("[ADMIN] Saving (NoJs) " || $l || "_" || $k || " facets file in the database...")
+                             let $debug        := console:log("[Admin] Saving (NoJs) " || $l || "_" || $k || " facets file in the database...")
                              let $storeStatus  := admin:saveTextFile("dummy", $filename, fn:serialize($v, map{"method":"json", "indent": true(), "encoding":"utf-8"}), "workslist")
-                             let $debug        := console:log("[ADMIN] Exporting (NoJs) " || $l || "_" || $k || " facets json file...")
+                             let $debug        := console:log("[Admin] Exporting (NoJs) " || $l || "_" || $k || " facets json file...")
                              let $exportStatus := admin:exportJSONFile($filename, fn:serialize($v, map{"method":"json", "indent": true(), "encoding":"utf-8"}), "workslist")
                              return <div>Saved {$l}_{$k} works list to {$storeStatus} and exported it to {$exportStatus}.</div>
                           })
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] finalFacets (No Js) done!") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] finalFacets (No Js) done!") else ()
     return $result
 };
 :)
@@ -1200,16 +1200,16 @@ declare function admin:buildFacets ($node as node(), $model as map (*), $lang as
 
 
 declare function admin:buildDictList ($node as node(), $model as map (*), $lang as xs:string?) {
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Building lemma facets for list view (version with Javascript)...") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] Building lemma facets for list view (version with Javascript)...") else ()
     let $result := for $l in ( "en")
                     let $content      := app:LEMfinalFacets($node, $model, $l)
                     let $filename     := 'dictionary_' || $l || '.json'
-                    let $debug        := console:log("[ADMIN] Saving (Js) " || $l || " facets file in the database...")
+                    let $debug        := console:log("[Admin] Saving (Js) " || $l || " facets file in the database...")
                     let $storeStatus  := admin:saveTextFile("dummy", $filename, fn:serialize($content, map{"method":"json", "indent": true(), "encoding":"utf-8"}), "lemmalist")
-                    let $debug        := console:log("[ADMIN] Exporting (Js) " || $l || " facets json file...")
+                    let $debug        := console:log("[Admin] Exporting (Js) " || $l || " facets json file...")
                     let $exportStatus := admin:exportJSONFile($filename, $content, 'lemmalist')
                     return <div>Saved {$l} works list to {$storeStatus} and exported it to {$exportStatus}.</div>
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] LEmma finalFacets (Js) done!") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] LEmma finalFacets (Js) done!") else ()
     return $result
 };
 
@@ -1219,7 +1219,7 @@ declare function admin:buildDictListNoJs ($node as node(), $model as map (*)) {
 };
 
 declare function admin:exportFileWRK ($node as node(), $model as map (*), $lang as xs:string?) {
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Exporting finalFacets (Js)...") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] Exporting finalFacets (Js)...") else ()
 (:   let $fileNameDe         :=  'works_de.json' :)
     let $fileNameEn         :=  'works_en.json'
 (:   let $fileNameEs         :=  'works_es.json' :)
@@ -1238,7 +1238,7 @@ declare function admin:exportFileWRK ($node as node(), $model as map (*), $lang 
 };
 
 declare function admin:exportFileLEM ($node as node(), $model as map (*), $lang as xs:string?) {
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Exporting lemma list (Js)...") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] Exporting lemma list (Js)...") else ()
 (:   let $fileNameDe         :=  'works_de.json' :)
     let $fileNameEn         :=  'dictionary_en.json'
 (:   let $fileNameEs         :=  'works_es.json' :)
@@ -1257,7 +1257,7 @@ declare function admin:exportFileLEM ($node as node(), $model as map (*), $lang 
 };
 
 declare function admin:saveFileWRK ($node as node(), $model as map (*), $lang as xs:string?) {
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Saving finalFacets (Js)...") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] Saving finalFacets (Js)...") else ()
     let $create-collection  :=  if (not(xmldb:collection-available($config:data-root))) then xmldb:create-collection($config:app-root, "data") else ()
 (:    let $fileNameDe         :=  'works_de.xml' :)
     let $fileNameEn         :=  'works_en.xml'
@@ -1277,7 +1277,7 @@ declare function admin:saveFileWRK ($node as node(), $model as map (*), $lang as
 };
 
 declare function admin:saveFileLEM ($node as node(), $model as map (*), $lang as xs:string?) {
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Saving lemma list (Js)...") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] Saving lemma list (Js)...") else ()
     let $create-collection  :=  if (not(xmldb:collection-available($config:data-root))) then xmldb:create-collection($config:app-root, "data") else ()
 (:    let $fileNameDe         :=  'works_de.xml' :)
     let $fileNameEn         :=  'dictionary_test_en.xml'
@@ -1297,7 +1297,7 @@ declare function admin:saveFileLEM ($node as node(), $model as map (*), $lang as
 };
 
 (: declare function admin:exportFileWRKnoJs ($node as node(), $model as map (*), $lang as xs:string?) {
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Exporting finalFacets (noJS)...") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] Exporting finalFacets (noJS)...") else ()
     let $fileNameDeSn := 'worksNoJs_de_surname.html'
     let $fileNameEnSn := 'worksNoJs_en_surname.html'
     let $fileNameEsSn := 'worksNoJs_es_surname.html'
@@ -1334,7 +1334,7 @@ declare function admin:saveFileLEM ($node as node(), $model as map (*), $lang as
 :)
 
 (: declare function admin:saveFileWRKnoJs ($node as node(), $model as map (*), $lang as xs:string?) {
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Saving finalFacets (noJS)...") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] Saving finalFacets (noJS)...") else ()
     let $create-collection  :=  
         if (not(xmldb:collection-available($config:data-root))) then 
             xmldb:create-collection(util:collection-name($config:data-root), $config:data-root) 
@@ -1375,7 +1375,7 @@ declare function admin:saveFileLEM ($node as node(), $model as map (*), $lang as
 :)
 
 (: declare %templates:wrap function admin:saveEditors($node as node()?, $model as map(*)?) {
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Storing finalFacets...") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] Storing finalFacets...") else ()
     let $create-collection  :=  
         if (not(xmldb:collection-available($config:data-root))) then 
             xmldb:create-collection($config:app-root, "data") 
@@ -1471,7 +1471,7 @@ declare %templates:wrap function admin:renderHTML($id as xs:string*) as element(
             let $rid := $work-raw/ancestor-or-self::tei:TEI/@xml:id/string()
             let $text-type := ($work-raw/tei:text/@type/string())[1]
 
-            let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Rendering HTML (and TXT) for " || $text-type || " " || $rid || ".") else ()
+            let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] Rendering HTML (and TXT) for " || $text-type || " " || $rid || ".") else ()
             let $start-time-work := util:system-time()
         
             let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
@@ -1485,7 +1485,7 @@ declare %templates:wrap function admin:renderHTML($id as xs:string*) as element(
 
             (: Keep track of how long this work did take :)
             let $runtime-ms-a := ((util:system-time() - $start-time-a) div xs:dayTimeDuration('PT1S'))  * 1000
-            let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Html files created. Saving...") else ()
+            let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] Html files created. Saving...") else ()
 
             (: store data :)
             let $cleanCollectionStatus := admin:cleanCollection($rid, "html")
@@ -1524,7 +1524,7 @@ declare %templates:wrap function admin:renderHTML($id as xs:string*) as element(
                             </div>
                         </div>
 
-            let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Html files saved. Cont'ing with plaintext files...") else ()
+            let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] Html files saved. Cont'ing with plaintext files...") else ()
             
             (: (2) TXT :)
             
@@ -1532,11 +1532,11 @@ declare %templates:wrap function admin:renderHTML($id as xs:string*) as element(
             let $plainTextEdit       := txt:makeTXTData($work-raw, 'edit')
             let $txtEditExportStatus := admin:exportBinaryFile($rid, $rid || "_edit.txt", $plainTextEdit, "txt")
             let $txtEditSaveStatus   := admin:saveTextFile($rid, $rid || "_edit.txt", $plainTextEdit, "txt")
-            let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Plain text (edit) file created and stored.") else ()
+            let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] Plain text (edit) file created and stored.") else ()
             let $plainTextOrig       := txt:makeTXTData($work-raw, 'orig')
             let $txtOrigEXportStatus := admin:exportBinaryFile($rid, $rid || "_orig.txt", $plainTextOrig, "txt")
             let $txtOrigSaveStatus   := admin:saveTextFile($rid, $rid || "_orig.txt", $plainTextOrig, "txt")
-            let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Plain text (orig) file created and stored.") else ()
+            let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] Plain text (orig) file created and stored.") else ()
             let $txt-end-time        := ((util:system-time() - $txt-start-time) div xs:dayTimeDuration('PT1S'))
             
             (: HTML & TXT Reporting :)
@@ -1568,7 +1568,7 @@ declare %templates:wrap function admin:renderHTML($id as xs:string*) as element(
     (: (re-)create txt and xml corpus zips :)
 (:
     let $corpus-start-time := util:system-time()
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Corpus packages created and stored.") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] Corpus packages created and stored.") else ()
     let $createTeiCorpus := admin:createTeiCorpus(encode-for-uri($workId))
     let $createTxtCorpus := admin:createTxtCorpus(encode-for-uri($workId))
     let $corpus-end-time := ((util:system-time() - $corpus-start-time) div xs:dayTimeDuration('PT1S'))
@@ -1580,8 +1580,8 @@ declare %templates:wrap function admin:renderHTML($id as xs:string*) as element(
         else format-number($runtime-ms-raw div (1000 * 60 * 60), "#.##") || " Std."
 
 
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Done rendering HTML and TXT for " || $resourceId || ".") else ()
-    let $debug := util:log('info', '[ADMIN] Created HTML for work ' || $resourceId || ' in ' || $runtime-ms || ' ms.')
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] Done rendering HTML and TXT for " || $resourceId || ".") else ()
+    let $debug := util:log('info', '[Admin] Created HTML for work ' || $resourceId || ' in ' || $runtime-ms || ' ms.')
     return 
         <div>
             <h2>HTML &amp; TXT Rendering</h2>
@@ -1608,10 +1608,18 @@ declare function admin:createTeiCorpus($processId as xs:string) {
     let $serializationOpts := map { "method": "xml", "encoding": "UTF-8" , "expand-xincludes": true(), "omit-xml-declaration": false(), "ident": false()}
     let $entries := 
         for $reqWork in collection($config:tei-works-root)/tei:TEI/@xml:id[string-length(.) eq 5]/string()
-            return if (doc-available($config:tei-works-root || '/' || $reqWork || '.xml') and sutil:WRKvalidateId($reqWork) eq 2) then
-                let $expanded := util:expand(doc($config:tei-works-root || '/' || $reqWork || '.xml')/tei:TEI) 
-                return <entry name="{$reqWork || '.xml'}" type="xml" method="deflate">{serialize($expanded, $serializationOpts)}</entry>
-            else ()
+            return if (doc-available($config:tei-works-root || '/' || $reqWork || '.xml')) then
+                let $valId := sutil:WRKvalidateId($reqWork)
+                return if ($valId eq 2) then
+                    let $debug := console:log("[Admin]: Expand/include" || $reqWork || " ...")
+                    let $expanded := util:expand(doc($config:tei-works-root || '/' || $reqWork || '.xml')/tei:TEI) 
+                    return <entry name="{$reqWork || '.xml'}" type="xml" method="deflate">{serialize($expanded, $serializationOpts)}</entry>
+                else
+                    let $debug := console:log("[Admin]: sutil:WRKvalidateId(" || $reqWork || ") = " || $valId || ". Skipping ...")
+                    return ()
+            else
+                let $debug := console:log("[Admin]: doc not available for xmldb:exist:///db/apps/salamanca-tei/works/" || $reqWork || ".xml. Skipping ...")
+                return ()
     (: let $debug   := console:log("[Admin] admin:createTxtCorpus: $entries are: " || serialize($entries, map { "method": "xml" }) || ".") :)
     let $debug   := console:log("[Admin] admin:createTeiCorpus: $entries contains " || xs:string(count($entries)) || " entries.")
 
@@ -1625,7 +1633,7 @@ declare function admin:createTeiCorpus($processId as xs:string) {
     let $debug  := console:log("[Admin] admin:createTeiCorpus: resource " || $save || " has approx. " || xs:string(xmldb:size($config:corpus-zip-root, "sal-tei-corpus.zip")) || " bytes.")
 
     (: Log/output :)
-    let $debug  := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] TEI corpus zip done (" || serialize($save) || "/" || serialize($export) || ").") else ()
+    let $debug  := if ($config:debug = ("trace", "info")) then console:log("[Admin] TEI corpus zip done (" || serialize($save) || "/" || serialize($export) || ").") else ()
     return
         <div>
             <h2>TEI Corpus</h2>
@@ -1660,9 +1668,9 @@ declare function admin:createTxtCorpus($processId as xs:string) {
                         util:binary-to-string(util:binary-doc($config:txt-root || '/' || $wid || '/' || $wid || '_orig.txt'))
                     else 
                         let $tei := util:expand(doc($config:tei-works-root || '/' || $wid || '.xml')/tei:TEI)
-                        let $debug := if ($config:debug = ("trace", "info")) then console:log('[ADMIN] Rendering txt version of work: ' || $config:tei-works-root || '/' || $wid || '.xml') else ()
+                        let $debug := if ($config:debug = ("trace", "info")) then console:log('[Admin] Rendering txt version of work: ' || $config:tei-works-root || '/' || $wid || '.xml') else ()
                         let $origTxt := string-join(txt:dispatch($tei, 'orig'), '')
-                        let $debug := if ($config:debug = ("trace", "info")) then console:log('[ADMIN] Rendered ' || $wid || ', string length: ' || string-length($origTxt)) else ()
+                        let $debug := if ($config:debug = ("trace", "info")) then console:log('[Admin] Rendered ' || $wid || ', string length: ' || string-length($origTxt)) else ()
                         let $saveOrig := admin:saveFile($wid, $wid || "_orig.txt", $origTxt, "txt")
                         let $exportOrig := admin:exportBinaryFile($wid || "_orig.txt", $origTxt, "/data/" || $wid || "/text/" )
                         return $origTxt
@@ -1690,7 +1698,7 @@ declare function admin:createTxtCorpus($processId as xs:string) {
     let $debug  := console:log("[Admin] admin:createTxtCorpus: resource " || $save || " has approx. " || xs:string(xmldb:size($config:corpus-zip-root, "sal-txt-corpus.zip")) || " bytes.")
 
     (: Log/output :)
-    let $debug  := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] TXT corpus zip done (" || serialize($save) || "/" || serialize($export) || ").") else ()
+    let $debug  := if ($config:debug = ("trace", "info")) then console:log("[Admin] TXT corpus zip done (" || serialize($save) || "/" || serialize($export) || ").") else ()
     return
         <div>
             <h2>TXT Corpus</h2>
@@ -1712,7 +1720,7 @@ declare function admin:createTxtCorpus($processId as xs:string) {
          since it applies to different types of texts (works, working papers) at once :)
 declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
     let $start-time := util:system-time()
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Rendering sphinx snippets for " || $wid || ".") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] Rendering sphinx snippets for " || $wid || ".") else ()
 
     (: Which works are to be indexed? :)
     let $todo := 
@@ -1901,7 +1909,7 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
 
 (: Now return statistics, schema and the whole document-set :)
     let $runtime-ms := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S')) * 1000
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Done rendering sphinx snippets for " || $wid || ".") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] Done rendering sphinx snippets for " || $wid || ".") else ()
     return 
         if ($mode = "html") then
             <div>
@@ -1938,8 +1946,8 @@ declare function admin:sphinx-out($wid as xs:string*, $mode as xs:string?) {
 :)
 declare function admin:createNodeIndex($wid as xs:string*) {
     let $debug := if ($config:debug = ("trace", "info")) then
-        let $d := console:log("[ADMIN] Creating node index for " || $wid || ".")
-        return util:log("info", "[ADMIN] Creating node index for " || $wid || ".")
+        let $d := console:log("[Admin] Creating node index for " || $wid || ".")
+        return util:log("info", "[Admin] Creating node index for " || $wid || ".")
     else
         ()
 
@@ -1963,18 +1971,18 @@ declare function admin:createNodeIndex($wid as xs:string*) {
             let $missed-elements := $indexing('missed_elements')
             let $unidentified-elements := $indexing('unidentified_elements')
 
-            let $debug := if ($config:debug = ("info")) then console:log("[ADMIN] There are "  || count($tei//tei:ref[@xml:id])|| " refs with xml:id in this work.") else ()
+            let $debug := if ($config:debug = ("info")) then console:log("[Admin] There are "  || count($tei//tei:ref[@xml:id])|| " refs with xml:id in this work.") else ()
 
             (: save final index file :)
-            let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Saving index file ...") else ()
+            let $debug := if ($config:debug = ("trace")) then console:log("[Admin] Saving index file ...") else ()
 
             let $cleanCollectionStatus := admin:cleanCollection($wid, "index")
             let $cleanDirectoryStatus := admin:cleanDirectory($wid, "index")
             
             let $indexSaveStatus   := admin:saveFile($wid, $wid || "_nodeIndex.xml", $index, "index")
             let $indexExportStatus := admin:exportXMLFile($wid, $wid || "_nodeIndex.xml", $index, "index")
-            let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Node index of "  || $wid || " successfully created and saved/exported (to " || $indexSaveStatus || "; " || $indexExportStatus || ").") else ()
-            let $debug := if ($config:debug = ("info")) then console:log("[ADMIN] Node index of "  || $wid || " successfully created.") else ()
+            let $debug := if ($config:debug = ("trace")) then console:log("[Admin] Node index of "  || $wid || " successfully created and saved/exported (to " || $indexSaveStatus || "; " || $indexExportStatus || ").") else ()
+            let $debug := if ($config:debug = ("info")) then console:log("[Admin] Node index of "  || $wid || " successfully created.") else ()
 
 
             (: Reporting... :)
@@ -2004,7 +2012,7 @@ declare function admin:createNodeIndex($wid as xs:string*) {
         if ($runtime-ms-raw < (1000 * 60)) then format-number($runtime-ms-raw div 1000, "#.##") || " Sek."
         else if ($runtime-ms-raw < (1000 * 60 * 60)) then format-number($runtime-ms-raw div (1000 * 60), "#.##") || " Min."
         else format-number($runtime-ms-raw div (1000 * 60 * 60), "#.##") || " Std."
-    let $debug := if ($config:debug = ("trace", "info")) then util:log("info", "[ADMIN] Finished node indexing for " || $wid || " in " || $runtime-ms || ".") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then util:log("info", "[Admin] Finished node indexing for " || $wid || " in " || $runtime-ms || ".") else ()
     
     return 
         <div>
@@ -2035,7 +2043,7 @@ declare function admin:uploadPdf($rid as xs:string) {
 
 declare function admin:createPdf($rid as xs:string){
     let $pdf-start-time           := util:system-time()
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Creating pdf from " || $rid || " ...") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] Creating pdf from " || $rid || " ...") else ()
     let $debug := if ($config:debug = ("trace")) then console:log("[PDF-" || $rid ||"] Transforming into XSL-FO...") else ()
 
     let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
@@ -2045,7 +2053,7 @@ declare function admin:createPdf($rid as xs:string){
     let $doctotransform := doc($targetSubcollection || '/'|| $rid || '.xml')//tei:TEI
     let $volumes := $doctotransform//xi:include[contains(@href, '_Vol')]/@href/substring-before(., '.xml')
     let $transformedvolumes := array{fn:for-each($volumes, function($k) {
-                                                                            let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Creating pdf for volume " || $k || " ...") else ()
+                                                                            let $debug := if ($config:debug = ("trace")) then console:log("[Admin] Creating pdf for volume " || $k || " ...") else ()
                                                                             return admin:createPdf($k)
                                                                         }
                                     )}
@@ -2068,9 +2076,9 @@ declare function admin:createPdf($rid as xs:string){
     let $renderedxslfo := xslfo:render($doctransformed2, $media-type, ())
 
     let $savedPdfFile := xmldb:store($config:pdf-root, $rid || '.pdf', $renderedxslfo)
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Stored pdf from " || $rid || " at " || $savedPdfFile || ".") else ()   
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] Stored pdf from " || $rid || " at " || $savedPdfFile || ".") else ()   
     let $exportedPdfFile := admin:exportBinaryStream($rid, $rid || '.pdf', $renderedxslfo, 'pdf')
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Exported pdf from " || $rid || " to " || $exportedPdfFile || ".") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] Exported pdf from " || $rid || " to " || $exportedPdfFile || ".") else ()
 
     let $pdf-end-time := util:system-time() 
     let $runtime-pdf := ((util:system-time() - $pdf-start-time) div xs:dayTimeDuration('PT1S'))  * 1000
@@ -2091,8 +2099,8 @@ declare function admin:createPdf($rid as xs:string){
 
 declare function admin:createCrumbtrails($wid as xs:string){
    let $debug := if ($config:debug = ("trace", "info")) then
-        let $d := console:log("[ADMIN] Creating Crumbtrails  for " || $wid || ".")
-        return util:log("warn", "[ADMIN] Creating Crumbtrails for " || $wid || ".")
+        let $d := console:log("[Admin] Creating Crumbtrails  for " || $wid || ".")
+        return util:log("warn", "[Admin] Creating Crumbtrails for " || $wid || ".")
     else ()
 
     let $start-time := util:system-time()
@@ -2115,17 +2123,17 @@ declare function admin:createCrumbtrails($wid as xs:string){
             let $unidentified-elements := $crumbing('unidentified_elements')
 
             (: save final crumb file :)
-            let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Saving Crumbtrails ...") else ()
+            let $debug := if ($config:debug = ("trace")) then console:log("[Admin] Saving Crumbtrails ...") else ()
 
             let $cleanCollectionStatus := admin:cleanCollection($wid, "crumbtrails")
             let $cleanDirectoryStatus := admin:cleanDirectory($wid, "crumbtrails")
 
             let $crumbSaveStatus := admin:saveFile($wid, $wid || "_crumbtrails.xml", $crumb, "crumbtrails")
-            let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Crumbtrails of "  || $wid || " successfully saved.") else ()
+            let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] Crumbtrails of "  || $wid || " successfully saved.") else ()
 
-            let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Exporting Crumbtrails ...") else ()
+            let $debug := if ($config:debug = ("trace")) then console:log("[Admin] Exporting Crumbtrails ...") else ()
             let $crumbExportStatus := admin:exportXMLFile($wid, $wid || "_crumbtrails.xml", $crumb, "crumbtrails")
-            let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Crumbtrails of "  || $wid || " successfully exported.") else ()
+            let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] Crumbtrails of "  || $wid || " successfully exported.") else ()
 
             (: Reporting... :)
             let $runtime-ms-a := ((util:system-time() - $start-time-a) div xs:dayTimeDuration('PT1S'))  * 1000
@@ -2172,7 +2180,7 @@ declare function admin:createCrumbtrails($wid as xs:string){
              if ($runtime-ms-raw < (1000 * 60)) then format-number($runtime-ms-raw div 1000, "#.##") || " Sek."
         else if ($runtime-ms-raw < (1000 * 60 * 60)) then format-number($runtime-ms-raw div (1000 * 60), "#.##") || " Min."
         else format-number($runtime-ms-raw div (1000 * 60 * 60), "#.##") || " Std."
-    let $debug := if ($config:debug = ("trace", "info")) then util:log("warn", "[ADMIN] Finished node crumbing for " || $wid || " in " || $runtime-ms || ".") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then util:log("warn", "[Admin] Finished node crumbing for " || $wid || " in " || $runtime-ms || ".") else ()
     
     return 
         <div>
@@ -2192,7 +2200,7 @@ declare function admin:createRoutes() {
 
 declare function admin:createRoutes($wid as xs:string) {
     let $start-time := util:system-time()
-    let $debug := console:log("[ADMIN] Routing: Creating routing for " || $wid || " ...")
+    let $debug := console:log("[Admin] Routing: Creating routing for " || $wid || " ...")
     let $index                  := if (doc-available($config:index-root || "/" || $wid || "_nodeIndex.xml")) then doc($config:index-root || "/" || $wid || "_nodeIndex.xml")/sal:index else ()
     let $routingWork            := admin:buildRoutingInfoWork($wid)
     let $routingWorkDetails     := array{ admin:buildRoutingInfoDetails($wid) }
@@ -2202,19 +2210,19 @@ declare function admin:createRoutes($wid as xs:string) {
     let $routingVolumeDetails   := if ($index) then
                                         array{fn:for-each($index//sal:node[@subtype = "work_volume"], function($k) {admin:buildRoutingInfoDetails($wid || ':' || $k/@citeID)} )}
                                    else if (doc-available($config:tei-works-root || '/' || $wid || '.xml')) then
-                                        let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Routing: creating routing details info for volumes, resolving xincludes...") else ()
+                                        let $debug := if ($config:debug = ("trace")) then console:log("[Admin] Routing: creating routing details info for volumes, resolving xincludes...") else ()
                                         let $volumes := doc($config:tei-works-root || '/' || $wid || '.xml')//xi:include[contains(@href, '_Vol')]/@href/substring-before(translate(., 'V', 'v'), '.xml')
                                         return array{fn:for-each($volumes, function($k) {
-                                                                                            let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Routing: creating routing details info for volume " || $k || "/" || $wid || ':vol' || xs:int(tokenize($k, 'vol')[2]) || " ...") else ()
+                                                                                            let $debug := if ($config:debug = ("trace")) then console:log("[Admin] Routing: creating routing details info for volume " || $k || "/" || $wid || ':vol' || xs:int(tokenize($k, 'vol')[2]) || " ...") else ()
                                                                                             return admin:buildRoutingInfoDetails($wid || ':vol' || xs:int(tokenize($k, 'vol')[2]))
                                                                                         }
                                                     )}
                                    else
-                                        let $debug := console:log("[ADMIN] Problem in creating volume routing for " || $wid || "?: Neither index nor a file'" || $config:tei-works-root || '/' || $wid || ".xml' could be found.")
+                                        let $debug := console:log("[Admin] Problem in creating volume routing for " || $wid || "?: Neither index nor a file'" || $config:tei-works-root || '/' || $wid || ".xml' could be found.")
                                         return ()
     let $routingTable           := array:join( ( $routingWork, $routingNodes, $routingVolumeDetails, $routingWorkDetails ) )
 
-    let $debug := if ($config:debug = ("trace")) then console:log("[ADMIN] Routing: Joint routing table: " || substring(serialize($routingTable, map{"method":"json", "indent": false(), "encoding":"utf-8"}), 1, 500) || " ...") else ()
+    let $debug := if ($config:debug = ("trace")) then console:log("[Admin] Routing: Joint routing table: " || substring(serialize($routingTable, map{"method":"json", "indent": false(), "encoding":"utf-8"}), 1, 500) || " ...") else ()
 
     (: save routing table :)
     let $cleanCollectionStatus := admin:cleanCollection($wid, "routing")
@@ -2223,15 +2231,15 @@ declare function admin:createRoutes($wid as xs:string) {
     let $routingSaveStatus  :=  if ($routingTable instance of array(*) and array:size($routingTable) > 0) then
                                     admin:saveTextFile($wid, $wid || '_routes.json', fn:serialize($routingTable, map{"method":"json", "indent": true(), "encoding":"utf-8"}), 'routes')
                                 else ()
-    let $debug := if ($config:debug = ("info", "trace")) then console:log("[ADMIN] Routing: Table saved as " || $routingSaveStatus || ".") else ()
+    let $debug := if ($config:debug = ("info", "trace")) then console:log("[Admin] Routing: Table saved as " || $routingSaveStatus || ".") else ()
 
-    let $debug := console:log("[ADMIN] Routing: Exporting routing file with " || array:size($routingTable) || " entries...")
+    let $debug := console:log("[Admin] Routing: Exporting routing file with " || array:size($routingTable) || " entries...")
     let $routingExportStatus := admin:exportJSONFile($wid, $wid || "_routes.json", $routingTable, "routing")
 
     let $debug := if ($routingExportStatus) then
-                        console:log("[ADMIN] Routing: Routing table successfully exported to " || $routingExportStatus || ".")
+                        console:log("[Admin] Routing: Routing table successfully exported to " || $routingExportStatus || ".")
                     else
-                        console:log("[ADMIN] Routing: There has been a problem saving routing table to " || $routingExportStatus || ".")
+                        console:log("[Admin] Routing: There has been a problem saving routing table to " || $routingExportStatus || ".")
 
     (: post routing table to caddy :)
     let $entriesBefore          := let $rt := net:getRoutingTable()
@@ -2239,20 +2247,20 @@ declare function admin:createRoutes($wid as xs:string) {
                                         if (count($rt) > 0) then array:size($rt)
                                         else 0
     let $addedEntries           := if (string-length($config:caddyAPI) > 0 and array:size($routingTable) > 0) then
-                                        let $debug := console:log("[ADMIN] Routing: live routing table contains " || $entriesBefore || " entries, now posting " || array:size($routingTable) || " additional ones...")
+                                        let $debug := console:log("[Admin] Routing: live routing table contains " || $entriesBefore || " entries, now posting " || array:size($routingTable) || " additional ones...")
                                         return net:postRoutingTable($routingTable)
                                     else
-                                        let $debug := console:log("[ADMIN] Routing: WARNING!! - No nodes routing info to post ($config:caddyAPI = " || $config:caddyAPI || ", array:size($routingTable) = " || array:size($routingTable) || ").")
+                                        let $debug := console:log("[Admin] Routing: WARNING!! - No nodes routing info to post ($config:caddyAPI = " || $config:caddyAPI || ", array:size($routingTable) = " || array:size($routingTable) || ").")
                                         return 0
     let $routingTableAfter      := net:getRoutingTable()
-    let $debug := if ($config:debug = ('trace')) then console:log("[ADMIN] Routing: Routing table: " || serialize($routingTableAfter)) else ()
+    let $debug := if ($config:debug = ('trace')) then console:log("[Admin] Routing: Routing table: " || serialize($routingTableAfter)) else ()
     let $entriesAfter           := if ($routingTableAfter instance of array(xs:string)) then array:size($routingTableAfter) else 0
     let $debug :=   if ($addedEntries > 0 and $entriesBefore + $addedEntries = $entriesAfter) then
-                        console:log("[ADMIN] Routing done: Routing table successfully posted, live routing table now contains " || $entriesBefore || "+" || $addedEntries || "=" || $entriesAfter || " entries.")
+                        console:log("[Admin] Routing done: Routing table successfully posted, live routing table now contains " || $entriesBefore || "+" || $addedEntries || "=" || $entriesAfter || " entries.")
                     else if ($addedEntries > 0) then 
-                        console:log("[ADMIN] Routing done: WARNING! Routing table posted, but something seems to be wrong with the numbers: " || $entriesBefore || " $entriesBefore + " || $addedEntries || " $addedEntries != " || $entriesAfter || " $entriesAfter. Maybe relevant entries had been in the routing table before and had to be deleted?")
+                        console:log("[Admin] Routing done: WARNING! Routing table posted, but something seems to be wrong with the numbers: " || $entriesBefore || " $entriesBefore + " || $addedEntries || " $addedEntries != " || $entriesAfter || " $entriesAfter. Maybe relevant entries had been in the routing table before and had to be deleted?")
                     else
-                        console:log("[ADMIN] Routing done: WARNING!! - No entries posted. Live routing table contains " || $entriesAfter || " .")
+                        console:log("[Admin] Routing done: WARNING!! - No entries posted. Live routing table contains " || $entriesAfter || " .")
     let $runtime-ms := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000
     let $runtimeString := 
         if ($runtime-ms < (1000 * 60)) then format-number($runtime-ms div 1000, "#.##") || " Sek."
@@ -2300,8 +2308,8 @@ declare function admin:buildRoutingInfoWork($resourceId as xs:string) {
                                 if ($index) then
                                     tokenize($resourceId, '_')[1] || '/html/' || $index/sal:node[1]/@fragment/string() || ".html#" || $index/sal:node[1]/@n/string()
                                 else
-                                    let $debug := console:log("[ADMIN] admin:buildRoutingInfoWork: No index for work " || $resourceId || ". Possibly the work is only available as image facsimiles. We let work id resolve to catalogue view.")
-                                    let $log := util:log("warn", "[ADMIN] admin:buildRoutingInfoWork: No index for work " || $resourceId || ". Possibly the work is only available as image facsimiles. We let work id resolve to catalogue view.")
+                                    let $debug := console:log("[Admin] admin:buildRoutingInfoWork: No index for work " || $resourceId || ". Possibly the work is only available as image facsimiles. We let work id resolve to catalogue view.")
+                                    let $log := util:log("warn", "[Admin] admin:buildRoutingInfoWork: No index for work " || $resourceId || ". Possibly the work is only available as image facsimiles. We let work id resolve to catalogue view.")
                                     return tokenize($resourceId, '_')[1] || '/html/' || $resourceId || '_details.html'
                     else if ($text_type eq 'workingpapers') then
                         tokenize($resourceId, '_')[1] || '/html/' || $resourceId || '_details.html'
@@ -2354,7 +2362,7 @@ declare function admin:buildRoutingInfoDetails($id) {
 ~ Creates RDF information.
 :)
 declare function admin:createRDF($rid as xs:string) {
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Rendering RDF for " || $rid || ".") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] Rendering RDF for " || $rid || ".") else ()
     let $rid :=  
         if (starts-with($rid, "authors/")) then
             substring-after($rid, "authors/")
@@ -2392,7 +2400,7 @@ declare function admin:createRDF($rid as xs:string) {
     let $cleanDirectoryStatus  := admin:cleanDirectory($rid, "rdf")
     let $export := admin:exportXMLFile($rid, $rid || '.rdf', $rdf, 'rdf')
     let $save   := admin:saveFile($rid, $rid || '.rdf', $rdf, 'rdf')
-    let $debug  := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Done rendering RDF for " || $rid || ".") else ()
+    let $debug  := if ($config:debug = ("trace", "info")) then console:log("[Admin] Done rendering RDF for " || $rid || ".") else ()
     return 
         <div>
             <h2>RDF Extraction</h2>
@@ -2405,7 +2413,7 @@ declare function admin:createRDF($rid as xs:string) {
 ~ Creates NLP information
 :)
 declare function admin:createNLP($rid as xs:string) {
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Rendering NLP CSV for " || $rid || ".") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] Rendering NLP CSV for " || $rid || ".") else ()
     let $rid :=
         if (starts-with($rid, "authors/")) then
             substring-after($rid, "authors/")
@@ -2432,7 +2440,7 @@ declare function admin:createNLP($rid as xs:string) {
     let $export := admin:exportBinaryFile($rid, $rid || '.csv', $csv, 'nlp')
     let $save   := admin:saveFile($rid, $rid || '.csv', $csv, 'nlp')
 
-    let $debug  := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Done rendering NLP CSV for " || $rid || ".") else ()
+    let $debug  := if ($config:debug = ("trace", "info")) then console:log("[Admin] Done rendering NLP CSV for " || $rid || ".") else ()
     return
         <div>
             <h2>NLP Extraction</h2>
@@ -2442,7 +2450,7 @@ declare function admin:createNLP($rid as xs:string) {
 };
 
 declare function admin:createNLPCorpus() {
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Compiling Corpus NLP CSV table.") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] Compiling Corpus NLP CSV table.") else ()
     let $start-time := util:system-time()
 
     let $works := xmldb:get-child-resources($config:nlp-root)
@@ -2464,7 +2472,7 @@ declare function admin:createNLPCorpus() {
     let $save   := xmldb:store($config:corpus-zip-root, 'corpus.csv', $full)
     let $export := admin:exportBinaryFile('corpus.csv', $full, 'data')
 
-    let $debug  := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Done compiling corpus NLP CSV table.") else ()
+    let $debug  := if ($config:debug = ("trace", "info")) then console:log("[Admin] Done compiling corpus NLP CSV table.") else ()
     return
         <div>
             <h2>NLP Corpus Compilation</h2>
@@ -2486,7 +2494,7 @@ declare function admin:createIIIF($wid as xs:string) {
 
     let $debug := 
         if ($config:debug = ('info', 'trace')) then
-            let $dbg := console:log("[ADMIN] iiif: Creation of IIIF resources requested, work id(s): " || string-join($todo, ', ') || ".")
+            let $dbg := console:log("[Admin] iiif: Creation of IIIF resources requested, work id(s): " || string-join($todo, ', ') || ".")
             return util:log("info", "Creation of IIIF resources requested, work id(s): " || string-join($todo, ', ') || ".")
         else ()
 
@@ -2530,7 +2538,7 @@ declare function admin:StripLBs($input as xs:string) {
 ~ Creates and stores overview page for catalog page(s) or for working paper view.
 :)
 declare function admin:createDetails($currentResourceId as xs:string) {
-    let $debug := if ($config:debug = ("trace", "info")) then console:log("[ADMIN] Rendering Details for " || $currentResourceId || ".") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[Admin] Rendering Details for " || $currentResourceId || ".") else ()
     let $start-time := util:system-time()
 
     let $targetSubcollection := for $subcollection in $config:tei-sub-roots return 
@@ -2550,7 +2558,7 @@ declare function admin:createDetails($currentResourceId as xs:string) {
         let $id        := $resource/@xml:id/string()
 
         let $exportXml := admin:exportXMLFile($id, $id || '.xml', $resource, 'index')
-        let $exportLog := console:log("[ADMIN] Exported '" || $id || ".xml' with " || xs:string(count($resource//tei:*)) || " nodes to " || $exportXml || ".")
+        let $exportLog := console:log("[Admin] Exported '" || $id || ".xml' with " || xs:string(count($resource//tei:*)) || " nodes to " || $exportXml || ".")
 
         let $public_id := if ($resource//tei:text[@type = ("work_multivolume", "work_monograph", "lemma_article", "working_paper")]) then
                               $id
@@ -2626,7 +2634,7 @@ declare function admin:createDetails($currentResourceId as xs:string) {
 
         let $dbg := for $v in $volumes_list return
                         if (count(map:get($v, 'key')) gt 1) then
-                            console:log("[ADMIN] Problem! More than one key value in a volume_string key: " || string-join(map:get($v, 'key'), ', '))
+                            console:log("[Admin] Problem! More than one key value in a volume_string key: " || string-join(map:get($v, 'key'), ', '))
                         else ()
                                             
         let $vol_strings    := for $v in $volumes_list return '$' || string(map:get($v, 'key')) || ' := dict ' ||
@@ -2783,9 +2791,9 @@ declare function admin:createDetails($currentResourceId as xs:string) {
         return ($id, $save, $export)
 
     let $debug := if ($config:debug = "bla") then
-                    console:log("[ADMIN] Done rendering Details.")
+                    console:log("[Admin] Done rendering Details.")
                   else if ($config:debug = ("info", "trace")) then
-                    console:log("[ADMIN] Done rendering Details. (Saved/exported to " || string-join(for $v in $process_loop return string-join($v, ','), '; ') || ").")
+                    console:log("[Admin] Done rendering Details. (Saved/exported to " || string-join(for $v in $process_loop return string-join($v, ','), '; ') || ").")
                   else ()
     return $process_loop
 };
@@ -2794,7 +2802,6 @@ declare function admin:createDetails($currentResourceId as xs:string) {
 ~ Creates and stores statistics.
 :)
 declare function admin:createStats($wid as xs:string) {
-    let $debug := console:log("[ADMIN] Stats: Creating stats for '" || $wid || "' ...")
     let $works := if ($wid = '*') then
                         sutil:getPublishedWorkIds()
                     else
@@ -2803,19 +2810,20 @@ declare function admin:createStats($wid as xs:string) {
         if (not(count($works) gt 0)) then
             map { "problem": "No works to process. wid parameter was: '" || $wid || "'." }
         else
-            for $w in $works
-                let $debug := console:log("[ADMIN] Stats: Creating stats for " || $w || " ...")
+            for $w at $i in $works
+                let $debug := console:log("[Admin] Stats: Creating stats for " || $w || " (" || xs:string($i) || "/" || xs:string(count($works)) || ") ...")
                 let $start-time := util:system-time()
-                let $log  := if ($config:debug = ('info', 'trace')) then util:log('info', "[ADMIN] Stats: Creating stats for " || $w || " ...") else ()
+                let $log  := if ($config:debug = ('info', 'trace')) then util:log('info', "[Admin] Stats: Creating stats for " || $w || " (" || xs:string($i) || "/" || xs:string(count($works)) || ") ...") else ()
+            
+                let $workStats := stats:workStats($w)
+        
+                let $log  := if ($config:debug = ('info', 'trace')) then console:log("[Admin] Stats: Saving/exporting ...") else ()
+                let $cleanCollectionStatus := admin:cleanCollection($w, "stats")
+                let $cleanDirectoryStatus := admin:cleanDirectory($w, "stats")
                 let $params := 
                     <output:serialization-parameters xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
                         <output:method value="json"/>
                     </output:serialization-parameters>
-            
-                let $workStats := stats:makeWorkStats($w)
-        
-                let $cleanCollectionStatus := admin:cleanCollection($w, "stats")
-                let $cleanDirectoryStatus := admin:cleanDirectory($w, "stats")
                 let $save   := admin:saveFile('dummy', $w || '-stats.json', serialize($workStats, $params), 'stats')
                 let $export := admin:exportJSONFile($w, $w || '-stats.json', $workStats, 'stats')
     
@@ -2824,108 +2832,50 @@ declare function admin:createStats($wid as xs:string) {
                     if ($runtime-ms < (1000 * 60)) then format-number($runtime-ms div 1000, "#.##") || " Sek."
                     else if ($runtime-ms < (1000 * 60 * 60))  then format-number($runtime-ms div (1000 * 60), "#.##") || " Min."
                     else format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
-                let $log   := util:log('info', '[ADMIN] Extracted stats for ' || $w || ' in ' || $runtimeString || '.')
-                let $debug := console:log('Extracted stats for ' || $w || ' in ' || $runtimeString || '. Saved at ' || $save || ' and exported to ' || $export || '.')
+                let $log   := util:log('info', '[Admin] Stats: Extracted stats for ' || $w || ' in ' || $runtimeString || '. Saved at ' || $save || ' and exported to ' || $export || '.')
+                let $debug := console:log('[Admin] Stats: Extracted stats for ' || $w || ' in ' || $runtimeString || '. Saved at ' || $save || ' and exported to ' || $export || '.')
                 return map {
                         $w: map {
-                            "save": $save,
-                            "export": $export,
-                            "time": $runtime-ms
+                            "processing": map {
+                                "save": $save,
+                                "export": $export,
+                                "time": $runtime-ms
+                            },
+                            "stats": $workStats
                         }
                     }
-    return map:merge($worksProc)
+    return $worksProc
 };
 
 declare function admin:createStatsCorpus() {
+    let $debug := console:log("[Admin] Stats: Creating corpus stats ...")
     let $start-time := util:system-time()
+    let $log  := if ($config:debug = ('info', 'trace')) then util:log('info', "[Admin] Stats: Creating corpus stats ...") else ()
 
-    let $debug := console:log("[ADMIN] Stats: Creating corpus stats ...")
-    let $log  := if ($config:debug = ('info', 'trace')) then util:log('info', "[ADMIN] Stats: Creating corpus stats ...") else ()
+    let $full := stats:corpusStats()
 
+    let $log  := if ($config:debug = ('info', 'trace')) then console:log("[Admin] Stats: Saving/exporting ...") else ()
     let $params := 
         <output:serialization-parameters xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
             <output:method value="json"/>
         </output:serialization-parameters>
-
-    let $works := xmldb:get-child-resources($config:stats-root)
-
-    (: Image-only works are not included in the individual work stats, so we need to count their images here, based on iiif manifests :)
-    let $manifests := xmldb:get-child-resources($config:iiif-root)
-    let $manifest-ids := distinct-values(for $m in $manifests return substring($m, 0, 6))
-    let $notext-ids := for $m in $manifest-ids where sutil:WRKvalidateId($m) = 1 return $m
-    let $notext-mfs := for $res in $manifests
-                            where substring($res, 0, 6) = $notext-ids
-                            return $res
-    let $notext-mf-contents := for $fn in $notext-mfs
-                                return json-doc($config:iiif-root || "/" || $fn)
-    let $notext-image-counts := for $mf in $notext-mf-contents
-                                    where map:contains($mf, "sequences") and map:contains($mf?sequences(1), "canvases")
-                                    return array:size($mf?sequences(1)?canvases)
-    let $notext-images := sum($notext-image-counts)
-    let $debug := console:log("Found " || xs:string($notext-images) || " images in works without transcriptions (and stats files).")
-
-    (: Collect all work stats and calculate aggregations :)
-    let $all-contents := for $fn in $works
-                         return json-doc($config:stats-root || "/" || $fn)
-
-    (: Aggregate corpus statistics :)
-    let $corpus-stats := 
-        map {
-            "id": "salamanca-corpus",
-            "lang": map:merge( for $c in $all-contents
-                                let $lang := string-join($c?lang, " &amp; ")
-                                group by $lang
-                                return map { $lang: count($c) }
-                            ),
-            "chars_count": sum(for $c in $all-contents return $c?chars_count),
-            "words_count": sum(for $c in $all-contents return $c?words_count),
-            "tokens_count": sum(for $c in $all-contents return $c?tokens_count),
-            "wordforms_count": sum(for $c in $all-contents return $c?wordforms_count),
-            "normalizations_count": map {
-                "abbr": sum(for $c in $all-contents return $c?normalizations_count?abbr),
-                "sic": sum(for $c in $all-contents return $c?normalizations_count?sic),
-                "unmarked_hyph": sum(for $c in $all-contents return $c?normalizations_count?unmarked_hyph)
-            },
-            "facs_count": map {
-                "full_text": sum(for $c in $all-contents return $c?facs_count?full_text),
-                "images": $notext-images
-            },
-            "mf_lemmata":   let $all-lemmata := array:flatten(for $c in $all-contents return $c?mf_lemmata)
-                            let $maps := for $i in $all-lemmata
-                                         where $i instance of map(*)
-                                         return $i
-                            return
-                                for $item in $maps
-                                group by $lid := $item?lid
-                                return map {
-                                    "lid"   : $lid,
-                                    "freq"  : sum($item?freq),
-                                    "terms" : ($item?terms)[1]
-                                }
-        }
-    
-    (: Create work-specific stats maps :)
-    let $log  := if ($config:debug = ('info', 'trace')) then console:log("[ADMIN] Stats: Build work-specific stats ...") else ()
-    let $all-stats := for $fn in $works
-                      let $content := json-doc($config:stats-root || "/" || $fn)
-                      return map { substring($fn, 1, 5) : $content }
-    
-    (: Combine corpus stats with work stats :)
-    let $log  := if ($config:debug = ('info', 'trace')) then console:log("[ADMIN] Stats: Concat work-specific and aggregate stats ...") else ()
-    let $full := array { map { "corpus": $corpus-stats }, $all-stats }
-    let $log  := if ($config:debug = ('info', 'trace')) then console:log("[ADMIN] Stats: Done now saving/exporting ...") else ()
-
     let $save   := xmldb:store($config:corpus-zip-root, 'corpus-stats.json', serialize($full, $params))
     let $export := admin:exportBinaryFile('corpus-stats.json', serialize($full, $params), 'data')
-
-    let $log := if ($config:debug = ('info', 'trace')) then util:log('info', '[ADMIN] Done creating corpus stats. Saved and exported to ' || $save || ' and ' || $export || '.') else ()
 
     let $runtime-ms := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000
     let $runtimeString :=
         if ($runtime-ms < (1000 * 60)) then format-number($runtime-ms div 1000, "#.##") || " Sek."
         else if ($runtime-ms < (1000 * 60 * 60))  then format-number($runtime-ms div (1000 * 60), "#.##") || " Min."
         else format-number($runtime-ms div (1000 * 60 * 60), "#.##") || " Std."
-    let $debug := console:log('[ADMIN] Done creating corpus stats. Saved and exported to ' || $save || ' and ' || $export || '.')
+    let $log := if ($config:debug = ('info', 'trace')) then util:log('info', '[Admin] Stats: Done creating corpus stats in ' || $runtimeString || '. Saved at ' || $save || ' and exported to ' || $export || '.') else ()
+    let $debug := console:log('[Admin] Stats: Done creating corpus stats in ' || $runtimeString || '. Saved at ' || $save || ' and and exported to ' || $export || '.')
 
-    return $full
+    return map {
+                    "processing": map {
+                        "save": $save,
+                        "export": $export,
+                        "time": $runtime-ms
+                    },
+                    "stats": $full
+                }
 };
