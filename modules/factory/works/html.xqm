@@ -11,7 +11,11 @@ module namespace html              = "https://www.salamanca.school/factory/works
 declare namespace tei              = "http://www.tei-c.org/ns/1.0";
 declare namespace sal              = "http://salamanca.adwmainz.de";
 
+declare namespace exist            = "http://exist.sourceforge.net/NS/exist";
 declare namespace output           = "http://www.w3.org/2010/xslt-xquery-serialization";
+declare namespace util             = "http://exist-db.org/xquery/util";
+
+import module namespace console    = "http://exist-db.org/xquery/console";
 
 import module namespace config     = "https://www.salamanca.school/xquery/config"        at "xmldb:exist:///db/apps/salamanca/modules/config.xqm";
 import module namespace i18n       = "http://exist-db.org/xquery/i18n"                   at "xmldb:exist:///db/apps/salamanca/modules/i18n.xqm";
@@ -22,11 +26,8 @@ import module namespace txt        = "https://www.salamanca.school/factory/works
 
 (: SETTINGS :)
 
-(: Note: The following eXist-db specific options have been removed for portability:
-   - exist:timeout
-   - exist:output-size-limit
-   These settings should be configured at the XQuery processor level instead.
-:)
+declare option exist:timeout "166400000"; (: in miliseconds, 25.000.000 ~ 7h, 43.000.000 ~ 12h :)
+declare option exist:output-size-limit "5000000"; (: max number of nodes in memory :)
 
 (: the max. amount of characters to be shown in a note teaser :)
 declare variable $html:noteTruncLimit := 33;
@@ -55,32 +56,33 @@ declare function html:makeHTMLData($tei as element(tei:TEI)) as map(*) {
 };
 
 declare function html:makeHTMLData($tei as element(tei:TEI), $lang as node()*) as map(*) {
+    let $work := util:expand($tei)
     let $fragmentationDepth := index:determineFragmentationDepth($tei)
-    let $debug := if ($config:debug = ("trace", "info")) then trace(("[HTML] Rendering " || string($tei/@xml:id) || " (" || xs:string($html:defaultLang/@xml:lang) || ") at fragmentation level " || $fragmentationDepth), "[HTML]") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Rendering " || string($tei/@xml:id) || " (" || xs:string($html:defaultLang/@xml:lang) || ") at fragmentation level " || $fragmentationDepth || " ...") else ()
 
-    let $target-set := index:getFragmentNodes($tei, $fragmentationDepth)
-    let $debug := if ($config:debug = ("trace", "info")) then trace(("[HTML] " || string(count($target-set)) || " elements to be rendered as fragments"), "[HTML]") else ()
+    let $target-set := index:getFragmentNodes($work, $fragmentationDepth)
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] " || string(count($target-set)) || " elements to be rendered as fragments ...") else ()
 
-    let $workId := $tei/@xml:id
-    let $text := $tei//tei:text[@type='work_volume'] | $tei//tei:text[@type = 'work_monograph'] | $tei//tei:text[@type = 'lemma_article']
-    let $elements := $tei//tei:text[@type = ('work_monograph', 'lemma_article')]/(tei:front | tei:body | tei:back)  
-    let $title := sutil:WRKcombined($tei, (), $workId)
+    let $workId := $work/@xml:id
+    let $text := $work//tei:text[@type='work_volume'] | $work//tei:text[@type = 'work_monograph'] | $work//tei:text[@type = 'lemma_article']
+    let $elements := $work//tei:text[@type = ('work_monograph', 'lemma_article')]/(tei:front | tei:body | tei:back)  
+    let $title := sutil:WRKcombined($work, (), $workId)
 
     (: (1) table of contents :)
-    let $debug := if ($config:debug = ("trace", "info")) then trace("[HTML] Creating ToC file for " || $workId, "[HTML]") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Creating ToC file for " || $workId || " ...") else ()
     let $toc :=     
         <div id="tableOfConts">
             <ul>
                 <li>
                     <b>{$title}</b>
                     {
-                    if (not($tei//tei:text[@type = ('work_volume', 'lemma_article')])) then
+                    if (not($work//tei:text[@type = ('work_volume', 'lemma_article')])) then
                         <span class="jstree-anchor hideMe pull-right">{html:getPagesFromDiv($text)}</span>
                     else ()
                     }
                     {
-                    if ($tei//tei:text[@type='work_volume']) then 
-                        for $a in $tei//tei:text where $a[@type='work_volume' and sutil:WRKisPublished($workId || '_' || @xml:id)] return
+                    if ($work//tei:text[@type='work_volume']) then 
+                        for $a in $work//tei:text where $a[@type='work_volume' and sutil:WRKisPublished($workId || '_' || @xml:id)] return
                             <ul>
                                 <li>
                                     { html:generateTocFromText($a, $workId, $lang) }
@@ -94,17 +96,17 @@ declare function html:makeHTMLData($tei as element(tei:TEI), $lang as node()*) a
         </div>
 
     (: (2) pagination :)
-    let $debug := if ($config:debug = ("trace", "info")) then trace("[HTML] Creating pagination", "[HTML]") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Creating pagination ...") else ()
     let $pages :=  html:makePagination((), (), $workId)
 
     (: (3) fragments :)
     (: TODO: Mysteriously, if you look at top or a similar tool, the following seems to run mainly on one processor core only... :)
     (: get "previous" and "next" fragment ids and hand the current fragment over to the renderFragment function :)
-    let $debug := if ($config:debug = ("trace", "info")) then trace("[HTML] Rendering fragments (new method)", "[HTML]") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Rendering fragments (new method) ...") else ()
     let $fragments := 
         for $section at $index in $target-set
             let $debug :=   if ($config:debug = ("trace", "info") and ($index mod 50 eq 0)) then
-                                trace("[HTML] HTML rendering: processing fragment no. " || string($index), "[HTML]")
+                                console:log("[HTML] HTML rendering: processing fragment no. " || string($index)  || " ...")
                             else ()
             let $prev   :=  
                 if ($index > 1) then
@@ -138,11 +140,11 @@ declare function html:makeHTMLData($tei as element(tei:TEI), $lang as node()*) a
     (: Reporting :)
     
     (: See if there are any leaf elements in our text that are not matched by our rule :)
-    let $missed-elements := $tei//(tei:front|tei:body|tei:back)//tei:*[count(./ancestor-or-self::tei:*) < $fragmentationDepth][not(*)]
+    let $missed-elements := $work//(tei:front|tei:body|tei:back)//tei:*[count(./ancestor-or-self::tei:*) < $fragmentationDepth][not(*)]
     (: See if any of the elements we did get is lacking an xml:id attribute :)
     let $unidentified-elements := $target-set[not(@xml:id)]
 
-    let $debug := if ($config:debug = ("trace", "info")) then trace("[HTML] Done", "[HTML]") else ()
+    let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Done.") else ()
 
     return 
         map {
@@ -551,7 +553,7 @@ declare function html:createPaginationLinks($workId as xs:string, $fragmentIndex
                         else if ($textType = "lemma_article") then
                             $docTEI//tei:fileDesc/tei:titleStmt
                         else
-                            let $debug := trace("[HTML]: Problem: createPagination Links called with unknown text type.", "[HTML]")
+                            let $debug := console:log("[HTML]: Problem: createPagination Links called with unknown text type.")
                             return ()
     let $authorname := string-join($desc//tei:author//tei:surname, '/')
     let $title      := $desc//tei:title[@type='short']
@@ -572,12 +574,12 @@ declare function html:createPaginationLinks($workId as xs:string, $fragmentIndex
     concat(
         '{{$work_info := dict ',
         '"id" "',      $workId,     '" ',
-        '"author" "',  $authorname, '" ',
-        '"title" "',   $title,      '" ',
-        '"place" "',   $place,      '" ',
-        '"printer" "', $printer,    '" ',
-        '"year" "',    $year,       '" ',
-        '"type" "',    $type,       '" ',
+        '"author" "',  string-join($authorname, "/"),  '" ',
+        '"title" "',   string-join($title, ". "),      '" ',
+        '"place" "',   string-join($place, ", "),      '" ',
+        '"printer" "', string-join($printer, "/"),     '" ',
+        '"year" "',    string-join($year, ", "),       '" ',
+        '"type" "',    string-join($type, ", "),       '" ',
         if ($prevId) then concat('"prev" "', format-number($fragmentIndex - 1, "00000"), '_', $prevId, '.html" ') else (),
         if ($nextId) then concat('"next" "', format-number($fragmentIndex + 1, "00000"), '_', $nextId, '.html" ') else (),
         '"content" $content}}'
@@ -658,7 +660,7 @@ declare function html:transformToLink($node as element(), $uri as xs:string) {
 :)
 declare function html:makeCiteIDURI($node as element()) as xs:string? {
     let $debug :=  if (not($node/@xml:id)) then
-                        trace("[HTML] Problem: intend to html:makeCiteIDURI of a " || local-name($node) || " node without xml:id. After line " || $node/preceding::tei:lb[1]/@xml:id/string(), "[HTML]")
+                        console:log("[HTML] Problem: intend to html:makeCiteIDURI of a " || local-name($node) || " node without xml:id. After line " || $node/preceding::tei:lb[1]/@xml:id/string() || "." )
                     else ()
     let $textId := $node/ancestor::tei:TEI/@xml:id/string()
 
@@ -718,13 +720,13 @@ declare function html:resolveURI($node as element(), $targets as xs:string) {
                     )
                 return
                     if ($result) then
-                        (: let $debug := trace("[HTML] return URI " || $result[1], "[HTML]") :)
+                        (: let $debug := console:log("[HTML] return URI " || $result[1]) :)
                         $result[1]
                     else
-                        let $debug := trace("[HTML] Problem: Could not create URI for " || $targets || ", return empty result.", "[HTML]")
+                        let $debug := console:log("[HTML] Problem: Could not create URI for " || $targets || ", return empty result.")
                         return ""
         else
-            let $debug := trace("[HTML] Problem? Create unprefixed URI for " || local-name($node) || " (" || $node/@xml:id || ") with targets '" || $targets || "': target '" || $target || "'.", "[HTML]")
+            let $debug := console:log("[HTML] Problem? Create unprefixed URI for " || local-name($node) || " (" || $node/@xml:id || ") with targets '" || $targets || "': target '" || $target || "'.")
             return $target
 };    
 
@@ -845,7 +847,7 @@ declare function html:dispatch($node as node(), $mode as xs:string, $lang as nod
     (: for fine-grained debugging: :)
     (: let $debug := 
         if (index:isIndexNode($node)) then 
-            trace($node/@xml:id, '[RENDER] Processing node tei:' || local-name($node)) 
+            util:log('warn', '[RENDER] Processing node tei:' || local-name($node) || ', with @xml:id=' || $node/@xml:id) 
         else ()
     :)
     return
@@ -1540,7 +1542,7 @@ declare function html:pb($node as element(tei:pb), $mode as xs:string) {
             )
 
         case 'html' return
-            if (index:isIndexNode($node)) then 
+            if (index:isIndexNode($node) and sutil:WRKisPublished(if ($node/ancestor::tei:text[@type eq 'work_volume']) then concat($node/ancestor::tei:TEI/@xml:id, '_', $node/ancestor::tei:text[@type eq 'work_volume']/@xml:id) else $node/ancestor::tei:TEI/@xml:id )) then 
                 let $inlineBreak :=
                     if ($node[@type eq 'blank']) then (: blank pages - make a typographic line break :)
                         <br/>
@@ -1571,7 +1573,7 @@ declare function html:pb($node as element(tei:pb), $mode as xs:string) {
         (: pb nodes are good candidates for tracing the speed/performance of document processing, 
             since they are equally distributed throughout a document :)
         case 'debug' return
-            trace($node/@xml:id, '[RENDER] Processing tei:pb node')
+            util:log('warn', '[RENDER] Processing tei:pb node ' || $node/@xml:id)
 
         default return () (: some sophisticated function to insert a pipe and a pagenumber div in the margin :)
 };
@@ -1611,11 +1613,12 @@ declare function html:ref($node as element(tei:ref), $mode as xs:string) {
         case 'html' return
             if ($node/@type eq 'note-anchor') then
                 () (: omit note references :)
-            else if ($node/ancestor::tei:text and $node/@target) then (:added ancestor::tei:body to avoid entering a loop for just the ref target in the header, 11.04.2024 :)(: Changed ...body/@target to ...test and $node/@target in order not to skip all because lemmata have refs in front, and neither text nor body do normally have target attributes, AW 16.04.2024 :)
-         (:   let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] New Ref processed: " || string($node/@target)) else () :)
-  let $resolvedUri := if ($node/@target/string() eq "" ) then "No target for this ref." else html:resolveURI($node, $node/@target/string()) (: TODO: verify that this works :) (: Bug here with W0063, a RW, 11.04.2024 :)
-  (:let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Resolved URI: " ||$resolvedUri) else ()  :)
-               return html:transformToLink($node, $resolvedUri)
+            else if ($node/ancestor::tei:text and $node/@target) then
+                (:added ancestor::tei:body to avoid entering a loop for just the ref target in the header, 11.04.2024 :)(: Changed ...body/@target to ...text and $node/@target in order not to skip all because lemmata have refs in front, and neither text nor body do normally have target attributes, AW 16.04.2024 :)
+                (:   let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] New Ref processed: " || string($node/@target)) else () :)
+                let $resolvedUri := if ($node/@target/string() eq "" ) then "No target for this ref." else html:resolveURI($node, $node/@target/string()) (: TODO: verify that this works :) (: Bug here with W0063, a RW, 11.04.2024 :)
+                (:let $debug := if ($config:debug = ("trace", "info")) then console:log("[HTML] Resolved URI: " ||$resolvedUri) else ()  :)
+                return html:transformToLink($node, $resolvedUri)
             else
                 html:passthru($node, $mode)
 

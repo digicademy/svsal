@@ -2241,7 +2241,9 @@ declare function admin:createRoutes($wid as xs:string) {
                     else
                         console:log("[Admin] Routing: There has been a problem saving routing table to " || $routingExportStatus || ".")
 
-    (: post routing table to caddy :)
+    (: don't post routing table to caddy for now :)
+    let $debug := console:log("[Admin] Routing: WARNING!! Routing table has been saved and exported. Due to crashes, it will not be posted to the live process. Don't forget to manually restart the caddy server. WARNING!!")
+    (: 
     let $entriesBefore          := let $rt := net:getRoutingTable()
                                    return
                                         if (count($rt) > 0) then array:size($rt)
@@ -2261,6 +2263,7 @@ declare function admin:createRoutes($wid as xs:string) {
                         console:log("[Admin] Routing done: WARNING! Routing table posted, but something seems to be wrong with the numbers: " || $entriesBefore || " $entriesBefore + " || $addedEntries || " $addedEntries != " || $entriesAfter || " $entriesAfter. Maybe relevant entries had been in the routing table before and had to be deleted?")
                     else
                         console:log("[Admin] Routing done: WARNING!! - No entries posted. Live routing table contains " || $entriesAfter || " .")
+    :)
     let $runtime-ms := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000
     let $runtimeString := 
         if ($runtime-ms < (1000 * 60)) then format-number($runtime-ms div 1000, "#.##") || " Sek."
