@@ -2241,22 +2241,18 @@ declare function admin:createRoutes($wid as xs:string) {
                     else
                         console:log("[Admin] Routing: There has been a problem saving routing table to " || $routingExportStatus || ".")
 
-    (: don't post routing table to caddy for now :)
-    let $debug := console:log("[Admin] Routing: WARNING!! Routing table has been saved and exported. Due to crashes, it will not be posted to the live process. Don't forget to manually restart the caddy server. WARNING!!")
+    (: post routing table to caddy :)
+    let $rtBefore      := net:getRoutingTable()
+    let $entriesBefore := if ($rtBefore instance of array(*)) then array:size($rtBefore) else 0
+    let $newTotalEntries := if (string-length($config:caddyAPI) > 0 and array:size($routingTable) > 0) then
+                              let $debug := console:log("[Admin] Routing: live routing table contains " || $entriesBefore || " entries, now posting " || array:size($routingTable) || " additional ones...")
+                                return net:postRoutingTable($routingTable, $rtBefore)
+                            else
+                                let $debug := console:log("[Admin] Routing: WARNING!! - No nodes routing info to post ($config:caddyAPI = " || $config:caddyAPI || ", array:size($routingTable) = " || array:size($routingTable) || ").")
+                                return 0
     (: 
-    let $entriesBefore          := let $rt := net:getRoutingTable()
-                                   return
-                                        if (count($rt) > 0) then array:size($rt)
-                                        else 0
-    let $addedEntries           := if (string-length($config:caddyAPI) > 0 and array:size($routingTable) > 0) then
-                                        let $debug := console:log("[Admin] Routing: live routing table contains " || $entriesBefore || " entries, now posting " || array:size($routingTable) || " additional ones...")
-                                        return net:postRoutingTable($routingTable)
-                                    else
-                                        let $debug := console:log("[Admin] Routing: WARNING!! - No nodes routing info to post ($config:caddyAPI = " || $config:caddyAPI || ", array:size($routingTable) = " || array:size($routingTable) || ").")
-                                        return 0
     let $routingTableAfter      := net:getRoutingTable()
-    let $debug := if ($config:debug = ('trace')) then console:log("[Admin] Routing: Routing table: " || serialize($routingTableAfter)) else ()
-    let $entriesAfter           := if ($routingTableAfter instance of array(xs:string)) then array:size($routingTableAfter) else 0
+    let $entriesAfter           := if ($routingTableAfter instance of array(*)) then array:size($routingTableAfter) else 0
     let $debug :=   if ($addedEntries > 0 and $entriesBefore + $addedEntries = $entriesAfter) then
                         console:log("[Admin] Routing done: Routing table successfully posted, live routing table now contains " || $entriesBefore || "+" || $addedEntries || "=" || $entriesAfter || " entries.")
                     else if ($addedEntries > 0) then 
@@ -2264,6 +2260,10 @@ declare function admin:createRoutes($wid as xs:string) {
                     else
                         console:log("[Admin] Routing done: WARNING!! - No entries posted. Live routing table contains " || $entriesAfter || " .")
     :)
+    let $debug := if ($newTotalEntries = $entriesBefore + array:size($routingTable)) then
+                        console:log("[Admin] Routing done: Routing table successfully posted, live routing table now contains " || $newTotalEntries || " (" || $entriesBefore || "+" || array:size($routingTable) || ") entries.")
+                  else
+                        console:log("[Admin] Something is strange with posting the new routing table entries. (Total entries before: " || $entriesBefore || ", new entries: " || array:size($routingTable) || ", new total entries: " || $newTotalEntries || ".)")
     let $runtime-ms := ((util:system-time() - $start-time) div xs:dayTimeDuration('PT1S'))  * 1000
     let $runtimeString := 
         if ($runtime-ms < (1000 * 60)) then format-number($runtime-ms div 1000, "#.##") || " Sek."
@@ -2274,7 +2274,7 @@ declare function admin:createRoutes($wid as xs:string) {
         <div>
             <h2>Routing information</h2>
             <p>Created {array:size($routingTable)} routing entries for {$wid}, saved at {$routingSaveStatus} and exported to {$routingExportStatus}.<br/>
-               Posted to caddy server: {$entriesBefore} + {$addedEntries} = {$entriesAfter} routing entries now.</p>
+               Posted to caddy server: {$entriesBefore} + {array:size($routingTable)} = {$newTotalEntries} routing entries now.</p>
             <p>It all took {$runtimeString}.</p>
         </div>
 };

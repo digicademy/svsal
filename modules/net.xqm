@@ -437,11 +437,16 @@ declare function local:negotiateCTSub($offers as xs:string*, $bestOffer as xs:st
 
 (: Interact with caddy server :)
 declare function net:getRoutingTable() as item()? {
-    fn:json-doc($config:caddyRoutes)
+    (: fn:json-doc($config:caddyRoutes) :)
+    let $request := <hc:request method="get" http-version="1.1" timeout="60000"/>
+    let $resp := try { hc:send-request($request, $config:caddyRoutes) } catch * { () }
+    return if ($resp[1]/@status eq "200" and exists($resp[2]))
+           then parse-json(bin:decode-string($resp[2]))
+           else ()
 };
 
 declare function net:deleteRoutingTable() as xs:boolean {
-    let $request    := <hc:request method="delete" http-version="1.0"></hc:request>
+    let $request    := <hc:request method="delete" http-version="1.0" timeout="60000"></hc:request>
     let $resp       := try  {
                                 hc:send-request($request, $config:caddyRoutes)
                             } catch * {
@@ -455,20 +460,28 @@ declare function net:deleteRoutingTable() as xs:boolean {
     let $debug := if ($resp[1]/@status ne "200") then
                          let $debug2 := console:log("[NET] Routing: WARNING! Problematic caddy response (when trying to delete routing table): " || fn:serialize($resp[1], map{"method": "text"}) )
                          let $debug2 := if ($resp[2]) then console:log("[NET] Response body: " || $resp[2]) else ()
-                         let $debug2 := if ($resp[2]) then console:log("[NET] Response body (decoded): " || bin:decode-string($resp[2])) else ()
+                         let $debug2 := if ($resp[2]) then console:log("[NET] Response body (decoded): " || substring(bin:decode-string($resp[2]), 1, 1000)) else ()
                          return ()
                     else ()
     return if ($resp[1]/@status eq "200") then true() else false()
 };
 
-declare function net:isInRoutingTable($src as xs:string) as xs:boolean {
+declare function net:isInRoutingTable($src as xs:string, $rtable as item()?) as xs:boolean {
+    let $routingTable :=
+        if ($rtable instance of array(*) and array:size($rtable) gt 0) then
+            $rtable
+        else
+            let $debug := console:log("[NET] Routing: no usable table snapshot passed, fetching live table...")
+            return net:getRoutingTable()
     let $rid := tokenize(tokenize(tokenize($src, ":")[1], '_')[1], "/")[last()]
-    let $routingTable := net:getRoutingTable()
     let $dbg := if ($config:debug = ('trace')) then console:log("[NET] Check if $rid " || $rid || " (from $src " || $src || ") is in routing table...") else ()
     return if ($routingTable instance of array(*) and array:size($routingTable) > 0) then
-        let $relevantEntries := array:filter($routingTable, function($i) {substring($i?input, 1, 12) eq concat("/texts/", $rid) or substring($i?input, 1, 14) eq concat("/lemmata/", $rid)})
-        return if (array:size($relevantEntries) > 0) then
-            let $debug := if ($config:debug = ('trace')) then console:log("[NET] Routing table contains " || array:size($relevantEntries) || " entries concerning " || $rid || ".") else ()
+        (: let $relevantEntries := array:filter($routingTable, function($i) {substring($i?input, 1, 12) eq concat("/texts/", $rid) or substring($i?input, 1, 14) eq concat("/lemmata/", $rid)}) :)
+        if (some $entry in $routingTable?*
+            satisfies  starts-with($entry?input, "/texts/" || $rid)
+                    or starts-with($entry?input, "/lemmata/" || $rid)) then
+   
+            let $debug := if ($config:debug = ('trace')) then console:log("[NET] Routing table contains entries concerning " || $rid || ".") else ()
             return true()
         else
             let $debug := if ($config:debug = ('trace')) then console:log("[NET] Routing table contains no relevant entries.") else ()
@@ -478,69 +491,129 @@ declare function net:isInRoutingTable($src as xs:string) as xs:boolean {
         return false()
 };
 
-declare function net:postRoutingTable($routes as array(*)) as xs:integer {
-    if (array:size($routes) = 0 or string-length($config:caddyRoutes) = 0) then
-        0
-    else
-        let $debug   := if ($config:debug = ('trace')) then console:log("[NET] Make sure relevant entries are not present in routing table already...") else ()
-        let $testmap := array:reverse($routes)?1   (: in case of facsimile-only works, the first input is an empty string, so we take the last input for testing :)
-        let $src     := tokenize($testmap?input, '_')[1] (: in case of lemmata, we don't have the *_details entry that is the last one in source works, so we eliminate the suffix :)
-        (: let $dest    := $testmap?outputs:)
-        return if (not(net:isInRoutingTable($src))) then
-            let $debug  := if ($config:debug = 'trace') then console:log("[NET] Routing: Posting " || array:size($routes) || " routes to '" || $config:caddyRoutes || "/...' ...") else ()
-            let $request    := 
-                <hc:request method="post" http-version="1.0">
-                    <hc:body method="text" media-type="application/json"></hc:body>
-                </hc:request>
-            (: ¡¡¡¡ Remember that http-client:send-request returns a *SEQUENCE* of (hc:response, document) - see http://expath.org/modules/http-client/ !!!! :)
-            let $resp       :=  try  {
-                                        hc:send-request($request, $config:caddyRoutes || "/...", fn:serialize($routes, map{"method":"json", "indent": true(), "encoding":"utf-8"}))
+declare function net:postRoutingTable($routes as array(*), $rtable as item()?) as xs:integer {
+    let $routingTable :=
+        if ($rtable instance of array(*) and array:size($rtable) gt 0) then
+            $rtable
+        else
+            let $debug := console:log("[NET] Routing: no usable table snapshot passed, fetching live table...")
+            return net:getRoutingTable()
+    return
+        if (array:size($routes) = 0 or string-length($config:caddyRoutes) = 0) then
+            0
+        else
+            let $debug   := if ($config:debug = ('trace')) then console:log("[NET] Make sure relevant entries are not present in routing table already...") else ()
+            let $size := array:size($routes)
+            let $testmap := if ($size gt 0) then $routes($size) else ()   (: in case of facsimile-only works, the first input is an empty string, so we take the last input for testing :)
+            let $src     := tokenize($testmap?input, '_')[1] (: in case of lemmata, we don't have the *_details entry that is the last one in source works, so we eliminate the suffix :)
+            (: let $dest    := $testmap?outputs:)
+            return if (not(net:isInRoutingTable($src, $routingTable))) then
+                let $debug  := if ($config:debug = 'trace') then console:log("[NET] Routing: Posting " || array:size($routes) || " routes to '" || $config:caddyRoutes || "/...' ...") else ()
+                let $request    := 
+                    <hc:request method="post" http-version="1.1" timeout="60000">
+                        <hc:body method="text" media-type="application/json"></hc:body>
+                    </hc:request>
+                (: ¡¡¡¡ Remember that http-client:send-request returns a *SEQUENCE* of (hc:response, document) - see http://expath.org/modules/http-client/ !!!! :)
+                let $resp       :=  try  {
+                                            hc:send-request($request, $config:caddyRoutes || "/...", fn:serialize($routes, map{"method":"json", "indent": false(), "encoding":"utf-8"}))
+                                         }
+                                    catch * {
+                                            let $debug := console:log("[NET] Routing: ERROR! " || $err:code || ": " || $err:description || " (" || concat($err:module, ": line ", $err:line-number, ":", $err:column-number) || ").")
+                                            return  (<err:problem status="-1">
+                                                        <err:code>{$err:code}</err:code>
+                                                        <err:description>{$err:description}</err:description>
+                                                        <err:location>{concat($err:module, ": line ", $err:line-number, ":", $err:column-number)}</err:location>
+                                                    </err:problem>, ())
+                                        }
+                let $debug := if ($resp[1]/@status ne "200") then
+                                     let $debug2 := console:log("[NET] Routing: WARNING! Problematic caddy response (when trying to post routing table): " || fn:serialize($resp[1], map{"method": "text"}) )
+                                     (: let $debug2 := if (exists($resp[2])) then console:log("[NET] Response body: " || $resp[2]) else ():)
+                                     let $debug2 := if (exists($resp[2])) then console:log("[NET] Response body (decoded): " || substring(bin:decode-string($resp[2]), 1, 1000)) else ()
+                                     return ()
+                                else ()
+                return if ($resp[1]/@status/string() ne "200") then
+                        -1
+                    else
+                        if ($config:debug = ('trace')) then
+                            let $debug := console:log("NET] Posting seems to have been successful, verify by checking presence of an example route...")
+                            let $newRoutingTable := net:getRoutingTable()
+                            return
+                                if (net:isInRoutingTable($src, $newRoutingTable)) then
+                                    array:size($newRoutingTable)
+                                else
+                                    let $debug := console:log('[NET] Routing: WARNING! Problem with nodes routing information: { "input": "' || $src || '" } not found in live routing table after posting.')
+                                    return -1
+                        else
+                            let $newTotalEntries := array:size($routingTable) + $size
+                            let $debug := console:log("[NET] Posting seems to have been successful (status 200, there should be " || $newTotalEntries || " total routing entries now).")
+                            return $newTotalEntries
+    
+            else
+                let $rid := tokenize(tokenize(tokenize($src, ":")[1], "_")[1], "/")[last()]
+                let $debug  := if ($config:debug = ('trace')) then console:log("[NET] Routing: At least one key of the routing information is already in caddy's configuration, need to clean live routing table for " || $rid || " first...") else ()
+                let $cleanStatus := net:cleanRoutingTable($rid, $routingTable)
+                return if ($cleanStatus ge 0) then
+                    let $wait := util:wait(5000)
+                    let $debug := if ($config:debug = ('trace')) then console:log("[NET] Routing: Retry...") else ()
+                    return net:postRoutingTable($routes, ())
+                else
+                    let $debug := console:log("[NET] Routing: WARNING! Cleaning routing table failed!")
+                    return -1
+};
+
+declare function net:cleanRoutingTable($rid as xs:string, $rtable as item()?) as xs:integer {
+    let $routingTable :=
+        if ($rtable instance of array(*) and array:size($rtable) gt 0) then
+            $rtable
+        else
+            let $debug := console:log("[NET] Routing: no usable table snapshot passed, fetching live table...")
+            return net:getRoutingTable()
+    (: let $cleanedRT      := array:filter($routingTable, function ($i) { 
+                                (/: let $dbg := if (substring($i?input, 1, 12) ne concat("/texts/", $wid)) then console:log("[NET] return true (keep entry) because " || substring($i?input, 1, 12) || " ne " || concat("/texts/",  $wid)) else console:log("[NET] return false (drop entry) because " || substring($i?input, 1, 12) || " eq " || concat("/texts/",  $wid)):/)
+                                not(substring($i?input, 1, 12) eq concat("/texts/", $rid)
+                                 or substring($i?input, 1, 14) eq concat("/lemmata/", $rid)
+                                 )
+                            })
+    :)
+    let $cleanedRT := array {
+        for $entry in $routingTable?*
+        where not(starts-with($entry?input, "/texts/" || $rid)
+               or starts-with($entry?input, "/lemmata/" || $rid))
+        return $entry
+    }
+    let $deleteStatus   := net:deleteRoutingTable()
+    return
+        if (array:size($cleanedRT) > 0) then
+            if ($deleteStatus) then
+                
+                (: net:postRoutingTable($cleanedRT) :)
+                
+                let $request    := 
+                    <hc:request method="post" http-version="1.1" timeout="60000">
+                        <hc:body method="text" media-type="application/json"></hc:body>
+                    </hc:request>
+                (: ¡¡¡¡ Remember that http-client:send-request returns a *SEQUENCE* of (hc:response, document) - see http://expath.org/modules/http-client/ !!!! :)
+                let $resp       :=  try  {
+                                        hc:send-request($request, $config:caddyRoutes || "/...", fn:serialize($cleanedRT, map{"method":"json", "indent": false(), "encoding":"utf-8"}))
                                      }
                                 catch * {
-                                        let $debug := console:log("[NET] Routing: ERROR! " || $err:code || ": " || $err:description || " (" || concat($err:module, ": line ", $err:line-number, ":", $err:column-number) || ").")
+                                        let $debug := console:log("[NET] Routing: ERROR! in cleaning routing table" || $err:code || ": " || $err:description || " (" || concat($err:module, ": line ", $err:line-number, ":", $err:column-number) || ").")
                                         return  (<err:problem status="-1">
                                                     <err:code>{$err:code}</err:code>
                                                     <err:description>{$err:description}</err:description>
                                                     <err:location>{concat($err:module, ": line ", $err:line-number, ":", $err:column-number)}</err:location>
                                                 </err:problem>, ())
                                     }
-            let $debug := if ($resp[1]/@status ne "200") then
-                                 let $debug2 := console:log("[NET] Routing: WARNING! Problematic caddy response (when trying to post routing table): " || fn:serialize($resp[1], map{"method": "text"}) )
-                                 (: let $debug2 := if (string-length($resp[2])>0) then console:log("[NET] Response body: " || $resp[2]) else ():)
-                                 let $debug2 := if (string-length($resp[2])>0) then console:log("[NET] Response body (decoded): " || bin:decode-string($resp[2])) else ()
-                                 return ()
-                            else ()
-            return if ($resp[1]/@status/string() ne "200") then
-                    -1
-                else
-                    let $debug := if ($config:debug = ('trace')) then console:log("[NET] Posting seems to have been successful, verify by checking presence of an example route...") else ()
-                    return if (net:isInRoutingTable($src)) then
-                        array:size($routes)
+                return
+                    if ($resp[1]/@status/string() ne "200") then
+                        -1
                     else
-                        let $debug := console:log('[NET] Routing: WARNING! Problem with nodes routing information: { "input": "' || $src || '" } not found in live routing table after posting.')
-                        return -1
+                        0
 
-        else
-            let $rid := tokenize(tokenize(tokenize($src, ":")[1], "_")[1], "/")[last()]
-            let $debug  := if ($config:debug = ('trace')) then console:log("[NET] Routing: At least one key of the routing information is already in caddy's configuration, need to clean live routing table for " || $rid || " first...") else ()
-            let $cleanStatus := net:cleanRoutingTable($rid)
-            return if ($cleanStatus ge 0) then
-                let $wait := util:wait(5000)
-                let $debug := if ($config:debug = ('trace')) then console:log("[NET] Routing: Retry...") else ()
-                return net:postRoutingTable($routes)
             else
-                let $debug := console:log("[NET] Routing: WARNING! Cleaning routing table failed!")
-                return -1
-};
-
-declare function net:cleanRoutingTable($rid as xs:string) as xs:integer {
-    let $routingTable   := net:getRoutingTable()
-    let $cleanedRT      := array:filter($routingTable, function ($i) { 
-                                (: let $dbg := if (substring($i?input, 1, 12) ne concat("/texts/", $wid)) then console:log("[NET] return true (keep entry) because " || substring($i?input, 1, 12) || " ne " || concat("/texts/",  $wid)) else console:log("[NET] return false (drop entry) because " || substring($i?input, 1, 12) || " eq " || concat("/texts/",  $wid)):)
-                                not(substring($i?input, 1, 12) eq concat("/texts/", $rid) or substring($i?input, 1, 14) eq concat("/lemmata/", $rid))
-                            })
-    let $deleteStatus   := net:deleteRoutingTable()
-    return if (array:size($cleanedRT) > 0) then net:postRoutingTable($cleanedRT) else 0
+                -1
+        else
+            0
 };
 
 
