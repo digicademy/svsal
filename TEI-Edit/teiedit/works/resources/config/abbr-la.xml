@@ -29,6 +29,26 @@
             <expanPart type="text">absque</expanPart>
         </expansion>
     </abbrExpan>
+    <abbrExpan xml:id="absque2">
+        <abbreviation>
+            <abbrPart type="text">ab</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">q;</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">absque</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="accidens1">
+        <abbreviation>
+            <abbrPart type="text">accid</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">s</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">accidens</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--acquisitum CR-->
     <abbrExpan xml:id="acquisitum1">
         <abbreviation>
@@ -126,6 +146,16 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">adhibenda</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--adinuicem CR-->
+    <abbrExpan xml:id="adinuicem1">
+        <abbreviation>
+            <abbrPart type="text">adinuic</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">adinuicem</expanPart>
         </expansion>
     </abbrExpan>
     <!--administrationem CR-->
@@ -391,7 +421,36 @@
             <expanPart type="text">Aggressorem</expanPart>
         </expansion>
     </abbrExpan>
-    
+    <!--Alexan CR-->
+    <abbrExpan xml:id="Alexan">
+        <abbreviation>
+            <abbrPart type="text">Alex</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Alexan</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Alexan2">
+        <abbreviation>
+            <abbrPart type="text">Alex</abbrPart>
+            <abbrPart type="g">#chara0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Alexan</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--Alexand CR-->
+    <abbrExpan xml:id="Alexand">
+        <abbreviation>
+            <abbrPart type="text">Alex</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+            <abbrPart type="text">d</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Alexand</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--Aliquam  CR -->
     <abbrExpan xml:id="Aliquam1">
         <abbreviation>
@@ -429,6 +488,27 @@
             <expanPart type="text">Aliquam</expanPart>
         </expansion>
     </abbrExpan>
+    <!--aliquando CR-->
+    <abbrExpan xml:id="Aliquando">
+        <abbreviation>
+            <abbrPart type="text">Aliqu</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+            <abbrPart type="text">do</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Aliquando</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="aliquando">
+        <abbreviation>
+            <abbrPart type="text">aliqu</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+            <abbrPart type="text">do</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">aliquando</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--aliquem CR-->
     <abbrExpan xml:id="aliquem1">
         <abbreviation>
@@ -446,6 +526,17 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">aliquem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--aliunde CR-->
+    <abbrExpan xml:id="aliunde">
+        <abbreviation>
+            <abbrPart type="text">ali</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">de</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">aliunde</expanPart>
         </expansion>
     </abbrExpan>
     <!--alluuionem CR-->
@@ -539,6 +630,16 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">Amicitiam</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--amorẽ CR-->
+    <abbrExpan xml:id="amorem1">
+        <abbreviation>
+            <abbrPart type="text">amor</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">amorem</expanPart>
         </expansion>
     </abbrExpan>
     <!--animarum CR-->
@@ -636,6 +737,27 @@
             <expanPart type="text">Apostolicarum</expanPart>
         </expansion>
     </abbrExpan>
+    <!--Apostolus CR-->
+    <abbrExpan xml:id="Apostolus1">
+        <abbreviation>
+            <abbrPart type="text">Ap</abbrPart>
+            <abbrPart type="g">#char0142</abbrPart>
+            <abbrPart type="text">us</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Apostolus</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="apostolus1">
+        <abbreviation>
+            <abbrPart type="text">ap</abbrPart>
+            <abbrPart type="g">#char0142</abbrPart>
+            <abbrPart type="text">us</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">apostolus</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--appellandum CR-->
     <abbrExpan xml:id="appellandum1">
         <abbreviation>
@@ -695,6 +817,17 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">appendit</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--aequalitatem CR-->
+    <abbrExpan xml:id="aequalitatem">
+        <abbreviation>
+            <abbrPart type="g">#char00e6</abbrPart>
+            <abbrPart type="text">qualitat</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">aequalitatem</expanPart>
         </expansion>
     </abbrExpan>
     <!--arbitrium CR-->
@@ -779,6 +912,27 @@
             <expanPart type="text">argentum</expanPart>
         </expansion>
     </abbrExpan>
+    <abbrExpan xml:id="argumenta1">
+        <abbreviation>
+            <abbrPart type="text">argum</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">ta</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">argumenta</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="argumentis1">
+        <abbreviation>
+            <abbrPart type="text">argum</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">tis</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">argumentis</expanPart>
+        </expansion>
+    </abbrExpan>
+    
     <!--argumento CR-->
     <abbrExpan xml:id="argumento1">
         <abbreviation>
@@ -839,7 +993,17 @@
             <expanPart type="text">Argumentum</expanPart>
         </expansion>
     </abbrExpan>
-    
+    <abbrExpan xml:id="argumentum5">
+        <abbreviation>
+            <abbrPart type="text">argum</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">t</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">argumentum</expanPart>
+        </expansion>
+    </abbrExpan>
     
     <!--audientiam CR-->
     <abbrExpan xml:id="audientiam1">
@@ -858,6 +1022,17 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">audientiam</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--augmentum CR-->
+    <abbrExpan xml:id="augmentum1">
+        <abbreviation>
+            <abbrPart type="text">augm</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">tum</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">augmentum</expanPart>
         </expansion>
     </abbrExpan>
     <!--asserunt CR-->
@@ -1062,6 +1237,27 @@
             <expanPart type="text">authoritatem</expanPart>
         </expansion>
     </abbrExpan>
+
+<!--autoritatem CR-->
+    <abbrExpan xml:id="autoritatem1">
+        <abbreviation>
+            <abbrPart type="text">autoritat</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">autoritatem</expanPart>
+        </expansion>
+    </abbrExpan>
+<!--beatitudinem CR-->
+    <abbrExpan xml:id="beatitudinem1">
+        <abbreviation>
+            <abbrPart type="text">beatitudin</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">beatitudinem</expanPart>
+        </expansion>
+    </abbrExpan>
     <!-- Beneficium CR -->
     <abbrExpan xml:id="Beneficium1">
         <abbreviation>
@@ -1210,6 +1406,28 @@
             <expanPart type="text">C</expanPart>
             <expanPart type="g">#char00e6</expanPart>
             <expanPart type="text">sarem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--caeterique CR-->
+    <abbrExpan xml:id="caeterique">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#char00e6</abbrPart>
+            <abbrPart type="text">teríque</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">caeterique</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--cambio CR-->
+    <abbrExpan xml:id="cambio">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+            <abbrPart type="text">bio</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">cambio</expanPart>
         </expansion>
     </abbrExpan>
     <!--candidam CR-->
@@ -1475,6 +1693,18 @@
             <expanPart type="text">censetur</expanPart>
         </expansion>
     </abbrExpan>
+    <!--censibus CR-->
+    <abbrExpan xml:id="censibus">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">ibus</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">censibus</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--centum CR-->
     <abbrExpan xml:id="centum1">
         <abbreviation>
@@ -1536,7 +1766,37 @@
             <expanPart type="text">censuram</expanPart>
         </expansion>
     </abbrExpan>
-    
+    <!--census CR-->
+    <abbrExpan xml:id="cenſus1">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">us</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">census</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="census2">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">sus</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">census</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="certitudinem1">
+        <abbreviation>
+            <abbrPart type="text">certitudin</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">certitudinem</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--certum CR-->
     <abbrExpan xml:id="certum1">
         <abbreviation>
@@ -1635,6 +1895,16 @@
             <expanPart type="text">christi</expanPart>
         </expansion>
     </abbrExpan>
+    <abbrExpan xml:id="christi3">
+        <abbreviation>
+            <abbrPart type="text">Ch</abbrPart>
+            <abbrPart type="g">#charr0303</abbrPart>
+            <abbrPart type="text">i</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Christi</expanPart>
+        </expansion>
+    </abbrExpan>
     
     <!-- CHRISTIANAE -->
     <abbrExpan xml:id="christianae1">
@@ -1678,6 +1948,38 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">Christianum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--Christo CR-->
+    <abbrExpan xml:id="christo1">
+        <abbreviation>
+            <abbrPart type="text">Ch</abbrPart>
+            <abbrPart type="g">#charr0303</abbrPart>
+            <abbrPart type="text">o</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Christo</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="christo2">
+        <abbreviation>
+            <abbrPart type="text">ch</abbrPart>
+            <abbrPart type="g">#charr0303</abbrPart>
+            <abbrPart type="text">o</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Christo</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--Christum CR-->
+    <abbrExpan xml:id="christum">
+        <abbreviation>
+            <abbrPart type="text">Ch</abbrPart>
+            <abbrPart type="g">#charr0303</abbrPart>
+            <abbrPart type="text">um</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Christum</expanPart>
         </expansion>
     </abbrExpan>
     <!-- CHRISTUS -->
@@ -1739,6 +2041,26 @@
             <expanPart type="text">christus</expanPart>
         </expansion>
     </abbrExpan>
+    <abbrExpan xml:id="Christus4">
+        <abbreviation>
+            <abbrPart type="text">Ch</abbrPart>
+            <abbrPart type="g">#charr0303</abbrPart>
+            <abbrPart type="text">us</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Christus</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--civilem CR-->
+    <abbrExpan xml:id="civilem">
+        <abbreviation>
+            <abbrPart type="text">civil</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">civilem</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--ciuitatem CR-->
     <abbrExpan xml:id="ciuitatem1">
         <abbreviation>
@@ -1756,6 +2078,17 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">ciuitatem</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <!--Clemen CR-->
+    <abbrExpan xml:id="Clemen">
+        <abbreviation>
+            <abbrPart type="text">Clem</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Clemen</expanPart>
         </expansion>
     </abbrExpan>
     <!--Clericum CR-->
@@ -1794,6 +2127,66 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">cognitionem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--cognoscatur CR-->
+    <abbrExpan xml:id="cognoscatur">
+        <abbreviation>
+            <abbrPart type="text">cogno</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">ca</abbrPart>
+            <abbrPart type="g">#chart0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">cognoscatur</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--commemorat CR-->
+    <abbrExpan xml:id="commemorat">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">memorat</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">commemorat</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--commissum CR-->
+    <abbrExpan xml:id="commissum">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">mi</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">um</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">commissum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--commitendum CR-->
+    <abbrExpan xml:id="commitendum1">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">mitt</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">dum</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">commitendum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="commitendum2">
+        <abbreviation>
+            <abbrPart type="text">committ</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">dum</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">commitendum</expanPart>
         </expansion>
     </abbrExpan>
     <!--commune CR-->
@@ -1898,6 +2291,17 @@
             <expanPart type="text">Communem</expanPart>
         </expansion>
     </abbrExpan>
+    <!--communes CR-->
+    <abbrExpan xml:id="communes">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">munes</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">communes</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--communi CR-->
     <abbrExpan xml:id="communi1">
         <abbreviation>
@@ -1917,6 +2321,17 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">communi</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--communia CR-->
+    <abbrExpan xml:id="communia">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">munia</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">communia</expanPart>
         </expansion>
     </abbrExpan>
     <!--communione CR-->
@@ -2002,7 +2417,17 @@
             <expanPart type="text">communiter</expanPart>
         </expansion>
     </abbrExpan>
-    
+    <!--compelli CR-->
+    <abbrExpan xml:id="compelli">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">pelli</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">compelli</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--compendiosa CR-->
     <abbrExpan xml:id="compendiosa1">
         <abbreviation>
@@ -2065,6 +2490,43 @@
             <expanPart type="text">compendium</expanPart>
         </expansion>
     </abbrExpan>
+    <!--compensatio CR-->
+    <abbrExpan xml:id="compensatio1">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>            
+            <abbrPart type="text">pen</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">atio</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">compensatio</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="compensatio2">
+        <abbreviation>
+            <abbrPart type="text">comp</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">atio</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">compensatio</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--compensatione CR-->
+    <abbrExpan xml:id="compensatione">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">pen</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">atione</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">compensatione</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--competit CR-->
     <abbrExpan xml:id="competit1">
         <abbreviation>
@@ -2084,6 +2546,29 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">competit</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--completo CR-->
+    <abbrExpan xml:id="completo">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">pleto</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">completo</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--complementum CR-->
+    <abbrExpan xml:id="complementum">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">plement</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">complementum</expanPart>
         </expansion>
     </abbrExpan>
     <!--comprobatum CR-->
@@ -2251,11 +2736,34 @@
             <expanPart type="text">concilio</expanPart>
         </expansion>
     </abbrExpan>
+    <!--conciliorum CR-->
+    <abbrExpan xml:id="conciliorum1">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">cilior</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">conciliorum</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--concilium CR-->
     <abbrExpan xml:id="concilium1">
         <abbreviation>
             <abbrPart type="text">c</abbrPart>
             <abbrPart type="g">#charo0304</abbrPart>
+            <abbrPart type="text">cili</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">concilium</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="concilium2">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
             <abbrPart type="text">cili</abbrPart>
             <abbrPart type="g">#charu0303</abbrPart>
         </abbreviation>
@@ -2286,6 +2794,17 @@
     <abbrExpan xml:id="Concilium5">
         <abbreviation>
             <abbrPart type="text">Concili</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Concilium</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Concilium6">
+        <abbreviation>
+            <abbrPart type="text">C</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">cili</abbrPart>
             <abbrPart type="g">#charu0303</abbrPart>
         </abbreviation>
         <expansion>
@@ -2406,9 +2925,11 @@
     </abbrExpan>
     <abbrExpan xml:id="conclusionem4">
         <abbreviation>
-            <abbrPart type="text">conclusion</abbrPart>
-            <abbrPart type="g">#charo0304</abbrPart>
-            <abbrPart type="text">conclusion</abbrPart>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">clu</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">ion</abbrPart>
             <abbrPart type="g">#chare0303</abbrPart>
         </abbreviation>
         <expansion>
@@ -2417,10 +2938,10 @@
     </abbrExpan>
     <abbrExpan xml:id="conclusionem5">
         <abbreviation>
-            <abbrPart type="text">conclusion</abbrPart>
-            <abbrPart type="g">#charo0304</abbrPart>
-            <abbrPart type="text">conclusion</abbrPart>
-            <abbrPart type="g">#chare0304</abbrPart>
+            <abbrPart type="text">conclu</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">ion</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
         </abbreviation>
         <expansion>
             <expanPart type="text">conclusionem</expanPart>
@@ -2507,6 +3028,17 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">Conclusionis</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--condemnandum CR-->
+    <abbrExpan xml:id="condemnandum">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">demnandum</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">condemnandum</expanPart>
         </expansion>
     </abbrExpan>
     <!--condemnatio CR-->
@@ -2617,6 +3149,30 @@
             <expanPart type="text">conditionem</expanPart>
         </expansion>
     </abbrExpan>
+    <!--conditiones CR-->
+    <abbrExpan xml:id="conditiones">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">ditiones</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">conditiones</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--conditionibus CR-->
+    <abbrExpan xml:id="conditionibus">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">diti</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">ibus</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">conditionibus</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--conducit CR-->
     <abbrExpan xml:id="conducit1">
         <abbreviation>
@@ -2657,6 +3213,20 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">concubina</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--concurrentibus CR-->
+    <abbrExpan xml:id="concurrentibus">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">curr</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">tib</abbrPart>
+            <abbrPart type="g">#chara770</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">concurrentibus</expanPart>
         </expansion>
     </abbrExpan>
     <!--confectum CR-->
@@ -2837,6 +3407,27 @@
             <expanPart type="text">confirmatio</expanPart>
         </expansion>
     </abbrExpan>
+    <!--confirmationem CR-->
+    <abbrExpan xml:id="confirmationem1">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">firmation</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">confirmationem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="confirmationem2">
+        <abbreviation>
+            <abbrPart type="text">confirmation</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">confirmationem</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--confirmetur CR-->
     <abbrExpan xml:id="confirmetur1">
         <abbreviation>
@@ -3003,6 +3594,45 @@
             <expanPart type="text">consanguinitatem</expanPart>
         </expansion>
     </abbrExpan>
+    <!--conscientia CR-->
+    <abbrExpan xml:id="conscientia">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">cientia</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">conscientia</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="conscientia2">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">ci</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">tia</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">conscientia</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--conscientiae CR-->
+    <abbrExpan xml:id="conscientiae">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">cienti</abbrPart>
+            <abbrPart type="g">#char00e6</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">conscienti</expanPart>
+            <abbrPart type="g">#char00e6</abbrPart>
+        </expansion>
+    </abbrExpan>
     <!--consensu CR-->
     <abbrExpan xml:id="consensu1">
         <abbreviation>
@@ -3087,6 +3717,71 @@
             <expanPart type="text">consentit</expanPart>
         </expansion>
     </abbrExpan>
+    <!--consequens CR-->
+    <abbrExpan xml:id="consequens">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">equ</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">s</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">consequens</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Consequens1">
+        <abbreviation>
+            <abbrPart type="text">Con</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">equ</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">s</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Consequens</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="consequens1">
+        <abbreviation>
+            <abbrPart type="text">con</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">equ</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">s</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">consequens</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--consequentia CR-->
+    <abbrExpan xml:id="consequentia1">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">equ</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">tia</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">consequentia</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Consequentia1">
+        <abbreviation>
+            <abbrPart type="text">C</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">equ</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">tia</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Consequentia</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--conseruationem CR-->
     <abbrExpan xml:id="conseruationem1">
         <abbreviation>
@@ -3108,6 +3803,20 @@
             <expanPart type="text">conseruationem</expanPart>
         </expansion>
     </abbrExpan>
+    <!--consideranda CR-->
+    <abbrExpan xml:id="consideranda">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">ider</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+            <abbrPart type="text">da</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">consideranda</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--considerandum CR-->
     <abbrExpan xml:id="considerandum1">
         <abbreviation>
@@ -3122,6 +3831,18 @@
         <abbreviation>
             <abbrPart type="text">considerand</abbrPart>
             <abbrPart type="g">#charu0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">considerandum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="considerandum3">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">iderand</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
         </abbreviation>
         <expansion>
             <expanPart type="text">considerandum</expanPart>
@@ -3496,6 +4217,18 @@
             <expanPart type="text">consuetudinem</expanPart>
         </expansion>
     </abbrExpan>
+    <!--consuetudo CR-->
+    <abbrExpan xml:id="consuetudo">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">uetudo</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">consuetudo</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--consultissima CR-->
     <abbrExpan xml:id="consultissima1">
         <abbreviation>
@@ -3557,6 +4290,20 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">contestatio</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--contentus CR-->
+    <abbrExpan xml:id="contentus">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">t</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">t</abbrPart>
+            <abbrPart type="g">#chara770</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">contentus</expanPart>
         </expansion>
     </abbrExpan>
     <!--contineatur CR-->
@@ -3662,6 +4409,17 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">contingit</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--continuentur CR-->
+    <abbrExpan xml:id="continuentur">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">tinuentur</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">continuentur</expanPart>
         </expansion>
     </abbrExpan>
     <!-- CONTRA -->
@@ -3788,6 +4546,17 @@
             <expanPart type="text">Contractus</expanPart>
         </expansion>
     </abbrExpan>
+    <abbrExpan xml:id="contractus3">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">tract</abbrPart>
+            <abbrPart type="g">#chara770</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">contractus</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--contradicere CR-->
     <abbrExpan xml:id="contradicere1">
         <abbreviation>
@@ -3807,6 +4576,19 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">contradicere</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--contrahentes CR-->
+    <abbrExpan xml:id="contrahentes">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">trah</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">tes</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">contrahentes</expanPart>
         </expansion>
     </abbrExpan>
     <!-- CONTRARIUM -->
@@ -4165,6 +4947,16 @@
             <expanPart type="text">conuersos</expanPart>
         </expansion>
     </abbrExpan>
+    <!--correctionem-->
+    <abbrExpan xml:id="correctionem1">
+        <abbreviation>
+            <abbrPart type="text">correction</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">correctionem</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--correctorem CR-->
     <abbrExpan xml:id="correctorem1">
         <abbreviation>
@@ -4182,6 +4974,17 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">correctorem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--credendum CR-->
+    <abbrExpan xml:id="credendum1">
+        <abbreviation>
+            <abbrPart type="text">cred</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">dum</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">credendum</expanPart>
         </expansion>
     </abbrExpan>
     <!--creditorem CR-->
@@ -4241,7 +5044,19 @@
             <expanPart type="text">cuius</expanPart>
         </expansion>
     </abbrExpan>
-    
+    <!--cuiuscumque CR-->
+    <abbrExpan xml:id="cuiuscumque1">
+        <abbreviation>
+            <abbrPart type="text">cuiu</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="g">#chare8bf</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">cuiuscumque</expanPart>
+        </expansion>
+    </abbrExpan>
     <!-- CUM -->
     <abbrExpan xml:id="Cum1">
         <abbreviation>
@@ -4296,6 +5111,17 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">culpam</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--cunctis CR-->
+    <abbrExpan xml:id="cunctis1">
+        <abbreviation>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">ctis</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">cunctis</expanPart>
         </expansion>
     </abbrExpan>
     <!--curiam CR-->
@@ -4471,6 +5297,29 @@
             <expanPart type="text">definitionem</expanPart>
         </expansion>
     </abbrExpan>
+    <!--defraudantem CR-->
+    <abbrExpan xml:id="defraudantem">
+        <abbreviation>
+            <abbrPart type="text">defraud</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+            <abbrPart type="text">t</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">defraudantem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--deinde CR-->
+    <abbrExpan xml:id="deinde">
+        <abbreviation>
+            <abbrPart type="text">de</abbrPart>
+            <abbrPart type="g">#chari0303</abbrPart>
+            <abbrPart type="text">de</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">deinde</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--delinquentem CR-->
     <abbrExpan xml:id="delinquentem1">
         <abbreviation>
@@ -4507,6 +5356,15 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">demum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--denique CR-->
+    <abbrExpan xml:id="denique">
+        <abbreviation>
+            <abbrPart type="text">deniq;</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">denique</expanPart>
         </expansion>
     </abbrExpan>
     <!--denunciationem CR-->
@@ -4725,6 +5583,17 @@
             <expanPart type="text">dicendum</expanPart>
         </expansion>
     </abbrExpan>
+    <abbrExpan xml:id="dicendum5">
+        <abbreviation>
+            <abbrPart type="text">dic</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">d</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">dicendum</expanPart>
+        </expansion>
+    </abbrExpan>
     <!-- DICENS -->
     <abbrExpan xml:id="Dicens1">
         <abbreviation>
@@ -4764,6 +5633,28 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">dicens</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--dicentes CR-->
+    <abbrExpan xml:id="dicentes1">
+        <abbreviation>
+            <abbrPart type="text">dic</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">tes</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">dicentes</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--dicentis CR-->
+    <abbrExpan xml:id="dicentis1">
+        <abbreviation>
+            <abbrPart type="text">dic</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">tis</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">dicentis</expanPart>
         </expansion>
     </abbrExpan>
     <!--Dicitur CR-->
@@ -4847,6 +5738,16 @@
             <expanPart type="text">differentes</expanPart>
         </expansion>
     </abbrExpan>
+    <!--difficultatem CR-->
+    <abbrExpan xml:id="difficultatem1">
+        <abbreviation>
+            <abbrPart type="text">difficultat</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">difficultatem</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--diffinitionem CR-->
     <abbrExpan xml:id="diffinitionem1">
         <abbreviation>
@@ -4922,6 +5823,26 @@
             <expanPart type="text">dignum</expanPart>
         </expansion>
     </abbrExpan>
+    <!--dignitatem CR-->
+    <abbrExpan xml:id="dignitatem1">
+        <abbreviation>
+            <abbrPart type="text">dignitat</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">dignitatem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--dilectionem CR-->
+    <abbrExpan xml:id="dilectionem1">
+        <abbreviation>
+            <abbrPart type="text">dilection</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">dilectionem</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--diligentia CR-->
     <abbrExpan xml:id="diligentia1">
         <abbreviation>
@@ -4983,6 +5904,19 @@
             <expanPart type="text">discrimen</expanPart>
         </expansion>
     </abbrExpan>
+    <!--dispensare CR-->
+    <abbrExpan xml:id="dispensare1">
+        <abbreviation>
+            <abbrPart type="text">di</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">are</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">dispensare</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--dispensatio CR-->
     <abbrExpan xml:id="dispensatio1">
         <abbreviation>
@@ -5040,6 +5974,27 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">distinctionem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--distinguendum CR-->
+    <abbrExpan xml:id="distinguendum">
+        <abbreviation>
+            <abbrPart type="text">distinguend</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">distinguendum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="diſtinguendum">
+        <abbreviation>
+            <abbrPart type="text">di</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">tinguend</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">distinguendum</expanPart>
         </expansion>
     </abbrExpan>
     <!--distinguunt CR-->
@@ -5212,6 +6167,17 @@
             <expanPart type="text">domini</expanPart>
         </expansion>
     </abbrExpan>
+    <!--dominis CR-->
+    <abbrExpan xml:id="dominis">
+        <abbreviation>
+            <abbrPart type="text">d</abbrPart>
+            <abbrPart type="g">#charn0303</abbrPart>
+            <abbrPart type="text">is</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">dominis</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--Dominium CR-->
     <abbrExpan xml:id="Dominium1">
         <abbreviation>
@@ -5269,6 +6235,28 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">dominium</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--Domino CR-->
+    <abbrExpan xml:id="Domino">
+        <abbreviation>
+            <abbrPart type="text">D</abbrPart>
+            <abbrPart type="g">#charn0303</abbrPart>
+            <abbrPart type="text">o</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Domino</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--dominum CR-->
+    <abbrExpan xml:id="dominum">
+        <abbreviation>
+            <abbrPart type="text">d</abbrPart>
+            <abbrPart type="g">#charn0303</abbrPart>
+            <abbrPart type="text">m</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">dominum</expanPart>
         </expansion>
     </abbrExpan>
     <!-- DOMINUS -->
@@ -5438,6 +6426,7 @@
             <expanPart type="text">Dum</expanPart>
         </expansion>
     </abbrExpan>
+    <!-- dum - removed 21.03.23 due to false positives when using startAtLineBeginning="TRUE"
     <abbrExpan xml:id="dum2">
         <abbreviation>
             <abbrPart type="text">d</abbrPart>
@@ -5446,7 +6435,8 @@
         <expansion>
             <expanPart type="text">dum</expanPart>
         </expansion>
-    </abbrExpan>
+    </abbrExpan>-->
+    
     <!--Dumtaxat CR-->
     <abbrExpan xml:id="Dumtaxat1">
         <abbreviation>
@@ -5639,6 +6629,83 @@
             <expanPart type="text">easdem</expanPart>
         </expansion>
     </abbrExpan>
+    <abbrExpan xml:id="easdem3">
+        <abbreviation>
+            <abbrPart type="text">ea</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">d</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">easdem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--ecclesia CR-->
+    <abbrExpan xml:id="ecclesia1">
+        <abbreviation>
+            <abbrPart type="text">ecc</abbrPart>
+            <abbrPart type="g">#char0142</abbrPart>
+            <abbrPart type="text">ia</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">ecclesia</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="ecclesia2">
+        <abbreviation>
+            <abbrPart type="text">ecc</abbrPart>
+            <abbrPart type="g">#char0142</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">ia</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">ecclesia</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="ecclesia3">
+        <abbreviation>
+            <abbrPart type="text">ecc</abbrPart>
+            <abbrPart type="g">#char0142</abbrPart>
+            <abbrPart type="text">a</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">ecclesia</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="ecclesia4">
+        <abbreviation>
+            <abbrPart type="text">ec</abbrPart>
+            <abbrPart type="g">#char0142</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">ia</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">ecclesia</expanPart>
+        </expansion>
+    </abbrExpan>
+<!--ecclesiae CR -->
+    <abbrExpan xml:id="ecclesiae1">
+        <abbreviation>
+            <abbrPart type="text">ecc</abbrPart>
+            <abbrPart type="g">#char0142</abbrPart>
+            <abbrPart type="text">i</abbrPart>
+            <abbrPart type="g">#chare0328</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">ecclesiae</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="ecclesiae2">
+        <abbreviation>
+            <abbrPart type="text">ecc</abbrPart>
+            <abbrPart type="g">#char0142</abbrPart>
+            <abbrPart type="text">i</abbrPart>
+            <abbrPart type="g">#char00e6</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">ecclesiae</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--ecclesiam CR-->
     <abbrExpan xml:id="ecclesiam1">
         <abbreviation>
@@ -5658,6 +6725,46 @@
             <expanPart type="text">ecclesiam</expanPart>
         </expansion>
     </abbrExpan>
+    <!--ecclesiarum CR-->
+    <abbrExpan xml:id="ecclesiarum1">
+        <abbreviation>
+            <abbrPart type="text">ecc</abbrPart>
+            <abbrPart type="g">#char0142</abbrPart>
+            <abbrPart type="text">iar</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">ecclesiarum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--ecclesiastica CR-->
+    <abbrExpan xml:id="ecclesiastica1">
+        <abbreviation>
+            <abbrPart type="text">ecc</abbrPart>
+            <abbrPart type="g">#char0142</abbrPart>
+            <abbrPart type="text">ia</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">tica</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">ecclesiastica</expanPart>
+        </expansion>
+    </abbrExpan>    
+    <!--ecclesiasticam CR-->
+    <abbrExpan xml:id="ecclesiasticam1">
+        <abbreviation>
+            <abbrPart type="text">ec</abbrPart>
+            <abbrPart type="g">#char0142</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">ia</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">tic</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">ecclesiasticam</expanPart>
+        </expansion>
+    </abbrExpan>    
     <!--Ecclesiasticum CR-->
     <abbrExpan xml:id="Ecclesiasticum1">
         <abbreviation>
@@ -5693,6 +6800,49 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">ecclesiasticum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--Econtra CR-->
+    <abbrExpan xml:id="Econtra1">
+        <abbreviation>
+            <abbrPart type="text">Ec</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">tr</abbrPart>
+            <abbrPart type="g">#chara0300</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Econtra</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="econtra1">
+        <abbreviation>
+            <abbrPart type="text">ec</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">tr</abbrPart>
+            <abbrPart type="g">#chara0300</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">econtra</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Econtra2">
+        <abbreviation>
+            <abbrPart type="text">Ec</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">tra</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Econtra</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="econtra2">
+        <abbreviation>
+            <abbrPart type="text">ec</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">tra</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">econtra</expanPart>
         </expansion>
     </abbrExpan>
     <!--editionem CR-->
@@ -5815,6 +6965,17 @@
         <abbreviation>
             <abbrPart type="text">eiusd</abbrPart>
             <abbrPart type="g">#chare0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">eiusdem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="eiusdem3">
+        <abbreviation>
+            <abbrPart type="text">eiu</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">d</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
         </abbreviation>
         <expansion>
             <expanPart type="text">eiusdem</expanPart>
@@ -5965,6 +7126,27 @@
             <expanPart type="text">eosdem</expanPart>
         </expansion>
     </abbrExpan>
+    <!--episcopi CR-->
+    <abbrExpan xml:id="Episcopi1">
+        <abbreviation>
+            <abbrPart type="text">E</abbrPart>
+            <abbrPart type="g">#charp0303</abbrPart>
+            <abbrPart type="text">i</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Episcopi</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="episcopi1">
+        <abbreviation>
+            <abbrPart type="text">e</abbrPart>
+            <abbrPart type="g">#charp0303</abbrPart>
+            <abbrPart type="text">i</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">episcopi</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--Episcopum CR-->
     <abbrExpan xml:id="Episcopum1">
         <abbreviation>
@@ -6060,6 +7242,16 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">Erant</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--errorem CR-->
+    <abbrExpan xml:id="errorem">
+        <abbreviation>
+            <abbrPart type="text">error</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">errorem</expanPart>
         </expansion>
     </abbrExpan>
     <!-- ETIAM -->
@@ -6261,6 +7453,26 @@
             <expanPart type="text">eundem</expanPart>
         </expansion>
     </abbrExpan>
+    <abbrExpan xml:id="eundem3">
+        <abbreviation>
+            <abbrPart type="text">e</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">dem</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">eundem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Eundem3">
+        <abbreviation>
+            <abbrPart type="text">E</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">dem</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Eundem</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--excommunicandum CR-->
     <abbrExpan xml:id="excommunicandum1">
         <abbreviation>
@@ -6301,6 +7513,38 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">excommunicati</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--excommunicatio CR-->
+    <abbrExpan xml:id="excommunicatio">
+        <abbreviation>
+            <abbrPart type="text">exc</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">municatio</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">excommunicatio</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="excommunicatio2">
+        <abbreviation>
+            <abbrPart type="text">exc</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">icatio</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">excommunicatio</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--excommunicato CR-->
+    <abbrExpan xml:id="excommunicato">
+        <abbreviation>
+            <abbrPart type="text">exc</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">municato</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">excommunicato</expanPart>
         </expansion>
     </abbrExpan>
     <!--excommunicationem CR-->
@@ -6468,6 +7712,16 @@
             <abbrPart type="g">#charo0303</abbrPart>
             <abbrPart type="text">municat</abbrPart>
             <abbrPart type="g">#charu0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">excommunicatum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="excommunicatum7">
+        <abbreviation>
+            <abbrPart type="text">exc</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">icatum</abbrPart>
         </abbreviation>
         <expansion>
             <expanPart type="text">excommunicatum</expanPart>
@@ -6682,6 +7936,17 @@
             <expanPart type="text">excellentiam</expanPart>
         </expansion>
     </abbrExpan>
+    <!--extendit CR-->
+    <abbrExpan xml:id="extendit">
+        <abbreviation>
+            <abbrPart type="text">ext</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">dit</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">extendit</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--exhibenda CR-->
     <abbrExpan xml:id="exhibenda1">
         <abbreviation>
@@ -6701,6 +7966,19 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">exhibenda</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--existentes CR-->
+    <abbrExpan xml:id="existentes1">
+        <abbreviation>
+            <abbrPart type="text">exi</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">t</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">tes</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">existentes</expanPart>
         </expansion>
     </abbrExpan>
     <!--existimarem CR-->
@@ -6762,6 +8040,17 @@
             <expanPart type="text">expeditam</expanPart>
         </expansion>
     </abbrExpan>
+    <!--faciendo CR-->
+    <abbrExpan xml:id="faciendo">
+        <abbreviation>
+            <abbrPart type="text">faci</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">do</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">faciendo</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--factam CR-->
     <abbrExpan xml:id="factam1">
         <abbreviation>
@@ -6798,6 +8087,16 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">factum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--facultatem CR-->
+    <abbrExpan xml:id="facultatem1">
+        <abbreviation>
+            <abbrPart type="text">facultat</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">facultatem</expanPart>
         </expansion>
     </abbrExpan>
     <!--Famam CR-->
@@ -7234,6 +8533,28 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">fundamentum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="fundamentum3">
+        <abbreviation>
+            <abbrPart type="text">fundam</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">t</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">fundamentum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--furandi CR-->
+    <abbrExpan xml:id="furandi">
+        <abbreviation>
+            <abbrPart type="text">fur</abbrPart>
+            <abbrPart type="g">#chara0304</abbrPart>
+            <abbrPart type="text">di</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">furandi</expanPart>
         </expansion>
     </abbrExpan>
     <!-- furtum CR -->
@@ -7677,6 +8998,18 @@
             <expanPart type="text">Hieronymum</expanPart>
         </expansion>
     </abbrExpan>
+    <!--Hierusalem CR-->
+    <abbrExpan xml:id="Hierusalem">
+        <abbreviation>
+            <abbrPart type="text">Hieru</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">al</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Hierusalem</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--hęredem CR-->
     <abbrExpan xml:id="hęredem1">
         <abbreviation>
@@ -7761,6 +9094,26 @@
             <expanPart type="text">hominum</expanPart>
         </expansion>
     </abbrExpan>
+    <!--honorem CR-->
+    <abbrExpan xml:id="honorem1">
+        <abbreviation>
+            <abbrPart type="text">honor</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">honorem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--humanitatem CR-->
+    <abbrExpan xml:id="humanitatem1">
+        <abbreviation>
+            <abbrPart type="text">humanitat</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">humanitatem</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--hunc CR-->
     <abbrExpan xml:id="hunc1">
         <abbreviation>
@@ -7788,6 +9141,36 @@
             <abbrPart type="text">hm</abbrPart>
             <abbrPart type="g">#charo0304</abbrPart>
             <abbrPart type="text">i</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">huiusmodi</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="huiusmodi2">
+        <abbreviation>
+            <abbrPart type="text">hm</abbrPart>
+            <abbrPart type="g">#charo0304</abbrPart>
+            <abbrPart type="text">di</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">huiusmodi</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="huiusmodi3">
+        <abbreviation>
+            <abbrPart type="text">hm</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">i</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">huiusmodi</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="huiusmodi4">
+        <abbreviation>
+            <abbrPart type="text">hm</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">di</abbrPart>
         </abbreviation>
         <expansion>
             <expanPart type="text">huiusmodi</expanPart>
@@ -7868,6 +9251,17 @@
             <expanPart type="text">Ibidem</expanPart>
         </expansion>
     </abbrExpan>
+    <abbrExpan xml:id="ibidem3">
+        <abbreviation>
+            <abbrPart type="text">ib</abbrPart>
+            <abbrPart type="g">#chari0302</abbrPart>
+            <abbrPart type="text">d</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">ibidem</expanPart>
+        </expansion>
+    </abbrExpan>
     <!-- IDEM -->
     <abbrExpan xml:id="Idem1">
         <abbreviation>
@@ -7910,6 +9304,16 @@
         <abbreviation>
             <abbrPart type="text">id</abbrPart>
             <abbrPart type="g">#charq0301</abbrPart>
+            <abbrPart type="text">;</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">idque</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="idque2">
+        <abbreviation>
+            <abbrPart type="text">id</abbrPart>
+            <abbrPart type="g">#charq0303</abbrPart>
             <abbrPart type="text">;</abbrPart>
         </abbreviation>
         <expansion>
@@ -8086,6 +9490,46 @@
             <expanPart type="text">impedimentum</expanPart>
         </expansion>
     </abbrExpan>
+    <!--imperatorem CR-->
+    <abbrExpan xml:id="imperatorem">
+        <abbreviation>
+            <abbrPart type="text">imperator</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">imperatorem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Imperatorem">
+        <abbreviation>
+            <abbrPart type="text">Imperator</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Imperatorem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--impertinens CR-->
+    <abbrExpan xml:id="impertinens">
+        <abbreviation>
+            <abbrPart type="text">impertin</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">s</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">impertinens</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--incarnationem CR-->
+    <abbrExpan xml:id="incarnationem1">
+        <abbreviation>
+            <abbrPart type="text">incarnation</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">incarnationem</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--incisionem CR-->
     <abbrExpan xml:id="incisionem1">
         <abbreviation>
@@ -8218,6 +9662,16 @@
             <expanPart type="text">Iniuriam</expanPart>
         </expansion>
     </abbrExpan>
+<!--Innocen CR-->
+    <abbrExpan xml:id="Innocen">
+        <abbreviation>
+            <abbrPart type="text">Innoc</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Innocen</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--inquit CR-->
     <abbrExpan xml:id="inquit1">
         <abbreviation>
@@ -8227,6 +9681,16 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">inquit</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--Ioan CR-->
+    <abbrExpan xml:id="Ioan">
+        <abbreviation>
+            <abbrPart type="text">Io</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Ioan</expanPart>
         </expansion>
     </abbrExpan>
     <!--institutionem CR-->
@@ -8370,6 +9834,17 @@
             <expanPart type="text">intellectum</expanPart>
         </expansion>
     </abbrExpan>
+    <!--intelligendum CR-->
+    <abbrExpan xml:id="intelligendum1">
+        <abbreviation>
+            <abbrPart type="text">intellig</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">dum</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">intelligendum</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--intelligendus CR-->
     <abbrExpan xml:id="intelligendus1">
         <abbreviation>
@@ -8488,6 +9963,29 @@
             <expanPart type="text">inualidum</expanPart>
         </expansion>
     </abbrExpan>
+    <!--ipsam CR-->
+    <abbrExpan xml:id="ipsam">
+        <abbreviation>
+            <abbrPart type="text">i</abbrPart>
+            <abbrPart type="g">#charp0303</abbrPart>
+            <abbrPart type="text">am</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">ipsam</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--ipsarum CR-->
+    <abbrExpan xml:id="ipsarum">
+        <abbreviation>
+            <abbrPart type="text">ip</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">ar</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">ipsarum</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--irregularitatem CB-->
     <abbrExpan xml:id="irregularitatem1">
         <abbreviation>
@@ -8580,6 +10078,27 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">item</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--Itaque CR-->
+    <abbrExpan xml:id="Itaque">
+        <abbreviation>
+            <abbrPart type="text">Ita</abbrPart>
+            <abbrPart type="g">#charq0303</abbrPart>
+            <abbrPart type="text">;</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Itaque</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="itaque">
+        <abbreviation>
+            <abbrPart type="text">ita</abbrPart>
+            <abbrPart type="g">#charq0303</abbrPart>
+            <abbrPart type="text">;</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">itaque</expanPart>
         </expansion>
     </abbrExpan>
     <!--iterum CR-->
@@ -8818,6 +10337,38 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">iurisdictionem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="iurisdictionem3">
+        <abbreviation>
+            <abbrPart type="text">iuri</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">diction</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">iurisdictionem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--iustificationem CR-->
+    <abbrExpan xml:id="iustificationem1">
+        <abbreviation>
+            <abbrPart type="text">iu</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">tification</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">iustificationem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="iustificationem2">
+        <abbreviation>
+            <abbrPart type="text">iutification</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">iustificationem</expanPart>
         </expansion>
     </abbrExpan>
     <!--iustitiam CR-->
@@ -9152,6 +10703,28 @@
             <expanPart type="text">longe</expanPart>
         </expansion>
     </abbrExpan>
+    <!--loquens CR-->
+    <abbrExpan xml:id="loquens1">
+        <abbreviation>
+            <abbrPart type="text">loqu</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">s</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">loquens</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--loquendo CR-->
+    <abbrExpan xml:id="loquendo1">
+        <abbreviation>
+            <abbrPart type="text">loqu</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">do</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">loquendo</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--lucrum CR-->
     <abbrExpan xml:id="lucrum1">
         <abbreviation>
@@ -9169,6 +10742,16 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">Lucrum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--lumen CR-->
+    <abbrExpan xml:id="lumen1">
+        <abbreviation>
+            <abbrPart type="text">lum</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">lumen</expanPart>
         </expansion>
     </abbrExpan>
     <!--maiorem CR-->
@@ -9473,6 +11056,16 @@
             <expanPart type="text">mensuram</expanPart>
         </expansion>
     </abbrExpan>
+    <!--mentem CR-->
+    <abbrExpan xml:id="mentem1">
+        <abbreviation>
+            <abbrPart type="text">ment</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">mentem</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--mentio CR-->
     <abbrExpan xml:id="mentio1">
         <abbreviation>
@@ -9649,6 +11242,17 @@
             <expanPart type="text">missarum</expanPart>
         </expansion>
     </abbrExpan>
+    <!--mittendum CR-->
+    <abbrExpan xml:id="mittendum">
+        <abbreviation>
+            <abbrPart type="text">mitt</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">dum</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">mittendum</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--modum CR-->
     <abbrExpan xml:id="modum1">
         <abbreviation>
@@ -9721,6 +11325,16 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">Monasterium</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--monetam CR-->
+    <abbrExpan xml:id="monetam">
+        <abbreviation>
+            <abbrPart type="text">monet</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">monetam</expanPart>
         </expansion>
     </abbrExpan>
     <!--morienti CR-->
@@ -9801,6 +11415,28 @@
             <expanPart type="text">Multum</expanPart>
         </expansion>
     </abbrExpan>
+    <!--mundi CR-->
+    <abbrExpan xml:id="mundi1">
+        <abbreviation>
+            <abbrPart type="text">m</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">di</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">mundi</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--mundo CR-->
+    <abbrExpan xml:id="mundo1">
+        <abbreviation>
+            <abbrPart type="text">m</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">do</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">mundo</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--mutuam CR-->
     <abbrExpan xml:id="mutuam1">
         <abbreviation>
@@ -9818,6 +11454,16 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">mutuam</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--mutuatum CR-->
+    <abbrExpan xml:id="mutuatum">
+        <abbreviation>
+            <abbrPart type="text">mutuat</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">mutuatum</expanPart>
         </expansion>
     </abbrExpan>
     <!--mutuum CR-->
@@ -9964,6 +11610,36 @@
             <expanPart type="text">nequaquam</expanPart>
         </expansion>
     </abbrExpan>
+    <!--Neque CR-->
+    <abbrExpan xml:id="Neque">
+        <abbreviation>
+            <abbrPart type="text">Neq;</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Neque</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="neque">
+        <abbreviation>
+            <abbrPart type="text">neq;</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">neque</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--nescienter CR-->
+    <abbrExpan xml:id="nescienter">
+        <abbreviation>
+            <abbrPart type="text">ne</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">ci</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">ter</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">nescienter</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--nomen CR-->
     <abbrExpan xml:id="nomen1">
         <abbreviation>
@@ -10038,6 +11714,17 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">nondum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--nonnullas CR-->
+    <abbrExpan xml:id="nonnullas">
+        <abbreviation>
+            <abbrPart type="text">n</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>non
+            <abbrPart type="text">nullas</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">nonnullas</expanPart>
         </expansion>
     </abbrExpan>
     <!--nostram CR-->
@@ -10273,6 +11960,17 @@
             <expanPart type="text">nullum</expanPart>
         </expansion>
     </abbrExpan>
+    <!--obediendum CR-->
+    <abbrExpan xml:id="obediendum1">
+        <abbreviation>
+            <abbrPart type="text">obedi</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">dum</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">obediendum</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--obseruationem CR-->
     <abbrExpan xml:id="obseruationem1">
         <abbreviation>
@@ -10346,6 +12044,16 @@
         <abbreviation>
             <abbrPart type="text">omn</abbrPart>
             <abbrPart type="g">#chare0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">omnem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="omnem3">
+        <abbreviation>
+            <abbrPart type="text">o</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">m</abbrPart>
         </abbreviation>
         <expansion>
             <expanPart type="text">omnem</expanPart>
@@ -10434,6 +12142,17 @@
             <expanPart type="text">omnia</expanPart>
         </expansion>
     </abbrExpan>
+    <!--omniaque CR-->
+    <abbrExpan xml:id="omniaque">
+        <abbreviation>
+            <abbrPart type="text">omnia</abbrPart>
+            <abbrPart type="g">#charq0303</abbrPart>
+            <abbrPart type="text">;</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">omniaque</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--omnibus CR-->
     <abbrExpan xml:id="omnibus1">
         <abbreviation>
@@ -10450,6 +12169,16 @@
         <abbreviation>
             <abbrPart type="text">omnib</abbrPart>
             <abbrPart type="g">#chara770</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">omnibus</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="omnibus3">
+        <abbreviation>
+            <abbrPart type="text">o</abbrPart>
+            <abbrPart type="g">#chari0303</abbrPart>
+            <abbrPart type="text">bus</abbrPart>
         </abbreviation>
         <expansion>
             <expanPart type="text">omnibus</expanPart>
@@ -10496,6 +12225,26 @@
             <expanPart type="text">omnis</expanPart>
         </expansion>
     </abbrExpan>
+    <abbrExpan xml:id="omnis3">
+        <abbreviation>
+            <abbrPart type="text">o</abbrPart>
+            <abbrPart type="g">#charm0303</abbrPart>
+            <abbrPart type="text">is</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">omnis</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Omnis3">
+        <abbreviation>
+            <abbrPart type="text">O</abbrPart>
+            <abbrPart type="g">#charm0303</abbrPart>
+            <abbrPart type="text">is</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Omnis</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--omnium CR-->
     <abbrExpan xml:id="omnium1">
         <abbreviation>
@@ -10532,6 +12281,25 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">opinionem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--orbem CR-->
+    <abbrExpan xml:id="orbem1">
+        <abbreviation>
+            <abbrPart type="text">orb</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">orbem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Orbem1">
+        <abbreviation>
+            <abbrPart type="text">Orb</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Orbem</expanPart>
         </expansion>
     </abbrExpan>
     <!--ordinariam CR-->
@@ -10591,6 +12359,45 @@
             <expanPart type="text">originem</expanPart>
         </expansion>
     </abbrExpan>
+    <!--ostendimus CR-->
+    <abbrExpan xml:id="ostendimus1">
+        <abbreviation>
+            <abbrPart type="text">o</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">t</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">dimus</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">ostendimus</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--ostendit CR-->
+    <abbrExpan xml:id="ostendit1">
+        <abbreviation>
+            <abbrPart type="text">o</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">t</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">dit</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">ostendit</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--ostenditur CR-->
+    <abbrExpan xml:id="ostenditur1">
+        <abbreviation>
+            <abbrPart type="text">o</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">t</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">ditur</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">ostenditur</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--pactum CR-->
     <abbrExpan xml:id="pactum1">
         <abbreviation>
@@ -10627,6 +12434,16 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">pandectarum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--parendum CR-->
+    <abbrExpan xml:id="parendum">
+        <abbreviation>
+            <abbrPart type="text">parend</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">parendum</expanPart>
         </expansion>
     </abbrExpan>
     <!--parentum CR-->
@@ -10686,6 +12503,36 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">pascendi</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--patiantur CR-->
+    <abbrExpan xml:id="patiantur">
+        <abbreviation>
+            <abbrPart type="text">pati</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+            <abbrPart type="text">tur</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">patiantur</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--patrem CR-->
+    <abbrExpan xml:id="patrem1">
+        <abbreviation>
+            <abbrPart type="text">patr</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">patrem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Patrem1">
+        <abbreviation>
+            <abbrPart type="text">Patr</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Patrem</expanPart>
         </expansion>
     </abbrExpan>
     <!--patrimonium CR-->
@@ -10758,6 +12605,25 @@
     <abbrExpan xml:id="peccatum2">
         <abbreviation>
             <abbrPart type="text">peccat</abbrPart>
+            <abbrPart type="g">#charu0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">peccatum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--Peccatum CR-->
+    <abbrExpan xml:id="Peccatum1">
+        <abbreviation>
+            <abbrPart type="text">Peccat</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Peccatum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Peccatum2">
+        <abbreviation>
+            <abbrPart type="text">Peccat</abbrPart>
             <abbrPart type="g">#charu0304</abbrPart>
         </abbreviation>
         <expansion>
@@ -10916,6 +12782,16 @@
             <expanPart type="text">perfectam</expanPart>
         </expansion>
     </abbrExpan>   
+    <!--perfectionem CR-->
+    <abbrExpan xml:id="perfectionem1">
+        <abbreviation>
+            <abbrPart type="text">perfection</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">perfectionem</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--perfectum CR-->
     <abbrExpan xml:id="perfectum1">
         <abbreviation>
@@ -11025,6 +12901,16 @@
             <expanPart type="text">Petrum</expanPart>
         </expansion>
     </abbrExpan>
+    <!--plenitudinem CR-->
+    <abbrExpan xml:id="plenitudinem1">
+        <abbreviation>
+            <abbrPart type="text">plenitudin</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">plenitudinem</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--plurimum CR-->
     <abbrExpan xml:id="plurimum1">
         <abbreviation>
@@ -11042,6 +12928,79 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">plurimum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--presenti CR-->
+    <abbrExpan xml:id="presenti">
+        <abbreviation>
+            <abbrPart type="text">pr</abbrPart>
+            <abbrPart type="g">#chare0327</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">ti</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">presenti</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--prestarent CR-->
+    <abbrExpan xml:id="prestarent">
+        <abbreviation>
+            <abbrPart type="g">#charp0303</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">tarent</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">prestarent</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--pretii CR-->
+    <abbrExpan xml:id="pretii">
+        <abbreviation>
+            <abbrPart type="g">#charp0303</abbrPart>
+            <abbrPart type="text">tii</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">pretii</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="pretij">
+        <abbreviation>
+            <abbrPart type="g">#charp0303</abbrPart>
+            <abbrPart type="text">tij</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">pretij</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--pretio CR-->
+    <abbrExpan xml:id="pretio">
+        <abbreviation>
+            <abbrPart type="g">#charp0303</abbrPart>
+            <abbrPart type="text">tio</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">pretio</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--pretium CR-->
+    <abbrExpan xml:id="pretium">
+        <abbreviation>
+            <abbrPart type="g">#charp0303</abbrPart>
+            <abbrPart type="text">tium</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">pretium</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="pretium2">
+        <abbreviation>
+            <abbrPart type="g">#charp0303</abbrPart>
+            <abbrPart type="text">ti</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">pretium</expanPart>
         </expansion>
     </abbrExpan>
     <!--principalem CR-->
@@ -11296,6 +13255,24 @@
             <expanPart type="text">Pontificem</expanPart>
         </expansion>
     </abbrExpan>
+    <abbrExpan xml:id="Pontificem3">
+        <abbreviation>
+            <abbrPart type="text">Potific</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Pontificem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="pontificem3">
+        <abbreviation>
+            <abbrPart type="text">potific</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">pontificem</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--Pontificis CR-->
     <abbrExpan xml:id="Pontificis1">
         <abbreviation>
@@ -11432,6 +13409,17 @@
             <expanPart type="text">postquam</expanPart>
         </expansion>
     </abbrExpan>
+    <abbrExpan xml:id="postquam2">
+        <abbreviation>
+            <abbrPart type="text">po</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">tqu</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">postquam</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--poterunt CR-->
     <abbrExpan xml:id="poterunt1">
         <abbreviation>
@@ -11494,6 +13482,17 @@
             <expanPart type="text">potest</expanPart>
         </expansion>
     </abbrExpan>
+    <!--potestate CR-->
+    <abbrExpan xml:id="potestate1">
+        <abbreviation>
+            <abbrPart type="text">pt</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+            <abbrPart type="text">te</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">potestate</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--potestatem CR-->
     <abbrExpan xml:id="potestatem1">
         <abbreviation>
@@ -11502,6 +13501,71 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">potestatem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="poteſtatem1">
+        <abbreviation>
+            <abbrPart type="text">pote</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">tat</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">potestatem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="potestatem3">
+        <abbreviation>
+            <abbrPart type="text">pt</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+            <abbrPart type="text">tem</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">potestatem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="potestatem4">
+        <abbreviation>
+            <abbrPart type="text">pt</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+            <abbrPart type="text">t</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">potestatem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--potestates CR-->
+    <abbrExpan xml:id="potestates1">
+        <abbreviation>
+            <abbrPart type="text">pt</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+            <abbrPart type="text">tes</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">potestate</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--potestati CR-->
+    <abbrExpan xml:id="potestati1">
+        <abbreviation>
+            <abbrPart type="text">pt</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+            <abbrPart type="text">ti</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">potestati</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--potestatis CR-->
+    <abbrExpan xml:id="potestatis1">
+        <abbreviation>
+            <abbrPart type="text">pt</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+            <abbrPart type="text">tis</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">potestatis</expanPart>
         </expansion>
     </abbrExpan>
     <!--præcedentibus CR-->
@@ -11587,6 +13651,92 @@
             <expanPart type="text">dictam</expanPart>
         </expansion>
     </abbrExpan>
+    <!--praefatus CR-->
+    <abbrExpan xml:id="praefatus">
+        <abbreviation>
+            <abbrPart type="g">#charp0303</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">fat</abbrPart>
+            <abbrPart type="g">#chara770</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">praefatus</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--praescribendum CR-->
+    <abbrExpan xml:id="praescribendum">
+        <abbreviation>
+            <abbrPart type="g">#charp0303</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">crib</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">d</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">praescribendum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--praescribentem CR-->
+    <abbrExpan xml:id="praescribentem">
+        <abbreviation>
+            <abbrPart type="g">#charp0303</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">cribent</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">praescribentem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="praescribentem2">
+        <abbreviation>
+            <abbrPart type="text">pr</abbrPart>
+            <abbrPart type="g">#chare0327</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">crib</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">tem</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">praescribentem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--praescriptione CR-->
+    <abbrExpan xml:id="praescriptione">
+        <abbreviation>
+            <abbrPart type="g">#charp0303</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">criptione</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">praescriptione</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--praescriptionis CR-->
+    <abbrExpan xml:id="praescriptionis">
+        <abbreviation>
+            <abbrPart type="g">#charp0303</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">criptionis</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">praescriptionis</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--præscriptionem CR-->
+    <abbrExpan xml:id="præscriptionem">
+        <abbreviation>
+            <abbrPart type="text">pr</abbrPart>
+            <abbrPart type="g">#char00e6</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">cription</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">praescriptionem</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--præsentationem CR-->
     <abbrExpan xml:id="præsentationem1">
         <abbreviation>
@@ -11612,6 +13762,18 @@
             <expanPart type="text">pr</expanPart>
             <expanPart type="g">#char00e6</expanPart>
             <expanPart type="text">sentationem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--praesumendum CR-->
+    <abbrExpan xml:id="praesumendum">
+        <abbreviation>
+            <abbrPart type="g">#charp0303</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">umend</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">praesumendum</expanPart>
         </expansion>
     </abbrExpan>
     <!--præsumptionem CR-->
@@ -11821,6 +13983,18 @@
             <expanPart type="text">probationem</expanPart>
         </expansion>
     </abbrExpan>
+    <!--probatque CR-->
+    <abbrExpan xml:id="probatque">
+        <abbreviation>
+            <abbrPart type="g">#chara753</abbrPart>
+            <abbrPart type="text">bat</abbrPart>
+            <abbrPart type="g">#charq0301</abbrPart>
+            <abbrPart type="text">;</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">probatque</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--probatur CR-->
     <abbrExpan xml:id="probatur1">
         <abbreviation>
@@ -11895,6 +14069,16 @@
         <abbreviation>
             <abbrPart type="g">#chara753</abbrPart>
             <abbrPart type="text">cedunt</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">procedunt</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="procedunt2">
+        <abbreviation>
+            <abbrPart type="text">proced</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">t</abbrPart>
         </abbreviation>
         <expansion>
             <expanPart type="text">procedunt</expanPart>
@@ -12038,7 +14222,16 @@
             <expanPart type="text">prohibitus</expanPart>
         </expansion>
     </abbrExpan>
-    
+    <!--proinde CR-->
+    <abbrExpan xml:id="proinde">
+        <abbreviation>
+            <abbrPart type="g">#chara753</abbrPart>
+            <abbrPart type="text">inde</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">proinde</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--promittens CR-->
     <abbrExpan xml:id="promittens1">
         <abbreviation>
@@ -12309,6 +14502,18 @@
             <expanPart type="text">pupillum</expanPart>
         </expansion>
     </abbrExpan>
+    <!--quacumque CR-->
+    <abbrExpan xml:id="quacumque">
+        <abbreviation>
+            <abbrPart type="text">quac</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="g">#charq0301</abbrPart>
+            <abbrPart type="text">;</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">quacumque</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--quamcunque CR-->
     <abbrExpan xml:id="quamcunque1">
         <abbreviation>
@@ -12328,6 +14533,17 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">quamcunque</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--quamdiu CR-->
+    <abbrExpan xml:id="quamdiu">
+        <abbreviation>
+            <abbrPart type="text">qu</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+            <abbrPart type="text">diu</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">quamdiu</expanPart>
         </expansion>
     </abbrExpan>
     <!--quamlibet CR-->
@@ -12378,6 +14594,51 @@
             <expanPart type="text">quamobrem</expanPart>
         </expansion>
     </abbrExpan>
+    <!--Quamquam CR-->
+    <abbrExpan xml:id="Quamquam">
+        <abbreviation>
+            <abbrPart type="text">Qu</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+            <abbrPart type="text">qu</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Quamquam</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="quamquam">
+        <abbreviation>
+            <abbrPart type="text">qu</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+            <abbrPart type="text">qu</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">quamquam</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Quamquam2">
+        <abbreviation>
+            <abbrPart type="text">Qu</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+            <abbrPart type="g">#chara757</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Quamquam</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="quamquam2">
+        <abbreviation>
+            <abbrPart type="text">qu</abbrPart>
+            <abbrPart type="g">#chara0304</abbrPart>
+            <abbrPart type="text">qu</abbrPart>
+            <abbrPart type="g">#chara0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">quamquam</expanPart>
+        </expansion>
+    </abbrExpan>
+
     <!--quamque CR-->
     <abbrExpan xml:id="quamque1">
         <abbreviation>
@@ -12475,6 +14736,26 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">quando</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="quando4">
+        <abbreviation>
+            <abbrPart type="text">qu</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+            <abbrPart type="text">do</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">quando</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Quando5">
+        <abbreviation>
+            <abbrPart type="text">Qu</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+            <abbrPart type="text">do</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Quando</expanPart>
         </expansion>
     </abbrExpan>
     <!--quandoque CR-->
@@ -12638,6 +14919,28 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">quantum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="quantum4">
+        <abbreviation>
+            <abbrPart type="text">qu</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+            <abbrPart type="text">t</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">quantum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--quantumcunque CR-->
+    <abbrExpan xml:id="quantumcunque">
+        <abbreviation>
+            <abbrPart type="text">qu</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+            <abbrPart type="text">tumcunq;</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">quantumcunque</expanPart>
         </expansion>
     </abbrExpan>
     <!--quartam CR-->
@@ -12961,11 +15264,40 @@
             <expanPart type="text">quicquid</expanPart>
         </expansion>
     </abbrExpan>
+    <!--quicumque CR-->
+    <abbrExpan xml:id="quicumque1">
+        <abbreviation>
+            <abbrPart type="text">quic</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="g">#chare8bf</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">quicumque</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Quicunque1">
+        <abbreviation>
+            <abbrPart type="text">Quic</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="g">#chare8bf</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Quicumque</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--quicunque CR-->
     <abbrExpan xml:id="quicunque1">
         <abbreviation>
             <abbrPart type="text">quicun</abbrPart>
             <abbrPart type="g">#chare8bf</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">quicunque</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="quicunque2">
+        <abbreviation>
+            <abbrPart type="text">quicunq;</abbrPart>
         </abbreviation>
         <expansion>
             <expanPart type="text">quicunque</expanPart>
@@ -13079,6 +15411,16 @@
             <expanPart type="text">quique</expanPart>
         </expansion>
     </abbrExpan>
+    <!--quis CR-->
+    <abbrExpan xml:id="quis1">
+        <abbreviation>
+            <abbrPart type="g">#chara757</abbrPart>
+            <abbrPart type="text">s</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">quis</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--quisquam CR-->
     <abbrExpan xml:id="quisquam1">
         <abbreviation>
@@ -13098,6 +15440,17 @@
             <expanPart type="text">quisquam</expanPart>
         </expansion>
     </abbrExpan>
+    <!--quiſque CR-->
+    <abbrExpan xml:id="quiſque">
+        <abbreviation>
+            <abbrPart type="text">qui</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">q;</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">quisque</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--quoddam CR-->
     <abbrExpan xml:id="quoddam1">
         <abbreviation>
@@ -13115,6 +15468,37 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">quoddam</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="quodam1">
+        <abbreviation>
+            <abbrPart type="text">quod</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">quodam</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--quodammodo CR-->
+    <abbrExpan xml:id="quodammodo">
+        <abbreviation>
+            <abbrPart type="text">quod</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+            <abbrPart type="text">mod</abbrPart>
+            <abbrPart type="g">#charo0300</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">quodammodo</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="quodammodo1">
+        <abbreviation>
+            <abbrPart type="text">quod</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+            <abbrPart type="text">modo</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">quodammodo</expanPart>
         </expansion>
     </abbrExpan>
     <!-- QUOD -->
@@ -13261,6 +15645,44 @@
             <expanPart type="text">rebus</expanPart>
         </expansion>
     </abbrExpan>
+    <!--recompensam CR-->
+    <abbrExpan xml:id="recompensam">
+        <abbreviation>
+            <abbrPart type="text">rec</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">p</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">am</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">recompensam</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="recompensam2">
+        <abbreviation>
+            <abbrPart type="text">rec</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">pen</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">am</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">recompensam</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="recompensam3">
+        <abbreviation>
+            <abbrPart type="text">recom</abbrPart>
+            <abbrPart type="text">p</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">am</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">recompensam</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--Regem CR-->
     <abbrExpan xml:id="Regem1">
         <abbreviation>
@@ -13278,6 +15700,15 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">Regem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="regem1">
+        <abbreviation>
+            <abbrPart type="text">reg</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">regem</expanPart>
         </expansion>
     </abbrExpan>
     <!--relictum CR-->
@@ -13299,7 +15730,25 @@
             <expanPart type="text">relictum</expanPart>
         </expansion>
     </abbrExpan>
-    
+    <!--religionem CR-->
+    <abbrExpan xml:id="religionem1">
+        <abbreviation>
+            <abbrPart type="text">religion</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">religionem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="religionem2">
+        <abbreviation>
+            <abbrPart type="text">religion</abbrPart>
+            <abbrPart type="g">#chare0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">religionem</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--relinquens CR-->
     <abbrExpan xml:id="relinquens1">
         <abbreviation>
@@ -13319,6 +15768,17 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">relinquens</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--relinquere CR-->
+    <abbrExpan xml:id="relinquere">
+        <abbreviation>
+            <abbrPart type="text">relin</abbrPart>
+            <abbrPart type="g">#charq0303</abbrPart>
+            <abbrPart type="text">re</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">relinquere</expanPart>
         </expansion>
     </abbrExpan>
     <!--remissionem  CR-->
@@ -13436,6 +15896,18 @@
             <expanPart type="text">resolutionem</expanPart>
         </expansion>
     </abbrExpan>
+    <!--Respon CR-->
+    <abbrExpan xml:id="Respon">
+        <abbreviation>
+            <abbrPart type="text">Re</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">p</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Respon</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--respondet CR-->
     <abbrExpan xml:id="respondet1">
         <abbreviation>
@@ -13497,6 +15969,16 @@
             <expanPart type="text">Respondetur</expanPart>
         </expansion>
     </abbrExpan>
+    <!--restituendum CR-->
+    <abbrExpan xml:id="restituendum">
+        <abbreviation>
+            <abbrPart type="text">restituend</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">restituendum</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--restitutionem CR-->
     <abbrExpan xml:id="restitutionem1">
         <abbreviation>
@@ -13514,6 +15996,18 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">restitutionem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--resurrectionem CR-->
+    <abbrExpan xml:id="resurrectionem1">
+        <abbreviation>
+            <abbrPart type="text">re</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">urrection</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">resurrectionem</expanPart>
         </expansion>
     </abbrExpan>
     <!--reuelationem CR-->
@@ -13629,6 +16123,28 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">sacerdotem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--sacramenta CR-->
+    <abbrExpan xml:id="sacramenta1">
+        <abbreviation>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">acram</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">ta</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">sacramenta</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Sacramenta1">
+        <abbreviation>
+            <abbrPart type="text">Sacram</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">ta</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Sacramenta</expanPart>
         </expansion>
     </abbrExpan>
     <!--sacramentalem CR-->
@@ -13821,6 +16337,7 @@
             <expanPart type="text">sacramento</expanPart>
         </expansion>
     </abbrExpan>
+    
     <!--sacramentum CR-->
     <abbrExpan xml:id="sacramentum1">
         <abbreviation>
@@ -13879,6 +16396,16 @@
             <expanPart type="text">saltem</expanPart>
         </expansion>
     </abbrExpan>
+    <abbrExpan xml:id="saltem3">
+        <abbreviation>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">alt</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">saltem</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--salutem CR-->
     <abbrExpan xml:id="salutem1">
         <abbreviation>
@@ -13893,6 +16420,16 @@
         <abbreviation>
             <abbrPart type="text">salut</abbrPart>
             <abbrPart type="g">#chare0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">salutem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="salutem3">
+        <abbreviation>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">alut</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
         </abbreviation>
         <expansion>
             <expanPart type="text">salutem</expanPart>
@@ -13917,6 +16454,52 @@
             <expanPart type="text">sancitam</expanPart>
         </expansion>
     </abbrExpan>
+    <!--satisfaciendum CR-->
+    <abbrExpan xml:id="satisfaciendum">
+        <abbreviation>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">atisfaciend</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">satisfaciendum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="satisfaciendum2">
+        <abbreviation>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">atisfaci</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">d</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">satisfaciendum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="satisfaciendum3">
+        <abbreviation>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">atisfaci</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">dum</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">satisfaciendum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--scandalis CR-->
+    <abbrExpan xml:id="scandalis">
+        <abbreviation>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">c</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+            <abbrPart type="text">dalis</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">scandalis</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--sciente CR-->
     <abbrExpan xml:id="sciente1">
         <abbreviation>
@@ -13938,6 +16521,38 @@
             <expanPart type="text">sciente</expanPart>
         </expansion>
     </abbrExpan>
+    <!--scientia CR-->
+    <abbrExpan xml:id="scientia1">
+        <abbreviation>
+            <abbrPart type="text">sci</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">tia</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">scientia</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Scientia1">
+        <abbreviation>
+            <abbrPart type="text">Sci</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">tia</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Scientia</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="scientia2">
+        <abbreviation>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">ci</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">tia</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">scientia</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--scientiam CR-->
     <abbrExpan xml:id="scientiam1">
         <abbreviation>
@@ -13955,6 +16570,52 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">scientiam</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--scientiae CR-->
+    <abbrExpan xml:id="scientiae1">
+        <abbreviation>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">ci</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">ti</abbrPart>
+            <abbrPart type="g">#char00e6</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">scientiae</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="scientiae2">
+        <abbreviation>
+            <abbrPart type="text">sci</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">ti</abbrPart>
+            <abbrPart type="g">#char00e6</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">scientiae</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--scribens-->
+    <abbrExpan xml:id="scribens1">
+        <abbreviation>
+            <abbrPart type="text">scrib</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">s</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">scribens</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="scribens2">
+        <abbreviation>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">crib</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">s</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">scribens</expanPart>
         </expansion>
     </abbrExpan>
     <!--scriptum CR-->
@@ -13993,6 +16654,38 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">secularem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--Secunda CR-->
+    <abbrExpan xml:id="Secunda1">
+        <abbreviation>
+            <abbrPart type="text">Sec</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">da</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Secunda</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="secunda1">
+        <abbreviation>
+            <abbrPart type="text">sec</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">da</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">secunda</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="secunda2">
+        <abbreviation>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">ec</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">da</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">secunda</expanPart>
         </expansion>
     </abbrExpan>
     <!--secundam CR-->
@@ -14035,6 +16728,40 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">Secundo</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="Secundo2">
+        <abbreviation>
+            <abbrPart type="text">Sec</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">d</abbrPart>
+            <abbrPart type="g">#charo0300</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Secundo</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="secundo2">
+        <abbreviation>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">ec</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">do</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">secundo</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="secundo3">
+        <abbreviation>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">ec</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">d</abbrPart>
+            <abbrPart type="g">#charo0300</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">secundo</expanPart>
         </expansion>
     </abbrExpan>
     <!-- SECUNDUM -->
@@ -14123,6 +16850,80 @@
             <expanPart type="text">Secundum</expanPart>
         </expansion>
     </abbrExpan>
+    <abbrExpan xml:id="secundum6">
+        <abbreviation>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">ec</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">d</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">m</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">secundum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="secundum7">
+        <abbreviation>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">ec</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">dum</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">secundum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="secundum8">
+        <abbreviation>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">ec</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">d</abbrPart>
+            <abbrPart type="g">#charu0300</abbrPart>
+            <abbrPart type="text">m</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">secundum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="secundum9">
+        <abbreviation>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">ec</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">d</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">secundum</expanPart>
+        </expansion>
+    </abbrExpan>
+    
+    <abbrExpan xml:id="Secundum11">
+        <abbreviation>
+            <abbrPart type="text">Sec</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">d</abbrPart>
+            <abbrPart type="g">#charu0300</abbrPart>
+            <abbrPart type="text">m</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">secundum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--secundus CR-->
+    <abbrExpan xml:id="secundus1">
+        <abbreviation>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">ec</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">dus</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">secundus</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--sedem CR-->
     <abbrExpan xml:id="sedem1">
         <abbreviation>
@@ -14137,6 +16938,16 @@
         <abbreviation>
             <abbrPart type="text">sed</abbrPart>
             <abbrPart type="g">#chare0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">sedem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="sedem3">
+        <abbreviation>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">ed</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
         </abbreviation>
         <expansion>
             <expanPart type="text">sedem</expanPart>
@@ -14178,6 +16989,18 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">Sempronium</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--sequentes CR-->
+    <abbrExpan xml:id="sequentes1">
+        <abbreviation>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">equ</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">tes</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">sequentes</expanPart>
         </expansion>
     </abbrExpan>
     <!--sequuntur CR-->
@@ -14279,6 +17102,19 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">Sententia</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--sententiae CR-->
+    <abbrExpan xml:id="sententiae1">
+        <abbreviation>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">ent</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">ti</abbrPart>
+            <abbrPart type="g">#char00e6</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">sententiae</expanPart>
         </expansion>
     </abbrExpan>
     <!--sententias CR-->
@@ -14428,6 +17264,19 @@
             <expanPart type="text">ententiam</expanPart>
         </expansion>
     </abbrExpan>
+    <abbrExpan xml:id="ſententiam8">
+        <abbreviation>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">ent</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">ti</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="g">#char017f</expanPart>
+            <expanPart type="text">ententiam</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--sententijs CR-->
     <abbrExpan xml:id="sententijs1">
         <abbreviation>
@@ -14543,6 +17392,17 @@
             <expanPart type="text">similem</expanPart>
         </expansion>
     </abbrExpan>
+    <!--similitudinem CR-->
+    <abbrExpan xml:id="similitudinem1">
+        <abbreviation>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">imilitudin</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">similitudinem</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--siquidem CR-->
     <abbrExpan xml:id="siquidem1">
         <abbreviation>
@@ -14609,6 +17469,47 @@
             <expanPart type="text">solidum</expanPart>
         </expansion>
     </abbrExpan>
+    <abbrExpan xml:id="ſolidum1">
+        <abbreviation>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">olid</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">solidum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--solvendum CR-->
+    <abbrExpan xml:id="solvendum">
+        <abbreviation>
+            <abbrPart type="text">solvend</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">solvendum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--solventes CR-->
+    <abbrExpan xml:id="solventes">
+        <abbreviation>
+            <abbrPart type="text">solv</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">tes</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">solventes</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="soluentes">
+        <abbreviation>
+            <abbrPart type="text">solu</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">tes</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">solventes</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--solum CR-->
     <abbrExpan xml:id="solum1">
         <abbreviation>
@@ -14642,6 +17543,16 @@
         <abbreviation>
             <abbrPart type="text">solution</abbrPart>
             <abbrPart type="g">#chare0304</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">solutionem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="solutionem3">
+        <abbreviation>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">olution</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
         </abbreviation>
         <expansion>
             <expanPart type="text">solutionem</expanPart>
@@ -14683,6 +17594,17 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">specialem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--speciem CR-->
+    <abbrExpan xml:id="speciem1">
+        <abbreviation>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">peci</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">speciem</expanPart>
         </expansion>
     </abbrExpan>
     <!-- SPIRITUALEM -->
@@ -14772,6 +17694,28 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">spiritualem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="spiritualem5">
+        <abbreviation>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">piritual</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">spiritualem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--spiritualis CR-->
+    <abbrExpan xml:id="spiritualis1">
+        <abbreviation>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">p</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">alis</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">spiritualis</expanPart>
         </expansion>
     </abbrExpan>
     <!--statutorum CR-->
@@ -14996,6 +17940,36 @@
             <expanPart type="text">superiorem</expanPart>
         </expansion>
     </abbrExpan>
+    <abbrExpan xml:id="superiorem3">
+        <abbreviation>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">uperior</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">superiorem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--supernaturalem CR-->
+    <abbrExpan xml:id="supernaturalem1">
+        <abbreviation>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">upernatural</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">supernaturalem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="supernaturalem2">
+        <abbreviation>
+            <abbrPart type="text">supernatural</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">supernaturalem</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--suspensionem CR-->
     <abbrExpan xml:id="suspensionem1">
         <abbreviation>
@@ -15032,6 +18006,16 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">tacitam</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--talem CR-->
+    <abbrExpan xml:id="talem1">
+        <abbreviation>
+            <abbrPart type="text">tal</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">talem</expanPart>
         </expansion>
     </abbrExpan>
     <!-- TAM -->
@@ -15221,6 +18205,16 @@
             <expanPart type="text">tandem</expanPart>
         </expansion>
     </abbrExpan>
+    <!--tanquam CR-->
+    <abbrExpan xml:id="tanquam1">
+        <abbreviation>
+            <abbrPart type="text">tan</abbrPart>
+            <abbrPart type="g">#char0308</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">tanquam</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--tanta CR-->
     <abbrExpan xml:id="tanta1">
         <abbreviation>
@@ -15361,6 +18355,28 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">Temporales</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--temporalibus CR-->
+    <abbrExpan xml:id="temporalibus">
+        <abbreviation>
+            <abbrPart type="text">t</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">poralib</abbrPart>
+            <abbrPart type="g">#chara770</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">temporalibus</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="temporalibus1">
+        <abbreviation>
+            <abbrPart type="text">t</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">poralibus</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">temporalibus</expanPart>
         </expansion>
     </abbrExpan>
     <!--tempore CR-->
@@ -15766,11 +18782,21 @@
             <expanPart type="text">Theologorum</expanPart>
         </expansion>
     </abbrExpan>
+    <!--timorem CR-->
+    <abbrExpan xml:id="timorem1">
+        <abbreviation>
+            <abbrPart type="text">timor</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">timorem</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--Titium CR-->
     <abbrExpan xml:id="Titium1">
         <abbreviation>
             <abbrPart type="text">Titi</abbrPart>
-            <abbrPart type="g">#charu0303</abbrPart>
+            
         </abbreviation>
         <expansion>
             <expanPart type="text">Titium</expanPart>
@@ -15827,6 +18853,16 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">totidem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--totum CR-->
+    <abbrExpan xml:id="totum">
+        <abbreviation>
+            <abbrPart type="text">tot</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">totum</expanPart>
         </expansion>
     </abbrExpan>
     <!-- TRACTATUS -->
@@ -15989,6 +19025,43 @@
             <expanPart type="text">Unquam</expanPart>
         </expansion>
     </abbrExpan>
+    <!--Vnuſquiſque CR-->
+    <abbrExpan xml:id="Vnuſquiſque">
+        <abbreviation>
+            <abbrPart type="text">Vnu</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">qui</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">q;</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Vnusquisque</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="vnuſquiſque">
+        <abbreviation>
+            <abbrPart type="text">vnu</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">qui</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">q;</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">vnusquisque</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="vnuſquiſque2">
+        <abbreviation>
+            <abbrPart type="text">vnu</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="g">#chara757</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">q;</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">vnusquisque</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--validum CR-->
     <abbrExpan xml:id="validum1">
         <abbreviation>
@@ -16046,6 +19119,17 @@
             <expanPart type="text">vel</expanPart>
         </expansion>
     </abbrExpan>
+    <!--venando CR-->
+    <abbrExpan xml:id="venando">
+        <abbreviation>
+            <abbrPart type="text">ven</abbrPart>
+            <abbrPart type="g">#chara0303</abbrPart>
+            <abbrPart type="text">do</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">venando</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--vendicat CR-->
     <abbrExpan xml:id="vendicat1">
         <abbreviation>
@@ -16065,6 +19149,30 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">vendicat</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--vendiderit CR-->
+    <abbrExpan xml:id="vendiderit">
+        <abbreviation>
+            <abbrPart type="text">v</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">diderit</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">vendiderit</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--venditione CR-->
+    <abbrExpan xml:id="venditione">
+        <abbreviation>
+            <abbrPart type="text">v</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">diti</abbrPart>
+            <abbrPart type="g">#charo0303</abbrPart>
+            <abbrPart type="text">e</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">venditione</expanPart>
         </expansion>
     </abbrExpan>
     <!--venditionem CR-->
@@ -16106,6 +19214,18 @@
             <expanPart type="text">venditionem</expanPart>
         </expansion>
     </abbrExpan>
+    
+    <!--venditor CR-->
+    <abbrExpan xml:id="venditor">
+        <abbreviation>
+            <abbrPart type="text">v</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">ditor</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">venditor</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--venditorem CR-->
     <abbrExpan xml:id="venditorem1">
         <abbreviation>
@@ -16123,6 +19243,27 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">venditorem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--venditores CR-->
+    <abbrExpan xml:id="venditores">
+        <abbreviation>
+            <abbrPart type="text">v</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+            <abbrPart type="text">ditores</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">venditores</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--venerationem CR-->
+    <abbrExpan xml:id="venerationem">
+        <abbreviation>
+            <abbrPart type="text">veneration</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">venerationem</expanPart>
         </expansion>
     </abbrExpan>
     <!--verborum CR-->
@@ -16198,6 +19339,16 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">verissimum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--veritatem CR-->
+    <abbrExpan xml:id="veritatem">
+        <abbreviation>
+            <abbrPart type="text">veritat</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">veritatem</expanPart>
         </expansion>
     </abbrExpan>
     <!--verum CR-->
@@ -16377,6 +19528,16 @@
             <expanPart type="text">virum</expanPart>
         </expansion>
     </abbrExpan>
+    <!--virtutem CR-->
+    <abbrExpan xml:id="virtutem1">
+        <abbreviation>
+            <abbrPart type="text">virtut</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">virtutem</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--vitam CR-->
     <abbrExpan xml:id="vitam1">
         <abbreviation>
@@ -16473,6 +19634,37 @@
             <expanPart type="text">vltimarum</expanPart>
         </expansion>
     </abbrExpan>
+    <!--vnitatem CR-->
+    <abbrExpan xml:id="vnitatem1">
+        <abbreviation>
+            <abbrPart type="text">vnitat</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">vnitatem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--vniuersalem CR-->
+    <abbrExpan xml:id="vniuersalem1">
+        <abbreviation>
+            <abbrPart type="text">vniuersal</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">vniuersalem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="vniuersalem2">
+        <abbreviation>
+            <abbrPart type="text">vniuer</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">al</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">vniuersalem</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--vnquam CR-->
     <abbrExpan xml:id="vnquam1">
         <abbreviation>
@@ -16481,6 +19673,27 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">vnquam</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--vocem CR-->
+    <abbrExpan xml:id="vocem1">
+        <abbreviation>
+            <abbrPart type="text">voc</abbrPart>
+            <abbrPart type="g">#chare0303</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">vocem</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--voluntas CR-->
+    <abbrExpan xml:id="voluntas1">
+        <abbreviation>
+            <abbrPart type="text">vol</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">tas</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">voluntas</expanPart>
         </expansion>
     </abbrExpan>
     <!--voluntate CR-->
@@ -16584,6 +19797,27 @@
             <expanPart type="text">votum</expanPart>
         </expansion>
     </abbrExpan>
+    <!--usque CR-->
+    <abbrExpan xml:id="vsque1">
+        <abbreviation>
+            <abbrPart type="text">v</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">q;</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">usque</expanPart>
+        </expansion>
+    </abbrExpan>
+    <abbrExpan xml:id="usque1">
+        <abbreviation>
+            <abbrPart type="text">u</abbrPart>
+            <abbrPart type="g">#char017f</abbrPart>
+            <abbrPart type="text">q;</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">usque</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--vsuram CR-->
     <abbrExpan xml:id="vsuram1">
         <abbreviation>
@@ -16639,6 +19873,17 @@
         </abbreviation>
         <expansion>
             <expanPart type="text">Vsurarum</expanPart>
+        </expansion>
+    </abbrExpan>
+    <!--vtcumque CR-->
+    <abbrExpan xml:id="vtcumque">
+        <abbreviation>
+            <abbrPart type="text">vtc</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="text">q;</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">vtcumque</expanPart>
         </expansion>
     </abbrExpan>
     <!--vtilitatem CR-->
@@ -16717,6 +19962,18 @@
             <expanPart type="text">vtrum</expanPart>
         </expansion>
     </abbrExpan>
+    <!--vtrumque CR-->
+    <abbrExpan xml:id="vtrumque">
+        <abbreviation>
+            <abbrPart type="text">vtr</abbrPart>
+            <abbrPart type="g">#charu0303</abbrPart>
+            <abbrPart type="g">#charq0301</abbrPart>
+            <abbrPart type="text">;</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">vtrumque</expanPart>
+        </expansion>
+    </abbrExpan>
     <!--vtuntur CR-->
     <abbrExpan xml:id="vtuntur1">
         <abbreviation>
@@ -16777,6 +20034,17 @@
             <expanPart type="text">vxorem</expanPart>
         </expansion>
     </abbrExpan>
+<!-- Spiritu MAH -->
+  <abbrExpan xml:id="Spiritu1">
+        <abbreviation>
+            <abbrPart type="text">Spu</abbrPart>
+        </abbreviation>
+        <expansion>
+            <expanPart type="text">Spiritu</expanPart>
+        </expansion>
+    </abbrExpan>
+
+
     <!-- TEMPLATE FOR ADDITIONAL ABBREVIATIONS: -->
     <!--
     <abbrExpan xml:id="">
