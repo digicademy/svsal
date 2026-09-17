@@ -12,7 +12,7 @@
     
     <xsl:param name="editors" as="xs:string" select="'#CR #auto'"/>
     <xsl:param name="editingDate" as="xs:string" select="'YYYY-MM-DD'"/>
-    <xsl:param name="changeId" as="xs:string" select="'WXXXX_VolXX_change_XXX'"></xsl:param>
+    <xsl:param name="changeId" as="xs:string" select="'W0XXX_change_XXX'"></xsl:param>
     <xsl:param name="editingDesc" as="xs:string" select="'Added (es) abbreviations depending on word structure with regex.'"/>
     <xsl:template match="tei:teiHeader/tei:revisionDesc/tei:listChange">
         <xsl:copy>
@@ -34,6 +34,10 @@
          ##########
         | READ ME: |
          ##########
+        
+        Updated 28.08.2025 by CR
+        If you want the last version before abbr with breaks were added see:
+        [SVN]/trunk/teiedit/works/resources/templates/xsl/deprecated/expandAbbreviations_ES_regex_TEItite_27.03.25.xsl
         
         See: https://github.com/CindyRicoCarmona/Expand_abbreviations_with_regex
 
@@ -72,6 +76,7 @@
         2) "ando - dudãdo", mode="ando"
         3) "ente|tes - gẽte", mode="ente"
         4) "ende - entiẽde", mode="ende"
+        Exception for W0035 "ſctõ" mode="ſcto"
         5) "on - Purificaciõ", mode="cion"
         6) "ento - mandamiẽto", mode="ento"
         7) "encia|cias - differẽcia", mode="encia" 
@@ -79,7 +84,11 @@
         9) "ẽ and er - entẽder", mode="ener"
         10) "ẽ and ar - encomẽdar", mode="enar"
         11) "ã and ar" - mãdar, mode="anar"
+        Exception Itẽ mode="Item"
         12) "ẽ - en - puedẽ, quiẽ, deuẽ", mode="final-en"
+        Exception W0053 eſpũ ſanto, should not be expanded as final-un
+        Exception W0035 Words ending with (ũ|ũ|ū|ū - un). e.g. segũ, algũ mode="final-un"
+        Exception for W0035 "ſctã" mode="ſctan"
         13) "ā - an - haziā, siruā, podrā", mode="final-an"
         14) "ũ - un - pregũtar, renũciar", mode="unar" 
         15) "ũ - before (b|p) costũbre, cũplido", mode="umbp"
@@ -91,10 +100,11 @@
         21) "ẽ  and ça|çan|ças, verguẽça, comiẽçan" mode="ença"
         22) "đ at the beginning + \w, đspues,đllas (no further special characters like "ā|ẽ|õ|ũ")" mode="dewords"
         23) "ꝓ q with tilde inside a word, flaq̃za, riq̃zas (flaqueza, riquezas)" mode="wquew"
+        Exeption ꝓxio projimo
         24) "ꝓ pro at the beginning + \w, ꝓhibir, ꝓcesso (prohibir, processo)" mode="prow"
           
         Depending on the text and the mixture between latin and spanish, check W0005_Vol01_005.xsl for cases:
-
+        
         25) "final ũ", algũ - algun mode="final-un"
         26) "q̃" - que,  mode="only-que"
         27) "ẽ - en", mode="only-en"
@@ -103,6 +113,8 @@
         
         To be used in all spanish texts:
         30) ⁊ (char204a) ==> y , mode="only-y"
+        31) ↄ abbreviation + p|b = com  ↄplida -> complida mode="abbr-com"
+        32) ↄ abbreviation con = ↄuiene -> conuiene mode="abbr-con"
         
             
                 
@@ -168,7 +180,7 @@
         
      2) Write the pattern with examples in the list "cases" above and assign a new mode. It should be different from all modes used before.
      
-     3) Between the last template and "Logging", write a new variable. Its name is usually the same name as the new mode. 
+     3) Between the last template and before ... see "ALWAYS AS LAST STEPS", write a new variable. Its name is usually the same name as the new mode. 
         And in <xsl:apply-templates/> select the last variable name, and place the new mode: 
      
          <xsl:variable name="ExampleNew">
@@ -189,34 +201,56 @@
           
           Regex-groups must be placed in () and distributed in the new elements. See the templates below.
     
-    6) For logging purpuses and for keeping track of the new expanssions added, look for the following locations (variable $out and variable $Expansions) at the very end of the code in the "logging" section
-       and replace the new variable:
+    6) update the new variable name "$ExampleNew" as the input for the "ALWAYS AS LAST STEPS" => variable "Put-LBHyphen-back"
     
-        <xsl:variable name="out">
-            <xsl:copy-of select="$ExampleNew"/>
-        </xsl:variable>
-        
-        Unwanted characters in expansions.
-        
-        <xsl:variable name="Abbr" as="node()*" select="$ExampleNew//tei:abbr[@rend eq 'abbr' and following-sibling::node()/self::tei:abbr[@rend eq 'expan' and matches(.,'[̃ ãāēẽõōũūꝓđ]+')]]"/>
-        <xsl:variable name="WrongExpansions" as="node()*" select="$ExampleNew//tei:abbr[@rend eq 'choice']//tei:abbr[@rend eq 'expan' and matches(.,'[̃ ãāēẽõōũūꝓđ]+')]"/>
-        
-        Abbr with no special character, check this out.
-        $prow//tei:abbr[@rend eq 'abbr' and not(matches(.,'[ãẽõũꝓq̃]+'))]
-        
-        Update last case variable
-        <xsl:variable name="Expansions" as="xs:integer" select="count($ExampleNew//tei:abbr[@rend eq 'choice']//tei:abbr[@rend eq 'expan'])"/>
+    See the variable "Put-LBHyphen-back":
     
+    <xsl:variable name="Put-LBHyphen-back">
+        <xsl:apply-templates select="[HIER SHOULD GO THE NEW VARIABLE]" mode="Put-LBHyphen-back"/>
+    </xsl:variable>
+    
+    so it looks like...
+    
+    <xsl:variable name="Put-LBHyphen-back">
+        <xsl:apply-templates select="$ExampleNew" mode="Put-LBHyphen-back"/>
+    </xsl:variable>
+   
+-->
+    
+<!--
 
+1 Replace '-<lb type="nb"/>' and '<lb type="nb"/> with '€' and '€' throughout the entire work.
+
+2 XSLT regex as usual, but using '-€' in the characters e.g.: regex="{'(\s)([æœęaA-zZſç-€]+)(ũ|ũ|ū|ū)([, \?!\(\)\*\+✝]+)'}".
+
+3 At the very end of the style scheet => Replace '-€' back with '-<lb type="nb"/>'.-->
+
+    <xsl:variable name="borrarLB">
+        <xsl:apply-templates select="/" mode="borrarLB"/>
+    </xsl:variable>
+        
+    <!-- identity transforms -->
+    <xsl:template match="@*|node()" mode="borrarLB">
+        <xsl:copy>
+            <xsl:apply-templates select="@*|node()" mode="borrarLB"/>
+        </xsl:copy>
+    </xsl:template>
+
+    <xsl:template match="tei:lb[@type='nb']" mode="borrarLB">
+        <xsl:text>€</xsl:text>
+        <xsl:apply-templates mode="borrarLB"/>
+    </xsl:template>
+    
+    
+<!--
 ###################################################################################################################################################        
                                          TEMPLATES FOR EACH CASE  
 ###################################################################################################################################################    
 -->
-    
 <!-- 1) ẽ + "do" e.g. "pudiẽdo"-->
     
     <xsl:variable name="endo">
-        <xsl:apply-templates select="/" mode="endo"/>
+        <xsl:apply-templates select="$borrarLB" mode="endo"/>
     </xsl:variable>
         
     <!-- identity transforms -->
@@ -227,7 +261,7 @@
     </xsl:template>
     
     <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="endo">
-        <xsl:analyze-string select="." regex="{'(\s)([aA-zZñſç]+)(ẽ|ẽ|ē)(do)([ .,;\(\)])'}">
+        <xsl:analyze-string select="." regex="{'(\s)([aA-zZñſç€-]+)(ẽ|ẽ|ē)(do)([ .,;\(\)])'}">
             <xsl:matching-substring>
                 <xsl:value-of select="regex-group(1)"/>
                 <xsl:element name="abbr">
@@ -250,8 +284,8 @@
             </xsl:non-matching-substring>
         </xsl:analyze-string>
     </xsl:template>
-    
-<!-- 2) ã + "do" e.g. dudãdo -->
+
+    <!-- 2) ã + "do" e.g. dudãdo -->
     
     <xsl:variable name="ando">
         <xsl:apply-templates select="$endo" mode="ando"/>
@@ -265,7 +299,7 @@
     </xsl:template>
     
     <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="ando">
-        <xsl:analyze-string select="." regex="{'(\s)([aA-zZſçñ]+)(ã|ã|ā)(do)([ \.,;\(\)])'}">
+        <xsl:analyze-string select="." regex="{'(\s)([aA-zZſçñ€-]+)(ã|ã|ā)(do)([ \.,:;\(\)])'}">
             <xsl:matching-substring>
                 <xsl:value-of select="regex-group(1)"/>
                 <xsl:element name="abbr">
@@ -303,7 +337,7 @@
     </xsl:template>
     
     <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="ente">
-        <xsl:analyze-string select="." regex="{'(\s)([aA-zZſçñ]+)(ẽ|ẽ|ē)(te|tes)([ \.,;\(\)])'}">
+        <xsl:analyze-string select="." regex="{'(\s)([aA-zZſçñ€-]+)(ẽ|ẽ|ē)(te|tes)([ \.,:;\(\)])'}">
             <xsl:matching-substring>
                 <xsl:value-of select="regex-group(1)"/>
                 <xsl:element name="abbr">
@@ -340,7 +374,7 @@
     </xsl:template>
     
     <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="ende">
-        <xsl:analyze-string select="." regex="{'(\s)([aA-zZſçñ]+)(ẽ|ẽ|ē)(de)([ \.,;\(\)])'}">
+        <xsl:analyze-string select="." regex="{'(\s)([aA-zZſçñ€-]+)(ẽ|ẽ|ē)(de)([ \.,:;\(\)])'}">
             <xsl:matching-substring>
                 <xsl:value-of select="regex-group(1)"/>
                 <xsl:element name="abbr">
@@ -363,10 +397,83 @@
             </xsl:non-matching-substring>
         </xsl:analyze-string>
     </xsl:template>
+
+<!--Exception for W0035 "ſctõ" mode="ſcto".-->
+
+    <xsl:variable name="Scto">
+        <xsl:apply-templates select="$ende" mode="Scto"/>
+    </xsl:variable>
+    
+    <!-- identity transforms -->
+    <xsl:template match="@*|node()" mode="Scto">
+        <xsl:copy>
+            <xsl:apply-templates select="@*|node()" mode="Scto"/>
+        </xsl:copy>
+    </xsl:template>
+    
+    <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="Scto">
+        <xsl:analyze-string select="." regex="{'(\s)(Sct)(õ|õ|ō|ō)([ \.,:;\(\)])'}">
+            <xsl:matching-substring>
+                <xsl:value-of select="regex-group(1)"/>
+                <xsl:element name="abbr">
+                    <xsl:attribute name="rend" select="'choice'"/>
+                    <xsl:attribute name="resp" select="'#auto'"/>
+                    <xsl:element name="abbr">
+                        <xsl:attribute name="rend" select="'abbr'"/>
+                        <xsl:value-of select="concat(regex-group(2),regex-group(3))"/>
+                    </xsl:element>
+                    <xsl:element name="abbr">
+                        <xsl:attribute name="rend" select="'expan'"/>
+                        <xsl:attribute name="resp" select="'#CR #auto'"/>
+                        <xsl:value-of select="'Santo'"/>
+                    </xsl:element>
+                </xsl:element>
+                <xsl:value-of select="regex-group(4)"/>
+            </xsl:matching-substring>
+            <xsl:non-matching-substring>
+                <xsl:value-of select="."/>
+            </xsl:non-matching-substring>
+        </xsl:analyze-string>
+    </xsl:template>
+    <xsl:variable name="ſcto">
+        <xsl:apply-templates select="$Scto" mode="ſcto"/>
+    </xsl:variable>
+    
+    <!-- identity transforms -->
+    <xsl:template match="@*|node()" mode="ſcto">
+        <xsl:copy>
+            <xsl:apply-templates select="@*|node()" mode="ſcto"/>
+        </xsl:copy>
+    </xsl:template>
+    
+    <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="ſcto">
+        <xsl:analyze-string select="." regex="{'(\s)(sct|ſct)(õ|õ|ō|ō)([ \.,:;\(\)])'}">
+            <xsl:matching-substring>
+                <xsl:value-of select="regex-group(1)"/>
+                <xsl:element name="abbr">
+                    <xsl:attribute name="rend" select="'choice'"/>
+                    <xsl:attribute name="resp" select="'#auto'"/>
+                    <xsl:element name="abbr">
+                        <xsl:attribute name="rend" select="'abbr'"/>
+                        <xsl:value-of select="concat(regex-group(2),regex-group(3))"/>
+                    </xsl:element>
+                    <xsl:element name="abbr">
+                        <xsl:attribute name="rend" select="'expan'"/>
+                        <xsl:attribute name="resp" select="'#CR #auto'"/>
+                        <xsl:value-of select="'santo'"/>
+                    </xsl:element>
+                </xsl:element>
+                <xsl:value-of select="regex-group(4)"/>
+            </xsl:matching-substring>
+            <xsl:non-matching-substring>
+                <xsl:value-of select="."/>
+            </xsl:non-matching-substring>
+        </xsl:analyze-string>
+    </xsl:template>
     
 <!--5) "õ-on" at the end e.g. "Purificaciõ"-->
     <xsl:variable name="cion">
-        <xsl:apply-templates select="$ende" mode="cion"/>
+        <xsl:apply-templates select="$ſcto" mode="cion"/>
     </xsl:variable>
     
     <!-- identity transforms -->
@@ -377,7 +484,7 @@
     </xsl:template>
     
     <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="cion">
-        <xsl:analyze-string select="." regex="{'(\s)([aA-zZſçñ]+)(õ|õ|ō|ō)([ \.,;\(\)])'}">
+        <xsl:analyze-string select="." regex="{'(\s)([aA-zZſçñ€-]+)(õ|õ|ō|ō)([ \.,:;\(\)])'}">
             <xsl:matching-substring>
                 <xsl:value-of select="regex-group(1)"/>
                 <xsl:element name="abbr">
@@ -414,7 +521,7 @@
     </xsl:template>
     
     <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="ento">
-        <xsl:analyze-string select="." regex="{'(\s)([aA-zZſçñ]+)(ẽ|ẽ|ē)(to)([ \.,;\(\)])'}"><!--(\w+[^ãẽõũ])-->
+        <xsl:analyze-string select="." regex="{'(\s)([aA-zZſçñ€-]+)(ẽ|ẽ|ē)(to)([ \.,:;\(\)])'}">
             <xsl:matching-substring>
                 <xsl:value-of select="regex-group(1)"/>
                 <xsl:element name="abbr">
@@ -451,7 +558,7 @@
     </xsl:template>
     
     <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="encia">
-        <xsl:analyze-string select="." regex="{'(\s)([aA-zZſçñ]+)(ẽ|ẽ|ē)(cia|cias)([ \.,;\(\)])'}"><!--(\w+[^ãẽõũ])-->
+        <xsl:analyze-string select="." regex="{'(\s)([aA-zZſçñ€-]+)(ẽ|ẽ|ē)(cia|cias)([ \.,:;\(\)])'}"><!--(\w+[^ãẽõũ])-->
             <xsl:matching-substring>
                 <xsl:value-of select="regex-group(1)"/>
                 <xsl:element name="abbr">
@@ -488,7 +595,7 @@
     </xsl:template>
     
     <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="ancia">
-        <xsl:analyze-string select="." regex="{'(\s)([aA-zZſçñ]+)(ã|ã|ā)(cia)([ \.,;\(\)])'}"><!--(\w+[^ãẽõũ])-->
+        <xsl:analyze-string select="." regex="{'(\s)([aA-zZſçñ€-]+)(ã|ã|ā)(cia)([ \.,:;\(\)])'}"><!--(\w+[^ãẽõũ])-->
             <xsl:matching-substring>
                 <xsl:value-of select="regex-group(1)"/>
                 <xsl:element name="abbr">
@@ -525,7 +632,7 @@
     </xsl:template>
     
     <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="ener">
-        <xsl:analyze-string select="." regex="{'(\s)([aA-zZſçñ]+)(ẽ|ẽ|ē)([aA-zZñſç]?)(er)([ \.,;\(\)])'}"><!--(\w+[^ãẽõũ])-->
+        <xsl:analyze-string select="." regex="{'(\s)([aA-zZſçñ€-]+)(ẽ|ẽ|ē)([aA-zZñſç]?)(er)([ \.,:;\(\)])'}"><!--(\w+[^ãẽõũ])-->
             <xsl:matching-substring>
                 <xsl:value-of select="regex-group(1)"/>
                 <xsl:element name="abbr">
@@ -562,7 +669,7 @@
     </xsl:template>
     
     <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="enar">
-        <xsl:analyze-string select="." regex="{'(\s)([aA-zZñſç]+)(ẽ|ẽ|ē)([aA-zZñſç]?)(ar)([ \.,;\(\)])'}"><!--(\w+[^ãẽõũ])-->
+        <xsl:analyze-string select="." regex="{'(\s)([aA-zZñſç€-]+)(ẽ|ẽ|ē)([aA-zZñſç]?)(ar)([ \.,:;\(\)])'}"><!--(\w+[^ãẽõũ])-->
             <xsl:matching-substring>
                 <xsl:value-of select="regex-group(1)"/>
                 <xsl:element name="abbr">
@@ -599,7 +706,7 @@
     </xsl:template>
     
     <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="anar">
-        <xsl:analyze-string select="." regex="{'(\s)([aA-zZſçñ]+)(ã|ã|ā)([aA-zZñſç]?)(ar)([\s\.,;\(\)])'}"><!--(\w+[^ãẽõũ])-->
+        <xsl:analyze-string select="." regex="{'(\s)([aA-zZſçñ€-]+)(ã|ã|ā)([aA-zZñſç]?)(ar)([\s\.,;\(\)])'}"><!--(\w+[^ãẽõũ])-->
             <xsl:matching-substring>
                 <xsl:value-of select="regex-group(1)"/>
                 <xsl:element name="abbr">
@@ -622,11 +729,46 @@
             </xsl:non-matching-substring>
         </xsl:analyze-string>
     </xsl:template>
+<!-- Exception Itẽ  -->
+    <xsl:variable name="Item">
+        <xsl:apply-templates select="$anar" mode="Item"/>
+    </xsl:variable>
     
+    <!-- identity transforms -->
+    <xsl:template match="@*|node()" mode="Item">
+        <xsl:copy>
+            <xsl:apply-templates select="@*|node()" mode="Item"/>
+        </xsl:copy>
+    </xsl:template>
+    
+    <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="Item">
+        <xsl:analyze-string select="." regex="{'(\s)(It)(ẽ|ẽ|ē)([ \.,:;\(\)])'}">
+            <xsl:matching-substring>
+                <xsl:value-of select="regex-group(1)"/>
+                <xsl:element name="abbr">
+                    <xsl:attribute name="rend" select="'choice'"/>
+                    <xsl:attribute name="resp" select="'#auto'"/>
+                    <xsl:element name="abbr">
+                        <xsl:attribute name="rend" select="'abbr'"/>
+                        <xsl:value-of select="concat(regex-group(2),regex-group(3))"/>
+                    </xsl:element>
+                    <xsl:element name="abbr">
+                        <xsl:attribute name="rend" select="'expan'"/>
+                        <xsl:attribute name="resp" select="'#CR #auto'"/>
+                        <xsl:value-of select="concat(regex-group(2),'em')"/>
+                    </xsl:element>
+                </xsl:element>
+                <xsl:value-of select="regex-group(4)"/>
+            </xsl:matching-substring>
+            <xsl:non-matching-substring>
+                <xsl:value-of select="."/>
+            </xsl:non-matching-substring>
+        </xsl:analyze-string>
+    </xsl:template>
 <!-- 12) Words ending with (ẽ-en). e.g. puedẽ, quiẽ, deuẽ-->
     
     <xsl:variable name="final-en">
-        <xsl:apply-templates select="$anar" mode="final-en"/>
+        <xsl:apply-templates select="$Item" mode="final-en"/>
     </xsl:variable>
     
     <!-- identity transforms -->
@@ -637,7 +779,7 @@
     </xsl:template>
     
     <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="final-en">
-        <xsl:analyze-string select="." regex="{'(\s)([aA-zZſçñ]+)(ẽ|ẽ|ē)([ \.,;\(\)])'}">
+        <xsl:analyze-string select="." regex="{'(\s)([aA-zZſçñ€-]+)(ẽ|ẽ|ē)([ \.,:;\(\)])'}">
             <xsl:matching-substring>
                 <xsl:value-of select="regex-group(1)"/>
                 <xsl:element name="abbr">
@@ -660,11 +802,120 @@
             </xsl:non-matching-substring>
         </xsl:analyze-string>
     </xsl:template>
+
+<!-- Exception W0053 eſpũ ſanto, should not be expanded as final-un -->
+    <xsl:variable name="spiritu">
+        <xsl:apply-templates select="$final-en" mode="spiritu"/>
+    </xsl:variable>
     
+    <!-- identity transforms -->
+    <xsl:template match="@*|node()" mode="spiritu">
+        <xsl:copy>
+            <xsl:apply-templates select="@*|node()" mode="spiritu"/>
+        </xsl:copy>
+    </xsl:template>
+    
+    <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="spiritu">
+        <xsl:analyze-string select="." regex="{'(\s)(eſp)(ũ|ũ|ū|ū)([ \.,:;\(\)])'}">
+            <xsl:matching-substring>
+                <xsl:value-of select="regex-group(1)"/>
+                <xsl:element name="abbr">
+                    <xsl:attribute name="rend" select="'choice'"/>
+                    <xsl:attribute name="resp" select="'#auto'"/>
+                    <xsl:element name="abbr">
+                        <xsl:attribute name="rend" select="'abbr'"/>
+                        <xsl:value-of select="concat(regex-group(2),regex-group(3))"/>
+                    </xsl:element>
+                    <xsl:element name="abbr">
+                        <xsl:attribute name="rend" select="'expan'"/>
+                        <xsl:attribute name="resp" select="'#CR #auto'"/>
+                        <xsl:value-of select="'espiritu'"/>
+                    </xsl:element>
+                </xsl:element>
+                <xsl:value-of select="regex-group(4)"/>
+            </xsl:matching-substring>
+            <xsl:non-matching-substring>
+                <xsl:value-of select="."/>
+            </xsl:non-matching-substring>
+        </xsl:analyze-string>
+    </xsl:template>
+<!-- Exception W0035 Words ending with (ũ|ũ|ū|ū - un). e.g. segũ, algũ-->
+    
+    <xsl:variable name="final-un">
+        <xsl:apply-templates select="$spiritu" mode="final-un"/>
+    </xsl:variable>
+    
+    <!-- identity transforms -->
+    <xsl:template match="@*|node()" mode="final-un">
+        <xsl:copy>
+            <xsl:apply-templates select="@*|node()" mode="final-un"/>
+        </xsl:copy>
+    </xsl:template>
+    
+    <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="final-un">
+        <xsl:analyze-string select="." regex="{'(\s)([aA-zZſçñ€-]+)(ũ|ũ|ū|ū)([ \.,:;\(\)])'}">
+            <xsl:matching-substring>
+                <xsl:value-of select="regex-group(1)"/>
+                <xsl:element name="abbr">
+                    <xsl:attribute name="rend" select="'choice'"/>
+                    <xsl:attribute name="resp" select="'#auto'"/>
+                    <xsl:element name="abbr">
+                        <xsl:attribute name="rend" select="'abbr'"/>
+                        <xsl:value-of select="concat(regex-group(2),regex-group(3))"/>
+                    </xsl:element>
+                    <xsl:element name="abbr">
+                        <xsl:attribute name="rend" select="'expan'"/>
+                        <xsl:attribute name="resp" select="'#CR #auto'"/>
+                        <xsl:value-of select="concat(regex-group(2),'un')"/>
+                    </xsl:element>
+                </xsl:element>
+                <xsl:value-of select="regex-group(4)"/>
+            </xsl:matching-substring>
+            <xsl:non-matching-substring>
+                <xsl:value-of select="."/>
+            </xsl:non-matching-substring>
+        </xsl:analyze-string>
+    </xsl:template>
+<!--Exception for W0035 "ſctã" mode="ſctan".-->   
+ <xsl:variable name="ſctan">
+        <xsl:apply-templates select="$final-un" mode="ſctan"/>
+    </xsl:variable>
+    
+    <!-- identity transforms -->
+    <xsl:template match="@*|node()" mode="ſctan">
+        <xsl:copy>
+            <xsl:apply-templates select="@*|node()" mode="ſctan"/>
+        </xsl:copy>
+    </xsl:template>
+    
+    <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="ſctan">
+        <xsl:analyze-string select="." regex="{'(\s)(ſct)(ã|ã|ā|ā)([, :;\?!\)\.])'}">
+            <xsl:matching-substring>
+                <xsl:value-of select="regex-group(1)"/>
+                <xsl:element name="abbr">
+                    <xsl:attribute name="rend" select="'choice'"/>
+                    <xsl:attribute name="resp" select="'#auto'"/>
+                    <xsl:element name="abbr">
+                        <xsl:attribute name="rend" select="'abbr'"/>
+                        <xsl:value-of select="concat(regex-group(2),regex-group(3))"/>
+                    </xsl:element>
+                    <xsl:element name="abbr">
+                        <xsl:attribute name="rend" select="'expan'"/>
+                        <xsl:attribute name="resp" select="'#CR #auto'"/>
+                        <xsl:value-of select="'santa'"/>
+                    </xsl:element>
+                </xsl:element>
+                <xsl:value-of select="regex-group(4)"/>
+            </xsl:matching-substring>
+            <xsl:non-matching-substring>
+                <xsl:value-of select="."/>
+            </xsl:non-matching-substring>
+        </xsl:analyze-string>
+    </xsl:template>
 <!-- 13) Words ending in (ā-an). e.g. haziā, siruā, podrā-->
     
     <xsl:variable name="final-an">
-        <xsl:apply-templates select="$final-en" mode="final-an"/>
+        <xsl:apply-templates select="$ſctan" mode="final-an"/>
     </xsl:variable>
     
     <!-- identity transforms -->
@@ -675,7 +926,7 @@
     </xsl:template>
     
     <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="final-an">
-        <xsl:analyze-string select="." regex="{'(\s)([aA-zZſçñ]+)(ã|ã|ā)([ \.,;\(\)])'}"><!--(\w+[^ãẽõũ])-->
+        <xsl:analyze-string select="." regex="{'(\s)([æœęaA-zZſçñ€-]+)(ã|ã|ā|ā)([, :;\?!\)\.])'}">
             <xsl:matching-substring>
                 <xsl:value-of select="regex-group(1)"/>
                 <xsl:element name="abbr">
@@ -699,48 +950,12 @@
         </xsl:analyze-string>
     </xsl:template>
    
-<!-- 14) ũ + ar e.g. pregũtar, renũciar-->
-    
-    <xsl:variable name="unar">
-        <xsl:apply-templates select="$final-en" mode="unar"/>
-    </xsl:variable>
-    
-    <!-- identity transforms -->
-    <xsl:template match="@*|node()" mode="unar">
-        <xsl:copy>
-            <xsl:apply-templates select="@*|node()" mode="unar"/>
-        </xsl:copy>
-    </xsl:template>
-    
-    <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="unar">
-        <xsl:analyze-string select="." regex="{'(\s)([aA-zZñſç]+)(ũ|ũ|ū|ū)([aA-zZñſç]+)(ar)([ \.,;\(\)])'}"><!--(\w+[^ãẽõũ])-->
-            <xsl:matching-substring>
-                <xsl:value-of select="regex-group(1)"/>
-                <xsl:element name="abbr">
-                    <xsl:attribute name="rend" select="'choice'"/>
-                    <xsl:attribute name="resp" select="'#auto'"/>
-                    <xsl:element name="abbr">
-                        <xsl:attribute name="rend" select="'abbr'"/>
-                        <xsl:value-of select="concat(regex-group(2),regex-group(3),regex-group(4),regex-group(5))"/>
-                    </xsl:element>
-                    <xsl:element name="abbr">
-                        <xsl:attribute name="rend" select="'expan'"/>
-                        <xsl:attribute name="resp" select="'#CR #auto'"/>
-                        <xsl:value-of select="concat(regex-group(2),'un',regex-group(4),regex-group(5))"/>
-                    </xsl:element>
-                </xsl:element>
-                <xsl:value-of select="regex-group(6)"/>
-            </xsl:matching-substring>
-            <xsl:non-matching-substring>
-                <xsl:value-of select="."/>
-            </xsl:non-matching-substring>
-        </xsl:analyze-string>
-    </xsl:template>
+
    
 <!-- 15) ũ before (b|p) e.g. cũplido, costũbre-->
     
     <xsl:variable name="umbp">
-        <xsl:apply-templates select="$unar" mode="umbp"/>
+        <xsl:apply-templates select="$final-an" mode="umbp"/>
     </xsl:variable>
     
     <!-- identity transforms -->
@@ -751,7 +966,7 @@
     </xsl:template>
     
     <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="umbp">
-        <xsl:analyze-string select="." regex="{'(\s)([aA-zZñſç]+)(ũ|ũ|ū|ū)(b|p)([aA-zZñſç]+)([ \.,;\(\)])'}">
+        <xsl:analyze-string select="." regex="{'(\s)([aA-zZñſç€-]+)(ũ|ũ|ū|ū)(b|p)([aA-zZñſç]+)([ \.,:;\(\)])'}">
             <xsl:matching-substring>
                 <xsl:value-of select="regex-group(1)"/>
                 <xsl:element name="abbr">
@@ -775,9 +990,47 @@
         </xsl:analyze-string>
     </xsl:template>
     
+<!-- 14) ũ + ar e.g. pregũtar, renũciar-->
+    
+    <xsl:variable name="unar">
+        <xsl:apply-templates select="$umbp" mode="unar"/>
+    </xsl:variable>
+    
+    <!-- identity transforms -->
+    <xsl:template match="@*|node()" mode="unar">
+        <xsl:copy>
+            <xsl:apply-templates select="@*|node()" mode="unar"/>
+        </xsl:copy>
+    </xsl:template>
+    
+    <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="unar">
+        <xsl:analyze-string select="." regex="{'(\s)([aA-zZñſç€-]+)(ũ|ũ|ū|ū)([aA-zZñſç]+)(ar)([ \.,:;\(\)])'}"><!--(\w+[^ãẽõũ])-->
+            <xsl:matching-substring>
+                <xsl:value-of select="regex-group(1)"/>
+                <xsl:element name="abbr">
+                    <xsl:attribute name="rend" select="'choice'"/>
+                    <xsl:attribute name="resp" select="'#auto'"/>
+                    <xsl:element name="abbr">
+                        <xsl:attribute name="rend" select="'abbr'"/>
+                        <xsl:value-of select="concat(regex-group(2),regex-group(3),regex-group(4),regex-group(5))"/>
+                    </xsl:element>
+                    <xsl:element name="abbr">
+                        <xsl:attribute name="rend" select="'expan'"/>
+                        <xsl:attribute name="resp" select="'#CR #auto'"/>
+                        <xsl:value-of select="concat(regex-group(2),'un',regex-group(4),regex-group(5))"/>
+                    </xsl:element>
+                </xsl:element>
+                <xsl:value-of select="regex-group(6)"/>
+            </xsl:matching-substring>
+            <xsl:non-matching-substring>
+                <xsl:value-of select="."/>
+            </xsl:non-matching-substring>
+        </xsl:analyze-string>
+    </xsl:template>
+
 <!--16) "õ - before (b|p) e.g. hōbres, Cōprar"-->
     <xsl:variable name="ombp">
-        <xsl:apply-templates select="$umbp" mode="ombp"/>
+        <xsl:apply-templates select="$unar" mode="ombp"/>
     </xsl:variable>
     
     <!-- identity transforms -->
@@ -788,7 +1041,7 @@
     </xsl:template>
     
     <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="ombp">
-        <xsl:analyze-string select="." regex="{'(\s)([aA-zZñſç]+)(õ|õ|ō|ō)(b|p)([aA-zZñſç]+)([ \.,;\(\)])'}">
+        <xsl:analyze-string select="." regex="{'(\s)([aA-zZñſç€-]+)(õ|õ|ō|ō)(b|p)([aA-zZñſç€-]+)([ \.,:;\(\)])'}">
             <xsl:matching-substring>
                 <xsl:value-of select="regex-group(1)"/>
                 <xsl:element name="abbr">
@@ -825,7 +1078,7 @@
     </xsl:template>
     
     <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="ondad">
-        <xsl:analyze-string select="." regex="{'(\s)([aA-zZñſç]+)(õ|õ|ō|ō)([aA-zZñſç]*)(dad|dades)([ \.,;\(\)])'}">
+        <xsl:analyze-string select="." regex="{'(\s)([aA-zZñſç€-]+)(õ|õ|ō|ō)([aA-zZñſç€-]*)(dad|dades)([ \.:,;\(\)])'}">
             <xsl:matching-substring>
                 <xsl:value-of select="regex-group(1)"/>
                 <xsl:element name="abbr">
@@ -863,7 +1116,7 @@
     </xsl:template>
     
     <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="ondido">
-        <xsl:analyze-string select="." regex="{'(\s)([aA-zZñſç]+)(õ|õ|ō|ō)([aA-zZñſç]*)(dido|dida|didas|didos)([ \.,;\)])'}">
+        <xsl:analyze-string select="." regex="{'(\s)([aA-zZñſç€-]+)(õ|õ|ō|ō)([aA-zZñſç€-]*)(dido|dida|didas|didos)([ \.,;\)])'}">
             <xsl:matching-substring>
                 <xsl:value-of select="regex-group(1)"/>
                 <xsl:element name="abbr">
@@ -901,7 +1154,7 @@
     </xsl:template>
     
     <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="andad">
-        <xsl:analyze-string select="." regex="{'(\s)([aA-zZñſç]+)(āã)([aA-zZñſç]*)(dad|dades)([ \.,;\(\)])'}">
+        <xsl:analyze-string select="." regex="{'(\s)([aA-zZñſç€-]+)(āã)([aA-zZñſç€-]*)(dad|dades)([ \.,:;\(\)])'}">
             <xsl:matching-substring>
                 <xsl:value-of select="regex-group(1)"/>
                 <xsl:element name="abbr">
@@ -938,7 +1191,7 @@
     </xsl:template>
     
     <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="ança">
-        <xsl:analyze-string select="." regex="{'(\s)([aA-zZñſç]+)(ã|ã|ā)([ças]+)([ \.,;\(\)])'}">
+        <xsl:analyze-string select="." regex="{'(\s)([aA-zZñſç€-]+)(ã|ã|ā)([ças€-]+)([ \.,:;\(\)])'}">
             <xsl:matching-substring>
                 <xsl:value-of select="regex-group(1)"/>
                 <xsl:element name="abbr">
@@ -975,7 +1228,7 @@
     </xsl:template>
     
     <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="ença">
-        <xsl:analyze-string select="." regex="{'(\s)([aA-zZñſç]+)(ẽ|ẽ|ē)(ça|çan|ças+)([ \.,;\(\)])'}">
+        <xsl:analyze-string select="." regex="{'(\s)([aA-zZñſç€-]+)(ẽ|ẽ|ē)(ça|çan|ças+)([ \.,:;\(\)])'}">
             <xsl:matching-substring>
                 <xsl:value-of select="regex-group(1)"/>
                 <xsl:element name="abbr">
@@ -1013,7 +1266,7 @@
     </xsl:template>
     
     <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="dewords">
-        <xsl:analyze-string select="." regex="{'(\s)(đ)([aA-zZñſç]+)([ \.,;\(\)])'}">
+        <xsl:analyze-string select="." regex="{'(\s)(đ)([aA-zZñſç€-]+)([ \.,:;\(\)])'}">
             <xsl:matching-substring>
                 <xsl:value-of select="regex-group(1)"/>
                 <xsl:element name="abbr">
@@ -1037,7 +1290,7 @@
         </xsl:analyze-string>
     </xsl:template>
     
-<!--23) "ꝓ (q with tilde) inside a word, flaq̃za, riq̃zas (flaqueza, riquezas)" mode="wquew"-->
+<!--23) "q̃ (q with tilde) inside a word, flaq̃za, riq̃zas (flaqueza, riquezas)" mode="wquew"-->
     <xsl:variable name="wquew">
         <xsl:apply-templates select="$dewords" mode="wquew"/>
     </xsl:variable>
@@ -1050,7 +1303,7 @@
     </xsl:template>
     
     <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="wquew">
-        <xsl:analyze-string select="." regex="{'(\s)([aA-zZſçñ]+)(q̃)([aA-zZñſç]+)([ \.,;\(\)])'}">
+        <xsl:analyze-string select="." regex="{'(\s)([aA-zZſçñ€-]+)(q̃)([aA-zZñſç€-]+)([ \.,:;\(\)])'}">
             <xsl:matching-substring>
                 <xsl:value-of select="regex-group(1)"/>
                 <xsl:element name="abbr">
@@ -1073,11 +1326,47 @@
             </xsl:non-matching-substring>
         </xsl:analyze-string>
     </xsl:template>
+<!--Exeption ꝓxio projimo 26.08.25 CR-->
+
+    <xsl:variable name="proximo">
+        <xsl:apply-templates select="$wquew" mode="proximo"/>
+    </xsl:variable>
     
+    <!-- identity transforms -->
+    <xsl:template match="@*|node()" mode="proximo">
+        <xsl:copy>
+            <xsl:apply-templates select="@*|node()" mode="proximo"/>
+        </xsl:copy>
+    </xsl:template>
+    
+    <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="proximo">
+        <xsl:analyze-string select="." regex="{'(\s)(ꝓ)(xio)([ \.,:;\(\)])'}">
+            <xsl:matching-substring>
+                <xsl:value-of select="regex-group(1)"/>
+                <xsl:element name="abbr">
+                    <xsl:attribute name="rend" select="'choice'"/>
+                    <xsl:attribute name="resp" select="'#auto'"/>
+                    <xsl:element name="abbr">
+                        <xsl:attribute name="rend" select="'abbr'"/>
+                        <xsl:value-of select="concat(regex-group(2),regex-group(3))"/>
+                    </xsl:element>
+                    <xsl:element name="abbr">
+                        <xsl:attribute name="rend" select="'expan'"/>
+                        <xsl:attribute name="resp" select="'#CR #auto'"/>
+                        <xsl:value-of select="'projimo'"/>
+                    </xsl:element>
+                </xsl:element>
+                <xsl:value-of select="regex-group(4)"/>
+            </xsl:matching-substring>
+            <xsl:non-matching-substring>
+                <xsl:value-of select="."/>
+            </xsl:non-matching-substring>
+        </xsl:analyze-string>
+    </xsl:template>
 <!--24) "ꝓ (pro) at the beginning, ꝓhibir, ꝓcesso (prohibir, processo)" mode="prow-->
     
     <xsl:variable name="prow">
-        <xsl:apply-templates select="$wquew" mode="prow"/>
+        <xsl:apply-templates select="$proximo" mode="prow"/>
     </xsl:variable>
     
     <!-- identity transforms -->
@@ -1088,7 +1377,7 @@
     </xsl:template>
     
     <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="prow">
-        <xsl:analyze-string select="." regex="{'(\s)(ꝓ)([aA-zZñſç]+)([ \.,;\(\)])'}">
+        <xsl:analyze-string select="." regex="{'(\s)(ꝓ)([aA-zZñſç€-]+)([ \.,:;\(\)])'}">
             <xsl:matching-substring>
                 <xsl:value-of select="regex-group(1)"/>
                 <xsl:element name="abbr">
@@ -1111,11 +1400,84 @@
             </xsl:non-matching-substring>
         </xsl:analyze-string>
     </xsl:template>
+<!--Only del-->
+    <xsl:variable name="only-del">
+        <xsl:apply-templates select="$prow" mode="only-del"/>
+    </xsl:variable>
+    
+    <!-- identity transforms -->
+    <xsl:template match="@*|node()" mode="only-del">
+        <xsl:copy>
+            <xsl:apply-templates select="@*|node()" mode="only-del"/>
+        </xsl:copy>
+    </xsl:template>
+    
+    <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="only-del">
+        <xsl:analyze-string select="." regex="{'(\s)()(l|los|llos|las|llas)([ \.,:;\(\)])'}">
+            <xsl:matching-substring>
+                <xsl:value-of select="regex-group(1)"/>
+                <xsl:element name="abbr">
+                    <xsl:attribute name="rend" select="'choice'"/>
+                    <xsl:attribute name="resp" select="'#auto'"/>
+                    <xsl:element name="abbr">
+                        <xsl:attribute name="rend" select="'abbr'"/>
+                        <xsl:value-of select="concat(regex-group(2),regex-group(3))"/>
+                    </xsl:element>
+                    <xsl:element name="abbr">
+                        <xsl:attribute name="rend" select="'expan'"/>
+                        <xsl:attribute name="resp" select="'#CR #auto'"/>
+                        <xsl:value-of select="concat('de',regex-group(3))"/>
+                    </xsl:element>
+                </xsl:element>
+                <xsl:value-of select="regex-group(4)"/>
+            </xsl:matching-substring>
+            <xsl:non-matching-substring>
+                <xsl:value-of select="."/>
+            </xsl:non-matching-substring>
+        </xsl:analyze-string>
+    </xsl:template>
+<!--   ==> de , mode="only-de"-->
+    
+    <xsl:variable name="only-de">
+        <xsl:apply-templates select="$only-del" mode="only-de"/>
+    </xsl:variable>
+    
+    <!-- identity transforms -->
+    <xsl:template match="@*|node()" mode="only-de">
+        <xsl:copy>
+            <xsl:apply-templates select="@*|node()" mode="only-de"/>
+        </xsl:copy>
+    </xsl:template>
+    
+    <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="only-de">
+        <xsl:analyze-string select="." regex="{'(\s)()([ \.,:;\(\)])'}">
+            <xsl:matching-substring>
+                <xsl:value-of select="regex-group(1)"/>
+                <xsl:element name="abbr">
+                    <xsl:attribute name="rend" select="'choice'"/>
+                    <xsl:attribute name="resp" select="'#auto'"/>
+                    <xsl:element name="abbr">
+                        <xsl:attribute name="rend" select="'abbr'"/>
+                        <xsl:value-of select="regex-group(2)"/>
+                    </xsl:element>
+                    <xsl:element name="abbr">
+                        <xsl:attribute name="rend" select="'expan'"/>
+                        <xsl:attribute name="resp" select="'#CR #auto'"/>
+                        <xsl:value-of select="'de'"/>
+                    </xsl:element>
+                </xsl:element>
+                <xsl:value-of select="regex-group(3)"/>
+            </xsl:matching-substring>
+            <xsl:non-matching-substring>
+                <xsl:value-of select="."/>
+            </xsl:non-matching-substring>
+        </xsl:analyze-string>
+    </xsl:template>
 
 <!--30) ⁊ (char204a) ==> y , mode="only-y"-->
     
     <xsl:variable name="only-y">
-        <xsl:apply-templates select="$prow" mode="only-y"/>
+        <xsl:apply-templates select="$only-de" mode="only-y"/>
     </xsl:variable>
     
     <!-- identity transforms -->
@@ -1126,7 +1488,7 @@
     </xsl:template>
     
     <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="only-y">
-        <xsl:analyze-string select="." regex="{'(\s)(⁊)([ \.,;\(\)])'}">
+        <xsl:analyze-string select="." regex="{'(\s)(⁊)([ \.,:;\(\)])'}">
             <xsl:matching-substring>
                 <xsl:value-of select="regex-group(1)"/>
                 <xsl:element name="abbr">
@@ -1148,6 +1510,186 @@
                 <xsl:value-of select="."/>
             </xsl:non-matching-substring>
         </xsl:analyze-string>
+
+    </xsl:template>
+
+<!--31) ↄ abbreviation + p|b = com  ↄplida -> complida-->
+<xsl:variable name="abbr-com">
+        <xsl:apply-templates select="$only-y" mode="abbr-com"/>
+    </xsl:variable>
+    
+    <!-- identity transforms -->
+    <xsl:template match="@*|node()" mode="abbr-com">
+        <xsl:copy>
+            <xsl:apply-templates select="@*|node()" mode="abbr-com"/>
+        </xsl:copy>
+    </xsl:template>
+    
+    <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="abbr-com">
+        <xsl:analyze-string select="." regex="{'(\s)(ↄ)(b|p|m)([aA-zZñſç€-]+)([ \.,:;\(\)])'}">
+            <xsl:matching-substring>
+                <xsl:value-of select="regex-group(1)"/>
+                <xsl:element name="abbr">
+                    <xsl:attribute name="rend" select="'choice'"/>
+                    <xsl:attribute name="resp" select="'#auto'"/>
+                    <xsl:element name="abbr">
+                        <xsl:attribute name="rend" select="'abbr'"/>
+                        <xsl:value-of select="concat(regex-group(2),regex-group(3),regex-group(4))"/>
+                    </xsl:element>
+                    <xsl:element name="abbr">
+                        <xsl:attribute name="rend" select="'expan'"/>
+                        <xsl:attribute name="resp" select="'#CR #auto'"/>
+                        <xsl:value-of select="concat('com',regex-group(3),regex-group(4))"/>
+                    </xsl:element>
+                </xsl:element>
+                <xsl:value-of select="regex-group(5)"/>
+            </xsl:matching-substring>
+            <xsl:non-matching-substring>
+                <xsl:value-of select="."/>
+            </xsl:non-matching-substring>
+        </xsl:analyze-string>
+    </xsl:template>
+<!--32) ↄ abbreviation con = ↄuiene -> conuiene-->
+<xsl:variable name="abbr-con">
+        <xsl:apply-templates select="$abbr-com" mode="abbr-con"/>
+    </xsl:variable>
+    
+    <!-- identity transforms -->
+    <xsl:template match="@*|node()" mode="abbr-con">
+        <xsl:copy>
+            <xsl:apply-templates select="@*|node()" mode="abbr-con"/>
+        </xsl:copy>
+    </xsl:template>
+    
+    <xsl:template match="text()[not(ancestor::tei:abbr or ancestor::*[@xml:lang = ('la','grc','gr','he','fr','pt','it')])]" mode="abbr-con">
+        <xsl:analyze-string select="." regex="{'(\s)(ↄ)([aA-zZñſç€-]+)([ \.,:;\(\)])'}">
+            <xsl:matching-substring>
+                <xsl:value-of select="regex-group(1)"/>
+                <xsl:element name="abbr">
+                    <xsl:attribute name="rend" select="'choice'"/>
+                    <xsl:attribute name="resp" select="'#auto'"/>
+                    <xsl:element name="abbr">
+                        <xsl:attribute name="rend" select="'abbr'"/>
+                        <xsl:value-of select="concat(regex-group(2),regex-group(3))"/>
+                    </xsl:element>
+                    <xsl:element name="abbr">
+                        <xsl:attribute name="rend" select="'expan'"/>
+                        <xsl:attribute name="resp" select="'#CR #auto'"/>
+                        <xsl:value-of select="concat('con',regex-group(3))"/>
+                    </xsl:element>
+                </xsl:element>
+                <xsl:value-of select="regex-group(4)"/>
+            </xsl:matching-substring>
+            <xsl:non-matching-substring>
+                <xsl:value-of select="."/>
+            </xsl:non-matching-substring>
+        </xsl:analyze-string>
+    </xsl:template>
+<!--
+ALWAYS AS LAST STEPS.
+
+
+
+3 At the very end of the style scheet => Replace back '-<lb type="nb"/>'.
+
+'-€' => '-<lb type="nb"/>' 
+'€' => '<lb type="nb"/>'
+
+in abbr lb with xml:id
+in expan lb with sameAs
+-->
+
+<!--lb rendition hyphen-->
+    <xsl:variable name="Put-LBHyphen-back">
+        <xsl:apply-templates select="$abbr-con" mode="Put-LBHyphen-back"/>
+    </xsl:variable>
+    
+    <!-- identity transforms -->
+    <xsl:template match="@*|node()" mode="Put-LBHyphen-back">
+        <xsl:copy>
+            <xsl:apply-templates select="@*|node()" mode="Put-LBHyphen-back"/>
+        </xsl:copy>
+    </xsl:template>
+    
+    <xsl:template match="tei:text//text()" mode="Put-LBHyphen-back">
+        <xsl:analyze-string select="." regex="-€">            
+            <xsl:matching-substring>
+                <xsl:text>-</xsl:text>
+                <xsl:element name="lb">
+                    <xsl:attribute name="type" select="'nb'"/>
+                </xsl:element>
+            </xsl:matching-substring>
+            <xsl:non-matching-substring>
+                <xsl:value-of select="."/>
+            </xsl:non-matching-substring>
+        </xsl:analyze-string>
+    </xsl:template>
+<!--lb rendition no hyphen-->
+    <xsl:variable name="Put-LBNoHypen-back">
+        <xsl:apply-templates select="$Put-LBHyphen-back" mode="Put-LBNoHypen-back"/>
+    </xsl:variable>
+    
+    <!-- identity transforms -->
+    <xsl:template match="@*|node()" mode="Put-LBNoHypen-back">
+        <xsl:copy>
+            <xsl:apply-templates select="@*|node()" mode="Put-LBNoHypen-back"/>
+        </xsl:copy>
+    </xsl:template>
+    
+    <xsl:template match="tei:text//text()" mode="Put-LBNoHypen-back">
+        <xsl:analyze-string select="." regex="€">            
+            <xsl:matching-substring>
+                <xsl:element name="lb">
+                    <xsl:attribute name="type" select="'nb'"/>
+                </xsl:element>
+            </xsl:matching-substring>
+            <xsl:non-matching-substring>
+                <xsl:value-of select="."/>
+            </xsl:non-matching-substring>
+        </xsl:analyze-string>
+    </xsl:template>
+
+<!--Add xml:id(s)-->
+
+
+    <xsl:variable name="IDS">
+        <xsl:apply-templates select="$Put-LBNoHypen-back" mode="IDS"/>
+    </xsl:variable>
+    
+    <!-- identity transforms -->
+    <xsl:template match="@*|node()" mode="IDS">
+        <xsl:copy>
+            <xsl:apply-templates select="@*|node()" mode="IDS"/>
+        </xsl:copy>
+    </xsl:template>
+    
+    <xsl:template match="tei:abbr[@rend eq 'abbr']/tei:lb" mode="IDS">
+        <xsl:copy>        
+        <xsl:copy-of select="@*"/>
+            <xsl:attribute name="xml:id" select="generate-id()"/>
+            <xsl:apply-templates mode="IDS"/>
+        </xsl:copy>
+    </xsl:template>
+    
+<!--Add sameAs-->    
+    <xsl:variable name="sameAs">
+        <xsl:apply-templates select="$IDS" mode="sameAs"/>
+    </xsl:variable>
+    
+    
+    <!-- identity transforms -->
+    <xsl:template match="@*|node()" mode="sameAs">
+        <xsl:copy>
+            <xsl:apply-templates select="@*|node()" mode="sameAs"/>
+        </xsl:copy>
+    </xsl:template>
+    <xsl:template match="tei:abbr[@rend eq 'expan']/tei:lb" mode="sameAs">
+        <xsl:variable name="abbr-ID" select="preceding::tei:abbr[@rend eq 'abbr' and ancestor::tei:abbr[@rend eq 'choice'] = current()/ancestor-or-self::tei:abbr[@rend eq 'choice']][1]/tei:lb[1]/@xml:id"/>
+        <xsl:copy>        
+            <xsl:copy-of select="@*"/>
+            <xsl:attribute name="sameAs" select="concat('#',$abbr-ID)"/>
+            <xsl:apply-templates mode="sameAs"/>
+        </xsl:copy>
     </xsl:template>
 <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
     
@@ -1155,7 +1697,7 @@
     <!-- adjust this section in case modifications take place with text nodes or break elements -->
     
     <xsl:variable name="out">
-        <xsl:copy-of select="$only-y"/>
+        <xsl:copy-of select="$sameAs"/>
     </xsl:variable>
     
     <xsl:template match="/">
@@ -1187,10 +1729,10 @@
         </xsl:if>
         <!-- breaks -->
         <xsl:if test="$inPb ne $outPb or $inCb ne $outCb or $inLb ne $outLb">
-            <xsl:message select="'ERROR: different amount of input and output pb/cb/lb: '"/>
+            <xsl:message select="'INFO: different amount of input and output pb/cb/lb - new lb(s) in abbr[@rend eq expan]: '"/>
             <xsl:message select="concat('Input pb: ', $inPb, ' | cb: ', $inCb, ' | lb: ', $inLb)"/>
             <xsl:message select="concat('Output pb: ', $outPb, ' | cb: ', $outCb, ' | lb: ', $outLb)"/>
-            <xsl:message terminate="yes"/>
+            <xsl:message terminate="no"/>
         </xsl:if>
         
         <!--
@@ -1200,8 +1742,8 @@
         e.g. (abbr: tãbiẽ => expan: tambien) is a complex case because it hast 2 characters to be expanded namely 'ã' in 'am' and 'ẽ' in 'en'.    
         -->
         <!-- Update last case variable in the following variables: Abbr and WrongExpansions-->
-        <xsl:variable name="Abbr" as="node()*" select="$only-y//tei:abbr[@rend eq 'abbr' and following-sibling::node()/self::tei:abbr[@rend eq 'expan' and matches(.,'[̃ ãāēẽõōũūꝓđ]+')]]"/>
-        <xsl:variable name="WrongExpansions" as="node()*" select="$only-y//tei:abbr[@rend eq 'choice']//tei:abbr[@rend eq 'expan' and matches(.,'[̃ ãāēẽõōũūꝓđ]+')]"/>
+        <xsl:variable name="Abbr" as="node()*" select="$sameAs//tei:abbr[@rend eq 'abbr' and following-sibling::node()/self::tei:abbr[@rend eq 'expan' and matches(.,'[̃ ãāēẽõōũūꝓđ]+')]]"/>
+        <xsl:variable name="WrongExpansions" as="node()*" select="$sameAs//tei:abbr[@rend eq 'choice']//tei:abbr[@rend eq 'expan' and matches(.,'[̃ ãāēẽõōũūꝓđ]+')]"/>
         <xsl:choose>
             <xsl:when test="count($WrongExpansions) gt 1">
                 <!--<xsl:for-each select="$WrongExpansions/text()">-->
@@ -1216,13 +1758,13 @@
                 <xsl:message terminate="no"/>
             </xsl:when>
             <!--Abbr with no special character, check this out.-->
-            <xsl:when test="$only-y//tei:abbr[@rend eq 'abbr' and not(matches(.,'[ãẽõũꝓq̃]+'))]">
-                <xsl:message select="concat('An abbr without special character detected: ',string-join(distinct-values(tei:abbr[@rend eq 'abbr' and not(matches(.,'[ãẽõũꝓq̃]+'))]),' | '))"/>
+            <xsl:when test="$sameAs//tei:abbr[@rend eq 'abbr' and not(matches(.,'[⁊ãẽõũꝓq̃]+'))]">
+                <xsl:message select="concat('An abbr without special character detected: ',string-join(distinct-values(tei:abbr[@rend eq 'abbr' and not(matches(.,'[⁊ãẽõũꝓq̃]+'))]),' | '))"/>
                 <xsl:message terminate="no"/>
             </xsl:when>
             <xsl:otherwise>
                 <!-- Update last case variable in the following variable: Expansions-->
-                <xsl:variable name="Expansions" as="xs:integer" select="count($only-y//tei:abbr[@rend eq 'choice']//tei:abbr[@rend eq 'expan'])"/>
+                <xsl:variable name="Expansions" as="xs:integer" select="count($sameAs//tei:abbr[@rend eq 'choice']//tei:abbr[@rend eq 'expan'])"/>
                 <xsl:message select="concat('INFO: added ', xs:string($Expansions), ' with regex-based (word structure) abbr. expansion.')"/>
                 <xsl:message select="'INFO: quality check successfull.'"/>
             </xsl:otherwise>
