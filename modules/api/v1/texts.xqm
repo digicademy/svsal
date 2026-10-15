@@ -95,6 +95,9 @@ function textsv1:textsResource1($rid, $format, $mode, $q, $lang, $viewer, $frag,
     let $log := if ($config:debug = ('info', 'trace')) then 
                     util:log('info', '[API] Request: id: "v1/texts/' || $rid || '"; remote_ip: ' || $remote_ip[1] || '; format: "' || $format || '"; accept: "' || string-join($accept, ', ') || '".')
                 else ()
+    let $dbg := if ($config:debug = ('trace')) then 
+                    console:log('[API] Request: id: "v1/texts/' || $rid || '"; remote_ip: ' || $remote_ip[1] || '; format: "' || $format || '"; accept: "' || string-join($accept, ', ') || '".')
+                else ()
     let $format := if ($format) then $format else api:getFormatFromContentTypes($accept, 'text/html')
     return
         switch($format)
@@ -104,7 +107,8 @@ function textsv1:textsResource1($rid, $format, $mode, $q, $lang, $viewer, $frag,
             case 'jpg' return textsv1:JPGredirect($rid)
             case 'rdf' return textsv1:RDFdeliverDoc($rid)
             case 'tei' return textsv1:TEIdeliverDoc($rid, $mode)
-            case 'txt' return textsv1:TXTdeliverDoc($rid, $mode)
+            (: 2026-10-13 Disabled Text API due to excessive load. AW :)
+            case 'txt' return () (: textsv1:TXTdeliverDoc($rid, $mode) :)
             case 'stats' return textsv1:STATSdeliverDoc($rid)
             default return 
                 textsv1:HTMLdeliverDoc($rid, $mode, $q, $lang, $viewer, $frag, $canvas, $host)
