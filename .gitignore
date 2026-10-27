@@ -19,3 +19,4 @@ yarn-error.log*
 /dist
 *-key.pem
 apache-any23-service-2.3.war
+docker/dockerfiles/svsal-exist/exist_mount
