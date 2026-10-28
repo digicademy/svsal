@@ -21,3 +21,4 @@ dockerfiles/any23/bak/**
 dockerfiles/caddy/bak/**
 dockerfiles/sphinxsearch/bak/**
 dockerfiles/svsal-exist/bak/**
+*.dist.xml
