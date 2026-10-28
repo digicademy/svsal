@@ -24,7 +24,7 @@
   <forward pattern="/(rest|servlet)/" servlet="EXistServlet"/>
 
   <!-- WebDAV interface -->
-  <forward pattern="/webdav/" servlet="milton"/>
+  <!-- forward pattern="/webdav/" servlet="milton"/ -->
 
   <!-- RESTXQ -->
   <forward pattern="/restxq/" servlet="RestXqServlet"/>
@@ -41,16 +41,21 @@
       ++ database. URLs starting with /db are handled
       ++ by the REST servlet.
   -->
-  <root pattern="/db.*"        path="xmldb:exist:///db"/>
-  <root pattern=".*"           path="xmldb:exist:///db/apps"/>
+  <!-- root pattern="/apps/library" path="xmldb:exist:///db/apps/tamboti"/ -->
+  <!-- root pattern="/apps/tamboti" path="xmldb:exist:///db/apps/tamboti"/ -->
+  <!-- root pattern="/solutions" path="xmldb:exist:///db/solutions/"/ -->
+  <!-- root pattern="/db.*"        path="xmldb:exist:///db"/ -->
 
+    <root pattern="/apps" path="xmldb:exist:///db/apps"/>
+    
   <!--
     ++ To redirect requests based on the server name (i.e. www.example.com)
   	++ to a specific collection within the database, comment out the following
   	++ root line and uncomment the block below with the server-name
   	++ attribute.
     -->
-  <!-- root pattern=".*" path="/"/ -->
+    <!-- root pattern=".*"           path="xmldb:exist:///db/apps"/ -->
+    <root pattern=".*" path="/"/>
   <!--
     <root server-name="site1.example.com" pattern="/*" path="xmldb:exist:///db/org/site1/"/>
     <root server-name="site2.example.com" pattern="/*" path="xmldb:exist:///db/org/site2/"/>
@@ -64,10 +69,8 @@
       ++ is stored in the database. However, the contents of the /webapp directory
       ++ should still be accessible with a /fs prefix in the path.
   -->
-  <!--
-    <root pattern="/fs" path="/"/>
-    <root pattern=".*" path="xmldb:exist:///db/www"/>
-  -->
+  <!-- root pattern="/fs" path="/"/>
+    <root pattern=".*" path="xmldb:exist:///db/www"/ -->
 
   <!--
       ++ Order is important here: the forward rule for XQuery resources has

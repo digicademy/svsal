@@ -15,9 +15,30 @@
 
    <!-- ==================== Servlet definitions ======================== -->
 
-   <!--
-        RpcServlet provides XML-RPC access.
+    <!--
+	 | ScaleImageJAI servlet: scale images on the fly and cache
+	 | the output. Commented out by default.
+	 +-->
+    <!--
+    <servlet>
+        <servlet-name>ScaleImageJAI</servlet-name>
+        <servlet-class>org.exist.http.servlets.ScaleImageJAI</servlet-class>
+
+        <init-param>
+            <param-name>base</param-name>
+            <param-value>xmldb:exist:///db</param-value>
+        </init-param>
+
+        <init-param>
+            <param-name>output-dir</param-name>
+            <param-value>/home/wolf/images</param-value>
+        </init-param>
+    </servlet>
     -->
+
+    <!--
+        RpcServlet provides XML-RPC access.
+   -->
    <servlet>
       <servlet-name>org.exist.xmlrpc.RpcServlet</servlet-name>
       <servlet-class>org.exist.xmlrpc.RpcServlet</servlet-class>
@@ -34,7 +55,7 @@
             is prohibited from accessing the XML-RPC API.
             -->
          <param-name>useDefaultUser</param-name>
-         <param-value>tue</param-value>
+         <param-value>true</param-value>
       </init-param>
       <init-param>
             <!--
@@ -55,7 +76,7 @@
         EXistServlet is a helper servlet that is used to ensure that
         eXist is running in the background.
         Set the start-parameter to true and load-on-startup a low value e.g. 2.
-    -->
+   -->
    <servlet>
       <servlet-name>EXistServlet</servlet-name>
       <servlet-class>org.exist.http.servlets.EXistServlet</servlet-class>
@@ -92,7 +113,7 @@
       -->
       <init-param>
          <param-name>hidden</param-name>
-         <param-value>false</param-value>
+         <param-value>true</param-value>
       </init-param>
       <!--
             Determines who is allowed to submit XQuery to the servlet
@@ -114,7 +135,7 @@
         -->
       <init-param>
          <param-name>xquery-submission</param-name>
-         <param-value>enabled</param-value>
+         <param-value>authenticated</param-value>
       </init-param>
       <!--
             Determines who is allowed to submit XUpdate to the servlet
@@ -135,7 +156,7 @@
         -->
       <init-param>
          <param-name>xupdate-submission</param-name>
-         <param-value>enabled</param-value>
+         <param-value>disabled</param-value>
       </init-param>
       <load-on-startup>2</load-on-startup>
    </servlet>
@@ -143,7 +164,7 @@
    <!--
         JMXservlet is a servlet to monitor the database. It returns status information 
         for the database based on the JMX interface.
-    -->
+   -->
    <servlet>
       <servlet-name>JMXServlet</servlet-name>
       <servlet-class>org.exist.management.client.JMXServlet</servlet-class>
@@ -152,6 +173,7 @@
    <!--
         Milton provides the WebDAV interface
    -->
+   <!--
    <servlet>
       <servlet-name>milton</servlet-name>
       <servlet-class>org.exist.webdav.MiltonWebDAVServlet</servlet-class>
@@ -159,31 +181,30 @@
          <param-name>resource.factory.class</param-name>
          <param-value>org.exist.webdav.ExistResourceFactory</param-value>
       </init-param>
-      <!--
+      <!-/-
                 Some WebDAV clients send a "Expect: 100-continue" header before 
                 uploading body data. Servlet containers (like tomcat and jetty) handle 
                 the header in a wrong way, making a client not work OK.
                 Set value to TRUE to restore old behavior (FALSE is the new default 
                 value, hardcoded in MiltonWebDAVServlet).       
-            -->
-      <!-- <init-param>
+      -/->
+      <!-/- init-param>
          <param-name>enable.expect.continue</param-name>
          <param-value>false</param-value>
-      </init-param>
-      -->    
-      <!--
+      </init-param -/->
+      <!-/-
                 Uncomment to enable debugging
-            -->
-      <!-- <init-param>
+      -/->
+      <!-/- <init-param>
          <param-name>filter_0</param-name>
          <param-value>com.bradmcevoy.http.DebugFilter</param-value>
-        </init-param>
-      -->
+      </init-param -/->
    </servlet>
+   -->
 
    <!--
         XQueryServlet generates HTML from an XQuery file.
-    -->
+   -->
    <servlet>
       <servlet-name>XQueryServlet</servlet-name>
       <servlet-class>org.exist.http.servlets.XQueryServlet</servlet-class>
@@ -211,12 +232,12 @@
 
    <!--
         XQueryURLRewrite, servlet filter for URL rewriting and redirection.
-    -->
+   -->
    <servlet>
       <servlet-name>XQueryURLRewrite</servlet-name>
       <servlet-class>org.exist.http.urlrewrite.XQueryURLRewrite</servlet-class>
       <!-- Defines the location of the controller-config.xml file,
-             which defines the root mappings. -->
+           which defines the root mappings. -->
       <init-param>
          <param-name>config</param-name>
          <param-value>WEB-INF/controller-config.xml</param-value>
@@ -244,7 +265,7 @@
 
    <!--
         XSLTServlet applies an XSLT transformation to its input stream.
-    -->
+   -->
    <servlet>
       <servlet-name>XSLTServlet</servlet-name>
       <servlet-class>org.exist.http.servlets.XSLTServlet</servlet-class>
@@ -252,7 +273,7 @@
 
    <!--
         EXQuery - RESTXQ
-    -->
+   -->
    <servlet>
       <servlet-name>RestXqServlet</servlet-name>
       <servlet-class>org.exist.extensions.exquery.restxq.impl.RestXqServlet</servlet-class>
@@ -260,7 +281,7 @@
 
    <!--
         Webstart servlet, provides access to the java client.
-    -->
+   -->
    <servlet>
       <servlet-name>jnlp</servlet-name>
       <servlet-class>org.exist.webstart.JnlpServlet</servlet-class>

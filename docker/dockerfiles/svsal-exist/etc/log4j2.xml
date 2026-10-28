@@ -146,6 +146,24 @@
          <DefaultRolloverStrategy max="${rollover.max}"/>
          <PatternLayout pattern="${exist.file.pattern}"/>
       </RollingRandomAccessFile>
+   <RollingRandomAccessFile name="exist.api"
+                              filePattern="${logs}/api.${rollover.file.pattern}.log.gz"
+                              fileName="${logs}/api.log">
+         <Policies>
+            <SizeBasedTriggeringPolicy size="${rollover.max.size}"/>
+         </Policies>
+         <DefaultRolloverStrategy max="${rollover.max}"/>
+         <PatternLayout pattern="${exist.file.pattern}"/>
+      </RollingRandomAccessFile>
+      <RollingRandomAccessFile name="exist.scheduler.stats"
+                              filePattern="${logs}/scheduler-stats.${rollover.file.pattern}.log.gz"
+                              fileName="${logs}/scheduler-stats.log">
+         <Policies>
+            <SizeBasedTriggeringPolicy size="${rollover.max.size}"/>
+         </Policies>
+         <DefaultRolloverStrategy max="${rollover.max}"/>
+         <PatternLayout pattern="${exist.file.pattern}"/>
+      </RollingRandomAccessFile>
    </Appenders>
    <Loggers>
       <Logger name="org.exist.storage.lock.LockTable"
@@ -248,9 +266,47 @@
               additivity="false" level="warn">
           <AppenderRef ref="exist.core"/>
       </Logger>
-      <Root level="info">
+      <!-- Root level="info">
          <AppenderRef ref="exist.core"/>
          <AppenderRef ref="STDOUT"/>
+      </Root -->
+   <Root level="info">
+         <!-- Route [API] messages exclusively to api.log -->
+         <AppenderRef ref="exist.api">
+            <Filters>
+               <RegexFilter regex=".*\[API\].*" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+         </AppenderRef>
+
+         <!-- Route quartz-worker thread messages exclusively to scheduler-stats.log -->
+         <AppenderRef ref="exist.scheduler.stats">
+            <Filters>
+               <ThreadNameFilter regexMatch="true"
+                                 regex="db\.exist\.scheduler\.quartz-worker-.*"
+                                 onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+         </AppenderRef>
+
+         <!-- exist.core gets everything EXCEPT [API] and quartz-worker messages -->
+         <AppenderRef ref="exist.core">
+            <Filters>
+               <RegexFilter regex=".*\[API\].*" onMatch="DENY" onMismatch="NEUTRAL"/>
+               <ThreadNameFilter regexMatch="true"
+                                 regex="db\.exist\.scheduler\.quartz-worker-.*"
+                                 onMatch="DENY" onMismatch="ACCEPT"/>
+            </Filters>
+         </AppenderRef>
+
+         <!-- Same exclusion logic for STDOUT -->
+         <AppenderRef ref="STDOUT">
+            <Filters>
+               <RegexFilter regex=".*\[API\].*" onMatch="DENY" onMismatch="NEUTRAL"/>
+               <ThreadNameFilter regexMatch="true"
+                                 regex="db\.exist\.scheduler\.quartz-worker-.*"
+                                 onMatch="DENY" onMismatch="ACCEPT"/>
+            </Filters>
+         </AppenderRef>
       </Root>
+
    </Loggers>
 </Configuration>
