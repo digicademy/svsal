@@ -21,6 +21,12 @@
 # whether they make sense depends on the environment the container is being run in:
 #
 # -e JAVA_TOOL_OPTIONS='-Xmx10g -Xms10g -XX:MaxRAMPercentage=75.0'
+#
+#
+# If all is well, login to container registry (with podman/buildah login ghcr.io) and upload with
+#   buildah push svsal-caddy ghcr.io/digicademy/svsal/svsal-exist:3.0rc4
+# or
+#   podman push ghcr.io/digicademy/svsal/svsal-exist:3.0rc4
 
 ARG EXIST_VERSION=6.4.0
 
