@@ -142,7 +142,7 @@
 					</fo:block>
 					<fo:block font-size="14pt" text-align="center">
 						<xsl:apply-templates
-							select="//tei:publicationStmt//tei:idno[@xml:id = 'urlid']"/>
+							select="concat('&lt;',//tei:publicationStmt//tei:idno[@xml:id = 'urlid'],'&gt;')"/>
 					</fo:block>
 				</fo:flow>
 			</fo:page-sequence>
@@ -716,7 +716,18 @@
 			<xsl:text> </xsl:text>
 		</fo:inline>
 	</xsl:template>
-
+	
+	<!--Special template for tests with W0063 Siete Partidas -->
+	<xsl:template match="tei:ref[@target][ancestor::*[@type =('preface','partida','gloss')]]">
+		<xsl:variable name="input" select="translate(@target, '#', '')"/>
+		<xsl:variable name="div_id" select="@xml:id"/>
+		<fo:inline font-weight="bold" font-size="12pt" space-before="0.2cm" space-after="0.2cm" id="{./@xml:id}">
+			<fo:basic-link internal-destination="{$input}" color="#0a0c75">
+				<xsl:apply-templates/>
+			</fo:basic-link>
+			<xsl:text> </xsl:text>
+		</fo:inline>
+	</xsl:template>
 
 	<!--   TEMPLATES FOR LINE, PAGE, AND COLUMN BREAKS -->
 
@@ -866,203 +877,224 @@
 	<img:images>
 		<images>
 			<image xml:id="W0001_Vol01" citation="Avendaño, Thesaurus Indicus, Vol. 1 (2019 [1668])">
-				<source>https://facs.salamanca.school/W0001/A/W0001-A-0006.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0001/A/W0001-A-0006.jpg</source>
 			</image>
 			<image xml:id="W0001_Vol02" citation="Avendaño, Thesaurus Indicus, Vol. 2 (2019 [1668])">
-				<source>https://facs.salamanca.school/W0001/B/W0001-B-0004.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0001/B/W0001-B-0004.jpg</source>
 			</image>
 			<image xml:id="W0001_Vol03" citation="Avendaño, Thesaurus Indicus, Vol. 3 (2020 [1675])">
-				<source>https://facs.salamanca.school/W0001/C/W0001-C-0004.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0001/C/W0001-C-0004.jpg</source>
 			</image>
 			<image xml:id="W0001_Vol04" citation="Avendaño, Thesaurus Indicus, Vol. 4 (2020 [1675])">
-				<source>https://facs.salamanca.school/W0001/D/W0001-D-0004.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0001/D/W0001-D-0004.jpg</source>
 			</image>
 			<image xml:id="W0001_Vol05" citation="Avendaño, Thesaurus Indicus, Vol. 5 (2020 [1675])">
-				<source>https://facs.salamanca.school/W0001/E/W0001-E-0004.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0001/E/W0001-E-0004.jpg</source>
 			</image>
 			<image xml:id="W0001_Vol06" citation="Avendaño, Thesaurus Indicus, Vol. 6 (2021 [1686])">
-				<source>https://facs.salamanca.school/W0001/F/W0001-F-0004.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0001/F/W0001-F-0004.jpg</source>
 			</image>
 			<image xml:id="W0002"
 				citation="Azpilcueta, Manual de Confessores y Penitentes (2019 [1556])">
-				<source>https://facs.salamanca.school/W0002/W0002-0004.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0002/W0002-0004.jpg</source>
 			</image>
 			<image xml:id="W0003" citation="Báñez, De Iure et Iustitia Decisiones (2019 [1594])">
-				<source>https://facs.salamanca.school/W0003/W0003-0004.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0003/W0003-0004.jpg</source>
 			</image>
 			<image xml:id="W0004" citation="Castillo, Tratado de Cuentas (2018 [1522])">
-				<source>https://facs.salamanca.school/W0004/W0004-0005.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0004/W0004-0005.jpg</source>
 			</image>
-			<image xml:id="W0005_Vol02" citation="_X_X_">
-				<source>https://facs.salamanca.school/W0005/B/W0005-B-0001.jpg</source>
+            <image xml:id="W0005_Vol01" citation="CASTILLO DE BOBADILLA, Política para Corregidores (2025 [1597])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0005/A/W0005-A-0001.jpg</source>
+			</image>
+			<image xml:id="W0005_Vol02" citation="CASTILLO DE BOBADILLA, Política para Corregidores (2025 [1597])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0005/B/W0005-B-0001.jpg</source>
 			</image>
 			<image xml:id="W0006_Vol01"
 				citation="Covarrubias y Leyva, Opera Omnia, Vol. 1 (2021 [1573])">
-				<source>https://facs.salamanca.school/W0006/A/W0006-A-0004.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0006/A/W0006-A-0004.jpg</source>
 			</image>
 			<image xml:id="W0006_Vol02"
 				citation="Covarrubias y Leyva, Opera Omnia, Vol. 2 (2021 [1573])">
-				<source>https://facs.salamanca.school/W0006/B/W0006-B-0001.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0006/B/W0006-B-0001.jpg</source>
 			</image>
 			<image xml:id="W0006_Vol03"
 				citation="Covarrubias y Leyva, Opera Omnia, Vol. 3 (2021 [1571])">
-				<source>https://facs.salamanca.school/W0006/C/W0006-C-0001.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0006/C/W0006-C-0001.jpg</source>
 			</image>
 			<image xml:id="W0007" citation="Mercado, Tratos y Contratos (2019 [1569])">
-				<source>https://facs.salamanca.school/W0007/W0007-0007.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0007/W0007-0007.jpg</source>
 			</image>
 			<image xml:id="W0008_Vol01" citation="_X_X_">
-				<source>https://facs.salamanca.school/W0008/A/W0008-A-0003.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0008/A/W0008-A-0003.jpg</source>
 			</image>
 			<image xml:id="W0008_Vol02" citation="_X_X_">
-				<source>https://facs.salamanca.school/W0008/B/W0008-B-0004.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0008/B/W0008-B-0004.jpg</source>
 			</image>
 			<image xml:id="W0008_Vol03" citation="_X_X_">
-				<source>https://facs.salamanca.school/W0008/C/W0008-C-0004.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0008/C/W0008-C-0004.jpg</source>
+			</image>
+            <image xml:id="W0008_Vol04" citation="_X_X_">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0008/D/W0008-D-0001.jpg</source>
 			</image>
 			<image xml:id="W0008_Vol05" citation="_X_X_">
-				<source>https://facs.salamanca.school/W0008/E/W0008-E-0004.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0008/E/W0008-E-0004.jpg</source>
+			</image>
+			<image xml:id="W0008_Vol06" citation="_X_X_">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0008/F/W0008-F-0001.jpg</source>
+			</image>
+			<image xml:id="W0008_Vol07" citation="_X_X_">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0008/G/W0008-G-0001.jpg</source>
 			</image>
 			<image xml:id="W0010" citation="Solórzano Pereira, Politica Indiana (2019 [1648])">
-				<source>https://facs.salamanca.school/W0010/W0010-0001.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0010/W0010-0001.jpg</source>
 			</image>
 			<image xml:id="W0011" citation="Soto, De Iustitia et Iure (2020 [1553])">
-				<source>https://facs.salamanca.school/W0011/W0011-0001.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0011/W0011-0001.jpg</source>
 			</image>
 			<image xml:id="W0012" citation="_X_X_">
-				<source>https://facs.salamanca.school/W0012/W0012-0000.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0012/W0012-0000.jpg</source>
 			</image>
 			<image xml:id="W0013_Vol01"
 				citation="Vitoria, Relectiones Theologicae XII, Vol. 1 (2018 [1557])">
-				<source>https://facs.salamanca.school/W0013/A/W0013-A-0004.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0013/A/W0013-A-0004.jpg</source>
 			</image>
 			<image xml:id="W0013_Vol02"
 				citation="Vitoria, Relectiones Theologicae XII, Vol. 2 (2018 [1557])">
-				<source>https://facs.salamanca.school/W0013/B/W0013-B-0492.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0013/B/W0013-B-0492.jpg</source>
 			</image>
 			<image xml:id="W0014" citation="Vitoria, Summa Sacramentorum (2018 [1561])">
-				<source>https://facs.salamanca.school/W0014/W0014-0006.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0014/W0014-0006.jpg</source>
 			</image>
 			<image xml:id="W0015" citation="Vitoria, Confessionario (2018 [1562])">
-				<source>https://facs.salamanca.school/W0015/W0015-0000.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0015/W0015-0000.jpg</source>
 			</image>
 			<image xml:id="W0017" citation="Albornoz, Arte de los contractos (2020 [1573])">
-				<source>https://facs.salamanca.school/W0017/W0017-0005.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0017/W0017-0005.jpg</source>
 			</image>
 			<image xml:id="W0018" citation="Alcalá, Tractado de los préstamos (2021 [1543])">
-				<source>https://facs.salamanca.school/W0018/W0018-0001.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0018/W0018-0001.jpg</source>
 			</image>
 			<image xml:id="W0030" citation="Cano, Relectio de Poenitentia (2019 [1558])">
-				<source>https://facs.salamanca.school/W0030/W0030-0001.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0030/W0030-0001.jpg</source>
 			</image>
 			<image xml:id="W0033"
 				citation="Carrasco del Saz, Tractatus de casibus curiae. (2020 [1630])">
-				<source>https://facs.salamanca.school/W0033/W0033-0007.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0033/W0033-0007.jpg</source>
 			</image>
 			<image xml:id="W0034" citation="Las Casas, Treinta Proposiciones (2018 [1552])">
-				<source>https://facs.salamanca.school/W0034/W0034-0001.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0034/W0034-0001.jpg</source>
 			</image>
 			<image xml:id="W0037_Vol01"
 				citation="Castillo Sotomayor, Opera omnia, sive quotidianarum controversiarum iuris, Vol. 1 (2022 [1658])">
-				<source>https://facs.salamanca.school/W0037/A/W0037-A-0000.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0037/A/W0037-A-0000.jpg</source>
 			</image>
 			<image xml:id="W0037_Vol02"
 				citation="Castillo Sotomayor, Opera omnia, sive quotidianarum controversiarum iuris, Vol. 2 (2022 [1658])">
-				<source>https://facs.salamanca.school/W0037/B/W0037-B-0001.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0037/B/W0037-B-0001.jpg</source>
 			</image>
 			<image xml:id="W0037_Vol03"
 				citation="Castillo Sotomayor, Opera omnia, sive quotidianarum controversiarum iuris, Vol. 3 (2022 [1658])">
-				<source>https://facs.salamanca.school/W0037/C/W0037-C-0001.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0037/C/W0037-C-0001.jpg</source>
 			</image>
 			<image xml:id="W0037_Vol04"
 				citation="Castillo Sotomayor, Opera omnia, sive quotidianarum controversiarum iuris, Vol. 4 (2023 [1658])">
-				<source>https://facs.salamanca.school/W0037/D/W0037-D-0001.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0037/D/W0037-D-0001.jpg</source>
 			</image>
 			<image xml:id="W0037_Vol05" citation="Castillo Sotomayor, Opera omnia, sive quotidianarum controversiarum iuris, Vol. 5 (2023 [1658])">
-				<source>https://facs.salamanca.school/W0037/E/W0037-E-0001.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0037/E/W0037-E-0001.jpg</source>
 			</image>
 			<image xml:id="W0039" citation="_X_X_">
-				<source>https://facs.salamanca.school/W0039/W0039-0002.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0039/W0039-0002.jpg</source>
 			</image>
 			<image xml:id="W0041"
 				citation="Díaz de Luco, Practica criminalis canonica (2021 [1554])">
-				<source>https://facs.salamanca.school/W0041/W0041-0001.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0041/W0041-0001.jpg</source>
 			</image>
 			<image xml:id="W0043_Vol01" citation="_X_X_">
-				<source>https://facs.salamanca.school/W0043/A/W0043-A-0005.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0043/A/W0043-A-0005.jpg</source>
 			</image>
 			<image xml:id="W0043_Vol02" citation="_X_X_">
-				<source>https://facs.salamanca.school/W0043/B/W0043-B-0001.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0043/B/W0043-B-0001.jpg</source>
 			</image>
 			<image xml:id="W0043_Vol03" citation="_X_X_">
-				<source>https://facs.salamanca.school/W0043/C/W0043-C-0003.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0043/C/W0043-C-0003.jpg</source>
 			</image>
 			<image xml:id="W0043_Vol04" citation="_X_X_">
-				<source>https://facs.salamanca.school/W0043/D/W0043-D-0001.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0043/D/W0043-D-0001.jpg</source>
 			</image>
 			<image xml:id="W0043_Vol05" citation="_X_X_">
-				<source>https://facs.salamanca.school/W0043/E/W0043-E-0001.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0043/E/W0043-E-0001.jpg</source>
 			</image>
 			<image xml:id="W0043_Vol06" citation="_X_X_">
-				<source>https://facs.salamanca.school/W0043/F/W0043-F-0001.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0043/F/W0043-F-0001.jpg</source>
 			</image>
 			<image xml:id="W0043_Vol07" citation="_X_X_">
-				<source>https://facs.salamanca.school/W0043/G/W0043-G-0003.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0043/G/W0043-G-0003.jpg</source>
+			</image>
+			<image xml:id="W0043_Vol08" citation="_X_X_">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0043/H/W0043-H-0001.jpg</source>
+			</image>
+            <image xml:id="W0043_Vol09" citation="_X_X_">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0043/I/W0043-I-0001.jpg</source>
 			</image>			
 			<image xml:id="W0046"
 				citation="Freitas, De Iusto Imperio Lusitanorum Asiatico (2020 [1625])">
-				<source>https://facs.salamanca.school/W0046/W0046-0005.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0046/W0046-0005.jpg</source>
 			</image>
 			<image xml:id="W0061"
 				citation="León Pinelo, Confirmaciones Reales de Encomiendas (2021 [1630])">
-				<source>https://facs.salamanca.school/W0061/W0061-0005.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0061/W0061-0005.jpg</source>
+			</image>
+			<image xml:id="W0063_Vol01" citation="_X_X_">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0063/A/W0063-A-0001.jpg</source>
 			</image>
 			<image xml:id="W0073" citation="_X_X_">
-				<source>https://facs.salamanca.school/W0073/W0073-0002.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0073/W0073-0002.jpg</source>
 			</image>
 			<image xml:id="W0074" citation="_X_X_">
-				<source>https://facs.salamanca.school/W0074/W0074-0007.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0074/W0074-0007.jpg</source>
 			</image>
 			<image xml:id="W0076" citation="XXX">
-				<source>https://facs.salamanca.school/W0076/W0076-0004.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0076/W0076-0004.jpg</source>
 			</image>
 			<image xml:id="W0078" citation="Nebrija, Lexicon Iuris Civilis (2020 [1537])">
-				<source>https://facs.salamanca.school/W0078/W0078-0005.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0078/W0078-0005.jpg</source>
 			</image>
 			<image xml:id="W0083" citation="Pedraza, Summa de casos de consciencia (2021 [1568])">
-				<source>https://facs.salamanca.school/W0083/W0083-0002.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0083/W0083-0002.jpg</source>
 			</image>
 			<image xml:id="W0089" citation="_X_X_">
-				<source>https://facs.salamanca.school/W0089/W0089-0002.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0089/W0089-0002.jpg</source>
 			</image>
-			<image xml:id="W0092" citation="_X_X_">
-				<source>https://facs.salamanca.school/W0092/W0092-0005.jpg</source>
+			<image xml:id="W0092" citation="SALAS, Tractatus De Legibus (2024 [1611]), in: The School of Salamanca. A Digital Collection of Sources &lt;https://id.salamanca.school/texts/W0092&gt;">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0092/W0092-0005.jpg</source>
 			</image>
 			<image xml:id="W0095"
 				citation="Sepúlveda, Apologia pro libro de iustis belli causis (2020 [1550])">
-				<source>https://facs.salamanca.school/W0095/W0095-0001.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0095/W0095-0001.jpg</source>
 			</image>
 			<image xml:id="W0096_Vol01"
 				citation="Solórzano Pereira, De Indiarum Iure, sive de Iusta Indiarum Occidentalium Inquisitione, Acquisitione, et Retentiones Tribus Libris Comprehensum. 2 vols. (2021 [1629])">
-				<source>https://facs.salamanca.school/W0096/A/W0096-A-0007.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0096/A/W0096-A-0007.jpg</source>
 			</image>
 			<image xml:id="W0103"
 				citation="Vacca, Expositiones locorum obscuriorum et Paratitulorum in Pandectas. (2020 [1554])">
-				<source>https://facs.salamanca.school/W0103/W0103-0001.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0103/W0103-0001.jpg</source>
 			</image>
 			<image xml:id="W0106" citation="Menchaca, Controversiarum Libri Tres. (2022 [1572])">
-				<source>https://facs.salamanca.school/W0106/W0106-0005.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0106/W0106-0005.jpg</source>
 			</image>
             <image xml:id="W0111"
 				citation="Villalón, >Antinomia iuris regni Hispaniarum ac ciuilis, in qua practica forensium causarum versatur, ac Aerarium commune opinionum communium iuxta ordinem alphabeti. (2023 [1569])">
-				<source>https://facs.salamanca.school/W0111/W0111-0002.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0111/W0111-0002.jpg</source>
 			</image>
 			<image xml:id="W0113"
 				citation="Villalón, Provechoso tratado de cambios y contrataciones de mercaderes y reprovación de usura (2021 [1541])">
-				<source>https://facs.salamanca.school/W0113/W0113-0005.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0113/W0113-0005.jpg</source>
 			</image>
 			<image xml:id="W0114" citation="_X_X_">
-				<source>https://facs.salamanca.school/W0114/W0114-0005.jpg</source>
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0114/W0114-0005.jpg</source>
 			</image>
 		</images>
 	</img:images>
