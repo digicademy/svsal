@@ -1,15 +1,15 @@
 #!/bin/sh
 
 # Copy files back from temporary directory if not already present
-
-echo "Copying config files to /etc/caddy/ if necessary"
-cp -rn /tmp/caddy/etc/*    /etc/caddy
-
-echo "Copying certificate to /root/certs/ if necessary"
-cp -rn /tmp/caddy/certs/*  /root/certs
-
-echo "Copying website files to /var/data/caddy/site/ if necessary"
-cp -rn /tmp/caddy/site/*   /var/data/caddy/site
+# 
+# echo "Copying config files to /etc/caddy/ if necessary"
+# cp -rn /tmp/caddy/etc/*    /etc/caddy
+# 
+# echo "Copying certificate to /root/certs/ if necessary"
+# cp -rn /tmp/caddy/certs/*  /root/certs
+# 
+# echo "Copying website files to /var/data/caddy/site/ if necessary"
+# cp -rn /tmp/caddy/site/*   /var/data/caddy/site
 
 
 # Run caddy either in development or production mode
