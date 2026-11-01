@@ -19,10 +19,12 @@
 #     or change the MODE to "prod" and mount the production config:
 #       -e MODE=prod
 #
+# Put the wildcard dummy certs in a directory that will be mounted to /root/certs in the container,
+# for example ./caddy_mount/certs, then mount with -v ./caddy_mount/certs:/root/certs:ro
+#
 # This is the last working podman run command:
 #
-#   podman run -e MODE=devel --rm -it -p 8888:80 -p 8444:443 -v ./caddy/etc:/etc/caddy -v ./caddy/log:/var/log/caddy -v ./caddy/certs:/root/certs -v ./existexport:/var/data/caddy/existdb/export/data:ro -v ./website:/var/data/caddy/site --name caddy ghcr.io/digicademy/svsal/svsal-caddy:2.11.7rc1
-#
+#  podman run -e MODE=devel --rm -it -p 8080:80 -p 8443:443 -v ./caddy_mount/etc:/etc/caddy -v ./caddy_mount/logs/:/var/log/caddy -v ./caddy_mount/certs:/root/certs:ro -v ./caddy_mount/site:/var/data/caddy/site -v ../svsal-exist/exist_mount/export:/var/data/existdb/data/export:ro --name caddy ghcr.io/digicademy/svsal/svsal-caddy:2.11.7rc1
 #
 # If all is well, login to container registry (with podman/buildah login ghcr.io) and upload with
 #   buildah push svsal-caddy ghcr.io/digicademy/svsal/svsal-caddy:2.11.7rc1
@@ -39,7 +41,8 @@ ARG CADDY_VERSION
 
 RUN xcaddy build ${CADDY_VERSION} \
     --with github.com/mpilhlt/caddy-conneg \
-    --with github.com/caddyserver/replace-response
+    --with github.com/caddyserver/replace-response \
+    --with pkg.jsn.cam/caddy-defender
 
 
 
@@ -48,6 +51,7 @@ RUN xcaddy build ${CADDY_VERSION} \
 FROM caddy:${CADDY_VERSION}
 
 ARG ETC_DIR="/etc/caddy"
+ARG DEFAULTS_DIR="/opt/caddy/defaults"
 ARG CERT_DIR="/root/certs"
 ARG LOG_DIR="/var/log/caddy"
 ARG SITE_DIR="/var/data/caddy/site"
@@ -56,6 +60,8 @@ ARG SAL_DATA_DIR="/var/data/existdb/data/export"
 LABEL org.opencontainers.image.source https://github.com/digicademy/svsal
 LABEL org.opencontainers.image.description "The School of Salamanca. Caddy Webserver Application"
 LABEL org.opencontainers.image.licenses MIT
+
+WORKDIR /tmp
 
 # install curl and other tools
 RUN apk update && \
@@ -70,22 +76,21 @@ RUN mkdir -p ${ETC_DIR} && \
     mkdir -p ${CERT_DIR} && \
     mkdir -p ${LOG_DIR} && \
     mkdir -p -m 777 ${SITE_DIR} && \
-    mkdir -p -m 777 ${SAL_DATA_DIR}
-    # mkdir -p /tmp/caddy/etc && \
-    # mkdir -p /tmp/caddy/certs && \
-    # mkdir -p /tmp/caddy/site
+    mkdir -p -m 777 ${SAL_DATA_DIR} && \
+    mkdir -p /tmp/caddy/certs && \
+    mkdir -p /tmp/caddy/site
 
 # copy scripts, config and certificates
 COPY --chmod=775  scripts/*     /usr/bin/
-COPY etc/*                      ${ETC_DIR}/
 COPY certs/*                    ${CERT_DIR}/
 
-# Copy config to a second, temporary directory in case the etc dir get mounted and is rest to empty.
-# Then caddy.sh can copy the config from the temporary directory back to the etc dir.
-# COPY etc/*                      /tmp/caddy/etc/
-# COPY certs/*                    /tmp/caddy/certs/
+# Copy defaults to a safe location (NOT the mount point)
+COPY etc/*   ${DEFAULTS_DIR}/
+# Also put them in the actual etc dir so it works without any mount
+COPY etc/*   ${ETC_DIR}/
 
-
+# Copy certificates to the temporary caddy directory for use during container initialization.
+COPY certs/*                    /tmp/caddy/certs/
 
 # === Get Website files ===
 
@@ -94,30 +99,21 @@ ARG APP_REPO=https://github.com/digicademy/svsal-website.git
 ARG APP_TAG_OR_BRANCH=feature/embeddings
 
 # Copy the website files
-RUN cd $HOME && \
-  git clone ${APP_REPO} && \
+RUN git clone ${APP_REPO} && \
   cd ${APP_NAME} && \
   echo "Checking out ${APP_TAG_OR_BRANCH}..." && \
   git checkout ${APP_TAG_OR_BRANCH} && \
-  cp -r site/* ${CADDY_SITE_DIR} && \
-  cd $HOME && \
+  cp -r site/* ${SITE_DIR}/ && \
+  cp -r site/* /tmp/caddy/site && \
+  cd .. && \
   rm -rf ${APP_NAME}
-  # cp -r site/* /tmp/caddy/site && \
-
 
 
 # === Finalize ===
 
-VOLUME [ ${ETC_DIR}, \
-         ${CERT_DIR}, \
-         ${LOG_DIR}, \
-         ${SITE_DIR}, \
-         ${SAL_DATA_DIR} \
-       ]
-
 EXPOSE 80 443
 
-ENV MODE="devel"
-# or "prod"
+ENV MODE="prod"
+# or "devel"
 
 CMD ["sh", "-c", "/usr/bin/caddy.sh ${MODE}"]

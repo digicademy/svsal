@@ -2928,16 +2928,15 @@
 										{
 											"handle": [
 												{
-													"handler": "basic_auth",
-													"users": [
-														{
-															"name": "admin",
-															"password": "{sha256}8df49b5fd31d3c8a8b0ec547920ee3ac225c0c8396d14e752e0df6f14b932abc",
-															"roles": [
-																"admin"
-															]
+                          "handler": "authentication",
+                          "providers": {
+                            "http_basic": {
+                              "accounts": [{
+                                "username": "sal",
+                                "password": "$2a$14$o0t5MBdTBubnMpQtVJvDNeexFC2HQpEksGOxB7v0m1BFF6KGVZRN2"
+                              }]
 														}
-													]
+                          }
 												},
 												{
 													"handler": "subroute",

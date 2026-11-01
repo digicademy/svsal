@@ -1,10 +1,5 @@
 #!/bin/bash
 
-# change logging verbosity. Available values: DEBUG, INFO, WARN, ERROR, PANIC, and FATAL
-curl -X PATCH "http://localhost:2019/config/logging/logs/default/level" \
-	-H "Content-Type: application/json" \
-	-d '"INFO"'
-
 # load config
 curl -X POST "http://localhost:2019/load" \
 	-H "Content-Type: application/json" \
