@@ -191,10 +191,10 @@ RUN --mount=type=secret,id=setadminpw,target=/setadminpw,mode=0444 ["java", "org
 
 # === Finalize ===
 
-VOLUME [ /exist/data/export, \
-         /exist/logs, \
-         /exist/etc \
-       ]
+# VOLUME [ /exist/data/export, \
+#          /exist/logs, \
+#          /exist/etc \
+#        ]
 
 EXPOSE ${HTTP_PORT} ${HTTPS_PORT}
 
