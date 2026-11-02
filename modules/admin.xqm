@@ -2818,7 +2818,7 @@ declare function admin:createStats($wid as xs:string) {
                 let $start-time := util:system-time()
                 let $log  := if ($config:debug = ('info', 'trace')) then util:log('info', "[Admin] Stats: Creating stats for " || $w || " (" || xs:string($i) || "/" || xs:string(count($works)) || ") ...") else ()
             
-                let $workStats := stats:workStats($w)
+                let $workStats := stats:makeWorkStats($w)
         
                 let $log  := if ($config:debug = ('info', 'trace')) then console:log("[Admin] Stats: Saving/exporting ...") else ()
                 let $cleanCollectionStatus := admin:cleanCollection($w, "stats")
@@ -2855,7 +2855,7 @@ declare function admin:createStatsCorpus() {
     let $start-time := util:system-time()
     let $log  := if ($config:debug = ('info', 'trace')) then util:log('info', "[Admin] Stats: Creating corpus stats ...") else ()
 
-    let $full := stats:corpusStats()
+    let $full := stats:makeCorpusStats()
 
     let $log  := if ($config:debug = ('info', 'trace')) then console:log("[Admin] Stats: Saving/exporting ...") else ()
     let $params := 
