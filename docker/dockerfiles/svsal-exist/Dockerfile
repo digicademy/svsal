@@ -1,7 +1,7 @@
 # Dockerfile for Salamanca eXist-db Webapp
 #
 # Build image with
-# . .env && time TMPDIR="/mnt/c/tmp" buildah bud --no-cache --secret id=setadminpw,src=../setadminpw --build-arg SVN_USER=${SVN_USER} --build-arg SVN_PASS=${SVN_PASS} --build-arg EXIST_PASS=${EXIST_PASS} --build-arg EXIST_VERSION=${EXIST_VERSION} -t ghcr.io/digicademy/svsal/svsal-exist:3.0rc4 -f Dockerfile .
+#  . .env && time TMPDIR="/mnt/c/tmp" buildah bud --no-cache --secret id=setadminpw,src=./.setadminpw --build-arg SVN_USER=${SVN_USER} --build-arg SVN_PASS=${SVN_PASS} --build-arg EXIST_PASS=${EXIST_PASS} --build-arg EXIST_VERSION=${EXIST_VERSION} -t ghcr.io/digicademy/svsal/svsal-exist:3.0rc4 -f Dockerfile .
 #
 # Then run with
 #   buildah from svsal-exist
@@ -190,11 +190,6 @@ ENV JAVA_TOOL_OPTIONS="\
 RUN --mount=type=secret,id=setadminpw,target=/setadminpw,mode=0444 ["java", "org.exist.start.Main", "client", "--no-gui", "-l", "-u", "admin", "-P", "", "-F", "/setadminpw" ]
 
 # === Finalize ===
-
-# VOLUME [ /exist/data/export, \
-#          /exist/logs, \
-#          /exist/etc \
-#        ]
 
 EXPOSE ${HTTP_PORT} ${HTTPS_PORT}
 

@@ -79,10 +79,6 @@
 										{
 											"handle": [
 												{
-													"handler": "vars",
-													"root": "/opt/open-sphinxsearch/public"
-												},
-												{
 													"handler": "headers",
 													"response": {
 														"set": {
@@ -180,96 +176,7 @@
 													},
 													"upstreams": [
 														{
-															"dial": "sphinxsearch:80"
-														}
-													]
-												}
-											]
-										}
-									]
-								}
-							],
-							"terminal": true
-						},
-						{
-							"match": [
-								{
-									"host": [
-										"blog.salamanca.school"
-									]
-								}
-							],
-							"handle": [
-								{
-									"handler": "subroute",
-									"routes": [
-										{
-											"handle": [
-												{
-													"handler": "static_response",
-													"headers": {
-														"Location": [
-															"{http.request.orig_uri.path}/"
-														]
-													},
-													"status_code": 308
-												}
-											],
-											"match": [
-												{
-													"file": {
-														"try_files": [
-															"{http.request.uri.path}/index.php"
-														]
-													},
-													"not": [
-														{
-															"path": [
-																"*/"
-															]
-														}
-													]
-												}
-											]
-										},
-										{
-											"handle": [
-												{
-													"handler": "rewrite",
-													"uri": "{http.matchers.file.relative}"
-												}
-											],
-											"match": [
-												{
-													"file": {
-														"split_path": [
-															".php"
-														],
-														"try_files": [
-															"{http.request.uri.path}",
-															"{http.request.uri.path}/index.php",
-															"index.php"
-														]
-													}
-												}
-											]
-										},
-										{
-											"handle": [
-												{
-													"handler": "reverse_proxy",
-													"headers": {
-														"request": {
-															"set": {
-																"Host": [
-																	"{http.reverse_proxy.upstream.host}"
-																]
-															}
-														}
-													},
-													"upstreams": [
-														{
-															"dial": "wordpress"
+															"dial": "sphinx:80"
 														}
 													]
 												}
@@ -2980,7 +2887,7 @@
 																	},
 																	"upstreams": [
 																		{
-																			"dial": "localhost:8080"
+																			"dial": "existdb:8080"
 																		}
 																	]
 																}

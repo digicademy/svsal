@@ -176,7 +176,7 @@
                           },
                           "upstreams": [
                             {
-                              "dial": "unix//run/php/php-fpm.sock"
+                              "dial": "unix//run/php-fpm.sock"
                             }
                           ]
                         }
@@ -317,7 +317,7 @@
                           },
                           "upstreams": [
                             {
-                              "dial": "unix//run/php/php-fpm.sock"
+                              "dial": "unix//run/php-fpm.sock"
                             }
                           ]
                         }
