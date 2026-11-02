@@ -18,4 +18,4 @@
 
 # find /var/data/existdb/data/export -type f -name "*.snippet.xml" -exec sed -i 's| xmlns:sphinx="https://www.salamanca.school/xquery/sphinx"||g' {} + >/etc/sphinxsearch/indexer.log 2>&1
 
-indexer --all --rotate --quiet | grep -v "duplicate" > /var/log/dockerservices/indexer.log
+indexer --all --rotate --quiet | grep -v "duplicate" > /var/log/sphinx/indexer.log

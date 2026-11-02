@@ -3,35 +3,35 @@
 # @author 	andreas wagner <wagner@lhlt.mpg.de>
 #
 # Build image with
-# time TMPDIR="/home/awagner/Temp" buildah bud -t ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc1 -f Dockerfile .
+# time TMPDIR="/mnt/c/tmp" buildah bud --no-cache -t ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc2 -f Dockerfile .
 #
 # Then run with
 #   buildah from svsal-sphinxsearch
 #   buildah run --tty         -p 9312:9312 -p 9306:9306 -p 8081:80 svsal-sphinxsearch-working-container /bin/sh
 #
 # or
-#   podman run --tty --rm -it -p 9312:9312 -p 9306:9306 -p 8081:80 --name sphinxsearch ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc1
+#   podman run --tty --rm -it -p 9312:9312 -p 9306:9306 -p 8081:80 --name sphinxsearch ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc2
 #
 #     perhaps add mount options:
 #       -v ./sphinx/etc:/etc/sphinx
 #       -v ./sphinx/index:/var/lib/sphinx/data
-#       -v ./sphinx/log:/var/log/dockerservices
+#       -v ./sphinx/log:/var/log/sphinx
 #       -v ./sphinx/opensphinxsearch:/opt/opensphinxsearch
 #       -v ./existexport:/var/data/existdb/data/export
 #
 #     taken together, and assuming there are subdirectories ./sphinx/{index,log,etc,opensphinxsearch} and ./existexport, this could be:
-#   podman run --rm -it --tty -p 8022:22 -p 9312:9312 -p 9306:9306 -p 8081:80 -v ./sphinx/log:/var/log/dockerservices -v ./sphinx/etc:/etc/sphinx -v ./sphinx/index:/var/lib/sphinx/data -v ./sphinx/opensphinxsearch:/opt/opensphinxsearch -v ./existexport:/var/data/existdb/data/export --name sphinxsearch ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc1
+#   podman run --rm -it --tty -p 8022:22 -p 9312:9312 -p 9306:9306 -p 8081:80 -v ./sphinx/log:/var/log/sphinx -v ./sphinx/etc:/etc/sphinx -v ./sphinx/index:/var/lib/sphinx/data -v ./sphinx/opensphinxsearch:/opt/opensphinxsearch -v ./existexport:/var/data/existdb/data/export --name sphinxsearch ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc2
 #     currently, the pasta network does not work when no upstream network is available (host is offline), so we might need to use slirp4netns:
-#   podman run --rm -it --tty -p 8022:22 -p 9312:9312 -p 9306:9306 -p 8081:80 -v ./sphinx/log:/var/log/dockerservices -v ./sphinx/etc:/etc/sphinx -v ./sphinx/index:/var/lib/sphinx/data -v ./sphinx/opensphinxsearch:/opt/opensphinxsearch -v ./existexport:/var/data/existdb/data/export --name sphinxsearch ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc1 --network=slirp4netns:allow_host_loopback=true
+#   podman run --rm -it --tty -p 8022:22 -p 9312:9312 -p 9306:9306 -p 8081:80 -v ./sphinx/log:/var/log/sphinx -v ./sphinx/etc:/etc/sphinx -v ./sphinx/index:/var/lib/sphinx/data -v ./sphinx/opensphinxsearch:/opt/opensphinxsearch -v ./existexport:/var/data/existdb/data/export --name sphinxsearch ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc2 --network=slirp4netns:allow_host_loopback=true
 #
 # This is the last working podman run command:
 #
-#   podman run --rm -it --tty -p 9312:9312 -p 9306:9306 -p 8081:80 -v ./sphinx/log:/var/log/dockerservices -v ./sphinx/etc:/etc/sphinx -v ./sphinx/index:/var/lib/sphinx/data -v ./sphinx/opensphinxsearch:/opt/opensphinxsearch -v ./existexport:/var/data/existdb/data/export --name sphinxsearch ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc1
+#   podman run --rm -it --tty -p 9312:9312 -p 9306:9306 -p 8081:80 -v ./sphinx/log:/var/log/sphinx -v ./sphinx/etc:/etc/sphinx -v ./sphinx/index:/var/lib/sphinx/data -v ./sphinx/opensphinxsearch:/opt/opensphinxsearch -v ./existexport:/var/data/existdb/data/export --name sphinx ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc2
 #
 # if all is well, upload (after podman login/buildah login) with
-#   buildah push svsal-sphinxsearch ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc1
+#   buildah push svsal-sphinxsearch ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc2
 # or
-#   podman push ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc1
+#   podman push ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc2
 #
 # When deploying, set SERVER_NAME with a build argument, e.g.:
 #   `--build-arg SERVER_NAME="search.salamanca.school"` or `--build-arg SERVER_NAME=${SERVER_NAME}` (where SERVER_NAME is set in the environment)
@@ -40,15 +40,16 @@
 # - php7.4
 # - sphinxsearch 2.2.11
 
-FROM php:7.4.29-fpm-alpine3.14
+FROM php:7.4-fpm-alpine
+# 2026-11-02: php:7.4.33-fpm-alpine3.16
 
 LABEL org.opencontainers.image.source https://github.com/digicademy/svsal
 LABEL org.opencontainers.image.description "The School of Salamanca. (Open)Sphinxsearch Application"
-LABEL org.opencontainers.image.licenses MIT
+LABEL org.opencontaineris.image.licenses MIT
 
 ARG PHP_EXTENSIONS="bz2 intl" \
     SERVER_NAME=":80" \
-    LOG_DIR=/var/log/dockerservices/
+    LOG_DIR=/var/log/sphinx/
 
 ENV LOG_DIR=${LOG_DIR} \
     SPHINX_LOG_DIR=${LOG_DIR} \
@@ -56,7 +57,7 @@ ENV LOG_DIR=${LOG_DIR} \
     CADDY_LOG_DIR=${LOG_DIR} \
     PHP_LOG_DIR=${LOG_DIR} \
     SPHINX_CONF_DIR=/etc/sphinx/ \
-    SPHINX_RUN_DIR=/run/sphinx/ \
+    SPHINX_RUN_DIR=/run/ \
     SPHINX_HOME_DIR=/var/lib/sphinx/ \
     SPHINX_INDEX_DIR=${SPHINX_HOME_DIR}data/ \
     SPHINX_USER=sphinx \
@@ -68,12 +69,12 @@ ENV LOG_DIR=${LOG_DIR} \
 
 # === Install System Packages
 
-RUN echo "http://dl-cdn.alpinelinux.org/alpine/v3.13/main" >> /etc/apk/repositories && \
-    echo "http://dl-cdn.alpinelinux.org/alpine/v3.13/community" >> /etc/apk/repositories
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/v3.16/main" >> /etc/apk/repositories && \
+    echo "http://dl-cdn.alpinelinux.org/alpine/v3.16/community" >> /etc/apk/repositories
 
 RUN apk update && \
-    apk del php8 php8-phar composer && \
-    apk upgrade
+  apk upgrade
+# apk del php8 php8-phar composer && \
 
 RUN apk add openrc \
     busybox-initscripts \
@@ -81,8 +82,8 @@ RUN apk add openrc \
     util-linux \
     caddy \
     'sphinx<3' \
-    php7 \
-    php7-fpm \
+#    php7.4 \
+#    php7.4-fpm \
     composer \
     curl \
     wget \
@@ -157,7 +158,7 @@ COPY etc/dummy.snippet.xml /tmp/salamancadata
 
 
 # add cronjob for indexer to pick up new materials even without restarting sphinxsearch/container
-RUN echo "30 03 * * * indexer --quiet --rotate --all | grep -v 'duplicate' > /var/log/dockerservices/indexer.log" > /etc/crontabs/root
+RUN echo "30 03 * * * indexer --quiet --rotate --all | grep -v 'duplicate' > /var/log/sphinx/indexer.log" > /etc/crontabs/root
 
 
 
@@ -178,13 +179,14 @@ RUN cd && \
 
 # Salamanca OpenSphinxsearch (PHP) Customizations
 RUN cd && \
-    git clone -b v3 https://github.com/digicademy/svsal-website && \
+    git clone https://github.com/digicademy/svsal-website && \
     cd svsal-website/ && \
+    git checkout feature/embeddings && \
     cp searchengine/sal-oss-customizations/configuration.json ${OPENSPHINXSEARCH_DIR} && \
     cp searchengine/sal-oss-customizations/templates/* ${OPENSPHINXSEARCH_DIR}templates/ && \
     cp searchengine/sal-oss-customizations/configuration.json /tmp/opensphinxsearch/ && \
     cp searchengine/sal-oss-customizations/templates/* /tmp/opensphinxsearch/templates/ && \
-    cd && \
+    cd .. && \
     rm -rf svsal-website
 
 
@@ -200,16 +202,17 @@ RUN sed -i 's/#rc_sys=""/rc_sys="lxc"/g' /etc/rc.conf && \
     echo 'rc_provide="loopback net"' >> /etc/rc.conf && \
 # no need for loggers
     sed -i 's/^#\(rc_logger="YES"\)$/\1/' /etc/rc.conf && \
-# rc log output should do /var/log/dockerservices/rc.log
-    sed -i 's/^#rc_log_path="\/var\/log\/rc.log"/rc_log_path="\/var\/log\/dockerservices\/rc.log"/g' /etc/rc.conf && \
+# rc log output should do /var/log/sphinx/rc.log
+    sed -i 's/^#rc_log_path="\/var\/log\/rc.log"/rc_log_path="\/var\/log\/sphinx\/rc.log"/g' /etc/rc.conf && \
 # direct syslogd output to ${LOG_DIR}/syslog
-    echo 'SYSLOGD_OPTS="-t -O /var/log/dockerservices/syslog.log"' > /etc/conf.d/syslog && \
+    echo 'SYSLOGD_OPTS="-t -O /var/log/sphinx/syslog.log"' > /etc/conf.d/syslog && \
 # can't get ttys unless you run the container in privileged mode
     sed -i '/tty/d' /etc/inittab && \
 # can't set hostname since docker sets it
     sed -i 's/hostname $opts/# hostname $opts/g' /etc/init.d/hostname && \
 # can't mount tmpfs since not privileged
-    sed -i 's/mount -t tmpfs/# mount -t tmpfs/g' /lib/rc/sh/init.sh && \
+#    sed -i 's/mount -t tmpfs/# mount -t tmpfs/g' /lib/rc/sh/init.sh && \
+    sed -i 's/if ! mount -t tmpfs .*/if false/g' /lib/rc/sh/init.sh && \
 # can't do cgroups
     sed -i 's/cgroup_add_service /# cgroup_add_service /g' /lib/rc/sh/openrc-run.sh && \
 # clean apk cache
@@ -219,12 +222,13 @@ RUN sed -i 's/#rc_sys=""/rc_sys="lxc"/g' /etc/rc.conf && \
 
 # === Enable Services
 
-COPY --chmod=775 scripts/startup-init /etc/init.d/startup-init
+COPY --chmod=775 scripts/startup-init   /etc/init.d/startup-init
+COPY --chmod=775 scripts/php-fpm-init   /etc/init.d/php-fpm
 
 RUN rc-update add caddy        default && \
     rc-update add sphinx       default && \
     rc-update add crond        default && \
-    rc-update add php-fpm7     default && \
+    rc-update add php-fpm      default && \
     rc-update add startup-init boot    && \
     rc-update add syslog       boot
 
@@ -232,20 +236,11 @@ RUN rc-update add caddy        default && \
 
 # === Diagnostics
 
-RUN head -n 100 /etc/sphinx/wordforms-united.txt
+RUN head -n 50 /etc/sphinx/wordforms-united.txt
 
 
 
 # === Finalize
-
-# expose directories
-VOLUME [ "${SPHINX_CONF_DIR}", \
-         "${SPHINX_INDEX_DIR}", \
-         "${LOG_DIR}", \
-         "${OPENSPHINXSEARCH_DIR}", \
-         "${SALAMANCA_DATA}" , \
-         "/sys/fs/cgroup" \
-       ]
 
 # expose ports
 EXPOSE 80 9312 9306

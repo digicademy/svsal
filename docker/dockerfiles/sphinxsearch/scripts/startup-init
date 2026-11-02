@@ -1,6 +1,9 @@
 #!/sbin/openrc-run
 
 start() {
+  # If the configuration files are not already present because the directory has
+  # been bind mounted to an empty directory, copy them from /tmp/...
+
   echo "   - Copying configuration files to /etc/sphinx ..."
   for file in /tmp/sphinx/*; do
     test -f /etc/sphinx/$(basename $file) || cp -R /tmp/sphinx/$(basename $file) /etc/sphinx/
@@ -21,6 +24,6 @@ start() {
   echo "       Done."
 
   echo "   - Run the indexer once (don't rotate indices, searchd is not running yet) ..."
-  indexer --all --quiet > /var/log/dockerservices/indexer.log 2>&1
+  indexer --all --quiet > /var/log/sphinx/indexer.log 2>&1
   echo "       Done."
 }

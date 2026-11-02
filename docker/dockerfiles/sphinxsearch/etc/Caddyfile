@@ -1,13 +1,13 @@
 {
 	debug
 	log {
-		output file /var/log/dockerservices/caddy.log
+		output file /var/log/sphinx/caddy.log
 		format console
 	}
 }
 :80 {
 	log {
-		output file /var/log/dockerservices/caddy.log
+		output file /var/log/sphinx/caddy.log
 		format console
 	}
 	# Compress responses according to Accept-Encoding headers
@@ -24,6 +24,6 @@
 	}
 
 	root * /opt/opensphinxsearch/public
-	php_fastcgi unix//run/php-fpm7/php-fpm.sock
+	php_fastcgi unix//run/php-fpm.sock
 	file_server
 }
