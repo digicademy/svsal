@@ -3,14 +3,14 @@
 # @author 	andreas wagner <wagner@lhlt.mpg.de>
 #
 # Build image with
-# time TMPDIR="/mnt/c/tmp" buildah bud --no-cache -t ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc2 -f Dockerfile .
+# time TMPDIR="/mnt/c/tmp" buildah bud --no-cache -t ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc3 -f Dockerfile .
 #
 # Then run with
 #   buildah from svsal-sphinxsearch
 #   buildah run --tty         -p 9312:9312 -p 9306:9306 -p 8081:80 svsal-sphinxsearch-working-container /bin/sh
 #
 # or
-#   podman run --tty --rm -it -p 9312:9312 -p 9306:9306 -p 8081:80 --name sphinxsearch ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc2
+#   podman run --tty --rm -it -p 9312:9312 -p 9306:9306 -p 8081:80 --name sphinxsearch ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc3
 #
 #     perhaps add mount options:
 #       -v ./sphinx/etc:/etc/sphinx
@@ -20,18 +20,18 @@
 #       -v ./existexport:/var/data/existdb/data/export
 #
 #     taken together, and assuming there are subdirectories ./sphinx/{index,log,etc,opensphinxsearch} and ./existexport, this could be:
-#   podman run --rm -it --tty -p 8022:22 -p 9312:9312 -p 9306:9306 -p 8081:80 -v ./sphinx/log:/var/log/sphinx -v ./sphinx/etc:/etc/sphinx -v ./sphinx/index:/var/lib/sphinx/data -v ./sphinx/opensphinxsearch:/opt/opensphinxsearch -v ./existexport:/var/data/existdb/data/export --name sphinxsearch ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc2
+#   podman run --rm -it --tty -p 8022:22 -p 9312:9312 -p 9306:9306 -p 8081:80 -v ./sphinx/log:/var/log/sphinx -v ./sphinx/etc:/etc/sphinx -v ./sphinx/index:/var/lib/sphinx/data -v ./sphinx/opensphinxsearch:/opt/opensphinxsearch -v ./existexport:/var/data/existdb/data/export --name sphinxsearch ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc3
 #     currently, the pasta network does not work when no upstream network is available (host is offline), so we might need to use slirp4netns:
-#   podman run --rm -it --tty -p 8022:22 -p 9312:9312 -p 9306:9306 -p 8081:80 -v ./sphinx/log:/var/log/sphinx -v ./sphinx/etc:/etc/sphinx -v ./sphinx/index:/var/lib/sphinx/data -v ./sphinx/opensphinxsearch:/opt/opensphinxsearch -v ./existexport:/var/data/existdb/data/export --name sphinxsearch ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc2 --network=slirp4netns:allow_host_loopback=true
+#   podman run --rm -it --tty -p 8022:22 -p 9312:9312 -p 9306:9306 -p 8081:80 -v ./sphinx/log:/var/log/sphinx -v ./sphinx/etc:/etc/sphinx -v ./sphinx/index:/var/lib/sphinx/data -v ./sphinx/opensphinxsearch:/opt/opensphinxsearch -v ./existexport:/var/data/existdb/data/export --name sphinxsearch ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc3 --network=slirp4netns:allow_host_loopback=true
 #
 # This is the last working podman run command:
 #
-#   podman run --rm -it --tty -p 9312:9312 -p 9306:9306 -p 8081:80 -v ./sphinx/log:/var/log/sphinx -v ./sphinx/etc:/etc/sphinx -v ./sphinx/index:/var/lib/sphinx/data -v ./sphinx/opensphinxsearch:/opt/opensphinxsearch -v ./existexport:/var/data/existdb/data/export --name sphinx ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc2
+#   podman run --rm -it --tty -p 9312:9312 -p 9306:9306 -p 8081:80 -v ./sphinx/log:/var/log/sphinx -v ./sphinx/etc:/etc/sphinx -v ./sphinx/index:/var/lib/sphinx/data -v ./sphinx/opensphinxsearch:/opt/opensphinxsearch -v ./existexport:/var/data/existdb/data/export --name sphinx ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc3
 #
 # if all is well, upload (after podman login/buildah login) with
-#   buildah push svsal-sphinxsearch ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc2
+#   buildah push svsal-sphinxsearch ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc3
 # or
-#   podman push ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc2
+#   podman push ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc3
 #
 # When deploying, set SERVER_NAME with a build argument, e.g.:
 #   `--build-arg SERVER_NAME="search.salamanca.school"` or `--build-arg SERVER_NAME=${SERVER_NAME}` (where SERVER_NAME is set in the environment)
@@ -212,7 +212,7 @@ RUN sed -i 's/#rc_sys=""/rc_sys="lxc"/g' /etc/rc.conf && \
     sed -i 's/hostname $opts/# hostname $opts/g' /etc/init.d/hostname && \
 # can't mount tmpfs since not privileged
 #    sed -i 's/mount -t tmpfs/# mount -t tmpfs/g' /lib/rc/sh/init.sh && \
-    sed -i 's/if ! mount -t tmpfs .*/if false/g' /lib/rc/sh/init.sh && \
+    sed -i 's/if ! mount -t tmpfs .*/if false; then/g' /lib/rc/sh/init.sh && \
 # can't do cgroups
     sed -i 's/cgroup_add_service /# cgroup_add_service /g' /lib/rc/sh/openrc-run.sh && \
 # clean apk cache
