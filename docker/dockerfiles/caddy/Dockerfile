@@ -1,13 +1,13 @@
 # Build image with
 #
-# time TMPDIR="/mnt/c/tmp" buildah bud --no-cache -t ghcr.io/digicademy/svsal/svsal-caddy:2.11.7rc1 -f Dockerfile .
+# time TMPDIR="/mnt/c/tmp" buildah bud --no-cache -t ghcr.io/digicademy/svsal/svsal-caddy:2.11.7rc3 -f Dockerfile .
 #
 # Then run with
 #   buildah from svsal-caddy
 #   buildah run -e MODE=devel   --tty -p 8180:80 -p 8443:443 svsal-caddy-working-container /bin/bash
 #
 # or
-#   podman run -e MODE=devel --rm -it -p 8180:80 -p 8443:443 --sysctl=net.core.rmem_max=7500000 --systl=net.core.wmem_max=7500000 --name caddy ghcr.io/digicademy/svsal/svsal-caddy:2.11.7rc1
+#   podman run -e MODE=devel --rm -it -p 8180:80 -p 8443:443 --sysctl=net.core.rmem_max=7500000 --systl=net.core.wmem_max=7500000 --name caddy ghcr.io/digicademy/svsal/svsal-caddy:2.11.7rc3
 #
 #     perhaps add more mount options:
 #       -v caddy/certs:/root/certs
@@ -20,16 +20,16 @@
 #       -e MODE=prod
 #
 # Put the wildcard dummy certs in a directory that will be mounted to /root/certs in the container,
-# for example ./caddy_mount/certs, then mount with -v ./caddy_mount/certs:/root/certs:ro
+# for example /var/data/caddy/certs, then mount with -v /var/data/caddy/certs:/root/certs:ro
 #
 # This is the last working podman run command:
 #
-#  podman run -e MODE=devel --rm -it -p 8080:80 -p 8443:443 -v ./caddy_mount/etc:/etc/caddy -v ./caddy_mount/logs/:/var/log/caddy -v ./caddy_mount/certs:/root/certs:ro -v ./caddy_mount/site:/var/data/caddy/site -v ../svsal-exist/exist_mount/export:/var/data/existdb/data/export:ro --name caddy ghcr.io/digicademy/svsal/svsal-caddy:2.11.7rc1
+#  podman run -e MODE=devel --rm -it -p 8080:80 -p 8443:443 -v /var/data/caddy/etc:/etc/caddy -v /var/data/caddy/logs/:/var/log/caddy -v /var/data/caddy/certs:/root/certs -v /var/data/caddy/site:/var/data/caddy/site -v /var/data/existdb/export:/var/data/existdb/data/export:ro --name caddy ghcr.io/digicademy/svsal/svsal-caddy:2.11.7rc3
 #
 # If all is well, login to container registry (with podman/buildah login ghcr.io) and upload with
-#   buildah push svsal-caddy ghcr.io/digicademy/svsal/svsal-caddy:2.11.7rc1
+#   buildah push svsal-caddy ghcr.io/digicademy/svsal/svsal-caddy:2.11.7rc3
 # or
-#   podman push ghcr.io/digicademy/svsal/svsal-caddy:2.11.7rc1
+#   podman push ghcr.io/digicademy/svsal/svsal-caddy:2.11.7rc3
 
 # === STAGE 1 ===
 

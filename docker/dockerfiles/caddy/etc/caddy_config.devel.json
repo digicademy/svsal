@@ -7,7 +7,7 @@
 		"logs": {
 			"default": {
 				"writer": {
-					"filename": "/var/log/caddy/access.log",
+					"filename": "/var/log/caddy/default.log",
 					"output": "file"
 				},
 				"encoder": {
@@ -43,14 +43,7 @@
 				},
 				"level": "info",
 				"include": [
-					"http.log.access.log0",
-					"http.log.access.log1",
-					"http.log.access.log2",
-					"http.log.access.log3",
-					"http.log.access.log4",
-					"http.log.access.log5",
-					"http.log.access.log6",
-					"http.log.access.log7"
+					"http.log.access.log0"
 				]
 			}
 		}
@@ -222,7 +215,6 @@
 								{
 									"host": [
 										"c100-101.cloud.gwdg.de",
-										"salamanca.school",
 										"www.salamanca.school",
 										"localhost"
 									]
@@ -388,6 +380,19 @@
 							],
 							"handle": [
 								{
+									"handler": "headers",
+									"response": {
+										"set": {
+											"Access-Control-Allow-Headers": [
+												"*"
+											],
+											"Access-Control-Allow-Methods": [
+												"*"
+											]
+										}
+									}
+								},
+								{
 									"encodings": {
 										"gzip": {},
 										"zstd": {}
@@ -418,19 +423,6 @@
 									"hide": [
 										"./Caddyfile"
 									]
-								},
-								{
-									"handler": "headers",
-									"response": {
-										"set": {
-											"Access-Control-Allow-Headers": [
-												"*"
-											],
-											"Access-Control-Allow-Methods": [
-												"*"
-											]
-										}
-									}
 								}
 							],
 							"terminal": true
@@ -1255,7 +1247,7 @@
 													},
 													"upstreams": [
 														{
-															"dial": "existdb:8080"
+															"dial": "anubis:3000"
 														}
 													]
 												}
@@ -2555,7 +2547,7 @@
 																	},
 																	"upstreams": [
 																		{
-																			"dial": "existdb:8080"
+																			"dial": "anubis:3000"
 																		}
 																	]
 																}
@@ -2616,7 +2608,7 @@
 																		"{volume}"
 																	],
 																	"source": "{http.request.uri.path.file}",
-																	"Defaults": [
+																	"defaults": [
 																		"",
 																		""
 																	],
@@ -2726,7 +2718,7 @@
 														{
 															"handle": [
 																{
-																	"Defaults": [
+																	"defaults": [
 																		"{http.request.uri.path.file}"
 																	],
 																	"destinations": [
@@ -2835,15 +2827,17 @@
 										{
 											"handle": [
 												{
-                          "handler": "authentication",
-                          "providers": {
-                            "http_basic": {
-                              "accounts": [{
-                                "username": "sal",
-                                "password": "$2a$14$o0t5MBdTBubnMpQtVJvDNeexFC2HQpEksGOxB7v0m1BFF6KGVZRN2"
-                              }]
+													"handler": "authentication",
+													"providers": {
+														"http_basic": {
+															"accounts": [
+																{
+																	"username": "sal",
+																	"password": "$2a$14$o0t5MBdTBubnMpQtVJvDNeexFC2HQpEksGOxB7v0m1BFF6KGVZRN2"
+																}
+															]
 														}
-                          }
+													}
 												},
 												{
 													"handler": "subroute",
@@ -2887,7 +2881,7 @@
 																	},
 																	"upstreams": [
 																		{
-																			"dial": "existdb:8080"
+																			"dial": "anubis:3000"
 																		}
 																	]
 																}
@@ -2917,10 +2911,10 @@
 							"salamanca.school": "log0",
 							"api.salamanca.school": "log0",
 							"blog.salamanca.school": "log0",
+							"exist.salamanca.school": "log0",
 							"facs.salamanca.school": "log0",
 							"files.salamanca.school": "log0",
 							"id.salamanca.school": "log0",
-							"exist.salamanca.school": "log0",
 							"search.salamanca.school": "log0",
 							"www.salamanca.school": "log0"
 						}
@@ -2931,11 +2925,11 @@
 								"sni": [
 									"api.salamanca.school",
 									"blog.salamanca.school",
+									"exist.salamanca.school",
 									"facs.salamanca.school",
 									"files.salamanca.school",
 									"id.salamanca.school",
 									"search.salamanca.school",
-									"exist.salamanca.school",
 									"www.salamanca.school"
 								]
 							},

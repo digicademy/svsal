@@ -7,7 +7,7 @@
     "logs": {
       "default": {
         "writer": {
-          "filename": "/var/log/caddy/access.log",
+          "filename": "/var/log/caddy/default.log",
           "output": "file"
         },
         "encoder": {
@@ -43,14 +43,7 @@
         },
         "level": "info",
         "include": [
-          "http.log.access.log0",
-          "http.log.access.log1",
-          "http.log.access.log2",
-          "http.log.access.log3",
-          "http.log.access.log4",
-          "http.log.access.log5",
-          "http.log.access.log6",
-          "http.log.access.log7"
+          "http.log.access.log0"
         ]
       }
     }
@@ -60,6 +53,7 @@
       "servers": {
         "srv0": {
           "listen": [
+            ":80",
             ":443"
           ],
           "routes": [
@@ -77,10 +71,6 @@
                   "routes": [
                     {
                       "handle": [
-                        {
-                          "handler": "vars",
-                          "root": "/opt/open-sphinxsearch/public"
-                        },
                         {
                           "handler": "headers",
                           "response": {
@@ -168,174 +158,19 @@
                       "handle": [
                         {
                           "handler": "reverse_proxy",
-                          "transport": {
-                            "protocol": "fastcgi",
-                            "split_path": [
-                              ".php"
-                            ]
-                          },
-                          "upstreams": [
-                            {
-                              "dial": "unix//run/php-fpm.sock"
-                            }
-                          ]
-                        }
-                      ],
-                      "match": [
-                        {
-                          "path": [
-                            "*.php"
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "handle": [
-                        {
-                          "handler": "file_server",
-                          "hide": [
-                            "./Caddyfile"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ],
-              "terminal": true
-            },
-            {
-              "match": [
-                {
-                  "host": [
-                    "blog.salamanca.school"
-                  ]
-                }
-              ],
-              "handle": [
-                {
-                  "handler": "subroute",
-                  "routes": [
-                    {
-                      "handle": [
-                        {
-                          "handler": "vars",
-                          "root": "/var/data/blog/wordpress"
-                        },
-                        {
-                          "handler": "headers",
-                          "response": {
-                            "set": {
-                              "Access-Control-Allow-Headers": [
-                                "*"
-                              ],
-                              "Access-Control-Allow-Methods": [
-                                "*"
-                              ],
-                              "Access-Control-Allow-Origin": [
-                                "*"
-                              ]
-                            }
-                          }
-                        },
-                        {
-                          "encodings": {
-                            "gzip": {},
-                            "zstd": {}
-                          },
-                          "handler": "encode",
-                          "prefer": [
-                            "zstd",
-                            "gzip"
-                          ]
-                        },
-                        {
-                          "handler": "push"
-                        }
-                      ]
-                    },
-                    {
-                      "handle": [
-                        {
-                          "handler": "static_response",
                           "headers": {
-                            "Location": [
-                              "{http.request.orig_uri.path}/"
-                            ]
-                          },
-                          "status_code": 308
-                        }
-                      ],
-                      "match": [
-                        {
-                          "file": {
-                            "try_files": [
-                              "{http.request.uri.path}/index.php"
-                            ]
-                          },
-                          "not": [
-                            {
-                              "path": [
-                                "*/"
-                              ]
+                            "request": {
+                              "set": {
+                                "Host": [
+                                  "{http.reverse_proxy.upstream.host}"
+                                ]
+                              }
                             }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "handle": [
-                        {
-                          "handler": "rewrite",
-                          "uri": "{http.matchers.file.relative}"
-                        }
-                      ],
-                      "match": [
-                        {
-                          "file": {
-                            "split_path": [
-                              ".php"
-                            ],
-                            "try_files": [
-                              "{http.request.uri.path}",
-                              "{http.request.uri.path}/index.php",
-                              "index.php"
-                            ]
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "handle": [
-                        {
-                          "handler": "reverse_proxy",
-                          "transport": {
-                            "protocol": "fastcgi",
-                            "split_path": [
-                              ".php"
-                            ]
                           },
                           "upstreams": [
                             {
-                              "dial": "unix//run/php-fpm.sock"
+                              "dial": "sphinx:80"
                             }
-                          ]
-                        }
-                      ],
-                      "match": [
-                        {
-                          "path": [
-                            "*.php"
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "handle": [
-                        {
-                          "handler": "file_server",
-                          "hide": [
-                            "./Caddyfile"
                           ]
                         }
                       ]
@@ -380,7 +215,6 @@
                 {
                   "host": [
                     "c100-101.cloud.gwdg.de",
-                    "salamanca.school",
                     "www.salamanca.school"
                   ]
                 }
@@ -545,6 +379,19 @@
               ],
               "handle": [
                 {
+                  "handler": "headers",
+                  "response": {
+                    "set": {
+                      "Access-Control-Allow-Headers": [
+                        "*"
+                      ],
+                      "Access-Control-Allow-Methods": [
+                        "*"
+                      ]
+                    }
+                  }
+                },
+                {
                   "encodings": {
                     "gzip": {},
                     "zstd": {}
@@ -575,19 +422,6 @@
                   "hide": [
                     "./Caddyfile"
                   ]
-                },
-                {
-                  "handler": "headers",
-                  "response": {
-                    "set": {
-                      "Access-Control-Allow-Headers": [
-                        "*"
-                      ],
-                      "Access-Control-Allow-Methods": [
-                        "*"
-                      ]
-                    }
-                  }
                 }
               ],
               "terminal": true
@@ -1412,7 +1246,7 @@
                           },
                           "upstreams": [
                             {
-                              "dial": "localhost:8080"
+                              "dial": "anubis:3000"
                             }
                           ]
                         }
@@ -2712,7 +2546,7 @@
                                   },
                                   "upstreams": [
                                     {
-                                      "dial": "localhost:8080"
+                                      "dial": "anubis:3000"
                                     }
                                   ]
                                 }
@@ -2773,7 +2607,7 @@
                                     "{volume}"
                                   ],
                                   "source": "{http.request.uri.path.file}",
-                                  "Defaults": [
+                                  "defaults": [
                                     "",
                                     ""
                                   ],
@@ -2883,7 +2717,7 @@
                             {
                               "handle": [
                                 {
-                                  "Defaults": [
+                                  "defaults": [
                                     "{http.request.uri.path.file}"
                                   ],
                                   "destinations": [
@@ -2995,10 +2829,12 @@
                           "handler": "authentication",
                           "providers": {
                             "http_basic": {
-                              "accounts": [{
-                                "username": "sal",
-                                "password": "$2a$14$o0t5MBdTBubnMpQtVJvDNeexFC2HQpEksGOxB7v0m1BFF6KGVZRN2"
-                              }]
+                              "accounts": [
+                                {
+                                  "username": "sal",
+                                  "password": "$2a$14$o0t5MBdTBubnMpQtVJvDNeexFC2HQpEksGOxB7v0m1BFF6KGVZRN2"
+                                }
+                              ]
                             }
                           }
                         },
@@ -3044,7 +2880,7 @@
                                   },
                                   "upstreams": [
                                     {
-                                      "dial": "localhost:8080"
+                                      "dial": "anubis:3000"
                                     }
                                   ]
                                 }
@@ -3074,10 +2910,10 @@
               "salamanca.school": "log0",
               "api.salamanca.school": "log0",
               "blog.salamanca.school": "log0",
+              "exist.salamanca.school": "log0",
               "facs.salamanca.school": "log0",
               "files.salamanca.school": "log0",
               "id.salamanca.school": "log0",
-              "exist.salamanca.school": "log0",
               "search.salamanca.school": "log0",
               "www.salamanca.school": "log0"
             }
@@ -3092,14 +2928,14 @@
             "subjects": [
               "c100-101.cloud.gwdg.de",
               "salamanca.school",
-              "www.salamanca.school",
-              "search.salamanca.school",
-              "facs.salamanca.school",
               "api.salamanca.school",
-              "id.salamanca.school",
-              "exist.salamanca.school",
               "blog.salamanca.school",
-              "files.salamanca.school"
+              "exist.salamanca.school",
+              "facs.salamanca.school",
+              "files.salamanca.school",
+              "id.salamanca.school",
+              "search.salamanca.school",
+              "www.salamanca.school"
             ],
             "issuers": [
               {
