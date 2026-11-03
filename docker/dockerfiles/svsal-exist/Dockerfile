@@ -15,7 +15,7 @@
 #
 # This is the last working podman run command:
 #
-#  podman run --rm -it -p 8080:8080 -p 8443:8443 --name=exist -v ./exist_mount/export:/exist/data/export -v ./exist_mount/logs:/exist/logs ghcr.io/digicademy/svsal/svsal-exist:3.0rc4
+#  podman run --rm -it -p 8080:8080 -p 8443:8443 --name=exist -v /var/data/existdb/export:/exist/data/export -v /var/data/existdb/logs:/exist/logs ghcr.io/digicademy/svsal/svsal-exist:3.0rc4
 #
 # These are (systemd service unit) podman parameters used in production,
 # whether they make sense depends on the environment the container is being run in:
