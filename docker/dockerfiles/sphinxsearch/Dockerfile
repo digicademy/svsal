@@ -26,7 +26,7 @@
 #
 # This is the last working podman run command:
 #
-#   podman run --rm -it --tty -p 9312:9312 -p 9306:9306 -p 8081:80 -v ./sphinx/log:/var/log/sphinx -v ./sphinx/etc:/etc/sphinx -v ./sphinx/index:/var/lib/sphinx/data -v ./sphinx/opensphinxsearch:/opt/opensphinxsearch -v ./existexport:/var/data/existdb/data/export --name sphinx ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc3
+#   podman run --rm -it --tty -p 9312:9312 -p 9306:9306 -p 8081:80 -v /var/data/sphinx/logs:/var/log/sphinx -v /var/data/sphinx/etc:/etc/sphinx -v /var/data/sphinx/data:/var/lib/sphinx/data -v /var/data/sphinx/oss:/opt/opensphinxsearch -v /var/data/existdb/export:/var/data/existdb/export --name sphinx ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc3
 #
 # if all is well, upload (after podman login/buildah login) with
 #   buildah push svsal-sphinxsearch ghcr.io/digicademy/svsal/svsal-sphinxsearch:2.2.11rc3
