@@ -1,0 +1,178 @@
+# Example Salamanca docker compose setup
+#
+# Run with:
+#   podman compose --env-file prod.env up
+# or with the development environment:
+#   podman compose --env-file devel.env up
+#
+# Except for the caddy reverse proxy service, none of the services
+# have ports definitions, as they are not to be accessed directly
+# from outside, only via the reverse proxy.
+
+services:
+  caddy:
+    image: ghcr.io/digicademy/svsal/svsal-caddy:${CADDY_VERSION}
+    restart: unless-stopped
+    environment:
+      MODE: "${MODE:-devel}" # set to "prod" for production
+    ports:
+      - "${CADDY_BIND_HTTP:-127.0.0.1:8080}:80"
+      - "${CADDY_BIND_HTTPS:-127.0.0.1:8443}:443"
+      - "${CADDY_BIND_HTTPS:-127.0.0.1:8443}:443/udp"
+    volumes:  # The z/Z suffix is for SELinux context - z means shared, Z means private
+      - ${CADDY_CERTS_MOUNT:-caddy_certs:/root/certs:Z}
+      - caddy_etc:/etc/caddy:z
+      - caddy_logs:/var/log/caddy:z
+      - caddy_site:/var/data/caddy/site:z
+      - exist_export:/var/data/existdb/data/export:z,ro # read-only
+    networks:
+      - salamanca-public
+      - salamanca-internal
+
+  existdb:
+    image: ghcr.io/digicademy/svsal/svsal-exist:${EXISTDB_VERSION}
+    restart: unless-stopped
+    volumes:
+      # - exist_etc:/exist/config:z
+      - exist_data:/exist/data:z               # persist the whole DB in a named volume (host-invisible)
+      - exist_export:/exist/data/export:z      # mount the export subdirectory separately (host-visible)
+      - exist_logs:/exist/logs:z
+    networks:
+      - salamanca-internal
+
+  sphinx:
+    image: ghcr.io/digicademy/svsal/svsal-sphinxsearch:${SPHINX_VERSION}
+    restart: unless-stopped
+    mem_limit: 512m # match indexer.value from sphinx.conf
+    volumes:
+      - sphinx_etc:/etc/sphinx:z                          # directory with sphinxsearch configuration files
+      - sphinx_oss:/opt/opensphinxsearch:z                # directory with OpenSphinxSearch
+      - sphinx_logs:/var/log/sphinx:z                     # directory with log files
+      - sphinx_data:/var/lib/sphinx/data:Z                # directory where sphinxsearch will store index data
+      - exist_export:/var/data/existdb/data/export:z      # eXist-db data directory
+                                                          # We cannot make it read-only because our indexing
+                                                          # routines have to manipulate the XML before ingesting
+                                                          # using sed, which creates temporary files in the target directory
+    networks:
+      - salamanca-internal
+
+  any23:
+    image: ghcr.io/digicademy/svsal/svsal-any23:${ANY23_VERSION}
+    restart: unless-stopped
+    networks:
+      - salamanca-internal
+    volumes:
+      - any23_logs:/usr/local/tomcat/logs:z
+
+  anubis:
+    image: ghcr.io/techarohq/anubis:${ANUBIS_VERSION} # 2026-11-03: 1.28.2
+    pull_policy: always
+    restart: unless-stopped
+    environment:
+      - BIND=:3000
+      - TARGET=http://existdb:8080
+      - COOKIE_SECURE=false
+    # volumes:
+    #   - anubis_logs:/var/anubis/logs:z
+    networks:
+      - salamanca-internal
+
+volumes:
+  caddy_certs:
+    driver: local
+    name: caddy_certs
+    driver_opts:
+      type: none
+      o: bind
+      device: /var/data/caddy/certs # must be the absolute host path and already exist
+  caddy_etc:
+    driver: local
+    name: caddy_etc
+    driver_opts:
+      type: none
+      o: bind
+      device: /var/data/caddy/etc # must be the absolute host path and already exist
+  caddy_logs:
+    driver: local
+    name: caddy_logs
+    driver_opts:
+      type: none
+      o: bind
+      device: /var/data/caddy/logs # must be the absolute host path and already exist
+  caddy_site:
+    driver: local
+    name: caddy_site
+    driver_opts:
+      type: none
+      o: bind
+      device: /var/data/caddy/site # must be the absolute host path and already exist
+
+  exist_etc:
+    driver: local
+    name: exist_etc
+    driver_opts:
+      type: none
+      o: bind
+      device: /var/data/existdb/etc # must be the absolute host path and already exist
+  exist_data: # named volume, no bind, just for persisting the whole DB (host-invisible)
+    name: exist_data
+  exist_export:
+    driver: local
+    name: exist_export
+    driver_opts:
+      type: none
+      o: bind
+      device: /var/data/existdb/export # must be the absolute host path and already exist
+  exist_logs:
+    driver: local
+    name: exist_logs
+    driver_opts:
+      type: none
+      o: bind
+      device: /var/data/existdb/logs # must be the absolute host path and already exist
+
+  sphinx_etc:
+    driver: local
+    name: sphinx_etc
+    driver_opts:
+      type: none
+      o: bind
+      device: /var/data/sphinx/etc # must be the absolute host path and already exist
+  sphinx_logs:
+    driver: local
+    name: sphinx_logs
+    driver_opts:
+      type: none
+      o: bind
+      device: /var/data/sphinx/logs # must be the absolute host path and already exist
+  sphinx_data:
+    driver: local
+    name: sphinx_data
+    driver_opts:
+      type: none
+      o: bind
+      device: /var/data/sphinx/data # must be the absolute host path and already exist
+  sphinx_oss:
+    driver: local
+    name: sphinx_oss
+    driver_opts:
+      type: none
+      o: bind
+      device: /var/data/sphinx/oss # must be the absolute host path and already exist
+
+  any23_logs:
+    driver: local
+    name: any23_logs
+    driver_opts:
+      type: none
+      o: bind
+      device: /var/data/any23/logs # must be the absolute host path and already exist
+
+networks:
+  salamanca-public:
+    name: salamanca-public
+    driver: bridge
+  salamanca-internal:
+    name: salamanca-internal
+    internal: true
+    driver: bridge
