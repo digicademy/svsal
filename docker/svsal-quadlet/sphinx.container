@@ -1,0 +1,29 @@
+# sphinx.container
+
+[Unit]
+Description=Salamanca Sphinxsearch
+After=existdb.service
+Wants=existdb.service
+
+[Container]
+ContainerName=sphinx
+Image=ghcr.io/digicademy/svsal/svsal-sphinx:2.2.11
+# AutoUpdate is commented out by default for manual updates.
+# Uncomment the line below to enable automatic updates:
+# AutoUpdate=registry
+Memory=512m
+Volume=/var/data/sphinx/etc:/etc/sphinx:z
+Volume=/var/data/sphinx/oss:/opt/opensphinxsearch:z
+Volume=/var/data/sphinx/logs:/var/log/sphinx:z
+Volume=sphinx_data.volume:/var/lib/sphinx/data:Z
+Volume=/var/data/existdb/export:/var/data/existdb/data/export:z
+Network=salamanca-internal.network
+
+[Service]
+Restart=always
+# Extend Timeout to allow time to pull the image
+TimeoutStartSec=300
+RestartSec=30
+
+[Install]
+WantedBy=default.target

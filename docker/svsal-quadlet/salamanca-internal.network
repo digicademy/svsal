@@ -1,0 +1,7 @@
+# salamanca-internal.network
+
+[Network]
+NetworkName=salamanca-internal
+Internal=true
+Subnet=10.89.0.0/24
+Gateway=10.89.0.1

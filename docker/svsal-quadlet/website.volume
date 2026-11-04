@@ -1,6 +1,0 @@
-[Volume]
-# Static website files volume
-# Contains the static web content served by Caddy
-
-[Install]
-WantedBy=default.target

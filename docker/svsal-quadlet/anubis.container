@@ -1,0 +1,24 @@
+# anubis.container
+
+[Unit]
+Description=Salamanca Anubis bot filter
+After=existdb.service
+Wants=existdb.service
+
+[Container]
+ContainerName=anubis
+Image=ghcr.io/techarohq/anubis:1.28.2
+Environment=BIND=:3000
+Environment=TARGET=http://existdb:8080
+Environment=COOKIE_SECURE=true
+Environment=TRUSTED_PROXIES=10.89.0.0/24
+Network=salamanca-internal.network
+
+[Service]
+Restart=always
+# Extend Timeout to allow time to pull the image
+TimeoutStartSec=450
+RestartSec=60
+
+[Install]
+WantedBy=default.target

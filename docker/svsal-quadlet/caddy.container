@@ -1,41 +1,38 @@
-[Unit]
-Description=SvSal Caddy Web Server Container
-Requires=existdb.service
-After=existdb.service
-After=local-fs.target
+# caddy.container
 
+[Unit]
+Description=Salamanca Caddy reverse proxy
+After=existdb.service sphinx.service any23.service anubis.service
+Wants=existdb.service sphinx.service any23.service anubis.service
 
 [Container]
 ContainerName=caddy
-Image=ghcr.io/digicademy/svsal/svsal-caddy:2.8.4rc3
-
+Image=ghcr.io/digicademy/svsal/svsal-caddy:2.11.7rc2
 # AutoUpdate is commented out by default for manual updates.
 # Uncomment the line below to enable automatic updates:
 # AutoUpdate=registry
+Environment=MODE=prod
+PublishPort=80:80
+PublishPort=443:443
+PublishPort=443:443/udp
+Volume=/var/data/caddy/certs:/root/certs:Z
+Volume=/var/data/caddy/etc:/etc/caddy:z
+Volume=/var/data/caddy/logs:/var/log/caddy:z
+Volume=/var/data/caddy/site:/var/data/caddy/site:z
+Volume=/var/data/existdb/export:/var/data/existdb/data/export:z,ro
+Network=salamanca-public.network
+Network=salamanca-internal.network
 
-Environment=MODE=devel
-
-Volume=logs.volume:/var/log/caddy:z
-Volume=website.volume:/var/data/caddy/site:z
-Volume=existexport.volume:/var/data/existdb/data/export:ro,z
-
-# Port mappings are handled at the pod level (svsal.pod)
-
-Pod=svsal.pod
-
+[Service]
+Restart=always
+# Extend Timeout to allow time to pull the image
+TimeoutStartSec=300
+RestartSec=30
 
 [Install]
 WantedBy=default.target
 
 
-[Service]
-Restart=always
-
-# Extend Timeout to allow time to pull the image
-TimeoutStartSec=300
-RestartSec=30
-
-ExecStop=/bin/sh -c "podman stop caddy"
-ExecStop=/bin/sh -c "podman rm caddy"
-
-KillMode=control-group
+Volume=logs.volume:/var/log/caddy:z
+Volume=website.volume:/var/data/caddy/site:z
+Volume=existexport.volume:/var/data/existdb/data/export:ro,z
