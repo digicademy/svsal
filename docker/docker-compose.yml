@@ -41,7 +41,7 @@ services:
       - salamanca-internal
 
   sphinx:
-    image: ghcr.io/digicademy/svsal/svsal-sphinxsearch:${SPHINX_VERSION}
+    image: ghcr.io/digicademy/svsal/svsal-sphinx:${SPHINX_VERSION}
     restart: unless-stopped
     mem_limit: 512m # match indexer.value from sphinx.conf
     volumes:

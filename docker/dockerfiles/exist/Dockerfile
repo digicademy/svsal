@@ -1,21 +1,21 @@
 # Dockerfile for Salamanca eXist-db Webapp
 #
 # Build image with
-#  . .env && time TMPDIR="/mnt/c/tmp" buildah bud --no-cache --secret id=setadminpw,src=./.setadminpw --build-arg SVN_USER=${SVN_USER} --build-arg SVN_PASS=${SVN_PASS} --build-arg EXIST_PASS=${EXIST_PASS} --build-arg EXIST_VERSION=${EXIST_VERSION} -t ghcr.io/digicademy/svsal/svsal-exist:3.0rc4 -f Dockerfile .
+#  . .env && time TMPDIR="/mnt/c/tmp" buildah bud --no-cache --secret id=setadminpw,src=./.setadminpw --build-arg SVN_USER=${SVN_USER} --build-arg SVN_PASS=${SVN_PASS} --build-arg EXIST_PASS=${EXIST_PASS} --build-arg EXIST_VERSION=${EXIST_VERSION} -t ghcr.io/digicademy/svsal/svsal-exist:3.1 -f Dockerfile .
 #
 # Then run with
 #   buildah from svsal-exist
 #   buildah run --tty -p 8080:8080 -p 8443:8443 svsal-exist-working-container /bin/bash
 #
 # or
-#   podman run --rm -it -p 8080:8080 -p 8443:8443 --name exist ghcr.io/digicademy/svsal/svsal-exist:3.0rc4
+#   podman run --rm -it -p 8080:8080 -p 8443:8443 --name exist ghcr.io/digicademy/svsal/svsal-exist:3.1
 #     perhaps add mount options:
 #       -v svsal-webdata:/var/data/exist/data/export
 #       -v $(pwd)/tmp/logs:/exist/logs
 #
 # This is the last working podman run command:
 #
-#  podman run --rm -it -p 8080:8080 -p 8443:8443 --name=exist -v /var/data/existdb/export:/exist/data/export -v /var/data/existdb/logs:/exist/logs ghcr.io/digicademy/svsal/svsal-exist:3.0rc4
+#  podman run --rm -it -p 8080:8080 -p 8443:8443 --name=exist -v /var/data/existdb/export:/exist/data/export -v /var/data/existdb/logs:/exist/logs ghcr.io/digicademy/svsal/svsal-exist:3.1
 #
 # These are (systemd service unit) podman parameters used in production,
 # whether they make sense depends on the environment the container is being run in:
@@ -24,9 +24,9 @@
 #
 #
 # If all is well, login to container registry (with podman/buildah login ghcr.io) and upload with
-#   buildah push svsal-caddy ghcr.io/digicademy/svsal/svsal-exist:3.0rc4
+#   buildah push svsal-caddy ghcr.io/digicademy/svsal/svsal-exist:3.1
 # or
-#   podman push ghcr.io/digicademy/svsal/svsal-exist:3.0rc4
+#   podman push ghcr.io/digicademy/svsal/svsal-exist:3.1
 
 ARG EXIST_VERSION=6.4.0
 
