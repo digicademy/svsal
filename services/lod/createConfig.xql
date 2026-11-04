@@ -123,7 +123,7 @@ let $collection :=
         let $uri := if ($config:instanceMode = "dockernet") then 
                 "http://existdb:8080/exist/apps/salamanca/enhance-tei.xql?wid=" || substring-after($resourceId, "works.")
             else
-                "http://www.salamanca.school:8080/exist/apps/salamanca/enhance-tei.xql?wid=" || substring-after($resourceId, "works.")
+                "https://exist.salamanca.school:8443/exist/apps/salamanca/enhance-tei.xql?wid=" || substring-after($resourceId, "works.")
         return
             <collection uri="{$uri}">
                 {$workMetadata}
@@ -138,7 +138,7 @@ let $collection :=
         let $uri := if ($config:instanceMode = "dockernet") then 
                 "http://existdb:8080/exist/apps/salamanca/enhance-tei.xql?wid=" || $resourceId
             else
-                "http://www.salamanca.school:8080/exist/apps/salamanca/enhance-tei.xql?wid=" || $resourceId
+                "https://exist.salamanca.school:8443/exist/apps/salamanca/enhance-tei.xql?wid=" || $resourceId
         return
             (: <collection uri="{$config:webserver}/enhance-tei.xql?wid={$resourceId}"> :)
             <collection uri="{$uri}">
