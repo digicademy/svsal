@@ -74,6 +74,11 @@
 												{
 													"handler": "headers",
 													"response": {
+														"delete": [
+															"Access-Control-Allow-Headers",
+															"Access-Control-Allow-Methods",
+															"Access-Control-Allow-Origin"
+														],
 														"set": {
 															"Access-Control-Allow-Headers": [
 																"*"
@@ -2108,6 +2113,11 @@
 												{
 													"handler": "headers",
 													"response": {
+														"delete": [
+															"Access-Control-Allow-Headers",
+															"Access-Control-Allow-Methods",
+															"Access-Control-Allow-Origin"
+														],
 														"set": {
 															"Access-Control-Allow-Headers": [
 																"*"
@@ -2596,19 +2606,6 @@
 																				],
 																				"X-Http-Version": [
 																					"{http.request.proto}"
-																				]
-																			}
-																		},
-																		"response": {
-																			"set": {
-																				"Access-Control-Allow-Headers": [
-																					"*"
-																				],
-																				"Access-Control-Allow-Methods": [
-																					"*"
-																				],
-																				"Access-Control-Allow-Origin": [
-																					"*"
 																				]
 																			}
 																		}
