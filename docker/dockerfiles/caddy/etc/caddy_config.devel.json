@@ -1231,6 +1231,25 @@
 												{
 													"handler": "reverse_proxy",
 													"headers": {
+														"request": {
+															"set": {
+																"X-Forwarded-For": [
+																	"{http.request.remote.host}"
+																],
+																"X-Forwarded-Proto": [
+																	"{http.request.scheme}"
+																],
+																"X-Forwarded-Host": [
+																	"{http.request.host}"
+																],
+																"X-Real-IP": [
+																	"{http.request.remote.host}"
+																],
+																"X-Http-Version": [
+																	"{http.request.proto}"
+																]
+															}
+														},
 														"response": {
 															"set": {
 																"Access-Control-Allow-Headers": [
@@ -1270,6 +1289,37 @@
 								{
 									"handler": "subroute",
 									"routes": [
+										{
+											"match": [
+												{
+													"path": [
+														"/js/*",
+														"/img/*",
+														"/css/*",
+														"/.within.website/*"
+													]
+												}
+											],
+											"handle": [
+												{
+													"handler": "reverse_proxy",
+													"headers": {
+														"request": {
+															"set": {
+																"X-Real-IP": [
+																	"{http.request.remote.host}"
+																]
+															}
+														}
+													},
+													"upstreams": [
+														{
+															"dial": "anubis:3000"
+														}
+													]
+												}
+											]
+										},
 										{
 											"handle": [
 												{
@@ -2531,6 +2581,25 @@
 																{
 																	"handler": "reverse_proxy",
 																	"headers": {
+																		"request": {
+																			"set": {
+																				"X-Forwarded-For": [
+																					"{http.request.remote.host}"
+																				],
+																				"X-Forwarded-Proto": [
+																					"{http.request.scheme}"
+																				],
+																				"X-Forwarded-Host": [
+																					"{http.request.host}"
+																				],
+																				"X-Real-IP": [
+																					"{http.request.remote.host}"
+																				],
+																				"X-Http-Version": [
+																					"{http.request.proto}"
+																				]
+																			}
+																		},
 																		"response": {
 																			"set": {
 																				"Access-Control-Allow-Headers": [
@@ -2846,18 +2915,51 @@
 															"match": [
 																{
 																	"path": [
-																		"/exist/apps/salamanca/de/admin.html",
-																		"/exist/apps/salamanca/de/*.xq",
-																		"/exist/apps/salamanca/en/admin.html",
-																		"/exist/apps/salamanca/en/*.xq",
-																		"/exist/apps/dashboard",
-																		"/exist/apps/dashboard/*",
-																		"/exist/apps/monex",
-																		"/exist/apps/monex/*",
-																		"/exist/apps/eXide",
-																		"/exist/apps/eXide/*",
-																		"/exist/apps/existdb-backup",
-																		"/exist/apps/existdb-backup/*"
+																		"/js/*",
+																		"/img/*",
+																		"/css/*",
+																		"/.within.website/*"
+																	]
+																}
+															],
+															"handle": [
+																{
+																	"handler": "reverse_proxy",
+																	"headers": {
+																		"request": {
+																			"set": {
+																				"X-Forwarded-For": [
+																					"{http.request.remote.host}"
+																				],
+																				"X-Forwarded-Proto": [
+																					"{http.request.scheme}"
+																				],
+																				"X-Forwarded-Host": [
+																					"{http.request.host}"
+																				],
+																				"X-Real-IP": [
+																					"{http.request.remote.host}"
+																				],
+																				"X-Http-Version": [
+																					"{http.request.proto}"
+																				]
+																			}
+																		}
+																	},
+																	"upstreams": [
+																		{
+																			"dial": "anubis:3000"
+																		}
+																	]
+																}
+															]
+														},
+														{
+															"match": [
+																{
+																	"path": [
+																		"/exist/rconsole",
+																		"/exist/rconsole/*"
 																	]
 																}
 															],
@@ -2873,8 +2975,66 @@
 																				"X-Forwarded-Host": [
 																					"{http.request.host}"
 																				],
+																				"X-Real-IP": [
+																					"{http.request.remote.host}"
+																				],
+																				"X-Forwarded-For": [
+																					"{http.request.remote.host}"
+																				]
+																			}
+																		}
+																	},
+																	"upstreams": [
+																		{
+																			"dial": "existdb:8080"
+																		}
+																	]
+																}
+															]
+														},
+														{
+															"match": [
+																{
+																	"path": [
+																		"/exist/apps/salamanca/de/admin.html",
+																		"/exist/apps/salamanca/de/*.xql",
+																		"/exist/apps/salamanca/en/admin.html",
+																		"/exist/apps/salamanca/en/*.xql",
+																		"/exist/apps/salamanca/services/lod/*.xql",
+																		"/exist/apps/dashboard",
+																		"/exist/apps/dashboard/*",
+																		"/exist/apps/monex",
+																		"/exist/apps/monex/*",
+																		"/exist/apps/eXide",
+																		"/exist/apps/eXide/*",
+																		"/exist/apps/existdb-backup",
+																		"/exist/apps/existdb-backup/*",
+																		"/exist/data/jmxservlet.token",
+																		"/exist/status",
+																		"/exist/status/*"
+																	]
+																}
+															],
+															"handle": [
+																{
+																	"handler": "reverse_proxy",
+																	"headers": {
+																		"request": {
+																			"set": {
+																				"X-Forwarded-Proto": [
+																					"{http.request.scheme}"
+																				],
+																				"X-Forwarded-Host": [
+																					"{http.request.host}"
+																				],
 																				"X-Forwarded-For": [
 																					"{http.request.remote_ip}"
+																				],
+																				"X-Real-IP": [
+																					"{http.request.remote.host}"
+																				],
+																				"X-Http-Version": [
+																					"{http.request.proto}"
 																				]
 																			}
 																		}
