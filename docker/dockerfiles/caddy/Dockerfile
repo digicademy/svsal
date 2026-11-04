@@ -1,13 +1,13 @@
 # Build image with
 #
-# time TMPDIR="/mnt/c/tmp" buildah bud --no-cache -t ghcr.io/digicademy/svsal/svsal-caddy:2.11.7rc4 -f Dockerfile .
+# time TMPDIR="/mnt/c/tmp" buildah bud --no-cache -t ghcr.io/digicademy/svsal/svsal-caddy:2.11.8 -f Dockerfile .
 #
 # Then run with
 #   buildah from svsal-caddy
 #   buildah run -e MODE=devel   --tty -p 8180:80 -p 8443:443 svsal-caddy-working-container /bin/bash
 #
 # or
-#   podman run -e MODE=devel --rm -it -p 8180:80 -p 8443:443 --sysctl=net.core.rmem_max=7500000 --systl=net.core.wmem_max=7500000 --name caddy ghcr.io/digicademy/svsal/svsal-caddy:2.11.7rc4
+#   podman run -e MODE=devel --rm -it -p 8180:80 -p 8443:443 --sysctl=net.core.rmem_max=7500000 --systl=net.core.wmem_max=7500000 --name caddy ghcr.io/digicademy/svsal/svsal-caddy:2.11.8
 #
 #     perhaps add more mount options:
 #       -v caddy/certs:/root/certs
@@ -24,16 +24,16 @@
 #
 # This is the last working podman run command:
 #
-#  podman run -e MODE=devel --rm -it -p 8080:80 -p 8443:443 -v /var/data/caddy/etc:/etc/caddy -v /var/data/caddy/logs/:/var/log/caddy -v /var/data/caddy/certs:/root/certs -v /var/data/caddy/site:/var/data/caddy/site -v /var/data/existdb/export:/var/data/existdb/data/export:ro --name caddy ghcr.io/digicademy/svsal/svsal-caddy:2.11.7rc4
+#  podman run -e MODE=devel --rm -it -p 8080:80 -p 8443:443 -v /var/data/caddy/etc:/etc/caddy -v /var/data/caddy/logs/:/var/log/caddy -v /var/data/caddy/certs:/root/certs -v /var/data/caddy/site:/var/data/caddy/site -v /var/data/existdb/export:/var/data/existdb/data/export:ro --name caddy ghcr.io/digicademy/svsal/svsal-caddy:2.11.8
 #
 # If all is well, login to container registry (with podman/buildah login ghcr.io) and upload with
-#   buildah push svsal-caddy ghcr.io/digicademy/svsal/svsal-caddy:2.11.7rc4
+#   buildah push svsal-caddy ghcr.io/digicademy/svsal/svsal-caddy:2.11.8
 # or
-#   podman push ghcr.io/digicademy/svsal/svsal-caddy:2.11.7rc4
+#   podman push ghcr.io/digicademy/svsal/svsal-caddy:2.11.8
 
 # === STAGE 1 ===
 
-ARG CADDY_VERSION="2.11.7"
+ARG CADDY_VERSION="2.11.8"
 
 FROM caddy:${CADDY_VERSION}-builder AS builder
 
