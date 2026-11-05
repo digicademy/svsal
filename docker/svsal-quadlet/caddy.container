@@ -19,7 +19,8 @@ Volume=/var/data/caddy/certs:/root/certs:Z
 Volume=/var/data/caddy/etc:/etc/caddy:z
 Volume=/var/data/caddy/logs:/var/log/caddy:z
 Volume=/var/data/caddy/site:/var/data/caddy/site:z
-Volume=/var/data/existdb/export:/var/data/existdb/data/export:z,ro
+# Volume=/var/data/existdb/export:/var/data/existdb/data/export:z,ro
+Volume=/var/data/existdb/export:/var/data/existdb/export:z,ro
 Network=salamanca-public.network
 Network=salamanca-internal.network
 
