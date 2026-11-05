@@ -2382,7 +2382,9 @@ declare function admin:createRDF($rid as xs:string) {
         || 'http://existdb:8080/exist/apps/salamanca/services/lod/createConfig.xql?resourceId=' || $rid
     else
            'https://exist.salamanca.school/exist/apps/salamanca/services/lod/extract.xql?format=rdf&amp;configuration='
-        || 'https://exist.salamanca.school/exist/apps/salamanca/services/lod/createConfig.xql?resourceId=' || $rid
+        (: || 'https://exist.salamanca.school/exist/apps/salamanca/services/lod/createConfig.xql?resourceId=' || $rid :)
+        || 'https%3A%2F%2Fexist.salamanca.school%2Fexist%2Fapps%2Fsalamanca%2Fservices%2Flod%2FcreateConfig.xql%3FresourceId%3D' || $rid
+        
     let $debug := 
         if ($config:debug = ("info", "trace")) then
             let $d := console:log("[Admin] Requesting " || $xtriplesUrl || " ...")
