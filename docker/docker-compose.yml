@@ -12,6 +12,7 @@
 services:
   caddy:
     image: ghcr.io/digicademy/svsal/svsal-caddy:${CADDY_VERSION}
+    container_name: caddy
     restart: unless-stopped
     environment:
       MODE: "${MODE:-devel}" # set to "prod" for production
@@ -31,6 +32,7 @@ services:
 
   existdb:
     image: ghcr.io/digicademy/svsal/svsal-exist:${EXISTDB_VERSION}
+    container_name: existdb
     restart: unless-stopped
     volumes:
       # - exist_etc:/exist/config:z
@@ -42,6 +44,7 @@ services:
 
   sphinx:
     image: ghcr.io/digicademy/svsal/svsal-sphinx:${SPHINX_VERSION}
+    container_name: sphinx
     restart: unless-stopped
     mem_limit: 512m # match indexer.value from sphinx.conf
     volumes:
@@ -58,6 +61,7 @@ services:
 
   any23:
     image: ghcr.io/digicademy/svsal/svsal-any23:${ANY23_VERSION}
+    container_name: any23
     restart: unless-stopped
     networks:
       - salamanca-internal
@@ -66,6 +70,7 @@ services:
 
   anubis:
     image: ghcr.io/techarohq/anubis:${ANUBIS_VERSION} # 2026-11-03: 1.28.2
+    container_name: anubis
     pull_policy: always
     restart: unless-stopped
     environment:
