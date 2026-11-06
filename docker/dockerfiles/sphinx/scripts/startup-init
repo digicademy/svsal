@@ -31,7 +31,7 @@ start() {
   NEWEST_SPA=$(ls -t /var/lib/sphinx/data/*.spa 2>/dev/null | head -1)
   if [ -z "$NEWEST_SPA" ] || [ ! -s "$NEWEST_SPA" ]; then
       echo "   - First boot or empty index: running 'indexer --all' (this may take a while) ..."
-      if ! indexer --all --quiet >> /var/log/sphinx/indexer.log 2>&1; then
+      if ! indexer --all --quiet > /var/log/sphinx/indexer.log 2>&1; then
           echo "ERROR: initial indexer failed; searchd will start with an empty index. See /var/log/sphinx/indexer.log" >&2
       fi
   else

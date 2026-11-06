@@ -9,10 +9,9 @@
 find ${SALAMANCA_DATA} -type f -name "*.snippet.xml" -exec sed -i 's| xmlns:sphinx="https://www.salamanca.school/xquery/sphinx"||g' {} +  >/dev/null
 
 echo '<?xml version="1.0" encoding="utf-8" standalone="yes"?>'
-# curl --insecure --silent https://test.salamanca.school:8443/exist/apps/salamanca/sphinx-client.xql?mode=load
-
 echo '<sphinx:docset>'
 cat /etc/sphinx/sal-schema.xml
 # cat -s /var/data/caddy/site/data/**/snippets/*.xml
-find ${SALAMANCA_DATA} -type f -name "*.snippet.xml" -exec cat {} +
+find "${SALAMANCA_DATA}" -type f -name '*.snippet.xml' \
+    -exec sed 's| xmlns:sphinx="https://www.salamanca.school/xquery/sphinx"||g' {} +
 echo '</sphinx:docset>'
