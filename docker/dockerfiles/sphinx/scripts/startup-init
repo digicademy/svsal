@@ -27,9 +27,15 @@ start() {
   done
   echo "       Done."
 
-  echo "   - Run the indexer once (don't rotate indices, searchd is not running yet) ..."
-  if ! indexer --all --quiet >> /var/log/sphinx/indexer.log 2>&1; then
-    echo "ERROR: indexer failed; see /var/log/sphinx/indexer.log" >&2
+  echo "   - Checking sphinx index state ..."
+  NEWEST_SPA=$(ls -t /var/lib/sphinx/data/*.spa 2>/dev/null | head -1)
+  if [ -z "$NEWEST_SPA" ] || [ ! -s "$NEWEST_SPA" ]; then
+      echo "   - First boot or empty index: running 'indexer --all' (this may take a while) ..."
+      if ! indexer --all --quiet >> /var/log/sphinx/indexer.log 2>&1; then
+          echo "ERROR: initial indexer failed; searchd will start with an empty index. See /var/log/sphinx/indexer.log" >&2
+      fi
+  else
+      echo "   - Index present; skipping boot-time indexer (cron handles updates)."
   fi
   echo "       Done."
 }

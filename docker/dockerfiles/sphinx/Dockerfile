@@ -3,14 +3,14 @@
 # @author 	andreas wagner <wagner@lhlt.mpg.de>
 #
 # Build image with
-# time TMPDIR="/mnt/c/tmp" buildah bud --no-cache -t ghcr.io/digicademy/svsal/svsal-sphinx:2.2.11 -f Dockerfile .
+# time TMPDIR="/mnt/c/tmp" buildah bud --no-cache -t ghcr.io/digicademy/svsal/svsal-sphinx:2.2.11-1 -f Dockerfile .
 #
 # Then run with
 #   buildah from svsal-sphinx
 #   buildah run --tty         -p 9312:9312 -p 9306:9306 -p 8081:80 svsal-sphinx-working-container /bin/sh
 #
 # or
-#   podman run --tty --rm -it -p 9312:9312 -p 9306:9306 -p 8081:80 --name sphinxsearch ghcr.io/digicademy/svsal/svsal-sphinx:2.2.11
+#   podman run --tty --rm -it -p 9312:9312 -p 9306:9306 -p 8081:80 --name sphinxsearch ghcr.io/digicademy/svsal/svsal-sphinx:2.2.11-1
 #
 #     perhaps add mount options:
 #       -v ./sphinx/etc:/etc/sphinx
@@ -20,25 +20,25 @@
 #       -v ./existexport:/var/data/existdb/data/export
 #
 #     taken together, and assuming there are subdirectories ./sphinx/{index,log,etc,opensphinxsearch} and ./existexport, this could be:
-#   podman run --rm -it --tty -p 8022:22 -p 9312:9312 -p 9306:9306 -p 8081:80 -v ./sphinx/log:/var/log/sphinx -v ./sphinx/etc:/etc/sphinx -v ./sphinx/index:/var/lib/sphinx/data -v ./sphinx/opensphinxsearch:/opt/opensphinxsearch -v ./existexport:/var/data/existdb/data/export --name sphinxsearch ghcr.io/digicademy/svsal/svsal-sphinx:2.2.11
+#   podman run --rm -it --tty -p 8022:22 -p 9312:9312 -p 9306:9306 -p 8081:80 -v ./sphinx/log:/var/log/sphinx -v ./sphinx/etc:/etc/sphinx -v ./sphinx/index:/var/lib/sphinx/data -v ./sphinx/opensphinxsearch:/opt/opensphinxsearch -v ./existexport:/var/data/existdb/data/export --name sphinxsearch ghcr.io/digicademy/svsal/svsal-sphinx:2.2.11-1
 #     currently, the pasta network does not work when no upstream network is available (host is offline), so we might need to use slirp4netns:
-#   podman run --rm -it --tty -p 8022:22 -p 9312:9312 -p 9306:9306 -p 8081:80 -v ./sphinx/log:/var/log/sphinx -v ./sphinx/etc:/etc/sphinx -v ./sphinx/index:/var/lib/sphinx/data -v ./sphinx/opensphinxsearch:/opt/opensphinxsearch -v ./existexport:/var/data/existdb/data/export --name sphinxsearch ghcr.io/digicademy/svsal/svsal-sphinx:2.2.11 --network=slirp4netns:allow_host_loopback=true
+#   podman run --rm -it --tty -p 8022:22 -p 9312:9312 -p 9306:9306 -p 8081:80 -v ./sphinx/log:/var/log/sphinx -v ./sphinx/etc:/etc/sphinx -v ./sphinx/index:/var/lib/sphinx/data -v ./sphinx/opensphinxsearch:/opt/opensphinxsearch -v ./existexport:/var/data/existdb/data/export --name sphinxsearch ghcr.io/digicademy/svsal/svsal-sphinx:2.2.11-1 --network=slirp4netns:allow_host_loopback=true
 #
 # This is the last working podman run command:
 #
-#   podman run --rm -it --tty -p 9312:9312 -p 9306:9306 -p 8081:80 -v /var/data/sphinx/logs:/var/log/sphinx -v /var/data/sphinx/etc:/etc/sphinx -v /var/data/sphinx/data:/var/lib/sphinx/data -v /var/data/sphinx/oss:/opt/opensphinxsearch -v /var/data/existdb/export:/var/data/existdb/export --name sphinx ghcr.io/digicademy/svsal/svsal-sphinx:2.2.11
+#   podman run --rm -it --tty -p 9312:9312 -p 9306:9306 -p 8081:80 -v /var/data/sphinx/logs:/var/log/sphinx -v /var/data/sphinx/etc:/etc/sphinx -v /var/data/sphinx/data:/var/lib/sphinx/data -v /var/data/sphinx/oss:/opt/opensphinxsearch -v /var/data/existdb/export:/var/data/existdb/export --name sphinx ghcr.io/digicademy/svsal/svsal-sphinx:2.2.11-1
 #
 # if all is well, upload (after podman login/buildah login) with
-#   buildah push svsal-sphinx ghcr.io/digicademy/svsal/svsal-sphinx:2.2.11
+#   buildah push svsal-sphinx ghcr.io/digicademy/svsal/svsal-sphinx:2.2.11-1
 # or
-#   podman push ghcr.io/digicademy/svsal/svsal-sphinx:2.2.11
+#   podman push ghcr.io/digicademy/svsal/svsal-sphinx:2.2.11-1
 #
 # When deploying, set SERVER_NAME with a build argument, e.g.:
 #   `--build-arg SERVER_NAME="search.salamanca.school"` or `--build-arg SERVER_NAME=${SERVER_NAME}` (where SERVER_NAME is set in the environment)
 #
 # As of 2024-12-16, this installs
 # - php7.4
-# - sphinxsearch 2.2.11
+# - sphinxsearch 2.2.11-1
 
 FROM php:7.4-fpm-alpine
 # 2026-11-02: php:7.4.33-fpm-alpine3.16
@@ -80,6 +80,8 @@ RUN apk add openrc \
     busybox-initscripts \
     logrotate \
     util-linux \
+    procps \
+    lsof \
     caddy \
     'sphinx<3' \
 #    php7.4 \
@@ -158,7 +160,7 @@ COPY etc/dummy.snippet.xml /tmp/salamancadata
 
 
 # add cronjob for indexer to pick up new materials even without restarting sphinxsearch/container
-RUN echo "30 03 * * * indexer --quiet --rotate --all | grep -v 'duplicate' > /var/log/sphinx/indexer.log" > /etc/crontabs/root
+RUN echo "30 03 * * * indexer --quiet --rotate --all 2>&1 | grep -v 'duplicate' > /var/log/sphinx/indexer.log" > /etc/crontabs/root
 
 
 
