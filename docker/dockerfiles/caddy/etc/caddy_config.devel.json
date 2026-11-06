@@ -219,7 +219,6 @@
 							"match": [
 								{
 									"host": [
-										"c100-101.cloud.gwdg.de",
 										"www.salamanca.school",
 										"localhost"
 									]
@@ -2991,6 +2990,16 @@
 														},
 														{
 															"match": [
+																{
+																		"path_regexp": {
+																				"pattern": "^/exist/apps/salamanca/(?:en|de)/resources/(?:[^/]*\\/)*[^/]+\\.(?i:png|jpe?g|gif|svg)$"
+																		}
+																},
+																{
+																		"path_regexp": {
+																				"pattern": "^/exist/apps/salamanca/(?:en|de)/(?:[^/]*\\/)*[^/]+\\.(?i:html|xml)$"
+																		}
+																},
 																{
 																	"path": [
 																		"/exist/apps/salamanca/de/admin.html",
