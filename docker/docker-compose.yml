@@ -71,7 +71,7 @@ services:
   anubis:
     image: ghcr.io/techarohq/anubis:${ANUBIS_VERSION} # 2026-11-03: 1.28.2
     container_name: anubis
-    pull_policy: always
+    pull_policy: missing
     restart: unless-stopped
     environment:
       - BIND=:3000
