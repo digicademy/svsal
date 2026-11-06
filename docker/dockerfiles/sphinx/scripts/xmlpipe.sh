@@ -10,8 +10,14 @@ find ${SALAMANCA_DATA} -type f -name "*.snippet.xml" -exec sed -i 's| xmlns:sphi
 
 echo '<?xml version="1.0" encoding="utf-8" standalone="yes"?>'
 echo '<sphinx:docset>'
-cat /etc/sphinx/sal-schema.xml
+
+# schema file probably has no prolog, but strip it if present:
+sed -e 's|<?xml[^>]*?>||g' /etc/sphinx/sal-schema.xml
 # cat -s /var/data/caddy/site/data/**/snippets/*.xml
-find "${SALAMANCA_DATA}" -type f -name '*.snippet.xml' \
-    -exec sed 's| xmlns:sphinx="https://www.salamanca.school/xquery/sphinx"||g' {} +
+
+find "${SALAMANCA_DATA}" -type f -name '*.snippet.xml' -exec \
+    sed -e 's|<?xml[^>]*?>||g' \
+        -e 's| xmlns:sphinx="https://www.salamanca.school/xquery/sphinx"||g' \
+        {} +
+
 echo '</sphinx:docset>'
