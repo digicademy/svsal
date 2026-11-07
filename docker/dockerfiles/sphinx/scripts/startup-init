@@ -39,7 +39,7 @@ start() {
               echo "   - First boot or empty index: populating index ..."
 
               echo "     - [1/2] preparing XML data ..."
-              if ! /usr/bin/prepare-xml.sh 2>&1 >> /var/log/sphinx/prepare-xml.log; then
+              if ! /usr/bin/prepare-xml.sh >> /var/log/sphinx/prepare-xml.log 2>&1; then
                   echo "ERROR: XML preparation failed. See /var/log/sphinx/prepare-xml.log" >&2
               fi
 

@@ -12,7 +12,10 @@ echo '<sphinx:docset>'
 # schema file probably has no prolog, but strip it if present:
 sed -e 's|<?xml[^>]*?>||g' /etc/sphinx/sal-schema.xml
 
-cat -s /var/data/caddy/site/data/**/snippets/*.xml
+# busybox's cat does not handle `-s` or globstar wildcards, so this does not work:
+# cat -s /var/data/caddy/site/data/**/snippets/*.xml
+find "${SALAMANCA_DATA}" -type f -path '*/snippets/*.snippet.xml' -exec cat {} +
+
 # find "${SALAMANCA_DATA}" -type f -name '*.snippet.xml' -exec \
 #     sed -e 's|<?xml[^>]*?>||g' \
 #         -e 's| xmlns:sphinx="https://www.salamanca.school/xquery/sphinx"||g' \

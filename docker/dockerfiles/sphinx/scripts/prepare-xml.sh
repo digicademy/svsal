@@ -1,14 +1,19 @@
 #!/bin/sh
+set -eu
 
-# This prepares the XML snippet files by removing the
-# XML prolog and Sphinx namespace declaration.
+STAMP=/var/lib/sphinx/.snippet-sed-stamp
+SEDF=/etc/sphinx/prepare.sed
+START=$(mktemp)
+touch "$START"
 
-find "${SALAMANCA_DATA}" -type f -name '*.snippet.xml' -exec \
-    sed -i 's|<?xml[^>]*?>||g' \
-        -i 's| xmlns:sphinx="https://www.salamanca.school/xquery/sphinx"||g' \
-        {} +
+if [ -e "$STAMP" ]; then
+    find "${SALAMANCA_DATA}" -type f -name '*.snippet.xml' \
+        -newer "$STAMP" \
+        -exec sed -i -f "$SEDF" {} +
+else
+    echo "   (first run: no stamp, processing all files)"
+    find "${SALAMANCA_DATA}" -type f -name '*.snippet.xml' \
+        -exec sed -i -f "$SEDF" {} +
+fi
 
-# This was the previous approach, which only removed the Sphinx namespace declaration.
-#
-# find ${SALAMANCA_DATA} -type f -name "*.snippet.xml" -exec \
-#     sed -i 's| xmlns:sphinx="https://www.salamanca.school/xquery/sphinx"||g' {} +
+mv "$START" "$STAMP"
