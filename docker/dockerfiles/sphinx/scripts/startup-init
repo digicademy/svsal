@@ -29,13 +29,27 @@ start() {
 
   echo "   - Checking sphinx index state ..."
   NEWEST_SPA=$(ls -t /var/lib/sphinx/data/*.spa 2>/dev/null | head -1)
-  if [ -z "$NEWEST_SPA" ] || [ ! -s "$NEWEST_SPA" ]; then
-      echo "   - First boot or empty index: running 'indexer --all' (this may take a while) ..."
-      if ! indexer --all --quiet > /var/log/sphinx/indexer.log 2>&1; then
-          echo "ERROR: initial indexer failed; searchd will start with an empty index. See /var/log/sphinx/indexer.log" >&2
-      fi
-  else
-      echo "   - Index present; skipping boot-time indexer (cron handles updates)."
-  fi
-  echo "       Done."
+
+  case "${SPHINX_SKIP_INDEX:-0}" in
+      1|y|Y|yes|Yes|YES|true|True|TRUE|on|On|ON)
+          echo "   - SPHINX_SKIP_INDEX is set; skipping index population."
+          ;;
+      *)
+          if [ -z "$NEWEST_SPA" ] || [ ! -s "$NEWEST_SPA" ]; then
+              echo "   - First boot or empty index: populating index ..."
+
+              echo "     - [1/2] preparing XML data ..."
+              if ! /usr/bin/prepare-xml.sh 2>&1 >> /var/log/sphinx/prepare-xml.log; then
+                  echo "ERROR: XML preparation failed. See /var/log/sphinx/prepare-xml.log" >&2
+              fi
+
+              echo "     - [2/2] running 'indexer --all' ..."
+              if ! indexer --all --quiet >> /var/log/sphinx/indexer.log 2>&1; then
+                  echo "ERROR: initial indexer failed; searchd will start with an empty index. See /var/log/sphinx/indexer.log" >&2
+              fi
+          else
+              echo "   - Index present; skipping boot-time indexer (cron handles updates)."
+          fi
+          ;;
+  esac  echo "       Done."
 }

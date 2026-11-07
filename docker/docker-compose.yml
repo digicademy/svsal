@@ -46,7 +46,9 @@ services:
     image: ghcr.io/digicademy/svsal/svsal-sphinx:${SPHINX_VERSION}
     container_name: sphinx
     restart: unless-stopped
-    mem_limit: 512m # match indexer.value from sphinx.conf
+    mem_limit: 1024m # match indexer.value from base.conf
+    environment:
+      - SPHINX_SKIP_INDEX=${SPHINX_SKIP_INDEX:-0}
     volumes:
       - sphinx_etc:/etc/sphinx:z                          # directory with sphinxsearch configuration files
       - sphinx_oss:/opt/opensphinxsearch:z                # directory with OpenSphinxSearch
