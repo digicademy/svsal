@@ -17,7 +17,7 @@
 	<xsl:template match="/">
 		<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"
 			font-selection-strategy="character-by-character"
-			font-family="Junicode, Antinoou, SBL Hebrew"
+			font-family="Junicode, Foulis Greek, Antinoou, SBL Hebrew"
 			xmlns:rx="http://www.renderx.com/XSL/Extensions">
 			<!-- DEFINING PAGE LAYOUTS AND THEIR SEQUENCES (PAGE AND SEQUENCE MASTERS)-->
 			<fo:layout-master-set>
@@ -681,7 +681,7 @@
 		<xsl:variable name="char_itself" select="./text()"/>
 		<xsl:variable name="standardized"
 			select="$specialchars/key('chars', $char_id)/tei:mapping[@type = 'standardized']/text()"/>
-		<xsl:variable name="replace" select="replace(current()/text(), $char_itself, $standardized)"/>
+        <xsl:variable name="replace" select="replace(current()/text(), $char_itself, $standardized)"/>
 		<xsl:choose>
 			<xsl:when test="($char_id = 'char017f') or ($char_id = 'char204a')">
 				<xsl:choose>
@@ -698,11 +698,16 @@
 				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:apply-templates/>
+				<fo:inline font-weight="normal"><xsl:apply-templates/></fo:inline>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-
+    <!-- TEMPLATE FOR FOREIGN (GREEK etc.)  -->
+    <xsl:template match="tei:foreign[@xml:lang='grc']">
+       <fo:inline font-family="Foulis Greek">
+         <xsl:apply-templates/>
+       </fo:inline>
+    </xsl:template>
 
 	<!-- TEMPLATE FOR CROSS-REFERENCES  -->
 	<!-- <ref>s which are parts of lists (table of contents etc.) are rendered  -->
@@ -718,7 +723,7 @@
 	</xsl:template>
 	
 	<!--Special template for tests with W0063 Siete Partidas -->
-	<xsl:template match="tei:ref[@target][ancestor::*[@type =('preface','partida','gloss')]]">
+	<xsl:template match="tei:ref[@target][ancestor::*[@type =('preface','partida','gloss')] or ancestor::tei:p]">
 		<xsl:variable name="input" select="translate(@target, '#', '')"/>
 		<xsl:variable name="div_id" select="@xml:id"/>
 		<fo:inline font-weight="bold" font-size="12pt" space-before="0.2cm" space-after="0.2cm" id="{./@xml:id}">
@@ -925,25 +930,25 @@
 			<image xml:id="W0007" citation="Mercado, Tratos y Contratos (2019 [1569])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0007/W0007-0007.jpg</source>
 			</image>
-			<image xml:id="W0008_Vol01" citation="_X_X_">
+			<image xml:id="W0008_Vol01" citation="Molina, Luis de (2025 [1593])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0008/A/W0008-A-0003.jpg</source>
 			</image>
-			<image xml:id="W0008_Vol02" citation="_X_X_">
+			<image xml:id="W0008_Vol02" citation="Molina, Luis de (2025 [1597])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0008/B/W0008-B-0004.jpg</source>
 			</image>
-			<image xml:id="W0008_Vol03" citation="_X_X_">
+			<image xml:id="W0008_Vol03" citation="Molina, Luis de (2026 [1600])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0008/C/W0008-C-0004.jpg</source>
 			</image>
-            <image xml:id="W0008_Vol04" citation="_X_X_">
+            <image xml:id="W0008_Vol04" citation="Molina, Luis de (2025 [1609])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0008/D/W0008-D-0001.jpg</source>
 			</image>
-			<image xml:id="W0008_Vol05" citation="_X_X_">
+			<image xml:id="W0008_Vol05" citation="Molina, Luis de (2026 [1609])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0008/E/W0008-E-0004.jpg</source>
 			</image>
-			<image xml:id="W0008_Vol06" citation="_X_X_">
+			<image xml:id="W0008_Vol06" citation="Molina, Luis de (2026 [1609])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0008/F/W0008-F-0001.jpg</source>
 			</image>
-			<image xml:id="W0008_Vol07" citation="_X_X_">
+			<image xml:id="W0008_Vol07" citation="Molina, Luis de (2025 [1609])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0008/G/W0008-G-0001.jpg</source>
 			</image>
 			<image xml:id="W0010" citation="Solórzano Pereira, Politica Indiana (2019 [1648])">
@@ -975,8 +980,23 @@
 			<image xml:id="W0018" citation="Alcalá, Tractado de los préstamos (2021 [1543])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0018/W0018-0001.jpg</source>
 			</image>
+            <image xml:id="W0019" citation="Alfaro, Tractatvs De Officio Fiscalis (2024 [1606])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0019/W0019-0006.jpg</source>
+			</image>
+            <image xml:id="W0022" citation="Ayala, De iure et officiis bellicis et disciplina militari (2025 [1582])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0022/W0022-0001.jpg</source>
+			</image>
+            <image xml:id="W0025" citation="Báñez, De fide, Spe, &amp; Charitate (2026 [1584])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0025/W0025-0002.jpeg</source>
+			</image>
 			<image xml:id="W0030" citation="Cano, Relectio de Poenitentia (2019 [1558])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0030/W0030-0001.jpg</source>
+			</image>
+            <image xml:id="W0031" citation="Cano, De locis Theologicis (2025 [1563])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0031/W0031-0006.jpg</source>
+			</image>
+            <image xml:id="W0032" citation="Carrasco del Saz, Interpretatio Ad Aliquas Leges Recopilationis Regni Castellae. (2025 [1620])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0032/W0031-0002.jpg</source>
 			</image>
 			<image xml:id="W0033"
 				citation="Carrasco del Saz, Tractatus de casibus curiae. (2020 [1630])">
@@ -984,6 +1004,9 @@
 			</image>
 			<image xml:id="W0034" citation="Las Casas, Treinta Proposiciones (2018 [1552])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0034/W0034-0001.jpg</source>
+			</image>
+            <image xml:id="W0035" citation="Las Casas, Tratado co[m]probatorio (2025 [1552])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0035/W0035-0001.jpg</source>
 			</image>
 			<image xml:id="W0037_Vol01"
 				citation="Castillo Sotomayor, Opera omnia, sive quotidianarum controversiarum iuris, Vol. 1 (2022 [1658])">
@@ -1004,55 +1027,113 @@
 			<image xml:id="W0037_Vol05" citation="Castillo Sotomayor, Opera omnia, sive quotidianarum controversiarum iuris, Vol. 5 (2023 [1658])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0037/E/W0037-E-0001.jpg</source>
 			</image>
-			<image xml:id="W0039" citation="_X_X_">
+            <image xml:id="W0038" citation="Castro Palao, De Ivstitia Et Ivre">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0038/W0038-0003.jpg</source>
+			</image>
+			<image xml:id="W0039" citation="Clavasio, Summa Angelica">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0039/W0039-0002.jpg</source>
 			</image>
 			<image xml:id="W0041"
 				citation="Díaz de Luco, Practica criminalis canonica (2021 [1554])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0041/W0041-0001.jpg</source>
 			</image>
-			<image xml:id="W0043_Vol01" citation="_X_X_">
+			<image xml:id="W0043_Vol01" citation="Escobar y Mendoza, Universae Theologiae Moralis. Volvmen Primvm (2024 [1652])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0043/A/W0043-A-0005.jpg</source>
 			</image>
-			<image xml:id="W0043_Vol02" citation="_X_X_">
+			<image xml:id="W0043_Vol02" citation="Escobar y Mendoza, Universae Theologiae Moralis. Volvmen Secvndvm (2024 [1655])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0043/B/W0043-B-0001.jpg</source>
 			</image>
-			<image xml:id="W0043_Vol03" citation="_X_X_">
+			<image xml:id="W0043_Vol03" citation="Escobar y Mendoza, Universae Theologiae Moralis. Tomi Tertii Pars Prima (2024 [1663])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0043/C/W0043-C-0003.jpg</source>
 			</image>
-			<image xml:id="W0043_Vol04" citation="_X_X_">
+			<image xml:id="W0043_Vol04" citation="Escobar y Mendoza, Universae Theologiae Moralis. Tomi Tertii Pars Altera. (2024 [1663])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0043/D/W0043-D-0001.jpg</source>
 			</image>
-			<image xml:id="W0043_Vol05" citation="_X_X_">
+			<image xml:id="W0043_Vol05" citation="Escobar y Mendoza, Universae Theologiae Moralis. Volvmen Quartvm. (2024 [1663])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0043/E/W0043-E-0001.jpg</source>
 			</image>
-			<image xml:id="W0043_Vol06" citation="_X_X_">
+			<image xml:id="W0043_Vol06" citation="Escobar y Mendoza, Universae Theologiae Moralis. Tomi Qvinti Pars Prima (2024 [1663])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0043/F/W0043-F-0001.jpg</source>
 			</image>
-			<image xml:id="W0043_Vol07" citation="_X_X_">
+			<image xml:id="W0043_Vol07" citation="Escobar y Mendoza, Universae Theologiae Moralis. Tomi Qvinti Pars Altera (2024 [1663])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0043/G/W0043-G-0003.jpg</source>
 			</image>
-			<image xml:id="W0043_Vol08" citation="_X_X_">
+			<image xml:id="W0043_Vol08" citation="Escobar y Mendoza, Universae Theologiae Moralis. Tomi Sexti Pars Prima (2024 [1663])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0043/H/W0043-H-0001.jpg</source>
 			</image>
-            <image xml:id="W0043_Vol09" citation="_X_X_">
+            <image xml:id="W0043_Vol09" citation="Escobar y Mendoza, Universae Theologiae Moralis. Tomi Sexti Pars Altera (2024 [1663])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0043/I/W0043-I-0001.jpg</source>
-			</image>			
+			</image>	
+            <image xml:id="W0043_Vol10" citation="Escobar y Mendoza, Universae Theologiae Moralis. Tomvs Septimvs Et Vltimvs (2024 [1663])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0043/J/W0043-J-0001.jpg</source>
+			</image>		
 			<image xml:id="W0046"
 				citation="Freitas, De Iusto Imperio Lusitanorum Asiatico (2020 [1625])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0046/W0046-0005.jpg</source>
+			</image>
+            <image xml:id="W0051_Vol01"
+				citation="González Téllez, Complectens Librvm Primvm, Additis Notis vberioribus ab Historia, &amp; Chorographia. Tomvs Primvs (2026 [1673])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0051/A/W0051-A-0009.jpg</source>
+			</image>
+            <image xml:id="W0051_Vol02"
+				citation="González Téllez, Complectens Librvm Secvndvm, Additis Notis vberioribus ab Historia, &amp; Chorographia. Tomvs Primvs (2026 [1673])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0051/B/W0051-B-0007.jpg</source>
+			</image>
+            <image xml:id="W0051_Vol03"
+				citation="González Téllez, Complectens Tomvs Tertivs, Additis Notis vberioribus ab Historia, &amp; Chorographia. Tomvs Primvs (2026 [1673])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0051/C/W0051-C-0007.jpg</source>
+			</image>
+            <image xml:id="W0051_Vol04"
+				citation="González Téllez, Complectens Librvm Qvartvm, Additis Notis vberioribus ab Historia, &amp; Chorographia. Tomvs Primvs (2026 [1673])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0051/D/W0051-D-0007.jpg</source>
+			</image>
+            <image xml:id="W0053"
+				citation="Viñones, Espejo dela concie[n]cia (2025 [1507])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0053/W0053-0005.jpg</source>
+			</image>
+            <image xml:id="W0056"
+				citation="Ibarra, Annvae Relectiones (2025 [1675])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0056/W0056-0009.jpg</source>
 			</image>
 			<image xml:id="W0061"
 				citation="León Pinelo, Confirmaciones Reales de Encomiendas (2021 [1630])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0061/W0061-0005.jpg</source>
 			</image>
-			<image xml:id="W0063_Vol01" citation="_X_X_">
+            <image xml:id="W0062"
+				citation="Lessius, De Ivstitia Et Ivre caeterisque Virtutibus Cardinalibus Libri IV (2025 [1605])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0062/W0062-0007.jpg</source>
+			</image>
+			<image xml:id="W0063_Vol01" citation="Primera Partida (2024 [1555])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0063/A/W0063-A-0001.jpg</source>
 			</image>
-			<image xml:id="W0073" citation="_X_X_">
+            <image xml:id="W0063_Vol02" citation="Segvnda Partida (2024 [1555])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0063/B/W0063-B-0001.jpg</source>
+			</image>
+            <image xml:id="W0063_Vol08" citation="López, Index seu repertorium materiarum (2024 [1555])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0063/H/W0063-H-0001.jpg</source>
+			</image>
+            <image xml:id="W0063_Vol09" citation="López, Reportorio Mvy Copioso De El Texto Y Leyes de las siete Partidas (2024 [1576])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0063/I/W0063-I-0001.jpg</source>
+			</image>
+            <image xml:id="W0063_Vol10" citation="López, Omnes fere tituli tam iuris civilis (2024 [1576])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0063/J/W0063-J-0001.jpg</source>
+			</image>
+            <image xml:id="W0063_Vol11" citation="López, Index seu repertorium materiarum (2024 [1576])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0063/K/W0063-K-0001.jpg</source>
+			</image>
+			<image xml:id="W0065" citation="López, Instructorium negotiantium: in duobus contentum libris. (2025 [1589])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0065/W0065-0002.jpg</source>
+			</image>
+			<image xml:id="W0067" citation="Mariana, De rege et regis institutione libri III. (2025 [1599])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0067/W0067-0002.jpg</source>
+			</image>
+			<image xml:id="W0070" citation="Martinez de Olano, Concordia Et noua reductio antinomiaru[m] iuris comunis. (2024 [1575])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0070/W0070-0006.jpg</source>
+			</image>
+			<image xml:id="W0073" citation="Medina, Restitutione et Contractibus Tractatus (2024 [1553])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0073/W0073-0002.jpg</source>
 			</image>
-			<image xml:id="W0074" citation="_X_X_">
+			<image xml:id="W0074" citation="Medina, In titulum de poenitentia eiusque partibus commentarii. (2024 [1553])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0074/W0074-0007.jpg</source>
 			</image>
 			<image xml:id="W0076" citation="XXX">
@@ -1061,13 +1142,19 @@
 			<image xml:id="W0078" citation="Nebrija, Lexicon Iuris Civilis (2020 [1537])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0078/W0078-0005.jpg</source>
 			</image>
+			<image xml:id="W0079" citation="Nebrija, Vocabvlarivm Vtrivsqve Ivris (2025 [1559])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0079/W0079-0001.jpg</source>
+			</image>
 			<image xml:id="W0083" citation="Pedraza, Summa de casos de consciencia (2021 [1568])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0083/W0083-0002.jpg</source>
 			</image>
-			<image xml:id="W0089" citation="_X_X_">
+			<image xml:id="W0089" citation="Quesada, Diversarum quaestionum iuris liber (2024 [1573])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0089/W0089-0002.jpg</source>
 			</image>
-			<image xml:id="W0092" citation="SALAS, Tractatus De Legibus (2024 [1611]), in: The School of Salamanca. A Digital Collection of Sources &lt;https://id.salamanca.school/texts/W0092&gt;">
+			<image xml:id="W0091" citation="Sánchez, Dispvtationvm De Sancto Matrimonii Sacramento. (2026 [1602])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0091/W0091-0005.jpg</source>
+			</image>
+			<image xml:id="W0092" citation="Salas, Tractatus De Legibus (2024 [1611])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0092/W0092-0005.jpg</source>
 			</image>
 			<image xml:id="W0095"
@@ -1078,23 +1165,60 @@
 				citation="Solórzano Pereira, De Indiarum Iure, sive de Iusta Indiarum Occidentalium Inquisitione, Acquisitione, et Retentiones Tribus Libris Comprehensum. 2 vols. (2021 [1629])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0096/A/W0096-A-0007.jpg</source>
 			</image>
+			<image xml:id="W0098"
+				citation="Suárez, Defensio fidei Catholicae et apostolicae adversus Anglicanae sectae errores. (2025 [1613])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0098/W0098-0001.jpg</source>
+			</image>
+			<image xml:id="W0100"
+				citation="Torquemada, Svmmae Ecclesiasticae. (2026 [1560])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0100/W0100-0006.jpg</source>
+			</image>
+			<image xml:id="W0101"
+				citation="Torres, De Fide, Spe, Charitate Et Prvdentia. Tomus Vnus (2025 [1617])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0101/W0101-0005.jpg</source>
+			</image>
+			<image xml:id="W0102"
+				citation="Torres, Dispvtationvm in secundam secundae D.Thomae. Tomus alter (2025 [1621])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0102/W0102-0004.jpg</source>
+			</image>
 			<image xml:id="W0103"
 				citation="Vacca, Expositiones locorum obscuriorum et Paratitulorum in Pandectas. (2020 [1554])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0103/W0103-0001.jpg</source>
+			</image>
+			<image xml:id="W0105_Vol01"
+				citation="Vázquez, Commentariorum theologicorum ac disputationum in primam secundae sancti Thomae. (2026 [1606])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0105/A/W0105-A-0009.jpg</source>
+			</image>
+			<image xml:id="W0105_Vol02"
+				citation="Vázquez, Commentariorum theologicorum ac disputationum in primam secundae sancti Thomae. (2026 [1606])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0105/B/W0105-B-0009.jpg</source>
 			</image>
 			<image xml:id="W0106" citation="Menchaca, Controversiarum Libri Tres. (2022 [1572])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0106/W0106-0005.jpg</source>
 			</image>
             <image xml:id="W0111"
-				citation="Villalón, >Antinomia iuris regni Hispaniarum ac ciuilis, in qua practica forensium causarum versatur, ac Aerarium commune opinionum communium iuxta ordinem alphabeti. (2023 [1569])">
+				citation="Villalón, Antinomia iuris regni Hispaniarum ac ciuilis, in qua practica forensium causarum versatur, ac Aerarium commune opinionum communium iuxta ordinem alphabeti. (2023 [1569])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0111/W0111-0002.jpg</source>
+			</image>
+			<image xml:id="W0112_Vol01"
+				citation="Villarroel, Govierno Eclesiastico Pacifico (2025 [1656])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0112/A/W0112-A-0003.jpg</source>
+			</image>
+			<image xml:id="W0112_Vol02"
+				citation="Villarroel, Govierno Eclesiastico Pacifico (2025 [1657])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0112/B/W0112-B-0003.jpg</source>
 			</image>
 			<image xml:id="W0113"
 				citation="Villalón, Provechoso tratado de cambios y contrataciones de mercaderes y reprovación de usura (2021 [1541])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0113/W0113-0005.jpg</source>
 			</image>
-			<image xml:id="W0114" citation="_X_X_">
+			<image xml:id="W0114" 
+				citation="Cajetan, Summula Caietani. (2024 [1525])">
 				<source>https://c099-013.cloud.gwdg.de/svsal/W0114/W0114-0005.jpg</source>
+			</image>
+			<image xml:id="W0116" 
+				citation="Zapata y Sandoval, De Iustitia distributiva. (2025 [1609])">
+				<source>https://c099-013.cloud.gwdg.de/svsal/W0116/W0116-0001.jpg</source>
 			</image>
 		</images>
 	</img:images>
